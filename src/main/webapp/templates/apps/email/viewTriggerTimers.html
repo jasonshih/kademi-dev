@@ -1,0 +1,95 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>$view.title</title>
+        <link href="manageGroupEmail.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="manageGroupEmail.js">//</script>
+        <style>
+            .remove-col {
+                width: 80px;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <section id="manageEmail" class="MainContent">
+            <header class="ClearFix">
+                <a href="new" class="SmallBtn Add newTrigger"><span>Add trigger</span></a>
+            </header>            
+            
+            <div class="Content">	
+                <form method="POST" action="$page.name" class="triggers-form">
+                    <table style='width: 100%' class='Summary'>
+                        <thead>
+                            <tr>
+                                <th>Trigger</th>
+                                <th>User</th>
+                                <th>Status</th>
+                                <th>Due Date</th>
+                                <th class="remove-col"><button type="submit" class="Btn">Remove</button></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            #foreach($tt in $page.model.recentTriggerTimers)
+                            <tr >
+                                <td><acronym title="ID: $tt.emailTrigger.id">$tt.emailTrigger.name</acronym></td>
+                                <td><a href="/manageUsers/$tt.fireForProfile.id/">$tt.fireForProfile.email</a></td>
+                                <td>$page.status($tt)</td>
+                                <td>$tt.fireAt</td>
+                                <td class="remove-col" style="text-align: center;">$formatter.checkbox($tt.id, "triggerId", false, $tt.id) </td>
+                            </tr>                    
+                            #end   
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </section>
+
+        <div id="modalCreateJob" class="Modal">
+            <header>
+                <h3>Manually create trigger</h3>
+                <a class="Close" href="#" title="Close"><span class="Hidden">Close</span></a>
+            </header>
+            <div class="ModalContent">
+                <form method="POST" action="$page.name">
+                    <p>Please enter the email of the user below. This must be a registered member.</p>
+                    <div class="pageMessage">.</div>
+                    <table>
+                        <tr>
+                            <th><label for="profileEmail">Enter email</label></th>
+                            <td><input type="text" name="profileEmail" id="profileEmail" value="" placeholder="Member's email address" class="required" /></td>
+                        </tr>
+                        <tr>
+                            <th><label for="fireAt">Date to process</label></th>
+                            <td><input type="text" name="fireAt" id="fireAt" value="" placeholder="31/1/2013 15:55" class="date required" /></td>
+                        </tr>                        
+                        <tr>
+                            <td colspan="2" class="BtnBar">
+                                <button class="Btn" type="submit">Create</button>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>           
+
+        <script type="text/javascript">
+            jQuery(function() {
+                $(".triggers-form").forms({
+                    callback: function() {
+                        window.location.reload();
+                    }
+                });
+                $(".newTrigger").click(function(e) {
+                    e.preventDefault();
+                    showModal($("#modalCreateJob"));
+                });
+                $("#modalCreateJob form").forms({
+                    callback: function(resp) {
+                        log("resp", resp);
+                        window.location.reload();
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>

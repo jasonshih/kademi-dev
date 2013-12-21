@@ -1,0 +1,18 @@
+<div class="pagination pagination-large pagination-centered">
+    <ul class="pages">
+        <li><a class="prevBtn">Previous</a></li>
+        #foreach($p in $folder.modulePages)
+        <li>
+            <a class="modPage" href="${formatter.percentEncode(${p.name})}" title="$formatter.htmlAttEncode($p.title)">
+                <span>$foreach.count</span>
+            </a>
+        </li>
+        #end
+        <li><a class="nextBtn"><span>Next</span></a></li>
+    </ul>            
+    <div style="display: none" class="popout">
+        <span>Continue</span>
+        <div class="spike"></div>
+    </div>
+    <div class="clr"></div>            
+</div>

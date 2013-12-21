@@ -1,0 +1,6 @@
+#manageEvent .Content {
+    border: 1px solid #dedede;
+    border-radius: 5px;
+    position: relative;
+    padding: 10px;
+}

@@ -1,0 +1,110 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>$view.title</title>
+        <link href="editTheme.css" rel="stylesheet" type="text/css" />
+
+    </head>
+    <body class="dashboard">
+        <section id="publish" class="MainContent">
+                        
+            
+            <article class="Note">Click one of the themes below to update your site. A preview is shown below, or <a target="_blank" href="$page.parent.externalUrl">click here to see your site</a></article>
+            
+            <a href=".." class="Btn">Back to $page.parent.parent.name website</a>
+            
+            #set($isLive = $page.parent.live)                        
+            #set($extUrl = $page.parent.externalUrl)
+            <ul class="themes" style="max-height: 400px; overflow-y: scroll">
+                #foreach($theme in $page.allThemes)
+                <li>
+                    <a href="$theme.name" class="selectTheme">
+                        #if( $theme.previewImage )
+                        <img alt="$theme.title" src="/templates/themes/$theme.name/$theme.previewImage" />
+                        #else
+                        <h2>$theme.title</h2>
+                        #end
+                    </a>
+                </li>
+                #end
+            </ul>
+
+            <br/>
+            <br/>
+            <iframe id="previewPage" src="$page.parent.externalUrl" style="width: 1024px; height: 300px">
+
+            </iframe>
+
+        </section>        
+        <script type="text/javascript">
+
+            var isLive = $isLive;
+            var first = true;
+            var themeName = "$page.currentTheme";
+
+            jQuery(function() {
+                var current = $(".selectTheme[href='" + themeName + "']");
+                current.closest("li").addClass("current-theme");
+                log("set current", current, themeName);
+                
+                var iframe = $("#previewPage");
+                iframe.load(function() {
+                    var li = $(".themes li.ajax-loading")
+                    li.removeClass("ajax-loading");
+                    li.closest("ul").removeClass("ajax-loading");
+                    li.addClass("current-theme");
+                    log("add", li);
+                });
+                
+                
+                $(".selectTheme").click(function(e) {
+                    e.preventDefault();
+                    var link = $(e.target).closest("a");
+                    var themeName = link.attr("href");
+                    var li = $(e.target).closest("li");
+                    var ul = li.closest("ul");
+                    if (ul.hasClass("ajax-loading")) {
+                        return;
+                    }
+                    if (isLive && first) {
+                        if (!confirm("Warning: You are editing the live version of this website and changes are immediate. If you want to update the live site now press OK. Otherwise press Cancel, then create a new version from Manage Websites and then change the theme.")) {
+                            return;
+                        }
+                    }
+                    first = false;
+                    $(".current-theme").removeClass("current-theme");
+                    li.addClass("ajax-loading");
+                    ul.addClass("ajax-loading");
+                    li.append("<img class='ajax-loader' src='/static/common/ajax-loader.gif' />");
+                    $.ajax({
+                        type: 'POST',
+                        url: window.location.pathname,
+                        data: {
+                            themeName: themeName
+                        },
+                        success: function(data) {
+                            log("success", data);
+                            li.addClass("current-theme");
+                            updatePreview(li);
+                        },
+                        error: function(resp) {
+                            li.removeClass("ajax-loading");
+                            alert("An error occured doing the user search. Please check your internet connection and try again");
+                        }
+                    });
+                });
+            });
+            function updatePreview(li) {
+                var iframe = $("#previewPage");
+                var src = iframe.attr("src");
+                var i = src.indexOf("?");
+                if (i > 0) { // chop off any request params
+                    src = src.substring(0, i);
+                }
+                src += "?rnd=" + Math.floor((Math.random() * 100000) + 1)
+                log("reload iframe", src);
+                iframe.attr("src", src);
+            }
+        </script>               
+    </body>
+</html>
+

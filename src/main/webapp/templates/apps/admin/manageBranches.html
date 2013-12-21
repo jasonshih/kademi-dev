@@ -1,0 +1,91 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Manage Versions</title>
+        <link href="publish.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="publish.js">//</script>
+
+    </head>
+    <body class="dashboard">
+        <section id="publish" class="MainContent">
+            <article class="Note">Manage versions for this repository.</article>
+            <br/>
+            <br/>
+            <table style="width: 100%">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Created Date</th>
+                        <th>From</th>
+                        <th>Visibility</th>
+                        <th>Last modified</th>
+                        <th>Modified by</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    #foreach($branch in $folder.repository.branches)
+                    <tr>
+                        <td>$branch.name</td>
+                        <td>$!branch.createdDate</td>
+                        <td>$!branch.fromCommit.branch.name</td>
+                        <td>
+                            #if( $branch.hiddenBy )
+                            hidden by $branch.hiddenBy.name (<a class="unhide" href="$branch.name">un-hide</a>)
+                            #else
+                            visible (<a class="hide" href="$branch.name">hide</a>)
+                            #end
+                        </td>
+                        <td>$!branch.head.createdDate</td>
+                        <td>$!branch.head.editor.name</td>
+                        <td><a href="/repositories/$folder.repository.name/$branch.name/commits">History</a></td>
+                    </tr>
+
+                    #end
+                </tbody>
+            </table>
+        </section>
+        <script type="text/javascript">
+            jQuery(function() {
+                $("#publish form").forms({
+                    callback: function() {
+                        alert("Done!");
+                    }
+                });
+                $(".hide").click(function(e) {
+                    e.preventDefault();
+                    var a = $(e.target).closest("a");
+                    setVisibility(a, true);
+                });
+                $(".unhide").click(function(e) {
+                    var a = $(e.target).closest("a");
+                    e.preventDefault();
+                    setVisibility(a, false);
+                });
+            });
+
+            function setVisibility(link, hidden) {
+                log("setVisibility", link, hidden);
+                $.ajax({
+                    type: 'POST',
+                    url: window.location.pathname,
+                    data: {
+                        name: link.attr("href"),
+                        hide: hidden
+                    },
+                    dataType: "json",
+                    success: function(resp) {
+                        if( resp && resp.status ) {
+                            window.location.reload();                        
+                        } else {
+                            alert("Sorry, had an error - " + resp.messages)
+                        }
+                    },
+                    error: function(resp) {
+                        log("error", resp);
+                        alert("Sorry couldnt set the visibility " + resp);
+                    }
+                });
+            }
+        </script>               
+    </body>
+</html>
+

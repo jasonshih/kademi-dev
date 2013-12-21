@@ -1,0 +1,49 @@
+.calendars {
+    width: 100%;
+
+}
+.calendars th {
+    text-align: left;
+}
+.calendars th, .calendars td {
+    padding:5px;
+
+}
+.calendar-events {
+    margin-bottom: 50px;
+}
+.calendar-event-byline {
+    margin-bottom: 10px;
+}
+.calendar-events-item {
+    margin-bottom: 20px;
+    border-bottom: dotted lightgray 1px;
+}
+.calendar-events-header {
+    margin-bottom: 10px;
+}
+.calendar-event-text {
+    margin-bottom: 30px;
+}
+.calendar-event-content {
+    min-height: 200px;
+}
+.attendees {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.attendees li {
+    display: block;
+    float: left;
+    width: 60px;
+    overflow: hidden;
+    padding: 0;
+    margin-right: 15px;
+    margin-bottom: 15px;
+}
+.attendees li .profilePic {
+    width: 52px;
+    height: 52px;
+    display: block;
+}

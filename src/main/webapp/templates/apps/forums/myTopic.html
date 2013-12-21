@@ -1,0 +1,75 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>$view.title</title>
+        <link href="myForums.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="myTopic.js" >//</script>
+    </head>
+    <body class="forums">
+        <div id="content">
+            <h3>$page.title</h3>
+            #if( $user )
+            <a href="#postQuestion" class="Button ShowModal border-text1"><i class="Icon-add"><!----></i> Post a question</a> 
+            #end
+            <div class="clr"></div>
+        </div>            
+        <div class="well">
+        #set($questions = $page.questions)
+        #if( $questions.isEmpty() )
+        <p>No one has posted any questions yet, <a href="#postQuestion" data-toggle="modal">be the first to ask</a></p>
+        #else
+
+        <ul class="">
+            #foreach($post in $questions)
+            <li class="thumbnail col-sm-6 col-md-3">
+                <div class="Avatar"> <img src="$formatter.profilePicHref($post.poster)" alt="$!post.poster.nickName" /> </div>
+                <div class="ReplyNumber"> <strong>$post.numReplies</strong> replies </div>
+                <div class="Details">
+                    <h4><a href="$post.name">$post.title</a></h4>
+                    <p>
+                        <abbr title="$formatter.formatDateISO8601($post.postDate)" class="timeago">$post.postDate</abbr>
+                        <em><a href="#">$post.poster.nickName</a></em>
+                    </p>
+                </div>
+            </li>
+            #end
+            <li class="clearfix" style="visibility: hidden"></li>
+        </ul>
+        #end
+        </div>
+
+
+        <div id="postQuestion" class="modal hide fade">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3>Ask a question</h3>
+            </div>
+            <form method="POST" action="." class="form-horizontal">
+                <div class="modal-body">
+
+                    <div class="control-group">
+                        <label class="control-label" for="newQuestion">Summary</label>
+                        <div class="controls">
+                            <input type="text" placeholder="Enter your question here" value="" id="newQuestion" name="newQuestion" class="required span5" />
+                        </div>
+                    </div>                    
+                    <div class="control-group">
+                        <label class="control-label" for="comment">Details</label>
+                        <div class="controls">
+                            <textarea name="comment" id="comment" placeholder="Leave a comment here" cols="50" rows="8" class="required span5"></textarea>
+                        </div>
+                    </div>                                    
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn">Close</a>
+                    <button class="btn btn-primary" type="submit">Ask</button>
+                </div>
+            </form>
+        </div>        
+
+        <script type="text/javascript">
+            jQuery(function($) {
+                initMyTopic();
+            });
+        </script>        
+    </body>
+</html>

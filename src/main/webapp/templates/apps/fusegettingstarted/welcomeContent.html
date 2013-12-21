@@ -1,0 +1,40 @@
+<div class='gettingStarted'>
+    <div class="welcome-content" style="position: relative">
+        <a href="#" class="hide-welcome" style="position: absolute; right: -10px; top: -10px"><img src="/static/common/close.png" /></a>
+        <h1>Welcome to Fuse!</h1>
+        <br/>
+        <center>
+            <iframe width="480" height="360" src="//www.youtube.com/embed/EoNWRLzOVKg" frameborder="0" allowfullscreen></iframe>
+        </center>
+        <br/>
+        <h3>Getting help</h3>
+        <p>To see documentation for any screen click the <img style='width: 20px' src='/theme/images/i.png'/></p>
+        <p>Or to talk to a real person click the <img style='width: 50px' src='/static/images/chat.png'> button</p>
+        <p>We've already made your first website and module. To get started now you can:</p>
+        <a target='_blank' href='$viewFirstModuleHref' class='Btn'>View your first learning module</a>
+        <a href='$editFirstModuleHref' class='Btn'>Edit your first learning module</a>
+
+    </div>
+    <div class="show-content" style="position: relative">
+        <a href="#" class="show-welcome">Show getting started</a>
+    </div>
+    <script type="text/javascript">
+        $(function() {
+            $(".hide-welcome").click(function(e) {
+                e.preventDefault();
+                $(".gettingStarted").addClass("suppressed");
+                $.cookie("gettingStartedSuppressed", true);
+            });
+            $(".show-welcome").click(function(e) {
+                e.preventDefault();
+                $(".gettingStarted").removeClass("suppressed");
+                $.cookie("gettingStartedSuppressed", false);
+            });
+            var s = $.cookie("gettingStartedSuppressed");
+            log("welcome suppressed", s);
+            if ("true" === s) {
+                $(".gettingStarted").addClass("suppressed");
+            }
+        });
+    </script>
+</div>

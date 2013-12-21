@@ -1,0 +1,64 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+    </head>
+    <body class="manageUserPages">
+        <section id="manageUser" class="MainContent">
+            <header class="ClearFix">
+                <a href="new" class="SmallBtn Add newLiveStreamBtn"><span>Add New Live Video</span></a>
+            </header>            
+            <div class="Info">
+                <table class="Summary" id="userSearchResults">
+                    <tr>
+                        <th>Name</th>
+                        <th>Status</th>
+                    </tr>
+                    #foreach($p in $page.children)
+                    <tr>
+                        <td>
+                            <a href='$p.name'>$p.name</a>
+                        </td>
+                    </tr>
+                    #end
+                </table>
+            </div>
+        </section>
+
+        <div class="Modal newLiveStream">
+            <header>
+                <h3>New live video</h3>
+                <a class="Close" href="#" title="Close"><span class="Hidden">Close</span></a>
+            </header>                           
+            <div class="ModalContent">
+                <form method="POST" action="" class="newLiveStreamForm">
+                    <div class="pageMessage"></div>
+                    <div class="inputs">
+                        <label for="newStreamName">Name</label>
+                        <input type="text" name="newStreamName" id="newStreamName" class="required" />
+                        <label for="newStreamStartDate">Estimated start date/time</label>
+                        <input type="text" name="newStreamStartDate" id="newStreamStartDate" placeholder="31/1/2013 15:55" class="date required" />
+                    </div>
+                    <button type="submit" class="Btn" style="float: right">Save</button>
+                </form>
+            </div>
+        </div>
+
+           
+        
+        
+        <script type="text/javascript" >
+            jQuery(function() {
+                $(".newLiveStreamBtn").click(function(e) {
+                    e.preventDefault();
+                    showModal($(".newLiveStream"));
+                });
+                $(".newLiveStreamForm").forms({
+                    callback: function(resp) {
+                        log("resp", resp);
+                        window.location.reload();
+                    }
+                });
+            });            
+        </script>        
+        
+    </body>
+</html>

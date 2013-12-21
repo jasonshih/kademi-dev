@@ -1,0 +1,169 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Manage Contact Requests</title>
+        <style>
+            .details {
+
+            }
+            .details th {
+                text-align: right;
+            }
+            .pages th {
+                text-align: left;
+            }
+            .details td, .details th, .pages td, .pages th {
+                padding: 10px 10px 5px 0;                
+		vertical-align: top;
+            }
+
+            .message {
+                padding: 10px 0;
+            }
+            .message h1 {
+                padding-bottom: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <section id="manageEmail" class="MainContent">            
+            <div class="Content">
+                <table class="details">
+                    <tr>
+                        <th>Contacted</th>
+                        <td>$page.contactRequest.createdDate</td>
+                        <th>Website</th>
+                        <td>$page.contactRequest.website.name</td>                        
+                    </tr>
+                    <tr>
+                        <th>Email</th>
+                        <td>
+				#if( $page.contactRequest.email )
+				<a href="mailto:$page.contactRequest.email">$page.contactRequest.email</a>
+				#end
+			</td>
+                        <th>Phone</th>
+                        <td>$!page.contactRequest.phone</td>                                                
+                    </tr>
+                    #if( $page.contactRequest.company )
+                    <tr>
+                        <th>Company</th>
+                        <td>$page.contactRequest.company</td>                        
+                    </tr>
+                    #end
+                    <tr>
+                        <th>Browser</th>
+                        <td>$!page.contactRequest.userAgent</td>                        
+                        <th>IP Address</th>
+                        <td>$!page.contactRequest.sourceIp</td>
+                    </tr>
+                </table>
+
+                #if( $page.contactRequest.fields )
+                <table class="details">
+                    #foreach($field in $page.contactRequest.fields )
+                    #if( !$field.startsWith("attach.") )
+                    <tr>
+                        <th>$field.fieldName</th>
+                        <td>$field.fieldValue</td>
+                    </tr>
+                    #end
+                    #end
+                </table>
+                #end
+
+		#if( $page.contactRequest.message )
+                <hr/>                
+                <div class="message">
+                    <h1>Message:</h1>
+                    $page.contactRequest.message
+                </div>                
+		#end
+
+                #if( $page.profile )
+                <hr/>
+                <div class="message">
+                    
+                    #set($memberships = $page.profile.memberships( $page.organisation ) )
+                    #if( $memberships.isEmpty() )
+                    <h1>This user has a FuseLMS profile: <b>$page.profile.formattedName</b></h1>
+                    <p>but does not have any memberships to your account</p>
+                    #else
+                    <h1>Profile associated with this email</h1>
+                    <a href="/manageUsers/$page.profile.id">$page.profile.formattedName</a>
+                    is a member of 
+                        #foreach($gm in $memberships)
+                        <span>$gm.groupEntity.name</span>,
+                        #end
+                    #end
+
+                </div>
+                #end
+
+
+
+                #if( !$page.contactRequest.attachments.isEmpty() )
+                <hr/>                
+		<div class="message">
+		<h1>Attachments</h1>
+                <table class="details">
+                    #foreach($att in $page.contactRequest.attachments )
+                    <tr>
+                        <td><a href="/_hashes/files/$att.attachmentHash">$att.attachmentFilename</a></td>
+                        <td>$att.contentType</td>
+                    </tr>
+                    #end
+                </table>
+		</div>
+                #end
+
+                <hr/>                
+                <div class="message" style="float: left; width: 45%">
+                    <h1>Viewed web pages</h1>
+                    <p><i>Last 7 days</i></p>
+                    <table class="pages">
+                        <thead>
+                            <th>Page</th>
+                            <th>Date</th>
+                            <th>From</th>
+                        </thead>
+                        <tbody>
+                            #foreach($log in $page.logs)
+
+                            <tr>
+                                <td><a href="http://$log.reqHost/$log.url">$log.url</a></td>
+                                <td>$formatter.formatDateTime( $log.reqDate )</td>
+                                <td><a href="$log.referrer">$!formatter.getFileName( $log.referrer )</a></td>
+                            </tr>
+                            #end
+                        </tbody>
+                    </table>
+                </div>
+                <div class="message" style="float: left; width: 45%">
+                    <h1>Form submits and actions</h1>
+                    <p><i>Last 7 days</i></p>
+                    <table class="pages">
+                        <thead>
+                            <th>Page</th>
+                            <th>Date</th>
+                        </thead>         
+                        <tbody>
+                            #foreach($log in $page.actions)
+                            <tr>
+                                <td><a href="http://$log.reqHost/$log.url">$log.url</a></td>
+                                <td>$formatter.formatDateTime( $log.reqDate )</td>
+                            </tr>
+                            #end
+                        </tbody>
+                    </table>
+                </div>
+
+
+            </div>
+        </section>
+        <script type="text/javascript">
+            jQuery(function() {
+
+            });
+        </script>
+    </body>
+</html>

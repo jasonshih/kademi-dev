@@ -1,0 +1,146 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Manage Calendars</title>
+        <link href="manageCalendars.css" rel="stylesheet" type="text/css" />
+        <link href="/static/css/fullcalendar-1.6.4.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="manageCalendars.js">//</script>
+        <script type="text/javascript" src="cal-utils.js">//</script>
+        <script type="text/javascript" src="/static/js/fullcalendar-1.6.4.js">//</script>
+        <style>
+            .calendars {
+                width: 100%;
+
+            }
+            .calendars th {
+                text-align: left;
+            }
+            .calendars th, .calendars td {
+                padding:5px;
+            }
+        </style>
+    </head>
+    <body>
+        <section id="manageForum" class="MainContent">
+
+            <article class="Note">                
+                Use this page to create and manage the calendars in your organisation..
+            </article>
+
+
+            <header class="ClearFix">
+                <button class="SmallBtn Add AddCalendar"><span>Add New Calendar</span></button>
+            </header>
+
+            <table class="calendars Summary">
+                <colgroup>
+                    <col style="width: 100px" />
+                    <col width="" />
+                    <col style="width: 200px" />
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th colspan="">Calendar</th>
+                        <th colspan="2">Upcoming events</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    #foreach($cal in $page.children)
+                    #set($upcoming = $cal.upcomingEvents)
+                    <tr>
+                        <td colspan="3"><a href="$cal.name">$cal.title</a></td>
+                        <td>
+                            <aside>
+                                <a class="View" title="Edit" href="$cal.name?goto" target="_blank">
+                                    <span class="Hidden">View</span>
+                                </a>
+
+                                <a class="Edit" title="Edit" href="$cal.name">
+                                    <span class="Hidden">Edit</span>
+                                </a>
+                                <a class="Delete" title="Delete" href="$cal.name">
+                                    <span class="Hidden">Delete</span>
+                                </a>                                
+                            </aside>
+                        </td>
+                    </tr>
+
+                    #if( !$upcoming.isEmpty() )
+                    #foreach($event in $upcoming )
+                    <tr>
+                        <td></td>                                                
+                        <td>$event.summary</td>
+                        <td><abbr title="$formatter.formatDateISO8601($event.startDate)" class="timeago">$!event.startDate</abbr></td>
+                        <td>
+                            <aside>
+                                <a class="Edit" title="Edit" href="$cal.name/$event.name">
+                                    <span class="Hidden">Edit</span>
+                                </a>
+                                <a class="Delete" title="Delete" href="$cal.name/$formatter.percentEncode( $event.name )">
+                                    <span class="Hidden">Delete</span>
+                                </a>                                
+                            </aside>
+                        </td>
+                    </tr>
+                    #end                    
+                    #else
+                    <tr>
+                        <td></td>
+                        <td colspan="3">There are no upcoming events for this calendar. <a href="$cal.name/">Add an event</a></td>
+                    </tr>
+
+                    #end
+
+                    #end
+                </tbody>
+            </table>
+
+            <hr/>
+
+            <br/><br/><br/>
+
+            <div id="calendar" class="calendar-container" style="width: 800px; margin: 0 auto;"></div>
+
+        </section>
+
+        <div class="Modal" id="addCalendarModal">
+            <header>
+                <h3>Add Calendar</h3>
+                <a class="Close" href="#" title="Close"><span class="Hidden">Close</span></a>
+            </header>
+            <div class="ModalContent">
+                <form method="post" action=".">
+                    <input type="hidden" name="action" value="create"/>
+                    <div class="pageMessage">.</div>
+                    <table>
+                        <tr>
+                            <th><label for="calendarName">Calendar name</label></th>
+                            <td><input type="text" name="name" id="calendarName" value="" class="required simpleChars" maxlength="30" placeholder="Forum name" /></td>
+                        </tr>
+                        <tr>
+                            <th><label for="calendarTitle">Calendar Title</label></th>
+                            <td><input type="text" name="title" id="calendarTitle" value="" class="required" maxlength="" placeholder="Forum title" /></td>
+                        </tr>                    
+                        <tr>
+                            <th><label for="name">Description</label></th>
+                            <td>
+                                <textarea name="notes" id="calendarNotes"></textarea>
+                            </td>
+                        </tr>                    
+
+                        <tr>
+                            <td colspan="2" class="Btn">
+                                <button>Save changes</button>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>          
+
+        <script type="text/javascript">
+            jQuery(function() {
+                initManageCalendars();
+            });
+        </script>
+    </body>
+</html>

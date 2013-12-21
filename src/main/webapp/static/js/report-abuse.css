@@ -1,0 +1,7 @@
+.post-report-modal {
+    position: absolute; 
+    width: 300px;
+    border: solid grey 1px;
+    padding: 10px 15px;
+    background: white;
+}

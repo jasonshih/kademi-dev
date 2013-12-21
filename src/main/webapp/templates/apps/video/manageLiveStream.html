@@ -1,0 +1,88 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <script type="text/javascript" src="/static/jwplayer/jwplayer.js" >//</script>        
+    </head>
+    <body class="manageUserPages">
+        <section id="manageUser" class="MainContent">        
+            <form method="POST" class="video-start">
+                <input type="hidden" name="command" value="start"/>
+                <button type="submit" name="command" value="start">Start</button>
+            </form>
+
+            <form method="POST" class="video-stop">
+                <input type="hidden" name="command" value="stop"/>
+                <button type="submit" name="command" value="stop">Stop</button>
+            </form>
+
+            <div class="Info">
+                <table>
+                    <tr>
+                        <td>Live stream ID</td>
+                        <td>$!page.liveStream.id</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Streaming IP</td>
+                        <td>$!page.liveStream.rtpReceiverIp</td>
+                    </tr>
+                    <tr>
+                        <td>Streaming Port</td>
+                        <td>$!page.liveStream.rtpReceiverPort</td>
+                    </tr>
+                    <tr>
+                        <td>Primary</td>
+                        <td>$!page.liveStream.hlsPrimary.id</td>
+                    </tr>
+                    <tr>
+                        <td>Complete</td>
+                        <td>$!page.liveStream.complete</td>
+                    </tr>                    
+                    #if( $page.liveStream.hlsPrimary.programs )
+                    #foreach($prog in $page.liveStream.hlsPrimary.programs)
+                    <tr>
+                        <td>Program $prog.width x $prog.height</td>
+                        <td>$prog.bandwidth bytes/sec</td>
+                        <td>$prog.numSegments segments</td>
+                    </tr>
+                    
+                    #end
+                    #else
+                    <tr>
+                        <td>No segments</td>
+                    </tr>
+                    #end
+                </table>
+
+                <div class="player" id="player"></div>
+            </div>
+
+        </section>
+
+
+
+        
+        <script type="text/javascript" >
+            jQuery(function() {
+                $(".video-start").forms({
+                    callback: function(resp) {
+                        log("resp", resp);
+                        window.location.reload();
+                    }
+                });
+                $(".video-stop").forms({
+                    callback: function(resp) {
+                        log("resp", resp);
+                        window.location.reload();
+                    }
+                });
+                jwplayer.key = "cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=";
+                jwplayer("player").setup({
+//                    file: "http://qthttp.apple.com.edgesuite.net/1010qwoeiuryfg/sl.m3u8",
+//                    image: "http://content.bitsontherun.com/thumbs/gSzpo2wh-480.jpg",
+                    file: "vid.m3u8"
+                });
+            });
+        </script>        
+
+    </body>
+</html>
