@@ -133,9 +133,10 @@ function setGroupRecipient(name, groupType) {
                 groupType: groupType
             },
             success: function(data) {
-                log("saved ok", data);
+                log("saved ok", name);
                 $(".GroupList li." + name).remove();
-                log("add to list", $(".GroupList. " + groupType), groupType);
+                //log("add to list", $(".GroupList. " + groupType), groupType);
+                log("add to list");
                 $(".GroupList." + groupType).append("<li class=" + name + "><span>" + name + "</span><a href='" + name + "'>Delete</a></li>");
             },
             error: function(resp) {

@@ -27,11 +27,10 @@
                     </div>
                     <div class="DropdownContent Hidden">
                         <div class="Content">
-                            <ul class="Program">
-                                #foreach($b in $page.closest("branch").parent.children)
+                            <ul class="Program branches">
+                                #foreach($b in $page.closest("branch").parent.children.ofType.branch)
                                 <li>
                                     <a href="#" class="copy" title="Copy this to a new version"><span>Copy</span></a>                                    
-
                                     #if( $b.live )
                                     <strong class="islive">LIVE</strong>
                                     #else

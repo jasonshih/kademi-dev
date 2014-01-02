@@ -217,9 +217,11 @@
                             }
 
                             adv.click(function() {
-                                if (adv.attr("checked")) {
+                                if (adv.is(":checked")) {
+                                    log("show", $(".advanced"));
                                     $(".advanced").show();
                                 } else {
+                                    log("hide", $(".advanced"));
                                     $(".advanced").hide();
                                 }
                             });
@@ -258,12 +260,7 @@
                                 <tr class="$eventId trigger">
                                     <th>$page.triggerOptionLabel($eventId, $optionCode)</th>
                                     <td>
-                                        <select id="$optionCode" name="$optionCode">
-                                            <option value="">[Choose]</option>
-                                            #foreach($option in $triggerType.get($optionCode))
-                                            $formatter.option($option.code, $option.text, $page.triggerOptionValue($optionCode))
-                                            #end
-                                        </select>
+                                        $triggerType.get($optionCode).toHtml($optionCode, $page.triggerOptionValue($optionCode) )                                        
                                     </td>
                                 </tr>
                                 #end                                    

@@ -18,8 +18,7 @@ toolbarSets["Full"] = [
     {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
     {name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align']},
     {name: 'styles'},
-    {name: 'colors'},
-    {name: 'about'}
+    {name: 'colors'}
 ];
 
 toolbarSets["Balanced"] = [
@@ -35,8 +34,7 @@ toolbarSets["Balanced"] = [
     {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
     {name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align']},
     {name: 'styles'},
-    {name: 'colors'},
-    {name: 'about'}
+    {name: 'colors'}
 ];
 
 //toolbarSets["Balanced"] = [
@@ -62,8 +60,7 @@ toolbarSets["Default"] = [
     '/',
     {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
     {name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align']},
-    {name: 'styles'},
-    {name: 'about'},
+    {name: 'styles'}
 ];
 
 //toolbarSets["Default"] = [
@@ -93,8 +90,7 @@ toolbarSets["Lite"] = [
     {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
     {name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align']},
     {name: 'styles'},
-    {name: 'colors'},
-    {name: 'about'}
+    {name: 'colors'}
 ];
 
 //toolbarSets["Lite"] = [
@@ -114,8 +110,7 @@ toolbarSets["BasicAndStyle"] = [
     {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
     {name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align']},
     {name: 'styles'},
-    {name: 'colors'},
-    {name: 'about'}
+    {name: 'colors'}
 ];
 
 //toolbarSets["BasicAndStyle"] = [
@@ -137,8 +132,7 @@ toolbarSets["Image"] = [
     {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
     {name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align']},
     {name: 'styles'},
-    {name: 'colors'},
-    {name: 'about'}
+    {name: 'colors'}
 ];
 
 
@@ -159,8 +153,7 @@ toolbarSets["Logo"] = [
     {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
     {name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align']},
     {name: 'styles'},
-    {name: 'colors'},
-    {name: 'about'}
+    {name: 'colors'}
 ];
 
 //

@@ -16,6 +16,11 @@
     
     <dependencies>
         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>fuse-server-jar</artifactId>
+            <version>2.0.5</version>
+        </dependency>
+        <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
             <version>7.0</version>
@@ -38,39 +43,57 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.3</version>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
                 <configuration>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <port>8080</port>
+                    <path>/</path>
                 </configuration>
-            </plugin>
+                <executions>
+                    <execution>
+                        <id>shutdown</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>shutdown</goal>
+                        </goals>
+                    </execution>
+                            
+                    <execution>
+                        <id>run</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>                        
+                        
+            </plugin> 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
+                <artifactId>maven-resources-plugin</artifactId>
                 <version>2.6</version>
                 <executions>
                     <execution>
-                        <phase>validate</phase>
+                        <id>copy-env-resources</id>
+                        <phase>process-resources</phase>
                         <goals>
-                            <goal>copy</goal>
+                            <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${endorsed.dir}</outputDirectory>
-                            <silent>true</silent>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>javax</groupId>
-                                    <artifactId>javaee-endorsed-api</artifactId>
-                                    <version>7.0</version>
-                                    <type>jar</type>
-                                </artifactItem>
-                            </artifactItems>
+                            <resources>
+                                <resource>
+                                    <directory>${basedir}/src/test/resources</directory>                                 
+                                </resource>
+                            </resources>
+                            <outputDirectory>${basedir}/target/classes</outputDirectory>
                         </configuration>
-                    </execution>
+                    </execution>                                                    
                 </executions>
-            </plugin>
+            </plugin>              
         </plugins>
     </build>
+
+
 
 </project>

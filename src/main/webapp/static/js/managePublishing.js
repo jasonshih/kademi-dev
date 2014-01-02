@@ -1,6 +1,6 @@
 
 function initPublishingMenu(managePage) {
-    log("initPublishingMenu");
+    log("initPublishingMenu", $(".publishing .branches"));
     $(".publishing .branches").on("click", "a.copy", function(e) {
         e.preventDefault();
         e.stopPropagation();
