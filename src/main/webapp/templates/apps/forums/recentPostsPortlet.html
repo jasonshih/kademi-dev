@@ -1,12 +1,28 @@
-<div class="stream-container">
-        <div class="stream">
-            <ul class="barList stream-items">
-                <li>
-                    <em>Loading comments..</em>
-                </li>                                                                     
-            </ul>            
-        </div>
+<div class="panel panel-default recent-post">
+	<div class="panel-heading">
+		<i class="clip-stack-empty"></i>
+		Recent posts
+		<div class="panel-tools">
+			<a href="#" class="btn btn-xs btn-link panel-collapse collapses">
+			</a>
+			<a href="#" class="btn btn-xs btn-link panel-close">
+				<i class="fa fa-times"></i>
+			</a>
+		</div>
+	</div>
+	<div class="panel-body">
+		<em>Loading comments..</em>
+	</div>
 </div>
+<!--<div class="stream-container">-->
+    <!--<div class="stream">-->
+        <!--<ul class="barList stream-items">-->
+            <!--<li>-->
+                <!--<em>Loading comments..</em>-->
+            <!--</li>-->
+        <!--</ul>-->
+    <!--</div>-->
+<!--</div>-->
 #set($basePath = "/")
 #if( $parentOrg )
 #set($basePath = $parentOrg.href)

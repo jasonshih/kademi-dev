@@ -3,18 +3,27 @@
         <title>$view.title</title>
     </head>
     <body class="dashboard">
-        <table class="plain dashboard">
-            <tr>
-                <td class="primary">
-                    #portlets("adminDashboardPrimaryAnnounce")
-                    #portlets("adminDashboardPrimary")
-                </td>
-                <td class="gap"></td>
-                <td class="secondary">
-                    #portlets("adminDashboardSecondary")
-                </td>                
-            </tr>
-        </table>                
+        <div id="dashboard-wrapper" class="row">
+	        <div class="col-md-8">
+		        #portlets("adminDashboardPrimaryAnnounce")
+		        #portlets("adminDashboardPrimary")
+	        </div>
+	        <div class="col-md-4">
+		        #portlets("adminDashboardSecondary")
+	        </div>
+        </div>
+        <!--<table class="plain dashboard">-->
+            <!--<tr>-->
+                <!--<td class="primary">-->
+                    <!--#portlets("adminDashboardPrimaryAnnounce")-->
+                    <!--#portlets("adminDashboardPrimary")-->
+                <!--</td>-->
+                <!--<td class="gap"></td>-->
+                <!--<td class="secondary">-->
+                    <!--#portlets("adminDashboardSecondary")-->
+                <!--</td>                -->
+            <!--</tr>-->
+        <!--</table>                -->
     </body>
 </html>
 
