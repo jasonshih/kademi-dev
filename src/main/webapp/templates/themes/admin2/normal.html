@@ -34,6 +34,51 @@
         <!-- start: CSS REQUIRED FOR THIS PAGE ONLY -->
         <!-- end: CSS REQUIRED FOR THIS PAGE ONLY -->
         <link rel="shortcut icon" href="favicon.ico" />
+                
+        
+        <!-- start: MAIN JAVASCRIPTS -->
+        <!--[if lt IE 9]>
+        <script src="assets/plugins/respond.min.js">//</script>
+        <script src="assets/plugins/excanvas.min.js">//</script>
+        <![endif]-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js">//</script>
+        
+        <!-- Fuse specific scripts. We might be able to remove some of these after admin2 integration -->
+        <script type="text/javascript" src="/static/js/common.js">//</script>        
+        <script type="text/javascript" src="/static/js/jquery.forms.js">//</script>        
+        <script type="text/javascript" src="/static/js/jquery.user.js">//</script>
+        <script type="text/javascript" src="/static/js/file.js" bottom="true">//</script>        
+        <script type="text/javascript" src="/static/js/toolbars.js" bottom="true">//</script>
+        <script type="text/javascript" src="/static/ckeditor41/ckeditor.js" bottom="true">//</script>
+        <script type="text/javascript" src="/static/ckeditor41/adapters/jquery.js" bottom="true">//</script>
+        <script type="text/javascript" src="/static/js/jQueryRotate.2.2.js">//</script>
+        <script type="text/javascript" src="/static/js/jquery.placeholder.js" >//</script>
+        <script type="text/javascript" src="/templates/themes/admin/setup.js" bottom="true">//</script>
+        <script type="text/javascript" src="/templates/themes/admin/prompt.js" bottom="true">//</script>
+        <script type="text/javascript" src="/static/js/raphael-2.1.0.min.js" bottom="true">//</script>
+        <script type="text/javascript" src='/static/js/morris.js' bottom="true">//</script>
+        <script type='text/javascript' src='/templates/apps/reporting/reports.js'>//</script>
+        <script type="text/javascript" src="/static/js/init-theme.js" bottom="true">//</script>        
+        <!-- End Fuse specific scripts -->
+        
+        <script src="/theme/assets/plugins/jquery-ui/jquery-ui-1.10.2.custom.min.js">//</script>
+        <script src="/theme/assets/plugins/bootstrap/js/bootstrap.min.js">//</script>
+        <script src="/theme/assets/plugins/blockUI/jquery.blockUI.js">//</script>
+        <script src="/theme/assets/plugins/iCheck/jquery.icheck.min.js">//</script>
+        <script src="/theme/assets/plugins/perfect-scrollbar/src/jquery.mousewheel.js">//</script>
+        <script src="/theme/assets/plugins/perfect-scrollbar/src/perfect-scrollbar.js">//</script>
+        <script src="/theme/assets/plugins/less/less-1.5.0.min.js">//</script>
+        <script src="/theme/assets/plugins/jquery-cookie/jquery.cookie.js">//</script>
+        <script src="/theme/assets/plugins/bootstrap-colorpalette/js/bootstrap-colorpalette.js">//</script>
+        <script src="/theme/assets/js/main.js">//</script>
+        <!-- end: MAIN JAVASCRIPTS -->
+        <!-- start: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
+        <!-- end: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
+        <script>
+            jQuery(document).ready(function() {
+                Main.init();
+            });
+        </script>        
     </head>
     <!-- end: HEAD -->
     <!-- start: BODY -->
@@ -660,31 +705,7 @@
                 <span class="go-top"><i class="clip-chevron-up"></i></span>
             </div>
         </div>
-        <!-- end: FOOTER -->
-        <!-- start: MAIN JAVASCRIPTS -->
-        <!--[if lt IE 9]>
-        <script src="assets/plugins/respond.min.js">//</script>
-        <script src="assets/plugins/excanvas.min.js">//</script>
-        <![endif]-->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js">//</script>
-        <script src="/theme/assets/plugins/jquery-ui/jquery-ui-1.10.2.custom.min.js">//</script>
-        <script src="/theme/assets/plugins/bootstrap/js/bootstrap.min.js">//</script>
-        <script src="/theme/assets/plugins/blockUI/jquery.blockUI.js">//</script>
-        <script src="/theme/assets/plugins/iCheck/jquery.icheck.min.js">//</script>
-        <script src="/theme/assets/plugins/perfect-scrollbar/src/jquery.mousewheel.js">//</script>
-        <script src="/theme/assets/plugins/perfect-scrollbar/src/perfect-scrollbar.js">//</script>
-        <script src="/theme/assets/plugins/less/less-1.5.0.min.js">//</script>
-        <script src="/theme/assets/plugins/jquery-cookie/jquery.cookie.js">//</script>
-        <script src="/theme/assets/plugins/bootstrap-colorpalette/js/bootstrap-colorpalette.js">//</script>
-        <script src="/theme/assets/js/main.js">//</script>
-        <!-- end: MAIN JAVASCRIPTS -->
-        <!-- start: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
-        <!-- end: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
-        <script>
-            jQuery(document).ready(function() {
-                Main.init();
-            });
-        </script>
+        <!-- end: FOOTER -->        
     </body>
     <!-- end: BODY -->
 </html>
