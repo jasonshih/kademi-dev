@@ -1,24 +1,27 @@
 
 function initPublishingMenu(managePage) {
-    log("initPublishingMenu", $(".publishing .branches"));
+    flog("initPublishingMenu", $(".publishing .branches"));
     $(".publishing .branches").on("click", "a.copy", function(e) {
         e.preventDefault();
         e.stopPropagation();
         var node = $(e.target);
         var link = node.closest("li").find("a").not(".copy");
         showCopyBranch(link, function(newName, resp) {
+            flog("done copy branch");
             var srcName = link.text().trim();
             node.closest("ul").append("<li><a href='#' class='copy'><span>Copy</span></a><a href='" + resp.nextHref + "/" + managePage + "'>" + newName + "</a></li>")
         });
     });
-    $(".publishing .branches").on("click", "a.hide", function(e) {
+    $(".publishing .branches").on("click", "a.hide-branch", function(e) {
         e.preventDefault();
         e.stopPropagation();
-        var link = $(e.target);
+        var link = $(e.target).closest("a");
+        flog("hide branch:", link);
         var li = link.closest("li");
         var srcHref = link.attr("href");
-        srcHref = toFolderPath(srcHref);
+        srcHref = toFolderPath(srcHref);        
         hideBranch(srcHref, function() {
+            li.next(".divider").hide();
             li.hide(700);
         });
     });
@@ -34,13 +37,14 @@ function showCopyBranch(link, callback) {
         createBranch(srcHref, newName, function(newName, resp) {
             closeMyPrompt();
             callback(newName, resp);
+            return false;
         });
         return false;
     });
 }
 
 function createBranch(src, destName, callback) {
-    log("createBranch", src, destName);
+    flog("createBranch", src, destName);
     $.ajax({
         type: 'POST',
         url: src,
@@ -61,7 +65,7 @@ function createBranch(src, destName, callback) {
 
 
 function hideBranch(href, callback) {
-    log("hideBranch", href);
+    flog("hideBranch", href);
     $.ajax({
         type: 'POST',
         url: href,
@@ -76,7 +80,7 @@ function hideBranch(href, callback) {
             }
         },
         error: function(resp) {
-            log("error", resp);
+            flog("error", resp);
             alert("Sorry couldnt hide the version: " + resp);
         }
     });

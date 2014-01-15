@@ -305,13 +305,17 @@ var typewatch = (function() {
 })();
 
 
-
+/**
+ * Finds the parent of the source, then looks inside it for a .modal and shows it
+ * 
+ * @param {type} source
+ * @returns {Boolean}
+ * 
+ */
 function showAddItem(source) {
-    var modal = $(source).parent().find(".Modal");
-    $.tinybox.show(modal, {
-        overlayClose: false,
-        opacity: 0
-    });
+    flog("showAddItem: source=", source);
+    var modal = $(source).parent().find(".modal");
+    showModal(modal);
     return false;
 }
 
