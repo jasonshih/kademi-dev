@@ -15,3 +15,7 @@
 .noclear {
     clear: none !important;
 }
+//** BM: the pageMessage element is used for feedback from jquery.forms.js, needs to be initially hidden **/
+.pageMessage {
+    display: none;
+}

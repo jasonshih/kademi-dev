@@ -106,45 +106,49 @@
             </ul>
             <div class="tab-content">
                 <div id="panel_details" class="tab-pane active">
-                    <form name="frmDetails" action="." method="post" class="Details">
+                    <form name="frmDetails" action="." method="post" class="form-horizontal details" role="form">
                         <div class="pageMessage">.</div>
                         <i>Note: Changes in this section apply immediately to all versions of the website, including the live version</i>
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <th>Website name</th>
-                                    <td>
-                                        <input type="text" name="name" value="$!page.website.name" class="required simpleChars" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Domain name</th>
-                                    <td><input type="text" name="domainName" value="$!page.website.domainName" class="simpleChars" /></td>
-                                </tr>
-                                <tr>
-                                    <th>Alias for</th>
-                                    <td>
-                                        <select>
-                                            <option value="">[None]</option>
-                                            #foreach($w in $page.otherWebsites)
-                                            $formatter.option($w.name, $w.name, $page.website.aliasTo)
-                                            #end
-                                        </select>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Redirect to</th>
-                                    <td><input type="text" name="redirectTo" value="$!page.website.redirectTo" class="href"/></td>
-                                </tr>                                    
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td colspan="2">
-                                        <button class="Btn">Save Changes</button>
-                                    </td>
-                                </tr>
-                            </tfoot>                                
-                        </table>
+                                                
+                        <div class="form-group">
+                            <label for="websiteName" class="col-sm-2 control-label">Website name</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="name" id="websiteName" value="$!page.website.name" class="required simpleChars form-control" required="true" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="domainName" class="col-sm-2 control-label">Domain name</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="domainName" id="domainName" value="$!page.website.domainName" class="simpleChars form-control" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="aliasTo" class="col-sm-2 control-label">Alias for</label>
+                            <div class="col-sm-10">
+                                <select name="aliasTo" id="aliasTo" class="form-control">
+                                    <option value="">[None]</option>
+                                    #foreach($w in $page.otherWebsites)
+                                    $formatter.option($w.name, $w.name, $page.website.aliasTo)
+                                    #end
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="domainName" class="col-sm-2 control-label">Redirect to</label>
+                            <div class="col-sm-10">
+                                <input type="url" name="redirectTo" value="$!page.website.redirectTo" class="href form-control"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-success">Save details</button>
+                            </div>
+                        </div>                        
+
                     </form>                    
                 </div> <!-- End Details -->
 
@@ -257,7 +261,7 @@
                     </article>        
                     #end
 
-                                      
+
 
                     <table class="apps">
                         #foreach($app in $apps )
@@ -302,7 +306,7 @@
             </div>
         </div>        
 
-        <div id="modalGroup" class="Modal">
+        <div id="modalGroup" class="modal">
             <header>
                 <h3>Choose groups</h3>
                 <a class="Close" href="#" title="Close"><span class="Hidden">Close</span></a>
@@ -328,12 +332,13 @@
         </div>
         <script type="text/javascript">
             jQuery(function() {
+                flog("page init initManageWebsite");
                 initManageWebsite();
                 initPublishingMenu("");
                 initHtmlEditors($(".htmleditor"), "60px", "200px", 'embed_video,modal', 'resize,elementspath');
-                $("form.Details").forms({
+                $("form.details").forms({
                     callback: function() {
-                        alert("Saved ok");
+                        
                     }
                 });
             });

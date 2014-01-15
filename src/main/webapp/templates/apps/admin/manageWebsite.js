@@ -1,5 +1,5 @@
 function initManageWebsite() {
-    log("initManageWebsite");
+    flog("initManageWebsite");
     $(".AddGroup").click(function() {
         var modal = $("#modalGroup");
         $.tinybox.show(modal, {
