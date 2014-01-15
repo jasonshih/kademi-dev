@@ -44,11 +44,6 @@
                             </tr>
                         </thead>
                         <tbody>
-                            #if( $page.children.isEmpty() )
-                            <tr>
-                                <td colspan="2">No organisation types</td>
-                            </tr>
-                            #else
                             #foreach($ot in $page.children)
                             <tr>
                                 <td>$ot.name</td>
@@ -65,7 +60,6 @@
                                     </div>
                                 </td>                    
                             </tr>
-                            #end
                             #end
                         </tbody>
                     </table>
