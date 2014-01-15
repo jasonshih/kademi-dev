@@ -55,7 +55,7 @@
 				}
 			});
             
-            self.$modal
+            self.$modal.find('')
 		},
 		show: function (href) {
 			var self = this,
@@ -99,35 +99,9 @@
 			this.$modal.modal('hide');
 		}
 	};
-
-	Bob.onDOMReady(function () {
-		var $body = $(doc.body);
-
-		ModalEditOrg.init();
-
-		$body.on('click', '.btn-delete-org', function (e) {
-			e.preventDefault();
-
-			var href = $(this).attr('href');
-
-			confirmDelete(href, getFileName(href), function () {
-				win.location.reload();
-			});
-		});
-
-		$body.on('click', '.btn-edit-org', function(e) {
-			e.preventDefault();
-
-			ModalEditOrg.show($(this).attr('href'));
-		});
-
-		$('.btn-add-org').on('click', function (e) {
-			e.preventDefault();
-
-			ModalEditOrg.show(null);
-		});
-
-		// Upload CSV
+    
+    var initUploadCsv = function () {
+        // Upload CSV
 		var $modalUploadCsv = $('#modal-upload-csv'),
 			$resultUploadCsv = $modalUploadCsv.find('.upload-results');
 		$('#do-upload-csv').mupload({
@@ -155,8 +129,10 @@
 				$formUploadCsv.attr('action', 'orgs.csv');
 			}
 		});
-
-		// Upload OrgId CSV
+    };
+    
+    var initUploadOrgIdCsv = function () {
+        // Upload OrgId CSV
 		var $modalUploadOrgidCsv = $('#modal-upload-orgid-csv'),
 			$resultUploadOrgidCsv = $modalUploadOrgidCsv.find('.upload-results');
 		$('#do-upload-orgid-csv').mupload({
@@ -175,5 +151,39 @@
 				}
 			}
 		});
-	});
+    };
+    
+    var initCRUDOrg = function () {
+        var $body = $(doc.body);
+        
+        $body.on('click', '.btn-delete-org', function (e) {
+			e.preventDefault();
+
+			var href = $(this).attr('href');
+
+			confirmDelete(href, getFileName(href), function () {
+				win.location.reload();
+			});
+		});
+
+		$body.on('click', '.btn-edit-org', function(e) {
+			e.preventDefault();
+
+			ModalEditOrg.show($(this).attr('href'));
+		});
+
+		$('.btn-add-org').on('click', function (e) {
+			e.preventDefault();
+
+			ModalEditOrg.show(null);
+		});
+    };
+
+    win.initManageOrgs = function ()  {
+		ModalEditOrg.init();
+        initUploadCsv();
+		initUploadOrgIdCsv();
+        initCRUDOrg();
+    };
+    
 })(Bob, jQuery, window, document);
