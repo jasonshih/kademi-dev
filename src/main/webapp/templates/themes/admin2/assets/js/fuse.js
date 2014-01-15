@@ -1,6 +1,18 @@
 (function (Bob, $, win, doc, undefined) {
 	Bob.onDOMReady(function () {
 		var $body = $(doc.body);
+        
+        $('.modal').exist(function () {
+            this.each(function () {
+                var $modal = $(this);
+                
+                $modal.find('[data-type=form-submit]').on('click', function (e) {
+                    e.preventDefault();
+                    
+                    $modal.find('form').submit();
+                });
+            });
+        });
 
 		$('.modal.modal-upload').exist(function () {
 			this.each(function () {

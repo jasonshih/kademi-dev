@@ -54,6 +54,8 @@
 					self.hide();
 				}
 			});
+            
+            self.$modal
 		},
 		show: function (href) {
 			var self = this,
