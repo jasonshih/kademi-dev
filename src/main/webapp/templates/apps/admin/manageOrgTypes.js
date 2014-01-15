@@ -1,90 +1,143 @@
-function initManageOrgTypes() {
-    initEditing();
-    initManageOrgTypeModal();    
-}
-
-function initManageOrgTypeModal() {
-    $("body").on("click", ".addField", function(e) {
-        e.preventDefault();
-        var name = prompt("Please enter a name for the new field");
-        if( name === "" ) {
-            return;
-        } else if( name.contains(" ")) {
-            alert("Please enter a name without spaces or other special characters");
-            return;
-        }
-        var newLi = $("<li>");
-        $("ul.fields").append(newLi);
-        newLi.append($("<h4>").text(name) );
-        newLi.append($("<input type='text' name='field-" + name + "'/>"));
-        newLi.append($("<a href='" + name +"' class='removeField'>Delete</a>"));                                                            
-    });
-}
-
-function initEditing() {
-    var modal = $("div.Modal.newOrgType");
-    $("a.newOrgType").click(function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        modal.find("input").val("");
-        $.tinybox.show(modal, {
-            overlayClose: false,
-            opacity: 0
+(function ($, win, doc, undefined) {
+    win.initManageOrgTypeModal = function () {
+        var $body = $(doc.body);
+        
+        $body.on('click', '.btn-add-field', function(e) {
+            e.preventDefault();
+            
+            var name = prompt('Please enter a name for the new field');
+            
+            if( name === '' ) {
+                return;
+            } else if( name.contains(' ')) {
+                alert('Please enter a name without spaces or other special characters');
+                return;
+            }            
+            
+            $('.fields').append(
+                '<div class="form-group">' +
+                    '<label for="field-' + name + '" class="control-label col-md-4">' + name + '</label>' +
+                    '<div class="col-md-8">' +
+                        '<div class="input-group">' +
+                            '<input type="text" class="form-control" id="field-' + name + '" name="field-' + name + '" value="" />' +
+                            '<span class="input-group-btn">' +
+                                '<a href="' + name + '" class="btn btn-default btn-delete-field" title="Delete this field" role="button">&times;</a>' +
+                            '</span>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>'
+            );                                                           
         });
-    });
-
-    $("body").on("click", "a.editOrgType", function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        var node = $(e.target);
-        var href = node.attr("href");
-        showEditForm(href);
-    });
-
-    $("body").on("click", "a.deleteOrgType", function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        var node = $(e.target);
-        var href = node.attr("href");
-        var name = getFileName(href);
-        log("delete", href);
-        confirmDelete(href, name, function() {
-            log("remove ", this);
-            window.location.reload();
-        });
-    });
-    modal.find("form").forms({
-        callback: function(resp) {
-            log("done new org type", resp);
-            $.tinybox.close();
-            window.location.reload();
-        }
-    });
-}
-
-
-function showEditForm(orgHref) {
-    var modal = $(".Modal.editOrgType");
-    modal.load(orgHref + " #editOrgTypeModal", function() {
-        modal.find("form").forms({
-            callback: function(resp) {
-                log("done", resp);
-                $.tinybox.close();
-                //window.location.reload();
-                $("div.content").load(window.location.pathname + " div.content > *", function() {
-
-                });
+        
+        $body.on('click', '.btn-delete-field', function (e) {
+            e.preventDefault();
+            
+            var $btnDelete = $(this);
+            
+            if (confirm('Do you want to delete "' + $btnDelete.attr('href') + '"')) {
+                $btnDelete.parents('.form-group').remove();
             }
-        });
-        log("done forms", modal);
+        });            
+    };
+    
+    var ModalAddOrgType = {
+        init: function () {
+            var self = this;
+            
+            self.$modal = $('#modal-new-orgtype').modal({
+				show: false
+			});
+            self.$form = self.$modal.find('form');
+            self.$input = self.$form.find('input');
+            
+            self.$form.forms({
+                callback: function(resp) {
+                    log('done new org type', resp);
+                    self.hide();
+                    win.location.reload();
+                }
+            });
+        },
+        show: function () {
+            this.$input.val('');
+            this.$modal.modal('show');
+        },
+        hide: function () {
+            this.$modal.modal('hide');
+        }
+    };
 
-        $.tinybox.show(modal, {
-            overlayClose: false,
-            opacity: 0
+    function initCRUDOrgType() {
+        var $body = $(doc.body);
+        
+        $body.on('click', '.btn-edit-orgtype', function(e) {
+            e.preventDefault();
+            
+            ModalEditOrgType.show($(this).attr('href'));
         });
-        log("showed modal");
-    });
 
-}
+        $body.on('click', '.btn-delete-orgtype', function(e) {
+            e.preventDefault();
+            
+            var href = $(this).attr('href');
+            
+            log('delete', href);
+            confirmDelete(href, getFileName(href), function() {
+                log('remove ', this);
+                win.location.reload();
+            });
+        });        
+        
+        $('.btn-add-type').on('click', function(e) {
+            e.preventDefault();
+            
+            ModalAddOrgType.show();
+        });
+    }
+    
+    var ModalEditOrgType = {
+        init: function () {
+            var self = this;
+            
+            self.$modal = $('#modal-edit-orgtype').modal({
+				show: false
+			});
+            self.$modalBody = self.$modal.find('.modal-body');
+        },
+        show: function (href) {
+            var self = this,
+                $modal = self.$modal,
+                $modalBody = self.$modalBody,
+                $manageOrgTypes = $('#manage-org-types');
+            
+            $modalBody.load(href + ' #modal-edit-orgtype', function () {
+                $modalBody.find('form').forms({
+                    callback: function(resp) {
+                        log('done', resp);
+                        self.hide();
+                        $manageOrgTypes.load(win.location.pathname + ' #manage-org-types > *', function() {
+
+                        });
+                    }
+                });
+                
+                log('done forms', $modal);
+                
+                $modal.modal('show');
+                
+                log('showed modal');
+            });
+        },
+        hide: function () {            
+            this.$modal.modal('hide');
+        }
+    };
+    
+    win.initManageOrgTypes = function () {
+        ModalAddOrgType.init();
+        ModalEditOrgType.init();
+        initCRUDOrgType();
+        initManageOrgTypeModal();  
+    };
+    
+})(jQuery, window, document);

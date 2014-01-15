@@ -6,7 +6,7 @@
             this.each(function () {
                 var $modal = $(this);
                 
-                $modal.find('[data-type=form-submit]').on('click', function (e) {
+                $modal.on('click', '[data-type=form-submit]', function (e) {
                     e.preventDefault();
                     
                     $modal.find('form').submit();
