@@ -13,24 +13,27 @@ function myPrompt(id, url, title, instructions, caption, buttonName, buttonText,
     if(existing ) {
         existing.remove();
     }
-    var header = $("<header><h3></h3><a title='Close' href='#' class='Close'><span class='Hidden'>Close</span></a></header>");
-    var inner = $("<div class='ModalContent'><form method='POST'><div class='pageMessage'></div></form></div>");
+            
+    var header = $("<div class='modal-header'><button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button><h4 class='modal-title' id='promptModalLabel'>Modal title</h4></div>");
+    var inner = $("<div class='modal-body'><form method='POST'><div class='pageMessage'></div></form></div>");
     var notes = $("<p></p>");
     var table = $("<table><tbody></tbody></table>");
     var row1 = $("<tr><th><label for=''></label></th><td><input type='text' class='required'/></td></tr>");
-    var row2 = $("<tr><td class='BtnBar' colspan='2'><button class='Btn'>Save</button></td></tr>");
+    var row2 = $("<tr><td class='BtnBar' colspan='2'><button class='btn btn-primary'>Save</button></td></tr>");
     
-    myPromptModal = $("<div class='Modal'></div>");
+    myPromptModal = $("<div class='modal fade' tabindex='-1' role='dialog' aria-labelledby='promptModalLabel' aria-hidden='true'></div>");
     myPromptModal.attr("id", id);
-    myPromptModal.append(header);
-    myPromptModal.append(inner);
+    //var modalContent = myPromptModal.find(".modal-content");
+    var modalContent = myPromptModal;
+    modalContent.append(header);
+    modalContent.append(inner);
     
     notes.html(instructions);
     inner.find("form").append(notes).append(table);
     table.append(row1);
     table.append(row2);
     
-    header.find("h3").text(title);
+    header.find("h4").text(title);
     var inputId = id + "_";
     row1.find("input").addClass(inputClass);    
     row1.find("input").attr("name", buttonName).attr("id", inputId).attr("placeholder", inputPlaceholder);    
@@ -45,45 +48,29 @@ function myPrompt(id, url, title, instructions, caption, buttonName, buttonText,
         if( checkRequiredFields(form)) {
             var newName = form.find("input").val();
             if( callback(newName, form) ) {
-                closeModals();
-                myPromptModal.remove();
+                myPromptModal.modal("hide");
+                //myPromptModal.remove();
             }
         }
     });
 
     $("body").append(myPromptModal);
 
-    $.tinybox.show(myPromptModal, {
-        overlayClose: false,
-        opacity: 0
-    });
+    showModal(myPromptModal);
 }
 
 function closeMyPrompt() {
-    $.tinybox.close();
-    myPromptModal.remove();
+    flog("closeMyPrompt");        
+    myPromptModal.modal("hide");
 }
 
 function showModal(modal) {
-    $.tinybox.show(modal, {
-        overlayClose: false,
-        opacity: 0
-    });
+    flog("prompt.js: showModal: ", modal);
+    modal.modal("show");
 }
 
 function closeModals() {
-    $.tinybox.close();
-}
+    flog("prompt.js: closeModals", $('.modal').find(":visible"));
+    $('.modal').find(":visible").modal('hide');
 
-function initModal() {
-    $("body").on("click", ".Modal a.Close", function(e) {
-        log("close tinybox");
-        $.tinybox.close();
-        e.preventDefault();
-    });
-    $('a.ShowModal').tinybox({
-        overlayClose: false,
-        opacity: 0
-    });
 }
-
