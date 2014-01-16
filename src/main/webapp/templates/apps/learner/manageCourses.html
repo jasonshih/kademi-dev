@@ -6,10 +6,10 @@
         <script type="text/javascript" src="/static/js/managePublishing.js">//</script>
         <script type="text/javascript" src="/templates/themes/admin/prompt.js">//</script>
     </head>
-    <body>
+    <body class="manage-course">
         #set($currentBranch = $page.closest("branch"))
         <div class="btn-group publishing pull-right">
-            #if( $currentBranch.live )            
+            #if( $currentBranch.live )
             <a href="../manageBranches" class="islive btn btn-danger">
                 <i class="fa fa-gear"></i>
                 LIVE
@@ -23,11 +23,11 @@
                 <i class="fa fa-gear"></i>
                 Manage versions
             </a>
-            #end                
+            #end
 
             <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
-                <b>Editing version:</b> 
-                $currentBranch.name 
+                <b>Editing version:</b>
+                $currentBranch.name
                 <span class="caret"></span>
             </a>
             <ul role="menu" class="dropdown-menu branches">
@@ -42,13 +42,13 @@
                     #end
                     <a href="${b.href}" class="branch noclear">
                         $b.name
-                    </a> 
+                    </a>
 
                 </li>
                 <li class="divider"></li>
-                #end                                
+                #end
             </ul>
-        </div>        
+        </div>
 
         <div class="btn-group">
             <a target='_blank' href='${page.externalUrl}' class='btn btn-success'>
@@ -59,107 +59,129 @@
                 <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
                     <b>Change website:</b> $page.closest("website").name
                     <span class="caret"></span>
-                </a>            
+                </a>
                 <ul role="menu" class="dropdown-menu">
                     #foreach($w in $page.closest("website").parent.children)
                     <li><a href="${w.href}">$w.name</a></li>
                     <li class="divider"></li>
-                    #end                               
-                </ul>            
+                    #end
+                </ul>
             </div>
         </div>
-        
+
         <hr/>
-        
+
+        <div id="manage-course">
+	        <p class="alert alert-info">This page will allow you to create and edit the flow of modules and control how your users progress through your learning content. Simply click the + button to add a new item, drag an item up or down to reposition it or click on the down arrow in an item for more options.</p>
+        </div>
+
         <section id="manageCourse" class="MainContent">
-            <article class="Note">This page will allow you to create and edit the flow of modules and control how your users progress through your learning content. Simply click the + button to add a new item, drag an item up or down to reposition it or click on the down arrow in an item for more options.</article>
-            <section class="Control ClearFix">
-                <div class="DropdownControl publishing">
-                    <div class="DropdownWrapper">
-                        #set($currentBranch = $page.closest("branch"))
-                        <span>
-                            <b>Editing version:</b> 
-                            $currentBranch.name
-                            #if( $currentBranch.live )
-                            <strong class="islive">LIVE</strong>
-                            #else
-                            <a href="${currentBranch.href}publish" class="publish">PUBLISH</a>
-                            #end
+	        #set($program = $page.closest("program"))
+	        #set($programs = $page.closest("programs"))
+	        <div class="btn-group programs-wrapper">
+		        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+			        <span><b>Program:</b> $!program.title</span> <span class="caret"></span>
+		        </button>
+		        <ul class="dropdown-menu programs-list" role="menu">
+			        #foreach($otherProg in $programs.children.ofType.program)
+			        <li class="program clearfix">
+				        <aside class="pull-right">
+					        <a class="btn btn-xs btn-default btn-edit-program" title="Edit program" href="#"><i class="glyphicon glyphicon-edit"></i></a>
+					        <a class="btn btn-xs btn-default btn-delete-program" title="Delete program" href="$otherProg.href"><i class="glyphicon glyphicon-remove"></i></a>
+				        </aside>
+				        <a href="${otherProg.href}">$otherProg.title</a>
+			        </li>
+			        #end
+			        <li class="clearfix last">
+				        <a class="btn-add-program" role="button" href="#"><i class="fa fa-plus fa-white"></i> Add new program</a>
+			        </li>
+		        </ul>
+	        </div><br /><br />
 
-                        </span> 
-                        <a href="#" class="Control"><span class="Hidden">Change version</span></a>
-                    </div>
-                    <div class="DropdownContent Hidden">
-                        <div class="Content">
-                            <ul class="Program branches">
-                                #foreach($b in $page.closest("branch").parent.children.ofType.branch)
-                                <li>
-                                    <a href="#" class="copy" title="Copy this to a new version"><span>Copy</span></a>                                    
-                                    #if( $b.live )
-                                    <strong class="islive">LIVE</strong>
-                                    #else
-                                    <a href="#" class="hide" title="Hide this version. Can be restored from the manage versions screen"><span>Hide</span></a>
-                                    #end
-
-                                    <a href="${b.href}manageModules"  class="branch">
-                                        $b.name
-                                    </a> 
-                                </li>
-                                #end
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="DropdownControl">
-                    <div class="DropdownWrapper">
-                        <span><b>Website:</b> $page.closest("website").name</span> 
-                        <a href="#" class="Control"><span class="Hidden">Change website</span></a>
-                    </div>
-                    <div class="DropdownContent Program Hidden">
-                        <div class="Content ClearFix">
-                            <section rel="program">
-                                <ul class="Program">
-                                    #foreach($w in $page.closest("website").parent.children)
-                                    <li><a href="${w.href}manageCourses">$w.name</a></li>
-                                    #end
-                                </ul>
-                            </section>
-                        </div>
-                    </div>
-                </div>
-
-                #set($program = $page.closest("program"))
-                #set($programs = $page.closest("programs"))
-                <div class="DropdownControl NoLabel selectProgram">                    
-                    <div class="DropdownWrapper"> 
-                        <span><b>Program:</b> $!program.title</span> <a href="#" class="Control"><span class="Hidden">Change program</span></a> 
-                    </div>
-                    <div class="DropdownContent Program Hidden">
-                        <div class="Content ClearFix">
-                            <section>
-                                <ul class="Program">
-                                    #foreach($otherProg in $programs.children.ofType.program)
-                                    <li>
-                                        <a href="${otherProg.href}">$otherProg.title</a>
-                                        <aside>
-                                            <a class="EditProgram" title="Edit program" href="#"><span class="Hidden">Edit program</span></a> 
-                                            <a class="DeleteProgram" title="Delete program" href="$otherProg.href"><span class="Hidden">Delete program</span></a>
-                                        </aside>
-                                    </li> 
-                                    #end
-                                </ul>
-                                <button class="Btn Add AddProgram">ADD PROGRAM</button>
-                            </section>
-                        </div>
-                    </div>
-                </div>
-                <!--
-                #if($page.program)
-                <button id="publish" class="Btn Cancel">Publish changes</button>
-                #end
-                -->
-            </section>
             #if($page.program)
+	        <div class="row">
+		        <div class="col-md-6">
+			        <div class="panel panel-default">
+				        <div class="panel-heading">
+					        <i class="fa fa-book"></i>
+					        Courses
+					        <div class="panel-tools">
+						        <a href="#" class="btn btn-xs btn-link panel-collapse collapses">
+						        </a>
+						        <a href="#" class="btn btn-xs btn-link panel-close">
+							        <i class="fa fa-times"></i>
+						        </a>
+					        </div>
+				        </div>
+				        <div class="panel-body clearfix">
+							<ul class="todo courses-list">
+								#foreach($course in $program.children.ofType.course)
+								<li class="course clearfix">
+									<aside class="pull-right">
+										<button class="btn btn-xs btn-default btn-move-course" title="Move up or down"><i class="glyphicon glyphicon-sort"></i></button>
+										<div class="btn-group">
+											<button class="btn btn-xs btn-default btn-edit-course" role="button" href="$org.href">Edit details</button>
+											<button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">
+												<span class="caret"></span>
+											</button>
+											<ul class="dropdown-menu pull-right" role="menu">
+												<li><a href="${course.href}?format=pdf" target="_blank">Export to PDF</a></li>
+												<li><a href="${course.href}?format=text" target="_blank">Export to text</a></li>
+												<li class="divider"></li>
+												<li><a class="btn-delete-course" href="${org.href}">Delete this course</a></li>
+											</ul>
+										</div>
+									</aside>
+									<a class="todo-actions" href="$course.href"><i class="fa fa-book"></i>$course.name - $course.title</a>
+								</li>
+								#end
+							</ul>
+					        <p class="pull-right"><a href="#" role="button" class="btn btn-xs btn-default btn-add-course"><i class="fa fa-plus fa-white"></i> Add new course</a></p>
+				        </div>
+			        </div>
+		        </div>
+		        <div class="col-md-6">
+			        <div class="panel panel-default">
+				        <div class="panel-heading">
+					        <i class="fa fa-file-o"></i>
+					        Modules
+					        <div class="panel-tools">
+						        <a href="#" class="btn btn-xs btn-link panel-collapse collapses">
+						        </a>
+						        <a href="#" class="btn btn-xs btn-link panel-close">
+							        <i class="fa fa-times"></i>
+						        </a>
+					        </div>
+				        </div>
+				        <div class="panel-body">
+							<ul class="todo">
+								#set($levels = $page.closest("course").children.ofType.folder.sortByField("order").groupByField("level") )
+								<ul>
+									#foreach($level in $levels.values())
+									#foreach($module in $level)
+									<li data-author-notes="$!module.notes" id="$module.name">
+										<span>$module.name - $module.title</span>
+										<aside>
+											<a href="" class="Move" title="Move up or down"><span class="Hidden">Move up or down</span></a>
+											<a href="" class="Dialogue DialogueModule" title="Show dialogue menu"><span class="Hidden">Show dialogue menu</span></a>
+										</aside>
+									</li>
+									#end
+									<li class="Splitter">
+										<span>Level Splitter</span>
+										<aside>
+											<a href="" class="Move" title="Move up or down"><span class="Hidden">Move up or down</span></a>
+											<a href="" class="Dialogue DialogueModule" title="Show dialogue menu"><span class="Hidden">Show dialogue menu</span></a>
+										</aside>
+									</li>
+									#end
+								</ul>
+							</ul>
+				        </div>
+			        </div>
+		        </div>
+	        </div>
+
             <section class="Content">
                 <header>
                     <h3>Courses</h3>
@@ -168,14 +190,14 @@
                 <section>
                     <table>
                         <tr>
-                            <td>						
+                            <td>
                                 <div class="Course ClearFix">
-                                    <ul>                                        
+                                    <ul>
                                         #foreach($course in $program.children.ofType.course)
                                         <li>
                                             <a href="$course.href">$course.name - $course.title</a>
                                             <aside>
-                                                <a href="" class="Move" title="Move up or down">Move up or down</a> 
+                                                <a href="" class="Move" title="Move up or down">Move up or down</a>
                                                 <a href="" class="Dialogue DialogueCourse" title="Show dialogue menu">Show dialogue menu</a>
                                             </aside>
                                         </li>
@@ -185,27 +207,27 @@
                                 </div>
                             </td>
                             <td id="modulePanel">
-                                <div class="Module ClearFix">                                    
+                                <div class="Module ClearFix">
                                     #set($levels = $page.closest("course").children.ofType.folder.sortByField("order").groupByField("level") )
-                                    <ul>                                        
+                                    <ul>
                                         #foreach($level in $levels.values())
                                         #foreach($module in $level)
                                         <li data-author-notes="$!module.notes" id="$module.name">
                                             <span>$module.name - $module.title</span>
-                                            <aside> 
-                                                <a href="" class="Move" title="Move up or down"><span class="Hidden">Move up or down</span></a> 
-                                                <a href="" class="Dialogue DialogueModule" title="Show dialogue menu"><span class="Hidden">Show dialogue menu</span></a> 
-                                            </aside>                                                                                        
+                                            <aside>
+                                                <a href="" class="Move" title="Move up or down"><span class="Hidden">Move up or down</span></a>
+                                                <a href="" class="Dialogue DialogueModule" title="Show dialogue menu"><span class="Hidden">Show dialogue menu</span></a>
+                                            </aside>
                                         </li>
                                         #end
                                         <li class="Splitter">
                                             <span>Level Splitter</span>
-                                            <aside> 
-                                                <a href="" class="Move" title="Move up or down"><span class="Hidden">Move up or down</span></a> 
-                                                <a href="" class="Dialogue DialogueModule" title="Show dialogue menu"><span class="Hidden">Show dialogue menu</span></a> 
-                                            </aside>                                            
+                                            <aside>
+                                                <a href="" class="Move" title="Move up or down"><span class="Hidden">Move up or down</span></a>
+                                                <a href="" class="Dialogue DialogueModule" title="Show dialogue menu"><span class="Hidden">Show dialogue menu</span></a>
+                                            </aside>
                                         </li>
-                                        #end                                                    
+                                        #end
                                     </ul>
                                     <button class="SmallBtn Add NoText AddModule" title="Add module"><span>Add</span></button>
                                 </div>
@@ -266,7 +288,7 @@
                         <tr>
                             <th><label for="note">Course description</label></th>
                             <td><textarea name="courseDescription" id="courseDescription" placeholder="Displayed to users" maxlength="" cols="4" rows="2"></textarea></td>
-                        </tr>                        
+                        </tr>
                         <tr>
                             <td colspan="2" class="Btn">
                                 <button>Submit</button>
@@ -289,7 +311,7 @@
                         <tr>
                             <th><label for="name">Enter module code</label></th>
                             <td><input type="text" name="moduleName" id="moduleName" maxlength="30" value="" placeholder="Module code" class="required" /></td>
-                        </tr>                        
+                        </tr>
                         <tr>
                             <th><label for="name">Enter module title</label></th>
                             <td><input type="text" name="moduleTitle" id="moduleTitle" maxlength="30" value="" placeholder="Module title" class="required" /></td>
@@ -306,7 +328,7 @@
                     </table>
                 </form>
             </div>
-        </div>    
+        </div>
 
         <!--
         <div id="addesProgramNotes" class="Modal">
@@ -322,7 +344,7 @@
                     <li>Enrol one or more user groups from the manage groups page <a style="float: right" href="${page.closest('organisation').href}/groups/">Manage groups</a></li>
                 </ul>
             </div>
-        </div>            
+        </div>
         -->
 
         #set($programs = $page.closest("programs"))
