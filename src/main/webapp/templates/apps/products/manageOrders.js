@@ -1,22 +1,20 @@
-
 var lastSearch = null;
 
 jQuery(function() {
     var rangeInputs = $('.SearchBox input');
     log("init range2");
-    lastSearch = $("#dates").val();   
+    lastSearch = $("#dates").val();
     rangeInputs.daterangepicker({
         dateFormat: "dd/mm/yy",
         onClose: function() {
             log("onChange");
             doSearch();
         }
-
     });
 
     $(".exportCsv").click(function(e) {
         var a = $(e.target);
-        a.attr("href", "orders.csv?q=" + $("#dates").val());        
+        a.attr("href", "orders.csv?q=" + $("#dates").val());
     });
 
     doSearch();
@@ -24,11 +22,11 @@ jQuery(function() {
 
 function doSearch() {
     var thisSearch = $("#dates").val();
-    if( thisSearch === lastSearch) {
+    if (thisSearch === lastSearch) {
         return;
     }
     log("do search", thisSearch, lastSearch);
-    lastSearch = thisSearch;   
+    lastSearch = thisSearch;
     var newUrl = window.location.pathname + "?q=" + thisSearch;
     $.ajax({
         type: 'GET',
