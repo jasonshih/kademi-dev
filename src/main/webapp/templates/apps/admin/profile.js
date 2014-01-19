@@ -2,7 +2,7 @@ function initProfile() {
     log("initProfile");
     initOrgSearch();
     initNewMembershipForm();
-    $("form").not("div.Modal.newUser form").forms({
+    $("form").not("#modal-membership form").forms({
         callback: function(resp, form) {                        
             confirmMessage = form.closest("div").find("p.confirm");                        
             log("done", confirmMessage);
@@ -11,16 +11,18 @@ function initProfile() {
             })
         }
     });
+
     $("#myUploaded").mupload({
         url: "",
         buttonText: "Select a new photo",
         oncomplete: function(data, name, href) {
-            log("set img", jQuery(".profilePic img"));
-            jQuery(".profilePic img").attr("src", "pic");
+            log("set img", $(".profile-photo img"));
+            $(".profile-photo img").attr("src", "pic");
         }
-    });  
+    });
+
     log("init delete membersip");
-    $("div.groups").on("click", "li a", function(e) {
+    $("div.memberships-wrapper").on("click", "a.btn-delete-membership", function(e) {
         log("click", this);
         e.preventDefault();
         e.stopPropagation();
@@ -36,19 +38,18 @@ function initProfile() {
 }
 
 function initNewMembershipForm() {
-    var modal = $("div.Modal.newUser");
-    $(".AddGroup").click(function(e) {
+    var modal = $("#modal-membership");
+
+    $(".btn-add-group").click(function(e) {
         e.preventDefault();
         e.stopPropagation();
-        $.tinybox.show(modal, {
-            overlayClose: false,
-            opacity: 0
-        });            
+	    modal.modal('show');
     });
+
     modal.find("form").forms({
         callback: function(resp) {
             log("done new membership", resp);
-            $.tinybox.close();
+            modal.modal('hide');
             reloadMemberships();
         }
     });   
@@ -59,12 +60,11 @@ function reloadMemberships() {
         type: 'GET',
         url: window.location.pathname,
         success: function(data) {
-            log("success", data)
-            var $fragment = $(data).find("ul.memberships");
-            var orig = $("ul.memberships");
+            log("success", data);
+            var $fragment = $(data).find("ul#user-membership");
+            var orig = $("ul#user-membership");
             log("replace", orig, $fragment);
             orig.replaceWith($fragment);
-            
         },
         error: function(resp) {
             alert("error: " + resp);

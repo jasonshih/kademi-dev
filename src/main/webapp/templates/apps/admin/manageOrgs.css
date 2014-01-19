@@ -7,15 +7,12 @@
     width: 190px;
 }
 
-#do-upload-csv .progress,
-#do-upload-orgid-csv .progress {
-	background-color: transparent;
-}
 .allow-inserts {
     position: absolute;
     left: 200px;
     top: 5px;
 }
+
 .upload-results {
     display: none;
 }

@@ -45,6 +45,10 @@
 	clear: none;
 }
 
+.btn .progress {
+	background: none;
+}
+
 .noclear {
 	clear: none !important;
 }
