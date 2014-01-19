@@ -12,7 +12,7 @@
 	margin-left: 70px;
 }
 
-hr {
+fieldset hr {
 	margin: 5px 0 20px;
 }
 
@@ -20,18 +20,18 @@ hr {
 	padding: 0 0 0 15px;
 }
 
-.membership-list {
+.memberships-list {
 	list-style: none;
 	padding: 0;
 	margin-bottom: 0;
 }
 
-.membership-list li {
+.memberships-list li {
 	padding: 0 15px 0 0;
 	margin-bottom: 5px;
 }
 
-.membership-list li div {
+.memberships-list li div {
 	border-radius: 5px;
 	background: #f0f0f0;
 	padding: 5px;
@@ -40,32 +40,68 @@ hr {
 	line-height: 23px;
 }
 
-.membership-list li div span {
+.memberships-list li div span {
 	float: left;
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	overflow-y: hidden;
 }
 
-.membership-list li div a {
+.memberships-list li div a {
 	float: right;
 	padding-top: 3px;
 }
 
-.modal-body .membership-list li div {
+.modal-body .memberships-list li div {
 	padding: 3px 5px;
 }
 
-.modal-body .membership-list li div span {
+.modal-body .memberships-list li div span {
 	float: none;
 	display: block;
 }
 
-.modal-body .membership-list li div label {
+.modal-body .memberships-list li div label {
 	margin-bottom: 0;
 	display: block;
 }
 
 #org-search {
 	margin: -1px 15px 0;
+}
+
+.modules-wrapper {
+	padding: 0 0 0 15px;
+}
+
+.modules-list {
+	list-style: none;
+	padding: 0;
+	margin-bottom: 0;
+}
+
+.modules-list li {
+	padding: 0 15px 0 0;
+	margin-bottom: 5px;
+}
+
+.modules-list li div {
+	border-radius: 5px;
+	background: #f0f0f0;
+	padding: 5px;
+	float: left;
+	width: 100%;
+	line-height: 23px;
+}
+
+.modules-list li div label {
+	float: left;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow-y: hidden;
+	margin-bottom: 0;
+}
+
+.modules-list li div a {
+	float: right;
 }
