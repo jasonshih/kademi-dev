@@ -37,6 +37,7 @@
             afterLoginUrl: null,
             logoutSelector: ".logout",
             valiationMessageSelector: "#validationMessage",
+	        valiationMessageText: '#validationMessage',
             requiredFieldsMessage: "Please enter your credentials.",
             loginFailedMessage: "Sorry, those login details were not recognised.",
             userNameProperty: "_loginUserName",
@@ -61,7 +62,7 @@
                 var password = $("input[type=password]", container).val();
                 if( userName == null || userName.length == 0 ) {
                     $("input[type=text]", container).addClass("errorField");
-                    $(config.valiationMessageSelector, container).text(config.requiredFieldsMessage);
+                    $(config.valiationMessageText, container).text(config.requiredFieldsMessage);
                     $(config.valiationMessageSelector, container).show(200);
                     return false;
                 }
@@ -138,14 +139,14 @@ function doLogin(userName, password, config, container) {
             } else {
                 log("Login not successful", resp.status);
                 // null userurl, so login was not successful
-                $(config.valiationMessageSelector, container).text(config.loginFailedMessage);
+                $(config.valiationMessageText, container).text(config.loginFailedMessage);
                 log("null userUrl, so failed. Set validation message message", $(config.valiationMessageSelector, this), config.loginFailedMessage);
                 $(config.valiationMessageSelector, container).show(200);
             }
         //window.location = "/index.html";
         },
         error: function(resp) {
-            $(config.valiationMessageSelector).text(config.loginFailedMessage);
+            $(config.valiationMessageText).text(config.loginFailedMessage);
             log("error response from server, set message. msg output:", $(config.valiationMessageSelector, this), "config msg:", config.loginFailedMessage, "resp:", resp);
             $(config.valiationMessageSelector).show(300);
         }

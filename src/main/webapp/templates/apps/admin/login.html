@@ -17,8 +17,9 @@
 			$(".login").user({
 				afterLoginUrl: null,
 				valiationMessageSelector: "#validationMessage",
-				requiredFieldsMessage: '<i class="fa fa-remove-sign"> Please enter your credentials.',
-				loginFailedMessage: '<i class="fa fa-remove-sign"> Sorry, those login details were not recognised.',
+				valiationMessageText: "#validationMessage span",
+				requiredFieldsMessage: 'Please enter your credentials.',
+				loginFailedMessage: 'Sorry, those login details were not recognised.',
 			}); // setup login and logout
 		});
 	</script>
@@ -32,7 +33,7 @@
 		<h3>Sign in to your account</h3>
 		<p>Please enter your name and password to log in.</p>
 		<form action="" class="form-login" method="post" novalidate="novalidate">
-			<div class="errorHandler alert alert-danger no-display" id="validationMessage"></div>
+			<div class="errorHandler alert alert-danger no-display" id="validationMessage"><i class="fa fa-remove-sign"></i> <span></span></div>
 			<fieldset>
 				<div class="form-group">
 					<span class="input-icon">
