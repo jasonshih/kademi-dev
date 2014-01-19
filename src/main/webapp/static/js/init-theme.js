@@ -38,7 +38,7 @@ function initTheme() {
     initActiveNav(".initActive");
     initFontSwitching();
     initHelp();
-    initModal();
+//    initModal();
     initTabPanel();
     initRotation();
     initPlaceholder();

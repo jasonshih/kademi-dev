@@ -13,12 +13,12 @@
         <section id="manageReward" class="MainContent">
             <div class="Content">                
                 <p style="padding-bottom: 5px; text-align: right">
-                    <a class="Btn showUploadCsvModal" href="#">Upload CSV</a>
-                    <a class="Btn" href="points.csv">Export to CSV</a>
-                    <a class="Btn removeUsers" style="margin-left: 15px">Remove</a>
+                    <a class="btn btn-primary btn-sm" href="#" data-toggle="modal" data-target="#modalUploadCsv">Upload CSV</a>
+                    <a class="btn btn-primary btn-sm" href="points.csv">Export to CSV</a>
+                    <a class="btn btn-primary btn-sm removeUsers" style="margin-left: 15px">Remove</a>
                 </p>
-                <article class="Note" style="clear: both;">Showing the most recent points awarded</article>                
-                <table class="Summary">
+                <div class="alert alert-info">Showing the most recent points awarded</div>               
+                <table class="table table-bordered table-striped table-hover">
                     <thead>
                         <tr>
                             <th>Reward</th>
@@ -26,13 +26,19 @@
                             <th>Issued date/time</th>
                             <th>No. Points</th>
                             <th>Reason</th>
-                            <th><input type="checkbox" name="toRemoveId" class="users selectAll"/></th>
+                            <th class="center">
+                                <div class="checkbox-table">
+                                    <label>
+                                        <input type="checkbox" name="toRemoveId" class="grey users selectAll"/>
+                                    </label>
+                                </div>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         #if( $page.recentPoints.isEmpty() )
                         <tr>
-                            <td colspan="5">There are no recent results</td>
+                            <td colspan="6">There are no recent results</td>
                         </tr>
                         #else
                         #foreach($p in $page.recentPoints)
@@ -42,7 +48,13 @@
                             <td>$formatter.formatDateLong( $p.issuedDate )</td>
                             <td>$p.numPoints</td>
                             <td>$p.reason</td>
-                            <td><input type="checkbox" name="toRemoveId" value="$p.id"/></td>
+                            <td class="center">
+                                <div class="checkbox-table">
+                                    <label>
+                                      <input type="checkbox" name="toRemoveId" value="$p.id"/>  
+                                    </label>
+                                </div>
+                            </td>
                         </tr>
                         #end
                         #end
@@ -59,53 +71,49 @@
                 </div>
             </div>
         </div>
-
-        <div id="modalUploadCsv" class="Modal">
-            <header>
-                <h3>Upload Points CSV</h3>
-                <a class="Close" href="#" title="Close"><span class="Hidden">Close</span></a>
-            </header>
-            <div class="ModalContent">
-                <div class='upload'>
-                    <div class="input uploadCsv" id='doUploadCsv'></div>
-                    <br/>
-                    <div class="results" style="display: none">
-                        <strong>Num inserted</strong>
-                        <span class="numInserted">-</span>
-
-                        <strong>Num updated:</strong>
-                        <span class="numUpdated">-</span>
-                        <strong>Unmatched rows:</strong>
-                        <span class="numUnmatched">-</span>
-                        <br/>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>                
+        <div id="modalUploadCsv" class="modal fade">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Upload Points CSV</h4>
             </div>
-        </div>          
-
+            <div class="modal-body">
+                <div class="row upload">
+                    <div class="col-sm-12">
+                        <div class="btn btn-primary btn-sm input uploadCsv" id="doUploadCsv"></div>
+                        <br/>
+                        <br/>
+                        <div class="results" style="display: none">
+                            <strong>Num inserted:</strong>
+                            <span class="numInserted">-</span>
+                            <strong>Num updated:</strong>
+                            <span class="numUpdated">-</span>
+                            <strong>Unmatched rows:</strong>
+                            <span class="numUnmatched">-</span>
+                            <br/>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+            </div>
+        </div>
         <script type="text/javascript" src="/static/js/jquery.fileupload.js"></script>
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
-
         <script type="text/javascript">
             jQuery(function() {
-                $(".showUploadCsvModal").click(function() {
-                    $.tinybox.show($("#modalUploadCsv"), {
-                        overlayClose: false,
-                        opacity: 0
-                    });
-                });
                 initSelectAll();
                 $(".removeUsers").click(function(e) {
                     var node = $(e.target);
@@ -172,7 +180,6 @@
                 });
                 unmatchedTable.show();
             }
-
         </script>
     </body>
 </html>

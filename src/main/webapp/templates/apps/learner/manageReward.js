@@ -311,15 +311,6 @@ function initSortableButton() {
     });
 }
 
-function showAddReward(source) {
-    var modal = $(source).parent().find(".Modal");
-    $.tinybox.show(modal, {
-        overlayClose: false,
-        opacity: 0
-    });
-    return false;
-}
-
 function initEntryFormEditing() {
     var chks = $(".entryFormItem input[type=checkbox]");
 
