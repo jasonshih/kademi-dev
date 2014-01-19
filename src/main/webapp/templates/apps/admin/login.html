@@ -1,36 +1,63 @@
 <html>
-    <head>
-        <title>Administration</title>
-        <script type="text/javascript" src="/static/js/jquery.user.js">//</script>
-        <link href="admin-login.css" rel="stylesheet" type="text/css" />
-        <link rel="template" href="plain" />
-        <script type="text/javascript">
-            jQuery(function($) {
-                $(".Login").user({
-                    afterLoginUrl: null
-                }); // setup login and logout
-            });
-        </script>
-        
-    </head>
-    <body class="Login">        
-        <section class="LoginPanel">
-            <h1 class="Logo"><img src="/templates/themes/admin/images/logo_login.png" width="177" height="65" alt="fuseLMS" /></h1>
-            <form action="" name="frmLogin" method="post">
-                <p id="validationMessage" style="display: none"></p>
-                <table>
-                    <tr>
-                        <td colspan="2"><input type="text" name="email" value="" placeholder="Enter your email address here" /></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2"><input type="password" name="password" value="" placeholder="Enter your password here" /></td>
-                    </tr>
-                    <tr>
-                        <td><a href="/password-reset">Forgotten your password?</a></td>
-                        <td><button><span>Login</span></button></td>
-                    </tr>
-                </table>
-            </form>
-        </section>
-    </body>
+<head>
+	<title>Administration</title>
+	<link media="screen" rel="stylesheet" href="/theme/assets/plugins/bootstrap/css/bootstrap.min.css" />
+	<link href="/theme/assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+	<link href="/theme/assets/fonts/style.css" rel="stylesheet" />
+	<link href="/theme/assets/css/main.css" rel="stylesheet" />
+	<link href="/theme/assets/css/main-responsive.css" rel="stylesheet" />
+	<link href="/theme/assets/plugins/iCheck/skins/all.css" rel="stylesheet" />
+	<link href="/theme/assets/plugins/bootstrap-colorpalette/css/bootstrap-colorpalette.css" rel="stylesheet" />
+	<link href="/theme/assets/plugins/perfect-scrollbar/src/perfect-scrollbar.css" rel="stylesheet" />
+	<link id="skin_color" href="/theme/assets/css/theme_light.css" rel="stylesheet" />
+	<script type="text/javascript" src="/static/js/jquery.user.js">//</script>
+	<link rel="template" href="plain" />
+	<script type="text/javascript">
+		jQuery(function ($) {
+			$(".login").user({
+				afterLoginUrl: null,
+				valiationMessageSelector: "#validationMessage",
+				requiredFieldsMessage: '<i class="fa fa-remove-sign"> Please enter your credentials.',
+				loginFailedMessage: '<i class="fa fa-remove-sign"> Sorry, those login details were not recognised.',
+			}); // setup login and logout
+		});
+	</script>
+
+</head>
+<body class="login example2">
+<div class="main-login col-sm-4 col-sm-offset-4">
+	<div class="logo"><img src="/templates/themes/admin/images/logo_login.png" width="177" height="65" alt="fuseLMS" />
+	</div>
+	<div class="box-login">
+		<h3>Sign in to your account</h3>
+		<p>Please enter your name and password to log in.</p>
+		<form action="" class="form-login" method="post" novalidate="novalidate">
+			<div class="errorHandler alert alert-danger no-display" id="validationMessage"></div>
+			<fieldset>
+				<div class="form-group">
+					<span class="input-icon">
+						<input type="text" placeholder="Username" name="email" class="form-control" />
+						<i class="fa fa-user"></i>
+					</span>
+				</div>
+				<div class="form-group form-actions">
+					<span class="input-icon">
+						<input type="password" placeholder="Password" name="password" class="form-control password" />
+						<i class="fa fa-lock"></i>
+						<a href="/password-reset" class="forgot">I forgot my password</a>
+					</span>
+				</div>
+				<div class="form-actions">
+					<button class="btn btn-bricky pull-right" type="submit">
+						Login <i class="fa fa-arrow-circle-right"></i>
+					</button>
+				</div>
+			</fieldset>
+		</form>
+	</div>
+	<div class="copyright">
+		2013 &copy; FuseLMS.
+	</div>
+</div>
+</body>
 </html>
