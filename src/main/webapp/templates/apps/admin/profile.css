@@ -1,107 +1,108 @@
 .btn-upload-photo {
-	width: 160px;
+    width: 160px;
+    cursor: pointer;
 }
 
 .profile-photo img {
-	width: 62px;
-	height: 62px;
-	float: left;
+    width: 62px;
+    height: 62px;
+    float: left;
 }
 
 .profile-photo img + div {
-	margin-left: 70px;
+    margin-left: 70px;
 }
 
 fieldset hr {
-	margin: 5px 0 20px;
+    margin: 5px 0 20px;
 }
 
 .memberships-wrapper {
-	padding: 0 0 0 15px;
+    padding: 0 0 0 15px;
 }
 
 .memberships-list {
-	list-style: none;
-	padding: 0;
-	margin-bottom: 0;
+    list-style: none;
+    padding: 0;
+    margin-bottom: 0;
 }
 
 .memberships-list li {
-	padding: 0 15px 0 0;
-	margin-bottom: 5px;
+    padding: 0 15px 0 0;
+    margin-bottom: 5px;
 }
 
 .memberships-list li div {
-	border-radius: 5px;
-	background: #f0f0f0;
-	padding: 5px;
-	float: left;
-	width: 100%;
-	line-height: 23px;
+    border-radius: 5px;
+    background: #f0f0f0;
+    padding: 5px;
+    float: left;
+    width: 100%;
+    line-height: 23px;
 }
 
 .memberships-list li div span {
-	float: left;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	overflow-y: hidden;
+    float: left;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow-y: hidden;
 }
 
 .memberships-list li div a {
-	float: right;
-	padding-top: 3px;
+    float: right;
+    padding-top: 3px;
 }
 
 .modal-body .memberships-list li div {
-	padding: 3px 5px;
+    padding: 3px 5px;
 }
 
 .modal-body .memberships-list li div span {
-	float: none;
-	display: block;
+    float: none;
+    display: block;
 }
 
 .modal-body .memberships-list li div label {
-	margin-bottom: 0;
-	display: block;
+    margin-bottom: 0;
+    display: block;
 }
 
 #org-search {
-	margin: -1px 15px 0;
+    margin: -1px 15px 0;
 }
 
 .modules-wrapper {
-	padding: 0 0 0 15px;
+    padding: 0 0 0 15px;
 }
 
 .modules-list {
-	list-style: none;
-	padding: 0;
-	margin-bottom: 0;
+    list-style: none;
+    padding: 0;
+    margin-bottom: 0;
 }
 
 .modules-list li {
-	padding: 0 15px 0 0;
-	margin-bottom: 5px;
+    padding: 0 15px 0 0;
+    margin-bottom: 5px;
 }
 
 .modules-list li div {
-	border-radius: 5px;
-	background: #f0f0f0;
-	padding: 5px;
-	float: left;
-	width: 100%;
-	line-height: 23px;
+    border-radius: 5px;
+    background: #f0f0f0;
+    padding: 5px;
+    float: left;
+    width: 100%;
+    line-height: 23px;
 }
 
 .modules-list li div label {
-	float: left;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	overflow-y: hidden;
-	margin-bottom: 0;
+    float: left;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow-y: hidden;
+    margin-bottom: 0;
 }
 
 .modules-list li div a {
-	float: right;
+    float: right;
 }
