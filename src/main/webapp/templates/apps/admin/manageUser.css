@@ -12,10 +12,6 @@
 	width: 200px;
 }
 
-#table-users_wrapper > div:first-child {
-	display: none;
-}
-
 .upload {
 	position: relative;
 }
