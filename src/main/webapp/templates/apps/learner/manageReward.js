@@ -48,10 +48,6 @@ function initRestrictions() {
     $(".addRestriction").click(function(e) {
         e.preventDefault();
         var modal = $("#modalAddRestriction");
-        $.tinybox.show(modal, {
-            overlayClose: false,
-            opacity: 0
-        });
     });
 
     var form = $(".addRestrictionForm");
