@@ -37,7 +37,26 @@
                     </form>
                 </div>
             </header>
-            <table class="table table-striped table-hover table-full-width Content">
+<!-- 			<div class="Content"> -->
+<!-- 				<header> -->
+<!-- 					<a href="" class="Status" rel="asc">Status</a> <a href="" -->
+<!-- 						class="Title" rel="asc">Title</a> -->
+<!-- 				</header> -->
+<!-- 				<ul> -->
+<!-- 					#foreach($r in $page.children.ofType.manageReward) -->
+<!-- 					<li> -->
+<!-- 						<div class="$r.StatusClass"> -->
+<!-- 							<a href="$r.name">$r.statusClass</a> -->
+<!-- 						</div> <a href="$r.name">$r.title</a> -->
+<!-- 						<aside> -->
+<!-- 							<a href="entries-${r.name}.html" class="entries">$r.numEntries entries</a>  -->
+<!-- 							<a href="$r.name" title="Edit" class="Edit EditReward"><span class="hidden">Edit</span></a> -->
+<!-- 							<a href="$r.name" title="Delete" class="Delete DeleteReward"><span class="hidden">Delete</span></a> -->
+<!-- 						</aside> -->
+<!-- 					</li> #end -->
+<!-- 				</ul> -->
+<!-- 			</div> -->
+			<table class="Content table table-striped table-hover table-full-width">
                 <colgroup>
                     <col style="width: 15%"/>
                     <col style="width: 40%"/>
@@ -57,15 +76,35 @@
                     <tr>
                         <td>
                             <div class="$r.StatusClass">
-                                <a href="$r.name">$r.statusClass</a>
+                            	#if($r.StatusClass == "Active")
+                            		#set($status = "success")
+								#elseif($r.StatusClass == "Expired")
+									#set($status = "danger")
+								#elseif($r.StatusClass == "Fullfilled")
+									#set($status = "warning")
+								#else
+								    #set($status = "default")
+								#end
+								<div>
+									<div class="btn-group">
+										<a class="btn dropdown-toggle btn-sm label label-sm label-$status" data-toggle="dropdown" href="#">
+											$r.statusClass <span class="caret"></span>
+										</a>
+										<ul role="menu" class="dropdown-menu pull-right">
+											<li class="Dialog" role="presentation">
+												
+											</li>
+										</ul>
+									</div>
+								</div>
                             </div>
                         </td>
                         <td><a href="$r.name">$r.title</a></td>
                         <td class="center"><a href="entries-${r.name}.html" class="entries">$r.numEntries entries</a></td>
                         <td class="center">
                             <div class="visible-md visible-lg hidden-sm hidden-xs">
-                                <a href="$r.name" title="Edit" class="Edit EditReward"><i class="fa fa-edit"></i>&nbsp;Edit</a>
-                                <a href="$r.name" title="Delete" class="Delete DeleteReward"><i class="fa fa-times"></i>&nbsp;Delete</a>
+                            	<a href="$r.name" class="btn btn-xs btn-teal tooltips Edit EditReward" data-placement="top" data-original-title="Edit"><i class="fa fa-edit"></i></a>
+                            	<a href="$r.name" class="btn btn-xs btn-bricky tooltips Delete DeleteReward" data-placement="top" data-original-title="Remove"><i class="fa fa-times fa fa-white"></i></a>
                             </div>
                         </td>
                     </tr>
@@ -73,12 +112,12 @@
                 </tbody>
             </table>
         </section>
-        <div class="Hidden">
+        <div class="hide">
             <div id="rewardForum">
-                <div class="Dialog Hidden">
-                    <a href="" class="ActiveReward">Active</a>
-                    <a href="" class="ExpiredReward">Expired</a>
-                    <a href="" class="FulfilledReward">Fullfilled</a>
+                <div class="Dialog hide">
+                	<a role="menuitem" tabindex="-1" href="#">Active</a>
+					<a role="menuitem" tabindex="-1" href="#">Expired</a>
+					<a role="menuitem" tabindex="-1" href="#">Fullfilled</a>
                 </div>
             </div>
         </div>

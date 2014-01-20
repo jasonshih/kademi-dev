@@ -9,7 +9,7 @@
     <body>
         <section id="manageReward" class="MainContent">
             <header class="clearfix">
-                <h4 class="col-sm-5">$page.title Entries</h4>
+                <h4 class="col-sm-5">$page.title</h4>
                 <div class="pull-right">
                     <button class="btn btn-primary btn-sm removeUsers">Remove Selected</button>
                     <a href="$page.reward.name/photos.html" class="export btn btn-primary btn-sm" style="margin-left: 10px">Photo entries</a>
@@ -90,7 +90,7 @@
                         }
                     },
                     error: function(resp) {
-                        alert("err");
+                        alert("An error occurred removing entries. You might not have permission to do this");
                     }
                 });      
             }            

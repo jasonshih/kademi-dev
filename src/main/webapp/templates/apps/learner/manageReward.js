@@ -201,23 +201,38 @@ function initController() {
 }
 
 function initDialog() {
-    var _tempDialog = $("#rewardForum").html();
-    $("#manageReward .Content ul li div").append(_tempDialog);
+    var _tempDialog = $("#rewardForum .Dialog").html();
+    $("#manageReward .Content .dropdown-menu li").append(_tempDialog);
 
     // Bind event for ActiveReward button
-    $("body").on("click", "div.Dialog a", function(e) {
+    $("body").on("click", "li.Dialog a", function(e) {
         e.preventDefault();
-
+        
         var _this = $(this);
         var _status = _this.html();
 
-        _this
-                .parent()
-                .addClass("Hidden")
-                .parent()
-                .attr("class", _status)
-                .find("> a")
-                .html(_status);
+        // Default status is 'Draft'
+        var _class = "default";
+        if (_status === "Active") {
+        	_class = "success";
+        } else if (_status === "Expired") {
+        	_class = "danger";
+        } else if (_status === "Fullfilled") {
+        	_class = "warning";
+        }
+        
+        var _curStatus = _this
+				                .parent()
+				                .parent()
+				                .parent()
+				                .find("> a");
+        
+        _curStatus
+        			.removeClass("label-success label-danger label-warning label-default")
+        			.addClass("label-" + _class);
+        _curStatus
+        			.html(_status)
+        			.append(" <span class=\"caret\"></span>");
     });
 }
 
