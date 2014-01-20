@@ -1,3 +1,19 @@
+.modal-lg {
+	width: 1000px;
+}
+
+.modal-md {
+	width: 800px;
+}
+
+.modal-sm {
+	width: 600px;
+}
+
+.modal-xs {
+	width: 400px;
+}
+
 .video-intro .panel-body {
 	text-align: center
 }
@@ -24,6 +40,10 @@
 
 .clearfix {
 	*zoom: 1
+}
+
+fieldset hr {
+	margin: 5px 0 20px;
 }
 
 .clearfix:after {

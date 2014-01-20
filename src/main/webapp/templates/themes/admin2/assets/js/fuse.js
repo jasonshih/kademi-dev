@@ -1,29 +1,37 @@
 (function (Bob, $, win, doc, undefined) {
 	Bob.onDOMReady(function () {
-		var $body = $(doc.body);
-        
-        $('.modal').exist(function () {
-            this.each(function () {
-                var $modal = $(this);
-                
-                $modal.on('click', '[data-type=form-submit]', function (e) {
-                    e.preventDefault();
-                    
-                    $modal.find('form').submit();
-                });
-            });
-        });
+		var body = $(doc.body);
 
-		$('.modal.modal-upload').exist(function () {
+		$('.modal').exist(function () {
 			this.each(function () {
-				this.setAttribute('data-width', 800);
+				var modal = $(this);
+
+				modal.on('click', '[data-type=form-submit]', function (e) {
+					e.preventDefault();
+
+					modal.find('form').submit();
+				});
+
+				var dataWidth = 0;
+				if (modal.hasClass('modal-lg')) {
+					dataWidth = 1000;
+				} else if (modal.hasClass('modal-md')) {
+					dataWidth = 800;
+				} else if (modal.hasClass('modal-sm')) {
+					dataWidth = 600;
+				} else if (modal.hasClass('modal-xs')) {
+					dataWidth = 400;
+				}
+
+				modal.attr('data-witdh', dataWidth)
 			});
 		});
 
-		$('.modal.modal-edit').exist(function () {
-			this.each(function () {
-				this.setAttribute('data-edit', 400);
-			});
+		// Clearer
+		body.on('click', '[data-type=clearer]', function (e) {
+			e.preventDefault();
+
+			$($(this).data('target')).val('');
 		});
 
 		$('.table.table-data').exist(function () {
