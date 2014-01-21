@@ -48,17 +48,18 @@
 
 		$('.table.table-data').exist(function () {
 			this.each(function () {
-				var $tableData = $(this),
-					col_length = $tableData.find('thead').find('th').length;
+				var dataTable = $(this);
+				var cols = dataTable.find('colgroup col');
+				var colLength = cols.length;
 
 				var aoColumnsSetting = [];
-				for (var i = 0; i < col_length; i++) {
+				cols.each(function (i) {
 					aoColumnsSetting.push({
-						"bSortable": i < col_length - 1
+						"bSortable": i < colLength - 1 && $(this).attr('data-sort') !== 'false'
 					});
-				}
+				});
 
-				$tableData.dataTable({
+				dataTable.dataTable({
 					"aoColumnDefs": [{
 						"aTargets": [0]
 					}],
@@ -73,7 +74,7 @@
 					"aaSorting": [
 						[1, 'asc']
 					],
-					"aoColumns":aoColumnsSetting,
+					"aoColumns": aoColumnsSetting,
 					"aLengthMenu": [
 						[5, 10, 15, 20, -1],
 						[5, 10, 15, 20, "All"]
@@ -81,7 +82,7 @@
 					"iDisplayLength": 10
 				});
 
-				var $wrapper = $tableData.parent();
+				var $wrapper = dataTable.parent();
 
 				$wrapper.find('.dataTables_filter input').addClass("form-control input-sm").attr("placeholder", "Search");
 				$wrapper.find('.dataTables_length select').addClass("m-wrap small");

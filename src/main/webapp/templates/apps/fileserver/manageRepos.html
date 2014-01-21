@@ -5,7 +5,9 @@
         <script type="text/javascript" src="manageRepos.js">//</script>
     </head>
     <body class="manage-repos">
-        <a href="#" class="btn btn-sm btn-primary btn-add-repo"><i class="fa fa-plus fa-white"></i> Add new repository</a>
+        <p>
+	        <a href="#" class="btn btn-sm btn-primary btn-add-repo"><i class="fa fa-plus fa-white"></i> Add new repository</a>
+        </p>
         
         <div class="panel panel-default">
 	        <div class="panel-heading">
@@ -20,23 +22,43 @@
 		        </div>
 	        </div>
 	        <div class="panel-body">
-                <table id="table-repo">
+                <table id="table-repo" class="table table-striped table-hover table-bordered table-data">
+	                <colgroup>
+		                <col style="width: 60px" data-sort="false" />
+		                <col />
+		                <col />
+		                <col style="width: 100px" />
+		                <col style="width: 220px" />
+	                </colgroup>
+	                <thead>
+		                <tr>
+			                <th>Status</th>
+			                <th>Name</th>
+			                <th>Current branch</th>
+			                <th>Public</th>
+			                <th>Action</th>
+		                </tr>
+	                </thead>
                     <tbody>
                         #foreach($w in $page.repositories)
                             <tr>
+	                            <td class="icon">
+		                            <i class="clip-checkmark-circle-2"></i>
+	                            </td>
                                 <td>
-                                    <h5>$w.name</h5>
-                                    <p>
-                                        Current branch: $w.liveBranch, Public: 
-                                        <span class="repoPublicAccess">$w.publicContent</span> 
-                                        <a href="../repositories/$w.name" class="togglePublic togglePublic-$w.publicContent">(change)</a> 
-                                    </p>
+	                                <h5>$w.name</h5>
                                 </td>
-                                <th>
-                                    <a href="../repositories/$w.name" class="btn btn-blue" target="_blank">View</a> 
-                                    <a href="../repositories/$w.name/$w.liveBranch/commits" target="_blank" class="btn btn-blue">History</a> 
+	                            <td>$w.liveBranch</td>
+	                            <td class="public">
+		                            <div data-off="danger" data-on="success" class="make-switch switch-small btn-switch-public" data-link="../repositories/$w.nam">
+			                            $formatter.checkbox($w.name, $w.publicContent)
+		                            </div>
+                                </td>
+                                <td>
+                                    <a href="../repositories/$w.name" class="btn btn-info" target="_blank">View</a>
+                                    <a href="../repositories/$w.name/$w.liveBranch/commits" target="_blank" class="btn btn-info">History</a>
                                     <a class="btn btn-orange btn-delete-repo" href="../repositories/$w.name">Delete</a>
-                                </th>                                        
+                                </td>
                             </tr>
                         #end
                     </tbody>
@@ -50,9 +72,9 @@
 		        <h4 class="modal-title">Add new repository</h4>
 	        </div>
 	        <div class="modal-body">
-                <form method="POST" action=".">
+                <form method="POST" action="." class="form-horizontal">
                     <div class="form-group">
-                        <label for="newName" class="col-md-4 control-label"></label>
+                        <label for="newName" class="col-md-4 control-label">Repository name</label>
                         <div class="col-md-8">
                             <input type="text" class="required simpleChars form-control" placeholder="Enter a simple name, eg MyFiles" id="newName" name="newName"/>
                         </div>
@@ -67,14 +89,7 @@
         
         <script type="text/javascript">
             jQuery(function() {
-                initManageRepositories();
-                $("form.addOrg").forms({
-                    callback: function(resp) {
-                        log("done", resp);
-                        window.location.reload();
-                    }
-                });                
-                
+                initManageRepos();
             });
         </script>
     </body>

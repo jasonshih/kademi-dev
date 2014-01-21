@@ -1,46 +1,56 @@
-function initManageRepositories() {
-    log("initManageRepositories");
-    $("form.addRepo").forms({
+function initManageRepos() {
+    log('initManageRepositories');
+
+	var modal = $('#modal-new-repo');
+
+	$('.btn-add-repo').on('click', function (e) {
+		e.preventDefault();
+
+		modal.modal('show');
+	});
+
+	modal.find('form').forms({
         callback: function(resp) {
             window.location.reload();
-            $.tinybox.close();
+	        modal.modal('hide');
         }
     });
     
-    $("a.DeleteRepo").click(function(e) {
+    $('a.btn-delete-repo').click(function(e) {
         e.preventDefault();
         var node = $(e.target);
-        var href = node.attr("href");
+        var href = node.attr('href');
         var name = getFileName(href);
         confirmDelete(href, name, function() {
-            alert("Repository deleted");
+            alert('Repository deleted');
             window.location.reload();
         });
     });
-    
-    $("a.togglePublic").click(function(e) {
-        e.preventDefault();
-        var node = $(e.target);
-        if( node.hasClass("togglePublic-true")) {
-            setRepoPublicAccess(node, false);
-        } else {
-            setRepoPublicAccess(node, true);
-        }
-    });
+
+	$('td.public label').on('click', function(e) {
+		e.preventDefault();
+
+		var label = $(this);
+		var wrapper = label.parents('.make-switch');
+
+		setTimeout(function () {
+			var isChecked = wrapper.find('input:checked').val() === 'true';
+
+			setRepoPublicAccess(wrapper, isChecked);
+		}, 0);
+	});
 }
 
-function setRepoPublicAccess(link, isPublic) {
+function setRepoPublicAccess(wrapper, isPublic) {
     $.ajax({
         type: 'POST',
         data: {isPublic: isPublic},
-        url: link.attr("href"),
+        url: wrapper.attr('data-href'),
         success: function(data) {
-            link.parent().find(".repoPublicAccess").text(isPublic);
-            link.addClass("togglePublic-" + isPublic);
-            link.removeClass("togglePublic-" + !isPublic);
         },
         error: function(resp) {
-            alert("Sorry, couldnt update public access: " +resp);            
+	        wrapper.find('label').trigger('click');
+            alert('Sorry, couldnt update public access: ' +resp);
         }
     });       
 }
