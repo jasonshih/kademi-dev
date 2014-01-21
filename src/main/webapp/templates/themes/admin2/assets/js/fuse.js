@@ -1,6 +1,18 @@
 (function (Bob, $, win, doc, undefined) {
 	Bob.onDOMReady(function () {
 		var body = $(doc.body);
+        
+        $('.chk-all').exist(function () {
+            this.each(function () {
+                var chkAll = $(this);
+                var table = chkAll.parents('table');
+                var chks = table.find('tbody input:checkbox');
+                
+                chkAll.on('click', function () {
+                    chks.attr('checked', chkAll.is(':checked'));
+                });
+            });
+        });
 
 		$('.modal').exist(function () {
 			this.each(function () {
