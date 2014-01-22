@@ -3,57 +3,81 @@
         <link href="manageCertificate.css" rel="stylesheet" type="text/css" />
        	<script type="text/javascript" src="manageCertificate.js">//</script>
     </head>
-    <body>
-        <!-- Content goes here - NO HEADER/BANNER/MENU! -->
-        <section id="manageCertificate" class="MainContent">
-            <header class="Controller">
-                <div class="Left">
-                    <a href="#" onclick="return showAddCert(this)" class="SmallBtn Add">Add New Certificate</a>
-                    <div class="Modal">
-                        <header>
-                            <h3>Add new certificate</h3>
-                            <a class="Close" href="#" title="Close"><span class="Hidden">Close</span></a>
-                        </header>
+    <body class="manage-certificates">
+        <p>
+            <a href="#" class="btn btn-sm btn-primary btn-add-cert"><i class="fa fa-plus fa-white"></i> Add new certificate</a>
+        </p>
+        
+        <div class="panel panel-default">
+	        <div class="panel-heading">
+		        <i class="fa clip-folder"></i>
+		        Certifications
+		        <div class="panel-tools">
+			        <a href="#" class="btn btn-xs btn-link panel-collapse collapses">
+			        </a>
+			        <a href="#" class="btn btn-xs btn-link panel-close">
+				        <i class="fa fa-times"></i>
+			        </a>
+		        </div>
+	        </div>
+	        <div class="panel-body">
+                <table class="table table-bordered table-striped table-hover table-data">
+                    <colgroup>
+                        <col />
+                        <col style="width: 120px;" />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        #foreach($cert in $page.children)
+                            <tr>
+                                <td>$cert.title</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a class="btn btn-xs btn-info" title="Edit" href="$cert.name">Edit details</a>
+                                        <button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu pull-right" role="menu">
+                                            <li><a class="btn-delete-cert" href="$cert.name" data-name="$cert.title">Delete</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        #end
+                    </tbody>                        
+                </table>
+	        </div>
+        </div>
 
-                        <div class="ModalContent">
-                            <form action="." method="POST" class="addCert">
-                                <table>
-                                    <tr>
-                                        <th><label for="newTitle">Enter certificate name</label></th>
-                                        <td><input type="text" name="newTitle" id="newTitle" placeholder="Certificate name" class="required" /></td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2" class="BtnBar">
-                                            <button class="Btn">Save changes</button>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </form>
-                        </div>                    
+        <div id="modal-add-cert" class="modal modal-xs fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                <h4 class="modal-title">Add new certificate</h4>
+            </div>
+            <div class="modal-body">
+                <form action="." method="POST" class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-md-4" for="newTitle">Certificate name</label>
+                        <div class="col-md-8">
+                            <input type="text" name="newTitle" id="newTitle" placeholder="Certificate name" class="required form-control" />
+                        </div>
                     </div>
-                </div>                              
-            </header>
-            <div class="Content ClearFix">
-                <div class="Certificate">
-                    <div class="CertificateList">
-                        <ul>
-                            #foreach($cert in $page.children)
-                            <li>
-                                <span class="title">$cert.title</span>
-                                <aside>
-                                    <a class="Edit EditCert" title="Edit" href="$cert.name"><span class="Hidden">Edit</span></a>
-                                    <a class="Delete DeleteCert" title="Delete" href="$cert.name"><span class="Hidden">Delete</span></a>
-                                </aside>
-                            </li>
-                            #end
-                        </ul>
-                    </div>
-                </div>                
-            </div>	
-        </section>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+                <button class="btn btn-primary" data-type="form-submit" type="button">Save</button>
+            </div>
+        </div>
+        
         <script type="text/javascript">
-            jQuery(function() {
-                initManageCertificate();
+            Bob.onDOMReady(function() {
+                initManageCertificates();
             });
         </script>
     </body>
