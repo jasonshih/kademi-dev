@@ -1,14 +1,13 @@
 function initManageCertificates() {
     log('initManageCertificate: ');
-    initPreviewSize();
     initCertificateController();
     initModalCertificate();
 }
 
-function initManageCertificatePage(certId) {
+function initManageCertificateDetails(certId) {
     log('initManageCertificate: ', certId);
     themeCssFiles.push('/templates/apps/learner/certificate.dyn.css?imageHash=' + certId);
-    edify($('#manageCertificate'), 
+    edify($('.manage-certificate-details'), 
         function(resp) {
             log('done', resp);
             alert('Saved ok');
@@ -24,7 +23,7 @@ function initManageCertificatePage(certId) {
         }
     );
                 
-    $('#uploadBtn').mupload({
+    $('#btn-upload').mupload({
         url: '',
         useJsonPut: false,
         buttonText: 'New image',
@@ -33,22 +32,6 @@ function initManageCertificatePage(certId) {
         }
     }); 
     
-}
-
-function initPreviewSize() {
-    var adjustSize = function() {
-        var $contentPreview = $('.ContentPreview'),
-        width = $contentPreview.width();
-			
-        $contentPreview.css('height', width	* 841 / 595);
-    }
-	
-    adjustSize();
-	
-    $(window).resize(function() {
-        adjustSize();
-    });
-    	
 }
 
 function initModalCertificate() {
@@ -81,22 +64,4 @@ function initCertificateController() {
             window.location.reload();
         });
     });
-}
-
-function showAddCert(source) {
-    var modal = $(source).parent().find('.Modal');
-    $.tinybox.show(modal, {
-        overlayClose: false,
-        opacity: 0
-    }); 
-    return false;
-}
-
-function showCreateMissingCerts(source) {
-    var modal = $(source).parent().find('.Modal');
-    $.tinybox.show(modal, {
-        overlayClose: false,
-        opacity: 0
-    }); 
-    return false;
 }

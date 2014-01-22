@@ -1,0 +1,42 @@
+.manage-certificate-details form .form-group {
+    width: 600px;
+}
+
+.manage-certificate-details form .form-group.editor-wrapper {
+    width: auto;
+}
+
+.manage-certificate-details form .form-group .col-md-8 {
+    position: relative;
+}
+
+.manage-certificate-details form .form-group .col-md-8 > span {
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    margin: -9px 0 0 0;
+}
+
+#btn-upload {
+    width: 150px;
+    height: 34px;
+}
+
+#btn-upload .muploadBtn {
+    background: none;
+    border: 0;
+    box-shadow: none;
+    text-shadow: none;
+    padding: 0;
+    font-size: inherit;
+    line-height: inherit;
+}
+
+#btn-upload .muploadBtn span {
+    font-size: inherit;
+    line-height: inherit;
+}
+
+#btn-upload .fileupload-buttonbar {
+    width: auto;
+}
