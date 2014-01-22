@@ -2,87 +2,70 @@
     <head>
         <title>Commit History</title>
         <link href="manageRepos.css" rel="stylesheet" type="text/css" />
-        <script type="text/javascript" src="manageRepos.js">//</script>
         <link href="/static/history/jquery.history.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="/static/history/jquery.history.js">//</script>
+        <script type="text/javascript" src="/static/js/jquery.timeago.js">//</script>
+	    <script type="text/javascript" src="commits.js">//</script>
+	    <link href="commits.css" rel="stylesheet" type="text/css" />
     </head>
-    <body>
-        <section id="manageRepos" class="MainContent">
-            <div style="border: solid lightgray 1px; padding: 20px; background: #EEE" class="pull-right">
-                <p>You can update the hash directly</p>
-                <a href="./" class="Btn set-hash">Set hash</a>
-            </div>            
-            <p>Here is a list of changes made to this branch. You can restore the branch
-                to the state of any of the commits below by clicking the Restore icon. The current state wont be lost, it will
-                just become the previous version</p>
-            <p>Click on the commit number to view the branch in that state without restoring it.</p>
-            <br/>
-            <table class="" style="width: 80%; text-align: left">
-                <thead>
-                    <tr>
-                        <th>Restore</th>
-                        <th>Link</th>
-                        <th>Hash</th>
-                        <th>User</th>
-                        <th>Edited</th>
-                    </tr>
-                </thead>
-                #foreach($c in $page.commits)
-                <tr>
-                    <td><button class='history' title='Restore this version' rel="$c.commit.itemHash">Rollback</button></td>
-                    <td>$c.link</td>
-                    <td>$c.commit.itemHash</td>
-                    <td>$c.commit.editor.name</td>
-                    <td><abbr title="$formatter.formatDateISO8601($c.commit.createdDate)" class="info timeago">$c.commit.createdDate</abbr></td>
-                </tr>
-                #end
+    <body class="manage-repo-history">
+        <p class="alert alert-info">
+	        <a class="close" role="button" href="#" data-dismiss="alert">&times;</a>
+	        Here is a list of changes made to this branch. You can restore the branch to the state of any of the commits below by clicking the Restore icon. The current state wont be lost, it will
+	        just become the previous version. <br /><b>Click on the commit number to view the branch in that state without restoring it.</b>
+        </p>
 
-            </table>
-        </section>
+        <div class="panel panel-default">
+	        <div class="panel-heading">
+		        <i class="fa fa-cloud-upload"></i>
+		        Commits
+		        <div class="panel-tools">
+			        <a href="#" class="btn btn-xs btn-link panel-collapse collapses">
+			        </a>
+			        <a href="#" class="btn btn-xs btn-link panel-close">
+				        <i class="fa fa-times"></i>
+			        </a>
+		        </div>
+	        </div>
+	        <div class="panel-body">
+		        <div class="clearfix">
+			        <p class="pull-left btn-set-hash-wrapper"><a href="./" class="btn btn-danger btn-set-hash pull-left">Set hash</a></p> <h4><small>(You can update the hash directly)</small></h4>
+		        </div>
+		        <table class="table table-bordered table-striped table-hover table-data">
+			        <colgroup>
+				        <col />
+				        <col />
+				        <col />
+				        <col />
+				        <col style="width: 70px" />
+			        </colgroup>
+			        <thead>
+				        <tr>
+					        <th>Link</th>
+					        <th>Hash</th>
+					        <th>User</th>
+					        <th>Edited</th>
+					        <th>Restore</th>
+				        </tr>
+			        </thead>
+			        <tbody>
+				        #foreach($c in $page.commits)
+					        <tr>
+						        <td>$c.link</td>
+						        <td>$c.commit.itemHash</td>
+						        <td>$c.commit.editor.name</td>
+						        <td><abbr title="$formatter.formatDateISO8601($c.commit.createdDate)" class="info timeago">$c.commit.createdDate</abbr></td>
+						        <td class="restore"><button class='btn btn-info btn-restore-repo' title='Restore this version' rel="$c.commit.itemHash"><i class="fa fa-white fa-undo"></i></button></td>
+					        </tr>
+				        #end
+			        </tbody>
+		        </table>
+	        </div>
+        </div>
         <script type="text/javascript">
-            jQuery(function() {
-                jQuery("abbr.timeago").timeago();
-                $("button.history").click(function(e) {
-                    var node = $(e.target);
-                    var hash = node.attr("rel");
-                    confirmRevert(hash, null, {
-                        getPageUrl: function() {
-                            return "."
-                        },
-                        afterRevertFn: function() {
-                            window.location.reload();
-                        }
-                    });
-                });
-                $(".set-hash").click(function(e) {
-                    e.preventDefault();
-                    var link = $(e.target).closest("a");
-                    var newHash = prompt("Please enter a new hash");
-                    if (newHash != null && newHash.trim().length > 0) {
-                        setHash(link, newHash);
-                    }
-                });
-            });
-            function setHash(link, newHash) {
-                log("setHash", link, newHash, link);
-                $.ajax({
-                    type: 'POST',
-                    data: {newHash: newHash},
-                    url: link.attr("href"),
-                    dataType: "json",
-                    success: function(data) {
-                        log("done", data);
-                        if (data.status) {
-                            window.location.reload();
-                        } else {
-                            alert("An error occured updating the branch: " + data.messages);
-                        }
-                    },
-                    error: function(resp) {
-                        alert("Sorry, couldnt update public access: " + resp);
-                    }
-                });
-            }
+	        Bob.onDOMReady(function () {
+		        initManageRepoHistory();
+	        });
         </script>
     </body>
 </html>
