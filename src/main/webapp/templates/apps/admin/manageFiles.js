@@ -298,6 +298,7 @@ function addPageToList(pageName, href, title) {
 	var newFileName = getFileName(href);
     $("#page-list").append(
 	    '<article class="page">' +
+		    '<input type="hidden" value="" name="' + pageName + '" />' +
 		    '<i class="fa clip-file-2"></i>' +
 		    '<span class="article-name">' + title + '</span>' +
 		    '<aside class="article-action">' +
@@ -308,14 +309,6 @@ function addPageToList(pageName, href, title) {
 	    '</article>'
     );
     log("newRow", newRow, "title", title);
-    newRow.append("<input type='hidden' value='' name='" + pageName + "'/>");
-    newRow.append("<span>" + title + "</span>");
-    var aside = $("<aside class='Hidden'></aside>");
-    newRow.append(aside);
-    aside.append("<a href='" + newFileName + "' class='Edit' title='Edit page'><span class='Hidden'>Edit page</span></a>");
-    aside.append("<a href='?goto=" + newFileName + "' target='_blank' class='View' title='View page'><span class='Hidden'>View page</span></a>");
-    aside.append("<a href='' class='Move' title='Move up or down'><span class='Hidden'>Move up or down</span></a>");
-    aside.append("<a href='" + href + "' class='Delete' title='Delete page'><span class='Hidden'>Delete page</span></a>");    
 }
 
 
