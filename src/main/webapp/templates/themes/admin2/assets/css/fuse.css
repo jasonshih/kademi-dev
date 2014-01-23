@@ -1,17 +1,21 @@
 .modal-lg {
 	width: 1000px;
+	margin-left: -500px;
 }
 
 .modal-md {
 	width: 800px;
+	margin-left: -800px;
 }
 
 .modal-sm {
 	width: 600px;
+	margin-left: -300px;
 }
 
 .modal-xs {
 	width: 400px;
+	margin-left: -200px;
 }
 
 .video-intro .panel-body {

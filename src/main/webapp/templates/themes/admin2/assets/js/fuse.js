@@ -1,6 +1,35 @@
 (function (Bob, $, win, doc, undefined) {
 	Bob.onDOMReady(function () {
 		var body = $(doc.body);
+
+		$('.tabbable').exist(function () {
+			this.each(function () {
+				var wrapper = $(this);
+				var tabHeader = wrapper.find('.nav-tabs');
+				var links = tabHeader.find('a');
+				var contents = wrapper.find('.tab-content').children();
+
+				var hash = window.location.hash;
+
+				if (hash === '') {
+					links.eq(0).trigger('click');
+				}
+
+				links.each(function () {
+					var link = $(this);
+					link.on('click', function (e) {
+						e.preventDefault();
+
+						window.location.hash = $(this).attr('href') + '-tab';
+					});
+				});
+			});
+
+			$(window).on('hashchange', function () {
+				var hash = window.location.hash.replace('-tab', '');
+				$('.tabbable .nav-tabs a[href=' + hash + ']').trigger('click');
+			}).trigger('hashchange');
+		});
         
         $('.chk-all').exist(function () {
             this.each(function () {

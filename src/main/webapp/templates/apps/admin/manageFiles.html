@@ -50,7 +50,7 @@
                         #else
                         <a href="${b.href}" class="hide-branch pull-right btn-xs btn btn-warning" title="Hide this version. Can be restored from the manage versions screen"><i class="clip-eye"></i></a>
                         #end
-                    </aside>                    
+                    </aside>
                     <a href="${b.href}" class="branch noclear">
                         $b.name
                     </a>
@@ -58,7 +58,7 @@
                 #end
             </ul>
         </div>
-        
+
         <div class="btn-group">
             <a target='_blank' href='${page.externalUrl}' class='btn btn-success'>
                 <i class="fa fa-arrow-circle-right"></i>
@@ -68,233 +68,223 @@
                 <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
                     <b>Change website:</b> $page.closest("website").name
                     <span class="caret"></span>
-                </a>            
+                </a>
                 <ul role="menu" class="dropdown-menu list">
                     #foreach($w in $page.closest("website").parent.children)
                     <li class="list-item"><a href="${w.href}">$w.name</a></li>
-                    #end                               
-                </ul>            
+                    #end
+                </ul>
             </div>
-        </div>          
+        </div>
 
         <hr class="clearfix"/>
-        
-        <section id="manageFiles" class="MainContent">
-            <header>                
-                <div class="DropdownControl">
-                    <div class="DropdownWrapper">
-                        <span><b>Repository:</b> $page.closest("repository").name</span> 
-                        <a href="#" class="Control"><span class="Hidden">Change</span></a>
-                    </div>
-                    <div class="DropdownContent Rows3 Hidden">
-                        <div class="Content ClearFix">
-                            <section rel="program">
-                                #foreach($w in $page.closest("repository").parent.children)
-                                <a href="${w.href}">$w.name</a>
-                                #end
-                            </section>
-                        </div>
-                    </div>
-                </div>                
-            </header>
 
-            <div class="pull-right">
-                <button class="Btn showImportModal" >Import</button>
-            </div>            
+        <button class="btn btn-primary btn-show-import pull-right" >Import</button>
 
-            <nav class="TabNav ClearFix">
-                <a href="#pages">Pages</a>
-                <a href="#files">Files &amp; Folders</a>
-            </nav>
-            <div class="Content TabContent" rel="#pages" style="position: relative">
-                <h4>$page.title</h4>
-                <a title="Add Page" class="SmallBtn Add NoText AddModulePage" href=""><span>Add</span></a>
-                <form method="POST" action="" class="">
-                    <div id='pagesList' class="MainContent filesList">
-                        #set($order = 0)
+        <div class="tabbable">
+	        <ul class="nav nav-tabs tab-purple">
+		        <li>
+			        <a data-toggle="tab" href="#pages">Pages of <span class="badge badge-purple">$page.title</span></a>
+		        </li>
+		        <li>
+			        <a data-toggle="tab" href="#files">Files and Folders of <span class="badge badge-purple">$page.name</span></a>
+		        </li>
+	        </ul>
+	        <div class="tab-content">
+		        <!-- Start content of Pages tab -->
+		        <div id="pages" class="tab-pane">
+			        <p class="clearfix">
+				        <a class="btn btn-orange pull-right btn-add-page" title="Add page"><i class="fa fa-plus fa-white"></i></a>
+			        </p>
+			        <form method="POST" action="" class="">
+						<div class="article-wrapper" id="page-list">
+							#set($order = 0)
+							#foreach($page in $page.children.ofType.html)
+							<article class="page">
+								<i class="fa clip-file-2"></i>
+								<span class="article-name">$page.title</span>
+								<aside class="article-action">
+									<a href="${page.name}" class="btn btn-xs btn-success btn-edit-page" title="Edit page"><i class="fa fa-white fa-edit"></i></a>
+									<a href="${page.name}?goto" target="_blank" class="btn btn-xs btn-success" title="View page"><i class="fa fa-white clip-new-tab"></i></a>
+									<a href="${page.path}" class="btn btn-xs btn-danger btn-delete-page" title="Delete page"><i class="fa fa-white fa-times"></i></a>
+								</aside>
+							</article>
+							#end
+						</div>
+			        </form>
+		        </div>
+		        <!-- End content of Pages tab -->
+		        <!-- Start content of Files and Folders tab -->
+		        <div id="files" class="tab-pane">
+			        <table class="table table-bordered table-striped table-hover">
+				        <colgroup>
+					        <col />
+					        <col />
+					        <col />
+					        <col />
+					        <col />
+				        </colgroup>
+				        <thead>
+							<tr>
+								<th></th>
+								<th>Name</th>
+								<th>Modified</th>
+								<th>Size</th>
+								<th style="text-align: right">
+									<a title="Create a folder" class="btn btn-sm btn-info btn-create-folder" href=""><i class="fa fa-white clip-folder-plus"></i></a>
+									<a title="Upload files" class="btn btn-sm btn-orange btn-upload-file" href=""><i class="fa fa-white fa-cloud-upload"></i></a>
+								</th>
+							</tr>
+				        </thead>
+				        <tbody>
+					        #foreach($f in $page.subFolders)
+						        <tr class="folder">
+							        <td class="icon">
+								        <a href="$f.href#files"><i class="clip-folder"></i></a>
+							        </td>
+							        <td class="left">
+								        <a href="${f.href}#files">$f.name</a>
+							        </td>
+							        <td><abbr title="$formatter.formatDateISO8601($f.modifiedDate)" class="timeago">$!f.modifiedDate</abbr></td>
+							        <td></td>
+							        <td>
+								        <aside class="Hidden">
+									        <a href="${f.path}" class='rename' title="Rename file"><span>Rename</span></a>
+									        <a href="${f.path}" class="Delete" title="Delete folder"><span class="Hidden">Delete folder</span></a>
+								        </aside>
+							        </td>
+						        </tr>
+					        #end
 
-                        #foreach($page in $page.children.ofType.html)
-                        <article class="modulePage">
-                            <span>$page.title</span>
-                            <aside class="Hidden">
-                                <a href="${page.name}" class="Edit" title="Edit page"><span class="Hidden">Edit page</span></a>
-                                <a href="${page.name}?goto" target="_blank" class="View" title="View page"><span class="Hidden">View page</span></a>
-                                <a href="${page.path}" class="Delete" title="Delete page"><span class="Hidden">Delete page</span></a>
-                            </aside>    
-                        </article>
+					        #foreach($f in $page.files)
+					            #set($type = $formatter.ifTrue($f.is("image"), "image", "file"))
+					            #set($imgClass = $formatter.ifTrue($f.is("image"), "fa-picture-o", "clip-file"))
+					            #set($aClass = $formatter.ifTrue($f.is("image"), "show-color-box group1 cboxElement", ""))
+						        <tr class="$type">
+							        <td class="icon">
+								        <a href="$f.href"><i class="Hidden"></i></a>
+							        </td>
+							        <td class="left">
+								        <a href="$f.href" class="$aClass" title="$f.name">$f.name</a>
+							        </td>
+							        <td><abbr title="$formatter.formatDateISO8601($!f.modifiedDate)" class="timeago">$!f.modifiedDate</abbr></td>
+							        <td>$f.contentLength</td>
+							        <td class="actions">
+								        <div class="btn-group btn-group-xs">
+									        <a href="${f.path}" class='btn btn-success btn-rename' title="Rename file"><i class="fa fa-white fa-edit"></i></a>
+									        <a href="${f.path}" target="_blank" class="btn btn-success" title="Download file"><i class="fa fa-white fa-cloud-download"></i></a>
+									        <a href="${f.path}" class='btn btn-success btn-history' title="Show history"><i class="fa fa-white clip-history"></i></a>
+									        <a href="${f.path}" class="btn btn-danger btn-delete" title="Delete file"><i class="fa fa-white fa-times"></i></a>
+								        </div>
+							        </td>
+						        </tr>
+					        #end
+				        </tbody>
+			        </table>
+		        </div>
+		        <!-- Start content of Files and Folders tab -->
+	        </div>
+        </div>
 
-                        #end
+        <div id="modal-add-page" class="modal modal-lg fade" aria-hidden="true" tabindex="-1">
+	        <div class="modal-header">
+		        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+		        <h4 class="modal-title">Add/edit module page</h4>
+	        </div>
+	        <div class="modal-body">
+		        <form method="POST" action="." class="form-horizontal">
+			        <input type="hidden" name="pageName" value="" />
+			        <div class="form-group">
+				        <label for="title" class="control-label col-md-2">Page title</label>
+				        <div class="col-md-4">
+					        <input type="text" name="title" id="title" class="form-control required" value="" placeholder="A title for the new page" />
+				        </div>
+				        <label for="template" class="control-label col-md-2">Page template</label>
+				        <div class="col-md-4">
+					        <select name="template" id="template" class="form-control">
+						        <option value="">None</option>
+						        #foreach($templateEntry in $page.closest("branch").getTemplates($page).entrySet() )
+						            <option value="$templateEntry.key">$templateEntry.value</option>
+						        #end
+					        </select>
+				        </div>
+			        </div>
+			        <div class="form-group">
+				        <div class="col-md-12">
+					        <textarea name="body" id="body" class="htmleditor toolbar-Full" style="width: 800px"></textarea>
+				        </div>
+			        </div>
+		        </form>
+	        </div>
+	        <div class="modal-footer">
+		        <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+		        <button class="btn btn-primary btn-history-page" type="button">History</button>
+		        <button class="btn btn-primary" data-type="form-submit" type="button">Save <img class='ajax-loader' src='/static/common/loading.gif' /></button>
+	        </div>
+        </div>
 
-                    </div>                
-                </form>
-            </div>
-            <div class="Content TabContent" rel="#files" id='filesContainer'>
-                <table id="fileList" class="filesList table table-striped vcenter">
-                    <thead>
-                        <tr>
-                            <th colspan="2">Files: $page.name</th>
-                            <th>Modified</th>
-                            <th>Size</th>
-                            <th>
-                                <a style="float: right" title="Upload files" class="SmallBtn Add NoText uploadFiles" href=""><span>Add</span></a>
-                                <a style="float: right" title="Create a folder" class="SmallBtn Add NoText createFolder" href=""><span>Quiz</span></a>
-                            </th>
-                        </tr>
-                        <tr class="seperator">
-                            <td colspan="4"></td>
-                        </tr>
-                    </thead>
-                    <tbody id='filesListBody'>                
-                        #foreach($f in $page.subFolders)
-                        <tr class="folder">
-                            <td style="width: 70px">
-                                <a href="$f.href#files"><span class="Hidden">folder</span></a>
-                            </td>
-                            <td class="left">
-                                <a href="${f.href}#files">$f.name</a>
-                            </td>
-                            <td><abbr title="$formatter.formatDateISO8601($f.modifiedDate)" class="timeago">$!f.modifiedDate</abbr></td>
-                            <td></td>
-                            <td>
-                                <aside class="Hidden">
-                                    <a href="${f.path}" class='rename' title="Rename file"><span>Rename</span></a>
-                                    <a href="${f.path}" class="Delete" title="Delete folder"><span class="Hidden">Delete folder</span></a>
-                                </aside> 
-                            </td>
-                        </tr>
-                        #end
+        <div id="modal-upload" class="modal modal-sx fade" aria-hidden="true" tabindex="-1">
+	        <div class="modal-header">
+		        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+		        <h4 class="modal-title">Upload files</h4>
+	        </div>
+	        <div class="modal-body">
+		        <div class="btn btn-primary" id='my-upload' style="width: 150px"></div>
+	        </div>
+	        <div class="modal-footer">
+		        <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+		        <button class="btn btn-primary" data-type="form-submit" type="button">Save</button>
+	        </div>
+        </div>
 
-                        #foreach($f in $page.files)                
-                        #set($lightBoxClass = "lightbox")
-                        #if( $f.contentLength < 100000 )
-                        #set($lightBoxClass = "")
-                        #end
-                        <tr class="file $lightBoxClass">
-                            #set($imgClass = $formatter.ifTrue($f.is("image"), "image", "" ) )
-                            <td style="width: 70px">
-                                <a href="$f.href" class="$imgClass"><span class="Hidden">file</span></a>
-                            </td>
-                            <td class="left">
-                                <a href="$f.href" class="$imgClass">$f.name</a>
-                            </td>
-                            <td><abbr title="$formatter.formatDateISO8601($!f.modifiedDate)" class="timeago">$!f.modifiedDate</abbr></td>
-                            <td>$f.contentLength</td>
-                            <td>
-                                <aside class="Hidden">
-                                    <a href="${f.path}" class='history' title="Show history"><span>History</span></a>
-                                    <a href="${f.path}" class="Delete" title="Delete file"><span>Delete file</span></a>
-                                    <a href="${f.path}" class='rename' title="Rename file"><span>Rename</span></a>
-                                    <a href="${f.path}" target="_blank" class="View" title="Download file"><span>Download file</span></a>                                                                                                            
-                                </aside> 
-                            </td>
-                        </tr>
-                        #end                 
-                    </tbody>
-                </table>                
-            </div>
-
-        </section>
-
-        <div id="modalCreatePage" class="Modal wide">
-            <header>
-                <h3>Add/edit module page</h3>                
-                <a class="Close" href="#" title="Close"><span class="Hidden">Close</span></a>
-            </header>
-            <div class="ModalContent new-page-modal-content">
-                <form method="POST" action=".">
-                    <input type="hidden" name="pageName" />
-                    <div class="pageMessage">.</div>
-                    <table class=''>
-                        <tr>
-                            <th><label for="name">Page title</label></th>
-                            <td>
-                                <input type="text" name="title" id="pageTitle" class="required" value="" placeholder="A title for the new page" />                                
-                            </td>
-                            <th>Page template</th>
-                            <td>                                
-                                <select name="template">
-                                    <option value="">None</option>
-                                    #foreach($templateEntry in $page.closest("branch").getTemplates($page).entrySet() )
-                                    <option value="$templateEntry.key">$templateEntry.value</option>
-                                    #end
-                                </select>
-                            </td>
-                            <td style='width: 300px'>
-                                <button class="Btn pageBtn" type="submit">
-                                    Save page
-                                    <img class='ajax-loader' src='/static/common/loading.gif'/>
-                                </button>
-                                <button class="Btn historyBtn" type="button">History</button>
-
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="5">
-                                <textarea name="body" id="body" class="htmleditor toolbar-Full" style="width: 800px"></textarea>
-                            </td>
-                        </tr>                        
-                    </table>
-                </form>
-            </div>
-        </div>          
-
-        <div id="modalUpload" class="Modal wide">
-            <header>
-                <h3>Upload files</h3>                
-                <a class="Close" href="#" title="Close"><span class="Hidden">Close</span></a>
-            </header>
-            <div class="ModalContent new-page-modal-content">
-                <div class="input" id='myUploaded' style="width: 150px"></div>        
-            </div>
-        </div>             
-
-        <div id="importModal" class="Modal">
-            <header>
-                <h3>Import from server</h3>                
-                <a class="Close" href="#" title="Close"><span class="Hidden">Close</span></a>
-            </header>
-            <div class="ModalContent">
-                <p>This will import files and folders from another webdav enabled website<br/></p>
-                <form>
-                    <div class="inputs">
-                        <label for="importFromUrl">Server URL</label>
-                        <input type="text" name="importFromUrl" id="importFromUrl" />
-
-                        <label for="remoteUser">Remote username</label>
-                        <input type="text" name="user" id="remoteUser" />
-
-                        <label for="remotePassword">Remote password</label>
-                        <input type="password" name="password" id="remotePassword" />
-                    </div>
-                    <button type="submit" class="Btn">Import</button>
-                </form>
-                <hr/>
-                <br/><br/>
-                <h3><a href="#" class="import-status">Import status - click to refresh</a></h3>
-                <textarea id="import-status-result" style="display: none"></textarea>
-            </div>
-        </div>  
+        <div id="modal-import" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
+	        <div class="modal-header">
+		        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+		        <h4 class="modal-title">Import from server</h4>
+	        </div>
+	        <div class="modal-body">
+		        <p class="alert alert-info">
+			        <a class="close" role="button" href="#" data-dismiss="alert">&times;</a>
+			        This will import files and folders from another webdav enabled website
+		        </p>
+		        <form class="form-horizontal">
+			        <div class="form-group">
+				        <label for="importFromUrl" class="label-control col-md-4">Server URL</label>
+				        <div class="col-md-8">
+				            <input type="text" name="importFromUrl" id="importFromUrl" class="form-control" />
+				        </div>
+			        </div>
+			        <div class="form-group">
+				        <label for="remoteUser" class="label-control col-md-4">Remote username</label>
+				        <div class="col-md-8">
+				            <input type="text" name="user" id="remoteUser" class="form-control" />
+				        </div>
+			        </div>
+			        <div class="form-group">
+				        <label for="remotePassword" class="label-control col-md-4">Remote password</label>
+				        <div class="col-md-8">
+				            <input type="password" name="password" id="remotePassword" class="form-control" />
+				        </div>
+			        </div>
+			        <div class="form-group">
+				        <label class="label-control col-md-4">Import status</label>
+				        <div class="col-md-8">
+					        <p><button class="btn btn-xs btn-success btn-import-status" type="button" title="Refresh the import status"><i class="fa fa-white fa-refresh"></i></button></p>
+					        <textarea id="import-status-result" class="form-control" rows="3" readonly></textarea>
+				        </div>
+			        </div>
+		        </form>
+	        </div>
+	        <div class="modal-footer">
+		        <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+		        <button class="btn btn-primary btn-import" data-type="form-submit" type="button">Import</button>
+	        </div>
+        </div>
 
         <script type="text/javascript" >
             var themePath = "${page.themePath}";
-            jQuery(function() {
-                initPublishingMenu("");
-                //initManageModule("../../..", themePath);
-                $(".showImportModal").click(function() {
-                    showModal($("#importModal"));
-                });
-                $("#importModal form").forms({
-                    callback: function(resp) {
-                        log("resp", resp);
-                        alert("The importer is running")
-                    }
-                });
-                $(".import-status").click(function(e) {
-                    e.preventDefault();
-                    $.getJSON(window.location.pathname + "?importStatus", function(data) {
-                        $("#import-status-result").val(data.messages).show(300);
-                    });
-                });
+            Bob.onDOMReady(function () {
+	            initManageFiles();
             });
         </script>        
     </body>

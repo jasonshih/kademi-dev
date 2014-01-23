@@ -1,13 +1,51 @@
-jQuery(document).ready(function() {
-    initHtmlEditors($(".Modal .htmleditor"), $(window).height() - 300 + "px", null, null, standardRemovePlugins + ",autogrow"); // disable autogrow
-    initFiles();
+function initManageFiles() {
+	initPublishingMenu("");
+	initHtmlEditors($(".htmleditor"), $(window).height() - 300 + "px", null, null, standardRemovePlugins + ",autogrow"); // disable autogrow
+	initFiles();
+	initImport();
+	initCRUDPage();
+	initAddPageModal();
+}
+
+function initImport() {
+	var modal = $('#modal-import');
+
+	$(".btn-show-import").on('click', function(e) {
+		e.preventDefault();
+
+		modal.modal('show');
+	});
+
+	modal.find('form').forms({
+		callback: function(resp) {
+			log("resp", resp);
+			alert("The importer is running")
+		}
+	});
+
+	$(".btn-import-status").on('click', function(e) {
+		e.preventDefault();
+
+		$.getJSON(window.location.pathname + "?importStatus", function(data) {
+			$("#import-status-result").val(data.messages).show(300);
+		});
+	});
+}
+
+function initCRUDPage() {
+
+}
+
+
+function intAction() {
+    
     initAddPageModal();
-    $("#myUploaded").mupload({
+    $("#my-uploaded").mupload({
         url: window.location.pathname,
         buttonText: "Upload a file",
         oncomplete: function(data, name, href) {
             // reload the file list
-            log("uploaded ok, now reload file list")
+            log("uploaded ok, now reload file list");
             reloadFileList();
         }
     });
@@ -52,7 +90,7 @@ jQuery(document).ready(function() {
             alert("Deleted " + name);
         });
     });
-});
+}
 
 function reloadFileList() {
     $.get(window.location.pathname, "", function(resp) {
@@ -66,101 +104,87 @@ function reloadFileList() {
 }
 
 function initFiles() {
+	var filesWrapper = $('#files');
+	var fileTable = filesWrapper.find('table.table');
+
     log("initFiles");
-    $('.lightbox a.image').each(function(i, n) {
+	fileTable.find('a.show-color-box').each(function(i, n) {
         var href = $(n).attr("href");
         $(n).attr("href", href + "/alt-640-360.png");
     });
-    log("init lightbox", $('a.image'));
-    $('a.image').lightBox({
-        imageLoading: '/static/images/lightbox-ico-loading.gif',
-        imageBtnClose: '/static/images/lightbox-btn-close.gif',
-        imageBtnPrev: '/static/images/lightbox-btn-prev.gif',
-        imageBtnNext: '/static/images/lightbox-btn-next.gif',
-        imageBlank: '/static/images/lightbox-blank.gif',
-        containerResizeSpeed: 350
-    });
-    jQuery("abbr.timeago").timeago();
-    jQuery("table.bar .file a").each(function(index, node) {
-        tag = $(node);
-        var href = tag.attr("href");
-        var icon = findIconByExt(href);
-        $("img", tag).attr("src", icon);
-    });
+    $("abbr.timeago").timeago();
 
-    $("#fileList tbody").on("click", "a.delete", function(e) {
-        e.stopPropagation();
+	fileTable.on('click', '.btn-delete', function (e) {
+		e.preventDefault();
+
+		var target = $(e.target);
+		var href = target.attr("href");
+		log("click delete. href", href);
+		var name = getFileName(href);
+		var tr = target.closest("tr");
+		confirmDelete(href, name, function() {
+			log("deleted", tr);
+			tr.remove();
+			alert("Deleted " + name);
+		});
+	});
+
+	fileTable.on("click", ".btn-rename", function(e) {
         e.preventDefault();
-        var target = $(e.target);
-        var href = target.attr("href");
-        log("click delete. href", href);
-        var name = getFileName(href);
-        var tr = target.closest("tr");
-        confirmDelete(href, name, function() {
-            log("deleted", tr);
-            tr.remove();
-            alert("Deleted " + name);
-        });
-    });
-    $("#fileList tbody").on("click", "a.rename", function(e) {
-        e.stopPropagation();
-        e.preventDefault();
+
         var target = $(e.target);
         var href = target.attr("href");
         promptRename(href, function(resp) {
             window.location.reload();
         });
     });
-    $("#fileList tbody").on("click", "a.history", function(e) {
+
+	fileTable.on("click", ".btn-history", function(e) {
         e.stopPropagation();
         e.preventDefault();
-
     });
-    $("a.history").history();
+    $(".btn-history").history();
 }
 
 function initAddPageModal() {
-    log("initAddPageModal", $(".AddModulePage"));
-    $(".AddModulePage").click(function(e) {
+    log("initAddPageModal", $(".btn-add-page"));
+
+	var modal = $('#modal-add-page');
+	var form = modal.find('form');
+
+    $(".btn-add-page").click(function(e) {
         e.preventDefault();
         log("initAddPageModal: click");
-        var modal = $("#modalCreatePage");
-        modal.find("input[type=text], textarea,input[name=pageName]").val("");
-        modal.find("form").unbind();
-        modal.find("form").submit(function(e) {
+
+	    form.find("input[type=text], textarea,input[name=pageName]").val("");
+	    form.unbind();
+	    form.submit(function(e) {
             log("submit clicked", e.target);
             e.preventDefault();
             //createPage(modal.find("form"));
-            doSavePage(modal.find("form"), null, false);
+            doSavePage(form, null, false);
         });
-        $.tinybox.show(modal, {
-            overlayClose: false,
-            opacity: 0
-        });
+	    modal.modal('show');
     });
 }
 
 
 function showEditModal(name, pageArticle) {
     log("showEditModal", name, pageArticle);
-    var modal = $("#modalCreatePage");
+	var modal = $('#modal-add-page');
+	var form = modal.find('form');
 
-    modal.find("input[name=pageName]").val(name);
-    $.tinybox.show(modal, {
-        overlayClose: false,
-        opacity: 0,
-        top: "10px"
-    });
-    modal.find("input[type=text], textarea").val("");
-    modal.find("form").unbind();
-    modal.find("form").submit(function(e) {
+	form.find("input[name=pageName]").val(name);
+	form.find("input[type=text], textarea").val("");
+	form.unbind();
+	form.submit(function(e) {
         e.preventDefault();
         e.stopPropagation();
         log("edit submit click", e.target);
-        doSavePage(modal.find("form"), pageArticle);
+        doSavePage(form, pageArticle);
     });
-    modal.find(".historyBtn").unbind();
-    modal.find(".historyBtn").history({
+    modal.find(".btn-history-page").unbind();
+    modal.find(".btn-history-page").history({
         pageUrl: name,
         showPreview: false,
         afterRevertFn: function() {
@@ -168,6 +192,76 @@ function showEditModal(name, pageArticle) {
         }
     });
     loadModalEditorContent(modal, name);
+}
+
+function doSavePage(form, pageArticle) {
+	var modal = form.parents('.modal');
+		log("doSavePage", form);
+
+	resetValidation(form);
+	if (!checkRequiredFields(form)) {
+		return;
+	}
+
+	var title = form.find("input[name=title]");
+	var data;
+	log("check ck editors", CKEDITOR.instances);
+	for (var key in CKEDITOR.instances) {
+		var editor = CKEDITOR.instances[key];
+		var content = editor.getData();
+		log("got ck content", key, content, editor);
+		var inp = $("textarea[name=" + key + "]", form);
+		if (inp) {
+			inp.html(content);
+			log("updated", inp);
+		}
+	}
+	data = form.serialize();
+
+	var url = form.find("input[name=pageName]").val();
+	if (url === null || url.length === 0) {
+		url = "autoname.new";
+	}
+
+	log("do ajax post", form.attr("action"), data);
+	try {
+		form.find("button[type=submit]").attr("disabled", "true");
+		log("set disabled", form.find("button[type=submit]"));
+		form.add(modal).addClass("ajax-processing");
+		$.ajax({
+			type: 'POST',
+			url: url,
+			data: data,
+			dataType: "json",
+			success: function(data) {
+				log("set enabled", form.find("button[type=submit]"));
+				form.add(modal).removeClass("ajax-processing");
+				form.find("button[type=submit]").removeAttr("disabled");
+				if (data.status) {
+					var _title = title.val();
+					if (pageArticle == null) { // indicated new page
+						var pageName = getFileName(data.messages[0]);
+						var href = data.nextHref;
+						addPageToList(pageName, href, _title);
+					} else {
+						pageArticle.find("> span").text(_title);
+					}
+					modal.modal('hide');
+				} else {
+					alert("There was an error saving the page: " + data.messages);
+				}
+			},
+			error: function(resp) {
+				form.add(modal).removeClass("ajax-processing");
+				form.find("button[type=submit]").removeAttr("disabled");
+				log("error", resp);
+				alert("Sorry, an error occured saving your changes. If you have entered editor content that you dont want to lose, please switch the editor to source view, then copy the content. Then refresh the page and re-open the editor and paste the content back in.");
+			}
+		});
+	} catch (e) {
+		log("exception in createJob", e);
+	}
+	return false;
 }
 
 function loadModalEditorContent(modal, name) {
@@ -199,86 +293,25 @@ function loadModalEditorContent(modal, name) {
     });
 }
 
-function doSavePage(form, pageArticle) {
-    var $form = $(form);
-    log("doSavePage", $form);
 
-    resetValidation($form);
-    if (!checkRequiredFields(form)) {
-        return;
-    }
-
-    var $title = $form.find("input[name=title]");
-    var data;
-    log("check ck editors", CKEDITOR.instances);
-    for (var key in CKEDITOR.instances) {
-        var editor = CKEDITOR.instances[key];
-        var content = editor.getData();
-        log("got ck content", key, content, editor);
-        var inp = $("textarea[name=" + key + "]", $form);
-        if (inp) {
-            inp.html(content);
-            log("updated", inp);
-        }
-    }
-    data = $form.serialize();
-
-    var url = form.find("input[name=pageName]").val();
-    if (url === null || url.length === 0) {
-        url = "autoname.new";
-    }
-
-    log("do ajax post", $form.attr("action"), data);
-    try {
-        form.find("button[type=submit]").attr("disabled", "true");
-        log("set disabled", form.find("button[type=submit]"));
-        form.addClass("ajax-processing");
-        $.ajax({
-            type: 'POST',
-            url: url,
-            data: data,
-            dataType: "json",
-            success: function(data) {
-                log("set enabled", form.find("button[type=submit]"));
-                form.removeClass("ajax-processing");
-                form.find("button[type=submit]").removeAttr("disabled");
-                if (data.status) {
-                    var title = $title.val();
-                    if (pageArticle == null) { // indicated new page
-                        var pageName = getFileName(data.messages[0]);
-                        var href = data.nextHref;
-                        addPageToList(pageName, href, title);
-                    } else {
-                        pageArticle.find("> span").text(title);
-                    }
-                    $.tinybox.close();
-                } else {
-                    alert("There was an error saving the page: " + data.messages);
-                }
-            },
-            error: function(resp) {
-                form.removeClass("ajax-processing");
-                form.find("button[type=submit]").removeAttr("disabled");
-                log("error", resp);
-                alert("Sorry, an error occured saving your changes. If you have entered editor content that you dont want to lose, please switch the editor to source view, then copy the content. Then refresh the page and re-open the editor and paste the content back in.");
-            }
-        });
-    } catch (e) {
-        log("exception in createJob", e);
-    }
-    return false;
-}
-
-
-function addPageToList(pageName, href, title) {    
-    var newRow = $("<article class='modulePage'></article>");
-    $("#pagesList").append(newRow);
+function addPageToList(pageName, href, title) {
+	var newFileName = getFileName(href);
+    $("#page-list").append(
+	    '<article class="page">' +
+		    '<i class="fa clip-file-2"></i>' +
+		    '<span class="article-name">' + title + '</span>' +
+		    '<aside class="article-action">' +
+			    '<a href="' + newFileName + '" class="btn btn-xs btn-success btn-edit-page" title="Edit page"><i class="fa fa-white fa-edit"></i></a>' +
+			    '<a href="?goto=' + newFileName + '" target="_blank" class="btn btn-xs btn-success" title="View page"><i class="fa fa-white clip-new-tab"></i></a>' +
+			    '<a href="' + href + '" class="btn btn-xs btn-danger btn-delete-page" title="Delete page"><i class="fa fa-white fa-times"></i></a>' +
+		    '</aside>' +
+	    '</article>'
+    );
     log("newRow", newRow, "title", title);
     newRow.append("<input type='hidden' value='' name='" + pageName + "'/>");
     newRow.append("<span>" + title + "</span>");
     var aside = $("<aside class='Hidden'></aside>");
     newRow.append(aside);
-    var newFileName = getFileName(href);
     aside.append("<a href='" + newFileName + "' class='Edit' title='Edit page'><span class='Hidden'>Edit page</span></a>");
     aside.append("<a href='?goto=" + newFileName + "' target='_blank' class='View' title='View page'><span class='Hidden'>View page</span></a>");
     aside.append("<a href='' class='Move' title='Move up or down'><span class='Hidden'>Move up or down</span></a>");
