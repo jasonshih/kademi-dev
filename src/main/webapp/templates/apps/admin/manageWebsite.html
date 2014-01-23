@@ -13,7 +13,7 @@
 
         #set($currentBranch = $page.closest("branch"))
         <div class="btn-group publishing pull-right">
-            #if( $currentBranch.live )            
+            #if( $currentBranch.live )
             <a href="../manageBranches" class="islive btn btn-danger">
                 <i class="fa fa-gear"></i>
                 LIVE
@@ -27,30 +27,29 @@
                 <i class="fa fa-gear"></i>
                 Manage versions
             </a>
-            #end                
+            #end
 
             <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
-                <b>Editing version:</b> 
-                $currentBranch.name 
+                <b>Editing version:</b>
+                $currentBranch.name
                 <span class="caret"></span>
             </a>
-            <ul role="menu" class="dropdown-menu branches">
+            <ul role="menu" class="dropdown-menu list branches">
                 #foreach($b in $page.closest("branch").parent.children.ofType.branch)
-                <li role="presentation" style="min-width: 300px">
+                <li role="presentation" class="list-item">
+                    <aside class="list-item-controller">
+                        <a href="#" class="copy btn btn-xs btn-primary pull-right" title="Copy this to a new version"><i class="fa fa-copy"></i></a>
+                        #if( $b.live )
 
-                    <a href="#" class="copy btn btn-primary pull-right" title="Copy this to a new version"><i class="fa fa-copy"></i></a>
-                    #if( $b.live )
-
-                    #else
-                    <a href="${b.href}" class="hide-branch pull-right btn btn-warning" title="Hide this version. Can be restored from the manage versions screen"><i class="clip-eye"></i></a>
-                    #end
+                        #else
+                        <a href="${b.href}" class="hide-branch pull-right btn-xs btn btn-warning" title="Hide this version. Can be restored from the manage versions screen"><i class="clip-eye"></i></a>
+                        #end
+                    </aside>                    
                     <a href="${b.href}" class="branch noclear">
                         $b.name
-                    </a> 
-
+                    </a>
                 </li>
-                <li class="divider"></li>
-                #end                                
+                #end
             </ul>
         </div>        
 
@@ -64,10 +63,9 @@
                     <b>Change website:</b> $page.closest("website").name
                     <span class="caret"></span>
                 </a>            
-                <ul role="menu" class="dropdown-menu">
+                <ul role="menu" class="dropdown-menu list">
                     #foreach($w in $page.closest("website").parent.children)
-                    <li><a href="${w.href}">$w.name</a></li>
-                    <li class="divider"></li>
+                    <li class="list-item"><a href="${w.href}">$w.name</a></li>
                     #end                               
                 </ul>            
             </div>

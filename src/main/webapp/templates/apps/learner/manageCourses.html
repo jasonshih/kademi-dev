@@ -30,22 +30,21 @@
                 $currentBranch.name
                 <span class="caret"></span>
             </a>
-            <ul role="menu" class="dropdown-menu branches">
+            <ul role="menu" class="dropdown-menu list branches">
                 #foreach($b in $page.closest("branch").parent.children.ofType.branch)
-                <li role="presentation" style="min-width: 300px">
+                <li role="presentation" class="list-item">
+                    <aside class="list-item-controller">
+                        <a href="#" class="copy btn btn-xs btn-primary pull-right" title="Copy this to a new version"><i class="fa fa-copy"></i></a>
+                        #if( $b.live )
 
-                    <a href="#" class="copy btn btn-primary pull-right" title="Copy this to a new version"><i class="fa fa-copy"></i></a>
-                    #if( $b.live )
-
-                    #else
-                    <a href="${b.href}" class="hide-branch pull-right btn btn-warning" title="Hide this version. Can be restored from the manage versions screen"><i class="clip-eye"></i></a>
-                    #end
+                        #else
+                        <a href="${b.href}" class="hide-branch pull-right btn-xs btn btn-warning" title="Hide this version. Can be restored from the manage versions screen"><i class="clip-eye"></i></a>
+                        #end
+                    </aside>                    
                     <a href="${b.href}" class="branch noclear">
                         $b.name
                     </a>
-
                 </li>
-                <li class="divider"></li>
                 #end
             </ul>
         </div>
@@ -60,10 +59,9 @@
                     <b>Change website:</b> $page.closest("website").name
                     <span class="caret"></span>
                 </a>
-                <ul role="menu" class="dropdown-menu">
+                <ul role="menu" class="dropdown-menu list">
                     #foreach($w in $page.closest("website").parent.children)
-                    <li><a href="${w.href}">$w.name</a></li>
-                    <li class="divider"></li>
+                    <li class="list-item"><a href="${w.href}">$w.name</a></li>
                     #end
                 </ul>
             </div>
@@ -81,17 +79,17 @@
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                 <span><b>Program:</b> $!program.title</span> <span class="caret"></span>
             </button>
-            <ul class="dropdown-menu programs-list" role="menu">
+            <ul class="dropdown-menu list programs-list" role="menu">
                 #foreach($otherProg in $programs.children.ofType.program)
-                <li class="program clearfix">
-                    <aside class="pull-right">
-                        <a class="btn btn-xs btn-default btn-edit-program" title="Edit program" href="#"><i class="glyphicon glyphicon-edit"></i></a>
-                        <a class="btn btn-xs btn-default btn-delete-program" title="Delete program" href="$otherProg.href"><i class="glyphicon glyphicon-remove"></i></a>
+                <li class="program clearfix list-item">
+                    <aside class="list-item-controller">
+                        <a class="btn btn-xs btn-success btn-edit-program" title="Edit program" href="#"><i class="glyphicon glyphicon-edit"></i></a>
+                        <a class="btn btn-xs btn-danger btn-delete-program" title="Delete program" href="$otherProg.href"><i class="glyphicon glyphicon-remove"></i></a>
                     </aside>
                     <a href="${otherProg.href}">$otherProg.title</a>
                 </li>
                 #end
-                <li class="clearfix last">
+                <li class="clearfix list-action">
                     <a class="btn-add-program" role="button" href="#"><i class="fa fa-plus fa-white"></i> New program</a>
                 </li>
             </ul>

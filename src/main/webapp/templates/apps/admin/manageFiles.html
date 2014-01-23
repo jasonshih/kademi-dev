@@ -14,48 +14,73 @@
         <script type="text/javascript" src="/templates/apps/admin/manageFiles.js">//</script>
         <script type="text/javascript" src="/static/js/types.js">// </script>
         <script type="text/javascript" src="/static/js/jquery.fileupload.js">//</script>
-        <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
-        <script type="text/javascript" src="/static/js/jquery.lightbox-0.5.js">//</script>          
+        <script type="text/javascript" src="/static/js/jquery.timeago.js">//</script>       
     </head>
-    <body class="manageFiles">
+    <body class="manage-files">
+        #set($currentBranch = $page.closest("branch"))
+        <div class="btn-group publishing pull-right">
+            #if( $currentBranch.live )
+            <a href="../manageBranches" class="islive btn btn-danger">
+                <i class="fa fa-gear"></i>
+                LIVE
+            </a>
+            #else
+            <a href="${currentBranch.href}publish" class="publish btn btn-success">
+                <i class="glyphicon glyphicon-ok-sign"></i>
+                PUBLISH
+            </a>
+            <a href="../manageBranches" class="btn btn-primary">
+                <i class="fa fa-gear"></i>
+                Manage versions
+            </a>
+            #end
+
+            <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+                <b>Editing version:</b>
+                $currentBranch.name
+                <span class="caret"></span>
+            </a>
+            <ul role="menu" class="dropdown-menu list branches">
+                #foreach($b in $page.closest("branch").parent.children.ofType.branch)
+                <li role="presentation" class="list-item">
+                    <aside class="list-item-controller">
+                        <a href="#" class="copy btn btn-xs btn-primary pull-right" title="Copy this to a new version"><i class="fa fa-copy"></i></a>
+                        #if( $b.live )
+
+                        #else
+                        <a href="${b.href}" class="hide-branch pull-right btn-xs btn btn-warning" title="Hide this version. Can be restored from the manage versions screen"><i class="clip-eye"></i></a>
+                        #end
+                    </aside>                    
+                    <a href="${b.href}" class="branch noclear">
+                        $b.name
+                    </a>
+                </li>
+                #end
+            </ul>
+        </div>
+        
+        <div class="btn-group">
+            <a target='_blank' href='${page.externalUrl}' class='btn btn-success'>
+                <i class="fa fa-arrow-circle-right"></i>
+                View website
+            </a>
+            <div class="btn-group">
+                <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+                    <b>Change website:</b> $page.closest("website").name
+                    <span class="caret"></span>
+                </a>            
+                <ul role="menu" class="dropdown-menu list">
+                    #foreach($w in $page.closest("website").parent.children)
+                    <li class="list-item"><a href="${w.href}">$w.name</a></li>
+                    #end                               
+                </ul>            
+            </div>
+        </div>          
+
+        <hr class="clearfix"/>
+        
         <section id="manageFiles" class="MainContent">
-            <header>
-                <div class="DropdownControl publishing">
-                    <div class="DropdownWrapper">
-                        #set($currentBranch = $page.closest("branch"))
-                        <span>
-                            <b>Version:</b> 
-                            $currentBranch.name
-                            #if( $currentBranch.live )
-                            <strong class="islive">LIVE</strong>
-                            #else                            
-                            <a href="${currentBranch.href}publish" class="publish">PUBLISH</a>
-                            #end
-
-                        </span> 
-                        <a href="#" class="Control"><span class="Hidden">Change version</span></a>
-                    </div>
-                    <div class="DropdownContent Hidden">
-                        <div class="Content">
-                            <ul class="Program branches">
-                                #foreach($b in $page.closest("branch").parent.children.ofType.branch)
-                                <li>
-                                    <a href="#" class="copy"><span>Copy</span></a>
-                                    #if( $b.live )
-                                    <strong class="islive">LIVE</strong>
-                                    #else
-                                    <a href="#" class="hide" title="Hide this version. Can be restored from the manage versions screen"><span>Hide</span></a>
-                                    #end
-
-                                    <a href="${b.href}" class="branch">
-                                        $b.name
-                                    </a>                                    
-                                </li>
-                                #end
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+            <header>                
                 <div class="DropdownControl">
                     <div class="DropdownWrapper">
                         <span><b>Repository:</b> $page.closest("repository").name</span> 
