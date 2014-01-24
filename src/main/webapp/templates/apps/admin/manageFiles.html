@@ -103,9 +103,15 @@
 								<i class="fa clip-file-2"></i>
 								<span class="article-name">$page.title</span>
 								<aside class="article-action">
-									<a href="${page.name}" class="btn btn-xs btn-success btn-edit-page" title="Edit page"><i class="fa fa-white fa-edit"></i></a>
-									<a href="${page.name}?goto" target="_blank" class="btn btn-xs btn-success" title="View page"><i class="fa fa-white clip-new-tab"></i></a>
-									<a href="${page.path}" class="btn btn-xs btn-danger btn-delete-page" title="Delete page"><i class="fa fa-white fa-times"></i></a>
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown"><i class="fa fa-white clip-settings"></i> <span class="caret"></span></button>
+                                        <ul class="dropdown-menu pull-right" role="menu">
+                                            <li><a href="${page.name}" class="btn-edit-page" title="Edit page">Edit page</a></li>
+                                            <li><a href="${page.name}?goto" target="_blank" title="View page">View page</a></li>
+                                            <li class="divider"></li>
+                                            <li><a href="${page.path}" class="btn-delete-page" title="Delete page">Delete page</a></li>
+                                        </ul>
+                                    </div>
 								</aside>
 							</article>
 							#end
@@ -121,7 +127,7 @@
 					        <col />
 					        <col />
 					        <col />
-					        <col style="width: 160px;" />
+					        <col style="width: 90px;" />
 				        </colgroup>
 				        <thead>
 							<tr>
@@ -129,9 +135,11 @@
 								<th>Name</th>
 								<th>Modified</th>
 								<th class="size">Size</th>
-								<th style="text-align: right">
-									<a title="Create a folder" class="btn btn-sm btn-info btn-create-folder" href=""><i class="fa fa-white clip-folder-plus"></i></a>
-									<a title="Upload files" class="btn btn-sm btn-orange btn-upload-file" href=""><i class="fa fa-white fa-cloud-upload"></i></a>
+								<th  class="action">
+                                    <div class="btn-group btn-group-sm">
+                                        <a title="Create a folder" class="btn btn-info btn-create-folder" href=""><i class="fa fa-white clip-folder-plus"></i></a>
+                                        <a title="Upload files" class="btn btn-orange btn-upload-file" href=""><i class="fa fa-white fa-cloud-upload"></i></a>
+                                    </div>
 								</th>
 							</tr>
 				        </thead>
@@ -148,8 +156,12 @@
 							        <td></td>
                                     <td class="action">
                                         <div class="btn-group btn-group-sm">
-                                            <a href="${f.path}" class='btn btn-success btn-rename-file' title="Rename folder"><i class="fa fa-white fa-edit"></i></a>
-									        <a href="${f.path}" class="btn btn-danger btn-delete-file" title="Delete folder"><i class="fa fa-white fa-times"></i></a>
+                                            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown"><i class="fa fa-white clip-settings"></i> <span class="caret"></span></button>
+                                            <ul class="dropdown-menu pull-right" role="menu">
+                                                <li><a href="${f.path}" class="btn-rename-file" title="Rename folder">Rename folder</a></li>
+                                                <li class="divider"></li>
+                                                <li><a href="${f.path}" class="btn-delete-file" title="Delete folder">Delete folder</a></li>
+                                            </ul>
                                         </div>
 							        </td>
 						        </tr>
@@ -170,10 +182,14 @@
 							        <td class="size">$f.contentLength</td>
 							        <td class="action">
 								        <div class="btn-group btn-group-sm">
-									        <a href="${f.path}" class='btn btn-success btn-rename-file' title="Rename file"><i class="fa fa-white fa-edit"></i></a>
-									        <a href="${f.path}" target="_blank" class="btn btn-success" title="Download file"><i class="fa fa-white fa-cloud-download"></i></a>
-									        <a href="${f.path}" class='btn btn-success btn-history-file' title="Show history"><i class="fa fa-white clip-history"></i></a>
-									        <a href="${f.path}" class="btn btn-danger btn-delete-file" title="Delete file"><i class="fa fa-white fa-times"></i></a>
+                                            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown"><i class="fa fa-white clip-settings"></i> <span class="caret"></span></button>
+                                            <ul class="dropdown-menu pull-right" role="menu">
+                                                <li><a href="${f.path}" class='btn-rename-file' title="Rename file"><i class="fa fa-white fa-edit"></i></a></li>
+                                                <li><a href="${f.path}" target="_blank" title="Download file"><i class="fa fa-white fa-cloud-download"></i></a></li>
+                                                <li><a href="${f.path}" class='btn-history-file' title="Show history"><i class="fa fa-white clip-history"></i></a></li>
+                                                <li class="divider"></li>
+                                                <li><a href="${f.path}" class="btn-delete-file" title="Delete file"><i class="fa fa-white fa-times"></i></a></li>
+                                            </ul>
 								        </div>
 							        </td>
 						        </tr>

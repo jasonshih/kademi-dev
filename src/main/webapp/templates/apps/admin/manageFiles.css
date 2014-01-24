@@ -1,64 +1,64 @@
 .btn-show-import {
-	position: relative;
-	z-index: 2;
+    position: relative;
+    z-index: 2;
 }
 
 .article-wrapper > article {
-	margin-top: 5px;
-	border-radius: 3px;
-	border: 1px solid #DEDEDE;
-	height: 34px;
-	line-height: 26px;
-	padding: 5px;
+    margin-top: 5px;
+    border-radius: 3px;
+    border: 1px solid #DEDEDE;
+    height: 42px;
+    line-height: 32px;
+    padding: 5px 5px 5px 10px;
 }
 
 .article-wrapper > article aside.article-action {
-	float: right;
-	line-height: normal;
-	visibility: hidden;
+    float: right;
+    line-height: normal;
+    visibility: hidden;
 }
 
 .article-wrapper > article:hover aside.article-action {
-	visibility: visible;
+    visibility: visible;
 }
 
 .article-wrapper > article aside.article-action > * {
-	vertical-align: top;
+    vertical-align: top;
 }
 
 .article-wrapper > article:nth-child(2n+1) {
-	background-color: #EDEDED;
+    background-color: #EDEDED;
 }
 
 .article-wrapper > article:first-child {
-	margin-top: 0;
+    margin-top: 0;
 }
 
 .article-wrapper > article > i,
 .article-wrapper > article span.article-name {
-	float: left;
-	vertical-align: top;
+    float: left;
+    vertical-align: top;
 }
 
 .article-wrapper > article > i {
-	margin: 5px 5px 0 0;
+    margin: 9px 5px 0 0;
 }
 
 #modal-add-page .btn[data-type] img,
 .btn-history-page img { 
-	visibility: hidden;
+    visibility: hidden;
 }
 
 #modal-add-page.ajax-processing .btn[data-type] img,
 .btn-history-page.loading img { 
-	visibility: visible;
+    visibility: visible;
 }
 
-#files table .action,
 #files table .size {
     text-align: right;
 }
 
+#files table .action,
 #files table .icon {
     text-align: center;
 }
