@@ -139,10 +139,10 @@
 					        #foreach($f in $page.subFolders)
 						        <tr class="folder">
 							        <td class="icon">
-								        <a href="$f.href#files"><i class="clip-folder"></i></a>
+								        <a href="$f.href#files-tab"><i class="clip-folder"></i></a>
 							        </td>
 							        <td class="left">
-								        <a href="${f.href}#files">$f.name</a>
+								        <a href="${f.href}#files-tab">$f.name</a>
 							        </td>
 							        <td><abbr title="$formatter.formatDateISO8601($f.modifiedDate)" class="timeago">$!f.modifiedDate</abbr></td>
 							        <td></td>
