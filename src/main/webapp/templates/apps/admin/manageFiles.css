@@ -44,10 +44,34 @@
 	margin: 5px 5px 0 0;
 }
 
-#modal-add-page .btn[data-type] img {
+#modal-add-page .btn[data-type] img,
+.btn-history-page img { 
 	visibility: hidden;
 }
 
-#modal-add-page.ajax-processing .btn[data-type] img {
+#modal-add-page.ajax-processing .btn[data-type] img,
+.btn-history-page.loading img { 
 	visibility: visible;
+}
+
+#files table .action,
+#files table .size {
+    text-align: right;
+}
+
+#files table .icon {
+    text-align: center;
+}
+
+#files table .icon a {
+    color: #333;
+    font-size: 20px;
+}
+
+.no-history {
+    background: #f0f0f0;
+}
+
+#modal-add-page .modal-body {
+    overflow-y: auto !important;
 }

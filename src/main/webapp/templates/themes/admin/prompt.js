@@ -8,69 +8,71 @@ var myPromptModal;
  *  form
  */
 function myPrompt(id, url, title, instructions, caption, buttonName, buttonText, inputClass, inputPlaceholder, callback) {
-    log("myPrompt");
-    var existing = $("#" + id);
+    log('myPrompt');
+    var existing = $('#' + id);
     if(existing ) {
         existing.remove();
     }
-            
-    var header = $("<div class='modal-header'><button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button><h4 class='modal-title' id='promptModalLabel'>Modal title</h4></div>");
-    var inner = $("<div class='modal-body'><form method='POST'><div class='pageMessage'></div></form></div>");
-    var notes = $("<p></p>");
-    var table = $("<table><tbody></tbody></table>");
-    var row1 = $("<tr><th><label for=''></label></th><td><input type='text' class='required'/></td></tr>");
-    var row2 = $("<tr><td class='BtnBar' colspan='2'><button class='btn btn-primary'>Save</button></td></tr>");
     
-    myPromptModal = $("<div class='modal fade' tabindex='-1' role='dialog' aria-labelledby='promptModalLabel' aria-hidden='true'></div>");
-    myPromptModal.attr("id", id);
-    //var modalContent = myPromptModal.find(".modal-content");
-    var modalContent = myPromptModal;
-    modalContent.append(header);
-    modalContent.append(inner);
+    var modalString = '<div id="' + id + '" class="modal modal-xs fade" tabindex="-1" role="dialog" aria-labelledby="promptModalLabel" aria-hidden="true"></div>';
+    myPromptModal = $(modalString);
     
-    notes.html(instructions);
-    inner.find("form").append(notes).append(table);
-    table.append(row1);
-    table.append(row2);
+    var inputId = id + '_';
     
-    header.find("h4").text(title);
-    var inputId = id + "_";
-    row1.find("input").addClass(inputClass);    
-    row1.find("input").attr("name", buttonName).attr("id", inputId).attr("placeholder", inputPlaceholder);    
-    row1.find("label").attr("for", inputId).text(caption);
-    row2.find("button").text(buttonText);
+    myPromptModal.html(        
+        '<div class="modal-header">' +
+           '<button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>' +
+           '<h4 class="modal-title">' + title + '</h4>' +
+        '</div>' +
+        '<div class="modal-body">' +
+            '<form method="POST" class="form-horizontal" action="' + url + '">' +
+                '<b>' + instructions + '</b><hr class="modal-splitter" />' +
+                '<p class="alert alert-danger modal-alert"></p>' +
+                '<div class="form-group">' + 
+                    '<label for="' + inputId + '" class="control-label col-md-4">' + caption + '</label>' +
+                    '<div class="col-md-8">' +
+                        '<input type="text" class="required form-control" id="' + inputId + '" name="' + buttonName + '" placeholder="' + inputPlaceholder + '" />'+
+                    '</div>' +
+                '</div>' +
+            '</form>' +
+        '</div>' +
+        '<div class="modal-footer">' +
+           '<button class="btn btn-default" data-dismiss="modal" type="button">Close</button>' +
+           '<button class="btn btn-primary" data-type="form-submit" type="button">' + buttonText + '</button>' +
+        '</div>'
+    );
     
-    var form = inner.find("form");
-    form.attr("action", url);
+    var form = myPromptModal.find('form');
+    
     form.submit(function(e) {
         e.preventDefault();
         resetValidation(form);
+        
         if( checkRequiredFields(form)) {
-            var newName = form.find("input").val();
+            var newName = form.find('input').val();
             if( callback(newName, form) ) {
-                myPromptModal.modal("hide");
-                //myPromptModal.remove();
+                myPromptModal.modal('hide');
             }
         }
     });
 
-    $("body").append(myPromptModal);
+    $('body').append(myPromptModal);
 
     showModal(myPromptModal);
 }
 
 function closeMyPrompt() {
-    flog("closeMyPrompt");        
-    myPromptModal.modal("hide");
+    flog('closeMyPrompt');        
+    myPromptModal.modal('hide');
 }
 
 function showModal(modal) {
-    flog("prompt.js: showModal: ", modal);
-    modal.modal("show");
+    flog('prompt.js: showModal: ', modal);
+    modal.modal('show');
 }
 
 function closeModals() {
-    flog("prompt.js: closeModals", $('.modal').find(":visible"));
-    $('.modal').find(":visible").modal('hide');
+    flog('prompt.js: closeModals', $(".modal").find(':visible'));
+    $(".modal").find(':visible').modal("hide");
 
 }

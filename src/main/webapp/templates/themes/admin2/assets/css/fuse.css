@@ -13,6 +13,16 @@
 	margin-left: -300px;
 }
 
+.invi {
+    top: -9999px !important;
+    left: -9999px !important;
+    width: 1px !important;
+    height: 1px !important;
+    visibility: hidden !important;
+    position: fixed !important;
+    display: block !important;
+}
+
 .modal-xs {
 	width: 400px;
 	margin-left: -200px;
@@ -113,7 +123,43 @@ ul.dropdown-menu.list li.list-action {
     padding-top: 5px;
 }
 
+.modal-fuse.calculating {
+    width: auto !important;
+    height: auto !important;
+}
+
 /** BM: the pageMessage element is used for feedback from jquery.forms.js, needs to be initially hidden **/
 .pageMessage {
 	display: none;
+}
+
+.modal-splitter {
+    margin: 5px 0 15px;
+}
+
+.modal-alert {
+    display: none;
+}
+
+.btn-upload {
+    height: 34px;
+}
+
+.btn-upload .muploadBtn {
+    background: none;
+    border: 0;
+    box-shadow: none;
+    text-shadow: none;
+    padding: 0;
+    font-size: inherit;
+    line-height: inherit;
+}
+
+.btn-upload .muploadBtn span {
+    font-size: inherit;
+    line-height: inherit;
+}
+
+.btn-upload .fileupload-buttonbar {
+    width: auto;
 }

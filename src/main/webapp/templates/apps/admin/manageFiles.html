@@ -4,8 +4,6 @@
         <link href="manageFiles.css" rel="stylesheet" type="text/css" />
         <link href="/static/history/jquery.history.css" rel="stylesheet" type="text/css" />
         <link href="/static/js/milton-image-select.css" rel="stylesheet" type="text/css" />
-        <link href="/static/css/jquery.lightbox-0.5.css" rel="stylesheet" type="text/css" media="screen" />
-
         <script type="text/javascript" src="/static/history/jquery.history.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-image-select.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-tree.js">//</script>
@@ -14,6 +12,7 @@
         <script type="text/javascript" src="/templates/apps/admin/manageFiles.js">//</script>
         <script type="text/javascript" src="/static/js/types.js">// </script>
         <script type="text/javascript" src="/static/js/jquery.fileupload.js">//</script>
+        <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.timeago.js">//</script>       
     </head>
     <body class="manage-files">
@@ -116,20 +115,20 @@
 		        <!-- End content of Pages tab -->
 		        <!-- Start content of Files and Folders tab -->
 		        <div id="files" class="tab-pane">
-			        <table class="table table-bordered table-striped table-hover">
+			        <table id="table-files" class="table table-bordered table-striped table-hover">
 				        <colgroup>
+					        <col style="width: 60px;" />
 					        <col />
 					        <col />
 					        <col />
-					        <col />
-					        <col />
+					        <col style="width: 160px;" />
 				        </colgroup>
 				        <thead>
 							<tr>
-								<th></th>
+								<th class="icon">Type</th>
 								<th>Name</th>
 								<th>Modified</th>
-								<th>Size</th>
+								<th class="size">Size</th>
 								<th style="text-align: right">
 									<a title="Create a folder" class="btn btn-sm btn-info btn-create-folder" href=""><i class="fa fa-white clip-folder-plus"></i></a>
 									<a title="Upload files" class="btn btn-sm btn-orange btn-upload-file" href=""><i class="fa fa-white fa-cloud-upload"></i></a>
@@ -147,11 +146,11 @@
 							        </td>
 							        <td><abbr title="$formatter.formatDateISO8601($f.modifiedDate)" class="timeago">$!f.modifiedDate</abbr></td>
 							        <td></td>
-							        <td>
-								        <aside class="Hidden">
-									        <a href="${f.path}" class='rename' title="Rename file"><span>Rename</span></a>
-									        <a href="${f.path}" class="Delete" title="Delete folder"><span class="Hidden">Delete folder</span></a>
-								        </aside>
+                                    <td class="action">
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="${f.path}" class='btn btn-success btn-rename-file' title="Rename folder"><i class="fa fa-white fa-edit"></i></a>
+									        <a href="${f.path}" class="btn btn-danger btn-delete-file" title="Delete folder"><i class="fa fa-white fa-times"></i></a>
+                                        </div>
 							        </td>
 						        </tr>
 					        #end
@@ -162,19 +161,19 @@
 					            #set($aClass = $formatter.ifTrue($f.is("image"), "show-color-box group1 cboxElement", ""))
 						        <tr class="$type">
 							        <td class="icon">
-								        <a href="$f.href"><i class="Hidden"></i></a>
+								        <a href="$f.href"><i class="$imgClass"></i></a>
 							        </td>
 							        <td class="left">
 								        <a href="$f.href" class="$aClass" title="$f.name">$f.name</a>
 							        </td>
 							        <td><abbr title="$formatter.formatDateISO8601($!f.modifiedDate)" class="timeago">$!f.modifiedDate</abbr></td>
-							        <td>$f.contentLength</td>
-							        <td class="actions">
-								        <div class="btn-group btn-group-xs">
-									        <a href="${f.path}" class='btn btn-success btn-rename' title="Rename file"><i class="fa fa-white fa-edit"></i></a>
+							        <td class="size">$f.contentLength</td>
+							        <td class="action">
+								        <div class="btn-group btn-group-sm">
+									        <a href="${f.path}" class='btn btn-success btn-rename-file' title="Rename file"><i class="fa fa-white fa-edit"></i></a>
 									        <a href="${f.path}" target="_blank" class="btn btn-success" title="Download file"><i class="fa fa-white fa-cloud-download"></i></a>
-									        <a href="${f.path}" class='btn btn-success btn-history' title="Show history"><i class="fa fa-white clip-history"></i></a>
-									        <a href="${f.path}" class="btn btn-danger btn-delete" title="Delete file"><i class="fa fa-white fa-times"></i></a>
+									        <a href="${f.path}" class='btn btn-success btn-history-file' title="Show history"><i class="fa fa-white clip-history"></i></a>
+									        <a href="${f.path}" class="btn btn-danger btn-delete-file" title="Delete file"><i class="fa fa-white fa-times"></i></a>
 								        </div>
 							        </td>
 						        </tr>
@@ -185,42 +184,42 @@
 		        <!-- Start content of Files and Folders tab -->
 	        </div>
         </div>
-
-        <div id="modal-add-page" class="modal modal-lg fade" aria-hidden="true" tabindex="-1">
-	        <div class="modal-header">
-		        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-		        <h4 class="modal-title">Add/edit module page</h4>
-	        </div>
-	        <div class="modal-body">
-		        <form method="POST" action="." class="form-horizontal">
-			        <input type="hidden" name="pageName" value="" />
-			        <div class="form-group">
-				        <label for="title" class="control-label col-md-2">Page title</label>
-				        <div class="col-md-4">
-					        <input type="text" name="title" id="title" class="form-control required" value="" placeholder="A title for the new page" />
-				        </div>
-				        <label for="template" class="control-label col-md-2">Page template</label>
-				        <div class="col-md-4">
-					        <select name="template" id="template" class="form-control">
-						        <option value="">None</option>
-						        #foreach($templateEntry in $page.closest("branch").getTemplates($page).entrySet() )
-						            <option value="$templateEntry.key">$templateEntry.value</option>
-						        #end
-					        </select>
-				        </div>
-			        </div>
-			        <div class="form-group">
-				        <div class="col-md-12">
-					        <textarea name="body" id="body" class="htmleditor toolbar-Full" style="width: 800px"></textarea>
-				        </div>
-			        </div>
-		        </form>
-	        </div>
-	        <div class="modal-footer">
-		        <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
-		        <button class="btn btn-primary btn-history-page" type="button">History</button>
-		        <button class="btn btn-primary" data-type="form-submit" type="button">Save <img class='ajax-loader' src='/static/common/loading.gif' /></button>
-	        </div>
+        
+        <div id="modal-add-page" class="modal modal-lg fade modal-fuse modal-fuse-editor" aria-hidden="true" tabindex="-1">
+            <div class="modal-header">
+                <button aria-hidden="true" data-type="modal-dismiss" class="close" type="button">&times;</button>
+                <h4 class="modal-title">Add/edit module page</h4>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="." class="form-horizontal">
+                    <input type="hidden" name="pageName" value="" />
+                    <div class="form-group">
+                        <label for="title" class="control-label col-md-2">Page title</label>
+                        <div class="col-md-4">
+                            <input type="text" name="title" id="title" class="form-control required" value="" placeholder="A title for the new page" />
+                        </div>
+                        <label for="template" class="control-label col-md-2">Page template</label>
+                        <div class="col-md-4">
+                            <select name="template" id="template" class="form-control">
+                                <option value="">None</option>
+                                #foreach($templateEntry in $page.closest("branch").getTemplates($page).entrySet() )
+                                    <option value="$templateEntry.key">$templateEntry.value</option>
+                                #end
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <textarea name="body" id="body" class="htmleditor toolbar-Full"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default" data-type="modal-dismiss" type="button">Close</button>
+                <button class="btn btn-primary btn-history-page" type="button">History <img class='ajax-loader' src='/static/common/loading.gif' /></button>
+                <button class="btn btn-primary" data-type="form-submit" type="button">Save <img class='ajax-loader' src='/static/common/loading.gif' /></button>
+            </div>
         </div>
 
         <div id="modal-upload" class="modal modal-sx fade" aria-hidden="true" tabindex="-1">
@@ -280,6 +279,38 @@
 		        <button class="btn btn-primary btn-import" data-type="form-submit" type="button">Import</button>
 	        </div>
         </div>
+        
+         <div id="modal-history" class="modal modal-xs fade" aria-hidden="true" tabindex="-1">
+	        <div class="modal-header">
+		        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+		        <h4 class="modal-title">History</h4>
+	        </div>
+	        <div class="modal-body">
+                <table class="table table-bordered table-striped table-hover table-condensed">
+                    <colgroup>
+				        <col />
+				        <col />
+				        <col />
+				        <col style="width: 70px" />
+			        </colgroup>
+                    <thead>
+                        <tr>
+					        <th>Description</th>
+					        <th>User</th>
+					        <th>Edited</th>
+					        <th>Restore</th>
+				        </tr>
+                    </thead>
+                    <tbody>
+                        
+                    </tbody>
+                </table>
+	        </div>
+	        <div class="modal-footer">
+		        <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+	        </div>
+        </div>
+
 
         <script type="text/javascript" >
             var themePath = "${page.themePath}";

@@ -17,6 +17,7 @@
                 }, options);  
                 
             log("init milton uploads", container);
+            container.addClass('btn-upload')
             var actionUrl = config.url;
             if( config.useJsonPut ) {
                 actionUrl += "_DAV/PUT?overwrite=true";
