@@ -6,50 +6,50 @@
     </head>
     <body>
         <section id="manageReward" class="MainContent">
-            <header class="clearfix">
-                <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addRewardModal"><i class="fa fa-plus"></i>Add new competition or reward</button>
-                <a href="points/" class="pull-right btn btn-primary btn-sm">Review points</a>
-                <div id="addRewardModal" class="modal fade">
-                    <form action="." method="POST" class="addReward">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="modal-title">Add new reward</h4>
-                        </div>
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="form-group">
-                                        <div class="errorHandler alert alert-danger no-display pageMessage">.</div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label" for="newTitle">Enter reward name</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" name="newTitle" id="newTitle" placeholder="Reward title" class="form-control required" />
-                                        </div>
+            <p class="clearfix">
+                <button class="btn btn-primary" data-toggle="modal" data-target="#addRewardModal"><i class="fa fa-plus"></i> Add new competition or reward</button>
+                <a href="points/" class="pull-right btn btn-orange">Review points</a>
+            </p>
+            <div id="addRewardModal" class="modal fade">
+                <form action="." method="POST" class="addReward">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Add new reward</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <div class="errorHandler alert alert-danger no-display pageMessage">.</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="newTitle">Enter reward name</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" name="newTitle" id="newTitle" placeholder="Reward title" class="form-control required" />
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary btn-sm">Save changes</button>
-                        </div>
-                    </form>
-                </div>
-            </header>
-            <table class="Content table table-striped table-hover table-full-width">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary btn-sm">Save changes</button>
+                    </div>
+                </form>
+            </div>
+            <table class="Content table table-striped table-bordered table-hover table-data">
                 <colgroup>
-                    <col style="width: 15%"/>
-                    <col style="width: 40%"/>
-                    <col style="width: 25%"/>
-                    <col style="width: 20%"/>
+                    <col />
+                    <col />
+                    <col />
+                    <col style="width: 60px" />
                 </colgroup>      
                 <thead>
                     <tr>
                         <th class="status" rel="asc">Status</th>
                         <th class="title" rel="asc">Title</th>
-                        <th class="center"></th>
-                        <th class="center"></th>
+                        <th>Entries number</th>
+                        <th class="action">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -71,25 +71,19 @@
                         </td>
                         <td><a href="$r.name">$r.title</a></td>
                         <td class="center"><a href="entries-${r.name}.html" class="entries">$r.numEntries entries</a></td>
-                        <td class="center">
-                            <div>
-                                <div class="btn-group">
-                                    <a class="btn btn-primary dropdown-toggle btn-sm" data-toggle="dropdown" href="#">
-                                        <i class="fa fa-cog"></i> <span class="caret"></span>
-                                    </a>
-                                    <ul role="menu" class="dropdown-menu pull-right">
-                                        <li role="presentation">
-                                            <a role="menuitem" tabindex="-1" href="$r.name" class="Edit EditReward">
-                                                <i class="fa fa-edit"></i> Edit
-                                            </a>
-                                        </li>
-                                        <li role="presentation">
-                                            <a role="menuitem" tabindex="-1" href="$r.name" class="Delete DeleteReward">
-                                                <i class="fa fa-times"></i> Delete
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
+                        <td class="action">
+                            <div class="btn-group btn-group-sm">
+                                <a class="btn btn-success dropdown-toggle btn-sm" data-toggle="dropdown" href="#">
+                                    <i class="clip-settings"></i>
+                                </a>
+                                <ul role="menu" class="dropdown-menu pull-right">
+                                    <li role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="$r.name" class="Edit EditReward">Edit</a>
+                                    </li>
+                                    <li role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="$r.name" class="Delete DeleteReward">Delete</a>
+                                    </li>
+                                </ul>
                             </div>
                         </td>
                     </tr>

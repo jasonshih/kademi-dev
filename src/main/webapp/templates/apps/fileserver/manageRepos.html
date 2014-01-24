@@ -6,12 +6,12 @@
     </head>
     <body class="manage-repos">
         <p>
-	        <a href="#" class="btn btn-sm btn-primary btn-add-repo"><i class="fa fa-plus fa-white"></i> Add new repository</a>
+	        <a href="#" class="btn btn-primary btn-add-repo"><i class="fa fa-plus"></i> Add new repository</a>
         </p>
         
         <div class="panel panel-default">
 	        <div class="panel-heading">
-		        <i class="fa clip-data "></i>
+		        <i class="clip-data "></i>
 		        Repositories
 	        </div>
 	        <div class="panel-body">
@@ -29,7 +29,7 @@
 			                <th>Name</th>
 			                <th>Current branch</th>
 			                <th>Public</th>
-			                <th>Action</th>
+			                <th class="action">Action</th>
 		                </tr>
 	                </thead>
                     <tbody>
@@ -47,10 +47,12 @@
 			                            $formatter.checkbox($w.name, $w.publicContent)
 		                            </div>
                                 </td>
-                                <td>
-                                    <a href="../repositories/$w.name" class="btn btn-info" target="_blank">View</a>
-                                    <a href="../repositories/$w.name/$w.liveBranch/commits" target="_blank" class="btn btn-info">History</a>
-                                    <a class="btn btn-orange btn-delete-repo" href="../repositories/$w.name">Delete</a>
+                                <td class="action">
+                                   <div class="btn-group">
+	                                   <a href="../repositories/$w.name" class="btn btn-success" target="_blank">View</a>
+	                                   <a href="../repositories/$w.name/$w.liveBranch/commits" target="_blank" class="btn btn-success">History</a>
+	                                   <a class="btn btn-orange btn-delete-repo" href="../repositories/$w.name">Delete</a>
+                                   </div>
                                 </td>
                             </tr>
                         #end

@@ -15,13 +15,13 @@
 		        #portlets("manageUsersTools")
 	        </div>
 	        <p class="pull-left">
-		        <a href="#" class="btn btn-sm btn-primary btn-add-user"><i class="fa fa-plus fa-white"></i> Add new user</a>
+		        <a href="#" class="btn btn-primary btn-add-user"><i class="fa fa-plus"></i> Add new user</a>
 	        </p>
         </div>
 
         <div class="panel panel-default">
 	        <div class="panel-heading">
-		        <i class="fa clip-folder"></i>
+		        <i class="clip-folder"></i>
 		        Dynamic Table
 	        </div>
 	        <div class="panel-body">
@@ -60,7 +60,7 @@
 				        <col />
 				        <col />
 				        <col />
-				        <col data-sort="false" style="width: 120px;" />
+				        <col data-sort="false" style="width: 60px;" />
 				        <col data-sort="false" style="width: 30px;" />
 			        </colgroup>
 			        <thead>
@@ -70,7 +70,7 @@
 					        <th>Last Name</th>
 					        <th>Email Address</th>
 					        <th>Contact</th>
-					        <th>Action</th>
+					        <th class="action">Action</th>
 					        <th><input type="checkbox" name="toRemoveId" class="chk-all" /></th>
 				        </tr>
 			        </thead>
@@ -90,13 +90,13 @@
 						        <td>$formatter.htmlEncode($p.surName)</td>
 						        <td><a href='mailto:$p.email'>$p.email</a></td>
 						        <td>$!p.phone</td>
-						        <td>
-							        <div class="btn-group btn-group-xs pull-right">
-								        <a href="$p.id" class="btn btn-default">User details</a>
-								        <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-									        <span class="caret"></span>
+						        <td class="action">
+							        <div class="btn-group btn-group-sm">
+								        <button class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+									       <i class="clip-settings"></i>
 								        </button>
-								        <ul class="dropdown-menu" role="menu">
+								        <ul class="dropdown-menu pull-right" role="menu">
+									        <li><a href="$p.id">User details</a></li>
 									        <li><a href="$p.id" class="btn-login-as">Login as this user</a></li>
 								        </ul>
 							        </div>

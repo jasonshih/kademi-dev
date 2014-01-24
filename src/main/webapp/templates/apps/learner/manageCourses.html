@@ -90,7 +90,7 @@
                 </li>
                 #end
                 <li class="clearfix list-action">
-                    <a class="btn-add-program" role="button" href="#"><i class="fa fa-plus fa-white"></i> New program</a>
+                    <a class="btn-add-program" role="button" href="#"><i class="fa fa-plus"></i> New program</a>
                 </li>
             </ul>
         </div><br /><br />
@@ -108,10 +108,10 @@
                             #foreach($course in $program.children.ofType.course)
                             <li class="course clearfix">
                                 <aside class="pull-right">
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-xs btn-default btn-move-course" title="Move up or down"><i class="glyphicon glyphicon-sort"></i></button>
-                                        <button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">
-                                            <span class="caret"></span>
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="button" class="btn btn-warning btn-move-course" title="Move up or down"><i class="glyphicon glyphicon-sort"></i></button>
+                                        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+                                            <i class="clip-settings"></i>
                                         </button>
                                         <ul class="dropdown-menu pull-right" role="menu">
                                             <li><a class="btn-edit-course" href="${course.href}">Edit details</a></li>
@@ -126,7 +126,7 @@
                             </li>
                             #end
                         </ul>
-                        <p class="pull-right"><a href="#" role="button" class="btn btn-xs btn-primary btn-add-course"><i class="fa fa-plus fa-white"></i> New course</a></p>
+                        <p class="pull-right"><a href="#" role="button" class="btn btn-primary btn-add-course"><i class="fa fa-plus"></i> New course</a></p>
                     </div>
                 </div>
             </div>
@@ -143,10 +143,10 @@
                                 #foreach($module in $level)
                                 <li class="module clearfix" data-author-notes="$!module.notes" id="${module.name}">
                                     <aside class="pull-right">
-                                        <div class="btn-group">
-                                            <button type="button" class="btn btn-xs btn-default btn-move-module" title="Move up or down"><i class="glyphicon glyphicon-sort"></i></button>
-                                            <button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">
-                                                <span class="caret"></span>
+                                        <div class="btn-group btn-group-sm">
+                                            <button type="button" class="btn btn-warning btn-move-module" title="Move up or down"><i class="glyphicon glyphicon-sort"></i></button>
+                                            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+                                                <i class="clip-settings"></i>
                                             </button>
                                             <ul class="dropdown-menu pull-right" role="menu">
                                                 <li><a class="btn-edit-module" role="button" href="${module.name}">Edit module</a></li>
@@ -166,10 +166,10 @@
                                 #end
                                 <li class="splitter clearfix">
                                     <aside class="pull-right">
-                                        <div class="btn-group">
-                                            <button type="button" class="btn btn-xs btn-default btn-move-splitter" title="Move up or down"><i class="glyphicon glyphicon-sort"></i></button>
-                                            <button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">
-                                                <span class="caret"></span>
+                                        <div class="btn-group btn-group-sm">
+                                            <button type="button" class="btn btn-warning btn-move-splitter" title="Move up or down"><i class="glyphicon glyphicon-sort"></i></button>
+                                            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+	                                            <i class="clip-settings"></i>
                                             </button>
                                             <ul class="dropdown-menu pull-right" role="menu">
                                                 <li><a href="${module.name}" class="btn-delete-splitter">Delete splitter</a></li>
@@ -180,7 +180,7 @@
                                 </li>
                             #end
                         </ul>
-                        <p class="pull-right"><a href="#" role="button" class="btn btn-xs btn-primary btn-add-module"><i class="fa fa-plus fa-white"></i> New module</a></p>
+                        <p class="pull-right"><a href="#" role="button" class="btn btn-primary btn-add-module"><i class="fa fa-plus"></i> New module</a></p>
                     </div>
                 </div>
             </div>

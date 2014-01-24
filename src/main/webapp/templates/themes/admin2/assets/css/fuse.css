@@ -163,3 +163,11 @@ ul.dropdown-menu.list li.list-action {
 .btn-upload .fileupload-buttonbar {
     width: auto;
 }
+
+.action {
+	text-align: center;
+}
+
+.action > * {
+	text-align: left;
+}

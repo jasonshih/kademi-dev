@@ -1,4 +1,3 @@
-// aaa
 
 var $content;
 var parentOrgHref;

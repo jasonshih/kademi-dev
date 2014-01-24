@@ -13,8 +13,8 @@
             <section id="manageReward" class="MainContent">
                 <div class="clearfix">
                     <div class="pull-right">
-                        <button class="btn btn-primary btn-sm">Save changes</button>
-                        <button class="btn btn-primary btn-sm Cancel" type="button">Cancel</button>
+                        <button class="btn btn-primary">Save changes</button>
+                        <button class="btn btn-default Cancel" type="button">Cancel</button>
                     </div>
                     <ul class="TabNav nav nav-tabs tab-bricky pull-left">
                         <li class=""><a href="#details" data-toggle="tab">Details</a></li>
@@ -159,7 +159,7 @@
                     </div>
                     
                     <div class="tab-pane Content" id="groups">
-                        <button class="btn btn-primary btn-sm Add AddGroup" data-toggle="modal" data-target="#modalGroup"><i class="fa fa-plus"></i>Add/remove groups</button>
+                        <button class="btn btn-primary Add AddGroup" data-toggle="modal" data-target="#modalGroup"><i class="fa fa-plus"></i> Add/remove groups</button>
                         <div class="alert alert-info margin-top-10">Add user groups to rewards to allow these users to directly enter the competition. These users will
                             see the reward on their dashboard when it is active.</div>
                         <ul class="GroupList clearfix">
@@ -215,7 +215,7 @@
                     <div class="tab-pane Content" id="restrictions">
                         <div class="clearfix">
                             <div class="alert alert-info pull-right reset-margin-bottom">Add restrictions which will prevent rewards from being given unless they have been ment.</div>
-                            <button class="btn btn-primary btn-sm addRestriction margin-top-12" data-toggle="modal" data-target="#modalAddRestriction"><i class="fa fa-plus"></i>Add a restriction</button>
+                            <button class="btn btn-primary addRestriction margin-top-12" data-toggle="modal" data-target="#modalAddRestriction"><i class="fa fa-plus"></i> Add a restriction</button>
                         </div>
                         <ul class="restrictionList clearfix margin-top-10 hidden">
                             #foreach($r in $page.restrictions)

@@ -81,30 +81,30 @@
         <button class="btn btn-primary btn-show-import pull-right" >Import</button>
 
         <div class="tabbable">
-	        <ul class="nav nav-tabs tab-purple">
+	        <ul class="nav nav-tabs tab-bricky">
 		        <li>
-			        <a data-toggle="tab" href="#pages">Pages of <span class="badge badge-purple">$page.title</span></a>
+			        <a data-toggle="tab" href="#pages">Pages of <span class="badge badge-danger">$page.title</span></a>
 		        </li>
 		        <li>
-			        <a data-toggle="tab" href="#files">Files and Folders of <span class="badge badge-purple">$page.name</span></a>
+			        <a data-toggle="tab" href="#files">Files and Folders of <span class="badge badge-danger">$page.name</span></a>
 		        </li>
 	        </ul>
 	        <div class="tab-content">
 		        <!-- Start content of Pages tab -->
 		        <div id="pages" class="tab-pane">
 			        <p class="clearfix">
-				        <a class="btn btn-orange pull-right btn-add-page" title="Add page"><i class="fa fa-plus fa-white"></i></a>
+				        <a class="btn btn-orange pull-right btn-add-page" title="Add page"><i class="fa fa-plus"></i></a>
 			        </p>
 			        <form method="POST" action="" class="">
 						<div class="article-wrapper" id="page-list">
 							#set($order = 0)
 							#foreach($page in $page.children.ofType.html)
 							<article class="page">
-								<i class="fa clip-file-2"></i>
+								<i class="clip-file-2"></i>
 								<span class="article-name">$page.title</span>
 								<aside class="article-action">
                                     <div class="btn-group btn-group-sm">
-                                        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown"><i class="fa fa-white clip-settings"></i> <span class="caret"></span></button>
+                                        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown"><i class="clip-settings"></i></button>
                                         <ul class="dropdown-menu pull-right" role="menu">
                                             <li><a href="${page.name}" class="btn-edit-page" title="Edit page">Edit page</a></li>
                                             <li><a href="${page.name}?goto" target="_blank" title="View page">View page</a></li>
@@ -127,7 +127,7 @@
 					        <col />
 					        <col />
 					        <col />
-					        <col style="width: 90px;" />
+					        <col style="width: 110px;" />
 				        </colgroup>
 				        <thead>
 							<tr>
@@ -136,9 +136,9 @@
 								<th>Modified</th>
 								<th class="size">Size</th>
 								<th  class="action">
-                                    <div class="btn-group btn-group-sm">
-                                        <a title="Create a folder" class="btn btn-info btn-create-folder" href=""><i class="fa fa-white clip-folder-plus"></i></a>
-                                        <a title="Upload files" class="btn btn-orange btn-upload-file" href=""><i class="fa fa-white fa-cloud-upload"></i></a>
+                                    <div class="btn-group">
+                                        <a title="Create a folder" class="btn btn-info btn-create-folder" href=""><i class="clip-folder-plus"></i></a>
+                                        <a title="Upload files" class="btn btn-orange btn-upload-file" href=""><i class="fa fa-cloud-upload"></i></a>
                                     </div>
 								</th>
 							</tr>
@@ -156,7 +156,7 @@
 							        <td></td>
                                     <td class="action">
                                         <div class="btn-group btn-group-sm">
-                                            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown"><i class="fa fa-white clip-settings"></i> <span class="caret"></span></button>
+                                            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown"><i class="clip-settings"></i></button>
                                             <ul class="dropdown-menu pull-right" role="menu">
                                                 <li><a href="${f.path}" class="btn-rename-file" title="Rename folder">Rename folder</a></li>
                                                 <li class="divider"></li>
@@ -182,13 +182,13 @@
 							        <td class="size">$f.contentLength</td>
 							        <td class="action">
 								        <div class="btn-group btn-group-sm">
-                                            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown"><i class="fa fa-white clip-settings"></i> <span class="caret"></span></button>
+                                            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown"><i class="clip-settings"></i></button>
                                             <ul class="dropdown-menu pull-right" role="menu">
-                                                <li><a href="${f.path}" class='btn-rename-file' title="Rename file"><i class="fa fa-white fa-edit"></i></a></li>
-                                                <li><a href="${f.path}" target="_blank" title="Download file"><i class="fa fa-white fa-cloud-download"></i></a></li>
-                                                <li><a href="${f.path}" class='btn-history-file' title="Show history"><i class="fa fa-white clip-history"></i></a></li>
+                                                <li><a href="${f.path}" class='btn-rename-file' title="Rename file"><i class="fa fa-edit"></i></a></li>
+                                                <li><a href="${f.path}" target="_blank" title="Download file"><i class="fa fa-cloud-download"></i></a></li>
+                                                <li><a href="${f.path}" class='btn-history-file' title="Show history"><i class="clip-history"></i></a></li>
                                                 <li class="divider"></li>
-                                                <li><a href="${f.path}" class="btn-delete-file" title="Delete file"><i class="fa fa-white fa-times"></i></a></li>
+                                                <li><a href="${f.path}" class="btn-delete-file" title="Delete file"><i class="fa fa-times"></i></a></li>
                                             </ul>
 								        </div>
 							        </td>
@@ -284,7 +284,7 @@
 			        <div class="form-group">
 				        <label class="label-control col-md-4">Import status</label>
 				        <div class="col-md-8">
-					        <p><button class="btn btn-xs btn-success btn-import-status" type="button" title="Refresh the import status"><i class="fa fa-white fa-refresh"></i></button></p>
+					        <p><button class="btn btn-xs btn-success btn-import-status" type="button" title="Refresh the import status"><i class="fa fa-refresh"></i></button></p>
 					        <textarea id="import-status-result" class="form-control" rows="3" readonly></textarea>
 				        </div>
 			        </div>

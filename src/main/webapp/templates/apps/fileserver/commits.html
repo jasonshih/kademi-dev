@@ -38,7 +38,7 @@
 					        <th>Hash</th>
 					        <th>User</th>
 					        <th>Edited</th>
-					        <th>Restore</th>
+					        <th class="action">Restore</th>
 				        </tr>
 			        </thead>
 			        <tbody>
@@ -48,7 +48,7 @@
 						        <td>$c.commit.itemHash</td>
 						        <td>$c.commit.editor.name</td>
 						        <td><abbr title="$formatter.formatDateISO8601($c.commit.createdDate)" class="info timeago">$c.commit.createdDate</abbr></td>
-						        <td class="restore"><button class="btn btn-info btn-restore-repo" title="Restore this version" rel="$c.commit.itemHash"><i class="fa fa-white fa-undo"></i></button></td>
+						        <td class="action"><button class="btn btn-success btn-restore-repo" title="Restore this version" rel="$c.commit.itemHash"><i class="fa fa-undo"></i></button></td>
 					        </tr>
 				        #end
 			        </tbody>

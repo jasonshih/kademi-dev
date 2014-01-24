@@ -5,7 +5,7 @@
         <link href="/static/quiz/quiz.css" rel="stylesheet" type="text/css" />
         <link href="/static/history/jquery.history.css" rel="stylesheet" type="text/css" />
         <link href="/static/js/milton-image-select.css" rel="stylesheet" type="text/css" />
-        
+
         <script type="text/javascript" src="/static/history/jquery.history.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-image-select.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-tree.js">//</script>
@@ -48,7 +48,7 @@
                         #else
                         <a href="${b.href}" class="hide-branch pull-right btn-xs btn btn-warning" title="Hide this version. Can be restored from the manage versions screen"><i class="clip-eye"></i></a>
                         #end
-                    </aside>                    
+                    </aside>
                     <a href="${b.href}" class="branch noclear">
                         $b.name
                     </a>
@@ -76,13 +76,14 @@
         </div>
 
         <hr/>
+
         <section id="manageModule" class="MainContent">
             <header>
                 <div class="DropdownControl publishing">
                     <div class="DropdownWrapper">
                         #set($currentBranch = $page.closest("branch"))
                         <span>
-                            <b>Version:</b> 
+                            <b>Version:</b>
                             $currentBranch.name
                             #if( $currentBranch.live )
                             <strong class="islive">LIVE</strong>
@@ -90,7 +91,7 @@
                             <a href="${currentBranch.href}publish" class="publish">PUBLISH</a>
                             #end
 
-                        </span> 
+                        </span>
                         <a href="#" class="Control"><span class="Hidden">Change version</span></a>
                     </div>
                     <div class="DropdownContent Hidden">
@@ -107,7 +108,7 @@
 
                                     <a href="${b.href}manageModules" class="branch">
                                         $b.name
-                                    </a>                                    
+                                    </a>
                                 </li>
                                 #end
                             </ul>
@@ -116,7 +117,7 @@
                 </div>
                 <div class="DropdownControl">
                     <div class="DropdownWrapper">
-                        <span><b>Website:</b> $page.closest("website").name</span> 
+                        <span><b>Website:</b> $page.closest("website").name</span>
                         <a href="#" class="Control"><span class="Hidden">Change website</span></a>
                     </div>
                     <div class="DropdownContent Rows3 Hidden">
@@ -129,7 +130,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="DropdownControl selectModule">                    
+                <div class="DropdownControl selectModule">
                     <div class="DropdownWrapper">
                         <span><b>Module:</b> $!folder.title / $!page.title</span>
                         <a href="#" class="Control"><span class="Hidden">Change module</span></a>
@@ -141,9 +142,9 @@
                             <h3>Modules</h3>
                         </header>
                         <div class="Content ClearFix">
-                            <section rel="program" class="programList">                                
+                            <section rel="program" class="programList">
                                 #set($parentProgram = $page.closest("program"))
-                                #foreach($program in $page.closest("programs").children.ofType.program)                                
+                                #foreach($program in $page.closest("programs").children.ofType.program)
                                 <a href="$program.href" class="${formatter.ifEqual('Active','', $parentProgram, $program)}">$program.title</a>
                                 #end
                             </section>
@@ -151,13 +152,13 @@
                                 #set($parentCourse = $page.closest("course"))
                                 #foreach($course in $page.closest("program").children.ofType.course)
                                 <a href="$course.href" class="${formatter.ifEqual('Active','', $parentCourse, $course)}">$course.title</a>
-                                #end                                
+                                #end
                             </section>
                             <section rel="module" class="modulesList">
                                 #set($selectedModule = $page.closest("module"))
                                 #foreach($mod in $page.closest("course").children.ofType.module)
                                 <a href="$mod.href" class="${formatter.ifEqual('Active','', $selectedModule, $mod)}">$mod.title</a>
-                                #end                                                                
+                                #end
                             </section>
                         </div>
                     </div>
@@ -190,12 +191,12 @@
                                 <a href="${modulePage.name}?goto" target="_blank" class="View" title="View page"><span class="Hidden">View page</span></a>
                                 <a href="" class="Move" title="Move up or down"><span class="Hidden">Move up or down</span></a>
                                 <a href="${modulePage.path}" class="Delete" title="Delete page"><span class="Hidden">Delete page</span></a>
-                            </aside>    
+                            </aside>
                         </article>
 
                         #end
 
-                    </div>                
+                    </div>
                 </form>
             </div>
             <div class="Content TabContent" rel="#detail">
@@ -210,25 +211,25 @@
                             <tr>
                                 <th>Module title</th>
                                 <td><input type="text" name="title" value="$!page.title" placeholder="Here is a module page title" /></td>
-                            </tr>                            
-                            
+                            </tr>
+
                             <tr>
                                 <th>Learning time (mins)</th>
                                 <td><input type="text" name="learningTimeMins" value="$!page.learningTimeMins" placeholder="Approximate number of minutes to complete the module" /></td>
-                            </tr>                            
+                            </tr>
                             <tr>
                                 <th>Thumbnail (image)</th>
                                 <td>
                                     <input class="thumbnail" type="text" name="thumb" value="$!page.rawThumb" placeholder="Path to a thumbnail for the module. Eg thumb.png" />
                                 </td>
-                            </tr>                            
+                            </tr>
 
                             <tr>
                                 <th>Description</th>
                                 <td>
                                     <textarea class="smaller" name="brief" id="brief">$!page.brief</textarea>
                                 </td>
-                            </tr>                            
+                            </tr>
                             <tr>
                                 <th>Completion message <small>Enter a message that will appear at the end of this module once completed.</small></th>
                                 <td>
@@ -240,12 +241,12 @@
                             </tr>
                             <tr rel="email">
                                 <th>
-                                    Email confirmation 
+                                    Email confirmation
                                     <small class="Hidden">Enter a message that will appear in an email that get's sent to the user after this module is completed.</small>
                                 </th>
                                 <td>
                                     <label for="emailConfirm">Send an email confirmation upon module completion</label>
-                                    $formatter.checkbox("emailConfirm", "emailConfirm", $page.emailConfirm, "true" )                                    
+                                    $formatter.checkbox("emailConfirm", "emailConfirm", $page.emailConfirm, "true" )
                                     <div class="EmailMessage Hidden">
                                         <textarea cols="100" id="email_message" class="htmleditor" name="emailCompletionMessage" rows="10" placeholder="Enter your email message here">$!page.emailConfirmMessage</textarea>
                                     </div>
@@ -264,9 +265,9 @@
                                             #foreach($cert in $page.certificates)
                                             $formatter.option($cert.id, $cert.title, $action.itemId)
                                             #end
-                                        </select> 
-                                        <label for="points$foreach.index">CPD points</label> 
-                                        <input type="text" class="Small" value="$!action.number" id="points$foreach.index" name="points$foreach.index" data-basename="points" /> 
+                                        </select>
+                                        <label for="points$foreach.index">CPD points</label>
+                                        <input type="text" class="Small" value="$!action.number" id="points$foreach.index" name="points$foreach.index" data-basename="points" />
                                         <a href="#" class="previewCertPdf Btn">Preview</a>
                                     </div>
                                     #end
@@ -279,18 +280,18 @@
                             </tr>
                             <tr>
                                 <th>Choose a reward <a href="${page.closest('organisation').href}rewards">Edit rewards</a></th>
-                                <td rel="reward" class="editList">                                    
+                                <td rel="reward" class="editList">
                                     #foreach($action in $page.actions("reward"))
-                                    <div class="Reward ClearFix First editRow">                                                 
-                                        <select name="reward$foreach.index" class="requiredIf" data-basename="reward">                                            
+                                    <div class="Reward ClearFix First editRow">
+                                        <select name="reward$foreach.index" class="requiredIf" data-basename="reward">
                                             <option value="">[No reward]</option>
                                             #foreach($r in $page.rewards)
                                             $formatter.option($r.id, $r.title, $action.itemId)
                                             #end
 
-                                        </select> 
-                                        <label for="numRewards$foreach.index">No. of rewards</label> 
-                                        <input type="text" class="Small requiredIf" value="$!action.number" id="numRewards$foreach.index" name="numRewards$foreach.index" data-basename="numRewards"/> 
+                                        </select>
+                                        <label for="numRewards$foreach.index">No. of rewards</label>
+                                        <input type="text" class="Small requiredIf" value="$!action.number" id="numRewards$foreach.index" name="numRewards$foreach.index" data-basename="numRewards"/>
                                     </div>
                                     #end
 
@@ -317,7 +318,7 @@
 
         <div id="modalCreatePage" class="Modal wide">
             <header>
-                <h3>Add/edit module page</h3>                
+                <h3>Add/edit module page</h3>
                 <a class="Close" href="#" title="Close"><span class="Hidden">Close</span></a>
             </header>
             <div class="ModalContent">
@@ -329,7 +330,7 @@
                         <tr>
                             <th><label for="name">Enter page title</label></th>
                             <td>
-                                <input type="text" name="pageTitle" id="pageTitle" class="required" value="" placeholder="A title for the new page" />                                
+                                <input type="text" name="pageTitle" id="pageTitle" class="required" value="" placeholder="A title for the new page" />
                                 <button class="Btn pageBtn" type="submit">
                                     Save page
                                     <img class='ajax-loader' src='/static/common/loading.gif'/>
@@ -341,14 +342,14 @@
                             <td colspan="2">
                                 <textarea name="body" id="body" class="htmleditor toolbar-Full" style="width: 800px"></textarea>
                             </td>
-                        </tr>                        
+                        </tr>
                     </table>
                 </form>
             </div>
-        </div>        
+        </div>
         <div id="modalCreateQuiz" class="Modal wide">
             <header>
-                <h3>Add/edit quiz</h3>                
+                <h3>Add/edit quiz</h3>
                 <a class="Close" href="#" title="Close"><span class="Hidden">Close</span></a>
             </header>
             <div class="ModalContent">
@@ -370,21 +371,21 @@
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="2">                                
+                            <td colspan="2">
                                 <div id="quizQuestions">
 
                                 </div>
                             </td>
-                        </tr>                        
+                        </tr>
                     </table>
                 </form>
             </div>
-        </div>           
+        </div>
         <script type="text/javascript" >
             var themePath = "${page.themePath}";
             jQuery(function() {
                 initManageModule("../../..", themePath);
-            });            
-        </script>        
+            });
+        </script>
     </body>
 </html>

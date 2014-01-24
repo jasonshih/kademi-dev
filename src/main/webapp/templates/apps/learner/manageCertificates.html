@@ -5,37 +5,38 @@
     </head>
     <body class="manage-certificates">
         <p>
-            <a href="#" class="btn btn-sm btn-primary btn-add-cert"><i class="fa fa-plus fa-white"></i> Add new certificate</a>
+            <a href="#" class="btn btn-primary btn-add-cert"><i class="fa fa-plus"></i> Add new certificate</a>
         </p>
         
         <div class="panel panel-default">
 	        <div class="panel-heading">
-		        <i class="fa clip-folder"></i>
+		        <i class="clip-folder"></i>
 		        Certifications
 	        </div>
 	        <div class="panel-body">
                 <table class="table table-bordered table-striped table-hover table-data">
                     <colgroup>
                         <col />
-                        <col style="width: 120px;" />
+                        <col style="width: 60px;" />
                     </colgroup>
                     <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Action</th>
+                            <th class="action">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         #foreach($cert in $page.children)
                             <tr>
                                 <td>$cert.title</td>
-                                <td>
-                                    <div class="btn-group">
-                                        <a class="btn btn-xs btn-info" title="Edit" href="$cert.name">Edit details</a>
-                                        <button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">
-                                            <span class="caret"></span>
+                                <td class="action">
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+                                            <i class="clip-settings"></i>
                                         </button>
                                         <ul class="dropdown-menu pull-right" role="menu">
+	                                        <li><a title="Edit" href="$cert.name">Edit details</a></li>
+	                                        <li class="divider"></li>
                                             <li><a class="btn-delete-cert" href="$cert.name" data-name="$cert.title">Delete</a></li>
                                         </ul>
                                     </div>
