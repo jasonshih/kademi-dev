@@ -56,6 +56,8 @@
 					dataWidth = 600;
 				} else if (modal.hasClass('modal-xs')) {
 					dataWidth = 400;
+				} else {
+					dataWidth = 200;
 				}
 
 				modal.attr('data-witdh', dataWidth)

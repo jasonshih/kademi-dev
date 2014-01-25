@@ -1,3 +1,6 @@
+/* ============================================================================
+   Modal
+   ============================================================================ */
 .modal-lg {
 	width: 1000px;
 	margin-left: -500px;
@@ -13,67 +16,83 @@
 	margin-left: -300px;
 }
 
-.invi {
-    top: -9999px !important;
-    left: -9999px !important;
-    width: 1px !important;
-    height: 1px !important;
-    visibility: hidden !important;
-    position: fixed !important;
-    display: block !important;
-}
-
 .modal-xs {
 	width: 400px;
 	margin-left: -200px;
 }
 
+.modal-xxs {
+	width: 200px;
+	margin-left: -100px;
+}
+
+.modal-fuse.calculating {
+	width: auto !important;
+	height: auto !important;
+}
+
+.modal-splitter {
+	margin: 5px 0 15px;
+}
+
+.modal-alert {
+	display: none;
+}
+
+/* ============================================================================
+   Dashboard
+   ============================================================================ */
 .video-intro .panel-body {
 	text-align: center
 }
 
-.invi {
-	visibility: hidden !important
+/* ============================================================================
+   Articles list
+   ============================================================================ */
+.article-wrapper > article {
+	margin-top: 5px;
+	border-radius: 3px;
+	border: 1px solid #DEDEDE;
+	height: 42px;
+	line-height: 32px;
+	padding: 5px 5px 5px 10px;
 }
 
-.hide {
-	display: none !important
+.article-wrapper > article aside.article-action {
+	float: right;
+	line-height: normal;
+	visibility: hidden;
 }
 
-.hide-text {
-	text-indent: 100% !important;
-	white-space: nowrap !important;
-	overflow: hidden !important;
-	font-size: 0 !important;
-	line-height: 0 !important
+.article-wrapper > article:hover aside.article-action {
+	visibility: visible;
 }
 
-.clear {
-	clear: both
+.article-wrapper > article aside.article-action > * {
+	vertical-align: top;
 }
 
-.clearfix {
-	*zoom: 1
+.article-wrapper > article:nth-child(2n+1) {
+	background-color: #EDEDED;
 }
 
-fieldset hr {
-	margin: 5px 0 20px;
+.article-wrapper > article:first-child {
+	margin-top: 0;
 }
 
-.clearfix:after {
-	clear: both;
-	content: " ";
-	display: block;
-	font-size: 0;
-	height: 0;
-	line-height: 0;
-	visibility: hidden
+.article-wrapper > article > i,
+.article-wrapper > article span.article-name {
+	float: left;
+	vertical-align: top;
 }
 
-.unstyled {
-	list-style: none
+.article-wrapper > article > i {
+	margin: 9px 5px 0 0;
 }
 
+/* ============================================================================
+   Utilities
+   ============================================================================ */
 /** BM: need to have links inside dropdowns which dont clear the float */
 .dropdown-menu > li > a.pull-right {
 	clear: none;
@@ -123,24 +142,14 @@ ul.dropdown-menu.list li.list-action {
     padding-top: 5px;
 }
 
-.modal-fuse.calculating {
-    width: auto !important;
-    height: auto !important;
-}
-
 /** BM: the pageMessage element is used for feedback from jquery.forms.js, needs to be initially hidden **/
 .pageMessage {
 	display: none;
 }
 
-.modal-splitter {
-    margin: 5px 0 15px;
-}
-
-.modal-alert {
-    display: none;
-}
-
+/* ============================================================================
+   Btn upload
+   ============================================================================ */
 .btn-upload {
     height: 34px;
 }
@@ -164,10 +173,61 @@ ul.dropdown-menu.list li.list-action {
     width: auto;
 }
 
+/* ============================================================================
+   Utilities
+   ============================================================================ */
 .action {
 	text-align: center;
 }
 
 .action > * {
 	text-align: left;
+}
+
+.invi {
+	top: -9999px !important;
+	left: -9999px !important;
+	width: 1px !important;
+	height: 1px !important;
+	visibility: hidden !important;
+	position: fixed !important;
+	display: block !important;
+}
+
+.hide {
+	display: none !important
+}
+
+.hide-text {
+	text-indent: 100% !important;
+	white-space: nowrap !important;
+	overflow: hidden !important;
+	font-size: 0 !important;
+	line-height: 0 !important
+}
+
+.clear {
+	clear: both
+}
+
+.clearfix {
+	*zoom: 1
+}
+
+fieldset hr {
+	margin: 5px 0 20px;
+}
+
+.clearfix:after {
+	clear: both;
+	content: " ";
+	display: block;
+	font-size: 0;
+	height: 0;
+	line-height: 0;
+	visibility: hidden
+}
+
+.unstyled {
+	list-style: none
 }

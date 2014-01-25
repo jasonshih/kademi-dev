@@ -3,47 +3,6 @@
     z-index: 2;
 }
 
-.article-wrapper > article {
-    margin-top: 5px;
-    border-radius: 3px;
-    border: 1px solid #DEDEDE;
-    height: 42px;
-    line-height: 32px;
-    padding: 5px 5px 5px 10px;
-}
-
-.article-wrapper > article aside.article-action {
-    float: right;
-    line-height: normal;
-    visibility: hidden;
-}
-
-.article-wrapper > article:hover aside.article-action {
-    visibility: visible;
-}
-
-.article-wrapper > article aside.article-action > * {
-    vertical-align: top;
-}
-
-.article-wrapper > article:nth-child(2n+1) {
-    background-color: #EDEDED;
-}
-
-.article-wrapper > article:first-child {
-    margin-top: 0;
-}
-
-.article-wrapper > article > i,
-.article-wrapper > article span.article-name {
-    float: left;
-    vertical-align: top;
-}
-
-.article-wrapper > article > i {
-    margin: 9px 5px 0 0;
-}
-
 #modal-add-page .btn[data-type] img,
 .btn-history-page img { 
     visibility: hidden;

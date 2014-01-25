@@ -1,121 +1,32 @@
-/** Begin Fuse/theme.css **/
-#manageModule > header {
-    padding-bottom: 8px;
-    border-bottom: 1px solid #dadada;
-    color: #333;
-    font-size: 11px;
-    line-height: 24px;
-    height: 24px;
+.program-course-module-mix .dropdown-menu {
+	padding-left: 15px;
 }
-/* Content */
-#manageModule > div.Content {
-    border: 1px solid #cecece;
-    background-color: #f0f0f0;
-    border-radius: 5px;
-}
-#manageModule > div.Content.ajax-loading {
-    background-image: url('/static/common/ajax-loader.gif');
-    background-position: 0 50px;
-    background-repeat: no-repeat;
-    background-position: 92% 0;
-}
-/* Content for page */
-#manageModule div.Content h4 {
-    font-size: 13px;
-    border-radius: 5px 5px 0 0;
-    height: 30px;
-    line-height: 30px;
-    padding: 0 10px;
-    font-weight: bold;
-}
-#manageModule div.Content div.MainContent {
-    padding: 5px;
-    border-top: 1px solid #cecece;
-    background: #FFF;
-    border-radius: 0 0 5px 5px;
-}
-#manageModule div.Content div.MainContent article {
-    margin-top: 5px;
-    padding: 4px 4px 4px 30px;
-    line-height: 25px;
-    height: 25px;
-    border: 1px solid #dedede;
-    border-radius: 3px;
-    cursor: move;
-    position: relative;
-}
-/* Content for details */
-#manageModule div.Content form { border: 0; }
-#manageModule div.Content form.Details table tbody td .EmailMessage {
-    clear: both;
-    padding-top: 5px;
-}
-#manageModule div.Content form.Details table tbody td div.Certificate, #manageModule div.Content form.Details table tbody td div.Reward {
-    clear: both;
-    margin-top: 7px;
-}
-#manageModule div.Content form.Details table tbody td div.Certificate.First, #manageModule div.Content form.Details table tbody td div.Reward.First { margin-top: 0; }
 
-#manageModule form.Details div.Certificate label, #manageModule form.Details div.Reward label {
-    font-weight: bold;
-    margin-right: 10px;
-    float: left;
-    line-height: 32px;
+.program-course-module-mix .dropdown-menu li {
+	padding: 0 15px 0 0;
+	min-height: 130px;
 }
-/* Controller panel for Edit mode */
-#manageModule .Controller {
-    padding: 4px;
-    border: 1px solid #d9d9d9;
-    border-radius: 5px;
-    margin-bottom: 5px;
-    height: auto;
-}
-#manageModule .Controller .Left .Btn { margin-right: 5px; }
-#manageModule .Controller .Right .Btn { margin-left: 5px; }
 
-.modulePage:hover aside {
-    display: block;
+.program-course-module-mix .dropdown-menu li.loading {
+	background: (/static/images/loading.gif) 50% 50% no-repeat;
 }
-#manageModule .AddModulePage {
-    position: absolute;
-    right: 0;
-    top: 0;
+
+.program-course-module-mix .dropdown-menu li.loading table tbody {
+	display: none;
 }
-#manageModule .AddQuizPage { 
-    background-image: url(/templates/themes/admin/images/icon_quiz.png); 
-    right: 35px;
-    position: absolute;
-    top: 0;
+
+.program-course-module-mix .dropdown-menu tr td,
+.program-course-module-mix .dropdown-menu tr th {
+	padding: 0;
 }
-.pageBtn {
-    float: right;
-    width: 140px;
+
+.program-course-module-mix .dropdown-menu tr a,
+.program-course-module-mix .dropdown-menu tr span {
+	text-decoration: none;
+	display: block;
+	padding: 5px;
 }
-body button.historyBtn {
-    float: right;
-    width: 100px;
-    background-color: #E78B00;
-    margin-right: 10px;
-}
-.Details #emailConfirm {
-    float: left;
-    margin: 0 5px 0 0;
-}
-div.EmailMessage {
-    display: none;
-}
-#emailConfirm:checked + div.EmailMessage {
-    display: block;
-}
-.Details label[for=emailConfirm] {
-    float: none !important;
-}
-.previewCertPdf {
-    float: right;
-}
-input.thumbnail {
-    margin-right: 10px;
-}
-#modalCreatePage div.ModalContent {
-    max-height: none;
+
+.program-course-module-mix .dropdown-menu tr.active a {
+	color: #fff;
 }

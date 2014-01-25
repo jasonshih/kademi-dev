@@ -13,9 +13,8 @@ function initManageModule(baseHref, themePath) {
     themeCssFiles.push("/static/prettify/prettify.css");
     parentOrgHref = baseHref;
     $content = $("#manageModule").find("> div.Content");
-		
-    stripTable();
-    initController();
+
+	initDropdownMix();
     initFormDetails();	
     initModuleList();
     initDropDown();
@@ -50,17 +49,20 @@ function initManageModule(baseHref, themePath) {
     window.onbeforeunload = isModalOpen;
 }
 
+function initDropdownMix() {
+	var mixWrapper = $('.program-course-module-mix');
+	var dropdown = mixWrapper.find('.dropdown-menu');
+	var mainContent = $('.main-content').children('.container ');
 
-function stripTable() {
-    $content
-    .find("div.MainContent article")
-    .removeClass("Even")
-    .filter(":even")
-    .addClass("Even");
-}
-	
-// Insert button in list of modules
-function initController() {
+	var adjustDropdown = function () {
+		dropdown.css('width', mainContent.width());
+	};
+
+	adjustDropdown();
+
+	Bob.onPageResized(function () {
+		adjustDropdown();
+	});
 }
 	
 	

@@ -14,7 +14,7 @@ function myPrompt(id, url, title, instructions, caption, buttonName, buttonText,
         existing.remove();
     }
     
-    var modalString = '<div id="' + id + '" class="modal modal-xs fade" tabindex="-1" role="dialog" aria-labelledby="promptModalLabel" aria-hidden="true"></div>';
+    var modalString = '<div id="' + id + '" class="modal modal-sm fade" tabindex="-1" role="dialog" aria-labelledby="promptModalLabel" aria-hidden="true"></div>';
     myPromptModal = $(modalString);
     
     var inputId = id + '_';

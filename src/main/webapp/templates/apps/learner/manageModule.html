@@ -77,100 +77,103 @@
 
         <hr/>
 
+        <div class="btn-group program-course-module-mix">
+	        <button class="btn btn-orange dropdown-toggle" data-toggle="dropdown">
+		        <b>Module:</b> <span class="current-module">$!folder.title / $!page.title</span>
+		        <span class="caret"></span>
+	        </button>
+	        <ul role="menu" class="dropdown-menu row">
+		        <li id="table-programs" class="col-md-4">
+			        <table class="table table-striped table-hover table-condensed">
+				        <thead>
+					        <tr>
+						        <th><span>Programs</span></th>
+					        </tr>
+				        </thead>
+				        <tbody>
+					        #set($parentProgram = $page.closest("program"))
+					        #foreach($program in $page.closest("programs").children.ofType.program)
+					            <tr class="program ${formatter.ifEqual('active','', $parentProgram, $program)}">
+						            <td><a href="$program.href" >$program.title</a></td>
+					            </tr>
+					        #end
+				        </tbody>
+			        </table>
+		        </li>
+		        <li id="table-course" class="col-md-4">
+			        <table class="table table-striped table-hover table-condensed">
+				        <thead>
+					        <tr>
+						        <th><span>Courses</span></th>
+					        </tr>
+				        </thead>
+				        <tbody>
+					        #set($parentCourse = $page.closest("course"))
+					        #foreach($course in $page.closest("program").children.ofType.course)
+					            <tr class="course ${formatter.ifEqual('active','', $parentCourse, $course)}">
+						            <td><a href="$course.href" class="">$course.title</a></td>
+					            </tr>
+					        #end
+				        </tbody>
+			        </table>
+		        </li>
+		        <li id="table-modules" class="col-md-4">
+			        <table class="table table-striped table-hover table-condensed">
+				        <thead>
+					        <tr>
+						        <th><span>Modules</span></th>
+					        </tr>
+				        </thead>
+				        <tbody>
+					        #set($selectedModule = $page.closest("module"))
+					        #foreach($mod in $page.closest("course").children.ofType.module)
+					            <tr class="module ${formatter.ifEqual('active','', $selectedModule, $mod)}">
+						            <td><a href="$mod.href" >$mod.title</a></td>
+					            </tr>
+					        #end
+				        </tbody>
+			        </table>
+		        </li>
+	        </ul>
+        </div>
+
+        <hr />
+
+        #if($page.module)
+        <div class="tabbable">
+	        <ul class="nav nav-tabs tab-bricky">
+		        <li>
+			        <a data-toggle="tab" href="#list-tab">Module pages</a>
+		        </li>
+		        <li>
+			        <a data-toggle="tab" href="#details-tab">Module details</a>
+		        </li>
+	        </ul>
+	        <div class="tab-content">
+		        <!-- Start content of Pages tab -->
+		        <div id="list" class="tab-pane">
+			        <div class="btn-group btn-group-sm pull-right">
+				        <a title="Add quiz" href="#" class="btn btn-success btn-quiz-page"><i class="clip-question"></i></a>
+				        <a title="Add page" href="#" class="btn btn-orange btn-module-page"><i class="fa fa-plus"></i></a>
+			        </div>
+			        <h4>$page.title</h4>
+			        <hr />
+		        </div>
+		        <!-- Start content of Pages tab -->
+		        <div id="details" class="tab-pane">
+		        </div>
+	        </div>
+        </div>
+        #end
+
         <section id="manageModule" class="MainContent">
-            <header>
-                <div class="DropdownControl publishing">
-                    <div class="DropdownWrapper">
-                        #set($currentBranch = $page.closest("branch"))
-                        <span>
-                            <b>Version:</b>
-                            $currentBranch.name
-                            #if( $currentBranch.live )
-                            <strong class="islive">LIVE</strong>
-                            #else
-                            <a href="${currentBranch.href}publish" class="publish">PUBLISH</a>
-                            #end
-
-                        </span>
-                        <a href="#" class="Control"><span class="Hidden">Change version</span></a>
-                    </div>
-                    <div class="DropdownContent Hidden">
-                        <div class="Content">
-                            <ul class="Program branches">
-                                #foreach($b in $page.closest("branch").parent.children.ofType.branch)
-                                <li>
-                                    <a href="#" class="copy"><span>Copy</span></a>
-                                    #if( $b.live )
-                                    <strong class="islive">LIVE</strong>
-                                    #else
-                                    <a href="#" class="hide" title="Hide this version. Can be restored from the manage versions screen"><span>Hide</span></a>
-                                    #end
-
-                                    <a href="${b.href}manageModules" class="branch">
-                                        $b.name
-                                    </a>
-                                </li>
-                                #end
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="DropdownControl">
-                    <div class="DropdownWrapper">
-                        <span><b>Website:</b> $page.closest("website").name</span>
-                        <a href="#" class="Control"><span class="Hidden">Change website</span></a>
-                    </div>
-                    <div class="DropdownContent Rows3 Hidden">
-                        <div class="Content ClearFix">
-                            <section rel="program">
-                                #foreach($w in $page.closest("website").parent.children)
-                                <a href="${w.href}manageModules">$w.name</a>
-                                #end
-                            </section>
-                        </div>
-                    </div>
-                </div>
-                <div class="DropdownControl selectModule">
-                    <div class="DropdownWrapper">
-                        <span><b>Module:</b> $!folder.title / $!page.title</span>
-                        <a href="#" class="Control"><span class="Hidden">Change module</span></a>
-                    </div>
-                    <div class="DropdownContent Rows3 Hidden">
-                        <header>
-                            <h3>Programs</h3>
-                            <h3>Courses</h3>
-                            <h3>Modules</h3>
-                        </header>
-                        <div class="Content ClearFix">
-                            <section rel="program" class="programList">
-                                #set($parentProgram = $page.closest("program"))
-                                #foreach($program in $page.closest("programs").children.ofType.program)
-                                <a href="$program.href" class="${formatter.ifEqual('Active','', $parentProgram, $program)}">$program.title</a>
-                                #end
-                            </section>
-                            <section rel="course" class="coursesList">
-                                #set($parentCourse = $page.closest("course"))
-                                #foreach($course in $page.closest("program").children.ofType.course)
-                                <a href="$course.href" class="${formatter.ifEqual('Active','', $parentCourse, $course)}">$course.title</a>
-                                #end
-                            </section>
-                            <section rel="module" class="modulesList">
-                                #set($selectedModule = $page.closest("module"))
-                                #foreach($mod in $page.closest("course").children.ofType.module)
-                                <a href="$mod.href" class="${formatter.ifEqual('Active','', $selectedModule, $mod)}">$mod.title</a>
-                                #end
-                            </section>
-                        </div>
-                    </div>
-                </div>
-            </header>
             #if($page.module)
             <nav class="TabNav ClearFix">
                 <a href="#list">Module pages</a>
                 <a href="#detail">Module details</a>
             </nav>
             <div class="Content TabContent" rel="#list" style="position: relative">
-                <h4>$page.title</h4>
+
                 <a title="Add Page" class="SmallBtn Add NoText AddModulePage" href=""><span>Add</span></a>
                 <a title="Add Quiz" class="SmallBtn Add NoText AddQuizPage" href=""><span>Quiz</span></a>
                 <form method="POST" action="" class="modulePages">
@@ -383,7 +386,7 @@
         </div>
         <script type="text/javascript" >
             var themePath = "${page.themePath}";
-            jQuery(function() {
+            Bob.onDOMReady(function() {
                 initManageModule("../../..", themePath);
             });
         </script>
