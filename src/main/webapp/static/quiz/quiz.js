@@ -1,11 +1,4 @@
-// aaa
-
-var $content;
-var selectedProgram = null;
 var selectedCourse = null;
-var selectModule = null;
-var parentOrgHref;
-
 
 function loadQuizEditor(modal, data) {
     modal.find("#quizQuestions").html(data.body);

@@ -39,6 +39,34 @@
 	display: none;
 }
 
+.modal .btn-img img {
+	visibility: hidden;
+}
+
+modal.ajax-processing .btn-img[data-type="form-submit"] img,
+.btn-img.loading img {
+	visibility: visible;
+}
+
+/* ============================================================================
+   Main content
+   ============================================================================ */
+.main-content .container {
+	position: relative;
+}
+
+.main-content .loading-overlay {
+	position: fixed;
+	z-index: 999999;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	background: #fff url("/static/images/loading.gif") 50% 50% no-repeat;
+	opacity: 0.5;
+	filter: "alpha(opacity=50)";
+}
+
 /* ============================================================================
    Dashboard
    ============================================================================ */
@@ -56,6 +84,10 @@
 	height: 42px;
 	line-height: 32px;
 	padding: 5px 5px 5px 10px;
+}
+
+.article-wrapper.article-draggable > article {
+	cursor: move;
 }
 
 .article-wrapper > article aside.article-action {

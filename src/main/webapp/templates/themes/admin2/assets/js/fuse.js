@@ -2,6 +2,8 @@
 	Bob.onDOMReady(function () {
 		var body = $(doc.body);
 
+		initLoadingOverlay();
+
 		$('.tabbable').exist(function () {
 			this.each(function () {
 				var wrapper = $(this);
@@ -250,4 +252,22 @@ function closeFuseModal(modal, callback) {
 	if (typeof callback === 'function') {
 		callback.apply(this);
 	}
+}
+
+function initLoadingOverlay() {
+	if (!findLoadingOverlay()[0]) {
+		$('.main-content').children('.container').prepend('<div class="loading-overlay hide"></div>');
+	}
+}
+
+function findLoadingOverlay() {
+	return $('.main-content').children('.container').find('.loading-overlay');
+}
+
+function showLoadingOverlay() {
+	findLoadingOverlay().removeClass('hide');
+}
+
+function hideLoadingOverlay() {
+	findLoadingOverlay().addClass('hide');
 }

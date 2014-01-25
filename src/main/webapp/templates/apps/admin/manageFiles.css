@@ -3,16 +3,6 @@
     z-index: 2;
 }
 
-#modal-add-page .btn[data-type] img,
-.btn-history-page img { 
-    visibility: hidden;
-}
-
-#modal-add-page.ajax-processing .btn[data-type] img,
-.btn-history-page.loading img { 
-    visibility: visible;
-}
-
 #files table .size {
     text-align: right;
 }

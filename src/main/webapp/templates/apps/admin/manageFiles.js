@@ -148,7 +148,6 @@ function initFiles() {
     });
 }
 
-var editorHeight = ($(window).height() - 500) + 'px';
 
 function initAddPageModal() {
     log('initAddPageModal', $('.btn-add-page'));
@@ -156,6 +155,7 @@ function initAddPageModal() {
     var modal = $('#modal-add-page');
 
 	initFuseModal(modal, function () {
+		var editorHeight = ($(window).height() - 500) + 'px';
         modal.find('.modal-body').css('height', editorHeight + 100);
         initHtmlEditors(modal.find('.htmleditor'), editorHeight, null, null, standardRemovePlugins + ',autogrow'); // disable autogrow
     });
@@ -256,7 +256,7 @@ function doSavePage(form, pageArticle) {
 					} else {
 						pageArticle.find('> span').text(_title);
 					}
-					modal.modal('hide');
+					closeFuseModal(modal);
 				} else {
 					alert('There was an error saving the page: ' + data.messages);
 				}

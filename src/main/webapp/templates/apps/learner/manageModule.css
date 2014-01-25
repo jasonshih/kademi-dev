@@ -4,29 +4,34 @@
 
 .program-course-module-mix .dropdown-menu li {
 	padding: 0 15px 0 0;
+}
+
+.program-course-module-mix .dropdown-menu li > div {
+	padding-bottom: 10px;
 	min-height: 130px;
 }
 
-.program-course-module-mix .dropdown-menu li.loading {
-	background: (/static/images/loading.gif) 50% 50% no-repeat;
+.program-course-module-mix .dropdown-menu li > div.loading {
+	background: url("/static/images/loading.gif") 50% 50% no-repeat;
 }
 
-.program-course-module-mix .dropdown-menu li.loading table tbody {
-	display: none;
+.program-course-module-mix .dropdown-menu li > p {
+	border-bottom: 2px solid #ccc;
+	margin-bottom: 0;
 }
-
-.program-course-module-mix .dropdown-menu tr td,
-.program-course-module-mix .dropdown-menu tr th {
-	padding: 0;
-}
-
-.program-course-module-mix .dropdown-menu tr a,
-.program-course-module-mix .dropdown-menu tr span {
-	text-decoration: none;
+.program-course-module-mix .dropdown-menu li > p,
+.program-course-module-mix .dropdown-menu li a {
 	display: block;
 	padding: 5px;
+	text-decoration: none;
 }
 
-.program-course-module-mix .dropdown-menu tr.active a {
+.program-course-module-mix .dropdown-menu li a:hover {
+	background: #f5f5f5;
+}
+
+
+.program-course-module-mix .dropdown-menu li a.active {
+	background: #428BCA;
 	color: #fff;
 }
