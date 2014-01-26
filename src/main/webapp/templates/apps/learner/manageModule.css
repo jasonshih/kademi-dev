@@ -35,3 +35,38 @@
 	background: #428BCA;
 	color: #fff;
 }
+.rewards-wrapper,
+.certificates-wrapper {
+	padding-top: 10px;
+}
+
+.rewards-wrapper .reward,
+.certificates-wrapper .certificate {
+	margin-top: 5px;
+}
+
+.rewards-wrapper .reward:first-child,
+.certificates-wrapper .certificate:first-child {
+	margin-top: 0;
+}
+
+.rewards-wrapper .reward > *,
+.certificates-wrapper .certificate > * {
+	float: left;
+	margin-right: 10px;
+}
+
+.rewards-wrapper .reward > .input-group,
+.certificates-wrapper .certificate > .input-group {
+	width: 220px;
+}
+
+.rewards-wrapper .reward > .input-group + select,
+.certificates-wrapper .certificate > .input-group + select {
+	width: 200px;
+}
+
+#details small {
+	font-style: italic;
+	color: #ccc;
+}

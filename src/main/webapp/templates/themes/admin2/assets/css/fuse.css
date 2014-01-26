@@ -8,7 +8,7 @@
 
 .modal-md {
 	width: 800px;
-	margin-left: -800px;
+	margin-left: -400px;
 }
 
 .modal-sm {
@@ -130,10 +130,6 @@ modal.ajax-processing .btn-img[data-type="form-submit"] img,
 	clear: none;
 }
 
-.btn .progress {
-	background: none;
-}
-
 .noclear {
 	clear: none !important;
 }
@@ -184,25 +180,61 @@ ul.dropdown-menu.list li.list-action {
    ============================================================================ */
 .btn-upload {
     height: 34px;
+	cursor: pointer;
+	width: 180px;
+	position: relative;
 }
 
-.btn-upload .muploadBtn {
-    background: none;
-    border: 0;
-    box-shadow: none;
-    text-shadow: none;
-    padding: 0;
-    font-size: inherit;
-    line-height: inherit;
+.btn-upload form {
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
 }
 
-.btn-upload .muploadBtn span {
-    font-size: inherit;
-    line-height: inherit;
+.btn-upload .progress {
+	cursor: pointer;
+	box-shadow: none;
+	display: none;
 }
 
-.btn-upload .fileupload-buttonbar {
-    width: auto;
+/* ============================================================================
+   Milton tree
+   ============================================================================ */
+.milton-tree {
+	border: 1px solid #ddd;
+	height: 300px;
+	overflow-y: auto;
+	margin-top: 15px;
+}
+
+.milton-tree.jstree-default a ins.jstree-icon {
+	font-family: 'clip-font';
+	font-style: normal;
+	font-variant: normal;
+	font-weight: normal;
+	line-height: 1;
+	text-transform: none;
+	background: none;
+}
+
+.milton-tree.jstree-default a ins.jstree-icon.folder:before {
+	content: "";
+}
+
+.milton-tree.jstree-default a ins.jstree-icon.file:before {
+	content: "";
+}
+
+/* ============================================================================
+   Milton tree
+   ============================================================================ */
+.milton-image-select-container .milton-image-preview {
+	border: 1px solid #ddd;
+	height: 300px;
+	overflow: auto;
+	margin-top: 15px;
 }
 
 /* ============================================================================

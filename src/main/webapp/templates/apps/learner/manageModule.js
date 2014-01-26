@@ -19,11 +19,10 @@ function initManageModule(baseHref, themePath) {
 	initThumbnail();
 	initCRUDModulePages();
 	initModuleList();
-
-	initFormDetails();
-	initAddQuizModal();
-	initQuizBuilder();
 	initPublishingMenu('manageModules');
+	initAddQuizModal();
+	initFormDetails();
+	initQuizBuilder();
 
 	window.onbeforeunload = isModalOpen;
 }
@@ -43,8 +42,8 @@ function initThumbnail() {
 	var pagePath = '';
 	var basePath = window.location.pathname;
 
-	log('init thumbnail selector', basePath, pagePath);
-	var thumbSel = $('input.thumbnail');
+	log('init thumbnail-image selector', basePath, pagePath);
+	var thumbSel = $('input.thumbnail-image');
 	thumbSel.mselect({
 		basePath: basePath,
 		pagePath: pagePath,
@@ -296,9 +295,98 @@ function initModuleList() {
 	});
 }
 
+function checkFormControlState(type) {
+	var allWrappers = {
+		reward: $('.rewards-wrapper'),
+		certificate: $('.certificates-wrapper')
+	};
+
+	allWrappers.all = allWrappers.reward.add(allWrappers.certificates);
+
+	var wrappers;
+
+	if (type) {
+		wrappers = allWrappers[type];
+	} else {
+		wrappers = allWrappers.all;
+	}
+
+	wrappers.each(function () {
+		var wrapper = $(this);
+		var btnAdd = wrapper.prev();
+		var contents = wrapper.children('div');
+
+		if (type) {
+			wrapper[contents.length === 0 ? 'addClass': 'removeClass']('hide');
+			btnAdd[contents.length === 0 ? 'addClass': 'removeClass']('btn-add-first');
+		}
+
+		contents.each(function (i) {
+			var content = $(this);
+
+			if (type === 'reward') {
+				var numRewards = 'numRewards' + i;
+
+				content.find('input:text').attr({
+					name: numRewards,
+					id: numRewards
+				});
+				content.find('label').attr('for', numRewards);
+
+				content.find('select').attr('name', 'reward' + i);
+			} else {
+				var points = 'points' + i;
+
+				content.find(points).attr({
+					name: numRewards,
+					id: points
+				});
+				content.find('label').attr('for', points);
+
+				content.find('select').attr('name', 'certificates' + i);
+			}
+		});
+	});
+}
+
+function initFormControl(name) {
+	var wrapper = $('.' + name +'s-wrapper');
+	var btnAdd = wrapper.prev();
+	var template = wrapper.children().eq(0).clone();
+
+	checkFormControlState();
+
+	btnAdd.on('click', function (e) {
+		e.preventDefault();
+
+		if (btnAdd.hasClass('btn-add-first')) {
+			btnAdd.removeClass('btn-add-first');
+			wrapper.removeClass('hide');
+		} else {
+			wrapper.append(template.clone());
+		}
+
+		checkFormControlState(name);
+	});
+
+	wrapper.on('click', '.btn-delete-' + name, function (e) {
+		e.preventDefault();
+
+		var btn = $(this);
+		var parent = btn.closest('.' + name);
+
+		parent.remove();
+
+		checkFormControlState(name);
+	});
+}
+
 // Event for Add and Edit Certificate and Reward button in Module details panel
 function initFormDetails() {
-	initModuleDetailsState(true);
+	checkFormControlState();
+
+	var detailsWrapper = $('#details');
+	var formDetails = detailsWrapper.find('form');
 
 	var addFirst = $('.addFirst');
 	addFirst.click(function (e) {
@@ -310,48 +398,38 @@ function initFormDetails() {
 		log('hide', btn);
 	});
 
-	$('#moduleDetailsForm').on('click', '.Delete', function (e) {
+	initFormControl('certificate');
+	initFormControl('reward');
+
+	$('.certificates-wrapper').on('click', 'a.btn-preview-certificate', function (e) {
 		e.preventDefault();
-		e.stopPropagation();
-		var div = $(e.target).closest('div');
-		var container = div.parent();
-		if (container.find('div').length > 1) {
-			log('remove', div);
-			div.remove();
-			initModuleDetailsState(false);
+
+		var btn = $(this);
+		var certId = btn.closest('.certificate').find('select').val();
+
+		if (certId === '') {
+			alert('Please select a certificate');
 		} else {
-			log('will hide', div);
-			// otherwise will be hidden, so just reset values
-			div.find('select, input').val('');
-			initModuleDetailsState(true);
+			var href = 'cert_' + certId + '/certificatePreview.pdf';
+			window.open(href, '_bank');
 		}
 	});
 
-	$('#moduleDetailsForm').on('click', '.addRow', function (e) {
-		e.preventDefault();
-		e.stopPropagation();
-		var div = $(e.target).closest('div');
-		log('addRow', div);
-		var container = div.parent();
-		var newDiv = div.clone();
-		container.append(newDiv);
-		newDiv.find('input').val(1);
-		initModuleDetailsState(false);
-	});
+	var chkEmailConfirm = $('#emailConfirm');
+	var contentEmailConfirm = $('#email-confirm-content');
+	var checkEmailConfirm = function () {
+		contentEmailConfirm[chkEmailConfirm.is(':checked') ? 'removeClass' : 'addClass']('hide');
+	};
+	checkEmailConfirm();
 
 	// For email
-	$('#emailConfirm').on('click', function () {
-		var $controls = $('div.EmailMessage');
-		if ($(this).is(':checked')) {
-			$controls.removeClass('Hidden');
-		} else {
-			$controls.addClass('Hidden');
-		}
+	chkEmailConfirm.on('click', function () {
+		checkEmailConfirm();
 	});
 
-	$('#moduleDetailsForm').forms({
+	formDetails.forms({
 		validate: function (form) {
-			return checkEditListsValid();
+			return checkEditListsValid(form);
 		},
 		callback: function (resp) {
 			log('done', resp);
@@ -361,88 +439,46 @@ function initFormDetails() {
 			}
 		}
 	});
-	initHtmlEditors($('#moduleDetailsForm .htmleditor'));
 
-	$('body').on('click', 'a.previewCertPdf', function (e) {
-		var node = $(e.target);
-		var certId = node.parent().find('select').val();
-		if (certId === '') {
-			alert('Please select a certificate');
-		} else {
-			var href = 'cert_' + certId + '/certificatePreview.pdf';
-			window.open(href);
-		}
-	});
+	initHtmlEditors(formDetails.find('.htmleditor'), ($(window).height() - 500) + 'px', null, null, 'autogrow');
 }
 
 function checkEditListsValid(form) {
 	log('checkEditListsValid');
+
 	var isOk = true;
-	$('.editList').each(function (i, n) {
-		var editList = $(n);
-		var editRows = editList.find('> div');
-		var values = new Array();
-		editRows.filter(':visible').each(function (rowIndex, n) {
-			var row = $(n);
-			row.find('select, input').filter('.requiredIf').each(function (ii, inputNode) {
-				var inp = $(inputNode);
-				if (inp.val() === '') {
-					isOk = false
-					showValidation(inp, 'A value is required', form);
-				} else {
-					// check for dups
-					var val = inp.val();
-					log('val', val, values);
-					if (values.indexOf(val) > -1) {
-						showErrorField(inp);
-						alert('Duplicate ' + inp.attr('data-basename') + ' on row ' + rowIndex);
+
+	$('.certificates-wrapper, .rewards-wrapper').each(function (i) {
+		var wrapper = $(this);
+		var values = [];
+
+		if (!wrapper.hasClass('hide')) {
+			wrapper.children().each(function (rowIndex) {
+				$(this).find('select.requiredIf, input.requiredIf').each(function () {
+					var input = $(this);
+					var val = input.val().trim();
+
+					if (val === '') {
 						isOk = false;
+						showValidation(input, 'A value is required', form);
+					} else {
+						log('val', val, values);
+
+						if (values.indexOf(val) !== -1) {
+							showErrorField(input);
+							alert('Duplicate ' + input.attr('data-basename') + ' on row ' + rowIndex);
+							isOk = false;
+						} else {
+							values.push(val);
+							log('val2', val, values);
+						}
 					}
-					values.push(val);
-					log('val2', val, values);
-				}
+				});
 			});
-		});
-	});
-	return isOk;
-}
-
-function initModuleDetailsState(allowHide) {
-	log('initModuleDetailsState');
-	// If first edit item is blank, then hide it and show add button
-	$('.editList').each(function (i, n) {
-		var editList = $(n);
-		var addFirst = editList.find('> button');
-		var editRows = editList.find('> div');
-		var lastRow = editRows.last();
-		var lastSelect = lastRow.find('select');
-		log('check select', lastSelect, lastSelect.val());
-		if (editRows.length === 1 && lastSelect.val().length === 0) {//&& allowHide
-			editRows.hide();
-			addFirst.show();
-		} else {
-			log('hide addFirst', addFirst);
-			addFirst.hide();
 		}
-		// Make sure all certs have a delete button, and update name and id to be sequential counter
-		editRows.each(function (i, n) {
-			var cert = $(n);
-			cert.find('select, input').each(function (ii, inp) {
-				var target = $(inp);
-				var updatedName = target.attr('data-basename') + i;
-				target.attr('name', updatedName);
-				target.attr('id', updatedName);
-			});
-			var btn = cert.find('button.Delete');
-			if (btn.length === 0) {
-				cert.append('<button title="Delete" class="SmallBtn Delete NoText"><span>Delete</span></button>');
-			}
-		});
-
-		// Make sure only last cert has a plus button to add a cert
-		editRows.find('button.Add').remove();
-		lastRow.append('<button title="Add" class="SmallBtn Add NoText addRow"><span>Add</span></button>');
 	});
+
+	return isOk;
 }
 
 function saveModulePages() {
@@ -474,22 +510,22 @@ function saveModulePages() {
 }
 
 function initAddQuizModal() {
-	$('.AddQuizPage').click(function (e) {
+	var modal = $('#modal-add-quiz');
+	var form = modal.find('form');
+
+	modal.find('.modal-body').css('min-height', $(window).height() - 400);
+
+	$('.btn-quiz-page').click(function (e) {
 		e.preventDefault();
-		var modal = $('#modalCreateQuiz');
+
 		modal.find('input[type=text], textarea,input[name=pageName]').val('');
-		modal.find('#quizQuestions').html('<ol class="quiz"></ol>');
-		var form = modal.find('form');
-		form.unbind();
-		form.submit(function (e) {
+		modal.find('#quiz-questions').html('<ol class="quiz"></ol>');
+		form.unbind().submit(function (e) {
 			e.preventDefault();
-			//createPage(modal.find('form'));
-			doSavePage(modal.find('form'), null, true);
+			doSavePage(form, null, true);
 		});
-		$.tinybox.show(modal, {
-			overlayClose: false,
-			opacity: 0
-		});
+
+		modal.modal('show');
 	});
 }
 
@@ -508,11 +544,7 @@ function showEditModal(name, pageArticle) {
 	editModal.find('input[name=pageName]').val(name);
 	editModal.find('input:text, textarea').val('');
 
-	if (isQuiz) {
-		editModal.modal('show');
-	} else {
-		openFuseModal(editModal);
-	}
+	openFuseModal(editModal);
 
 	form.unbind().submit(function (e) {
 		e.preventDefault();
@@ -521,7 +553,7 @@ function showEditModal(name, pageArticle) {
 		doSavePage(form, pageArticle, isQuiz);
 	});
 
-	editModal.find('.btn-history-page').unbind().history({
+	editModal.find('.btn-history').unbind().history({
 		pageUrl: name,
 		showPreview: false,
 		afterRevertFn: function () {
@@ -533,7 +565,7 @@ function showEditModal(name, pageArticle) {
 
 function isModalOpen() {
 	log('isModalOpen');
-	if ($('#modalCreateQuiz').is(':visible') || $('#modalCreatePage').is(':visible')) {
+	if ($('#modal-add-quiz').is(':visible') || $('#modal-add-page').is(':visible')) {
 		return 'Please close the edit modal before leaving this page';
 	}
 }
@@ -614,6 +646,7 @@ function doSavePage(form, pageArticle, isQuiz) {
 						pageArticle.find('> span').text(title);
 					}
 					closeFuseModal(modal);
+
 					saveModulePages();                 
 				} else {
 					alert('There was an error saving the page: ' + data.messages);
@@ -632,19 +665,32 @@ function doSavePage(form, pageArticle, isQuiz) {
 }
 
 function addPageToList(pageName, href, title, isQuiz) {
-	var newRow = $('<article class="modulePage"></article>');
-	if (isQuiz) {
-		newRow.addClass('Quiz');
-	}
-	$('form.modulePages div.MainContent').append(newRow);
-	log('newRow', newRow, title, isQuiz);
-	newRow.append('<input type="hidden" value="" name="' + pageName + '"/>');
-	newRow.append('<span>' + title + '</span>');
-	var aside = $('<aside class="Hidden"></aside>');
-	newRow.append(aside);
+	log('newRow', title, isQuiz);
 	var newFileName = getFileName(href);
-	aside.append('<a href="' + newFileName + '" class="Edit" title="Edit page"><span class="Hidden">Edit page</span></a>');
-	aside.append('<a href="' + newFileName + '?goto" target="_blank" class="View" title="View page"><span class="Hidden">View page</span></a>');
-	aside.append('<a href="" class="Move" title="Move up or down"><span class="Hidden">Move up or down</span></a>');
-	aside.append('<a href="' + href + '" class="Delete" title="Delete page"><span class="Hidden">Delete page</span></a>');
+	var type = isQuiz ? 'quiz' : 'file';
+	var className = isQuiz ? 'clip-question' : 'clip-file-2';
+
+	$('#pages-list').append(
+		'<article class="page ' + type + '">' +
+			'<input type="hidden" name="' + pageName + '" value="$order"/>' +
+			'<i class="' + className + '"></i>' +
+			'<span class="article-name">' + title + '</span>' +
+			'<aside class="article-action">' +
+				'<div class="btn-group btn-group-sm">' +
+					'<button type="button" class="btn btn-move-file btn-orange dropdown-toggle" title="Move up or down">' +
+						'<i class="glyphicon glyphicon-sort"></i>' +
+					'</button>' +
+					'<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">' +
+						'<i class="fa fa-cog"></i>' +
+					'</button>' +
+					'<ul class="dropdown-menu pull-right">' +
+						'<li><a href="' + newFileName + '" class="btn-edit-page" title="Edit page">Edit page</a></li>' +
+						'<li><a href="' + newFileName + '?goto" target="_blank" title="View page">View page</a></li>' +
+						'<li class="divider"></li>' +
+						'<li><a href="' + href + '" class="btn-delete-page" title="Delete page">Delete page</a></li>' +
+					'</ul>' +
+				'</div>' +
+			'</aside>' +
+		'</article>'
+	);
 }

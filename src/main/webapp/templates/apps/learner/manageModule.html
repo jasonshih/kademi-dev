@@ -7,6 +7,7 @@
         <link href="/static/js/milton-image-select.css" rel="stylesheet" type="text/css" />
 
         <script type="text/javascript" src="/static/history/jquery.history.js">//</script>
+        <script type="text/javascript" src="/static/js/jquery.timeago.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-image-select.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-tree.js">//</script>
         <script type="text/javascript" src="manageModule.js">//</script>
@@ -154,7 +155,7 @@
 									        <i class="glyphicon glyphicon-sort"></i>
 								        </button>
 								        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
-									        <i class="clip-settings"></i>
+									        <i class="fa fa-cog"></i>
 								        </button>
 								        <ul class="dropdown-menu pull-right">
 									        <li><a href="${modulePage.name}" class="btn-edit-page" title="Edit page">Edit page</a></li>
@@ -171,7 +172,7 @@
 		        <!-- End content of Module list tab -->
 		        <!-- Start content of Module details tab -->
 		        <div id="details" class="tab-pane">
-			        <form name="frmDetails" action="" method="post" class="form-horizontal" id="moduleDetailsForm">
+			        <form action="" method="post" class="form-horizontal">
 				        <div class="form-group">
 					        <label for="name" class="control-label col-md-2">Code</label>
 					        <div class="col-md-6">
@@ -193,7 +194,7 @@
 				        <div class="form-group">
 					        <label for="thumb" class="control-label col-md-2">Thumbnail (image)</label>
 					        <div class="col-md-6">
-						        <input class="thumbnail form-control" id="thumb" type="text" name="thumb" value="$!page.rawThumb" placeholder="Path to a thumbnail for the module. Eg thumb.png" />
+						        <input class="thumbnail-image form-control" id="thumb" type="text" name="thumb" value="$!page.rawThumb" placeholder="Path to a thumbnail for the module. Eg thumb.png" />
 					        </div>
 				        </div>
 				        <div class="form-group">
@@ -218,8 +219,8 @@
 						        <small class="Hidden">Enter a message that will appear in an email that get's sent to the user after this module is completed.</small>
 					        </label>
 					        <div class="col-md-10">
-						        <label for="emailConfirm">Send an email confirmation upon module completion</label>
 						        $formatter.checkbox("emailConfirm", "emailConfirm", $page.emailConfirm, "true" )
+						        <label for="emailConfirm">Send an email confirmation upon module completion</label>
 						        <div class="hide" id="email-confirm-content">
 							        <textarea cols="100" id="email-message" class="htmleditor" name="emailCompletionMessage" rows="10" placeholder="Enter your email message here">$!page.emailConfirmMessage</textarea>
 						        </div>
@@ -232,23 +233,25 @@
 						        <small><a href="${page.closest('organisation').href}certificates" target="_blank">Edit certificates</a></small>
 					        </label>
 					        <div class="col-md-10">
-						        <button class="btn btn-wraning btn-sm btn-add-cert" title="Add certificate"><i class="fa fa-plus"></i> <span>Add</span></button>
-						        <div class="certificates-wrapper">
+						        <button class="btn btn-warning btn-sm btn-add-cert btn-add-first" type="button" title="Add certificate"><i class="fa fa-plus"></i> <span>Add</span></button>
+						        <div class="certificates-wrapper hide">
 							        #foreach($action in $page.actions("certificate"))
 								        <div class="certificate clearfix">
-									        <div class="input-group">
+									        <div class="input-group input-group-sm">
 										        <label for="points$foreach.index" class="input-group-addon">CPD points</label>
-										        <input type="text" class="form-control" value="$!action.number" id="points$foreach.index" placeholder="Username" name="points$foreach.index" data-basename="points" />
+										        <input type="text" class="form-control" value="$!action.number" id="points$foreach.index" name="points$foreach.index" data-basename="points" />
 									        </div>
-									        <select name="certificate$foreach.index" class="requiredIf form-control" data-basename="certificate">
-										        <option value="">[No certificate]</option>
-										        #foreach($cert in $page.certificates)
-										            $formatter.option($cert.id, $cert.title, $action.itemId)
-										        #end
-									        </select>
+									        <div class="input-group input-group-sm">
+										        <select name="certificate$foreach.index" class="requiredIf form-control" data-basename="certificate">
+											        <option value="">[No certificate]</option>
+											        #foreach($cert in $page.certificates)
+											            $formatter.option($cert.id, $cert.title, $action.itemId)
+											        #end
+										        </select>
+									        </div>
 									        <div class="btn-group btn-group-sm">
-										        <a href="#" class="btn btn-success btn-preview-cert">Preview</a>
-										        <a href="#" class="btn btn-danger btn-delete-cert"><i class="fa fa-times"></i></a>
+										        <a href="#" class="btn btn-success btn-preview-certificate">Preview</a>
+										        <a href="#" class="btn btn-danger btn-delete-certificate"><i class="fa fa-times"></i></a>
 									        </div>
 								        </div>
 							        #end
@@ -262,20 +265,22 @@
 						        <small><a href="${page.closest('organisation').href}rewards" target="_blank">Edit rewards</a></small>
 					        </label>
 					        <div class="col-md-10">
-						        <button class="btn btn-wraning btn-sm btn-add-reward" title="Add reward"><i class="fa fa-plus"></i> <span>Add</span></button>
-						        <div class="rewards-wrapper">
+						        <button class="btn btn-warning btn-sm btn-add-reward btn-add-first" type="button" title="Add reward"><i class="fa fa-plus"></i> <span>Add</span></button>
+						        <div class="rewards-wrapper hide">
 							        #foreach($action in $page.actions("reward"))
 							        <div class="reward clearfix">
-								        <div class="input-group">
+								        <div class="input-group input-group-sm">
 									        <label for="numRewards$foreach.index" class="input-group-addon">No. of rewards</label>
 									        <input type="text" class="form-control requiredIf" value="$!action.number" id="numRewards$foreach.index" name="numRewards$foreach.index" data-basename="numRewards"/>
 								        </div>
-								        <select name="reward$foreach.index" class="form-control requiredIf" data-basename="reward">
-									        <option value="">[No reward]</option>
-									        #foreach($r in $page.rewards)
-									            $formatter.option($r.id, $r.title, $action.itemId)
-									        #end
-								        </select>
+								        <div class="input-group input-group-sm">
+									        <select name="reward$foreach.index" class="form-control requiredIf" data-basename="reward">
+										        <option value="">[No reward]</option>
+										        #foreach($r in $page.rewards)
+										            $formatter.option($r.id, $r.title, $action.itemId)
+										        #end
+									        </select>
+								        </div>
 								        <div class="btn-group btn-group-sm">
 									        <a href="#" class="btn btn-danger btn-delete-reward"><i class="fa fa-times"></i></a>
 								        </div>
@@ -299,7 +304,7 @@
 
         <div id="modal-add-page" class="modal modal-lg fade modal-fuse modal-fuse-editor" aria-hidden="true" tabindex="-1">
 	        <div class="modal-header">
-		        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+		        <button aria-hidden="true" data-type="modal-dismiss" class="close" type="button">&times;</button>
 		        <h4 class="modal-title">Add/edit module page</h4>
 	        </div>
 	        <div class="modal-body">
@@ -320,7 +325,7 @@
 		        </form>
 	        </div>
 	        <div class="modal-footer">
-		        <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+		        <button class="btn btn-default" data-type="modal-dismiss" type="button">Close</button>
 		        <button class="btn btn-primary btn-img btn-history" type="button">History <img class='ajax-loader' src='/static/common/loading.gif'/></button>
 		        <button class="btn btn-primary btn-img" data-type="form-submit" type="button">Save <img class='ajax-loader' src='/static/common/loading.gif'/></button>
 	        </div>
@@ -336,13 +341,13 @@
 			        <input type="hidden" name="pageName" />
 			        <input type="hidden" name="template" value="learner/quizPage" />
 			        <div class="form-group">
-				        <label for="quizTitle" class="control-label col-md-3">Enter quiz title</label>
-				        <div class="col-md-6">
-				            <input type="text" name="pageTitle" id="quizTitle" class="required" value="" placeholder="A title for the new page" />
+				        <label for="quizTitle" class="control-label col-md-2">Enter quiz title</label>
+				        <div class="col-md-4">
+				            <input type="text" name="pageTitle" id="quizTitle" class="required form-control" value="" placeholder="A title for the new page" />
 				        </div>
 				        <div class="col-md-3">
-					        <div class="btn-group btn-group-sm">
-						        <button class="btn btn-success dropdown-toggle" data-toggle="dropdown"><i class="fa fa-plus"></i> Add a question <span class="caret"></span></button>
+					        <div class="btn-group">
+						        <button class="btn btn-success btn-add-question dropdown-toggle" data-toggle="dropdown"><i class="fa fa-plus"></i> Add a question <span class="caret"></span></button>
 						        <ul class="dropdown-menu pull-right">
 							        <li><a href="#" class="btn-multiple">Multiple choice</a></li>
 							        <li><a href="#" class="btn-textbox">Textbox</a></li>
@@ -350,6 +355,7 @@
 					        </div>
 				        </div>
 			        </div>
+			        <div id="quiz-questions"></div>
 		        </form>
 	        </div>
 	        <div class="modal-footer">

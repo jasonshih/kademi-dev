@@ -133,47 +133,48 @@
 })(Bob, jQuery, window, document);
 
 function initFuseModal(modal, callback) {
-	var id = modal.attr('id');
-
-	modal.wrap(
-		'<div id="' + id + '-wrapper" class="modal-scrollable hide" style="z-index: 1050;"></div>'
-	);
-
-	var wrapper = modal.parent();
-	var backdrop = $('<div id="' + id + '-backdrop" class="modal-backdrop fade hide" style="z-index: 1040;"></div>');
-	wrapper.after(backdrop);
-
-	if (typeof callback === 'function') {
-		callback.apply(this);
-	}
-
-	modal.find('[data-type=modal-dismiss]').on('click', function (e) {
-		e.preventDefault();
-
-		closeFuseModal(modal);
-	});
-
-	wrapper.on('click', function (e) {
-		if ($(e.target).is(wrapper)) {
-			closeFuseModal(modal);
-		}
-	});
-
-	var heightModal = 0;
-
-	wrapper.removeClass('hide');
-	wrapper.add(modal).addClass('invi');
-	modal.addClass('calculating');
-
-	var calculate = function () {
-		heightModal = modal.outerHeight();
-		modal.attr('data-height', heightModal);
-		wrapper.add(modal).removeClass('invi');
-		wrapper.addClass('hide');
-		modal.removeClass('calculating');
-	};
-
 	if (modal.hasClass('modal-fuse-editor')) {
+		var id = modal.attr('id');
+
+		modal.wrap(
+			'<div id="' + id + '-wrapper" class="modal-scrollable hide" style="z-index: 1030;"></div>'
+		);
+
+		var wrapper = modal.parent();
+		var backdrop = $('<div id="' + id + '-backdrop" class="modal-backdrop fade hide" style="z-index: 1020;"></div>');
+		wrapper.after(backdrop);
+
+		modal.on('click', '[data-type=modal-dismiss]', function (e) {
+			e.preventDefault();
+			e.stopPropagation();
+
+			closeFuseModal(modal);
+		});
+
+		wrapper.on('click', function (e) {
+			if ($(e.target).is(wrapper)) {
+				closeFuseModal(modal);
+			}
+		});
+
+		if (typeof callback === 'function') {
+			callback.apply(this);
+		}
+
+		var heightModal = 0;
+
+		wrapper.removeClass('hide');
+		wrapper.add(modal).addClass('invi');
+		modal.addClass('calculating');
+
+		var calculate = function () {
+			heightModal = modal.outerHeight();
+			modal.attr('data-height', heightModal);
+			wrapper.add(modal).removeClass('invi');
+			wrapper.addClass('hide');
+			modal.removeClass('calculating');
+		};
+
 		var editor = modal.find('.htmleditor').get(0);
 		var ckEditor = null;
 
@@ -189,13 +190,15 @@ function initFuseModal(modal, callback) {
 				calculate();
 			});
 		}
-	} else {
-		calculate();
-	}
 
-	Bob.onPageResized(function () {
-		adjustModal(modal);
-	});
+		Bob.onPageResized(function () {
+			adjustModal(modal);
+		});
+	} else {
+		if (typeof callback === 'function') {
+			callback.apply(this);
+		}
+	}
 }
 
 function adjustModal(modal) {
@@ -212,42 +215,55 @@ function openFuseModal(modal, callback, time) {
 	var wrapper = modal.parent();
 	var backdrop = wrapper.next();
 
-	if (modal.attr('data-height')) {
-		adjustModal(modal);
-		$(document.body).addClass('modal-open');
-		wrapper.removeClass('hide');
-		backdrop.removeClass('hide');
-		modal.show();
+	if (modal.hasClass(('modal-fuse-editor'))) {
+		if (modal.attr('data-height')) {
+			adjustModal(modal);
+			$(document.body).addClass('modal-open');
+			wrapper.removeClass('hide');
+			backdrop.removeClass('hide');
+			modal.show();
 
-		setTimeout(function () {
-			modal.addClass('in');
-			backdrop.addClass('in');
-		}, 0);
+			setTimeout(function () {
+				modal.addClass('in');
+				backdrop.addClass('in');
+			}, 0);
+
+			if (typeof callback === 'function') {
+				callback.apply(this);
+			}
+		} else {
+			time = time ? time : 0;
+			var time_string = time === 0 ? '' : ' (Tried ' + time + ' time(s))';
+			if (confirm('This popup is still initializing. Do you want to try to reopen this' + time_string + '?')) {
+				openFuseModal(modal, callback, time + 1);
+			}
+		}
+	} else {
+		modal.modal('show');
 
 		if (typeof callback === 'function') {
 			callback.apply(this);
 		}
-	} else {
-		time = time ? time : 0;
-		var time_string = time === 0 ? '' : ' (Tried ' + time + ' time(s))';
-		if (confirm('This popup is still initializing. Do you want to try to reopen this' + time_string + '?')) {
-			openFuseModal(modal, callback, time + 1);
-		}
 	}
+
 }
 
 function closeFuseModal(modal, callback) {
-	var wrapper = modal.parent();
-	var backdrop = wrapper.next();
+	if (modal.hasClass(('modal-fuse-editor'))) {
+		var wrapper = modal.parent();
+		var backdrop = wrapper.next();
 
-	backdrop.add(modal).removeClass('in');
+		backdrop.add(modal).removeClass('in');
 
-	setTimeout(function () {
-		backdrop.addClass('hide');
-		modal.hide();
-		wrapper.addClass('hide');
-		$(document.body).removeClass('modal-open');
-	}, 400);
+		setTimeout(function () {
+			backdrop.addClass('hide');
+			modal.hide();
+			wrapper.addClass('hide');
+			$(document.body).removeClass('modal-open');
+		}, 400);
+	} else {
+		modal.modal('hide');
+	}
 
 	if (typeof callback === 'function') {
 		callback.apply(this);

@@ -468,7 +468,7 @@ function showValidation(target, text, container) {
 }
 
 function showMessage(text, container) {
-    var messages = $(".pageMessage, .alert", container)
+    var messages = $(".pageMessage, .alert", container);
     if (messages.length === 0) {
         messages = $("<div class='pageMessage alert alert-error alert-danger'><a class='close' data-dismiss='alert' href='#'>&times;</a></div>");
         container.prepend(messages);

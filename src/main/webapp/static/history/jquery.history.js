@@ -36,12 +36,53 @@
             log('show history');
             e.preventDefault();
             btn.addClass("loading");
+	        if (!modal) {
+		        modal = buildModal();
+	        }
             loadHistory(modal.find("tbody"), config);
             modal.modal("show");
             btn.removeClass("loading");
         });
     };
 })(jQuery);
+
+function buildModal() {
+	var id = 'modal-history';
+
+	$(document.body).append(
+		'<div id="' + id + '" class="modal modal-xs fade" aria-hidden="true" tabindex="-1">' +
+			'<div class="modal-header">' +
+				'<button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>' +
+				'<h4 class="modal-title">History</h4>' +
+			'</div>' +
+			'<div class="modal-body">' +
+				'<table class="table table-bordered table-striped table-hover table-condensed">' +
+					'<colgroup>' +
+						'<col />' +
+						'<col />' +
+						'<col />' +
+						'<col style="width: 70px" />' +
+					'</colgroup>' +
+					'<thead>' +
+						'<tr>' +
+							'<th>Description</th>' +
+							'<th>User</th>' +
+							'<th>Edited</th>' +
+							'<th>Restore</th>' +
+						'</tr>' +
+					'</thead>' +
+					'<tbody>' +
+					'</tbody>' +
+				'</table>' +
+			'</div>' +
+			'<div class="modal-footer">' +
+				'<button class="btn btn-default" data-dismiss="modal" type="button">Close</button>' +
+			'</div>' +
+		'</div>'
+	);
+
+	return $('#' + id);
+}
 
 function loadHistory(tbody, config) {
     log('loadHistory', config);
