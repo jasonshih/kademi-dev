@@ -155,9 +155,8 @@ function initAddPageModal() {
     var modal = $('#modal-add-page');
 
 	initFuseModal(modal, function () {
-		var editorHeight = ($(window).height() - 500) + 'px';
-        modal.find('.modal-body').css('height', editorHeight + 100);
-        initHtmlEditors(modal.find('.htmleditor'), editorHeight, null, null, standardRemovePlugins + ',autogrow'); // disable autogrow
+        modal.find('.modal-body').css('height', getStandardModalEditorHeight());
+        initHtmlEditors(modal.find('.htmleditor'),  getStandardEditorHeight(), null, null, standardRemovePlugins + ',autogrow'); // disable autogrow
     });
     
 	var form = modal.find('form');

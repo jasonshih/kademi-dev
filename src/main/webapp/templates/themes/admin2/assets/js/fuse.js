@@ -287,3 +287,15 @@ function showLoadingOverlay() {
 function hideLoadingOverlay() {
 	findLoadingOverlay().addClass('hide');
 }
+
+function getStandardEditorHeight() {
+	return $(window).height() - 400;
+}
+
+function getStandardModalEditorHeight() {
+	return getStandardEditorHeight() + 200;
+}
+
+function getStandardModalHeight() {
+	return getStandardModalEditorHeight();
+}

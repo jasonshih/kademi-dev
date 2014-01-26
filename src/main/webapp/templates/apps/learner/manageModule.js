@@ -225,9 +225,8 @@ function initCRUDModulePages() {
 	var form = modal.find('form');
 
 	initFuseModal(modal, function () {
-		var editorHeight = ($(window).height() - 500) + 'px';
-		modal.find('.modal-body').css('height', editorHeight + 100);
-		initHtmlEditors(modal.find('.htmleditor'), editorHeight, null, null, standardRemovePlugins + ',autogrow'); // disable autogrow
+		modal.find('.modal-body').css('height', getStandardModalEditorHeight());
+		initHtmlEditors(modal.find('.htmleditor'), getStandardEditorHeight(), null, null, standardRemovePlugins + ',autogrow'); // disable autogrow
 	});
 
 	$('.btn-add-page').click(function (e) {
@@ -440,7 +439,7 @@ function initFormDetails() {
 		}
 	});
 
-	initHtmlEditors(formDetails.find('.htmleditor'), ($(window).height() - 500) + 'px', null, null, 'autogrow');
+	initHtmlEditors(formDetails.find('.htmleditor'), getStandardEditorHeight() + 'px', null, null, 'autogrow');
 }
 
 function checkEditListsValid(form) {
@@ -513,7 +512,7 @@ function initAddQuizModal() {
 	var modal = $('#modal-add-quiz');
 	var form = modal.find('form');
 
-	modal.find('.modal-body').css('min-height', $(window).height() - 400);
+	modal.find('.modal-body').css('min-height', getStandardModalHeight());
 
 	$('.btn-quiz-page').click(function (e) {
 		e.preventDefault();
