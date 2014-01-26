@@ -30,7 +30,7 @@
 
 (function( $ ) {
     $.fn.user = function(options) {
-        log("init login plugin2", this);
+        flog("init login plugin2", this);
         initUser();
         var config = $.extend( {
             urlSuffix: "/.dologin",
@@ -53,7 +53,7 @@
   
         var container = this;
         $("form", this).submit(function() {
-            log("login", window.location);
+            flog("login", window.location);
             
             $("input", container).removeClass("errorField");
             $(config.valiationMessageSelector, this).hide(100);
@@ -68,7 +68,7 @@
                 }
                 doLogin(userName, password, config, container);
             } catch(e) {
-                log("exception doing login", e);
+                flog("exception doing login", e);
             }            
             return false;
         });    
@@ -77,7 +77,7 @@
 
 
 function doLogin(userName, password, config, container) {
-    log("doLogin", userName, config.urlSuffix);
+    flog("doLogin", userName, config.urlSuffix);
     $(config.valiationMessageSelector).hide();
     var data = new Object();
     var userNameProperty;
@@ -102,52 +102,52 @@ function doLogin(userName, password, config, container) {
         dataType: "json",
         acceptsMap: "application/x-javascript",
         success: function(resp) {
-            log("received login response", resp)
+            flog("received login response", resp)
             initUser();                
             if( resp.status ) {
-                log("login success", resp.status);
+                flog("login success", resp.status);
                 if( config.loginCallback) {
                     config.loginCallback();
                 }
                 if( config.afterLoginUrl === null) {
                     // If not url in config then use the next href in the response, if given, else reload current page
                     if( resp.nextHref ) {
-                        log("login: no afterLoginUrl and received next href, so go there", resp.nextHref);
+                        flog("login: no afterLoginUrl and received next href, so go there", resp.nextHref);
                         window.location.href = resp.nextHref;
                     } else {
-                        log("login: no afterLoginUrl and no nextHref, so reload");
+                        flog("login: no afterLoginUrl and no nextHref, so reload");
                         window.location.reload();
                     }                    
                 } else if( config.afterLoginUrl.startsWith("/")) {
                     // if config has an absolute path the redirect to it
-                    log("redirect to1: " + config.afterLoginUrl);
+                    flog("redirect to1: " + config.afterLoginUrl);
                     //return;
                     window.location = config.afterLoginUrl;
                 } else {
                     if( config.afterLoginUrl === "none") {
-                        log("Not doing redirect because afterLoginUrl=='none'");
+                        flog("Not doing redirect because afterLoginUrl=='none'");
                     } else if( config.afterLoginUrl === "reload") {
-                        log("Reload current location");
+                        flog("Reload current location");
                         window.location.reload();
                     } else {
                         // if config has a relative path, then evaluate it relative to the user's own url in response
-                        log("redirect to2: " + userUrl + config.afterLoginUrl);
+                        flog("redirect to2: " + userUrl + config.afterLoginUrl);
                         //return;
                         window.location = userUrl + config.afterLoginUrl;
                     }
                 }
             } else {
-                log("Login not successful", resp.status);
+                flog("Login not successful", resp.status);
                 // null userurl, so login was not successful
                 $(config.valiationMessageText, container).text(config.loginFailedMessage);
-                log("null userUrl, so failed. Set validation message message", $(config.valiationMessageSelector, this), config.loginFailedMessage);
+                flog("null userUrl, so failed. Set validation message message", $(config.valiationMessageSelector, this), config.loginFailedMessage);
                 $(config.valiationMessageSelector, container).show(200);
             }
         //window.location = "/index.html";
         },
         error: function(resp) {
             $(config.valiationMessageText).text(config.loginFailedMessage);
-            log("error response from server, set message. msg output:", $(config.valiationMessageSelector, this), "config msg:", config.loginFailedMessage, "resp:", resp);
+            flog("error response from server, set message. msg output:", $(config.valiationMessageSelector, this), "config msg:", config.loginFailedMessage, "resp:", resp);
             $(config.valiationMessageSelector).show(300);
         }
     });      
@@ -164,16 +164,16 @@ function initUser() {
         return true; // already done
     }    
     initUserCookie();
-    log("initUser");
+    flog("initUser");
     if( isEmpty(userUrl) ) {
         // no cookie, so authentication hasnt been performed.
-        log('initUser: no userUrl');
+        flog('initUser: no userUrl');
         $(".requiresuser").hide();
         $(".sansuser").show();    
         $("body").addClass("notLoggedIn");
         return false;
     } else {
-        log("userUrl", userUrl);
+        flog("userUrl", userUrl);
         $("body").addClass("isLoggedIn");
         userName = userUrl.substr(0, userUrl.length-1); // drop trailing slash
         var pos = userUrl.indexOf("users");
@@ -201,9 +201,9 @@ function initUserCookie() {
         userName = userUrl.substr(0, userUrl.length-1); // drop trailing slash
         var pos = userUrl.indexOf("users");
         userName = userName.substring(pos+6);
-        log('initUserCookie: user:',userUrl, userName);
+        flog('initUserCookie: user:',userUrl, userName);
     } else {
-        log("initUserCookie: no user cookie");
+        flog("initUserCookie: no user cookie");
         userName = null;
     }
 }
@@ -213,18 +213,18 @@ function isEmpty(s) {
 }
 
 function doLogout() {
-    log("doLogout - common");
+    flog("doLogout - common");
     $.ajax({
         type: 'POST',
         url: "/.dologin",
         data: "miltonLogout=true",
         dataType: "text",
         success: function() {
-            log("logged out ok, going to root...");
+            flog("logged out ok, going to root...");
             window.location = "/";
         },
         error: function(resp) {
-            log('There was a problem logging you out, a 400 error is expected', resp);
+            flog('There was a problem logging you out, a 400 error is expected', resp);
             window.location = "/";
         }
     });    
@@ -246,7 +246,7 @@ function dropHost(s) {
         return s;
     }
     var pos = s.indexOf("/",8);
-    log("pos",pos);
+    flog("pos",pos);
     s = s.substr(pos);
     return s;
 }
@@ -257,7 +257,7 @@ function showRegisterOrLoginModal(callbackOnLoggedIn) {
         modal = $("<div id='registerOrLoginModal' class='Modal' style='min-height: 300px'><a href='#' class='Close' title='Close'>Close</a><div class='modalContent'>");
         $("body").append(modal);
     }
-    log("showRegisterOrLoginModal", 1);
+    flog("showRegisterOrLoginModal", 1);
     $.getScript("/theme/apps/signup/register.js", function() {
         $.ajax({
             type: 'GET',
@@ -266,27 +266,27 @@ function showRegisterOrLoginModal(callbackOnLoggedIn) {
             success: function(resp) {
                 var page = $(resp);
                 var r = page.find(".registerOrLoginCont");                        
-                log("content", page, "r", r);
+                flog("content", page, "r", r);
                 modal.find(".modalContent").html(r);
-                log("modal", modal);
+                flog("modal", modal);
                 $("td.loginCont").user({
                     afterLoginUrl: "none",
                     loginCallback: function() {
-                        log("logged in ok, process callback");
+                        flog("logged in ok, process callback");
                         $('body').trigger('userLoggedIn', [userUrl, userName]);
                         callbackOnLoggedIn();
                         $.tinybox.close();
                     }
                 });
                 initRegisterForms("none", function() {
-                    log("registered and logged in ok, process callback");
+                    flog("registered and logged in ok, process callback");
                     $('body').trigger('userLoggedIn', [userUrl, userName]);
                     callbackOnLoggedIn();
                     $.tinybox.close();                    
                 });
             },
             error: function(resp) {
-                log('There was a problem logging you out', resp);
+                flog('There was a problem logging you out', resp);
             }
         });     
         
