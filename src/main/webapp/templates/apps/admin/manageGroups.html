@@ -2,10 +2,30 @@
     <head>
         <title>Manage Groups</title>
         <link href="manageGroup.css" rel="stylesheet" type="text/css" />
+        <link href="/templates/apps/learner/groupsAdminPortlet.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="manageGroup.js">//</script>
+        <script type="text/javascript" src="/templates/apps/learner/groupsAdminPortlet.js">//</script>
     </head>
     <body class="manageModulePages">
-        <!-- Content goes here - NO HEADER/BANNER/MENU! -->
+        <p>
+	        <a class="btn btn-primary btn=add-group" href="#"><i class="fa fa-plus"></i> Add new group</a>
+        </p>
+
+        #foreach($group in $page.children)
+	        <div class="panel panel-default">
+		        <div class="panel-heading">
+			        <i class="clip-users"></i>
+			        $group.name
+			        <div class="panel-tools">
+						<span class="label label-info">Registration: $group.regoModeText</span>
+						<span class="label label-success">$group.numMembers Members</span>
+			        </div>
+		        </div>
+		        <div class="panel-body">
+			        #portlets("groupDetails")
+		        </div>
+	        </div>
+        #end
         <section id="manageGroup" class="MainContent">
             <header class="ClearFix">
                 <button class="SmallBtn Add AddGroup"><span>Add New Group</span></button>
@@ -184,7 +204,8 @@
         </div>        
 
         <script type="text/javascript" >
-            jQuery(function() {
+            Bob.onDOMReady(function() {
+	            initGroupAdminPortlet();
                 initManageGroup();
             });
         </script>        

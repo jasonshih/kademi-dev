@@ -84,7 +84,6 @@
 				var dataTable = $(this);
 				var cols = dataTable.find('colgroup col');
 				var ths = dataTable.find('thead th');
-				var colLength = cols.length;
 
 				var aoColumnsSetting = [];
 				cols.each(function (i) {

@@ -1,30 +1,23 @@
-var groupAdminPortletInitDone = false;
+function initGroupAdminPortlet() {
+	log('init group admin portlet');
 
-$(function() {
-    if( groupAdminPortletInitDone ) {
-        return;
-    }
-    groupAdminPortletInitDone = true;
-    log("init group admi portlet");
-    $("body").on("change", "ul.programs input[type=radio]", function(e) {
-        log("clicked", e);
-        var n = $(e.target);
-        var groupName = n.closest("div.Modal").find("h3 span").text();
-        var itemHref = n.closest("li").find("a").attr("href");
-        saveGroupProgram(groupName, itemHref, n);
-    });
-});
+	$(document.body).on('change', 'input[type=radio]', function () {
+		log('clicked', this);
 
-function showEditProgramsModal(source) {
-    var modal = $(source).parent().find(".Modal");
-    $.tinybox.show(modal, {
-        overlayClose: false,
-        opacity: 0
-    });    
+		var radioBtn = $(this);
+		var modal = radioBtn.closest('.modal');
+		var groupName = modal.find('h4 span').text();
+		var itemHref = radioBtn.closest('article').find('a').attr('href');
+
+		console.log(groupName, itemHref, radioBtn, modal);
+
+		saveGroupProgram(groupName, itemHref, radioBtn, modal);
+	});
 }
 
-function saveGroupProgram(groupName, itemHref, chk) {
-    var value = chk.closest("form").find("input[name='" + chk.attr("name") + "']:checked").val();
+function saveGroupProgram(groupName, itemHref, radioBtn, modal) {
+    var value = radioBtn.closest('form').find('input[name="' + radioBtn.attr('name') + '"]:checked').val();
+	console.log(value);
     try {
         $.ajax({
             type: 'POST',
@@ -33,20 +26,22 @@ function saveGroupProgram(groupName, itemHref, chk) {
                 group: groupName,
                 enrolement: value
             },
-            dataType: "json",
+            dataType: 'json',
             success: function(response) {
-                log("saved ok", response);
-                $.tinybox.close();                
-                var groupDiv = chk.closest("div.Group");
-                var groupId = groupDiv.attr("id");
-                groupDiv.load(window.location.pathname + " #" + groupId + "> *");
+                log('saved ok', response);
+
+	            var groupDiv = modal.closest('[data-role="group-programs"]');
+	            var groupId = groupDiv.attr('id');
+                groupDiv.load(window.location.pathname + ' #' + groupId + '> *');
+
+	            modal.modal('hide');
             },
             error: function(resp) {
-                log("error", resp);
-                alert("An error occured updating the enrolement information");
+                log('error', resp);
+                alert('An error occured updating the enrolement information');
             }
         });          
     } catch(e) {
-        log("exception in createJob", e);
+        log('exception in createJob', e);
     }        
 }

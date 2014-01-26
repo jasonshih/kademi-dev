@@ -97,6 +97,11 @@ modal.ajax-processing .btn-img[data-type="form-submit"] img,
 	visibility: hidden;
 }
 
+.article-wrapper > article aside.article-more-infor {
+	line-height: 32px;
+	float: right;
+}
+
 .article-wrapper > article:hover aside.article-action {
 	visibility: visible;
 }
@@ -121,6 +126,14 @@ modal.ajax-processing .btn-img[data-type="form-submit"] img,
 
 .article-wrapper > article > i {
 	margin: 9px 5px 0 0;
+}
+
+.article-wrapper + .article-wrapper-action {
+	margin-top: 5px;
+}
+
+.article-wrapper > .article-sub {
+	margin-left: 30px;
 }
 
 /* ============================================================================

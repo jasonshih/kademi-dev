@@ -5,108 +5,152 @@
         <script type="text/javascript" src="managePost.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.timeago.js">//</script>
     </head>
-    <body>
-        <section id="managePost" class="MainContent">
-            #set($reports = $page.postReports)
-            #if( $reports.size() > 0 )
-            <div class="reported-posts">
-                <h2>Please review the following reports of abusive or spam posts</h2>
-                #foreach($report in $reports)
-                    #set($post = $report.post)
-            <div class="Post Comment ClearFix">
-                <header>
-                    #if( $post.forumTitle )
-                    <strong>Forum:</strong> <a target="_blank" href="http://${post.contentDomain}$post.contentHref?${page.cookieAuthParams}">$post.forumTitle</a>
-                    #else
-                    <strong>Page:</strong> <a target="_blank" href="http://${post.contentDomain}$post.contentHref?${page.cookieAuthParams}">$post.contentTitle</a>
-                    #end
-                </header>		
-                <aside>
-                    <abbr title="$formatter.formatDateISO8601($post.date)" class="timeago">$post.date</abbr>
-                    <br />
-                    <a href="$post.user.href">$post.user.name</a>
-                </aside>
-                <div class="Content">
-                    <p>Report Category: $report.category</p>
-                    <p>Reported by: <a href="$report.reportedBy.href">$report.reportedBy.name</a></p>
-                    #if( $report.comments )
-                    <p>Comments by reportee: $report.comments</p>
-                    #end
-                    <hr/>
-                    <p>Reported post:</p>
-                    <p class="post-text">$post.notes</p>
-                </div>
-                <footer class="ClearFix Clear">
-                    <div>
-                        <a href="$report.id" title="Dismiss report" class="Ok DismissReport"><span class="Hidden">Dismiss report</span></a>
-                        <a href="$post.id" title="Edit this post" class="Edit EditPost"><span class="Hidden">Edit this post</span></a>
-                        <a href="$report.id" title="Delete this post" class="Delete DeleteReportedPost"><span class="Hidden">Delete this post</span></a>
-                    </div>
-                </footer>
-            </div>
-                
-                #end
-            </div>
-            #end
-            
-            #set($posts = $page.latestPosts)
-            #if( $posts.isEmpty() )
-            <p>There are currently no posts</p>
-            #else
-                #foreach($post in $posts)
-            <div class="Post Comment ClearFix">
-                <header>
-                    #if( $post.forumTitle )
-                    <strong>Forum:</strong> <a target="_blank" href="http://${post.contentDomain}$post.contentHref?${page.cookieAuthParams}">$post.forumTitle</a>
-                    #else
-                    <strong>Page:</strong> <a target="_blank" href="http://${post.contentDomain}$post.contentHref?${page.cookieAuthParams}">$post.contentTitle</a>
-                    #end
-                </header>
-                <aside>
-                    <abbr title="$formatter.formatDateISO8601($post.date)" class="timeago">$post.date</abbr>
-                    <br />
-                    <a href="$post.user.href">$post.user.name</a>
-                </aside>
-                <div class="Content">
-                    <p class="post-text">$post.notes</p>
-                </div>
-                <footer class="ClearFix Clear">
-                    <div>
-                        <a href="$post.id" title="Edit this post" class="Edit EditPost"><span class="Hidden">Edit this post</span></a>
-                        <a href="$post.id" title="Delete this post" class="Delete DeletePost"><span class="Hidden">Delete this post</span></a>
-                    </div>
-                </footer>
-            </div>
-                #end
-            #end
-        </section>
-        <div class="Hidden">
-            <div id="controller">		
-                <a class="Edit EditPost" title="Edit this post" href=""><span class="Hidden">Edit this post</span></a>
-                <a class="Delete DeletePost" title="Edit this post" href=""><span class="Hidden">Delete this post</span></a>
-            </div>
+    <body class="managePost">
+        <p class="pull-right"><span class="badge badge-success">Page</span>/<span class="badge badge-info">Forum</span></p>
+        <div class="tabbable">
+	        <ul class="nav nav-tabs tab-bricky">
+		        <li>
+			        <a data-toggle="tab" href="#posts">Recent posts</a>
+		        </li>
+		        <li>
+			        <a data-toggle="tab" href="#reports">Reports</a>
+		        </li>
+	        </ul>
+	        <div class="tab-content">
+		        <!-- Start content of Recent posts tab -->
+		        <div id="posts" class="tab-pane">
+			        <table class="table table-bordered table-striped table-hover table-data">
+				        <colgroup>
+					        <col />
+					        <col />
+					        <col />
+					        <col />
+					        <col style="width: 60px" />
+				        </colgroup>
+				        <thead>
+					        <tr>
+						        <th>Content</th>
+						        <th>Name</th>
+						        <th>Time</th>
+						        <th>Author</th>
+						        <th class="action">Action</th>
+					        </tr>
+				        </thead>
+				        <tbody>
+					        #set($posts = $page.latestPosts)
+					        #foreach($post in $posts)
+					            <tr>
+						            <td>$post.note</td>
+						            <td>
+							            #if( $post.forumTitle )
+							                <a target="_blank" class="btn btn-xs btn-info" href="http://${post.contentDomain}$post.contentHref?${page.cookieAuthParams}">$post.forumTitle</a>
+							            #else
+							                <a target="_blank" class="btn btn-xs btn-success" href="http://${post.contentDomain}$post.contentHref?${page.cookieAuthParams}">$post.contentTitle</a>
+							            #end
+						            </td>
+						            <td><abbr title="$formatter.formatDateISO8601($post.date)" class="timeago">$post.date</abbr></td>
+						            <td><a href="$post.user.href">$post.user.name</a></td>
+						            <td class="action">
+							            <div class="btn-group btn-group-sm">
+								            <button class="btn btn-success dropdown-toggle" data-toggle="dropdown" type="button">
+									            <i class="fa fa-cog"></i>
+								            </button>
+								            <ul class="dropdown-menu pull-right">
+									            <li><a href="$post.id" title="Edit this post" class="btn-edit-post"><span class="Hidden">Edit this post</span></a></li>
+									            <li><a href="$post.id" title="Delete this post" class="btn-delete-post"><span class="Hidden">Delete this post</span></a></li>
+								            </ul>
+							            </div>
+						            </td>
+					            </tr>
+					        #end
+				        </tbody>
+			        </table>
+		        </div>
+		        <!-- End content of Recent posts tab -->
+		        <!-- Start content of Reports tab -->
+		        <div id="reports" class="tab-pane">
+			        <table class="table table-bordered table-striped table-hover table-data">
+				        <colgroup>
+					        <col />
+					        <col />
+					        <col />
+					        <col />
+					        <col />
+					        <col />
+					        <col />
+					        <col style="width: 60px" />
+				        </colgroup>
+				        <thead>
+					        <tr>
+						        <th>Content</th>
+						        <th>Page/Forum</th>
+						        <th>Time</th>
+						        <th>Author</th>
+						        <th>Reported by</th>
+						        <th>Comment by reportee</th>
+						        <th>Report Category</th>
+						        <th class="action">Action</th>
+					        </tr>
+				        </thead>
+				        <tbody>
+					        #set($reports = $page.postReports)
+					        #foreach($report in $reports)
+						        #set($post = $report.post)
+						        <tr>
+							        <td>$post.notes</td>
+							        <td>
+								        #if( $post.forumTitle )
+								            <a target="_blank" class="btn btn-xs btn-info" href="http://${post.contentDomain}$post.contentHref?${page.cookieAuthParams}">$post.forumTitle</a>
+								        #else
+								            <a target="_blank" class="btn btn-xs btn-success" href="http://${post.contentDomain}$post.contentHref?${page.cookieAuthParams}">$post.contentTitle</a>
+								        #end
+							        </td>
+							        <td><abbr title="$formatter.formatDateISO8601($post.date)" class="timeago">$post.date</abbr></td>
+							        <td><a href="$post.user.href">$post.user.name</a></td>
+							        <td><a href="$report.reportedBy.href">$report.reportedBy.name</a></td>
+							        <td>$report.comments</td>
+							        <td>$report.category</td>
+							        <td class="action">
+								        <div class="btn-group btn-group-sm">
+									        <button class="btn btn-success dropdown-toggle" data-toggle="dropdown" type="button">
+										        <i class="fa fa-cog"></i>
+									        </button>
+									        <ul class="dropdown-menu pull-right">
+										        <li><a href="$report.id" title="Dismiss report" class="btn-dismiss-report"><span class="Hidden">Dismiss report</span></a></li>
+										        <li><a href="$post.id" title="Edit this post" class="btn-edit-post"><span class="Hidden">Edit this post</span></a></li>
+										        <li><a href="$report.id" title="Delete this post" class="btn-delete-report"><span class="Hidden">Delete this post</span></a></li>
+									        </ul>
+								        </div>
+							        </td>
+						        </tr>
+					        #end
+				        </tbody>
+			        </table>
+		        </div>
+		        <!-- End content of Reports tab -->
+	        </div>
         </div>
 
-        <div id="editPost" class="Modal">
-            <header>
-                <h3>Edit Post</h3>
-                <a class="Close" href="#" title="Close"><span class="Hidden">Close</span></a>
-            </header>
-            <div class="ModalContent">
-                <table>
-                    <tr>
-                        <td><textarea name="editComment" cols="50" rows="10" class="required"></textarea></td>
-                    </tr>
-                    <tr>
-                        <td class="Btn">
-                            <button>Save changes</button>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </div>        
+        <div id="modal-edit-post" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
+	        <div class="modal-header">
+		        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+		        <h4 class="modal-title">Edit Post</h4>
+	        </div>
+	        <div class="modal-body">
+		        <div class="form-group">
+			        <div class="col-md-12">
+				        <textarea name="editComment" cols="50" rows="10" class="required form-control"></textarea>
+			        </div>
+		        </div>
+	        </div>
+	        <div class="modal-footer">
+		        <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+		        <button class="btn btn-primary" data-type="form-submit" type="button">Save</button>
+	        </div>
+        </div>
+
         <script type="text/javascript">
-            jQuery(function() {
+            Bob.onDOMReady(function() {
                 initManagePost();
             });
         </script>

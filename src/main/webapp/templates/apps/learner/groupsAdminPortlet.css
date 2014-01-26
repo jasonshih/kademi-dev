@@ -1,0 +1,13 @@
+.modal-edit-programs aside label {
+	margin-left: 5px;
+}
+
+.modal-edit-programs article span.article-name > a {
+	float: left;
+	width: 150px;
+	margin-right: 10px;
+}
+
+.modal-edit-programs article.article-sub span.article-name > a {
+	width: 120px;
+}

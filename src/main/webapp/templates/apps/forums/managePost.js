@@ -1,135 +1,146 @@
 function initManagePost() {
-    $("#managePost").on("click", ".EditPost", function(e) {
+	var tabbable = $('.tabble');
+	var reportsWrapper = $('#reports');
+	var postsWrapper = $('#posts');
+	
+	tabbable.on('click', '.btn-edit-post', function (e) {
+		e.preventDefault();
+		
+		var btn = $(this);
+		var id = btn.attr('href');
+		var divPost = btn.closest('tr');
+		
+		showEditPost(id, divPost);
+	});
+
+	postsWrapper.on('click', '.btn-delete-post', function(e) {
         e.preventDefault();
-        var id = $(e.target).attr("href");
-        var divPost = $(e.target).closest("div.Post");
-        showEditPost(id, divPost);
-    });
-    $("#managePost").on("click", ".DeletePost", function(e) {
-        e.preventDefault();
-        var id = $(e.target).attr("href");
-        var divPost = $(e.target).closest("div.Post");
+
+		var btn = $(this);
+		var id = btn.attr('href');
+		var divPost = btn.closest('tr');
+
         confirmDeletePost(id, divPost);
     });
-    $("#managePost").on("click", ".DismissReport", function(e) {
+
+	reportsWrapper.on('click', '.btn-dismiss-report', function(e) {
         e.preventDefault();
-        var id = $(e.target).attr("href");
-        var divPost = $(e.target).closest("div.Post");
+
+	    var btn = $(this);
+	    var id = btn.attr('href');
+	    var divPost = btn.closest('tr');
+
         dismissReport(id, divPost);
     });
-    $("#managePost").on("click", ".DeleteReportedPost", function(e) {
+
+	reportsWrapper.on('click', '.btn-delete-report', function(e) {
         e.preventDefault();
-        var id = $(e.target).attr("href");
-        var divPost = $(e.target).closest("div.Post");
+
+		var btn = $(this);
+		var id = btn.attr('href');
+		var divPost = btn.closest('tr');
+
         deleteReportedPost(id, divPost);
     });
-    
 
-    jQuery("abbr.timeago").timeago();
+    jQuery('abbr.timeago').timeago();
 }
 
-function deleteReportedPost(reportId, postDiv) {
-    log("deleteReportedPost", reportId, postDiv);
+function deleteReportedPost(reportId, postRow) {
+    log('deleteReportedPost', reportId, postRow);
     $.ajax({
         type: 'POST',
         url: window.location.pathname,
-        dataType: "json",
-        data: "deleteAbuseReportId=" + reportId,
+        dataType: 'json',
+        data: 'deleteAbuseReportId=' + reportId,
         success: function(data) {
-            log("response", data);
-            postDiv.hide(300, function() {
-                postDiv.remove();
-            })
+            log('response', data);
+            postRow.remove();
         },
         error: function(resp) {
-            log("error", resp);
-            alert("Sorry, couldnt delete the post. Do you have permissions?");
+            log('error', resp);
+            alert('Sorry, couldnt delete the post. Do you have permissions?');
         }
     });
 }
 
-function dismissReport(reportId, postDiv) {
-    log("dismissReport", reportId, postDiv);
+function dismissReport(reportId, postRow) {
+    log('dismissReport', reportId, postRow);
     $.ajax({
         type: 'POST',
         url: window.location.pathname,
-        dataType: "json",
-        data: "dismissReportId=" + reportId,
+        dataType: 'json',
+        data: 'dismissReportId=' + reportId,
         success: function(data) {
-            log("response", data);
-            postDiv.hide(300, function() {
-                postDiv.remove();
-            })
+            log('response', data);
+            postRow.remove();
         },
         error: function(resp) {
-            log("error", resp);
-            alert("Sorry, couldnt delete the post. Do you have permissions?");
+            log('error', resp);
+            alert('Sorry, couldnt delete the post. Do you have permissions?');
         }
     });
 }
 
-function confirmDeletePost(postId, postDiv) {
-    log("delete", postId, postDiv);
-    if (confirm("Are you sure you want to delete this post?")) {
+function confirmDeletePost(postId, postRow) {
+    log('delete', postId, postRow);
+    if (confirm('Are you sure you want to delete this post?')) {
         $.ajax({
             type: 'POST',
             url: window.location.pathname,
-            dataType: "json",
-            data: "deleteId=" + postId,
+            dataType: 'json',
+            data: 'deleteId=' + postId,
             success: function(data) {
-                log("response", data);
-                postDiv.hide(300, function() {
-                    postDiv.remove();
-                })
+                log('response', data);
+                postRow.remove();
             },
             error: function(resp) {
-                log("error", resp);
-                alert("Sorry, couldnt delete the post. Do you have permissions?");
+                log('error', resp);
+                alert('Sorry, couldnt delete the post. Do you have permissions?');
             }
         });
     }
 }
 
-function showEditPost(postId, postDiv) {
-    log("edit", postId, postDiv);
-    var currentText = postDiv.find(".Content p.post-text").text();
-    var modal = $("#editPost");
-    modal.find("textarea").val(currentText);
-    modal.find("button").unbind();
-    modal.find("button").click(function() {
-        var newText = modal.find("textarea").val();
-        updatePost(postId, newText, postDiv);
-    });
+function showEditPost(postId, postRow) {
+	var modal = $('#modal-edit-post');
 
-    $.tinybox.show("#editPost", {
-        overlayClose: false,
-        opacity: 0
-    });
+    log('edit', postId, postRow);
+    var currentText = postRow.find('td:first').text();
+
+    modal.find('textarea').val(currentText);
+	modal.off('click').find('.btn-save-post').on('click', function(e) {
+		e.preventDefault();
+
+		var newText = modal.find('textarea').val();
+		updatePost(postId, newText, postRow);
+	});
+
+    modal.modal('show');
 }
 
-function updatePost(postId, newText, postDiv) {
+function updatePost(postId, newText, postRow) {
     $.ajax({
         type: 'POST',
         url: window.location.pathname,
-        dataType: "json",
+        dataType: 'json',
         data: {
             editId: postId,
             newText: newText
         },
         success: function(data) {
-            log("response", data);
-            postDiv.find(".Content p.post-text").text(newText);
-            var bg = postDiv.css("background-color");
-            log("current bg", bg);
-            postDiv.css("opacity", "0");
-            postDiv.animate({opacity: 0}, 300, function() {
-                postDiv.animate({opacity: 1}, 300);
+            log('response', data);
+            postRow.find('td:first').text(newText);
+
+            postRow.css('opacity', '0');
+            postRow.animate({opacity: 0}, 300, function() {
+                postRow.animate({opacity: 1}, 300);
             });
-            $.tinybox.close();
+	        $('#modal-edit-post').modal('hide');
         },
         error: function(resp) {
-            log("error", resp);
-            alert("Sorry, couldnt update the post. Do you have permissions?");
+            log('error', resp);
+            alert('Sorry, couldnt update the post. Do you have permissions?');
         }
     });
 }
