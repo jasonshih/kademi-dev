@@ -503,35 +503,57 @@
                     <!-- end: MAIN MENU TOGGLER BUTTON -->
                     <!-- start: MAIN NAVIGATION MENU -->
                     <ul class="main-navigation-menu">
-                        #foreach($parentItem in $menu.items)
-                        #set($subItems = $parentItem.items)
-                        <li class="$formatter.ifTrue( $parentItem.active, 'active open', '' )">
-                            <a href="$parentItem.href">
-                                <i class="clip-home-3"></i>
-                                <span class="title">$parentItem.text</span>
+                        #foreach($rootItem in $menu.items)
 
-                                #if( !$subItems.isEmpty() )
+                        <li class="$formatter.ifTrue( $rootItem.active, 'active open', '' )">
+                            <a href="$rootItem.href">
+                                <i class="clip-home-3"></i>
+                                <span class="title">$rootItem.text</span>
+
+                                #if( !$rootItem.items.isEmpty() )
                                 <i class="icon-arrow"></i>
                                 #end
 
-                                #if( $parentItem.active )
+                                #if( $rootItem.active )
                                 <span class="selected"></span>
                                 #end
                             </a>
 
-                            #if( !$subItems.isEmpty() )
+                            #set($subItems = $rootItem.items)
                             <ul class="sub-menu">
-                                #foreach($item in $parentItem.items)
-                                <li>
-                                    <a href="$item.href">
-                                        <span class="title">$item.text</span>
+                                #foreach($sectionItem in $subItems)
+                                <li class="$formatter.ifTrue( $sectionItem.active, 'active open', '' )">
+                                    <a href="javascript:void()">
+                                        <i class="clip-folder"></i>
+                                        <span class="title">$sectionItem.text</span>
+
+                                        #if( !$subItems.isEmpty() )
+                                        <i class="icon-arrow"></i>
+                                        #end
+
+                                        #if( $sectionItem.active )
+                                        <span class="selected"></span>
+                                        #end
                                     </a>
-                                </li>  
+
+                                    #if( !$sectionItem.items.isEmpty() )
+                                    <ul class="sub-menu">
+                                        #foreach($item in $sectionItem.items)
+                                        <li>
+                                            <a href="$item.href">
+                                                <span class="title">$item.text</span>
+                                            </a>
+                                        </li>  
+                                        #end
+                                    </ul>      
+                                    #end
+                                </li>
                                 #end
-                            </ul>      
-                            #end
-                        </li>
-                        #end
+                            </ul>
+                            #end                            
+                        </li>                        
+
+
 
 
                     </ul>
