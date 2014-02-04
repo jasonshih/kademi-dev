@@ -5,8 +5,6 @@
         <link href="manageOrgs.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="/static/js/jquery.fileupload.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
-
-        <script type="text/javascript" src="manageGroup.js" bottom="true">//</script>
         <script type="text/javascript" src="manageOrgs.js" bottom="true">//</script>
 
     </head>
@@ -14,16 +12,16 @@
         <div id="manage-business-unit">
             <header class="clearfix">
                 <p class="pull-left">
-                    <a class="btn btn-sm btn-primary btn-add-org" href="#"><i class="fa fa-plus"></i> Add new business units</a>
+                    <a class="btn btn-primary btn-add-org" href="#"><i class="fa fa-plus"></i> Add new business units</a>
                 </p>
                 <div class="pull-right">
                     <p class="btn-group">
-                        <a class="btn btn-sm btn-default" href="#modal-upload-csv" data-toggle="modal" data-target="#modal-upload-csv">Upload CSV</a>
-                        <a class="btn btn-sm btn-default" href="orgs.csv">Open CSV</a>
+                        <a class="btn btn-warning" href="#modal-upload-csv" data-toggle="modal" data-target="#modal-upload-csv">Upload CSV</a>
+                        <a class="btn btn-info" href="orgs.csv">Open CSV</a>
                     </p>
                     <p class="btn-group">
-                        <a class="btn btn-sm btn-default" href="#modal-upload-orgid-csv" data-toggle="modal">Upload OrgIDs CSV</a>
-                        <a class="btn btn-sm btn-default" href="orgIds.csv">Open OrgIDs CSV</a>
+                        <a class="btn btn-warning" href="#modal-upload-orgid-csv" data-toggle="modal">Upload OrgIDs CSV</a>
+                        <a class="btn btn-info" href="orgIds.csv">Open OrgIDs CSV</a>
                     </p>
                 </div>
             </header>
@@ -50,7 +48,7 @@
                                 <th>Path</th>
                                 <th>Phone</th>
                                 <th>Address</th>
-                                <th>Action</th>
+                                <th class="action">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -61,13 +59,13 @@
                                 <td>$org.parentPath</td>
                                 <td>$!org.phone</td>
                                 <td>$!org.address</td>
-                                <td>
-                                    <div class="btn-group">
-                                        <a class="btn btn-xs btn-default btn-edit-org" role="button" href="$org.href">Edit details</a>
-                                        <button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">
-                                            <span class="caret"></span>
+                                <td class="action">
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+                                            <i class="clip-settings"></i>
                                         </button>
                                         <ul class="dropdown-menu pull-right" role="menu">
+	                                        <li><a class="btn-edit-org" role="button" href="$org.href">Edit details</a></li>
                                             <li><a href="${org.href}viewDetails">View users and details</a></li>
                                             <li><a href="${org.href}organisations">Manage child orgs</a></li>
                                             <li class="divider"></li>
