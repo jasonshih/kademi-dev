@@ -1,7 +1,7 @@
 function initGroupAdminPortlet() {
 	log('init group admin portlet');
 
-	$(document.body).on('change', 'input[type=radio]', function () {
+	$(document.body).on('change', '.modal-edit-programs input[type=radio]', function () {
 		log('clicked', this);
 
 		var radioBtn = $(this);
@@ -30,9 +30,9 @@ function saveGroupProgram(groupName, itemHref, radioBtn, modal) {
             success: function(response) {
                 log('saved ok', response);
 
-	            var groupDiv = modal.closest('[data-role="group-programs"]');
-	            var groupId = groupDiv.attr('id');
-                groupDiv.load(window.location.pathname + ' #' + groupId + '> *');
+	            var id = modal.attr('data-program-id');
+
+                $('#' + id).load(window.location.pathname + ' #' + id + '> *');
 
 	            modal.modal('hide');
             },

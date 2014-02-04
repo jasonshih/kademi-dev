@@ -12,9 +12,9 @@
 	        #end
 	        <aside class="article-more-infor">
 	            #if($enrolement.completable)
-	                <span class="badge badge-success">Completable</span>
+	                <b class="text-success">Completable</b>
 	            #else
-	                <span class="badge badge-beige">View only</span>
+	                <b class="text-muted">View only</b>
 	            #end
 	        </aside>
 	    </article>
@@ -24,7 +24,7 @@
 		<a class="btn btn-sm btn-primary btn-add-program pull-right" data-toggle="modal" href="#modal-edit-$group.name"><i class="fa fa-plus"></i> Add/remove programs & courses</a>
 	</p>
 
-	<div id="modal-edit-$group.name" class="modal modal-md fade modal-edit-programs" aria-hidden="true" tabindex="-1">
+	<div id="modal-edit-$group.name" class="modal modal-md fade modal-edit-programs" aria-hidden="true" tabindex="-1" data-program-id="programs-list-$group.name">
 		<div class="modal-header">
 			<button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
 			<h4 class="modal-title">Edit programs for group: <span>$group.name</span></h4>

@@ -97,6 +97,10 @@ modal.ajax-processing .btn-img[data-type="form-submit"] img,
 	visibility: hidden;
 }
 
+.article-wrapper.showed-action > article aside.article-action {
+	visibility: visible;
+}
+
 .article-wrapper > article aside.article-more-infor {
 	line-height: 32px;
 	float: right;
@@ -134,6 +138,15 @@ modal.ajax-processing .btn-img[data-type="form-submit"] img,
 
 .article-wrapper > .article-sub {
 	margin-left: 30px;
+}
+
+.article-wrapper.article-sm > article {
+	height: 32px;
+	line-height: 22px;
+}
+
+.article-wrapper.article-sm > article > .article-action {
+	margin-top: -1px;
 }
 
 /* ============================================================================

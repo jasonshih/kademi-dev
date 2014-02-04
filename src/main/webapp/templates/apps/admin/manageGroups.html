@@ -8,14 +8,26 @@
     </head>
     <body class="manageModulePages">
         <p>
-	        <a class="btn btn-primary btn=add-group" href="#"><i class="fa fa-plus"></i> Add new group</a>
+	        <a class="btn btn-primary btn-add-group" href="#"><i class="fa fa-plus"></i> Add new group</a>
         </p>
 
         #foreach($group in $page.children)
-	        <div class="panel panel-default">
+	        <div class="panel panel-default group">
 		        <div class="panel-heading">
 			        <i class="clip-users"></i>
-			        $group.name
+			        <span class="group-name">$group.name</span>
+			        <div class="btn-group btn-group-xs">
+				        <button data-toggle="dropdown" class="btn btn-default btn-squared dropdown-toggle" type="button">
+					        <span class="caret"></span>
+				        </button>
+				        <ul role="menu" class="dropdown-menu">
+					        <li><a href="" class="btn-rename-group">Rename this group</a></li>
+					        <li><a href="$group.name/members" class="btn-view-group-member">View members</a></li>
+					        <li><a href="" class="btn-copy-member">Copy members from group</a></li>
+					        <li class="divider"></li>
+					        <li><a href="" class="btn-delete-group">Delete this group</a></li>
+				        </ul>
+			        </div>
 			        <div class="panel-tools">
 						<span class="label label-info">Registration: $group.regoModeText</span>
 						<span class="label label-success">$group.numMembers Members</span>
@@ -23,185 +35,162 @@
 		        </div>
 		        <div class="panel-body">
 			        #portlets("groupDetails")
+
+			        <h4>Roles</h4>
+			        <hr class="hr-sm" />
+			        <div class="roles-wrapper">
+			        #foreach($role in $group.children.ofType.role)
+				        <span class="role">
+					        <span>$role.title</span>
+				            <a class="btn btn-xs btn-danger btn-remove-role" href="$role.href" title="Remove this role"><i class="clip-minus-circle "></i></a>
+				        </span>
+			        #end
+			        </div>
+			        <p class="clearfix role-action">
+				        <a href="#modal-edit-roles" data-toggle="modal" class="btn btn-sm btn-primary btn-add-role-group pull-right"><i class="fa fa-plus"></i> Add roles</a>
+			        </p>
+
+			        <h4>Website access</h4>
+			        <hr class="hr-sm" />
+			        <div class="article-wrapper showed-action websites-list">
+				        #set($signups = $group.signupPages)
+				        #if( $signups.isEmpty() )
+				            <p>This user group does not have access to any websites</p>
+				        #else
+					        #foreach($p in $signups.keySet())
+					        <article>
+						        <span class="article-name">
+							        <a target="_blank" href="http://${p}${formatter.portString}"><b>$p</b></a>
+						        </span>
+						        #if( $group.publicSignup )
+						            <aside class="article-action">
+						                <a target="_blank" href="$signups.get($p)" class="btn btn-sm btn-warning">Signup page</a>
+						            </aside>
+						        #else
+							        <aside class="article-more-infor">
+							            No signup page
+							        </aside>
+						        #end
+					        </article>
+					        #end
+				        #end
+			        </div>
 		        </div>
 	        </div>
         #end
-        <section id="manageGroup" class="MainContent">
-            <header class="ClearFix">
-                <button class="SmallBtn Add AddGroup"><span>Add New Group</span></button>
-            </header>
-            #foreach($group in $page.children)
-            <div class="Group" id="group-${group.group.id}">
-                <header class="ClearFix">
-                    <div class="ShowDialog"><span>$group.name</span></div>
-                    <a class="numMembers" href="$group.name/members">$group.numMembers Members</a>
-                    <a href="#" class="regoMode">Registration: $group.regoModeText</a>
-                </header>
-                <div class="ContentGroup ClearFix">
-                    #portlets("groupDetails")
-                    <h4>Roles</h4>
-                    <ul class="PermissionList ClearFix">
-                        #foreach($role in $group.children.ofType.role)
-                        <li>
-                            <span>$role.title</span>
-                            <a href="$role.href">Delete</a>
-                        </li>
-                        #end
-                    </ul>	
-                    <div class="ClearFix">
-                        <button onclick="showPermissionModal(this)" class="SmallBtn Add AddPermission"><span>Add roles</span></button>
-                    </div>
-                    
-                    <h4>Website access</h4>
-                    <ul class="ClearFix">
-                        #set($signups = $group.signupPages)
-                        #if( $signups.isEmpty() )
-                        <li>This user group does not have access to any websites</li>
-                        #else
-                        #foreach($p in $signups.keySet())
-                        <li>
-                            <a target="_blank" href="http://${p}${formatter.portString}"><b>$p</b></a>
-                            #if( $group.publicSignup )
-                            <span class="pull-right">
-                                <a target="_blank" href="$signups.get($p)" class="Btn">Signup page</a>
-                            </span>                   
-                            #else
-                            <span class="pull-right">No signup page</span>
-                            #end
-                        </li>
-                        #end
-                        #end
-                    </ul>	                    
-                </div>
-            </div>
-            #end
-        </section>
 
-        <div class="Modal roles">
-            <header>
-                <h3>Edit roles</h3>
-                <a class="Close" href="#" title="Close"><span class="Hidden">Close</span></a>
-            </header>
-
-            <div class="ModalContent">
-                <table>
-                    <tr>
-                        <td colspan="2">
-                            <p>Role applies to:</p>
-                            <ul class="appliesTo">
-                                <li>
-                                    <input type="radio" name="appliesTo" value="ownOrg" id="appliesToOwnOrg" /> 
-                                    <label for="appliesToOwnOrg">Their own organistion</label>
-                                </li>
-                                <li>
-                                    <input type="radio" name="appliesTo" value="selectRepo" id="appliesToRepository"/> 
-                                    <label for="appliesToRepository">A repository</label>
-                                    <select>
-                                        <option value="">-- Select a repository --</option>
-                                        #foreach($r in $page.organisation.repositories)
-                                        <option value="$r.name">$r.name</option>
-                                        #end
-                                    </select>
-                                </li>
-                                <li>
-                                    <input type="radio" name="appliesTo" value="selectOrg" id="appliesToOrg"/> 
-                                    <label for="appliesToOrg">An organistion</label>
-                                    <select>
-                                        <option value="">-- Select an organisation --</option>
-                                        <option value="$page.organisation.id">$page.organisation.formattedName (this organisation)</option>
-                                        #foreach($org in $page.organisation.childOrgs)
-                                        <option value="$org.id">$org.formattedName</option>
-                                        #end
-                                    </select>
-
-                                </li>
-                            </ul>
-                            <ul class="ListItem roles">
-                                #foreach($role in $page.allRoles)
-                                <li>
-                                    <span>$role</span>
-                                    <aside>
-                                        <button class="SmallBtn Add"><span>Add role</span></button>
-                                    </aside>
-                                </li>
-                                #end
-                            </ul>
-                        </td>
-                    </tr>
-                </table>
-            </div>                    
-        </div>        
-
-        <div class="Hidden">
-            <div id="dialogGroup">
-                <div class="Dialog Hidden">
-                    <a href="" class="RenameGroup">Rename this group</a>
-                    <a href="" class="Delete DeleteGroup">Delete this group</a>
-                    <a href="" class="ViewGroupMembers">View members</a>
-                    <a href="" class="CopyMembers">Copy members from group</a>
-                </div>
-            </div>
-            <div id="modalListController">
-                <aside>
-                    <label for="selected"><input type="checkbox" value="1" id="selected" name="selected" class="FuseChk" checked="checked" /></label>
-                </aside>
-            </div>
+        <div class="modal modal-sm fade" aria-hidden="true" tabindex="-1" id="modal-edit-roles">
+	        <div class="modal-header">
+		        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+		        <h4 class="modal-title">Edit roles</h4>
+	        </div>
+	        <div class="modal-body">
+		        <h5>Role applies to:</h5>
+		        <div class="applies-to">
+			        <p>
+				        <input type="radio" name="appliesTo" value="ownOrg" id="appliesToOwnOrg" />
+				        <label for="appliesToOwnOrg">Their own organistion</label>
+			        </p>
+			        <p>
+				        <input type="radio" name="appliesTo" value="selectRepo" id="appliesToRepository"/>
+				        <label for="appliesToRepository">A repository</label>
+				        <select class="hide">
+					        <option value="">-- Select a repository --</option>
+					        #foreach($r in $page.organisation.repositories)
+					        <option value="$r.name">$r.name</option>
+					        #end
+				        </select>
+			        </p>
+			        <p>
+				        <input type="radio" name="appliesTo" value="selectOrg" id="appliesToOrg"/>
+				        <label for="appliesToOrg">An organistion</label>
+				        <select class="hide">
+					        <option value="">-- Select an organisation --</option>
+					        <option value="$page.organisation.id">$page.organisation.formattedName (this organisation)</option>
+					        #foreach($org in $page.organisation.childOrgs)
+					        <option value="$org.id">$org.formattedName</option>
+					        #end
+				        </select>
+			        </p>
+		        </div>
+		        <div class="article-wrapper article-sm showed-action roles">
+			        #foreach($role in $page.allRoles)
+				        <article>
+					        <span class="article-name">$role</span>
+					        <aside class="article-action">
+						        <button class="btn btn-xs btn-success btn-add-role" title="Add role"><i class="clip-plus-circle "></i></button>
+					        </aside>
+				        </article>
+			        #end
+		        </div>
+	        </div>
+	        <div class="modal-footer">
+		        <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+		        <button class="btn btn-primary" data-type="form-submit" type="button">Save</button>
+	        </div>
         </div>
 
-        <div id="modalGroup" class="Modal">
-            <header>
-                <h3>Edit Group</h3>
-                <a class="Close" href="#" title="Close"><span class="Hidden">Close</span></a>
-            </header>
-            <div class="ModalContent">
-                <table>
-                    <tr rel="Group" class="Hidden">
-                        <th><label for="name">Group name</label></th>
-                        <td><input type="text" name="name" id="name" value="" placeholder="Group name" /></td>
-                    </tr>                    
-                    <tr>
-                        <td colspan="2" class="Btn">
-                            <button>Save changes</button>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        
-        <div id="modalRegoMode" class="Modal">
-
+        <div id="modal-group" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
+	        <div class="modal-header">
+		        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+		        <h4 class="modal-title">Edit Group</h4>
+	        </div>
+	        <div class="modal-body">
+		        <div class="form-horizontal">
+			        <div class="form-group">
+				        <label class="label-control col-md-4" for="name">Group name</label>
+				        <div class="col-md-8">
+					        <input class="form-control" type="text" name="name" id="name" value="" placeholder="Group name" />
+				        </div>
+			        </div>
+		        </div>
+	        </div>
+	        <div class="modal-footer">
+		        <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+		        <button class="btn btn-primary btn-save-group" type="button">Save</button>
+	        </div>
         </div>
 
-        <div id="modalCopyMembers" class="Modal">
-            <header>
-                <h3>Copy Members To: <span>.</span></h3>
-                <a class="Close" href="#" title="Close"><span class="Hidden">Close</span></a>
-            </header>
-            <div class="ModalContent">
-                <form method="POST" action="">
-                    <div class="BtnBar">
-                        <button class="Btn">Copy Members</button>
-                        <div style="clear: both"></div>
-                    </div>
-                    <p>Use this form to copy the members from the group below into <span>.</span><br/><br/></p>
-                    <table>
-                        <tr>
-                            <td><label for="selectSourceGroup"><b>Group</b></label></td>
-                            <td>
-                                <select name="sourceGroup">
-                                    <option value="">[None]</option>
-                                    #foreach($group in $page.organisation.groups)
-                                    <option value="$group.name">$group.name</option>
-                                    #end
-                                </select> 
-                                <p>Select the group to copy members from.</p>
-                            </td>
-                        </tr>
-                    </table>
-                </form>
-            </div>
+        <div id="modal-rego-mode" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
+	        <div class="modal-header">
+		        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+		        <h4 class="modal-title">Upload Organisation IDs CSV</h4>
+	        </div>
+	        <div class="modal-body">
+	        </div>
+	        <div class="modal-footer">
+		        <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+		        <button class="btn btn-primary" data-type="form-submit" type="button">Save</button>
+	        </div>
+        </div>
 
-        </div>        
+        <div id="modal-copy-members" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
+	        <div class="modal-header">
+		        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+		        <h4 class="modal-title">Copy Members To: <span class="group-name"></span></h4>
+	        </div>
+	        <div class="modal-body">
+		        <form class="form-horizontal" action="" method="post">
+			        <p>Use this form to copy the members from the group below into <b class="group-name"></b></p>
+			        <div class="form-group">
+				        <label class="control-label col-md-4" for="selectSourceGroup">Group</label>
+				        <div class="col-md-8">
+					        <select name="sourceGroup" id="selectSourceGroup" class="form-control">
+						        <option value="">[None]</option>
+						        #foreach($group in $page.organisation.groups)
+						        <option value="$group.name">$group.name</option>
+						        #end
+					        </select>
+					        <p>Select the group to copy members from.</p>
+				        </div>
+				        </div>
+		        </form>
+	        </div>
+	        <div class="modal-footer">
+		        <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+		        <button class="btn btn-primary" data-type="form-submit" type="button">Copy Members</button>
+	        </div>
+        </div>
 
         <script type="text/javascript" >
             Bob.onDOMReady(function() {
