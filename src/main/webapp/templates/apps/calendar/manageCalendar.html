@@ -14,7 +14,31 @@
 
         <header class="ClearFix">
             <button class="SmallBtn Add AddEvent"><span>Add New Event</span></button>
-        </header>  
+        </header>
+
+        <div class="row">
+	        <div class="col-md-6 col-sm-12">
+		        <div class="panel panel-default">
+			        <div class="panel-heading">
+				        <i class="clip-list"></i>
+				        List of calendars
+			        </div>
+			        <div class="panel-body">
+			        </div>
+		        </div>
+	        </div>
+	        <div class="col-md-6 col-sm-12">
+		        <div class="panel panel-default">
+			        <div class="panel-heading">
+				        <i class="clip-calendar"></i>
+				        Calendar
+			        </div>
+			        <div class="panel-body">
+				        <div id="calendar" class="calendar-container"></div>
+			        </div>
+		        </div>
+	        </div>
+        </div>
 
 
         <table id="calendars" class="bar table table-striped vcenter Summary">
@@ -64,10 +88,6 @@
         </table>
 
         <hr/>
-
-        <br/><br/><br/>
-
-        <div id="calendar" class="calendar-container" style="width: 800px; margin: 0 auto;"></div>
 
 
         <script type="text/javascript" src="/static/js/stupidtable.js"></script>

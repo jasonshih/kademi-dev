@@ -1,6 +1,7 @@
-#manageEvent .Content {
-    border: 1px solid #dedede;
-    border-radius: 5px;
-    position: relative;
-    padding: 10px;
+.table-calendar {
+	margin-top: 20px;
+}
+
+.table-calendar:first-child {
+	margin-top: 0;
 }
