@@ -34,11 +34,11 @@
 					            </colgroup>
 					            <thead>
 						            <tr>
-							            <th colspan="2" class="action"><a href="$cal.name">$cal.title</a></th>
-							            <th class="action">
-								            <div class="btn-group btn-group-sm">
+							            <th colspan="3" class="action">
+								            <a href="$cal.name">$cal.title</a>
+								            <div class="btn-group btn-group-xs pull-right">
 									            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
-										            <span class="clip-settings"></span>
+										            <span class="caret"></span>
 									            </button>
 									            <ul class="dropdown-menu pull-right" role="menu">
 										            <li> <a  title="View" href="$cal.name?goto" target="_blank">View</a></li>
@@ -64,7 +64,7 @@
 							            <td><abbr title="$formatter.formatDateISO8601($event.startDate)" class="timeago">$!event.startDate</abbr></td>
 							            <td class="action">
 								            <div class="btn-group btn-group-xs">
-									            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+									            <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
 										            <span class="clip-settings"></span>
 									            </button>
 									            <ul class="dropdown-menu pull-right" role="menu">

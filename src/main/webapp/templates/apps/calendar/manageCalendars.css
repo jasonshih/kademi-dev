@@ -5,3 +5,13 @@
 .table-calendar:first-child {
 	margin-top: 0;
 }
+
+label small {
+	font-style: italic;
+	color: #ccc;
+}
+
+.page-action {
+	position: relative;
+	z-index: 1;
+}

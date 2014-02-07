@@ -1,20 +1,21 @@
 <html>
     <head>
         <title>Calendar</title>
+	    <link href="/static/css/fullcalendar-1.6.4.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="calendars.js">//</script>
         <script type="text/javascript" src="manageCalendars.js">//</script>
         <script type="text/javascript" src="cal-utils.js">//</script>
         <script type="text/javascript" src="/static/js/fullcalendar-1.6.4.js">//</script>
-        <script type="text/javascript" src="/static/js/jquery-ui-1.10.3.custom.min.js">//</script>        
-        <link href="/static/css/fullcalendar-1.6.4.css" rel="stylesheet" type="text/css" />
+	    <script type="text/javascript" src="/static/js/jquery.fileupload.js"></script>
+	    <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
     </head>    
     <body class="directory">
 
-        <div class="input pull-right" id='myUploaded' style="width: 200px"></div> 
+        <!--<div class="input pull-right" id='myUploaded' style="width: 200px"></div>-->
 
-        <header class="ClearFix">
-            <button class="SmallBtn Add AddEvent"><span>Add New Event</span></button>
-        </header>
+        <p>
+	        <a class="btn btn-primary btn-add-event"><i class="fa fa-plus"></i> Add new event</a>
+        </p>
 
         <div class="row">
 	        <div class="col-md-6 col-sm-12">
@@ -24,6 +25,50 @@
 				        List of calendars
 			        </div>
 			        <div class="panel-body">
+				        <table class="table table-bordered table-striped table-hover">
+					        <colgroup>
+						        <col />
+						        <col />
+						        <col />
+						        <col style="width: 80px" />
+					        </colgroup>
+					        <thead>
+						        <tr>
+							        <th>Events</th>
+							        <th>Start</th>
+							        <th>Finish</th>
+							        <th class="action">Action</th>
+						        </tr>
+					        </thead>
+					        <tbody>
+						        #set($items = $page.upcomingEvents)
+						        #if( $items.isEmpty() )
+						        <tr>
+							        <td colspan="4">There are no events. Add one using the Add button above, or upload ical files</td>
+						        </tr>
+						        #else
+						        #foreach($event in $items)
+						        <tr>
+							        <td><a href="$event.href">$event.summary</a></td>
+							        <td><a href="$event.href">$formatter.formatDateTime($event.startDate)</a></td>
+							        <td><a href="$event.href">$formatter.formatDateTime($event.endDate)</a></td>
+							        <td class="action">
+								        <div class="btn-group btn-group-sm">
+									        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+										        <span class="clip-settings"></span>
+									        </button>
+									        <ul class="dropdown-menu pull-right" role="menu">
+										        <li><a title="Edit" href="$event.name">Edit</a></li>
+										        <li class="divider"></li>
+										        <li><a class="btn-delete" title="Delete" href="$event.name">Delete</a></li>
+									        </ul>
+								        </div>
+							        </td>
+						        </tr>
+						        #end
+						        #end
+					        </tbody>
+				        </table>
 			        </div>
 		        </div>
 	        </div>
@@ -40,102 +85,46 @@
 	        </div>
         </div>
 
+        <div id="modal-add-event" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
+	        <div class="modal-header">
+		        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+		        <h4 class="modal-title">Add Event</h4>
+	        </div>
+	        <div class="modal-body">
+		        <form method="post" action="." class="form-horizontal">
+			        <input type="hidden" name="action" value="create"/>
+			        <div class="form-group">
+				        <label class="control-label col-md-4" for="startDate">Start date</label>
+				        <div class="col-md-8">
+					        <input type="text" name="startDate" id="startDate" value="" class="DateTime required form-control date-picker" maxlength="30" />
+				        </div>
+			        </div>
+			        <div class="form-group">
+				        <label class="control-label col-md-4" for="endDate">End date</label>
+				        <div class="col-md-8">
+					        <input type="text" name="endDate" id="endDate" value="" class="DateTime required form-control date-picker" maxlength="" />
+				        </div>
+			        </div>
+			        <div class="form-group">
+				        <label class="control-label col-md-4" for="summary">Short summary</label>
+				        <div class="col-md-8">
+					        <textarea name="summary" id="summary" class="form-control" rows="3"></textarea>
+				        </div>
+			        </div>
 
-        <table id="calendars" class="bar table table-striped vcenter Summary">
-            <thead>
-                <tr>
-                    <th class="type-string">Events</th>
-                    <th class="type-string">Start</th>
-                    <th class="type-string">Finish</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>                
-                #set($items = $page.upcomingEvents)
-                #if( $items.isEmpty() )
-                <tr>
-                    <td colspan="4">There are no events. Add one using the Add button above, or upload ical files</td>
-                </tr>
-
-                #else
-                #foreach($event in $items)
-                <tr>
-                    <td class="left">
-                        <a href="$event.href">$event.summary</a>
-                    </td>
-                    <td><a href="$event.href">$formatter.formatDateTime($event.startDate)</a></td>
-                    <td><a href="$event.href">$formatter.formatDateTime($event.endDate)</a></td>
-                    <td>
-                        <aside>
-                            <!--
-                            <a class="View" title="Edit" href="$event.name?goto">
-                                <span class="Hidden">View</span>
-                            </a>
-                            -->
-                            <a class="Edit" title="Edit" href="$event.name">
-                                <span class="Hidden">Edit</span>
-                            </a>
-                            <a class="Delete" title="Delete" href="$event.name">
-                                <span class="Hidden">Delete</span>
-                            </a>                                
-                        </aside>
-                    </td>
-
-                </tr>
-                #end
-                #end
-            </tbody>
-        </table>
-
-        <hr/>
-
-
-        <script type="text/javascript" src="/static/js/stupidtable.js"></script>
-        <script type="text/javascript" src="/static/js/jquery.fileupload.js"></script>
-        <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>      
-
-
-        <div class="Modal" id="addEventModal">
-            <header>
-                <h3>Add Event</h3>
-                <a class="Close" href="#" title="Close"><span class="Hidden">Close</span></a>
-            </header>
-            <div class="ModalContent">
-                <form method="post" action=".">
-                    <input type="hidden" name="action" value="create"/>
-                    <div class="pageMessage">.</div>
-                    <table>
-                        <tr>
-                            <th><label for="startDate">Start date</label></th>
-                            <td><input type="text" name="startDate" id="startDate" value="" class="DateTime required" maxlength="30" placeholder="" /></td>
-                        </tr>
-                        <tr>
-                            <th><label for="endDate">End date</label></th>
-                            <td><input type="text" name="endDate" id="endDate" value="" class="DateTime required" maxlength="" placeholder="" /></td>
-                        </tr>                    
-                        <tr>
-                            <th><label for="summary">Short summary</label></th>
-                            <td>
-                                <textarea name="summary" id="summary"></textarea>
-                            </td>
-                        </tr>                    
-
-                        <tr>
-                            <th><label for="description">Long Description</label></th>
-                            <td>
-                                <textarea name="description" id="description"></textarea>
-                            </td>
-                        </tr>                    
-
-                        <tr>
-                            <td colspan="2" class="Btn">
-                                <button>Save changes</button>
-                            </td>
-                        </tr>
-                    </table>
-                </form>
-            </div>
-        </div>            
+			        <div class="form-group">
+				        <label class="control-label col-md-4" for="description">Long Description</label>
+				        <div class="col-md-8">
+					        <textarea name="description" id="description" class="form-control" rows="3"></textarea>
+				        </div>
+			        </div>
+		        </form>
+	        </div>
+	        <div class="modal-footer">
+		        <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+		        <button class="btn btn-primary" data-type="form-submit" type="button">Save</button>
+	        </div>
+        </div>       
 
         <script type="text/javascript">
             jQuery(function() {

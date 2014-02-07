@@ -20,22 +20,61 @@ function initManageCalendars() {
 }
 
 function initManageCalendar() {
-    $('.AddEvent').click(function() {
-        showModal($('#addEventModal'));
-    });
-    $('#addEventModal form').forms({
+	var modal = $('#modal-add-event');
+
+	$('.btn-add-event').on('click', function (e) {
+		e.preventDefault();
+
+		modal.modal('show');
+	});
+
+	modal.find('form').forms({
         callback: function() {
             window.location.reload();
         }
     });
+
     initFullCalendar();
     initDeletes();
+	initDatePicker();
 }
 
 function initManageEvent() {
     log('initManageEvent');
-    initHtmlEditors($('.htmleditor'));
+    initHtmlEditors($('.htmleditor'), getStandardEditorHeight(), null, null, 'autogrow');
     $('.manageEventForm').forms();
+	initDatePicker();
+
+	$('#allowRegistration, #emailConfirm').click(function() {
+		checkConfirmation();
+		console.log('a');
+	});
+
+	checkConfirmation();
+}
+
+function checkConfirmation() {
+	log('checkVisibility');
+	if( $('#allowRegistration').is(':checked') ) {
+		$('.allowReg').show();
+		
+		log('checkVisibility2');
+		if( $('#emailConfirm').is(':checked') ) {
+			$('.emailReg').show();
+		} else {
+			$('.emailReg').hide();
+		}
+	} else {
+		$('.allowReg').hide();
+	}
+}
+
+function initDatePicker() {
+	$('.date-picker').datepicker({
+		autoclose: true,
+		format: 'mm/dd/yyyy',
+		viewMode: 'years'
+	});
 }
 
 function initDeletes() {
