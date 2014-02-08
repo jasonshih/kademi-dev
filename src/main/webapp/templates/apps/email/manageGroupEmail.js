@@ -1,11 +1,8 @@
 function initManageEmail() {
     log("initManageEmail");
-    stripList();
-    initController();
     initList();
     initSortableButton();
     checkCookie();
-    initAddJob();
 }
 
 function initEditEmailPage() {
@@ -149,26 +146,6 @@ function setGroupRecipient(name, groupType) {
     }
 }
 
-function showAddJob() {
-    var _modal = $("#modalCreateJob");
-    $.tinybox.show(_modal, {
-        overlayClose: false,
-        opacity: 0
-    });
-}
-
-function initAddJob() {
-    log("initAddJob", $("#moduleCreateJob form"));
-    $("#modalCreateJob form").forms({
-        callback: function(data) {
-            log("saved ok", data);
-            $.tinybox.close();
-            window.location.href = data.nextHref;
-
-        }
-    });
-}
-
 function checkCookie() {
     var _sort_type = $.cookie("email-sort-type");
     if (_sort_type) {
@@ -188,29 +165,7 @@ function checkCookie() {
                 $("a.SortByStatus").attr("rel", _asc ? "desc" : "asc");
                 break;
         }
-        ;
     }
-}
-
-function stripList() {
-    $("#manageEmail .Content ul li").removeClass("Odd").filter(":odd").addClass("Odd");
-}
-
-function initController() {
-
-    //Bind event for Delete email
-    $("body").on("click", "a.DeleteEmail", function(e) {
-        e.preventDefault();
-        var a = $(e.target);
-        log("do it", a);
-        var href = a.attr("href");
-        var name = getFileName(href);
-        confirmDelete(href, name, function() {
-            log("remove", a);
-            a.closest("tr").remove();
-            stripList();
-        });
-    });
 }
 
 function initList() {

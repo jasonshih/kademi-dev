@@ -4,6 +4,18 @@
 
 		initLoadingOverlay();
 
+		$('.date-picker').exist(function () {
+			this.datepicker({
+				autoclose: true
+			});
+		});
+
+		$('.date-time-picker').exist(function () {
+			this.datetimepicker({
+				pick12HourFormat: false
+			});
+		});
+
 		$('.tabbable').exist(function () {
 			this.each(function () {
 				var wrapper = $(this);

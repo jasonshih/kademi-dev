@@ -36,14 +36,12 @@ function initManageCalendar() {
 
     initFullCalendar();
     initDeletes();
-	initDatePicker();
 }
 
 function initManageEvent() {
     log('initManageEvent');
     initHtmlEditors($('.htmleditor'), getStandardEditorHeight(), null, null, 'autogrow');
     $('.manageEventForm').forms();
-	initDatePicker();
 
 	$('#allowRegistration, #emailConfirm').click(function() {
 		checkConfirmation();
@@ -67,14 +65,6 @@ function checkConfirmation() {
 	} else {
 		$('.allowReg').hide();
 	}
-}
-
-function initDatePicker() {
-	$('.date-picker').datepicker({
-		autoclose: true,
-		format: 'mm/dd/yyyy',
-		viewMode: 'years'
-	});
 }
 
 function initDeletes() {

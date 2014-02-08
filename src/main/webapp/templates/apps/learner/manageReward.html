@@ -85,7 +85,7 @@
                                 </tr>     
 
                                 <script type="text/javascript">
-                                    $(function() {
+                                    Bob.onDOMReady(function () {
                                         $("select.pointsType").click(function() {
                                             showHidePointsOrgType();
                                         });
@@ -304,7 +304,7 @@
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>                
         <script>
             var quiz = $formatter.toJson($page.quiz);
-            jQuery(function() {
+            Bob.onDOMReady(function () {
                 initEditReward(quiz);
                 //function to initiate bootstrap-datepicker
                 $('.date-picker').datepicker({

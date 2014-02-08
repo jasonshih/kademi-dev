@@ -1,4 +1,4 @@
-$(function() {
+Bob.onDOMReady(function () {
     $('#myModal').on('shown shown.bs.modal', function() {
         log("modal shown");
         checkInitChangeOrdModal();

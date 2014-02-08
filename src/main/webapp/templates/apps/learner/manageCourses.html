@@ -283,7 +283,7 @@
 
         #set($programs = $page.closest("programs"))
         <script type="text/javascript">
-            jQuery(function() {
+            Bob.onDOMReady(function () {
                 initManageCourse("${programs.href}", "$!{program.href}");
             });
         </script>

@@ -13,7 +13,7 @@
 	<script type="text/javascript" src="/static/js/jquery.user.js">//</script>
 	<link rel="template" href="plain" />
 	<script type="text/javascript">
-		jQuery(function ($) {
+		Bob.onDOMReady(function () { ($) {
 			$(".login").user({
 				afterLoginUrl: null,
 				valiationMessageSelector: "#validationMessage",

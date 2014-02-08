@@ -1,6 +1,6 @@
 var lastSearch = null;
 
-jQuery(function() {
+Bob.onDOMReady(function () {
     var rangeInputs = $('.SearchBox input');
     log("init range2");
     lastSearch = $("#dates").val();

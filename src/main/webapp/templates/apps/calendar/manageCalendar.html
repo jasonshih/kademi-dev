@@ -96,13 +96,13 @@
 			        <div class="form-group">
 				        <label class="control-label col-md-4" for="startDate">Start date</label>
 				        <div class="col-md-8">
-					        <input type="text" name="startDate" id="startDate" value="" class="DateTime required form-control date-picker" maxlength="30" />
+					        <input type="text" name="startDate" id="startDate" value="" class="DateTime required form-control date-picker" maxlength="30" data-date-viewmode="years" data-date-format="mm/dd/yyyy" />
 				        </div>
 			        </div>
 			        <div class="form-group">
 				        <label class="control-label col-md-4" for="endDate">End date</label>
 				        <div class="col-md-8">
-					        <input type="text" name="endDate" id="endDate" value="" class="DateTime required form-control date-picker" maxlength="" />
+					        <input type="text" name="endDate" id="endDate" value="" class="DateTime required form-control date-picker" maxlength="" data-date-viewmode="years" data-date-format="mm/dd/yyyy" />
 				        </div>
 			        </div>
 			        <div class="form-group">
@@ -127,7 +127,7 @@
         </div>       
 
         <script type="text/javascript">
-            jQuery(function() {
+            Bob.onDOMReady(function () {
                 initManageCalendar();
             });
         </script>        

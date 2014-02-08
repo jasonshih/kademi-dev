@@ -47,7 +47,7 @@
             </div>
         </section>
         <script type="text/javascript">
-            jQuery(function() {
+            Bob.onDOMReady(function () {
                 $(".item").click(function(e) {
                     var tr = $(e.target).closest("tr");
                     tr.nextUntil(".item").toggle(300);

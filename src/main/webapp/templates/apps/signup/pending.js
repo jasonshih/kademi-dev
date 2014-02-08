@@ -1,4 +1,4 @@
-$(function() {
+Bob.onDOMReady(function () {
     $("abbr.timeago").timeago();
     $(".pendingAccounts button.accept").click(function(e) {
         e.stopPropagation();

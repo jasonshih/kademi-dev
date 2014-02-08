@@ -192,7 +192,7 @@
 
                     </div>
                     <script type="text/javascript">
-                        jQuery(function() {
+                        Bob.onDOMReady(function () {
                             $("input[name=includeUser]").change(function() {
                                 var includeUser = $("input[name=includeUser]:checked").length != 0;
                                 log("includeUser", includeUser);
@@ -390,7 +390,7 @@
 
 
         <script type="text/javascript">
-            jQuery(function() {
+            Bob.onDOMReady(function () {
                 initEditEmailPage();
                 $("form.MainForm").forms({
                     callback: function() {
