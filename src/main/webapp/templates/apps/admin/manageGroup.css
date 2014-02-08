@@ -4,17 +4,6 @@
 	top: -3px;
 }
 
-.roles-wrapper .role {
-	display: inline-block;
-	border: 1px solid #ccc;
-	padding: 6px 12px;
-	margin-right: 5px;
-}
-
-.roles-wrapper .role span {
-	margin-right: 5px;
-}
-
 .role-action {
 	margin-top: 5px;
 }

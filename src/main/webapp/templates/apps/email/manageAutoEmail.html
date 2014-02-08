@@ -1,494 +1,393 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>$view.title</title>
-        <link href="manageGroupEmail.css" rel="stylesheet" type="text/css" />
-        <script type="text/javascript" src="manageGroupEmail.js">//</script>
-        <script type="text/javascript" src="/static/js/jquery.fileupload.js">//</script>
-        <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
+	    <link href="manageAutoEmail.css" rel="stylesheet" type="text/css" />
+	    <script type="text/javascript" src="/static/js/jquery.fileupload.js">//</script>
+	    <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
+	    <script type="text/javascript" src="manageAutoEmail.js">//</script>
     </head>
-    <body>
-        <section id="manageEmail" class="MainContent">
-            <form name="frmDetails" action="." method="post" class="MainForm">
-                <button class="Btn" style="float: right">Save Changes</button>
-                <button class="Btn send-test" style="float: right; margin-right: 10px">Send Test</button>
-                <nav class="TabNav ClearFix">
-                    <a href="#sendInfo">General</a>
-                    <a href="#triggers">Triggers</a>                    
-                    <a href="#message">Actions</a>
-                    <a href="#recipients">Recipients</a>
-                    <a href="#history">History</a>
-                </nav>
+    <body class="manageAutoEmail">
+        <form name="frmDetails" action="." method="post" class="form-horizontal">
+	        <div class="pull-right page-action">
+		        <button class="btn btn-primary" type="submit">Save changes</button>
+		        <button class="btn btn-info btn-sent-test" type="button">Send Test</button>
+	        </div>
 
-                <div rel="#sendInfo" class="TabContent Content Details">
-                    <table class="">
-                        <tbody>
-                            <tr>
-                                <th>Trigger name</th>
-                                <td><input type="text" name="title" value="$!page.title" placeholder="" class="required" /></td>
-                            </tr>
-                            <tr>
-                                <th>Enabled</th>
-                                <td>
-                                    $formatter.checkbox("enabled", $page.enabled)
-                                    <small>This auto email will only be sent if enabled</small>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Notes <small>These notes are for internal purposes only.</small></th>
-                                <td><textarea cols="100" name="notes" rows="10" placeholder="">$!page.notes</textarea></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>	
-                <div rel="#message" class="TabContent Content Details">
-                    <div class="actionItem">
-                        $formatter.checkbox("emailEnabled", "emailEnabled", $page.emailEnabled)
-                        <label for="emailEnabled">Send an email</label>
+	        <div class="tabbable">
+		        <ul class="nav nav-tabs tab-bricky">
+			        <li><a data-toggle="tab" href="#general">General</a></li>
+			        <li><a data-toggle="tab" href="#triggers">Triggers</a></li>
+			        <li><a data-toggle="tab" href="#action">Actions</a></li>
+			        <li><a data-toggle="tab" href="#recipients">Recipients</a></li>
+			        <li><a data-toggle="tab" href="#history">History</a></li>
+		        </ul>
+		        <div class="tab-content">
+		            <!-- Start content of General tab -->
+			        <div id="general" class="tab-pane">
+				        <div class="form-group">
+					        <label class="control-label col-md-3 col-lg-2" for="title">Trigger name</label>
+					        <div class="col-md-8 col-lg-4">
+						        <input type="text" name="title" id="title" value="$!page.title" placeholder="" class="required form-control" />
+					        </div>
+				        </div>
+				        <div class="form-group">
+					        <label class="control-label col-md-3 col-lg-2" for="enabled">Enabled</label>
+					        <div class="col-md-8 col-lg-4">
+						        $formatter.checkbox("enabled", "enabled", $page.enabled)<br />
+						        <small>This auto email will only be sent if enabled</small>
+					        </div>
+				        </div>
+				        <div class="form-group">
+					        <label class="control-label col-md-3 col-lg-2" for="notes">Notes<small>These notes are for internal purposes only.</small></label>
+					        <div class="col-md-8 col-lg-4">
+						        <textarea cols="100" name="notes" id="notes" rows="10" placeholder="" class="form-control">$!page.notes</textarea>
+					        </div>
+				        </div>
+			        </div>
+			        <!-- End content of General tab -->
 
-                        <div class="actionItemDetails">
-                            <div style="width: 50%; float: left">
-                                <table class="">
-                                    <tbody>
-                                        <tr>
-                                            <th>Website</th>
-                                            <td>
-                                                <select name="themeSiteId" class="required">
-                                                    $formatter.option("", "[Please select]", $page.themeSiteId)
-                                                    #foreach($website in $page.organisation.websites)
-                                                    $formatter.option($website.id, $website.name, $page.themeSiteId)
-                                                    #end
-                                                </select>
+			        <!-- Start content of Triggers tab -->
+			        <div id="triggers" class="tab-pane">
+				        <div class="row">
+					        <div class="col-md-6">
+						        <div class="form-group">
+							        <label class="control-label col-md-4" for="eventId">Event type</label>
+							        <div class="col-md-8">
+								        <select id="eventId" name="eventId" class="form-control">
+									        <option value="-">[Choose]</option>
+									        #foreach($eventId in $mapOfTriggerTypes.keySet())
+									        $formatter.option($eventId, $eventId, $page.trigger.eventId)
+									        #end
+								        </select>
+							        </div>
+						        </div>
+						        #foreach($eventId in $mapOfTriggerTypes.keySet())
+						        #set($triggerType = $mapOfTriggerTypes.get($eventId))
+						        #foreach($optionCode in $triggerType.keySet())
+						        <div class="form-group event-type hide $eventId">
+							        <label class="control-label col-md-4" for="$optionCode">$page.triggerOptionLabel($eventId, $optionCode)</label>
+							        <div class="col-md-8">
+								        $triggerType.get($optionCode).toHtml($optionCode, $page.triggerOptionValue($optionCode) )
+							        </div>
+						        </div>
+						        #end
+						        #end
+						        <div class="form-group">
+							        <label class="control-label col-md-4" for="createTimerEnabled">Enable event delay</label>
+							        <div class="col-md-8">
+								        $formatter.checkbox("createTimerEnabled", "createTimerEnabled", $page.createTimerEnabled, "aaaaaa")
+								        <div class="panel-toggled" data-toggled="display" data-actor="#createTimerEnabled">
+									        <p>
+										        You can set a timer so the event is only fired after a delay. This can be used to send reminder emails a week or so later, for example. Any conditional rules are applied after the delay
+									        </p>
+									        <div class="clearfix">
+										        <div class="input-group pull-left">
+											        <span class="input-group-addon">Fire the next event after</span>
+											        <input type="text" style="width: 50px" class="form-control" value="$!page.job.timerMultiple" name="timerMultiple" />
+										        </div>
+										        <div class="input-group pull-left">
+											        <select name="timerUnitName" class="form-control" id="timerUnit">
+												        #foreach($unit in $page.timerUnits)
+												        $formatter.option( $unit, $unit, $page.job.timerUnit )
+												        #end
+											        </select>
+										        </div>
+									        </div>
+								        </div>
+							        </div>
+						        </div>
+						        <div class="form-group">
+							        <label class="control-label col-md-4" for="conditionScriptXml">Advanced</label>
+							        <div class="col-md-8">
+								        <p>You can enter XML rules below, the trigger will only fire if this evaluates to true</p>
+								        <textarea name="conditionScriptXml" id="conditionScriptXml" class="form-control" rows="5">$!page.job.conditionScriptXml</textarea>
+							        </div>
+						        </div>
+					        </div>
+				        </div>
+			        </div>
+			        <!-- End content of Triggers tab -->
 
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th>Email subject</th>
-                                            <td><input type="text" name="subject" value="$!page.subject" placeholder="Enter the email subject here" class="required" /></td>
-                                        </tr>
-                                        <tr>
-                                            <th>Email from address</th>
-                                            <td><input type="text" name="fromAddress" value="$!page.fromAddress" placeholder="admin@mybusinessname.com" class="required email" /></td>
-                                        </tr>
+			        <!-- Start content of Actions tab -->
+			        <div id="action" class="tab-pane">
+				        <div class="panel panel-default">
+					        <div class="panel-heading">
+						        <i class="clip-chk">$formatter.checkbox("emailEnabled", "emailEnabled", $page.emailEnabled)</i>
+						        <label for="emailEnabled">Send an email</label>
+					        </div>
+					        <div class="panel-body panel-toggled" data-toggled="display" data-actor="#emailEnabled">
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<label class="control-label col-md-4" for="themeSiteId">Website</label>
+											<div class="col-md-8">
+												<select name="themeSiteId" id="themeSiteId" class="required form-control">
+													$formatter.option("", "[Please select]", $page.themeSiteId)
+													#foreach($website in $page.organisation.websites)
+													$formatter.option($website.id, $website.name, $page.themeSiteId)
+													#end
+												</select>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="control-label col-md-4" for="subject">Email subject</label>
+											<div class="col-md-8">
+												<input type="text" name="subject" id="subject" value="$!page.subject" placeholder="Enter the email subject here" class="required form-control" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="control-label col-md-4" for="fromAddress">Email from address</label>
+											<div class="col-md-8">
+												<input type="text" name="fromAddress" id="fromAddress" value="$!page.fromAddress" placeholder="admin@mybusinessname.com" class="required email form-control" />
+											</div>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="add-attachment btn btn-success btn-upload"></div>
+										<div class="article-wrapper article-sm showed-action attachments-list">
+											#foreach($att in $page.job.attachments)
+											<article>
+												<span class="article-name">
+													<a target="_blank" href="/_hashes/files/$att.attachmentHash">$att.attachmentFilename</a>
+												</span>
+												<aside class="article-action">
+													<a class="btn btn-xs btn-danger btn-delete-attachment" href="$att.attachmentFilename" title="Remove"><i class="clip-minus-circle"></i></a>
+												</aside>
+											</article>
+											#end
+										</div>
+									</div>
+								</div>
+						        <textarea class="htmleditor" cols="100" name="html" placeholder="">$!page.html</textarea>
+					        </div>
+				        </div>
 
-                                    </tbody>
-                                </table>    
-                            </div>
-                            <div style="width: 50%; float: right;">
-                                <div style="padding-left: 20px">
-                                    <div class="add-attachment"></div>
-                                    <ul class="attachments">
-                                        #foreach($att in $page.job.attachments)
-                                        <li>
-                                            <a target="_blank" href="/_hashes/files/$att.attachmentHash">$att.attachmentFilename</a>
-                                            <a class="Btn attachment-remove" href="$att.attachmentFilename"><span>Remove</span></a>
-                                        </li>
-                                        #end
-                                    </ul>
-                                </div>
-                            </div>
-                            <div style="clear: both"></div>
-                            <div class="messageContent" style="margin-top: 20px">
-                                <textarea class="htmleditor" cols="100" name="html" placeholder="">$!page.html</textarea>
-                            </div>
-                        </div>
-                    </div>
+				        <div class="panel panel-default">
+					        <div class="panel-heading">
+						        <i class="clip-chk">$formatter.checkbox("addToGroupEnabled", "addToGroupEnabled", $page.addToGroupEnabled)</i>
+						        <label for="addToGroupEnabled">Add to a group</label>
+					        </div>
+					        <div class="panel-body panel-toggled" data-toggled="display" data-actor="#addToGroupEnabled">
+						        <p>When this trigger fires add the user to a selected group.</p>
+						        <div class="form-group">
+							        <div class="row">
+								        <div class="col-md-6">
+									        <label class="control-label col-md-4" for="groupToJoin">Group to join</label>
+									        <div class="col-md-8">
+										        <select name="groupToJoinName" id="groupToJoin" class="form-control">
+											        $formatter.option( "", "[Please select]", $page.job.groupToJoin.name )
+											        #foreach($group in $page.organisation.groups)
+											        $formatter.option( $group.name, $group.name, $page.job.groupToJoin.name )
+											        #end
+										        </select>
+									        </div>
+								        </div>
+							        </div>
+						        </div>
+					        </div>
+				        </div>
+			        </div>
+			        <!-- End content of Actions tab -->
 
-                    <div class="actionItem">
-                        $formatter.checkbox("addToGroupEnabled", "addToGroupEnabled", $page.addToGroupEnabled)
-                        <label for="addToGroupEnabled">Add to a group</label>
-                        <div class="actionItemDetails">
-                            <p>When this trigger fires add the user to a selected group.</p>
-                            <label for="groupToJoin">Group to join</label>
-                            <select name="groupToJoinName" id="groupToJoin">
-                                $formatter.option( "", "[Please select]", $page.job.groupToJoin.name )
-                                #foreach($group in $page.organisation.groups)
-                                $formatter.option( $group.name, $group.name, $page.job.groupToJoin.name )
-                                #end
-                            </select>
-                        </div>
-                    </div>
+			        <!-- Start content of Recipients tab -->
+			        <div id="recipients" class="tab-pane">
+				        <div class="panel panel-default">
+					        <div class="panel-heading">
+						        <i class="clip-chk">$formatter.checkbox("includeUser", "includeUser", $page.trigger.includeUser, "true")</i>
+						        <label for="includeUser">Include the user that cause the event</label>
+					        </div>
+					        <div class="panel-body">
+						        <button class="btn btn-sm btn-success btn-add-group" data-toggle="modal" data-target="#modal-choose-group"><i class="fa fa-plus"></i> Add recipient groups</button>
+						        <hr class="hr-sm" />
+						        <div class="blocks-wrapper recipient">
+							        #foreach($g in $page.groupRecipients)
+							        <span class="block $g.name">
+								        <span class="block-name">$g.name</span>
+								        #if( $page.status == "Draft" )
+				                        <a class="btn btn-xs btn-danger btn-remove-role" href="$g.name" title="Remove this role"><i class="clip-minus-circle "></i></a>
+								        #end
+							        </span>
+							        #end
+						        </div>
+						        <p>&nbsp;</p>
+						        <button class="btn btn-sm btn-success btn-add-group" data-toggle="modal" data-target="#modal-choose-group"><i class="fa fa-plus"></i> Add excluded groups</button>
+						        <hr class="hr-sm" />
+						        <div class="blocks-wrapper excluded">
+							        #foreach($g in $page.excludedGroups)
+							        <span class="block $g.name">
+								        <span class="block-name">$g.name</span>
+								        #if( $page.status == "Draft" )
+				                        <a class="btn btn-xs btn-danger btn-remove-role" href="$g.name" title="Remove this role"><i class="clip-minus-circle "></i></a>
+								        #end
+							        </span>
+							        #end
+						        </div>
+					        </div>
+				        </div>
 
-                </div>
-                <div rel="#recipients" class="TabContent Content">
-                    <div class="Recipient Details">
-                        $formatter.checkbox("includeUser", "includeUser", $page.trigger.includeUser, "true")
-                        <label for="includeUser">Include the user that cause the event</label>
+				        <div class="panel panel-default">
+					        <div class="panel-heading">
+						        <i class="clip-chk"><input type="checkbox" id="showAdvanced" /></i>
+						        <label for="showAdvanced">Advanced</label>
+					        </div>
+					        <div class="panel-body panel-toggled" data-toggled="display" data-actor="#showAdvanced">
+						        <div class="row">
+							        <div class="col-md-6">
+								        <p>You can enter XML rules below, to filter out potential recipients</p>
+								        <textarea name="filterScriptXml" class="form-control" rows="20">$!page.job.filterScriptXml</textarea>
+							        </div>
+							        <div class="col-md-6">
+								        <h5>Available Rules</h5>
+								        <div class="rules">
+											<ul>
+												<li>
+													<h6>Expression types</h6>
+													<ul>
+														<li>
+															<b>const</b>: Constants, eg <br/>&lt;const type='Integer'&gt;1&lt;/const&gt;
+														</li>
+														<li>
+															<b>comparison</b>:
+															                 Compare 2 expressions, Eg
+															<br/>
+															                 &lt;comparison operator='EQUALS'&gt;<br/>
+															                 &lt;const type='Integer'&gt;1&lt;/const&gt;<br/>
+															                 &lt;const type='Integer'&gt;1&lt;/const&gt;<br/>
+															                 &lt;/comparison&gt;<br/>
+														</li>
+														<li>
+															<b>app-prop</b>: a property from an application. See below for a full list of app-id's and prop-name's. Eg:
+															<br/>
+															               &lt;app-prop app-id='userApp' prop-name='firstName' /&gt;
+														</li>
+													</ul>
+												</li>
+												#foreach( $app in $applicationManager.getPropertyProviderApps($rootFolder) )
+												<li>
+													<h6>$app.instanceId</h6>
+													<ul>
+														#foreach( $expr in $app.allProperties )
+														<li>
+															<b>$expr.name</b>:
+															                 $expr.description
+														</li>
+														#end
+													</ul>
+												</li>
+												#end
+											</ul>
+								        </div>
+							        </div>
+						        </div>
+					        </div>
+				        </div>
+			        </div>
+			        <!-- End content of Recipients tab -->
 
-                        <hr/>
+			        <!-- Start content of History tab -->
+			        <div id="history" class="tab-pane">
+				        <p class="alert alert-info">
+					        Emails sent by this trigger over the last 7 days.
+				        </p>
+				        <table class="table table-bordered table-striped table-hover table-data">
+					        <colgroup>
+						        <col />
+						        <col />
+						        <col />
+						        <col />
+						        <col />
+					        </colgroup>
+					        <thead>
+						        <tr>
+							        <th>Subject</th>
+							        <th>Recipient</th>
+							        <th>Address</th>
+							        <th>Status</th>
+							        <th>Status Date</th>
+						        </tr>
+					        </thead>
+					        <tbody>
+						        #foreach($item in $page.history)
+						        <tr>
+							        <td>$item.subject</td>
+							        <td>$item.recipient.formattedName</td>
+							        <td>$item.recipientAddress</td>
+							        <td>
+								        <abbr title="EmailItemID: $item.id">
+									        $item.statusText
+								        </abbr>
+								        #if( $item.sendStatus == "r" )
+								        <small>( retry at $nextRetry )</small>
+								        #elseif( $item.sendStatus == "p" )
+								        #if( $item.numAttempts )
+								        <small>( $item.numAttempts attempts )</small>
+								        #end
+								        #elseif( $item.sendStatus == "f" )
+								        <small>( $item.numAttempts attempts; last error $item.lastAttempt.status )</small>
+								        #end
+							        </td>
+							        <td>$item.sendStatusDate</td>
+						        </tr>
+						        #end
+					        </tbody>
+				        </table>
+			        </div>
+			        <!-- End content of History tab -->
+		        </div>
+	        </div>
+        </form>
 
-                        <header class="ClearFix">
-                            <button class="SmallBtn Add AddGroup"><span>Add recipient groups</span></button>
-                        </header>
-                        <ul class="GroupList ClearFix recipient">
-                            #foreach($g in $page.groupRecipients)
-                            <li class="$g.name">
-                                <span>$g.name</span>
-                                #if( $page.status == "Draft" )
-                                <a href="$g.name">Delete</a>
-                                #end
-                            </li>
-                            #end
-                        </ul>
-                        <header class="ClearFix">
-                            <button class="SmallBtn Add AddGroup"><span>Add excluded groups</span></button>
-                        </header>
-                        <ul class="GroupList ClearFix excluded">
-                            #foreach($g in $page.excludedGroups)
-                            <li class="$g.name">
-                                <span>$g.name</span>
-                                #if( $page.status == "Draft" )
-                                <a href="$g.name">Delete</a>
-                                #end
-                            </li>
-                            #end
-                        </ul>
+        <div id="modal-choose-group" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
+	        <div class="modal-header">
+		        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+		        <h4 class="modal-title">Choose groups</h4>
+	        </div>
+	        <div class="modal-body">
+		        <p>
+			        Choose whether a groups should be a recipient, excluded, or to not care about. When a group is excluded then members of that group will not receive the email, even if they are in a recipient group
+		        </p>
+		        <table id="table-groups" class="table table-striped table-hover table-condensed">
+			        <thead>
+				        <tr>
+					        <th>Group</th>
+					        <th colspan='3'></th>
+				        </tr>
+			        </thead>
+			        <tbody>
+				        #foreach($g in $page.allGroups)
+				        <tr>
+					        <td>$g.name</td>
 
-                        <header style="margin-top: 50px;"><input type="checkbox" id="showAdvanced" /> Advanced</header>                        
-                        <div class="advanced" style="display: none">
-                            <p>You can enter XML rules below, to filter out potential recipients</p>
-                            <div class="rules-ref">
-                                <h2>Available Rules</h2>
-
-                                <ul>
-                                    <li>
-                                        <h3>Expression types</h3>
-                                        <ul>
-                                            <li>
-                                                <b>const</b>: Constants, eg <br/>&lt;const type='Integer'&gt;1&lt;/const&gt;
-                                            </li>
-                                            <li>
-                                                <b>comparison</b>: 
-                                                Compare 2 expressions, Eg
-                                                <br/>
-                                                &lt;comparison operator='EQUALS'&gt;<br/>
-                                                &lt;const type='Integer'&gt;1&lt;/const&gt;<br/>
-                                                &lt;const type='Integer'&gt;1&lt;/const&gt;<br/>
-                                                &lt;/comparison&gt;<br/>
-                                            </li>
-                                            <li>
-                                                <b>app-prop</b>: a property from an application. See below for a full list of app-id's and prop-name's. Eg:
-                                                <br/>
-                                                &lt;app-prop app-id='userApp' prop-name='firstName' /&gt;
-                                            </li>
-                                        </ul>                                    
-                                    </li>
-                                    #foreach( $app in $applicationManager.getPropertyProviderApps($rootFolder) )
-                                    <li>
-                                        <h3>$app.instanceId</h3>
-                                        <ul>
-                                            #foreach( $expr in $app.allProperties )
-                                            <li>
-                                                <b>$expr.name</b>: 
-                                                $expr.description
-                                            </li>
-                                            #end
-                                        </ul>
-                                    </li>
-                                    #end
-                                </ul>
-                            </div>
-                            <textarea name="filterScriptXml" style='height: 300px; width: 400px'>$!page.job.filterScriptXml</textarea>
-                        </div>
-
-                    </div>
-                    <script type="text/javascript">
-                        Bob.onDOMReady(function () {
-                            $("input[name=includeUser]").change(function() {
-                                var includeUser = $("input[name=includeUser]:checked").length != 0;
-                                log("includeUser", includeUser);
-                                $.ajax({
-                                    type: 'POST',
-                                    url: window.location.href,
-                                    data: {
-                                        includeUser: includeUser
-                                    },
-                                    error: function(resp) {
-                                        log("error", resp);
-                                        alert("err");
-                                    }
-                                });
-                            });
-                            var adv = $("#showAdvanced")
-                            var scriptXml = $("textarea[name=filterScriptXml]");
-                            if (scriptXml.val().length > 0) {
-                                log("show adv");
-                                adv.attr("checked", true);
-                                $(".advanced").show();
-                            }
-
-                            adv.click(function() {
-                                if (adv.is(":checked")) {
-                                    log("show", $(".advanced"));
-                                    $(".advanced").show();
-                                } else {
-                                    log("hide", $(".advanced"));
-                                    $(".advanced").hide();
-                                }
-                            });
-                        });
-                        function showAppropriateTriggerOptions() {
-                            var eventId = $("#eventId").val();
-                            log("changed", eventId);
-                            $(".triggers .trigger").hide();
-                            $(".triggers .trigger select").attr("disabled", "true");
-                            $(".triggers ." + eventId).show();
-                            $(".triggers ." + eventId + " select").attr("disabled", null);
-                        }
-                    </script>                    
-                </div>
-                <div rel="#triggers" class="TabContent Content">
-                    <div class="Send Details">
-                        #set($mapOfTriggerTypes = $page.emailTriggerTypes)                        
-                        <table>
-                            <tbody class="triggers">
-                                <tr>
-                                    <th>Event type</th>
-                                    <td>
-                                        <select id="eventId" name="eventId">
-                                            <option value="-">[Choose]</option>
-                                            #foreach($eventId in $mapOfTriggerTypes.keySet())
-                                            $formatter.option($eventId, $eventId, $page.trigger.eventId)
-                                            #end
-                                        </select>
-                                    </td>
-                                </tr>
-
-
-                                #foreach($eventId in $mapOfTriggerTypes.keySet())
-                                #set($triggerType = $mapOfTriggerTypes.get($eventId))
-                                #foreach($optionCode in $triggerType.keySet())
-                                <tr class="$eventId trigger">
-                                    <th>$page.triggerOptionLabel($eventId, $optionCode)</th>
-                                    <td>
-                                        $triggerType.get($optionCode).toHtml($optionCode, $page.triggerOptionValue($optionCode) )                                        
-                                    </td>
-                                </tr>
-                                #end                                    
-                                #end
-                            </tbody>
-                        </table>
-
-                        <div class="actionItem">
-                            <a style="float: right" href="timerTriggers.html">Queued triggers</a>
-                            $formatter.checkbox("createTimerEnabled", "createTimerEnabled", $page.createTimerEnabled)
-                            <label for="createTimerEnabled">Enable event delay</label>
-                            <div class="actionItemDetails">
-                                <p>You can set a timer so the event is only fired after a delay. This can be used
-                                    to send reminder emails a week or so later, for example. Any conditional rules are applied after the delay</p>
-                                <label for="groupToJoin">Fire the next event after</label>
-                                <input type="text" style="width: 50px" value="$!page.job.timerMultiple" name="timerMultiple" />
-                                <select name="timerUnitName" id="timerUnit">
-                                    #foreach($unit in $page.timerUnits)
-                                    $formatter.option( $unit, $unit, $page.job.timerUnit )
-                                    #end
-                                </select>                            
-                            </div>
-                        </div>
-
-
-                        <header>Advanced</header>
-                        <p>You can enter XML rules below, the trigger will only fire if this evaluates to true</p>                        
-                        <textarea name="conditionScriptXml" style='height: 300px; width: 400px'>$!page.job.conditionScriptXml</textarea>
-                    </div>
-                </div>
-
-                <div rel="#actions" class="TabContent Content">
-                    <div class="messageContent Details">
-                        #portlets("triggerActions")
-                    </div>
-                </div>                
-
-                <div rel="#history" class="TabContent Content status">
-                    <div class="Send Details" id="manageEmail">
-                        <article class="Note">
-                            Emails sent by this trigger over the last 7 days.
-                        </article>
-                        <table id="emails">
-                            <thead>
-                                <tr>
-                                    <th>Subject</th>
-                                    <th>Recipient</th>
-                                    <th>Address</th>
-                                    <th>Status</th>
-                                    <th>Status Date</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                #foreach($item in $page.history)
-                                <tr>
-                                    <td>$item.subject</td>
-                                    <td>$item.recipient.formattedName</td>
-                                    <td>$item.recipientAddress</td>
-                                    <td>
-                                        <acronym title="EmailItemID: $item.id">
-                                        $item.statusText
-                                        </acronym>
-                                        #if( $item.sendStatus == "r" )
-                                        <small>( retry at $nextRetry )</small>
-                                        #elseif( $item.sendStatus == "p" )
-                                            #if( $item.numAttempts )
-                                        <small>( $item.numAttempts attempts )</small>
-                                            #end
-                                        #elseif( $item.sendStatus == "f" )
-                                        <small>( $item.numAttempts attempts; last error $item.lastAttempt.status )</small>
-                                        #end
-                                    </td>
-                                    <td>$item.sendStatusDate</td>
-                                </tr>
-                                #end
-                            </tbody>
-                        </table>
-                    </div>
-                </div>            
-            </form>
-        </section>
-        
-        <div id="modalGroup" class="Modal">
-            <header>
-                <h3>Choose groups</h3>
-                <a class="Close" href="#" title="Close"><span class="Hidden">Close</span></a>
-            </header>
-            <div class="ModalContent">
-                <p>Choose whether a groups should be a recipient, excluded, or to not care about.</p>
-                <p>When a group is excluded then members of that group will not receive the email, even if they are in a recipient group.</p>
-                <table class='choose-groups'>
-                    <thead>
-                        <tr>
-                            <th>Group</th>
-                            <th colspan='3'></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        #foreach($g in $page.allGroups)
-                        <tr>
-                            <td>$g.name</td>
-
-                            #set($name = $g.name)
-                            <td>                            
-                                #set($id = $name + "-recip")
-                                $formatter.radio($id, $name, $page.isSelected($g), "recipient" )
-                                <label for="$id">Recipient</label>
-                            </td>
-                            <td>
-                                #set($id = $name + "-excluded")
-                                $formatter.radio($id, $name, $page.isExcluded($g), "excluded" )
-                                <label for="$id">Excluded</label>
-                            </td>
-                            <td>
-                                #set($id = $name + "-none")
-                                $formatter.radio($id, $name, false, "none" )
-                                <label for="$id">Don't care</label>
-                            </td>                        
-                        </tr>
-                        #end
-                    </tbody>
-                </table>
-            </div>
+					        #set($name = $g.name)
+					        <td>
+						        #set($id = $name + "-recip")
+						        $formatter.radio($id, $name, $page.isSelected($g), "recipient" )
+						        <label for="$id">Recipient</label>
+					        </td>
+					        <td>
+						        #set($id = $name + "-excluded")
+						        $formatter.radio($id, $name, $page.isExcluded($g), "excluded" )
+						        <label for="$id">Excluded</label>
+					        </td>
+					        <td>
+						        #set($id = $name + "-none")
+						        $formatter.radio($id, $name, false, "none" )
+						        <label for="$id">Don't care</label>
+					        </td>
+				        </tr>
+				        #end
+			        </tbody>
+		        </table>
+	        </div>
+	        <div class="modal-footer">
+		        <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+	        </div>
         </div>
-
-
-
 
         <script type="text/javascript">
             Bob.onDOMReady(function () {
-                initEditEmailPage();
-                $("form.MainForm").forms({
-                    callback: function() {
-                        alert("Saved");
-                    }
-                });
-                //edify($("div.messageContent"), ["/templates/apps/learner/learning.dyn.css", "/templates/apps/learner/moduleLayout.dyn.css", "/templates/apps/learner/moduleContent.dyn.css"]);
-                initHtmlEditors();
-                $("#eventId").change(function() {
-                    showAppropriateTriggerOptions();
-                });
-                showAppropriateTriggerOptions();
-                $(".add-attachment").mupload({
-                    buttonText: "Upload attachment",
-                    useJsonPut: false,
-                    oncomplete: function(data, name) {
-                        log("oncomplete. name=", name, "data=", data);
-                        showAttachment(data, name);
-                    }
-                });
-                $(".attachments").on("click", ".attachment-remove", function(e) {
-                    e.preventDefault();
-                    var link = $(e.target).closest("a");
-                    var href = link.attr("href");
-                    doRemoveAttachment(href, function() {
-                        link.closest("li").remove();
-                    });
-                });
-                $(".send-test").click(function(e) {
-                    e.preventDefault();
-                    $.ajax({
-                        type: 'POST',
-                        url: window.location.pathname,
-                        data: "sendTest=true",
-                        success: function(data) {
-                            alert("A test has been sent to your email address");
-                        },
-                        error: function(resp) {
-                            alert("Sorry, we couldnt remove the attachment. Please refresh the page and try again");
-                        }
-                    });
-                });
+	            initManageAutoEmail();
             });
-
-            function doRemoveAttachment(name, callback) {
-                try {
-                    $.ajax({
-                        type: 'POST',
-                        url: window.location.pathname,
-                        data: {
-                            removeAttachment: name
-                        },
-                        success: function(data) {
-                            log("saved ok", data);
-                            callback();
-                        },
-                        error: function(resp) {
-                            log("error", resp);
-                            alert("Sorry, we couldnt remove the attachment. Please refresh the page and try again");
-                        }
-                    });
-                } catch (e) {
-                    alert("Sorry, we couldnt remove the attachment. Please refresh the page and try again");
-                }
-            }
-
-            function showAttachment(data) {
-                log("attach", data);
-                var name = data.files[0].name;
-                var hash = data.result.nextHref;
-                var h = "<li>";
-                h += "<a href='/_hashes/files/" + hash + "'>" + name + "</a>";
-                h += "<a class='Btn attachment-remove' href='" + name + "'><span>Remove</span></a>";
-                h += "</li>";
-                $(".attachments").append(h);
-            }
-
-            function inpVal(id) {
-                var v = $("#" + id).val();
-                if (v == null) {
-                    return null;
-                }
-                v = v.trim();
-                if (v === "") {
-                    return null;
-                }
-                return v;
-            }
-
-            function showAppropriateTriggerOptions() {
-                log("showAppropriateTriggerOptions");
-                var eventId = $("#eventId").val();
-                log("changed", eventId);
-                $(".triggers .trigger").hide();
-                $(".triggers .trigger select").attr("disabled", "true");
-                $(".triggers ." + eventId).show();
-                $(".triggers ." + eventId + " select").attr("disabled", null);
-            }
         </script>
     </body>
 </html>

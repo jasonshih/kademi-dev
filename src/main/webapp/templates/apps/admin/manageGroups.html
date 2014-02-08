@@ -38,10 +38,10 @@
 
 			        <h4>Roles</h4>
 			        <hr class="hr-sm" />
-			        <div class="roles-wrapper">
+			        <div class="blocks-wrapper roles-wrapper">
 			        #foreach($role in $group.children.ofType.role)
-				        <span class="role">
-					        <span>$role.title</span>
+				        <span class="block role">
+					        <span class="block-name">$role.title</span>
 				            <a class="btn btn-xs btn-danger btn-remove-role" href="$role.href" title="Remove this role"><i class="clip-minus-circle "></i></a>
 				        </span>
 			        #end

@@ -4,6 +4,25 @@
 
 		initLoadingOverlay();
 
+		$('[data-toggled=display]').exist(function () {
+			this.each(function () {
+				var panel = $(this);
+				var actor = $(panel.attr('data-actor'));
+				var checkActor = function () {
+					if (actor.is(':checked')) {
+						panel.show();
+					} else {
+						panel.hide();
+					}
+				};
+
+				checkActor();
+				actor.on('click', function () {
+					checkActor();
+				});
+			});
+		});
+
 		$('.date-picker').exist(function () {
 			this.datepicker({
 				autoclose: true
@@ -11,9 +30,7 @@
 		});
 
 		$('.date-time-picker').exist(function () {
-			this.datetimepicker({
-				pick12HourFormat: false
-			});
+			this.datetimepicker();
 		});
 
 		$('.tabbable').exist(function () {
