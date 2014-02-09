@@ -2,26 +2,6 @@
 	width: 230px;
 }
 
-#recipients h5 {
-	margin: 0 0 13px;
-}
-
-#recipients .rules {
-	height: 430px;
-	overflow-y: auto;
-	border: 1px solid #ccc;
-	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
-}
-
-#recipients .rules:hover {
-	border-color: #b5b5b5;
-}
-
-.page-action {
-	position: relative;
-	z-index: 1;
-}
-
 .attachments-list {
 	margin-top: 10px;
 	height: 88px;
