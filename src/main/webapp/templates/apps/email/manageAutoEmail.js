@@ -41,6 +41,8 @@ function initChooseGroupModal() {
 	modal.find('input:radio').on('click', function () {
 		var radioBtn = $(this);
 
+		console.log('a');
+
 		log("radiobutton click", radioBtn, radioBtn.is(":checked"));
 		setGroupRecipient(radioBtn.attr('name'), radioBtn.val());
 	});
@@ -59,11 +61,11 @@ function setGroupRecipient(name, groupType) {
 			success: function(data) {
 				log("saved ok", name);
 
-				var blockWrapper = $('#recipients').find('blocks-wrapper');
+				var blockWrapper = $('#recipients').find('.blocks-wrapper');
 				blockWrapper.find('.block.' + name).remove();
 
 				log("add to list");
-				$blockWrapper.filter('.' + groupType).append(
+				blockWrapper.filter('.' + groupType).append(
 					'<span class="block ' + name + '">' +
 						'<span class="block-name">' + name + '</span>' +
 						'<a class="btn btn-xs btn-danger btn-remove-role" href="' + name + '" title="Remove this role"><i class="clip-minus-circle "></i></a>' +
