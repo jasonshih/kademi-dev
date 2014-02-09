@@ -120,6 +120,7 @@ function initAdvanceRecipients() {
 function initFormDetailEmail() {
 	$('form[name=frmDetails]').forms({
 		callback: function() {
+			$('body').removeClass('dirty');
 			alert('Saved');
 		}
 	});

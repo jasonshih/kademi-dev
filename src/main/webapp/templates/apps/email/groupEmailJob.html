@@ -5,20 +5,12 @@
         <link href="manageEmail.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="manageGroupEmail.js">//</script>
         <script type="text/javascript" src="manageEmail.js">//</script>
-        <style>
-            #status-tools div * {
-                display: none;
-            }
-            #status-tools.Draft .Draft, #status-tools.Running .Running, #status-tools.Completed .Completed, #status-tools.Preparing .Preparing {
-                display: inline-block;
-            }
-        </style>
     </head>
     <body>
         <form name="frmDetails" action="." method="post" class="form-horizontal">
-        <div id="status-tools" class="$page.status">
+        <div id="status-tools" class="$page.status page-action">
 	        <div class="pull-right">
-		        <button class="Btn Draft">Save Changes</button>
+		        <button class="btn btn-primary Draft">Save Changes</button>
 		        <span class="Completed">This email has been sent.</span>
 		        <span class="Preparing">Preparing..</span>
 		        <span class="Running">Job is running..</span>
@@ -213,77 +205,68 @@
 
 			        <!-- Start content of Send tab -->
 			        <div id="send" class="tab-pane">
+				        #if( $page.status == "Draft" )
+				        <div class="sent" style="display: none;">
+					        <p>&nbsp;</p>
+					        <h4>Email has been sent, or is sending</h4>
+					        <p>&nbsp;</p>
+				        </div>
+				        <div>
+					        <h4>Before you send be sure to check your email information, message content and recipients.</h4>
+					        <p>
+						        <button class="btn btn-info btn-preview-email" type="button">PREVIEW YOUR EMAIL</button>
+					        </p>
+					        <p>&nbsp;</p>
+					        <p>When you are ready click the 'Send Now' button below and the system will start to send out your email.<br />Once the send process starts you can navigate away from this page without affecting your send.</p>
+					        <p>If you choose to navigate away from this page you can still view the send results by click on the<br />info button from the email list page.</p>
+					        <p><button class="btn btn-lg btn-primary btn-send-email" type="button">SEND NOW</button></p>
+				        </div>
+				        #else
+				            <p>&nbsp;</p>
+				            <h4>Email has been sent, or is sending</h4>
+				            <p>&nbsp;</p>
+				        #end
 			        </div>
 			        <!-- Start content of Send tab -->
 
 			        <!-- Start content of Status tab -->
 			        <div id="status" class="tab-pane">
+				        <div class="notsent">
+					        <p class="alert alert-info">Email is not being processed</p>
+				        </div>
+
+				        <div class="send-progress">
+					        <div class="status-wrapper">
+						        <h4 class="status_p text-info">Send in progress</h4>
+						        <h4 class="status_c text-success">Job completed</h4>
+						        <p><small>You may navigate away from this page.</small></p>
+					        </div>
+					        <div class="progress progress-striped">
+						        <div class="progress-bar"></div>
+						        <div class="stats"></div>
+					        </div>
+					        <br/>
+					        <br/>
+					        <p class="alert alert-info">In-progress emails, if any, are shown below. See the log (above) to see completed and failed emails</p>
+					        <table id="emails" class="table table-bordered table-striped table-hover table-condensed">
+						        <thead>
+							        <tr>
+								        <th>Email Address</th>
+								        <th>Name</th>
+								        <th>Status</th>
+								        <th>Attempt</th>
+							        </tr>
+						        </thead>
+						        <tbody>
+							        <tr>
+							        </tr>
+						        </tbody>
+					        </table>
+				        </div>
 			        </div>
 			        <!-- Start content of Status tab -->
 		        </div>
 	        </div>
-            <section id="manageEmail" class="MainContent">
-                <div  rel='#send' class="TabContent Content Details">
-                    <div class="Send Content Details">
-                        #if( $page.status == "Draft" )
-                        <h4>Before you send be sure to check your email information, message content and recipients.</h4>
-                        <p>
-                            <button class="Btn preview">PREVIEW YOUR EMAIL</button>
-                        </p>
-                        <p>When you are ready click the 'Send Now' button below and the system will start to send out your email.<br />Once the send process starts you can navigate away from this page without affecting your send.</p>				
-                        <p>If you choose to navigate away from this page you can still view the send results by click on the<br />info button from the email list page.</p>
-                        <p><button class="Btn Big Cancel SendEmail send">SEND NOW</button></p>
-                        #else
-                        <h4>Email has been sent, or is sending</h4>
-                        <div style="display: none">
-                            <h4>Before you send be sure to check your email information, message content and recipients.</h4>
-                            <p>
-                                <button class="Btn preview">PREVIEW YOUR EMAIL</button>
-                            </p>
-                            <p>When you are ready click the 'Send Now' button below and the system will start to send out your email.<br />Once the send process starts you can navigate away from this page without affecting your send.</p>				
-                            <p>If you choose to navigate away from this page you can still view the send results by click on the<br />info button from the email list page.</p>
-                            <p><button class="Btn Big Cancel SendEmail send">SEND NOW</button></p>                            
-                        </div>
-                        #end
-                    </div>
-                </div>
-
-                <div rel='#status' class="TabContent status Content Details">
-                    <div class="NotSent Content">
-                        <p>Email is not being processed</p>
-                    </div>
-
-                    <div class="SendProgress Content">
-                        <p>
-                            <strong class="status status_p">Send in progress</strong>
-                            <strong class="status status_c">Job completed</strong>
-                            <small>You may navigate away from this page.</small>
-                        </p>
-                        <div class="Progress">                            
-                            <div class="Percent"></div>
-                            <div class="stats"></div>
-                        </div>
-                        <br/>
-                        <br/>
-                        <strong>In-progress emails, if any, are shown below. See the log (above) to see completed and failed emails</strong>
-                        <table id="emails">
-                            <thead>
-                                <tr>
-                                    <th>Email Address</th>                                    
-                                    <th>Name</th>
-                                    <th>Status</th>
-                                    <th>Attempt</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-            </section>
         </form>
 
         <div id="modal-choose-group" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
