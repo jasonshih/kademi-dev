@@ -5,8 +5,9 @@
         <link href="/static/quiz/quiz.css" rel="stylesheet" type="text/css" />
         <link href="/static/history/jquery.history.css" rel="stylesheet" type="text/css" />
         <link href="/static/js/milton-image-select.css" rel="stylesheet" type="text/css" />
-        
+
         <script type="text/javascript" src="/static/history/jquery.history.js">//</script>
+        <script type="text/javascript" src="/static/js/jquery.timeago.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-image-select.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-tree.js">//</script>
         <script type="text/javascript" src="manageModule.js">//</script>
@@ -15,315 +16,359 @@
         <script type="text/javascript" src="/templates/themes/admin/prompt.js">//</script>
     </head>
     <body class="manageModulePages">
-        <section id="manageModule" class="MainContent">
-            <header>
-                <div class="DropdownControl publishing">
-                    <div class="DropdownWrapper">
-                        #set($currentBranch = $page.closest("branch"))
-                        <span>
-                            <b>Version:</b> 
-                            $currentBranch.name
-                            #if( $currentBranch.live )
-                            <strong class="islive">LIVE</strong>
-                            #else
-                            <a href="${currentBranch.href}publish" class="publish">PUBLISH</a>
-                            #end
-
-                        </span> 
-                        <a href="#" class="Control"><span class="Hidden">Change version</span></a>
-                    </div>
-                    <div class="DropdownContent Hidden">
-                        <div class="Content">
-                            <ul class="Program branches">
-                                #foreach($b in $page.closest("branch").parent.children.ofType.branch)
-                                <li>
-                                    <a href="#" class="copy"><span>Copy</span></a>
-                                    #if( $b.live )
-                                    <strong class="islive">LIVE</strong>
-                                    #else
-                                    <a href="#" class="hide" title="Hide this version. Can be restored from the manage versions screen"><span>Hide</span></a>
-                                    #end
-
-                                    <a href="${b.href}manageModules" class="branch">
-                                        $b.name
-                                    </a>                                    
-                                </li>
-                                #end
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="DropdownControl">
-                    <div class="DropdownWrapper">
-                        <span><b>Website:</b> $page.closest("website").name</span> 
-                        <a href="#" class="Control"><span class="Hidden">Change website</span></a>
-                    </div>
-                    <div class="DropdownContent Rows3 Hidden">
-                        <div class="Content ClearFix">
-                            <section rel="program">
-                                #foreach($w in $page.closest("website").parent.children)
-                                <a href="${w.href}manageModules">$w.name</a>
-                                #end
-                            </section>
-                        </div>
-                    </div>
-                </div>
-                <div class="DropdownControl selectModule">                    
-                    <div class="DropdownWrapper">
-                        <span><b>Module:</b> $!folder.title / $!page.title</span>
-                        <a href="#" class="Control"><span class="Hidden">Change module</span></a>
-                    </div>
-                    <div class="DropdownContent Rows3 Hidden">
-                        <header>
-                            <h3>Programs</h3>
-                            <h3>Courses</h3>
-                            <h3>Modules</h3>
-                        </header>
-                        <div class="Content ClearFix">
-                            <section rel="program" class="programList">                                
-                                #set($parentProgram = $page.closest("program"))
-                                #foreach($program in $page.closest("programs").children.ofType.program)                                
-                                <a href="$program.href" class="${formatter.ifEqual('Active','', $parentProgram, $program)}">$program.title</a>
-                                #end
-                            </section>
-                            <section rel="course" class="coursesList">
-                                #set($parentCourse = $page.closest("course"))
-                                #foreach($course in $page.closest("program").children.ofType.course)
-                                <a href="$course.href" class="${formatter.ifEqual('Active','', $parentCourse, $course)}">$course.title</a>
-                                #end                                
-                            </section>
-                            <section rel="module" class="modulesList">
-                                #set($selectedModule = $page.closest("module"))
-                                #foreach($mod in $page.closest("course").children.ofType.module)
-                                <a href="$mod.href" class="${formatter.ifEqual('Active','', $selectedModule, $mod)}">$mod.title</a>
-                                #end                                                                
-                            </section>
-                        </div>
-                    </div>
-                </div>
-            </header>
-            #if($page.module)
-            <nav class="TabNav ClearFix">
-                <a href="#list">Module pages</a>
-                <a href="#detail">Module details</a>
-            </nav>
-            <div class="Content TabContent" rel="#list" style="position: relative">
-                <h4>$page.title</h4>
-                <a title="Add Page" class="SmallBtn Add NoText AddModulePage" href=""><span>Add</span></a>
-                <a title="Add Quiz" class="SmallBtn Add NoText AddQuizPage" href=""><span>Quiz</span></a>
-                <form method="POST" action="" class="modulePages">
-                    <div class="MainContent filesList">
-                        #set($order = 0)
-
-                        #foreach($modulePage in $page.children.ofType.Page.sortByIntField("order"))
-                        #set($order = $order +1)
-                        #set($classes = "modulePage")
-                        #if($modulePage.html.is("quizPage"))
-                        #set($classes = $classes + " Quiz")
-                        #end
-                        <article class="$classes">
-                            <input type="hidden" name="${modulePage.name}" value="$order"/>
-                            <span>$modulePage.title</span>
-                            <aside class="Hidden">
-                                <a href="${modulePage.name}" class="Edit" title="Edit page"><span class="Hidden">Edit page</span></a>
-                                <a href="${modulePage.name}?goto" target="_blank" class="View" title="View page"><span class="Hidden">View page</span></a>
-                                <a href="" class="Move" title="Move up or down"><span class="Hidden">Move up or down</span></a>
-                                <a href="${modulePage.path}" class="Delete" title="Delete page"><span class="Hidden">Delete page</span></a>
-                            </aside>    
-                        </article>
-
-                        #end
-
-                    </div>                
-                </form>
-            </div>
-            <div class="Content TabContent" rel="#detail">
-                <form name="frmDetails" action="" method="post" class="Details" id="moduleDetailsForm">
-                    <div class="pageMessage">.</div>
-                    <table>
-                        <tbody>
-                            <tr>
-                                <th>Code</th>
-                                <td><input type="text" name="name" value="$!page.name" placeholder="Module code Eg MOD001" /></td>
-                            </tr>
-                            <tr>
-                                <th>Module title</th>
-                                <td><input type="text" name="title" value="$!page.title" placeholder="Here is a module page title" /></td>
-                            </tr>                            
-                            
-                            <tr>
-                                <th>Learning time (mins)</th>
-                                <td><input type="text" name="learningTimeMins" value="$!page.learningTimeMins" placeholder="Approximate number of minutes to complete the module" /></td>
-                            </tr>                            
-                            <tr>
-                                <th>Thumbnail (image)</th>
-                                <td>
-                                    <input class="thumbnail" type="text" name="thumb" value="$!page.rawThumb" placeholder="Path to a thumbnail for the module. Eg thumb.png" />
-                                </td>
-                            </tr>                            
-
-                            <tr>
-                                <th>Description</th>
-                                <td>
-                                    <textarea class="smaller" name="brief" id="brief">$!page.brief</textarea>
-                                </td>
-                            </tr>                            
-                            <tr>
-                                <th>Completion message <small>Enter a message that will appear at the end of this module once completed.</small></th>
-                                <td>
-                                    <textarea class="htmleditor" cols="100" id="message" name="message" rows="10" placeholder="Enter your completion message here">$!page.completionMessage</textarea>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="2"><hr /></td>
-                            </tr>
-                            <tr rel="email">
-                                <th>
-                                    Email confirmation 
-                                    <small class="Hidden">Enter a message that will appear in an email that get's sent to the user after this module is completed.</small>
-                                </th>
-                                <td>
-                                    <label for="emailConfirm">Send an email confirmation upon module completion</label>
-                                    $formatter.checkbox("emailConfirm", "emailConfirm", $page.emailConfirm, "true" )                                    
-                                    <div class="EmailMessage Hidden">
-                                        <textarea cols="100" id="email_message" class="htmleditor" name="emailCompletionMessage" rows="10" placeholder="Enter your email message here">$!page.emailConfirmMessage</textarea>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="2"><hr /></td>
-                            </tr>
-                            <tr>
-                                <th>Choose a certificate <a href="${page.closest('organisation').href}certificates">Edit certificates</a></th>
-                                <td rel="certificate" class="editList">
-                                    #foreach($action in $page.actions("certificate"))
-                                    <div class="Certificate ClearFix First editRow">
-                                        <select name="certificate$foreach.index" class="requiredIf" data-basename="certificate">
-                                            <option value="">[No certificate]</option>
-                                            #foreach($cert in $page.certificates)
-                                            $formatter.option($cert.id, $cert.title, $action.itemId)
-                                            #end
-                                        </select> 
-                                        <label for="points$foreach.index">CPD points</label> 
-                                        <input type="text" class="Small" value="$!action.number" id="points$foreach.index" name="points$foreach.index" data-basename="points" /> 
-                                        <a href="#" class="previewCertPdf Btn">Preview</a>
-                                    </div>
-                                    #end
-                                    <button class="SmallBtn Add addFirst" title="Add certificate" id="addCert"><span>Add</span></button>
-
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="2"><hr /></td>
-                            </tr>
-                            <tr>
-                                <th>Choose a reward <a href="${page.closest('organisation').href}rewards">Edit rewards</a></th>
-                                <td rel="reward" class="editList">                                    
-                                    #foreach($action in $page.actions("reward"))
-                                    <div class="Reward ClearFix First editRow">                                                 
-                                        <select name="reward$foreach.index" class="requiredIf" data-basename="reward">                                            
-                                            <option value="">[No reward]</option>
-                                            #foreach($r in $page.rewards)
-                                            $formatter.option($r.id, $r.title, $action.itemId)
-                                            #end
-
-                                        </select> 
-                                        <label for="numRewards$foreach.index">No. of rewards</label> 
-                                        <input type="text" class="Small requiredIf" value="$!action.number" id="numRewards$foreach.index" name="numRewards$foreach.index" data-basename="numRewards"/> 
-                                    </div>
-                                    #end
-
-                                    <button class="SmallBtn Add addFirst" title="Add reward" id="addRewards"><span>Add</span></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="2"><hr /></td>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="2">
-                                    <button class="Btn">Save Changes</button>
-                                </td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </form>
-            </div>
+        #set($currentBranch = $page.closest("branch"))
+        <div class="btn-group publishing pull-right">
+            #if( $currentBranch.live )
+            <a href="../manageBranches" class="islive btn btn-danger">
+                <i class="fa fa-gear"></i>
+                LIVE
+            </a>
+            #else
+            <a href="${currentBranch.href}publish" class="publish btn btn-success">
+                <i class="glyphicon glyphicon-ok-sign"></i>
+                PUBLISH
+            </a>
+            <a href="../manageBranches" class="btn btn-primary">
+                <i class="fa fa-gear"></i>
+                Manage versions
+            </a>
             #end
-        </section>
 
+            <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+                <b>Editing version:</b>
+                $currentBranch.name
+                <span class="caret"></span>
+            </a>
+            <ul role="menu" class="dropdown-menu list branches">
+                #foreach($b in $page.closest("branch").parent.children.ofType.branch)
+                <li role="presentation" class="list-item">
+                    <aside class="list-item-controller">
+                        <a href="#" class="copy btn btn-xs btn-primary pull-right" title="Copy this to a new version"><i class="fa fa-copy"></i></a>
+                        #if( $b.live )
 
-        <div id="modalCreatePage" class="Modal wide">
-            <header>
-                <h3>Add/edit module page</h3>                
-                <a class="Close" href="#" title="Close"><span class="Hidden">Close</span></a>
-            </header>
-            <div class="ModalContent">
-                <form method="POST" action=".">
-                    <input type="hidden" name="pageName" />
-                    <input type="hidden" name="template" value="learner/modulePage" />
-                    <div class="pageMessage">.</div>
-                    <table>
-                        <tr>
-                            <th><label for="name">Enter page title</label></th>
-                            <td>
-                                <input type="text" name="pageTitle" id="pageTitle" class="required" value="" placeholder="A title for the new page" />                                
-                                <button class="Btn pageBtn" type="submit">
-                                    Save page
-                                    <img class='ajax-loader' src='/static/common/loading.gif'/>
-                                </button>
-                                <button class="Btn historyBtn" type="button">History</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <textarea name="body" id="body" class="htmleditor toolbar-Full" style="width: 800px"></textarea>
-                            </td>
-                        </tr>                        
-                    </table>
-                </form>
+                        #else
+                        <a href="${b.href}" class="hide-branch pull-right btn-xs btn btn-warning" title="Hide this version. Can be restored from the manage versions screen"><i class="clip-eye"></i></a>
+                        #end
+                    </aside>
+                    <a href="${b.href}" class="branch noclear">
+                        $b.name
+                    </a>
+                </li>
+                #end
+            </ul>
+        </div>
+
+        <div class="btn-group">
+            <a target='_blank' href='${page.externalUrl}' class='btn btn-success'>
+                <i class="fa fa-arrow-circle-right"></i>
+                View website
+            </a>
+            <div class="btn-group">
+                <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+                    <b>Change website:</b> $page.closest("website").name
+                    <span class="caret"></span>
+                </a>
+                <ul role="menu" class="dropdown-menu list">
+                    #foreach($w in $page.closest("website").parent.children)
+                    <li class="list-item"><a href="${w.href}">$w.name</a></li>
+                    #end
+                </ul>
             </div>
-        </div>        
-        <div id="modalCreateQuiz" class="Modal wide">
-            <header>
-                <h3>Add/edit quiz</h3>                
-                <a class="Close" href="#" title="Close"><span class="Hidden">Close</span></a>
-            </header>
-            <div class="ModalContent">
-                <form method="POST" action="." class="quizContainer">
-                    <input type="hidden" name="pageName" />
-                    <input type="hidden" name="template" value="learner/quizPage" />
-                    <div class="pageMessage">.</div>
-                    <table>
-                        <tr>
-                            <th><label for="name">Enter quiz title</label></th>
-                            <td>
-                                <input type="text" name="pageTitle" id="pageTitle" class="required" value="" placeholder="A title for the new page" />
-                                <select class="newQuestionType">
-                                    <option value="">Add a question</option>
-                                    <option value="multi">Multiple choice</option>
-                                    <option value="textbox">Textbox</option>
-                                </select>
-                                <button class="Btn pageBtn" type="submit">Save page</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">                                
-                                <div id="quizQuestions">
+        </div>
 
-                                </div>
-                            </td>
-                        </tr>                        
-                    </table>
-                </form>
-            </div>
-        </div>           
+        <hr/>
+
+        <div class="btn-group program-course-module-mix">
+	        #set($parentProgram = $page.closest("program"))
+	        <button class="btn btn-orange btn-show-mix dropdown-toggle">
+		        <b>Module:</b> <span class="current-module">$!parentProgram.title / $!folder.title / $!page.title</span>
+		        <span class="caret"></span>
+	        </button>
+	        <ul role="menu" class="dropdown-menu row">
+		        <li id="programs-wrapper" class="col-md-4">
+			        <p>Programs</p>
+			        <div class="programs-list">
+				        #foreach($program in $page.closest("programs").children.ofType.program)
+					        <a class="program ${formatter.ifEqual('active','', $parentProgram, $program)}" href="$program.href" >$program.title</a>
+				        #end
+			        </div>
+		        </li>
+		        <li id="courses-wrapper" class="col-md-4">
+			        <p>Courses</p>
+			        <div class="courses-list">
+				        #set($parentCourse = $page.closest("course"))
+				        #foreach($course in $page.closest("program").children.ofType.course)
+					        <a  class="course ${formatter.ifEqual('active','', $parentCourse, $course)}"href="$course.href" class="">$course.title</a>
+				        #end
+			        </div>
+		        </li>
+		        <li id="modules-wrapper" class="col-md-4">
+			        <p>Modules</p>
+			        <div class="modules-list">
+				        #set($selectedModule = $page.closest("module"))
+				        #foreach($mod in $page.closest("course").children.ofType.module)
+					        <a class="module ${formatter.ifEqual('active','', $selectedModule, $mod)}" href="$mod.href" >$mod.title</a>
+				        #end
+			        </div>
+		        </li>
+	        </ul>
+        </div>
+
+        <hr />
+
+        #if($page.module)
+        <div class="tabbable">
+	        <ul class="nav nav-tabs tab-bricky">
+		        <li>
+			        <a data-toggle="tab" href="#list">Module pages</a>
+		        </li>
+		        <li>
+			        <a data-toggle="tab" href="#details">Module details</a>
+		        </li>
+	        </ul>
+	        <div class="tab-content">
+		        <!-- Start content of Module list tab -->
+		        <div id="list" class="tab-pane">
+			        <div class="btn-group btn-group-sm pull-right">
+				        <a title="Add quiz" href="#" class="btn btn-success btn-quiz-page"><i class="clip-question"></i></a>
+				        <a title="Add page" href="#" class="btn btn-orange btn-add-page"><i class="fa fa-plus"></i></a>
+			        </div>
+			        <h4>$page.title</h4>
+			        <hr />
+			        <div id="pages-list" class="article-wrapper article-draggable">
+				        #set($order = 0)
+				        #foreach($modulePage in $page.children.ofType.Page.sortByIntField("order"))
+					        #set($order = $order +1)
+					        #set($classes = "clip-file-2")
+					        #set($type = "file")
+					        #if($modulePage.html.is("quizPage"))
+					            #set($classes = "clip-question")
+					            #set($type = "quiz")
+					        #end
+					        <article class="page $type">
+						        <input type="hidden" name="${modulePage.name}" value="$order"/>
+						        <i class="$classes"></i>
+						        <span class="article-name">$modulePage.title</span>
+						        <aside class="article-action">
+							        <div class="btn-group btn-group-sm">
+								        <button type="button" class="btn btn-move-file btn-orange dropdown-toggle" title="Move up or down">
+									        <i class="glyphicon glyphicon-sort"></i>
+								        </button>
+								        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+									        <i class="fa fa-cog"></i>
+								        </button>
+								        <ul class="dropdown-menu pull-right">
+									        <li><a href="${modulePage.name}" class="btn-edit-page" title="Edit page">Edit page</a></li>
+									        <li><a href="${modulePage.name}?goto" target="_blank" title="View page">View page</a></li>
+									        <li class="divider"></li>
+									        <li><a href="${modulePage.path}" class="btn-delete-page" title="Delete page">Delete page</a></li>
+								        </ul>
+							        </div>
+						        </aside>
+					        </article>
+				        #end
+			        </div>
+		        </div>
+		        <!-- End content of Module list tab -->
+		        <!-- Start content of Module details tab -->
+		        <div id="details" class="tab-pane">
+			        <form action="" method="post" class="form-horizontal">
+				        <div class="form-group">
+					        <label for="name" class="control-label col-md-2">Code</label>
+					        <div class="col-md-6">
+						        <input type="text" id="name" class="form-control" name="name" value="$!page.name" placeholder="Module code Eg MOD001" />
+					        </div>
+				        </div>
+				        <div class="form-group">
+					        <label for="title" class="control-label col-md-2">Module title</label>
+					        <div class="col-md-6">
+						        <input type="text" id="title" class="form-control" name="title" value="$!page.title" placeholder="Here is a module page title" />
+					        </div>
+				        </div>
+				        <div class="form-group">
+					        <label for="learningTimeMins" class="control-label col-md-2">Learning time (mins)</label>
+					        <div class="col-md-6">
+						        <input type="text" id="learningTimeMins" class="form-control" name="learningTimeMins" value="$!page.learningTimeMins" placeholder="Approximate number of minutes to complete the module" />
+					        </div>
+				        </div>
+				        <div class="form-group">
+					        <label for="thumb" class="control-label col-md-2">Thumbnail (image)</label>
+					        <div class="col-md-6">
+						        <input class="thumbnail-image form-control" id="thumb" type="text" name="thumb" value="$!page.rawThumb" placeholder="Path to a thumbnail for the module. Eg thumb.png" />
+					        </div>
+				        </div>
+				        <div class="form-group">
+					        <label for="brief" class="control-label col-md-2">Description</label>
+					        <div class="col-md-10">
+						        <textarea class="form-control"  name="brief" id="brief" rows="5">$!page.brief</textarea>
+					        </div>
+				        </div>
+				        <div class="form-group">
+					        <label for="message" class="control-label col-md-2">
+						        Completion message <br />
+						        <small>Enter a message that will appear at the end of this module once completed.</small>
+					        </label>
+					        <div class="col-md-10">
+						        <textarea class="htmleditor" cols="100" id="message" name="message" rows="10" placeholder="Enter your completion message here">$!page.completionMessage</textarea>
+					        </div>
+				        </div>
+				        <hr />
+				        <div class="form-group">
+					        <label for="" class="control-label col-md-2">
+						        Email confirmation <br />
+						        <small class="Hidden">Enter a message that will appear in an email that get's sent to the user after this module is completed.</small>
+					        </label>
+					        <div class="col-md-10">
+						        $formatter.checkbox("emailConfirm", "emailConfirm", $page.emailConfirm, "true" )
+						        <label for="emailConfirm">Send an email confirmation upon module completion</label>
+						        <div class="hide" id="email-confirm-content">
+							        <textarea cols="100" id="email-message" class="htmleditor" name="emailCompletionMessage" rows="10" placeholder="Enter your email message here">$!page.emailConfirmMessage</textarea>
+						        </div>
+					        </div>
+				        </div>
+				        <hr />
+				        <div class="form-group">
+					        <label class="control-label col-md-2">
+						        Choose a certificate<br />
+						        <small><a href="${page.closest('organisation').href}certificates" target="_blank">Edit certificates</a></small>
+					        </label>
+					        <div class="col-md-10">
+						        <button class="btn btn-warning btn-sm btn-add-cert btn-add-first" type="button" title="Add certificate"><i class="fa fa-plus"></i> <span>Add</span></button>
+						        <div class="certificates-wrapper hide">
+							        #foreach($action in $page.actions("certificate"))
+								        <div class="certificate clearfix">
+									        <div class="input-group input-group-sm">
+										        <label for="points$foreach.index" class="input-group-addon">CPD points</label>
+										        <input type="text" class="form-control" value="$!action.number" id="points$foreach.index" name="points$foreach.index" data-basename="points" />
+									        </div>
+									        <div class="input-group input-group-sm">
+										        <select name="certificate$foreach.index" class="requiredIf form-control" data-basename="certificate">
+											        <option value="">[No certificate]</option>
+											        #foreach($cert in $page.certificates)
+											            $formatter.option($cert.id, $cert.title, $action.itemId)
+											        #end
+										        </select>
+									        </div>
+									        <div class="btn-group btn-group-sm">
+										        <a href="#" class="btn btn-success btn-preview-certificate">Preview</a>
+										        <a href="#" class="btn btn-danger btn-delete-certificate"><i class="fa fa-times"></i></a>
+									        </div>
+								        </div>
+							        #end
+						        </div>
+					        </div>
+				        </div>
+				        <hr />
+				        <div class="form-group">
+					        <label class="control-label col-md-2">
+						        Choose a reward<br />
+						        <small><a href="${page.closest('organisation').href}rewards" target="_blank">Edit rewards</a></small>
+					        </label>
+					        <div class="col-md-10">
+						        <button class="btn btn-warning btn-sm btn-add-reward btn-add-first" type="button" title="Add reward"><i class="fa fa-plus"></i> <span>Add</span></button>
+						        <div class="rewards-wrapper hide">
+							        #foreach($action in $page.actions("reward"))
+							        <div class="reward clearfix">
+								        <div class="input-group input-group-sm">
+									        <label for="numRewards$foreach.index" class="input-group-addon">No. of rewards</label>
+									        <input type="text" class="form-control requiredIf" value="$!action.number" id="numRewards$foreach.index" name="numRewards$foreach.index" data-basename="numRewards"/>
+								        </div>
+								        <div class="input-group input-group-sm">
+									        <select name="reward$foreach.index" class="form-control requiredIf" data-basename="reward">
+										        <option value="">[No reward]</option>
+										        #foreach($r in $page.rewards)
+										            $formatter.option($r.id, $r.title, $action.itemId)
+										        #end
+									        </select>
+								        </div>
+								        <div class="btn-group btn-group-sm">
+									        <a href="#" class="btn btn-danger btn-delete-reward"><i class="fa fa-times"></i></a>
+								        </div>
+							        </div>
+							        #end
+						        </div>
+					        </div>
+				        </div>
+				        <hr />
+				        <div class="form-group">
+					        <div class="col-md-12">
+								<button type="submit" class="btn btn-primary pull-right">Save changes</button>
+					        </div>
+				        </div>
+			        </form>
+		        </div>
+		        <!-- End content of Module details tab -->
+	        </div>
+        </div>
+        #end
+
+        <div id="modal-add-page" class="modal modal-lg fade modal-fuse modal-fuse-editor" aria-hidden="true" tabindex="-1">
+	        <div class="modal-header">
+		        <button aria-hidden="true" data-type="modal-dismiss" class="close" type="button">&times;</button>
+		        <h4 class="modal-title">Add/edit module page</h4>
+	        </div>
+	        <div class="modal-body">
+		        <form method="POST" action="." class="form-horizontal">
+			        <input type="hidden" name="pageName" />
+			        <input type="hidden" name="template" value="learner/modulePage" />
+			        <div class="form-group">
+				        <label for="pageTitle" class="control-label col-md-3">Enter page title</label>
+				        <div class="col-md-9">
+					        <input type="text" name="pageTitle" id="pageTitle" class="required form-control" value="" placeholder="A title for the new page" />
+				        </div>
+			        </div>
+			        <div class="form-group">
+				        <div class="col-md-12">
+					        <textarea name="body" id="body" class="htmleditor toolbar-Full" style="width: 800px"></textarea>
+				        </div>
+			        </div>
+		        </form>
+	        </div>
+	        <div class="modal-footer">
+		        <button class="btn btn-default" data-type="modal-dismiss" type="button">Close</button>
+		        <button class="btn btn-primary btn-img btn-history" type="button">History <img class='ajax-loader' src='/static/common/loading.gif'/></button>
+		        <button class="btn btn-primary btn-img" data-type="form-submit" type="button">Save <img class='ajax-loader' src='/static/common/loading.gif'/></button>
+	        </div>
+        </div>
+
+        <div id="modal-add-quiz" class="modal modal-lg fade" aria-hidden="true" tabindex="-1">
+	        <div class="modal-header">
+		        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+		        <h4 class="modal-title">Add/edit quiz</h4>
+	        </div>
+	        <div class="modal-body">
+		        <form method="POST" action="." class="form-horizontal">
+			        <input type="hidden" name="pageName" />
+			        <input type="hidden" name="template" value="learner/quizPage" />
+			        <div class="form-group">
+				        <label for="quizTitle" class="control-label col-md-2">Enter quiz title</label>
+				        <div class="col-md-4">
+				            <input type="text" name="pageTitle" id="quizTitle" class="required form-control" value="" placeholder="A title for the new page" />
+				        </div>
+				        <div class="col-md-3">
+					        <div class="btn-group">
+						        <button class="btn btn-success btn-add-question dropdown-toggle" data-toggle="dropdown"><i class="fa fa-plus"></i> Add a question <span class="caret"></span></button>
+						        <ul class="dropdown-menu pull-right">
+							        <li><a href="#" class="btn-multiple">Multiple choice</a></li>
+							        <li><a href="#" class="btn-textbox">Textbox</a></li>
+						        </ul>
+					        </div>
+				        </div>
+			        </div>
+			        <div id="quiz-questions"></div>
+		        </form>
+	        </div>
+	        <div class="modal-footer">
+		        <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+		        <button class="btn btn-primary" data-type="form-submit" type="button">Save</button>
+	        </div>
+        </div>
+
         <script type="text/javascript" >
             var themePath = "${page.themePath}";
-            jQuery(function() {
+            Bob.onDOMReady(function() {
                 initManageModule("../../..", themePath);
-            });            
-        </script>        
+            });
+        </script>
     </body>
 </html>

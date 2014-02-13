@@ -113,6 +113,28 @@ function log() {
     }
 }
 
+/**
+ * Fuse Log - renamed from 'log' to avoid name clash with less.js 
+ * 
+ * varargs function to output to console.log if console is available
+ */
+function flog() {
+    if (typeof(console) != "undefined") {
+        if (navigator.appName == 'Microsoft Internet Explorer') {
+            // BM: Previous used JSON, but that crashed IE sometimes. So this is pretty crap, but at least safer
+            if (arguments.length == 1) {
+                console.log(arguments[0]);
+            } else if (arguments.length == 2) {
+                console.log(arguments[0], arguments[1]);
+            } else if (arguments.length > 2) {
+                console.log(arguments[0], arguments[1], arguments[2]);
+            }
+        } else {
+            console.log(arguments);
+        }
+    }
+}
+
 function pad2(i) {
     var j = i - 0; // force to be a number
     if (j < 10) {
@@ -248,7 +270,7 @@ function stripCharsInBag(s, bag) {
     // If character is not in bag, append to returnString.
     for (i = 0; i < s.length; i++) {
         var c = s.charAt(i);
-        if (bag.indexOf(c) == -1)
+        if (bag.indexOf(c) === -1)
             returnString += c;
     }
     return returnString;
@@ -257,71 +279,72 @@ function stripCharsInBag(s, bag) {
 function daysInFebruary(year) {
     // February has 29 days in any year evenly divisible by four,
     // EXCEPT for centurial years which are not also divisible by 400.
-    return (((year % 4 == 0) && ((!(year % 100 == 0)) || (year % 400 == 0))) ? 29 : 28);
+    return (((year % 4 === 0) && ((!(year % 100 === 0)) || (year % 400 === 0))) ? 29 : 28);
 }
+
 function DaysArray(n) {
     for (var i = 1; i <= n; i++) {
         this[i] = 31
-        if (i == 4 || i == 6 || i == 9 || i == 11) {
-            this[i] = 30
+        if (i === 4 || i === 6 || i === 9 || i === 11) {
+            this[i] = 30;
         }
-        if (i == 2) {
-            this[i] = 29
+        if (i === 2) {
+            this[i] = 29;
         }
     }
-    return this
+    return this;
 }
 
+/**
+ * 
+ * @param {type} dtStr
+ * @returns {Boolean}Deprecated. Use moment.js instead
+ */
 function isDate(dtStr) {
-    var daysInMonth = DaysArray(12)
-    var pos1 = dtStr.indexOf(dtCh)
-    var pos2 = dtStr.indexOf(dtCh, pos1 + 1)
-    var strDay = dtStr.substring(0, pos1)
-    var strMonth = dtStr.substring(pos1 + 1, pos2)
-    var strYear = dtStr.substring(pos2 + 1)
-    strYr = strYear
-    if (strDay.charAt(0) == "0" && strDay.length > 1)
-        strDay = strDay.substring(1)
-    if (strMonth.charAt(0) == "0" && strMonth.length > 1)
-        strMonth = strMonth.substring(1)
-    for (var i = 1; i <= 3; i++) {
-        if (strYr.charAt(0) == "0" && strYr.length > 1)
-            strYr = strYr.substring(1)
+    var daysInMonth = DaysArray(12);
+    var pos1 = dtStr.indexOf(dtCh);
+    var pos2 = dtStr.indexOf(dtCh, pos1 + 1);
+    var strDay = dtStr.substring(0, pos1);
+    var strMonth = dtStr.substring(pos1 + 1, pos2);
+    var strYear = dtStr.substring(pos2 + 1);
+    strYr = strYear;
+    if (strDay.charAt(0) === "0" && strDay.length > 1){
+        strDay = strDay.substring(1);
     }
-    month = parseInt(strMonth)
-    day = parseInt(strDay)
-    year = parseInt(strYr)
-    if (pos1 == -1 || pos2 == -1) {
+    if (strMonth.charAt(0) === "0" && strMonth.length > 1) {
+        strMonth = strMonth.substring(1);
+    }
+    for (var i = 1; i <= 3; i++) {
+        if (strYr.charAt(0) === "0" && strYr.length > 1) {
+            strYr = strYr.substring(1);
+        }
+    }
+    month = parseInt(strMonth);
+    day = parseInt(strDay);
+    year = parseInt(strYr);
+    if (pos1 === -1 || pos2 === -1) {
         log("The date format should be : dd/mm/yyyy");
-        return false
+        return false;
     }
     if (strMonth.length < 1 || month < 1 || month > 12) {
         log("Please enter a valid month");
-        return false
+        return false;
     }
-    if (strDay.length < 1 || day < 1 || day > 31 || (month == 2 && day > daysInFebruary(year)) || day > daysInMonth[month]) {
+    if (strDay.length < 1 || day < 1 || day > 31 || (month === 2 && day > daysInFebruary(year)) || day > daysInMonth[month]) {
         log("Please enter a valid day");
-        return false
+        return false;
     }
-    if (strYear.length != 4 || year == 0 || year < minYear || year > maxYear) {
+    if (strYear.length !== 4 || year === 0 || year < minYear || year > maxYear) {
         log("Please enter a valid 4 digit year between " + minYear + " and " + maxYear);
-        return false
+        return false;
     }
-    if (dtStr.indexOf(dtCh, pos2 + 1) != -1 || isInteger(stripCharsInBag(dtStr, dtCh)) == false) {
+    if (dtStr.indexOf(dtCh, pos2 + 1) !== -1 || isInteger(stripCharsInBag(dtStr, dtCh)) === false) {
         log("Please enter a valid date");
-        return false
+        return false;
     }
-    return true
+    return true;
 }
 
-function ValidateForm() {
-    var dt = document.frmSample.txtDate
-    if (isDate(dt.value) == false) {
-        dt.focus()
-        return false
-    }
-    return true
-}
 
 function getFileName(path) {
     var arr = path.split('/');
@@ -329,7 +352,7 @@ function getFileName(path) {
         return "";
     }
     var name = arr[arr.length - 1];
-    if (name == null || name.length == 0) { // might be empty if trailing slash
+    if (name === null || name.length === 0) { // might be empty if trailing slash
         name = arr[arr.length - 2];
     }
     if (name.contains("#")) {

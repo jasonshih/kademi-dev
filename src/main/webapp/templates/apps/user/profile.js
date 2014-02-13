@@ -1,4 +1,4 @@
-$(function() {
+Bob.onDOMReady(function () {
     $("form").not(".form-unsubscribe").forms({
         callback: function(resp, form) {
             log("done");

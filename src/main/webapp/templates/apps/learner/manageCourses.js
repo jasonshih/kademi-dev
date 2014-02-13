@@ -1,4 +1,3 @@
-
 var selectedCourse;
 
 function initManageCourse(programsUrl, programUrl) {
@@ -9,9 +8,9 @@ function initManageCourse(programsUrl, programUrl) {
     initCourseEditing(programUrl);
     initActive();
 
-    if ($("modulePanel").length > 0) {
-        $('div.Course li > a').pjax('#modulePanel', {
-            fragment: "#modulePanel",
+    if ($("#manage-course").length > 0) {
+        $('div.courses-list li > a').pjax('#manage-course', {
+            fragment: "#manage-course",
             success: function() {
                 log("done!");
                 initActive();
@@ -22,15 +21,15 @@ function initManageCourse(programsUrl, programUrl) {
 }
 
 function initActive() {
-    $("div.Course li.Active").removeClass("Active");
-    var active = $("div.Course li > a").filter(function() {
-        return $(this).attr("href") == window.location.pathname;
+    $("ul.courses-list > li.active").removeClass("active");
+    var active = $("ul.courses-list > li > a").filter(function() {
+        return $(this).attr("href") === window.location.pathname;
     });
-    active.closest("li").addClass("Active");
+    active.closest("li").addClass("active");
 
 }
 
-function initModuleEditing() {
+function initModuleEditing() {    
     log("initModuleEditing");
     var modal = $("#moduleModal");
     var form = modal.find("form");
@@ -44,11 +43,11 @@ function initModuleEditing() {
                 window.location.reload();
                 // TODO: update html
             }
-            $.tinybox.close();
+            modal.modal('hide');
         }
     });
 
-    $("body").on("click", "button.AddModule", function(e) {
+    $(document.body).on("click", ".btn-add-module", function(e) {
         e.preventDefault();
         courseHref = window.location.pathname;
         log("add module", courseHref);
@@ -58,89 +57,73 @@ function initModuleEditing() {
         }, validateSimpleChars);
 
     });
-
-    $("div.Module").on("click", "a.DialogueModule", function(e) {
+    
+    var moduleWrapper = $("div.modules-wrapper");
+    
+    moduleWrapper.on('click', '.btn-duplicate-module', function (e) {
+        e.preventDefault();        
+        
+        duplicateModule($(this).parents('li.module'));
+    });
+    
+    moduleWrapper.on('click', '.btn-add-splitter', function (e) {
+        e.preventDefault();        
+        
+        $(this).parents('li.module').after(
+            '<li class="splitter clearfix">' +
+                '<aside class="pull-right">' +
+                    '<div class="btn-group">' +
+                        '<button type="button" class="btn btn-xs btn-default btn-move-splitter" title="Move up or down"><i class="glyphicon glyphicon-sort"></i></button>' +
+                        '<button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">' +
+                            '<span class="caret"></span>' +
+                        '</button>' +
+                        '<ul class="dropdown-menu pull-right" role="menu">' +
+                            '<li><a href="${module.name}" class="btn-delete-splitter">Delete splitter</a></li>' +
+                        '</ul>' +
+                    '</div>' +
+                '</aside>' +
+                '<span>Level Splitter</span>' +
+            '</li>'
+        );
+    
+        saveModules();
+    });
+    
+    moduleWrapper.on('click', '.btn-edit-module', function (e) {
+        e.preventDefault(); 
+        
+        var li = $(this).parents('li.module');
+        
+        log("Delete", li)       
+        
+        showEditModule(li, modal, form);
+    });
+    
+    
+    moduleWrapper.on('click', '.btn-delete-module', function (e) {
         e.preventDefault();
-        log("click module");
-        var moduleLi = $(e.target).closest("li");
-        var dialog = moduleLi.find(".Dialog");
-        if (dialog.length == 0) {
-            log("create new dialog");
-            dialog = $("<div class='Dialog'></div>").hide();
-            moduleLi.append(dialog);
-            var deleteLink;
-            log("add delete link", moduleLi);
-            if (moduleLi.hasClass("Splitter")) {
-                deleteLink = $("<a href='#' class='Delete Deletemodule'>Delete this splitter</a> ").appendTo(dialog);
-            } else {
-                var editLink = $("<a href='#' class='EditModule'>Edit module name notes</a>").appendTo(dialog);
-                $("<a href='" + moduleLi.attr("id") + "' class='ManageModule'>Manage this module</a>").appendTo(dialog);
-                $("<a target='_blank' href='" + moduleLi.attr("id") + "?goto=' class='ManageModule'>View module</a>").appendTo(dialog);
-                var addSplitterLink = $("<a href='#' class='ManageModule'>Add splitter below</a>").appendTo(dialog);
-                deleteLink = $("<a href='#' class='Delete Deletemodule'>Delete this module</a> ").appendTo(dialog);
-                var dupLink = $("<a href='#' class='DuplicateModule'>Duplicate</a> ").appendTo(dialog);
-                var exportPdf = $("<a href='#' class=''>Export to PDF</a> ").appendTo(dialog);
-                var exportText = $("<a href='#' class=''>Export to Text</a> ").appendTo(dialog);
-
-                exportPdf.click(function(e) {
-                    var moduleHref = moduleLi.attr("id") + "?format=pdf";
-                    window.open(moduleHref);
-                });
-                exportText.click(function(e) {
-                    var moduleHref = moduleLi.attr("id") + "?format=text";
-                    window.open(moduleHref);
-                });
-
-                dupLink.click(function(e) {
-                    e.preventDefault();
-                    duplicateModule(moduleLi);
-                });
-
-                editLink.click(function(e) {
-                    e.preventDefault();
-                    showEditModule(moduleLi, modal, form);
-                });
-
-                addSplitterLink.click(function(e) {
-                    e.preventDefault();
-                    moduleLi.after('\
-			<li class="Splitter" style="">\
-				<span>Level Splitter</span> \
-				<aside>\
-					<a title="Move up or down" class="Move" href=""><span class="Hidden">Move up or down</span></a> \
-					<a title="Show dialogue menu" class="Dialogue DialogueModule" href=""><span class="Hidden">Show dialogue menu</span></a> \
-				</aside>\
-				<div class="Dialog Hidden">\
-					<a class="Delete DeleteModule" href="">Delete this module</a>\
-				</div>\
-			</li>'
-                            );
-                    dialog.hide();
-                    saveModules();
-                });
-
-
-            }
-
-            deleteLink.click(function(e) {
-                e.preventDefault();
-                log("Delete", moduleLi)
-                if (moduleLi.hasClass("Splitter")) {
-                    moduleLi.remove();
-                    saveModules();
-                } else {
-                    var moduleHref = moduleLi.attr("id");
-                    confirmDelete(moduleHref, moduleHref, function() {
-                        window.location.reload();
-                    });
-                }
-            });
-        }
-        dialog.toggle(200);
+        
+        var li = $(this).parents('li.module');
+        
+        log("Delete", li)
+        var moduleHref = li.attr("id");
+        confirmDelete(moduleHref, moduleHref, function() {
+            window.location.reload();
+        });
+    });
+    
+    moduleWrapper.on('click', '.btn-delete-splitter', function (e) {
+        e.preventDefault();
+        
+        var li = $(this).parents('li.splitter');
+        
+        log("Delete", li)        
+        li.remove();
+        saveModules();
     });
 
     var cont = $("section.Content");
-    $("div.Module ul").sortable({
+    $("div.modules-wrapper ul").sortable({
         items: "> li",
         sort: function() {
             if( cont.hasClass("ajax-loading") ) {
@@ -174,11 +157,8 @@ function showEditModule(liModule, modal, form) {
                 form.find("input[name=moduleName]").val(p.name);
                 form.find("input[name=moduleTitle]").val(p.title);
                 form.find("textarea").val(p.notes);
-            }
-            $.tinybox.show(modal, {
-                overlayClose: false,
-                opacity: 0
-            });
+            }            
+            modal.modal('show');
         },
         error: function(resp) {
             alert("Sorry couldnt get module data");
@@ -192,48 +172,26 @@ function initCourseEditing(programUrl) {
     var modal = $("#courseModal");
     var form = modal.find("form");
 
-    $("button.AddCourse").click(function(e) {
+    $(".btn-add-course").click(function(e) {
         e.preventDefault();
         var msg = "Please enter a code for the new course. Once created the code can't be changed, but you can enter a descriptive title";
         showCreateFolder(programUrl, "Create course", msg, function(name) {
             window.location = programUrl + name;
         }, validateSimpleChars);
     });
-
-
-    $("body").on("click", "div.Course a.DialogueCourse", function(e) {
-        e.preventDefault();
-        var courseLi = $(e.target).closest("li");
-        var dialog = courseLi.find(".Dialog");
-        if (dialog.length == 0) {
-            log("create new dialog");
-            dialog = $("<div class='Dialog'></div>").hide();
-            courseLi.append(dialog);
-            var editLink = $("<a href='#' class='EditCourse'>Edit this course</a>").appendTo(dialog);
-            var deleteLink = $("<a href='#' class='Delete DeleteCourse'>Delete this course</a> ").appendTo(dialog);
-            var exportPdf = $("<a href='#' class=''>Export to PDF</a> ").appendTo(dialog);
-            var exportText = $("<a href='#' class=''>Export to Text</a> ").appendTo(dialog);
-
-            exportPdf.click(function(e) {
-                var href = courseLi.find("> a").attr("href") + "?format=pdf";
-                window.open(href);
-            });
-            exportText.click(function(e) {
-                var href = courseLi.find("> a").attr("href") + "?format=text";
-                window.open(href);
-            });
-
-            editLink.click(function(e) {
-                e.preventDefault();
-                var liCourse = $(this).closest("li");
-                showEditCourse(liCourse, modal, form);
-            });
-            deleteLink.click(function(e) {
-                e.preventDefault();
-                deleteCourse(courseLi);
-            });
-        }
-        dialog.toggle(200);
+    
+    var courseWrapper = $('.courses-wrapper');
+    
+    courseWrapper.on('click', '.btn-edit-course', function (e) {
+        e.preventDefault();        
+        
+        showEditCourse($(this).parents('li.course'), modal, form);
+    });
+    
+    courseWrapper.on('click', '.btn-delete-course', function (e) {
+        e.preventDefault();        
+        
+        deleteCourse($(this).parents('li.course'));
     });
 
     form.forms({
@@ -241,8 +199,8 @@ function initCourseEditing(programUrl) {
             log("done save course", resp);
             var title = form.find("input[type=text]").val();
             var name = getFileName(form.attr("action"));
-            selectedCourse.find("> a").text(name + " - " + title);
-            $.tinybox.close();
+            selectedCourse.find("> a").text(name + " - " + title);            
+            modal.modal('hide');
         }
     });
 }
@@ -252,8 +210,7 @@ function deleteCourse(courseLi) {
     var courseName = courseLi.find("> a").text();
     log("deleteCourse", courseLi, courseHref, courseName);
     confirmDelete(courseHref, courseName, function() {
-        $("#modulePanel")
-                .find("div.Module")
+        $("div.modules-wrapper")
                 .filter("[data-course=" + courseLi.attr("data-course") + "]")
                 .remove();
         courseLi.remove();
@@ -282,11 +239,8 @@ function showEditCourse(liCourse, modal, form) {
                 log("set fields", p);
                 form.find("input[type=text]").val(p.title);
                 form.find("textarea").val(p.notes);
-            }
-            $.tinybox.show(modal, {
-                overlayClose: false,
-                opacity: 0
-            });
+            }            
+            modal.modal('show');
         },
         error: function(resp) {
             alert("Sorry couldnt get program data");
@@ -305,39 +259,42 @@ function initProgramEditing(programsUrl) {
             log("done save program", resp);
             if (resp.nextHref) {
                 // nextHref means this is a new resource, so add it to the list
-                var li = $("<li><a href='" + resp.nextHref + "'>" + form.find("input[type=text]").val() + "</a></li>");
-                var aside = $("<aside></aside>");
-                li.append(aside);
-                var edit = $("<a class='EditProgram' title='Edit program' href='#'><span class='Hidden'>Edit program</span></a> ");
-                var del = $("<a class='DeleteProgram' title='Delete program' href='" + resp.nextHref + "'><span class='Hidden'>Delete program</span></a>");
-                aside.append(edit).append(del);
-                $("ul.Program").append(li);
+                $("ul.programs-list").append(
+                    '<li class="program clearfix">' +
+                        '<aside class="pull-right">' +
+                            '<a class="btn btn-xs btn-default btn-edit-program" title="Edit program" href="#"><i class="glyphicon glyphicon-edit"></i></a>' +
+                            '<a class="btn btn-xs btn-default btn-delete-program" title="Delete program" href="' + resp.nextHref + '"><i class="glyphicon glyphicon-remove"></i></a>' +
+                        '</aside>' +
+                        '<a href="' + resp.nextHref + '">$otherProg.title</a>' +
+                    '</li>'
+                );
                 log("go to: " + resp.nextHref);
                 window.location.reload();
                 //window.location.href = resp.nextHref + "manageCourses";
             } else {
                 window.location.reload();
-            }
-            $.tinybox.close();
+            }            
+            modal.modal('hide');
         }
     });
-    $("body").on("click", "button.AddProgram", function(e) {
+    
+    var programsList = $('ul.programs-list');
+    
+    programsList.on('click', '.btn-add-program', function (e) {
         e.preventDefault();
-
+        
         var msg = "Please enter a code for the new program. Once created the code can't be changed, but you can add a descriptive title after the program is created";
         showCreateFolder(programsUrl, "Create program", msg, function(name) {
             log("created", name);
             window.location = programsUrl + name;
         }, validateSimpleChars);
-
+        
     });
 
-
-
     // Event for Delete button
-    $("body").on("click", "div.Program a.DeleteProgram", function(e) {
+    programsList.on("click", ".btn-delete-program", function(e) {
         e.preventDefault();
-        liProgram = $(this).closest("li");
+        liProgram = $(this).parents("li.program");
         var programHref = $(e.target).closest("a").attr("href");
         var programName = getFileName(programHref);
         log("click delete program", liProgram, programHref);
@@ -352,9 +309,9 @@ function initProgramEditing(programsUrl) {
     });
 
     // Event for Edit button
-    $("body").on("click", "div.Program a.EditProgram", function(e) {
+    programsList.on("click", ".btn-edit-program", function(e) {
         e.preventDefault();
-        liProgram = $(this).closest("li");
+        liProgram = $(this).parents("li.program");
         var programHref = liProgram.find("> a").attr("href");
         //programHref = getFolderPath(programHref) + "/";
         var programName = getFileName(programHref);
@@ -373,10 +330,7 @@ function initProgramEditing(programsUrl) {
                     form.find("input[type=text]").val(p.title);
                     form.find("textarea").val(p.notes);                    
                 }
-                $.tinybox.show(modal, {
-                    overlayClose: false,
-                    opacity: 0
-                });
+                modal.modal('show');
             },
             error: function(resp) {
                 alert("Sorry couldnt get program data");
@@ -387,24 +341,24 @@ function initProgramEditing(programsUrl) {
 
 
 function saveModules() {
-    log("Save", selectedCourse, $("#modulePanel .Module li"));
+    log("Save", selectedCourse, $("#ul.modules-list > li.module"));
     var level = 1;
     var order = 0;
     var data = new Object();
-    $("#modulePanel .Module li").each(function(i, node) {
-        var $node = $(node);
-        log("save node: ", $node);
-        if ($node.hasClass("Splitter")) {
+    $("ul.modules-list > li.module").each(function(i, li) {
+        var li = $(li);
+        log("save node: ", li);
+        if (li.hasClass("splitter")) {
             level++;
             log("found splitter", level);
         } else {
             order++;
-            var name = $node.attr("id");
-            var title = $($("span", $node)[0]).text();
+            var name = li.attr("id");
+            var title = $($("> span", li)[0]).text();
             if (!name) {
                 name = $.URLEncode(title);
-                $node.attr("id", name);
-                log("set name", name, $node);
+                li.attr("id", name);
+                log("set name", name, li);
             }
             data["name-" + order] = name;
             data["level-" + order] = level;
@@ -412,7 +366,7 @@ function saveModules() {
         }
     });
     log("saveModules", data);
-    var cont = $("section.Content");
+    var cont = $(".content");
     cont.addClass("ajax-loading");
     $.ajax({
         type: 'POST',
@@ -435,20 +389,20 @@ function saveModules() {
 
 
 function orderCourseModuleItem() {
-    $("div.Course ul").sortable({
-        items: "> li",
+    $("ul.courses-list").sortable({
+        items: "> li.course",
         sort: function() {
             $(this).removeClass("ui-state-default");
         }
     });
 
-    $("div.Course > ul > li").each(function(i) {
+    $("div.courses-wrapper > ul.courses-list > li.course").each(function(i) {
         $(this).attr({
             "data-course": i + 1
-        }).find("div.Module")
+        }).find("div.modules-wrapper")
                 .attr("data-course", i + 1)
                 .find("ul > li")
-                .not(".Splitter")
+                .not(".splitter")
                 .each(function(idx) {
             $(this).attr("data-module", idx + 1);
         });
@@ -458,7 +412,7 @@ function orderCourseModuleItem() {
 
 function maxOrderCourse() {
     var _order = [];
-    $("div.Course > ul > li").each(function() {
+    $("div.courses-wrapper > ul > li").each(function() {
         _order.push($(this).attr("data-course"));
     });
 
@@ -469,7 +423,7 @@ function maxOrderCourse() {
 
 function maxOrderModule() {
     var _order = [];
-    $("#modulePanel div.Module ul li").each(function() {
+    $("div.modules-wrapper ul.modules-list li.module").each(function() {
         _order.push($(this).attr("data-course"));
     });
 
@@ -480,7 +434,7 @@ function maxOrderModule() {
 
 function maxOrderProgram() {
     var _order = [];
-    $("ul.Program li").each(function() {
+    $("ul.programs-list li.program").each(function() {
         _order.push($(this).attr("data-program"));
     });
 

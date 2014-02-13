@@ -41,7 +41,7 @@
             var first = true;
             var themeName = "$page.currentTheme";
 
-            jQuery(function() {
+            Bob.onDOMReady(function () {
                 var current = $(".selectTheme[href='" + themeName + "']");
                 current.closest("li").addClass("current-theme");
                 log("set current", current, themeName);

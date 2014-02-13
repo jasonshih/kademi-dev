@@ -17,6 +17,15 @@
     $.fn.forms = function(options) {
         log("init forms plugin", this);
 
+        // Load the moment.js script
+        options = $.extend(options || {}, {
+            dataType: "script",
+            cache: true,
+            url: "/static/js/moment-with-langs.min.js"
+        });
+
+        jQuery.ajax(options);
+
         var config = $.extend({
             postUrl: null, // means to use the form action as url
             callback: function() {
@@ -91,7 +100,7 @@ function postForm(form, valiationMessageSelector, validationFailedMessage, callb
                     log("status indicates failure", resp);
                     try {
                         var messagesContainer = $(valiationMessageSelector, form);
-                        if (resp) {                            
+                        if (resp) {
                             if (resp.messages && resp.messages.length > 0) {
                                 for (i = 0; i < resp.messages.length; i++) {
                                     var msg = resp.messages[i];
@@ -99,7 +108,7 @@ function postForm(form, valiationMessageSelector, validationFailedMessage, callb
                                 }
                             } else {
                                 messagesContainer.append("<p>Sorry, we couldnt process your request</p>");
-                            }                            
+                            }
                             showFieldMessages(resp.fieldMessages, form)
                         } else {
                             messagesContainer.append("<p>Sorry, we couldnt process your request</p>");
@@ -108,9 +117,9 @@ function postForm(form, valiationMessageSelector, validationFailedMessage, callb
                     } catch (e) {
                         log("ex", e);
                     }
-                    if( errorCallback ) {
+                    if (errorCallback) {
                         errorCallback();
-                    }                    
+                    }
                     //alert("Sorry, an error occured and the form could not be processed. Please check for validation messages");
                 }
             },
@@ -166,7 +175,7 @@ function checkRequiredFields(container) {
         var val = $(node).val();
 
         var title = $(node).attr("title");
-        if (!val || (val == title)) { // note that the watermark can make the value == title
+        if (!val || (val === title)) { // note that the watermark can make the value == title
             log('error field', node);
             showErrorField($(node));
             isOk = false;
@@ -180,6 +189,7 @@ function checkRequiredFields(container) {
 
     if (isOk) {
         isOk = checkValidEmailAddress(container);
+        
         if (!checkDates(container)) {
             isOk = false;
         }
@@ -218,7 +228,7 @@ function checkRequiredChecks(container) {
 
 function checkRadio(radioName, container) {
     log('checkRadio', radioName, container);
-    if ($("input:radio[name=" + radioName + "]:checked", container).length == 0) {
+    if ($("input:radio[name=" + radioName + "]:checked", container).length === 0) {
         var node = $("input:radio[name=" + radioName + "]", container)[0];
         node = $(node);
         node = $("label[for=" + node.attr("id") + "]");
@@ -237,9 +247,10 @@ function checkDates(container) {
         var id = $(node).attr("id");
         if (id && id.contains("Date")) {
             var val = $(node).val();
-            log('val');
             if (val && val.length > 0) {
-                if (!isDate(val)) {
+                var valid = moment(val, ["DD-MM-YYYY", "DD-MM-YYYY HH:mm"], true);
+                if (!valid) {
+                    log("checkDates: not a valid date: ", val);
                     showValidation($(node), "Please enter a valid date", container);
                     isOk = false;
                 }
@@ -302,7 +313,7 @@ function checkValidEmailAddress(container) {
 }
 
 function checkSimpleChars(container) {
-    var target = $(".simpleChars", container); 
+    var target = $(".simpleChars", container);
     var isOk = true;
     var pattern = new RegExp("^[a-zA-Z0-9_\.\ -]+$");
     target.each(function(i, n) {
@@ -457,7 +468,7 @@ function showValidation(target, text, container) {
 }
 
 function showMessage(text, container) {
-    var messages = $(".pageMessage, .alert", container)
+    var messages = $(".pageMessage, .alert", container);
     if (messages.length === 0) {
         messages = $("<div class='pageMessage alert alert-error alert-danger'><a class='close' data-dismiss='alert' href='#'>&times;</a></div>");
         container.prepend(messages);

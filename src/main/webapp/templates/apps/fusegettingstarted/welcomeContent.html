@@ -1,40 +1,42 @@
-<div class='gettingStarted'>
-    <div class="welcome-content" style="position: relative">
-        <a href="#" class="hide-welcome" style="position: absolute; right: -10px; top: -10px"><img src="/static/common/close.png" /></a>
-        <h1>Welcome to Fuse!</h1>
-        <br/>
-        <center>
-            <iframe width="480" height="360" src="//www.youtube.com/embed/EoNWRLzOVKg" frameborder="0" allowfullscreen></iframe>
-        </center>
-        <br/>
-        <h3>Getting help</h3>
-        <p>To see documentation for any screen click the <img style='width: 20px' src='/theme/images/i.png'/></p>
-        <p>Or to talk to a real person click the <img style='width: 50px' src='/static/images/chat.png'> button</p>
-        <p>We've already made your first website and module. To get started now you can:</p>
-        <a target='_blank' href='$viewFirstModuleHref' class='Btn'>View your first learning module</a>
-        <a href='$editFirstModuleHref' class='Btn'>Edit your first learning module</a>
-
+<div id='getting-started'>
+    <div class="panel panel-default video-intro">
+	    <div class="panel-heading">
+		    <i class="fa-youtube-play"></i>
+		    Welcome to Fuse!
+	    </div>
+	    <div class="panel-body">
+		    <iframe width="480" height="360" src="//www.youtube.com/embed/EoNWRLzOVKg" frameborder="0" allowfullscreen></iframe>
+	    </div>
     </div>
-    <div class="show-content" style="position: relative">
-        <a href="#" class="show-welcome">Show getting started</a>
-    </div>
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<i class="clip-home"></i>
+			Getting help
+		</div>
+		<div class="panel-body">
+			<p>To see documentation for any screen click the <i class="clip-notification-2"></i> or to talk to a real person click the <i class="clip-bubble-3"></i> button.</p>
+			<p>We've already made your first website and module. To get started now you can:</p>
+			<a target='_blank' href='$viewFirstModuleHref' class='btn btn-primary'>View your first learning module</a>
+			<a href='$editFirstModuleHref' class='btn btn-primary'>Edit your first learning module</a>
+		</div>
+	</div>
     <script type="text/javascript">
-        $(function() {
-            $(".hide-welcome").click(function(e) {
-                e.preventDefault();
-                $(".gettingStarted").addClass("suppressed");
-                $.cookie("gettingStartedSuppressed", true);
-            });
-            $(".show-welcome").click(function(e) {
-                e.preventDefault();
-                $(".gettingStarted").removeClass("suppressed");
-                $.cookie("gettingStartedSuppressed", false);
-            });
-            var s = $.cookie("gettingStartedSuppressed");
-            log("welcome suppressed", s);
-            if ("true" === s) {
-                $(".gettingStarted").addClass("suppressed");
-            }
-        });
+//        Bob.onDOMReady(function () {
+//            $(".hide-welcome").click(function(e) {
+//                e.preventDefault();
+//                $(".gettingStarted").addClass("suppressed");
+//                $.cookie("gettingStartedSuppressed", true);
+//            });
+//            $(".show-welcome").click(function(e) {
+//                e.preventDefault();
+//                $(".gettingStarted").removeClass("suppressed");
+//                $.cookie("gettingStartedSuppressed", false);
+//            });
+//            var s = $.cookie("gettingStartedSuppressed");
+//            log("welcome suppressed", s);
+//            if ("true" === s) {
+//                $(".gettingStarted").addClass("suppressed");
+//            }
+//        });
     </script>
 </div>

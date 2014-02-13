@@ -6,174 +6,200 @@
         <script type="text/javascript" src="manageApps.js">//</script>
         <script type="text/javascript" src="/static/js/managePublishing.js">//</script>
         <link href="manageApps.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="/theme/assets/plugins/bootstrap-switch/static/stylesheets/bootstrap-switch.css"/>
+        <script src="/theme/assets/plugins/bootstrap-switch/static/js/bootstrap-switch.min.js">//</script>
     </head>
     <body class="manageWebsite">
 
-        <section class="MainContent">
-            <section class="Control ClearFix">
-                <div class="DropdownControl publishing">
-                    <div class="DropdownWrapper">
-                        #set($currentBranch = $page.closest("branch"))
-                        <span>
-                            <b>Editing version:</b> 
-                            $currentBranch.name
-                            #if( $currentBranch.live )
-                            <strong class="islive">LIVE</strong>
-                            #else
-                            <a href="${currentBranch.href}publish" class="publish">PUBLISH</a>
-                            #end
+        #set($currentBranch = $page.closest("branch"))
+        <div class="btn-group publishing pull-right">
+            #if( $currentBranch.live )
+            <a href="../manageBranches" class="islive btn btn-danger">
+                <i class="fa fa-gear"></i>
+                LIVE
+            </a>
+            #else
+            <a href="${currentBranch.href}publish" class="publish btn btn-success">
+                <i class="glyphicon glyphicon-ok-sign"></i>
+                PUBLISH
+            </a>
+            <a href="../manageBranches" class="btn btn-primary">
+                <i class="fa fa-gear"></i>
+                Manage versions
+            </a>
+            #end
 
-                        </span> 
-                        <a href="#" class="Control"><span class="Hidden">Change version</span></a>
-                    </div>
-                    <div class="DropdownContent Hidden">
-                        <div class="Content">
-                            <a href="../manageBranches">Manage versions</a>
-                            <ul class="Program branches">
-                                #foreach($b in $page.closest("branch").parent.children.ofType.branch)
-                                <li>
-                                    <a href="#" class="copy" title="Copy this to a new version"><span>Copy</span></a>                                    
-                                    #if( $b.live )
-                                    <strong class="islive">LIVE</strong>
-                                    #else
-                                    <a href="${b.href}" class="hide" title="Hide this version. Can be restored from the manage versions screen"><span>Hide</span></a>
-                                    #end
+            <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+                <b>Editing version:</b>
+                $currentBranch.name
+                <span class="caret"></span>
+            </a>
+            <ul role="menu" class="dropdown-menu list branches">
+                #foreach($b in $page.closest("branch").parent.children.ofType.branch)
+                <li role="presentation" class="list-item">
+                    <aside class="list-item-controller">
+                        <a href="#" class="copy btn btn-xs btn-primary pull-right" title="Copy this to a new version"><i class="fa fa-copy"></i></a>
+                        #if( $b.live )
 
-                                    <a href="${b.href}" class="branch">
-                                        $b.name
-                                    </a> 
-                                </li>
-                                #end
-                            </ul>
+                        #else
+                        <a href="${b.href}" class="hide-branch pull-right btn-xs btn btn-warning" title="Hide this version. Can be restored from the manage versions screen"><i class="clip-eye"></i></a>
+                        #end
+                    </aside>                    
+                    <a href="${b.href}" class="branch noclear">
+                        $b.name
+                    </a>
+                </li>
+                #end
+            </ul>
+        </div>        
+
+        <div class="btn-group">
+            <a target='_blank' href='${page.externalUrl}' class='btn btn-success'>
+                <i class="fa fa-arrow-circle-right"></i>
+                View website
+            </a>
+            <div class="btn-group">
+                <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+                    <b>Change website:</b> $page.closest("website").name
+                    <span class="caret"></span>
+                </a>            
+                <ul role="menu" class="dropdown-menu list">
+                    #foreach($w in $page.closest("website").parent.children)
+                    <li class="list-item"><a href="${w.href}">$w.name</a></li>
+                    #end                               
+                </ul>            
+            </div>
+        </div>          
+
+        <hr class="clearfix"/>
+
+        <div class="tabbable">
+            <ul class="nav nav-tabs tab-bricky" id="myTab">
+                <li class="active">
+                    <a data-toggle="tab" href="#panel_details">
+                        <i class="green fa fa-home"></i> Details
+                    </a>
+                </li>
+                <li class="">
+                    <a data-toggle="tab" href="#panel_theme">
+                        <i class="green fa fa-home"></i> Theme
+                    </a>
+                </li>
+                <li class="">
+                    <a data-toggle="tab" href="#panel_groups">
+                        <i class="green fa fa-home"></i> Group access
+                    </a>
+                </li>
+                <li class="">
+                    <a data-toggle="tab" href="#panel_mailserver">
+                        <i class="green fa fa-home"></i> Mail server
+                    </a>
+                </li>
+                <li class="">
+                    <a data-toggle="tab" href="#panel_apps">
+                        <i class="green fa fa-home"></i> Apps
+                    </a>
+                </li>
+
+            </ul>
+            <div class="tab-content">
+                <div id="panel_details" class="tab-pane active">
+                    <form name="frmDetails" action="." method="post" class="form-horizontal details" role="form">
+                        <div class="pageMessage">.</div>
+                        <i>Note: Changes in this section apply immediately to all versions of the website, including the live version</i>
+                                                
+                        <div class="form-group">
+                            <label for="websiteName" class="col-sm-2 control-label">Website name</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="name" id="websiteName" value="$!page.website.name" class="required simpleChars form-control" required="true" />
+                            </div>
                         </div>
-                    </div>
-                </div>
 
-
-                <div class="DropdownControl">
-                    <div class="DropdownWrapper">
-                        <span><b>Website:</b> $page.closest("website").name</span> 
-                        <a href="#" class="Control"><span class="Hidden">Change website</span></a>
-                    </div>
-                    <div class="DropdownContent Program Hidden">
-                        <div class="Content ClearFix">
-                            <section rel="program">
-                                <ul class="Program">
-                                    #foreach($w in $page.closest("website").parent.children)
-                                    <li><a href="${w.href}">$w.name</a></li>
-                                    #end
-                                </ul>
-                            </section>
+                        <div class="form-group">
+                            <label for="domainName" class="col-sm-2 control-label">Domain name</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="domainName" id="domainName" value="$!page.website.domainName" class="simpleChars form-control" />
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <a target='_blank' href='${page.externalUrl}' class='Btn' style='float: left; margin-left: 0px'>View website</a>
-            </section>    
 
-            <div class="TabContainer">
-                <nav class="ClearFix TabNav">
-                    <a href="#details">Details</a>
-                    <a href="#themes">Themes</a>
-                    <a href="#groups">Group Access</a>
-                    <a href="#mail">Mail server</a>
-                    <a href="#apps">Apps</a>
-                </nav>
-                <div class="TabContent" rel="#details">
-                    <div class="Content">
-                        <form name="frmDetails" action="." method="post" class="Details">
-                            <div class="pageMessage">.</div>
-                            <i>Note: Changes in this section apply immediately to all versions of the website, including the live version</i>
-                            <table>
-                                <tbody>
-                                    <tr>
-                                        <th>Website name</th>
-                                        <td>
-                                            <input type="text" name="name" value="$!page.website.name" class="required simpleChars" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>Domain name</th>
-                                        <td><input type="text" name="domainName" value="$!page.website.domainName" class="simpleChars" /></td>
-                                    </tr>
-                                    <tr>
-                                        <th>Alias for</th>
-                                        <td>
-                                            <select>
-                                                <option value="">[None]</option>
-                                                #foreach($w in $page.otherWebsites)
-                                                $formatter.option($w.name, $w.name, $page.website.aliasTo)
-                                                #end
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>Redirect to</th>
-                                        <td><input type="text" name="redirectTo" value="$!page.website.redirectTo" class="href"/></td>
-                                    </tr>                                    
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <td colspan="2">
-                                            <button class="Btn">Save Changes</button>
-                                        </td>
-                                    </tr>
-                                </tfoot>                                
-                            </table>
-                        </form>
-                    </div>
-                </div>	
-                <div class="TabContent" rel="#themes">
-                    <div class="Content">
-                        <form name="frmDetails" action="." method="post" class="Details">
-                            <p class="pageMessage"></p>
-                            <table>
-                                <tbody>
-                                    <tr>
-                                        <th class="Short">Theme</th>
-                                        <td colspan="3">
-                                            <a style='float: right' class='Btn' href="themeSelect">Browse the theme library</a>                        
-                                            <a href="themeSelect">
+                        <div class="form-group">
+                            <label for="aliasTo" class="col-sm-2 control-label">Alias for</label>
+                            <div class="col-sm-10">
+                                <select name="aliasTo" id="aliasTo" class="form-control">
+                                    <option value="">[None]</option>
+                                    #foreach($w in $page.otherWebsites)
+                                    $formatter.option($w.name, $w.name, $page.website.aliasTo)
+                                    #end
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="domainName" class="col-sm-2 control-label">Redirect to</label>
+                            <div class="col-sm-10">
+                                <input type="url" name="redirectTo" value="$!page.website.redirectTo" class="href form-control"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-success">Save details</button>
+                            </div>
+                        </div>                        
+
+                    </form>                    
+                </div> <!-- End Details -->
+
+                <div id="panel_theme" class="tab-pane">
+                    <form name="frmDetails" action="." method="post" class="Details">
+                        <p class="pageMessage"></p>
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <th class="Short">Theme</th>
+                                    <td colspan="3">
+                                        <a style='float: right' class='Btn' href="themeSelect">Browse the theme library</a>                        
+                                        <a href="themeSelect">
                                             #set($theme = $page.currentTheme)
                                             #if( $theme )
-                                                #if( $theme.previewImage )
+                                            #if( $theme.previewImage )
                                             <img style="width: 150px" src="/templates/themes/$theme.name/$theme.previewImage" />
-                                                #else
-                                                $theme.title
-                                                #end
+                                            #else
+                                            $theme.title
+                                            #end
                                             #else
                                             No selected theme
                                             #end
-                                            </a>                                                                                        
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th class="Short">Logo</th>
-                                        <td colspan="3">
-                                            <input type="text" class="required toolbar-Logo" name="logo" id="logo" value="$!page.themeAttributes.logo" />
-                                        </td>
-                                    </tr>                                    
-                                    <tr>
-                                        <th class="Short">Menu</th>
-                                        <td colspan="3">
-                                            <textarea name="menu">$!page.themeAttributes.menu</textarea>
-                                            <br/>
-                                            Menu is in the form of address,title. Eg /faq.html,FAQ
-                                        </td>
-                                    </tr>                                    
+                                        </a>                                                                                        
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="Short">Logo</th>
+                                    <td colspan="3">
+                                        <input type="text" class="required toolbar-Logo" name="logo" id="logo" value="$!page.themeAttributes.logo" />
+                                    </td>
+                                </tr>                                    
+                                <tr>
+                                    <th class="Short">Menu</th>
+                                    <td colspan="3">
+                                        <textarea name="menu">$!page.themeAttributes.menu</textarea>
+                                        <br/>
+                                        Menu is in the form of address,title. Eg /faq.html,FAQ
+                                    </td>
+                                </tr>                                    
 
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <td colspan="4">
-                                            <button class="Btn">Save Changes</button>
-                                        </td>
-                                    </tr>
-                                </tfoot>                                                                
-                            </table>
-                        </form>                                                     
-                    </div>
-                </div>
-                <div class="TabContent" rel="#groups">
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="4">
+                                        <button class="Btn">Save Changes</button>
+                                    </td>
+                                </tr>
+                            </tfoot>                                                                
+                        </table>
+                    </form>                    
+                </div> <!-- End theme -->
+                <div id="panel_groups" class="tab-pane">
                     <div class="Content Recipient">
                         <header class="ClearFix">
                             <button class="SmallBtn Add AddGroup"><span>Add/remove groups</span></button>
@@ -183,98 +209,102 @@
                             <li>$g.name</li>
                             #end
                         </ul>
-                    </div>
-                </div>
-                <div class="TabContent" rel="#mail">
-                    <div class="Content">
-                        <form name="frmDetails" action="." method="post" class="Details">
-                            <p class="pageMessage"></p>
-                            <table>
-                                <tbody>
-                                    <tr>
-                                        <th>Mail server host</th>
-                                        <td><input type="text" name="mailServer" value="$!page.mailServer" class="required" /></td>
-                                    </tr>
-                                    <tr>
-                                        <th>User name</th>
-                                        <td><input type="text" name="mailUser" value="$!page.mailUser"/></td>
-                                    </tr>
-                                    <tr>
-                                        <th>Password</th>
-                                        <td><input type="text" name="mailPassword" value="$!page.mailPassword"/></td>
-                                    </tr>                                    
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <td colspan="2">
-                                            <button class="Btn">Save Changes</button>
-                                        </td>
-                                    </tr>
-                                </tfoot>                                
+                    </div>                    
+                </div> <!-- End groups -->
 
-                            </table>
-                        </form>
-                    </div>
-                </div>	
-                <div class="TabContent" rel="#apps">
-                    <div class="Content appsContainer">
 
-                        <article class="Note">
-                            <p>Applications control large chunks of functionality, like forums or emails. You can add them to websites</p>
-                            <p>
-                                Applications are made available for websites by activating them on your organisation's Manage Applications page. Available apps are then shown on the website apps list where they can be turned on or off as required.
-                            </p>
-                        </article>
+                <div id="panel_mailserver" class="tab-pane">
+                    <form name="frmDetails" action="." method="post" class="Details">
+                        <p class="pageMessage"></p>
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <th>Mail server host</th>
+                                    <td><input type="text" name="mailServer" value="$!page.mailServer" class="required" /></td>
+                                </tr>
+                                <tr>
+                                    <th>User name</th>
+                                    <td><input type="text" name="mailUser" value="$!page.mailUser"/></td>
+                                </tr>
+                                <tr>
+                                    <th>Password</th>
+                                    <td><input type="text" name="mailPassword" value="$!page.mailPassword"/></td>
+                                </tr>                                    
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="2">
+                                        <button class="Btn">Save Changes</button>
+                                    </td>
+                                </tr>
+                            </tfoot>                                
 
-                        #set($apps = $page.apps)
-                        #if( $apps.isEmpty() )
-                        <article class="Note">
-                            <p>No applications are available. This means that the parent organisation has disabled them</p>
-                        </article>        
-                        #end
+                        </table>
+                    </form>
+                </div> <!-- End mail server -->
 
-                        <table class="apps">            
-                            #foreach($app in $apps )
-                            <tr>
-                                <td class="CheckBoxWrapper">
+
+                <div id="panel_apps" class="tab-pane appsContainer">
+                    <article class="Note">
+                        <p>Applications control large chunks of functionality, like forums or emails. You can add them to websites</p>
+                        <p>
+                            Applications are made available for websites by activating them on your organisation's Manage Applications page. Available apps are then shown on the website apps list where they can be turned on or off as required.
+                        </p>
+                    </article>
+
+                    #set($apps = $page.apps)
+                    #if( $apps.isEmpty() )
+                    <article class="Note">
+                        <p>No applications are available. This means that the parent organisation has disabled them</p>
+                    </article>        
+                    #end
+
+
+
+                    <table class="apps">
+                        #foreach($app in $apps )
+                        <tr>
+                            <td class="">
+                                <div class="make-switch" data-on="primary" data-off="info">
                                     $formatter.checkbox("chk_${app.appId}", $app.appId, $app.enabled, $app.appId)
-                                    <label for="chk_${app.appId}"></label>
-                                </td>
-                                <td>
-                                    <h5>$page.getTitle($app.appId)</h5>
-                                    <p>$page.getSummary($app.appId)</p>
-                                </td>
-                                <td>
-                                    #if( $page.hasSettings($app) )
-                                    <button class="settings" rel="$app.appId">Manage</button>
-                                    #end
-                                </td>
-                            </tr>
-                            #end
-                        </table>            
-
-                        #foreach($app in $page.apps )
-                        #if( $page.hasSettings($app) )
-                        <div class="Modal settings" id="settings_${app.appId}">
-                            <header>
-                                <h3>Edit Application: $app.appId</h3>
-                                <a class="Close" href="#" title="Close"><span class="Hidden">Close</span></a>
-                            </header>                           
-                            <div class="ModalContent">
-                                <form method="POST" action=".">
-                                    <input type="hidden" name="settingsAppId" value="$app.appId"/>
-                                    #appSettings($app.appId)
-                                    <button type="submit" class="Btn" style="float: right">Save</button>
-                                </form>
-                            </div>
-                        </div>
+                                </div>                                                               
+                                <label for="chk_${app.appId}"></label>
+                            </td>
+                            <td>
+                                <h5>$page.getTitle($app.appId)</h5>
+                                <p>$page.getSummary($app.appId)</p>
+                            </td>
+                            <td>
+                                #if( $page.hasSettings($app) )
+                                <button class="settings" rel="$app.appId">Manage</button>
+                                #end
+                            </td>
+                        </tr>
                         #end
-                        #end                        
+                    </table>            
+
+                    #foreach($app in $page.apps )
+                    #if( $page.hasSettings($app) )
+                    <div class="Modal settings" id="settings_${app.appId}">
+                        <header>
+                            <h3>Edit Application: $app.appId</h3>
+                            <a class="Close" href="#" title="Close"><span class="Hidden">Close</span></a>
+                        </header>                           
+                        <div class="ModalContent">
+                            <form method="POST" action=".">
+                                <input type="hidden" name="settingsAppId" value="$app.appId"/>
+                                #appSettings($app.appId)
+                                <button type="submit" class="Btn" style="float: right">Save</button>
+                            </form>
+                        </div>
                     </div>
-                </div>
+                    #end
+                    #end   
+                </div> <!-- End apps -->
             </div>
-        </section>
-        <div id="modalGroup" class="Modal">
+        </div>        
+
+        <div id="modalGroup" class="modal">
             <header>
                 <h3>Choose groups</h3>
                 <a class="Close" href="#" title="Close"><span class="Hidden">Close</span></a>
@@ -299,13 +329,14 @@
             </div>
         </div>
         <script type="text/javascript">
-            jQuery(function() {
+            Bob.onDOMReady(function () {
+                flog("page init initManageWebsite");
                 initManageWebsite();
                 initPublishingMenu("");
                 initHtmlEditors($(".htmleditor"), "60px", "200px", 'embed_video,modal', 'resize,elementspath');
-                $("form.Details").forms({
+                $("form.details").forms({
                     callback: function() {
-                        alert("Saved ok");
+                        
                     }
                 });
             });

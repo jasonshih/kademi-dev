@@ -1,4 +1,4 @@
-$(function() {
+Bob.onDOMReady(function () {
     initApps();
 });
 function initApps() {

@@ -13,9 +13,20 @@
         <h3>$page.title</h3>
         <div class="row">
             <div class="col-md-4 col-md-push-8">
+
                 #if( $page.allowRegistration )
+                <div class="well well-rsvp rsvp-nouser">
+                    <button class='btn btn-info requiresUser' onclick="showRsvpPanel()">Register now</button>
+                </div>                
+
                 <div class="well well-rsvp rsvp-yes">
-                    <h3>You're attending</h3>
+                    <h3>You're attending
+                        #if( $page.allowGuests )
+                        <span class="num-guests">                        
+                            with <b class="num-guests-count">$page.guests.size()</b> guest(s)
+                        </span>
+                        #end
+                    </h3>
                     <p>You've accepted the invitation</p>
                     <button class='btn btn-info rsvp-change'>Change</button>
                 </div>
@@ -32,7 +43,7 @@
                         <div class="radio">                        
                             <label for="rsvp-yes" >
                                 <input type="radio" name="rsvp" value="ACCEPTED" id="rsvp-yes" />
-                                Yes, I'm coming
+                                Yes, I'm coming                                
                             </label>
                         </div>
                         #if( $page.allowGuests )
@@ -43,10 +54,10 @@
                                 #foreach($guest in $page.guests)
                                 <li>
                                     <a class='pull-right guests-delete' href='#'><span class="glyphicon glyphicon-remove-circle"></span></a>
-                                    <a href="#" class="guest-edit">$guest.firstName $guest.lastName</a> of $guest.orgName
+                                    <a href="#" class="guest-edit">$guest.firstName $guest.surname</a> of $guest.orgName
                                     <input type="hidden" name="guestFirstName" value="$guest.firstName"/>
-                                    <input type="hidden" name="guestSurname" value="$guest.firstName"/>
-                                    <input type="hidden" name="guestEmail" value="$guest.firstName"/>                                                                            
+                                    <input type="hidden" name="guestSurname" value="$guest.surname"/>
+                                    <input type="hidden" name="guestEmail" value="$guest.email"/>                                                                            
                                 </li>
                                 #end
                             </ul>
@@ -71,7 +82,7 @@
                 </div>
                 #end
 
-                <table>                    
+                <table class="table">                    
                     <tbody>                        
                         #if( $page.organisor )
                         <tr>
@@ -182,10 +193,10 @@
 
         <script type="text/javascript">
             var rsvpStatus = "$page.rsvpStatus";
-            jQuery(function() {
-                initViewEvent();                
+            Bob.onDOMReady(function () {
+                initViewEvent();
             });
-            
+
         </script>
     </body>
 </html>

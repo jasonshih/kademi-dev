@@ -2,76 +2,50 @@
     <head>
         <title>Manage Contact Requests</title>
     </head>
-    <body>
-        <section id="manageEmail" class="MainContent">
-            <article class="Note">Below is a list of recently received contacts from your websites. Click on an item to see more information</article>
-            <div class="Content">
-                <table style='width: 100%' class='Summary'>
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Name</th>
-                            <th>Phone</th>
-                            <th>Email</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    #if( $page.recent.isEmpty() )
-                    <tr>
-                        <td colspan="3">No contact requests</td>
-                    </tr>
-                    #else
-                    #foreach($cr in $page.recent)
-                    <tr class="emailStatus$!{email.status}">
-                        <td class="Date"><acronym title="$cr.createdDate">$formatter.formatDate($cr.createdDate)</acronym></td>
-                        <td class="Name">$formatter.htmlEncode($cr.firstName) $formatter.htmlEncode($cr.surName)</td>
-                        <td class="">$formatter.htmlEncode($cr.phone)</td>
-                        <td class="">$!cr.email</td>
-                        <td>
-                            <aside>
-                                <!--
-                                <a class="Delete DeleteEmail" title="Delete" href="$cr.id">
-                                    <span class="Hidden">Delete</span>
-                                </a>
-                                -->
-                                <a class="View ViewEmail" title="View" href="$cr.id">
-                                    <span class="Hidden">View</span>
-                                </a>
-                            </aside>
-                        </td>
-                    </tr>                    
-                    #end 
-                    #end
-                    </tbody>
-                </table>
-            </div>
-        </section>
-        <div id="modalCreateJob" class="Modal">
-            <header>
-                <h3>Create email</h3>
-                <a class="Close" href="#" title="Close"><span class="Hidden">Close</span></a>
-            </header>
-            <div class="ModalContent">
-                <form method="POST" action=".">
-                    <div class="pageMessage">.</div>
-                    <table>
-                        <tr>
-                            <th><label for="name">Enter email name</label></th>
-                            <td><input type="text" name="name" id="name" value="" placeholder="A name for the email job" class="required simpleChars" /></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" class="BtnBar">
-                                <button class="Btn" type="submit">Save changes</button>
-                            </td>
-                        </tr>
-                    </table>
-                </form>
-            </div>
+    <body class="manageEmail">
+        <p class="alert alert-info">
+	        <a class="close" data-dismiss="alert">&times;</a>
+	        Below is a list of recently received contacts from your websites. Click on an item to see more information
+        </p>
+
+        <div class="panel panel-default">
+	        <div class="panel-heading">
+		        <i class="fa fa-envelope-o"></i>
+		        Request
+	        </div>
+	        <div class="panel-body">
+		        <table class="table table-bordered table-striped table-hover table-data">
+			        <colgroup>
+				        <col />
+				        <col />
+				        <col />
+				        <col />
+				        <col style="width: 80px" />
+			        </colgroup>
+			        <thead>
+				        <tr>
+					        <th>Date</th>
+					        <th>Name</th>
+					        <th>Phone</th>
+					        <th>Email</th>
+					        <th class="action">Action</th>
+				        </tr>
+			        </thead>
+			        <tbody>
+				        #foreach($cr in $page.recent)
+				        <tr>
+					        <td><abbr title="$cr.createdDate">$formatter.formatDate($cr.createdDate)</abbr></td>
+					        <td>$formatter.htmlEncode($cr.firstName) $formatter.htmlEncode($cr.surName)</td>
+					        <td>$formatter.htmlEncode($cr.phone)</td>
+					        <td>$!cr.email</td>
+					        <td class="action">
+						        <a class="btn btn-sm btn-success" href="$cr.id">View </a>
+					        </td>
+				        </tr>
+				        #end
+			        </tbody>
+				</table>
+	        </div>
         </div>
-        <script type="text/javascript">
-            jQuery(function() {
-                initManageEmail();
-            });
-        </script>
     </body>
 </html>

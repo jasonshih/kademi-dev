@@ -1,43 +1,65 @@
-<br/>
-<br/>
-<form action="manageRego" method="POST" enctype="multipart/form-data" class="softwareRego Note" style="width: 500px; position: relative">
-    <h4>Software Registration Options</h4>
-    <div class="pageMessage">.</div>
-    <ul class="verticalFields">
-        <li class="odd">
-            <label for="description">Registration Description</label>
-            <input type="text" id="description" name="description" value="$!softwareProduct.description" placeholder="A short description to appear on the product page" />
-            <br/>
-            <span>This description is shown in the register panel on the product page</span>
-        </li>
-        
-        <li class="odd">
-            <label for="orgTitle">Validity (Days)</label>
-            <input type="text" class="numeric" id="validityDays" name="validityDays" value="$!softwareProduct.validityDays" placeholder="Number of days a registration is valid, or leave blank for no time limit" />
-            <br/>
-            <span>This will add an Expiry property to the registration file</span>
-        </li>
-        <li class="even">
-            <label for="orgPostcode">Required Properties</label>
-            <input type="text" class="" id="requiredProperties" name="requiredProperties" value="$!softwareProduct.requiredProperties" placeholder="Comma seperated list of names of properties" />
-            <br/>
-            <span>Comma seperated list of properties required for registration</span>
-        </li>
-        <li class="odd">
-            <label for="fixedProperties">Fixed properties</label>
-            <br/>
-            <textarea style="width: 95%; height: 100px" name="fixedProperties" id="fixedProperties" placeholder="ProductCode=XYZ">$!softwareProduct.fixedProperties</textarea>
-            <br/>
-            <span>Use property file format, where each line is like Name=Value</span>
-        </li>
-        
-    </ul>
-
-    <button type="submit" class="Btn" style="position: absolute; left: 450px; top: 177px">Save</button>
-</form>  
-
+<hr />
+<div class="col-md-7">
+    <form action="manageRego" method="POST" enctype="multipart/form-data" class="softwareRego well">
+        <div class="form-group">
+            <h4 class="col-sm-12">Software Registration Options</h4>
+            <div class="col-sm-12 errorHandler alert alert-danger no-display pageMessage">.</div>
+        </div>
+        <div class="form-group clearfix">
+            <label class="col-sm-3 control-label" for="description">Registration Description</label>
+            <div class="col-sm-8">
+                <input type="text" id="description" class="form-control" name="description" value="$!softwareProduct.description" placeholder="A short description to appear on the product page" />
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-sm-12">
+                <span>
+                    <i>This description is shown in the register panel on the product page</i>
+                </span>
+            </div>
+        </div>
+        <div class="form-group clearfix">
+            <label class="col-sm-3 control-label" for="orgTitle">Validity (Days)</label>
+            <div class="col-sm-8">
+                <input type="text" class="numeric form-control" id="validityDays" name="validityDays" value="$!softwareProduct.validityDays" placeholder="Number of days a registration is valid, or leave blank for no time limit" />
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-sm-12">
+                <span>
+                    <i>This will add an Expiry property to the registration file</i>
+                </span>
+            </div>
+        </div>
+        <div class="form-group clearfix">
+            <label class="col-sm-3 control-label" for="orgPostcode">Required Properties</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" id="requiredProperties" name="requiredProperties" value="$!softwareProduct.requiredProperties" placeholder="Comma seperated list of names of properties" />
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-sm-12">
+                <span>
+                    <i>Comma seperated list of properties required for registration</i>
+                </span>
+            </div>
+        </div>
+        <div class="form-group clearfix">
+            <label class="col-sm-12 control-label" for="fixedProperties">Fixed properties</label>
+            <div class="col-sm-12">
+                <textarea class="form-control" style="height: 100px" name="fixedProperties" id="fixedProperties" placeholder="ProductCode=XYZ">$!softwareProduct.fixedProperties</textarea>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-sm-12">
+                <span>
+                    <i>Use property file format, where each line is like Name=Value</i>
+                </span>
+            </div>
+        </div>
+        <div class="form-group clearfix col-sm-12">
+            <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+    </form>
+</div>
 <script type="text/javascript">
-    jQuery(function() {
+    Bob.onDOMReady(function () {
         jQuery("form.softwareRego").forms({
             callback: function() {
                 alert("Saved ok");

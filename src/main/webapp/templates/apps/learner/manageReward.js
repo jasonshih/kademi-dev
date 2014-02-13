@@ -1,9 +1,5 @@
 function initEditReward(quiz) {
     try {
-        //    edify($("#manageReward"), function(resp) {
-        //        log("done", resp);
-        //        alert("Saved ok");
-        //    });
         initHtmlEditors($(".htmleditor"));
         $("form.manageRewardForm").forms({
             callback: function(resp) {
@@ -45,15 +41,6 @@ function initEditReward(quiz) {
 }
 
 function initRestrictions() {
-    $(".addRestriction").click(function(e) {
-        e.preventDefault();
-        var modal = $("#modalAddRestriction");
-        $.tinybox.show(modal, {
-            overlayClose: false,
-            opacity: 0
-        });
-    });
-
     var form = $(".addRestrictionForm");
     form.submit(function(e) {
         e.preventDefault();
@@ -67,36 +54,33 @@ function initRestrictions() {
         var id = Math.floor(Math.random() * 1000000);
         li.append("<input type='hidden' name='restrictionType" + id + "' value='" + type + "'/>");
         li.append("<input type='hidden' name='restrictionItem" + id + "' value='" + item + "'/>");
-        li.append("<a class='remove' href='#'>Remove</a>");
+        li.append("<button data-dismiss=\"alert\" class=\"close remove\">&times;</button>");
         ul.append(li);
-        alert('added');
+        ul.removeClass('hidden');
+        log("Successfully added restriction!");
+        
+        $("#modalAddRestriction").modal('hide');
     });
 
-    $(".restrictionList").on("click", "a.remove", function(e) {
+    $(".restrictionList").on("click", ".remove", function(e) {
         e.preventDefault();
         e.stopPropagation();
         $(e.target).closest("li").remove();
+        var ul = $(".restrictionList");
+        if (ul.find("li .remove").html() === undefined) {
+            ul.addClass("hidden");
+        }
     });
 }
 
 function initGroupEditing() {
-    $(".AddGroup").click(function(e) {
-        e.preventDefault();
-        var modal = $("#modalGroup");
-        $.tinybox.show(modal, {
-            overlayClose: false,
-            opacity: 0
-        });
-    });
     $("#modalGroup input[type=checkbox]").click(function() {
         var $chk = $(this);
         log("checkbox click", $chk, $chk.is(":checked"));
         var isRecip = $chk.is(":checked");
         setGroupRecipient($chk.attr("name"), isRecip);
     });
-
 }
-
 
 function setGroupRecipient(name, isRecip) {
     log("setGroupRecipient", name, isRecip);
@@ -142,7 +126,7 @@ function initManageReward() {
     log("initManageReward");
     stripList();
     initController();
-    initDialog();
+//    initDialog();
     initSortableButton();
     initList();
     checkCookie();
@@ -197,27 +181,6 @@ function initController() {
         });
         //$(this).parent().parent().remove();
         //stripList();
-    });
-}
-
-function initDialog() {
-    var _tempDialog = $("#rewardForum").html();
-    $("#manageReward .Content ul li div").append(_tempDialog);
-
-    // Bind event for ActiveReward button
-    $("body").on("click", "div.Dialog a", function(e) {
-        e.preventDefault();
-
-        var _this = $(this);
-        var _status = _this.html();
-
-        _this
-                .parent()
-                .addClass("Hidden")
-                .parent()
-                .attr("class", _status)
-                .find("> a")
-                .html(_status);
     });
 }
 
@@ -311,15 +274,6 @@ function initSortableButton() {
     });
 }
 
-function showAddReward(source) {
-    var modal = $(source).parent().find(".Modal");
-    $.tinybox.show(modal, {
-        overlayClose: false,
-        opacity: 0
-    });
-    return false;
-}
-
 function initEntryFormEditing() {
     var chks = $(".entryFormItem input[type=checkbox]");
 
@@ -338,4 +292,3 @@ function initEntryFormEditing() {
         node.parent().find("div.entryFormItemDetails").show();
     })
 }
-

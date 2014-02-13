@@ -6,66 +6,93 @@
     </head>
     <body>
         <section id="manageReward" class="MainContent">
-            <header class="ClearFix">
-                <button class="SmallBtn Add"><span>Add new competition or reward</span></button>
-                <a href="points/" class="pull-right Btn">Review points</a>
-                <div class="Modal">
-                    <header>
-                        <h3>Add new reward</h3>
-                        <a class="Close" href="#" title="Close"><span class="Hidden">Close</span></a>
-                    </header>
-
-                    <div class="ModalContent">
-                        <form action="." method="POST" class="addReward">
-                            <div class="pageMessage">.</div>
-                            <table>
-                                <tr>
-                                    <th><label for="newTitle">Enter reward name</label></th>
-                                    <td><input type="text" name="newTitle" id="newTitle" placeholder="Reward title" class="required" /></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2" class="BtnBar">
-                                        <button class="Btn">Save changes</button>
-                                    </td>
-                                </tr>
-                            </table>
-                        </form>
-                    </div>                    
-                </div>
-            </header>
-            <div class="Content">
-                <header>
-                    <a href="" class="Status" rel="asc">Status</a>
-                    <a href="" class="Title" rel="asc">Title</a>
-                </header>
-                <ul>
+            <p class="clearfix">
+                <button class="btn btn-primary" data-toggle="modal" data-target="#addRewardModal"><i class="fa fa-plus"></i> Add new competition or reward</button>
+                <a href="points/" class="pull-right btn btn-orange">Review points</a>
+            </p>
+            <div id="addRewardModal" class="modal fade">
+                <form action="." method="POST" class="addReward">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Add new reward</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <div class="errorHandler alert alert-danger no-display pageMessage">.</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="newTitle">Enter reward name</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" name="newTitle" id="newTitle" placeholder="Reward title" class="form-control required" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary btn-sm">Save changes</button>
+                    </div>
+                </form>
+            </div>
+            <table class="Content table table-striped table-bordered table-hover table-data">
+                <colgroup>
+                    <col />
+                    <col />
+                    <col />
+                    <col style="width: 60px" />
+                </colgroup>      
+                <thead>
+                    <tr>
+                        <th class="status" rel="asc">Status</th>
+                        <th class="title" rel="asc">Title</th>
+                        <th>Entries number</th>
+                        <th class="action">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
                     #foreach($r in $page.children.ofType.manageReward)
-                    <li>
-                        <div class="$r.StatusClass">
-                            <a href="$r.name">$r.statusClass</a>
-                        </div> 
-                        <a href="$r.name">$r.title</a>
-                        <aside>
-                            <a href="entries-${r.name}.html" class="entries">$r.numEntries entries</a>
-                            <a href="$r.name" title="Edit" class="Edit EditReward"><span class="Hidden">Edit</span></a>
-                            <a href="$r.name" title="Delete" class="Delete DeleteReward"><span class="Hidden">Delete</span></a>
-                        </aside>
-                    </li>
+                    <tr>
+                        <td>
+                            <div class="$r.StatusClass">
+                            	#if($r.StatusClass == "Active")
+                                    #set($status = "success")
+                                #elseif($r.StatusClass == "Expired")
+                                    #set($status = "danger")
+                                #elseif($r.StatusClass == "Fullfilled")
+                                    #set($status = "warning")
+                                #else
+                                    #set($status = "default")
+                                #end
+                                <span class="label label-sm label-$status">$r.statusClass</span>
+                            </div>
+                        </td>
+                        <td><a href="$r.name">$r.title</a></td>
+                        <td class="center"><a href="entries-${r.name}.html" class="entries">$r.numEntries entries</a></td>
+                        <td class="action">
+                            <div class="btn-group btn-group-sm">
+                                <a class="btn btn-success dropdown-toggle btn-sm" data-toggle="dropdown" href="#">
+                                    <i class="fa fa-cog"></i>
+                                </a>
+                                <ul role="menu" class="dropdown-menu pull-right">
+                                    <li role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="$r.name" class="Edit EditReward">Edit</a>
+                                    </li>
+                                    <li role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="$r.name" class="Delete DeleteReward">Delete</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
                     #end
-                </ul>
-            </div>
+                </tbody>
+            </table>
         </section>
-        <div class="Hidden">
-            <div id="rewardForum">
-                <div class="Dialog Hidden">
-                    <a href="" class="ActiveReward">Active</a>
-                    <a href="" class="ExpiredReward">Expired</a>
-                    <a href="" class="FulfilledReward">Fullfilled</a>
-                </div>
-            </div>
-        </div>
         <script type="text/javascript">
-            jQuery(function() {
+            Bob.onDOMReady(function () {
                 initManageReward();
             });
         </script>

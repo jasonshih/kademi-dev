@@ -116,12 +116,17 @@ function initRsvpForm() {
 
 function showRsvpPanel() {
     log("showRsvpPanel", rsvpStatus);
+    var toShow = null;
     if (rsvpStatus === "ACCEPTED") {
-        var toShow = $(".rsvp-yes");
+        toShow = $(".rsvp-yes");
     } else if (rsvpStatus === "DECLINED") {
-        var toShow = $(".rsvp-no");
+        toShow = $(".rsvp-no");
     } else {
-        var toShow = $(".rsvp-form");
+        if (userUrl) {
+            toShow = $(".rsvp-form");
+        } else {
+            toShow = $(".rsvp-nouser");
+        }
     }
     $(".well-rsvp").not(toShow).hide();
     toShow.show(200);
@@ -139,7 +144,7 @@ function checkGuestList(guestList) {
 
 function updateModalForGuest(modal, li) {
     $("#newGuestFirstName").val(li.find("input[name=guestFirstName]").val());
-    $("#newGuestSurame").val(li.find("input[name=guestSurname]").val());
+    $("#newGuestSurname").val(li.find("input[name=guestSurname]").val());
     $("#newGuestEmail").val(li.find("input[name=guestEmail]").val());
     $("#newGuestOrg").val(li.find("input[name=guestOrgName]").val());
 }

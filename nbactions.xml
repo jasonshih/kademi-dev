@@ -11,4 +11,19 @@
                 <goal>package</goal>
             </goals>
         </action>
+        <action>
+            <actionName>debug</actionName>
+            <packagings>
+                <packaging>war</packaging>
+                <packaging>ear</packaging>
+                <packaging>ejb</packaging>
+            </packagings>
+            <goals>
+                <goal>package</goal>
+            </goals>
+            <properties>
+                <netbeans.deploy.debugmode>true</netbeans.deploy.debugmode>
+                <jpda.listen>maven</jpda.listen>
+            </properties>
+        </action>
     </actions>

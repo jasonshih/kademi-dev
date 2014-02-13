@@ -1,0 +1,380 @@
+/* ============================================================================
+   Modal
+   ============================================================================ */
+.modal-lg {
+	width: 1000px;
+	margin-left: -500px;
+}
+
+.modal-md {
+	width: 800px;
+	margin-left: -400px;
+}
+
+.modal-sm {
+	width: 600px;
+	margin-left: -300px;
+}
+
+.modal-xs {
+	width: 400px;
+	margin-left: -200px;
+}
+
+.modal-xxs {
+	width: 200px;
+	margin-left: -100px;
+}
+
+.modal-fuse.calculating {
+	width: auto !important;
+	height: auto !important;
+}
+
+.modal-splitter {
+	margin: 5px 0 15px;
+}
+
+.modal-alert {
+	display: none;
+}
+
+.modal .btn-img img {
+	visibility: hidden;
+}
+
+modal.ajax-processing .btn-img[data-type="form-submit"] img,
+.btn-img.loading img {
+	visibility: visible;
+}
+
+/* ============================================================================
+   Main content
+   ============================================================================ */
+.main-content .container {
+	position: relative;
+	padding-bottom: 15px;
+}
+
+.main-content .loading-overlay {
+	position: fixed;
+	z-index: 999999;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	background: #fff url("/static/images/loading.gif") 50% 50% no-repeat;
+	opacity: 0.5;
+	filter: "alpha(opacity=50)";
+}
+
+/* ============================================================================
+   Dashboard
+   ============================================================================ */
+.video-intro .panel-body {
+	text-align: center
+}
+
+/* ============================================================================
+   Articles list
+   ============================================================================ */
+.article-wrapper > article {
+	margin-top: 5px;
+	border-radius: 3px;
+	border: 1px solid #DEDEDE;
+	height: 42px;
+	line-height: 32px;
+	padding: 5px 5px 5px 10px;
+}
+
+.article-wrapper.article-draggable > article {
+	cursor: move;
+}
+
+.article-wrapper > article aside.article-action {
+	float: right;
+	line-height: normal;
+	visibility: hidden;
+}
+
+.article-wrapper.showed-action > article aside.article-action {
+	visibility: visible;
+}
+
+.article-wrapper > article aside.article-more-infor {
+	line-height: 32px;
+	float: right;
+}
+
+.article-wrapper > article:hover aside.article-action {
+	visibility: visible;
+}
+
+.article-wrapper > article aside.article-action > * {
+	vertical-align: top;
+}
+
+.article-wrapper > article:nth-child(2n+1) {
+	background-color: #EDEDED;
+}
+
+.article-wrapper > article:first-child {
+	margin-top: 0;
+}
+
+.article-wrapper > article > i,
+.article-wrapper > article span.article-name {
+	float: left;
+	vertical-align: top;
+}
+
+.article-wrapper > article > i {
+	margin: 9px 5px 0 0;
+}
+
+.article-wrapper + .article-wrapper-action {
+	margin-top: 5px;
+}
+
+.article-wrapper > .article-sub {
+	margin-left: 30px;
+}
+
+.article-wrapper.article-sm > article {
+	height: 32px;
+	line-height: 22px;
+}
+
+.article-wrapper.article-sm > article > .article-action {
+	margin-top: -1px;
+}
+
+/* ============================================================================
+   Utilities
+   ============================================================================ */
+/** BM: need to have links inside dropdowns which dont clear the float */
+.dropdown-menu > li > a.pull-right {
+	clear: none;
+}
+
+.noclear {
+	clear: none !important;
+}
+
+ul.dropdown-menu.list {
+    min-width: 300px;
+}
+
+ul.dropdown-menu.list li.list-item,
+ul.dropdown-menu.list li.list-action {
+    border-top: 1px solid #E5E5E5;
+    overflow: auto;
+}
+
+ul.dropdown-menu.list li.list-item:first-child {
+    border-top: 0;
+}
+
+ul.dropdown-menu.list li.list-item > a {
+    padding: 5px 20px;
+    clear: none;
+    overflow: hidden;
+    display: block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+ul.dropdown-menu.list li.list-item:hover {
+    background: #f5f5f5;
+}
+
+ul.dropdown-menu.list li.list-item aside.list-item-controller {
+    padding: 4px 5px 0 0;
+    float: right;
+}
+
+ul.dropdown-menu.list li.list-action {
+    padding-top: 5px;
+}
+
+/** BM: the pageMessage element is used for feedback from jquery.forms.js, needs to be initially hidden **/
+.pageMessage {
+	display: none;
+}
+
+/* ============================================================================
+   Btn upload
+   ============================================================================ */
+.btn-upload {
+    height: 34px;
+	cursor: pointer;
+	width: 180px;
+	position: relative;
+}
+
+.btn-upload form {
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+}
+
+.btn-upload .progress {
+	cursor: pointer;
+	box-shadow: none;
+	display: none;
+}
+
+/* ============================================================================
+   Hr
+   ============================================================================ */
+.hr-lg {
+	margin: 30px 0;
+}
+
+.hr-md {
+	margin: 20px 0;
+}
+
+.hr-sm {
+	margin: 10px 0;
+}
+
+.hr-xs {
+	 margin: 5px 0;
+ }
+
+/* ============================================================================
+   Toggled panel
+   ============================================================================ */
+.panel-toggled {
+	display: none;
+}
+
+/* ============================================================================
+   Blocks wrapper
+   ============================================================================ */
+.blocks-wrapper .block {
+	display: inline-block;
+	border: 1px solid #ccc;
+	padding: 6px 12px;
+	margin-right: 5px;
+}
+
+.blocks-wrapper .block span.block-name {
+	margin-right: 5px;
+}
+
+/* ============================================================================
+   Label
+   ============================================================================ */
+label small {
+	display: block;
+	font-style: italic;
+	color: #999;
+}
+
+/* ============================================================================
+   CLip icon
+   ============================================================================ */
+.clip-chk input {
+	margin-top: -1px;
+}
+
+/* ============================================================================
+   Milton tree
+   ============================================================================ */
+.milton-tree {
+	border: 1px solid #ddd;
+	height: 300px;
+	overflow-y: auto;
+	margin-top: 15px;
+}
+
+.milton-tree.jstree-default a ins.jstree-icon {
+	font-family: 'clip-font';
+	font-style: normal;
+	font-variant: normal;
+	font-weight: normal;
+	line-height: 1;
+	text-transform: none;
+	background: none;
+}
+
+.milton-tree.jstree-default a ins.jstree-icon.folder:before {
+	content: "";
+}
+
+.milton-tree.jstree-default a ins.jstree-icon.file:before {
+	content: "";
+}
+
+/* ============================================================================
+   Milton tree
+   ============================================================================ */
+.milton-image-select-container .milton-image-preview {
+	border: 1px solid #ddd;
+	height: 300px;
+	overflow: auto;
+	margin-top: 15px;
+}
+
+/* ============================================================================
+   Utilities
+   ============================================================================ */
+.action {
+	text-align: center;
+}
+
+.action > * {
+	text-align: left;
+}
+
+.invi {
+	top: -9999px !important;
+	left: -9999px !important;
+	width: 1px !important;
+	height: 1px !important;
+	visibility: hidden !important;
+	position: fixed !important;
+	display: block !important;
+}
+
+.hide {
+	display: none !important
+}
+
+.hide-text {
+	text-indent: 100% !important;
+	white-space: nowrap !important;
+	overflow: hidden !important;
+	font-size: 0 !important;
+	line-height: 0 !important
+}
+
+.clear {
+	clear: both
+}
+
+.clearfix {
+	*zoom: 1
+}
+
+fieldset hr {
+	margin: 5px 0 20px;
+}
+
+.clearfix:after {
+	clear: both;
+	content: " ";
+	display: block;
+	font-size: 0;
+	height: 0;
+	line-height: 0;
+	visibility: hidden
+}
+
+.unstyled {
+	list-style: none
+}

@@ -4,64 +4,84 @@
         <link href="manageWebsite.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="manageWebsite.js">//</script>
         <script type="text/javascript">
-            jQuery(function() {
+            Bob.onDOMReady(function () {
+                flog("initManageWebsite");
                 initManageWebsite();
                 $("form.addOrg").forms({
                     callback: function(resp) {
-                        log("done", resp);
+                        flog("done", resp);
                         window.location.reload();
                     }
-                });                
-                
+                });
+
             });
         </script>        
     </head>
     <body>
-        <section id="manageWebsite" class="MainContent">
-            <div class="Left">
-                <a class="SmallBtn Add" onclick="return showAddItem(this)" href="#">Add new website</a>
-                <div class="Modal">
-                    <header>
-                        <h3>Add new website</h3>
-                        <a title="Close" href="#" class="Close"><span class="Hidden">Close</span></a>
-                    </header>
+        <div class="">
+            <p>
+	            <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#addWebsiteModal" ><i class="fa fa-plus"></i> Create new website</a>
+            </p>
 
-                    <div class="ModalContent">
-                        <form class="addOrg" method="POST" action=".">
-                            <div class="pageMessage">.</div>
-                            <table>
-                                <tbody>
-                                    <tr>
-                                        <th><label for="newName">Enter a name</label></th>
-                                        <td><input type="text" class="required simpleChars" placeholder="Enter a simple name, eg MyLearning" id="newName" name="newName"/></td>
-                                    </tr>                                    
-                                    <tr>
-                                        <td class="BtnBar" colspan="2">
-                                            <button class="Btn">Save changes</button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </form>
-                    </div>                    
+            <div class="modal fade" id="addWebsiteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">Add new website</h4>
                 </div>
-            </div>
+                <div class="modal-body">
+                    <form class="addOrg form-horizontal" method="POST" action=".">
+	                    <div class="form-group">
+	                        <label for="newName" class="col-sm-4 control-label">Simple name</label>
+	                        <div class="col-sm-8">
+	                            <input type="text" class="form-control simpleChars required" required="true" id="newName" name="newName" placeholder="Simple characters only, no punctuation, dots, etc, all lower case, not a domain name">
+	                        </div>
+	                    </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" data-type="form-submit" class="btn btn-primary">Create website</button>
+                </div>
+            </div><!-- /.modal -->
+        </div>
 
-            <table class="Summary">
+        <table id="search-results" class="table table-bordered table-striped table-hover table-data">
+            <colgroup>
+                <col />
+                <col />
+                <col />
+                <col style="width: 60px"/>
+            </colgroup>            
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Live branch</th>
+                    <th>Theme</th>
+                    <th class="action">Action</th>
+                </tr>
+            </thead>            
+            <tbody>
                 #foreach($w in $page.websites)
                 <tr>
-                    <td>
-                        <h5>$w.name</h5>
-                        <p>Current version: $!w.liveBranch | Theme: $!w.liveBranch().publicTheme</p>
-                    </td>
-                    <td>
-                        <a target="_blank" href="http://${page.websiteAddress($w)}${formatter.portString}/" class="Btn ViewWebsite">View</a> 
-                        <a href="$w.name" class="Btn Cancel EditWebsite">Edit</a>
+                    <td>$w.name</td>
+                    <td>$!w.liveBranch</td>
+                    <td>$!w.liveBranch().publicTheme</td>
+                    <td class="action">
+                        <div class="btn-group btn-group-sm">
+                            <button data-toggle="dropdown" class="btn btn-success dropdown-toggle" type="button">
+	                            <i class="fa fa-cog"></i>
+                            </button>
+                            <ul role="menu" class="dropdown-menu pull-right">
+	                            <li><a href="$w.name">Edit</a></li>
+                                <li><a target="_blank" href="http://${page.websiteAddress($w)}${formatter.portString}/" class="Btn ViewWebsite">View</a></li>
+                            </ul>
+                        </div>                        
+
                     </td>
                 </tr>
                 #end
+            </tbody>
+        </table>
 
-            </table>
-        </section>        
     </body>
 </html>

@@ -18,22 +18,103 @@
         <meta content="" name="author" />
         <!-- end: META -->
         <!-- start: MAIN CSS -->
-        <link href="/theme/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="/theme/assets/plugins/bootstrap/css/bootstrap.min.css" />
         <link rel="stylesheet" href="/theme/assets/plugins/font-awesome/css/font-awesome.min.css"/>
         <link rel="stylesheet" href="/theme/assets/fonts/style.css"/>
         <link rel="stylesheet" href="/theme/assets/css/main.css"/>
         <link rel="stylesheet" href="/theme/assets/css/main-responsive.css"/>
         <link rel="stylesheet" href="/theme/assets/plugins/iCheck/skins/all.css"/>
         <link rel="stylesheet" href="/theme/assets/plugins/bootstrap-colorpalette/css/bootstrap-colorpalette.css"/>
+        <link rel="stylesheet" href="/theme/assets/plugins/bootstrap-modal/css/bootstrap-modal-bs3patch.css"/>
+        <link rel="stylesheet" href="/theme/assets/plugins/bootstrap-modal/css/bootstrap-modal.css"/>
         <link rel="stylesheet" href="/theme/assets/plugins/perfect-scrollbar/src/perfect-scrollbar.css"/>
+        <link rel="stylesheet" href="/theme/assets/plugins/select2/select2.css" />
+        <link rel="stylesheet" href="/theme/assets/plugins/DataTables/media/css/DT_bootstrap.css" />
+        <link rel="stylesheet" href="/theme/assets/plugins/jquery-ui/jquery-ui-1.10.3.full.css" />
+        <link rel="stylesheet" href="/theme/assets/plugins/bootstrap-fileupload/bootstrap-fileupload.min.css" />
+        <link rel="stylesheet" href="/theme/assets/plugins/bootstrap-switch/static/stylesheets/bootstrap-switch.css" />
         <link rel="stylesheet" href="/theme/assets/css/theme_light.css" id="skin_color"/>
+        <link rel="stylesheet" href="/theme/assets/plugins/datepicker/css/datepicker.css" />
+        <link rel="stylesheet" href="/theme/assets/plugins/bootstrap-v3-datetimepicker/css/bootstrap-datetimepicker.css" />
+        <link rel="stylesheet" href="/theme/assets/plugins/bootstrap-daterangepicker/daterangepicker-bs3.css" />
+        <link rel='stylesheet' href='/static/daterange/ui.daterangepicker.css' type='text/css' />
+        <link rel='stylesheet' href='/theme/assets/plugins/colorbox/example2/colorbox.css' type='text/css' />
         <!--[if IE 7]>
         <link rel="stylesheet" href="/theme/assets/plugins/font-awesome/css/font-awesome-ie7.min.css">
         <![endif]-->
+        <link rel="stylesheet" href="/theme/assets/css/fuse.css" id="fuse-skin"/>
         <!-- end: MAIN CSS -->
         <!-- start: CSS REQUIRED FOR THIS PAGE ONLY -->
         <!-- end: CSS REQUIRED FOR THIS PAGE ONLY -->
         <link rel="shortcut icon" href="favicon.ico" />
+
+
+        <!-- start: MAIN JAVASCRIPTS -->
+        <!--[if lt IE 9]>
+        <script src="assets/plugins/respond.min.js">//</script>
+        <script src="assets/plugins/excanvas.min.js">//</script>
+        <![endif]-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js">//</script>
+
+        <!-- Fuse specific scripts. We might be able to remove some of these after admin2 integration -->
+        <script type="text/javascript" src="/static/js/common.js">//</script>        
+        <script type="text/javascript" src="/static/js/jquery.forms.js">//</script>        
+        <script type="text/javascript" src="/static/js/jquery.user.js">//</script>
+        <script type="text/javascript" src="/static/js/file.js" bottom="true">//</script>        
+        <script type="text/javascript" src="/static/js/toolbars.js" bottom="true">//</script>
+        <script type="text/javascript" src="/static/ckeditor41/ckeditor.js" bottom="true">//</script>
+        <script type="text/javascript" src="/static/ckeditor41/adapters/jquery.js" bottom="true">//</script>
+        <script type="text/javascript" src="/static/js/jQueryRotate.2.2.js">//</script>
+        <script type="text/javascript" src="/static/js/jquery.placeholder.js" >//</script>
+        <script type="text/javascript" src="/static/js/jquery.pjax.js" >//</script>
+        <script type="text/javascript" src="/static/js/lib/jquery.ba-hashchange.min.js" >//</script>
+        <script type="text/javascript" src="/static/js/bob/bob.js" >//</script>
+        <script type="text/javascript" src="/static/js/bob/bob.util.js" >//</script>
+        <script type="text/javascript" src="/static/js/bob/bob.jquery.js" >//</script>
+        <script type="text/javascript" src="/static/js/bob/bob.array.js" >//</script>
+        <script type="text/javascript" src="/static/js/bob/bob.string.js" >//</script>
+        <!--<script type="text/javascript" src="/templates/themes/admin/setup.js" bottom="true">//</script>-->
+        <!--<script type="text/javascript" src="/templates/themes/admin/prompt.js" bottom="true">//</script>-->
+        <script type="text/javascript" src="/static/js/raphael-2.1.0.min.js" bottom="true">//</script>
+        <script type="text/javascript" src='/static/js/jquery.forms.js'>//</script>
+        <script type="text/javascript" src='/static/js/morris.js' bottom="true">//</script>
+        <!--<script type='text/javascript' src='/static/daterange/daterangepicker.jQuery.js'>//</script>-->
+        <!--<script type="text/javascript" src="/static/js/jquery-ui-timepicker-addon.js" bottom="true">//</script>-->
+        <script type="text/javascript" src="/static/js/init-theme.js" bottom="true">//</script>        
+        <!-- End Fuse specific scripts -->
+
+        <script src="/theme/assets/plugins/jquery-ui/jquery-ui-1.10.3.full.min.js">//</script>
+        <script src="/theme/assets/plugins/bootstrap/js/bootstrap.min.js">//</script>
+        <script src="/theme/assets/plugins/bootstrap-modal/js/bootstrap-modal.js">//</script>
+        <script src="/theme/assets/plugins/bootstrap-modal/js/bootstrap-modalmanager.js">//</script>
+        <script src="/theme/assets/plugins/blockUI/jquery.blockUI.js">//</script>
+        <script src="/theme/assets/plugins/iCheck/jquery.icheck.min.js">//</script>
+        <script src="/theme/assets/plugins/perfect-scrollbar/src/jquery.mousewheel.js">//</script>
+        <script src="/theme/assets/plugins/perfect-scrollbar/src/perfect-scrollbar.js">//</script>
+        <script src="/theme/assets/plugins/less/less-1.5.0.min.js">//</script>
+        <script src="/theme/assets/plugins/jquery-cookie/jquery.cookie.js">//</script>
+        <script src="/theme/assets/plugins/bootstrap-colorpalette/js/bootstrap-colorpalette.js">//</script>
+        <script src="/theme/assets/js/main.js">//</script>
+        <script src="/theme/assets/plugins/select2/select2.min.js">//</script>
+        <script src="/theme/assets/plugins/DataTables/media/js/jquery.dataTables.min.js">//</script>
+        <script src="/theme/assets/plugins/DataTables/media/js/DT_bootstrap.js">//</script>
+        <script src="/theme/assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js" bottom="true">//</script>
+        <script src="/theme/assets/plugins/bootstrap-v3-datetimepicker/js/bootstrap-datetimepicker.min.js" bottom="true">//</script>
+        <script src="/theme/assets/plugins/bootstrap-fileupload/bootstrap-fileupload.min.js">//</script>
+        <script src="/theme/assets/plugins/bootstrap-switch/static/js/bootstrap-switch.min.js">//</script>
+	    <script src="/theme/assets/plugins/moment/min/moment-2.4.0.js">//</script>
+	    <script src="/theme/assets/plugins/bootstrap-daterangepicker/daterangepicker.js">//</script>
+        <script src="/theme/assets/plugins/colorbox/jquery.colorbox-min.js">//</script>
+        <script src="/theme/assets/js/fuse.js">//</script>
+        <!-- end: MAIN JAVASCRIPTS -->
+        <!-- start: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
+        <!-- end: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
+        <script>
+            jQuery(document).ready(function() {
+                Main.init();
+                initTheme(); // init the fuse extensions
+            });
+        </script>        
     </head>
     <!-- end: HEAD -->
     <!-- start: BODY -->
@@ -55,318 +136,24 @@
                     <!-- end: LOGO -->
                 </div>
                 <div class="navbar-tools">
+
                     <!-- start: TOP NAVIGATION MENU -->
                     <ul class="nav navbar-right">
-                        <!-- start: TO-DO DROPDOWN -->
-                        <li class="dropdown">
+                        <li class="dropdown ">
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                                <i class="clip-list-5"></i>
-                                <span class="badge"> 12</span>
+                                Logged into: $page.organisation.formattedName
+                                <i class="clip-chevron-down"></i>
                             </a>
-                            <ul class="dropdown-menu todo">
+                            <ul class="dropdown-menu">
+                                #foreach($org in $page.organisations)
                                 <li>
-                                    <span class="dropdown-menu-title"> You have 12 pending tasks</span>
+                                    <a href="$org.href">
+                                        <i class="clip-home-2"></i>
+                                        &nbsp; $org.title</a>
                                 </li>
-                                <li>
-                                    <div class="drop-down-wrapper">
-                                        <ul>
-                                            <li>
-                                                <a class="todo-actions" href="javascript:void(0)">
-                                                    <i class="fa fa-square-o"></i>
-                                                    <span class="desc" style="opacity: 1; text-decoration: none;"> Windows Phone 8 App</span>
-                                                    <span class="label label-danger" style="opacity: 1;"> today</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a class="todo-actions" href="javascript:void(0)">
-                                                    <i class="fa fa-square-o"></i>
-                                                    <span class="desc" style="opacity: 1; text-decoration: none;"> New frontend layout</span>
-                                                    <span class="label label-danger" style="opacity: 1;"> today</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a class="todo-actions" href="javascript:void(0)">
-                                                    <i class="fa fa-square-o"></i>
-                                                    <span class="desc"> Hire developers</span>
-                                                    <span class="label label-warning"> tommorow</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a class="todo-actions" href="javascript:void(0)">
-                                                    <i class="fa fa-square-o"></i>
-                                                    <span class="desc"> Windows Phone 8 App</span>
-                                                    <span class="label label-warning"> tommorow</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a class="todo-actions" href="javascript:void(0)">
-                                                    <i class="fa fa-square-o"></i>
-                                                    <span class="desc"> New frontend layout</span>
-                                                    <span class="label label-success"> this week</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a class="todo-actions" href="javascript:void(0)">
-                                                    <i class="fa fa-square-o"></i>
-                                                    <span class="desc"> Hire developers</span>
-                                                    <span class="label label-success"> this week</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a class="todo-actions" href="javascript:void(0)">
-                                                    <i class="fa fa-square-o"></i>
-                                                    <span class="desc"> New frontend layout</span>
-                                                    <span class="label label-info"> this month</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a class="todo-actions" href="javascript:void(0)">
-                                                    <i class="fa fa-square-o"></i>
-                                                    <span class="desc"> Hire developers</span>
-                                                    <span class="label label-info"> this month</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a class="todo-actions" href="javascript:void(0)">
-                                                    <i class="fa fa-square-o"></i>
-                                                    <span class="desc" style="opacity: 1; text-decoration: none;"> Windows Phone 8 App</span>
-                                                    <span class="label label-danger" style="opacity: 1;"> today</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a class="todo-actions" href="javascript:void(0)">
-                                                    <i class="fa fa-square-o"></i>
-                                                    <span class="desc" style="opacity: 1; text-decoration: none;"> New frontend layout</span>
-                                                    <span class="label label-danger" style="opacity: 1;"> today</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a class="todo-actions" href="javascript:void(0)">
-                                                    <i class="fa fa-square-o"></i>
-                                                    <span class="desc"> Hire developers</span>
-                                                    <span class="label label-warning"> tommorow</span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li class="view-all">
-                                    <a href="javascript:void(0)">
-                                        See all tasks <i class="fa fa-arrow-circle-right"></i>
-                                    </a>
-                                </li>
+                                #end
                             </ul>
-                        </li>
-                        <!-- end: TO-DO DROPDOWN-->
-                        <!-- start: NOTIFICATION DROPDOWN -->
-                        <li class="dropdown">
-                            <a data-toggle="dropdown" data-hover="dropdown" class="dropdown-toggle" data-close-others="true" href="#">
-                                <i class="clip-notification-2"></i>
-                                <span class="badge"> 11</span>
-                            </a>
-                            <ul class="dropdown-menu notifications">
-                                <li>
-                                    <span class="dropdown-menu-title"> You have 11 notifications</span>
-                                </li>
-                                <li>
-                                    <div class="drop-down-wrapper">
-                                        <ul>
-                                            <li>
-                                                <a href="javascript:void(0)">
-                                                    <span class="label label-primary"><i class="fa fa-user"></i></span>
-                                                    <span class="message"> New user registration</span>
-                                                    <span class="time"> 1 min</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:void(0)">
-                                                    <span class="label label-success"><i class="fa fa-comment"></i></span>
-                                                    <span class="message"> New comment</span>
-                                                    <span class="time"> 7 min</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:void(0)">
-                                                    <span class="label label-success"><i class="fa fa-comment"></i></span>
-                                                    <span class="message"> New comment</span>
-                                                    <span class="time"> 8 min</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:void(0)">
-                                                    <span class="label label-success"><i class="fa fa-comment"></i></span>
-                                                    <span class="message"> New comment</span>
-                                                    <span class="time"> 16 min</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:void(0)">
-                                                    <span class="label label-primary"><i class="fa fa-user"></i></span>
-                                                    <span class="message"> New user registration</span>
-                                                    <span class="time"> 36 min</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:void(0)">
-                                                    <span class="label label-warning"><i class="fa fa-shopping-cart"></i></span>
-                                                    <span class="message"> 2 items sold</span>
-                                                    <span class="time"> 1 hour</span>
-                                                </a>
-                                            </li>
-                                            <li class="warning">
-                                                <a href="javascript:void(0)">
-                                                    <span class="label label-danger"><i class="fa fa-user"></i></span>
-                                                    <span class="message"> User deleted account</span>
-                                                    <span class="time"> 2 hour</span>
-                                                </a>
-                                            </li>
-                                            <li class="warning">
-                                                <a href="javascript:void(0)">
-                                                    <span class="label label-danger"><i class="fa fa-shopping-cart"></i></span>
-                                                    <span class="message"> Transaction was canceled</span>
-                                                    <span class="time"> 6 hour</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:void(0)">
-                                                    <span class="label label-success"><i class="fa fa-comment"></i></span>
-                                                    <span class="message"> New comment</span>
-                                                    <span class="time"> yesterday</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:void(0)">
-                                                    <span class="label label-primary"><i class="fa fa-user"></i></span>
-                                                    <span class="message"> New user registration</span>
-                                                    <span class="time"> yesterday</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:void(0)">
-                                                    <span class="label label-primary"><i class="fa fa-user"></i></span>
-                                                    <span class="message"> New user registration</span>
-                                                    <span class="time"> yesterday</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:void(0)">
-                                                    <span class="label label-success"><i class="fa fa-comment"></i></span>
-                                                    <span class="message"> New comment</span>
-                                                    <span class="time"> yesterday</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:void(0)">
-                                                    <span class="label label-success"><i class="fa fa-comment"></i></span>
-                                                    <span class="message"> New comment</span>
-                                                    <span class="time"> yesterday</span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li class="view-all">
-                                    <a href="javascript:void(0)">
-                                        See all notifications <i class="fa fa-arrow-circle-right"></i>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <!-- end: NOTIFICATION DROPDOWN -->
-                        <!-- start: MESSAGE DROPDOWN -->
-                        <li class="dropdown">
-                            <a class="dropdown-toggle" data-close-others="true" data-hover="dropdown" data-toggle="dropdown" href="#">
-                                <i class="clip-bubble-3"></i>
-                                <span class="badge"> 9</span>
-                            </a>
-                            <ul class="dropdown-menu posts">
-                                <li>
-                                    <span class="dropdown-menu-title"> You have 9 messages</span>
-                                </li>
-                                <li>
-                                    <div class="drop-down-wrapper">
-                                        <ul>
-                                            <li>
-                                                <a href="javascript:;">
-                                                    <div class="clearfix">
-                                                        <div class="thread-image">
-                                                            <img alt="" src="/theme/assets/images/avatar-2.jpg">
-                                                        </div>
-                                                        <div class="thread-content">
-                                                            <span class="author">Nicole Bell</span>
-                                                            <span class="preview">Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.</span>
-                                                            <span class="time"> Just Now</span>
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:;">
-                                                    <div class="clearfix">
-                                                        <div class="thread-image">
-                                                            <img alt="" src="/theme/assets/images/avatar-1.jpg">
-                                                        </div>
-                                                        <div class="thread-content">
-                                                            <span class="author">Peter Clark</span>
-                                                            <span class="preview">Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.</span>
-                                                            <span class="time">2 mins</span>
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:;">
-                                                    <div class="clearfix">
-                                                        <div class="thread-image">
-                                                            <img alt="" src="/theme/assets/images/avatar-3.jpg">
-                                                        </div>
-                                                        <div class="thread-content">
-                                                            <span class="author">Steven Thompson</span>
-                                                            <span class="preview">Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.</span>
-                                                            <span class="time">8 hrs</span>
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:;">
-                                                    <div class="clearfix">
-                                                        <div class="thread-image">
-                                                            <img alt="" src="/theme/assets/images/avatar-1.jpg">
-                                                        </div>
-                                                        <div class="thread-content">
-                                                            <span class="author">Peter Clark</span>
-                                                            <span class="preview">Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.</span>
-                                                            <span class="time">9 hrs</span>
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:;">
-                                                    <div class="clearfix">
-                                                        <div class="thread-image">
-                                                            <img alt="" src="/theme/assets/images/avatar-5.jpg">
-                                                        </div>
-                                                        <div class="thread-content">
-                                                            <span class="author">Kenneth Ross</span>
-                                                            <span class="preview">Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.</span>
-                                                            <span class="time">14 hrs</span>
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li class="view-all">
-                                    <a href="pages_messages.html">
-                                        See all messages <i class="fa fa-arrow-circle-right"></i>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <!-- end: MESSAGE DROPDOWN -->
+                        </li>                        
                         <!-- start: USER DROPDOWN -->
                         <li class="dropdown current-user">
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
@@ -376,29 +163,16 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a href="pages_user_profile.html">
+                                    <a href="/profile">
                                         <i class="clip-user-2"></i>
                                         &nbsp;My Profile
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="pages_calendar.html">
-                                        <i class="clip-calendar"></i>
-                                        &nbsp;My Calendar
-                                    </a>
-                                <li>
-                                    <a href="pages_messages.html">
-                                        <i class="clip-bubble-4"></i>
-                                        &nbsp;My Messages (3)
-                                    </a>
-                                </li>
+
                                 <li class="divider"></li>
+
                                 <li>
-                                    <a href="utility_lock_screen.html"><i class="clip-locked"></i>
-                                        &nbsp;Lock Screen </a>
-                                </li>
-                                <li>
-                                    <a href="login_example1.html">
+                                    <a href="#" class="logout">
                                         <i class="clip-exit"></i>
                                         &nbsp;Log Out
                                     </a>
@@ -426,36 +200,58 @@
                     <!-- end: MAIN MENU TOGGLER BUTTON -->
                     <!-- start: MAIN NAVIGATION MENU -->
                     <ul class="main-navigation-menu">
-                        #foreach($parentItem in $menu.items)
-                        #set($subItems = $parentItem.items)
-                        <li class="$formatter.ifTrue( $parentItem.active, 'active open', '' )">
-                            <a href="$parentItem.href">
+                        #foreach($rootItem in $menu.items)
+
+                        <li class="$formatter.ifTrue( $rootItem.active, 'active open', '' )">
+                            <a href="$rootItem.href">
                                 <i class="clip-home-3"></i>
-                                <span class="title">$parentItem.text</span>
-                                
-                                #if( !$subItems.isEmpty() )
+                                <span class="title">$rootItem.text</span>
+
+                                #if( !$rootItem.items.isEmpty() )
                                 <i class="icon-arrow"></i>
                                 #end
-                                
-                                #if( $parentItem.active )
+
+                                #if( $rootItem.active )
                                 <span class="selected"></span>
                                 #end
                             </a>
-                            
-                            #if( !$subItems.isEmpty() )
+
+                            #set($subItems = $rootItem.items)
                             <ul class="sub-menu">
-                                #foreach($item in $parentItem.items)
-                                <li>
-                                    <a href="$item.href">
-                                        <span class="title">$item.text</span>
+                                #foreach($sectionItem in $subItems)
+                                <li class="$formatter.ifTrue( $sectionItem.active, 'active open', '' )">
+                                    <a href="javascript:void()">
+                                        <i class="clip-folder"></i>
+                                        <span class="title">$sectionItem.text</span>
+
+                                        #if( !$subItems.isEmpty() )
+                                        <i class="icon-arrow"></i>
+                                        #end
+
+                                        #if( $sectionItem.active )
+                                        <span class="selected"></span>
+                                        #end
                                     </a>
-                                </li>  
+
+                                    #if( !$sectionItem.items.isEmpty() )
+                                    <ul class="sub-menu">
+                                        #foreach($item in $sectionItem.items)
+                                        <li>
+                                            <a href="$item.href">
+                                                <span class="title">$item.text</span>
+                                            </a>
+                                        </li>  
+                                        #end
+                                    </ul>      
+                                    #end
+                                </li>
                                 #end
-                            </ul>      
-                            #end
-                        </li>
-                        #end
-                        
+                            </ul>
+                            #end                            
+                        </li>                        
+
+
+
 
                     </ul>
                     <!-- end: MAIN NAVIGATION MENU -->
@@ -641,9 +437,9 @@
                     </div>
                     <!-- end: PAGE HEADER -->
                     <!-- start: PAGE CONTENT -->
-                    
-                    
-                    
+
+
+
                     #content
                     <!-- end: PAGE CONTENT-->
                 </div>
@@ -660,31 +456,15 @@
                 <span class="go-top"><i class="clip-chevron-up"></i></span>
             </div>
         </div>
-        <!-- end: FOOTER -->
-        <!-- start: MAIN JAVASCRIPTS -->
-        <!--[if lt IE 9]>
-        <script src="assets/plugins/respond.min.js">//</script>
-        <script src="assets/plugins/excanvas.min.js">//</script>
-        <![endif]-->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js">//</script>
-        <script src="/theme/assets/plugins/jquery-ui/jquery-ui-1.10.2.custom.min.js">//</script>
-        <script src="/theme/assets/plugins/bootstrap/js/bootstrap.min.js">//</script>
-        <script src="/theme/assets/plugins/blockUI/jquery.blockUI.js">//</script>
-        <script src="/theme/assets/plugins/iCheck/jquery.icheck.min.js">//</script>
-        <script src="/theme/assets/plugins/perfect-scrollbar/src/jquery.mousewheel.js">//</script>
-        <script src="/theme/assets/plugins/perfect-scrollbar/src/perfect-scrollbar.js">//</script>
-        <script src="/theme/assets/plugins/less/less-1.5.0.min.js">//</script>
-        <script src="/theme/assets/plugins/jquery-cookie/jquery.cookie.js">//</script>
-        <script src="/theme/assets/plugins/bootstrap-colorpalette/js/bootstrap-colorpalette.js">//</script>
-        <script src="/theme/assets/js/main.js">//</script>
-        <!-- end: MAIN JAVASCRIPTS -->
-        <!-- start: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
-        <!-- end: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
-        <script>
-            jQuery(document).ready(function() {
-                Main.init();
-            });
-        </script>
+        <!-- end: FOOTER -->  
+        
+            <script type='text/javascript'>
+            (function() {
+                var se = document.createElement('script'); se.type = 'text/javascript'; se.async = true;
+                se.src = '//commondatastorage.googleapis.com/code.snapengage.com/js/8403dc38-ead5-47bb-97f2-bd8a90b10184.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(se, s);
+            })();
+            </script>        
     </body>
     <!-- end: BODY -->
 </html>

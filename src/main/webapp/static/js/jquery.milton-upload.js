@@ -17,6 +17,7 @@
                 }, options);  
                 
             log("init milton uploads", container);
+            container.addClass('btn-upload')
             var actionUrl = config.url;
             if( config.useJsonPut ) {
                 actionUrl += "_DAV/PUT?overwrite=true";
@@ -24,7 +25,7 @@
             log("upload to url: ", actionUrl);
             var form = $("<form action='" + actionUrl + "' method='POST' enctype='multipart/form-data' style='position: relative'><input type='hidden' name='overwrite' value='true'></form>");
             var buttonBar = $("<div class='row fileupload-buttonbar' style='position:relative; overflow: hidden'></div>");
-            var fileInput = $("<input type='file' name='files[]' id='fileupload' style='opacity: 0; font-size: 50px; min-width: 100%; z-index: 6; position: absolute; right: 0; top: 0' />");
+            var fileInput = $("<input type='file' name='files[]' id='fileupload" + (new Date().getTime()) + "' style='opacity: 0; font-size: 50px; min-width: 100%; z-index: 6; position: absolute; right: 0; top: 0' />");
             form.append(buttonBar);
             
             var fileInputContainer = $("<div class='muploadBtn' style='position: relative'></div>");            

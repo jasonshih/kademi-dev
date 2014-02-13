@@ -1,0 +1,19 @@
+.show-user-group {
+    width: 300px;
+}
+
+.group-add-group > * {
+    float: left;
+    display: block;
+    clear: none;
+    width: auto;
+    margin-left: 10px;
+}
+
+.groups-list .group {
+    float: left;
+    padding: 3px;
+    border-radius: 5px;
+    background: #f0f0f0;
+    margin: 0 5px 5px 0;
+}

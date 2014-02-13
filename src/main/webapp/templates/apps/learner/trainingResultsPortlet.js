@@ -1,12 +1,14 @@
-$(function() {
+function initTrainingResultsPortlet() {
+	var modal = $('#modal-upload-training-results-csv');
+	var result = modal.find('.upload-results');
+
     $(".showUploadTrainingResultsModal").click(function(e) {
-        $.tinybox.show($("#modalUploadTrainingResultsCsv"), {
-            overlayClose: false,
-            opacity: 0
-        });                       
+	    e.preventDefault();
+
+	    modal.modal('show');
     });   
 
-    $("#doUploadTrainingResultsCsv").mupload({
+    $("#do-upload-training-results-csv").mupload({
         buttonText: "Upload spreadsheet",
         url: "../trainingResults.csv",
         useJsonPut: false,
@@ -21,11 +23,10 @@ $(function() {
                     alert("There was an error uploading");
                 }                                
             }
-            $(".results .numUpdated").text(data.result.data.numUpdated);
-            $(".results .numUnmatched").text(data.result.data.unmatched.length);
-            showUnmatched(data.result.data.unmatched);
-            $(".results").show();
-            
+	        result.find(".num-updated").text(data.result.data.numUpdated);
+	        result.find(".num-unmatched").text(data.result.data.unmatched.length);
+            showUnmatched(result, data.result.data.unmatched);
+	        result.show();
         }
-    });      
-});
+    });
+}
