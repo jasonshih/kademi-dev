@@ -1,0 +1,36 @@
+<div class="modules">
+
+        #foreach($mod in $modules)
+            #set($tileClass = "large")
+            #set($curPage = "")
+            #set($curPage = $mod.currentPage)
+        <div class="span4 $tileClass col-md-6">
+            <div class="thumbnail tile">
+                #if(${mod.thumb} and $mod.thumb.length() > 0 )
+                <div style="background-image: url(${mod.thumb}/alt-300-300.png)" class="tile-image">
+                    <a href="${mod.href}" class="requiresUser"><span>View</span></a>
+                </div>
+                #end
+                <div class="tile-content">
+                    <h3><a href="${mod.href}" class="requiresUser">${mod.title}</a></h3>
+                    <p>$mod.brief</p>
+                    <div>
+                        <ul class="tools">
+                            <li class="modPerc">
+                                #if( $mod.complete )
+                                100%
+                                #elseif( $mod.percentComplete )
+                                ${mod.percentComplete}%
+                                #end
+                            </li>
+                            <li class="pull-right"><a href="${mod.href}" class="btn btn-sm btn-primary requiresUser">View</a></li>
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        #end
+        <div class='clearfix'></div>
+
+</div>

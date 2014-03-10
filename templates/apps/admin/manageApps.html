@@ -1,0 +1,70 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>$view.title</title>
+        <link href="manageApps.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="manageApps.js">//</script>
+    </head>
+    <body class="manageApplications appsContainer">
+        <div class="well">
+            <p>Applications control large chunks of functionality, like forums or emails. You can add them to websites</p>
+            <p>Applications are made available for websites by activating them on your organisation's Manage Applications page. Available apps are then shown on the website apps list where they can be turned on or off as required.</p>
+        </div>
+        #set($apps = $page.apps)
+        #if( $apps.isEmpty() )
+        <div class="well">
+            <p>No applications are available. This means that the parent organisation has disabled them</p>
+        </div>        
+        #end
+        <div class="appsContainer">
+	        <div class="table-responsive">
+	            <table class="table table-striped table-hover">
+	                #foreach($app in $apps )
+	                <tr>
+	                    <td class="CheckBoxWrapper">
+	                        <div data-off="danger" data-on="success" class="make-switch btn-switch-public">
+	                            $formatter.checkbox("chk_${app.appId}", $app.appId, $app.enabled, $app.appId)
+	                        </div>
+	                        <label for="chk_${app.appId}"></label>
+	                    </td>
+	                    <td>
+	                        <h4>$page.getTitle($app.appId)</h4>
+	                        <p>$page.getSummary($app.appId)</p>
+	                    </td>
+	                    <td>
+	                        #if($page.hasSettings($app))
+	                        <button class="btn btn-primary btn-sm settings" data-toggle="modal" data-target="#settings_${app.appId}"><i class="fa fa-cog"></i> Settings</button>
+	                        #end
+	                    </td>
+	                </tr>
+	                #end
+	            </table>
+            </div>
+        </div>
+
+        #foreach($app in $page.apps)
+        #if($page.hasSettings($app))
+        <div class="modal fade settings" id="settings_${app.appId}" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Edit Application: $app.appId</h4>
+            </div>
+            <div class="modal-body ModalContent">
+                <form method="POST" action="$page.name" class="form-horizontal" role="form">
+                    <input type="hidden" name="settingsAppId" value="$app.appId"/>
+                    #appSettings($app.appId)
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary btn-sm" data-type="form-submit">Save</button>
+            </div>
+        </div>
+        #end
+        #end
+        <script type="text/javascript">
+            Bob.onDOMReady(function () {
+                initApps();
+            });
+        </script>          
+    </body>
+</html>

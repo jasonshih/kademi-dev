@@ -1,0 +1,79 @@
+@font-face {
+	font-family: "Roboto";
+	src: url('roboto/803741456-Roboto-Black.eot');
+	src: url('roboto/803741456-Roboto-Black.eot?#iefix') format('embedded-opentype'), url('roboto/803741456-Roboto-Black.svg#Roboto') format('svg'), url('roboto/803741456-Roboto-Black.woff') format('woff'), url('roboto/803741456-Roboto-Black.ttf') format('truetype');
+	font-weight: 900;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Roboto";
+	src: url('roboto/290222168-Roboto-BlackItalic.eot');
+	src: url('roboto/290222168-Roboto-BlackItalic.eot?#iefix') format('embedded-opentype'), url('roboto/290222168-Roboto-BlackItalic.svg#Roboto') format('svg'), url('roboto/290222168-Roboto-BlackItalic.woff') format('woff'), url('roboto/290222168-Roboto-BlackItalic.ttf') format('truetype');
+	font-weight: 900;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Roboto";
+	src: url('roboto/684997559-Roboto-Bold.eot');
+	src: url('roboto/684997559-Roboto-Bold.eot?#iefix') format('embedded-opentype'), url('roboto/684997559-Roboto-Bold.svg#Roboto') format('svg'), url('roboto/684997559-Roboto-Bold.woff') format('woff'), url('roboto/684997559-Roboto-Bold.ttf') format('truetype');
+	font-weight: 700;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Roboto";
+	src: url('roboto/313812256-Roboto-BoldItalic.eot');
+	src: url('roboto/313812256-Roboto-BoldItalic.eot?#iefix') format('embedded-opentype'), url('roboto/313812256-Roboto-BoldItalic.svg#Roboto') format('svg'), url('roboto/313812256-Roboto-BoldItalic.woff') format('woff'), url('roboto/313812256-Roboto-BoldItalic.ttf') format('truetype');
+	font-weight: 700;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Roboto";
+	src: url('roboto/49468995-Roboto-Italic.eot');
+	src: url('roboto/49468995-Roboto-Italic.eot?#iefix') format('embedded-opentype'), url('roboto/49468995-Roboto-Italic.svg#Roboto') format('svg'), url('roboto/49468995-Roboto-Italic.woff') format('woff'), url('roboto/49468995-Roboto-Italic.ttf') format('truetype');
+	font-weight: 400;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Roboto";
+	src: url('roboto/166809083-Roboto-Light.eot');
+	src: url('roboto/166809083-Roboto-Light.eot?#iefix') format('embedded-opentype'), url('roboto/166809083-Roboto-Light.svg#Roboto') format('svg'), url('roboto/166809083-Roboto-Light.woff') format('woff'), url('roboto/166809083-Roboto-Light.ttf') format('truetype');
+	font-weight: 300;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Roboto";
+	src: url('roboto/785400391-Roboto-LightItalic.eot');
+	src: url('roboto/785400391-Roboto-LightItalic.eot?#iefix') format('embedded-opentype'), url('roboto/785400391-Roboto-LightItalic.svg#Roboto') format('svg'), url('roboto/785400391-Roboto-LightItalic.woff') format('woff'), url('roboto/785400391-Roboto-LightItalic.ttf') format('truetype');
+	font-weight: 300;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Roboto";
+	src: url('roboto/44860840-Roboto-Regular.eot');
+	src: url('roboto/44860840-Roboto-Regular.eot?#iefix') format('embedded-opentype'), url('roboto/44860840-Roboto-Regular.svg#Roboto') format('svg'), url('roboto/44860840-Roboto-Regular.woff') format('woff'), url('roboto/44860840-Roboto-Regular.ttf') format('truetype');
+	font-weight: 400;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Roboto";
+	src: url('roboto/267761231-Roboto-Medium.eot');
+	src: url('roboto/267761231-Roboto-Medium.eot?#iefix') format('embedded-opentype'), url('roboto/267761231-Roboto-Medium.svg#Roboto') format('svg'), url('roboto/267761231-Roboto-Medium.woff') format('woff'), url('roboto/267761231-Roboto-Medium.ttf') format('truetype');
+	font-weight: 600;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Roboto";
+	src: url('roboto/407165528-Roboto-MediumItalic.eot');
+	src: url('roboto/407165528-Roboto-MediumItalic.eot?#iefix') format('embedded-opentype'), url('roboto/407165528-Roboto-MediumItalic.svg#Roboto') format('svg'), url('roboto/407165528-Roboto-MediumItalic.woff') format('woff'), url('roboto/407165528-Roboto-MediumItalic.ttf') format('truetype');
+	font-weight: 600;
+	font-style: italic;
+}

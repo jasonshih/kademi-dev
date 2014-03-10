@@ -1,0 +1,130 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Manage Groups</title>
+        <link href="manageGroup.css" rel="stylesheet" type="text/css" />
+        <link href="manageGroupMembers.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body class="manageModulePages">
+        <!-- Content goes here - NO HEADER/BANNER/MENU! -->
+        <div class="panel panel-default">
+        	<div class="panel-heading"><i class="clip-users"></i> Members</div>
+        	<div id="manageGroup" class="panel-body MainContent">
+        		<button class="btn btn-sm btn-bricky removeUsers pull-right">Remove</button>
+        		<a href="members.csv" class="btn btn-sm btn-info removeUsers pull-right" style="margin-right: 10px;">Open CSV</a>
+        		<div class="col-md-2">
+        			<h5>
+	        			<label class="label-control">Showing: </label>
+		        		<label class="label-control count">$page.members.size()</label>
+		        		<label class="label-control"> users </label>
+        			</h5>
+        		</div>
+        		<div class="col-md-3">
+	        		<select id="showUserSelect" class="form-control">
+	                    <option>[Filter]</option>
+	                    <option value="withPassword">Only those with a password</option>
+	                    <option value="noPassword">Those without a password</option>
+	                </select>
+                </div>
+                
+                <table class="Summary members table table-hover">
+	                <thead>
+	                    <tr>
+	                        <th>Nickname</th>
+	                        <th>First name</th>
+	                        <th>Surname</th>
+	                        <th>Phone</th>
+	                        <th>Email</th>
+	                        <th>Password set</th>
+	                        <th><input type="checkbox" name="toRemoveId" class="users selectAll"/></th>
+	                    </tr>
+	                </thead>
+	                <tbody>
+	                    #foreach($member in $page.members)
+	                    #set($pwdDate = false)
+	                    #set($pwdDate = $member.thisUser.passwordCredentialDate)
+	                    #set($rowClass = "")
+	                    #if( $pwdDate )
+	                    #set($rowClass = "withPassword")
+	                    #else
+	                    #set($rowClass = "noPassword")
+	                    #end
+	                    <tr class="$rowClass">
+	                        <td>$!member.thisUser.nickName</td>
+	                        <td>$!member.thisUser.firstName</td>
+	                        <td>$!member.thisUser.surName</td>
+	                        <td>$!member.thisUser.phone</td>
+	                        <td>$!member.thisUser.email</td>
+	                        <td>
+	                            #if( $pwdDate )                            
+	                            <abbr title="$formatter.formatDateISO8601($pwdDate)" class="info timeago">$!pwdDate</abbr>                    
+	                            #end                            
+	                        </td>
+	                        <td><input type="checkbox" name="toRemoveId" value="$member.thisUser.id" /></td>
+	                    </tr>
+	                    #end
+	                </tbody>
+	            </table>
+        	</div>
+        </div>
+        <script type="text/javascript">       
+        	Bob.onDOMReady(function() {
+        		jQuery("abbr.timeago").timeago();
+        		jQuery("#showUserSelect").val("").change(function() {
+                    var type = $(this).val();
+                    log("change", type);
+                    if( type == "noPassword") {
+                        log("1");
+                        $("table.members tbody tr").hide();
+                        $("table.members tbody tr.noPassword").show();                        
+                    } else if(type == "withPassword") {
+                        log("2");
+                        $("table.members tbody tr").hide();
+                        $("table.members tbody tr.withPassword").show();
+                    } else {
+                        log("3");
+                        $("table.members tbody tr").show();                        
+                    }
+                    $("span.count").text($("table.members tbody tr:visible").length);
+                });
+                initSelectAll();
+                initRemoveUsers();
+            });
+            
+            function initRemoveUsers() {
+                $(".removeUsers").click(function(e) {
+                    var node = $(e.target);
+                    log("removeUsers", node, node.is(":checked"));
+                    var checkBoxes = node.closest(".MainContent").find("tbody td input:[name=toRemoveId]:checked");
+                    if( checkBoxes.length == 0 ) {
+                        alert("Please select the users you want to remove by clicking the checkboxs to the right");
+                    } else {
+                        if( confirm("Are you sure you want to remove " + checkBoxes.length + " users?") ) {
+                            doRemoveUsers(checkBoxes);
+                        }
+                    }
+                });
+            }        
+            
+            function doRemoveUsers(checkBoxes) {
+                $.ajax({
+                    type: 'POST',
+                    data: checkBoxes,
+                    dataType: "json",
+                    url: "",
+                    success: function(data) {
+                        log("success", data)
+                        if( data.status ) {
+                            alert("Removed members ok");                
+                            window.location.reload();
+                        } else {
+                            alert("There was a problem removing users. Please try again and contact the administrator if you still have problems");
+                        }
+                    },
+                    error: function(resp) {
+                        alert("err");
+                    }
+                });      
+            }            
+        </script>  
+    </body>
+</html>

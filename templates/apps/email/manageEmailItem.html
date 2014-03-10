@@ -1,0 +1,54 @@
+<html>
+    <head>
+        <title>Notifications</title>
+        <link href="myInbox.less" rel="stylesheet" type="text/css" media="all" />
+        <script type="text/javascript" src="myInbox.js">//</script>
+    </head>
+    <body>        
+        <table class="plain">
+            <tr>
+                <td>From</td>
+                <td>$page.fromStr</td>
+            </tr>
+            <tr>
+                <td>To</td>
+                <td>
+                    #foreach($mailbox in $page.to)
+                    $mailbox.class
+                    #end
+                </td>
+            </tr>     
+            <tr>
+                <td>Subject</td>
+                <td>$page.subject</td>
+            </tr>               
+            <tr>
+                <td>Message</td>
+                <td>$page.message</td>
+            </tr>               
+            <tr>
+                <td>Attachments</td>
+                <td>
+                    <ul>
+                        #foreach($attachment in $page.children)
+                        <li><a href="$attachment.name">$attachment.fileName</a></li>
+                        #end
+                    </ul>
+                </td>
+            </tr>               
+        </table>
+        <br/>
+        <hr/>
+        <br/>
+        <br/>
+        #if( $page.html )
+        $!page.html
+        #else
+        $!page.text
+        #end
+
+
+    </body>
+</html>
+
+

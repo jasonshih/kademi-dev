@@ -1,0 +1,108 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <link href="manageCalendars.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="calendars.js">//</script>
+        <script type="text/javascript" src="manageCalendars.js">//</script>
+        <script type="text/javascript" src="cal-utils.js">//</script>
+        <link rel="stylesheet" type="text/css" href="/static/common/jquery-ui-1.8.11.custom.css" />
+        <link href="/static/common/fileuploader.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="/static/js/fileuploader.js">//</script>    
+        <title></title>
+        <style>
+            td.partstat-ACCEPTED {
+                color: green;
+            }
+            td.partstat-DECLINED {
+                color: red;
+            }
+            td.partstat-NEEDS-ACTION {
+                color: orange;
+            }
+        </style>
+    </head>
+    <body>
+        <section id="manageReward" class="MainContent">
+            <header>
+                <div class=""><h3>People attending $page.title</h3></div>
+                <div class="pull-right">                    
+                    <a href="attendees-${page.name}?csv" class="export btn-sm btn btn-default">Export as CSV</a>
+                    <button class="btn-sm btn btn-default removeAttendees">Remove Selected</button>
+                </div>
+            </header>
+            <div class="Content Details">       
+                
+                <table class="attendees table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Full name</th>
+                            <th>Organisation</th>
+                            <th>Email</th>
+                            <th>Date registered</th>
+                            <th>Guest of</th>
+                            <td style="width: auto; text-align: right"><input type="checkbox" name="toRemoveId" class="entries selectAll"/></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        #foreach($att in $page.attendeesAndGuests)
+                        <tr>
+                            <td class="partstat-$att.partStat">$att.partStat</td>
+                            <td>$att.fullName</td>
+                            <td>$att.orgName</td>
+                            <td>$att.email</td>
+                            <td>$formatter.formatDate($att.registeredDate)</td>
+                            <td>
+                                #if( $att.guestOf )
+                                <a href="$att.guestOf.href">$att.guestOf.firstName $att.guestOf.surName</a>
+                                #end
+                            </td>
+                            <td style="text-align: right"><input type="checkbox" name="toRemoveId" value="$att.id"/></td>
+                        </tr>
+                        #end
+                    </tbody>
+                </table>
+            </div>			
+        </section>
+        <script>
+            jQuery(function() {
+                initRemoveAttendees();    
+                initSelectAll();
+            });
+            function initRemoveAttendees() {
+                $(".removeAttendees").click(function(e) {
+                    var node = $(e.target);
+                    log("removeAttendees", node, node.is(":checked"));
+                    var checkBoxes = node.closest(".MainContent").find("table.attendees tbody td input:checked");
+                    log("checks", checkBoxes);
+                    if( checkBoxes.length === 0 ) {
+                        alert("Please select the attendees you want to remove by clicking the checkboxs to the right");
+                    } else {
+                        if( confirm("Are you sure you want to remove " + checkBoxes.length + " attendees?") ) {
+                            doRemoveAttendees(checkBoxes);
+                        }
+                    }
+                });
+            }
+            function doRemoveAttendees(checkBoxes) {
+                $.ajax({
+                    type: 'POST',
+                    data: checkBoxes,
+                    dataType: "json",
+                    url: "",
+                    success: function(data) {
+                        log("success", data)
+                        if( data.status ) {
+                            alert("Removed entries ok");                
+                            window.location.reload();
+                        } else {
+                            alert("There was a problem removing entries. Please try again and contact the administrator if you still have problems");
+                        }
+                    },
+                    error: function(resp) {
+                        alert("err");
+                    }
+                });      
+            }            
+        </script>
+    </body>
+</html>

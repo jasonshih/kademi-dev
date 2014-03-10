@@ -1,0 +1,89 @@
+<div class="panel panel-default recent-post">
+    <div class="panel-heading">
+        <i class="clip-stack-empty"></i>
+        Recent posts
+    </div>
+    <div class="panel-body">
+        <ul class="messages-list">
+            <li><em>Loading comments..</em></li>
+        </ul>        
+    </div>
+</div>
+#set($basePath = "/")
+#if( $parentOrg )
+#set($basePath = $parentOrg.href)
+#end
+
+<script type="text/javascript">
+    $(function() {
+        initPosts("$basePath");
+    });
+
+    function initPosts(basePath) {
+        $.getJSON(basePath + "_postSearch?a", function(response) {
+            log("got posts response", response);
+            processPosts(response);
+        });
+    }
+
+    function processPosts(comments) {
+        var list = $(".recent-post ul")
+        list.html("");
+        if (comments) {
+            if (comments.length > 0) {
+                comments.sort(dateOrd);
+                var cookieAuth = "?miltonUserUrl=" + $.cookie("miltonUserUrl");
+                cookieAuth += "&miltonUserUrlHash=" + $.cookie("miltonUserUrlHash");
+                var template = $(".message-template > li");
+                for (i = 0; i < comments.length; i++) {
+                    var comment = comments[i];
+                    var dt = new Date(comment.date);
+                    var url = "http://" + comment.contentDomain + comment.contentHref + cookieAuth;
+                    displayPost(comment.user, dt, comment.notes, comment.contentTitle, url, list, template); // pageTitle and pagePath are only present for aggregated results
+                }
+                list.find(".timeago").timeago();
+            } else {
+                list.html("<li>No recent posts</li>");
+            }
+        }
+    }
+
+
+    function displayPost(user, date, comment, pageTitle, pagePath, list, template) {
+        if (user == null) {
+            log("missing user, ignore");
+            return;
+        }
+        log("user", user);
+        var li = template.clone();
+        //var manageUserHref = "manageUsers/" + user.userId;
+        if (user.photoHash) {
+            li.find(".messages-item-avatar").attr("href", "/_hashes/files/" + user.photoHash);
+        }
+        li.find(".messages-item-from").text(user.name);
+        var subject = "posted in " + pageTitle;
+        li.find(".messages-item-subject").html(subject);
+        li.find(".messages-item-preview").text(comment);
+        
+        var formattedDate = date.toISOString(formattedDate);
+        li.find(".messages-item-time .text").text(formattedDate).attr("title", formattedDate);
+
+        list.append(li);
+        li.click(function(e){
+            window.open(pagePath, "_blank");
+        });
+    }
+
+</script>
+
+<ul class="hide message-template">
+    <li class="messages-item">
+        <img class="messages-item-avatar" src="/templates/apps/user/profile.png" alt="">
+        <span class="messages-item-from">Name</span>
+        <div class="messages-item-time">
+            <span class="text timeago">10:23 PM</span>            
+        </div>
+        <span class="messages-item-subject">Lorem ipsumdolor sit amet ...</span>
+        <span class="messages-item-preview">Lorem ipsum dolor sit amet, consec tetur adipisicing elit, sed do antera ...</span>
+    </li>
+</ul>
