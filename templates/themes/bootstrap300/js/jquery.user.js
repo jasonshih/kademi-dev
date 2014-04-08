@@ -57,7 +57,7 @@
             log("click", e);
         });
         $("form", this).submit(function(e) {
-            log("login", window.location);
+            flog("jquery.user.js(bootstrap300): login", window.location.pathname);
             e.stopPropagation();
             e.preventDefault();
 
@@ -75,7 +75,7 @@
                 }
                 doLogin(userName, password, config, container);
             } catch (e) {
-                log("exception sending forum comment", e);
+                flog("exception logging in", e);
             }
             return false;
         });

@@ -32,17 +32,19 @@
         <link rel="stylesheet" href="/theme/assets/plugins/DataTables/media/css/DT_bootstrap.css" />
         <link rel="stylesheet" href="/theme/assets/plugins/jquery-ui/jquery-ui-1.10.3.full.css" />
         <link rel="stylesheet" href="/theme/assets/plugins/bootstrap-fileupload/bootstrap-fileupload.min.css" />
-        <link rel="stylesheet" href="/theme/assets/plugins/bootstrap-switch/static/stylesheets/bootstrap-switch.css" />
+        <link rel="stylesheet" href="/static/bootstrap-switch/3.0/bootstrap3/bootstrap-switch.min.css" />
         <link rel="stylesheet" href="/theme/assets/css/theme_light.css" id="skin_color"/>
         <link rel="stylesheet" href="/theme/assets/plugins/datepicker/css/datepicker.css" />
         <link rel="stylesheet" href="/theme/assets/plugins/bootstrap-v3-datetimepicker/css/bootstrap-datetimepicker.css" />
-        <link rel="stylesheet" href="/theme/assets/plugins/bootstrap-daterangepicker/daterangepicker-bs3.css" />
+        <link rel="stylesheet" href="/static/daterangepicker/1.3.3/daterangepicker-bs3.css" />
         <link rel='stylesheet' href='/static/daterange/ui.daterangepicker.css' type='text/css' />
         <link rel='stylesheet' href='/theme/assets/plugins/colorbox/example2/colorbox.css' type='text/css' />
+        <link rel="stylesheet" href="/static/bootstrap-tagsinput/1.0.0/bootstrap-tagsinput.css">
         <!--[if IE 7]>
         <link rel="stylesheet" href="/theme/assets/plugins/font-awesome/css/font-awesome-ie7.min.css">
         <![endif]-->
-        <link rel="stylesheet" href="/theme/assets/css/fuse.css" id="fuse-skin"/>
+        <link rel="stylesheet" href="/theme/assets/css/fuse.css" id="fuse-skin1"/>
+        <link rel="stylesheet" href="/theme/assets/fonts/roboto.css" id="fuse-skin2"/>
         <!-- end: MAIN CSS -->
         <!-- start: CSS REQUIRED FOR THIS PAGE ONLY -->
         <!-- end: CSS REQUIRED FOR THIS PAGE ONLY -->
@@ -54,7 +56,7 @@
         <script src="assets/plugins/respond.min.js">//</script>
         <script src="assets/plugins/excanvas.min.js">//</script>
         <![endif]-->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js">//</script>
+        <script src="/static/jquery/1.11.0/jquery-1.11.0.js">// TODO, should be 2.0.3</script>
 
         <!-- Fuse specific scripts. We might be able to remove some of these after admin2 integration -->
         <script type="text/javascript" src="/static/js/common.js">//</script>        
@@ -62,21 +64,23 @@
         <script type="text/javascript" src="/static/js/jquery.user.js">//</script>
         <script type="text/javascript" src="/static/js/file.js" bottom="true">//</script>        
         <script type="text/javascript" src="/static/js/toolbars.js" bottom="true">//</script>
-        <script type="text/javascript" src="/static/ckeditor41/ckeditor.js" bottom="true">//</script>
-        <script type="text/javascript" src="/static/ckeditor41/adapters/jquery.js" bottom="true">//</script>
+        <script type="text/javascript" src="/static/ckeditor431/ckeditor.js" bottom="true">//</script>
+        <script type="text/javascript" src="/static/ckeditor431/adapters/jquery.js" bottom="true">//</script>
         <script type="text/javascript" src="/static/js/jQueryRotate.2.2.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.placeholder.js" >//</script>
         <script type="text/javascript" src="/static/js/jquery.pjax.js" >//</script>
+        <script type="text/javascript" src="/static/js/jquery.timeago.js" >//</script>
         <script type="text/javascript" src="/static/js/lib/jquery.ba-hashchange.min.js" >//</script>
         <script type="text/javascript" src="/static/js/bob/bob.js" >//</script>
         <script type="text/javascript" src="/static/js/bob/bob.util.js" >//</script>
         <script type="text/javascript" src="/static/js/bob/bob.jquery.js" >//</script>
         <script type="text/javascript" src="/static/js/bob/bob.array.js" >//</script>
         <script type="text/javascript" src="/static/js/bob/bob.string.js" >//</script>
-        <!--<script type="text/javascript" src="/templates/themes/admin/setup.js" bottom="true">//</script>-->
-        <!--<script type="text/javascript" src="/templates/themes/admin/prompt.js" bottom="true">//</script>-->
+        <script type="text/javascript" src="/templates/themes/admin2/setup.js" bottom="true">//</script>
+        <script type="text/javascript" src="/templates/themes/admin2/prompt.js" bottom="true">//</script>
         <script type="text/javascript" src="/static/js/raphael-2.1.0.min.js" bottom="true">//</script>
         <script type="text/javascript" src='/static/js/jquery.forms.js'>//</script>
+        <script type="text/javascript" src='/static/reload-fragment/1.0.0/jquery.reload-fragment.js'>//</script>
         <script type="text/javascript" src='/static/js/morris.js' bottom="true">//</script>
         <!--<script type='text/javascript' src='/static/daterange/daterangepicker.jQuery.js'>//</script>-->
         <!--<script type="text/javascript" src="/static/js/jquery-ui-timepicker-addon.js" bottom="true">//</script>-->
@@ -101,11 +105,13 @@
         <script src="/theme/assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js" bottom="true">//</script>
         <script src="/theme/assets/plugins/bootstrap-v3-datetimepicker/js/bootstrap-datetimepicker.min.js" bottom="true">//</script>
         <script src="/theme/assets/plugins/bootstrap-fileupload/bootstrap-fileupload.min.js">//</script>
-        <script src="/theme/assets/plugins/bootstrap-switch/static/js/bootstrap-switch.min.js">//</script>
-	    <script src="/theme/assets/plugins/moment/min/moment-2.4.0.js">//</script>
-	    <script src="/theme/assets/plugins/bootstrap-daterangepicker/daterangepicker.js">//</script>
+        <script src="/static/bootstrap-switch/3.0/bootstrap-switch.min.js">//</script>
+        <script src="/theme/assets/plugins/moment/min/moment-2.4.0.js">//</script>
+        <script src="/static/daterangepicker/1.3.3/daterangepicker.js">//</script>
         <script src="/theme/assets/plugins/colorbox/jquery.colorbox-min.js">//</script>
+        <script type="text/javascript" src="/static/bootstrap-tagsinput/1.0.0/bootstrap-tagsinput.js">//</script>        
         <script src="/theme/assets/js/fuse.js">//</script>
+        
         <!-- end: MAIN JAVASCRIPTS -->
         <!-- start: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
         <!-- end: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
@@ -122,7 +128,7 @@
         <!-- start: HEADER -->
         <div class="navbar navbar-inverse navbar-fixed-top">
             <!-- start: TOP NAVIGATION CONTAINER -->
-            <div class="container">
+            <div class="container fuse-header">
                 <div class="navbar-header">
                     <!-- start: RESPONSIVE MENU TOGGLER -->
                     <button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle" type="button">
@@ -130,8 +136,8 @@
                     </button>
                     <!-- end: RESPONSIVE MENU TOGGLER -->
                     <!-- start: LOGO -->
-                    <a class="navbar-brand" href="index.html">
-                        CLIP<i class="clip-clip"></i>ONE
+                    <a class="navbar-brand" href="/">
+                        <img src="/static/images/login_logo_admin.png" width="127" height="30" alt="FuseLMS" />
                     </a>
                     <!-- end: LOGO -->
                 </div>
@@ -139,12 +145,17 @@
 
                     <!-- start: TOP NAVIGATION MENU -->
                     <ul class="nav navbar-right">
-                        <li class="dropdown ">
+                        <li class="dropdown fuse-header-item">
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                 Logged into: $page.organisation.formattedName
                                 <i class="clip-chevron-down"></i>
                             </a>
                             <ul class="dropdown-menu">
+                                <li>
+                                    <a href="/edit">
+                                        <i class="clip-pencil"></i>
+                                        &nbsp; Organisation details</a>
+                                </li>
                                 #foreach($org in $page.organisations)
                                 <li>
                                     <a href="$org.href">
@@ -155,15 +166,17 @@
                             </ul>
                         </li>                        
                         <!-- start: USER DROPDOWN -->
-                        <li class="dropdown current-user">
+                        <li class="dropdown current-user fuse-header-item">
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                                <img src="/theme/assets/images/avatar-1-small.jpg" class="circle-img" alt="">
-                                <span class="username">Peter Clark</span>
+                                #if( $profile.photoHash )
+                                <img src="/_hashes/files/$profile.photoHash" class="circle-img" alt="">
+                                #end
+                                <span class="username">$user.thisProfile.nickName</span>
                                 <i class="clip-chevron-down"></i>
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a href="/profile">
+                                    <a href="/manageUsers/$profile.userId">
                                         <i class="clip-user-2"></i>
                                         &nbsp;My Profile
                                     </a>
@@ -203,8 +216,10 @@
                         #foreach($rootItem in $menu.items)
 
                         <li class="$formatter.ifTrue( $rootItem.active, 'active open', '' )">
-                            <a href="$rootItem.href">
-                                <i class="clip-home-3"></i>
+                            #set($href = "#")
+                            #set($href = $rootItem.href)
+                            <a href="$href">
+                                <i class="fuse-icon $rootItem.id"></i>
                                 <span class="title">$rootItem.text</span>
 
                                 #if( !$rootItem.items.isEmpty() )
@@ -220,39 +235,18 @@
                             <ul class="sub-menu">
                                 #foreach($sectionItem in $subItems)
                                 <li class="$formatter.ifTrue( $sectionItem.active, 'active open', '' )">
-                                    <a href="javascript:void()">
-                                        <i class="clip-folder"></i>
+                                    <a href="$sectionItem.href">
                                         <span class="title">$sectionItem.text</span>
-
-                                        #if( !$subItems.isEmpty() )
-                                        <i class="icon-arrow"></i>
-                                        #end
 
                                         #if( $sectionItem.active )
                                         <span class="selected"></span>
                                         #end
                                     </a>
-
-                                    #if( !$sectionItem.items.isEmpty() )
-                                    <ul class="sub-menu">
-                                        #foreach($item in $sectionItem.items)
-                                        <li>
-                                            <a href="$item.href">
-                                                <span class="title">$item.text</span>
-                                            </a>
-                                        </li>  
-                                        #end
-                                    </ul>      
-                                    #end
                                 </li>
                                 #end
                             </ul>
                             #end                            
                         </li>                        
-
-
-
-
                     </ul>
                     <!-- end: MAIN NAVIGATION MENU -->
                 </div>
@@ -404,10 +398,11 @@
                                         </a>
                                     </div>
                                 </div>
-                                <div class="style-toggle close"></div>
+                                <!-- <div class="style-toggle close"></div> -->
                             </div>
                             <!-- end: STYLE SELECTOR BOX -->
                             <!-- start: PAGE TITLE & BREADCRUMB -->
+                            <!--
                             <ol class="breadcrumb">
                                 <li>
                                     <i class="clip-file"></i>
@@ -429,6 +424,7 @@
                                     </form>
                                 </li>
                             </ol>
+                            -->
                             <div class="page-header">
                                 <h1>$formatter.htmlEncode($page.title)</h1>
                             </div>
@@ -457,14 +453,17 @@
             </div>
         </div>
         <!-- end: FOOTER -->  
-        
-            <script type='text/javascript'>
+
+        <script type='text/javascript'>
             (function() {
-                var se = document.createElement('script'); se.type = 'text/javascript'; se.async = true;
+                var se = document.createElement('script');
+                se.type = 'text/javascript';
+                se.async = true;
                 se.src = '//commondatastorage.googleapis.com/code.snapengage.com/js/8403dc38-ead5-47bb-97f2-bd8a90b10184.js';
-                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(se, s);
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(se, s);
             })();
-            </script>        
+        </script>        
     </body>
     <!-- end: BODY -->
 </html>

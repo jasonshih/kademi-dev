@@ -9,110 +9,11 @@
             }
         </style>
     </head>    
-    <body class="calendar-event">
-        <h3>$page.title</h3>
+    <body class="calendar-event add-container">        
         <div class="row">
-            <div class="col-md-4 col-md-push-8">
-
-                #if( $page.allowRegistration )
-                <div class="well well-rsvp rsvp-nouser">
-                    <button class='btn btn-info requiresUser' onclick="showRsvpPanel()">Register now</button>
-                </div>                
-
-                <div class="well well-rsvp rsvp-yes">
-                    <h3>You're attending
-                        #if( $page.allowGuests )
-                        <span class="num-guests">                        
-                            with <b class="num-guests-count">$page.guests.size()</b> guest(s)
-                        </span>
-                        #end
-                    </h3>
-                    <p>You've accepted the invitation</p>
-                    <button class='btn btn-info rsvp-change'>Change</button>
-                </div>
-
-                <div class="well well-rsvp rsvp-no">
-                    <h3>You're not attending</h3>
-                    <p>You've indicated that you will not be attending</p>
-                    <button class='btn btn-info rsvp-change'>Change</button>
-                </div>
-
-                <div class="well well-rsvp rsvp-form">
-                    <form method="POST" action="$page.name" class="form-horizontal rsvp" role="form">
-                        <button class="btn btn-primary guests-add pull-right">Add a guest</button>
-                        <div class="radio">                        
-                            <label for="rsvp-yes" >
-                                <input type="radio" name="rsvp" value="ACCEPTED" id="rsvp-yes" />
-                                Yes, I'm coming                                
-                            </label>
-                        </div>
-                        #if( $page.allowGuests )
-                        <div class="guests">
-                            <br/>
-                            <p class='guests-intro'>I'm bringing the following guests:</p>
-                            <ul class="guests">
-                                #foreach($guest in $page.guests)
-                                <li>
-                                    <a class='pull-right guests-delete' href='#'><span class="glyphicon glyphicon-remove-circle"></span></a>
-                                    <a href="#" class="guest-edit">$guest.firstName $guest.surname</a> of $guest.orgName
-                                    <input type="hidden" name="guestFirstName" value="$guest.firstName"/>
-                                    <input type="hidden" name="guestSurname" value="$guest.surname"/>
-                                    <input type="hidden" name="guestEmail" value="$guest.email"/>                                                                            
-                                </li>
-                                #end
-                            </ul>
-                            <hr/>
-                        </div>
-                        #end
-
-                        <div class="radio">                        
-                            <label for="rsvp-no" >
-                                <input type="radio" name="rsvp" value="DECLINED" id="rsvp-no" />
-                                No, I will not be attending
-                            </label>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-sm-10">
-                                <br/>
-                                <button type='submit' class="btn btn-success">Submit</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                #end
-
-                <table class="table">                    
-                    <tbody>                        
-                        #if( $page.organisor )
-                        <tr>
-                            <td>Organisor</td>
-                            <td>$page.organisor.formattedName</td>
-                        </tr>
-                        #end
-
-                        #if( $page.location )
-                        <tr>
-                            <td>Location</td>
-                            <td>$page.location</td>
-                        </tr>
-                        #end
-
-                        <tr>
-                            <td>Start</td>
-                            <td>$formatter.formatDateTime( $page.startDate )</td>
-                        </tr>
-                        <tr>
-                            <td>Finish</td>
-                            <td>$formatter.formatDateTime( $page.endDate )</td>
-                        </tr>
-
-
-                    </tbody>
-                </table>
-
-            </div>            
-            <div class="col-md-8 col-md-pull-4">
+                       
+            <div class="col-md-8">
+                <h3>$page.title</h3>
                 <div class="calendar-event-byline">
                     #if( $page.organisor )
                     <small class="author">By <a href="/users/$event.organisor.name/public">$page.organisor.formattedName</a></small>
@@ -120,7 +21,10 @@
                     #if( $event.location )
                     <small class="location">At $page.location</small>
                     #end
-                    <small>Starts $formatter.formatDate( $page.startDate ) (<abbr title="$formatter.formatDateISO8601($page.startDate)" class="timeago">$!$page.startDate</abbr>)</small>
+                    <small>
+                        Starts $formatter.formatDate( $page.startDate, $page.timezone ) 
+                        (<abbr title="$formatter.formatDateISO8601($page.startDate)" class="timeago">$formatter.formatDateTime($page.startDate, $page.timezone)</abbr>)
+                    </small>
                 </div>
 
                 <div class='calendar-event-content'>
@@ -153,6 +57,113 @@
                 </div>                
                 #end
             </div>
+            
+            <div class="col-md-4">
+
+                #if( $page.allowRegistration )
+                <div class="well well-rsvp rsvp-nouser">
+                    <button class='btn btn-sm btn-info requiresUser' onclick="showRsvpPanel()">Register now</button>
+                </div>                
+
+                <div class="well well-rsvp rsvp-yes">
+                    <h3>You're attending
+                        #if( $page.allowGuests )
+                        <span class="num-guests">                        
+                            with <b class="num-guests-count">$page.myGuests.size()</b> guest(s)
+                        </span>
+                        #end
+                    </h3>
+                    <p>You've accepted the invitation</p>
+                    <button class='btn btn-sm btn-info rsvp-change'>Change</button>
+                </div>
+
+                <div class="well well-rsvp rsvp-no">
+                    <h3>You're not attending</h3>
+                    <p>You've indicated that you will not be attending</p>
+                    <button class='btn btn-sm btn-info rsvp-change'>Change</button>
+                </div>
+
+                <div class="well well-rsvp rsvp-form">
+                    <form method="POST" action="$page.name" class="form-horizontal rsvp" role="form">
+                        <button class="btn btn-sm btn-primary guests-add pull-right">Add a guest</button>
+                        <div class="radio">                        
+                            <label for="rsvp-yes" >
+                                <input type="radio" name="rsvp" value="ACCEPTED" id="rsvp-yes" />
+                                Yes, I'm coming                                
+                            </label>
+                        </div>
+                        #if( $page.allowGuests )
+                        <div class="guests">
+                            <br/>
+                            <p class='guests-intro'>I'm bringing the following guests:</p>
+                            <ul class="guests">
+                                #foreach($guest in $page.myGuests)
+                                <li>
+                                    <a class='pull-right guests-delete' href='#'><span class="glyphicon glyphicon-remove-circle"></span></a>
+                                    <a href="#" class="guest-edit">$guest.firstName $guest.surname</a> 
+                                    #if( $guest.orgName )
+                                    of $guest.orgName
+                                    #end
+                                    <input type="hidden" name="guestFirstName" value="$guest.firstName"/>
+                                    <input type="hidden" name="guestSurname" value="$guest.surname"/>
+                                    <input type="hidden" name="guestEmail" value="$guest.email"/>                                                                            
+                                    <input type="hidden" name="guestOrgName" value="$!guest.orgName"/>
+                                </li>
+                                #end
+                            </ul>
+                            <hr/>
+                        </div>
+                        #end
+
+                        <div class="radio">                        
+                            <label for="rsvp-no" >
+                                <input type="radio" name="rsvp" value="DECLINED" id="rsvp-no" />
+                                No, I will not be attending
+                            </label>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-10">
+                                <br/>
+                                <button type='submit' class="btn btn-sm btn-success">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                #end
+
+                <table class="table">                    
+                    <tbody>                        
+                        #if( $page.organisor )
+                        <tr>
+                            <td>Organiser</td>
+                            <td>$page.organisor.formattedName</td>
+                        </tr>
+                        #end
+
+                        #if( $page.location )
+                        <tr>
+                            <td>Location</td>
+                            <td>$page.location</td>
+                        </tr>
+                        #end
+
+                        <tr>
+                            <td>Start</td>
+                            <td>
+                                $formatter.formatDateTime(  $page.startDate, $page.timezone )
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Finish</td>
+                            <td>$formatter.formatDateTime( $page.endDate, $page.timezone )</td>
+                        </tr>
+
+
+                    </tbody>
+                </table>
+
+            </div>             
         </div>
 
         <div class="modal fade guests-modal">
@@ -182,18 +193,19 @@
                             </div>                            
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Add/edit guest</button>
+                            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-sm btn-primary">Add/edit guest</button>
                         </div>
                     </form>
                 </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
 
+        #portlets("userDataModal")
 
         <script type="text/javascript">
             var rsvpStatus = "$page.rsvpStatus";
-            Bob.onDOMReady(function () {
+            $(function () {
                 initViewEvent();
             });
 

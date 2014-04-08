@@ -312,6 +312,7 @@ input.cke_dialog_ui_input_text:focus, input.cke_dialog_ui_input_password:focus, 
 }
 
 a.cke_dialog_ui_button,
+button.cke_dialog_ui_button,
 div.cke_dialog_ui_button {
     display: inline-block;
     *display: inline;
@@ -345,6 +346,7 @@ span.cke_dialog_ui_button {
 }
 
 a.cke_dialog_ui_button:hover,
+button.cke_dialog_ui_button:hover,
 div.cke_dialog_ui_button:hover {
     border-color: #9e9e9e;
     background: #ccc;
@@ -359,6 +361,8 @@ div.cke_dialog_ui_button:hover {
 
 a.cke_dialog_ui_button:focus,
 a.cke_dialog_ui_button:active,
+button.cke_dialog_ui_button:focus,
+button.cke_dialog_ui_button:active,
 div.cke_dialog_ui_button:focus,
 div.cke_dialog_ui_button:active {
     border-color: #969696;
@@ -387,6 +391,7 @@ div.cke_dialog_ui_button:active {
 }
 
 a.cke_dialog_ui_button_ok,
+button.cke_dialog_ui_button_ok,
 div.cke_dialog_ui_button_ok {
     color: #fff;
     text-shadow: 0 -1px 0 #55830c;
@@ -401,6 +406,7 @@ div.cke_dialog_ui_button_ok {
 }
 
 a.cke_dialog_ui_button_ok:hover,
+button.cke_dialog_ui_button_ok:hover,
 div.cke_dialog_ui_button_ok:hover {
     border-color: #5b9909 #5b9909 #478500;
     background: #88be14;
@@ -413,11 +419,13 @@ div.cke_dialog_ui_button_ok:hover {
 }
 
 a.cke_dialog_ui_button span,
+button.cke_dialog_ui_button span,
 div.cke_dialog_ui_button span {
     text-shadow: 0 1px 0 #fff
 }
 
 a.cke_dialog_ui_button_ok span,
+button.cke_dialog_ui_button_ok span,
 div.cke_dialog_ui_button_ok span {
     text-shadow: 0 -1px 0 #55830c
 }
@@ -430,6 +438,10 @@ a.cke_dialog_ui_button_ok:focus,
 a.cke_dialog_ui_button_ok:active,
 a.cke_dialog_ui_button_cancel:focus,
 a.cke_dialog_ui_button_cancel:active,
+button.cke_dialog_ui_button_ok:focus,
+button.cke_dialog_ui_button_ok:active,
+button.cke_dialog_ui_button_cancel:focus,
+button.cke_dialog_ui_button_cancel:active,
 div.cke_dialog_ui_button_ok:focus,
 div.cke_dialog_ui_button_ok:active,
 div.cke_dialog_ui_button_cancel:focus,
@@ -440,6 +452,8 @@ div.cke_dialog_ui_button_cancel:active {
 
 a.cke_dialog_ui_button_ok:focus,
 a.cke_dialog_ui_button_ok:active,
+button.cke_dialog_ui_button_ok:focus,
+button.cke_dialog_ui_button_ok:active,
 div.cke_dialog_ui_button_ok:focus,
 div.cke_dialog_ui_button_ok:active {
     border-color: #568c0a
@@ -449,6 +463,10 @@ a.cke_dialog_ui_button_ok:focus span,
 a.cke_dialog_ui_button_ok:active span,
 a.cke_dialog_ui_button_cancel:focus span,
 a.cke_dialog_ui_button_cancel:active span,
+button.cke_dialog_ui_button_ok:focus span,
+button.cke_dialog_ui_button_ok:active span,
+button.cke_dialog_ui_button_cancel:focus span,
+button.cke_dialog_ui_button_cancel:active span,
 div.cke_dialog_ui_button_ok:focus span,
 div.cke_dialog_ui_button_ok:active span,
 div.cke_dialog_ui_button_cancel:focus span,
@@ -691,12 +709,14 @@ a.cke_smile:focus, a.cke_smile:active, a.cke_specialchar:focus, a.cke_specialcha
 }
 
 a.cke_dialog_ui_button *,
+button.cke_dialog_ui_button *,
 div.cke_dialog_ui_button * {
     color: inherit;
     cursor: pointer;
 }
 
 a.cke_dialog_ui_button span,
+button.cke_dialog_ui_button span,
 div.cke_dialog_ui_button span {
     font-size: 12px;
     line-height: 20px;
@@ -715,4 +735,14 @@ div.cke_dialog_ui_button span {
 
 .cke_dialog_ui_button.btn-upload span {
     padding-top: 3px;
+}
+
+.fallback-message {
+    padding: 15px;
+    border: 1px solid #bce8f1;
+    border-radius: 4px;
+    color: #3a87ad;
+    background-color: #d9edf7;
+    white-space: pre-wrap;
+    margin-bottom: 20px;
 }

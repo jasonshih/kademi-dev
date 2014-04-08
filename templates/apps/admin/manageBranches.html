@@ -3,46 +3,45 @@
         <title>Manage Versions</title>
         <link href="publish.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="publish.js">//</script>
-
     </head>
     <body class="dashboard">
-        <section id="publish" class="MainContent">
-            <article class="Note">Manage versions for this repository.</article>
-            <br/>
-            <br/>
-            <table style="width: 100%">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Created Date</th>
-                        <th>From</th>
-                        <th>Visibility</th>
-                        <th>Last modified</th>
-                        <th>Modified by</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    #foreach($branch in $folder.repository.branches)
-                    <tr>
-                        <td>$branch.name</td>
-                        <td>$!branch.createdDate</td>
-                        <td>$!branch.fromCommit.branch.name</td>
-                        <td>
-                            #if( $branch.hiddenBy )
-                            hidden by $branch.hiddenBy.name (<a class="unhide" href="$branch.name">un-hide</a>)
-                            #else
-                            visible (<a class="hide" href="$branch.name">hide</a>)
-                            #end
-                        </td>
-                        <td>$!branch.head.createdDate</td>
-                        <td>$!branch.head.editor.name</td>
-                        <td><a href="/repositories/$folder.repository.name/$branch.name/commits">History</a></td>
-                    </tr>
-
-                    #end
-                </tbody>
-            </table>
-        </section>
+    	<p class="well">Manage versions for this repository.</p>
+    	<div id="publish" class="panel panel-default MainContent">
+    		<div class="panel-body">
+    			<table class="table table-hover">
+	                <thead>
+	                    <tr>
+	                        <th>Name</th>
+	                        <th>Created Date</th>
+	                        <th>From</th>
+	                        <th>Visibility</th>
+	                        <th>Last modified</th>
+	                        <th>Modified by</th>
+	                        <th></th>
+	                    </tr>
+	                </thead>
+	                <tbody>
+	                    #foreach($branch in $folder.repository.branches)
+	                    <tr>
+	                        <td>$branch.name</td>
+	                        <td>$!branch.createdDate</td>
+	                        <td>$!branch.fromCommit.branch.name</td>
+	                        <td>
+	                            #if( $branch.hiddenBy )
+	                            hidden by $branch.hiddenBy.name (<a class="unhide" href="$branch.name">un-hide</a>)
+	                            #else
+	                            visible (<a class="hide" href="$branch.name">hide</a>)
+	                            #end
+	                        </td>
+	                        <td>$!branch.head.createdDate</td>
+	                        <td>$!branch.head.editor.name</td>
+	                        <td><a href="/repositories/$folder.repository.name/$branch.name/commits" class="btn btn-xs btn-blue btn-block">History <i class="fa fa-arrow-circle-right"></i></a></td>
+	                    </tr>
+	                    #end
+	                </tbody>
+	            </table>
+    		</div>
+    	</div>
         <script type="text/javascript">
             Bob.onDOMReady(function () {
                 $("#publish form").forms({

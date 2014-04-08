@@ -41,11 +41,11 @@ function initUploadUsers() {
 
 	var resultUploadCsv = modalUploadCsv.find('.upload-results');
 	$("#do-upload-csv").mupload({
-		buttonText: "Upload spreadsheet",
+		buttonText: "<i class=\"clip-folder\"></i> Upload spreadsheet",
 		url: "users.csv",
 		useJsonPut: false,
 		oncomplete: function (data, name, href) {
-			log("oncomplete:", data.result.data, name, href);
+			flog("oncomplete:", data.result.data, name, href);
 			resultUploadCsv.find('.num-updated').text(data.result.data.numUpdated);
 			resultUploadCsv.find('.num-inserted').text(data.result.data.numInserted);
 			resultUploadCsv.find('.num-unmatched').text(data.result.data.unmatched.length);
@@ -57,7 +57,7 @@ function initUploadUsers() {
 
 	var formUploadCsv = modalUploadCsv.find('form');
 	$("#allow-inserts").click(function (e) {
-		log("click", e.target);
+		flog("click", e.target);
 		if ($(e.target).is(":checked")) {
 			formUploadCsv.attr("action", "users.csv?insertMode=true");
 		} else {
@@ -71,7 +71,7 @@ function showUnmatched(resultUploadCsv, unmatched) {
 	var tbody = unmatchedTable.find("tbody");
 	tbody.html("");
 	$.each(unmatched, function (i, row) {
-		log("unmatched", row);
+		flog("unmatched", row);
 		var tr = $("<tr>");
 		$.each(row, function (ii, field) {
 			tr.append("<td>" + field + "</td>");
@@ -83,7 +83,7 @@ function showUnmatched(resultUploadCsv, unmatched) {
 function initSearchUser() {
 	$("#user-query").keyup(function () {
 		typewatch(function () {
-			log("do search");
+			flog("do search");
 			doSearch();
 		}, 500);
 	});
@@ -95,12 +95,12 @@ function initSearchUser() {
 function doSearch() {
 	var query = $("#user-query").val();
 	var groupName = $("#search-group").val();
-	log("doSearch", query, groupName);
+	flog("doSearch", query, groupName);
 	$.ajax({
 		type: 'GET',
 		url: window.location.pathname + "?q=" + query + "&g=" + groupName,
 		success: function (data) {
-			log("success", data);
+			flog("success", data);
 			var $fragment = $(data).find("#table-users");
 			$("#table-users").replaceWith($fragment);
 		},
@@ -119,7 +119,7 @@ function doUpdateUserId(newUserId) {
 			newUserId: newUserId
 		},
 		success: function (data) {
-			log("success", data)
+			flog("success", data)
 			if (data.status) {
 				window.location.reload();
 			} else {
@@ -225,7 +225,7 @@ function initNewUserForm() {
 
 	modal.find("form").forms({
 		callback: function (resp) {
-			log("done new user", resp);
+			flog("done new user", resp);
 			if (resp.nextHref) {
 				window.location.href = resp.nextHref;
 			}
@@ -239,26 +239,26 @@ function initOrgSearch() {
 	var orgId = $('#orgId');
 	var orgSearch = $('#org-search');
 
-	log("initOrgSearch", orgTitle);
+	flog("initOrgSearch", orgTitle);
 	orgTitle.on("focus click", function () {
 		orgSearch.show();
-		log("show", orgSearch);
+		flog("show", orgSearch);
 	});
 	orgTitle.keyup(function () {
 		typewatch(function () {
-			log("do search");
+			flog("do search");
 			doOrgSearch();
 		}, 500);
 	});
 	$("div.groups").on("click", "a", function (e) {
-		log("clicked", e.target);
+		flog("clicked", e.target);
 		e.preventDefault();
 		e.stopPropagation();
 		var orgLink = $(e.target);
 		orgId.val(orgLink.attr("href"));
 		orgTitle.val(orgLink.text());
 		$("#org-search").hide();
-		log("clicked", orgId.val(), orgTitle.val());
+		flog("clicked", orgId.val(), orgTitle.val());
 	});
 }
 
@@ -267,12 +267,12 @@ function doOrgSearch() {
 		type: 'GET',
 		url: window.location.pathname + "?orgSearch=" + $("#orgTitle").val(),
 		success: function (data) {
-			log("success", data);
+			flog("success", data);
 
 			var $fragment = $(data).find("#org-search");
 			$("#org-search").replaceWith($fragment);
 			$fragment.show();
-			log("frag", $fragment);
+			flog("frag", $fragment);
 		},
 		error: function (resp) {
 			alert("An error occurred searching for organisations");
@@ -283,7 +283,7 @@ function doOrgSearch() {
 function initRemoveUsers() {
 	$(".btn-remove-users").click(function (e) {
 		var node = $(e.target);
-		log("removeUsers", node, node.is(":checked"));
+		flog("removeUsers", node, node.is(":checked"));
 		var checkBoxes = $('#table-users').find('tbody input[name=toRemoveId]:checked');
 		if (checkBoxes.length == 0) {
 			alert("Please select the users you want to remove by clicking the checkboxs to the right");
@@ -297,12 +297,11 @@ function initRemoveUsers() {
 
 function initAddToGroup() {
 	var modal = $("#modal-add-to-group");
-	var chks = $('#table-users').find('tbody input[name=toRemoveId]');
-
+	
 	$(".btn-add-to-group").click(function (e) {
 		var node = $(e.target);
-		log("addToGroup", node, node.is(":checked"));
-		var checkBoxes = chks.filter(':checked');
+		flog("addToGroup", node, node.is(":checked"));
+		var checkBoxes = $('#table-users').find('tbody input[name=toRemoveId]').filter(':checked');
 		if (checkBoxes.length === 0) {
 			alert("Please select the users you want to add by clicking the checkboxs to the right");
 		} else {
@@ -313,8 +312,8 @@ function initAddToGroup() {
 	modal.find(".groups-wrapper a").click(function (e) {
 		e.preventDefault();
 		var href = $(e.target).attr("href");
-		log("add to group", href);
-		var checkBoxes = chks.filter(':checked');
+		flog("add to group", href);
+		var checkBoxes = $('#table-users').find('tbody input[name=toRemoveId]').filter(':checked');
 		doAddUsersToGroup(href, checkBoxes);
 	});
 }
@@ -326,7 +325,7 @@ function doAddUsersToGroup(groupName, checkBoxes) {
 		dataType: "json",
 		url: "?groupName=" + groupName,
 		success: function (data) {
-			log("success", data);
+			flog("success", data);
 			$("#modal-add-to-group").modal('hide');
 			if (data.status) {
 				doSearch();
@@ -348,7 +347,7 @@ function doRemoveUsers(checkBoxes) {
 		dataType: "json",
 		url: "",
 		success: function (data) {
-			log("success", data);
+			flog("success", data);
 			if (data.status) {
 				doSearch();
 				alert("Removed users ok");
@@ -379,7 +378,7 @@ function showLoginAs(profileId) {
 		url: profileId + "?availWebsites",
 		dataType: "json",
 		success: function (response) {
-			log("success", response.data);
+			flog("success", response.data);
 			var newList = "";
 			if (response.data.length > 0) {
 				$.each(response.data, function (i, n) {

@@ -1,9 +1,9 @@
 function initManagePost() {
-	var tabbable = $('.tabble');
+	var table = $('.table');
 	var reportsWrapper = $('#reports');
 	var postsWrapper = $('#posts');
 	
-	tabbable.on('click', '.btn-edit-post', function (e) {
+	table.on('click', '.btn-edit-post', function (e) {
 		e.preventDefault();
 		
 		var btn = $(this);

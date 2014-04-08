@@ -210,13 +210,13 @@ function initComments(pageUrl) {
         path: "/"
     });
     log("comments hidden", commentsHidden);
-    if (commentsHidden == "true") {
+    if (commentsHidden === "true") {
         $("#comments").hide();
         $(".hideBtn a").text("Show comments");
         $(".hideBtn a").addClass("ishidden");
     }
 
-    $("body").on("click", ".commentContainer textarea", function(e) {
+    $("body").on("click focus", ".commentContainer textarea", function(e) {
         $(e.target).closest("div").find(".commentControls").show();
     });
     $('.commentContainer textarea').css('overflow', 'hidden').autogrow()

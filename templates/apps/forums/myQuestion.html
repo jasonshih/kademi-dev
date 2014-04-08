@@ -6,7 +6,7 @@
         <script type="text/javascript" src="/static/js/jquery.report-abuse.js" >//</script>
         <link href="/static/js/report-abuse.css" rel="stylesheet" type="text/css" />
     </head>
-    <body class="forums">
+    <body class="forums add-container">
         <!-- Content goes here - NO HEADER/BANNER/MENU! -->
         <div id="content">            
             <div class="PostDetails">
@@ -52,7 +52,7 @@
         </div>
 
         <script type="text/javascript">
-            Bob.onDOMReady(function () {($) {
+            $(function () {
                 initMyQuestion();
                 initComments(window.location.pathname);
             });

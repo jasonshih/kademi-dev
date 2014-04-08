@@ -5,24 +5,22 @@
         <script type="text/javascript" src="manageWebsite.js">//</script>
         <script type="text/javascript">
             Bob.onDOMReady(function () {
-                flog("initManageWebsite");
-                initManageWebsite();
+                flog("initManageWebsites");
                 $("form.addOrg").forms({
                     callback: function(resp) {
                         flog("done", resp);
                         window.location.reload();
                     }
                 });
-
             });
         </script>        
     </head>
     <body>
         <div class="">
             <p>
-	            <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#addWebsiteModal" ><i class="fa fa-plus"></i> Create new website</a>
+	            <a href="#" class="btn btn-sm btn-success" data-toggle="modal" data-target="#addWebsiteModal" ><i class="fa fa-plus"></i> Create new website</a>
             </p>
-
+            
             <div class="modal fade" id="addWebsiteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -31,57 +29,63 @@
                 <div class="modal-body">
                     <form class="addOrg form-horizontal" method="POST" action=".">
 	                    <div class="form-group">
-	                        <label for="newName" class="col-sm-4 control-label">Simple name</label>
+	                        <label for="newName" class="col-sm-3 control-label">Simple name</label>
 	                        <div class="col-sm-8">
-	                            <input type="text" class="form-control simpleChars required" required="true" id="newName" name="newName" placeholder="Simple characters only, no punctuation, dots, etc, all lower case, not a domain name">
+	                            <input type="text" class="form-control reallySimpleChars required" required="true" id="newName" name="newName" placeholder="Simple characters only, no punctuation, dots, etc, all lower case, not a domain name">
 	                        </div>
 	                    </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" data-type="form-submit" class="btn btn-primary">Create website</button>
+                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Create website</button>
                 </div>
             </div><!-- /.modal -->
         </div>
-
-        <table id="search-results" class="table table-bordered table-striped table-hover table-data">
-            <colgroup>
-                <col />
-                <col />
-                <col />
-                <col style="width: 60px"/>
-            </colgroup>            
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Live branch</th>
-                    <th>Theme</th>
-                    <th class="action">Action</th>
-                </tr>
-            </thead>            
-            <tbody>
-                #foreach($w in $page.websites)
-                <tr>
-                    <td>$w.name</td>
-                    <td>$!w.liveBranch</td>
-                    <td>$!w.liveBranch().publicTheme</td>
-                    <td class="action">
-                        <div class="btn-group btn-group-sm">
-                            <button data-toggle="dropdown" class="btn btn-success dropdown-toggle" type="button">
-	                            <i class="fa fa-cog"></i>
-                            </button>
-                            <ul role="menu" class="dropdown-menu pull-right">
-	                            <li><a href="$w.name">Edit</a></li>
-                                <li><a target="_blank" href="http://${page.websiteAddress($w)}${formatter.portString}/" class="Btn ViewWebsite">View</a></li>
-                            </ul>
-                        </div>                        
-
-                    </td>
-                </tr>
-                #end
-            </tbody>
-        </table>
-
+        
+        <div class="panel panel-default">
+            <div class="panel-body">
+	            <div class="table-responsive">
+	                <table id="search-results" class="table table-striped table-hover">
+			            <colgroup>
+			                <col width="45%" />
+			                <col width="20%" />
+			                <col width="20%" />
+			                <col width="15%" />
+			            </colgroup>
+			            <thead>
+			                <tr>
+			                    <th>Name</th>
+			                    <th>Live branch</th>
+			                    <th>Theme</th>
+			                    <th class="action"></th>
+			                </tr>
+			            </thead>
+			            <tbody>
+			                #foreach($w in $page.websites)
+			                <tr>
+			                    <td>$w.name</td>
+			                    <td>$!w.liveBranch</td>
+			                    <td>$!w.liveBranch().publicTheme</td>
+			                    <td class="action">
+									<div class="btn-group btn-group-sm">
+										<a href="http://${page.websiteAddress($w)}${formatter.portString}/" target="_blank" class="btn btn-sm btn-info"><i class="fa fa-eye"></i> View</a>
+			                            <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
+			                                <span class="caret"></span>
+			                                <span class="sr-only">Toggle Dropdown</span>
+			                            </button>
+			                            <ul role="menu" class="dropdown-menu pull-right">
+			                                <li><a href="$w.name"><i class="fa fa-edit"></i> Edit</a></li>
+			                                <li><a target="_blank" href="http://${page.websiteAddress($w)}${formatter.portString}/" class="ViewWebsite"><i class="fa fa-eye"></i> View</a></li>
+			                            </ul>
+			                        </div>
+			                    </td>
+			                </tr>
+			                #end
+			            </tbody>
+			        </table>
+	            </div>
+            </div>
+        </div>
     </body>
 </html>

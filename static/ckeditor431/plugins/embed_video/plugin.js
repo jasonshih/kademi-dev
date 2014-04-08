@@ -149,6 +149,7 @@ CKEDITOR.plugins.add( 'embed_video',
                             }
                         });                
                         $("#myVidTree").parent().find(".myUploaded").mupload({
+                            isInCkeditor: true,
                             buttonText: "Upload video",
                             useDropzone: true,
                             oncomplete: function(data, name, href) {

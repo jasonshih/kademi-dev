@@ -9,128 +9,141 @@
         <script type="text/javascript" src="/static/js/jquery.timeago.js">//</script>
     </head>
     <body class="manageCalendars">
-        <p class="alert alert-info">
-	        <a class="close" data-dismiss="alert">&times;</a>
-	        Use this page to create and manage the calendars in your organisation.
+        <p class="well">
+            Use this page to create and manage the calendars in your organisation.
         </p>
-        <p>
-	        <a class="btn btn-primary btn-add-calendar"><i class="fa fa-plus"></i> Add new calendar</a>
+        <p class="clearfix">
+            <a class="btn btn-success btn-sm btn-add-calendar"><i class="fa fa-plus"></i> Add new calendar</a>
         </p>
-
         <div class="row">
-	        <div class="col-md-6 col-sm-12">
-		        <div class="panel panel-default">
-			        <div class="panel-heading">
-				        <i class="clip-list"></i>
-				        List of calendars
-			        </div>
-			        <div class="panel-body">
-				        #foreach($cal in $page.children)
-				            <table class="table table-bordered table-striped table-hover table-calendar">
-					            <colgroup>
-						            <col />
-						            <col />
-						            <col style="width: 80px" />
-					            </colgroup>
-					            <thead>
-						            <tr>
-							            <th colspan="3" class="action">
-								            <a href="$cal.name">$cal.title</a>
-								            <div class="btn-group btn-group-xs pull-right">
-									            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
-										            <span class="caret"></span>
-									            </button>
-									            <ul class="dropdown-menu pull-right" role="menu">
-										            <li> <a  title="View" href="$cal.name?goto" target="_blank">View</a></li>
-										            <li> <a title="Edit" href="$cal.name">Edit</a></li>
-										            <li class="divider"></li>
-										            <li> <a class="btn-delete" title="Delete" href="$cal.name">Delete</a></li>
-									            </ul>
-								            </div>
-							            </th>
-						            </tr>
-						            <tr>
-							            <th>Event summary</th>
-							            <th>Start date</th>
-							            <th class="action">Action</th>
-						            </tr>
-					            </thead>
-					            <tbody>
-						            #set($upcoming = $cal.upcomingEvents)
-						            #if( !$upcoming.isEmpty() )
-						            #foreach($event in $upcoming )
-						            <tr>
-							            <td>$event.summary</td>
-							            <td><abbr title="$formatter.formatDateISO8601($event.startDate)" class="timeago">$!event.startDate</abbr></td>
-							            <td class="action">
-								            <div class="btn-group btn-group-xs">
-									            <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
-										            <span class="clip-settings"></span>
-									            </button>
-									            <ul class="dropdown-menu pull-right" role="menu">
-										            <li> <a title="Edit" href="$cal.name/$event.name">Edit</a></li>
-										            <li class="divider"></li>
-										            <li> <a class="btn-delete" title="Delete" href="$cal.name/$formatter.percentEncode( $event.name )">Delete</a></li>
-									            </ul>
-								            </div>
-							            </td>
-						            </tr>
-						            #end
-						            #else
-						            <tr>
-							            <td colspan="2">There are no upcoming events for this calendar.</td>
-							            <td class="action">
-								            <a class="btn btn-info btn-xs" href="$cal.name/" title="Add an event"><i class="fa fa-plus"></i></a>
-							            </td>
-						            </tr>
-						            #end
-					            </tbody>
-				            </table>
-				        #end
-			        </div>
-		        </div>
-	        </div>
-	        <div class="col-md-6 col-sm-12">
-		        <div class="panel panel-default">
-			        <div class="panel-heading">
-				        <i class="clip-calendar"></i>
-				        Calendar
-			        </div>
-			        <div class="panel-body">
-			            <div id="calendar" class="calendar-container"></div>
-			        </div>
-		        </div>
-	        </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="clip-list"></i>List of calendars
+                    </div>
+                    <div class="panel-body">
+                        #foreach($cal in $page.children)
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover table-calendar">
+                                <colgroup>
+                                    <col />
+                                    <col />
+                                    <col style="width: 100px" />
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        #if ($cal.title)
+                                            #set ($calName = $cal.title)                                            
+                                        #else
+                                            #set ($calName = $cal.name)
+                                        #end
+                                        <th colspan="2" class="">
+                                            <a href="$cal.name">$calName  <i class="fa fa-arrow-circle-right"></i></a>
+                                        </th>
+                                        <th>
+                                            <div class="btn-group btn-group-sm">
+                                                <a href="$cal.name" class="btn btn-sm btn-primary btn-sm">
+                                                    <i class="fa fa-edit"></i> Edit
+                                                </a>
+                                                <button class="btn btn-sm btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+                                                    <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu pull-right" role="menu">
+                                                    <li> <a  title="View" href="$cal.name?goto" target="_blank"><i class="clip-eye"></i> View</a></li>
+                                                    <li> <a title="Edit" href="$cal.name"><i class="fa fa-edit"></i> Edit</a></li>
+                                                    <li class="divider"></li>
+                                                    <li> <a class="btn-delete" title="Delete" href="$cal.name"><i class="fa fa-times"></i> Delete</a></li>
+                                                </ul>
+                                            </div>
+                                        </th>
+
+                                    </tr>
+                                    <tr>
+                                        <th>Event summary</th>
+                                        <th>Start date</th>
+                                        <th class="action"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    #set($upcoming = $cal.upcomingEvents)
+                                    #if( !$upcoming.isEmpty() )
+                                    #foreach($event in $upcoming )
+                                    <tr>
+                                        <td>$event.summary</td>
+                                        <td><abbr title="$formatter.formatDateISO8601($event.startDate)" class="timeago">$!event.startDate</abbr></td>
+                                        <td class="action">
+                                            <div class="btn-group btn-group-xs">
+                                                <button type="button" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown">
+                                                    <span class="clip-settings"></span>
+                                                </button>
+                                                <ul class="dropdown-menu pull-right" role="menu">
+                                                    <li> <a title="Edit" href="$cal.name/$event.name">Edit</a></li>
+                                                    <li class="divider"></li>
+                                                    <li> <a class="btn-delete" title="Delete" href="$cal.name/$formatter.percentEncode( $event.name )">Delete</a></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    #end
+                                    #else
+                                    <tr>
+                                        <td colspan="2">There are no upcoming events for this calendar.</td>
+                                        <td class="action">
+                                            <a class="btn btn-info btn-xs" href="$cal.name/" title="Add an event"><i class="fa fa-plus"></i></a>
+                                        </td>
+                                    </tr>
+                                    #end
+                                </tbody>
+                            </table>
+                        </div>
+                        #end
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="clip-calendar"></i>Calendar
+                    </div>
+                    <div class="panel-body">
+                        <div id="calendar" class="calendar-container"></div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div id="modal-add-calendar" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
-	        <div class="modal-header">
-		        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-		        <h4 class="modal-title">Add Calendar</h4>
-	        </div>
-	        <div class="modal-body">
-		        <form method="post" action="." class="form-horizontal">
-			        <input type="hidden" name="action" value="create"/>
-			        <div class="form-group">
-				        <label class="control-label col-md-4" for="calendarName">Calendar name</label>
-				        <div class="col-md-8"><input type="text" name="name" id="calendarName" value="" class="form-control required simpleChars" maxlength="30" placeholder="Forum name" /></div>
-			        </div>
-			        <div class="form-group">
-				        <label class="control-label col-md-4" for="calendarTitle">Calendar Title</label>
-				        <div class="col-md-8"><input type="text" name="title" id="calendarTitle" value="" class="form-control required" maxlength="" placeholder="Forum title" /></div>
-			        </div>
-			        <div class="form-group">
-				        <label class="control-label col-md-4" for="calendarNotes">Description</label>
-				        <div class="col-md-8">
-					        <textarea name="notes" id="calendarNotes" class="form-control" rows="3"></textarea>
-				        </div>
-			        </div>
-		        </form>
-	        </div>
-	        <div class="modal-footer">
-		        <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
-		        <button class="btn btn-primary" data-type="form-submit" type="button">Save</button>
-	        </div>
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                <h4 class="modal-title">Add Calendar</h4>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="." class="form-horizontal">
+                    <input type="hidden" name="action" value="create" />
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="calendarName">Calendar name</label>
+                        <div class="col-md-8">
+                            <input type="text" name="name" id="calendarName" value="" class="form-control simpleChars" maxlength="30" placeholder="Calendar name" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="calendarTitle">Calendar Title</label>
+                        <div class="col-md-8">
+                            <input type="text" name="title" id="calendarTitle" value="" class="form-control" maxlength="" placeholder="Calendar Title" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="calendarNotes">Description</label>
+                        <div class="col-md-8">
+                            <textarea name="notes" id="calendarNotes" class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                <button class="btn btn-sm btn-primary" data-type="form-submit" type="button">Save</button>
+            </div>
         </div>
 
         <script type="text/javascript">

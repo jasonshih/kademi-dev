@@ -36,55 +36,6 @@
 	border-radius: 0 !important;
 }
 
-.memberships-wrapper {
-	padding: 0 0 0 15px;
-}
-
-.memberships-list {
-	list-style: none;
-	padding: 0;
-	margin-bottom: 0;
-}
-
-.memberships-list li {
-	padding: 0 15px 0 0;
-	margin-bottom: 5px;
-}
-
-.memberships-list li div {
-	border-radius: 5px;
-	background: #f0f0f0;
-	padding: 5px;
-	float: left;
-	width: 100%;
-	line-height: 23px;
-}
-
-.memberships-list li div span {
-	float: left;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	overflow-y: hidden;
-}
-
-.memberships-list li div a {
-	float: right;
-}
-
-.modal-body .memberships-list li div {
-	padding: 3px 5px;
-}
-
-.modal-body .memberships-list li div span {
-	float: none;
-	display: block;
-}
-
-.modal-body .memberships-list li div label {
-	margin-bottom: 0;
-	display: block;
-}
-
 #org-search {
 	margin: -1px 15px 0;
 	display: none;

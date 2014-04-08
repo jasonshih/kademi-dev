@@ -10,22 +10,22 @@
         #set($currentBranch = $page.closest("branch"))
         <div class="btn-group publishing pull-right">
             #if( $currentBranch.live )
-            <a href="../manageBranches" class="islive btn btn-danger">
+            <a href="${currentBranch.href}../manageBranches" class="islive btn btn-sm btn-danger">
                 <i class="fa fa-gear"></i>
                 LIVE
             </a>
             #else
-            <a href="${currentBranch.href}publish" class="publish btn btn-success">
+            <a href="${currentBranch.href}publish" class="publish btn btn-sm btn-success">
                 <i class="glyphicon glyphicon-ok-sign"></i>
                 PUBLISH
             </a>
-            <a href="../manageBranches" class="btn btn-primary">
+            <a href="${currentBranch.href}../manageBranches" class="btn btn-sm btn-primary">
                 <i class="fa fa-gear"></i>
                 Manage versions
             </a>
             #end
 
-            <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+            <a class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
                 <b>Editing version:</b>
                 $currentBranch.name
                 <span class="caret"></span>
@@ -41,7 +41,7 @@
                         <a href="${b.href}" class="hide-branch pull-right btn-xs btn btn-warning" title="Hide this version. Can be restored from the manage versions screen"><i class="clip-eye"></i></a>
                         #end
                     </aside>                    
-                    <a href="${b.href}" class="branch noclear">
+                    <a href="${b.href}manageCourses" class="branch noclear">
                         $b.name
                     </a>
                 </li>
@@ -50,18 +50,18 @@
         </div>
 
         <div class="btn-group">
-            <a target='_blank' href='${page.externalUrl}' class='btn btn-success'>
+            <a target='_blank' href='${page.externalUrl}' class='btn btn-sm btn-success'>
                 <i class="fa fa-arrow-circle-right"></i>
                 View website
             </a>
             <div class="btn-group">
-                <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+                <a class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
                     <b>Change website:</b> $page.closest("website").name
                     <span class="caret"></span>
                 </a>
                 <ul role="menu" class="dropdown-menu list">
                     #foreach($w in $page.closest("website").parent.children)
-                    <li class="list-item"><a href="${w.href}">$w.name</a></li>
+                    <li class="list-item"><a href="${w.href}manageCourses">$w.name</a></li>
                     #end
                 </ul>
             </div>
@@ -70,20 +70,20 @@
         <hr/>
 
         <div id="manage-course">
-	        <p class="alert alert-info">This page will allow you to create and edit the flow of modules and control how your users progress through your learning content. Simply click the + button to add a new item, drag an item up or down to reposition it or click on the down arrow in an item for more options.</p>
+            <p class="well">This page will allow you to create and edit the flow of modules and control how your users progress through your learning content. Simply click the + button to add a new item, drag an item up or down to reposition it or click on the down arrow in an item for more options.</p>
         </div>
 
         #set($program = $page.closest("program"))
         #set($programs = $page.closest("programs"))
         <div class="btn-group programs-wrapper">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
                 <span><b>Program:</b> $!program.title</span> <span class="caret"></span>
             </button>
             <ul class="dropdown-menu list programs-list" role="menu">
                 #foreach($otherProg in $programs.children.ofType.program)
-                <li class="program clearfix list-item">
+                <li class="program clearfix list-item" id="prog-${otherProg.name}">
                     <aside class="list-item-controller">
-                        <a class="btn btn-xs btn-success btn-edit-program" title="Edit program" href="#"><i class="glyphicon glyphicon-edit"></i></a>
+                        <a class="btn btn-xs btn-success btn-edit-program" title="Edit program" href="$otherProg.href"><i class="glyphicon glyphicon-edit"></i></a>
                         <a class="btn btn-xs btn-danger btn-delete-program" title="Delete program" href="$otherProg.href"><i class="glyphicon glyphicon-remove"></i></a>
                     </aside>
                     <a href="${otherProg.href}">$otherProg.title</a>
@@ -106,11 +106,11 @@
                     <div class="panel-body courses-wrapper clearfix">
                         <ul class="courses-list">
                             #foreach($course in $program.children.ofType.course)
-                            <li class="course clearfix">
+                            <li class="course clearfix" id="course-${course.name}">
                                 <aside class="pull-right">
                                     <div class="btn-group btn-group-sm">
-                                        <button type="button" class="btn btn-warning btn-move-course" title="Move up or down"><i class="glyphicon glyphicon-sort"></i></button>
-                                        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+                                        <button type="button" class="btn btn-sm btn-warning btn-move-course" title="Move up or down"><i class="glyphicon glyphicon-sort"></i></button>
+                                        <button type="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown">
                                             <i class="fa fa-cog"></i>
                                         </button>
                                         <ul class="dropdown-menu pull-right" role="menu">
@@ -126,7 +126,7 @@
                             </li>
                             #end
                         </ul>
-                        <p class="pull-right"><a href="#" role="button" class="btn btn-primary btn-add-course"><i class="fa fa-plus"></i> New course</a></p>
+                        <p class="pull-right"><a href="#" role="button" class="btn btn-sm btn-success btn-add-course"><i class="fa fa-plus"></i> New course</a></p>
                     </div>
                 </div>
             </div>
@@ -138,49 +138,50 @@
                     </div>
                     <div class="panel-body modules-wrapper clearfix">
                         #set($levels = $page.closest("course").children.ofType.folder.sortByField("order").groupByField("level") )
+
                         <ul class="modules-list">
                             #foreach($level in $levels.values())
-                                #foreach($module in $level)
-                                <li class="module clearfix" data-author-notes="$!module.notes" id="${module.name}">
-                                    <aside class="pull-right">
-                                        <div class="btn-group btn-group-sm">
-                                            <button type="button" class="btn btn-warning btn-move-module" title="Move up or down"><i class="glyphicon glyphicon-sort"></i></button>
-                                            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
-                                                <i class="fa fa-cog"></i>
-                                            </button>
-                                            <ul class="dropdown-menu pull-right" role="menu">
-                                                <li><a class="btn-edit-module" role="button" href="${module.name}">Edit module</a></li>
-                                                <li><a href="${module.name}">Manage this module</a></li>
-                                                <li><a href="${module.name}?goto=" target="_blank">View module</a></li>
-                                                <li><a href="#" class="btn-add-splitter">Add splitter below</a></li>
-                                                <li><a href="#" class="btn-duplicate-module">Duplicate</a></li>
-                                                <li><a href="${module.name}?format=pdf" target="_blank">Export to PDF</a></li>
-                                                <li><a href="${module.name}?format=text" target="_blank">Export to text</a></li>
-                                                <li class="divider"></li>
-                                                <li><a class="btn-delete-module" href="${module.name}">Delete this module</a></li>
-                                            </ul>
-                                        </div>
-                                    </aside>
-                                    <span>$module.name - $module.title</span>
-                                </li>
-                                #end
-                                <li class="splitter clearfix">
-                                    <aside class="pull-right">
-                                        <div class="btn-group btn-group-sm">
-                                            <button type="button" class="btn btn-warning btn-move-splitter" title="Move up or down"><i class="glyphicon glyphicon-sort"></i></button>
-                                            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
-	                                            <i class="fa fa-cog"></i>
-                                            </button>
-                                            <ul class="dropdown-menu pull-right" role="menu">
-                                                <li><a href="${module.name}" class="btn-delete-splitter">Delete splitter</a></li>
-                                            </ul>
-                                        </div>
-                                    </aside>
-                                    <span>Level Splitter</span>
-                                </li>
+                            #foreach($module in $level)
+                            <li class="module clearfix" data-author-notes="$!module.notes" id="${module.name}">
+                                <aside class="pull-right">
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="button" class="btn btn-sm btn-warning btn-move-module"><i class="glyphicon glyphicon-sort"></i></button>
+                                        <button type="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown">
+                                            <i class="fa fa-cog"></i>
+                                        </button>
+                                        <ul class="dropdown-menu pull-right" role="menu">
+                                            <li><a href="${module.name}" class="btn-edit-module" role="button">Edit module</a></li>
+                                            <li><a href="${module.name}">Manage this module</a></li>
+                                            <li><a href="${module.name}?goto=" target="_blank">View module</a></li>
+                                            <li><a href="#" class="btn-add-splitter">Add splitter below</a></li>
+                                            <li><a href="#" class="btn-duplicate-module">Duplicate</a></li>
+                                            <li><a href="${module.name}?format=pdf" target="_blank">Export to PDF</a></li>
+                                            <li><a href="${module.name}?format=text" target="_blank">Export to text</a></li>
+                                            <li class="divider"></li>
+                                            <li><a class="btn-delete-module" href="${module.name}">Delete this module</a></li>
+                                        </ul>
+                                    </div>
+                                </aside>
+                                <a href="$module.href">$module.name - $module.title</a>
+                            </li>
+                            #end
+                            <li class="module splitter clearfix">
+                                <aside class="pull-right">
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="button" class="btn btn-sm btn-warning btn-move-splitter"><i class="glyphicon glyphicon-sort"></i></button>
+                                        <button type="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown">
+                                            <i class="fa fa-cog"></i>
+                                        </button>
+                                        <ul class="dropdown-menu pull-right" role="menu">
+                                            <li><a href="${module.name}" class="btn-delete-splitter">Delete splitter</a></li>
+                                        </ul>
+                                    </div>
+                                </aside>
+                                <span>Level Splitter</span>
+                            </li>
                             #end
                         </ul>
-                        <p class="pull-right"><a href="#" role="button" class="btn btn-primary btn-add-module"><i class="fa fa-plus"></i> New module</a></p>
+                        <p class="pull-right"><a href="#" role="button" class="btn btn-sm btn-success btn-add-module"><i class="fa fa-plus"></i> New module</a></p>
                     </div>
                 </div>
             </div>
@@ -194,15 +195,22 @@
             </div>
             <div class="modal-body">
                 <form method="post" action="${parentOrg.path}/programs/" class="form-horizontal">
-                    <input type="hidden" value="" name="programName" />
+                    <input type="hidden" name="originalProgramName" value=""  />
                     <div class="form-group">
-                        <label for="programTitle" class="control-label col-md-4">Enter program name</label>
+                        <label for="programTitle" class="control-label col-md-3">Program code</label>
                         <div class="col-md-8">
-                            <input type="text" name="programTitle" id="programTitle" maxlength="30" value="" placeholder="Program name" class="form-control required simpleChars" />
+                            <input type="text" name="programName" id="programName" maxlength="30" value="" placeholder="A unique program code" class="form-control required simpleChars" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="programTitle" class="control-label col-md-3">Program title</label>
+                        <div class="col-md-8">
+                            <input type="text" name="programTitle" id="programTitle" maxlength="30" value="" placeholder="Title to appear on certificates etc" class="form-control required simpleChars" />
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="programNotes" class="control-label col-md-4">Enter author notes</label>
+                        <label for="programNotes" class="control-label col-md-3">Author notes</label>
                         <div class="col-md-8">
                             <textarea name="programNotes" id="programNotes" placeholder="Author notes" maxlength="255" cols="2" rows="2" class="form-control"></textarea>
                         </div>
@@ -210,80 +218,91 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
-                <button class="btn btn-primary" data-type="form-submit" type="button">Save</button>
+                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                <button class="btn btn-sm btn-primary" type="submit" data-type="form-submit" type="button">Save</button>
             </div>
         </div>
 
         <div id="courseModal" class="modal modal-sm fade" tabindex="-1" aria-hidden="true">
-            <div class="modal-header">
-                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                <h4 class="modal-title">Course Details</h4>
-            </div>
-            <div class="modal-body">
-                <form method="post" action="." class="form-horizontal">
+            <form method="post" action="." class="form-horizontal">
+                <div class="modal-header">
+                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                    <h4 class="modal-title">Course Details</h4>
+                </div>
+                <div class="modal-body">                
+                    <input type="hidden" name="originalCourseName" value=""  />
+
                     <div class="form-group">
-                        <label for="courseTitle" class="control-label col-md-4">Course title</label>
+                        <label for="programTitle" class="control-label col-md-3">Course code</label>
                         <div class="col-md-8">
-                            <input type="text" name="courseTitle" id="courseTitle" maxlength="30" value="" placeholder="Course name" class="required form-control" />
+                            <input type="text" name="courseName" id="courseName" maxlength="30" value="" placeholder="A unique course code" class="form-control required simpleChars" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="courseTitle" class="control-label col-md-3">Course title</label>
+                        <div class="col-md-8">
+                            <input type="text" name="courseTitle" id="courseTitle" maxlength="30" value="" placeholder="Course title" class="required form-control" />
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="courseNotes" class="control-label col-md-4">Author notes</label>
+                        <label for="courseNotes" class="control-label col-md-3">Author notes</label>
                         <div class="col-md-8">
                             <textarea name="courseNotes" id="courseNotes" placeholder="Author notes" maxlength="" cols="2" rows="2" class="form-control"></textarea>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="courseDescription" class="control-label col-md-4">Course description</label>
+                        <label for="courseDescription" class="control-label col-md-3">Course description</label>
                         <div class="col-md-8">
                             <textarea name="courseDescription" id="courseDescription" placeholder="Displayed to users" maxlength="" cols="4" rows="2" class="form-control"></textarea>
                         </div>
-                    </div>
-                </form>        
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
-                <button class="btn btn-primary" data-type="form-submit" type="button">Save</button>
-            </div>
+                    </div>                
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                    <button class="btn btn-sm btn-primary" type="submit" data-type="form-submit" type="button">Save</button>
+                </div>
+            </form>        
         </div>
 
         <div id="moduleModal" class="modal modal-sm fade" tabindex="-1" aria-hidden="true">
-            <div class="modal-header">
-                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                <h4 class="modal-title">Module Details</h4>
-            </div>
-            <div class="modal-body">
-                <form method="post" action="." class="form-horizontal">
+            <form method="post" action="." class="form-horizontal">
+                <div class="modal-header">
+                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                    <h4 class="modal-title">Module Details</h4>
+                </div>
+                <div class="modal-body">
+
+                    <input type="hidden" name="originalModuleName" value=""  />
                     <div class="form-group">
-                        <label for="moduleName" class="control-label col-md-4">Module code</label>
+                        <label for="moduleName" class="control-label col-md-3">Module code</label>
                         <div class="col-md-8">
                             <input type="text" name="moduleName" id="moduleName" maxlength="30" value="" placeholder="Module code" class="required form-control" />
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="moduleTitle" class="control-label col-md-4">Module title</label>
+                        <label for="moduleTitle" class="control-label col-md-3">Module title</label>
                         <div class="col-md-8">
                             <input type="text" class="form-control required" placeholder="Module title" value="" maxlength="30" id="moduleTitle" name="moduleTitle" />
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="moduleNotes" class="control-label col-md-4">Author notes</label>
+                        <label for="moduleNotes" class="control-label col-md-3">Author notes</label>
                         <div class="col-md-8">
                             <textarea name="moduleNotes" id="moduleNotes" placeholder="Author notes" maxlength="255" cols="4" rows="2" class="form-control"></textarea>
                         </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
-                <button class="btn btn-primary" data-type="form-submit" type="button">Save</button>
-            </div>
+                    </div>                
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                    <button class="btn btn-sm btn-primary" type="submit" data-type="form-submit" type="button">Save</button>
+                </div>
+            </form>
         </div>
 
         #set($programs = $page.closest("programs"))
         <script type="text/javascript">
-            Bob.onDOMReady(function () {
+            Bob.onDOMReady(function() {
                 initManageCourse("${programs.href}", "$!{program.href}");
             });
         </script>

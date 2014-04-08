@@ -157,6 +157,9 @@ div.entryFormItemDetails select.newQuestionType {
     margin-top: 3px;
     margin-right: 10px;
 }
-.ListItem li {
+.restrictionList li, .GroupList li, .ListItem li {
     list-style-type: none;
+}
+.DateTimeIcon {
+	display: none;
 }

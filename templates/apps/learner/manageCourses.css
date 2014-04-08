@@ -28,7 +28,7 @@
 }
 
 .courses-list li.course > a,
-.modules-list li.module > span,
+.modules-list li.module > a,
 .modules-list li.splitter > span {
     display: block;
     color: #fff;

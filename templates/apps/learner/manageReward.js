@@ -3,7 +3,7 @@ function initEditReward(quiz) {
         initHtmlEditors($(".htmleditor"));
         $("form.manageRewardForm").forms({
             callback: function(resp) {
-                log("done", resp);
+                flog("done", resp);
                 alert("Saved ok");
             },
             error: function() {
@@ -36,7 +36,7 @@ function initEditReward(quiz) {
         var quizContainer = $(".quizContainer");
         loadQuizEditor(quizContainer, quiz);
     } catch (e) {
-        log("exception in initEditReward", e);
+        flog("exception in initEditReward", e);
     }
 }
 
@@ -57,7 +57,7 @@ function initRestrictions() {
         li.append("<button data-dismiss=\"alert\" class=\"close remove\">&times;</button>");
         ul.append(li);
         ul.removeClass('hidden');
-        log("Successfully added restriction!");
+        flog("Successfully added restriction!");
         
         $("#modalAddRestriction").modal('hide');
     });
@@ -76,14 +76,14 @@ function initRestrictions() {
 function initGroupEditing() {
     $("#modalGroup input[type=checkbox]").click(function() {
         var $chk = $(this);
-        log("checkbox click", $chk, $chk.is(":checked"));
+        flog("checkbox click", $chk, $chk.is(":checked"));
         var isRecip = $chk.is(":checked");
         setGroupRecipient($chk.attr("name"), isRecip);
     });
 }
 
 function setGroupRecipient(name, isRecip) {
-    log("setGroupRecipient", name, isRecip);
+    flog("setGroupRecipient", name, isRecip);
     try {
         $.ajax({
             type: 'POST',
@@ -95,35 +95,35 @@ function setGroupRecipient(name, isRecip) {
             dataType: "json",
             success: function(data) {
                 if (data.status) {
-                    log("saved ok", data);
+                    flog("saved ok", data);
                     if (isRecip) {
-                        $(".GroupList").append("<li>" + name + "</li>");
-                        log("appended to", $(".GroupList"));
+                        $(".GroupList").append('<button class="btn btn-sm btn-default reset-margin-bottom" type="button" style="margin-right: 5px;">' + name + '</button>');
+                        flog("appended to", $(".GroupList"));
                     } else {
-                        var toRemove = $(".GroupList li").filter(function() {
+                        var toRemove = $(".GroupList button").filter(function() {
                             return $(this).text() == name;
                         });
                         toRemove.remove();
                     }
                 } else {
-                    log("error", data);
+                    flog("error", data);
                     alert("Sorry, couldnt save " + data);
                 }
             },
             error: function(resp) {
-                log("error", resp);
+                flog("error", resp);
                 alert("Sorry, couldnt save - " + resp);
             }
         });
     } catch (e) {
-        log("exception in createJob", e);
+        flog("exception in createJob", e);
     }
 }
 
 var list;
 
 function initManageReward() {
-    log("initManageReward");
+    flog("initManageReward");
     stripList();
     initController();
 //    initDialog();
@@ -135,7 +135,7 @@ function initManageReward() {
     });
     $("#manageReward form.addReward").forms({
         callback: function(resp) {
-            log("done");
+            flog("done");
             window.location.href = resp.nextHref;
         }
     });
@@ -176,7 +176,7 @@ function initController() {
         var link = $(e.target).closest("a");
         var href = link.attr("href");
         confirmDelete(href, href, function() {
-            log("remoe it", $(this).closest("li"));
+            flog("remoe it", $(this).closest("li"));
             link.closest("li").remove();
         });
         //$(this).parent().parent().remove();
@@ -286,7 +286,7 @@ function initEntryFormEditing() {
         }
     });
     chks = chks.filter(":checked");
-    log("chcks", chks);
+    flog("chcks", chks);
     chks.each(function(i, n) {
         var node = $(n);
         node.parent().find("div.entryFormItemDetails").show();

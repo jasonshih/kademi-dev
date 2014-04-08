@@ -2,16 +2,13 @@
     <head>
         <title>$view.title</title>
         <link href="editTheme.css" rel="stylesheet" type="text/css" />
-
     </head>
     <body class="dashboard">
         <section id="publish" class="MainContent">
-                        
-            
-            <article class="Note">Click one of the themes below to update your site. A preview is shown below, or <a target="_blank" href="$page.parent.externalUrl">click here to see your site</a></article>
-            
-            <a href=".." class="Btn">Back to $page.parent.parent.name website</a>
-            
+            <div class="alert alert-warning">
+                Click one of the themes below to update your site. A preview is shown below, or <a target="_blank" href="$page.parent.externalUrl">click here to see your site</a>
+            </div>
+            <a href=".." class="btn btn-sm btn-blue">Back to $page.parent.parent.name website <i class="fa fa-arrow-circle-right"></i></a>
             #set($isLive = $page.parent.live)                        
             #set($extUrl = $page.parent.externalUrl)
             <ul class="themes" style="max-height: 400px; overflow-y: scroll">
@@ -30,10 +27,10 @@
 
             <br/>
             <br/>
-            <iframe id="previewPage" src="$page.parent.externalUrl" style="width: 1024px; height: 300px">
-
-            </iframe>
-
+            <div class="page-header">
+                <h4>Preview </h4>
+            </div>
+            <iframe id="previewPage" src="$page.parent.externalUrl" style="width: 1030px; height: 400px"></iframe>
         </section>        
         <script type="text/javascript">
 
@@ -44,7 +41,7 @@
             Bob.onDOMReady(function () {
                 var current = $(".selectTheme[href='" + themeName + "']");
                 current.closest("li").addClass("current-theme");
-                log("set current", current, themeName);
+                flog("set current", current, themeName);
                 
                 var iframe = $("#previewPage");
                 iframe.load(function() {
@@ -52,7 +49,7 @@
                     li.removeClass("ajax-loading");
                     li.closest("ul").removeClass("ajax-loading");
                     li.addClass("current-theme");
-                    log("add", li);
+                    flog("add", li);
                 });
                 
                 
@@ -82,7 +79,7 @@
                             themeName: themeName
                         },
                         success: function(data) {
-                            log("success", data);
+                            flog("success", data);
                             li.addClass("current-theme");
                             updatePreview(li);
                         },
@@ -93,15 +90,18 @@
                     });
                 });
             });
+            
             function updatePreview(li) {
                 var iframe = $("#previewPage");
                 var src = iframe.attr("src");
                 var i = src.indexOf("?");
-                if (i > 0) { // chop off any request params
+             	
+                // chop off any request params
+                if (i > 0) {
                     src = src.substring(0, i);
                 }
                 src += "?rnd=" + Math.floor((Math.random() * 100000) + 1)
-                log("reload iframe", src);
+                flog("reload iframe", src);
                 iframe.attr("src", src);
             }
         </script>               

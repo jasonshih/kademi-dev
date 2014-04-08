@@ -5,47 +5,51 @@
     </head>
     <body class="manage-certificates">
         <p>
-            <a href="#" class="btn btn-primary btn-add-cert"><i class="fa fa-plus"></i> Add new certificate</a>
+            <a href="#" class="btn btn-sm btn-success btn-add-cert"><i class="fa fa-plus"></i> Add new certificate</a>
         </p>
-        
+
         <div class="panel panel-default">
-	        <div class="panel-heading">
-		        <i class="clip-folder"></i>
-		        Certifications
-	        </div>
-	        <div class="panel-body">
-                <table class="table table-bordered table-striped table-hover table-data">
-                    <colgroup>
-                        <col />
-                        <col style="width: 60px;" />
-                    </colgroup>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th class="action">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        #foreach($cert in $page.children)
+            <div class="panel-heading">
+                <i class="clip-folder"></i>
+                Certifications
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <colgroup>
+                            <col />
+                            <col style="width: 100px;" />
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th class="action"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            #foreach($cert in $page.children)
                             <tr>
                                 <td>$cert.title</td>
                                 <td class="action">
                                     <div class="btn-group btn-group-sm">
-                                        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
-                                            <i class="fa fa-cog"></i>
+                                        <a href="$cert.name" class="btn btn-sm btn-primary btn-sm">
+                                            <i class="fa fa-edit"></i> Edit
+                                        </a>
+                                        <button class="btn btn-sm btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+                                            <span class="caret"></span>
                                         </button>
                                         <ul class="dropdown-menu pull-right" role="menu">
-	                                        <li><a title="Edit" href="$cert.name">Edit details</a></li>
-	                                        <li class="divider"></li>
-                                            <li><a class="btn-delete-cert" href="$cert.name" data-name="$cert.title">Delete</a></li>
+                                            <li><a href="$cert.name"><i class="fa fa-edit"></i> Edit details</a></li>
+                                            <li><a href="$cert.name" class="btn-login-as"><i class="clip-user"></i> Login as this user</a></li>
                                         </ul>
-                                    </div>
+                                    </div>                                    
                                 </td>
                             </tr>
-                        #end
-                    </tbody>                        
-                </table>
-	        </div>
+                            #end
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
 
         <div id="modal-add-cert" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
@@ -56,7 +60,7 @@
             <div class="modal-body">
                 <form action="." method="POST" class="form-horizontal">
                     <div class="form-group">
-                        <label class="control-label col-md-4" for="newTitle">Certificate name</label>
+                        <label class="control-label col-md-3" for="newTitle">Certificate name</label>
                         <div class="col-md-8">
                             <input type="text" name="newTitle" id="newTitle" placeholder="Certificate name" class="required form-control" />
                         </div>
@@ -64,11 +68,11 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
-                <button class="btn btn-primary" data-type="form-submit" type="button">Save</button>
+                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                <button class="btn btn-sm btn-primary" data-type="form-submit" type="button">Save</button>
             </div>
         </div>
-        
+
         <script type="text/javascript">
             Bob.onDOMReady(function() {
                 initManageCertificates();

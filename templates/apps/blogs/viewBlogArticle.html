@@ -1,0 +1,61 @@
+<html>
+    <head>
+        <title>View Blog Article</title>
+        <style>
+            .horiz-image-container {
+                margin-left: auto;
+                margin-right: auto;
+                max-height: 200px;
+                overflow: hidden;
+                width: 80%;
+            }
+            .horiz-image {
+                margin-left: auto;
+                margin-right: auto;                
+            }
+            .blog-article-body {
+                margin-top: 30px;
+            }
+        </style>
+    </head>    
+    <body class="calendar-event add-container">        
+        <div class="blog-article">
+            <h2><a href="$article.href">$page.title</a></h2>
+            <div class="clearfix">
+                <span class="pull-left timeago" title="$formatter.formatDateISO8601($page.articleDate)">$page.articleDate</span>
+                <div class="pull-right">
+                    #if( $page.category )
+                    <span class="label label-primary">$tag</span>
+                    #end
+                    #foreach($tag in $page.tags)
+                    <span class="label label-primary">$tag</span>
+                    #end
+                    #if($page.featured)
+                    <span class="label label-success">Featured</span>
+                    #end
+                </div>                
+            </div>    
+
+            <hr/>            
+            
+            #set($horizImage = $page.horizontalImageHref)
+            #if($horizImage)
+            <div class="horiz-image-container">
+                <img src="$horizImage" class="img-responsive horiz-image" />
+            </div>
+
+            #end
+
+            <div class="blog-article-body">
+                $page.body
+            </div>
+        </div>
+        <script type="text/javascript">
+            jQuery(document).ready(function() {
+                flog("do timeago", $(".timeago").timeago());
+                $(".timeago").timeago();
+                flog("do timeago");
+            });
+        </script>            
+    </body>
+</html>

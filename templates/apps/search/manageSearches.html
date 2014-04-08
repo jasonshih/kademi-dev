@@ -1,0 +1,88 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Manage Search</title>
+        <script type="text/javascript" src="search.js">//</script>
+    </head>
+    <body>
+        <div class="clearfix">
+            #set($currentBranch = $page.closest("branch"))
+            <div class="btn-group publishing pull-right">
+                #if( $currentBranch.live )
+                <a href="../manageBranches" class="islive btn btn-sm btn-danger">
+                    <i class="fa fa-gear"></i>
+                    LIVE
+                </a>
+                #else
+                <a href="${currentBranch.href}publish" class="publish btn btn-sm btn-success">
+                    <i class="glyphicon glyphicon-ok-sign"></i>
+                    PUBLISH
+                </a>
+                <a href="../manageBranches" class="btn btn-sm btn-primary">
+                    <i class="fa fa-gear"></i>
+                    Manage versions
+                </a>
+                #end
+
+                <a class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+                    <b>Editing version:</b>
+                    $currentBranch.name
+                    <span class="caret"></span>
+                </a>
+                <ul role="menu" class="dropdown-menu list branches">
+                    #foreach($b in $page.closest("branch").parent.children.ofType.branch)
+                    <li role="presentation" class="list-item">
+                        <a href="${b.href}manageSearch" class="branch noclear">
+                            $b.name
+                        </a>
+                    </li>
+                    #end
+                </ul>
+            </div>
+
+            #if($page.closest("repository").name)
+            <div class="dropdown pull-left">
+                <a class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+                    <b>Change repository</b> $page.closest("repository").name <span class="caret"></span>
+                </a>
+                <ul role="menu" class="dropdown-menu list">
+                    #foreach($w in $page.closest("repository").parent.children)
+                    <li class="list-item"><a href="${w.href}manageSearch">$w.name</a></li>
+                    #end
+                </ul>
+            </div>
+            #end
+        </div> <!-- end repo and branch selection -->
+        
+        <br/><br/>
+        
+        <div class="well">
+            <p>
+            If the search index for a repository becomes out of date and inconsistent with the content,
+            just click the Re-index button here to regenerate the search index.
+            </p>
+            <p>
+                This will not normally be required.
+            </p>
+            
+            <h4>Please confirm you are on the correct repository before proceeding:</h4>
+            <p>
+                Repository: <b>$page.closest("repository").name</b>
+                <br/>
+                Branch: $currentBranch.name
+            </p>
+	        <div class="manage-search">
+	            <p class="pageMessage" style="display: none"></p>
+	            <br/>
+	            <form method="post" action="" class="form-horizontal" role="form">
+	                <button class="btn btn-warning btn-lg btn-reindex btn-block"><i class="fa fa-arrow-circle-right"></i> <span class="lbl-reindex-action">Re-index</span> : $page.closest("repository").name</button>
+	            </form>
+	        </div>            
+        </div>
+        
+        <script type="text/javascript">
+            $(document).ready(function() {
+                initReindexForms();
+            });
+        </script>
+    </body>
+</html>

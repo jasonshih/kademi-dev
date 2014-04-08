@@ -5,137 +5,354 @@
         <script type="text/javascript" src="calendars.js">//</script>
         <script type="text/javascript" src="manageCalendars.js">//</script>
         <script type="text/javascript" src="cal-utils.js">//</script>
+        <script type="text/javascript" src="/static/chosen/1.1.0/chosen.jquery.js">//</script>
+        <link rel="stylesheet" href="/static/chosen/1.1.0/chosen.css"/>             
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"/>        
+        <style>
+            .reminder-content {
+                height: 400px;                
+            }
+        </style>
     </head>    
     <body class="calendar-event">
         <form action="" method="POST" class="manageEventForm form-horizontal">
-	        <div class="pull-right page-action">
-		        <button class="btn btn-primary" type="submit">Save changes</button>
-		        <button class="btn btn-danger" type="button">Cancel</button>
-	        </div>
-	        
-	        <div class="tabbable">
-		        <ul class="nav nav-tabs tab-bricky">
-			        <li>
-				        <a data-toggle="tab" href="#details">Details</a>
-			        </li>
-			        <li>
-				        <a data-toggle="tab" href="#description">Description</a>
-			        </li>
-			        <li>
-				        <a data-toggle="tab" href="#confirmation">Confirmation</a>
-			        </li>
-			        <li>
-				        <a data-toggle="tab" href="#entries">Attendees</a>
-			        </li>
-		        </ul>
-		        <div class="tab-content">
-			        <!-- Start content of Details tab -->
-			        <div id="details" class="tab-pane">
-				        <input type="hidden" id="backgroundImageHash" name="backgroundImageHash" value="$!page.backgroundImageHash" />
-				        <div class="form-group">
-					        <label class="control-label col-md-3 col-lg-2" for="title">Event title</label>
-					        <div class="col-md-8 col-lg-4"><input type="text" id="title" name="title" placeholder="Enter a name here" value="$page.title" class="required form-control" /></div>
-				        </div>
-				        <div class="form-group">
-					        <label class="control-label col-md-3 col-lg-2" for="startDate">Choose a start date</label>
-					        <div class="col-md-8 col-lg-4"><input type="text" id="startDate" name="startDate" placeholder="Start date" value="$formatter.formatDateTime(  $page.startDate )" class="date-picker form-control" data-date-viewmode="years" data-date-format="mm/dd/yyyy" /></div>
-				        </div>
-				        <div class="form-group">
-					        <label class="control-label col-md-3 col-lg-2" for="endDate">Choose a end date</label>
-					        <div class="col-md-8 col-lg-4"><input type="text" id="endDate" name="endDate" placeholder="End date" value="$formatter.formatDateTime( $page.endDate )" class="date-picker form-control" data-date-viewmode="years" data-date-format="mm/dd/yyyy" /></div>
-				        </div>
-				        <div class="form-group">
-					        <label class="control-label col-md-3 col-lg-2" for="location">Location</label>
-					        <div class="col-md-8 col-lg-4"><input type="text" id="location" name="location" placeholder="38 Boulevarde Ave" value="$!page.location" class="form-control" /></div>
-				        </div>
-				        <div class="form-group">
-					        <label class="control-label col-md-3 col-lg-2" for="Organisor">Organisor</label>
-					        <div class="col-md-8 col-lg-4">
-						        <input type="text" name="organisor" id="Organisor" placeholder="Email address or user id" value="$!page.organisor.email" class="required form-control" />
-					        </div>
-				        </div>
-			        </div>
-			        <!-- End content of Details tab -->
-			        
-			        <!-- Start content of Description tab -->
-			        <div id="description" class="tab-pane">
-				        <textarea class="htmleditor" cols="100" name="html" rows="10" placeholder="">$!page.description</textarea>
-			        </div>
-			        <!-- End content of Description tab -->
-			        
-			        <!-- Start content of Confirmation tab -->
-			        <div id="confirmation" class="tab-pane">
-				        <div class="form-group">
-					        <label class="control-label col-md-3 col-lg-2"">Allow registration</label>
-					        <div class="col-md-8 col-lg-4"> 
-						        $formatter.checkbox("allowRegistration", "allowRegistration", $page.allowRegistration)
-						        <label for="allowRegistration">Allow users to register their attendance.</label>
-					        </div> 
-				        </div>
-				        <div class="form-group allowReg">
-					        <label class="control-label col-md-3 col-lg-2">Allow guests</label>
-					        <div class="col-md-8 col-lg-4"> 
-						        $formatter.checkbox("allowGuests", "allowGuests", $page.allowGuests)
-						        <label for="allowGuests">Allow users to register guests.</label>
-					        </div> 
-				        </div>
-				        <div class="form-group allowReg">
-					        <label class="control-label col-md-3 col-lg-2" for="maxAttendees">Maximum attendees</label>
-					        <div class="col-md-8 col-lg-4">
-						        <input type="text" id="maxAttendees" name="maxAttendees" placeholder="Leave empty if there's no limit" value="$!page.maxAttendees" class="numeric form-control" />
-					        </div>
-				        </div>
-				        <div class="form-group allowReg">
-					        <label class="control-label col-md-3 col-lg-2">Email confirmation</label>
-					        <div class="col-md-8 col-lg-4"> 
-						        $formatter.checkbox("emailConfirm", "emailConfirm", $page.emailConfirm)
-						        <label for="emailConfirm" style="float: none">Send an email confirmation to the user when they are awarded.</label>
-					        </div> 
-				        </div>
-				        <div class="allowReg emailReg">
-					        <hr />
-				        </div>
-				        <div class="form-group allowReg emailReg">
-					        <label class="control-label col-md-3 col-lg-2">
-						        Details
-						        <small>The message to send when a user registers.</small>
-					        </label>
-					        <div class="col-md-9 col-lg-10">
-						        <textarea cols="100" name="details" rows="10" class="htmleditor" placeholder="Enter the details here">$!page.emailConfirmTemplate</textarea>
-					        </div> 
-				        </div>
-			        </div>
-			        <!-- End content of Confirmation tab -->
-			        
-			        <!-- Start content of Attendees tab -->
-			        <div id="entries" class="tab-pane">
-				        <div class="form-group">
-					        <label class="control-label col-md-3 col-lg-2">Attendees</label>
-					        <div class="col-md-8 col-lg-4">
-						        $page.numAttendees attendees <a href="../attendees-${page.name}.html" class="btn btn-sm btn-default">View</a>
-					        </div>
-				        </div>
-				        <div class="form-group">
-					        <label class="control-label col-md-3 col-lg-2">Export to spreadsheet</label>
-					        <div class="col-md-8 col-lg-4">
-						        <a href="entries.csv" class="btn btn-sm btn-default">Export as CSV</a>
-					        </div>
-				        </div>
-				        <div class="form-group">
-					        <label class="control-label col-md-3 col-lg-2">Photos</label>
-					        <div class="col-md-8 col-lg-4">
-						        <a href="photos.html" class="btn btn-sm btn-default">View photo entries</a> (for photo upload comps)
-					        </div>
-				        </div>
-			        </div>
-			        <!-- End content of Attendees tab -->
-		        </div>
-	        </div>
+            <div class="pull-right page-action">
+                <button class="btn btn-sm btn-primary" type="submit">Save changes</button>
+                <a class="btn btn-sm btn-default" href="$folder.href" type="button">Cancel</a>
+            </div>
+
+            <div class="tabbable">
+                <ul class="nav nav-tabs tab-bricky">
+                    <li>
+                        <a data-toggle="tab" href="#details">Details</a>
+                    </li>
+                    <li>
+                        <a data-toggle="tab" href="#description">Description</a>
+                    </li>
+                    <li>
+                        <a data-toggle="tab" href="#confirmation">Confirmation</a>
+                    </li>
+                    <li>
+                        <a data-toggle="tab" href="#entries">Attendees</a>
+                    </li>
+                    <li>
+                        <a data-toggle="tab" href="#reminders">Reminders</a>
+                    </li>
+
+                </ul>
+                <div class="tab-content">
+                    <!-- Start content of Details tab -->
+                    <div id="details" class="tab-pane">
+                        <input type="hidden" id="backgroundImageHash" name="backgroundImageHash" value="$!page.backgroundImageHash" />
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-lg-2" for="title">Event title</label>
+                            <div class="col-md-8 col-lg-4">
+                                <input type="text" id="title" name="summary" placeholder="Enter a name here" value="$page.title" class="required form-control" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-lg-2" for="location">Timezone</label>
+                            <div class="col-md-8 col-lg-4">
+                                <select name="timezone" class="chosen-select required form-control">
+                                    <option value="">[Please select]</option>
+                                    #foreach($tzId in $page.timezoneIdList)
+                                    $formatter.option( $tzId, $tzId, $page.timezone )
+                                    #end
+                                </select>
+                                <small>Timezone offset: <b>$page.timeZoneOffsetStr</b> (save and refresh to update)</small>
+                            </div>
+                        </div>                        
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-lg-2" for="startDate">Dates & times</label>
+                            <div class="col-md-8 col-lg-4">
+                                <input type="text" id="event-range" placeholder="Choose start and end dates" value="$formatter.formatDateTime(  $page.startDate, $page.timezone ) - $formatter.formatDateTime( $page.endDate, $page.timezone )" class="form-control" />
+                                <input type="hidden" id="startDate" name="startDate" value="$formatter.formatDateTime(  $page.startDate, $page.timezone )"  />
+                                <input type="hidden" id="endDate" name="endDate" value="$formatter.formatDateTime( $page.endDate, $page.timezone )"  />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-lg-2" for="location">Location</label>
+                            <div class="col-md-8 col-lg-4"><input type="text" id="location" name="location" placeholder="38 Boulevarde Ave" value="$!page.location" class="form-control" /></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-lg-2" for="Organisor">Organisor</label>
+                            <div class="col-md-8 col-lg-4">
+                                <input type="text" name="organisor" id="Organisor" placeholder="Email address or user id" value="$!page.organisor.email" class="required form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End content of Details tab -->
+
+                    <!-- Start content of Description tab -->
+                    <div id="description" class="tab-pane">
+                        <textarea class="htmleditor" cols="100" name="description" rows="10" placeholder="">$!page.description</textarea>
+                    </div>
+                    <!-- End content of Description tab -->
+
+                    <!-- Start content of Confirmation tab -->
+                    <div id="confirmation" class="tab-pane">
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-lg-2">Allow registration</label>
+                            <div class="col-md-8 col-lg-6"> 
+                                $formatter.checkbox("allowRegistration", "allowRegistration", $page.allowRegistration)
+                                <label for="allowRegistration"><small>Allow users to register their attendance.</small></label>
+                            </div> 
+                        </div>
+                        <div class="form-group allowReg">
+                            <label class="control-label col-md-3 col-lg-2">Allow guests</label>
+                            <div class="col-md-8 col-lg-6"> 
+                                $formatter.checkbox("allowGuests", "allowGuests", $page.allowGuests)
+                                <label for="allowGuests"><small>Allow users to register guests.</small></label>
+                            </div> 
+                        </div>
+                        <div class="form-group allowReg">
+                            <label class="control-label col-md-3 col-lg-2" for="maxAttendees">Maximum attendees</label>
+                            <div class="col-md-8 col-lg-6">
+                                <input type="text" id="maxAttendees" name="maxAttendees" placeholder="Leave empty if there's no limit" value="$!page.maxAttendees" class="numeric form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group allowReg">
+                            <label class="control-label col-md-3 col-lg-2">Email confirmation</label>
+                            <div class="col-md-8 col-lg-6"> 
+                                $formatter.checkbox("emailConfirm", "emailConfirm", $page.emailConfirm)
+                                <label for="emailConfirm" class=''><small>Send an email confirmation to the user when they've registered.</small></label>
+                            </div> 
+                        </div>
+                        <div class="form-group allowReg emailReg">
+                            <label class="control-label col-md-3 col-lg-2" for="maxAttendees">Confirmation subject</label>
+                            <div class="col-md-8 col-lg-6">
+                                <input type="text" id="emailConfirmSubject" name="emailConfirmSubject" placeholder="Subject line for the confirm email" value="$!page.emailConfirmSubject" class="form-control" />
+                            </div>
+                        </div>       
+                        <div class="form-group allowReg allowGuests emailReg">
+                            <label class="control-label col-md-3 col-lg-2">No guest emails</label>
+                            <div class="col-md-8 col-lg-6"> 
+                                $formatter.checkbox("suppressGuestEmails", "suppressGuestEmails", $page.suppressGuestEmails)
+                                <label for="suppressGuestEmails" class=''><small>Tick this to prevent guests from receiving confirmation and reminder emails</small></label>
+                            </div> 
+                        </div>                        
+                        <div class="allowReg emailReg">
+                            <hr />
+                        </div>
+                        
+                        <div class="form-group allowReg emailReg">                                
+                            <div class="col-md-12">
+                                <small>The message to send when a user registers.</small>
+                                <textarea cols="100" name="emailConfirmTemplate" rows="10" class="htmleditor" placeholder="Enter the details here">$!page.emailConfirmTemplate</textarea>
+                            </div> 
+                        </div>
+                    </div>
+                    <!-- End content of Confirmation tab -->
+
+                    <!-- Start content of Attendees tab -->
+                    <div id="entries" class="tab-pane">
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-lg-2">Attendees</label>
+                            <div class="col-md-8 col-lg-4">
+                                $page.numAttendees attendees <a href="attendees-${page.name}" class="btn btn-sm btn-default">View</a>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-lg-2">Send invitation emails</label>
+                            <div class="col-md-8 col-lg-4">
+                                <button class="btn btn-success create-email">Create group email</button>
+                            </div>
+                        </div>                        
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-lg-2">Export to spreadsheet</label>
+                            <div class="col-md-8 col-lg-4">
+                                <a href="attendees-${page.name}?csv" class="btn btn-sm btn-default">Export as CSV</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End content of Attendees tab -->
+
+                    <!-- Start content of Reminders tab -->
+                    <div id="reminders" class="tab-pane">
+                        <header class="clearfix">
+                            <a class="btn btn-sm btn-success add-reminder" href="#reminderDetails" data-toggle="modal"><i class="fa fa-plus"></i> Create a reminder</a>
+                        </header>
+                        <br />
+
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <colgroup>
+                                    <col style='width: 40px'>
+                                    <col>
+                                    <col>
+                                    <col style="width: 100px">
+                                </colgroup>
+                                <thead>
+                                    <tr class="odd">
+                                        <th class="icon">Status</th>
+                                        <th>When</th>
+                                        <th>Email subject</th>
+                                        <th>Website</th>
+                                        <th>Processed</th>
+                                        <th class="action"></th>
+                                    </tr>
+                                </thead>
+                                <tbody class="reminders">
+                                    #foreach($reminder in $page.reminders)
+                                        #set($count = $foreach.count - 1)
+                                    <tr class="emailStatusDraft odd">
+                                        <td class="">
+                                            $formatter.bsswitch("", "reminder.${count}.enabled", $reminder.enabled, "true")
+                                            <input type="hidden" name="reminder.${count}.timerMultiple" class="timerMultiple" value='$!reminder.timerMultiple'/>
+                                            <input type="hidden" name="reminder.${count}.timerUnit" class="timerUnit" value='$!reminder.timerUnit'/>
+                                            <input type="hidden" name="reminder.${count}.subject" class="subject" value='$!reminder.subject'/>
+                                            <input type="hidden" name="reminder.${count}.themeSite" class="themeSite" value='$!reminder.themeSite.id'/>
+                                            <textarea style="display: none" class="html" name="reminder.${count}.html">$!reminder.html</textarea>
+                                        </td>
+                                        <td>
+                                            <span class="timerMultiple">$reminder.timerMultiple</span> <span class="timerUnit">$reminder.timerUnit</span>
+                                        </td>
+                                        <td class="subject">$reminder.subject</td>
+                                        <td class="themeSite">$reminder.themeSite.name</td>
+                                        <td>$!reminder.processedDate</td>
+                                        <td class="action last">
+                                            <div class="btn-group btn-group-sm">
+                                                <a class="btn btn-sm btn-info btn-sm edit" href="#">
+                                                    <i class="fa fa-edit"></i> Edit
+                                                </a>
+                                                <button data-toggle="dropdown" class="btn btn-sm btn-info btn-sm dropdown-toggle">
+                                                    <span class="caret"></span>
+                                                </button>
+                                                <ul role="menu" class="dropdown-menu pull-right">
+                                                    <li class="odd"><a title="Edit" class="edit" href="#"><i class="fa fa-edit"></i> Edit</a></li>
+                                                    <li class="divider even"></li>
+                                                    <li class="odd"><a title="Delete" class="delete" href="#"><i class="fa fa-times"></i> Delete</a></li>
+                                                </ul>
+                                            </div>                                    
+                                        </td>
+                                    </tr>
+                                    #end
+                                </tbody>
+                            </table>
+                        </div>                        
+                    </div>
+                    <!-- End content of Reminders tab -->                    
+                </div>
+            </div>
         </form>
+
+
+        <div id="sendEmailModal" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                <h4 class="modal-title">Send email inviations</h4>
+            </div>
+            <div class="modal-body">
+                <p>Please select which website to invite users for:</p>
+                <ul class="list" >
+                    <li>Please wait...</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="reminderDetails" class="modal fade modal-lg" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
+            <form class="form-horizontal">            
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Reminder</h4>
+                </div>
+                <div class="modal-body ModalContent">
+                    <input type="hidden" name="reminderId" />
+                    <div class="alert alert-danger pageMessage">.</div>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-2" for="subject">Send reminder</label>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <input type="text" class="text-center form-control" required="true" value="$!page.job.timerMultiple" name="timerMultiple" />
+                                <div class="input-group-btn">
+                                    <button data-toggle="dropdown" class="btn btn-default dropdown-toggle timer-unit" type="button">DAYS <span class="caret"></span></button>
+                                    <ul role="menu" class="dropdown-menu pull-right timer-units">
+                                        #foreach($unit in $page.timerUnits)
+                                        <li><a href="#">$unit</a></li>
+                                        #end                                                            
+                                    </ul>
+                                </div>                                       
+                            </div>
+                        </div>
+                        <label class="control-label col-md-2" for="themeSiteId">Choose a template</label>
+                        <div class="col-md-4">
+                            <select name="themeSite" class="form-control" required="true">
+                                #foreach($website in $page.organisation.websites)
+                                $formatter.option($website.id, $website.name, "")
+                                #end
+                            </select>
+                        </div>                        
+                    </div>
+
+                    <div class="form-group">                        
+                        <label class="control-label col-md-2" for="subject">Email subject</label>
+                        <div class="col-md-10">
+                            <input type="text" id="subject" name="subject" value="" placeholder="" required="true" class="form-control" />
+                        </div>                        
+                    </div>
+                    <i>Enter the message content as HTML below</i>
+                    
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <textarea class="reminder-content inline-editor"></textarea>
+                        </div>
+                    </div>    
+                </div>
+                <div class="modal-footer BtnBar">
+                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">OK</button>
+                </div>            
+            </form>                                
+        </div>
+
+        <!-- Template for adding reminder rows, just a copy of above -->
+        <table class="hide">
+            <tbody id="reminder-row-template">
+                <tr class="emailStatusDraft odd">
+                    <td class="">                                            
+                        <input type="checkbox" name="reminder.${foreach.count}.enabled" class="enabled" data-on-color='success' data-off-color='danger' value='true'/>
+                        <input type="hidden" name="reminder.${foreach.count}.timerMultiple" class="timerMultiple" value='$!reminder.timerMultiple'/>
+                        <input type="hidden" name="reminder.${foreach.count}.timerUnit" class="timerUnit" value='$!reminder.timerUnit'/>
+                        <input type="hidden" name="reminder.${foreach.count}.subject" class="subject" value='$!reminder.subject'/>
+                        <input type="hidden" name="reminder.${foreach.count}.themeSite" class="themeSite" value='$!reminder.themeSite'/>
+                        <textarea style="display: none" class="html" name="reminder.${foreach.count}.html">$!reminder.html</textarea>
+                    </td>
+                    <td>
+                        <span class="timerMultiple">$reminder.timerMultiple</span> <span class="timerUnit">$reminder.timerUnit</span>
+                    </td>
+                    <td class="subject">$reminder.subject</td>
+                    <td class="themeSite">$reminder.themeSite.name</td>
+                    <td></td>
+                    <td class="action last">
+                        <div class="btn-group btn-group-sm">
+                            <a class="btn btn-sm btn-info btn-sm edit" href="#">
+                                <i class="fa fa-edit"></i> Edit
+                            </a>
+                            <button data-toggle="dropdown" class="btn btn-sm btn-info btn-sm dropdown-toggle">
+                                <span class="caret"></span>
+                            </button>
+                            <ul role="menu" class="dropdown-menu pull-right">
+                                <li class="odd"><a title="Edit" class="edit" href="#"><i class="fa fa-edit"></i> Edit</a></li>
+                                <li class="divider even"></li>
+                                <li class="odd"><a title="Delete" class="delete" href="#"><i class="fa fa-times"></i> Delete</a></li>
+                            </ul>
+                        </div>                                    
+                    </td>
+                </tr>
+            </tbody>
+        </table>
 
         <script type="text/javascript">
             Bob.onDOMReady(function() {
                 initManageEvent();
+                $(".chosen-select").chosen({
+                    search_contains: true
+                });
             });
         </script>        
     </body>

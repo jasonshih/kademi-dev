@@ -1,0 +1,626 @@
+/** bootstrap.less */
+/*!
+ * Bootstrap v3.0.0
+ *
+ * Copyright 2013 Twitter, Inc
+ * Licensed under the Apache License v2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Designed and built with all the love in the world by @mdo and @fat.
+ */
+
+// Core variables and mixins
+@import "variables.less";
+@import "bootswatch.less"; // For bootswatch.com themes
+@import "mixins.less";
+
+// Reset
+@import "normalize.less";
+@import "print.less";
+
+// Core CSS
+@import "scaffolding.less";
+@import "type.less";
+@import "code.less";
+@import "grid.less";
+@import "tables.less";
+@import "forms.less";
+@import "buttons.less";
+
+// Components
+@import "component-animations.less";
+@import "glyphicons.less";
+@import "dropdowns.less";
+@import "button-groups.less";
+@import "input-groups.less";
+@import "navs.less";
+@import "navbar.less";
+@import "breadcrumbs.less";
+@import "pagination.less";
+@import "pager.less";
+@import "labels.less";
+@import "badges.less";
+@import "jumbotron.less";
+@import "thumbnails.less";
+@import "alerts.less";
+@import "progress-bars.less";
+@import "media.less";
+@import "list-group.less";
+@import "panels.less";
+@import "wells.less";
+@import "close.less";
+
+// Components w/ JavaScript
+@import "modals.less";
+@import "tooltip.less";
+@import "popovers.less";
+@import "carousel.less";
+
+// Utility classes
+@import "utilities.less";
+@import "responsive-utilities.less";
+
+/** extras.less */
+@icon-font-path:          "fonts/";
+
+@horizontalNarrowOffset : 40; 
+
+@wellBackground: @well-bg;
+
+@errorText: @state-danger-text;
+@errorBackground: @state-danger-bg;
+
+@textColor: @text-color;
+
+@text1: @textColor;
+@text2: @textColor;
+@hero1: @brand-primary;
+@hero2: @brand-success;
+
+
+body {
+    padding-top: 50px;
+}
+
+// Mixin for form field states
+.formFieldState(@textColor: #555, @borderColor: #ccc, @backgroundColor: #f5f5f5) {
+    // Set the text color
+    .control-label,
+    .help-block,
+    .help-inline {
+        color: @textColor;
+    }
+    // Style inputs accordingly
+    .checkbox,
+    .radio,
+    input,
+    select,
+    textarea {
+        color: @textColor;
+    }
+    input,
+    select,
+    textarea {
+        border-color: @borderColor;
+        .box-shadow(inset 0 1px 1px rgba(0,0,0,.075)); // Redeclare so transitions work
+        &:focus {
+            border-color: darken(@borderColor, 10%);
+            @shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 6px lighten(@borderColor, 20%);
+            .box-shadow(@shadow);
+        }
+    }
+    // Give a small background color for input-prepend/-append
+    .input-prepend .add-on,
+    .input-append .add-on {
+        color: @textColor;
+        background-color: @backgroundColor;
+        border-color: @textColor;
+    }
+}
+
+
+table.list-view {
+    .table;
+    tbody {
+        tr {            
+            td {
+                border-bottom:1px solid darken(@wellBackground, 7%);    
+                vertical-align: middle;
+            }
+        }
+        tr:nth-child(even) {
+            td {
+                // background-color: @wellBackground;  // looks rubbish on my learning
+            }
+        }
+    }    
+}
+
+.clr {
+    clear: both;
+}
+.navbar-fixed-top ul.nav-tabs {
+    border-bottom: none;
+    margin-top: 40px;    
+}
+.banner {
+    position: relative;
+}
+.banner .btn-group {
+    position: absolute; right: 0; top: 10px
+}
+.main-content {
+    margin-top: 20px;
+}
+
+.content-header {
+    border-bottom-width: 0;
+}
+.content-header, .content-no-header {
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 6px 6px 0 0;
+}
+
+.content-header .header-inner, .content-no-header .no-header-inner {
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #E8E8E8;
+    border-radius: 5px 5px 0 0;
+    min-height: 20px;
+    padding: 12px;
+}
+
+.content-header h3 {
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 20px;
+    margin: 0;
+    padding: 0;
+}
+
+.banner {
+    form.form-horizontal {
+        margin: 20px 20px 20px 0;
+        .control-group {
+            margin-bottom: 0;
+        }
+        .control-label {
+            //width: 80px;
+        }
+        .controls {
+            //margin-left: 100px;
+        }
+    }
+    a p {
+        margin: 0;
+        padding: 0;
+    }
+}
+
+.forumReply {
+    position: relative;
+    border-bottom: solid @input-border 1px;
+    margin-bottom: 10px;
+    .profilePic {
+        float: left;
+        margin-right: 8px;
+    }
+    .user {
+    }
+    p {
+        padding: 0;
+        margin-left: 60px;
+        margin-top: 10px;
+    }
+    abbr {
+        position: absolute;
+        top: 0;
+        right: 0;
+        font-size: 85%;
+    }
+}
+
+body .navbar .nav .dropdown-toggle .caret {
+    margin-top: 6px; // need to override default of 8px for alignment
+}
+
+.stream-items {
+    list-style-type: none;
+    li {
+        margin-bottom: 10px;
+        border-bottom: solid @input-border 1px;
+    }
+    p {
+        font-size: 85%;
+        margin-left: 60px;
+        margin-top: 5px;
+        margin-bottom: 0;
+    }
+    abbr {
+        margin-left: 60px;
+        border: medium none;
+        font-size: 80%;
+    }
+    .profilePic {
+        float: left;
+        margin-right: 8px;
+    }
+}
+ul.tools {
+    list-style-type: none;
+    margin: 0;
+    li {
+        display: block;
+    }
+    li.modPerc {
+        float: left;
+        font-size: 200%;
+    }
+}
+.thumbnails li {
+    list-style-type: none;
+}
+.tile {
+    padding: 0;
+    overflow: hidden;
+    margin-bottom: 20px;
+    .tile-image {
+        width: 100%;
+        height: 150px;
+        a {
+            display: block;
+            height: 100%;            
+            width: 100%;
+            span {
+                visibility: hidden;
+            }
+        }
+    }
+    .tile-content {
+        margin: 10px;   
+        h3 {
+            margin: 0;
+            font-size: 150%;
+        }
+        p {
+            font-size: 85%;
+        }
+    }    
+}
+.small .tile {
+    .tile-image {
+        height: 100px;
+        background-position: 0 -20px;
+    }
+    .tile-content {
+        p {
+            display: none;
+        }
+    }    
+}
+.dash-primary {
+
+}
+.table.vcenter {
+    td, th {
+        vertical-align: middle;
+    }
+}
+
+.form-horizontal.form-horizontal-narrow {
+    .control-label {
+
+    }
+    .controls {
+
+    }
+}
+.form-horizontal.form-horizontal-narrower {
+    .control-label {
+
+    }
+    .controls {
+    }
+}
+.form-tight.form-horizontal .control-group {
+    margin-bottom: 5px;
+}
+
+.muploadBtn {
+    .btn;
+    .btn-success;
+    overflow: hidden;
+    span {
+        line-height: 25px;
+    }
+}
+
+.hideBtn {
+    margin: 0 auto;
+    text-align: center;
+    width: 150px;
+    font-size: 85%;
+}
+.commentContainer {
+    textarea {
+        width: 460px;
+        resize: none;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        min-height: 30px;
+    }
+    .commentControls {
+        display: none;
+    }
+    button {
+        float: right;
+    }
+}
+
+// Provides a convenient way to hide comments, just add the hideComments class to the body
+.hideComments .commentArea {
+    display: none;
+}
+
+.centerOuter {
+    float: right; 
+    left: -50%; 
+    text-align: left; 
+    position: relative;
+
+    .centerInner {
+        left: 50%; 
+        position: relative;
+    }
+}
+
+.contentForm {
+    min-height: 300px;
+}
+
+.pageMessage {
+    display: none;
+}
+.modal form {
+    margin: 0;
+}
+
+.downloadIcon {
+    background-image: url(/static/common/download.png);
+    display: block;
+    width: 34px;
+    height: 31px;
+    span {
+        visibility: hidden;
+    }
+}
+
+.modal-overflow {
+    overflow-y: visible;
+}
+
+.pagination-centered {
+    text-align: center;
+}
+
+.tt-dropdown-menu {
+    min-width: 160px;
+    width: 400px;
+    margin-top: 2px;
+    padding: 5px 0;
+    background-color: @dropdown-bg;
+    border: 1px solid #ccc;
+    border: 1px solid @dropdown-border;
+    *border-right-width: 2px;
+    *border-bottom-width: 2px;
+    border-radius: 6px;
+    .box-shadow(0 5px 10px rgba(0,0,0,.2));
+    -webkit-background-clip: padding-box;
+    -moz-background-clip: padding;
+    background-clip: padding-box;
+}
+
+.tt-suggestion {
+    display: block;
+    padding: 3px 20px;
+}
+
+.tt-suggestion.tt-is-under-cursor {
+    color: @dropdown-link-hover-bg;
+}
+
+.tt-suggestion.tt-is-under-cursor a {
+    color: @dropdown-bg;
+}
+
+.tt-suggestion p {
+    margin: 0;
+}
+.tt-hint {
+    display: none !important;
+}
+
+
+// http://stackoverflow.com/questions/18432577/stacked-tabs-in-bootstrap-3
+.tabs-below, .tabs-right, .tabs-left {
+    .nav-tabs {
+        border-bottom: 0;
+        width: 100%;
+    }
+}
+
+.tab-content > .tab-pane,
+.pill-content > .pill-pane {
+    display: none;
+}
+
+.tab-content > .active,
+.pill-content > .active {
+    display: block;
+}
+
+.tabs-below {
+    > .nav-tabs {
+        border-top: 1px solid #ddd;
+
+        > li {
+            margin-top: -1px;
+            margin-bottom: 0;
+
+            > a {
+                -webkit-border-radius: 0 0 4px 4px;
+                -moz-border-radius: 0 0 4px 4px;
+                border-radius: 0 0 4px 4px;
+
+                &:hover, &:focus {
+                    border-top-color: #ddd;
+                    border-bottom-color: transparent;
+                }
+            }
+        }
+        > .active a {
+            &, &:hover, &:focus {
+                border-color: transparent #ddd #ddd #ddd;
+            }
+        }
+    }
+}
+
+.tabs-left, .tabs-right {
+    > .nav-tabs > li {
+        float: none;
+
+        > a {
+            min-width: 74px;
+            margin-right: 0;
+            margin-bottom: 3px;
+        }
+    }
+}
+
+.tabs-left > .nav-tabs {
+    float: left;
+    margin-right: 19px;
+    border-right: 1px solid #ddd;
+
+    > li > a {
+        margin-right: -1px;
+        -webkit-border-radius: 4px 0 0 4px;
+        -moz-border-radius: 4px 0 0 4px;
+        border-radius: 4px 0 0 4px;
+
+        &:hover, &:focus {
+            border-color: #eee #ddd #eee #eee;
+        }
+    }
+
+    > .active a {
+        &, &:hover, &:focus {
+            border-color: #ddd transparent #ddd #ddd;
+            *border-right-color: #fff;
+        }
+    }
+}
+
+.tabs-right > .nav-tabs {
+    float: right;
+    margin-left: 19px;
+    border-left: 1px solid #ddd;
+
+    > li > a {
+        margin-left: -1px;
+        -webkit-border-radius: 0 4px 4px 0;
+        -moz-border-radius: 0 4px 4px 0;
+        border-radius: 0 4px 4px 0;
+
+        &:hover, &:focus {
+            border-color: #eee #eee #eee #ddd;
+        }
+    }
+
+    > .active a {
+        &, &:hover, &:focus {
+            border-color: #ddd #ddd #ddd transparent;
+            *border-left-color: #fff;
+        }
+    }
+}
+
+/** theme-params.less */
+@frameworkToolsColor: #FFF;
+@frameworkToolsInverseColor: #414141;
+@frameworkHighlightColor: #FFF;
+@frameworkHighlightInverseColor: #FF9531;
+@text1: #464646;
+@text2: #464646;
+@hero1: #0093DD;
+@hero2: #008ACF;
+@border1: #E3E3E3;
+@bg1: #F6F6F6;
+@borderRadius: 5px;
+@listIndent: 40px;
+
+
+
+html body .nav .nav-menuMyRewards {
+	display: none;
+}
+body {
+	.hero-unit {
+		h1 {
+			font-size: 30px;
+			margin-bottom: 15px;
+		}
+		iframe {
+			margin-left: 30px;
+		}
+	}
+}
+
+
+body .nav li  a.nav-menu-myfiles {
+    display: none;
+}
+
+.padded-box {
+	padding: 15px;
+}
+
+body .jumbotron p {
+	color: #697B92;
+	text-shadow: none;
+}
+
+.youtube-wrapper {
+    float: none;
+    clear: both;
+    width: 100%;
+    position: relative;
+    padding-bottom: 56.25%;
+    padding-top: 25px;
+    height: 0;
+}
+.youtube-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+p {
+	color: #333 !important;
+}
+html body .navbar-inverse .navbar-inner .container{
+	background-repeat: no-repeat;
+	background-image: url('/theme/mio-logo-small.png');
+    background-size: auto 100%;
+    padding-left: 80px;
+}
+.modules .tile-image {
+	background-size: 100% auto;
+}
+.modules {
+   padding-left: 15px;
+}

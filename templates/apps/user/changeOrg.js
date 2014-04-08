@@ -1,6 +1,6 @@
-Bob.onDOMReady(function () {
+$(function() {
     $('#myModal').on('shown shown.bs.modal', function() {
-        log("modal shown");
+        flog("modal shown");
         checkInitChangeOrdModal();
 //        initChangeOrgModal();
     })
@@ -22,7 +22,7 @@ function initChangeOrgModal() {
         return;
     }
     form.addClass("change-org-init");
-    log("initChangeOrgModal", form );
+    flog("initChangeOrgModal", form );
     
     $("#changeMemberOrgForm").forms({
         callback: function(resp, form) {
@@ -33,17 +33,17 @@ function initChangeOrgModal() {
     $("#orgTitle").typeahead({
         minLength: 2,
         source: function(query, process) {
-        	log("typeahead", query);
+        	flog("typeahead", query);
             doOrgSearch(query, process);
         },
         updater: function(item) {
             var org = mapOfOrgs[item];
-            log("item: ", item, org);
+            flog("item: ", item, org);
             $("#orgId").val(org.orgId);
             return item;
         }
     });
-    log("Done init typeahead", $("#orgTitle").length);
+    flog("Done init typeahead", $("#orgTitle").length);
 
     var mapOfOrgs = {};
     function doOrgSearch(query, callback) {
@@ -52,18 +52,18 @@ function initChangeOrgModal() {
             url: window.location.pathname + "?changeMemberOrg=" + $("#changeMemberOrg").val() + "&orgSearchQuery=" + query,
             dataType: "json",
             success: function(data) {
-                log("success", data)
+                flog("success", data)
                 mapOfOrgs = {};
                 orgNames = [];
                 $.each(data.data, function(i, state) {
-                    //log("found: ", state, state.title);
+                    //flog("found: ", state, state.title);
                     orgNames.push(state.title);
                     mapOfOrgs[state.title] = state;
                 });
                 callback(orgNames);
             },
             error: function(resp, textStatus, errorThrown) {
-                log("error", resp, textStatus, errorThrown);
+                flog("error", resp, textStatus, errorThrown);
                 alert("Error querying the list of organisations");
             }
         });

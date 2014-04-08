@@ -19,7 +19,7 @@ function initModulePage(pStatUrl, pFinished, pEditMode, pIsCompletable) {
 
 
 function initModuleNav(pStatUrl, pFinished) {
-    log("initModuleNav");
+    flog("initModuleNav");
     modStatusUrl = pStatUrl;
     modStatusComplete = pFinished;
     initPageNav();
@@ -38,18 +38,18 @@ function initModuleNav(pStatUrl, pFinished) {
     $('.pages a').click(function(e) {
         var a = $(e.target).closest("a");
         if (a.hasClass("disabled")) {
-            log("preventing click on disabled link", a);
+            flog("preventing click on disabled link", a);
             e.stopPropagation();
             e.preventDefault();
             return false;
         }
     });
-    log("setup pjax", $('.pages a'));
+    flog("setup pjax", $('.pages a'));
     $(document).pjax2('.panelBox', {
         selector: ".pages a",
         fragment: ".panelBox",
         success: function() {
-            log("done!");
+            flog("done!");
             initPrintLink(); // called by init-theme
             initPageNav();
         }
@@ -65,16 +65,16 @@ function initPageNav() {
     var pageName = getFileName(window.location.pathname);
     pageName = pageName.replaceAll(" ", "%20");
     pageName = decodeURI(pageName);
-    log("initPageNav", pageName);
-    $(".pages li a.modPage").each(function(i, n) {
+    flog("initPageNav", pageName);
+    $(".pages a.modPage").each(function(i, n) {
         var node = $(n);
         var link = decodeURI(node.attr("href"));
-        if (link == pageName) {
-            log("initPageNav-found", pageName, link);
+        if (link === pageName) {
+            //flog("initPageNav-found", pageName, link);
             $(n).addClass("active");
             $(n).closest("li").addClass("active");
         } else {
-            log("initPageNav-notfound", pageName, link);
+            //flog("initPageNav-notfound", pageName, link);
         }
     });
 
@@ -93,7 +93,7 @@ function initPageNav() {
     //$("table.classifier").classifier();
     //
     // set active on current page nav
-    log("initPageNav. modStatusComplete=", modStatusComplete, "userurl", userUrl);
+    flog("initPageNav. modStatusComplete=", modStatusComplete, "userurl", userUrl);
 
     $('html, body').animate({
         scrollTop: 0
@@ -101,29 +101,32 @@ function initPageNav() {
 
     initJPlayer("360", "640", "jp-video-360p");
 
-    $(".prevBtn").attr("href", getMoveHref(-1));
-    $(".nextBtn").attr("href", getMoveHref(1));
+    var s = getMoveHref(-1);
+    flog('prev url', s);
+    $(".prevBtn").attr("href", s);
+    s = getMoveHref(1);
+    $(".nextBtn").attr("href", s);
 
     if (modStatusComplete) {
-        log("initPageNav: module is complete so do nothing");
+        flog("initPageNav: module is complete so do nothing");
     } else {
         var c = currentPageIndex();
         var p = progressPageIndex();
         if (!p || c > p) { // only save current page if it is the furthest yet visited
-            log("do save progress");
+            flog("do save progress");
             window.setTimeout(function() {
                 save();
             }, 1000);
         } else {
-            log("not doing save, so explicitly reload fields...", modStatusUrl);
+            flog("not doing save, so explicitly reload fields...", modStatusUrl);
             doRestoreFields();
         }
     }
     checkProgressPageVisibility();
     // Setup event to save any changes on the fly
-    log("init field saving", $("#body textarea, #body input, #body select"));
+    flog("init field saving", $("#body textarea, #body input, #body select"));
     $("#body textarea, #body input, #body select").change(function(e) {
-        log("changed field", e.target);
+        flog("changed field", e.target);
         var field = $(e.target);
         saveField(field.attr("name"), field.val(), modStatusUrl);
     });
@@ -131,7 +134,7 @@ function initPageNav() {
     // Need to delay, because this script might be running before other scripts
     // have had time to register for the event
     window.setTimeout(function() {
-        log("fire modulePageLoad event");
+        flog("fire modulePageLoad event");
         $("body").trigger("modulePageLoad");
     }, 50);
 }
@@ -145,7 +148,7 @@ function doRestoreFields() {
             restoreFields(response);
         },
         error: function(event, XMLHttpRequest, ajaxOptions, thrownError) {
-            log('error restoring fields', event, XMLHttpRequest, ajaxOptions, thrownError);
+            flog('error restoring fields', event, XMLHttpRequest, ajaxOptions, thrownError);
         }
     });    
 }
@@ -155,7 +158,7 @@ function doRestoreFields() {
  * elements should be enabled
  */
 function checkProgressPageVisibility() {
-    log("checkProgressPageVisibility");
+    flog("checkProgressPageVisibility");
     var hiddenSections = $(".btnHideFollowing").not(".expanded");
     var hasHidden = hiddenSections.length > 0;
     if (currentPageIndex() < progressPageIndex()) {
@@ -165,7 +168,7 @@ function checkProgressPageVisibility() {
     var isInputsDone = true;
     // has the user already progressed beyond this page?
     var isBeyondCurrent = progressPageIndex() > currentPageIndex();
-    log("isBeyondCurrent:", progressPageIndex(), currentPageIndex())
+    flog("isBeyondCurrent:", progressPageIndex(), currentPageIndex())
     var onQuiz = false; // figure out if user is on a quiz page
     var quiz = $("ol.quiz");
     if (quiz.length > 0) {
@@ -178,7 +181,7 @@ function checkProgressPageVisibility() {
         }
     } else {
         isInputsDone = (findIncompleteInputs().length === 0);
-        log("Not a quiz page, so check if fields completed... = ", isInputsDone);
+        flog("Not a quiz page, so check if fields completed... = ", isInputsDone);
     }
 
     // Page nav button is enabled if its index is <= progress page index, or all btnHideFollowing have expanded class and its index = current+1 and current page=progress page
@@ -189,7 +192,7 @@ function checkProgressPageVisibility() {
         p = c;
     }
 
-    var pagesList = $("ul.pages");
+    var pagesList = $(".pages");
     var pages = pagesList.find("a.modPage");
     pages.find("li").removeClass("limit-lower").removeClass("limit-upper").removeClass("limit");
     pages.first().closest("li").addClass("limit-end");
@@ -210,12 +213,12 @@ function checkProgressPageVisibility() {
         li.addClass("away-" + away).addClass("away-limited-" + limited);
         var enabled = i <= p || i == c || (i == (c + 1) && isInputsDone && !hasHidden);
         enabled = enabled || !isCompletable; // all links enabled for view only (non completable) enrolments
-        //log("is enabled?", a, i, p, c,isInputsDone,isCompletable, "=", enabled);
+        //flog("is enabled?", a, i, p, c,isInputsDone,isCompletable, "=", enabled);
         setLinkEnabled(a, enabled);
     });
 
     var nextEnabled;
-    log("modStatusComplete", modStatusComplete, "isBeyondCurrent", isBeyondCurrent, "isLastPage())", isLastPage());
+    flog("modStatusComplete", modStatusComplete, "isBeyondCurrent", isBeyondCurrent, "isLastPage())", isLastPage());
     if (!isCompletable) {
         // For a non-completable enrolement we allow users to view any page in any order
         nextEnabled = true;
@@ -224,11 +227,11 @@ function checkProgressPageVisibility() {
         nextEnabled = true;
     } else {
         $("a.nextBtn span").text("Next");
-        var nextLink = $("ul.pages a.active.modPage").parent().next().find("a");
+        var nextLink = $("a.active.modPage").parent().next().find("a");
         // if there's a hidden section, clicking next will show it
         // If inputs are not complete, still show next so they user can click it to get validation
         nextEnabled = nextLink.hasClass("enabled") || hasHidden || !isInputsDone;
-        log("nextEnabled", nextEnabled, nextLink)
+        flog("nextEnabled=", nextEnabled, nextLink, "hasHidden=", hasHidden, "isInputsDone=", isInputsDone);
     }
 
     setLinkEnabled($(".pages a.nextBtn"), nextEnabled);
@@ -239,14 +242,14 @@ function checkProgressPageVisibility() {
 var checkNextValidationFunction = null;
 
 function checkNext() {
-    log("checkNext");
+    flog("checkNext");
     var popout = $("div.pages div.popout");
     popout.hide();
     var hiddenSections = $(".btnHideFollowing").not(".expanded").filter(":visible");
-    log("hiddenSections", hiddenSections);
+    flog("hiddenSections", hiddenSections);
     if (hiddenSections.length > 0) {
         var first = hiddenSections.first();
-        log("hidden", first);
+        flog("hidden", first);
         // Check if required inputs prior to this are completed
         var incompleteInput = null;
         first.prev().find("input.required, select.required, textarea.required").each(function(i, n) {
@@ -254,9 +257,9 @@ function checkNext() {
             var val = node.val().trim();
             if (val == "") {
                 incompleteInput = node;
-                log("check input: is incomplete", val, node, incompleteInput);
+                flog("check input: is incomplete", val, node, incompleteInput);
             } else {
-                log("check input: ok", val, node, incompleteInput);
+                flog("check input: ok", val, node, incompleteInput);
             }
         });
         if (incompleteInput == null) {
@@ -264,19 +267,19 @@ function checkNext() {
         } else {
             showNextPopup(findIncompleteInputs());
         }
-        log("found hidden sections", hiddenSections);
+        flog("found hidden sections", hiddenSections);
         return false;
     }
 
     inp = findIncompleteInputs();
     if (inp.length > 0) {
-        log("found incomplete input", inp)
+        flog("found incomplete input", inp)
         showNextPopup(inp);
         return false;
     }
 	if( checkNextValidationFunction ) {
 		if( !checkNextValidationFunction() ) {
-			log("checkNextValidationFunction returned false");
+			flog("checkNextValidationFunction returned false");
 			return false;
 		}
 	}
@@ -318,20 +321,20 @@ function setLinkEnabled(a, isEnabled) {
 }
 
 function initLearningContentStyles() {
-    log("initLearningContentStyles");
+    flog("initLearningContentStyles");
     // insert spans so we can use sprites for background images
     $(".panelBox").find(".dropdown, .btnHideFollowing, .activity, .keyPoint, .lightbulb h6").prepend("<span class='sprite'>&nbsp;</span>");
 
     var c = currentPageIndex();
     var p = progressPageIndex();
     if (c >= p) {
-        //        log("show hide following", c, p);
+        //        flog("show hide following", c, p);
         $(".btnHideFollowing").nextAll().hide(); // initially hide everything after it
 
         $(".btnHideFollowing").click(function() {
             $(this).addClass("expanded");
             var toToggle = $(this).nextUntil(".btnHideFollowing").not(".linked-modal");
-            log("btnHideFollowing: toggle:", toToggle);
+            flog("btnHideFollowing: toggle:", toToggle);
             toToggle.show(200);
             // also show the next button, if there is one
             var last = $(toToggle[toToggle.length - 1]);
@@ -339,7 +342,7 @@ function initLearningContentStyles() {
             checkProgressPageVisibility();
         });
     } else {
-        //        log("hide hide following buttons", c, p);
+        //        flog("hide hide following buttons", c, p);
         $(".btnHideFollowing").hide(); // if we're not using continue buttons, hide them
     }
 
@@ -348,9 +351,9 @@ function initLearningContentStyles() {
         if (dropDownDiv.length > 1) {
             dropDownDiv = $(dropDownDiv[0]);
         }
-        //        log("toggle visibility", $("> div", dropDownDiv));
+        //        flog("toggle visibility", $("> div", dropDownDiv));
         $("> div", dropDownDiv).toggle(200, function() {
-            log("set open class", this, $(":visible", $(this)));
+            flog("set open class", this, $(":visible", $(this)));
             var vis = $(":visible", $(this)).length > 0;
             if (vis) {
                 dropDownDiv.addClass("open");
@@ -373,19 +376,19 @@ function initLearningContentStyles() {
 
 function getMoveHref(count) {
     var i = currentPageIndex();
-    //log("currentPageIndex", i);
-    var allLinks = $("ul.pages a.modPage");
+    //flog("currentPageIndex", i);
+    var allLinks = $(".pages a.modPage");
     i = i + count;
     if (i < 0) {
         i = 0;
     }
     if (i >= allLinks.length) {
         //i = allLinks.length-1;
-        //log("getMoveHref: ", count, "moved index", i, "allLinks.length",allLinks.length,"result:", href);
+        //flog("getMoveHref: ", count, "moved index", i, "allLinks.length",allLinks.length,"result:", href);
         return "pFinished.html";
     } else {
         var href = $(allLinks[i]).attr("href");
-        //log("getMoveHref: ", count, "moved index", i, "result:", href);
+        //flog("getMoveHref: ", count, "moved index", i, "result:", href);
         return href;
     }
 }
@@ -394,7 +397,7 @@ function getMoveHref(count) {
 
 function setReadonly() {
     //readonly = true;
-    log("setReadOnly");
+    flog("setReadOnly");
     $("#submitBtn").attr('disabled', 'disabled');
     $("#submitBtn").hide();
     $("#saveBtn").css("visibility", "hidden");
@@ -409,8 +412,8 @@ function isReadonly() {
 
 
 function save(callback) {
-    log("save. isCompletable=", isCompletable, "userUrl", userUrl);
-    log("save", "userUrl", userUrl);
+    flog("save. isCompletable=", isCompletable, "userUrl", userUrl);
+    flog("save", "userUrl", userUrl);
     if (userUrl === null) {
         return;
     }
@@ -422,7 +425,7 @@ function save(callback) {
     var currentPage = getFileName(window.location.href);
     progressPage = currentPage; // update progress page so we can keep track
     var url = modStatusUrl;
-    log("save. url=", url, "currentPage", currentPage); 
+    flog("save. url=", url, "currentPage", currentPage); 
     var data = {};
     $("#body textarea, #body input, #body select").each(function(i, n) {
         var inp = $(n);
@@ -434,14 +437,14 @@ function save(callback) {
         url: url,
         data: data,
         success: function(response) {
-            log('saved ok', response);
+            flog('saved ok', response);
             restoreFields(response);
             if (callback) {
                 callback();
             }
         },
         error: function(event, XMLHttpRequest, ajaxOptions, thrownError) {
-            log('error saving moduleStatus', event, XMLHttpRequest, ajaxOptions, thrownError);
+            flog('error saving moduleStatus', event, XMLHttpRequest, ajaxOptions, thrownError);
             //alert("There was an error saving your progress");
         }
     });
@@ -453,51 +456,51 @@ function saveFields(callback) {
         var inp = $(n);
         data[inp.attr("name")] = inp.val();
     });
-    log("saveFields", data);
+    flog("saveFields", data);
     var url = modStatusUrl;
     $.ajax({
         type: "POST",
         url: url,
         data: data,
         success: function(response) {
-            log('saved ok', response);
+            flog('saved ok', response);
             if (callback) {
                 callback();
             }
         },
         error: function(event, XMLHttpRequest, ajaxOptions, thrownError) {
-            log('error saving moduleStatus', event, XMLHttpRequest, ajaxOptions, thrownError);
+            flog('error saving moduleStatus', event, XMLHttpRequest, ajaxOptions, thrownError);
             alert("There was an error saving your fields");
         }
     });    
 }
 
 function restoreFields(response) {
-    log("restoreFields");
+    flog("restoreFields");
     if (response.data) {
         for (qualifiedFieldName in response.data) {
             var fieldName = stripPageName(qualifiedFieldName);
             var fieldValue = response.data[qualifiedFieldName];
-            log("fieldValue", fieldValue, "fieldName", qualifiedFieldName, "from", response.data);
+            flog("fieldValue", fieldValue, "fieldName", qualifiedFieldName, "from", response.data);
             var inp = $("#body textarea[name='" + fieldName + "'], #body input[type=text][name='" + fieldName + "'], #body select[name='" + fieldName + "']");
 
-            log("restoreFields: look for text input", fieldName, fieldValue, inp);
+            flog("restoreFields: look for text input", fieldName, fieldValue, inp);
             if (inp.length > 0) {
                 inp.val(fieldValue);
             } else {                
                 var radios = $("#body input[type=radio][name='" + fieldName + "']");
-                log("didnt find text input, look for radios...", radios, "with value", fieldValue);
+                flog("didnt find text input, look for radios...", radios, "with value", fieldValue);
                 if (radios.length > 0) {
                     radios.attr("checked", "");
                     var radio = radios.filter("[value=" + fieldValue + "]");
-                    log("select radio", radio, fieldValue);
+                    flog("select radio", radio, fieldValue);
                     radio.attr("checked", "true"); // set radio buttons
-                    log("check radio");
+                    flog("check radio");
                 }
             }
         }
     }
-    log("restoreFields: trim text inputs");
+    flog("restoreFields: trim text inputs");
     $("textarea").each(function(i, n) {
         var t = $(n);
         var text = t.val().trim();
@@ -510,7 +513,7 @@ function restoreFields(response) {
  * Called to indicate that the module is complete
  */
 function completed() {
-    log("completed", modStatusUrl);
+    flog("completed", modStatusUrl);
     if (!isCompletable) {
         if (modStatusComplete) {
             alert("You have reached the end of this module, and you have previously completed it.");
@@ -531,19 +534,19 @@ function setStatusComplete() {
         data: "statusComplete=true",
         success: function(response) {
             ajaxLoadingOff();
-            log("setStatusComplete response", response);
+            flog("setStatusComplete response", response);
             if (response.status) {
-                log("setStatusComplete completed ok, so show completed message");
+                flog("setStatusComplete completed ok, so show completed message");
                 showCompletedMessage();
             } else {
-                log("setStatusComplete returned false", response.fieldMessages[0]);
+                flog("setStatusComplete returned false", response.fieldMessages[0]);
                 if (response.fieldMessages.length > 0 && response.fieldMessages[0].field === "userData") {
                     // show modal prompting for name details
                     jQuery.ajax({
                         type: 'GET',
                         url: "/profile/",
                         success: function(resp) {
-                            log("setStatusComplete: profile get complete");
+                            flog("setStatusComplete: profile get complete");
                             var page = $(resp);
                             var form = page.find("div.details form");
                             form.find("h4").remove();
@@ -563,19 +566,19 @@ function setStatusComplete() {
                             });
                             var modal = $("#userDataModal");
                             modal.find("button").click(function(e) {
-                                log("submit form", e);
+                                flog("submit form", e);
                                 e.preventDefault();
                                 e.stopPropagation();
                                 form.submit();
                             });
                             modal.find(".modal-body").html(form);
-                            log("got profile page", resp);
+                            flog("got profile page", resp);
                             showModal(modal);
 
                         },
                         error: function(resp) {
                             ajaxLoadingOff();
-                            log("setStatusComplete: profile get failed");
+                            flog("setStatusComplete: profile get failed");
                             alert("Very sorry, but something went wrong while attempting to complete your module. Could you please refresh the page and try again?");
 
                         }
@@ -594,7 +597,7 @@ function setStatusComplete() {
 }
 
 function showCompletedMessage() {
-    log("showCompletedMessage");
+    flog("showCompletedMessage");
     jQuery.ajax({
         type: 'GET',
         url: "./?completeMessage",
@@ -612,26 +615,29 @@ function showCompletedMessage() {
 }
 
 function currentPageIndex() {
-    var current = $("ul.pages a.active").attr("href");
+    var pages = $(".pages a.modPage");
+    //flog("pages", pages, "active=", pages.filter(".active") );    
+    var current = pages.filter(".active").attr("href");    
     var currentIndex = 0;
-    var all = $("ul.pages a.modPage");
+    var all = pages;
     currentIndex = all.length - 1; // default to finish, in case not found
     all.each(function(index) {
-        if ($(this).attr("href") == current) {
+        if ($(this).attr("href") === current) {
             currentIndex = index;
         }
     });
-    //log("currentIndex", currentIndex, "index=", current);
+    //flog("currentPageIndex: current=", current, "pages=", pages, "result=", currentIndex);
     return currentIndex;
 }
 
 function progressPageIndex() {
-    var currentPageLink = $("ul.pages a[href='" + progressPage + "']");
+    var pages = $(".pages a.modPage");
+    var currentPageLink = pages.find("a[href='" + progressPage + "']");
     var current = currentPageLink.attr("href");
     var currentIndex = 0;
-    var all = $("ul.pages a.modPage");
+    var all = pages;
     all.each(function(index) {
-        if ($(this).attr("href") == current) {
+        if ($(this).attr("href") === current) {
             currentIndex = index;
         }
     });
@@ -646,14 +652,14 @@ function getCurrentPage() {
 }
 
 function numberOfPages() {
-    var all = $("ul.pages a.modPage");
+    var all = $(".pages a.modPage");
     return all.length;
 }
 
 function isLastPage() {
     var p = currentPageIndex();
     var b = p >= (numberOfPages() - 1);
-    log("isLastPage", p, numberOfPages(), b)
+    flog("isLastPage. currentPageIndex=", p, "num pages=", numberOfPages(), "result=", b)
     return b;
 }
 
@@ -662,9 +668,9 @@ function initMedia() {
 }
 
 function saveField(fieldName, fieldValue, statUrl) {
-    log("saveField", fieldName, fieldValue, statUrl, userUrl)
-    if (userUrl == null || userUrl === "") {
-        log("No current user, so dont save");
+    flog("saveField", fieldName, fieldValue, statUrl, userUrl)
+    if (userUrl === null || userUrl === "") {
+        flog("No current user, so dont save");
         return;
     }
     if (!fieldName) {
@@ -679,10 +685,10 @@ function saveField(fieldName, fieldValue, statUrl) {
             changedValue: fieldValue
         },
         success: function(response) {
-            log('saved ok', response);
+            flog('saved ok', response);
         },
         error: function(response) {
-            log('error saving moduleStatus', response);
+            flog('error saving moduleStatus', response);
         }
     });
 }
@@ -699,7 +705,7 @@ function stripPageName(qualifiedFieldName) {
     if (qualifiedFieldName.contains("_")) {
         var i = qualifiedFieldName.indexOf("_");
         var n = qualifiedFieldName.substring(i + 1, qualifiedFieldName.length);
-        log("stripPageName", i, n);
+        flog("stripPageName", i, n);
         return n;
     } else {
         return qualifiedFieldName;
@@ -707,7 +713,7 @@ function stripPageName(qualifiedFieldName) {
 }
 
 function initModalLinks() {
-    log("init modal popups");
+    flog("init modal popups");
     $('div.linked-modal').each(function() {
         $(this).append('<a href="#" title="Close" class="close-modal">Close</a>')
     });
@@ -727,7 +733,7 @@ function initModalLinks() {
     });
 
     $('a.close-modal').click(function(e) {
-        log("close modals");
+        flog("close modals");
         e.preventDefault();
         closeModals();
     });
@@ -742,13 +748,13 @@ function initModalLinks() {
  */
 function checkSubmit(e) {
     var vis = $(".nextBtn:visible");
-    log("checkSubmit", e, vis);
+    flog("checkSubmit", e, vis);
     if (vis.length === 0) {
-        log("already processing");
+        flog("already processing");
         return;
     }
     if (!isQuizComplete(e)) { // there might not be a quiz, which is ok
-        log("Quiz is not complete");
+        flog("Quiz is not complete");
         e.preventDefault();
         e.stopPropagation();
         return;
@@ -768,24 +774,24 @@ function checkSubmit(e) {
  */
 function isQuizComplete(e) {
     var quiz = $("form.quiz");    
-    log("isQuizComplete", quiz);
+    flog("isQuizComplete", quiz);
     if (quiz.length === 0) {
-        log("Quiz is empty, so is complete");
+        flog("Quiz is empty, so is complete");
         return true;
     }
     if (quiz.hasClass("validated")) {
-        log("Quiz has been validated, so is complete");
+        flog("Quiz has been validated, so is complete");
         return true;
     }
     var isBeyondQuiz = progressPageIndex() > currentPageIndex();
     if (isBeyondQuiz) {
-        log("is beyond quiz, so quiz is complete");
+        flog("is beyond quiz, so quiz is complete");
         return true;
     }
 
     // Clear any previous errors
     var errors = quiz.find(".error");
-    log("isQuizComplete: remove prev errors", errors);
+    flog("isQuizComplete: remove prev errors", errors);
     errors.removeClass("error");
 
     // Check all questions have been answered
@@ -795,14 +801,14 @@ function isQuizComplete(e) {
         var inp = li.find("textarea, input:radio:checked");
         if (inp.length === 0) {
             hasError = true;
-            log("found incomplete input", li);
+            flog("found incomplete input", li);
             li.addClass("error");
         } else {
             var val = inp.val() + "";
             val = val.trim();
             if (val.length === 0) {
                 hasError = true;
-                log("found incomplete input", li);
+                flog("found incomplete input", li);
                 li.addClass("error");
             }
         }
@@ -812,7 +818,7 @@ function isQuizComplete(e) {
     }
 
     if (quiz.hasClass("processing")) {
-        log("Quiz check is in progress");
+        flog("Quiz check is in progress");
         return false;
     }
 
@@ -822,7 +828,7 @@ function isQuizComplete(e) {
     var pageName = getFileName(window.location.pathname);
     quiz.find("input[name=quiz]").val(pageName);
     try {
-        log("no, doing quiz check");
+        flog("no, doing quiz check");
         $.ajax({
             type: "POST",
             url: modStatusUrl,
@@ -831,17 +837,17 @@ function isQuizComplete(e) {
             success: function(response) {
                 quiz.removeClass("processing");
                 if (response.status) {
-                    log('quiz validated ok', response);
+                    flog('quiz validated ok', response);
                     quiz.addClass("validated");
                     $(e.target).click();
                     //                    if( isLastPage() ) {        
                     //                        completed();
                     //                    } else {
-                    //                        log("re-click next");
+                    //                        flog("re-click next");
                     //                        $(e.target).click();
                     //                    }
                 } else {
-                    log('quiz validated returned false', response);
+                    flog('quiz validated returned false', response);
                     alert("Please check your answers");
                     $.each(response.fieldMessages, function(i, n) {
                         var inp = quiz.find("li." + n.field);
@@ -851,12 +857,12 @@ function isQuizComplete(e) {
             },
             error: function(response) {
                 quiz.removeClass("processing");
-                log("isQuizComplete error response", response);
+                flog("isQuizComplete error response", response);
                 showApology("check your answers");
             }
         });
     } catch (e) {
-        log("exception in isQuizComplete", e);
+        flog("exception in isQuizComplete", e);
         showApology("check your answers");
     }
     return false;

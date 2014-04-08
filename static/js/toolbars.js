@@ -57,7 +57,6 @@ toolbarSets["Default"] = [
     {name: 'tools'},    
     {name: 'others'},
     {name: 'colors'},    
-    '/',
     {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
     {name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align']},
     {name: 'styles'}
@@ -78,19 +77,10 @@ toolbarSets["Default"] = [
 //
 
 toolbarSets["Lite"] = [
-    {name: 'clipboard', groups: ['clipboard', 'undo']},
-    {name: 'editing', groups: ['find', 'selection', 'spellchecker']},
     {name: 'links'},
-    {name: 'insert'},
-    {name: 'forms'},
-    {name: 'tools'},
-    {name: 'document', groups: ['mode', 'document', 'doctools']},
     {name: 'others'},
-    '/',
     {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
     {name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align']},
-    {name: 'styles'},
-    {name: 'colors'}
 ];
 
 //toolbarSets["Lite"] = [

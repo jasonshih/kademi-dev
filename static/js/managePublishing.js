@@ -8,8 +8,9 @@ function initPublishingMenu(managePage) {
         var link = node.closest("li").find("a").not(".copy");
         showCopyBranch(link, function(newName, resp) {
             flog("done copy branch");
-            var srcName = link.text().trim();
-            node.closest("ul").append("<li><a href='#' class='copy'><span>Copy</span></a><a href='" + resp.nextHref + "/" + managePage + "'>" + newName + "</a></li>")
+            var s = "<a class='branch noclear' href='" + resp.nextHref + (managePage ? "/" + managePage : "") + "'>" + newName + "</a>";
+            s = "<li class='list-item' role='presentation'>" + s + "</li>";
+            node.closest("ul").append(s);
         });
     });
     $(".publishing .branches").on("click", "a.hide-branch", function(e) {
@@ -31,7 +32,7 @@ function initPublishingMenu(managePage) {
 function showCopyBranch(link, callback) {
     var srcHref = link.attr("href");
     srcHref = toFolderPath(srcHref);
-    myPrompt("copyVersion", "", "Copy website version", "Make a copy of this version of the website", "Enter a name", "newName", "Copy", "simpleChars", "Enter a simple name for the version, eg version2", function(newName, form) {
+    myPrompt("copyVersion", "", "Copy website version", "Make a copy of this version of the website", "Enter a name", "newName", "Copy", "reallySimpleChars", "Enter a simple name for the version, eg version2", function(newName, form) {
         newName = newName.toLowerCase();
         log("create version", newName, form);
         createBranch(srcHref, newName, function(newName, resp) {

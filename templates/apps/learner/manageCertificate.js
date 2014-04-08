@@ -1,32 +1,33 @@
 function initManageCertificates() {
-    log('initManageCertificate: ');
+    flog('initManageCertificate: ');
     initCertificateController();
     initModalCertificate();
 }
 
 function initManageCertificateDetails(certId) {
-    log('initManageCertificate: ', certId);
+    flog('initManageCertificate: ', certId);
     themeCssFiles.push('/templates/apps/learner/certificate.dyn.css?imageHash=' + certId);
-    edify($('.manage-certificate-details'), 
+    
+    edify($('.manage-certificate-details'),
         function(resp) {
-            log('done', resp);
+            flog('done', resp);
             alert('Saved ok');
         },
         function(form) {
             var content = $('#editContent');
-            log('validate', form, content, content.val());
+            flog('validate', form, content, content.val());
             if( content.val().trim() == '') {
                 alert('Please enter some content for the certificate');
                 return false;
             }
-            return true;            
+            return true;
         }
     );
                 
     $('#btn-upload').mupload({
-        url: '',
+        url: window.location.pathname,
         useJsonPut: false,
-        buttonText: 'New image',
+        buttonText: '<i class="clip-folder"></i> New image',
         oncomplete: function(data, name, href) {
             window.location.reload();
         }
@@ -45,7 +46,7 @@ function initModalCertificate() {
     
     modal.find('form').forms({
         callback: function(resp) {
-            log('done');
+            flog('done');
             window.location.href = resp.nextHref;        
             modal.modal('hide');
         }
@@ -59,7 +60,7 @@ function initCertificateController() {
         var a = $(this);
         var name = a.attr('data-name');;
         
-        log('delete onclick', a, name);
+        flog('delete onclick', a, name);
         confirmDelete(a.attr('href'), name, function() {
             window.location.reload();
         });

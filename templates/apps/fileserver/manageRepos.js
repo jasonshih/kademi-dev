@@ -1,21 +1,18 @@
 function initManageRepos() {
     log('initManageRepositories');
+    var modal = $('#modal-new-repo');
+    $('.btn-add-repo').on('click', function(e) {
+        e.preventDefault();
+        modal.modal('show');
+    });
 
-	var modal = $('#modal-new-repo');
-
-	$('.btn-add-repo').on('click', function (e) {
-		e.preventDefault();
-
-		modal.modal('show');
-	});
-
-	modal.find('form').forms({
+    modal.find('form').forms({
         callback: function(resp) {
             window.location.reload();
-	        modal.modal('hide');
+            modal.modal('hide');
         }
     });
-    
+
     $('a.btn-delete-repo').click(function(e) {
         e.preventDefault();
         var node = $(e.target);
@@ -27,30 +24,34 @@ function initManageRepos() {
         });
     });
 
-	$('td.public label').on('click', function(e) {
-		e.preventDefault();
+    flog("init switch", $('td.public input'));
+    $('td.public input').on('change switchChange', function(e) {
+        flog("switch", e.target);
+        e.preventDefault();
 
-		var label = $(this);
-		var wrapper = label.parents('.make-switch');
+        var label = $(this);
+        var wrapper = label.parents('.make-switch');
 
-		setTimeout(function () {
-			var isChecked = wrapper.find('input:checked').val() === 'true';
-
-			setRepoPublicAccess(wrapper, isChecked);
-		}, 0);
-	});
+        setTimeout(function() {
+            var isChecked = wrapper.find('input:checked').val() === 'true';
+            flog("checked=", isChecked);
+            var href = wrapper.closest("tr").find("a.repo").attr("href");
+            setRepoPublicAccess(href, isChecked);
+        }, 0);
+    });
 }
 
-function setRepoPublicAccess(wrapper, isPublic) {
+function setRepoPublicAccess(href, isPublic) {
     $.ajax({
         type: 'POST',
         data: {isPublic: isPublic},
-        url: wrapper.attr('data-href'),
+        url: href,
         success: function(data) {
         },
         error: function(resp) {
-	        wrapper.find('label').trigger('click');
-            alert('Sorry, couldnt update public access: ' +resp);
+            flog("error updating: ", href, resp);
+            alert('Sorry, couldnt update public access: ' + resp);
+            window.location.reload();
         }
-    });       
+    });
 }

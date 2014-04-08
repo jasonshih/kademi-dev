@@ -1,0 +1,155 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Manage Blogs</title>
+    </head>
+    <body class="manageModulePages">
+        <p><button class="btn btn-sm btn-success btn-add-group" href="#" data-toggle="modal" data-target="#modal-blog"><i class="fa fa-plus"></i> Add new blog</button></p>
+        <div id="blogs-container">
+            #if( $page.children.isEmpty() )
+            <div class="well">
+                You have not created any blogs yet. Click the button above to setup
+                your first blog, in which you can add blog articles.
+            </div>
+            #else
+            #foreach($blog in $page.children)
+            <div class="panel panel-default group">
+                <div class="panel-heading">
+                    <i class="clip-users"></i>
+                    <span class="group-name">$blog.title - $blog.websiteName</span>
+                    <div class="btn-group btn-group-xs">
+                        <button data-toggle="dropdown" class="btn btn-sm btn-default btn-squared dropdown-toggle" type="button">
+                            <span class="caret"></span>
+                        </button>
+                        <ul role="menu" class="dropdown-menu">
+                            <li><a href="$blog.href" class="btn-rename-group">Rename this blog</a></li>
+                            <li class="divider"></li>
+                            <li><a href="$blog.href" class="btn-delete-group">Delete this blog</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <p class="pull-right">
+                        <a class="btn btn-sm btn-info" href="$blog.name/">Manage blog</a>
+                        <a class="btn btn-sm btn-success" href="$blog.name/new" ><i class="fa fa-plus"></i> Create new article</a>
+                    </p>
+                    <h4>Recent articles</h4>                    
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <colgroup>
+                                <col />
+                                <col style="width: 120px;" />
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th class="title" rel="asc">Title</th>
+                                    <th class="action"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                #if( $blog.recentArticles.isEmpty() )
+                                <tr>
+                                    <td>No articles have been created yet.</td>
+                                </tr>
+                                
+                                #else
+                                #foreach($article in $blog.recentArticles)
+                                <tr>
+                                    <td><a href="$blog.name/$article.name">$article.title</a></td>
+                                    <td class="action">
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="$blog.name/$article.name" class="btn btn-sm btn-primary btn-sm"> <i class="fa fa-edit"></i> Edit</a>                                            
+                                        </div>                                                                               
+                                    </td>
+                                </tr>
+                                #end
+                                #end
+                            </tbody>
+                        </table>
+                    </div>                
+                </div>
+            </div>
+            #end
+            #end
+        </div>
+
+
+        <div id="modal-blog" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                <h4 class="modal-title">New Blog</h4>
+            </div>
+            <form method="post" action="$page.path">
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-md-4" for="newName">Website</label>
+                            <div class="col-md-8">
+                                <select name="website" class="form-control">
+                                    #foreach($website in $page.closest("organisation").child("websites").children)
+                                    <option>$website.name</option>
+                                    #end
+                                </select>
+                                <br/>
+                                <i>This blog will be available for the selected website.</i>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="control-label col-md-4" for="newName">Blog name</label>
+                            <div class="col-md-8">
+                                <input class="form-control" type="text" name="newName" id="newName" value="" placeholder="my-blog" />
+                                <br/>
+                                <i>This is the identifier that will be part of the address for this blog.</i>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4" for="title">Blog title</label>
+                            <div class="col-md-8">
+                                <input class="form-control" type="text" name="title" id="title" value="" placeholder="My New Blog" />
+                                <br/>
+                                <i>This is the title which will be displayed to users on the blogs page.</i>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                    <button class="btn btn-sm btn-primary btn-save-group" type="submit">Save</button>
+                </div>
+            </form>
+        </div>
+
+
+
+
+
+        <script type="text/javascript" >
+            Bob.onDOMReady(function() {
+                $("#modal-blog form").forms({
+                    callback: function(resp) {
+                        flog("created  blog", resp);
+                        $("#modal-blog").modal("hide");
+                        $("#blogs-container").reloadFragment();
+                    }
+                });
+                $("#blogs-container").on("click", ".btn-rename-group", function(e) {
+                    e.preventDefault();
+                    var href = $(e.target).closest("a").attr("href");
+                    promptRename(href, function() {
+                        $("#blogs-container").reloadFragment();
+                    });
+                });
+
+                $("#blogs-container").on("click", ".btn-delete-group", function(e) {
+                    e.preventDefault();
+                    var href = $(e.target).closest("a").attr("href");
+                    confirmDelete(href, getFileName(href), function() {
+                        $("#blogs-container").reloadFragment();
+                    });
+                });
+
+            });
+        </script>        
+    </body>
+</html>

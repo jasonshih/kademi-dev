@@ -163,8 +163,10 @@ body .navbar .nav .dropdown-toggle .caret {
 
 .stream-items {
     list-style-type: none;
+    padding: 0;    
     li {
-        margin-bottom: 10px;
+        margin-bottom: 15px;
+        padding-bottom: 15px;
         border-bottom: solid @input-border 1px;
     }
     p {
@@ -197,44 +199,7 @@ ul.tools {
 .thumbnails li {
     list-style-type: none;
 }
-.tile {
-    padding: 0;
-    overflow: hidden;
-    margin-bottom: 20px;
-    .tile-image {
-        width: 100%;
-        height: 150px;
-        a {
-            display: block;
-            height: 100%;            
-            width: 100%;
-            span {
-                visibility: hidden;
-            }
-        }
-    }
-    .tile-content {
-        margin: 10px;   
-        h3 {
-            margin: 0;
-            font-size: 150%;
-        }
-        p {
-            font-size: 85%;
-        }
-    }    
-}
-.small .tile {
-    .tile-image {
-        height: 100px;
-        background-position: 0 -20px;
-    }
-    .tile-content {
-        p {
-            display: none;
-        }
-    }    
-}
+
 .dash-primary {
 
 }
@@ -482,4 +447,102 @@ ul.tools {
             *border-left-color: #fff;
         }
     }
+}
+
+
+.module-container {
+    margin-bottom: @padding-large-vertical;
+}
+
+// My learning page modules
+.modules {
+    h3 {
+        margin-top: 0; // make the heading flush top with the row
+    }
+    .media {
+        a {
+            width: 150px;
+            height: 100px;
+            background-size: cover;
+            background-position: center center;
+        }
+    }
+}
+
+
+.hero {
+    display: table;
+    overflow: hidden;
+    border-radius: 5px;
+    padding: 0;
+    .hero-body {
+        margin: 15px;
+    }
+    .hero-image {
+        width: 30%;
+        display: table-cell;
+        height: 100%;
+        background-size: cover;
+        background-repeat: no-repeat;        
+        background-position: center center;
+    }
+}
+.with-image {
+    .hero-body {
+        margin-left: 30%; // as above        
+    }
+}
+
+.thumbnail {
+    position: relative;
+}
+.tile {
+    padding: 0;
+    overflow: hidden;
+    margin-bottom: 20px;
+    min-height:300px;
+
+    .tile-content {
+        margin: 15px;  
+        padding-bottom: 40px;
+        p {
+            font-size: 85%;
+        }
+        > div {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            width: 100%;
+        }
+    }    
+}
+
+.tile-image {
+    width: 100%;
+    height: 150px;
+    background-size: 100% auto;
+    a {
+        display: block;
+        height: 100%;            
+        width: 100%;
+        span {
+            visibility: hidden;
+        }
+    }
+}
+
+.tile-horiz .tile-image {
+    width: 300px;
+}
+
+// For truncating text, see learningDashboardPortlet.html
+span.read-more { cursor: pointer; color: gray; }
+span.more { display: none;  }
+
+// Kill the top margin on headings inside wells to avoid excessive space at top
+.well h1, .well h2, .well h3, .well h4 {
+    margin-top: 0;
+}
+.user-nickname {
+    
 }

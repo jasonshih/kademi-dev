@@ -36,8 +36,8 @@
 			if (config.showToolbar) {
 				container.prepend(
 					'<div class="milton-tree-toolbar">' +
-						'<button class="btn btn-danger btn-delete-tree">Detele</button> ' +
-						'<button class="btn btn-primary btn-add-folder">Add Folder</button> ' +
+						'<a class="btn btn-danger btn-delete-tree cke_dialog_ui_button"><span class="cke_dialog_ui_button">Delete</span></a> ' +
+						'<a class="btn btn-primary btn-add-folder cke_dialog_ui_button cke_dialog_ui_button_ok"><span class="cke_dialog_ui_button">Add Folder</span></a> ' +
 					'</div>'
 				);
 				container.find('.btn-delete-tree').on('click', function (e) {

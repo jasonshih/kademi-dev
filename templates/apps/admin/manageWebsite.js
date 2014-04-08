@@ -1,18 +1,12 @@
 function initManageWebsite() {
     flog("initManageWebsite");
-    $(".AddGroup").click(function() {
-        var modal = $("#modalGroup");
-        $.tinybox.show(modal, {
-            overlayClose: false,
-            opacity: 0
-        });        
-    });
     initGroupCheckbox();
+    initApps();
+    initManageMenu();
 }
 
-
 function initGroupCheckbox() {
-    $("#modalGroup input[type=checkbox]").click(function() {
+    $("#modalGroup input[type=checkbox]").click(function () {
         var $chk = $(this);
         log("checkbox click", $chk, $chk.is(":checked"));
         var isRecip = $chk.is(":checked");
@@ -31,14 +25,14 @@ function setGroupRecipient(name, isRecip) {
                 isRecip: isRecip
             },
             dataType: "json",
-            success: function(data) {
-                if( data.status ) {
+            success: function (data) {
+                if (data.status) {
                     log("saved ok", data);
-                    if( isRecip ) {
-                        $(".GroupList").append("<li>" + name + "</li>");
+                    if (isRecip) {
+                        $(".GroupList").append("<span class=\"alert alert-block alert-info\">" + name + "</span>");
                         log("appended to", $(".GroupList"));
                     } else {
-                        var toRemove = $(".GroupList li").filter(function() {
+                        var toRemove = $(".GroupList span").filter(function () {
                             return $(this).text() == name;
                         });
                         toRemove.remove();
@@ -48,12 +42,12 @@ function setGroupRecipient(name, isRecip) {
                     alert("Sorry, couldnt save " + data);
                 }
             },
-            error: function(resp) {
+            error: function (resp) {
                 log("error", resp);
                 alert("Sorry, couldnt save - " + resp);
             }
-        });          
-    } catch(e) {
+        });
+    } catch (e) {
         log("exception in createJob", e);
-    }       
+    }
 }

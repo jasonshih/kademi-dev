@@ -1,91 +1,127 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>$view.title</title>
-	    <link href="manageAutoEmail.css" rel="stylesheet" type="text/css" />
-	    <script type="text/javascript" src="manageAutoEmail.js">//</script>
-	    <script type="text/javascript" src="manageEmail.js">//</script>
+        <link href="manageAutoEmail.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="manageAutoEmail.js">//</script>
+        <script type="text/javascript" src="manageEmail.js">//</script>
     </head>
     <body>
-	    <p>
-		    <a class="btn btn-primary btn-add-trigger" data-toggle="modal" href="#modal-add-trigger"><i class="fa fa-plus"></i> Add trigger</a>
-	    </p>
-	    <div class="panel panel-default">
-		    <div class="panel-heading">
-			    <i class="fa fa-envelope-o"></i>
-			    Auto email triggers
-		    </div>
-		    <div class="panel-body">
-			    <form method="POST" action="$page.name" class="form-triggers">
-			        <table class="table table-bordered table-striped table-hover table-data">
-					    <colgroup>
-						    <col />
-						    <col />
-						    <col />
-						    <col />
-						    <col style="width: 80px" />
-					    </colgroup>
-					    <thead>
-						    <tr>
-							    <th>Trigger</th>
-							    <th>User</th>
-							    <th>Status</th>
-							    <th>Due Date</th>
-							    <th class="action"><button class="btn btn-sm btn-danger btn-remove"><i class="clip-minus-circle "></i></button></th>
-						    </tr>
-					    </thead>
-					    <tbody>
-						    #foreach($tt in $page.model.recentTriggerTimers)
-						    <tr >
-							    <td><abbr title="ID: $tt.emailTrigger.id">$tt.emailTrigger.name</abbr></td>
-							    <td><a href="/manageUsers/$tt.fireForProfile.id/">$tt.fireForProfile.email</a></td>
-							    <td>$page.status($tt)</td>
-							    <td>$tt.fireAt</td>
-							    <td class="action">
-								    $formatter.checkbox($tt.id, "triggerId", false, $tt.id)
-							    </td>
-						    </tr>
-						    #end
-					    </tbody>
-				    </table>
-			    </form>
-		    </div>
-	    </div>
+        <p>
+            <a class="btn btn-success btn-add-trigger" data-toggle="modal" href="#modal-add-trigger"><i class="fa fa-plus"></i> Add trigger</a>
+        </p>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-envelope-o"></i>
+                Auto email triggers
+            </div>
+            <div class="panel-body">
+                <form method="POST" action="$page.name" class="form-triggers">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <colgroup>
+                                <col />
+                                <col />
+                                <col />
+                                <col />
+                                <col style="width: 80px" />
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>Trigger</th>
+                                    <th>User</th>
+                                    <th>Status</th>
+                                    <th>Due Date</th>
+                                    <th class="action"><button class="btn btn-sm btn-danger btn-remove"><i class="clip-minus-circle "></i></button></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                #foreach($tt in $page.model.recentTriggerTimers)
+                                <tr >
+                                    <td><abbr title="ID: $tt.emailTrigger.id">$tt.emailTrigger.name</abbr></td>
+                                    <td><a href="/manageUsers/$tt.fireForProfile.id/">$tt.fireForProfile.email</a></td>
+                                    <td>$page.status($tt)</td>
+                                    <td>$tt.fireAt</td>
+                                    <td class="action">
+                                        $formatter.checkbox($tt.id, "triggerId", false, $tt.id)
+                                    </td>
+                                </tr>
+                                #end
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
+            </div>
+        </div>
 
-	    <div id="modal-add-trigger" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
-		    <div class="modal-header">
-			    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-			    <h4 class="modal-title">Manually create trigger</h4>
-		    </div>
-		    <div class="modal-body">
-			    <p class="alert alert-info">Please enter the email of the user below. This must be a registered member.</p>
-			    <form method="POST" action="$page.name" class="form-horizontal">
-				    <div class="form-group">
-					    <label class="control-label col-md-4" for="profileEmail">Enter email</label>
-					    <div class="col-md-8">
-						    <input type="text" name="profileEmail" id="profileEmail" value="" placeholder="Member's email address" class="required form-control" />
-					    </div>
-				    </div>
-				    <div class="form-group">
-					    <label class="control-label col-md-4" for="fireAt">Date to process</label>
-					    <div class="col-md-8">
-						    <div class="input-group date-time-picker date" data-date="31/01/2013 15:55" data-format="dd/mm/yyyy hh:ii">
-							    <input type="text" name="fireAt" id="fireAt" value="" placeholder="31/01/2013 15:55" class="required form-control" />
-							    <span class="input-group-addon"><span class="glyphicon-time glyphicon"></span></span>
-						    </div>
+        <div id="modal-add-trigger" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                <h4 class="modal-title">Manually create trigger</h4>
+            </div>
+            <div class="modal-body">
+                <p class="well">Please enter the email of the user below. This must be a registered member.</p>
+                <form method="POST" action="$page.name" class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-md-4" for="profileEmail">Enter email</label>
+                        <div class="col-md-8">
+                            <input type="text" name="profileEmail" id="profileEmail" value="" placeholder="Member's email address" class="required form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-4" for="fireAt">Date to process</label>
+                        <div class="col-md-8">
+                            <div class="input-group date-time-picker date" data-date="31/01/2013 15:55" data-format="dd/mm/yyyy hh:ii">
+                                <input type="text" name="fireAt" id="fireAt" value="" placeholder="31/01/2013 15:55" class="required form-control" />
+                                <span class="input-group-addon"><span class="glyphicon-time glyphicon"></span></span>
+                            </div>
 
-					    </div>
-	                </div>
-			    </form>
-		    </div>
-		    <div class="modal-footer">
-			    <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
-			    <button class="btn btn-primary" data-type="form-submit" type="button">Save</button>
-		    </div>
-	    </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+                <button class="btn btn-primary" data-type="form-submit" type="button">Save</button>
+            </div>
+        </div>
 
         <script type="text/javascript">
-            Bob.onDOMReady(function () {
-	            initManageEmailTrigger();
+            Bob.onDOMReady(function() {
+                initManageEmailTrigger();
+                $(".select.select-all").click(function(e) {
+                    e.preventDefault();
+                    $(".triggers-table").find("input[type=checkbox]").prop("checked", true);
+                });
+                $(".select.select-invert").click(function(e) {
+                    e.preventDefault();
+                    $(".triggers-table").find("input[type=checkbox]").each(function(i, n) {
+                        var chk = $(n);
+                        var checked = chk.prop("checked");
+                        log("chk", chk, "checked=", checked);
+                        if (checked) {
+                            chk.prop("checked", false);
+                        } else {
+                            chk.prop("checked", true);
+                            log("set checked", chk, "confirm", chk.is(":checked"));
+                        }
+                    });
+                });
+
+                $(".select.select-next").click(function(e) {
+                    e.preventDefault();
+                    // Find first unchecked box and check it and following up to max of 20
+                    var count = 0;
+                    $(".triggers-table").find("input[type=checkbox]").each(function(i, n) {
+                        var chk = $(n);
+                        var checked = chk.prop("checked");
+                        log("select next: chk", chk, "checked=", checked, "count=", count);
+                        if (!checked && count < 20) {
+                            log("set checked", chk);
+                            chk.prop("checked", true);
+                            count++;
+                        }
+                    });
+                });
             });
         </script>
     </body>

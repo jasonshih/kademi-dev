@@ -73,20 +73,20 @@ function initFullCalendar() {
 }
 
 function initRsvpForm() {
-    var form = $("form.rsvp");
-    form.forms({
+    var rsvpForm = $("form.rsvp");
+    rsvpForm.forms({
         validate: function() {
             // Check they've selected something
-            var option = form.find("input[type=radio]:checked");
+            var option = rsvpForm.find("input[type=radio]:checked");
             if (option.length === 0) {
                 var alert = $("<div class='alert alert-warning'><a class='close' data-dismiss='alert' href='#' aria-hidden='true'>&times;</a>Please select an option</div>");
-                form.prepend(alert);
+                rsvpForm.prepend(alert);
                 //alert.alert();
                 return false;
             }
 
             // re-number guestlist inputs
-            form.find("ul.guests li").each(function(row, n) {
+            rsvpForm.find("ul.guests li").each(function(row, n) {
                 var li = $(n);
                 li.find("input").each(function(fieldNum, inp) {
                     var i = $(inp);
@@ -102,14 +102,64 @@ function initRsvpForm() {
             });
             return true;
         },
-        callback: function() {
-            alert("Thanks!");
+        callback: function(resp) {
+            // only called when resp.status = true
             rsvpStatus = $("form.rsvp input[name=rsvp]:checked").val();
             showRsvpPanel();
         },
+        errorHandler: function(response, form, valiationMessageSelector, errorCallback) {
+            if (response.fieldMessages.length > 0 && response.fieldMessages[0].field === "userData") {
+                // show modal prompting for name details
+                jQuery.ajax({
+                    type: 'GET',
+                    url: "/profile/",
+                    success: function(resp) {
+                        flog("setStatusComplete: profile get complete");
+                        var page = $(resp);
+                        var form = page.find("div.details form");
+                        form.find("h4").remove();
+                        form.find("legend").text("In order to register for this event you must provide the following information.");
+                        form.find("#firstName").addClass("required");
+                        form.find("#surName").addClass("required");
+                        form.find("button").hide();
+                        form.attr("action", "/profile/");
+                        form.forms({
+                            callback: function(resp) {
+                                if (resp.status) {
+                                    closeModals();
+                                    rsvpForm.submit();
+                                } else {
+                                    alert("Sorry, we couldnt update your details, please try again");
+                                }
+                            }
+                        });
+                        var modal = $("#userDataModal");
+                        modal.find("button").click(function(e) {
+                            flog("submit form", e);
+                            e.preventDefault();
+                            e.stopPropagation();
+                            form.submit();
+                        });
+                        modal.find(".modal-body").html(form);
+                        flog("got profile page", resp);
+                        showModal(modal);
+
+                    },
+                    error: function(resp) {
+                        ajaxLoadingOff();
+                        flog("setStatusComplete: profile get failed");
+                        alert("Very sorry, but something went wrong while attempting to complete your module. Could you please refresh the page and try again?");
+
+                    }
+                });
+            } else {
+                ajaxLoadingOff();
+                alert("Sorry, for some reason we couldnt register your attendance. Maybe you could try again, or contact the site administrator for help");
+            }
+        },
         error: function() {
             var alert = $("<div class='alert alert-danger'><a class='close' data-dismiss='alert' href='#' aria-hidden='true'>&times;</a>Sorry, there was an error submitting your request. Please try again and contact the administrator if you still have problems.</div>");
-            form.prepend(alert)
+            rsvpForm.prepend(alert)
         }
     });
 }
@@ -118,6 +168,8 @@ function showRsvpPanel() {
     flog("showRsvpPanel", rsvpStatus);
     var toShow = null;
     if (rsvpStatus === "ACCEPTED") {
+        var numGuests = $("ul.guests li").length;
+        $(".num-guests-count").text(numGuests + "");
         toShow = $(".rsvp-yes");
     } else if (rsvpStatus === "DECLINED") {
         toShow = $(".rsvp-no");

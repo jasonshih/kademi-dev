@@ -7,7 +7,7 @@
  *  application to get the toolbars you want
  */
 
-CKEDITOR_BASEPATH = "/static/ckeditor41/";
+CKEDITOR_BASEPATH = "/static/ckeditor431/";
 
 
 // Templates should push theme css files into this array, so they will be included in the editor
@@ -23,7 +23,7 @@ Array.min = function(array) {
 };
 
 function initTheme() {
-    log("initTheme: init-theme.js");
+    flog("initTheme: init-theme.js");
 
     // the login box in header is normally for logging in from a public page. So
     // in this case we want to navigate to the user's dashboard
@@ -48,26 +48,26 @@ function initTheme() {
     initDropDownHiding();
     initVideos();
 
-    log("initTheme: run page init functions", pageInitFunctions.length);
+    flog("initTheme: run page init functions", pageInitFunctions.length);
     $.each(pageInitFunctions, function(i, f) {
-        log("run function" + i);
+        flog("run function" + i);
         pageInitFunctions[i]();
-        log("done run function", i);
+        flog("done run function", i);
 
     });
 
     $(".DropdownWrapper").click(function(e, node) {
-        log("initDropDown click", e);
+        flog("initDropDown click", e);
         var div = $(e.target).closest("div.DropdownControl");
-        log("dropdown", $(".DropdownContent", div));
+        flog("dropdown", $(".DropdownContent", div));
         $(".DropdownContent", div).toggle(300);
     });
 
-    log("finished init-theme");
+    flog("finished init-theme");
 }
 
 function initLoginDropDown() {
-    log("init login", $(".Login"));
+    flog("init login", $(".Login"));
     var login = $(".Login");
     var dropdown = login.find(".dropBox");
     login.find("> a").click(function(e) {
@@ -162,7 +162,7 @@ function getSavedFontSize() {
  * See /static/js/toolbars.js
  */
 function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
-    log("initHtmlEditors: height=", height);
+    flog("initHtmlEditors: elements=", elements);
 //    if (!$('.htmleditor').ckeditor) {
 //        log("ckeditor jquery adapter is not loaded");
 //        return;
@@ -176,7 +176,7 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
     if (!removePlugins) {
         removePlugins = standardRemovePlugins;
     }
-    log("prepare html editors", elements);
+    flog("prepare html editors", elements);
     elements.each(function(i, n) {
         var inp = $(n);
 
@@ -195,8 +195,9 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
             }
         }
 
-        toolbar = "Default"; // HACK!!
-        log("using toolbar", toolbar, "=>", toolbarSets[toolbar]);
+        //toolbar = "Default"; // HACK!!
+        flog("using toolbar", toolbar, "=>", toolbarSets[toolbar]);
+
         var config = {
             skin: editorSkin,
             allowedContent: true, // DISABLES Advanced Content Filter. This is so templates with classes are allowed through
@@ -230,7 +231,7 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
         }
 
         config.stylesSet = 'myStyles:/templates/themes/fuse/styles.js'; // TODO: needs to be configurable, based on theme
-        log("create editor", inp, config);
+        flog("create editor", inp, config);
         inp.ckeditor(config);
     });
 }

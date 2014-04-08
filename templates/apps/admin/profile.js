@@ -1,11 +1,11 @@
 function initProfile() {
-    log("initProfile");
+    flog("initProfile");
     initOrgSearch();
     initNewMembershipForm();
     $("form").not("#modal-membership form").forms({
         callback: function(resp, form) {                        
             confirmMessage = form.closest("div").find("p.confirm");                        
-            log("done", confirmMessage);
+            flog("done", confirmMessage);
             confirmMessage.show(500, function() {
                 confirmMessage.hide(5000);
             })
@@ -14,42 +14,43 @@ function initProfile() {
 
     $("#myUploaded").mupload({
         url: "",
-        buttonText: "Select a new photo",
+        buttonText: "<i class=\"fa fa-folder-open-o\"></i> Select a new photo",
         oncomplete: function(data, name, href) {
-            log("set img", $(".profile-photo img"));
+            flog("set img", $(".profile-photo img"));
             $(".profile-photo img").attr("src", "pic");
         }
     });
 
-    log("init delete membersip");
-    $("div.memberships-wrapper").on("click", "a.btn-delete-membership", function(e) {
-        log("click", this);
+    flog("init delete membersip");
+    $(".memberships-wrapper").on("click", "a.btn-delete-membership", function(e) {
+        flog("click", this);
         e.preventDefault();
         e.stopPropagation();
         if( confirm("Are you sure you want to delete this group membership? WARNING: If this is the last membership you will not be able to edit the user.")) {
             var a = $(e.target);
-            log("do it", a);
+            if (!a) {
+            	a = a.parent();
+            }
+            flog("do it", a);
             var href = a.attr("href");
             deleteFile(href, function() {
-                a.closest("li").remove();
+                a.closest("span.membership").remove();
             });
         }
     });
 }
 
 function initNewMembershipForm() {
-    var modal = $("#modal-membership");
-
     $(".btn-add-group").click(function(e) {
         e.preventDefault();
         e.stopPropagation();
-	    modal.modal('show');
+        $("#modal-membership").modal('show');
     });
 
-    modal.find("form").forms({
+    $("#modal-membership").find("form").forms({
         callback: function(resp) {
-            log("done new membership", resp);
-            modal.modal('hide');
+            flog("done new membership", resp);
+            $("#modal-membership").modal('hide');
             reloadMemberships();
         }
     });   
@@ -60,10 +61,10 @@ function reloadMemberships() {
         type: 'GET',
         url: window.location.pathname,
         success: function(data) {
-            log("success", data);
-            var $fragment = $(data).find("ul#user-membership");
-            var orig = $("ul#user-membership");
-            log("replace", orig, $fragment);
+            flog("success", data);
+            var $fragment = $(data).find("#user-membership");
+            var orig = $("#user-membership");
+            flog("replace", orig, $fragment);
             orig.replaceWith($fragment);
         },
         error: function(resp) {

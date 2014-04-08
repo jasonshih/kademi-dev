@@ -19,7 +19,7 @@
         var config = $.extend({
             'pageUrl': window.location,
             'renderCommentFn': function(user, date, comment) {
-                log("renderCommentFn-standard", user);
+                log("renderCommentFn-1-standard, user=", user);
                 var s = "";
                 s = s + "<p class='forumAnnotation'>" + user.name + " | " + toDisplayDateNoTime(date) + "</p>";
                 s = s + "<p class='forumText'>" + comment + "</p>";
@@ -64,7 +64,7 @@
 
 function sendNewForumComment(pageUrl, commentInput, renderComment, currentUser) {
     log("sendNewForumComment", pageUrl, commentInput, currentUser);
-    if (currentUser.href == null) {
+    if (currentUser.href === null) {
         alert("You must be logged in to post comments");
         return;
     }

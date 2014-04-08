@@ -3,7 +3,7 @@
     <p>Please use the form below to generate registration files which will be sent to your email address</p>
     <p>$softwareProduct.description</p>
     <form method="POST" action="register" class="registerSoftware form-horizontal form-horizontal-narrower">
-        <div class="pageMessage">.</div>
+        <div class="alert alert-danger pageMessage">.</div>
 
         #if( $softwareProduct.validityDays )
         <div class="control-group">
@@ -26,14 +26,14 @@
 
         <div class="control-group">
             <div class="controls">
-                <button type="submit" class="btn btn-primary">Email my registration</button>
+                <button type="submit" class="btn btn-sm btn-primary">Email my registration</button>
             </div>
         </div>
     </form>
 </div>
 
 <script type="text/javascript">
-    Bob.onDOMReady(function () {
+    $(function () {
 
         jQuery("form.registerSoftware").forms({
             validate: function(form) {

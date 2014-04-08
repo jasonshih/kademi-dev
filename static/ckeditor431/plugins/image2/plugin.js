@@ -161,6 +161,7 @@ CKEDITOR.plugins.add('image2',
                                 }
                             });
                             $("#imageUploaded").mupload({
+                                isInCkeditor: true,
                                 buttonText: "Upload image",
                                 useDropzone: true,
                                 oncomplete: function (data, name, href) {

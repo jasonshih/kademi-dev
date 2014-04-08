@@ -21,9 +21,7 @@
 	                #foreach($app in $apps )
 	                <tr>
 	                    <td class="CheckBoxWrapper">
-	                        <div data-off="danger" data-on="success" class="make-switch btn-switch-public">
-	                            $formatter.checkbox("chk_${app.appId}", $app.appId, $app.enabled, $app.appId)
-	                        </div>
+                            $formatter.bsswitch("chk_${app.appId}", $app.appId, $app.enabled, $app.appId)
 	                        <label for="chk_${app.appId}"></label>
 	                    </td>
 	                    <td>

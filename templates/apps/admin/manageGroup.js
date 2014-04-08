@@ -5,7 +5,7 @@ function initManageGroup() {
 //    addOrderPermissionList();
     initGroupModal();
 //    initPermissionCheckboxes();
-//    initRegoMode();
+    initRegoMode();
 	initCRUDRole();
     initCopyMembers();
 //    initOptInGroups();
@@ -16,7 +16,7 @@ function initCRUDGroup() {
 
 	$('.btn-add-group').on('click', function (e) {
 		e.preventDefault();
-		log('addGroupButton: click');
+		flog('addGroupButton: click');
 		showGroupModal('Group', 'Add new group', 'Add');
 	});
 
@@ -28,9 +28,9 @@ function initCRUDGroup() {
 		var name = btn.closest('.btn-group').prev().text();
 		var href = $.URLEncode(name);
 
-		log('delete', href);
+		flog('delete', href);
 		confirmDelete(href, name, function() {
-			log('remove ', this);
+			flog('remove ', this);
 
 			btn.parents('div.group').remove();
 		});
@@ -62,12 +62,12 @@ function initCRUDRole() {
 	});
 
 	body.on('click', '.btn-remove-role', function(e) {
-		log('click', this);
+		flog('click', this);
 		e.preventDefault();
 
 		if (confirm('Are you sure you want to remove this role?')) {
 			var btn = $(this);
-			log('do it', btn);
+			flog('do it', btn);
 			var href = btn.attr('href');
 			deleteFile(href, function() {
 				btn.closest('span.role').remove();
@@ -109,8 +109,8 @@ function initCRUDRole() {
 			appliesToText = 'their own organisation';
 		}
 
-		log('add role', appliesToTypeVal, appliesToVal);
-		log('currentGroupDiv', currentGroupDiv);
+		flog('add role', appliesToTypeVal, appliesToVal);
+		flog('currentGroupDiv', currentGroupDiv);
 
 		var groupHref = currentGroupDiv.find('span.group-name').text();
 		var roleName = btn.closest('.article-action').prev().text();
@@ -121,9 +121,9 @@ function initCRUDRole() {
 			}
 
 			currentGroupDiv.find('.roles-wrapper').append(
-				'<span class="role">' +
+				'<span class="block role">' +
 					'<span>' + roleName + ', on ' + appliesToText + '</span> ' +
-					'<a class="btn btn-xs btn-danger btn-remove-role" href="' + resp.nextHref + '" title="Remove this role"><i class="clip-minus-circle "></i></a>' +
+					'<a class="btn btn-xs btn-danger btn-remove-role" href="' + resp.nextHref + '" title="Remove this role"><i class="fa fa-times"></i></a>' +
 				'</span>'
 			);
 		});
@@ -132,7 +132,7 @@ function initCRUDRole() {
 
 
 function addRoleToGroup(groupHref, roleName, appliesToType, appliesTo, callback) {
-    log('addRoleToGroup', groupHref, roleName, appliesToType, appliesTo);
+    flog('addRoleToGroup', groupHref, roleName, appliesToType, appliesTo);
 
     try {
         $.ajax({
@@ -145,9 +145,9 @@ function addRoleToGroup(groupHref, roleName, appliesToType, appliesTo, callback)
                 appliesTo: appliesTo
             },
             success: function(data) {
-                log('success', data);
+                flog('success', data);
                 if (data.status) {
-                    log('saved ok', data);
+                    flog('saved ok', data);
                     callback(data);
                     alert('Added role');
                 } else {
@@ -157,24 +157,24 @@ function addRoleToGroup(groupHref, roleName, appliesToType, appliesTo, callback)
                             msg += '\n' + n.message;
                         });
                     }
-                    log('error msg', msg);
+                    flog('error msg', msg);
                     alert('Couldnt save the new role: ' + msg);
                 }
             },
             error: function(resp) {
-                log('error', resp);
+                flog('error', resp);
                 alert('Error, couldnt add role');
             }
         });
     } catch (e) {
-        log('exception in createJob', e);
+        flog('exception in createJob', e);
     }
 }
 
 function initPermissionCheckboxes() {
     $('body').on('click', '.roles input[type=checkbox]', function(e) {
         var $chk = $(this);
-        log('checkbox click', $chk, $chk.is(':checked'));
+        flog('checkbox click', $chk, $chk.is(':checked'));
         var isRecip = $chk.is(':checked');
         var groupName = $chk.closest('aside').attr('rel');
         var permissionList = $chk.closest('.ContentGroup').find('.PermissionList');
@@ -183,7 +183,7 @@ function initPermissionCheckboxes() {
 }
 
 function setGroupRole(groupName, roleName, isRecip, permissionList) {
-    log('setGroupRole', groupName, roleName, isRecip);
+    flog('setGroupRole', groupName, roleName, isRecip);
     try {
         $.ajax({
             type: "POST",
@@ -194,21 +194,21 @@ function setGroupRole(groupName, roleName, isRecip, permissionList) {
                 isRecip: isRecip
             },
             success: function(data) {
-                log('saved ok', data);
+                flog('saved ok', data);
                 if (isRecip) {
                     permissionList.append('<li>' + roleName + '</li>');
                 } else {
-                    log('remove', permissionList.find('li:contains("' + roleName + '")'));
+                    flog('remove', permissionList.find('li:contains("' + roleName + '")'));
                     permissionList.find('li:contains("' + roleName + '")').remove();
                 }
             },
             error: function(resp) {
-                log('error', resp);
+                flog('error', resp);
                 alert('err');
             }
         });
     } catch (e) {
-        log('exception in createJob', e);
+        flog('exception in createJob', e);
     }
 }
 
@@ -267,7 +267,7 @@ function showGroupModal(name, title, type, data) {
     resetModalControl();
 
 	var modal = $('#modal-group');
-    log('showGroupModal', modal);
+    flog('showGroupModal', modal);
 
     modal.find('.modal-title').html(title);
 	modal.find('.btn-save-group').text(type);
@@ -327,7 +327,7 @@ function initGroupModal() {
     modal.find('.btn-save-group').click(function(e) {
 	    e.preventDefault();
 
-        log('Click add/edit group');
+        flog('Click add/edit group');
         var btn = $(this);
         var type = btn.html();
 
@@ -351,94 +351,33 @@ function initGroupModal() {
 			    });
 		    }
 
+		    modal.modal('hide');
 		    resetModalControl();
-		    modal.modal('show');
 	    } else {
 		    alert('Please enter group name!');
 	    }
     });
 }
 
+/**
+ * Called from the manageGroupRegoMode.html template
+ * 
+ * @returns {undefined}
+ */
 function initRegoMode() {
-    $('body').on('click', 'a.regoMode', function(e) {
-        log('click', e.target);
-        e.preventDefault();
-        e.stopPropagation();
-        var target = $(e.target);
-        var href = target.closest('div.Group').find('header div > span').text();
-        href = $.URLEncode(href) + '/';
-        var modal = $('#modalRegoMode');
-        modal.load(href + ' #modalRegoCont', function() {
-            initOptInGroups();
-            $('#modalRegoMode form.general').forms({
-                callback: function(resp) {
-                    log('done', resp);
-                    $.tinybox.close();
-                    //window.location.reload();
-                    $('div.content').load(window.location.pathname + ' div.content > *', function() {
-
-                    });
-                }
+	flog('initRegoMode');
+	
+    initOptInGroups();
+    $('form.general').forms({
+        callback: function(resp) {
+            flog('done', resp);
+            //$.tinybox.close();
+            //window.location.reload();
+            $('div.content').load(window.location.pathname + ' div.content > *', function() {
+            	
             });
-
-            $('#modalRegoMode form.fields').forms({
-                confirmMessage: null,
-                callback: function(resp, form) {
-                    if (resp.status) {
-                        var key = form.find('input[name=addFieldName]').val();
-                        var val = form.find('input[name=addFieldValue]').val();
-                        newLi = $('<li><h4>' + key + '</h4>' + val + '<a href="' + key + '" class="removeField">Delete</a></li>');
-                        $('ul.fields').append(newLi);
-                        $(".addField").toggle();
-                        form.find('input').val('');
-                    } else {
-                        alert('Couldnt add the field. Please check your input and try again');
-                    }
-                }
-            });
-
-            modal.on('click','a.removeField', function(e) {
-                log('click removeField');
-                e.preventDefault();
-                var target = $(e.target);
-                var li = target.closest('li');
-                var fieldName = target.attr('href');
-                var groupHref = li.closest('form').attr('action');
-                removeField(groupHref, fieldName, li);
-            });
-
-            log('done forms', modal);
-
-            $.tinybox.show(modal, {
-                overlayClose: false,
-                opacity: 0
-            });
-            log('showed modal');
-        });
-
+        }
     });
-}
-
-function removeField(groupHref, fieldName, li) {
-    try {
-        $.ajax({
-            type: "POST",
-            url: groupHref,
-            data: {
-                removeFieldName: fieldName
-            },
-            success: function(data) {
-                log('saved ok', data);
-                li.remove();
-            },
-            error: function(resp) {
-                log('error', resp);
-                alert('There was an error removing the field. Please check your internet connection');
-            }
-        });
-    } catch (e) {
-        log('exception in createJob', e);
-    }
 }
 
 function setRegoMode(currentRegoModeLink, selectedRegoModeLink) {
@@ -447,7 +386,7 @@ function setRegoMode(currentRegoModeLink, selectedRegoModeLink) {
     var data = 'milton:regoMode=' + val;
     var href = currentRegoModeLink.closest('div.Group').find('header div > span').text();
     href = $.URLEncode(href) + '/';
-    log('setRegoMode: val=', val, 'text=', text, 'data=', data, 'href=', href);
+    flog('setRegoMode: val=', val, 'text=', text, 'data=', data, 'href=', href);
     proppatch(href, data, function() {
         currentRegoModeLink.text(text);
     });
@@ -458,7 +397,7 @@ function initCopyMembers() {
 	var modal = $('#modal-copy-members');
 
 	body.on('click', '.btn-copy-member', function(e) {
-        log('click', this);
+        flog('click', this);
         e.preventDefault();
 
         var btn = $(this);
@@ -471,7 +410,7 @@ function initCopyMembers() {
 
 	modal.find('form').forms({
         callback: function(resp) {
-            log('done', resp);
+            flog('done', resp);
             $.tinybox.close();
             alert('Copied members');
             window.location.reload();
@@ -489,9 +428,9 @@ function initOptInGroups() {
 
 function updateOptIn(chk) {
     if (chk.is(':checked')) {
-        chk.closest('li').addClass('checked');
+        chk.closest('div.clearfix').addClass('checked');
     } else {
-        chk.closest('li').removeClass('checked');
+        chk.closest('div.clearfix').removeClass('checked');
     }
 
 }

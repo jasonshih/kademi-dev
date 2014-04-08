@@ -1,12 +1,10 @@
 <html lang="en">
     <head>        
-        <meta charset="utf-8"/>
         <title>The normal template</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <meta name="description" content=""/>
         <meta name="author" content=""/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-
 
         <script src="/templates/themes/bootstrap300/js/common.js">//</script>       
         <script src="/static/js/jquery-1.8.1.min.js">//</script>
@@ -67,92 +65,22 @@
         <script src="/static/js/respond.src.js">//
         </script>  
 
-        #set($website = $page.closest("website"))        
-        #if( $formatter.isNull($website.themeAttributes.navbarStyle) )
-        #set($navType = "navbar-default")
-        #else
-        #set($navType = $website.themeAttributes.navbarStyle)
-        #end
-        <div class="navbar navbar-fixed-top $navType" id="nav-top" role="navigation">
-            <div class="navbar-header">
-                <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-main-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>                    
-                <a class="brand navbar-brand" href="/">
-                    <div class='logo'>$!website.themeAttributes.logo</div>                        
-                </a>
+        #portlets("mainNavBar") <!-- see apps/content/mainNavBar.html -->
 
-            </div>
-            <div class="navbar-collapse collapse navbar-main-collapse">
-                <div class="pull-right">
-                    #portlets("header")
-                    <ul class="nav navbar-nav navbar-right">                       
-                        #foreach($item in $menu.items)
-                        <li class="$formatter.ifTrue($item.active, 'active', '')"><a class="nav-${item.id}" href="$item.href" shape="rect">$item.text</a></li>
-                        #end
-                        #if($user)
-                        <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                $user.title
-                                <b class="caret"></b>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a href="/profile">Profile</a>
-                                </li>                                    
-                                <li>
-                                    <a href="#" class="logout">Logout</a>
-                                </li>
-                            </ul>
-                        </li>
-                        #else
-                        <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                Login
-                                <b class="caret"></b>
-                            </a>
-                            <ul class="dropdown-menu pull-right">
-                                <li class="login" style="width: 350px; padding: 15px">
-                                    <form class="form-horizontal form-horizontal-narrower" role="form">
-                                        <div class="form-group email">
-                                            <label class="control-label col-md-3" for="inputEmail">Email</label>
-                                            <div class="col-md-9">
-                                                <input type="text" id="inputEmail" name="email" placeholder="Email" type="email" required="true" class="form-control" />
-                                                <span class="help-block"></span>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3" for="inputPassword">Password</label>
-                                            <div class="col-md-9">
-                                                <input type="password" name="password" id="inputPassword" placeholder="Password" required="true" class="form-control" />
-                                                <span class="help-block"></span>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-md-offset-3 col-md-9">
-                                                <button type="submit" class="btn">Sign in</button>
-                                                <small class="pull-right"><a href="/password-reset" title="Forgotten password" class="Forgot">Forgotten password</a></small>
-                                            </div>
-                                        </div>
-                                    </form>                                            
-                                </li>
-                            </ul>
-                            #end
-                    </ul>
-                </div>
-            </div><!--/.nav-collapse -->                                          
-
-        </div>
-
-
-        <div class="container main-content">
+        <div class="main-content" id="maincontentContainer">
             #content
         </div> <!-- /container -->
 
 
-        #portlets("endOfPage")
+        #portlets("endOfPage")  <!-- hard coded into ContentApp at the moment, sorry :( -->
+        
+        <script>
+            $(function(){
+                // allow page templates to add a container around the whole content area
+                $("body.add-container").find("#maincontentContainer").addClass("container");
+            });
+        </script>
+        
     </body>
 </html>
 

@@ -5,13 +5,12 @@
         <script type="text/javascript" src="manageForum.js">//</script>
     </head>
     <body class="manageForum">
-        <p class="alert alert-info">
-	        <a class="close" data-dismiss="alert" href="">&times;</a>
+        <p class="well">
 	        Use this page to create and manage the forums in your websites. Select a website to begin.
         </p>
 
         <div class="btn-group pull-right">
-	        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+	        <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
 		        <span>$page.title</span> <span class="caret"></span>
 	        </button>
 	        <ul class="dropdown-menu" role="menu">
@@ -28,7 +27,7 @@
 
         #if($page.website)
             <p>
-	            <a class="btn btn-primary btn-add-forum" href=""><i class="fa fa-plus"></i> Add forum</a>
+	            <a class="btn btn-sm btn-success btn-add-forum" href=""><i class="fa fa-plus"></i> Add forum</a>
             </p>
 
 	        #foreach($forum in $page.children)
@@ -37,13 +36,13 @@
 				        <i class="clip-folder"></i>
 				        $forum.title
 				        <div class="btn-group btn-group-xs">
-					        <button data-toggle="dropdown" class="btn btn-default btn-squared dropdown-toggle" type="button">
+					        <button data-toggle="dropdown" class="btn btn-sm btn-default btn-squared dropdown-toggle" type="button">
 						        <span class="caret"></span>
 					        </button>
 					        <ul role="menu" class="dropdown-menu">
-						        <li><a href="" class="btn-edit-forum">Edit name and notes</a></li>
+						        <li><a href="#" class="btn-edit-forum"><i class="fa fa-edit"></i> Edit</a></li>
 						        <li class="divider"></li>
-						        <li><a href="" class="btn-delete-forum">Delete this forum</a></li>
+						        <li><a href="#" class="btn-delete-forum"><i class="fa fa-times"></i> Delete</a></li>
 					        </ul>
 				        </div>
 			        </div>
@@ -71,19 +70,19 @@
 		        <form method="post" action="." class="form-horizontal">
 			        <input type="hidden" value="" id="action" name="action" />
 			        <div class="form-group">
-				        <label class="control-label col-md-4" for="name">Name</label>
+				        <label class="control-label col-md-3" for="name">Name</label>
 				        <div class="col-md-8">
 				            <input type="text" name="name" id="name" value="" class="required simpleChars form-control" maxlength="30" placeholder="Forum name" />
 				        </div>
 			        </div>
 			        <div class="form-group">
-				        <label class="control-label col-md-4" for="title">Title</label>
+				        <label class="control-label col-md-3" for="title">Title</label>
 				        <div class="col-md-8">
-					        <input type="text" name="title" id="title" value="" class="required form-control" maxlength="" placeholder="Forum title" />
+					        <input type="text" name="title" id="title" value="" class="form-control" maxlength="" placeholder="Forum title" />
 				        </div>
 			        </div>
 			        <div class="form-group">
-				        <label class="control-label col-md-4" for="notes">Description</label>
+				        <label class="control-label col-md-3" for="notes">Description</label>
 				        <div class="col-md-8">
 					        <textarea name="notes" id="notes" class="form-control" rows="4"></textarea>
 				        </div>
@@ -91,8 +90,8 @@
 		        </form>
 	        </div>
 	        <div class="modal-footer">
-		        <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
-		        <button class="btn btn-primary" data-type="form-submit" type="button">Save</button>
+		        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+		        <button class="btn btn-sm btn-primary" data-type="form-submit" type="button">Save</button>
 	        </div>
         </div>
 

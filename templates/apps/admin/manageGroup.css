@@ -7,3 +7,20 @@
 .role-action {
 	margin-top: 5px;
 }
+
+.panel-hide {
+	display: none;
+	margin-bottom: 20px;
+}
+
+.optins input[type=text] {
+	display: none;
+}
+
+.optins .checked input[type=text] {
+	display: block;
+}
+
+.btn-mrg5 {
+	margin: 5px 5px 5px 0px;
+}

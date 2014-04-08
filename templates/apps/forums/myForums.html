@@ -4,7 +4,7 @@
         <link href="myForums.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="myTopic.js" >//</script>
     </head>
-    <body class="forums">
+    <body class="forums add-container">
         <div class="row-fluid">
             <div class="modules span8 col-md-8">
                 <div class="forums">
@@ -77,7 +77,7 @@
 
                     <script type="text/javascript" src="/theme/apps/forums/recentPosts.js">//</script>
                     <script type="text/javascript">
-                        Bob.onDOMReady(function() {
+                        $(function() {
                             initPosts("$basePath", !$rootFolder.is('website'));
                         });
                     </script>                        

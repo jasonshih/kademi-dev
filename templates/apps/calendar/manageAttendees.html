@@ -48,12 +48,20 @@
                         <tr>
                             <td class="partstat-$att.partStat">$att.partStat</td>
                             <td>$att.fullName</td>
-                            <td>$att.orgName</td>
+                            <td>$!att.orgName</td>
                             <td>$att.email</td>
                             <td>$formatter.formatDate($att.registeredDate)</td>
                             <td>
                                 #if( $att.guestOf )
-                                <a href="$att.guestOf.href">$att.guestOf.firstName $att.guestOf.surName</a>
+                                <a href="$att.guestOf.href">
+                                    #if( $att.guestOf.firstName )
+                                    $att.guestOf.firstName 
+                                    #end
+                                    #if( $att.guestOf.surName )
+                                    $att.guestOf.surName
+                                    #end
+                                    ( $att.guestOf.email )
+                                </a>
                                 #end
                             </td>
                             <td style="text-align: right"><input type="checkbox" name="toRemoveId" value="$att.id"/></td>

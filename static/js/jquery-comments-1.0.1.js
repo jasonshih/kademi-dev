@@ -21,7 +21,7 @@
             'pageUrl': window.location,
             'streamSelector': ".comments-stream",
             'renderCommentFn': function(user, date, comment, commentId) {
-                log("renderCommentFn-standard", user);
+                log("renderCommentFn-101-standard", user, "container=", container, "commentId=", commentId);
                 if (user === null) {
                     log("no user so dont render");
                     return;
@@ -32,7 +32,9 @@
                     log("add comment");
                     outerDiv = $("<div class='forumReply'></div>");
                     outerDiv.attr("id", commentId);
-                    container.find(config.streamSelector).append(outerDiv);
+                    var commentStream = container.find(config.streamSelector);
+                    flog("append to", commentStream, "sel", config.streamSelector);
+                    commentStream.append(outerDiv);
                     var profilePic = profileImg(user);
                     var profLink = $("<a class='profilePic' href='" + user.href + "'>" + profilePic + "</a>");
                     var nameLink = $("<a class='user' href='" + user.href + "'>" + user.name + "</a>");

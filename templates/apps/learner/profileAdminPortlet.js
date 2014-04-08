@@ -17,19 +17,23 @@ function initAdminProfile() {
 			$.getJSON(href + '_DAV/PROPFIND?fields=href,milton:title,name,milton:moduleType&depth=2&where=milton:moduleType', function (data) {
 				log('resp', data.length);
 
-				var list_string = '';
+				var moduleLi = '';
 
 				for (i = 0; i < data.length; i++) {
 					var item = data[i];
 					var id = 'option' + i;
 					log('add', item);
 					if (!item.name.startsWith('.')) {
-						list_string +=
+                        var title = item.title;
+                        if( title === undefined || title.length === 0) {
+                            title = item.href;
+                        }
+						moduleLi +=
 							'<li class="col-md-6 module">' +
 								'<div>' +
 									'<label for="' + id + '">' +
 										'<input id="' + id + '" type="checkbox" name="forceCompleteModule" value="' + item.href + '"/>' +
-										item.title +
+										title +
 									'</label>' +
 									'<a class="btn btn-xs btn-default" target="_blank" title="Open" href="' + item.href + '"><i class="fa fa-caret-square-o-right"></i></a>' +
 								'</div>' +
@@ -37,7 +41,7 @@ function initAdminProfile() {
 					}
 				}
 
-				moduleList.append(list_string);
+				moduleList.append(moduleLi);
 
 				moduleList.parent().removeClass('hide');
 			});

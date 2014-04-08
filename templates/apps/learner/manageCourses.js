@@ -1,8 +1,9 @@
 var selectedCourse;
+var selectedModule;
 
-function initManageCourse(programsUrl, programUrl) {
+function initManageCourse(programsUrl, programUrl, courseUrl) {
     initPublishingMenu("manageCourses");
-    initModuleEditing();
+    initModuleEditing(courseUrl);
     orderCourseModuleItem();
     initProgramEditing(programsUrl);
     initCourseEditing(programUrl);
@@ -12,7 +13,7 @@ function initManageCourse(programsUrl, programUrl) {
         $('div.courses-list li > a').pjax('#manage-course', {
             fragment: "#manage-course",
             success: function() {
-                log("done!");
+                flog("done!");
                 initActive();
                 initModuleEditing();
             }
@@ -20,104 +21,140 @@ function initManageCourse(programsUrl, programUrl) {
     }
 }
 
-function initActive() {
-    $("ul.courses-list > li.active").removeClass("active");
-    var active = $("ul.courses-list > li > a").filter(function() {
-        return $(this).attr("href") === window.location.pathname;
-    });
-    active.closest("li").addClass("active");
-
-}
-
-function initModuleEditing() {    
-    log("initModuleEditing");
+function initModuleEditing(courseUrl) {
+    flog("initModuleEditing", courseUrl);
+    
     var modal = $("#moduleModal");
     var form = modal.find("form");
-    log("init module form", form);
+    form.attr("action", courseUrl); // always post to he course, ie for create/edit modal
+
+    var modulesList = $(".modules-list");
+    var moduleWrapper = $("div.modules-wrapper");    
+
     form.forms({
         callback: function(resp) {
-            log("done save program", resp);
-            if (resp.nextHref) {
-                window.location.reload();
-            } else {
-                window.location.reload();
-                // TODO: update html
+            flog("done save module", resp);
+            var href = resp.nextHref;
+            var oldCode = form.find("input[name=originalModuleName]").val();
+            var updatedHref = courseUrl + oldCode;
+            var affectsMe = window.location.pathname.startsWith(updatedHref);
+            if (affectsMe) {
+                flog("changed a path that affects current page so reload");
+                window.location.href = href;
+                return;
             }
+            var code = form.find("input[name=moduleName]").val();
+            var title = form.find("input[name=moduleTitle]").val();
+
+            var li;
+            if (oldCode === "") {
+                flog("display new module")
+                // nextHref means this is a new resource, so add it to the list
+                li = $(
+                                '<li id="a1" data-author-notes="" class="module clearfix odd">' +
+                                '    <aside class="pull-right">' +
+                                '        <div class="btn-group btn-group-sm">' +
+                                '            <button class="btn btn-sm btn-warning btn-move-module" type="button"><i class="glyphicon glyphicon-sort"></i></button>' +
+                                '            <button data-toggle="dropdown" class="btn btn-sm btn-success dropdown-toggle" type="button">' +
+                                '                <i class="fa fa-cog"></i>' +
+                                '            </button>' +
+                                '            <ul role="menu" class="dropdown-menu pull-right">' +
+                                '                <li class="odd"><a role="button" class="btn-edit-module" href="a1">Edit module</a></li>' +
+                                '                <li class="even"><a href="a1">Manage this module</a></li>' +
+                                '                <li class="odd"><a target="_blank" href="a1?goto=">View module</a></li>' +
+                                '                <li class="even"><a class="btn-add-splitter" href="#">Add splitter below</a></li>' +
+                                '                <li class="odd"><a class="btn-duplicate-module" href="#">Duplicate</a></li>' +
+                                '                <li class="divider even"></li>' +
+                                '                <li class="odd"><a href="a1" class="btn-delete-module">Delete this module</a></li>' +
+                                '            </ul>' +
+                                '        </div>' +
+                                '    </aside>' +
+                                '    <a>EL MODULO NUMERO ASTA</a>' +
+                                '</li>'
+                        );
+                modulesList.prepend(li);
+            } else {
+                var sel = "#" + oldCode;
+                li = modulesList.find(sel);
+                flog("update module", sel, li);
+            }
+            var newId = code;
+            li.attr("id", newId);
+            li.find("a").attr("href", href, title);
+            li.find("> a").text(code + " - " + title);
+
             modal.modal('hide');
         }
     });
 
-    $(document.body).on("click", ".btn-add-module", function(e) {
+    moduleWrapper.on('click', '.btn-add-module', function(e) {
         e.preventDefault();
-        courseHref = window.location.pathname;
-        log("add module", courseHref);
-        var msg = "Please enter a code for the new module. Once created the module code can't be changed, but you can enter a descriptive title";
-        showCreateFolder(courseHref, "Create module", msg, function(name, resp) {
-            window.location.reload();
-        }, validateSimpleChars);
+        showNewModule(form, modal);
+    });
 
-    });
-    
-    var moduleWrapper = $("div.modules-wrapper");
-    
-    moduleWrapper.on('click', '.btn-duplicate-module', function (e) {
-        e.preventDefault();        
-        
-        duplicateModule($(this).parents('li.module'));
-    });
-    
-    moduleWrapper.on('click', '.btn-add-splitter', function (e) {
-        e.preventDefault();        
-        
-        $(this).parents('li.module').after(
-            '<li class="splitter clearfix">' +
-                '<aside class="pull-right">' +
-                    '<div class="btn-group">' +
-                        '<button type="button" class="btn btn-xs btn-default btn-move-splitter" title="Move up or down"><i class="glyphicon glyphicon-sort"></i></button>' +
-                        '<button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">' +
-                            '<span class="caret"></span>' +
-                        '</button>' +
-                        '<ul class="dropdown-menu pull-right" role="menu">' +
-                            '<li><a href="${module.name}" class="btn-delete-splitter">Delete splitter</a></li>' +
-                        '</ul>' +
-                    '</div>' +
-                '</aside>' +
-                '<span>Level Splitter</span>' +
-            '</li>'
-        );
-    
-        saveModules();
-    });
-    
-    moduleWrapper.on('click', '.btn-edit-module', function (e) {
-        e.preventDefault(); 
-        
-        var li = $(this).parents('li.module');
-        
-        log("Delete", li)       
-        
-        showEditModule(li, modal, form);
-    });
-    
-    
-    moduleWrapper.on('click', '.btn-delete-module', function (e) {
+    // Event for Delete button
+    modulesList.on("click", ".btn-delete-module", function(e) {
         e.preventDefault();
-        
-        var li = $(this).parents('li.module');
-        
-        log("Delete", li)
-        var moduleHref = li.attr("id");
-        confirmDelete(moduleHref, moduleHref, function() {
-            window.location.reload();
+        li = $(this).parents("li.module");
+        var href = $(e.target).closest("a").attr("href");
+        var name = getFileName(href);
+        flog("click delete module", li, href);
+        confirmDelete(href, name, function() {
+            li.remove();
+            var currentHref = window.location.pathname;
+            flog("current", currentHref, "href=", href);
+            if (currentHref.startsWith(href)) {
+                window.location.href = courseUrl;
+            }
         });
     });
-    
-    moduleWrapper.on('click', '.btn-delete-splitter', function (e) {
+
+    // Event for Edit button
+    modulesList.on("click", ".btn-edit-module", function(e) {
         e.preventDefault();
+        li = $(this).parents("li.module");
+        flog("click edit module", li);
+        var href = li.find("> a").attr("href");
+        showEditModule(li, href, form, modal);
+    });
         
+
+    moduleWrapper.on('click', '.btn-duplicate-module', function(e) {
+        e.preventDefault();
+
+        duplicateModule($(this).parents('li.module'));
+    });
+
+    moduleWrapper.on('click', '.btn-add-splitter', function(e) {
+        e.preventDefault();
+
+        $(this).parents('li.module').after(
+                '<li class="splitter clearfix">' +
+                '<aside class="pull-right">' +
+                '<div class="btn-group btn-group-sm">' +
+                '<button type="button" class="btn btn-sm btn-warning btn-move-splitter"><i class="glyphicon glyphicon-sort"></i></button>' +
+                '<button type="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown">' +
+                '<i class="fa fa-cog"></i>' +
+                '</button>' +
+                '<ul class="dropdown-menu pull-right" role="menu">' +
+                '<li><a href="${module.name}" class="btn-delete-splitter">Delete splitter</a></li>' +
+                '</ul>' +
+                '</div>' +
+                '</aside>' +
+                '<span>Level Splitter</span>' +
+                '</li>'
+                );
+
+        saveModules();
+    });
+
+    
+    moduleWrapper.on('click', '.btn-delete-splitter', function(e) {
+        e.preventDefault();
+
         var li = $(this).parents('li.splitter');
-        
-        log("Delete", li)        
+
+        flog("Delete", li)
         li.remove();
         saveModules();
     });
@@ -126,38 +163,46 @@ function initModuleEditing() {
     $("div.modules-wrapper ul").sortable({
         items: "> li",
         sort: function() {
-            if( cont.hasClass("ajax-loading") ) {
+            if (cont.hasClass("ajax-loading")) {
                 return false;
-            }                  
+            }
             $(this).removeClass("ui-state-default");
         },
         update: function() {
-            log("module change order");
+            flog("module change order");
             saveModules();
         }
     });
+    flog("done init module sorting");
 }
 
-var selectedModule;
-
-function showEditModule(liModule, modal, form) {
-    selectedModule = liModule;
+function showNewModule(form, modal) {
+    flog("showNewModule", form, modal);
     resetForm(form);
-    var moduleHref = liModule.attr("id");
-    form.attr("action", moduleHref);
+    form.find("input[name=originalModuleName]").val(""); // set hidden name field to the resource name
+    modal.modal('show');
+}
+
+function showEditModule(liModule, moduleHref, form, modal) {
+    flog("showEditModule, moduleHref=", moduleHref);
+    selectedModule = liModule;
+
+    var modName = getFileName(moduleHref);
+    resetForm(form);
+    form.find("input[name=originalModuleName]").val(modName); // set hidden name field to identify the resource name
+    form.find("input[name=moduleName]").val(modName);
     // Load title and notes into modal form
     $.ajax({
         type: 'GET',
-        url: moduleHref + "/_DAV/PROPFIND?fields=name,milton:title,milton:notes&depth=0",
+        url: moduleHref + "_DAV/PROPFIND?fields=milton:title,milton:notes&depth=0",
         dataType: "json",
         success: function(resp) {
             if (resp) {
                 var p = resp[0];
-                log("set fields", p);
-                form.find("input[name=moduleName]").val(p.name);
+                flog("set fields", p);
                 form.find("input[name=moduleTitle]").val(p.title);
-                form.find("textarea").val(p.notes);
-            }            
+                form.find("textarea[name=moduleNotes]").val(p.notes);
+            }
             modal.modal('show');
         },
         error: function(resp) {
@@ -168,82 +213,133 @@ function showEditModule(liModule, modal, form) {
 
 
 
+
 function initCourseEditing(programUrl) {
+    flog("initCourseEditing", programUrl);
     var modal = $("#courseModal");
     var form = modal.find("form");
+    form.attr("action", programUrl); // always post to he program, ie for create/edit course
 
-    $(".btn-add-course").click(function(e) {
-        e.preventDefault();
-        var msg = "Please enter a code for the new course. Once created the code can't be changed, but you can enter a descriptive title";
-        showCreateFolder(programUrl, "Create course", msg, function(name) {
-            window.location = programUrl + name;
-        }, validateSimpleChars);
-    });
-    
-    var courseWrapper = $('.courses-wrapper');
-    
-    courseWrapper.on('click', '.btn-edit-course', function (e) {
-        e.preventDefault();        
-        
-        showEditCourse($(this).parents('li.course'), modal, form);
-    });
-    
-    courseWrapper.on('click', '.btn-delete-course', function (e) {
-        e.preventDefault();        
-        
-        deleteCourse($(this).parents('li.course'));
-    });
+    var coursesList = $(".courses-list");
 
     form.forms({
         callback: function(resp) {
-            log("done save course", resp);
-            var title = form.find("input[type=text]").val();
-            var name = getFileName(form.attr("action"));
-            selectedCourse.find("> a").text(name + " - " + title);            
+            flog("done save course", resp);
+            var href = resp.nextHref;
+            var oldCode = form.find("input[name=originalCourseName]").val();
+            var updatedHref = programUrl + oldCode;
+            var affectsMe = window.location.pathname.startsWith(updatedHref);
+            if (affectsMe) {
+                flog("changed a path that affects current page so reload");
+                window.location.href = href;
+                return;
+            }
+            var code = form.find("input[name=courseName]").val();
+            var title = form.find("input[name=courseTitle]").val();
+
+            var li;
+            if (oldCode === "") {
+                flog("display new course")
+                // nextHref means this is a new resource, so add it to the list
+                li = $(
+                        '<li class="course clearfix active odd" data-course="1" id="course-">' +
+                        '        <aside class="pull-right">' +
+                        '            <div class="btn-group btn-group-sm">' +
+                        '                <button title="Move up or down" class="btn btn-sm btn-warning btn-move-course" type="button"><i class="glyphicon glyphicon-sort"></i></button>' +
+                        '                <button data-toggle="dropdown" class="btn btn-sm btn-success dropdown-toggle" type="button">' +
+                        '                    <i class="fa fa-cog"></i>' +
+                        '                </button>' +
+                        '                <ul role="menu" class="dropdown-menu pull-right">' +
+                        '                    <li class="odd"><a href="#" class="btn-edit-course">Edit details</a></li>' +
+                        '                    <li class="divider even"></li>' +
+                        '                    <li class="odd"><a href="#" class="btn-delete-course">Delete this course</a></li>' +
+                        '                </ul>' +
+                        '            </div>' +
+                        '        </aside>' +
+                        '        <a href="#">DA NAME</a>' +
+                        '    </li>'
+                        );
+                coursesList.prepend(li);
+            } else {
+                var sel = "#course-" + oldCode;
+                li = coursesList.find(sel);
+            }
+            var newId = li.attr("id") + code;
+            li.attr("id", newId);
+            li.find("a").attr("href", href)
+            li.find("> a").text(title);
+
             modal.modal('hide');
         }
     });
-}
+    
 
-function deleteCourse(courseLi) {
-    var courseHref = courseLi.find("> a").attr("href");
-    var courseName = courseLi.find("> a").text();
-    log("deleteCourse", courseLi, courseHref, courseName);
-    confirmDelete(courseHref, courseName, function() {
-        $("div.modules-wrapper")
-                .filter("[data-course=" + courseLi.attr("data-course") + "]")
-                .remove();
-        courseLi.remove();
+    $(".courses-wrapper").on('click', '.btn-add-course', function(e) {
+        e.preventDefault();
+        showNewCourse(form, modal);
+    });
 
-        log("deleted course", courseHref, window.location.pathname);
+    // Event for Delete button
+    coursesList.on("click", ".btn-delete-course", function(e) {
+        e.preventDefault();
+        li = $(this).parents("li.course");
+        var href = $(e.target).closest("a").attr("href");
+        var name = getFileName(href);
+        flog("click delete course", li, href);
+        confirmDelete(href, name, function() {
+            li.remove();
+            var currentHref = window.location.pathname;
+            flog("current", currentHref, "href=", href);
+            if (currentHref.startsWith(href)) {
+                window.location.href = programUrl;
+            }
+        });
+    });
 
-        if (courseHref == window.location.pathname) {
-            window.location = "../";
-        }
+    // Event for Edit button
+    coursesList.on("click", ".btn-edit-course", function(e) {
+        e.preventDefault();
+        li = $(this).parents("li.course");
+        flog("click edit course", li);
+        var courseHref = li.find("> a").attr("href");
+        showEditCourse(li, courseHref, form, modal);
     });
 }
 
-function showEditCourse(liCourse, modal, form) {
-    selectedCourse = liCourse;
+
+
+function showNewCourse(form, modal) {
     resetForm(form);
-    var courseHref = liCourse.find("> a").attr("href");
-    form.attr("action", courseHref);
+    form.find("input[name=originalCourseName]").val(""); // set hidden name field to the resource name
+    modal.modal('show');
+}
+
+function showEditCourse(liCourse, courseHref, form, modal) {
+    flog("showEditCourse, courseHref=", courseHref);
+    selectedCourse = liCourse;
+
+    var courseName = getFileName(courseHref);
+    resetForm(form);
+    form.find("input[name=originalCourseName]").val(courseName); // set hidden name field to identify the resource name
+    form.find("input[name=courseName]").val(courseName);
     // Load title and notes into modal form
     $.ajax({
         type: 'GET',
-        url: courseHref + "_DAV/PROPFIND?fields=milton:title,milton:notes&depth=0",
+        url: courseHref + "_DAV/PROPFIND?fields=milton:title,milton:body,milton:notes&depth=0",
         dataType: "json",
         success: function(resp) {
             if (resp) {
                 var p = resp[0];
-                log("set fields", p);
-                form.find("input[type=text]").val(p.title);
-                form.find("textarea").val(p.notes);
-            }            
+                flog("set fields", p);
+                form.find("input[name=courseTitle]").val(p.title);
+                form.find("textarea[name=courseNotes]").val(p.notes);
+                form.find("textarea[name=courseDescription]").val(p.body);
+
+            }
             modal.modal('show');
         },
         error: function(resp) {
-            alert("Sorry couldnt get program data");
+            alert("Sorry couldnt get course data");
         }
     });
 }
@@ -251,57 +347,69 @@ function showEditCourse(liCourse, modal, form) {
 function initProgramEditing(programsUrl) {
     var modal = $("#programModal");
     var form = modal.find("form");
-    log("initProgramEditing", form, programsUrl);
+    var programsList = $("ul.programs-list");
+    flog("initProgramEditing", form, programsUrl);
 
     form.attr("action", programsUrl);
     form.forms({
         callback: function(resp) {
-            log("done save program", resp);
-            if (resp.nextHref) {
+            flog("done save program", resp);
+            var href = resp.nextHref;
+            var oldCode = form.find("input[name=originalProgramName]").val();
+            var updatedHref = programsUrl + oldCode;
+            var affectsMe = window.location.pathname.startsWith(updatedHref);
+            if (affectsMe) {
+                flog("changed a path that affects current page so reload");
+                window.location.href = href;
+                return;
+            }
+            var code = form.find("input[name=programName]").val();
+            var title = form.find("input[name=programTitle]").val();
+
+            var li;
+            if (oldCode === "") {
+                flog("display new program")
                 // nextHref means this is a new resource, so add it to the list
-                $("ul.programs-list").append(
-                    '<li class="program clearfix">' +
-                        '<aside class="pull-right">' +
-                            '<a class="btn btn-xs btn-default btn-edit-program" title="Edit program" href="#"><i class="glyphicon glyphicon-edit"></i></a>' +
-                            '<a class="btn btn-xs btn-default btn-delete-program" title="Delete program" href="' + resp.nextHref + '"><i class="glyphicon glyphicon-remove"></i></a>' +
+                li = $(
+                        '<li class="program clearfix list-item" id="prog-">' +
+                        '<aside class="list-item-controller">' +
+                        '    <a class="btn btn-xs btn-success btn-edit-program" title="Edit program" href="#"><i class="glyphicon glyphicon-edit"></i></a>' +
+                        '    <a class="btn btn-xs btn-danger btn-delete-program" title="Delete program" href="#"><i class="glyphicon glyphicon-remove"></i></a>' +
                         '</aside>' +
-                        '<a href="' + resp.nextHref + '">$otherProg.title</a>' +
-                    '</li>'
-                );
-                log("go to: " + resp.nextHref);
-                window.location.reload();
-                //window.location.href = resp.nextHref + "manageCourses";
+                        '<a href="#">title goes ehre</a>' +
+                        '</li>');
+                programsList.prepend(li);
             } else {
-                window.location.reload();
-            }            
+                var sel = "#prog-" + oldCode;
+                li = programsList.find(sel);
+                flog("get old li", sel, li)
+            }
+            var newId = li.attr("id") + code;
+            li.attr("id", newId);
+            li.find("a").attr("href", href)
+            li.find("> a").text(title);
+
             modal.modal('hide');
         }
     });
-    
-    var programsList = $('ul.programs-list');
-    
-    programsList.on('click', '.btn-add-program', function (e) {
+
+    programsList.on('click', '.btn-add-program', function(e) {
         e.preventDefault();
-        
-        var msg = "Please enter a code for the new program. Once created the code can't be changed, but you can add a descriptive title after the program is created";
-        showCreateFolder(programsUrl, "Create program", msg, function(name) {
-            log("created", name);
-            window.location = programsUrl + name;
-        }, validateSimpleChars);
-        
+        showNewProgram(form, modal);
+
     });
 
     // Event for Delete button
     programsList.on("click", ".btn-delete-program", function(e) {
         e.preventDefault();
-        liProgram = $(this).parents("li.program");
+        li = $(this).parents("li.program");
         var programHref = $(e.target).closest("a").attr("href");
         var programName = getFileName(programHref);
-        log("click delete program", liProgram, programHref);
+        flog("click delete program", li, programHref);
         confirmDelete(programHref, programName, function() {
-            liProgram.remove();
+            li.remove();
             var currentHref = window.location.pathname;
-            log("current", currentHref, "programHref=", programHref);
+            flog("current", currentHref, "programHref=", programHref);
             if (currentHref.startsWith(programHref)) {
                 window.location.href = programsUrl;
             }
@@ -311,46 +419,56 @@ function initProgramEditing(programsUrl) {
     // Event for Edit button
     programsList.on("click", ".btn-edit-program", function(e) {
         e.preventDefault();
-        liProgram = $(this).parents("li.program");
-        var programHref = liProgram.find("> a").attr("href");
-        //programHref = getFolderPath(programHref) + "/";
-        var programName = getFileName(programHref);
-        log("click edit program", liProgram, programName);
-        resetForm(form);
-        form.find("input[type=hidden]").val(programName); // set hidden name field to the resource name
-        // Load title and notes into modal form
-        $.ajax({
-            type: 'GET',
-            url: programHref + "_DAV/PROPFIND?fields=milton:title,milton:notes&depth=0",
-            dataType: "json",
-            success: function(resp) {
-                if (resp) {
-                    var p = resp[0];
-                    log("set fields", p);
-                    form.find("input[type=text]").val(p.title);
-                    form.find("textarea").val(p.notes);                    
-                }
-                modal.modal('show');
-            },
-            error: function(resp) {
-                alert("Sorry couldnt get program data");
-            }
-        });
+        li = $(this).parents("li.program");
+        flog("click edit program", li);
+        var programHref = li.find("> a").attr("href");
+        showEditProgram(programHref, form, modal);
     });
 }
 
+function showNewProgram(form, modal) {
+    resetForm(form);
+    form.find("input[name=originalProgramName]").val(""); // set hidden name field to the resource name
+    modal.modal('show');
+}
+
+function showEditProgram(programHref, form, modal) {
+    //programHref = getFolderPath(programHref) + "/";
+    var programName = getFileName(programHref);
+    resetForm(form);
+    form.find("input[name=originalProgramName]").val(programName); // set hidden name field to identify the resource name
+    form.find("input[name=programName]").val(programName);
+    // Load title and notes into modal form
+    $.ajax({
+        type: 'GET',
+        url: programHref + "_DAV/PROPFIND?fields=milton:title,milton:body&depth=0",
+        dataType: "json",
+        success: function(resp) {
+            if (resp) {
+                var p = resp[0];
+                flog("set fields", p);
+                form.find("input[name=programTitle]").val(p.title);
+                form.find("textarea").val(p.body);
+            }
+            modal.modal('show');
+        },
+        error: function(resp) {
+            alert("Sorry couldnt get program data");
+        }
+    });
+}
 
 function saveModules() {
-    log("Save", selectedCourse, $("#ul.modules-list > li.module"));
+    flog("Save", selectedCourse, $("#ul.modules-list > li.module"));
     var level = 1;
     var order = 0;
     var data = new Object();
-    $("ul.modules-list > li.module").each(function(i, li) {
+    $("ul.modules-list > li").each(function(i, li) {
         var li = $(li);
-        log("save node: ", li);
+        flog("save node: ", li);
         if (li.hasClass("splitter")) {
             level++;
-            log("found splitter", level);
+            flog("found splitter", level);
         } else {
             order++;
             var name = li.attr("id");
@@ -358,14 +476,14 @@ function saveModules() {
             if (!name) {
                 name = $.URLEncode(title);
                 li.attr("id", name);
-                log("set name", name, li);
+                flog("set name", name, li);
             }
             data["name-" + order] = name;
             data["level-" + order] = level;
-            log("added data", data);
+            flog("added data", data);
         }
     });
-    log("saveModules", data);
+    flog("saveModules", data);
     var cont = $(".content");
     cont.addClass("ajax-loading");
     $.ajax({
@@ -375,24 +493,25 @@ function saveModules() {
         dataType: "json",
         success: function(resp) {
             cont.removeClass("ajax-loading");
-            log("saved module", resp);
+            flog("saved module", resp);
         },
         error: function(resp) {
             cont.removeClass("ajax-loading");
-            alert("Sorry couldnt update module");
+            flog("Sorry couldnt update module");
         }
     });
 
 }
 
-
-
-
 function orderCourseModuleItem() {
-    $("ul.courses-list").sortable({
+    $("div.courses-wrapper > ul.courses-list").sortable({
         items: "> li.course",
         sort: function() {
             $(this).removeClass("ui-state-default");
+        },
+        update: function() {
+            console.flog("course change order");
+            // TODO: edit here
         }
     });
 
@@ -404,43 +523,43 @@ function orderCourseModuleItem() {
                 .find("ul > li")
                 .not(".splitter")
                 .each(function(idx) {
-            $(this).attr("data-module", idx + 1);
-        });
+                    $(this).attr("data-module", idx + 1);
+                });
     });
 }
 
 
 function maxOrderCourse() {
-    var _order = [];
+    var order = [];
     $("div.courses-wrapper > ul > li").each(function() {
-        _order.push($(this).attr("data-course"));
+        order.push($(this).attr("data-course"));
     });
 
-    _order.sort().reverse();
+    order.sort().reverse();
 
-    return (parseInt(_order[0]) + 1);
+    return (parseInt(order[0]) + 1);
 }
 
 function maxOrderModule() {
-    var _order = [];
+    var order = [];
     $("div.modules-wrapper ul.modules-list li.module").each(function() {
-        _order.push($(this).attr("data-course"));
+        order.push($(this).attr("data-course"));
     });
 
-    _order.sort().reverse();
+    order.sort().reverse();
 
-    return (parseInt(_order[0]) + 1);
+    return (parseInt(order[0]) + 1);
 }
 
 function maxOrderProgram() {
-    var _order = [];
+    var order = [];
     $("ul.programs-list li.program").each(function() {
-        _order.push($(this).attr("data-program"));
+        order.push($(this).attr("data-program"));
     });
 
-    _order.sort().reverse();
+    order.sort().reverse();
 
-    return (parseInt(_order[0]) + 1);
+    return (parseInt(order[0]) + 1);
 }
 
 function validateSimpleChars(val) {
@@ -474,4 +593,13 @@ function duplicateModule(moduleLi) {
             alert("Sorry couldnt duplicate the module");
         }
     });
+}
+
+function initActive() {
+    $("ul.courses-list > li.active").removeClass("active");
+    var active = $("ul.courses-list > li > a").filter(function() {
+        return $(this).attr("href") === window.location.pathname;
+    });
+    active.closest("li").addClass("active");
+
 }

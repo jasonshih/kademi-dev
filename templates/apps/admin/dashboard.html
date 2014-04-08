@@ -1,29 +1,20 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>$view.title</title>
+        <script type="text/javascript" src="/templates/apps/reporting/reports.js">//</script>
     </head>
     <body class="dashboard">
         <div id="dashboard-wrapper" class="row">
 	        <div class="col-md-8">
 		        #portlets("adminDashboardPrimaryAnnounce")
-		        #portlets("adminDashboardPrimary")
+                <div class="row">
+                    #portlets("adminDashboardPrimary")
+                </div>
 	        </div>
 	        <div class="col-md-4">
 		        #portlets("adminDashboardSecondary")
 	        </div>
         </div>
-        <!--<table class="plain dashboard">-->
-            <!--<tr>-->
-                <!--<td class="primary">-->
-                    <!--#portlets("adminDashboardPrimaryAnnounce")-->
-                    <!--#portlets("adminDashboardPrimary")-->
-                <!--</td>-->
-                <!--<td class="gap"></td>-->
-                <!--<td class="secondary">-->
-                    <!--#portlets("adminDashboardSecondary")-->
-                <!--</td>                -->
-            <!--</tr>-->
-        <!--</table>                -->
     </body>
 </html>
 

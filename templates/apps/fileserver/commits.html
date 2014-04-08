@@ -9,7 +9,7 @@
 	    <link href="commits.css" rel="stylesheet" type="text/css" />
     </head>
     <body class="manage-repo-history">
-        <p class="alert alert-info">
+        <p class="well">
 	        <a class="close" role="button" href="#" data-dismiss="alert">&times;</a>
 	        Here is a list of changes made to this branch. You can restore the branch to the state of any of the commits below by clicking the Restore icon. The current state wont be lost, it will
 	        just become the previous version. <br /><b>Click on the commit number to view the branch in that state without restoring it.</b>
@@ -22,37 +22,39 @@
 	        </div>
 	        <div class="panel-body">
 		        <div class="clearfix">
-			        <p class="pull-left btn-set-hash-wrapper"><a href="./" class="btn btn-danger btn-set-hash pull-left">Set hash</a></p> <h4><small>(You can update the hash directly)</small></h4>
+			        <p class="pull-left btn-set-hash-wrapper"><a href="./" class="btn btn-sm btn-danger btn-set-hash pull-left">Set hash</a></p> <h4><small>(You can update the hash directly)</small></h4>
 		        </div>
-		        <table class="table table-bordered table-striped table-hover table-data">
-			        <colgroup>
-				        <col />
-				        <col />
-				        <col />
-				        <col />
-				        <col style="width: 70px" />
-			        </colgroup>
-			        <thead>
-				        <tr>
-					        <th>Link</th>
-					        <th>Hash</th>
-					        <th>User</th>
-					        <th>Edited</th>
-					        <th class="action">Restore</th>
-				        </tr>
-			        </thead>
-			        <tbody>
-				        #foreach($c in $page.commits)
+		        <div class="table-responsive">
+			        <table class="table table-striped table-hover">
+				        <colgroup>
+					        <col />
+					        <col />
+					        <col />
+					        <col />
+					        <col style="width: 70px" />
+				        </colgroup>
+				        <thead>
 					        <tr>
-						        <td>$c.link</td>
-						        <td>$c.commit.itemHash</td>
-						        <td>$c.commit.editor.name</td>
-						        <td><abbr title="$formatter.formatDateISO8601($c.commit.createdDate)" class="info timeago">$c.commit.createdDate</abbr></td>
-						        <td class="action"><button class="btn btn-success btn-restore-repo" title="Restore this version" rel="$c.commit.itemHash"><i class="fa fa-undo"></i></button></td>
+						        <th>Link</th>
+						        <th>Hash</th>
+						        <th>User</th>
+						        <th>Edited</th>
+						        <th class="action">Restore</th>
 					        </tr>
-				        #end
-			        </tbody>
-		        </table>
+				        </thead>
+				        <tbody>
+					        #foreach($c in $page.commits)
+						        <tr>
+							        <td>$c.link</td>
+							        <td>$c.commit.itemHash</td>
+							        <td>$c.commit.editor.name</td>
+							        <td><abbr title="$formatter.formatDateISO8601($c.commit.createdDate)" class="info timeago">$c.commit.createdDate</abbr></td>
+							        <td class="action"><button class="btn btn-sm btn-success btn-restore-repo" title="Restore this version" rel="$c.commit.itemHash"><i class="fa fa-undo"></i></button></td>
+						        </tr>
+					        #end
+				        </tbody>
+			        </table>
+		        </div>
 	        </div>
         </div>
         <script type="text/javascript">

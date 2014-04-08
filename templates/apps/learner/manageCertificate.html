@@ -5,46 +5,57 @@
         <link href="/static/common/fileuploader.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="/static/js/fileuploader.js">//</script>
         <script type="text/javascript" src="/static/inline-edit/inline-edit.js">//</script>
-        <script type="text/javascript" src="manageCertificate.js">//</script>        
+        <script type="text/javascript" src="/static/js/jquery.milton-image-select.js">//</script>
+        <script type="text/javascript" src="/static/js/jquery.milton-tree.js">//</script>
+
+        <script type="text/javascript" src="manageCertificate.js">//</script>
     </head>
-    <body class="manage-certificate-details">
-        <div class="clearfix">
-            <p class="pull-right">
-                <button class="btn btn-primary btn-save-cert">Save changes</button>
-                <a href="../" class="btn btn-danger">Cancel</a>
+    <body id="manageCertificate">
+        <div class="manage-certificate-details">
+            <div class="clearfix">
+                <p class="pull-right">
+                <button class="btn btn-sm btn-primary btn-save-cert">Save changes</button>
+                <a href="../" class="btn btn-sm btn-danger">Cancel</a>
             </p>
-        </div>
-        <form class="form-horizontal">
+            </div>
+            <div class="form-horizontal">
             <div class="form-group">
-                <label for="title" class="control-label col-md-4">Certificate name</label>
+                <label for="title" class="control-label col-md-2">Certificate name</label>
                 <div class="col-md-8">
-                    <input type="text" value="$page.title" name="title" id="title" placeholder="Certifcate name" class="form-control" /> <span class="badge badge-info">id: $page.certificate.id</span>
+                    <input type="text" value="$page.title" name="title" id="title" placeholder="Certifcate name" class="form-control" />
                 </div>
+                <span class="checkbox-inline badge badge-info">id: $page.certificate.id</span>
             </div>
             <div class="form-group">
-                <label for="" class="control-label col-md-4">Background image</label>
+                <label for="" class="control-label col-md-2">Background image</label>
                 <div class="col-md-8">
-                    <div class="btn btn-primary" id='btn-upload'></div>
-                    <p><small>Please ensure the image you upload is a JPEG, 710 pixels wide by 1004 pixels in height.</small></p>
-                    <input type="hidden" id="imageHash" name="backgroundImageHash" value="$!page.imageHash" />
                     #if($page.imageHash.length() > 0)
-                        <a target="_blank" href="/_hashes/files/${page.imageHash}" class="btn btn-orange btn-view-img">View</a>
+                    <a target="_blank" href="/_hashes/files/${page.imageHash}" class="btn-view-img pull-left" style="margin-right: 20px">
+                        <img src="/_hashes/files/${page.imageHash}" style="width: 100px" />
+                    </a>
                     #end
+
+                    <div id='btn-upload' class="pull-left"></div>
+                    <br style="clear: both"/>
+                    <p><small><i>Please ensure the image you upload is a JPEG, 710 pixels wide by 1004 pixels in height.</i></small></p>
+
+                    <input type="hidden" id="imageHash" name="backgroundImageHash" value="$!page.imageHash" />
                 </div>
             </div>
+
             <div class="form-group editor-wrapper">
                 <div class="col-md-12">
                     <textarea cols="100" id="editContent" name="text" rows="10" class="htmleditor">$!page.text</textarea>
                 </div>
             </div>
-        </form>     
-        
-        <script type="text/javascript" src="/static/js/jquery.fileupload.js"></script>
-        <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>        
+            </div>
+        </div>
+
+        <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
         <script type="text/javascript">
             Bob.onDOMReady(function () {
                 initManageCertificateDetails("$!page.imageHash");
             });
-        </script>        
+        </script>
     </body>
 </html>

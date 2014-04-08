@@ -9,7 +9,7 @@ function initTrainingResultsPortlet() {
     });   
 
     $("#do-upload-training-results-csv").mupload({
-        buttonText: "Upload spreadsheet",
+        buttonText: "<i class=\"clip-folder\"></i> Upload spreadsheet",
         url: "../trainingResults.csv",
         useJsonPut: false,
         oncomplete: function(data, name, href) {

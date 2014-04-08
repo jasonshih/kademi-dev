@@ -1,92 +1,201 @@
-
-
-
-(function( $ ) {
-    
+(function($) {
     var methods = {
-        init : function( options ) { 
+        init: function(options) {
             var container = this;
-            
-            var config = $.extend( {
+            var config = $.extend({
                 url: "./",
                 useJsonPut: true,
-                buttonText: "Add files...",
+                useDropzone: false,
+                buttonText: "Add files",
                 oncomplete: function(data) {
-                    log("finished upload", data);
-                }
-                }, options);  
-                
-            log("init milton uploads", container);
-            container.addClass('btn-upload')
+                    flog("finished upload", data);
+                },
+                isInCkeditor: false
+            }, options);
+
+            flog("init milton uploads", container);
+            container.addClass('');
             var actionUrl = config.url;
-            if( config.useJsonPut ) {
+            if (config.useJsonPut) {
                 actionUrl += "_DAV/PUT?overwrite=true";
             }
-            log("upload to url: ", actionUrl);
-            var form = $("<form action='" + actionUrl + "' method='POST' enctype='multipart/form-data' style='position: relative'><input type='hidden' name='overwrite' value='true'></form>");
-            var buttonBar = $("<div class='row fileupload-buttonbar' style='position:relative; overflow: hidden'></div>");
-            var fileInput = $("<input type='file' name='files[]' id='fileupload" + (new Date().getTime()) + "' style='opacity: 0; font-size: 50px; min-width: 100%; z-index: 6; position: absolute; right: 0; top: 0' />");
-            form.append(buttonBar);
-            
-            var fileInputContainer = $("<div class='muploadBtn' style='position: relative'></div>");            
-            fileInputContainer.append($("<span>" + config.buttonText + "</span>"));
-            
-            fileInputContainer.append(fileInput);
-            buttonBar.append(fileInputContainer);
-            fileInputContainer.append("<div class='progress progress-info progress-striped' style='position: absolute; left: 0; top: 0; width: 100%; height: 100%; opacity: 0.5; z-index: 3'><div class='bar' style='height: 100%'></div></div>");
-            container.append(form);
-            var loading = $("<img src='/static/common/loading.gif' style='position: absolute; right: 5px; top: 5px'/>");
-            loading.hide();
-            fileInputContainer.append(loading);
+            flog("upload to url: ", actionUrl);
 
-            log("init fileupload", fileInput);
-            fileInput.fileupload({
-                dataType: 'json',
-                progressInterval: 10,
-                complete: function(e, data) {
-                    loading.hide();
-                },
-                done: function (e, data) {
-                    log("done", data);
-                    //log("done", data.result[0], data.result[0].href);
-                    var href = null; 
-                    var name = null;
-                    if( data.result && data.result[0]) {
-                        href = data.result[0].href;
-                        if( href ) {
-                            name = getFileName(href);
+            config.id = Math.floor(Math.random() * 1000000);
+            flog('id', config.id);
+
+            var isSupport = typeof(window.FileReader) !== 'undefined';
+
+            flog('Dropzone is supported');
+            if (isSupport) {
+                var formHtml = "<form action='" + actionUrl + "' method='POST' enctype='multipart/form-data' style='position: relative'>"
+                    + "<input type='hidden' name='overwrite' value='true'>";
+                // If not using a dropzone, generate a bootstrap button
+                if (!config.useDropzone) {
+                    var buttonClass = config.isInCkeditor ? 'cke_dialog_ui_button cke_dialog_ui_button_ok' : 'btn btn-success';
+                    var spanClass = config.isInCkeditor ? 'cke_dialog_ui_button' : '';
+
+                    formHtml += "<button class='dz-message " + buttonClass + "' type='button'><span class='" + spanClass + "'>" + config.buttonText + "</span></button>";
+                }
+                formHtml += "</form>";
+                var form = $(formHtml);
+                form.css("position: relative");
+                if (config.useDropzone) {
+                    form.addClass("dropzone");
+                }
+                form.attr("id", config.id);
+                container.append(form);
+
+                var dropzoneCss = "/templates/themes/admin2/assets/plugins/dropzone/downloads/css/dropzone.css";
+                if (!$("link[href='" + dropzoneCss + "']").length) {
+                    flog("loading css");
+                    $('<link href="' + dropzoneCss + '" rel="stylesheet">').appendTo("head");
+                } else {
+                    flog("already have dropzone css");
+                }
+
+                var previewDiv = null;
+
+                $.getScriptOnce(('/templates/themes/admin2/assets/plugins/dropzone/downloads/dropzone.min.js'), function() {
+                    flog("Loaded dropzone plugin, now init...");
+                    Dropzone.autoDiscover = false;
+                    var dzConfig = {
+                        paramName: "file", // The name that will be used to transfer the file
+                        maxFilesize: 500.0, // MB
+                        addRemoveLinks: true,
+                        parallelUploads: 1,
+                        uploadMultiple: false
+                        ,
+                        init: function() {
+                            this.on("success", function(file, resp) {
+                                flog("success1", resp);
+                                var result = null;
+                                if (typeof resp === "string") {
+                                    result = $.parseJSON(resp);
+                                } else {
+                                    result = resp;
+                                }
+                                if( $.isArray(result)) {
+                                    result = result[0]; // might be a propfind response
+                                }
+                                var data = {
+                                    result: result,
+                                    name: file.name
+                                };
+                                flog("success2", file, result);
+                                config.oncomplete(data, file.name, result.href);
+                            });
+                            this.on("error", function(file, errorMessage) {
+                                alert("An error occured uploading: " + file.name + " because: " + errorMessage);
+                            });
+                            this.on("addedfile", function(file, errorMessage) {
+                                if (previewDiv !== null) {
+                                    previewDiv.show();
+                                }
+                            });
+                            this.on("complete", function(file, errorMessage) {
+                                if (previewDiv !== null) {
+                                    previewDiv.hide();
+                                }
+                            });
                         }
-                    }                    
-                    config.oncomplete(data, name, href);
-                    $('.progress').hide();
-                    loading.hide();
-                },
-                progressall: function (e, data) {  
-                    var progress = parseInt(data.loaded / data.total * 100, 10);                    
-                    $('.progress').show();
-                    $('.progress .bar', buttonBar).css('width',progress + '%');
-                    log("progress", e, data, progress);
-                    loading.show();     
-                    log("show loading", loading);
-                }        
-            });
-            log("done fileupload init");
+                    };
+
+                    if (!config.useDropzone) {
+                        flog("do not use dropzone, use button instead")
+                        previewDiv = $("<div class='dropzone-previews' style='display: none'></div>");
+                        form.append(previewDiv);
+                        previewDiv.css("position: absolute");
+                        previewDiv.css("top", "20px");
+
+                        dzConfig.previewsContainer = previewDiv[0];
+                        flog("done init dropzone config. previewsContainer=", dzConfig.previewsContainer);
+                    }
+
+                    flog("Now invoke dropzone plugin...", dzConfig);
+                    form.dropzone(dzConfig);
+                    flog("Finished dropzone init", Dropzone);
+                });
+            } else {
+                flog('init fallback for dropzone');
+                methods.initFallback(container, config, actionUrl);
+            }
+
+            flog("done fileupload init");
         },
-        setUrl : function( url ) {
-            log("setUrl", this, url);
+        initFallback: function (container, config, actionUrl) {
+            container.addClass('fallback-upload');
+
+            var fallbackCss = "/templates/themes/admin2/assets/plugins/jQuery-File-Upload/css/jquery.fileupload-ui.css";
+            if (!$("link[href='" + fallbackCss + "']").length) {
+                flog("loading fallback css");
+                $('<link href="' + fallbackCss + '" rel="stylesheet">').appendTo("head");
+            } else {
+                flog("already have fallback css");
+            }
+
+            $.getScriptOnce('/templates/themes/admin2/assets/plugins/jQuery-File-Upload/js/jquery.fileupload.js', function () {
+                flog('All scripts for fallback are loaded!');
+                var buttonClass = config.isInCkeditor ? 'cke_dialog_ui_button cke_dialog_ui_button_ok' : 'btn btn-success';
+                var spanClass = config.isInCkeditor ? 'cke_dialog_ui_button' : '';
+
+                if (config.useDropzone) {
+                    container.addClass('fallback-dropzone');
+                    container.append(
+                        '<p class="fallback-message">' +
+                            'Your browser does not support drag\'n\'drop file uploads.' +
+                            'Please use the fallback button below to upload your files like in the olden days.' +
+                        '</p>'
+                    );
+                }
+
+                var button = $(
+                    '<button id="' + config.id + '" type="button" class="' + buttonClass + ' fileinput-button fallback-button">' +
+                        '<span class="' + spanClass + '">' + config.buttonText + '</span>' +
+                        '<span class="fallback-progress"></span>' +
+                        '<input type="file" name="files[]" data-url="' + actionUrl + '" />' +
+                    '</button>'
+                );
+
+                container.append(button);
+
+                // Initialize the jQuery File Upload widget:
+                button.fileupload({
+                    url: actionUrl,
+                    dataType: 'json',
+                    done: function (e, data) {
+                        button.find('.fallback-progress').hide();
+
+                        var file = data.result[0];
+
+                        config.oncomplete.call(this, file, file.originalName, file.href);
+                    },
+                    progressall: function (e, data) {
+                        var progress = parseInt(data.loaded / data.total * 100, 10);
+
+                        button.find('.fallback-progress').show().css(
+                            'width',
+                            progress + '%'
+                        );
+                    }
+                });
+            });
+        },
+        setUrl: function(url) {
+            flog("setUrl", this, url);
             var newAction = url + "_DAV/PUT?overwrite=true";
             this.find("form").attr("action", newAction);
         }
-    };    
-    
-    $.fn.mupload = function(method) {        
-        log("mupload", this);
-        if ( methods[method] ) {
-            return methods[ method ].apply( this, Array.prototype.slice.call( arguments, 1 ));
-        } else if ( typeof method === 'object' || ! method ) {
-            return methods.init.apply( this, arguments );
-        } else {
-            $.error( 'Method ' +  method + ' does not exist on jQuery.tooltip' );
-        }           
     };
-})( jQuery );
+
+    $.fn.mupload = function(method) {
+        flog("mupload", this);
+        if (methods[method]) {
+            return methods[ method ].apply(this, Array.prototype.slice.call(arguments, 1));
+        } else if (typeof method === 'object' || !method) {
+            return methods.init.apply(this, arguments);
+        } else {
+            $.error('Method ' + method + ' does not exist on jQuery.tooltip');
+        }
+    };
+})(jQuery);

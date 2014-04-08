@@ -92,9 +92,12 @@ function openModal(key, value) {
         txtText.val(values.text);
 
         var optionString = '';
-        $.each(values.options.split(','), function (i, item) {
-            optionString += renderOption(item);
-        });
+        if (values.options) {      
+            var options = values.options.split(',');      
+            $.each(options, function (i, item) {
+                optionString += renderOption(item);
+            });
+        }
 
         optionWrapper.html(optionString);
         modal.addClass('edit');

@@ -1,22 +1,22 @@
 #set($currentBranch = $page.closest("branch"))
 <div class="btn-group publishing pull-right">
 	#if( $currentBranch.live )
-	<a href="../manageBranches" class="islive btn btn-danger">
+	<a href="../manageBranches" class="islive btn-sm btn btn-danger">
 		<i class="fa fa-gear"></i>
 		LIVE
 	</a>
 	#else
-	<a href="${currentBranch.href}publish" class="publish btn btn-success">
+	<a href="${currentBranch.href}publish" class="publish btn-sm btn btn-success">
 		<i class="glyphicon glyphicon-ok-sign"></i>
 		PUBLISH
 	</a>
-	<a href="../manageBranches" class="btn btn-primary">
+	<a href="../manageBranches" class="btn btn-sm btn-primary">
 		<i class="fa fa-gear"></i>
 		Manage versions
 	</a>
 	#end
 
-	<a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+	<a class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
 		<b>Editing version:</b>
 		$currentBranch.name
 		<span class="caret"></span>
@@ -41,12 +41,12 @@
 </div>
 
 <div class="btn-group">
-	<a target='_blank' href='${page.externalUrl}' class='btn btn-success'>
+	<a target='_blank' href='${page.externalUrl}' class='btn-sm btn btn-success'>
 		<i class="fa fa-arrow-circle-right"></i>
 		View website
 	</a>
 	<div class="btn-group">
-		<a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+		<a class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
 			<b>Change website:</b> $page.closest("website").name
 			<span class="caret"></span>
 		</a>

@@ -94,7 +94,7 @@
                 $(".removeUsers").click(function(e) {
                     var node = $(e.target);
                     log("removeUsers", node, node.is(":checked"));
-                    var checkBoxes = node.closest(".MainContent").find("tbody td input:[name=toRemoveId]:checked");
+                    var checkBoxes = node.closest(".MainContent").find("tbody td input[name=toRemoveId]:checked");
                     if( checkBoxes.length == 0 ) {
                         alert("Please select the users you want to remove by clicking the checkboxs to the right");
                     } else {

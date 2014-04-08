@@ -1,128 +1,252 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>Manage Groups</title>
+        <script type="text/javascript" src="manageGroup.js">//</script>
+        <script type="text/javascript" src="manageExtraField.js">//</script>
+        <link href="manageGroup.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
-
-        <div id="modalRegoCont" >
-            <header>
-                <h3>Registration Mode</h3>
-                <a class="Close" href="#" title="Close"><span class="Hidden">Close</span></a>
-            </header>
-            <div class="ModalContent">
-                <form method="POST" action="$page.href" class="general">
-                    <div class="BtnBar">
-                        <button class="Btn">Save</button>
-                        <div style="clear: both"></div>
+        <form method="POST" action="$page.href" class="general">
+            <div class="form-group clearfix">
+                <button class="btn btn-sm btn-primary pull-right">Save</button>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="clip-question"></i> What will this group be used for?
+                </div>
+                <div class="panel-body">
+                    <div class="form-group col-sm-12">
+                        <div class="clearfix">
+                            <label class="control-label radio-inline" for="groupTypePrimary">
+                                $formatter.radioEq("groupTypePrimary", "groupType", $page.group.groupType, "P")
+                                Primary group, representing the type of the user. User's should only be a member of one primary group
+                            </label>
+                        </div>
+                        <div class="clearfix">
+                            <label class="control-label radio-inline" for="groupTypeMailing">
+                                $formatter.radioEq("groupTypeMailing", "groupType", $page.group.groupType, "M")
+                                Mailing list. Users may opt-in or out at any time
+                            </label>
+                        </div>
+                        <div class="clearfix">
+                            <label class="control-label radio-inline" for="groupTypeSubscription">
+                                $formatter.radioEq("groupTypeSubscription", "groupType", $page.group.groupType, "S")
+                                Subscription group, which can have additional inputs to complete for joining
+                            </label>
+                        </div>
                     </div>
-                    <h2>Is this a primary group?</h2>                    
-                    <p>If so it will be considered the main group if a user is registered to multiple groups.</p>
-                    $formatter.checkbox ... TODO
-                    <h2>Is this group open to the public?</h2>
-                    <table class="regoMode">
-                        <tr>
-                            <td style="width: 100px">
-                                $formatter.radioEq("regoModeOpen", "regoMode",$page.group.registrationMode  ,"o")
-                                <label for="regoModeOpen">Open</label>
-                            </td>
-                            <td>Allows any member of the public to register and their membership is immediately active</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                $formatter.radioEq("regoModeAdmin", "regoMode",$page.group.registrationMode  ,"a")
-                                <label for="regoModeAdmin">Approval</label>
-                            </td>
-                            <td>Memberships are initially inactive until reviewed by an administrator</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                $formatter.radioEq("regoModeClosed", "regoMode",$page.group.registrationMode  ,"c")
-                                <label for="regoModeClosed">Closed</label>
-                            </td>
-                            <td>External registration is not available. Instead administrators create accounts as required</td>
-                        </tr>
-                    </table>
+                </div>
+            </div>
+            <div class="panel panel-default panel-regomode">
+                <div class="panel-heading">
+                    <i class="clip-question"></i> Is this group open to the public?
+                </div>
+                <div class="panel-body">
+                    <div class="form-group col-sm-12">	
+                        <div class="clearfix">
+                            <label for="regoModeOpen" class="radio-inline col-sm-1">$formatter.radioEq("regoModeOpen", "regoMode", $page.group.registrationMode  ,"o") Open</label>
+                            <div class="col-sm-10">
+                                <label class="radio-inline control-label">Allows any member of the public to register and their membership is immediately active</label>
+                            </div>
+                        </div>
+                        <div class="clearfix">
+                            <label for="regoModeAdmin" class="radio-inline col-sm-1">$formatter.radioEq("regoModeAdmin", "regoMode", $page.group.registrationMode  ,"a") Approval</label>
+                            <div class="col-sm-10">
+                                <label class="radio-inline control-label">Memberships are initially inactive until reviewed by an administrator</label>
+                            </div>
+                        </div>
+                        <div class="clearfix">
+                            <label for="regoModeClosed" class="radio-inline col-sm-1">$formatter.radioEq("regoModeClosed", "regoMode", $page.group.registrationMode  ,"c") Closed</label>
+                            <div class="col-sm-10">
+                                <label class="radio-inline control-label">External registration is not available. Instead administrators create accounts as required</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                    <br/>
-                    <h2>What organisations can users join?</h2>
-                    <table>
-                        <tr>
-                            <td style="width: 150px"><label for="selectOrgLabel">Organisation Type</label></td>
-                            <td>
-                                <select name="orgType">
+            <div class="panel panel-default panel-joinorgs">
+                <div class="panel-heading">
+                    <i class="clip-question"></i> What organisations can users join?
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="selectOrgLabel" class="col-sm-2 control-label">Organisation Type</label>
+                        <div class="col-sm-10">
+                            <div class="col-sm-4">
+                                <select name="orgType" class="form-control">
                                     <option value="">[Any]</option>
                                     #foreach($ot in $page.organisation.orgTypes)
                                     $formatter.option($ot.name, $ot.displayName, $page.group.regoOrgType.name)
                                     #end
-                                </select> 
-                                <p>Select which type of organisation to allow users to register to.</p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><label for="rootOrg">Select from</label></td>
-                            <td>
-                                <select name="sRootRegoOrg">
+                                </select>
+                            </div>
+                            <p class="col-sm-10 clearfix">
+                                <i>Select which type of organisation to allow users to register to.</i>
+                            </p> 
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="rootOrg" class="col-sm-2 control-label">Select from</label>
+                        <div class="col-sm-10">
+                            <div class="col-sm-4">
+                                <select name="sRootRegoOrg" class="form-control">
                                     <option value="">$page.organisation.formattedName (this organisation)</option>
                                     #foreach($org in $page.organisation.childOrgs())
                                     $formatter.option($org.orgId, $org.formattedName, $page.group.rootRegoOrg.orgId)
                                     #end
-                                </select>                            
-                                <p>Enter the business unit which users will search within for thier organisation</p>
-                            </td>
-                        </tr>
-                    </table>
-
-                    <br />
-                    <h2>Can users opt-in to other mailing lists?</h2>
-
-                    <ul class="optins">
-                        #foreach($group in $page.organisation.groups)
-                        #if( $group == $page.group )
-                        #else
-                        <li>
-                            #set($groupId = "optin" + $group.name)
-                            #set($optin = "")
-                            #set($optin = $page.optin($group))
-                            $formatter.checkbox($groupId, "optinGroup", $formatter.isNotNull($optin), $group.name)
-                            <label for="$groupId">$group.name</label>
-                            <input type="text" name="${groupId}_Desc" placeholder="Invitation message to users" value="$!optin.message" />
-                        </li>
-                        #end
-                        #end
-                    </ul>
-                </form>
-
-                <div style="clear: both" ></div>
-                <br/>
-
-                <h2>What extra fields do you want to ask new users?</h2>
-                <button type="button" class="SmallBtn Add addField" onclick="$('.addField').toggle()"><span>Add field</span></button>
-                <form class="fields" method="POST" action="$page.href">
-                    <div class=" addField Hidden">
-                        <p>Enter a name for the field and the information about the format of the field</p>
-                        <input type="text" class="required" placeholder="Name for the field" name="addFieldName" style="width: 100px" />
-                        <input type="text" placeholder="Format. Eg required;options(yes,no);text=Would you like..?" name="addFieldValue" style="width: 250px" />
-                        <button type="submit" class="Btn">Add</button>                
+                                </select>
+                            </div>
+                            <p class="col-sm-10 clearfix">
+                                <i>Enter the business unit which users will search within for thier organisation</i>
+                            </p>
+                        </div>
                     </div>
-                    <ul class="fields">
+                </div>
+            </div>
+
+            <div class="panel panel-default panel-optins">
+                <div class="panel-heading">
+                    <i class="clip-question"></i> Can users opt-in to other mailing lists?
+                </div>
+                <div class="panel-body optins">
+                    #foreach($group in $page.organisation.groups)
+                    #if( $group == $page.group )
+
+                    #else
+                    <div class="optins form-group col-sm-12">
+                        <div class="clearfix">
+                            #set($groupId = "optin" + $group.name)
+                            <label for="$groupId" class="checkbox-inline control-label col-sm-2">
+
+                                #set($optin = "")
+                                #set($optin = $page.optin($group))
+                                $formatter.checkbox($groupId, "optinGroup", $formatter.isNotNull($optin), $group.name)
+                                $group.name
+                            </label>
+                            <div class="col-sm-7">
+                                <input type="text" name="${groupId}_Desc" class="form-control" placeholder="Invitation message to users" value="$!optin.message" />
+                            </div>
+                        </div>
+                    </div>
+                    #end
+                    #end
+                </div>
+            </div>	
+        </form>
+
+        <div class="panel panel-default panel-fields">
+            <div class="panel-heading">
+                <i class="clip-question"></i> What extra fields do you want to ask new users?
+            </div>
+            <div class="panel-body">
+                <p>
+                    <button type="button" class="btn btn-sm btn-success btn-add-extra-field"><i class="fa fa-plus"></i> Add field</button>
+                </p>
+                <table id="table-extra-field" class="table table-hover table-stripled" data-group-href="$page.href">
+                    <colgroup>
+                        <col />
+                        <col />
+                        <col />
+                        <col />
+                        <col style="width: 150px" />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Text</th>
+                            <th>Required</th>
+                            <th>Options</th>
+                            <th class="action">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                         #foreach($field in $page.dataCaptureFields.entrySet())
-                        <li>
-                            <h4>$field.key</h4>
-                            $field.value
-                            <a href="$field.key" class="removeField">Delete</a>
-                        </li>
+                        <tr class="extra-field">
+                            <td>
+                                <input type="hidden" value="$field.key" name="key" />
+                                <input type="hidden" value="$field.value" name="value" />
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
                         #end
-                    </ul>
-                </form>
+                    </tbody>
+                </table>            
             </div>
         </div>
 
+        <div id="modal-extra-field" class="modal fade" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Add extra field</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" action="$page.href" method="POST">
+                    <input id="extra-field-value" type="hidden" name="addFieldValue" />
+                    <div class="form-group">
+                        <label for="extra-field-name" class="control-label col-md-4">Name:</label>
+                        <div class="col-md-8">
+                            <input id="extra-field-name" type="text" class="form-control required" name="addFieldName" placeholder="Field text" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="extra-field-required" class="control-label col-md-4">Required:</label>
+                        <div class="col-md-8">
+                            <input id="extra-field-required" type="checkbox" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="extra-field-text" class="control-label col-md-4">Text:</label>
+                        <div class="col-md-8">
+                            <input id="extra-field-text" class="form-control required" placeholder="Field text" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label  class="control-label col-md-4">Option:</label>
+                        <div class="col-md-8">
+                            <button type="button" class="btn btn-sm btn-add-option btn-info">Add option</button>
+                        </div>
+                    </div>
+                    <div id="options-wrapper"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary btn-sm btn-save-menu" data-type="form-submit">Save</button>
+            </div>
+        </div>
 
         <script type="text/javascript" >
-                    Bob.onDOMReady(function () {
+            Bob.onDOMReady(function() {
+                initManageGroup();
+                initManageExtraField();
+                showHidePanels();
 
-                        initManageGroup();
-                    });
+                $("input:radio[name=groupType]").click(function() {
+                    showHidePanels();
+                });
+            });
+
+            function showHidePanels() {
+                var panels = $(".panel-fields, .panel-optins, .panel-joinorgs, .panel-regomode");
+
+                panels.hide();
+                // show only appropriate
+                var type = $("input:radio[name=groupType]:checked").val();
+                flog("showHidePanels:", type);
+                if (type == "P") {
+                    // primary
+                    panels.show();
+                } else if (type == "M") {
+                    // mailing list
+                } else if (type == "S") {
+                    // subscription
+                    $(".panel-fields").show();
+                }
+            }
         </script>        
     </body>
 </html>

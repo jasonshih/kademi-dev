@@ -8,14 +8,19 @@
  *  - callback(resp, form): called after successful processing with the response
  *  object and the form
  *  - validate(form) - return true if the form is valid
+ *  - errorHandler(resp, form, valiationMessageSelector, errorCallback) - default displays messages and also calls errorCallback if provided
+ *  - errorCallback() - a simpler error callback, is called after form UI is updated
+ *  - doPostForm - defaults to true. If false, the form will not be submitted, although callbacks will still be called
+ *  - confirmMessage - defaults to "Saved ok"
+ *  - valiationMessageSelector - defaults to ".pageMessage"
+ *  - validationFailedMessage - defaults to "Some inputs are not valid."
+ *  
  * 
  */
 
 (function($) {
-
-
     $.fn.forms = function(options) {
-        log("init forms plugin", this);
+        flog("init forms plugin", this);
 
         // Load the moment.js script
         options = $.extend(options || {}, {
@@ -31,37 +36,75 @@
             callback: function() {
 
             },
+            errorHandler: function(resp, form, valiationMessageSelector, errorCallback) {
+                try {
+                    var messagesContainer = $(valiationMessageSelector, form);
+                    flog("status indicates failure", resp);
+                    if (resp) {
+                        if (resp.messages && resp.messages.length > 0) {
+                            for (i = 0; i < resp.messages.length; i++) {
+                                var msg = resp.messages[i];
+                                showMessage(msg, form);
+                            }
+                        } else {
+                            showMessage("Sorry, we couldnt process your request", form);
+                        }
+                        showFieldMessages(resp.fieldMessages, form)
+                    } else {
+                        showMessage("Sorry, we couldnt process your request", form);
+                    }
+                    messagesContainer.show(100);
+                } catch (e) {
+                    flog("ex", e);
+                }
+                if (errorCallback) {
+                    errorCallback();
+                }
+            },
             error: function() {
 
             },
             validate: function(form) {
                 return true;
             },
+            onValid: function(form) {
+
+            },
+            doPostForm: true,
             confirmMessage: "Saved OK",
             valiationMessageSelector: ".pageMessage",
             validationFailedMessage: "Some inputs are not valid."
         }, options);
 
-
         var container = this;
-        log("msgs", config.valiationMessageSelector, container, $(config.valiationMessageSelector, container));
+        flog("msgs", config.valiationMessageSelector, container, $(config.valiationMessageSelector, container));
         $(this).submit(function(e) {
             e.preventDefault();
             e.stopPropagation();
             var form = $(this);
             resetValidation(container);
             if (!config.validate(form)) {
-                log("validate method returned false");
+                flog("validate method returned false");
                 return false;
             }
             form.trigger("submitForm");
-            log("form submit", form);
+            flog("form submit", form);
             if (checkRequiredFields(form)) {
-                postForm(form, config.valiationMessageSelector, config.validationFailedMessage, config.callback, config.confirmMessage, config.postUrl, config.error);
+                if (typeof config.onValid === 'function') {
+                    config.onValid(form);
+                }
+                if (config.doPostForm) {
+                    postForm(form, config.valiationMessageSelector, config.validationFailedMessage, config.callback, config.confirmMessage, config.postUrl, config.error, config.errorHandler);
+                }
             } else {
                 showValidation(null, config.validationFailedMessage, form);
-                //$(config.valiationMessageSelector, container).text(config.validationFailedMessage);
-                $(config.valiationMessageSelector, form).show(100);
+                var messages = $(config.valiationMessageSelector, form);
+//                messages.append("<div class='alert alert-danger'>Some inputs are not valid. Please correct any highlighted fields.</div>");
+//                messages.find(".alert")
+//                        .prepend("<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>")
+//                        .alert();
+//                flog("show messages", messages);
+//                messages.show(100);
                 config.error(form);
             }
             return false;
@@ -69,15 +112,15 @@
     };
 })(jQuery);
 
-function postForm(form, valiationMessageSelector, validationFailedMessage, callback, confirmMessage, postUrl, errorCallback) {
-    log("postForm", form);
+function postForm(form, valiationMessageSelector, validationFailedMessage, callback, confirmMessage, postUrl, errorCallback, errorHandler) {
     var serialised = form.serialize();
     form.trigger("preSubmitForm", serialised);
     var url = form.attr("action");
     if (postUrl) {
-        log("use supplied postUrl instead of form action", postUrl);
+        flog("use supplied postUrl instead of form action", postUrl);
         url = postUrl;
     }
+    flog("postForm", form, serialised, url);
     try {
         form.find("button").attr("disabled", "true");
         form.addClass("ajax-processing");
@@ -91,50 +134,29 @@ function postForm(form, valiationMessageSelector, validationFailedMessage, callb
                 ajaxLoadingOff();
                 form.removeClass("ajax-processing");
                 if (resp && resp.status) {
-                    log("save success", resp)
+                    flog("save success", resp)
                     if (confirmMessage) {
-                        showConfirmMessage(form, confirmMessage);
+                        showConfirmMessage(form, confirmMessage, valiationMessageSelector);
                     }
                     callback(resp, form)
                 } else {
-                    log("status indicates failure", resp);
-                    try {
-                        var messagesContainer = $(valiationMessageSelector, form);
-                        if (resp) {
-                            if (resp.messages && resp.messages.length > 0) {
-                                for (i = 0; i < resp.messages.length; i++) {
-                                    var msg = resp.messages[i];
-                                    messagesContainer.append("<p>" + msg + "</p>");
-                                }
-                            } else {
-                                messagesContainer.append("<p>Sorry, we couldnt process your request</p>");
-                            }
-                            showFieldMessages(resp.fieldMessages, form)
-                        } else {
-                            messagesContainer.append("<p>Sorry, we couldnt process your request</p>");
-                        }
-                        messagesContainer.show(100);
-                    } catch (e) {
-                        log("ex", e);
+                    if( errorHandler ) {
+                        errorHandler(resp, form, valiationMessageSelector, errorCallback);
                     }
-                    if (errorCallback) {
-                        errorCallback();
-                    }
-                    //alert("Sorry, an error occured and the form could not be processed. Please check for validation messages");
                 }
             },
-            error: function(resp) {
+            error: function(jqXHR, textStatus, errorThrown) {
                 ajaxLoadingOff();
                 form.removeClass("ajax-processing");
                 form.find("button").removeAttr("disabled");
-                log("error posting form", form, resp);
+                flog("error posting form", form, jqXHR, textStatus, errorThrown);
                 alert("Sorry, there was an error submitting the form. Please check the form for detailed error messages and try again");
                 $(valiationMessageSelector, form).text(validationFailedMessage);
                 $(valiationMessageSelector, form).show(100);
             }
         });
     } catch (e) {
-        log("exception sending forum comment", e);
+        flog("exception sending forum comment", e);
     }
 }
 
@@ -148,12 +170,11 @@ function showConfirmMessage(form, confirmMessage) {
 function showFieldMessages(fieldMessages, container) {
     if (fieldMessages) {
         $.each(fieldMessages, function(i, n) {
-            log("field message", n);
+            flog("field message", n);
             var target = $("#" + n.field);
             showValidation(target, n.message, container);
         });
     }
-
 }
 
 function resetValidation(container) {
@@ -164,10 +185,11 @@ function resetValidation(container) {
     $(".pageMessage", container).html("");
     $(".error > *", container).unwrap();
     $(".errorField", container).removeClass("errorField");
+    $(".alert", container).remove();
 }
 
 function checkRequiredFields(container) {
-    log('checkRequiredFields', container);
+    flog('checkRequiredFields', container);
     var isOk = true;
 
     // Check mandatory
@@ -176,20 +198,20 @@ function checkRequiredFields(container) {
 
         var title = $(node).attr("title");
         if (!val || (val === title)) { // note that the watermark can make the value == title
-            log('error field', node);
+            flog('error field', node);
             showErrorField($(node));
             isOk = false;
         }
     });
 
     if (!checkRequiredChecks(container)) {
-        log('missing required checkboxs');
+        flog('missing required checkboxs');
         isOk = false;
     }
 
     if (isOk) {
         isOk = checkValidEmailAddress(container);
-        
+
         if (!checkDates(container)) {
             isOk = false;
         }
@@ -203,10 +225,6 @@ function checkRequiredFields(container) {
             isOk = false;
         }
         if (!checkNumbers(container)) {
-            isOk = false;
-        }
-
-        if (!checkValueLength($("#firstName", container), 1, 15, "First name")) {
             isOk = false;
         }
     } else {
@@ -227,12 +245,12 @@ function checkRequiredChecks(container) {
 
 
 function checkRadio(radioName, container) {
-    log('checkRadio', radioName, container);
+    flog('checkRadio', radioName, container);
     if ($("input:radio[name=" + radioName + "]:checked", container).length === 0) {
         var node = $("input:radio[name=" + radioName + "]", container)[0];
         node = $(node);
         node = $("label[for=" + node.attr("id") + "]");
-        log('apply error to label', node);
+        flog('apply error to label', node);
         showValidation(node, "Please select a value for " + radioName, container);
         return false;
     } else {
@@ -250,7 +268,7 @@ function checkDates(container) {
             if (val && val.length > 0) {
                 var valid = moment(val, ["DD-MM-YYYY", "DD-MM-YYYY HH:mm"], true);
                 if (!valid) {
-                    log("checkDates: not a valid date: ", val);
+                    flog("checkDates: not a valid date: ", val);
                     showValidation($(node), "Please enter a valid date", container);
                     isOk = false;
                 }
@@ -263,16 +281,20 @@ function checkDates(container) {
  *  If password is present, checks for validity
  */
 function checkValidPasswords(container) {
-    var target = $("#password, input.password", container).not(".allow-dodgy-password");
+    flog("checkValidPasswords");
+    var target = $("#password, input.password", container);
     var p1 = target.val();
     if (p1) {
-        var passed = validatePassword(p1, {
-            length: [6, Infinity],
-            alpha: 1,
-            numeric: 1,
-            badWords: [],
-            badSequenceLength: 6
-        });
+        var passed = true;
+        if (!target.hasClass("allow-dodgy-password")) {
+            passed = validatePassword(p1, {
+                length: [6, Infinity],
+                alpha: 1,
+                numeric: 1,
+                badWords: [],
+                badSequenceLength: 6
+            });
+        }
         if (!passed) {
             showValidation(target, "Your password must be at least 6 characters and it must contain numbers and letters", container);
             return false;
@@ -284,6 +306,7 @@ function checkValidPasswords(container) {
 }
 
 function checkPasswordsMatch(container) {
+    flog("checkPasswordsMatch");
     if ($("#confirmPassword").length == 0) {
         return true; // there is no confirmation field
     }
@@ -313,37 +336,81 @@ function checkValidEmailAddress(container) {
 }
 
 function checkSimpleChars(container) {
-    var target = $(".simpleChars", container);
+    flog("checkSimpleChars");
+    var isOk = checkChars(container, ".simpleChars,.reallySimpleChars", "^[a-zA-Z0-9_\.\ -]+$");
+    if (isOk) {
+        var targets = $(".reallySimpleChars", container);
+        targets.each(function(i, n) {
+            var node = $(n);
+            var val = node.val();
+            if (val.length > 0) {
+                if (val.contains(" ")) {
+                    showValidation(node, "Spaces are not allowed", container);
+                    isOk = false;
+                }
+                if (val.contains("+")) {
+                    showValidation(node, "Plus signs are not allowed", container);
+                    isOk = false;
+                }
+                if (val.contains(".")) {
+                    showValidation(node, "Full stops are not allowed", container);
+                    isOk = false;
+                }
+            }
+        });
+    }
+    return isOk;
+}
+
+function checkChars(container, inpClass, reg) {
+    flog("checkChars");
+    var target = $(inpClass, container);
+    flog("checkChars2", target, inpClass, container);
     var isOk = true;
-    var pattern = new RegExp("^[a-zA-Z0-9_\.\ -]+$");
+    var pattern = new RegExp(reg);
     target.each(function(i, n) {
         var node = $(n);
         var val = node.val();
-        log("test: ", val, node);
+        flog("val", val);
         if (val.length > 0) {
             if (!pattern.test(val)) {
+                flog("not valid");
                 showValidation(node, "Please use only letters, numbers and underscores", container);
                 isOk = false;
+            } else {
+                flog("is valid");
             }
         }
     });
     return isOk;
 }
 
+function checkReallySimple(val) {
+    if (val.length > 0) {
+        if (val.contains(" ")) {
+            return false;
+        }
+        if (!pattern.test(val)) {
+            return false;
+        }
+    }
+    return true;
+}
+
 function checkNumbers(container) {
     var target = $(".numeric", container); // either with id of email, or with class email
-    log("checkNumbers", target);
+    flog("checkNumbers", target);
     var isOk = true;
     target.each(function(i, n) {
         var node = $(n);
         var val = node.val();
-        log("checkNumeric", val);
+        flog("checkNumeric", val);
         if (val.length > 0) {
             if (!isNumber(val)) {
                 showValidation(node, "Please enter a number", container);
                 isOk = false;
             } else {
-                log("  isok");
+                flog("  isok");
             }
         }
     });
@@ -368,31 +435,30 @@ function checkHrefs(container) {
 
 }
 
-function checkValueLength(target, minLength, maxLength, lbl) {
-    log('checkValueLength', target, minLength, maxLength, lbl);
+function checkValueLength(target, minLength, maxLength, lbl, container) {
+    //flog('checkValueLength', target, minLength, maxLength, lbl);
     target = ensureObject(target);
-    if (target.length == 0) {
+    if (target.length === 0) {
         return true;
     }
     var value = target.val();
-    log('length', value.length);
+    flog('length', value.length);
     if (minLength) {
         if (value.length < minLength) {
-            showValidation(target, lbl + " must be at least " + minLength + " characters");
+            showValidation(target, lbl + " must be at least " + minLength + " characters", container);
             return false;
         }
     }
     if (maxLength) {
-        log('check max length: ' + (value.length > maxLength));
+        flog('check max length: ' + (value.length > maxLength));
         if (value.length > maxLength) {
-            showValidation(target, lbl + " must be no more then " + maxLength + " characters");
+            showValidation(target, lbl + " must be no more then " + maxLength + " characters", container);
             return false;
         } else {
-            log('check max length ok: ' + (value.length > maxLength));
+            flog('check max length ok: ' + (value.length > maxLength));
         }
 
     }
-    log('length ok');
     return true;
 }
 
@@ -450,15 +516,13 @@ function checkTrue(target, message, container) {
     }
 }
 
-
-
 /**
  * target can be id or a jquery object
  * text is the text to display
  */
 function showValidation(target, text, container) {
     if (text) {
-        log("showValidation", target, text, container);
+        flog("showValidation", target, text, container);
         showMessage(text, container);
         if (target) {
             var t = ensureObject(target);
@@ -473,27 +537,27 @@ function showMessage(text, container) {
         messages = $("<div class='pageMessage alert alert-error alert-danger'><a class='close' data-dismiss='alert' href='#'>&times;</a></div>");
         container.prepend(messages);
     }
-    log("showMessage", messages);
+    flog("showMessage", messages);
     messages.append("<p class='validationError'>" + text + "</p>");
     messages.show(500);
 }
 
 function showErrorField(target) {
-    log("showErrorField", target);
+    flog("showErrorField", target);
     target.addClass("errorField");
     target.closest(".form-group").addClass("has-error"); // for bootstrap3
     target.closest(".control-group").addClass("error"); // for bootstrap2
     if (typeof CKEDITOR != 'undefined') {
         if (CKEDITOR) {
-            log("check for editor1", target);
+            flog("check for editor1", target);
             var name = target.attr("name");
             if (!name) {
                 name = target.attr("id");
             }
             editor = CKEDITOR.instances[name];
-            log("check for editor", name, editor);
+            flog("check for editor", name, editor);
             if (editor) {
-                log("add class", editor.container);
+                flog("add class", editor.container);
                 editor.container.addClass("errorField");
             }
         }

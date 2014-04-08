@@ -3,7 +3,7 @@
         <title>$view.title</title>
     </head>
     <body class="manageEmailJobLog">
-        <p class="alert alert-info">Click a row to see send attempts</p>
+        <p class="well">Click a row to see send attempts</p>
 
 	    <div class="panel panel-default">
 		    <div class="panel-heading">
@@ -11,39 +11,47 @@
 			    Total Emails: <span class="badge badge-info">$page.model.items.size()</span>
 		    </div>
 		    <div class="panel-body">
-			    <table class="table table-bordered table-striped table-hover">
-				    <thead>
-					    <tr>
-						    <th>To</th>
-						    <th>Date</th>
-						    <th>Subject</th>
-						    <th>Status</th>
-					    </tr>
-				    </thead>
-				    <tbody>
-					    #foreach($item in $page.model.items)
-					    <tr class="item">
-						    <td>$item.recipientAddress</td>
-						    <td>$formatter.formatAge( $item.sendStatusDate )</td>
-						    <td>$item.subject</td>
-						    <td>$item.statusText</td>
-					    </tr>
-					    #foreach($attempt in $item.emailSendAttempts)
-					    <tr class="attempt">
-						    <td></td>
-						    <td colspan="3">$attempt.status - $formatter.formatAge( $attempt.statusDate )</td>
-					    </tr>
-					    #end
-					    #end
-				    </tbody>
-			    </table>
+			    <div class="table-responsive">
+				    <table class="table table-striped table-hover">
+				        <colgroup>
+				            <col width="25%" />
+				            <col width="20%" />
+				            <col width="40%" />
+				            <col width="15%" />
+				        </colgroup>
+					    <thead>
+						    <tr>
+							    <th>To</th>
+							    <th>Date</th>
+							    <th>Subject</th>
+							    <th>Status</th>
+						    </tr>
+					    </thead>
+					    <tbody>
+						    #foreach($item in $page.model.items)
+						    <tr class="item">
+							    <td>$item.recipientAddress</td>
+							    <td>$formatter.formatAge( $item.sendStatusDate )</td>
+							    <td>$item.subject</td>
+							    <td>$item.statusText</td>
+						    </tr>
+						    #foreach($attempt in $item.emailSendAttempts)
+						    <tr class="attempt" style="display: none;">
+							    <td></td>
+							    <td colspan="3">$attempt.status - $formatter.formatAge( $attempt.statusDate )</td>
+						    </tr>
+						    #end
+						    #end
+					    </tbody>
+				    </table>
+			    </div>
 		    </div>
 	    </div>
         <script type="text/javascript">
             Bob.onDOMReady(function () {
                 $('.item').on('click', function() {
                     var tr = $(this);
-
+                    flog("to see send attempts", tr);
                     tr.nextUntil('.item').toggle(300);
                 });
             });

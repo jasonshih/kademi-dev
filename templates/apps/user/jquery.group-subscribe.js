@@ -143,8 +143,12 @@ function initSubscribeInitialState(container, config) {
                 flog(resp, config.group);
                 var optin = resp.data.optins[config.group];
                 flog("found", optin);
-                displaySubscribeState(container, config, optin.selected);
-                config.onInit(optin.selected);
+                if( optin ) {
+                    displaySubscribeState(container, config, optin.selected);
+                    config.onInit(optin.selected);
+                } else {
+                    alert("Warning: Could not find Opt-in mailing group: " + config.group);
+                }
             },
             error: function(resp) {
                 ajaxLoadingOff();

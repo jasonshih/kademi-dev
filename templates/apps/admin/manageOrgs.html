@@ -12,71 +12,82 @@
         <div id="manage-business-unit">
             <header class="clearfix">
                 <p class="pull-left">
-                    <a class="btn btn-primary btn-add-org" href="#"><i class="fa fa-plus"></i> Add new business units</a>
+                    <a class="btn btn-sm btn-success btn-add-org" href="#"><i class="fa fa-plus"></i> Add new business units</a>
                 </p>
                 <div class="pull-right">
                     <p class="btn-group">
-                        <a class="btn btn-warning" href="#modal-upload-csv" data-toggle="modal" data-target="#modal-upload-csv">Upload CSV</a>
-                        <a class="btn btn-info" href="orgs.csv">Open CSV</a>
+                        <a class="btn btn-sm  btn-warning" href="#modal-upload-csv" data-toggle="modal" data-target="#modal-upload-csv">Upload CSV</a>
+                        <a class="btn btn-sm btn-info" href="orgs.csv">Open CSV</a>
                     </p>
                     <p class="btn-group">
-                        <a class="btn btn-warning" href="#modal-upload-orgid-csv" data-toggle="modal">Upload OrgIDs CSV</a>
-                        <a class="btn btn-info" href="orgIds.csv">Open OrgIDs CSV</a>
+                        <a class="btn btn-sm btn-warning" href="#modal-upload-orgid-csv" data-toggle="modal">Upload OrgIDs CSV</a>
+                        <a class="btn btn-sm btn-info" href="orgIds.csv">Open OrgIDs CSV</a>
                     </p>
                 </div>
             </header>
-			
+
             <div class="panel panel-default">
-                <div class="panel-heading">
-                    <i class="clip-folder"></i>
-                    Business Units
-                </div>
+                <div class="panel-heading"><i class="clip-folder"></i> Business Units</div>
                 <div class="panel-body">
-                    <table id="search-results" class="table table-bordered table-striped table-hover table-data">
-                        <colgroup>
-                            <col />
-                            <col style="width: 10%" />
-                            <col style="width: 10%" />
-                            <col style="width: 10%" />
-                            <col style="width: 15%" />
-                            <col style="width: 120px" />
-                        </colgroup>
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Type</th>
-                                <th>Path</th>
-                                <th>Phone</th>
-                                <th>Address</th>
-                                <th class="action">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            #foreach($org in $page.searchResults)
-                            <tr>
-                                <td>$formatter.htmlEncode($org.title)</td>
-                                <td>$org.orgTypeName</td>
-                                <td>$org.parentPath</td>
-                                <td>$!org.phone</td>
-                                <td>$!org.address</td>
-                                <td class="action">
-                                    <div class="btn-group btn-group-sm">
-                                        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
-                                            <i class="clip-settings"></i>
-                                        </button>
-                                        <ul class="dropdown-menu pull-right" role="menu">
-	                                        <li><a class="btn-edit-org" role="button" href="$org.href">Edit details</a></li>
-                                            <li><a href="${org.href}viewDetails">View users and details</a></li>
-                                            <li><a href="${org.href}organisations">Manage child orgs</a></li>
-                                            <li class="divider"></li>
-                                            <li><a class="btn-delete-org" href="${org.href}">Delete this organisation</a></li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-                            #end
-                        </tbody>
-                    </table>
+                    <div class="clearfix form-horizontal">
+                        <div class="input-group input-group-sm col-md-8">
+                            <input type="text" id="org-query" class="form-control" placeholder="Search for organisations here" value="" /> 
+                            <span class="input-group-btn">
+                                <button class="btn btn-sm btn-default" type="button" data-type="clearer" data-target="#org-query">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </span>
+                        </div>
+                        
+                    </div>
+
+                    <div class="table-responsive">
+                        <table id="search-results" class="table table-striped table-hover">
+                            <colgroup>
+                                <col />
+                                <col style="width: 10%" />
+                                <col style="width: 10%" />
+                                <col style="width: 10%" />
+                                <col style="width: 15%" />
+                                <col style="width: 120px" />
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Path</th>
+                                    <th>Phone</th>
+                                    <th>Address</th>
+                                    <th class="action"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="searchResults" class="search-results">
+                                #foreach($org in $page.searchResults)
+                                <tr>
+                                    <td>$formatter.htmlEncode($org.title)</td>
+                                    <td>$org.orgTypeName</td>
+                                    <td>$org.parentPath</td>
+                                    <td>$!org.phone</td>
+                                    <td>$!org.address</td>
+                                    <td class="action">
+                                        <div class="btn-group btn-group-sm">
+                                            <button type="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown">
+                                                <i class="clip-settings"></i>
+                                            </button>
+                                            <ul class="dropdown-menu pull-right" role="menu">
+                                                <li><a class="btn-edit-org" role="button" href="$org.href">Edit details</a></li>
+                                                <li><a href="${org.href}viewDetails">View users and details</a></li>
+                                                <li><a href="${org.href}organisations">Manage child orgs</a></li>
+                                                <li class="divider"></li>
+                                                <li><a class="btn-delete-org" href="${org.href}">Delete this organisation</a></li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                                #end
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -100,7 +111,7 @@
                         <li>If you click "allow inserts" then any organisations in the spreadsheet which do not match existing orgs in the database will be inserted</li>
                     </ol>
                     <div class="upload">
-                        <div class="btn btn-sm btn-primary" id='do-upload-csv'></div>
+                        <div class="btn-upload" id='do-upload-csv'></div>
                         <br/>
                         <div class="allow-inserts">
                             <input type="checkbox" id="allow-inserts"/>
@@ -112,17 +123,19 @@
                             <strong>No. updated:</strong> <span class="badge badge-success num-updated">-</span>
                             <strong>Unmatched:</strong> <span class="badge badge-danger num-unmatched">-</span>
                         </p>
-                        <table class="table table-striped table-hover table-condensed">
-                            <tbody>
-                                <tr>
-                                    <td></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover table-condensed">
+                                <tbody>
+                                    <tr>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
                 </div>
             </div>
 
@@ -145,24 +158,26 @@
                         <li>The server processes about 1000 rows per minute, so larger databases can take a while</li>
                     </ol>
                     <div class="upload">
-                        <div class="btn btn-sm btn-primary" id='do-upload-orgid-csv'></div>
+                        <div class="" id='do-upload-orgid-csv'></div>
                     </div><br />
                     <div class="upload-results">
                         <p>
                             <strong>No. updated:</strong> <span class="badge badge-success num-updated">-</span>
                             <strong>Invalid rows:</strong> <span class="badge badge-danger num-errors">-</span>
                         </p>
-                        <table class="table table-striped table-hover table-condensed">
-                            <tbody>
-                                <tr>
-                                    <td></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover table-condensed">
+                                <tbody>
+                                    <tr>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
                 </div>
             </div>
 
@@ -174,26 +189,26 @@
                 <div class="modal-body">
                     <form method="post" action="" class="form-horizontal">
                         <div class="form-group">
-                            <label for="orgTitle" class="control-label col-md-4">ID</label>
+                            <label for="orgTitle" class="control-label col-md-3">ID</label>
                             <div class="col-md-8">
                                 <input type="text" class="form-control" name="orgId" id="orgId" placeholder="A unique id. To enabled updating from spreadsheet" />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="orgTitle" class="control-label col-md-4">Admin ID</label>
+                            <label for="orgTitle" class="control-label col-md-3">Admin ID</label>
                             <div class="col-md-8">
                                 <input type="text" class="form-control" name="adminDomain" id="adminDomain" placeholder="Unique in all of fuse. Used to identify the admin console" />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="orgTitle" class="control-label col-md-4">Name</label>
+                            <label for="orgTitle" class="control-label col-md-3">Name</label>
                             <div class="col-md-8">
                                 <input type="text" class="form-control required" name="title" id="orgTitle" placeholder="User friendly name for the organisation" />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="orgTypeName" class="control-label col-md-4">Type</label>
-                            <div class="col-md-8">
+                            <label for="orgTypeName" class="control-label col-md-3">Type</label>
+                            <div class="col-md-4">
                                 <select name="orgTypeName" class="form-control" id="orgTypeName">
                                     <option value="">[None]</option>
                                     #foreach($orgType in $page.orgTypes)
@@ -203,31 +218,31 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="orgPhone" class="control-label col-md-4">Phone</label>
+                            <label for="orgPhone" class="control-label col-md-3">Phone</label>
                             <div class="col-md-8">
                                 <input type="text" class="form-control" name="phone" id="orgPhone" />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="orgAddress" class="control-label col-md-4">Address</label>
+                            <label for="orgAddress" class="control-label col-md-3">Address</label>
                             <div class="col-md-8">
                                 <input type="text" class="form-control" name="address" id="orgAddress" />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="orgAddress2" class="control-label col-md-4">Address Line2</label>
+                            <label for="orgAddress2" class="control-label col-md-3">Address Line2</label>
                             <div class="col-md-8">
                                 <input type="text" class="form-control" name="addressLine2" id="orgAddress2" />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="orgState" class="control-label col-md-4">State</label>
+                            <label for="orgState" class="control-label col-md-3">State</label>
                             <div class="col-md-8">
                                 <input type="text" class="form-control" name="addressState" id="orgState" />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="orgPostcode" class="control-label col-md-4">Postcode</label>
+                            <label for="orgPostcode" class="control-label col-md-3">Postcode</label>
                             <div class="col-md-8">
                                 <input type="text" class="form-control" name="postcode" id="orgPostcode" />
                             </div>
@@ -235,8 +250,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
-                    <button class="btn btn-primary" data-type="form-submit" type="button">Save</button>
+                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                    <button class="btn btn-sm btn-primary" data-type="form-submit" type="button">Save</button>
                 </div>
             </div>
             <script type="text/javascript">

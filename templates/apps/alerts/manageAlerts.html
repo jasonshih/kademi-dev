@@ -1,0 +1,78 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Manage Dashboard Messages</title>
+    </head>
+    <body class="manageModulePages">
+        <p class="well">
+            You can set messages to appear on the dashboards for different groups in each website. Just click on the group below to go to the edit page.
+        </p>
+
+        <div class="btn-group">
+            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+                Create new alert <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                #foreach($website in $page.find("/websites").children.ofType.website)
+                <li><a href="${website.live.href}alert-new">Create alert for website: $website.name</a></li>
+                #end
+            </ul>
+        </div>
+        
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <colgroup>
+                    <col />
+                    <col />
+                    <col style="width: 120px;" />
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th class="title" rel="asc">Title</th>
+                        <th class="action"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    #set($alerts = $page.alerts)
+                    #if( $alerts.isEmpty() )
+                    <tr>
+                        <td colspan='2'>There are currently no dashboard alerts</td>
+                    </tr>
+                    #else
+                    #foreach($alert in $alerts)
+                    <tr>
+                        <td class="lead">
+                            #if($alert.control == "enabled" )
+                            <i class="fa fa-check-circle text-success"></i>
+                            #elseif($alert.control == "event" )
+                            <i class="glyphicon glyphicon-flash text-success"></i>
+                            #else
+                            <i class="fa fa-exclamation-circle text-danger"></i>
+                            #end                                          
+                        </td>
+                        <td><a href="$alert.href">$alert.description</a></td>
+                        <td class="action">
+                            <div class="btn-group btn-group-sm">
+                                <a href="$alert.href" class="btn btn-sm btn-primary btn-sm"> <i class="fa fa-edit"></i> Edit
+                                </a>
+                                <button class="btn btn-sm btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu pull-right" role="menu">
+                                    <li role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="$alert.href" class="Edit EditReward"><i class="fa fa-edit"></i> Edit</a>
+                                    </li>
+                                    <li role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="$alert.href" class="Delete DeleteReward"><i class="fa fa-times"></i> Delete</a>
+                                    </li>
+                                </ul>
+                            </div>                                                                               
+                        </td>
+                    </tr>
+                    #end
+                    #end
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>

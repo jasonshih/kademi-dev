@@ -33,7 +33,7 @@
             <br/>
             <form method="POST" action="maint" class="maintForm" >
                 <input type="text" name="dateOffsetMinutes" value="$!{page.dateOffsetMinutes}" />
-                <button class="Btn">Submit</button>
+                <button class="btn-sm btn btn-default">Submit</button>
             </form>
 
             <p>Current date/time: <span class="now">$page.currentDateService.now</span> <i>adjusted by offset</i></p>
@@ -50,7 +50,7 @@
             <br/>
             <form method="POST" action="maint" class="runTasksForm" >
                 <input type="hidden" name="runScheduledTasks" value="true"/>
-                <button class="Btn" type="submit">Run Scheduled Tasks</button>
+                <button class="btn-sm btn btn-default" type="submit">Run Scheduled Tasks</button>
             </form>
             <br/>
             <h4>Task history</h4>

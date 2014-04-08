@@ -9,123 +9,123 @@
         <p class="pull-right"><span class="badge badge-success">Page</span>/<span class="badge badge-info">Forum</span></p>
         <div class="tabbable">
 	        <ul class="nav nav-tabs tab-bricky">
-		        <li>
-			        <a data-toggle="tab" href="#posts">Recent posts</a>
-		        </li>
-		        <li>
-			        <a data-toggle="tab" href="#reports">Reports</a>
-		        </li>
+		        <li><a data-toggle="tab" href="#posts">Recent posts</a></li>
+		        <li><a data-toggle="tab" href="#reports">Reports</a></li>
 	        </ul>
 	        <div class="tab-content">
 		        <!-- Start content of Recent posts tab -->
 		        <div id="posts" class="tab-pane">
-			        <table class="table table-bordered table-striped table-hover table-data">
-				        <colgroup>
-					        <col />
-					        <col />
-					        <col />
-					        <col />
-					        <col style="width: 60px" />
-				        </colgroup>
-				        <thead>
-					        <tr>
-						        <th>Content</th>
-						        <th>Name</th>
-						        <th>Time</th>
-						        <th>Author</th>
-						        <th class="action">Action</th>
-					        </tr>
-				        </thead>
-				        <tbody>
-					        #set($posts = $page.latestPosts)
-					        #foreach($post in $posts)
-					            <tr>
-						            <td>$post.note</td>
-						            <td>
-							            #if( $post.forumTitle )
-							                <a target="_blank" class="btn btn-xs btn-info" href="http://${post.contentDomain}$post.contentHref?${page.cookieAuthParams}">$post.forumTitle</a>
-							            #else
-							                <a target="_blank" class="btn btn-xs btn-success" href="http://${post.contentDomain}$post.contentHref?${page.cookieAuthParams}">$post.contentTitle</a>
-							            #end
-						            </td>
-						            <td><abbr title="$formatter.formatDateISO8601($post.date)" class="timeago">$post.date</abbr></td>
-						            <td><a href="$post.user.href">$post.user.name</a></td>
-						            <td class="action">
-							            <div class="btn-group btn-group-sm">
-								            <button class="btn btn-success dropdown-toggle" data-toggle="dropdown" type="button">
-									            <i class="fa fa-cog"></i>
-								            </button>
-								            <ul class="dropdown-menu pull-right">
-									            <li><a href="$post.id" title="Edit this post" class="btn-edit-post"><span class="Hidden">Edit this post</span></a></li>
-									            <li><a href="$post.id" title="Delete this post" class="btn-delete-post"><span class="Hidden">Delete this post</span></a></li>
-								            </ul>
-							            </div>
-						            </td>
-					            </tr>
-					        #end
-				        </tbody>
-			        </table>
+			        <div class="table-responsive">
+				        <table class="table table-striped table-hover">
+					        <colgroup>
+						        <col />
+						        <col />
+						        <col />
+						        <col />
+						        <col style="width: 60px" />
+					        </colgroup>
+					        <thead>
+						        <tr>
+							        <th>Content</th>
+							        <th>Name</th>
+							        <th>Time</th>
+							        <th>Author</th>
+							        <th class="action"></th>
+						        </tr>
+					        </thead>
+					        <tbody>
+						        #set($posts = $page.latestPosts)
+						        #foreach($post in $posts)
+						            <tr>
+							            <td>$post.notes</td>
+							            <td>
+								            #if( $post.forumTitle )
+								                <a target="_blank" class="btn btn-xs btn-info" href="http://${post.contentDomain}$post.contentHref?${page.cookieAuthParams}">$post.forumTitle</a>
+								            #else
+								                <a target="_blank" class="btn btn-xs btn-success" href="http://${post.contentDomain}$post.contentHref?${page.cookieAuthParams}">$post.contentTitle</a>
+								            #end
+							            </td>
+							            <td><abbr title="$formatter.formatDateISO8601($post.date)" class="timeago">$post.date</abbr></td>
+							            <td><a href="$post.user.href">$post.user.name</a></td>
+							            <td class="action">
+								            <div class="btn-group btn-group-sm">
+									            <button class="btn btn-success dropdown-toggle" data-toggle="dropdown" type="button">
+										            <i class="fa fa-cog"></i>
+									            </button>
+									            <ul class="dropdown-menu pull-right">
+										            <li><a href="$post.id" title="Edit this post" class="btn-edit-post"><span class="Hidden">Edit this post</span></a></li>
+										            <li><a href="$post.id" title="Delete this post" class="btn-delete-post"><span class="Hidden">Delete this post</span></a></li>
+									            </ul>
+								            </div>
+							            </td>
+						            </tr>
+						        #end
+					        </tbody>
+				        </table>
+			        </div>
 		        </div>
 		        <!-- End content of Recent posts tab -->
 		        <!-- Start content of Reports tab -->
 		        <div id="reports" class="tab-pane">
-			        <table class="table table-bordered table-striped table-hover table-data">
-				        <colgroup>
-					        <col />
-					        <col />
-					        <col />
-					        <col />
-					        <col />
-					        <col />
-					        <col />
-					        <col style="width: 60px" />
-				        </colgroup>
-				        <thead>
-					        <tr>
-						        <th>Content</th>
-						        <th>Page/Forum</th>
-						        <th>Time</th>
-						        <th>Author</th>
-						        <th>Reported by</th>
-						        <th>Comment by reportee</th>
-						        <th>Report Category</th>
-						        <th class="action">Action</th>
-					        </tr>
-				        </thead>
-				        <tbody>
-					        #set($reports = $page.postReports)
-					        #foreach($report in $reports)
-						        #set($post = $report.post)
+			        <div class="table-responsive">
+				        <table class="table table-striped table-hover">
+					        <colgroup>
+						        <col />
+						        <col />
+						        <col />
+						        <col />
+						        <col />
+						        <col />
+						        <col />
+						        <col style="width: 60px" />
+					        </colgroup>
+					        <thead>
 						        <tr>
-							        <td>$post.notes</td>
-							        <td>
-								        #if( $post.forumTitle )
-								            <a target="_blank" class="btn btn-xs btn-info" href="http://${post.contentDomain}$post.contentHref?${page.cookieAuthParams}">$post.forumTitle</a>
-								        #else
-								            <a target="_blank" class="btn btn-xs btn-success" href="http://${post.contentDomain}$post.contentHref?${page.cookieAuthParams}">$post.contentTitle</a>
-								        #end
-							        </td>
-							        <td><abbr title="$formatter.formatDateISO8601($post.date)" class="timeago">$post.date</abbr></td>
-							        <td><a href="$post.user.href">$post.user.name</a></td>
-							        <td><a href="$report.reportedBy.href">$report.reportedBy.name</a></td>
-							        <td>$report.comments</td>
-							        <td>$report.category</td>
-							        <td class="action">
-								        <div class="btn-group btn-group-sm">
-									        <button class="btn btn-success dropdown-toggle" data-toggle="dropdown" type="button">
-										        <i class="fa fa-cog"></i>
-									        </button>
-									        <ul class="dropdown-menu pull-right">
-										        <li><a href="$report.id" title="Dismiss report" class="btn-dismiss-report"><span class="Hidden">Dismiss report</span></a></li>
-										        <li><a href="$post.id" title="Edit this post" class="btn-edit-post"><span class="Hidden">Edit this post</span></a></li>
-										        <li><a href="$report.id" title="Delete this post" class="btn-delete-report"><span class="Hidden">Delete this post</span></a></li>
-									        </ul>
-								        </div>
-							        </td>
+							        <th>Content</th>
+							        <th>Page/Forum</th>
+							        <th>Time</th>
+							        <th>Author</th>
+							        <th>Reported by</th>
+							        <th>Comment by reportee</th>
+							        <th>Report Category</th>
+							        <th class="action"></th>
 						        </tr>
-					        #end
-				        </tbody>
-			        </table>
+					        </thead>
+					        <tbody>
+						        #set($reports = $page.postReports)
+						        #foreach($report in $reports)
+							        #set($post = $report.post)
+							        <tr>
+								        <td>$post.notes</td>
+								        <td>
+									        #if( $post.forumTitle )
+									            <a target="_blank" class="btn btn-xs btn-info" href="http://${post.contentDomain}$post.contentHref?${page.cookieAuthParams}">$post.forumTitle</a>
+									        #else
+									            <a target="_blank" class="btn btn-xs btn-success" href="http://${post.contentDomain}$post.contentHref?${page.cookieAuthParams}">$post.contentTitle</a>
+									        #end
+								        </td>
+								        <td><abbr title="$formatter.formatDateISO8601($post.date)" class="timeago">$post.date</abbr></td>
+								        <td><a href="$post.user.href">$post.user.name</a></td>
+								        <td><a href="$report.reportedBy.href">$report.reportedBy.name</a></td>
+								        <td>$report.comments</td>
+								        <td>$report.category</td>
+								        <td class="action">
+									        <div class="btn-group btn-group-sm">
+										        <button class="btn btn-success dropdown-toggle" data-toggle="dropdown" type="button">
+											        <i class="fa fa-cog"></i>
+										        </button>
+										        <ul class="dropdown-menu pull-right">
+											        <li><a href="$report.id" title="Dismiss report" class="btn-dismiss-report"><span class="Hidden">Dismiss report</span></a></li>
+											        <li><a href="$post.id" title="Edit this post" class="btn-edit-post"><span class="Hidden">Edit this post</span></a></li>
+											        <li><a href="$report.id" title="Delete this post" class="btn-delete-report"><span class="Hidden">Delete this post</span></a></li>
+										        </ul>
+									        </div>
+								        </td>
+							        </tr>
+						        #end
+					        </tbody>
+				        </table>
+			        </div>
 		        </div>
 		        <!-- End content of Reports tab -->
 	        </div>
@@ -145,7 +145,7 @@
 	        </div>
 	        <div class="modal-footer">
 		        <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
-		        <button class="btn btn-primary" data-type="form-submit" type="button">Save</button>
+		        <button class="btn btn-primary btn-save-post" data-type="form-submit" type="button">Save</button>
 	        </div>
         </div>
 

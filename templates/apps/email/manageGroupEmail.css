@@ -38,15 +38,8 @@
 	margin: 0 auto;
 }
 
-#status .progress .stats {
-	position: absolute;
-	left: 0;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	font-weight: bold;
-	color: #fff;
-	text-shadow: 0 0 1px #000;
+.progress-bar {
+    padding-top: 10px;
 }
 
 #emails {

@@ -6,7 +6,7 @@
         <script type="text/javascript" src="/static/js/fullcalendar-1.6.4.js">//</script>
         <link href="calendars.css" rel="stylesheet" type="text/css" />
     </head>
-    <body>
+    <body class="add-container">
         <h3>Upcoming events</h3>
         <div class="row">
             <div class="calendar-events col-lg-6">
@@ -26,7 +26,7 @@
                         </div>
                     </header>
                     <div class="calendar-event-text">
-                        <a href="$event.name" class="btn btn-success pull-right">Register</a>
+                        <a href="$event.name" class="btn btn-sm btn-success pull-right">Register</a>
                         $event.description
                     </div>
                 </article>
@@ -42,7 +42,7 @@
 
 
         <script type="text/javascript">
-            Bob.onDOMReady(function () {
+            $(function () {
                 initCalendar();
             });
         </script>
