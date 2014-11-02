@@ -71,7 +71,7 @@ function initFiles() {
         confirmDelete(href, name, function() {
             log("deleted", tr);
             tr.remove();
-            alert("Deleted " + name);
+            Msg.success("Deleted " + name);
         });
     });
     $("#fileList tbody").on("click", "a.rename", function(e) {
@@ -124,16 +124,16 @@ function showImportFromUrl() {
             success: function(data) {
                 log("response", data);
                 if (!data.status) {
-                    alert("Failed to import");
+                    Msg.error("Failed to import");
                     return;
                 } else {
-                    alert("Importing has finished");
+                    Msg.success("Importing has finished");
                     window.location.reload();
                 }
             },
             error: function(resp) {
                 log("error", resp);
-                alert("err");
+                Msg.error('err');
             }
         });
     }

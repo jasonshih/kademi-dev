@@ -2,22 +2,41 @@
     <head>
         <title>$view.title</title>
         <link href="manageGroupEmail.css" rel="stylesheet" type="text/css" />
-        <link href="manageEmail.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="manageGroupEmail.js">//</script>
         <script type="text/javascript" src="manageEmail.js">//</script>
     </head>
     <body>
         <form name="frmDetails" action="." method="post" class="form-horizontal">
             <div class="page-validation"></div>
+
+            <div class="btn-group pull-right page-action" style="margin-left: 15px">
+                <button class="btn btn-sm btn-success btn-sent-test">
+                    <span class="glyphicon glyphicon-send"></span>
+                    Send test
+                </button>
+                <button type="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown">
+                    <span class="caret"></span>
+                    <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu pull-right" role="menu">
+                    <li><a href="#" class="btn-sent-test-choose">Enter recipient address</a></li>
+                </ul>
+            </div>                        
+
             <div id="status-tools" class="$page.status page-action">
                 <div class="pull-right">
-                    <button class="btn btn-sm btn-primary Draft">Save Changes</button>
+                    <button class="btn btn-sm btn-primary Draft">
+                        <span class="glyphicon glyphicon-floppy-disk"></span>
+                        Save Changes
+                    </button>
                     <span class="Completed">This email has been sent.</span>
                     <span class="Preparing">Preparing..</span>
                     <span class="Running">Job is running..</span>
-                    <a class="Running Completed" href="log.html">See Log</a>
-                </div>
+                    <span class="Canceled">Job canceled</span>
+                    <a class="Running Completed Canceled" href="log.html">See Log</a>                                           
+                </div>            
             </div>
+
             <div class="tabbable">
                 <ul class="nav nav-tabs tab-bricky">
                     <li class=""><a data-toggle="tab" href="#sendInfo">Send information</a></li>
@@ -58,8 +77,7 @@
                     <div id="recipients" class="tab-pane">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <i class="clip-chk">$formatter.checkbox("includeUser", "includeUser", $page.trigger.includeUser, "true")</i>
-                                <label for="includeUser">Include the user that cause the event</label>
+                                Select which groups to send to and/or exclude
                             </div>
                             <div class="panel-body">
                                 <button class="btn btn-sm btn-success btn-add-group" data-toggle="modal" data-target="#modal-choose-group"><i class="fa fa-plus"></i> Add recipient groups</button>
@@ -88,7 +106,10 @@
                                     #end
                                 </div>
                                 <p>&nbsp;</p>
-                                <button class="btn btn-sm btn-success btn-show-recipients"> Show recipients</button>
+                                <button class="btn btn-sm btn-info btn-show-recipients">
+                                    <span class="fa fa-users"></span>
+                                    Show recipients
+                                </button>
                                 <hr class="hr-sm" />
                                 <div class="recipients-wrapper hide">
                                     <div class="table-responsive">
@@ -177,30 +198,37 @@
                             <label class="control-label col-md-2" for="themeSiteId">Choose a template</label>
                             <div class="col-md-4">
                                 <select name="themeSiteId" id="themeSiteId" class="form-control">
-                                    #foreach($website in $page.organisation.websites)
+                                    #foreach($website in $page.websites)
                                     $formatter.option($website.id, $website.name, $page.themeSiteId)
                                     #end
                                 </select>
                             </div>
                         </div>
+
                         <div class="form-group">
-                            <div class="col-md-10 col-sm-offset-2">
+                            <div class="col-md-12">
                                 <textarea class="htmleditor" cols="100" name="html" rows="20" placeholder="">$!page.html</textarea>
                             </div>
                         </div>
 
-                        $formatter.checkbox("passwordReset", "passwordReset", $page.job.passwordReset, "true")
-                        <label for="passwordReset" style="float: none">Password reset. Only send to users without a password</label>
-                        <div class="panel-toggled" data-toggled="display" data-actor="#passwordReset">
-                            <div class="form-group">
-                                <div class="col-md-12">
-                                    <div class="input-group">
-                                        <span class="input-group-addon">Reset password link text:</span>
-                                        <input type="text" value="$!page.job.passwordResetLinkText" id="passwordResetLinkText" placeholder="Please enter the text of the password reset link" class="form-control" name="passwordResetLinkText" />
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                $formatter.checkbox("passwordReset", "passwordReset", $page.job.passwordReset, "true")
+                                <label for="passwordReset" style="float: none">Password reset. Only send to users without a password</label>
+                                <p>Use this to invite new users to your site, they will be given a link that prompts them to create a password. You can use it multiple times and it will only be sent to users who have not registered.</p>
+
+                                <div class="panel-toggled" data-toggled="display" data-actor="#passwordReset">
+                                    <div class="form-group">
+                                        <div class="col-md-6">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">Reset password link text:</span>
+                                                <input type="text" value="$!page.job.passwordResetLinkText" id="passwordResetLinkText" placeholder="Please enter the text of the password reset link" class="form-control" name="passwordResetLinkText" />
+                                            </div>
+                                            <span class="help-block">
+                                                <i class="fa fa-info-circle"></i> Eg: Click here to get started!
+                                            </span>
+                                        </div>
                                     </div>
-                                    <span class="help-block">
-                                        <i class="fa fa-info-circle"></i> Eg: Click here to get started!
-                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -216,18 +244,27 @@
                             <p>&nbsp;</p>
                         </div>
                         <div>
-                            <h4>Before you send be sure to check your email information, message content and recipients.</h4>
-                            <p>
-                                <button class="btn btn-info btn-preview-email" type="button">PREVIEW YOUR EMAIL</button>
-                            </p>
+                            <h3>Before you send:</h3>
+                            <p><span class="label label-info">PREVIEW</span> Preview the email using the 'Send test' button above</p>
+                            <p><span class="label label-info">CHECK</span> Use the 'Show Recipients' button on the <a href='#recipients'>recipients</a> tab to check who the email will be sent to</p>
                             <p>&nbsp;</p>
                             <p>When you are ready click the 'Send Now' button below and the system will start to send out your email.<br />Once the send process starts you can navigate away from this page without affecting your send.</p>
                             <p>If you choose to navigate away from this page you can still view the send results by click on the<br />info button from the email list page.</p>
-                            <p><button class="btn btn-lg btn-primary btn-send-email" type="button">SEND NOW</button></p>
+                            <p>
+                                <button class="btn btn-lg btn-danger btn-send-email" type="button">
+                                    <span class='fa fa-envelope'></span>
+                                    SEND NOW
+                                </button>
+                            </p>
                         </div>
                         #else
                         <p>&nbsp;</p>
+                        #if( $page.status == "Cancelled" )
+                        <h4>Email sending was cancelled</h4>
+                        #else
                         <h4>Email has been sent, or is sending</h4>
+
+                        #end
                         <p>&nbsp;</p>
                         #end
                     </div>
@@ -241,14 +278,20 @@
 
                         <div class="send-progress">
                             <div class="status-wrapper">
-                                <h4 class="status_p text-info">Send in progress</h4>
-                                <h4 class="status_c text-success">Job completed</h4>
-                                <p><small>You may navigate away from this page.</small></p>
+                                <h4 class="status status_p text-info">Send in progress</h4>
+                                <div class="status status_p">
+                                    <button class="btn btn-lg btn-danger btn-cancel">
+                                        <span class="glyphicon glyphicon-stop"></span>
+                                        Cancel
+                                    </button>
+                                </div>
+                                <h4 class="status status_c text-success">Job completed</h4>
+                                <p class="status status_p"><small>You may navigate away from this page.</small></p>
                             </div>
                             <div id="open-rate">
                                 <h3>Open rate <span class="label label-info">$page.openRate</span></h3>
                             </div>
-                            <div class="progress progress-striped">
+                            <div class="status status_p progress progress-striped">
                                 <div class="progress-bar"></div>
                                 <div class="stats"></div>
                             </div>
@@ -266,14 +309,11 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
-                    <!-- Start content of Status tab -->
                 </div>
             </div>
         </form>
@@ -329,8 +369,48 @@
             </div>
         </div>
 
+        <div id="modal-send-test" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                <h4 class="modal-title">Send test</h4>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="$page.path" class="form-horizontal">
+                    <input type="hidden" name="sendTest" value="true"/>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="name">Recipient</label>
+                        <div class="col-md-8">
+                            <input type="text" name="recipient" value="" placeholder="An email address" class="required email form-control" />
+                            <p>A single email will be sent to this address</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="name">Target</label>
+                        <div class="col-md-8">
+                            <input type="text" name="targetProfile" value="" placeholder="Email address of user to generate email for" class="required email form-control" />
+                            <p>This profile will be used to generate the content of the email, ie for any dynamic templating</p>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                <button class="btn btn-sm btn-success" data-type="form-submit" type="button"><i class="glyphicon glyphicon-send"></i> Send</button>
+            </div>
+        </div>
+
+        <div id="modal-send-test-progress" class="modal modal-lg fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                <h4 class="modal-title">Test send progress</h4>
+            </div>
+            <div class="modal-body" id="send-test-body">
+            </div>
+        </div>        
+
         <script type="text/javascript">
-            Bob.onDOMReady(function() {
+            $(function () {
                 initManageGroupEmail();
                 //initEditEmailPage();
             });

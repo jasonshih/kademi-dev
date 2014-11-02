@@ -2,23 +2,22 @@
 
 /**
  *  Editor support: Note that this relies on a global variable called toolbarSets
- *  
+ *
  *  A default is defined in toolbars.js. You should override that file in your
  *  application to get the toolbars you want
  */
 
-CKEDITOR_BASEPATH = "/static/ckeditor431/";
-
+CKEDITOR_BASEPATH = "/static/ckeditor440/";
+var ADDED_EXTRA_CSS = false;
 
 // Templates should push theme css files into this array, so they will be included in the editor
 var themeCssFiles = new Array();
 
-
-Array.max = function(array) {
+Array.max = function (array) {
     return Math.max.apply(Math, array);
 };
 
-Array.min = function(array) {
+Array.min = function (array) {
     return Math.min.apply(Math, array);
 };
 
@@ -49,14 +48,14 @@ function initTheme() {
     initVideos();
 
     flog("initTheme: run page init functions", pageInitFunctions.length);
-    $.each(pageInitFunctions, function(i, f) {
+    $.each(pageInitFunctions, function (i, f) {
         flog("run function" + i);
         pageInitFunctions[i]();
         flog("done run function", i);
 
     });
 
-    $(".DropdownWrapper").click(function(e, node) {
+    $(".DropdownWrapper").click(function (e, node) {
         flog("initDropDown click", e);
         var div = $(e.target).closest("div.DropdownControl");
         flog("dropdown", $(".DropdownContent", div));
@@ -70,16 +69,16 @@ function initLoginDropDown() {
     flog("init login", $(".Login"));
     var login = $(".Login");
     var dropdown = login.find(".dropBox");
-    login.find("> a").click(function(e) {
+    login.find("> a").click(function (e) {
         e.preventDefault();
         e.stopPropagation();
         log("hide1", e.target);
         dropdown.toggle(300);
     });
-    dropdown.click(function(e) {
+    dropdown.click(function (e) {
         e.stopPropagation();
     });
-    $("body").click(function() {
+    $("body").click(function () {
         if (dropdown.is(":visible")) {
             log("hide2");
             dropdown.toggle(300);
@@ -87,9 +86,8 @@ function initLoginDropDown() {
     });
 }
 
-
 function initHelp() {
-    $(".helpIcon").click(function(e) {
+    $(".helpIcon").click(function (e) {
 
         e.preventDefault();
 
@@ -99,7 +97,6 @@ function initHelp() {
         window.open(href);
     });
 }
-
 
 function initNav() {
     var bodyClasses = jQuery("body").attr("class");
@@ -113,7 +110,7 @@ function initNav() {
 
 function initFontSwitching() {
     log("initFontSwitching");
-    $(".ZoomOut").click(function() {
+    $(".ZoomOut").click(function () {
         var currentFontSize = $('html').css('font-size');
         var currentFontSizeNum = parseFloat(currentFontSize, 10);
         var newFontSize = currentFontSizeNum * 1.2;
@@ -121,7 +118,7 @@ function initFontSwitching() {
         log("ZoomOut", newFontSize);
         return false;
     });
-    $(".ZoomIn").click(function() {
+    $(".ZoomIn").click(function () {
         var currentFontSize = $('html').css('font-size');
         var currentFontSizeNum = parseFloat(currentFontSize, 10);
         var newFontSize = currentFontSizeNum / 1.2;
@@ -130,7 +127,7 @@ function initFontSwitching() {
         return false;
     });
 
-    $(".ZoomReset").click(function() {
+    $(".ZoomReset").click(function () {
         var newFontSize = "1em";
         $('html').css('font-size', newFontSize);
         log("ZoomReset", newFontSize);
@@ -154,15 +151,13 @@ function getSavedFontSize() {
     return $.cookie("font-size");
 }
 
-
-
 /**
  * Make sure you push any required css files into "themeCssFiles" before calling
- * 
+ *
  * See /static/js/toolbars.js
  */
 function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
-    flog("initHtmlEditors: elements=", elements);
+    flog("initHtmlEditors: elements=", elements, "editorSkin", editorSkin);
 //    if (!$('.htmleditor').ckeditor) {
 //        log("ckeditor jquery adapter is not loaded");
 //        return;
@@ -176,12 +171,18 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
     if (!removePlugins) {
         removePlugins = standardRemovePlugins;
     }
-    flog("prepare html editors", elements);
-    elements.each(function(i, n) {
+    
+    flog("prepare html editors", elements, "using templates:", templatesPath); // see toolbars.js for templatesPath
+    elements.each(function (i, n) {
         var inp = $(n);
 
         var inputClasses = inp.attr("class");
         var id = inp.attr("id");
+        // Add id for editor if dont have id
+        if (!id) {
+            id = 'editor-' + Math.round(Math.random() * 123456789);
+            inp.attr('id', id);
+        }
         var toolbar = "Default";
         if (inputClasses) {
             c = inputClasses.split(" ");
@@ -197,13 +198,17 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
 
         //toolbar = "Default"; // HACK!!
         flog("using toolbar", toolbar, "=>", toolbarSets[toolbar]);
+        flog("using templates and styles", templatesPath, stylesPath);
+
+        themeCssFiles.push('/theme/assets/plugins/bootstrap/css/bootstrap.min.css');
+        themeCssFiles.push('/theme/assets/plugins/bootstrap/css/bootstrap-ckeditor.css');
 
         var config = {
             skin: editorSkin,
             allowedContent: true, // DISABLES Advanced Content Filter. This is so templates with classes are allowed through
             contentsCss: themeCssFiles, // mainCssFile,
             bodyId: "editor",
-            templates_files: ['/static/editor/templates.js'],
+            templates_files: [templatesPath],
             templates_replaceContent: false,
             toolbarGroups: toolbarSets[toolbar],
             extraPlugins: extraPlugins,
@@ -230,17 +235,27 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
             config.width = width;
         }
 
-        config.stylesSet = 'myStyles:/templates/themes/fuse/styles.js'; // TODO: needs to be configurable, based on theme
+        config.stylesSet = 'myStyles:' + stylesPath; // See toolbars.js, or overridden elsewhere
         flog("create editor", inp, config);
-        inp.ckeditor(config);
-    });
-}
+        var editor = inp.ckeditor(config).editor;
 
+        editor.on('instanceReady', function(evt) {
+            if (!ADDED_EXTRA_CSS) {
+                var cssCkeditorExtra = '/static/ckeditor440/skins/bootstrapck/editor_extra.css';
+                flog("loading ckeditor extra css");
+                $('<link href="' + cssCkeditorExtra + '" rel="stylesheet">').appendTo("head");
+
+                ADDED_EXTRA_CSS = true;
+            }
+        });
+    });
+
+}
 
 // Event for tab panel
 function initTabPanel() {
     log("initTabPanel");
-    $("nav.TabNav a").on("click", function(e) {
+    $("nav.TabNav a").on("click", function (e) {
         //e.preventDefault();
         log("initTabPanel:click1", this);
         var href = $(this).attr("href");
@@ -267,51 +282,51 @@ function initTabPanel() {
 }
 
 if (!String.prototype.trim) {
-    String.prototype.trim = function() {
+    String.prototype.trim = function () {
         return this.replace(/^\s+|\s+$/g, "");
     };
 }
 
 // Function check/uncheck for checkbox
-$.fn.check = function(is_check) {
+$.fn.check = function (is_check) {
     return $(this).attr('checked', is_check);
 };
 
 // Function disable/enable for form control
-$.fn.disable = function(is_disable) {
+$.fn.disable = function (is_disable) {
     return $(this).attr('disabled', is_disable);
 };
 
 // Ensure support for toISOString in all browsers
 if (!Date.prototype.toISOString) {
-    Date.prototype.toISOString = function() {
+    Date.prototype.toISOString = function () {
         function pad(n) {
             return n < 10 ? '0' + n : n
         }
+
         return this.getUTCFullYear() + '-'
-                + pad(this.getUTCMonth() + 1) + '-'
-                + pad(this.getUTCDate()) + 'T'
-                + pad(this.getUTCHours()) + ':'
-                + pad(this.getUTCMinutes()) + ':'
-                + pad(this.getUTCSeconds()) + 'Z';
+            + pad(this.getUTCMonth() + 1) + '-'
+            + pad(this.getUTCDate()) + 'T'
+            + pad(this.getUTCHours()) + ':'
+            + pad(this.getUTCMinutes()) + ':'
+            + pad(this.getUTCSeconds()) + 'Z';
     };
 }
 
-var typewatch = (function() {
+var typewatch = (function () {
     var timer = 0;
-    return function(callback, ms) {
+    return function (callback, ms) {
         clearTimeout(timer);
         timer = setTimeout(callback, ms);
     }
 })();
 
-
 /**
  * Finds the parent of the source, then looks inside it for a .modal and shows it
- * 
+ *
  * @param {type} source
  * @returns {Boolean}
- * 
+ *
  */
 function showAddItem(source) {
     flog("showAddItem: source=", source);
@@ -320,14 +335,13 @@ function showAddItem(source) {
     return false;
 }
 
-
 function initRotation() {
-    $(function() {
+    $(function () {
         log("initRotation");
         try {
             var rotateDegrees = 0;
 
-            setInterval(function() {
+            setInterval(function () {
                 if (rotateDegrees === 360) {
                     rotateDegrees = 0;
                 } else {
@@ -345,7 +359,9 @@ function initRotation() {
 }
 
 function initPlaceholder() {
-    $('input, textarea').placeholder();
+    if ($.placeholder) {
+        $('input, textarea').placeholder();
+    }
 }
 
 function initPseudoClasses() {
@@ -358,14 +374,14 @@ function initPseudoClasses() {
 }
 
 function initPrintLink() {
-    $("a.print").click(function(e) {
+    $("a.print").click(function (e) {
         e.preventDefault();
         window.print();
     });
 }
 
 function initDropDownHiding() {
-    $(".content").on("click", "a.ShowDialog", function(e) {
+    $(".content").on("click", "a.ShowDialog", function (e) {
         log("hi111");
         var _this = $(this);
         var dialog = _this.parent().find("> div");
@@ -375,7 +391,7 @@ function initDropDownHiding() {
     });
 
     // Hide DropDownContent which clicking elsewhere
-    $('body').click(function(event) {
+    $('body').click(function (event) {
         var target = $(event.target);
         if (target.closest("div.DropdownControl, .ShowDialog, .Dialogue").length > 0) {
             return; // don't handle events inside the dropdown'
@@ -391,27 +407,25 @@ function initDropDownHiding() {
 
 }
 
-
-
 /**
  *  Although this function is defined here in the theme, it should be called
  *  from each page.
- *  
+ *
  *  Each page should decide what url to pass as the pageUrl, as this can be used
  *  to share comments across pages (such as when the logical context is the folder
  *  the pages are in, rather then each page)
- *  
+ *
  *  Eg initComments(window.location.pathname);
  */
 function initComments(pageUrl) {
     log("initComments", pageUrl);
-    $(".hideBtn").click(function() {
+    $(".hideBtn").click(function () {
         var oldCommentsHidden = $("#comments:visible").length == 0;
         log("store new comments hidden", oldCommentsHidden);
         jQuery.cookie("commentsHidden", !oldCommentsHidden, {
             path: "/"
         });
-        $("#comments").toggle(100, function() {
+        $("#comments").toggle(100, function () {
             if (!oldCommentsHidden) {
                 $(".hideBtn a").text("Show comments");
                 $(".hideBtn a").addClass("ishidden");
@@ -432,7 +446,7 @@ function initComments(pageUrl) {
         $(".hideBtn a").addClass("ishidden");
     }
 
-    $("body").on("click", ".commentContainer textarea", function(e) {
+    $("body").on("click", ".commentContainer textarea", function (e) {
         $(e.target).closest("div").find(".commentControls").show();
     });
     $('.commentContainer textarea').css('overflow', 'hidden').autogrow()
@@ -444,7 +458,7 @@ function initComments(pageUrl) {
     };
 
     // This is for deferred logins, ie someone logs in after going to a page with comments
-    $('body').on('userLoggedIn', function(event, userUrl, userName) {
+    $('body').on('userLoggedIn', function (event, userUrl, userName) {
         currentUser.name = userName;
         currentUser.href = userUrl;
     });
@@ -452,7 +466,7 @@ function initComments(pageUrl) {
     $("#comments").comments({
         currentUser: currentUser,
         pageUrl: pageUrl,
-        renderCommentFn: function(user, date, comment) {
+        renderCommentFn: function (user, date, comment) {
             log("renderCommentFn", user);
             if (user == null) {
                 log("no user so dont render");
@@ -486,32 +500,32 @@ function initComments(pageUrl) {
     });
 }
 
-
 function initSelectAll() {
-    $("body").on("click", ".selectAll", function(e) {
+    flog("initSelectAll");
+    $("body").on("click", ".selectAll", function (e) {
         var node = $(e.target);
-        log("selectall", node, node.is(":checked"));
+        flog("selectall", node, node.is(":checked"));
         var chkName = node.attr("name");
         var checked = node.is(":checked");
-        checkBoxes = node.closest("table").find("tbody td input:[type=checkbox]:[name=" + chkName + "]");
+        checkBoxes = node.closest("table").find("tbody td input[type=checkbox][name=" + chkName + "]");
+        flog("check boxes", checkBoxes);
         if (checked) {
-            checkBoxes.attr("checked", "true");
+            checkBoxes.prop("checked", true);
         } else {
-            checkBoxes.removeAttr("checked");
+            checkBoxes.prop("checked", false);
         }
     });
 }
 
-
 /**
- *  Uses the new jwplayer and HLS. Replaces images with the video-jw class with a 
- *  jwPlayer control, which loads the video from a path either derived from 
+ *  Uses the new jwplayer and HLS. Replaces images with the video-jw class with a
+ *  jwPlayer control, which loads the video from a path either derived from
  *  the image src, or from the data-video-src attribute if present
  */
 function initVideos() {
     log("initVideos");
     doInitVideos();
-    $(document).on("pjaxComplete", function() {
+    $(document).on("pjaxComplete", function () {
         doInitVideos();
     });
 }
@@ -520,15 +534,15 @@ function doInitVideos() {
     var images = $(".video-jw");
     if (images.length === 0) {
         return;
-    }    
-    $.getScript("/static/jwplayer/jwplayer.js", function() {
+    }
+    $.getScript("/static/jwplayer/6.8/jwplayer.js", function () {
         jwplayer.key = "cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=";
         replaceImagesWithJWPlayer(images);
-    });    
+    });
 }
 
 function replaceImagesWithJWPlayer(images) {
-    images.each(function(i, n) {
+    images.each(function (i, n) {
         var img = $(n);
         var src = img.attr("data-video-src");
         var posterUrl = img.attr("src");
@@ -543,7 +557,6 @@ function replaceImagesWithJWPlayer(images) {
         buildJWPlayer(img, i + 10, src, posterUrl);
     });
 }
-
 
 function buildJWPlayer(itemToReplace, count, src, posterHref) {
     var h = itemToReplace.height();
@@ -560,22 +573,27 @@ function buildJWPlayer(itemToReplace, count, src, posterHref) {
     itemToReplace.replaceWith(div);
     var innerId = div.find(".jw-video").attr("id");
     jwplayer(innerId).setup({
-//        file: src,
-        flashplayer: "/static/jwplayer/jwplayer.flash.swf",
+        file: src,
+        flashplayer: "/static/jwplayer/6.8/jwplayer.flash.swf",
         height: h,
 //        image: posterHref,
         width: w,
-        playlist: [{
+        playlist: [
+            {
                 image: posterHref,
                 sources: [{
                         file: src
-                    }, {
+                    }
+                    , {
                         file: src + "/../alt-640-360.webm"
+                    }, {
+                        file: src + "/../alt-640-360.m4v"
                     }]
-            }],
-        primary: "flash"
+            }
+        ]
+        //,primary: "flash"
     });
-    jwplayer(innerId).onReady(function() {
+    jwplayer(innerId).onReady(function () {
         var wrapperId = innerId + "_wrapper";
         var wrapper = $("#" + wrapperId);
         wrapper.addClass("jwplayer-wrapper");

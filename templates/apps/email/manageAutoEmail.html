@@ -1,8 +1,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>$view.title</title>
-        <link href="manageAutoEmail.css" rel="stylesheet" type="text/css" />
-        <link href="manageEmail.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="/static/js/jquery.fileupload.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
         <script type="text/javascript" src="manageAutoEmail.js">//</script>
@@ -11,8 +9,23 @@
     <body class="manageAutoEmail">
         <form name="frmDetails" action="." method="post" class="form-horizontal">
             <div class="pull-right page-action">
-                <button class="btn btn-sm btn-primary" type="submit">Save changes</button>
-                <button class="btn btn-sm btn-info btn-sent-test" type="button">Send Test</button>
+                <button class="btn btn-sm btn-primary" type="submit">
+                    <span class="glyphicon glyphicon-floppy-disk"></span>
+                    Save changes
+                </button>
+                <div class="btn-group">
+                    <button class="btn btn-sm btn-success btn-sent-test" type="button">
+                        <span class="glyphicon glyphicon-send"></span>
+                        Send test
+                    </button>
+                    <button type="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown" type="button">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu pull-right" role="menu">
+                        <li><a href="#" class="btn-sent-test-choose">Enter recipient address</a></li>
+                    </ul>
+                </div>
             </div>
 
             <div class="tabbable">
@@ -21,7 +34,7 @@
                     <li><a data-toggle="tab" href="#triggers">Triggers</a></li>
                     <li><a data-toggle="tab" href="#action">Actions</a></li>
                     <li><a data-toggle="tab" href="#recipients">Recipients</a></li>
-                    <li><a data-toggle="tab" href="#history">History</a></li>
+                    <li><a data-toggle="tab" href="#history">Email History</a></li>
                 </ul>
                 <div class="tab-content">
                     <!-- Start content of General tab -->
@@ -107,13 +120,36 @@
 
                                 <hr/>
 
-                                <div class="form-group">
-                                    <label class="control-label col-md-4" for="conditionScriptXml">Advanced</label>
-                                    <div class="col-md-8">
-                                        <p>You can enter XML rules below, the trigger will only fire if this evaluates to true</p>
-                                        <textarea name="conditionScriptXml" id="conditionScriptXml" class="form-control" rows="5">$!page.job.conditionScriptXml</textarea>
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a href="#condition-expr" data-toggle="tab">Expression</a></li>
+                                    <li><a href="#condition-xml" data-toggle="tab">XML</a></li>
+                                </ul>
+
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="condition-expr">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-4" for="conditionScriptMvel">Advanced</label>
+                                            <div class="col-md-8">
+                                                <p>You can enter a rule expression below using MVEL syntax, the trigger will only fire if this evaluates to true</p>
+                                                <textarea name="conditionScriptMvel" id="conditionScriptMvel" class="form-control" rows="5">$!page.job.conditionScriptMvel</textarea>
+                                            </div>
+                                        </div>
+
                                     </div>
-                                </div>
+                                    <div class="tab-pane" id="condition-xml">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-4" for="conditionScriptXml">Advanced</label>
+                                            <div class="col-md-8">
+                                                <p>You can enter XML rules below, the trigger will only fire if this evaluates to true</p>
+                                                <p>The XML syntax is deprecated, you should use expressions instead</p>
+                                                <textarea name="conditionScriptXml" id="conditionScriptXml" class="form-control" rows="5">$!page.job.conditionScriptXml</textarea>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>                                
+
                             </div>
                         </div>
                     </div>
@@ -229,16 +265,22 @@
                                 <label for="rewardEnabled">Grant rewards</label>
                             </div>
                             <div class="panel-body panel-toggled" data-toggled="display" data-actor="#rewardEnabled">
-                                <p>When this trigger fires grant the user a number of rewards or points.</p>                                
+                                <p>
+                                    When this trigger fires grant the user a number of rewards or points.
+                                    |
+                                    <a target="_blank" href='/rewards'>Go to rewards</a>
+                                    |
+                                    <a href='#' class='refresh-rewards text-success'>Refresh alerts list</a>
+                                </p>                                
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-6">
                                             <label class="control-label col-md-4" for="groupToJoin">Reward to grant</label>
-                                            <div class="col-md-8">
+                                            <div class="col-md-8" id="rewards-container">
                                                 <select name="reward" id="reward" class="form-control">
                                                     $formatter.option( "", "[Please select]", $page.job.reward.name )
                                                     #foreach($reward in $page.allRewards)
-                                                    $formatter.option( $reward, $reward, $page.job.reward.name )
+                                                    $formatter.option( $reward.name, $reward.title, $page.job.reward.name )
                                                     #end
                                                 </select>
                                             </div>
@@ -254,26 +296,44 @@
                                             </div>
                                         </div>
                                     </div> <!-- end row -->
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="control-label col-md-4" for="groupToJoin">Reason</label>
+                                            <div class="col-md-8">
+                                                <input type="text" name="rewardReason" id="rewardReason" value="$!page.job.rewardReason" class="form-control" />
+                                                <br/>
+                                                <i>The reason to show the user why they received the points.</i>
+                                            </div>
+                                        </div>
+                                    </div> <!-- end row -->
                                 </div>                                
                             </div>
                         </div> <!-- End reward --> 
-                        
+
                         <div class="panel panel-default"> <!-- start activate alert -->
                             <div class="panel-heading">
                                 <i class="clip-chk">$formatter.checkbox("activateAlertEnabled", "activateAlertEnabled", $page.job.activateAlertEnabled)</i>
-                                <label for="activateAlertEnabled">Actviate alert</label>
+                                <label for="activateAlertEnabled">Activate alert</label>
                             </div>
                             <div class="panel-body panel-toggled" data-toggled="display" data-actor="#activateAlertEnabled">
-                                <p>Activate a dashboard alert for this user.</p>                                
+                                <p>
+                                    Activate a dashboard alert for this user. 
+                                    |
+                                    <a target="_blank" href='/manageAlerts'>Go to alerts</a>
+                                    |
+                                    <a href='#' class='refresh-alerts text-success'>Refresh alerts list</a>
+                                </p>
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-12">
                                             <label class="control-label col-md-2" for="alert">Alert to activate</label>
-                                            <div class="col-md-10">
+                                            <div class="col-md-10" id='alerts-list'>
                                                 <select name="alert" id="alert" class="form-control">
                                                     $formatter.option( "", "[Please select]", $page.job.alert.id )
                                                     #foreach($alert in $page.allAlerts)
-                                                    $formatter.option( $alert.id, $alert.textDescription, $page.job.alert.id )
+                                                    $formatter.option( $alert.id, $alert.title, $page.job.alert.id )
                                                     #end
                                                 </select>
                                             </div>
@@ -282,7 +342,7 @@
                                 </div>                                                               
                             </div>
                         </div> <!-- End actviate alert -->
-                        
+
                     </div> <!-- End content of Actions tab -->
 
 
@@ -382,11 +442,24 @@
 
                     <!-- Start content of History tab -->
                     <div id="history" class="tab-pane">
-                        <p class="well">
-                            <button type="button" class="refresh-history btn btn-success pull-right">Refresh</button>
-                            Emails sent by this trigger over the last 7 days.
-                            <br/>
-                        </p>                        
+                        <div class="btn-group pull-right">
+                            <a class="btn btn-info history-csv" href="email-history.csv?startDate=$!request.params.startDate&finishDate=$!request.params.finishDate">
+                                Export to CSV
+                                <span class="glyphicon glyphicon-cloud-download"></span>
+                            </a>
+                            <button type="button" class="refresh-history btn btn-success">
+                                Refresh
+                                <span class="glyphicon glyphicon-refresh"></span>
+                            </button>
+                        </div>
+
+                        <div class="input-group date-range col-md-4">
+                            <label for="report-range" class="input-group-addon">Time</label>
+                            <input type="text" id="report-range" placeholder="Choose a date range" value="" class="form-control" />
+                        </div>                          
+                        <div class="clearfix"></div>
+                        <hr/>
+
                         <div class="table-responsive" id="history-table">
                             <table class="table table-striped table-hover">
                                 <thead>
@@ -399,7 +472,7 @@
                                         <th>Status Date</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="history-table-body">
                                     #foreach($item in $page.history)
                                     <tr>
                                         <td class="icon" title="$!email.status">
@@ -425,7 +498,8 @@
                                         </td>
 
                                         <td>$item.subject</td>
-                                        <td>$item.recipient.formattedName</td>
+                                        <td>$!item.recipient.firstName</td>
+                                        <td>$!item.recipient.surName</td>
                                         <td>$item.recipientAddress</td>
                                         <td>
                                             <abbr class="pull-right timeago" title="$formatter.formatDateISO8601($item.sendStatusDate)">$item.sendStatusDate</abbr>
@@ -489,9 +563,49 @@
                 <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
             </div>
         </div>
+        
+        <div id="modal-send-test" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                <h4 class="modal-title">Send test</h4>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="$page.path" class="form-horizontal">
+                    <input type="hidden" name="sendTest" value="true"/>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="name">Recipient</label>
+                        <div class="col-md-8">
+                            <input type="text" name="recipient" value="" placeholder="An email address" class="required email form-control" />
+                            <p>A single email will be sent to this address</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="name">Target</label>
+                        <div class="col-md-8">
+                            <input type="text" name="targetProfile" value="" placeholder="Email address of user to generate email for" class="required email form-control" />
+                            <p>This profile will be used to generate the content of the email, ie for any dynamic templating</p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                <button class="btn btn-sm btn-success" data-type="form-submit" type="button"><i class="glyphicon glyphicon-send"></i> Send</button>
+            </div>
+        </div>
+        
+        
+        <div id="modal-send-test-progress" class="modal modal-lg fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                <h4 class="modal-title">Test send progress</h4>
+            </div>
+            <div class="modal-body" id="send-test-body">
+            </div>
+        </div>
 
         <script type="text/javascript">
-            Bob.onDOMReady(function() {
+            $(function() {
                 initManageAutoEmail();
                 $(".refresh-history").click(function(e) {
                     e.preventDefault();
@@ -503,7 +617,70 @@
                     $(".timer-unit").text(unit).val(unit);
                 });
                 jQuery("abbr.timeago").timeago();
+                initHistorySearch();
+                $(".refresh-alerts").click(function() {
+                    $("#alerts-list").reloadFragment();
+                });
+                $(".refresh-rewards").click(function() {
+                    $("#rewards-container").reloadFragment();
+                });
             });
+
+            function initHistorySearch() {
+                var reportRange = $('#report-range');
+
+                reportRange.exist(function() {
+                    flog("init report range");
+                    reportRange.daterangepicker({
+                        format: 'DD/MM/YYYY', // YYYY-MM-DD
+                        ranges: {
+                            'Last 7 Days': [moment().subtract('days', 6), moment()],
+                            'Last 30 Days': [moment().subtract('days', 29), moment()],
+                            'This Month': [moment().startOf('month'), moment().endOf('month')],
+                            'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
+                            'This Year': [moment().startOf('year'), moment()],
+                        },
+                    },
+                            function(start, end) {
+                                flog('onChange', start, end);
+                                doHistorySearch(start, end);
+                            }
+                    );
+                });
+            }
+
+            function doHistorySearch(startDate, endDate) {
+                flog('doHistorySearch', startDate, endDate);
+
+                var data = {
+                    startDate: formatDate(startDate),
+                    finishDate: formatDate(endDate)
+                };
+                flog("data", data);
+
+                var target = $("#history-table-body");
+                //target.load();
+
+                var dates = "startDate=" + formatDate(startDate) + "&finishDate=" + formatDate(endDate);
+                var baseHref = window.location.pathname + "?" + dates;
+                var href = baseHref + "#history-tab";
+                $("a.history-csv").attr("href", "email-history.csv?" + dates);
+
+                $.ajax({
+                    type: "GET",
+                    url: href,
+                    dataType: 'html',
+                    success: function(content) {
+                        flog('response', content);
+                        var newBody = $(content).find("#history-table-body");
+                        flog("newBody", newBody);
+                        target.replaceWith(newBody);
+                        jQuery("abbr.timeago").timeago();
+                        window.history.pushState(null, "Email History", href);
+                    }
+                });
+
+            }
         </script>
     </body>
 </html>

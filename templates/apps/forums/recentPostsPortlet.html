@@ -57,7 +57,7 @@
         } else {
             li.append("<a class='profilePic' href='" + manageUserHref + "'><img src='/templates/apps/user/profile.png' alt='' /></a>");
         }
-        li.append("<a class='user' href='" + manageUserHref + "'>" + user.name + "</a> posted in <a target='_blank' class='module' href='" + pagePath + "'><span>" + pageTitle + "</span></a>");
+        li.append(user.name + " posted in <a target='_blank' class='module' href='" + pagePath + "'><span>" + pageTitle + "</span></a>");
         var formattedDate = date.toISOString();
         var commentHtml = "<div class='post'>";    
         commentHtml += "<p>" + comment + "</p>";

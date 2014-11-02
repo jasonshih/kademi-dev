@@ -11,7 +11,7 @@
  *  - errorHandler(resp, form, valiationMessageSelector, errorCallback) - default displays messages and also calls errorCallback if provided
  *  - errorCallback() - a simpler error callback, is called after form UI is updated
  *  - doPostForm - defaults to true. If false, the form will not be submitted, although callbacks will still be called
- *  - confirmMessage - defaults to "Saved ok"
+ *  - confirmMessage - defaults to null, which suppresses confirmation display
  *  - valiationMessageSelector - defaults to ".pageMessage"
  *  - validationFailedMessage - defaults to "Some inputs are not valid."
  *  
@@ -20,6 +20,11 @@
 
 (function($) {
     $.fn.forms = function(options) {
+        var form = $(this);
+        if (form.data('formOPtions')) {
+            return;
+        }
+
         flog("init forms plugin", this);
 
         // Load the moment.js script
@@ -71,44 +76,46 @@
 
             },
             doPostForm: true,
-            confirmMessage: "Saved OK",
+            confirmMessage: null,
             valiationMessageSelector: ".pageMessage",
             validationFailedMessage: "Some inputs are not valid."
         }, options);
 
-        var container = this;
-        flog("msgs", config.valiationMessageSelector, container, $(config.valiationMessageSelector, container));
-        $(this).submit(function(e) {
+        flog("msgs", config.valiationMessageSelector, form, $(config.valiationMessageSelector, form));
+        form.on('submit', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            var form = $(this);
-            resetValidation(container);
-            if (!config.validate(form)) {
+            var thisForm = $(this);
+
+            resetValidation(thisForm);
+            if (!config.validate(thisForm)) {
                 flog("validate method returned false");
                 return false;
             }
-            form.trigger("submitForm");
-            flog("form submit", form);
-            if (checkRequiredFields(form)) {
+            thisForm.trigger("submitForm");
+            flog("form submit", thisForm);
+            if (checkRequiredFields(thisForm)) {
                 if (typeof config.onValid === 'function') {
-                    config.onValid(form);
+                    config.onValid(thisForm);
                 }
                 if (config.doPostForm) {
-                    postForm(form, config.valiationMessageSelector, config.validationFailedMessage, config.callback, config.confirmMessage, config.postUrl, config.error, config.errorHandler);
+                    postForm(thisForm, config.valiationMessageSelector, config.validationFailedMessage, config.callback, config.confirmMessage, config.postUrl, config.error, config.errorHandler);
                 }
             } else {
-                showValidation(null, config.validationFailedMessage, form);
-                var messages = $(config.valiationMessageSelector, form);
+                showValidation(null, config.validationFailedMessage, thisForm);
+                var messages = $(config.valiationMessageSelector, thisForm);
 //                messages.append("<div class='alert alert-danger'>Some inputs are not valid. Please correct any highlighted fields.</div>");
 //                messages.find(".alert")
 //                        .prepend("<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>")
 //                        .alert();
 //                flog("show messages", messages);
 //                messages.show(100);
-                config.error(form);
+                config.error(thisForm);
             }
             return false;
         });
+
+        form.data('formOptions', config);
     };
 })(jQuery);
 
@@ -140,7 +147,7 @@ function postForm(form, valiationMessageSelector, validationFailedMessage, callb
                     }
                     callback(resp, form)
                 } else {
-                    if( errorHandler ) {
+                    if (errorHandler) {
                         errorHandler(resp, form, valiationMessageSelector, errorCallback);
                     }
                 }
@@ -167,74 +174,109 @@ function showConfirmMessage(form, confirmMessage) {
     }, 5000);
 }
 
-function showFieldMessages(fieldMessages, container) {
+function showFieldMessages(fieldMessages, form) {
     if (fieldMessages) {
         $.each(fieldMessages, function(i, n) {
             flog("field message", n);
             var target = $("#" + n.field);
-            showValidation(target, n.message, container);
+            showValidation(target, n.message, form);
         });
     }
 }
 
-function resetValidation(container) {
-    $(".control-group", container).removeClass("error");
-    $(".form-group", container).removeClass("has-error");
-    $(".validationError", container).remove();
-    $(".pageMessage", container).hide(300);
-    $(".pageMessage", container).html("");
-    $(".error > *", container).unwrap();
-    $(".errorField", container).removeClass("errorField");
-    $(".alert", container).remove();
+function resetValidation(form) {
+    $(".control-group", form).removeClass("error");
+    $(".form-group", form).removeClass("has-error");
+    $(".validationError", form).remove();
+    $(".pageMessage", form).hide(300);
+    $(".pageMessage", form).html("");
+    $(".error > *", form).unwrap();
+    $(".errorField", form).removeClass("errorField");
+    $(".alert", form).remove();
 }
 
-function checkRequiredFields(container) {
-    flog('checkRequiredFields', container);
+function checkRequiredFields(form) {
+    flog('checkRequiredFields', form);
     var isOk = true;
 
     // Check mandatory
-    $(".required", container).each(function(index, node) {
+    $(".required", form).each(function(index, node) {
         var val = $(node).val();
+        if (val !== null) {
+            val = $.trim(val);
+        } else {
+            val = "";
+        }
+
 
         var title = $(node).attr("title");
-        if (!val || (val === title)) { // note that the watermark can make the value == title
+        if (val.length === 0 || (val === title)) { // note that the watermark can make the value == title
             flog('error field', node);
             showErrorField($(node));
             isOk = false;
         }
     });
 
-    if (!checkRequiredChecks(container)) {
+    if (!checkRequiredChecks(form)) {
         flog('missing required checkboxs');
         isOk = false;
     }
 
     if (isOk) {
-        isOk = checkValidEmailAddress(container);
+        isOk = checkValidEmailAddress(form);
 
-        if (!checkDates(container)) {
+        if (!checkDates(form)) {
             isOk = false;
         }
-        if (!checkValidPasswords(container)) {
+        if (!checkValidPasswords(form)) {
             isOk = false;
         }
-        if (!checkSimpleChars(container)) {
+        if (!checkSimpleChars(form)) {
             isOk = false;
         }
-        if (!checkHrefs(container)) {
+        if (!checkHrefs(form)) {
             isOk = false;
         }
-        if (!checkNumbers(container)) {
+        if (!checkNumbers(form)) {
+            isOk = false;
+        }
+        if (!checkRegex(form)) {
             isOk = false;
         }
     } else {
-        showMessage("Please enter all required values", container);
+        showMessage("Please enter all required values", form);
     }
     return isOk;
 }
-function checkRequiredChecks(container) {
+
+function checkRegex(form) {
     var isOk = true;
-    $("input.required:checkbox", container).not(":checked").each(function(index, node) {
+    $('input.regex', form).each(function () {
+        var input = $(this);
+        var value = input.val();
+        var regex = new RegExp(input.attr('data-regex'));
+        var message = input.attr('data-message');
+
+        if (regex.test(value)) {
+            isOk = true;
+        } else {
+            isOk = false;
+
+            if (message) {
+                showValidation(input, message, form);
+            } else {
+                showErrorField(input);
+            }
+        }
+
+    });
+
+    return isOk;
+}
+
+function checkRequiredChecks(form) {
+    var isOk = true;
+    $("input.required:checkbox", form).not(":checked").each(function(index, node) {
         node = $(node);
         node = $("label[for=" + node.attr("id") + "]");
         showErrorField($(node));
@@ -244,14 +286,14 @@ function checkRequiredChecks(container) {
 }
 
 
-function checkRadio(radioName, container) {
-    flog('checkRadio', radioName, container);
-    if ($("input:radio[name=" + radioName + "]:checked", container).length === 0) {
-        var node = $("input:radio[name=" + radioName + "]", container)[0];
+function checkRadio(radioName, form) {
+    flog('checkRadio', radioName, form);
+    if ($("input:radio[name=" + radioName + "]:checked", form).length === 0) {
+        var node = $("input:radio[name=" + radioName + "]", form)[0];
         node = $(node);
         node = $("label[for=" + node.attr("id") + "]");
         flog('apply error to label', node);
-        showValidation(node, "Please select a value for " + radioName, container);
+        showValidation(node, "Please select a value for " + radioName, form);
         return false;
     } else {
         return true;
@@ -259,9 +301,9 @@ function checkRadio(radioName, container) {
 }
 
 // depends on common.js
-function checkDates(container) {
+function checkDates(form) {
     isOk = true;
-    $("input", container).each(function(index, node) {
+    $("input", form).each(function(index, node) {
         var id = $(node).attr("id");
         if (id && id.contains("Date")) {
             var val = $(node).val();
@@ -269,7 +311,7 @@ function checkDates(container) {
                 var valid = moment(val, ["DD-MM-YYYY", "DD-MM-YYYY HH:mm"], true);
                 if (!valid) {
                     flog("checkDates: not a valid date: ", val);
-                    showValidation($(node), "Please enter a valid date", container);
+                    showValidation($(node), "Please enter a valid date", form);
                     isOk = false;
                 }
             }
@@ -280,9 +322,9 @@ function checkDates(container) {
 /**
  *  If password is present, checks for validity
  */
-function checkValidPasswords(container) {
+function checkValidPasswords(form) {
     flog("checkValidPasswords");
-    var target = $("#password, input.password", container);
+    var target = $("#password, input.password", form);
     var p1 = target.val();
     if (p1) {
         var passed = true;
@@ -296,24 +338,24 @@ function checkValidPasswords(container) {
             });
         }
         if (!passed) {
-            showValidation(target, "Your password must be at least 6 characters and it must contain numbers and letters", container);
+            showValidation(target, "Your password must be at least 6 characters and it must contain numbers and letters", form);
             return false;
         } else {
-            return checkPasswordsMatch(container);
+            return checkPasswordsMatch(form);
         }
     }
     return true;
 }
 
-function checkPasswordsMatch(container) {
+function checkPasswordsMatch(form) {
     flog("checkPasswordsMatch");
     if ($("#confirmPassword").length == 0) {
         return true; // there is no confirmation field
     }
-    var p1 = $("#password", container).val();
-    var p2 = $("#confirmPassword", container).val();
+    var p1 = $("#password", form).val();
+    var p2 = $("#confirmPassword", form).val();
     if (p1 != p2) {
-        showValidation("password", "Your password's don't match. Please try again", container);
+        showValidation("password", "Your password's don't match. Please try again", form);
         return false;
     }
     return true;
@@ -322,38 +364,38 @@ function checkPasswordsMatch(container) {
 /**
  * We assume the field to validate has an id of "email"
  */
-function checkValidEmailAddress(container) {
-    var target = $("#email, input.email", container); // either with id of email, or with class email
+function checkValidEmailAddress(form) {
+    var target = $("#email, input.email", form); // either with id of email, or with class email
     var emailAddress = target.val();
     if (emailAddress) {
         var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
         if (!pattern.test(emailAddress)) {
-            showValidation(target, "Please check the format of your email address, it should read like ben@somewhere.com", container);
+            showValidation(target, "Please check the format of your email address, it should read like ben@somewhere.com", form);
             return false;
         }
     }
     return true;
 }
 
-function checkSimpleChars(container) {
+function checkSimpleChars(form) {
     flog("checkSimpleChars");
-    var isOk = checkChars(container, ".simpleChars,.reallySimpleChars", "^[a-zA-Z0-9_\.\ -]+$");
+    var isOk = checkChars(form, ".simpleChars,.reallySimpleChars", "^[a-zA-Z0-9_\.\ -]+$");
     if (isOk) {
-        var targets = $(".reallySimpleChars", container);
+        var targets = $(".reallySimpleChars", form);
         targets.each(function(i, n) {
             var node = $(n);
             var val = node.val();
             if (val.length > 0) {
                 if (val.contains(" ")) {
-                    showValidation(node, "Spaces are not allowed", container);
+                    showValidation(node, "Spaces are not allowed", form);
                     isOk = false;
                 }
                 if (val.contains("+")) {
-                    showValidation(node, "Plus signs are not allowed", container);
+                    showValidation(node, "Plus signs are not allowed", form);
                     isOk = false;
                 }
                 if (val.contains(".")) {
-                    showValidation(node, "Full stops are not allowed", container);
+                    showValidation(node, "Full stops are not allowed", form);
                     isOk = false;
                 }
             }
@@ -362,10 +404,10 @@ function checkSimpleChars(container) {
     return isOk;
 }
 
-function checkChars(container, inpClass, reg) {
+function checkChars(form, inpClass, reg) {
     flog("checkChars");
-    var target = $(inpClass, container);
-    flog("checkChars2", target, inpClass, container);
+    var target = $(inpClass, form);
+    flog("checkChars2", target, inpClass, form);
     var isOk = true;
     var pattern = new RegExp(reg);
     target.each(function(i, n) {
@@ -375,7 +417,7 @@ function checkChars(container, inpClass, reg) {
         if (val.length > 0) {
             if (!pattern.test(val)) {
                 flog("not valid");
-                showValidation(node, "Please use only letters, numbers and underscores", container);
+                showValidation(node, "Please use only letters, numbers and underscores", form);
                 isOk = false;
             } else {
                 flog("is valid");
@@ -397,8 +439,8 @@ function checkReallySimple(val) {
     return true;
 }
 
-function checkNumbers(container) {
-    var target = $(".numeric", container); // either with id of email, or with class email
+function checkNumbers(form) {
+    var target = $(".numeric", form); // either with id of email, or with class email
     flog("checkNumbers", target);
     var isOk = true;
     target.each(function(i, n) {
@@ -407,7 +449,7 @@ function checkNumbers(container) {
         flog("checkNumeric", val);
         if (val.length > 0) {
             if (!isNumber(val)) {
-                showValidation(node, "Please enter a number", container);
+                showValidation(node, "Please enter a number", form);
                 isOk = false;
             } else {
                 flog("  isok");
@@ -417,16 +459,16 @@ function checkNumbers(container) {
     return isOk;
 }
 
-function checkHrefs(container) {
-    var target = $(".href", container);
+function checkHrefs(form) {
+    var target = $(".href", form);
     var isOk = true;
-    var pattern = new RegExp("^[a-zA-Z0-9_/%:/.]+$");
+    var pattern = new RegExp("^[a-zA-Z0-9_/%:/./-]+$");
     target.each(function(i, n) {
         var node = $(n);
         var val = node.val();
         if (val.length > 0) {
             if (!pattern.test(val)) {
-                showValidation(node, "Not a valid web address", container);
+                showValidation(node, "Not a valid web address", form);
                 isOk = false;
             }
         }
@@ -435,7 +477,7 @@ function checkHrefs(container) {
 
 }
 
-function checkValueLength(target, minLength, maxLength, lbl, container) {
+function checkValueLength(target, minLength, maxLength, lbl, form) {
     //flog('checkValueLength', target, minLength, maxLength, lbl);
     target = ensureObject(target);
     if (target.length === 0) {
@@ -445,14 +487,14 @@ function checkValueLength(target, minLength, maxLength, lbl, container) {
     flog('length', value.length);
     if (minLength) {
         if (value.length < minLength) {
-            showValidation(target, lbl + " must be at least " + minLength + " characters", container);
+            showValidation(target, lbl + " must be at least " + minLength + " characters", form);
             return false;
         }
     }
     if (maxLength) {
         flog('check max length: ' + (value.length > maxLength));
         if (value.length > maxLength) {
-            showValidation(target, lbl + " must be no more then " + maxLength + " characters", container);
+            showValidation(target, lbl + " must be no more then " + maxLength + " characters", form);
             return false;
         } else {
             flog('check max length ok: ' + (value.length > maxLength));
@@ -506,12 +548,12 @@ function checkNumeric(target) {
 }
 
 
-function checkTrue(target, message, container) {
+function checkTrue(target, message, form) {
     var n = $("#" + target + ":checked").val();
     if (n) {
         return true;
     } else {
-        showValidation($("label[for='" + target + "']"), message, container);
+        showValidation($("label[for='" + target + "']"), message, form);
         return false;
     }
 }
@@ -520,10 +562,10 @@ function checkTrue(target, message, container) {
  * target can be id or a jquery object
  * text is the text to display
  */
-function showValidation(target, text, container) {
+function showValidation(target, text, form) {
     if (text) {
-        flog("showValidation", target, text, container);
-        showMessage(text, container);
+        flog("showValidation", target, text, form);
+        showMessage(text, form);
         if (target) {
             var t = ensureObject(target);
             showErrorField(t);
@@ -531,11 +573,11 @@ function showValidation(target, text, container) {
     }
 }
 
-function showMessage(text, container) {
-    var messages = $(".pageMessage, .alert", container);
+function showMessage(text, form) {
+    var messages = $(".pageMessage, .alert", form);
     if (messages.length === 0) {
         messages = $("<div class='pageMessage alert alert-error alert-danger'><a class='close' data-dismiss='alert' href='#'>&times;</a></div>");
-        container.prepend(messages);
+        form.prepend(messages);
     }
     flog("showMessage", messages);
     messages.append("<p class='validationError'>" + text + "</p>");
@@ -557,8 +599,8 @@ function showErrorField(target) {
             editor = CKEDITOR.instances[name];
             flog("check for editor", name, editor);
             if (editor) {
-                flog("add class", editor.container);
-                editor.container.addClass("errorField");
+                flog("add class", editor.form);
+                editor.form.addClass("errorField");
             }
         }
     }

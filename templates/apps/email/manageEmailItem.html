@@ -5,47 +5,85 @@
         <script type="text/javascript" src="myInbox.js">//</script>
     </head>
     <body>        
-        <table class="plain">
-            <tr>
-                <td>From</td>
-                <td>$page.fromStr</td>
-            </tr>
-            <tr>
-                <td>To</td>
-                <td>
-                    #foreach($mailbox in $page.to)
-                    $mailbox.class
-                    #end
-                </td>
-            </tr>     
-            <tr>
-                <td>Subject</td>
-                <td>$page.subject</td>
-            </tr>               
-            <tr>
-                <td>Message</td>
-                <td>$page.message</td>
-            </tr>               
-            <tr>
-                <td>Attachments</td>
-                <td>
-                    <ul>
-                        #foreach($attachment in $page.children)
-                        <li><a href="$attachment.name">$attachment.fileName</a></li>
+        <div id="email-item-info">
+            <p>
+            <a class="btn btn-primary pull-right" href="$page.href" target="_blank">                
+                Open in new window
+                <span class="glyphicon glyphicon-arrow-right"></span>
+            </a>
+            </p>
+            <table class="table status-$page.sendStatus">
+                <tr>
+                    <td>Status</td>
+                    <td>
+                        #if( $page.sendStatus == 'r' )
+                        <p class="label label-warning">
+                            <span class="glyphicon glyphicon-repeat"></span>
+                            $page.statusText - $page.numAttempts
+                        </p>
+                        #elseif( $page.sendStatus == 'c' )
+                        <p class="label label-success">
+                            <span class="glyphicon glyphicon-ok"></span>
+                            $page.statusText
+                        </p>
+                        #elseif( $page.sendStatus == 'p' )
+                        <p class="label label-warning">
+                            <span class="glyphicon glyphicon-time"></span>
+                            $page.statusText
+                        </p>
+                        #elseif( $page.sendStatus == 'f' )
+                        <p class="label label-danger">
+                            <span class="glyphicon glyphicon-remove"></span>
+                            $page.statusText
+                        </p>
+
+                        #else
+                        <span class="glyphicon glyphicon-time"></span> Preparing..
                         #end
-                    </ul>
-                </td>
-            </tr>               
-        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>From</td>
+                    <td>$page.fromAddress</td>
+                </tr>
+                <tr>
+                    <td>To</td>
+                    <td>$page.recipientAddress</td>
+                </tr>     
+                <tr>
+                    <td>Subject</td>
+                    <td>$page.subject</td>
+                </tr>               
+
+                <tr>
+                    <td style='vertical-align: top'>Attachments</td>
+                    <td>
+                        <ul>
+                            #foreach($attachment in $page.children)
+                            <li><a href="/_hashes/files/$attachment.fileHash">$attachment.fileName</a></li>
+                            #end
+                        </ul>
+                    </td>
+                </tr>               
+                <tr>
+                    <td style='vertical-align: top'>Send attempts</td>
+                    <td>
+                        <ul>
+                            #foreach($attempt in $page.sendAttempts)
+                            <li>$attempt.status, at $attempt.statusDate</li>
+                            #end
+                        </ul>
+                    </td>
+                </tr>  
+            </table>
+        </div>
+        <h4>Message content</h4>
+        <hr/>
+        <iframe style="border: none; width: 100%; min-height: 400px" srcdoc="$formatter.htmlEncode( $page.emailHtml )"></iframe>
         <br/>
         <hr/>
         <br/>
         <br/>
-        #if( $page.html )
-        $!page.html
-        #else
-        $!page.text
-        #end
 
 
     </body>

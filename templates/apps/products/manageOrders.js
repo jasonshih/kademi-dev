@@ -1,6 +1,6 @@
 var lastSearch = null;
 
-Bob.onDOMReady(function () {
+$(function () {
     var rangeInputs = $('.SearchBox input');
     log("init range2");
     lastSearch = $("#dates").val();
@@ -39,7 +39,7 @@ function doSearch() {
             log("pushed new statte", newUrl, window.location.pathname);
         },
         error: function(resp) {
-            alert("Sorry, an error occured loading the order search");
+            Msg.error("Sorry, an error occured loading the order search");
         }
     });
 }

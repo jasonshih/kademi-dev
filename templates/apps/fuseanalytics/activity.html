@@ -107,18 +107,18 @@
 
 
         <script type="text/javascript">
-            Bob.onDOMReady(function() {
+            $(function () {
                 $("form.maintForm").forms({
                     callback: function(resp) {
                         log("resp", resp);
                         $("span.now").text(resp.data);
-                        alert("Done");
+                        Msg.success("Done");
                     }
                 });
                 $("form.runTasksForm").forms({
                     callback: function(resp) {
                         log("resp", resp);
-                        alert("Scheduled tasks are now running");
+                        Msg.info("Scheduled tasks are now running");
                         window.location.reload();
                     }
                 });

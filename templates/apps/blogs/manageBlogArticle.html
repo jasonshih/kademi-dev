@@ -2,8 +2,8 @@
     <head>
         <title>Manage Blog Article</title>
         <script type="text/javascript" src="/static/typeahead/0.10.2/typeahead.bundle.js">//</script>
-        <script type="text/javascript" src="/static/js/jquery.fileupload.js">//</script>
-        <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
+        <script type="text/javascript" src="/static/bootstrap-upcrop-image/1.0/bootstrap-upcrop-image.js">//</script>
+        <script type="text/javascript" src="manageBlogArticle.js">//</script>
         <style>
             #images-container .thumbnail {
                 min-height: 240px;
@@ -11,16 +11,81 @@
         </style>
     </head>
     <body>
+
+
+        #if( $page.publishedDate or $page.submittedDate )
+        <div class="panel panel-info col-md-8 pull-right">
+            <div class="panel-body">
+                #if( $page.publishedDate )
+                <p class="lead text-right">
+                    Published by $!page.publishedBy.name for release 
+                    <abbr title="$formatter.formatDateISO8601($page.publishedDate)" class="timeago">$!page.publishedDate</abbr>
+                </p>
+                <p class="text-right">
+                    Submitted by $!page.submittedBy.name  
+                    <abbr title="$formatter.formatDateISO8601($page.submittedDate)" class="timeago">$!page.submittedDate</abbr>
+                </p>          
+                #if( $page.canPublish )
+                <button class="btn btn-sm btn-warning article-reject" type="button">Unpublish</button>
+                #end
+                #else
+                <p class="lead text-right">
+                    Submitted by $!page.submittedBy.name  
+                    <abbr title="$formatter.formatDateISO8601($page.submittedDate)" class="timeago">$!page.submittedDate</abbr>
+                </p>                
+                #if( $page.canPublish )
+                <button class="btn btn-sm btn-warning article-reject" type="button">Reject with reason</button>
+
+                <button class="btn btn-sm btn-success article-publish" type="button">Publish</button>
+                #end
+                #end                                                
+            </div>
+        </div>
+        <div class="clearfix"></div>                
+        #end
+
+        #if( $page.rejectedAt )
+        <div class="panel panel-info col-md-8 pull-right">
+            <div class="panel-body">
+                <p class="lead text-right">
+                    Rejected by $!page.rejectedBy.name 
+                    <abbr title="$formatter.formatDateISO8601($page.rejectedAt)" class="timeago">$!page.rejectedAt</abbr>
+                </p>
+
+                <p class="text-right">$!page.rejectedReason</p>                
+            </div>
+        </div>
+        <div class="clearfix"></div>                        
+        #end
+
         <form action="" method="POST" class="form-horizontal article-form" role="form">
             <div id="manageReward" class="MainContent tabbable">
-                <div class="clearfix">
-                    <div class="pull-right">
+                <div class="clearfix">                    
+                    <div class="pull-right">                        
+                        #if( $page.canAuthor )
+                        <button class="btn btn-sm btn-success article-submit" type="button">Submit for approval</button>
                         <button class="btn btn-sm btn-primary" type="submit">Save changes</button>
-                        <button class="btn btn-sm btn-default Cancel" type="button">Cancel</button>
+                        #end
+
+                        <div class="btn-group">
+                            <a class="btn btn-sm btn-default article-preview" target="_blank" href="$page.href?goto=">Preview</a>
+                            <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu pull-right" role="menu">
+                                <li><a>Select a version:</a></li>
+                                <li class="divider"></li>
+                                #foreach($version in $page.parent.branches)
+                                <li><a target="_blank" href="$page.href?goto=$!version">$!version</a></li>
+                                #end
+                            </ul>
+                        </div>
                     </div>
                     <ul class="TabNav nav nav-tabs tab-bricky pull-left">
                         <li class=""><a href="#details" data-toggle="tab">Details</a></li>
                         <li class=""><a href="#bodyCopy" data-toggle="tab">Content</a></li>
+                        <li class=""><a href="#groups" data-toggle="tab">Groups</a></li>
                         <li class=""><a href="#images" data-toggle="tab">Images</a></li>
                     </ul>
                 </div>
@@ -54,39 +119,10 @@
                         </div>
                         <div class="form-group">
                             <label class="control-label col-md-3" for="tags">Tags</label>
-                            <div class="col-md-8">
-                                #set ($selectedTags = "")
-                                #set ($selectedTag = "")
-                                #foreach($tag in $page.tags)
-                                    #if ($page.isSelectedTag($tag))
-                                        #set ($selectedTag = $tag)
-                                        #if ($selectedTags != "")
-                                            #set ($selectedTags = $selectedTags + "," + $selectedTag)
-                                        #else
-                                            #set ($selectedTags = $selectedTag)
-                                        #end
-                                    #end
-                                #end
-                                <!--
-                                <input type="text" id="tags" value="$selectedTags" name="tags2" class="form-control" />
-                                -->
-                                <script type="text/javascript">
-                                    var tags = [];
-                                    #foreach($tag in $page.tags)
-                                        tags.push('$tag');
-                                    #end
-
-                                    $('#tags').tagsinput({
-                                        typeahead: {
-                                            source: function () {
-                                                return tags;
-                                            }
-                                        }
-                                    });
-                                </script>
+                            <div class="col-md-8">                                
                                 #foreach($tag in $page.tags)
                                 <label>
-                                    $formatter.checkbox(null, "tags", $page.isSelectedTag($tag), $tag )
+                                    $formatter.checkbox("tags", "tags", $page.isSelectedTag($tag), $tag)
                                     $tag
                                 </label>
                                 #end
@@ -96,7 +132,7 @@
                             <label class="control-label col-md-3" for="articleDate">Article Date</label>
                             <div class="col-sm-5">
                                 <div class='input-group'>
-                                    <input type="text" id="articleDate" name="articleDate" placeholder="Start date" data-format="DD/MM/YYYY" value="$!page.articleDate" class="form-control date-picker" />
+                                    <input type="text" id="articleDate" name="articleDateDate" placeholder="Start date" data-format="DD/MM/YYYY" value="$!page.articleDate" class="form-control date-picker" />
                                     <span class="input-group-addon">
                                         <a href="#articleDate" data-role="date-picker-trigger">
                                             <i class="fa fa-calendar"></i>
@@ -118,8 +154,18 @@
                         <textarea class="htmleditor" cols="100" name="body" rows="20" placeholder="">$!page.body</textarea>                        
                     </div>
 
+                    <div class="tab-pane" id="groups">
+                        <button class="btn btn-sm btn-primary Add AddGroup" data-toggle="modal" data-target="#modalGroup"><i class="fa fa-plus"></i> Add/remove groups</button>
+                        <div class="well margin-top-10">Add user groups to limit visibility to the selected groups only. If no groups are selected then everyone has visibility</div>
+                        <div class="GroupList">
+                            #foreach($g in $page.groups)
+                            <button class="btn btn-sm btn-default reset-margin-bottom" type="button">$!g.name</button>
+                            #end
+                        </div>
+                    </div>                    
+
                     <div class="tab-pane" id="images">
-                        <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#addImageModal">
+                        <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-add-image">
                             <i class="fa fa-plus"></i> Add image
                         </button>
 
@@ -132,9 +178,9 @@
                                     <div class="thumbnail">                                        
                                         <img src="$i.href/alt-150-150.png" class="img-responsive" />
                                         <div class="caption">
-                                            <a href="$i.href" target="_blank"><h4>$i.name</h4></a>
+                                            <a href="$i.href" target="_blank"><h4>$!i.name</h4></a>
 
-                                            <a class="pull-right btn btn-danger image-delete" href="$i.href">
+                                            <a class="pull-right btn btn-sm btn-danger image-delete" href="$i.href">
                                                 <span class="glyphicon glyphicon-remove"></span>
                                             </a>                                            
 
@@ -158,7 +204,9 @@
             </div>
         </form>
 
-        <div id="addImageModal" class="modal fade">
+        <div id="modal-add-image" class="modal modal-md fade">
+            <div class="upcrop-zone"></div>
+            <div class="edit-image-zone hide">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 class="modal-title">Add new image</h4>
@@ -170,9 +218,10 @@
                             <div class="errorHandler alert alert-danger no-display pageMessage">.</div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label" for="newTagName">Upload</label>
+                            <label class="col-sm-3 control-label" for="newTagName">Preview</label>
                             <div class="col-sm-9">
-                                <div class="btn-upload" id='upload-image'></div>
+                                <p><img src="" class="img-responsive preview" /></p>
+                                <button class="btn btn-sm btn-success btn-add-other-img" type="button">Upload other image</button>
                             </div>
                         </div>
                         <div class="form-group">
@@ -181,62 +230,88 @@
                                 <input type="text" name="fileName" class="form-control required" required="true" />
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label" for="newTagName">Orientation</label>
-                            <div class="col-sm-9">
-                                <select name="orientation" class="form-control">
-                                    <option value="">Default</option>
-                                    <option value="square">Square</option>
-                                    <option value="vertical">Vertical</option>
-                                    <option value="horizontal">Horizontal</option>
-                                </select>
-                            </div>
-                        </div>
+                        <input type="hidden" name="orientation" value="" />
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary btn-sm" data-type="form-submit">Save image</button>
                 </div>
+            </div>
         </div>        
 
-        <script type="text/javascript">
-            Bob.onDOMReady(function() {
-                $(".article-form").forms({
-                    callback: function(resp, form) {
-                        flog("Done", form, resp);
-                        if (resp.nextHref) {
-                            window.location = resp.nextHref;
-                        }
-                    }
-                });
-                initHtmlEditors();
+        <div id="publishModal" class="modal fade">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Publish</h4>
+            </div>
+            <div class="modal-body">
+                <form action="$page.href" method="POST" class="form-horizontal">
+                    <input type="hidden" name="publish" />
+                    <div class="form-group">
+                        <div class="errorHandler alert alert-danger no-display pageMessage">.</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" for="newTagName">Embargo Date</label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <input type="text" class="form-control date-picker" data-date-viewmode="years" data-date-format="dd/mm/yyyy" placeholder="Embargo date" value="" name="embargoDate"/>
+                                <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
+                            </div>
+                            <br/>
+                            <i>Enter a date for the article to become available, or leave blank to publish immediately</i>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success btn-sm" data-type="form-submit">Publish</button>
+            </div>
+        </div>
 
-                var addImageModal = $("#addImageModal");
-                addImageModal.find("form").forms({
-                    callback: function() {
-                        $("#images-container").reloadFragment();
-                    }
-                });
-                $('#upload-image').mupload({
-                    buttonText: '<i class="clip-folder"></i> Upload image',
-                    url: window.location.pathname,
-                    useJsonPut: false,
-                    oncomplete: function(data, name, href) {
-                        flog('oncomplete:', data.result, name, href);
-                        addImageModal.find("input[name=hash]").val(data.result.data.file); // the hash of the "file" file input that was uploaded
-                        addImageModal.find("input[name=fileName]").val(name);
-                        flog("set", addImageModal.find("input[name=fileName]"));
-                    }
-                });
-                $("#images-container").on("click", ".image-delete", function(e) {
-                    e.preventDefault();
-                    var href = $(e.target).closest("a").attr("href");
-                    flog("delete image", $(e.target), href);
-                    confirmDelete(href, getFileName(href), function() {
-                        $("#images-container").reloadFragment();
-                    });
-                });
+        <div id="rejectModal" class="modal fade">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Reject</h4>
+            </div>
+            <div class="modal-body">
+                <form action="$page.href" method="POST" class="form-horizontal">
+                    <input type="hidden" name="reject" />
+                    <p>Please give a reason for rejecting or un-publishing</p>
+                    <div class="input-group col-md-12">
+                        <textarea name="reason" class="form-control col-md-12"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger btn-sm" data-type="form-submit">Reject</button>
+            </div>
+        </div>
+
+        <div id="modalGroup" class="modal fade">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Choose groups</h4>
+            </div>
+            <div class="modal-body">
+                <div class="ListItem">
+                    #foreach($g in $page.allGroups)
+                    <div class="panel panel-default">
+                        <div class="panel-body membership">
+                            <label for="$g.name">$g.name</label>
+                            <label class="pull-right">$formatter.checkbox($g.name, $page.isSelected($g))</label>
+                        </div>
+                    </div>
+                    #end
+                </div>
+            </div>
+        </div>  
+
+        <script type="text/javascript">
+            $(function() {
+                initManageBlogArticle();
             });
         </script>
     </body>

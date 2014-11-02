@@ -44,7 +44,6 @@ function updateEvent(event) {
     var edt = toFormattedGMTDate(event.end);
 
     flog("dates", sdt, edt);
-    //alert('start date: ' + sdt + 'endDate: ' + edt);
     //return;
 
     $.ajax({

@@ -1,16 +1,17 @@
 function initManageModule(baseHref, themePath) {
+    flog("initManageModule", baseHref, themePath);
     window.request_url = function() {
-        var str = "";
+        var str = '';
         var p = getSelectedProgram();
         if (p) {
-            str += p.name + "/";
+            str += p.name + '/';
         }
         if (selectedCourse) {
-            str += selectedCourse.name + "/"; // TODO: branches
+            str += selectedCourse.name + '/'; // TODO: branches
         }
-        flog("str", str);
-        var s = baseHref + "/" + str + "_DAV/PROPFIND?fields=href,name,milton:title,iscollection&where=iscollection";
-        flog("request_url", s);
+        flog('str', str);
+        var s = baseHref + '/' + str + '_DAV/PROPFIND?fields=href,name,milton:title,iscollection&where=iscollection';
+        flog('request_url', s);
         return s;
     };
 
@@ -28,23 +29,27 @@ function initManageModule(baseHref, themePath) {
 }
 
 function initCssForEditor(themePath) {
-    flog("initCssForEditor. Themepath=", themePath);
-    themePath = "/templates/themes/bootstrap300/"; // HACK!! Loading from an actual theme doesnt work when its not a base theme (eg united)
-    flog("initCssForEditor. Themepath=", themePath);
+    flog('initCssForEditor. Themepath=', themePath);
+    themePath = '/templates/themes/bootstrap320/'; // HACK!! Loading from an actual theme doesnt work when its not a base theme (eg united)
+    flog('initCssForEditor. Themepath=', themePath);
     //cssPath += ',' + themePath + 'theme.less,/static/common/contentStyles.less';
-    var cssPath = "";
+    var cssPath = '';
     cssPath += themePath + 'less/bootstrap.less';
     cssPath += ',';
     cssPath += evaluateRelativePath(window.location.pathname, '../../../../theme/theme-params.less');
-    flog("initCssForEditor2", cssPath);
+    flog('initCssForEditor2', cssPath);
     cssPath = cssPath.replaceAll('/', '--');
     cssPath = '/' + cssPath + '.compile.less';
-    flog("initCssForEditor3", cssPath);
+    flog('initCssForEditor3', cssPath);
 
     flog('push theme css file for editor', cssPath);
     themeCssFiles.push(cssPath);
-    themeCssFiles.push("/static/editor/editor.css"); // just to format the editor itself a little
+    themeCssFiles.push('/static/editor/editor.css'); // just to format the editor itself a little
     themeCssFiles.push('/static/prettify/prettify.css');
+        
+    templatesPath = themePath + 'editor-templates.js'; // override default defined in toolbars.js
+    stylesPath = themePath + 'styles.js'; // override default defined in toolbars.js
+    flog('override default templates and styles', templatesPath, stylesPath);
 }
 
 function initThumbnail() {
@@ -131,12 +136,14 @@ function initDropdownMix() {
 
     adjustDropdownWidth();
 
-    Bob.onPageResized(function() {
+    $(window).resize(function() {
         adjustDropdownWidth();
     });
 
-    Bob.onPageClicked(function(e, $target) {
-        if (!$target.is(btnShowMix) && !$target.parents().is(btnShowMix) && !$target.parents().is(dropdown)) {
+    $(document.body).on('click', function (e) {
+        var target = $(e.target);
+
+        if (!target.is(btnShowMix) && !target.parents().is(btnShowMix) && !target.parents().is(dropdown)) {
             mixWrapper.removeClass('open');
         }
     });
@@ -241,8 +248,21 @@ function initCRUDModulePages() {
     $('.btn-add-page').click(function(e) {
         e.preventDefault();
         flog('initAddPageModal: click');
-
+        // Make sure inputs are cleared
         modal.find('input[type=text], textarea,input[name=pageName]').val('');
+        
+        // Find highest order value and increment for new page
+        var lastOrder = $("#pages-list input[type=hidden]").last().val();
+        flog("lastOrder", lastOrder);
+        if( lastOrder === null || lastOrder === "") {
+            lastOrder = 0;
+        }
+        
+        lastOrder = Number(lastOrder);
+        var newOrderVal = lastOrder + 1;       
+        
+        flog("newOrderVal", newOrderVal);
+        form.find("input[name=order]").val(newOrderVal);
 
         form.unbind().submit(function(e) {
             flog('submit clicked', e.target);
@@ -303,8 +323,8 @@ function initModuleList() {
     });
 }
 
-function checkFormControlState(type) {
-    flog("checkFormControlState", type);
+function checkFormControlState(type, afterRemoveLastOne) {
+    flog('checkFormControlState', type);
     var allWrappers = {
         reward: $('.rewards-wrapper'),
         certificate: $('.certificates-wrapper')
@@ -325,7 +345,7 @@ function checkFormControlState(type) {
         var btnAdd = wrapper.prev();
         var contents = wrapper.children('div');
 
-        if (type) {
+        if (type && !afterRemoveLastOne) {
             wrapper[contents.length === 0 ? 'addClass' : 'removeClass']('hide');
             btnAdd[contents.length === 0 ? 'addClass' : 'removeClass']('btn-add-first');
         }
@@ -345,8 +365,8 @@ function checkFormControlState(type) {
                 content.find('select').attr('name', 'reward' + i);
             } else if (type === 'certificate') {
                 var points = 'points' + i;
-                var pointsInp = content.find("input");
-                flog("points", pointsInp);
+                var pointsInp = content.find('input');
+                flog('points', pointsInp);
                 pointsInp.attr({
                     name: points,
                     id: points
@@ -373,8 +393,8 @@ function initFormControl(name) {
             wrapper.removeClass('hide');
         } else {
             var cloned = template.clone();
-            flog("cloned", cloned);
-            cloned.find("input, select").val("");
+            flog('cloned', cloned);
+            cloned.find('input, select').val('');
             wrapper.append(cloned);
         }
 
@@ -386,10 +406,17 @@ function initFormControl(name) {
 
         var btn = $(this);
         var parent = btn.closest('.' + name);
+        var remain = wrapper.find('.' + name).length;
 
-        parent.remove();
+        if (remain == 1) {
+            btnAdd.addClass('btn-add-first');
+            wrapper.addClass('hide');
+            parent.find('input, select').val('');
+        } else {
+            parent.remove();
+        }
 
-        checkFormControlState(name);
+        checkFormControlState(name, remain === 1);
     });
 }
 
@@ -420,7 +447,7 @@ function initFormDetails() {
         var certId = btn.closest('.certificate').find('select').val();
 
         if (certId === '') {
-            alert('Please select a certificate');
+            Msg.error('Please select a certificate');
         } else {
             var href = 'cert_' + certId + '/certificatePreview.pdf';
             window.open(href, '_bank');
@@ -439,13 +466,14 @@ function initFormDetails() {
         checkEmailConfirm();
     });
 
-    $("#moduleDetailsForm").forms({
+    $('#moduleDetailsForm').forms({
         validate: function(form) {
             return checkEditListsValid();
         },
         callback: function(resp) {
             flog('Module details saved', resp);
-            if (resp.nextHref && resp.nextHref !== window.location.pathname) {
+            Msg.info("Saved");
+            if (resp.nextHref && resp.nextHref !== decodeURIComponent(window.location.pathname)) {
                 window.location.href = resp.nextHref;
             }
         }
@@ -455,7 +483,7 @@ function initFormDetails() {
 }
 
 function checkEditListsValid() {
-	flog('checkEditListsValid');
+    flog('checkEditListsValid');
     var isOk = true;
 
     $('.certificates-wrapper, .rewards-wrapper').each(function(i) {
@@ -464,19 +492,22 @@ function checkEditListsValid() {
 
         if (!wrapper.hasClass('hide')) {
             wrapper.children().each(function(rowIndex) {
-                $(this).find('select.requiredIf, input.requiredIf').each(function() {
+                var item = $(this);
+
+                item.find('select.requiredIf, input.requiredIf').each(function() {
                     var input = $(this);
                     var val = input.val().trim();
                     
                     if (val === '') {
                         isOk = false;
-                        showValidation(input, 'A value is required', form);
+
+                        item.addClass('has-error');
                     } else {
                         flog('val', val, values);
 
                         if (values.indexOf(val) !== -1) {
                             showErrorField(input);
-                            alert('Duplicate ' + input.attr('data-basename') + ' on row ' + rowIndex);
+                            Msg.error('Duplicate ' + input.attr('data-basename') + ' on row ' + rowIndex);
                             isOk = false;
                         } else {
                             values.push(val);
@@ -504,7 +535,7 @@ function saveModulePages() {
     showLoadingOverlay();
     
     $.ajax({
-        type: "POST",
+        type: 'POST',
         url: '',
         data: $('form.modulePages').serialize(),
         dataType: 'json',
@@ -514,7 +545,7 @@ function saveModulePages() {
         },
         error: function(resp) {
             hideLoadingOverlay();
-            alert('Sorry couldnt update module');
+            Msg.error('Sorry couldnt update module');
         }
     });
 }
@@ -530,6 +561,20 @@ function initAddQuizModal() {
 
         modal.find('input[type=text], textarea,input[name=pageName]').val('');
         modal.find('#quiz-questions').html('<ol class="quiz"></ol>');
+        
+        // Find highest order value and increment for new page
+        var lastOrder = $("#pages-list input[type=hidden]").last().val();
+        flog("lastOrder", lastOrder);
+        if( lastOrder === null || lastOrder === "") {
+            lastOrder = 0;
+        }
+        
+        lastOrder = Number(lastOrder);
+        var newOrderVal = lastOrder + 1;       
+        
+        flog("newOrderVal", newOrderVal);
+        form.find("input[name=order]").val(newOrderVal);        
+        
         form.unbind().submit(function(e) {
             e.preventDefault();
             doSavePage(form, null, true);
@@ -582,7 +627,7 @@ function isModalOpen() {
 
 function loadModalEditorContent(modal, name, isQuiz) {
     $.ajax({
-        type: "GET",
+        type: 'GET',
         url: name + '?type=json',
         dataType: 'json',
         success: function(resp) {
@@ -592,13 +637,15 @@ function loadModalEditorContent(modal, name, isQuiz) {
 
             if (isQuiz) {
                 loadQuizEditor(modal, data);
-            } else {
+            } else {               
+                //CKEDITOR.instances["body"].setData(data.body)
                 modal.find('textarea').val(data.body);
+                flog("set values", data.title, data.body, CKEDITOR.instances["body"]);
             }
         },
         error: function(resp) {
             flog('error', resp);
-            alert('err: couldnt load page data');
+            Msg.error('err: couldnt load page data');
         }
     });
 }
@@ -632,11 +679,12 @@ function doSavePage(form, pageArticle, isQuiz) {
     }
     flog('do ajax post', form.attr('action'), data);
     try {
+        var orderVal = form.find("input[name=order]").val();
         modal.find('button[data-type=form-submit]').attr('disabled', 'true');
         flog('set disabled', modal.find('button[data-type=form-submit]'));
         form.addClass('ajax-processing');
         $.ajax({
-            type: "POST",
+            type: 'POST',
             url: form.attr('action'),
             data: data,
             dataType: 'json',
@@ -646,24 +694,24 @@ function doSavePage(form, pageArticle, isQuiz) {
                 modal.find('button[data-type=form-submit]').removeAttr('disabled');
                 if (data.status) {
                     var title = $title.val();
-                    if (pageArticle == null) { // indicated new page
+                    if (pageArticle === null) { // indicated new page
                         var pageName = getFileName(data.messages[0]);
                         var href = data.nextHref;
-                        addPageToList(pageName, href, title, isQuiz);
+                        addPageToList(pageName, href, title, isQuiz, orderVal);
                     } else {
                         pageArticle.find('> span').text(title);
                     }
                     closeFuseModal(modal);
 
-                    saveModulePages();
+                    //saveModulePages();
                 } else {
-                    alert('There was an error saving the page: ' + data.messages);
+                    Msg.error('There was an error saving the page: ' + data.messages);
                 }
             },
             error: function(resp) {
                 form.removeClass('ajax-processing');
                 flog('error', resp);
-                alert('Sorry, an error occured saving your changes. If you have entered editor content that you dont want to lose, please switch the editor to source view, then copy the content. Then refresh the page and re-open the editor and paste the content back in.');
+                Msg.error('Sorry, an error occured saving your changes. If you have entered editor content that you dont want to lose, please switch the editor to source view, then copy the content. Then refresh the page and re-open the editor and paste the content back in.');
             }
         });
     } catch (e) {
@@ -672,36 +720,7 @@ function doSavePage(form, pageArticle, isQuiz) {
     return false;
 }
 
-function addPageToList(pageName, href, title, isQuiz) {
+function addPageToList(pageName, href, title, isQuiz, orderVal) {
     flog('newRow', title, isQuiz);
-    var newFileName = getFileName(href);
-    var type = isQuiz ? 'quiz' : 'file';
-    var className = isQuiz ? 'clip-question' : 'clip-file-2';
-
-    $('#pages-list').append(
-            '<article class="page ' + type + '">' +
-            '<input type="hidden" name="' + newFileName + '" value="$order"/>' +
-            '<i class="' + className + '"></i>' +
-            '<span class="article-name">' + title + '</span>' +
-            '<aside class="article-action">' +
-            '<button type="button" class="btn btn-sm btn-move-file btn-info" title="Move up or down" style="margin-right: 4px;">' +
-            '<i class="glyphicon glyphicon-sort"></i>' +
-            '</button>' +
-            '<div class="btn-group btn-group-sm">' +
-            '<a role="button" href="' + newFileName + '" class="btn btn-sm btn-edit-page btn-info">' +
-            '<i class="fa fa-edit"></i> Edit' +
-            '</a>' +
-            '<button type="button" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown">' +
-            '<span class="caret"></span>' +
-            '</button>' +
-            '<ul class="dropdown-menu pull-right">' +
-            '<li><a href="' + newFileName + '" class="btn-edit-page" title="Edit page"><i class="fa fa-edit"></i> Edit</a></a></li>' +
-            '<li><a href="' + newFileName + '?goto" target="_blank" title="View page"><i class="clip-file-2"></i> View</a></a></li>' +
-            '<li class="divider"></li>' +
-            '<li><a href="' + href + '" class="btn-delete-page" title="Delete page"><i class="fa fa-times"></i> Delete</a></a></li>' +
-            '</ul>' +
-            '</div>' +
-            '</aside>' +
-            '</article>'
-            );
+    $("#pages-list").reloadFragment();
 }

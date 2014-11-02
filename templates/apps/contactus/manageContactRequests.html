@@ -10,8 +10,23 @@
 		        Request
 	        </div>
 	        <div class="panel-body">
+                <div class="clearfix form-horizontal">
+                    <div class="input-group date-range pull-right col-md-4 col-sm-6">
+                        <label for="report-range" class="input-group-addon">Time</label>
+                        <input type="text" id="report-range" placeholder="Choose a date range" value="" class="form-control" />
+                    </div>                    
+                    <div class="input-group search-user input-group-sm col-md-6 col-sm-6">
+                        <input type="text" id="email-query" class="form-control" placeholder="Search by recipient or subject" value="" /> 
+                        <span class="input-group-btn">
+                            <button class="btn btn-sm btn-default" type="button" data-type="clearer" data-target="#email-query">
+                                <i class="fa fa-times"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+                
 		        <div class="table-responsive">
-			        <table class="table table-striped table-hover">
+			        <table id="table-users" class="table table-striped table-hover">
 				        <colgroup>
 					        <col />
 					        <col />
@@ -31,7 +46,7 @@
 				        <tbody>
 					        #foreach($cr in $page.recent)
 					        <tr>
-						        <td><abbr title="$cr.createdDate">$formatter.formatDate($cr.createdDate)</abbr></td>
+						        <td><abbr class="timeago" title="$cr.createdDate">$formatter.formatDate($cr.createdDate)</abbr></td>
 						        <td>$formatter.htmlEncode($cr.firstName) $formatter.htmlEncode($cr.surName)</td>
 						        <td>$formatter.htmlEncode($cr.phone)</td>
 						        <td>$!cr.email</td>
@@ -45,5 +60,65 @@
 		        </div>
 	        </div>
         </div>
+        
+        <script type="text/javascript">
+            $(function() {
+                $('abbr.timeago').timeago();
+                flog("Init email history");
+                $("#email-query").keyup(function() {
+                    typewatch(function() {
+                        flog("do search");
+                        doSearch();
+                    }, 500);
+                });
+
+                var reportRange = $('#report-range');
+
+                reportRange.exist(function() {
+                    flog("init report range");
+                    reportRange.daterangepicker({
+                        format: 'DD/MM/YYYY', // YYYY-MM-DD
+                        ranges: {
+                            'Last 7 Days': [moment().subtract('days', 6), moment()],
+                            'Last 30 Days': [moment().subtract('days', 29), moment()],
+                            'This Month': [moment().startOf('month'), moment().endOf('month')],
+                            'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
+                            'This Year': [moment().startOf('year'), moment()],
+                        },
+                    },
+                            function(start, end) {
+                                flog('onChange', start, end);
+                                doSearch(start, end);
+                            }
+                    );
+                });
+
+            });
+
+            function doSearch(startDate, endDate) {
+                var query = $("#email-query").val();
+                flog("doSearch", query);
+                var data = {
+                    q: query,
+                    startDate: formatDate(startDate),
+                    finishDate: formatDate(endDate)
+                };
+                $.ajax({
+                    type: 'GET',
+                    url: window.location.pathname,
+                    data: data,
+                    success: function(data) {
+                        flog("success", data);
+                        var $fragment = $(data).find("#table-users");
+                        $("#table-users").replaceWith($fragment);
+                        $('abbr.timeago').timeago();
+                    },
+                    error: function(resp) {
+                        Msg.error("An error occured doing the user search. Please check your internet connection and try again");
+                    }
+                });
+            }
+
+        </script>
     </body>
 </html>

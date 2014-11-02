@@ -1,7 +1,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>$view.title</title>
-        <link href="manageAutoEmail.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="manageAutoEmail.js">//</script>
         <script type="text/javascript" src="manageEmail.js">//</script>
     </head>
@@ -17,7 +16,7 @@
             <div class="panel-body">
                 <form method="POST" action="$page.name" class="form-triggers">
                     <div class="table-responsive">
-                        <table class="table table-striped table-hover">
+                        <table id="trigger-wrapper" class="table table-striped table-hover">
                             <colgroup>
                                 <col />
                                 <col />
@@ -31,7 +30,7 @@
                                     <th>User</th>
                                     <th>Status</th>
                                     <th>Due Date</th>
-                                    <th class="action"><button class="btn btn-sm btn-danger btn-remove"><i class="clip-minus-circle "></i></button></th>
+                                    <th class="action"><button title="Delete selected queued triggers" class="btn btn-sm btn-danger btn-remove"><i class="clip-minus-circle "></i></button></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -86,7 +85,7 @@
         </div>
 
         <script type="text/javascript">
-            Bob.onDOMReady(function() {
+            $(function () {
                 initManageEmailTrigger();
                 $(".select.select-all").click(function(e) {
                     e.preventDefault();

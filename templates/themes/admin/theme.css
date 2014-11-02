@@ -1149,6 +1149,8 @@ ul.barList li:last-child {
 .profilePic{
     float:left;
     margin-right:8px;
+    height: 52px;
+    width: 52px;
 }
 a.module {
     font-weight: bold;

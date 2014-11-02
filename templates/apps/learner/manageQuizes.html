@@ -1,0 +1,163 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title></title>
+        <link rel="stylesheet" type="text/css" href="manageReward.css" />
+        <link rel="stylesheet" type="text/css" href="/static/common/jquery-ui-1.8.11.custom.css" />
+       	<script type="text/javascript" src="manageReward.js">//</script>        
+        <link href="/static/common/fileuploader.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="/static/js/fileuploader.js">//</script>
+    </head>
+    <body>
+        <section id="manageReward" class="MainContent">
+            <div class="clearfix">
+                <button class="btn btn-primary removeEntries">Remove Selected</button>
+                <button class="btn btn-success pull-right refresh-history">Refresh</button>
+                <div class="input-group date-range col-md-3 pull-right" style="margin-right: 5px">
+                    <label for="report-range" class="input-group-addon">Time</label>
+                    <input type="text" id="report-range" placeholder="Choose a date range" value="" class="form-control" />
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+            <hr/>
+            <div class="Content Details">
+                <div class="table-responsive">
+                    <table class="entries table table-striped table-hover table-full-width" id="history-table">
+                        <thead>
+                            <tr>
+                                <th class="center">
+                                    <div class="checkbox-table">
+                                        <label>
+                                            <input type="checkbox" name="toRemoveId" class="selectAll"/>
+                                        </label>
+                                    </div>
+                                </th>
+
+                                <th>Email</th>
+                                <th>Date awarded</th>
+                                <th>For</th>
+                                #foreach($field in $page.fieldNames)
+                                <th>$field</th>
+                                #end                                
+                            </tr>
+                        </thead>
+                        <tbody id="history-table-body">
+                            #foreach($entry in $page.submissions)
+                            <tr>
+                                <td class="center">
+                                    <div class="checkbox-table">
+                                        <label>
+                                            <input type="checkbox" name="toRemoveId" value="$entry.id"/>
+                                        </label>
+                                    </div>
+                                </td>
+
+                                <td><a href="/manageUsers/$entry.profile.id">$entry.profile.email</a></td>
+                                <td>$formatter.formatDate($entry.createdDate)</td>
+                                <td>$page.submittedForTitle($entry)</td>
+                                #foreach($field in $page.getAnswers($entry) )
+                                <td>$field</td>
+                                #end
+                            </tr>
+                            #end
+                        </tbody>
+                    </table>
+                </div>
+            </div>			
+        </section>
+        <script type="text/javascript">
+            $(function() {
+                initRemoveEntries();
+                initSelectAll();
+                initHistorySearch();
+                $(".refresh-history").click(function(e) {
+                    e.preventDefault();
+                    $("#history-table").reloadFragment();
+                });
+            });
+            function initRemoveEntries() {
+                $(".removeEntries").click(function(e) {
+                    var node = $(e.target);
+                    log("removeEntries", node, node.is(":checked"));
+                    var checkBoxes = node.closest(".MainContent").find("table.entries tbody td input[name=toRemoveId]:checked");
+                    if (checkBoxes.length == 0) {
+                        Msg.error("Please select the entries you want to remove by clicking the checkboxs to the right");
+                    } else {
+                        if (confirm("Are you sure you want to remove " + checkBoxes.length + " entries?")) {
+                            doRemoveEntries(checkBoxes);
+                        }
+                    }
+                });
+            }
+            function doRemoveEntries(checkBoxes) {
+                $.ajax({
+                    type: 'POST',
+                    data: checkBoxes,
+                    dataType: "json",
+                    url: "",
+                    success: function(data) {
+                        log("success", data)
+                        if (data.status) {
+                            Msg.success("Removed entries ok");
+                            $("#history-table").reloadFragment();
+                        } else {
+                            Msg.error("There was a problem removing submissions. Please try again and contact the administrator if you still have problems");
+                        }
+                    },
+                    error: function(resp) {
+                        Msg.error("An error occurred removing entries. You might not have permission to do this");
+                    }
+                });
+            }
+
+            function initHistorySearch() {
+                var reportRange = $('#report-range');
+
+                reportRange.exist(function() {
+                    flog("init report range");
+                    reportRange.daterangepicker({
+                        format: 'DD/MM/YYYY', // YYYY-MM-DD
+                        ranges: {
+                            'Last 7 Days': [moment().subtract('days', 6), moment()],
+                            'Last 30 Days': [moment().subtract('days', 29), moment()],
+                            'This Month': [moment().startOf('month'), moment().endOf('month')],
+                            'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
+                            'This Year': [moment().startOf('year'), moment()],
+                        },
+                    },
+                            function(start, end) {
+                                flog('onChange', start, end);
+                                doHistorySearch(start, end);
+                            }
+                    );
+                });
+
+                function doHistorySearch(startDate, endDate) {
+                    flog('doHistorySearch', startDate, endDate);
+
+                    var data = {
+                        startDate: formatDate(startDate),
+                        finishDate: formatDate(endDate)
+                    };
+                    flog("data", data);
+
+                    var target = $("#history-table-body");
+                    $.ajax({
+                        type: "GET",
+                        url: window.location.pathname,
+                        dataType: 'html',
+                        data: data,
+                        success: function(content) {
+                            flog('response', content);
+                            var newBody = $(content).find("#history-table-body");
+                            flog("newBody", newBody);
+                            target.replaceWith(newBody);
+                            jQuery("abbr.timeago").timeago();
+                        }
+                    });
+
+                }
+            }
+        </script>
+    </body>
+</html>

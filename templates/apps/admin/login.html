@@ -15,13 +15,13 @@
         <script type="text/javascript" src="/static/js/jquery.user.js">//</script>
         <link rel="template" href="plain" />
         <script type="text/javascript">
-            Bob.onDOMReady(function() {
+            $(function () {
                 $(".login").user({
                     afterLoginUrl: null,
                     valiationMessageSelector: "#validationMessage",
                     valiationMessageText: "#validationMessage span",
                     requiredFieldsMessage: 'Please enter your credentials.',
-                    loginFailedMessage: 'Sorry, those login details were not recognised.',
+                    loginFailedMessage: 'Sorry, those login details were not recognised.'
                 }); // setup login and logout
             });
         </script>
@@ -30,7 +30,7 @@
     <body class="login example2">
         <div class="main-login col-sm-4 col-sm-offset-4">
             <div class="logo">
-                <img src="/static/images/login_logo.png" width="182" height="43" alt="fuseLMS" />
+                <img src="/static/images/login-logo.png"  alt="fuseLMS" />
             </div>
             <div class="box-login">
                 <h3>Sign in to your account</h3>
@@ -40,7 +40,7 @@
                     <fieldset>
                         <div class="form-group">
                             <span class="input-icon">
-                                <input type="text" placeholder="Username" name="email" class="form-control" />
+                                <input type="text" autocapitalize="off" autocorrect="off" placeholder="Username" name="email" class="form-control" />
                                 <i class="fa fa-user"></i>
                             </span>
                         </div>
@@ -60,7 +60,7 @@
                 </form>
             </div>
             <div class="copyright">
-                2013 &copy; FuseLMS.
+                2014 &copy; Kademi Ltd.
             </div>
         </div>
     </body>

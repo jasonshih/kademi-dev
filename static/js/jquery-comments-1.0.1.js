@@ -11,23 +11,23 @@
  * ajaxLoadingFn - callback function to show ajax loading. Takes one argument isLoading (true/false)
  * currentUser - user object containing name, href, photoHref
  * streamSelector - jquery selector for the contained element to hold the comment stream
- * 
+ *
  */
 
-(function($) {
-    $.fn.comments = function(options) {
+(function ($) {
+    $.fn.comments = function (options) {
         var container = this;
         var config = $.extend({
             'pageUrl': window.location,
             'streamSelector': ".comments-stream",
-            'renderCommentFn': function(user, date, comment, commentId) {
+            'renderCommentFn': function (user, date, comment, commentId) {
                 log("renderCommentFn-101-standard", user, "container=", container, "commentId=", commentId);
                 if (user === null) {
                     log("no user so dont render");
                     return;
                 }
                 var outerDiv = $("#" + commentId);
-                log("outerDiv", commentId, outerDiv);
+                
                 if (outerDiv.length === 0) {
                     log("add comment");
                     outerDiv = $("<div class='forumReply'></div>");
@@ -41,7 +41,14 @@
                     var commentPara = $("<p class='cmt'></p>");
                     commentPara.html(comment);
 
-                    var dateSpan = $("<abbr title='" + date.toISOString() + "' class='auxText'>" + toDisplayDateNoTime(date) + "</abbr>");
+                    var dt = {
+                        date: date.getDate(),
+                        month: date.getMonth(),
+                        year: date.getYear()
+                    };
+                    
+                    var dateSpan = $("<abbr title='" + date.toISOString() + "' class='auxText'>" + toDisplayDateNoTime(dt) + "</abbr>");
+
                     var toolsDiv = $("<div></div>");
                     outerDiv.append(profLink);
                     outerDiv.append(nameLink);
@@ -54,17 +61,47 @@
                     outerDiv.find(".cmt").html(comment);
                 }
 
-
                 jQuery("abbr.auxText", outerDiv).timeago();
             },
-            'clearContainerFn': function() {
+            'clearContainerFn': function () {
                 container.find(config.streamSelector).html("");
             },
-            'ajaxLoadingFn': function(isLoading) {
+            'ajaxLoadingFn': function (isLoading) {
                 if (isLoading) {
                     ajaxLoadingOn();
                 } else {
                     ajaxLoadingOff();
+                }
+            },
+            itemsPerPage: 10,
+            'paginateFn': function (comments, config, container) {
+                log("paginateFn-101-standard", comments, config, container);
+
+                var totalComments = comments.length;
+                var itemsPerPage = config.itemsPerPage;
+
+                if (totalComments > itemsPerPage) {
+                    container.prepend(
+                        '<div class="well well-sm text-center"><a href="" class="btn-show-more">Show previous comments</a></div>'
+                    );
+
+                    var commentWrappers = container.find('.forumReply');
+
+                    // Show 10 last comments
+                    commentWrappers.filter(':lt(' + (totalComments - itemsPerPage) + ')').hide().addClass('hidden-comment');
+
+                    container.find('.btn-show-more').click(function (e) {
+                        e.preventDefault();
+
+                        var hiddenCommentWrappers = commentWrappers.filter('.hidden-comment');
+                        var totalHiddenComments = hiddenCommentWrappers.length;
+
+                        hiddenCommentWrappers.filter(':gt(' + (totalHiddenComments - itemsPerPage - 1) + ')').show().removeClass('hidden-comment');
+
+                        if (totalHiddenComments <= itemsPerPage) {
+                            $(this).parent().hide();
+                        }
+                    });
                 }
             },
             'aggregated': false  // if true will list all comments under the given page 
@@ -72,7 +109,7 @@
 
         log("register submit event", $("form", this));
 
-        $("form", this).submit(function(e) {
+        $("form", this).submit(function (e) {
             e.preventDefault();
             e.stopPropagation();
             try {
@@ -84,8 +121,7 @@
         });
         initWebsockets(config);
 
-
-        loadComments(config.pageUrl, config.renderCommentFn, config.clearContainerFn, config.aggregated, container);
+        loadComments(config, container);
     };
 
     function initWebsockets(config) {
@@ -94,7 +130,7 @@
         var b64ContentId = Base64.encode(path);
         try {
             wsocket = new WebSocket("ws://" + window.location.host + "/comments/" + window.location.host + "/content/" + b64ContentId);
-            wsocket.onmessage = function(evt) {
+            wsocket.onmessage = function (evt) {
                 var c = $.parseJSON(evt.data);
                 log("onMessage", c);
                 var dt = new Date(c.date);
@@ -107,12 +143,7 @@
         }
     }
 
-
 })(jQuery);
-
-
-
-
 
 function sendNewForumComment(pageUrl, commentInput, renderComment, currentUser) {
     log("sendNewForumComment", pageUrl, commentInput, currentUser);
@@ -137,7 +168,7 @@ function sendNewForumComment(pageUrl, commentInput, renderComment, currentUser) 
         url: url,
         data: {newComment: comment},
         dataType: "json",
-        success: function(resp) {
+        success: function (resp) {
             ajaxLoadingOff();
             commentInput.val('');
             commentInput.keyup();
@@ -150,14 +181,19 @@ function sendNewForumComment(pageUrl, commentInput, renderComment, currentUser) 
                 alert("Sorry, there was a problem posting your comment. Please try again");
             }
         },
-        error: function() {
+        error: function () {
             ajaxLoadingOff();
             alert('Sorry, we could not process your comment. Please try again later');
         }
     });
 }
 
-function loadComments(page, renderCommentFn, clearContainerFn, aggregated, container) {
+function loadComments(config, container) {
+    var page = config.pageUrl;
+    var renderCommentFn = config.renderCommentFn;
+    var clearContainerFn = config.clearContainerFn;
+    var aggregated = config.aggregated;
+
     commentUrl = page;
     var url = page;
     if (!url.endsWith("/")) {
@@ -165,25 +201,26 @@ function loadComments(page, renderCommentFn, clearContainerFn, aggregated, conta
     }
     url += "_comments";
 
-    $.getJSON(url, function(response) {
+    $.getJSON(url,function (response) {
         log("got comments response", response);
         clearContainerFn();
-        processComments(response, renderCommentFn);
-    }).fail(function() {
+        processComments(response, config, container);
+    }).fail(function () {
         log("Failed to load comments", container);
         clearContainerFn();
-        if( container ) {
+        if (container) {
             container.hide();
         }
     });
 }
 
-function processComments(comments, renderCommentFn) {
+function processComments(comments, config, container) {
     if (comments) {
         comments.sort(dateOrd);
-        $.each(comments, function(i, comment) {
-            invokeRenderFn(comment, renderCommentFn);
+        $.each(comments, function (i, comment) {
+            invokeRenderFn(comment, config.renderCommentFn);
         });
+        config.paginateFn(comments, config, container);
     }
 }
 
@@ -191,5 +228,3 @@ function invokeRenderFn(comment, renderCommentFn) {
     var dt = new Date(comment.date);
     renderCommentFn(comment.user, dt, comment.comment, comment.id);
 }
-
-

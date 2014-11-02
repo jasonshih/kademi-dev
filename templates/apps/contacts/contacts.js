@@ -74,7 +74,7 @@ function showEditContact(link) {
         },
         error: function(resp) {
             log("error", resp);
-            alert("err");
+            alert("An error occured retrieving contact details");
         }
     });
 

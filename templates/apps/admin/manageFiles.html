@@ -12,21 +12,15 @@
         <script type="text/javascript" src="/templates/themes/admin/prompt.js">//</script>
         <script type="text/javascript" src="/templates/apps/admin/manageFiles.js">//</script>
         <script type="text/javascript" src="/static/js/types.js">// </script>
-        <script type="text/javascript" src="/static/js/jquery.timeago.js">//</script>       
+        <script type="text/javascript" src="/static/js/jquery.timeago.js">//</script>
+        <script type="text/javascript" src="/static/jquery.cutcopy/1.0.0/jquery.cutcopy-1.0.0.js">//</script>
     </head>
     <body class="manage-files">
-        <div class="well">
-            <p>A repository is a container for files, you can think of it like a hard disk
-                in the internet. There are different types of repositories for different functions. A <b>website</b>
-                in Fuse is a repository which is connected to a domain name.</p>
-            <p>Here you can upload files, create folders and create and edit web pages. But
-                you should tread carefully - not all repositories are meant to be used this way!</p>
-        </div>
         <div class="clearfix">
             #set($currentBranch = $page.closest("branch"))
             <div class="btn-group publishing pull-right">
                 #if( $currentBranch.live )
-                <a href="../manageBranches" class="islive btn btn-sm btn-danger">
+                <a href="/repositories/$page.closest("repository").name/manageBranches" class="islive btn btn-sm btn-danger">
                     <i class="fa fa-gear"></i>
                     LIVE
                 </a>
@@ -35,7 +29,7 @@
                     <i class="glyphicon glyphicon-ok-sign"></i>
                     PUBLISH
                 </a>
-                <a href="../manageBranches" class="btn btn-sm btn-primary">
+                <a href="/repositories/$page.closest("repository").name/manageBranches" class="btn btn-sm btn-primary">
                     <i class="fa fa-gear"></i>
                     Manage versions
                 </a>
@@ -126,7 +120,7 @@
                                 <col />
                                 <col />
                                 <col />
-                                <col style="width: 110px;" />
+                                <col style="width: 150px;" />
                             </colgroup>
                             <thead>
                                 <tr>
@@ -136,13 +130,27 @@
                                     <th class="size">Size</th>
                                     <th  class="action">
                                         <div class="btn-group">
-                                            <a title="Create a folder" class="btn btn-success btn-sm btn-create-folder" href=""><i class="clip-folder-plus"></i></a>
+                                            <a title="Paste" href="$page.href" class="btn btn-success btn-sm btn-paste requires-clipboard" data-clipboard="default" href="$page.href"><i class="fa fa-paste"></i></a>
+                                            <a title="Create a folder" class="btn btn-success btn-sm btn-create-folder" href=""><i class="clip-folder-plus"></i></a>                                            
                                             <a title="Upload files" class="btn btn-success btn-sm btn-upload-file" href=""><i class="fa fa-cloud-upload"></i></a>
                                         </div>
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
+                                #if (!$page.is("branch"))
+                                <tr class="folder">
+                                    <td class="icon">
+                                        <a href="../#files-tab"><i class="fa fa-reply"></i></a>
+                                    </td>
+                                    <td class="left">
+                                        <a href="../#files-tab">Parent Directory</a>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="action"></td>
+                                </tr>
+                                #end
                                 #foreach($f in $page.subFolders)
                                 <tr class="folder">
                                     <td class="icon">
@@ -158,6 +166,10 @@
                                             <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cog"></i> <span class="caret"></span></button>
                                             <ul class="dropdown-menu pull-right" role="menu">
                                                 <li><a href="${f.path}" class="btn-rename-file" title="Rename folder"><i class="fa fa-edit"></i> Rename</a></li>
+                                                <li class="divider"></li>                                                
+                                                <li><a href="$f.href" class="btn-copy"><span class="fa fa-copy"></span> Copy</a></li>
+                                                <li><a href="$f.href" class="btn-cut"><span class="fa fa-cut"></span> Cut</a></li>
+                                                <li class="requires-clipboard" data-clipboard="default"><a href="$f.href" class="btn-paste"><span class="fa fa-paste"></span> Paste</a></li>
                                                 <li class="divider"></li>
                                                 <li><a href="${f.path}" class="btn-delete-file" title="Delete folder"><i class="fa fa-times"></i> Delete</a></li>
                                             </ul>
@@ -167,15 +179,21 @@
                                 #end
 
                                 #foreach($f in $page.files)
+                                #set($isImage = $f.is("image"))
                                 #set($type = $formatter.ifTrue($f.is("image"), "image", "file"))
-                                #set($imgClass = $formatter.ifTrue($f.is("image"), "fa-picture-o", "clip-file"))
+                                #set($imgClass = $formatter.ifTrue($f.is("image"), "fa fa-picture-o", "clip-file"))
                                 #set($aClass = $formatter.ifTrue($f.is("image"), "show-color-box group1 cboxElement", ""))
+                                #set($linkToFile = $f.href)
+                                #if(!$isImage)
+                                    #set($linkToFile = "texteditor?fileName=" + $f.name)
+                                #end
+
                                 <tr class="$type">
                                     <td class="icon">
                                         <a href="$f.href"><i class="$imgClass"></i></a>
                                     </td>
                                     <td class="left">
-                                        <a href="$f.href" class="$aClass" title="$f.name">$f.name</a>
+                                        <a href="$linkToFile" target="_blank" class="$aClass" title="$f.name">$f.name</a>
                                     </td>
                                     <td><abbr title="$formatter.formatDateISO8601($!f.modifiedDate)" class="timeago">$!f.modifiedDate</abbr></td>
                                     <td class="size">$f.contentLength</td>
@@ -187,6 +205,9 @@
                                                 <li><a href="${f.path}" target="_blank" title="Download file"><i class="fa fa-cloud-download"></i> Download</a></li>
                                                 <li><a href="${f.path}" class='btn-history-file' title="Show history"><i class="clip-history"></i> Show history</a></li>
                                                 <li class="divider"></li>
+                                                <li><a href="$f.href" class="btn-copy"><span class="fa fa-copy"></span> Copy</a></li>
+                                                <li><a href="$f.href" class="btn-cut"><span class="fa fa-cut"></span> Cut</a></li>                                                
+                                                <li class="divider"></li>                                                
                                                 <li><a href="${f.path}" class="btn-delete-file" title="Delete file"><i class="fa fa-times"></i> Delete</a></li>
                                             </ul>
                                         </div>
@@ -240,13 +261,13 @@
 
 
         <script src="/theme/assets/plugins/dropzone/downloads/dropzone.min.js"></script>
-        <div id="modal-upload" class="modal fade" aria-hidden="true" tabindex="-1">
+        <div id="modal-upload" class="modal modal-md fade" aria-hidden="true" tabindex="-1">
             <div class="modal-header">
                 <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
                 <h4 class="modal-title">Upload files</h4>
             </div>
             <div class="modal-body">
-                <form action="${page.href}_DAV/PUT?overwrite=true" class="dropzone" id="uploadFileDropzone"></form>
+                <form action="${page.href}_DAV/PUT?overwrite=true" class="dropzone dropzone-fullwidth" id="uploadFileDropzone"></form>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
@@ -332,7 +353,7 @@
 
         <script type="text/javascript" >
             var themePath = "${page.themePath}";
-            Bob.onDOMReady(function() {
+            $(function () {
                 initManageFiles();
                 Dropzone.autoDiscover = false;
                 $(".dropzone").dropzone({
@@ -349,7 +370,7 @@
                     reloadFileList();
                 });
                 dz.on("error", function(file, errorMessage) {
-                    alert("An error occured uploading: " + file.name + " because: " + errorMessage);
+                    Msg.error("An error occured uploading: " + file.name + " because: " + errorMessage);
                 });                
             });
         </script>        

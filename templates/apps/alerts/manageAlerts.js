@@ -4,7 +4,7 @@ function initManageDashboardMessage() {
 	$('#frm-message').forms({
 		callback: function(resp) {
 			log('done save', resp);
-			alert('Saved');
+			Msg.success('Saved');
 		}
 	});
 

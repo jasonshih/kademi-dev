@@ -3,14 +3,85 @@ function initManageEmail() {
     initDeleteEmail();
 }
 
+
+function initSendTest() {
+    flog("initSendTest");
+    $('.btn-sent-test').click(function(e) {
+        flog("test");
+        e.preventDefault();
+        doSendTest();
+
+    });
+    $(".btn-sent-test-choose").click(function(e) {
+        e.preventDefault();
+        $("#modal-send-test").modal();
+    });
+    flog("send test", $(".btn-sent-test-choose"));
+    $("#modal-send-test").find("form").forms({
+        callback: function(resp) {
+            flog("resp", resp);
+            onTestResponse(resp);
+        }
+    });
+}
+
+function doSendTest() {
+    flog("doSendTest");
+    $.ajax({
+        type: 'POST',
+        url: window.location.pathname,
+        datatype: 'json',
+        data: {
+            sendTest: true
+        },
+        success: function(resp) {
+            Msg.success('A test has been sent to your email address');
+            onTestResponse(resp);
+        },
+        error: function(resp) {
+            Msg.error('Sorry, we couldnt send the test. Please contact the administator to help find the problem.');
+        }
+    });
+}
+
+function onTestResponse(resp) {
+    flog("onTestResponse", resp);
+    if (resp.status) {
+        var url = resp.nextHref;
+        //var win = window.open(url, "_blank");
+        var modal = $("#modal-send-test-progress");
+        modal.modal();
+        var target = modal.find(".modal-body");
+        loadEmailItemContent(target, url);
+    } else {
+        Msg.info("Couldnt not send test email: " + resp.messages);
+    }
+}
+
+function loadEmailItemContent(target, url) {
+    flog("loadEmailItemContent", url);
+    target.load(url + ' #email-item-info > *', function(response, status, xhr) {
+        setTimeout(function() {
+            var complete = target.find(".status-c");
+            flog("reload", complete);
+            if( complete.length == 0 ) {
+                loadEmailItemContent(target, url);
+            }
+        }, 3000);
+    });
+}
+
+
 function initModalAddEmail() {
+    flog("initModalAddEmail");
     var modal = $('#modal-add-email');
 
     modal.find('form').forms({
         callback: function(data) {
             flog('saved ok', data);
             modal.modal('hide');
-            window.location.href = data.nextHref;
+            Msg.success($('#name').val() + ' is created!');
+            $('#email-trigger-wrapper').reloadFragment();
         }
     });
 }
@@ -29,6 +100,7 @@ function initDeleteEmail() {
         confirmDelete(href, name, function() {
             flog('remove', btn);
             btn.closest('tr').remove();
+            Msg.success(href + ' is deleted!');
         });
     });
 }
@@ -77,7 +149,7 @@ function setGroupRecipient(name, groupType) {
             },
             error: function(resp) {
                 flog("error", resp);
-                alert("err");
+                Msg.error('err');
             }
         });
     } catch (e) {
@@ -122,7 +194,7 @@ function initFormDetailEmail() {
         valiationMessageSelector: ".page-validation",        
         callback: function() {
             $('body').removeClass('dirty');
-            alert('Saved');
+            Msg.success('Saved');
         }
     });
 }

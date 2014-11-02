@@ -4,10 +4,26 @@
         <link href="/static/css/fullcalendar-1.6.4.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="calendars.js">//</script>
         <script type="text/javascript" src="/static/js/fullcalendar-1.6.4.js">//</script>
+        <script type="text/javascript" src="/static/moment/2.4.0/moment-2.4.0.js">//</script>        
+        <script type="text/javascript" src="/static/daterangepicker/1.3.3/daterangepicker.js">//</script>        
         <link href="calendars.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="/static/daterangepicker/1.3.3/daterangepicker-bs3.css" />
     </head>
     <body class="add-container">
+
+        #if( $page.writable )
+        <div class="pull-right">
+            <button class="btn btn-success add-event" data-toggle="modal" data-target="#add-event-modal">
+                <span class="glyphicon glyphicon-plus"></span>
+                Create event
+            </button>
+        </div>        
+        <div class="clearfix"></div>
+        #end
+        
+
         <h3>Upcoming events</h3>
+
         <div class="row">
             <div class="calendar-events col-lg-6">
                 #set($upcoming = $page.upcomingEvents)
@@ -36,7 +52,80 @@
             <div class="col-lg-6">
                 <div id="calendar" class="calendar-container" style=""></div>
             </div>
+        </div>
 
+
+        <div id="add-event-modal" class="modal fade">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h3>Create a new event</h3>
+                    </div>
+                    <form method="POST" action="$page.href" class="form-horizontal" id="new-event">
+                        <input type="hidden" name="comment"/>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="control-label col-md-2" for="newQuestion">Title</label>
+                                <div class="col-md-10">
+                                    <input type="text" placeholder="A title for the event" id="summary" name="summary" class="form-control required" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-2" for="description">Description</label>
+                                <div class="col-md-10">
+                                    <textarea name="description" id="description" class="form-control" rows="3"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-2" for="description">Attendees</label>
+                                <div class="col-md-10">
+                                    <textarea name="attendees" id="attendees" class="form-control" rows="1"></textarea>
+                                    <i>Enter user names or email addresses</i>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label class="control-label col-md-2" for="location">Timezone</label>
+                                <div class="col-md-4">
+                                    <select name="timezone" class="chosen-select required form-control">
+                                        <option value="">[Please select]</option>
+                                        #foreach($tzId in $page.timezoneIdList)
+                                        $formatter.option( $tzId, $tzId, $page.timezone )
+                                        #end
+                                    </select>
+                                </div>
+
+                                <label class="control-label col-md-2" for="startDate">Dates & times</label>
+                                <div class="col-md-4">
+                                    <input type="text" id="event-range" placeholder="Choose start and end dates" value="$formatter.formatDateTime(  $page.startDate, $page.timezone ) - $formatter.formatDateTime( $page.endDate, $page.timezone )" class="form-control" />
+                                    <input type="hidden" id="startDate" name="startDate" value="$formatter.formatDateTime(  $page.startDate, $page.timezone )"  />
+                                    <input type="hidden" id="endDate" name="endDate" value="$formatter.formatDateTime( $page.endDate, $page.timezone )"  />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-2" for="location">Location</label>
+                                <div class="col-md-4"><input type="text" id="location" name="location" placeholder="38 Boulevarde Ave" class="form-control" /></div>
+                                <label class="control-label col-md-2" for="Organisor">Organisor</label>
+                                <div class="col-md-4">
+                                    <input type="text" name="organisor" id="Organisor" placeholder="Email address or user id" value="$!user.email" class="required form-control" />
+                                </div>
+                            </div>                                                              
+                        </div>
+                        <div class="modal-footer">
+                            <a href="#" class="btn" data-dismiss="modal">Close</a>
+                            <button class="btn btn-success" type="submit">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                                Create event
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
 
 
@@ -44,6 +133,30 @@
         <script type="text/javascript">
             $(function () {
                 initCalendar();
+
+                $("#new-event").forms({
+                    callback: function () {
+                        window.location.reload();
+                    }
+                });
+
+                var eventRange = $('#event-range');
+                eventRange.exist(function () {
+                    flog('init report range');
+                    eventRange.daterangepicker({
+                        format: 'DD/MM/YYYY HH:mm',
+                        timePicker: true,
+                        timePickerIncrement: 15,
+                        timePicker12Hour: false
+
+                    },
+                    function (start, end) {
+                        flog('onChange', start, end);
+                        $('#startDate').val(formatDateTime(start));
+                        $('#endDate').val(formatDateTime(end));
+                    }
+                    );
+                });
             });
         </script>
     </body>

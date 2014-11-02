@@ -1,0 +1,97 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Manage modules</title>
+        <link href="manageModule.css" rel="stylesheet" type="text/css" />
+        <link href="/static/quiz/quiz.css" rel="stylesheet" type="text/css" />
+        <link href="/static/history/jquery.history.css" rel="stylesheet" type="text/css" />
+        <link href="/static/js/milton-image-select.css" rel="stylesheet" type="text/css" />
+
+        <script type="text/javascript" src="/static/history/jquery.history.js">//</script>
+        <script type="text/javascript" src="/static/js/jquery.timeago.js">//</script>
+        <script type="text/javascript" src="/static/js/jquery.milton-image-select.js">//</script>
+        <script type="text/javascript" src="/static/js/jquery.milton-tree.js">//</script>
+    </head>
+    <body class="manageModulePages">
+        #set($currentBranch = $page.closest("branch"))
+
+
+
+        <div class="tabbable">
+            <ul class="nav nav-tabs tab-bricky">
+                <li><a data-toggle="tab" href="#list">Forms</a></li>
+                #if( $page.form )
+                <li><a data-toggle="tab" href="#details">Module details</a></li>
+                #end
+            </ul>
+            <div class="tab-content">
+                <!-- Start content of Module list tab -->
+                <div id="list" class="tab-pane">
+                    <div class="btn-group btn-group-sm pull-right">
+                        <a title="Add form" href="/forms/new.edit" class="btn btn-sm btn-success btn-quiz-page create-form"><i class="clip-question"></i></a>
+                    </div>
+
+                    <div id="pages-list" class="article-wrapper article-draggable">
+
+                        #foreach($formPage in $page.formsFiles)
+                        <article class="page">
+                            <span class="article-name">$modulePage.title</span>
+                            <aside class="article-action">
+                                <div class="btn-group btn-group-sm">
+                                    <a role="button" href="${$formPage.name}" class="btn btn-sm btn-edit-page btn-info">
+                                        <i class="fa fa-edit"></i> Edit
+                                    </a>
+                                    <button type="button" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown">
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu pull-right">
+                                        <li><a href="${modulePage.name}" class="btn-edit-page" title="Edit page"><i class="fa fa-edit"></i> Edit</a></li>
+                                        <li><a href="${modulePage.name}?goto" target="_blank" title="View page"><i class="fa fa-eye"></i> View</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="${modulePage.path}" class="btn-delete-page" title="Delete page"><i class="fa fa-times"></i> Delete</a></li>
+                                    </ul>
+                                </div>
+                            </aside>
+                        </article>
+                        #end
+                    </div>
+
+                </div>
+                <!-- End content of Module list tab -->
+                <!-- Start content of Module details tab -->
+                <div id="details" class="tab-pane Content TabContent">
+                    <form name="frmDetails" action="$page.name" method="post" class="Details form-horizontal" id="moduleDetailsForm">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                        <br/>
+                        <input type="text" name="formName" value="$page.form.name"/>
+                        <br/>
+                        <textarea name="formJson">
+                            $page.formJson
+                        </textarea>
+                    </form>
+                </div>
+                <!-- End content of Module details tab -->
+            </div>
+        </div>
+
+
+
+
+
+
+        <script type="text/javascript" >
+            var themePath = "${page.themePath}";
+            $(function () {
+                $(".create-form").click(function(e) {
+                    // redirect to the manage forms page which will create the directory if needed
+                    e.preventDefault();
+                    window.location = window.location.pathname + "?create=form";
+                });
+                $(".Details").forms({
+                    callback: function(resp) {
+                        flog("resp", resp);
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>

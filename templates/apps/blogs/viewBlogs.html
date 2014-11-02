@@ -3,9 +3,9 @@
         <title>Edit Event</title>
         <script type="text/javascript" src="/static/js/jquery.timeago.js">//</script>        
     </head>    
-    <body class="add-container">
+    <body class="blogs-home add-container">
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-lg-9 col-md-9">
                 #foreach($article in $page.articles.featured)
 
                 <div class="hero thumbnail well col-md-12">
@@ -13,13 +13,13 @@
                     #set($image = $article.bestSquareImageHref)
                     #if( $image )
                     #set($bg = "background-image: url('${image}/alt-300-300.png')")
-                    <div class="hero-image" style="$bg"></div>
+                    <div class="hero-image hidden-xs hidden-sm" style="$bg"></div>
                     #end
 
                     <div class="hero-body">                        
                         <h2 class="hero-heading"><a href="$article.href">$article.title</a></h2>
 
-                        $article.brief
+                        $!article.brief
 
                         <div class="clearfix">
                             <abbr class="pull-left timeago" title="$formatter.formatDateISO8601($article.articleDate)">$article.articleDate</abbr>
@@ -28,7 +28,9 @@
                                 <span class="label label-primary">$tag</span>
                                 #end
                                 #foreach($tag in $article.tags)
+                                #if( $article.isSelectedTag( $tag ) )
                                 <span class="label label-primary">$tag</span>
+                                #end
                                 #end
                                 #if($article.featured)
                                 <span class="label label-success">Featured</span>
@@ -37,23 +39,24 @@
                         </div>                        
                     </div>
                 </div>
-
+       	        <hr style="clear: both" />
                 #end
 
 
                 #foreach($article in $page.articles.notFeatured)
                 <div class="hero thumbnail well col-md-12">
+
                     #set($image = false)
                     #set($image = $article.bestSquareImageHref)
                     #if( $image )
                     #set($bg = "background-image: url('${image}/alt-300-300.png')")
-                    <div class="hero-image" style="$bg"></div>
+                    <div class="hero-image hidden-xs hidden-sm" style="$bg"></div>
                     #end
 
                     <div class="hero-body">                        
                         <h2 class="hero-heading"><a href="$article.href">$article.title</a></h2>
 
-                        $article.brief
+                        $!article.brief
 
                         <div class="clearfix">
                             <abbr class="pull-left timeago" title="$formatter.formatDateISO8601($article.articleDate)">$article.articleDate</abbr>
@@ -62,7 +65,9 @@
                                 <span class="label label-primary">$tag</span>
                                 #end
                                 #foreach($tag in $article.tags)
+                                #if( $article.isSelectedTag( $tag ) )
                                 <span class="label label-primary">$tag</span>
+                                #end
                                 #end
                                 #if($article.featured)
                                 <span class="label label-success">Featured</span>
@@ -71,37 +76,40 @@
                         </div>                        
                     </div>
                 </div>
+       	        <hr style="clear: both" />
                 #end
 
             </div> <!-- End primary section -->
 
-            <div class="col-md-4">
-                <ul class="nav nav-pills nav-stacked">
-                    #foreach($categoryCount in $page.categoryCounts)
-                    <li class="active">
-                        <a href="$page.href?cat=$categoryCount.item">
-                            <span class="badge pull-right">$categoryCount.count</span>
-                            $categoryCount.item
-                        </a>
-                    </li>
-                    #end
-                    #foreach($tagCount in $page.tagCounts)
-                    <li class="active">
-                        <a href="$page.href?tag=$tagCount.item">
-                            <span class="badge pull-right">$tagCount.count</span>
-                            $tagCount.item
-                        </a>
-                    </li>
-                    #end
+            <div class="col-lg-3 col-md-3">
+                <div class="panel">
+                    <div class="panel-body">
+                        <ul class="nav nav-pills nav-stacked">
+                            #foreach($categoryCount in $page.categoryCounts)
+                            <li class="active">
+                                <a href="$page.href?cat=$formatter.percentEncode( $categoryCount.item )">
+                                    <span class="badge pull-right">$categoryCount.count</span>
+                                    $categoryCount.item
+                                </a>
+                            </li>
+                            #end
+                            #foreach($tagCount in $page.tagCounts)
+                            <li class="active">
+                                <a href="$page.href?tag=$formatter.percentEncode( $tagCount.item )">
+                                    <span class="badge pull-right">$tagCount.count</span>
+                                    $tagCount.item
+                                </a>
+                            </li>
+                            #end
 
-                </ul>                              
+                        </ul>
+                    </div>
+                </div>
             </div> <!-- End side column -->
         </div>
         <script type="text/javascript">
             jQuery(document).ready(function() {
-                flog("do timeago", $(".timeago").timeago());
                 $(".timeago").timeago();
-                flog("do timeago");
             });
         </script>          
     </body>

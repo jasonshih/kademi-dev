@@ -18,7 +18,7 @@ function initManageOrgTypeModal() {
         if (name === '') {
             return;
         } else if (name.contains(' ')) {
-            alert('Please enter a name without spaces or other special characters');
+            Msg.error('Please enter a name without spaces or other special characters');
             return;
         }
 
@@ -64,7 +64,8 @@ var ModalAddOrgType = {
             callback: function(resp) {
                 log('done new org type', resp);
                 self.hide();
-                window.location.reload();
+                Msg.success(self.$modal.find('[name=displayName]').val() + ' is created!');
+                $('#org-types').reloadFragment();
             }
         });
     },
@@ -89,12 +90,15 @@ function initCRUDOrgType() {
     $body.on('click', '.btn-delete-orgtype', function(e) {
         e.preventDefault();
 
-        var href = $(this).attr('href');
+        var btn = $(this);
+        var href = btn.attr('href');
+        var name = getFileName(btn.prop('href'));
 
         log('delete', href);
         confirmDelete(href, getFileName(href), function() {
             log('remove ', this);
-            win.location.reload();
+            Msg.success(name + ' is removed!');
+            $('#org-types').reloadFragment();
         });
     });
 
@@ -125,9 +129,8 @@ var ModalEditOrgType = {
                 callback: function(resp) {
                     log('done', resp);
                     self.hide();
-                    manageOrgTypes.load(window.location.pathname + ' #manage-org-types > *', function() {
-
-                    });
+                    Msg.success(modalBody.find('[name=displayName]').val() + ' is saved!');
+                    $('#org-types').reloadFragment();
                 }
             });
 

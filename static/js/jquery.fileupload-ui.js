@@ -183,7 +183,7 @@
             // Callback for failed (abort or error) uploads:
             fail: function (e, data) {
                 document.getElementById("uploadfile").style.display = "block";
-                alert(data.files[0].name + " upload failed! Please retry again.");
+                Msg.error(data.files[0].name + " upload failed! Please retry again.");
                 var that = $(this).data('fileupload'),
                 template;
                 that._adjustMaxNumberOfFiles(data.files.length);

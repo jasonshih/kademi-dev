@@ -5,6 +5,14 @@
         <script type="text/javascript" src="manageRepos.js">//</script>
     </head>
     <body class="manage-repos">
+        <div class="well">
+            <p>A repository is a container for files, you can think of it like a hard disk
+                in the internet. There are different types of repositories for different functions. A <b>website</b>
+                in Fuse is a repository which is connected to a domain name.</p>
+            <p>Here you can upload files, create folders and create and edit web pages. But
+                you should tread carefully - not all repositories are meant to be used this way!</p>
+        </div>
+        
         <p>
             <a href="#" class="btn btn-sm btn-success btn-add-repo"><i class="fa fa-plus"></i> Add new repository</a>
         </p>
@@ -22,11 +30,11 @@
                             <col />
                             <col />
                             <col style="width: 100px" />
-                            <col style="width: 220px" />
+                            <col style="width: 150px" />
                         </colgroup>
                         <thead>
                             <tr>
-                                <th>Status</th>
+                                <th>Type</th>
                                 <th>Name</th>
                                 <th>Current branch</th>
                                 <th>Public</th>
@@ -37,7 +45,15 @@
                             #foreach($w in $page.repositories)
                             <tr>
                                 <td class="icon">
-                                    <i class="clip-checkmark-circle-2"></i>
+                                    #if( $w.repoType == "W" )
+                                    <i class="fa fa-globe"></i>
+                                    #elseif( $w.repoType == "B" )
+                                    <i class="fa fa-quote-right"></i>
+                                    #elseif( $w.repoType == "CA" )
+                                    <i class="fa fa-calendar-o"></i>
+                                    #else
+                                    <i class="fa fa-folder-o"></i>
+                                    #end                                                                        
                                 </td>
                                 <td>
                                     <h5><a href="/repositories/$w.name" class="repo">$w.name</a></h5>
@@ -49,11 +65,18 @@
                                     </div>
                                 </td>
                                 <td class="action">
-                                    <div class="btn-group">
-                                        <a href="../repositories/$w.name" class="btn btn-sm btn-primary">View</a>
-                                        <a href="../repositories/$w.name/$w.liveBranch/commits" class="btn btn-sm btn-primary">History</a>
-                                        <a class="btn btn-sm btn-danger btn-delete-repo" href="../repositories/$w.name">Delete</a>
-                                    </div>
+									<div class="btn-group btn-group-sm">
+										<a href="../repositories/$w.name" class="btn btn-sm btn-primary btn-sm"> <i class="fa fa-edit"></i> Files
+										</a>
+										<button class="btn btn-sm btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+											<span class="caret"></span>
+										</button>
+										<ul class="dropdown-menu pull-right" role="menu">
+											<li><a href="../repositories/$w.name/$w.liveBranch/commits" class="">History</a></li>
+                                            <li><a class="transfer-ownership" href="../repositories/$w.name">Transfer ownership</a></li>
+											<li><a class="btn-delete-repo" href="../repositories/$w.name">Delete</a></li>
+										</ul>
+									</div>
                                 </td>
                             </tr>
                             #end
@@ -85,7 +108,7 @@
         </div>        
 
         <script type="text/javascript">
-            Bob.onDOMReady(function() {
+            $(function () {
                 initManageRepos();
             });
         </script>

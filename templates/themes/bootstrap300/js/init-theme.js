@@ -7,7 +7,7 @@
  *  application to get the toolbars you want
  */
 
-CKEDITOR_BASEPATH = "/static/ckeditor431/";
+CKEDITOR_BASEPATH = "/static/ckeditor440/";
 
 
 // Templates should push theme css files into this array, so they will be included in the editor
@@ -137,7 +137,7 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
         log("create editor", inp, config);
         //var editor = CKEDITOR.instances["body"];
         flog("editor", CKEDITOR.instances);
-        
+
     });
 }
 
@@ -145,6 +145,10 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
 function initRotation() {
     $(function() {
         flog("initRotation");
+        var rotaters = $(".rotate");
+        if( rotaters.length === 0 ) {
+            return;
+        }
         try {
             var rotateDegrees = 0;
 
@@ -166,7 +170,7 @@ function initRotation() {
 }
 
 
-function initPrintLink() {    
+function initPrintLink() {
     var links = $("a.print2");
     flog("initPrintLink", links);
     links.click(function(e) {
@@ -262,7 +266,7 @@ function initSelectAll() {
  *  the image src, or from the data-video-src attribute if present
  */
 function initVideos() {
-    log("initVideos");
+    flog("initVideos");
     doInitVideos();
     $(document).on("pjaxComplete", function() {
         doInitVideos();
@@ -273,11 +277,11 @@ function doInitVideos() {
     var images = $(".video-jw");
     if (images.length === 0) {
         return;
-    }    
-    $.getScript("/static/jwplayer/jwplayer.js", function() {
+    }
+    $.getScript("/static/jwplayer/6.8/jwplayer.js", function() {
         jwplayer.key = "cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=";
         replaceImagesWithJWPlayer(images);
-    });    
+    });
 }
 
 function replaceImagesWithJWPlayer(images) {
@@ -286,13 +290,13 @@ function replaceImagesWithJWPlayer(images) {
         var src = img.attr("data-video-src");
         var posterUrl = img.attr("src");
         if (src == null) {
-            log("replaceImagesWithJWPlayer: derive video base path from src", posterUrl);
+            flog("replaceImagesWithJWPlayer: derive video base path from src", posterUrl);
             src = getFolderPath(posterUrl);
         } else {
-            log("replaceImagesWithJWPlayer: Using data-video-src", src);
+            flog("replaceImagesWithJWPlayer: Using data-video-src", src);
         }
         src += "/alt-hls.m3u8";
-        log("jwplayer item", img, i, src);
+        flog("jwplayer item", img, i, src);
         buildJWPlayer(img, i + 10, src, posterUrl);
     });
 }
@@ -312,6 +316,7 @@ function buildJWPlayer(itemToReplace, count, src, posterHref) {
     log("buildJWPlayer", src, "size=", h, w);
     itemToReplace.replaceWith(div);
     var innerId = div.find(".jw-video").attr("id");
+    flog("HACK using src");
     jwplayer(innerId).setup({
 //        file: src,
         height: h,
@@ -321,11 +326,14 @@ function buildJWPlayer(itemToReplace, count, src, posterHref) {
                 image: posterHref,
                 sources: [{
                         file: src
-                    }, {
+                    }
+                    , {
                         file: src + "/../alt-640-360.webm"
+                    }, {
+                        file: src + "/../alt-640-360.m4v"
                     }]
-            }],
-        primary: "flash"
+            }]
+        ,primary: "flash"
     });
     jwplayer(innerId).onReady(function() {
         var wrapperId = innerId + "_wrapper";

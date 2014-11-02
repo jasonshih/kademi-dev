@@ -1,4 +1,4 @@
-Bob.onDOMReady(function() {
+$(function () {
     flog("Init reports");
     var reportContainer = $('#annual');
     var itemsContainer = $('#items');
@@ -18,18 +18,10 @@ Bob.onDOMReady(function() {
         },
                 function(start, end) {
                     flog('onChange', start, end);
-                    // Eg http://admin.milton.olhub.com/reporting/org-websiteAccess?startDate=20%2F02%2F2014+&finishDate=+27%2F02%2F2014
-                    // http://localhost:8080/reporting/org-websiteAccess?startDate=02%2F06%2F2014+&finishDate=+02%2F28%2F2014
-
-                    //var rangeText = formatDate(start) + " " + formatDate(end);
-                    //flog("rangeText", rangeText);
                     runReportWithDateRange(start, end, reportContainer, itemsContainer, window.location.pathname);
                     updateDatedLinks();
                 }
         );
-
-        //runReport(reportRange.val(), reportContainer, itemsContainer, window.location.pathname);
-        //updateDatedLinks();
     });
 });
 

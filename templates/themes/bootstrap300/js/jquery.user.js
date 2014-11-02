@@ -31,7 +31,7 @@
 
 (function($) {
     $.fn.user = function(options) {
-        log("init user plugin", this);
+        flog("init user plugin", this);
         initUser();
         var config = $.extend({
             urlSuffix: "/.dologin",
@@ -52,9 +52,9 @@
         });
 
         var container = this;
-        log("init login form", $("form", this));
+        flog("init login form", $("form", this));
         $("form", this).click(function(e) {
-            log("click", e);
+            flog("click", e);
         });
         $("form", this).submit(function(e) {
             flog("jquery.user.js(bootstrap300): login", window.location.pathname);
@@ -79,23 +79,23 @@
             }
             return false;
         });
-        log("init requiresUser links");        
+        flog("init requiresUser links");        
         // use a body class to ensure is only inited once
         $("body").not("body.requiresUserDone").addClass("requiresUserDone").on("click", "a.requiresUser, button.requiresUser", function(e) {
             var target = $(e.target);
-            log("check required user", target, userUrl);
+            flog("check required user", target, userUrl);
             if (userUrl === null || userUrl === "") {
                 e.preventDefault();
                 e.stopPropagation();
                 showRegisterOrLoginModal(function() {
                     //target.click();
-                    log("going to", target.attr("href"));
+                    flog("going to", target.attr("href"));
                     //window.location.href = target.attr("href");
                         target.click();
 
                 });
             } else{ 
-                log("all good, carry on...");
+                flog("all good, carry on...");
             }
         });
     };
@@ -103,7 +103,7 @@
 
 
 function doLogin(userName, password, config, container) {
-    log("doLogin1", userName, config.urlSuffix);
+    flog("doLogin1", userName, config.urlSuffix);
     $(config.valiationMessageSelector).hide();
     var data = new Object();
     var userNameProperty;
@@ -128,7 +128,7 @@ function doLogin(userName, password, config, container) {
         dataType: "json",
         acceptsMap: "application/x-javascript",
         success: function(resp) {
-            log("login success", resp)
+            flog("login success", resp)
             initUser();
             if (resp.status) {
                 if (config.loginCallback) {
@@ -148,13 +148,13 @@ function doLogin(userName, password, config, container) {
                     window.location = config.afterLoginUrl;
                 } else {
                     if (config.afterLoginUrl === "none") {
-                        log("Not doing redirect because afterLoginUrl=='none'");
+                        flog("Not doing redirect because afterLoginUrl=='none'");
                     } else if( config.afterLoginUrl === "reload") {
                         window.location.reload();
                         
                     } else {
                         // if config has a relative path, then evaluate it relative to the user's own url in response
-                        log("redirect to2: " + userUrl + config.afterLoginUrl);
+                        flog("redirect to2: " + userUrl + config.afterLoginUrl);
                         //return;
                         window.location = userUrl + config.afterLoginUrl;
                     }
@@ -162,7 +162,7 @@ function doLogin(userName, password, config, container) {
             } else {
                 // null userurl, so login was not successful
                 $(config.valiationMessageSelector, container).text(config.loginFailedMessage);
-                log("null userUrl, so failed. Set validation message message", $(config.valiationMessageSelector, this), config.loginFailedMessage);
+                flog("null userUrl, so failed. Set validation message message", $(config.valiationMessageSelector, this), config.loginFailedMessage);
                 $(config.valiationMessageSelector, container).show(200);
             }
             //window.location = "/index.html";
@@ -170,12 +170,12 @@ function doLogin(userName, password, config, container) {
         error: function(resp) {
             $(config.valiationMessageSelector).text(config.loginFailedMessage);
             var val = $(config.valiationMessageSelector, this);
-            log("error response from server", val, "config msg:", config.loginFailedMessage, "resp:", resp);
+            flog("error response from server", val, "config msg:", config.loginFailedMessage, "resp:", resp);
             if( val.length === 0 ) {
-                log("show message", container);
+                flog("show message", container);
                 showMessage("Login failed, please check your credentials", container);
             } else {
-                log("show validation container");
+                flog("show validation container");
                 val.show(300);
             }
         }
@@ -193,22 +193,22 @@ function initUser() {
         return true; // already done
     }
     initUserCookie();
-    log("initUser");
+    flog("initUser");
     if (isEmpty(userUrl)) {
         // no cookie, so authentication hasnt been performed.
-        log('initUser: no userUrl');
+        flog('initUser: no userUrl');
         $(".requiresuser").hide();
         $(".sansuser").show();
         $("body").addClass("notLoggedIn");
         return false;
     } else {
-        log("userUrl", userUrl);
+        flog("userUrl", userUrl);
         $("body").addClass("isLoggedIn");
         userName = userUrl.substr(0, userUrl.length - 1); // drop trailing slash
         var pos = userUrl.indexOf("users");
         userName = userName.substring(pos + 6);
         
-        log("current userName", userName);
+        flog("current userName", userName);
         
         $("#currentuser").attr("href", userUrl);
         $(".requiresuser").show();
@@ -224,7 +224,7 @@ function initUser() {
 function initUserCookie() {
     userUrl = $.cookie('miltonUserUrl');
     if (userUrl && userUrl.length > 1) {
-        log("initUserCookie", userUrl);
+        flog("initUserCookie", userUrl);
         if( userUrl.startsWith("b64")) {
             userUrl = userUrl.substring(3); // strip b64 ext
             userUrl = Base64.decode(userUrl);
@@ -234,9 +234,9 @@ function initUserCookie() {
         userName = userUrl.substr(0, userUrl.length - 1); // drop trailing slash
         var pos = userUrl.indexOf("users");
         userName = userName.substring(pos + 6);
-        log('initUserCookie: user:', userUrl, userName);
+        flog('initUserCookie: user:', userUrl, userName);
     } else {
-        log("initUserCookie: no user cookie");
+        flog("initUserCookie: no user cookie");
         userName = null;
     }
 }
@@ -246,18 +246,18 @@ function isEmpty(s) {
 }
 
 function doLogout() {
-    log("doLogout");
+    flog("doLogout");
     $.ajax({
         type: 'POST',
         url: "/.dologin",
         data: "miltonLogout=true",
         dataType: "text",
         success: function() {
-            log("logged out ok, going to root...");
+            flog("logged out ok, going to root...");
             window.location = "/";
         },
         error: function(resp) {
-            log('There was a problem logging you out', resp);
+            flog('There was a problem logging you out', resp);
             window.location = "/";
         }
     });
@@ -279,7 +279,7 @@ function dropHost(s) {
         return s;
     }
     var pos = s.indexOf("/", 8);
-    log("pos", pos);
+    flog("pos", pos);
     s = s.substr(pos);
     return s;
 }
@@ -293,7 +293,7 @@ function showRegisterOrLoginModal(callbackOnLoggedIn) {
             closeModals();
         });
     }
-    log("showRegisterOrLoginModal - bootstrap300");
+    flog("showRegisterOrLoginModal - bootstrap300");
     $.getScript("/theme/apps/signup/register.js", function() {
         $.ajax({
             type: 'GET',
@@ -304,19 +304,19 @@ function showRegisterOrLoginModal(callbackOnLoggedIn) {
                 var r = page.find(".registerOrLoginCont");
                 //log("content", page, "r", r);
                 modal.find(".modal-body").html(r);
-                log("modal", modal);
+                flog("modal", modal);
                 $(".loginCont").user({
                     afterLoginUrl: "none",
                     loginCallback: function() {
                         closeModals();                        
-                        log("logged in ok, process callback", callbackOnLoggedIn);
+                        flog("logged in ok, process callback", callbackOnLoggedIn);
                         $('body').trigger('userLoggedIn', [userUrl, userName]);
                         callbackOnLoggedIn();
                     }
                 });
                 initRegisterForms("none", function() {
                     closeModals();                     
-                    log("registered and logged in ok, process callback");
+                    flog("registered and logged in ok, process callback");
                     $('body').trigger('userLoggedIn', [userUrl, userName]);
                     callbackOnLoggedIn();
                 });
@@ -327,7 +327,7 @@ function showRegisterOrLoginModal(callbackOnLoggedIn) {
         });
 
     });
-    log("showModal...", showModal);
+    flog("showModal...", showModal);
     showModal(modal);
     modal.css("top", "20%");
 }

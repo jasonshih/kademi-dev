@@ -4,7 +4,7 @@
  */
 (function($) {
     $.getScriptOnce = function(url, successhandler) {
-         if ($.getScriptOnce.loaded.indexOf(url) === -1) {
+        if ($.inArray(url, $.getScriptOnce.loaded) === -1) {
             $.getScriptOnce.loaded.push(url);
             if (successhandler === undefined) {
                 return $.getScript(url);
@@ -404,7 +404,7 @@ function submitEdifiedForm(callback, validateCallback) {
             },
             error: function(resp) {
                 ajaxLoadingOff();
-                alert("err");
+                alert('An error occured');
             }
         });
     } catch (e) {

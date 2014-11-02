@@ -82,7 +82,7 @@ function hideBranch(href, callback) {
         },
         error: function(resp) {
             flog("error", resp);
-            alert("Sorry couldnt hide the version: " + resp);
+            Msg.error("Sorry couldnt hide the version: " + resp);
         }
     });
 }

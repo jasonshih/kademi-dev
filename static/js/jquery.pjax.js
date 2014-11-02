@@ -57,7 +57,7 @@
     //
     // Returns false if pjax runs, otherwise nothing.
     function handleClick(event, container, options) {
-        log("pjax::handleClick", options);
+        log("pjax::handleClick", event.target);
         options = optionsFor(container, options)
 
         var link = event.currentTarget
@@ -114,15 +114,15 @@
         success = options.success || $.noop
 
         // We don't want to let anyone override our success handler.
-        delete options.success
+        delete options.success;
 
-        options = $.extend(true, {}, pjax.defaults, options)
+        options = $.extend(true, {}, pjax.defaults, options);
 
         if ( $.isFunction(options.url) ) {
             options.url = options.url()
         }
 
-        options.context = $container
+        options.context = $container;
 
         options.success = function(data){
             var $data = $(data);
@@ -155,58 +155,89 @@
 
             // Make it happen.
             log("pjax:got data", data);
-            this.data("pjaxHidden", false);
-            this.stop(); // stop the fadeout if still in progress
-            this.css("opacity", 0);            
-            this.html(data)
-            var contentContainer = this;
-            this.animate({opacity: 1}, 1000, function() {
-                // make sure the new content is shown, because Paddy was always getting a display: none
-                log("pjax: opacity animation done, now show to ensure shown");
-                contentContainer.show();
-            });
-
-            var state = {
-                pjax: $container.selector,
-                fragment: options.fragment,
-                timeout: options.timeout
-            }
-
-            // If there are extra params, save the complete URL in the state object
-            var query = $.param(options.data)
-            if ( query != "_pjax=true" )
-                state.url = options.url + (/\?/.test(options.url) ? "&" : "?") + query
-
-            if ( options.replace ) {
-                pjax.active = true
-                window.history.replaceState(state, document.title, options.url)
-            } else if ( options.push ) {
-                // this extra replaceState before first push ensures good back
-                // button behavior
-                if ( !pjax.active ) {
-                    window.history.replaceState($.extend({}, state, {
-                        url:null
-                    }), oldTitle)
-                    pjax.active = true
+            
+            var context = this;
+            var showNewContent = function() {                
+                flog("context", context);
+                context.data("pjaxHidden", false);            
+                context.html(data);
+                var link = $(pjax.options.clickedElement);
+                var slideDir = link.data("pjax-dir"); //  left or right, empty means fade
+                if( slideDir ) {
+                    // swap direction for show from hide
+                    if( slideDir == "left") slideDir = "right"
+                    else slideDir = "left";
+                    
+                    var effectOptions = {
+                        direction : slideDir
+                    };            
+                    context.show("slide", effectOptions, 400);
+                } else {
+                    context.stop(); // stop the fadeout if still in progress
+                    context.css("opacity", 0);            
+                    
+                    context.animate({opacity: 1}, 1000, function() {
+                        // make sure the new content is shown, because Paddy was always getting a display: none
+                        log("pjax: opacity animation done, now show to ensure shown");
+                        context.show();
+                    });
                 }
 
-                window.history.pushState(state, document.title, options.url)
+                var state = {
+                    pjax: $container.selector,
+                    fragment: options.fragment,
+                    timeout: options.timeout
+                }
+
+                // If there are extra params, save the complete URL in the state object
+                var query = $.param(options.data)
+                if ( query != "_pjax=true" )
+                    state.url = options.url + (/\?/.test(options.url) ? "&" : "?") + query
+
+                if ( options.replace ) {
+                    pjax.active = true
+                    window.history.replaceState(state, document.title, options.url)
+                } else if ( options.push ) {
+                    // this extra replaceState before first push ensures good back
+                    // button behavior
+                    if ( !pjax.active ) {
+                        window.history.replaceState($.extend({}, state, {
+                            url:null
+                        }), oldTitle)
+                        pjax.active = true
+                    }
+
+                    window.history.pushState(state, document.title, options.url)
+                }
+
+                // If the URL has a hash in it, make sure the browser
+                // knows to navigate to the hash.
+                var hash = window.location.hash.toString()
+                if ( hash !== '' ) {
+                    window.location.href = hash
+                }
+
+                // Invoke their success handler if they gave us one.
+                success.apply(context, arguments)
+                
+                
+                $(document).trigger('pjaxComplete');
+                
+
             }
-
-            // Google Analytics support
-            if ( (options.replace || options.push) && window._gaq )
-                _gaq.push(['_trackPageview'])
-
-            // If the URL has a hash in it, make sure the browser
-            // knows to navigate to the hash.
-            var hash = window.location.hash.toString()
-            if ( hash !== '' ) {
-                window.location.href = hash
+            
+            var checkComplete = function() {
+                flog("check if we're complete");
+                if( context.data("transitionComplete") ) {
+                    flog("have completed transition, so show content");
+                    showNewContent();
+                } else {
+                    flog("have not completed transition, so wait a bit..");
+                    window.setTimeout(checkComplete, 50);
+                }
             }
-
-            // Invoke their success handler if they gave us one.
-            success.apply(this, arguments)
-            $(document).trigger('pjaxComplete');
+            checkComplete();
+            
         }
 
         // Cancel the current request if we're already pjaxing
@@ -315,19 +346,34 @@
                 settings.timeout = 0
             }
 
+            $(document).trigger('pjaxStarted');
             this.trigger('pjax:start', [xhr, pjax.options])
             // start.pjax is deprecated
             this.trigger('start.pjax', [xhr, pjax.options])
             xhr.setRequestHeader('X-PJAX', 'true')
 
-            log("hiding the content..", this.data("pjaxHidden"));
+            flog("hiding the content..", this );
             if(!this.data("pjaxHidden")) {
                 this.data("pjaxHidden", true);
-                var effectOptions = {
-                    direction : "right"
-                };
-                //this.hide("slide", effectOptions, 500);
-                this.animate({opacity: 0}, 200);
+                this.data("transitionComplete", false);
+                var link = $(pjax.options.clickedElement);
+                var slideDir = link.data("pjax-dir"); //  left or right, empty means fade
+                if( slideDir ) {
+                    // Set a height on the container to prevent it collapsing when content is hidden
+                    var height = this.height();
+                    flog("container height", height);
+                    //this.css("height", height + "px");
+                    var effectOptions = {
+                        direction : slideDir
+                    };
+                    this.hide("slide", effectOptions, 400, function(){
+                        context.data("transitionComplete", true);
+                    });
+                } else {
+                    this.animate({opacity: 0}, 200, function() {
+                        context.data("transitionComplete", true);
+                    });
+                }                
                 log("pjax: done hide");
             }
         },

@@ -6,7 +6,7 @@ function initContentSearch() {
         var query = $(this).val();
         typewatch(function() {
             // Load fragment
-            $('#search-results').load('contentSearch?q=' + encodeURIComponent(query) + ' #search-results > *');
+            $('#search-results').load('contentSearch?q=' + encodeURIComponent(query.trim()) + ' #search-results > *');
         }, 500);
     });
 
@@ -41,7 +41,7 @@ function reIndexState() {
 			var resp = $.parseJSON(res);
 			var data = resp.data, status = resp.status, message = resp.messages, state = message[0];
 			if (state != 'STOPPED') {
-				flog("Re-indexing state: " + data + " files have been processed");
+				flog("Re-indexing state: " + data + " resources (htmls, blogs, products...) have been processed");
 				$(".pageMessage").css({"display":"block"});
 				$(".pageMessage").empty();
 				$(".pageMessage").html("<b>Re-Indexing Status: </b><i class=\"badge badge-info\">" + data + "</i> files have been processed");
@@ -64,7 +64,7 @@ function reIndexState() {
 				
 				// Throw exception message
 				if (!status) {
-					alert(state);
+					Msg.error(state);
 				}
 				lblReindex.empty();
 				lblReindex.html("Re-index");

@@ -3948,7 +3948,7 @@ body.lock-screen .user-info > span em {
 /*	daterangepicker
 /* ---------------------------------------------------------------------- */
 .daterangepicker {
-	margin-top: 51px !important;
+	/** margin-top: 51px !important; BM: dont know why this is here, but its screwing things up */ 
 }
 body.header-default .daterangepicker {
 	margin-top: 1px !important;

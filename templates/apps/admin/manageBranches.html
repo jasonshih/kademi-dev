@@ -2,13 +2,13 @@
     <head>
         <title>Manage Versions</title>
         <link href="publish.css" rel="stylesheet" type="text/css" />
-        <script type="text/javascript" src="publish.js">//</script>
+        <script type="text/javascript" src="manageBranches.js">//</script>
     </head>
     <body class="dashboard">
     	<p class="well">Manage versions for this repository.</p>
-    	<div id="publish" class="panel panel-default MainContent">
+    	<div class="panel panel-default MainContent">
     		<div class="panel-body">
-    			<table class="table table-hover">
+    			<table class="table table-hover" id="branch-wrapper">
 	                <thead>
 	                    <tr>
 	                        <th>Name</th>
@@ -28,14 +28,30 @@
 	                        <td>$!branch.fromCommit.branch.name</td>
 	                        <td>
 	                            #if( $branch.hiddenBy )
-	                            hidden by $branch.hiddenBy.name (<a class="unhide" href="$branch.name">un-hide</a>)
-	                            #else
-	                            visible (<a class="hide" href="$branch.name">hide</a>)
+                                <span class="label label-warning">Hidden</span>
+	                               by $branch.hiddenBy.name (<a class="btn-unhide-branch" href="$branch.name">un-hide</a>)
+	                            #else	                               
+                                   #if( $branch.name == $branch.repository.liveBranch )
+                                   <span class="label label-danger">LIVE</span>
+                                   #else
+                                   <span class="label label-default">Visible</span>
+                                   (<a class="btn-hide-branch" href="$branch.name">hide</a>)
+                                   #end
 	                            #end
 	                        </td>
 	                        <td>$!branch.head.createdDate</td>
 	                        <td>$!branch.head.editor.name</td>
-	                        <td><a href="/repositories/$folder.repository.name/$branch.name/commits" class="btn btn-xs btn-blue btn-block">History <i class="fa fa-arrow-circle-right"></i></a></td>
+	                        <td>
+                                #if ( $branch.hiddenBy )
+                                    <a title="" class="btn btn-xs btn-blue btn-block disabled">
+                                        History <i class="fa fa-arrow-circle-right"></i>
+                                    </a>
+                                #else
+                                    <a href="/repositories/$folder.repository.name/$branch.name/commits" class="btn btn-xs btn-blue btn-block">
+                                        History <i class="fa fa-arrow-circle-right"></i>
+                                    </a>
+                                #end
+                            </td>
 	                    </tr>
 	                    #end
 	                </tbody>
@@ -43,47 +59,9 @@
     		</div>
     	</div>
         <script type="text/javascript">
-            Bob.onDOMReady(function () {
-                $("#publish form").forms({
-                    callback: function() {
-                        alert("Done!");
-                    }
-                });
-                $(".hide").click(function(e) {
-                    e.preventDefault();
-                    var a = $(e.target).closest("a");
-                    setVisibility(a, true);
-                });
-                $(".unhide").click(function(e) {
-                    var a = $(e.target).closest("a");
-                    e.preventDefault();
-                    setVisibility(a, false);
-                });
+            $(function () {
+                initManageBranches();
             });
-
-            function setVisibility(link, hidden) {
-                log("setVisibility", link, hidden);
-                $.ajax({
-                    type: 'POST',
-                    url: window.location.pathname,
-                    data: {
-                        name: link.attr("href"),
-                        hide: hidden
-                    },
-                    dataType: "json",
-                    success: function(resp) {
-                        if( resp && resp.status ) {
-                            window.location.reload();                        
-                        } else {
-                            alert("Sorry, had an error - " + resp.messages)
-                        }
-                    },
-                    error: function(resp) {
-                        log("error", resp);
-                        alert("Sorry couldnt set the visibility " + resp);
-                    }
-                });
-            }
         </script>               
     </body>
 </html>

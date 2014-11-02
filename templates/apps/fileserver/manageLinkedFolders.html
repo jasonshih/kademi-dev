@@ -1,0 +1,222 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Commit History</title>
+        <link href="manageRepos.css" rel="stylesheet" type="text/css" />
+        <link href="/static/history/jquery.history.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="/static/history/jquery.history.js">//</script>
+        <script type="text/javascript" src="/static/js/jquery.timeago.js">//</script>
+        <script type="text/javascript" src="commits.js">//</script>
+        <link href="commits.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body class="manage-repo-history">
+        <div class="well">
+            <p>
+                This is a list of folder links. Folder links cause two existing folders
+                to be updated to always have the same content. Deleting a folder
+                link does not delete the folder.
+            </p>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-link"></i>
+                <b>Folder links</b>
+            </div>
+            <div class="panel-body">
+                <p>
+                    <a href="#" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-new-link" ><i class="fa fa-plus"></i> Create new link</a>
+                </p>
+
+                <div class="table-responsive">
+                    <table id="links-wrapper" class="table table-striped table-hover">
+                        <colgroup>
+                            <col />
+                            <col />
+                            <col />
+                            <col />
+                            <col style="width: 70px" />
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>Source</th>
+                                <th></th>
+                                <th></th>
+                                <th>Destination</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-table-body">
+                            #foreach($c in $page.folderLinks)
+                            <tr>
+                                <td>
+                                    $c.fromRepo.name#if( $c.fromRepo.baseEntity.adminDomain != $page.organisation.adminDomain )
+@$c.fromRepo.baseEntity.adminDomain
+#end
+                                </td>
+                                <td>$!c.fromBranch.name</td>
+                                <td>
+                                    <a href="$page.fromHref($c)">$c.fromPath</a>
+                                </td>
+                                <td>
+                                    $!c.toRepo.name#if( $c.toRepo.baseEntity.adminDomain != $page.organisation.adminDomain )
+@$c.toRepo.baseEntity.adminDomain
+#end
+
+                                </td>
+                                <td>$!c.toBranch.name</td>
+                                <td>
+                                    <a href="$page.toHref($c)">$c.toPath</a>
+                                </td>
+                                <td>
+                                    <a class="btn btn-danger delete" href="$c.id">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </a>
+                                </td>
+                            </tr>
+                            #end
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div id="modal-new-link" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                <h4 class="modal-title">Create new folder link</h4>
+            </div>
+            <div class="modal-body">            
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="active"><a href="#link-simple" role="tab" data-toggle="tab">Simple</a></li>
+                    <li><a href="#link-advanced" role="tab" data-toggle="tab">Advanced</a></li>
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div class="tab-pane active" id="link-simple">
+                        <form method="POST" action="$request.absolutePath" class="form-horizontal">                            
+                            <div class="form-group">
+                                <label for="newName" class="col-md-3 control-label">From repository</label>
+                                <div class="col-md-8">
+                                    <select name="fromRepo" class="required form-control">
+                                        <option value="">[Please select]</option>
+                                        #foreach($repo in $page.repositories)
+                                        <option value="$repo.name">$repo.name</option>
+                                        #end
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="newName" class="col-md-3 control-label">From path</label>
+                                <div class="col-md-8">
+                                    <input type="text" class="required form-control" placeholder="" name="fromPath"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="newName" class="col-md-3 control-label">To repository</label>
+                                <div class="col-md-8">
+                                    <select name="toRepo" class="required form-control">
+                                        <option value="">[Please select]</option>
+                                        #foreach($repo in $page.repositories)
+                                        <option value="$repo.name">$repo.name</option>
+                                        #end
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="newName" class="col-md-3 control-label">To path</label>
+                                <div class="col-md-8">
+                                    <input type="text" class="required form-control" placeholder="" name="toPath"/>
+                                </div>
+                            </div> 
+
+                            <div class="form-group">
+                                <div class="col-md-offset-3 col-sm-8">
+                                    <button type="submit" class="btn btn-success">Create</button>
+                                </div>
+                            </div>                            
+                        </form>                            
+                    </div>
+                    <div class="tab-pane" id="link-advanced">
+                        <div class="alert alert-info">
+                            <p>Addresses are in the form repo@org:path, where @org is optional</p>
+                            <p>Eg <b>website1@acme-ltd:/programs/program1</b></p>
+                            <p>Where <i>acme-ltd</i> is an administrative organisation ID and <i>website1</i> is a repository name</p>
+                        </div>
+                        <form method="POST" action="$request.absolutePath" class="form-horizontal">                            
+                            <div class="form-group">
+                                <label for="newName" class="col-md-3 control-label">From address</label>
+                                <div class="col-md-8">
+                                    <input type="text" class="required form-control" placeholder="" name="fromAddress"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="newName" class="col-md-3 control-label">To address</label>
+                                <div class="col-md-8">
+                                    <input type="text" class="required form-control" placeholder="" name="toAddress"/>
+                                </div>
+                            </div>                            
+                            <div class="form-group">
+                                <div class="col-md-offset-3 col-sm-8">
+                                    <button type="submit" class="btn btn-success">Create</button>
+                                </div>
+                            </div>                                                        
+                        </form>                            
+                    </div>
+                </div>                        
+
+            </div>
+        </div>  
+        <script type="text/javascript">
+            $(function () {
+                var modal = $("#modal-new-link");
+                modal.find("form").forms({
+                    callback: function () {
+                        $("#links-wrapper").reloadFragment();
+                        $("#modal-new-link").modal("hide");
+                    }
+                });
+                $("#links-wrapper").on("click", "a.delete", function (e) {
+                    e.preventDefault();
+                    var link = $(e.target).closest("a");
+                    confirmDeleteLink(link, function () {
+                        $("#links-wrapper").reloadFragment();
+                    });
+
+                });
+                function confirmDeleteLink(link, callback) {
+                    if (confirm("Are you sure you want to delete this link?")) {
+                        deleteLink(link.attr("href"), callback);
+                    }
+                }
+
+                function deleteLink(href, callback) {
+                    ajaxLoadingOn();
+                    $.ajax({
+                        type: 'POST',
+                        url: window.location.pathname,
+                        data: {
+                            deleteId: href
+                        },
+                        dataType: "json",
+                        success: function (resp) {
+                            ajaxLoadingOff();
+                            if (callback) {
+                                callback();
+                            }
+                        },
+                        error: function (resp) {
+                            log("failed", resp);
+                            ajaxLoadingOff();
+                            alert("Sorry, an error occured deleting " + href + ". Please check your internet connection");
+                        }
+                    });
+                }
+            });
+        </script>
+    </body>
+</html>

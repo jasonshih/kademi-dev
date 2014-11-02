@@ -3,14 +3,25 @@ function initManageEmailTrigger() {
     initFormTriggers();
 }
 
+function initManageAutoEmails() {
+    initModalAddEmailTrigger();
+    initDeleteEmail();
+}
+
 function initModalAddEmailTrigger() {
-    var modal = $('#modal-add-trigger');
+    flog("initModalAddEmail");
+    var modal = $('#modal-add-email');
 
     modal.find('form').forms({
-        callback: function(resp) {
-            flog('resp', resp);
+        validate: function(form) {
+            flog("manageEmail.js: check radio", form);
+            return checkRadio("eventId", form);
+        },
+        callback: function(data) {
+            flog('saved ok', data);
             modal.modal('hide');
-            window.location.reload();
+            Msg.success($('#name').val() + ' is created!');
+            $('#email-trigger-wrapper').reloadFragment();
         }
     });
 }
@@ -24,6 +35,7 @@ function initFormTriggers() {
 }
 
 function initManageAutoEmail() {
+    flog("initManageAutoEmail");
     initHtmlEditors($('.htmleditor'), getStandardEditorHeight(), null, null, 'autogrow');
     initAttachment();
     initFormDetailEmail();
@@ -31,25 +43,28 @@ function initManageAutoEmail() {
     initEventType();
     initAdvanceRecipients();
     initSendTest();
-    initChooseGroup()
-}
+    initChooseGroup();
 
-function initSendTest() {
-    $('.btn-sent-test').click(function(e) {
-        e.preventDefault();
-
-        $.ajax({
-            type: 'POST',
-            url: window.location.pathname,
-            data: 'sendTest=true',
-            success: function(data) {
-                alert('A test has been sent to your email address');
-            },
-            error: function(resp) {
-                alert('Sorry, we couldnt remove the attachment. Please refresh the page and try again');
-            }
-        });
+    $('#action .toggler').on({
+        'checked.toggled': function(e, panel) {
+            $(panel).find('select, input, textarea').not(':hidden').addClass('required');
+        },
+        'unchecked.toggled': function(e, panel) {
+            $(panel).find('select, input, textarea').not(':hidden').removeClass('required');
+        }
     });
+
+    var toggledPanel = $('.panel-toggled');
+    toggledPanel.each(function () {
+        var panel = $(this);
+        if (panel.is(':hidden')) {
+            panel.find('select, input, textarea').not(':hidden').removeClass('required');
+        } else {
+            panel.find('select, input, textarea').not(':hidden').addClass('required');
+        }
+    });
+
+    flog("initManageAutoEmail - DONE");
 }
 
 function initEventType() {
@@ -83,7 +98,7 @@ function initIncludeUser() {
             },
             error: function(resp) {
                 flog('error', resp);
-                alert('err');
+                Msg.error('err');
             }
         });
     });
@@ -132,7 +147,7 @@ function showAttachment(data, attachmentsList) {
 }
 
 function doRemoveAttachment(name, callback) {
-    if (confirm("Are you sure you want to delete attachment " + name + "?") ) {
+    if (confirm("Are you sure you want to delete attachment " + name + "?")) {
         try {
             $.ajax({
                 type: 'POST',
@@ -146,11 +161,11 @@ function doRemoveAttachment(name, callback) {
                 },
                 error: function(resp) {
                     flog('error', resp);
-                    alert('Sorry, we couldnt remove the attachment. Please refresh the page and try again');
+                    Msg.error('Sorry, we couldnt remove the attachment. Please refresh the page and try again');
                 }
             });
         } catch (e) {
-            alert('Sorry, we couldnt remove the attachment. Please refresh the page and try again');
+            Msg.error('Sorry, we couldnt remove the attachment. Please refresh the page and try again');
         }
     }
 }

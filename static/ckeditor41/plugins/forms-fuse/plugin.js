@@ -89,8 +89,8 @@ CKEDITOR.plugins.add( 'forms-fuse', {
 
 		// Since Image plugin is disabled when Image2 is to be loaded,
 		// ImageButton also got to be off (#11222).
-		if ( imagePlugin && !editor.plugins.image2 )
-			addButtonCommand( 'ImageButton', 'imagebutton', CKEDITOR.plugins.getPath( 'image' ) + 'dialogs/image.js' );
+//		if ( imagePlugin && !editor.plugins.image2 )
+//			addButtonCommand( 'ImageButton', 'imagebutton', CKEDITOR.plugins.getPath( 'image' ) + 'dialogs/image.js' );
 
 		addButtonCommand( 'HiddenField', 'hiddenfield', dialogPath + 'hiddenfield.js' );
 

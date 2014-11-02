@@ -1,0 +1,37 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Text editor</title>
+        <link rel="template" href="editorBase" />
+        <script type="text/javascript" src="htmlEditor.js">//</script>
+        <link rel="stylesheet" type="text/css" href="textEditor.css" />        
+    </head>
+    <body class="">
+        #set($fname = $params.fileName)
+        #set($file = $folder.child($fname))
+
+        <div id="editor-wrapper">
+            <div class="clearfix editor-toolbar">
+                <button class="btn btn-success btn-save-file pull-right" >Save file</button>
+                <h3 class="pull-left">$file.name</h3>
+            </div>
+            <textarea id="editor" class="">$formatter.htmlEncode($file.body)</textarea>
+        </div>
+
+        #foreach($cssPath in $file.cssPaths)
+        <link rel="editor-stylesheet" href="${cssPath}" />
+        #end
+
+        <script type="text/javascript">
+            $(function () {
+                themeCssFiles.push('/static/editor/editor.css'); // just to format the editor itself a little
+                themeCssFiles.push('/static/prettify/prettify.css');
+
+                $("link[rel=editor-stylesheet]").each(function (i, n) {
+                    var cssPath = $(n).attr("href");
+                    themeCssFiles.push(cssPath);
+                });
+                initHtmlEditorPage('$fname');
+            });
+        </script>
+    </body>
+</html>

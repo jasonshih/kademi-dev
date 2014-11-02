@@ -21,14 +21,6 @@ function initProfile() {
         e.stopPropagation();
         $(e.target).closest(".modal").find("form").trigger("submit");
     });
-        
-    $("#myUploaded").mupload({
-        url: "/profile/",
-        buttonText: "Select a new photo",
-        oncomplete: function(data, name, href) {
-            jQuery("img.avatar").attr("src", "/profile/pic");
-        }
-    });
     
     $(".membership-remove").click(function(e) {
         e.preventDefault();
@@ -91,7 +83,7 @@ function updateOptin(on, group) {
         error: function(resp, textStatus, errorThrown) {
             flog("error", resp, textStatus, errorThrown);
             form.removeClass("ajax-processing");
-            alert("Error updating the optin");
+            Msg.error("Error updating the optin");
         }
     });
 }

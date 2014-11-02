@@ -16,6 +16,7 @@ function initRegister(afterRegisterHref) {
     initRegisterForms(afterRegisterHref);
 }
 
+
 function initRegisterForms(afterRegisterHref, callback) {
     log("initRegisterForms - bootstrap300", jQuery("#registerForm"));
     $("#registerForm").forms({
@@ -35,20 +36,47 @@ function initRegisterForms(afterRegisterHref, callback) {
             }
         }
     });
-    $.getScript("/theme/js/typeahead.js", function() {
-        var searchUrl = $("#registerForm").attr("action");
-        $("#orgName").typeahead({
-            minLength: 1,
-            valueKey: "title",
-            name: "orgs",
-            remote: searchUrl + '?jsonQuery=%QUERY&th', // set the 'th' flag to get responses in typeahead format
-            template: function (datum) {
-                return '<div>' + datum.title + ' ' + datum.address + '</span></div>'
+
+    $.getScript("/static/typeahead/0.10.2/typeahead.bundle.js", function() {
+        $.getScript("/static/handlebars/1.2.0/handlebars.js", function() {
+            try {
+                var searchUrl = $("#registerForm").attr("action");
+
+                var orgs = new Bloodhound({
+                    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+                    queryTokenizer: Bloodhound.tokenizers.whitespace,
+                    remote: {
+                        url: searchUrl + '?jsonQuery=%QUERY&th',
+                        replace: function() {
+                            return $("#registerForm").attr("action") + '?jsonQuery=' + encodeURIComponent($("#orgName").val()) + '&th';
+                        }
+                    }
+                });
+
+                orgs.initialize();
+
+                $("#orgName").typeahead(null, {
+                    minLength: 1,
+                    valueKey: "title",
+                    name: "orgs",
+                    source: orgs.ttAdapter(),
+                    templates: {
+                        empty: [
+                            '<div class="empty-message">',
+                            'No organisations match your search',
+                            '</div>'
+                        ].join('\n'),
+                        suggestion: Handlebars.compile('<p><strong>{{title}}</strong> {{address}}, {{postcode}}</p>')
+                    }
+                });
+                $("#orgName").on("typeahead:selected", function(e, datum) {
+                    log("Selected", e, datum);
+                    $("#orgId").val(datum.orgId);
+                });
+                flog("init typeahead3");
+            } catch (e) {
+                flog("exception: " + e);
             }
-        });
-        $("#orgName").on("typeahead:selected", function(e, datum) {
-            log("Selected", e, datum);
-            $("#orgId").val(datum.orgId);
         });
     });
 

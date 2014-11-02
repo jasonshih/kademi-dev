@@ -42,6 +42,18 @@
     margin-right: 15px;
     margin-bottom: 15px;
 }
+.attendees li a.profilePic {
+    display: block;
+    width: 60px;
+    text-align: center;
+}
+.attendees li a.user {
+    display: block;
+    width: 60px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
 .attendees li .profilePic {
     width: 52px;
     height: 52px;
@@ -49,4 +61,7 @@
 }
 .guests {
     margin-left: 20px;
+}
+.fc-border-separate thead th.fc-day-header {
+    width: 14.28% !important;
 }

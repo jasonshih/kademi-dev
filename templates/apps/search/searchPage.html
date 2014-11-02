@@ -8,7 +8,7 @@
         <div class="container">
             <form role="form" class="form-horizontal form-search" action="">
                 <div class="input-group">
-                    <input type="text" name="q" class="form-control" placeholder="Enter keyword to search..." value="#if (!$request.params.isEmpty()) $request.params.q #end" />
+                    <input type="text" name="q" class="form-control" placeholder="Enter keyword to search..." value="#if (!$request.params.isEmpty()) $request.params.q.trim() #end" />
                     <span class="input-group-btn">
                         <button class="btn btn-default" type="submit">Search</button>
                     </span>
@@ -18,7 +18,19 @@
             <div id="search-results">
                 #if ($page.hit.totalHits)
                     <p class="totals text-muted">
-                        <small>About $page.hit.totalHits results</small>
+                        <small>
+                            #if( $page.hit.totalHits == 0 )
+                            Couldnt find any matching results
+                            #elseif( $page.hit.totalHits == 1 )
+                            Oh, just one result
+                            #elseif( $page.hit.totalHits < 4 )
+                            Found a few results
+                            #elseif( $page.hit.totalHits < 10 )
+                            Found several results
+                            #else
+                            Found about $page.hit.totalHits results
+                            #end
+                        </small>
                     </p>
                 #end
                 <div class="results-wrapper">

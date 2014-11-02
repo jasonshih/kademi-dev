@@ -17,7 +17,7 @@
             initBindOrdersInitialState(container, config);
             container.find("form").forms({
                 callback: function() {
-                    alert("done!");
+                    Msg.success("done!");
                 }
             });
         },

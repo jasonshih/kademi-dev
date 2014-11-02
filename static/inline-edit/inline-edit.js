@@ -113,7 +113,7 @@ function listTemplates(callback) {
                 return;
             }
 
-            alert('There was a problem looking for templates');
+            Msg.error('There was a problem looking for templates');
         }
     });
 }
@@ -136,8 +136,8 @@ function edifyPage(selector) {
     };
     
     $.getScriptOnce("/static/js/toolbars.js", f);
-    $.getScriptOnce("/static/ckeditor431/ckeditor.js", f);
-    $.getScriptOnce("/static/ckeditor431/adapters/jquery.js", f);
+    $.getScriptOnce("/static/ckeditor440/ckeditor.js", f);
+    $.getScriptOnce("/static/ckeditor440/adapters/jquery.js", f);
 }
     
 function edifyAfterScriptsLoaded(selector) {
@@ -179,7 +179,7 @@ function edifyAfterScriptsLoaded(selector) {
             },
             error: function(resp) {
                 ajaxLoadingOff();
-                alert("There was an error loading the page content into the editor. Please refresh the page and try again");
+                Msg.error("There was an error loading the page content into the editor. Please refresh the page and try again");
             }
 
         });

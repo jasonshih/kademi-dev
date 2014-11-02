@@ -31,10 +31,10 @@
             </form>
         </div>
         <script type="text/javascript">
-            Bob.onDOMReady(function () {
+            $(function () {
                 $("#publish form").forms({
                     callback: function() {
-                        alert("Done!");
+                        Msg.success("Done!");
                     }
                 });
             });

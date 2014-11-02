@@ -65,7 +65,10 @@
                                 <td>
                                     <div class="blocks-wrapper">
                                         #foreach($m in $member.memberships)
-                                        <div class="block"><a href="groups/${m.groupEntity.name}/members">$m.groupEntity.name</a> in $m.withinOrg.titleOrId</div>
+                                        <div class="block">
+                                            <a href="groups/${m.groupEntity.name}/members">$m.groupEntity.name</a> 
+                                            in $m.withinOrg.titleOrId
+                                        </div>
                                         #end
                                     </div>
                                 </td>
@@ -90,7 +93,7 @@
             </div>
         </div>
         <script type="text/javascript">
-            Bob.onDOMReady(function() {
+            $(function () {
                 initSearchSignups();
             });
         </script>  

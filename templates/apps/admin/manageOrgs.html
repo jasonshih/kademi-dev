@@ -3,7 +3,6 @@
         <title>$view.title</title>
         <link href="manageWebsite.css" rel="stylesheet" type="text/css" />
         <link href="manageOrgs.css" rel="stylesheet" type="text/css" />
-        <script type="text/javascript" src="/static/js/jquery.fileupload.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
         <script type="text/javascript" src="manageOrgs.js" bottom="true">//</script>
 
@@ -29,16 +28,19 @@
             <div class="panel panel-default">
                 <div class="panel-heading"><i class="clip-folder"></i> Business Units</div>
                 <div class="panel-body">
-                    <div class="clearfix form-horizontal">
-                        <div class="input-group input-group-sm col-md-8">
-                            <input type="text" id="org-query" class="form-control" placeholder="Search for organisations here" value="" /> 
-                            <span class="input-group-btn">
-                                <button class="btn btn-sm btn-default" type="button" data-type="clearer" data-target="#org-query">
-                                    <i class="fa fa-times"></i>
-                                </button>
-                            </span>
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <div class="col-md-5">
+                                <div class="input-group input-group-sm">
+                                    <input type="text" id="org-query" class="form-control" placeholder="Search for organisations here" value="" />
+                                <span class="input-group-btn">
+                                    <button class="btn btn-sm btn-default" type="button" data-type="clearer" data-target="#org-query">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+                                </span>
+                                </div>
+                            </div>
                         </div>
-                        
                     </div>
 
                     <div class="table-responsive">
@@ -58,7 +60,7 @@
                                     <th>Path</th>
                                     <th>Phone</th>
                                     <th>Address</th>
-                                    <th class="action"></th>
+                                    <th class="action">Action</th>
                                 </tr>
                             </thead>
                             <tbody id="searchResults" class="search-results">
@@ -75,9 +77,10 @@
                                                 <i class="clip-settings"></i>
                                             </button>
                                             <ul class="dropdown-menu pull-right" role="menu">
-                                                <li><a class="btn-edit-org" role="button" href="$org.href">Edit details</a></li>
+                                                <li><a class="btn-edit-org" role="button" href="${org.href}edit">Edit details</a></li>
                                                 <li><a href="${org.href}viewDetails">View users and details</a></li>
                                                 <li><a href="${org.href}organisations">Manage child orgs</a></li>
+                                                <li><a href="${org.href}manageRepos">File manager</a></li>
                                                 <li class="divider"></li>
                                                 <li><a class="btn-delete-org" href="${org.href}">Delete this organisation</a></li>
                                             </ul>
@@ -94,7 +97,7 @@
             <div id="modal-upload-csv" tabindex="-1" class="modal fade modal-md" aria-hidden="true">
                 <div class="modal-header">
                     <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                    <h4 class="modal-title">Upload Organisation IDs CSV</h4>
+                    <h4 class="modal-title">Upload CSV</h4>
                 </div>
                 <div class="modal-body">
                     <p>Instructions for uploading organisations</p>
@@ -111,12 +114,18 @@
                         <li>If you click "allow inserts" then any organisations in the spreadsheet which do not match existing orgs in the database will be inserted</li>
                     </ol>
                     <div class="upload">
-                        <div class="btn-upload" id='do-upload-csv'></div>
-                        <br/>
-                        <div class="allow-inserts">
-                            <input type="checkbox" id="allow-inserts"/>
-                            <label for="allow-inserts">Allow inserts</label>
-                        </div>
+                        <form method="post" enctype="multipart/form-data" action="orgs.csv" id="orgs-upload-form" role="form" class="well">
+                            <div class="form-group">
+                                <label for="file">Select your CSV file to upload</label>
+                                <input type="file" id="file" name="file"/>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="insertMode" value="true" /> Allow inserts
+                                </label>
+                            </div>                            
+                            <button type="submit" class="btn btn-warning">Upload Organisations CSV</button>
+                        </form>
                     </div><br />
                     <div class="upload-results">
                         <p>
@@ -255,7 +264,7 @@
                 </div>
             </div>
             <script type="text/javascript">
-                Bob.onDOMReady(function() {
+                $(function() {
                     initManageOrgs();
                 });
             </script>

@@ -1,0 +1,2 @@
+This is a list of hacks to make ckeditor work. Need to be applied to subsequent versions
+ - pbckcode - comment out some styles

@@ -65,7 +65,7 @@ function initCRUDExtraField() {
                     },
                     error: function(resp) {
                         flog('error', resp);
-                        alert('There was an error removing the field. Please check your internet connection');
+                        Msg.error('There was an error removing the field. Please check your internet connection');
                     }
                 });
             } catch (e) {
@@ -86,9 +86,9 @@ function openModal(key, value) {
 
         txtName.val(key);
 
-        var values = getValue(value);
+        var values = getValue(value, key);
 
-        chkRequire.attr('checked', values.require);
+        chkRequire.prop('checked', values.require);
         txtText.val(values.text);
 
         var optionString = '';
@@ -201,19 +201,29 @@ function initModal() {
 
                 modal.modal('hide');
             } else {
-                alert('Couldnt add the field. Please check your input and try again');
+                Msg.error('Couldnt add the field. Please check your input and try again');
             }
         }
     });
 }
 
-function getValue(value) {
+function getValue(value, key) {    
     var values = value.split(';');
-    var isRequired = value.indexOf('required') !== -1;
-    var text = isRequired ? values[2] : values[1];
-    text = text.replace('text=', '');
-    var options = isRequired ? values[1] : values[0];
-    options = options.replace(/^options\((.*)\)$/, '$1');
+    var isRequired = false;
+
+    var text = key;
+    var options = "";
+    for( i=0; i<values.length; i++) {
+        var s = values[i];
+        if( s.startsWith("text=")) {
+            text = s.substring(5);
+        } else if( s.startsWith("options")) {
+            options = s;
+            options = options.replace(/^options\((.*)\)$/, '$1');
+        } else if( s === "required") {
+            isRequired = true;
+        }
+    }
 
     return {
         require: isRequired,
@@ -224,7 +234,7 @@ function getValue(value) {
 
 function buildExtraField(key, value) {
     var string = '';
-    var values = getValue(value);
+    var values = getValue(value, key);
     var required = values.require ? '<i class="clip-notification-2 text-danger"></i>' : '';
     var text = values.text;
     var options = values.options.replace(/,/g, ', ');

@@ -6,6 +6,9 @@
 	float: left;
 	width: 150px;
 	margin-right: 10px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }
 
 .modal-edit-programs article.article-sub span.article-name > a {

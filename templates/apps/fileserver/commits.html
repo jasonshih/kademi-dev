@@ -5,62 +5,133 @@
         <link href="/static/history/jquery.history.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="/static/history/jquery.history.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.timeago.js">//</script>
-	    <script type="text/javascript" src="commits.js">//</script>
-	    <link href="commits.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="commits.js">//</script>
+        <link href="commits.css" rel="stylesheet" type="text/css" />
     </head>
     <body class="manage-repo-history">
-        <p class="well">
-	        <a class="close" role="button" href="#" data-dismiss="alert">&times;</a>
-	        Here is a list of changes made to this branch. You can restore the branch to the state of any of the commits below by clicking the Restore icon. The current state wont be lost, it will
-	        just become the previous version. <br /><b>Click on the commit number to view the branch in that state without restoring it.</b>
-        </p>
+        <div class="well">
+            <p>
+                Here is a list of changes made to this branch. You can restore the branch to the state of any of the commits below by clicking the Restore icon. The current state wont be lost, it will
+                just become the previous version. <br /><b>Click on the commit number to view the branch in that state without restoring it.</b>
+            </p>
+            <p class="">
+                If you know the hash of another directory or repository you can set it directly on this
+                to make an exact copy
+                <a href="./" class="btn btn-sm btn-danger btn-set-hash ">Set hash</a>
+            </p>      
+        </div>
 
         <div class="panel panel-default">
-	        <div class="panel-heading">
-		        <i class="fa fa-cloud-upload"></i>
-		        Commits
-	        </div>
-	        <div class="panel-body">
-		        <div class="clearfix">
-			        <p class="pull-left btn-set-hash-wrapper"><a href="./" class="btn btn-sm btn-danger btn-set-hash pull-left">Set hash</a></p> <h4><small>(You can update the hash directly)</small></h4>
-		        </div>
-		        <div class="table-responsive">
-			        <table class="table table-striped table-hover">
-				        <colgroup>
-					        <col />
-					        <col />
-					        <col />
-					        <col />
-					        <col style="width: 70px" />
-				        </colgroup>
-				        <thead>
-					        <tr>
-						        <th>Link</th>
-						        <th>Hash</th>
-						        <th>User</th>
-						        <th>Edited</th>
-						        <th class="action">Restore</th>
-					        </tr>
-				        </thead>
-				        <tbody>
-					        #foreach($c in $page.commits)
-						        <tr>
-							        <td>$c.link</td>
-							        <td>$c.commit.itemHash</td>
-							        <td>$c.commit.editor.name</td>
-							        <td><abbr title="$formatter.formatDateISO8601($c.commit.createdDate)" class="info timeago">$c.commit.createdDate</abbr></td>
-							        <td class="action"><button class="btn btn-sm btn-success btn-restore-repo" title="Restore this version" rel="$c.commit.itemHash"><i class="fa fa-undo"></i></button></td>
-						        </tr>
-					        #end
-				        </tbody>
-			        </table>
-		        </div>
-	        </div>
+            <div class="panel-heading">
+                <i class="fa fa-cloud-upload"></i>
+                <b>Commits</b>
+                #if( $page.commits.size() > 0 ) 
+                - showing $page.commits.size() results
+                    #if( $page.commits.size() >= 1000 ) 
+                     (limited to 1000)
+                    #end
+                #end
+            </div>
+            <div class="panel-body">
+                <div class="">
+                    <div class="input-group date-range col-md-4">
+                        <label for="report-range" class="input-group-addon">Time</label>
+                        <input type="text" id="report-range" placeholder="Choose a date range" value="" class="form-control" />
+                    </div>   
+                    <div class="clearfix"></div>
+                </div>
+                <div class="table-responsive">
+                    <table id="commit-wrapper" class="table table-striped table-hover">
+                        <colgroup>
+                            <col />
+                            <col />
+                            <col />
+                            <col />
+                            <col style="width: 70px" />
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>Link</th>
+                                <th>Hash</th>
+                                <th>User</th>
+                                <th>Edited</th>
+                                <th class="action">Restore</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-table-body">
+                            #foreach($c in $page.commits)
+                            <tr>
+                                <td>$!c.link</td>
+                                <td>$!c.commit.itemHash</td>
+                                <td>$!c.commit.editor.name</td>
+                                <td><abbr title="$formatter.formatDateISO8601($!c.commit.createdDate)" class="info timeago">$!c.commit.createdDate</abbr></td>
+                                <td class="action"><button class="btn btn-sm btn-success btn-restore-repo" title="Restore this version" rel="$!c.commit.itemHash"><i class="fa fa-undo"></i></button></td>
+                            </tr>
+                            #end
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
         <script type="text/javascript">
-	        Bob.onDOMReady(function () {
-		        initManageRepoHistory();
-	        });
+            $(function() {
+                initManageRepoHistory();
+                initHistorySearch();
+            });
+
+            function initHistorySearch() {
+                var reportRange = $('#report-range');
+
+                reportRange.exist(function() {
+                    flog("init report range");
+                    reportRange.daterangepicker({
+                        format: 'DD/MM/YYYY', // YYYY-MM-DD
+                        ranges: {
+                            'Last 7 Days': [moment().subtract('days', 6), moment()],
+                            'Last 30 Days': [moment().subtract('days', 29), moment()],
+                            'This Month': [moment().startOf('month'), moment().endOf('month')],
+                            'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
+                            'This Year': [moment().startOf('year'), moment()],
+                        },
+                    },
+                            function(start, end) {
+                                flog('onChange', start, end);
+                                doHistorySearch(start, end);
+                            }
+                    );
+                });
+            }
+
+            function doHistorySearch(startDate, endDate) {
+                flog('doHistorySearch', startDate, endDate);
+
+                var data = {
+                    startDate: formatDate(startDate),
+                    finishDate: formatDate(endDate)
+                };
+                flog("data", data);
+
+                var target = $("#history-table-body");
+                //target.load();
+
+                var dates = "startDate=" + formatDate(startDate) + "&finishDate=" + formatDate(endDate);
+                var baseHref = window.location.pathname + "?" + dates;                
+                var href = baseHref + "#history-tab";
+
+                $.ajax({
+                    type: "GET",
+                    url: href,
+                    dataType: 'html',
+                    success: function(content) {
+                        flog('response', content);
+                        var newBody = $(content).find("#history-table-body");
+                        target.replaceWith(newBody);
+                        jQuery("abbr.timeago").timeago();
+                        window.history.pushState(null, "Email History", href);
+                    }
+                });
+
+            }            
         </script>
     </body>
 </html>

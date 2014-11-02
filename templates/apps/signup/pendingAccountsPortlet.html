@@ -1,4 +1,5 @@
 #if($applications.size() > 0 )
+<div class="container">
 <div class="panel panel-default">
     <div class="panel-heading">
         <i class="clip-home"></i>
@@ -22,7 +23,7 @@
             </thead>
             <tbody>
                 #foreach($app in $applications)
-                <tr>
+                <tr data-toggle="collapse" data-target=".det-$app.id">
                     <td>
                         <input type="hidden" name="appId" value="$app.id"/>
                         <button class="accept btn btn-success">Accept</button>
@@ -36,6 +37,20 @@
                     <td>$app.withinOrg.titleOrId</td>
                     <td><abbr title="$formatter.formatDateISO8601($app.createdDate)" class="timeago">$app.createdDate</abbr></td>
                 </tr>
+                <tr id="" class="collapse det-$app.id">
+                    <td colspan="3"></td>
+                    <td>Name</td>
+                    <td colspan="4">$!app.member.firstName $!app.member.surName</td>
+                </tr>
+                #if( $app.fields.nvPairs.size() > 0 )
+                #foreach($field in $app.fields.nvPairs)
+                <tr id="" class="collapse det-$app.id">
+                    <td colspan="3"></td>
+                    <td>$field.name</td>
+                    <td colspan="4">$field.propValue</td>
+                </tr>                
+                #end
+                #end
                 #end
             </tbody>
         </table>
@@ -43,4 +58,5 @@
         <script type="text/javascript" src="/templates/apps/signup/pending.js">//</script>
     </div>
 </div>
+    </div>
 #end

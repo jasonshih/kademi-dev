@@ -100,7 +100,7 @@ function loadHistory(tbody, config) {
             },
             error: function(resp) {
                 ajaxLoadingOff();
-                alert('err');
+                Msg.error('err');
             }
         });
     } catch (e) {
@@ -174,11 +174,11 @@ function revert(hash, tbody, config) {
             error: function(resp) {
                 ajaxLoadingOff();
                 log('error response', resp);
-                alert('Sorry, there was an error reverting to the previous version. Please check your internet connection');
+                Msg.error('Sorry, there was an error reverting to the previous version. Please check your internet connection');
             }
         });
     } catch (e) {
         log('exception', e);
-        alert('Sorry, there was an exception reverting to the previous version. Please check your internet connection');
+        Msg.error('Sorry, there was an exception reverting to the previous version. Please check your internet connection');
     }
 }

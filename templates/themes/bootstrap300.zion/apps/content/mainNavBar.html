@@ -31,10 +31,7 @@
 
                     <div class="navbar-collapse collapse navbar-main-collapse">
                         <div class="$navItemsDiv">
-                            <ul class="$navItemsType">                       
-                                #foreach($item in $menu.items)
-                                <li class="$formatter.ifTrue($item.active, 'active', '')"><a class="nav-${item.id}" href="$item.href" shape="rect">$item.text</a></li>
-                                #end
+                            <ul class="$navItemsType navbar-right">
                                 #if($user)
                                 <li class="dropdown">
                                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -84,6 +81,13 @@
                                     </ul>
                                     #end
                             </ul>
+                            
+                            <ul class="$navItemsType navbar-right">
+                                #foreach($item in $menu.items)
+                                <li class="$formatter.ifTrue($item.active, 'active', '')"><a class="nav-${item.id}" href="$item.href" shape="rect">$item.text</a></li>
+                                #end
+                            </ul>
+                            
                         </div>
                     </div><!--/.nav-collapse -->                                          
                 </div><!-- end col-md-12 -->

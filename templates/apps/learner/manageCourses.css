@@ -6,6 +6,7 @@
 }
 
 .courses-list li.course,
+.courses-list li.splitter,
 .modules-list li.module,
 .modules-list li.splitter {
     margin-bottom: 10px;
@@ -13,6 +14,7 @@
 }
 
 .courses-list li.course,
+.courses-list li.splitter > span,
 .modules-list li.module,
 .modules-list li.splitter > span {
     border-radius: 3px;
@@ -22,12 +24,22 @@
     background: #555;
 }
 
+.courses-list li.course.cut {
+    background: rgba(85, 85, 85, 0.5);
+}
+
 .courses-list li.course.active,
 .modules-list li.module {
     background: #5BC0DE;
 }
 
+.courses-list li.course.active.cut,
+.modules-list li.module.cut {
+    background: rgba(91, 192, 222, 0.5);
+}
+
 .courses-list li.course > a,
+.courses-list li.splitter > span,
 .modules-list li.module > a,
 .modules-list li.splitter > span {
     display: block;
@@ -38,11 +50,13 @@
 }
 
 .courses-list li.course aside,
+.courses-list li.splitter aside,
 .modules-list li.module aside,
 .modules-list li.splitter aside {
     padding: 5px 5px 0 0;
 }
 
+.courses-list li.splitter > span,
 .modules-list li.splitter > span {
     color: #555;
     background: #f0f0f0;

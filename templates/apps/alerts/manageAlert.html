@@ -1,7 +1,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>Manage Dashboard Messages</title>
-	    <link rel="stylesheet" type="text/css" href="manageDashboardMessages.css" />
 	    <script type="text/javascript" src="manageDashboardMessages.js">//</script>
     </head>
     <body class="manageModulePages">
@@ -16,7 +15,7 @@
                 <div class="clearfix">
                     <div class="pull-right">
                         <button class="btn btn-sm btn-primary" type="submit">Save changes</button>
-                        <button class="btn btn-sm btn-default Cancel" type="button">Cancel</button>
+<!--                         <button class="btn btn-sm btn-default Cancel" type="button">Cancel</button> -->
                     </div>
                     <ul class="TabNav nav nav-tabs tab-bricky pull-left">
                         <li class=""><a href="#details" data-toggle="tab">Details</a></li>
@@ -26,11 +25,18 @@
                 <div class="tab-content">
                     <div class="tab-pane" id="details">
                         <div class="form-group">
+                            <label class="control-label col-md-3" for="type">Title</label>
+                            <div class="col-md-8">
+                                <input type="text" name="title" value="$page.title" class="form-control required" />
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
                             <label class="control-label col-md-3" for="type">Group</label>
                             <div class="col-md-8">
                                 <select name="targetGroup" id="targetGroup" class="form-control">
                                     <option value="">[None]</option>
-                                    #foreach($group in $page.organisation.groups)
+                                    #foreach($group in $page.groups)
                                     $formatter.option($group.name, $group.name, $page.targetGroup)
                                     #end
                                 </select>
@@ -117,11 +123,12 @@
             </div>
         </form>
         <script type="text/javascript" >
-	        Bob.onDOMReady(function () {
+	        $(function () {
                 initHtmlEditors();
 		        $(".alert-form").forms({
                     callback: function(resp) {
                         flog("Saved ok", resp);
+                        Msg.info("Saved alert");
                         if( resp.nextHref ) {
                             window.location = resp.nextHref;
                         }

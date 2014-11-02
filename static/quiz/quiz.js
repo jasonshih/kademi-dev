@@ -34,7 +34,7 @@ function loadQuizEditor(modal, data) {
                 var val = data[prop];
                 var radio = radios.filter('[value=' + val + ']');
                 flog('radio val', val, radio);
-                radio.attr('checked', 'true'); // set radio buttons
+                radio.prop('checked', true); // set radio buttons
                 flog('restored radio', radio);
             }
         }
@@ -79,11 +79,13 @@ function prepareQuizForSave(quizWrapper, data) {
         data.pageName = quizWrapper.find('input[name=pageName]').val();
         data.pageTitle = quizWrapper.find('input[name=pageTitle]').val();
         data.template = quizWrapper.find('input[name=template]').val();
+        data.order = quizWrapper.find('input[name=order]').val();
     } else {
         data = {
             pageName: quizWrapper.find('input[name=pageName]').val(),
             pageTitle: quizWrapper.find('input[name=pageTitle]').val(),
-            template: quizWrapper.find('input[name=template]').val()
+            template: quizWrapper.find('input[name=template]').val(),
+            order: quizWrapper.find('input[name=order]').val()
         };
     }
 
@@ -251,6 +253,7 @@ function initQuizBuilder() {
                 '<p>[Enter help text here]</p>' +
                 '</li>'
                 );
+        li.addClass("answer" + id);
         quizWrapper.append(li);
         return li;
     }
@@ -272,15 +275,20 @@ function ensureOneEmptyRadio(ol) {
     addRadioToMulti(ol);
 }
 
-function addRadioToMulti(ol) {
+function addRadioToMulti(ol) {    
     var question = ol.closest('li').attr('class');
     flog('addRadioToMulti', ol, question);
     var answerId = Math.floor(Math.random() * 1000000);
     var li = $('<li></li>');
     li.append($('<input type="radio" id="answer_' + answerId + '" value="' + answerId + '"/>'));
-    li.append($('<label for="answer_' + answerId + '">[Enter answer text here]</label>'));
-    li.find('input').attr('name', question); // make the name of all radios the question
+    li.append($('<label for="answer_' + answerId + '">[Enter answer text here]</label>'));    
     ol.append(li);
+    
+    // Do this after appending
+    var inputs = li.closest("ol").find('input');
+    flog("Set name!", inputs, question);
+    inputs.attr('name', question); // make the name of all radios the question
+    
 }
 
 /**

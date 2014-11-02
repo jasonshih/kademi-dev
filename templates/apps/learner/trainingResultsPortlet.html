@@ -1,11 +1,11 @@
 <div id="modal-upload-training-results-csv" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
 	<div class="modal-header">
 		<button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-		<h4 class="modal-title">Upload Users CSV</h4>
+		<h4 class="modal-title">Upload Results CSV</h4>
 	</div>
 	<div class="modal-body">
 		<div class="upload">
-			<div class="btn btn-sm btn-primary" id='do-upload-training-results-csv'></div>
+			<div id='do-upload-training-results-csv'></div>
 		</div><br />
 		<div class="upload-results">
 			<p>
@@ -30,7 +30,7 @@
 
 <script src='/templates/apps/learner/trainingResultsPortlet.js'></script>
 <script type="text/javascript">
-	Bob.onDOMReady(function () {
+	$(function () {
 		initTrainingResultsPortlet();
 	});
 </script>

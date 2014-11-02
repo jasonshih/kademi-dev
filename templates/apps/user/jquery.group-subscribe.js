@@ -76,7 +76,7 @@
                 onSuccess: function(newSelectedVal) {
                 },
                 onError: function(resp) {
-                    alert("Error updating subscription details");
+                    Msg.error("Error updating subscription details");
                 },
                 isCheckbox: container.is(":checkbox"),
                 isButton: container.is("button")

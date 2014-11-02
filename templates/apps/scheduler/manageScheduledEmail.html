@@ -24,7 +24,7 @@
                             <div class="form-group">
                                 <label class="col-md-2 control-label" for="title">Name</label>
                                 <div class="col-md-5">
-                                    <input type="text" name="title" value="$!page.name" placeholder="" class="form-control" />
+                                    <input type="text" name="title" value="$!page.name" placeholder="" required="true" class="required form-control" />
                                 </div>
                             </div>
                             <div class="form-group">
@@ -39,13 +39,13 @@
                             <div class="form-group">
                                 <label class="col-md-2 control-label" for="subject">Email subject</label>
                                 <div class="col-md-8">
-                                    <input type="text" name="subject" value="$!page.subject" placeholder="" class="form-control" />
+                                    <input type="text" name="subject" value="$!page.subject" placeholder="" required="true" class="required form-control" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-md-2 control-label" for="fromAddress">Email from address</label>
                                 <div class="col-md-8">
-                                    <input type="text" name="fromAddress" value="$!page.fromAddress" placeholder="" class="email form-control" />
+                                    <input type="text" name="fromAddress" value="$!page.fromAddress" placeholder="" required="true" class="required email form-control" />
                                     <p class="clearfix">
                                         <i>Choose an email address for example admin@mybusinessname.com</i>
                                     </p>
@@ -110,7 +110,7 @@
                                 <label class="col-md-2 control-label" for="startDate">Start Date</label>
                                 <div class="col-md-4">
                                     <div class="input-group">
-                                        <input type="text" name="startDate" value="$formatter.formatDate($page.job.startDate)" placeholder="Start date" data-date-format="dd/mm/yyyy" data-date-viewmode="years" class="form-control date-picker"/>
+                                        <input type="text" name="startDate" value="$formatter.formatDate($page.job.startDate)" placeholder="Start date" data-date-format="dd/mm/yyyy" data-date-viewmode="years" class="form-control date-picker required" data-impacted="#endDate" data-impact="startDate" />
                                         <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
                                     </div>
                                 </div>
@@ -119,7 +119,7 @@
                                 <label class="col-md-2 control-label" for="startDate">End Date (optional)</label>
                                 <div class="col-md-4">
                                     <div class="input-group">
-                                        <input type="text" name="endDate" value="$formatter.formatDate($page.job.endDate)" placeholder="End date" data-date-format="dd/mm/yyyy" data-date-viewmode="years" class="form-control date-picker"/>
+                                        <input type="text" name="endDate" value="$formatter.formatDate($page.job.endDate)" id="endDate" placeholder="End date" data-date-format="dd/mm/yyyy" data-date-viewmode="years" class="form-control date-picker" />
                                         <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
                                     </div>                                    
                                 </div>
@@ -234,7 +234,7 @@
             </div>
         </div>
         <script type="text/javascript">
-            Bob.onDOMReady(function() {
+            $(function () {
                 initEditEmailPage();
                 $(".show-time-details").click(function(e) {
                     e.preventDefault();
@@ -243,6 +243,7 @@
                 $("form").forms({
                     callback: function() {
                         flog("Saved Ok!");
+                        Msg.success('Saved Ok!');
                     }
                 });
             });

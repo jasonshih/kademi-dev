@@ -11,13 +11,13 @@ function initManageCertificateDetails(certId) {
     edify($('.manage-certificate-details'),
         function(resp) {
             flog('done', resp);
-            alert('Saved ok');
+            Msg.success('Saved ok');
         },
         function(form) {
             var content = $('#editContent');
             flog('validate', form, content, content.val());
             if( content.val().trim() == '') {
-                alert('Please enter some content for the certificate');
+                Msg.error('Please enter some content for the certificate');
                 return false;
             }
             return true;
@@ -54,11 +54,10 @@ function initModalCertificate() {
 }
 
 function initCertificateController() {
-    // Bind event for DeleteCert button
-    $(document.body).on('click', 'a.btn-delete-cert', function(e) {
+    $(document.body).on('click', '.btn-delete-cert', function(e) {
         e.preventDefault();
         var a = $(this);
-        var name = a.attr('data-name');;
+        var name = a.closest('tr').find('td.name').text();
         
         flog('delete onclick', a, name);
         confirmDelete(a.attr('href'), name, function() {

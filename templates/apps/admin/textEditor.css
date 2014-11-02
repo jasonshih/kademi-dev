@@ -1,0 +1,30 @@
+h3 {
+    margin: 0 0 20px;
+}
+
+#editor {
+    min-height: 400px;
+}
+
+#editor .ace_content {
+    min-height: 400px;
+}
+
+#editor-wrapper {
+    padding-top: 20px;
+    overflow-y: auto;
+    background: #fff;
+}
+
+#editor-wrapper .editor-toolbar {
+    padding: 0 20px;
+}
+
+#editor-wrapper.fullscreen-mode #editor {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    top: 66px;
+    height: auto !important;
+}

@@ -53,13 +53,13 @@ function doCreateAccount() {
                                 msg += key + " - " + m + "\n";
                             }
                         }
-                        alert(msg);
+                        Msg.error(msg);
                     } else {
-                        alert("We're sorry, but there was an error creating your account. Please check what you've entered and try again");
+                        Msg.error("We're sorry, but there was an error creating your account. Please check what you've entered and try again");
                     }
                 }
             } else {
-                alert("An error has occured and your application might not have been submitted");
+                Msg.error("An error has occured and your application might not have been submitted");
             }
 
         },

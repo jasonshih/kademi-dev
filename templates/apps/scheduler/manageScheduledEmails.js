@@ -73,7 +73,6 @@ function initRemoveRecipientGroup() {
     });    
 }
 
-
 function initGroupCheckbox() {
     $("#modalGroup input[type=checkbox]").click(function() {
         var $chk = $(this);
@@ -109,7 +108,7 @@ function setGroupRecipient(name, isRecip) {
             },
             error: function(resp) {
                 flog("error", resp);
-                alert("err");
+                Msg.error('err');
             }
         });          
     } catch(e) {
@@ -119,6 +118,7 @@ function setGroupRecipient(name, isRecip) {
 
 function initAddJob() {
     flog("initAddJob", $("#moduleCreateJob form"));
+    var modalCreateJob = $("#modalCreateJob");
     $("#modalCreateJob form").forms({
         callback: function(data) {
             flog("saved ok", data);
@@ -157,13 +157,18 @@ function initController() {
     //Bind event for Delete email
     $("body").on("click", "a.DeleteEmail", function(e) {
         e.preventDefault();
-        var a = $(e.target);
+
+        var a = $(this);
         flog("do it", a);
         var href = a.attr("href");
-        var name = getFileName(href);
+        var tr = a.closest('tr');
+        var name = tr.attr('data-name');
+
         confirmDelete(href, name, function() {
-            a.closest("li").remove();
+            Msg.success('Deleted!');
+            tr.remove();
             stripList();
+            Msg.info("Deleted OK");
         });
     });
 }
@@ -327,25 +332,25 @@ function eventForModal() {
 function validateEmail() {
     // Check it has recipients
     if( $(".GroupList button").length == 0  ) {
-        alert("Please enter at least one recipient");
+        Msg.error("Please enter at least one recipient");
         return false;
     }
     // Check it has a message
     var msg = $("textarea[name=html]").val();
     if( msg == null || msg.length == 0 ) {
-        alert("Please enter a message to send");
+        Msg.error("Please enter a message to send");
         return false;
     }
     // Check subject
     var subject = $("input[name=subject]").val();
     if( subject == null || subject.length == 0) {
-        alert("Please enter a subject for the email");
+        Msg.error("Please enter a subject for the email");
         return false;
     }
     // Check from address    
     var fromAddress = $("input[name=fromAddress]").val();
     if( fromAddress == null || fromAddress.length == 0) {
-        alert("Please enter a from address for the email");
+        Msg.error("Please enter a from address for the email");
         return false;
     }
     // Check that if doing password reset then a theme is selected
@@ -353,7 +358,7 @@ function validateEmail() {
     flog("check reset", $("#passwordReset:checked"), sel);
     if( $("#passwordReset:checked").length > 0 ) {
         if( sel.val() == "" ) {
-            alert("A theme is required for a password reset email. Please choose a theme on the Message tab");
+            Msg.error("A theme is required for a password reset email. Please choose a theme on the Message tab");
             return false;
         }
     }                
@@ -384,19 +389,19 @@ function sendMailAjax(reallySend) {
             success: function(data) {
                 flog("send has been initiated", data);
                 if( reallySend ) {
-                    alert("Email sending has been initiated. If there is a large number of users this might take some time. This screen will display progress");
+                    Msg.success("Email sending has been initiated. If there is a large number of users this might take some time. This screen will display progress");
                     $("a.statusTab").click();
                     $("#manageEmail button").hide();
                     $(".GroupList a").hide();
                     $(".Content.Send").html("<h4>Email has been sent, or is sending</h4>");
                     initStatusPolling();
                 } else {
-                    alert("The preview email has been sent to your email address. Please review it");
+                    Msg.info("The preview email has been sent to your email address. Please review it");
                 }
             },
             error: function(resp) {
                 flog("error", resp);
-                alert("Failed to start the send job. Please refresh the page");
+                Msg.error("Failed to start the send job. Please refresh the page");
             }
         });          
     } catch(e) {
@@ -512,11 +517,11 @@ function sendTest() {
                 test: true,
             },
             success: function(data) {
-                alert("Test sent");
+                Msg.success("Test sent");
             },
             error: function(resp) {
                 flog("error", resp);
-                alert("Failed to send test message");
+                Msg.error("Failed to send test message");
             }
         });          
     } catch(e) {

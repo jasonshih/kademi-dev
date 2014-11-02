@@ -39,7 +39,9 @@ function initForumModal() {
 
 	modal.find('form').forms({
 		callback: function() {
-			window.location.reload();
+            modal.modal('hide');
+            Msg.success($('#title').val() + ' is saved!');
+            $('#forum-wrapper').reloadFragment();
 		}
 	});
 }
@@ -72,13 +74,15 @@ function showForumModal(selected) {
 }
 
 function confirmDeleteForum(e) {
-    var forum = $(e.target).closest('div.Forum');
-    var forumLink = forum.find('header div.ShowDialog > a');
+    var forum = $(e.target).closest('div.forum');
+    var forumLink = forum.find('.btn-delete-forum');
     var href = forumLink.attr('href');
-    var name = forumLink.text();
+    var name = getFileName(href);
+
     confirmDelete(href, name, function() {
+        Msg.success(forum.attr('data-title') + ' is deleted!');
         forum.remove();
-    });            
+    });
 }
 
 // TODO: recheck topic
@@ -138,7 +142,7 @@ function addTopic(forumName) {
 	var name = $('input[name=name]', modal).val();
 	log('addTopic', name);
 	if( name == null || name.length == 0 ) {
-		alert('Please enter a name for the new topic');
+		Msg.error('Please enter a name for the new topic');
 		return;
 	}
 
@@ -165,7 +169,7 @@ function addTopic(forumName) {
 		},
 		error: function(resp) {
 			log('error', resp);
-			alert('err');
+			Msg.error('err');
 		}
 	});
 
@@ -203,7 +207,7 @@ function renameTopic(topicLi) {
         },
         error: function(resp) {
             log('error', resp);
-            alert('err');
+            Msg.error('err');
         }
     });    
 }

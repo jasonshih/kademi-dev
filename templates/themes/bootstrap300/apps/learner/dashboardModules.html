@@ -4,12 +4,6 @@
     <div class="" > <!-- begin hero module -->
         #set($mod = $modules.get(0))
 
-        #if ( $mod.percentComplete )
-        <h2>Continue your training</h2>
-        #else
-        <h2>Start your training</h2>
-        #end            
-
         <div class="hero thumbnail well">
             #if( $mod.thumb )
             #set($bg = "background-image: url('${mod.thumb}/alt-300-300.png')")
@@ -79,7 +73,7 @@
         <div class="col-lg-4 col-md-6 col-sm-6 large $count">
             <div class="thumbnail tile">
                 #if(${mod.thumb})
-                <div style="background-image: url(${mod.thumb}/alt-300-300.png)" class="tile-image">
+                <div style="background-image: url('${mod.thumb}/alt-300-300.png')" class="tile-image">
                     <a href="${mod.href}" class="requiresUser"><span>View</span></a>
                 </div>
                 #end

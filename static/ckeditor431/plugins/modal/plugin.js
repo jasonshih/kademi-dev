@@ -144,7 +144,7 @@
 
                                         if (this.getValue()) {
                                             if (isNaN(value)) {
-                                                alert('The Width must be digits!');
+                                                Msg.error('The Width must be digits!');
                                                 return false;
                                             }
                                         }
@@ -167,7 +167,7 @@
 
                                         if (this.getValue()) {
                                             if (isNaN(value)) {
-                                                alert('The Height must be digits!');
+                                                Msg.error('The Height must be digits!');
                                                 return false;
                                             }
                                         }

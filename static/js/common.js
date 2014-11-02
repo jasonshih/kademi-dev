@@ -9,11 +9,10 @@
             };
             $.getScriptOnce.loaded[url] = scriptMeta;
             if (successhandler === undefined) {
-                return $.getScript(url);
+                return $.cachedScript(url);
             } else {
-                flog("getScriptOnce: Loading", url, "callback", successhandler);
                 return $.getScript(url, function (script, textStatus, jqXHR) {
-                    flog("getScriptOnce: Loaded!!", url, "callback", successhandler);
+                    //flog('getScriptOnce: Loaded!!', url, 'callback', successhandler);
                     scriptMeta.loaded = true;
                     successhandler(script, textStatus, jqXHR);
                     for (var i = 0; i < scriptMeta.callbacks.length; i++) {
@@ -25,12 +24,12 @@
             if (successhandler === undefined) {
                 // do nothing
             } else {
-                flog("getScriptOnce: Got script meta: ", url, scriptMeta);
+                //flog('getScriptOnce: Got script meta: ', url, scriptMeta);
                 if (!scriptMeta.loaded) {
-                    flog("call later");
+                    //flog('call later');
                     scriptMeta.callbacks.push(successhandler);
                 } else {
-                    flog("call immediately");
+                    //flog('call immediately');
                     successhandler(url);
                 }
             }
@@ -44,28 +43,43 @@
     var scripts = document.getElementsByTagName('script');
     for (i = 0; i < scripts.length; i++) {
         var scr = scripts[i];
-        var url = $(scr).attr("src");
+        var url = $(scr).attr('src');
         $.getScriptOnce.loaded.push(url);
     }
 }(jQuery));
 
+jQuery.cachedScript = function (url, callback, options) {
+    options = $.extend(options || {}, {
+        dataType: 'script',
+        cache: true,
+        url: url
+    });
+    if (callback) {
+        options.success = callback;
+    }
+    // Use $.ajax() since it is more flexible than $.getScript
+    // Return the jqXHR object so we can chain callbacks
+    return jQuery.ajax(options);
+};
+
 function endsWith(str, suffix) {
-    return str.match(suffix + "$") == suffix;
+    return str.match(suffix + '$') == suffix;
 }
+
 function startsWith(str, prefix) {
     return str.indexOf(prefix) === 0;
 }
 
 Date.prototype.formatMMDDYYYY = function () {
     return (this.getMonth() + 1) +
-        "/" + this.getDate() +
-        "/" + this.getFullYear();
+        '/' + this.getDate() +
+        '/' + this.getFullYear();
 }
 
 Date.prototype.formatDDMMYYYY = function () {
     return this.getDate() +
-        "/" + (this.getMonth() + 1) +
-        "/" + this.getFullYear();
+        '/' + (this.getMonth() + 1) +
+        '/' + this.getFullYear();
 }
 
 /**
@@ -78,13 +92,14 @@ String.prototype.contains = function (it) {
 String.prototype.startsWith = function (prefix) {
     return this.indexOf(prefix) === 0;
 };
+
 String.prototype.endsWith = function (suffix) {
-    return this.match(suffix + "$") == suffix;
+    return this.match(suffix + '$') == suffix;
 };
 
 function ensureObject(target) {
-    if (typeof target == "string") {
-        target = $("#" + target);
+    if (typeof target == 'string') {
+        target = $('#' + target);
     }
     return target;
 }
@@ -138,7 +153,7 @@ $.fn.classes = function (f) {
             '' === _[j] || c.push(_[j]);
     });
     c = $.unique(c);
-    if ("function" === typeof f)
+    if ('function' === typeof f)
         for (var j in c)
             f(c[j]);
     return c;
@@ -148,7 +163,7 @@ $.fn.classes = function (f) {
  * varargs function to output to console.log if console is available
  */
 function log() {
-    if (typeof (console) != "undefined") {
+    if (typeof(console) != 'undefined') {
         if (navigator.appName == 'Microsoft Internet Explorer') {
             // BM: Previous used JSON, but that crashed IE sometimes. So this is pretty crap, but at least safer
             if (arguments.length == 1) {
@@ -170,7 +185,7 @@ function log() {
  * varargs function to output to console.log if console is available
  */
 function flog() {
-    if (typeof (console) != "undefined") {
+    if (typeof(console) != 'undefined') {
         if (navigator.appName == 'Microsoft Internet Explorer') {
             // BM: Previous used JSON, but that crashed IE sometimes. So this is pretty crap, but at least safer
             if (arguments.length == 1) {
@@ -189,7 +204,7 @@ function flog() {
 function pad2(i) {
     var j = i - 0; // force to be a number
     if (j < 10) {
-        return "0" + j;
+        return '0' + j;
     } else {
         return i;
     }
@@ -204,7 +219,7 @@ function toFileSize(num) {
 }
 
 function toDisplayDateNoTime(dt) {
-    return (dt.date) + "/" + (dt.month + 1) + "/" + (dt.year + 1900);
+    return (dt.date) + '/' + (dt.month + 1) + '/' + (dt.year + 1900);
 }
 
 function now() {
@@ -243,8 +258,7 @@ function dateOrd(post1, post2) {
     }
     if (n.day < m.day) {
         return -1;
-    }
-    else if (n.day > m.day) {
+    } else if (n.day > m.day) {
         return 1;
     }
     if (n.hours < m.hours) {
@@ -281,8 +295,8 @@ function ajaxLoadingOff(sel) {
 /** Displays a modal with a title and message
  */
 function showThankyou(title, message) {
-    log("showThankyou");
-    $(".modal").dialog("close");
+    log('showThankyou');
+    $('.modal').dialog('close');
     $('#thankyou h3').html(title);
     $('#thankyou p').html(message);
     $('#thankyou').dialog({
@@ -295,7 +309,7 @@ function showThankyou(title, message) {
  * DHTML date validation script. Courtesy of SmartWebby.com (http://www.smartwebby.com/dhtml/)
  */
 // Declaring valid date character, minimum year and maximum year
-var dtCh = "/";
+var dtCh = '/';
 var minYear = 1900;
 var maxYear = 2100;
 
@@ -304,7 +318,7 @@ function isInteger(s) {
     for (i = 0; i < s.length; i++) {
         // Check that current character is number.
         var c = s.charAt(i);
-        if (((c < "0") || (c > "9")))
+        if (((c < '0') || (c > '9')))
             return false;
     }
     // All characters are numbers.
@@ -313,7 +327,7 @@ function isInteger(s) {
 
 function stripCharsInBag(s, bag) {
     var i;
-    var returnString = "";
+    var returnString = '';
     // Search through string's characters one by one.
     // If character is not in bag, append to returnString.
     for (i = 0; i < s.length; i++) {
@@ -356,14 +370,14 @@ function isDate(dtStr) {
     var strMonth = dtStr.substring(pos1 + 1, pos2);
     var strYear = dtStr.substring(pos2 + 1);
     strYr = strYear;
-    if (strDay.charAt(0) === "0" && strDay.length > 1) {
+    if (strDay.charAt(0) === '0' && strDay.length > 1) {
         strDay = strDay.substring(1);
     }
-    if (strMonth.charAt(0) === "0" && strMonth.length > 1) {
+    if (strMonth.charAt(0) === '0' && strMonth.length > 1) {
         strMonth = strMonth.substring(1);
     }
     for (var i = 1; i <= 3; i++) {
-        if (strYr.charAt(0) === "0" && strYr.length > 1) {
+        if (strYr.charAt(0) === '0' && strYr.length > 1) {
             strYr = strYr.substring(1);
         }
     }
@@ -371,23 +385,23 @@ function isDate(dtStr) {
     day = parseInt(strDay);
     year = parseInt(strYr);
     if (pos1 === -1 || pos2 === -1) {
-        log("The date format should be : dd/mm/yyyy");
+        log('The date format should be : dd/mm/yyyy');
         return false;
     }
     if (strMonth.length < 1 || month < 1 || month > 12) {
-        log("Please enter a valid month");
+        log('Please enter a valid month');
         return false;
     }
     if (strDay.length < 1 || day < 1 || day > 31 || (month === 2 && day > daysInFebruary(year)) || day > daysInMonth[month]) {
-        log("Please enter a valid day");
+        log('Please enter a valid day');
         return false;
     }
     if (strYear.length !== 4 || year === 0 || year < minYear || year > maxYear) {
-        log("Please enter a valid 4 digit year between " + minYear + " and " + maxYear);
+        log('Please enter a valid 4 digit year between ' + minYear + ' and ' + maxYear);
         return false;
     }
     if (dtStr.indexOf(dtCh, pos2 + 1) !== -1 || isInteger(stripCharsInBag(dtStr, dtCh)) === false) {
-        log("Please enter a valid date");
+        log('Please enter a valid date');
         return false;
     }
     return true;
@@ -396,18 +410,18 @@ function isDate(dtStr) {
 function getFileName(path) {
     var arr = path.split('/');
     if (arr.length === 1) {
-        return "";
+        return '';
     }
     var name = arr[arr.length - 1];
     if (name === null || name.length === 0) { // might be empty if trailing slash
         name = arr[arr.length - 2];
     }
-    if (name.contains("#")) {
-        var pos = name.lastIndexOf("#");
+    if (name.contains('#')) {
+        var pos = name.lastIndexOf('#');
         name = name.substring(0, pos);
     }
 
-    path = path.replaceAll(" ", "%20"); // safari bug. path is returned encoded from window.location.pathname
+    path = path.replaceAll(' ', '%20'); // safari bug. path is returned encoded from window.location.pathname
     return name;
 }
 
@@ -418,10 +432,10 @@ function getFileName(path) {
  */
 function getFolderPath(path) {
     path = stripFragment(path); // remove any fragment like #section
-    if (path.endsWith("/")) {
+    if (path.endsWith('/')) {
         path = path.substring(0, path.length - 1);
     }
-    var pos = path.lastIndexOf("/");
+    var pos = path.lastIndexOf('/');
     return path.substring(0, pos);
 }
 
@@ -431,7 +445,7 @@ function getFolderPath(path) {
  */
 function toFolderPath(path) {
     path = stripFragment(path); // remove any fragment like #section
-    var pos = path.lastIndexOf("/");
+    var pos = path.lastIndexOf('/');
     return path.substring(0, pos);
 }
 
@@ -441,22 +455,22 @@ function toFolderPath(path) {
 function getPathFromHref(href) {
     // eg http://blah.com/a/b -->> /a/b
     var path = href.substring(8); // drop protocol
-    var pos = path.indexOf("/");
+    var pos = path.indexOf('/');
     path = path.substring(pos);
     return path;
 }
 
 function initEdify() {
-    if (!$("body").hasClass("edifyIsEditMode")) {
-        $("body").addClass("edifyIsViewMode");
+    if (!$('body').hasClass('edifyIsEditMode')) {
+        $('body').addClass('edifyIsViewMode');
     }
-    $("body").on("click", ".edifyDelete", function () {
+    $('body').on('click', '.edifyDelete', function () {
         var href = window.location.href;
         var name = getFileName(href);
         confirmDelete(href, name, function () {
-            alert("Page deleted");
+            Msg.success('Page deleted');
             var folderHref = getFolderPath(href);
-            log("load", folderHref);
+            log('load', folderHref);
             window.location = folderHref + '/';
         });
     });
@@ -469,9 +483,9 @@ function resetForm($form) {
 }
 
 function edify(container, callback, validateCallback) {
-    flog("edify", container, callback);
-    $("body").removeClass("edifyIsViewMode");
-    $("body").addClass("edifyIsEditMode");
+    flog('edify', container, callback);
+    $('body').removeClass('edifyIsViewMode');
+    $('body').addClass('edifyIsEditMode');
 
     if (!callback) {
         callback = function (resp) {
@@ -488,21 +502,21 @@ function edify(container, callback, validateCallback) {
     }, 200, function () {
         initHtmlEditors();
 
-        $(".inputTextEditor").each(function (i, n) {
+        $('.inputTextEditor').each(function (i, n) {
             var $n = $(n);
             var s = $n.text();
-            $n.replaceWith("<input name='" + $n.attr("id") + "' type='text' value='" + s + "' />");
+            $n.replaceWith('<input name="' + $n.attr('id') + '" type="text" value="' + s + '" />');
         });
-        container.wrap("<form id='edifyForm' action='" + window.location + "' method='POST'></form>");
-        $("#edifyForm").append("<input type='hidden' name='body' value='' />");
+        container.wrap('<form id="edifyForm" action="' + window.location + '" method="POST"></form>');
+        $('#edifyForm').append('<input type="hidden" name="body" value="" />');
 
-        $("#edifyForm").submit(function (e) {
-            flog("edifyForm submit");
+        $('#edifyForm').submit(function (e) {
+            flog('edifyForm submit');
             e.preventDefault();
             e.stopPropagation();
             submitEdifiedForm(callback, validateCallback);
         });
-        flog("done hide, now show again");
+        flog('done hide, now show again');
         container.animate({
             opacity: 1
         }, 500);
@@ -510,22 +524,22 @@ function edify(container, callback, validateCallback) {
 }
 
 function submitEdifiedForm(callback, validateCallback) {
-    var form = $("#edifyForm");
-    log("trigger event..");
-    form.trigger("submitEdified");
-    log("submit form", form);
+    var form = $('#edifyForm');
+    log('trigger event..');
+    form.trigger('submitEdified');
+    log('submit form', form);
     for (var key in CKEDITOR.instances) {
         var editor = CKEDITOR.instances[key];
         var content = editor.getData();
-        var inp = $("input[name=" + key + "], textarea[name=" + key + "]");
+        var inp = $('input[name=' + key + '], textarea[name=' + key + ']');
         if (inp.length > 0) {
             inp.val(content);
         } else {
-            inp = $("<input type='hidden' name='" + key + "/>");
+            inp = $('<input type="hidden" name="' + key + '"/>');
             form.append(inp);
             inp.val(content);
         }
-        log("copied html editor val to:", inp, "for", key);
+        log('copied html editor val to:', inp, 'for', key);
     }
 
     resetValidation(form);
@@ -535,53 +549,54 @@ function submitEdifiedForm(callback, validateCallback) {
 
     if (validateCallback) {
         if (!validateCallback(form)) {
-            log("validation callback reported false");
+            log('validation callback reported false');
             return false;
         }
     }
 
     var data = form.serialize();
-    log("serialied", data);
+    log('serialied', data);
 
     try {
-        //$("#edifyForm input[name=body]").attr("value", CKEDITOR.instances["editor1"].getData() );
+        //$('#edifyForm input[name=body]').attr('value', CKEDITOR.instances['editor1'].getData() );
         $.ajax({
             type: 'POST',
-            url: $("#edifyForm").attr("action"),
+            url: $('#edifyForm').attr('action'),
             data: data,
-            dataType: "json",
+            dataType: 'json',
             success: function (resp) {
                 ajaxLoadingOff();
-                log("common.js: edify: save success", resp, window.location.path);
+                log('common.js: edify: save success', resp, window.location.path);
                 if (callback) {
-                    log("call callback", callback);
+                    log('call callback', callback);
                     callback(resp);
                 } else {
-                    log("no callback");
+                    log('no callback');
                 }
             },
             error: function (resp) {
                 ajaxLoadingOff();
-                alert("err");
+                alert('Sorry an error occured submitting the form');
             }
         });
     } catch (e) {
-        log("exception", e);
+        log('exception', e);
     }
     return false;
 }
 
 function confirmDelete(href, name, callback) {
-    if (confirm("Are you sure you want to delete " + name + "?")) {
+    if (confirm('Are you sure you want to delete ' + name + '?')) {
         deleteFile(href, callback);
     }
 }
+
 function deleteFile(href, callback) {
     ajaxLoadingOn();
     $.ajax({
         type: 'DELETE',
         url: href,
-        dataType: "json",
+        dataType: 'json',
         success: function (resp) {
             log('deleted', href);
             ajaxLoadingOff();
@@ -590,9 +605,9 @@ function deleteFile(href, callback) {
             }
         },
         error: function (resp) {
-            log("failed", resp);
+            log('failed', resp);
             ajaxLoadingOff();
-            alert("Sorry, an error occured deleting " + href + ". Please check your internet connection");
+            alert('Sorry, an error occured deleting ' + href + '. Please check your internet connection');
         }
     });
 }
@@ -602,9 +617,9 @@ function proppatch(href, data, callback) {
     href = suffixSlash(href);
     $.ajax({
         type: 'POST',
-        url: href + "_DAV/PROPPATCH",
+        url: href + '_DAV/PROPPATCH',
         data: data,
-        dataType: "json",
+        dataType: 'json',
         success: function (resp) {
             ajaxLoadingOff();
             if (callback) {
@@ -612,18 +627,18 @@ function proppatch(href, data, callback) {
             }
         },
         error: function (resp) {
-            log("failed", resp);
+            log('failed', resp);
             ajaxLoadingOff();
-            alert("Sorry, an error occured deleting " + href + ". Please check your internet connection");
+            alert('Sorry, an error occured deleting ' + href + '. Please check your internet connection');
         }
     });
 }
 
 function suffixSlash(href) {
-    if (href.endsWith("/")) {
+    if (href.endsWith('/')) {
         return href;
     }
-    return href + "/";
+    return href + '/';
 }
 
 /**
@@ -636,13 +651,13 @@ function suffixSlash(href) {
  * @returns nothing
  */
 function showCreateFolder(parentHref, title, text, callback, validatorFn) {
-    log("showCreateFolder");
+    log('showCreateFolder');
     var s = text;
     if (!s) {
-        s = "Please enter a name for the new folder";
+        s = 'Please enter a name for the new folder';
     }
-    myPrompt("createFolder", parentHref, title, text, "Enter a name", "newName", "Create", "", "Enter a name to create", function (newName, form) {
-        log("create folder", form);
+    myPrompt('createFolder', parentHref, title, text, 'Enter a name', 'newName', 'Create', '', 'Enter a name to create', function (newName, form) {
+        log('create folder', form);
         var msg = null;
         if (validatorFn) {
             msg = validatorFn(newName);
@@ -660,14 +675,14 @@ function showCreateFolder(parentHref, title, text, callback, validatorFn) {
 }
 
 function createFolder(name, parentHref, callback) {
-    log("createFolder: name=", name, "parentHref=", parentHref);
+    log('createFolder: name=', name, 'parentHref=', parentHref);
     var encodedName = name; //$.URLEncode(name);
     //    ajaxLoadingOn();
-    var url = "_DAV/MKCOL";
+    var url = '_DAV/MKCOL';
     if (parentHref) {
         var s = parentHref;
-        if (!s.endsWith("/")) {
-            s += "/";
+        if (!s.endsWith('/')) {
+            s += '/';
         }
         s += url;
         url = s;
@@ -678,9 +693,9 @@ function createFolder(name, parentHref, callback) {
         data: {
             name: encodedName
         },
-        dataType: "text",
+        dataType: 'text',
         success: function (resp) {
-            $("body").trigger("ajaxLoading", {
+            $('body').trigger('ajaxLoading', {
                 loading: false
             });
             if (callback) {
@@ -688,12 +703,12 @@ function createFolder(name, parentHref, callback) {
             }
         },
         error: function (resp) {
-            log("error", resp);
-            $("body").trigger("ajaxLoading", {
+            log('error', resp);
+            $('body').trigger('ajaxLoading', {
                 loading: false
             });
             if (resp.status === 400) {
-                alert("Sorry, the folder could not be created. Please check if a folder with that name already exists");
+                alert('Sorry, the folder could not be created. Please check if a folder with that name already exists');
             } else {
                 alert('There was a problem creating the folder');
             }
@@ -705,20 +720,20 @@ function createFolder(name, parentHref, callback) {
  *  Prompts the user for a new name, and the does a rename (ie move)
  */
 function promptRename(sourceHref, callback) {
-    log("promptRename", sourceHref);
+    log('promptRename', sourceHref);
     var currentName = getFileName(sourceHref);
-    var newName = prompt("Please enter a new name for " + currentName, currentName);
+    var newName = prompt('Please enter a new name for ' + currentName, currentName);
     if (newName) {
         newName = newName.trim();
         if (newName.length > 0 && currentName != newName) {
             var currentFolder = getFolderPath(sourceHref);
-            log("promptRename: currentFolder", currentFolder);
+            log('promptRename: currentFolder', currentFolder);
             var dest = currentFolder;
-            if (!dest.endsWith("/")) {
-                dest += "/";
+            if (!dest.endsWith('/')) {
+                dest += '/';
             }
             dest += newName;
-            log("promptRename: dest", dest);
+            log('promptRename: dest', dest);
             move(sourceHref, dest, callback);
         }
     }
@@ -726,17 +741,17 @@ function promptRename(sourceHref, callback) {
 
 function move(sourceHref, destHref, callback) {
     //    ajaxLoadingOn();    
-    var url = "_DAV/MOVE";
+    var url = '_DAV/MOVE';
     if (sourceHref) {
         var s = sourceHref;
-        log("s", s);
-        if (!s.endsWith("/")) {
-            s += "/";
+        log('s', s);
+        if (!s.endsWith('/')) {
+            s += '/';
         }
         url = s + url;
     }
-    log("move", sourceHref, destHref, "url=", url);
-    $("body").trigger("ajaxLoading", {
+    log('move', sourceHref, destHref, 'url=', url);
+    $('body').trigger('ajaxLoading', {
         loading: true
     });
     $.ajax({
@@ -745,17 +760,61 @@ function move(sourceHref, destHref, callback) {
         data: {
             destination: destHref
         },
-        dataType: "text",
+        dataType: 'text',
         success: function (resp) {
-            $("body").trigger("ajaxLoading", {
+            $('body').trigger('ajaxLoading', {
                 loading: false
             });
             if (callback) {
-                callback(resp);
+                callback(resp, sourceHref, destHref);
             }
         },
         error: function () {
-            $("body").trigger("ajaxLoading", {
+            $('body').trigger('ajaxLoading', {
+                loading: false
+            });
+            alert('There was a problem creating the folder');
+        }
+    });
+}
+
+function moveFolder(sourceHref, destHref, callback) {
+    flog("moveFolder", "sourceHref=", sourceHref, "destHref=", destHref);
+    move(sourceHref, destHref, callback);
+}
+
+function copyFolder(sourceHref, destHref, callback) {
+    //    ajaxLoadingOn();    
+    var url = '_DAV/COPY';
+    if (sourceHref) {
+        var s = sourceHref;
+        log('s', s);
+        if (!s.endsWith('/')) {
+            s += '/';
+        }
+        url = s + url;
+    }
+    log('move', sourceHref, destHref, 'url=', url);
+    $('body').trigger('ajaxLoading', {
+        loading: true
+    });
+    $.ajax({
+        type: 'POST',
+        url: url,
+        data: {
+            destination: destHref
+        },
+        dataType: 'text',
+        success: function (resp) {
+            $('body').trigger('ajaxLoading', {
+                loading: false
+            });
+            if (callback) {
+                callback(resp, sourceHref, destHref);
+            }
+        },
+        error: function () {
+            $('body').trigger('ajaxLoading', {
                 loading: false
             });
             alert('There was a problem creating the folder');
@@ -770,14 +829,14 @@ function move(sourceHref, destHref, callback) {
 function initActiveNav(containerSelector) {
     var url = window.location.pathname;
     var container = $(containerSelector);
-    log("initActiveNav", url, "container:", container);
-    container.find("a").each(function (i, n) {
+    log('initActiveNav', url, 'container:', container);
+    container.find('a').each(function (i, n) {
         var node = $(n);
-        var href = node.attr("href");
+        var href = node.attr('href');
         if (href) {
-            log("initActiveNav, check", url, href);
+            log('initActiveNav, check', url, href);
             if (href.startsWith(url)) {
-                node.addClass("active");
+                node.addClass('active');
             }
         }
     });
@@ -788,11 +847,11 @@ function profileImg(user) {
     if (user.photoHref) {
         profileHref = user.photoHref;
     } else if (user.photoHash) {
-        profileHref = "/_hashes/files/" + user.photoHash + "";
+        profileHref = '/_hashes/files/' + user.photoHash + '';
     } else {
-        profileHref = "/templates/apps/user/profile.png";
+        profileHref = '/templates/apps/user/profile.png';
     }
-    var profilePic = "<img src='" + profileHref + "' alt='' />";
+    var profilePic = '<img src="' + profileHref + '" alt="" />';
     return profilePic;
 }
 
@@ -811,19 +870,20 @@ function dec_sort(a, b) {
  * Replaces all occurrences of a substring in a string
  */
 String.prototype.replaceAll = function (token, newToken, ignoreCase) {
-    var str, i = -1, _token;
-    if ((str = this.toString()) && typeof token === "string") {
+    var str, i = -1,
+        _token;
+    if ((str = this.toString()) && typeof token === 'string') {
         _token = ignoreCase === true ? token.toLowerCase() : undefined;
         while ((i = (
             _token !== undefined ?
-                str.toLowerCase().indexOf(
-                    _token,
-                    i >= 0 ? i + newToken.length : 0
-                ) : str.indexOf(
+            str.toLowerCase().indexOf(
+                _token,
+                i >= 0 ? i + newToken.length : 0
+            ) : str.indexOf(
                 token,
                 i >= 0 ? i + newToken.length : 0
             )
-            )) !== -1) {
+        )) !== -1) {
             str = str.substring(0, i)
                 .concat(newToken)
                 .concat(str.substring(i + token.length));
@@ -837,31 +897,31 @@ String.prototype.replaceAll = function (token, newToken, ignoreCase) {
  *
  */
 function evaluateRelativePath(startFrom, relPath) {
-    var arr = relPath.split("/");
+    var arr = relPath.split('/');
     var href = startFrom;
     for (i = 0; i < arr.length; i++) {
         var part = arr[i];
-        if (part == "..") {
+        if (part == '..') {
             href = getFolderPath(href);
-        } else if (part == ".") {
+        } else if (part == '.') {
             // do nothing
         } else {
-            href += "/" + part;
+            href += '/' + part;
         }
     }
     return href;
 }
 
 function replaceSpecialChars(nameToUse) {
-    nameToUse = nameToUse.replace("/", "");
-    nameToUse = nameToUse.replace("'", "");
-    nameToUse = nameToUse.replace("\"", "");
-    nameToUse = nameToUse.replace("@", "-");
-    nameToUse = nameToUse.replace(" ", "-");
-    nameToUse = nameToUse.replace("?", "-");
-    nameToUse = nameToUse.replace(":", "-");
-    nameToUse = nameToUse.replace("--", "-");
-    nameToUse = nameToUse.replace("--", "-");
+    nameToUse = nameToUse.replace('/', '');
+    nameToUse = nameToUse.replace('"', '');
+    nameToUse = nameToUse.replace('\'', '');
+    nameToUse = nameToUse.replace('@', '-');
+    nameToUse = nameToUse.replace(' ', '-');
+    nameToUse = nameToUse.replace('?', '-');
+    nameToUse = nameToUse.replace(':', '-');
+    nameToUse = nameToUse.replace('--', '-');
+    nameToUse = nameToUse.replace('--', '-');
     return nameToUse;
 }
 
@@ -898,8 +958,8 @@ function refreshIE8Layout(element) {
         p.css('height', height);
         p.css('height', 'auto');
 
-//        var contentForm = element.closest(".contentForm");
-//        contentForm
+        //        var contentForm = element.closest('.contentForm');
+        //        contentForm
     }
 }
 
@@ -909,7 +969,7 @@ function isIE() {
 }
 
 function stripFragment(href) {
-    var i = href.indexOf("#");
+    var i = href.indexOf('#');
     if (i > 0) {
         href = href.substring(0, i - 1);
     }
@@ -920,20 +980,20 @@ function stripFragment(href) {
  * http://javascriptbase64.googlecode.com/svn/trunk/base64.js
  * 
  Copyright (c) 2008 Fred Palmer fred.palmer_at_gmail.com
-
+ 
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
- files (the "Software"), to deal in the Software without
+ files (the 'Software'), to deal in the Software without
  restriction, including without limitation the rights to use,
  copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the
  Software is furnished to do so, subject to the following
  conditions:
-
+ 
  The above copyright notice and this permission notice shall be
  included in all copies or substantial portions of the Software.
-
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ 
+ THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
  OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
@@ -952,12 +1012,11 @@ StringBuffer.prototype.append = function append(string) {
 };
 
 StringBuffer.prototype.toString = function toString() {
-    return this.buffer.join("");
+    return this.buffer.join('');
 };
 
-var Base64 =
-{
-    codex: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
+var Base64 = {
+    codex: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=',
     encode: function (input) {
         var output = new StringBuffer();
 
@@ -978,8 +1037,7 @@ var Base64 =
 
             if (isNaN(chr2)) {
                 enc3 = enc4 = 64;
-            }
-            else if (isNaN(chr3)) {
+            } else if (isNaN(chr3)) {
                 enc4 = 64;
             }
 
@@ -1002,8 +1060,7 @@ var Base64 =
                 var charCode2 = enumerator.current;
 
                 output.append(String.fromCharCode(((charCode & 31) << 6) | (charCode2 & 63)));
-            }
-            else {
+            } else {
                 enumerator.moveNext();
                 var charCode2 = enumerator.current;
 
@@ -1016,7 +1073,7 @@ var Base64 =
 
         return output.toString();
     }
-}
+};
 
 function Utf8EncodeEnumerator(input) {
     this._input = input;
@@ -1024,22 +1081,19 @@ function Utf8EncodeEnumerator(input) {
     this._buffer = [];
 }
 
-Utf8EncodeEnumerator.prototype =
-{
+Utf8EncodeEnumerator.prototype = {
     current: Number.NaN,
     moveNext: function () {
         if (this._buffer.length > 0) {
             this.current = this._buffer.shift();
             return true;
-        }
-        else if (this._index >= (this._input.length - 1)) {
+        } else if (this._index >= (this._input.length - 1)) {
             this.current = Number.NaN;
             return false;
-        }
-        else {
+        } else {
             var charCode = this._input.charCodeAt(++this._index);
 
-            // "\r\n" -> "\n"
+            // '\r\n' -> '\n'
             //
             if ((charCode == 13) && (this._input.charCodeAt(this._index + 1) == 10)) {
                 charCode = 10;
@@ -1048,12 +1102,10 @@ Utf8EncodeEnumerator.prototype =
 
             if (charCode < 128) {
                 this.current = charCode;
-            }
-            else if ((charCode > 127) && (charCode < 2048)) {
+            } else if ((charCode > 127) && (charCode < 2048)) {
                 this.current = (charCode >> 6) | 192;
                 this._buffer.push((charCode & 63) | 128);
-            }
-            else {
+            } else {
                 this.current = (charCode >> 12) | 224;
                 this._buffer.push(((charCode >> 6) & 63) | 128);
                 this._buffer.push((charCode & 63) | 128);
@@ -1062,7 +1114,7 @@ Utf8EncodeEnumerator.prototype =
             return true;
         }
     }
-}
+};
 
 function Base64DecodeEnumerator(input) {
     this._input = input;
@@ -1070,19 +1122,16 @@ function Base64DecodeEnumerator(input) {
     this._buffer = [];
 }
 
-Base64DecodeEnumerator.prototype =
-{
+Base64DecodeEnumerator.prototype = {
     current: 64,
     moveNext: function () {
         if (this._buffer.length > 0) {
             this.current = this._buffer.shift();
             return true;
-        }
-        else if (this._index >= (this._input.length - 1)) {
+        } else if (this._index >= (this._input.length - 1)) {
             this.current = 64;
             return false;
-        }
-        else {
+        } else {
             var enc1 = Base64.codex.indexOf(this._input.charAt(++this._index));
             var enc2 = Base64.codex.indexOf(this._input.charAt(++this._index));
             var enc3 = Base64.codex.indexOf(this._input.charAt(++this._index));

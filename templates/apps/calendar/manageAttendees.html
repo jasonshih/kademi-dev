@@ -29,9 +29,8 @@
                     <button class="btn-sm btn btn-default removeAttendees">Remove Selected</button>
                 </div>
             </header>
-            <div class="Content Details">       
-                
-                <table class="attendees table table-striped">
+            <div class="Content Details">
+                <table id="attendee-wrapper" class="attendees table table-striped">
                     <thead>
                         <tr>
                             <th>Status</th>
@@ -49,7 +48,7 @@
                             <td class="partstat-$att.partStat">$att.partStat</td>
                             <td>$att.fullName</td>
                             <td>$!att.orgName</td>
-                            <td>$att.email</td>
+                            <td>$!att.email</td>
                             <td>$formatter.formatDate($att.registeredDate)</td>
                             <td>
                                 #if( $att.guestOf )
@@ -83,7 +82,7 @@
                     var checkBoxes = node.closest(".MainContent").find("table.attendees tbody td input:checked");
                     log("checks", checkBoxes);
                     if( checkBoxes.length === 0 ) {
-                        alert("Please select the attendees you want to remove by clicking the checkboxs to the right");
+                        Msg.error("Please select the attendees you want to remove by clicking the checkboxs to the right");
                     } else {
                         if( confirm("Are you sure you want to remove " + checkBoxes.length + " attendees?") ) {
                             doRemoveAttendees(checkBoxes);
@@ -98,16 +97,16 @@
                     dataType: "json",
                     url: "",
                     success: function(data) {
-                        log("success", data)
+                        log("success", data);
                         if( data.status ) {
-                            alert("Removed entries ok");                
-                            window.location.reload();
+                            Msg.success("Removed entries ok");
+                            $('#attendee-wrapper').reloadFragment();
                         } else {
-                            alert("There was a problem removing entries. Please try again and contact the administrator if you still have problems");
+                            Msg.error("There was a problem removing entries. Please try again and contact the administrator if you still have problems");
                         }
                     },
                     error: function(resp) {
-                        alert("err");
+                        Msg.error('err');
                     }
                 });      
             }            

@@ -1,3 +1,5 @@
+// loaded from /templates/themes/bootstrap300/apps/learner/moduleList.js
+
 function initMyLearning() {
     flog("initMyLearning");
 

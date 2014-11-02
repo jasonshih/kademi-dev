@@ -425,10 +425,10 @@ function save(callback) {
     var url = modStatusUrl;
     log("save. url=", url, "currentPage", currentPage); 
     var data = {};
-    $("#body textarea, #body input, #body select").each(function(i, n) {
-        var inp = $(n);
-        data[inp.attr("name")] = inp.val();
-    });
+//    $("#body textarea, #body input, #body select").each(function(i, n) {
+//        var inp = $(n);
+//        data[inp.attr("name")] = inp.val();
+//    });
     data["statusCurrentPage"] = currentPage;
     $.ajax({
         type: "POST",
@@ -452,7 +452,8 @@ function saveFields(callback) {
     var data = {};
     $("#body textarea, #body input, #body select").not(".no-save").each(function(i, n) {
         var inp = $(n);
-        data[inp.attr("name")] = inp.val();
+        var qname = getQualifiedFieldName(inp.attr("name"));
+        data[qname] = inp.val();
     });
     log("saveFields", data);
     var url = modStatusUrl;
@@ -479,22 +480,38 @@ function restoreFields(response) {
         for (qualifiedFieldName in response.data) {
             var fieldName = stripPageName(qualifiedFieldName);
             var fieldValue = response.data[qualifiedFieldName];
-            log("fieldValue", fieldValue, "fieldName", qualifiedFieldName, "from", response.data);
+            if( fieldValue !== null ) {
+                fieldValue = fieldValue.trim();
+            }
+            var isQualified = false;
+            if (fieldName !== qualifiedFieldName) {
+                isQualified = true;
+            }
+            
+            log("fieldValue", fieldValue, "fieldName", qualifiedFieldName);
             var inp = $("#body textarea[name='" + fieldName + "'], #body input[type=text][name='" + fieldName + "'], #body select[name='" + fieldName + "']");
 
-            log("restoreFields: look for text input", fieldName, fieldValue, inp);
-            if (inp.length > 0) {
-                inp.val(fieldValue);
-            } else {                
-                var radios = $("#body input[type=radio][name='" + fieldName + "']");
-                log("didnt find text input, look for radios...", radios, "with value", fieldValue);
-                if (radios.length > 0) {
-                    radios.attr("checked", "");
-                    var radio = radios.filter("[value=" + fieldValue + "]");
-                    log("select radio", radio, fieldValue);
-                    radio.attr("checked", "true"); // set radio buttons
-                    log("check radio");
+            if (!inp.hasClass("qualified-set")) {
+//                flog("restoreFields: look for text input", fieldName, fieldValue, inp);
+                if( isQualified ) {
+//                    flog("set is qualfieid");
+                    inp.addClass("qualified-set");
                 }
+                if (inp.length > 0) {
+                    inp.val(fieldValue);
+                } else {
+                    var radios = $("#body input[type=radio][name='" + fieldName + "']");
+//                    flog("didnt find text input, look for radios...", radios, "with value", fieldValue);
+                    if (radios.length > 0) {
+                        radios.attr("checked", "");
+                        var radio = radios.filter("[value=" + fieldValue + "]");
+//                        flog("select radio", radio, fieldValue);
+                        radio.attr("checked", "true"); // set radio buttons
+//                        flog("check radio");
+                    }
+                }
+            } else {
+//                flog("already set with qualified parameter");
             }
         }
     }
@@ -700,7 +717,6 @@ function stripPageName(qualifiedFieldName) {
     if (qualifiedFieldName.contains("_")) {
         var i = qualifiedFieldName.indexOf("_");
         var n = qualifiedFieldName.substring(i + 1, qualifiedFieldName.length);
-        log("stripPageName", i, n);
         return n;
     } else {
         return qualifiedFieldName;

@@ -38,7 +38,7 @@ function saveGroupProgram(groupName, itemHref, radioBtn, modal) {
             },
             error: function(resp) {
                 log('error', resp);
-                alert('An error occured updating the enrolement information');
+                Msg.error('An error occured updating the enrolement information');
             }
         });          
     } catch(e) {

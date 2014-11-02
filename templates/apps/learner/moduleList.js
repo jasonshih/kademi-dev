@@ -1,3 +1,5 @@
+// loaded from /templates/apps/learner/moduleList.js
+
 function initMyLearning(){
     log("initMyLearning");
 

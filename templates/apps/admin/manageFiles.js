@@ -5,7 +5,16 @@ function initManageFiles() {
     initCRUDPages();
     initAddPageModal();
     initCRUDFiles();
+    initCopyCutPaste();
 }
+
+function initCopyCutPaste() {
+    var cont = $("body");
+    $("#table-files").cutcopy();
+}
+
+
+
 
 function initImport() {
     var modal = $('#modal-import');
@@ -19,7 +28,7 @@ function initImport() {
     modal.find('form').forms({
         callback: function(resp) {
             flog('resp', resp);
-            alert('The importer is running')
+            Msg.info('The importer is running')
         }
     });
 
@@ -55,12 +64,13 @@ function initCRUDPages() {
         confirmDelete(href, name, function() {
             flog('deleted', article);
             article.remove();
-            alert('Deleted ' + name);
+            Msg.success('Deleted ' + name);
         });
     });
 }
 
 function initCRUDFiles() {
+    var tableFiles = $('#table-files');
 //    $('#my-upload').mupload({
 //        url: window.location.pathname,
 //        buttonText: '<i class="clip-folder"></i> Upload a file',
@@ -71,7 +81,7 @@ function initCRUDFiles() {
 //        }
 //    });
 
-    $('.btn-create-folder').click(function(e) {
+    tableFiles.on('click', '.btn-create-folder', function(e) {
         e.stopPropagation();
         e.preventDefault();
         var parentHref = window.location.pathname;
@@ -80,39 +90,43 @@ function initCRUDFiles() {
         });
     });
 
-    $('.btn-upload-file').click(function(e) {
+    tableFiles.on('click', '.btn-upload-file', function(e) {
         e.stopPropagation();
         e.preventDefault();
+
         $('#modal-upload').modal('show');
     });
 
-    $('.importFromUrl').click(function(e) {
+    $('#importFromUrl').click(function(e) {
         e.stopPropagation();
         e.preventDefault();
+
+        flog('click');
+
         showImportFromUrl();
     });
 }
 
 function reloadFileList() {
-    console.log(window.location.pathname);
-    $.get(window.location.pathname, '', function(resp) {
-        flog('got file list', resp);
-        var html = $(resp);
-        $('#table-files').replaceWith(html.find('#table-files'));
-        initPseudoClasses();
-        initFiles();
+    $('#table-files').reloadFragment({
+        whenComplete: function () {
+            initPseudoClasses();
+            initFiles();
+        }
     });
 }
 
 function initFiles() {
     flog('initFiles');
-    $('#table-files').find('a.show-color-box').each(function(i, n) {
+    var tableFiles = $('#table-files');
+
+    tableFiles.find('a.show-color-box').each(function(i, n) {
         var href = $(n).attr('href');
         $(n).attr('href', href + '/alt-640-360.png');
     });
     $('abbr.timeago').timeago();
 
-    $('#table-files').on('click', '.btn-delete-file', function(e) {
+    tableFiles.on('click', '.btn-delete-file', function(e) {
         e.preventDefault();
 
         var target = $(this);
@@ -124,25 +138,29 @@ function initFiles() {
         confirmDelete(href, name, function() {
             flog('deleted', tr);
             tr.remove();
-            alert('Deleted ' + name);
+            Msg.success('Deleted ' + name);
         });
     });
 
-    $('#table-files').on('click', '.btn-rename-file', function(e) {
+    tableFiles.on('click', '.btn-rename-file', function(e) {
         e.preventDefault();
         e.stopPropagation();
 
         var target = $(this);
         var href = target.attr('href');
-        promptRename(href, function(resp) {
-            window.location.reload();
+        promptRename(href, function(resp, sourceHref, destHref) {
+            var sourceName = getFileName(sourceHref);
+            var destName = getFileName(destHref);
+            $('#table-files').reloadFragment();
+            Msg.success(sourceName + ' is renamed to ' + destName);
         });
     });
 
-    $('#table-files').on('click', '.btn-history-file', function(e) {
+    tableFiles.on('click', '.btn-history-file', function(e) {
         e.stopPropagation();
         e.preventDefault();
     });
+
     $('.btn-history-file').history({
         modal: $('#modal-history')
     });
@@ -257,14 +275,14 @@ function doSavePage(form, pageArticle) {
                     }
                     closeFuseModal(modal);
                 } else {
-                    alert('There was an error saving the page: ' + data.messages);
+                    Msg.error('There was an error saving the page: ' + data.messages);
                 }
             },
             error: function(resp) {
                 form.add(modal).removeClass('ajax-processing');
                 form.find('button[type=submit]').removeAttr('disabled');
                 flog('error', resp);
-                alert('Sorry, an error occured saving your changes. If you have entered editor content that you dont want to lose, please switch the editor to source view, then copy the content. Then refresh the page and re-open the editor and paste the content back in.');
+                Msg.error('Sorry, an error occured saving your changes. If you have entered editor content that you dont want to lose, please switch the editor to source view, then copy the content. Then refresh the page and re-open the editor and paste the content back in.');
             }
         });
     } catch (e) {
@@ -298,7 +316,7 @@ function loadModalEditorContent(modal, name) {
         },
         error: function(resp) {
             flog('error', resp);
-            alert('err: couldnt load page data');
+            Msg.error('err: couldnt load page data');
         }
     });
 }
@@ -341,16 +359,16 @@ function showImportFromUrl() {
             success: function(data) {
                 flog('response', data);
                 if (!data.status) {
-                    alert('Failed to import');
+                    Msg.error('Failed to import');
                     return;
                 } else {
-                    alert('Importing has finished');
+                    Msg.success('Importing has finished');
                     window.location.reload();
                 }
             },
             error: function(resp) {
                 flog('error', resp);
-                alert('err');
+                Msg.error('err');
             }
         });
     }

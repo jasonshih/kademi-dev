@@ -1,4 +1,4 @@
-Bob.onDOMReady(function () {
+$(function () {
     $("abbr.timeago").timeago();
     $(".pendingAccounts button.accept").click(function(e) {
         e.stopPropagation();
@@ -28,14 +28,14 @@ Bob.onDOMReady(function () {
             success: function(data) {
                 log("response", data);
                 if( !data.status ) {
-                    alert("An error occured processing the request. Please refresh the page and try again: " + data.messages);
+                    Msg.error("An error occured processing the request. Please refresh the page and try again: " + data.messages);
                     return;
                 }
                 tr.remove();
             },
             error: function(resp) {
                 log("error", resp);
-                alert("An error occured processing the request. Please refresh the page and try again");
+                Msg.error("An error occured processing the request. Please refresh the page and try again");
             }
         });                    
     }    

@@ -24,3 +24,7 @@
 .btn-mrg5 {
 	margin: 5px 5px 5px 0px;
 }
+
+.panel-group .panel {
+	overflow: visible;
+}

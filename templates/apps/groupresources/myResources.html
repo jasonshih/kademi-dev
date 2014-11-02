@@ -8,7 +8,7 @@
 		    <table class="bar table table-striped vcenter">
 		        <thead>
 		            <tr>
-		                <th colspan="2">Resources</th>
+		                <th colspan="">Resources</th>
 		                <th>Date Added</th>
 		                <th>Download</th>
 		            </tr>
@@ -17,13 +17,26 @@
 		            </tr>
 		        </thead>
 		        <tbody>
-		            #foreach($file in $page.model.resources)
+		            #foreach($file in $page.model.resources.dirs)
 		            <tr>
-		                <td style="width: 70px">
-		                    <a href="$file.href"><img alt="" src="/templates/images/img8.gif"/></a>
-		                </td>
 		                <td class="left">
 		                    <a href="$file.href">
+                                <span class="glyphicon glyphicon-folder-close btn-lg "></span>
+		                        $file.title
+		                    </a>
+		                </td>
+		                <td>
+		                    <abbr title="$formatter.formatDateISO8601($file.modifiedDate)" class="info timeago">$file.modifiedDate</abbr>
+		                </td>
+                        <td></td>
+		            </tr>
+		            #end
+                    
+		            #foreach($file in $page.model.resources.files)
+		            <tr>
+		                <td class="left">
+		                    <a href="$file.href">
+                                <span class="glyphicon $file.glyphicon btn-lg"></span>
 		                        $file.title
 		                    </a>
 		                </td>

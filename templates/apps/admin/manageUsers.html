@@ -50,8 +50,7 @@
 					<div class="form-group">
 						<label for="search-group" class="col-sm-1 control-label">Group:</label>
 						<div class="col-sm-3">
-							<select name="searchGroup" id="search-group"
-								class="form-control input-sm">
+							<select name="searchGroup" id="search-group" class="form-control input-sm">
 								<option value="">&nbsp;</option>
 								#foreach($group in $page.organisation.groups)
 								<option value="$group.name">$group.name</option> 
@@ -74,10 +73,10 @@
 						</colgroup>
 						<thead>
 							<tr>
-								<th>Nickname</th>
-								<th>First Name</th>
-								<th>Last Name</th>
-								<th>Email Address</th>
+								<th>Nick name</th>
+								<th>Given</th>
+								<th>Surname</th>
+								<th>Email</th>
 								<th>Contact</th>
 								<th class="action"></th>
 								<th><input type="checkbox" name="toRemoveId" class="chk-all" /></th>
@@ -201,7 +200,7 @@
 			</div>
 		</div>
 
-		<div id="modal-upload-csv" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
+		<div id="modal-upload-csv" class="modal modal-lg fade" aria-hidden="true" tabindex="-1">
 			<div class="modal-header">
 				<button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
 				<h4 class="modal-title">Upload Users CSV</h4>
@@ -210,9 +209,11 @@
 				<div class="upload">
 					<div class="btn-upload" id='do-upload-csv'></div>
 					<br />
+                    <!--
 					<div class="allow-inserts">
 						<input type="checkbox" id="allow-inserts" /> <label for="allow-inserts">Allow inserts</label>
 					</div>
+                    -->
 				</div>
 				<br />
 				<div class="upload-results">
@@ -305,7 +306,7 @@
 				<p>Please choose which group to add users to</p>
 				<div class="groups-wrapper">
 					<ul class="groups-list row" style="margin-left: 20px;">
-						#foreach($group in $page.organisation.groups)
+						#foreach($group in $page.groups)
 						<li class="col-md-6 group"><a href="$group.name">$group.name</a></li>
 						#end
 					</ul>
@@ -316,10 +317,9 @@
 			</div>
 		</div>
 
-		<script type="text/javascript" src="/static/js/jquery.fileupload.js"></script>
 		<script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
 		<script type="text/javascript">
-	        Bob.onDOMReady(function() {
+	        $(function () {
 	            initManageUsers();
 	        });
 	    </script>

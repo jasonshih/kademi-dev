@@ -14,8 +14,30 @@
             <div id="manageReward" class="MainContent tabbable">
                 <div class="clearfix">
                     <div class="pull-right">
-                        <button class="btn btn-sm btn-primary">Save changes</button>
-                        <button class="btn btn-sm btn-default Cancel" type="button">Cancel</button>
+                        <button class="btn btn-sm btn-success">
+                            <span class="glyphicon glyphicon-floppy-disk"></span>
+                            Save
+                        </button>
+                        
+                        <div class="btn-group">
+                            <a class="btn btn-sm btn-default article-preview" target="_blank" href="$page.href?goto=">Preview</a>
+                            <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu pull-right" role="menu">
+                                <li><a>Select a version:</a></li>
+                                <li class="divider"></li>
+                                #foreach($version in $page.parent.branches)
+                                <li><a target="_blank" href="$page.href?goto=$version.repository.name:$version.name">$version.repository.name - $version.name</a></li>
+                                #end
+                            </ul>
+                        </div>
+                        
+                        <button class="btn btn-sm btn-warning Cancel" type="button">
+                            Cancel
+                        </button>
+                        
                     </div>
                     <ul class="TabNav nav nav-tabs tab-bricky pull-left">
                         <li class=""><a href="#details" data-toggle="tab">Details</a></li>
@@ -28,7 +50,7 @@
                 <div class="tab-content">
                     <div class="tab-pane Details" id="details">
                         <input type="hidden" id="backgroundImageHash" name="backgroundImageHash" value="$!page.backgroundImageHash" />
-                        <table class="Details">
+                        <table class="Details form-horizontal">
                             <colgroup>
                                 <col width="20%" />
                                 <col width="80%" />
@@ -37,20 +59,24 @@
                                 <tr>
                                     <td>Reward title</td>
                                     <td>
-                                        <div class="col-sm-4">
-                                            <input type="text" name="title" placeholder="Enter a name here" value="$page.reward.title" class="form-control required" />
+                                        <div class="form-group">
+                                            <div class="col-sm-4">
+                                                <input type="text" name="title" placeholder="Enter a name here" value="$page.reward.title" class="form-control required" />
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Status</td>
                                     <td>
-                                        <div class="col-sm-2">
-                                            <select name="status" class="form-control">
-                                                #foreach($st in $page.statusList.entrySet())
-                                                $formatter.option($st.key, $st.value, $page.status)
-                                                #end
-                                            </select>
+                                        <div class="form-group">
+                                            <div class="col-sm-2">
+                                                <select name="status" class="form-control">
+                                                    #foreach($st in $page.statusList.entrySet())
+                                                    $formatter.option($st.key, $st.value, $page.status)
+                                                    #end
+                                                </select>
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>
@@ -58,45 +84,66 @@
                                 <tr>
                                     <td>Points system</td>
                                     <td>
-                                        <div class="col-sm-4">
-                                            <select name="pointsType" class="pointsType form-control">
-                                                $formatter.option("", "No points system", $page.reward.pointsType)
-                                                #foreach($st in $page.pointsOptionsMap.entrySet())
-                                                $formatter.option($st.key, $st.value, $page.pointsType)
-                                                #end
-                                            </select>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <span class="pointsOrgType">To organisation type:</span>
-                                        </div>
-                                        <div class="col-sm-4">
-                                            <select name="pointsOrgType" class="pointsOrgType form-control" style="float: none">
-                                                $formatter.option("", "[Any]", $page.pointsOrgType)
-                                                #foreach($orgType in $page.orgTypes)
-                                                $formatter.option($orgType.name, $orgType.displayName, $page.pointsOrgType)
-                                                #end
-                                            </select>
+                                        <div class="form-group">
+                                            <div class="col-sm-4">
+                                                <select name="pointsType" class="pointsType form-control">
+                                                    $formatter.option("", "No points system", $page.reward.pointsType)
+                                                    #foreach($st in $page.pointsOptionsMap.entrySet())
+                                                    $formatter.option($st.key, $st.value, $page.pointsType)
+                                                    #end
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <span class="pointsOrgType">To organisation type:</span>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <select name="pointsOrgType" class="pointsOrgType form-control" style="float: none">
+                                                    $formatter.option("", "[Any]", $page.pointsOrgType)
+                                                    #foreach($orgType in $page.orgTypes)
+                                                    $formatter.option($orgType.name, $orgType.displayName, $page.pointsOrgType)
+                                                    #end
+                                                </select>
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>     
                                 <tr>
                                     <td>One per recipient</td>
                                     <td>
-                                        <div class="col-sm-12">
-                                        	<div class="checkbox">
-                                        		<label>
-                                        			$formatter.checkbox("onePerRecipient", $page.onePerRecipient)
-                                        			<i>If selected this reward will only be issued once to a user, or their organisation if using an organisation points system</i>
-                                        		</label>
-                                        	</div>
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <div class="checkbox">
+                                                    <label>
+                                                        $formatter.checkbox("onePerRecipient", $page.onePerRecipient)
+                                                        <i>If selected this reward will only be issued once to a user, or their organisation if using an organisation points system</i>
+                                                    </label>
+                                                </div>
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Notes <i>These notes are for internal purposes only.</i></td>
+                                    <td>Template</td>
                                     <td>
-                                        <div class="col-sm-12">
-                                            <textarea cols="100" class="form-control" name="notes" rows="10" placeholder="Enter your notes here">$!page.notes</textarea>
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <input type="text" name="template" value="$!page.template"/>
+                                                <br/>
+                                                <i>Leave blank for default, otherwise a path to a template, eg /learner/competition.html</i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>                                
+                                <tr>
+                                    <td>
+                                        Notes
+                                        <br /><small><i>These notes are for internal purposes only.</i></small>
+                                    </td>
+                                    <td>
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <textarea cols="100" class="form-control" name="notes" rows="10" placeholder="Enter your notes here">$!page.notes</textarea>
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>
@@ -104,49 +151,63 @@
                                 <tr>
                                     <td>Choose a start date</td>
                                     <td>
-                                        <div class="col-sm-5 input-group">
-                                            <input type="text" name="startDate" placeholder="Start date" data-format="DD/MM/YYYY" value="$!page.startDate" class="form-control DateTime" />
-                                            <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
+                                        <div class="form-group">
+                                            <div class="col-sm-5">
+                                                <div class="input-group">
+                                                    <input type="text" name="startDate" placeholder="Start date" data-format="DD/MM/YYYY" value="$!page.startDate" class="form-control DateTime" />
+                                                    <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Choose a end date</td>
                                     <td>
-                                        <div class="col-sm-5 input-group">
-                                            <input type="text" name="endDate" placeholder="End date" data-format="DD/MM/YYYY" value="$!page.endDate" class="form-control DateTime" />
-                                            <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
+                                        <div class="form-group">
+                                            <div class="col-sm-5">
+                                                <div class="input-group">
+                                                    <input type="text" name="endDate" placeholder="End date" data-format="DD/MM/YYYY" value="$!page.endDate" class="form-control DateTime" />
+                                                    <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>							
+                                <!--
                                 <tr>
                                     <td>Email confirmation</td>
                                     <td>
-                                        <div class="col-sm-12">
-                                        	<div class="checkbox">
-                                        		<label>
-                                        			$formatter.checkbox("emailConfirm", $page.emailConfirm)
-                                        			Send an email confirmation to the user when they are awarded.
-                                        		</label>
-                                        	</div>
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <div class="checkbox">
+                                                    <label>
+                                                        $formatter.checkbox("emailConfirm", $page.emailConfirm)
+                                                        Send an email confirmation to the user when they are awarded.
+                                                    </label>
+                                                </div>
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>
+                                -->
                                 <tr>
                                     <td>
-                                        Details
-                                        <i>This copy will sit next to the image and tell the user about the competition or reward.</i>
+                                        Details<br />
+                                        <small><i>This copy will sit next to the image and tell the user about the competition or reward.</i></small>
                                     </td>
                                     <td>
-                                        <div class="col-sm-12">
-                                            <textarea cols="120" name="details" rows="10" class="htmleditor" placeholder="Enter the details here">$!page.details</textarea>
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <textarea cols="120" name="details" rows="10" class="htmleditor" placeholder="Enter the details here">$formatter.htmlEncode($page.details)</textarea>
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                    
+
                     <div class="tab-pane" id="groups">
                         <button class="btn btn-sm btn-primary Add AddGroup" data-toggle="modal" data-target="#modalGroup"><i class="fa fa-plus"></i> Add/remove groups</button>
                         <div class="well margin-top-10">Add user groups to rewards to allow these users to directly enter the competition. These users will see the reward on their dashboard when it is active.</div>
@@ -156,7 +217,7 @@
                             #end
                         </div>
                     </div>
-                    
+
                     <div class="tab-pane" id="entryForm">
                         <div class="well reset-margin-bottom">
                             You can add entry form items here. Just enable the item you want and 
@@ -186,7 +247,8 @@
 
                         <div class="entryFormItem">
                             $formatter.checkbox("quizEnabled", "quizEnabled", $page.quizEnabled)
-                            <label for="quizEnabled" class="control-label">Quiz</label>
+                            <label for="quizEnabled" class="control-label">Survey / Quiz</label>
+                            <!--
                             <div class="entryFormItemDetails quizContainer">
                                 <div class="alert alert-danger pageMessage">.</div>
                                 <select class="form-control newQuestionType">
@@ -196,10 +258,27 @@
                                 </select>
                                 <div id="quiz-questions"></div>
                             </div>
-                            <input type="hidden" name="quizHtml" value=""/>
+                            -->
+                            <p>Please enter the HTML for the quiz or survey below</p>
+                            <textarea name="quizHtml" class="col-md-12" style="min-height: 200px">$!page.quizHtml</textarea>
+                            <br/>
+                            <h3>Quiz</h3>
+                            <p>If you would like this to be a quiz, please enter answers below. If not provided answers will not be checked.</p>
+                            
+                            #foreach($i in [1..5])
+                            <div class="form-group">
+                                <label for="answer1" class="col-sm-3 control-label">Answer $i</label>
+                                <div class="col-sm-8">
+                                    #set($answerName = "answer" + $i)
+                                    <input name="$answerName" type="text" class="form-control" id="answer${i}" placeholder="Answer $i" value="$!page.actualAnswers.get($answerName)"/>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            #end
                         </div>
+                        
                     </div>
-                    
+
                     <div class="tab-pane" id="restrictions">
                         <div class="clearfix">
                             <button class="btn btn-sm btn-primary addRestriction" data-toggle="modal" data-target="#modalAddRestriction"><i class="fa fa-plus"></i> Add a restriction</button>
@@ -217,7 +296,7 @@
                             #end
                         </ul>
                     </div>
-                    
+
                     <div class="tab-pane" id="entries">
                         <div class="well reset-margin-bottom">
                             <table class="entriesLinks">
@@ -248,17 +327,17 @@
             <div class="modal-body">
                 <div class="ListItem">
                     #foreach($g in $page.allGroups)
-	                <div class="panel panel-default">
-	                    <div class="panel-body membership">
-	                        <label for="$g.name">$g.name</label>
-	                        <label class="pull-right">$formatter.checkbox($g.name, $page.isSelected($g))</label>
-	                    </div>
-	                </div>
-	                #end
+                    <div class="panel panel-default">
+                        <div class="panel-body membership">
+                            <label for="$g.name">$g.name</label>
+                            <label class="pull-right">$formatter.checkbox($g.name, $page.isSelected($g))</label>
+                        </div>
+                    </div>
+                    #end
                 </div>
             </div>
         </div>        
-        
+
         <div id="modalAddRestriction" class="modal fade">
             <form class="addRestrictionForm">
                 <div class="modal-header">
@@ -286,16 +365,15 @@
             </form>
         </div>        
 
-        <script type="text/javascript" src="/static/js/jquery.fileupload.js"></script>
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
         <script type="text/javascript">
-        	var quiz = $formatter.toJson($page.quiz);
-            Bob.onDOMReady(function () {
+            var quiz = $formatter.toJson($page.quiz);
+            $(function() {
                 $("select.pointsType").click(function() {
                     showHidePointsOrgType();
                 });
                 showHidePointsOrgType();
-                
+
                 initEditReward(quiz);
                 //function to initiate bootstrap-datepicker
                 $('.date-picker').datepicker({
@@ -303,7 +381,7 @@
                 });
                 $('.TabNav a:first').tab('show');
             });
-            
+
             function showHidePointsOrgType() {
                 if ($("select.pointsType").val() == "POINTS_ORG") {
                     $(".pointsOrgType").show();

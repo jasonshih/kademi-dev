@@ -55,8 +55,11 @@
         </div>        
 
         <div class="btn-group">
-            <a target='_blank' href='${page.externalUrl}' class="btn btn-sm btn-success">
+            <a target='_blank' href='$page.href?goto=' class="btn btn-sm btn-success">
                 <i class="fa fa-arrow-circle-right"></i> View website
+            </a>
+            <a href='/repositories/$page.closest("website").name/$page.name' class="btn btn-sm btn-success">
+                <i class="fa fa-edit"></i> Edit pages
             </a>
             <div class="btn-group">
                 <a class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" href="#">
@@ -78,7 +81,7 @@
                 <li class="active"><a data-toggle="tab" href="#panel_details"><i class="green fa fa-home"></i> Details</a></li>
                 <li class=""><a data-toggle="tab" href="#panel_theme"><i class="green fa fa-home"></i> Theme</a></li>
                 <li class=""><a data-toggle="tab" href="#panel_groups"><i class="green fa fa-home"></i> Group access</a></li>
-<!--                 <li class=""><a data-toggle="tab" href="#panel_mailserver"><i class="green fa fa-home"></i> Mail server</a></li> -->
+                <li class=""><a data-toggle="tab" href="#panel_mailserver"><i class="green fa fa-home"></i> Mail server</a></li>
                 <li class=""><a data-toggle="tab" href="#panel_apps"><i class="green fa fa-home"></i> Apps</a></li>
             </ul>
             
@@ -174,7 +177,7 @@
                         <div class="form-group">
                             <label for="logo" class="col-sm-3 control-label">Logo</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control toolbar-Logo" name="logo" id="logo" value="$!page.themeAttributes.logo" />
+                                <input type="text" class="form-control toolbar-Logo" name="logo" id="logo" value="$formatter.htmlAttEncode($page.themeAttributes.logo)" />
                             </div>
                         </div>
                         <div class="form-group">
@@ -183,6 +186,14 @@
                                 <textarea id="menu" name="menu" class="form-control limited" rows="5">$!page.themeAttributes.menu</textarea>
                             </div>
                         </div>
+                        #foreach( $customField in $page.customFields ) 
+                        <div class="form-group">
+                            <label for="menu" class="col-sm-3 control-label">$customField.text</label>
+                            <div class="col-sm-6">
+                                $customField.html( $page.themeAttributes.get($customField.name) )
+                            </div>
+                        </div>
+                        #end
                         <div class="form-group">
                             <div class="col-sm-offset-3 col-sm-6">
                                 <button type="submit" class="btn btn-sm btn-success">Save Changes</button>
@@ -196,42 +207,60 @@
                         <button class="btn btn-sm btn-default AddGroup" data-toggle="modal" data-target="#modalGroup"><i class="fa fa-plus"></i> Add/remove groups</button>
                         <p class="clearfix"></p>
                         <br />
-                        <p class="clearfix GroupList">
+                        <div id="group-list" class="clearfix GroupList">
                             #foreach($g in $page.selectedGroups)
-                            <span class="alert alert-block alert-info">$g.name</span>
+                            <div class="alert alert-info">
+                                <span class="fa fa-users"></span>
+                                <a href="/groups/$g.name/members">$g.name</a> 
+                                #if( $g.groupType == "P" )
+                                - Primary group
+                                #elseif( $g.groupType == "M" )
+                                - Mailing list
+                                #elseif( $g.groupType == "S" )
+                                - Subscription
+                                #end
+                                -
+                                #if( $g.registrationMode == "o" )
+                                Open group
+                                #elseif( $g.registrationMode == "c" )
+                                Closed group
+                                #elseif( $g.registrationMode == "a" )
+                                Administrator approval group
+                                #else
+                                No registration mode has been set
+                                #end
+                            </div>
                             #end
-                        </p>
+                        </div>
                     </div>                    
                 </div> <!-- End groups -->
                 
-<!--                 <div id="panel_mailserver" class="tab-pane"> -->
-<!--                     <form name="frmDetails" action="." method="post" class="form-horizontal details" role="form"> -->
-<!--                         <div class="alert alert-danger pageMessage">.</div> -->
-<!--                         <div class="form-group"> -->
-<!--                             <label for="mailServer" class="col-sm-3 control-label">Mail server host</label> -->
-<!--                             <div class="col-sm-6"> -->
-<!--                                 <input type="text" name="mailServer" value="$!page.mailServer" class="form-control" /> -->
-<!--                             </div> -->
-<!--                         </div> -->
-<!--                         <div class="form-group"> -->
-<!--                             <label for="mailUser" class="col-sm-3 control-label">User name</label> -->
-<!--                             <div class="col-sm-6"> -->
-<!--                                 <input type="text" name="mailUser" value="$!page.mailUser" class="form-control" /> -->
-<!--                             </div> -->
-<!--                         </div> -->
-<!--                         <div class="form-group"> -->
-<!--                             <label for="mailPassword" class="col-sm-3 control-label">Password</label> -->
-<!--                             <div class="col-sm-6"> -->
-<!--                                 <input type="password" name="mailPassword" value="$!page.mailPassword" class="form-control" /> -->
-<!--                             </div> -->
-<!--                         </div> -->
-<!--                         <div class="form-group"> -->
-<!--                             <div class="col-sm-offset-3 col-sm-6"> -->
-<!--                                 <button type="submit" class="btn btn-sm btn-success">Save Changes</button> -->
-<!--                             </div> -->
-<!--                         </div> -->
-<!--                     </form> -->
-<!--                 </div> -->
+                 <div id="panel_mailserver" class="tab-pane">
+                     <form name="frmDetails" action="." method="post" class="form-horizontal details" role="form">
+                         <div class="alert alert-danger pageMessage">.</div> 
+                         <p class="">DKIM is a way to increase the number of emails which reach your recipients, by
+                         reducing your spam score. It does this by adding a digital signature to each email signed
+                         signed and verified by your DNS.</p>
+                         <p>To get a DKIM certificate and <a href="http://www.port25.com/support/domainkeysdkim-wizard/" target="_blank">setup your domain for DKIM please see here</a></p>
+                         <div class="form-group"> 
+                             <label for="dkimSelector" class="col-sm-3 control-label">DKIM Selector</label> 
+                             <div class="col-sm-6">
+                                 <input type="text" name="dkimSelector" value="$!page.dkimSelector" class="form-control" />
+                             </div>
+                         </div>
+                         <div class="form-group">
+                             <label for="dkimPrivateKey" class="col-sm-3 control-label">DKIM Private key</label>
+                             <div class="col-sm-6">
+                                 <textarea name="dkimPrivateKey" class="form-control">$!page.dkimPrivateKey</textarea>
+                             </div>
+                         </div>
+                         <div class="form-group"> 
+                             <div class="col-sm-offset-3 col-sm-6">
+                                 <button type="submit" class="btn btn-sm btn-success">Save Changes</button>
+                             </div>
+                         </div>
+                     </form>
+                 </div>
                 
                 <div id="panel_apps" class="tab-pane appsContainer">
                     <div class="well">
@@ -343,7 +372,7 @@
         </div>
 
         <script type="text/javascript">
-            Bob.onDOMReady(function () {
+            $(function () {
                 flog("page init initManageWebsite");
                 initManageWebsite();
                 initPublishingMenu("");
@@ -351,6 +380,7 @@
                 $("form.details").forms({
                     callback: function() {
                         flog("Saved Ok!");
+                        Msg.info("Saved");
                     }
                 });
             });

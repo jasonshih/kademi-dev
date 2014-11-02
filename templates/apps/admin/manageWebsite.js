@@ -28,23 +28,27 @@ function setGroupRecipient(name, isRecip) {
             success: function (data) {
                 if (data.status) {
                     log("saved ok", data);
-                    if (isRecip) {
-                        $(".GroupList").append("<span class=\"alert alert-block alert-info\">" + name + "</span>");
-                        log("appended to", $(".GroupList"));
-                    } else {
-                        var toRemove = $(".GroupList span").filter(function () {
-                            return $(this).text() == name;
-                        });
-                        toRemove.remove();
-                    }
+                    $("#group-list").reloadFragment();
+//                    if (isRecip) {
+//                        $(".GroupList").append("<div class=\"alert alert-block alert-info\"><span class=\"fa fa-users\"></span>" + name + "</div>");
+//                        log("appended to", $(".GroupList"));
+//                    } else {
+//                        var toRemove = $(".GroupList div").filter(function () {                            
+//                            var thisName = $(this).find("a").text();
+//                            flog("filter", this, thisName);
+//                            return thisName === name;
+//                        });
+//                        flog("remove", toRemove);
+//                        toRemove.remove();
+//                    }
                 } else {
                     log("error", data);
-                    alert("Sorry, couldnt save " + data);
+                    Msg.error("Sorry, couldnt save " + data);
                 }
             },
             error: function (resp) {
                 log("error", resp);
-                alert("Sorry, couldnt save - " + resp);
+                Msg.error("Sorry, couldnt save - " + resp);
             }
         });
     } catch (e) {

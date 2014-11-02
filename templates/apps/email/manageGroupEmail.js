@@ -7,6 +7,13 @@ function initManageGroupEmail() {
     initResetPasswordLinkText();
     initEditEmailPage();
     initStatusPolling();
+    initSendTest();
+    $(".btn-cancel").click(function (e) {
+        e.preventDefault();
+        if (confirm("Are you sure you want to permanently cancel this job?")) {
+            doControl("stop");
+        }
+    });
 }
 
 function initResetPasswordLinkText() {
@@ -21,7 +28,7 @@ function initShowRecipients() {
     var btnShowRecipients = $('.btn-show-recipients');
     var recipientsWrapper = $('.recipients-wrapper');
 
-    btnShowRecipients.on('click', function(e) {
+    btnShowRecipients.on('click', function (e) {
         e.preventDefault();
 
         if (recipientsWrapper.hasClass('hide')) {
@@ -38,14 +45,14 @@ function showRecipients(tableBody) {
             type: 'GET',
             url: window.location.pathname + '?recipients',
             dataType: 'json',
-            success: function(resp) {
+            success: function (resp) {
                 flog('got results', resp.data.length, resp.data);
                 tableBody.html('');
 
                 if (resp.data.length > 0) {
                     var dataString = '';
 
-                    $.each(resp.data, function(i, profile) {
+                    $.each(resp.data, function (i, profile) {
                         dataString +=
                                 '<tr>' +
                                 '<td><a href="/manageUsers/' + profile.userId + '">' + profile.name + '</a></td>' +
@@ -60,8 +67,8 @@ function showRecipients(tableBody) {
                     tableBody.html('<tr><td colspan="4">No recipients</td></tr>');
                 }
             },
-            error: function(resp) {
-                alert('Sorry, an error occured collecting the recipient list');
+            error: function (resp) {
+                Msg.error('Sorry, an error occured collecting the recipient list');
             }
         });
     } catch (e) {
@@ -74,27 +81,27 @@ function initEditEmailPage() {
 
     flog('initEditEmailPage');
 
-    $('.btn-send-email').click(function(e) {
+    $('.btn-send-email').click(function (e) {
         e.preventDefault();
 
         if (body.hasClass('dirty')) {
-            alert('Please save your changes before sending the email');
+            Msg.error('Please save your changes before sending the email');
         } else {
             sendMailAjax(true);
         }
     });
 
-    $('.btn-preview-email').click(function(e) {
+    $('.btn-preview-email').click(function (e) {
         e.preventDefault();
 
         if (body.hasClass('dirty')) {
-            alert('Please save your changes before sending the preview');
+            Msg.error('Please save your changes before sending the preview');
         } else {
             sendMailAjax(false);
         }
     });
 
-    $('input, select, textarea').change(function() {
+    $('input, select, textarea').change(function () {
         body.addClass('dirty');
     });
 }
@@ -112,22 +119,22 @@ function sendMailAjax(reallySend) {
                 sendMail: 'true',
                 reallySend: reallySend
             },
-            success: function(data) {
+            success: function (data) {
                 flog('send has been initiated', data);
                 if (reallySend) {
-                    alert('Email sending has been initiated. If there is a large number of users this might take some time. This screen will display progress');
+                    Msg.success('Email sending has been initiated. If there is a large number of users this might take some time. This screen will display progress');
                     $('a[href=#status]').trigger('click');
                     $('#recipients').find('.btn-remove-role').remove();
-                    $('#status-tools').removeClass('Draft').addClass('Running');
+                    $('#status-tools').attr('class', 'Running page-action');
 
                     initStatusPolling();
                 } else {
-                    alert('The preview email has been sent to your email address. Please review it');
+                    Msg.info('The preview email has been sent to your email address. Please review it');
                 }
             },
-            error: function(resp) {
+            error: function (resp) {
                 flog('error', resp);
-                alert('Failed to start the send job. Please refresh the page');
+                Msg.error('Failed to start the send job. Please refresh the page');
             }
         });
     } catch (e) {
@@ -135,31 +142,54 @@ function sendMailAjax(reallySend) {
     }
 }
 
+function doControl(command) {
+    try {
+        $.ajax({
+            type: 'POST',
+            url: window.location.href,
+            data: {
+                control: command
+            },
+            success: function (data) {
+                flog("Done");
+                window.location.reload();
+            },
+            error: function (resp) {
+                flog('error', resp);
+                Msg.error('Failed to send the command');
+            }
+        });
+    } catch (e) {
+        flog('exception in createJob', e);
+    }
+}
+
+
 function validateEmail() {
     // Check it has recipients
     if (!$('.blocks-wrapper.recipient .block')[0]) {
-        alert('Please enter at least one recipient');
+        Msg.error('Please enter at least one recipient');
         return false;
     }
 
     // Check it has a message
     var msg = $('textarea[name=html]').val();
     if (msg == null || msg.length == 0) {
-        alert('Please enter a message to send');
+        Msg.error('Please enter a message to send');
         return false;
     }
 
     // Check subject
     var subject = $('input[name=subject]').val();
     if (subject == null || subject.length == 0) {
-        alert('Please enter a subject for the email');
+        Msg.error('Please enter a subject for the email');
         return false;
     }
 
     // Check from address
     var fromAddress = $('input[name=fromAddress]').val();
     if (fromAddress == null || fromAddress.length == 0) {
-        alert('Please enter a from address for the email');
+        Msg.error('Please enter a from address for the email');
         return false;
     }
 
@@ -168,7 +198,7 @@ function validateEmail() {
     flog('check reset', $('#passwordReset:checked'), sel);
     if ($('#passwordReset:checked').length > 0) {
         if (sel.val() == '') {
-            alert('A theme is required for a password reset email. Please choose a theme on the Message tab');
+            Msg.error('A theme is required for a password reset email. Please choose a theme on the Message tab');
             return false;
         }
     }
@@ -197,22 +227,24 @@ function pollStatus() {
             data: {
                 status: 'true'
             },
-            success: function(resp) {
+            success: function (resp) {
                 displayStatus(resp.data);
                 if (resp.data.statusCode === '') {
                     setTimeout(pollStatus, 2000);
+                } else if (resp.data.statusCode === 's') {
+                    statusTools.attr('class', 'Canceled page-action');                    
                 } else if (resp.data.statusCode !== 'c') {
-                    statusTools.removeClass('Draft').addClass('Running');
+                    statusTools.attr('class', 'Running page-action');
                     setTimeout(pollStatus, 2000);
                 } else {
                     flog("job status is finished, so just poll open rate");
                     $(".send-progress .progress").hide();
                     $("#open-rate").show();
-                    statusTools.removeClass('Running').addClass('Complete');
+                    statusTools.attr('class', 'Completed page-action');
                     pollOpenRate();
                 }
             },
-            error: function(resp) {
+            error: function (resp) {
                 flog('error', resp);
             }
         });
@@ -234,12 +266,17 @@ function displayStatus(data) {
     var progress = status.find('.progress');
     var progressBar = progress.find('.progress-bar');
 
-
     if (data.statusCode) {
         status.children('div').hide();
-        status.removeClass('status_c status_p');
+        status.removeClass('status_r status_c status_p status_s');
         status.addClass('status_' + data.statusCode);
+
         $('.send-progress').show();
+        if (data.statusCode == "s") {
+            $('.progress').hide();            
+        } else {
+            $('.progress').show();
+        }
         var percent = (data.successful + data.totalFailed) * 100 / data.totalToSend;
         flog("progress", percent, (data.successful + data.totalFailed), data.totalToSend);
         flog("progres", progressBar);
@@ -268,10 +305,12 @@ function displayStatus(data) {
             txtProgress = 'Preparing emails...';
         }
 
-        progressBar.text(txtProgress);
+        progressBar.next().text(txtProgress);
+
 
         addRows(data.sending, 'Sending..', tbody);
         addRows(data.retrying, 'Retrying..', tbody);
+        removeOkRows(data.sending.concat(data.retrying), tbody);
     } else {
         status.children('div').hide().filter('.notsent').show();
         tbody.html('');
@@ -279,7 +318,7 @@ function displayStatus(data) {
 }
 
 function addRows(list, status, tbody) {
-    $.each(list, function(i, e) {
+    $.each(list, function (i, e) {
         tr = getOrCreateEmailRow(e, tbody);
 
         if (e.lastError) {
@@ -295,8 +334,29 @@ function getOrCreateEmailRow(e, tbody) {
     var tr = tbody.find('#' + e.emailId);
 
     if (tr.length === 0) {
-        tr = $('<tr id="' + e.emailId + '"></tr><td>' + e.email + '</td><td>' + e.fullName + '</td><td class="status"></td><td class="attempt"></td>');
+        tr = $('<tr id="' + e.emailId + '"><td>' + e.email + '</td><td>' + e.fullName + '</td><td class="status"></td><td class="attempt"></td></tr>');
         tbody.prepend(tr);
     }
+
     return tr;
+}
+
+function removeOkRows(list, tbody) {
+    if (list.length === 0) {
+        tbody.find('tr').remove();
+    } else {
+        var keepList = {};
+        $.each(list, function (i, e) {
+            keepList[e.emailId] = e;
+        });
+
+        tbody.find('tr').each(function () {
+            var tr = $(this);
+            var id = +tr.attr('id');
+
+            if (!(id in keepList)) {
+                tr.remove();
+            }
+        });
+    }
 }

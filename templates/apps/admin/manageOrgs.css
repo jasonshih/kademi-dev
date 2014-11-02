@@ -16,3 +16,14 @@
 .upload-results {
     display: none;
 }
+
+.upload-results .table-responsive {
+    border: 1px solid #ddd;
+    margin-bottom: 15px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    width: 100%;
+}
+.upload-results .table-responsive > .table {
+    margin-bottom: 0;
+}

@@ -86,26 +86,27 @@ function ensureObject(target) {
 function log() {
     if (typeof (console) != "undefined") {
         if (navigator.appName == 'Microsoft Internet Explorer') {
-            if (typeof (JSON) == "undefined") {
-                if (arguments.length == 1) {
-                    console.log(arguments[0]);
-                } else if (arguments.length == 2) {
-                    console.log(arguments[0], arguments[1]);
-                } else if (arguments.length > 2) {
-                    console.log(arguments[0], arguments[1], arguments[2]);
-                }
+//            console.log(arguments[0]);
+//            if (typeof (JSON) == "undefined") {
+//                if (arguments.length == 1) {
+//                    console.log(arguments[0]);
+//                } else if (arguments.length == 2) {
+//                    console.log(arguments[0], arguments[1]);
+//                } else if (arguments.length > 2) {
+//                    console.log(arguments[0], arguments[1], arguments[2]);
+//                }
 
-            } else {
-                try {
-                    var msg = "";
-                    for (var i = 0; i < arguments.length; i++) {
-                        msg += JSON.stringify(arguments[i]) + ","; // log string instead of JSON object
-                    }
-                    console.log(msg);
-                } catch (ex) {
-                    console.log(ex); // If current browser doesn't support JSON.stringify method
-                }                
-            }
+//            } else {
+//                try {
+//                    var msg = "";
+//                    for (var i = 0; i < arguments.length; i++) {
+//                        msg += JSON.stringify(arguments[i]) + ","; // log string instead of JSON object
+//                    }
+//                    console.log(msg);
+//                } catch (ex) {
+//                    console.log(ex); // If current browser doesn't support JSON.stringify method
+//                }                
+//            }
         } else {
             console.log(arguments);
         }
@@ -115,26 +116,26 @@ function log() {
 function flog() {
     if (typeof (console) != "undefined") {
         if (navigator.appName == 'Microsoft Internet Explorer') {
-            if (typeof (JSON) == "undefined") {
-                if (arguments.length == 1) {
-                    console.log(arguments[0]);
-                } else if (arguments.length == 2) {
-                    console.log(arguments[0], arguments[1]);
-                } else if (arguments.length > 2) {
-                    console.log(arguments[0], arguments[1], arguments[2]);
-                }
-
-            } else {
-                try {
-                    var msg = "";
-                    for (var i = 0; i < arguments.length; i++) {
-                        msg += JSON.stringify(arguments[i]) + ","; // log string instead of JSON object
-                    }
-                    console.log(msg);
-                } catch (ex) {
-                    console.log(ex); // If current browser doesn't support JSON.stringify method
-                }                
-            }
+//            if (typeof (JSON) == "undefined") {
+//                if (arguments.length == 1) {
+//                    console.log(arguments[0]);
+//                } else if (arguments.length == 2) {
+//                    console.log(arguments[0], arguments[1]);
+//                } else if (arguments.length > 2) {
+//                    console.log(arguments[0], arguments[1], arguments[2]);
+//                }
+//
+//            } else {
+//                try {
+//                    var msg = "";
+//                    for (var i = 0; i < arguments.length; i++) {
+//                        msg += JSON.stringify(arguments[i]) + ","; // log string instead of JSON object
+//                    }
+//                    console.log(msg);
+//                } catch (ex) {
+//                    console.log(ex); // If current browser doesn't support JSON.stringify method
+//                }                
+//            }
         } else {
             console.log(arguments);
         }

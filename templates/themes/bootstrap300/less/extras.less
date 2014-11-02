@@ -1,4 +1,4 @@
-@icon-font-path:          "fonts/";
+@icon-font-path:          "/theme/fonts/";
 
 @horizontalNarrowOffset : 40; 
 
@@ -141,6 +141,12 @@ table.list-view {
     .profilePic {
         float: left;
         margin-right: 8px;
+        height: 52px;
+        width: 52px;
+        img {
+            height: 100%;
+            width: 100%;
+        }
     }
     .user {
     }
@@ -183,6 +189,13 @@ body .navbar .nav .dropdown-toggle .caret {
     .profilePic {
         float: left;
         margin-right: 8px;
+        height: 52px;
+        width: 52px;
+        img {
+            height: 100%;
+            width: 100%;
+        }        
+        
     }
 }
 ul.tools {
@@ -475,8 +488,9 @@ ul.tools {
     overflow: hidden;
     border-radius: 5px;
     padding: 0;
+    width: 100%;
     .hero-body {
-        margin: 15px;
+        margin: 30px;
     }
     .hero-image {
         width: 30%;
@@ -521,6 +535,7 @@ ul.tools {
     width: 100%;
     height: 150px;
     background-size: 100% auto;
+    background-position: center;
     a {
         display: block;
         height: 100%;            
@@ -544,5 +559,34 @@ span.more { display: none;  }
     margin-top: 0;
 }
 .user-nickname {
-    
+
 }
+
+
+// For dropdown hidden panels in editor content
+.cke_widget_element.dropdown-btn {
+    border-style: dashed;
+}
+
+.dropdown-btn.collapsed {
+    display: inline-block; // fit to width of text when collapsed
+}
+
+#editor {
+    .col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-10, .col-md-11 {
+        border: dashed grey 1px;
+        min-height: 200px;
+    }
+    .btn {
+        -moz-user-select: text;
+    }
+}
+
+.bs-avatar {
+    margin: 0px 15px 15px 0;
+    img {
+        width: 52px;
+        height: 52px;
+    }
+}
+

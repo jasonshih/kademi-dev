@@ -1,4 +1,4 @@
-(function(Bob, $, win, doc, undefined) {
+(function($, win, doc, undefined) {
     function showErrors($result, errors) {
         var $table = $result.find('table'),
                 $tbody = $table.find('tbody');
@@ -18,8 +18,8 @@
     }
 
     function showUnmatched($result, unmatched) {
-        var $table = $result.find('table'),
-                $tbody = $table.find('tbody');
+        var $table = $result.find('table');
+        var $tbody = $table.find('tbody');
 
         $tbody.html('');
 
@@ -50,7 +50,8 @@
             self.$form.forms({
                 callback: function(resp) {
                     log('done', resp);
-                    alert('Saved ok. Please refresh to see changes');
+                    Msg.success($('#orgTitle').val() + ' is saved!');
+                    $('#search-results').reloadFragment();
                     self.hide();
                 }
             });
@@ -88,7 +89,7 @@
                         }
                     },
                     error: function(response) {
-                        alert('err');
+                        Msg.error('err');
                     }
                 });
             } else {
@@ -102,27 +103,55 @@
 
     var initUploadCsv = function() {
         // Upload CSV
-        var $modalUploadCsv = $('#modal-upload-csv'),
-                $resultUploadCsv = $modalUploadCsv.find('.upload-results');
+        var modalUploadCsv = $('#modal-upload-csv');
+        var resultUploadCsv = modalUploadCsv.find('.upload-results');
+        var form = modalUploadCsv.find("form");
+        form.submit(function(e) {
+            e.preventDefault();
+            var f = form[0];
+            flog("init form data", f);
+            var formData = new FormData(f);
+            flog("done form data");
+            $.ajax({
+                url: form.attr("action"),
+                type: 'POST',
+                data: formData,
+                cache: false,
+                processData: false,
+                contentType: false,
+                success: function(result) {
+                    flog("success", result);                    
+                    if (result.status) {
+                        resultUploadCsv.find('.num-updated').text(result.data.numUpdated);
+                        resultUploadCsv.find('.num-unmatched').text(result.data.unmatched.length);
+                        showUnmatched(resultUploadCsv, result.data.unmatched);
+                        Msg.success('Upload completed. Please review any unmatched organisations below, or refresh the page to see the updated list of organisations');
+                    } else {
+                        Msg.error('There was a problem uploading the organisations: ' + result.messages);
+                    }
+                }
+            });
+        });
+
         $('#do-upload-csv').mupload({
             buttonText: '<i class="clip-folder"></i> Upload spreadsheet',
             url: 'orgs.csv',
             useJsonPut: false,
             oncomplete: function(data, name, href) {
-                log('oncomplete:', data.result, name, href);
+                flog('oncomplete:', data.result, name, href);
                 if (data.result.status) {
-                    $resultUploadCsv.find('.num-update').text(data.result.data.numUpdated);
-                    $resultUploadCsv.find('.num-unmatched').text(data.result.data.unmatched.length);
-                    showUnmatched($resultUploadCsv, data.result.data.unmatched);
-                    alert('Upload completed. Please review any unmatched organisations below, or refresh the page to see the updated list of organisations');
+                    resultUploadCsv.find('.num-updated').text(data.result.data.numUpdated);
+                    resultUploadCsv.find('.num-unmatched').text(data.result.data.unmatched.length);
+                    showUnmatched(resultUploadCsv, data.result.data.unmatched);
+                    Msg.success('Upload completed. Please review any unmatched organisations below, or refresh the page to see the updated list of organisations');
                 } else {
-                    alert('There was a problem uploading the organisations: ' + data.result.messages);
+                    Msg.error('There was a problem uploading the organisations: ' + data.result.messages);
                 }
             }
         });
-        var $formUploadCsv = $modalUploadCsv.find('form');
+        var $formUploadCsv = modalUploadCsv.find('form');
         $('#allow-inserts').on('click', function(e) {
-            log('click', e.target);
+            flog('click', e.target);
             if (this.checked) {
                 $formUploadCsv.attr('action', 'orgs.csv?insertMode=true');
             } else {
@@ -145,9 +174,9 @@
                     $resultUploadOrgidCsv.find('.num-update').text(data.result.data.numUpdated);
                     $resultUploadOrgidCsv.find('.num-errors').text(data.result.data.errors.length);
                     showErrors($resultUploadOrgidCsv, data.result.data.errors);
-                    alert('Upload completed. Please review any unmatched organisations below, or refresh the page to see the updated list of organisations');
+                    Msg.success('Upload completed. Please review any unmatched organisations below, or refresh the page to see the updated list of organisations');
                 } else {
-                    alert('There was a problem uploading the organisations: ' + data.result.messages);
+                    Msg.error('There was a problem uploading the organisations: ' + data.result.messages);
                 }
             }
         });
@@ -166,11 +195,11 @@
             });
         });
 
-        $body.on('click', '.btn-edit-org', function(e) {
-            e.preventDefault();
-
-            ModalEditOrg.show($(this).attr('href'));
-        });
+//        $body.on('click', '.btn-edit-org', function(e) {
+//            e.preventDefault();
+//
+//            ModalEditOrg.show($(this).attr('href'));
+//        });
 
         $('.btn-add-org').on('click', function(e) {
             e.preventDefault();
@@ -187,17 +216,20 @@
         initSearchOrg();
     };
 
-})(Bob, jQuery, window, document);
+})(jQuery, window, document);
 
 function initSearchOrg() {
-    $("#org-query").keyup(function() {
-        typewatch(function() {
+    $("#org-query").on({
+        keyup: function() {
+            typewatch(function() {
+                flog("do search");
+                doSearch();
+            }, 500);
+        },
+        change: function() {
             flog("do search");
             doSearch();
-        }, 500);
-    });
-    $("#search-group").change(function() {
-        doSearch();
+        }
     });
 }
 
@@ -209,15 +241,15 @@ function doSearch() {
         type: 'GET',
         url: newUrl,
         success: function(data) {
-            log("success", data);
+            flog("success", data);
             window.history.pushState("", document.title, newUrl);
-            var $fragment = $(data).find("#searchResults");
-            log("replace", $("#searchResults"));
-            log("frag", $fragment);
-            $("#searchResults").replaceWith($fragment);
+            var $fragment = $(data).find("#search-results");
+            flog("replace", $("#se"));
+            flog("frag", $fragment);
+            $("#search-results").replaceWith($fragment);
         },
         error: function(resp) {
-            alert("err");
+            Msg.error("err");
         }
     });
 }

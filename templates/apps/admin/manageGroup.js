@@ -9,6 +9,13 @@ function initManageGroup() {
 	initCRUDRole();
     initCopyMembers();
 //    initOptInGroups();
+    initPanelHeader();
+}
+
+function initPanelHeader() {
+    $(document.body).on('click', '.panel-tools, .btn-group .dropdown-menu', function (e) {
+        e.stopPropagation();
+    });
 }
 
 function initCRUDGroup() {
@@ -91,7 +98,7 @@ function initCRUDRole() {
 		var appliesToType = appliesTo.find('input:checked');
 
 		if (!appliesToType[0]) {
-			alert('Please select what the role applies to');
+			Msg.error('Please select what the role applies to');
 			return;
 		}
 
@@ -101,7 +108,7 @@ function initCRUDRole() {
 		if (select[0]) {
 			appliesToVal = select.val();
 			if (appliesToVal.length == 0) {
-				alert('Please select a target for the role');
+				Msg.error('Please select a target for the role');
 				return;
 			}
 			appliesToText = select.find('option:checked').text();
@@ -149,7 +156,7 @@ function addRoleToGroup(groupHref, roleName, appliesToType, appliesTo, callback)
                 if (data.status) {
                     flog('saved ok', data);
                     callback(data);
-                    alert('Added role');
+                    Msg.success('Added role');
                 } else {
                     var msg = data.messages + '\n';
                     if (data.fieldMessages) {
@@ -158,12 +165,12 @@ function addRoleToGroup(groupHref, roleName, appliesToType, appliesTo, callback)
                         });
                     }
                     flog('error msg', msg);
-                    alert('Couldnt save the new role: ' + msg);
+                    Msg.error('Couldnt save the new role: ' + msg);
                 }
             },
             error: function(resp) {
                 flog('error', resp);
-                alert('Error, couldnt add role');
+                Msg.error('Error, couldnt add role');
             }
         });
     } catch (e) {
@@ -204,7 +211,7 @@ function setGroupRole(groupName, roleName, isRecip, permissionList) {
             },
             error: function(resp) {
                 flog('error', resp);
-                alert('err');
+                Msg.error('err');
             }
         });
     } catch (e) {
@@ -280,30 +287,6 @@ function showGroupModal(name, title, type, data) {
         if (data.group) {
             modal.attr('data-group', data.group);
         }
-
-//        if (data.program) {
-//            var _programList = modal.find('tr[rel=Program] ul.ListItem li');
-//            var _programs = data.program;
-//
-//            for (var i = 0; i < _programs.length; i++) {
-//                _programList
-//                        .filter('[data-program=' + _programs[i] + ']')
-//                        .find('input[type=checkbox]')
-//                        .check(true);
-//            }
-//        }
-//
-//        if (data.permission) {
-//            var _permissionList = modal.find('tr[rel=Permission] ul.ListItem li');
-//            var _permission = data.permission;
-//
-//            for (var i = 0; i < _permission.length; i++) {
-//                _permissionList
-//                        .filter('[data-permission=' + _permission[i] + ']')
-//                        .find('input[type=checkbox]')
-//                        .check(true);
-//            }
-//        }
     }
 
 	modal.modal('show');
@@ -324,19 +307,19 @@ function initGroupModal() {
 	var modal = $('#modal-group');
 
     // Event for Add/Edit button
-    modal.find('.btn-save-group').click(function(e) {
+    modal.find('form').submit(function(e) {
 	    e.preventDefault();
-
-        flog('Click add/edit group');
-        var btn = $(this);
+        
+        var btn = modal.find(".btn-save-group");        
         var type = btn.html();
+        flog('Click add/edit group', btn, type);
 
 	    var name = modal.find('input[name=name]').val();
-
-	    if (name.trim() !== '') {
+	    if (checkSimpleChars(modal.find('form'))) {
 		    if (type === 'Add') {
 			    createFolder(name, null, function(name, resp) {
-				    window.location.reload();
+                    Msg.success(name + ' is created!');
+				    $('#group-wrapper').reloadFragment();
 			    });
 
 		    } else { // If is editing Group
@@ -353,8 +336,6 @@ function initGroupModal() {
 
 		    modal.modal('hide');
 		    resetModalControl();
-	    } else {
-		    alert('Please enter group name!');
 	    }
     });
 }
@@ -371,11 +352,8 @@ function initRegoMode() {
     $('form.general').forms({
         callback: function(resp) {
             flog('done', resp);
-            //$.tinybox.close();
-            //window.location.reload();
-            $('div.content').load(window.location.pathname + ' div.content > *', function() {
-            	
-            });
+            $('#group-wrapper').reloadFragment();
+            Msg.info("Saved");
         }
     });
 }
@@ -411,9 +389,9 @@ function initCopyMembers() {
 	modal.find('form').forms({
         callback: function(resp) {
             flog('done', resp);
-            $.tinybox.close();
-            alert('Copied members');
-            window.location.reload();
+            modal.modal('hide');
+            Msg.success('Copied members');
+            $('#group-wrapper').reloadFragment();
         }
     });
 }

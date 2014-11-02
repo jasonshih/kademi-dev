@@ -8,7 +8,10 @@
     <body>
         <form method="POST" action="$page.href" class="general">
             <div class="form-group clearfix">
-                <button class="btn btn-sm btn-primary pull-right">Save</button>
+                <button class="btn btn-sm btn-success pull-right">                    
+                    <span class="glyphicon glyphicon-floppy-disk"></span>
+                    Save
+                </button>
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -110,7 +113,7 @@
                     <i class="clip-question"></i> Can users opt-in to other mailing lists?
                 </div>
                 <div class="panel-body optins">
-                    #foreach($group in $page.organisation.groups)
+                    #foreach($group in $page.groups)
                     #if( $group == $page.group )
 
                     #else
@@ -220,7 +223,7 @@
         </div>
 
         <script type="text/javascript" >
-            Bob.onDOMReady(function() {
+            $(function () {
                 initManageGroup();
                 initManageExtraField();
                 showHidePanels();

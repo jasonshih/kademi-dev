@@ -16,7 +16,7 @@
                         <a class="btn btn-sm btn-success Add" href="#modalCreateJob" data-toggle="modal">Create a scheduled task</a>
                     </header>
                     <br />
-                    <div class="Content">
+                    <div id="scheduledEmails" class="Content">
                         <table class="Summary table table-hover">
                             <thead>
                                 <tr>
@@ -34,7 +34,7 @@
                                 </tr>
                                 #else
                                 #foreach($email in $page.children)
-                                <tr class="emailStatus$!{email.job.enabled}">
+                                <tr class="emailStatus$!{email.job.enabled}" data-name="$email.name">
                                     <td class="Date">$formatter.formatDate($email.job.startDate)</td>
                                     <td class="Date">$formatter.formatDate($email.job.endDate)</td>
                                     <td class="Name">$formatter.htmlEncode($email.title)</td>
@@ -76,7 +76,7 @@
                     <div class="form-group">
                         <label class="col-md-3 control-label" for="name">Enter email name</label>
                         <div class="col-md-8">
-                            <input type="text" name="name" id="name" value="" placeholder="A name for the email job" class="simpleChars form-control" />
+                            <input type="text" name="name" id="name" value="" placeholder="A name for the email job" class="simpleChars form-control required"/>
                         </div>
                     </div>
                 </form>
@@ -87,7 +87,7 @@
             </div>
         </div>
         <script type="text/javascript">
-            Bob.onDOMReady(function() {
+            $(function () {
                 initManageEmail();
             });
         </script>

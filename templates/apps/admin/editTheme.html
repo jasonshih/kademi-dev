@@ -38,7 +38,7 @@
             var first = true;
             var themeName = "$page.currentTheme";
 
-            Bob.onDOMReady(function () {
+            $(function () {
                 var current = $(".selectTheme[href='" + themeName + "']");
                 current.closest("li").addClass("current-theme");
                 flog("set current", current, themeName);
@@ -85,7 +85,7 @@
                         },
                         error: function(resp) {
                             li.removeClass("ajax-loading");
-                            alert("An error occured doing the user search. Please check your internet connection and try again");
+                            Msg.error("An error occured doing the user search. Please check your internet connection and try again");
                         }
                     });
                 });

@@ -1,6 +1,5 @@
 
 // were getting two change events for one click, so quick and dirty flag to prevent double submissions
-
 function initApps() {
     flog("initApps");    
     $("div.appsContainer").on("switchChange", ".CheckBoxWrapper input[type=checkbox]", function() {
@@ -22,12 +21,20 @@ function initApps() {
             }, chk);
         }
     });
+    
     $("div.appsContainer").on("click", "button.settings", function(e) {
         e.preventDefault();
         var modal = $("#settings_" + $(this).attr("rel"));
-        log("show", $(this), $(this).attr("rel"), modal);
-    });    
+        flog("show", $(this), $(this).attr("rel"), modal);
+    });
+    
     initSettingsForms();
+
+    $(document.body).on('hidden.bs.modal', '.modal', function () {
+        var modal = $(this);
+        var form = modal.find('form');
+        resetForm(form);
+    });
 }
 
 function initSettingsForms() {
@@ -35,10 +42,11 @@ function initSettingsForms() {
     $(".settings form").forms({
         callback: function(resp) {
             flog("done save", resp);
-            
-            initSettingsForms();
+            $('.modal').modal('hide');
+            //initSettingsForms();
             // Close modal auto by timeout
-            setTimeout(function(){ $('.modal').modal('hide'); }, 1000);
+            //setTimeout(function(){ $('.modal').modal('hide'); }, 1000);
+            Msg.info("Saved settings");
         }
     });   
     
@@ -57,7 +65,7 @@ function setEnabled(appId, isEnabled, success, chk) {
             chk.prop('disabled', false);
             flog("response", data);
             if( !data.status ) {
-                alert("Failed to set status: " + data.mssages);
+                Msg.error("Failed to set status: " + data.mssages);
                 return;
             }
             success(data);
@@ -65,7 +73,7 @@ function setEnabled(appId, isEnabled, success, chk) {
         error: function(resp) {
             chk.prop('disabled', false);
             flog("error", resp);
-            alert("Could not change application. Please check your internet connection, and that you have permissions");
+            Msg.error("Could not change application. Please check your internet connection, and that you have permissions");
         }
     });                    
 }

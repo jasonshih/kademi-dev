@@ -150,7 +150,7 @@ function doRestoreFields() {
         error: function(event, XMLHttpRequest, ajaxOptions, thrownError) {
             flog('error restoring fields', event, XMLHttpRequest, ajaxOptions, thrownError);
         }
-    });    
+    });
 }
 
 /**
@@ -277,12 +277,12 @@ function checkNext() {
         showNextPopup(inp);
         return false;
     }
-	if( checkNextValidationFunction ) {
-		if( !checkNextValidationFunction() ) {
-			flog("checkNextValidationFunction returned false");
-			return false;
-		}
-	}
+    if (checkNextValidationFunction) {
+        if (!checkNextValidationFunction()) {
+            flog("checkNextValidationFunction returned false");
+            return false;
+        }
+    }
     return true;
 }
 
@@ -417,7 +417,7 @@ function save(callback) {
     if (userUrl === null) {
         return;
     }
-    
+
     if (!isCompletable) {
         doRestoreFields();
         return;
@@ -425,11 +425,12 @@ function save(callback) {
     var currentPage = getFileName(window.location.href);
     progressPage = currentPage; // update progress page so we can keep track
     var url = modStatusUrl;
-    flog("save. url=", url, "currentPage", currentPage); 
+    flog("save. url=", url, "currentPage", currentPage);
     var data = {};
     $("#body textarea, #body input, #body select").each(function(i, n) {
         var inp = $(n);
-        data[inp.attr("name")] = inp.val();
+        var qname = getQualifiedFieldName(inp.attr("name"));
+        data[qname] = inp.val();
     });
     data["statusCurrentPage"] = currentPage;
     $.ajax({
@@ -445,7 +446,7 @@ function save(callback) {
         },
         error: function(event, XMLHttpRequest, ajaxOptions, thrownError) {
             flog('error saving moduleStatus', event, XMLHttpRequest, ajaxOptions, thrownError);
-            //alert("There was an error saving your progress");
+            Msg.error("There was an error saving your progress");
         }
     });
 }
@@ -454,7 +455,8 @@ function saveFields(callback) {
     var data = {};
     $("#body textarea, #body input, #body select").not(".no-save").each(function(i, n) {
         var inp = $(n);
-        data[inp.attr("name")] = inp.val();
+        var qname = getQualifiedFieldName(inp.attr("name"));
+        data[qname] = inp.val();
     });
     flog("saveFields", data);
     var url = modStatusUrl;
@@ -470,9 +472,9 @@ function saveFields(callback) {
         },
         error: function(event, XMLHttpRequest, ajaxOptions, thrownError) {
             flog('error saving moduleStatus', event, XMLHttpRequest, ajaxOptions, thrownError);
-            alert("There was an error saving your fields");
+            Msg.error("There was an error saving your fields");
         }
-    });    
+    });
 }
 
 function restoreFields(response) {
@@ -481,25 +483,41 @@ function restoreFields(response) {
         for (qualifiedFieldName in response.data) {
             var fieldName = stripPageName(qualifiedFieldName);
             var fieldValue = response.data[qualifiedFieldName];
-            flog("fieldValue", fieldValue, "fieldName", qualifiedFieldName, "from", response.data);
+            if( fieldValue !== null ) {
+                fieldValue = fieldValue.trim();
+            }
+            var isQualified = false;
+            if (fieldName !== qualifiedFieldName) {
+                isQualified = true;
+            }
+//            flog("fieldValue", fieldValue, "fieldName", qualifiedFieldName, "from", response.data);
             var inp = $("#body textarea[name='" + fieldName + "'], #body input[type=text][name='" + fieldName + "'], #body select[name='" + fieldName + "']");
 
-            flog("restoreFields: look for text input", fieldName, fieldValue, inp);
-            if (inp.length > 0) {
-                inp.val(fieldValue);
-            } else {                
-                var radios = $("#body input[type=radio][name='" + fieldName + "']");
-                flog("didnt find text input, look for radios...", radios, "with value", fieldValue);
-                if (radios.length > 0) {
-                    radios.attr("checked", "");
-                    var radio = radios.filter("[value=" + fieldValue + "]");
-                    flog("select radio", radio, fieldValue);
-                    radio.attr("checked", "true"); // set radio buttons
-                    flog("check radio");
+            if (!inp.hasClass("qualified-set")) {
+//                flog("restoreFields: look for text input", fieldName, fieldValue, inp);
+                if( isQualified ) {
+//                    flog("set is qualfieid");
+                    inp.addClass("qualified-set");
                 }
+                if (inp.length > 0) {
+                    inp.val(fieldValue);
+                } else {
+                    var radios = $("#body input[type=radio][name='" + fieldName + "']");
+//                    flog("didnt find text input, look for radios...", radios, "with value", fieldValue);
+                    if (radios.length > 0) {
+                        radios.attr("checked", "");
+                        var radio = radios.filter("[value=" + fieldValue + "]");
+//                        flog("select radio", radio, fieldValue);
+                        radio.attr("checked", "true"); // set radio buttons
+//                        flog("check radio");
+                    }
+                }
+            } else {
+//                flog("already set with qualified parameter");
             }
         }
     }
+    $(".qualified-set").removeClass("qualified-set");
     flog("restoreFields: trim text inputs");
     $("textarea").each(function(i, n) {
         var t = $(n);
@@ -516,9 +534,9 @@ function completed() {
     flog("completed", modStatusUrl);
     if (!isCompletable) {
         if (modStatusComplete) {
-            alert("You have reached the end of this module, and you have previously completed it.");
+            Msg.success("You have reached the end of this module, and you have previously completed it.");
         } else {
-            alert("You have reached the end of this module.");
+            Msg.success("You have reached the end of this module.");
         }
         return;
     }
@@ -560,7 +578,7 @@ function setStatusComplete() {
                                         closeModals();
                                         setStatusComplete();
                                     } else {
-                                        alert("Sorry, we couldnt update your details, please try again");
+                                        Msg.error("Sorry, we couldnt update your details, please try again");
                                     }
                                 }
                             });
@@ -579,19 +597,19 @@ function setStatusComplete() {
                         error: function(resp) {
                             ajaxLoadingOff();
                             flog("setStatusComplete: profile get failed");
-                            alert("Very sorry, but something went wrong while attempting to complete your module. Could you please refresh the page and try again?");
+                            Msg.error("Very sorry, but something went wrong while attempting to complete your module. Could you please refresh the page and try again?");
 
                         }
                     });
                 } else {
                     ajaxLoadingOff();
-                    alert("Sorry, for some reason we couldnt mark your module as being complete. Maybe you could try again, or contact the site administrator for help");
+                    Msg.error("Sorry, for some reason we couldnt mark your module as being complete. Maybe you could try again, or contact the site administrator for help");
                 }
             }
         },
         error: function(response) {
             ajaxLoadingOff();
-            alert("Error!", "There was an error saving your progress. Please try again and if you still have problems contact the site administrator");
+            Msg.error("Error!", "There was an error saving your progress. Please try again and if you still have problems contact the site administrator");
         }
     });
 }
@@ -608,7 +626,7 @@ function showCompletedMessage() {
             showModal(modal);
         },
         error: function(resp) {
-            alert("Your module has been completed successfully, but there was a problem displaying the congratulations message.");
+            Msg.error("Your module has been completed successfully, but there was a problem displaying the congratulations message.");
             window.location = "/dashboard";
         }
     });
@@ -617,7 +635,7 @@ function showCompletedMessage() {
 function currentPageIndex() {
     var pages = $(".pages a.modPage");
     //flog("pages", pages, "active=", pages.filter(".active") );    
-    var current = pages.filter(".active").attr("href");    
+    var current = pages.filter(".active").attr("href");
     var currentIndex = 0;
     var all = pages;
     currentIndex = all.length - 1; // default to finish, in case not found
@@ -722,7 +740,7 @@ function initModalLinks() {
         var target = $(e.target);
         var id = target.attr("href");
         var title = target.text();
-        if( title.length > 50 ) {
+        if (title.length > 50) {
             title = title.substring(0, 50);
         }
         var div = $(id);
@@ -773,7 +791,7 @@ function checkSubmit(e) {
  * messages
  */
 function isQuizComplete(e) {
-    var quiz = $("form.quiz");    
+    var quiz = $("form.quiz");
     flog("isQuizComplete", quiz);
     if (quiz.length === 0) {
         flog("Quiz is empty, so is complete");
@@ -848,7 +866,7 @@ function isQuizComplete(e) {
                     //                    }
                 } else {
                     flog('quiz validated returned false', response);
-                    alert("Please check your answers");
+                    Msg.error("Please check your answers");
                     $.each(response.fieldMessages, function(i, n) {
                         var inp = quiz.find("li." + n.field);
                         inp.addClass("error");
@@ -869,5 +887,5 @@ function isQuizComplete(e) {
 }
 
 function showApology(operation) {
-    alert("Oh, oops. I'm really, really, sorry, but I couldnt " + operation + " because of some computer-not-behaving thing. Perhaps check your internet connection? If it still doesnt work it would be super nice if you could tell us from the contact page and we'll sort it out ASAP - thanks!");
+    Msg.error("Oh, oops. I'm really, really, sorry, but I couldnt " + operation + " because of some computer-not-behaving thing. Perhaps check your internet connection? If it still doesnt work it would be super nice if you could tell us from the contact page and we'll sort it out ASAP - thanks!");
 }

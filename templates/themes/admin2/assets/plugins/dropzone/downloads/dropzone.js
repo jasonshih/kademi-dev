@@ -1650,7 +1650,8 @@ require.register("dropzone/lib/dropzone.js", function(exports, require, module){
   if (typeof jQuery !== "undefined" && jQuery !== null) {
     jQuery.fn.dropzone = function(options) {
       return this.each(function() {
-        return new Dropzone(this, options);
+        var dropzone = new Dropzone(this, options);
+        $(this).data('dropzone', dropzone);
       });
     };
   }

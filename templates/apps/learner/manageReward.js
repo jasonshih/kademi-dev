@@ -4,10 +4,10 @@ function initEditReward(quiz) {
         $("form.manageRewardForm").forms({
             callback: function(resp) {
                 flog("done", resp);
-                alert("Saved ok");
+                Msg.success("Saved ok");
             },
             error: function() {
-                alert("Some information is not valid. Please check the reward details");
+                Msg.error("Some information is not valid. Please check the reward details");
             }
         });
 
@@ -107,12 +107,12 @@ function setGroupRecipient(name, isRecip) {
                     }
                 } else {
                     flog("error", data);
-                    alert("Sorry, couldnt save " + data);
+                    Msg.error("Sorry, couldnt save " + data);
                 }
             },
             error: function(resp) {
                 flog("error", resp);
-                alert("Sorry, couldnt save - " + resp);
+                Msg.error("Sorry, couldnt save - " + resp);
             }
         });
     } catch (e) {
@@ -175,12 +175,13 @@ function initController() {
         e.preventDefault();
         var link = $(e.target).closest("a");
         var href = link.attr("href");
+
         confirmDelete(href, href, function() {
-            flog("remoe it", $(this).closest("li"));
+            flog("remove it");
+            link.closest("tr").remove();
             link.closest("li").remove();
+            Msg.success('Reward is deleted!');
         });
-        //$(this).parent().parent().remove();
-        //stripList();
     });
 }
 

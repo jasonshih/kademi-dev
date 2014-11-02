@@ -1,49 +1,89 @@
 function initManagePost() {
-	var table = $('.table');
-	var reportsWrapper = $('#reports');
-	var postsWrapper = $('#posts');
-	
-	table.on('click', '.btn-edit-post', function (e) {
-		e.preventDefault();
-		
-		var btn = $(this);
-		var id = btn.attr('href');
-		var divPost = btn.closest('tr');
-		
-		showEditPost(id, divPost);
-	});
+    var table = $('.posts-table');
+    var reportsWrapper = $('#reports');
+    var postsWrapper = $('#posts');
 
-	postsWrapper.on('click', '.btn-delete-post', function(e) {
+    table.on('click', '.btn-edit-post', function(e) {
         e.preventDefault();
 
-		var btn = $(this);
-		var id = btn.attr('href');
-		var divPost = btn.closest('tr');
+        var btn = $(this);
+        var id = btn.attr('href');
+        var divPost = btn.closest('tr');
+
+        showEditPost(id, divPost);
+    });
+
+    table.on("click", ".vote-up", function(e) {
+        e.preventDefault();
+        var row = $(e.target).closest("tr");
+        var id = row.data("id");
+        votePost(id, 1, row);
+    });
+
+    table.on("click", ".vote-down", function(e) {
+        e.preventDefault();
+        var row = $(e.target).closest("tr");
+        var id = row.data("id");
+        votePost(id, -1, row);
+    });
+
+    jQuery('abbr.timeago').timeago();
+
+    postsWrapper.on('click', '.btn-delete-post', function(e) {
+        e.preventDefault();
+
+        var btn = $(this);
+        var id = btn.attr('href');
+        var divPost = btn.closest('tr');
 
         confirmDeletePost(id, divPost);
     });
 
-	reportsWrapper.on('click', '.btn-dismiss-report', function(e) {
+    reportsWrapper.on('click', '.btn-dismiss-report', function(e) {
         e.preventDefault();
 
-	    var btn = $(this);
-	    var id = btn.attr('href');
-	    var divPost = btn.closest('tr');
+        var btn = $(this);
+        var id = btn.attr('href');
+        var divPost = btn.closest('tr');
 
         dismissReport(id, divPost);
     });
 
-	reportsWrapper.on('click', '.btn-delete-report', function(e) {
+    reportsWrapper.on('click', '.btn-delete-report', function(e) {
         e.preventDefault();
 
-		var btn = $(this);
-		var id = btn.attr('href');
-		var divPost = btn.closest('tr');
+        var btn = $(this);
+        var id = btn.attr('href');
+        var divPost = btn.closest('tr');
 
         deleteReportedPost(id, divPost);
     });
+}
 
-    jQuery('abbr.timeago').timeago();
+function votePost(postId, count, row) {
+    log('votePost', postId, count, row);
+    $.ajax({
+        type: 'POST',
+        url: window.location.pathname,
+        dataType: 'json',
+        data: {
+            voteId: postId,
+            count: count
+        },
+        success: function(data) {
+            log('response', data);
+            row.reloadFragment({
+                whenComplete: function(){
+                    row.find("abbr.timeago").timeago();
+                }
+            });
+            Msg.info("Vote applied");
+        },
+        error: function(resp) {
+            log('error', resp);
+            Msg.error('Sorry, couldnt vote on the post. Do you have permissions?');
+        }
+    });    
 }
 
 function deleteReportedPost(reportId, postRow) {
@@ -59,7 +99,7 @@ function deleteReportedPost(reportId, postRow) {
         },
         error: function(resp) {
             log('error', resp);
-            alert('Sorry, couldnt delete the post. Do you have permissions?');
+            Msg.error('Sorry, couldnt delete the post. Do you have permissions?');
         }
     });
 }
@@ -77,7 +117,7 @@ function dismissReport(reportId, postRow) {
         },
         error: function(resp) {
             log('error', resp);
-            alert('Sorry, couldnt delete the post. Do you have permissions?');
+            Msg.error('Sorry, couldnt delete the post. Do you have permissions?');
         }
     });
 }
@@ -96,25 +136,25 @@ function confirmDeletePost(postId, postRow) {
             },
             error: function(resp) {
                 log('error', resp);
-                alert('Sorry, couldnt delete the post. Do you have permissions?');
+                Msg.error('Sorry, couldnt delete the post. Do you have permissions?');
             }
         });
     }
 }
 
 function showEditPost(postId, postRow) {
-	var modal = $('#modal-edit-post');
+    var modal = $('#modal-edit-post');
 
     log('edit', postId, postRow);
-    var currentText = postRow.find('td:first').text();
+    var currentText = postRow.find('.post-content').text();
 
     modal.find('textarea').val(currentText);
-	modal.off('click').find('.btn-save-post').on('click', function(e) {
-		e.preventDefault();
+    modal.off('click').find('.btn-save-post').on('click', function(e) {
+        e.preventDefault();
 
-		var newText = modal.find('textarea').val();
-		updatePost(postId, newText, postRow);
-	});
+        var newText = modal.find('textarea').val();
+        updatePost(postId, newText, postRow);
+    });
 
     modal.modal('show');
 }
@@ -130,17 +170,17 @@ function updatePost(postId, newText, postRow) {
         },
         success: function(data) {
             log('response', data);
-            postRow.find('td:first').text(newText);
+            postRow.find('.post-content').text(newText);
 
             postRow.css('opacity', '0');
             postRow.animate({opacity: 0}, 300, function() {
                 postRow.animate({opacity: 1}, 300);
             });
-	        $('#modal-edit-post').modal('hide');
+            $('#modal-edit-post').modal('hide');
         },
         error: function(resp) {
             log('error', resp);
-            alert('Sorry, couldnt update the post. Do you have permissions?');
+            Msg.error('Sorry, couldnt update the post. Do you have permissions?');
         }
     });
 }

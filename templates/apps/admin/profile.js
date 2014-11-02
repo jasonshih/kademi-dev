@@ -4,11 +4,7 @@ function initProfile() {
     initNewMembershipForm();
     $("form").not("#modal-membership form").forms({
         callback: function(resp, form) {                        
-            confirmMessage = form.closest("div").find("p.confirm");                        
-            flog("done", confirmMessage);
-            confirmMessage.show(500, function() {
-                confirmMessage.hide(5000);
-            })
+            Msg.info("Done");
         }
     });
 
@@ -52,6 +48,7 @@ function initNewMembershipForm() {
             flog("done new membership", resp);
             $("#modal-membership").modal('hide');
             reloadMemberships();
+            Msg.info("Saved membership");
         }
     });   
 }
@@ -68,7 +65,7 @@ function reloadMemberships() {
             orig.replaceWith($fragment);
         },
         error: function(resp) {
-            alert("error: " + resp);
+            Msg.error("error: " + resp);
         }
     });      
 }

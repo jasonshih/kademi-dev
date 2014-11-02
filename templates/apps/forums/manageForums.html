@@ -1,7 +1,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title>$view.title</title>
-        <link href="manageForum.css" rel="stylesheet" type="text/css" />
+        <title>$page.title</title>
+        <link href="manageForum.css" rel="stylesheet" type="text/css"/>
         <script type="text/javascript" src="manageForum.js">//</script>
     </head>
     <body class="manageForum">
@@ -30,6 +30,7 @@
 	            <a class="btn btn-sm btn-success btn-add-forum" href=""><i class="fa fa-plus"></i> Add forum</a>
             </p>
 
+            <div id="forum-wrapper">
 	        #foreach($forum in $page.children)
 		        <div class="panel panel-default forum" data-name="$forum.name" data-title="$forum.title" data-notes="$!forum.notes">
 			        <div class="panel-heading">
@@ -40,9 +41,9 @@
 						        <span class="caret"></span>
 					        </button>
 					        <ul role="menu" class="dropdown-menu">
-						        <li><a href="#" class="btn-edit-forum"><i class="fa fa-edit"></i> Edit</a></li>
+						        <li><a href="$forum.name" class="btn-edit-forum"><i class="fa fa-edit"></i> Edit</a></li>
 						        <li class="divider"></li>
-						        <li><a href="#" class="btn-delete-forum"><i class="fa fa-times"></i> Delete</a></li>
+						        <li><a href="$forum.name" class="btn-delete-forum"><i class="fa fa-times"></i> Delete</a></li>
 					        </ul>
 				        </div>
 			        </div>
@@ -60,6 +61,7 @@
 		        </div>
 	        #end
         #end
+        </div>
 
         <div id="modal-forum" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
 	        <div class="modal-header">
@@ -78,7 +80,7 @@
 			        <div class="form-group">
 				        <label class="control-label col-md-3" for="title">Title</label>
 				        <div class="col-md-8">
-					        <input type="text" name="title" id="title" value="" class="form-control" maxlength="" placeholder="Forum title" />
+					        <input type="text" name="title" id="title" value="" class="required simpleChars form-control" maxlength="" placeholder="Forum title" />
 				        </div>
 			        </div>
 			        <div class="form-group">
@@ -96,7 +98,7 @@
         </div>
 
         <script type="text/javascript">
-            Bob.onDOMReady(function() {
+            $(function () {
                 initManageForum();
             });
         </script>

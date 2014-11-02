@@ -23,6 +23,7 @@ fieldset hr {
 
 .modal-body .memberships-list .membership {
 	display: block;
+    overflow: hidden;
 }
 
 .modal-body .memberships-list .membership label {

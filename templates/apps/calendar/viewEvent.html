@@ -10,10 +10,14 @@
         </style>
     </head>    
     <body class="calendar-event add-container">        
-        <div class="row">
-                       
+        <ol class="breadcrumb">
+            <li><a href="../">Calendars</a></li>
+            <li><a href="$page.parent.href">$page.parent.title</a></li>
+        </ol>
+        <div class="row">                       
             <div class="col-md-8">
-                <h3>$page.title</h3>
+                <h3>$page.title</h3>                
+
                 <div class="calendar-event-byline">
                     #if( $page.organisor )
                     <small class="author">By <a href="/users/$event.organisor.name/public">$page.organisor.formattedName</a></small>
@@ -50,14 +54,14 @@
                                 <img alt="" src="/templates/apps/user/profile.png">
                                 #end
                             </a>
-                            <a href="$profile.href" class="user">$profile.name</a>                        
+                            <a href="$profile.href" class="user" title="$profile.name">$profile.name</a>                        
                         </li>
                         #end
                     </ul>
                 </div>                
                 #end
             </div>
-            
+
             <div class="col-md-4">
 
                 #if( $page.allowRegistration )
@@ -84,16 +88,20 @@
                 </div>
 
                 <div class="well well-rsvp rsvp-form">
-                    <form method="POST" action="$page.name" class="form-horizontal rsvp" role="form">
-                        <button class="btn btn-sm btn-primary guests-add pull-right">Add a guest</button>
+                    <form method="POST" action="$page.name" class="form-horizontal rsvp" role="form">                        
                         <div class="radio">                        
                             <label for="rsvp-yes" >
                                 <input type="radio" name="rsvp" value="ACCEPTED" id="rsvp-yes" />
                                 Yes, I'm coming                                
                             </label>
                         </div>
+                        <!--
+                        <input type="text" name="firstName" value="$!profile.firstName"/>
+                        -->
+
+                        <button class="btn btn-sm btn-primary guests-add pull-right">Add a guest</button>
                         #if( $page.allowGuests )
-                        <div class="guests">
+                        <div class="guests" style="clear: both">
                             <br/>
                             <p class='guests-intro'>I'm bringing the following guests:</p>
                             <ul class="guests">
@@ -104,9 +112,9 @@
                                     #if( $guest.orgName )
                                     of $guest.orgName
                                     #end
-                                    <input type="hidden" name="guestFirstName" value="$guest.firstName"/>
-                                    <input type="hidden" name="guestSurname" value="$guest.surname"/>
-                                    <input type="hidden" name="guestEmail" value="$guest.email"/>                                                                            
+                                    <input type="hidden" name="guestFirstName" value="$!guest.firstName"/>
+                                    <input type="hidden" name="guestSurname" value="$!guest.surname"/>
+                                    <input type="hidden" name="guestEmail" value="$!guest.email"/>                                                                            
                                     <input type="hidden" name="guestOrgName" value="$!guest.orgName"/>
                                 </li>
                                 #end
@@ -125,7 +133,10 @@
                         <div class="form-group">
                             <div class="col-sm-10">
                                 <br/>
-                                <button type='submit' class="btn btn-sm btn-success">Submit</button>
+                                <button type='submit' class="btn btn-sm btn-success">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                    Submit attendance
+                                </button>
                             </div>
                         </div>
                     </form>
@@ -185,7 +196,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="newGuestEmail">Email address</label>
-                                <input type="email" class="form-control" required='true' id="newGuestEmail" placeholder="Enter email">
+                                <input type="email" class="form-control" id="newGuestEmail" placeholder="Enter email">
                             </div>
                             <div class="form-group">
                                 <label for="newGuestOrg">Organisation</label>

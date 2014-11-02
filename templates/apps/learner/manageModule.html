@@ -10,10 +10,10 @@
         <script type="text/javascript" src="/static/js/jquery.timeago.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-image-select.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-tree.js">//</script>
-        <script type="text/javascript" src="manageModule.js">//</script>
         <script type="text/javascript" src="/static/quiz/quiz.js">//</script>
         <script type="text/javascript" src="/static/js/managePublishing.js">//</script>
         <script type="text/javascript" src="/templates/themes/admin/prompt.js">//</script>
+        <script type="text/javascript" src="manageModule.js">//</script>
     </head>
     <body class="manageModulePages">
         #set($currentBranch = $page.closest("branch"))
@@ -111,12 +111,12 @@
         #if($page.module)
         <div class="tabbable">
             <ul class="nav nav-tabs tab-bricky">
-                <li><a data-toggle="tab" href="#list">Module pages</a></li>
+                <li><a data-toggle="tab" href="#files">Module pages</a></li>
                 <li><a data-toggle="tab" href="#details">Module details</a></li>
             </ul>
             <div class="tab-content">
                 <!-- Start content of Module list tab -->
-                <div id="list" class="tab-pane">
+                <div id="files" class="tab-pane">
                     <div class="btn-group btn-group-sm pull-right">
                         <a title="Add quiz" href="#" class="btn btn-sm btn-success btn-quiz-page"><i class="clip-question"></i></a>
                         <a title="Add page" href="#" class="btn btn-sm btn-success btn-add-page"><i class="fa fa-plus"></i></a>
@@ -143,14 +143,17 @@
 	                                    <i class="glyphicon glyphicon-sort"></i>
 	                                </button>
 	                                <div class="btn-group btn-group-sm">
-	                                    <a role="button" href="${modulePage.name}" class="btn btn-sm btn-edit-page btn-info">
-	                                        <i class="fa fa-edit"></i> Edit
-	                                    </a>
+                                        <a role="button" href="?htmleditor=${modulePage.name}" target="_blank" class="btn btn-sm btn-info" title="Edit page">
+                                            <i class="fa fa-edit"></i> 
+                                            Edit
+                                        </a>
+	                                    
 	                                    <button type="button" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown">
 	                                        <span class="caret"></span>
 	                                    </button>
 	                                    <ul class="dropdown-menu pull-right">
-	                                        <li><a href="${modulePage.name}" class="btn-edit-page" title="Edit page"><i class="fa fa-edit"></i> Edit</a></li>
+                                            <li><a href="${modulePage.name}" class="btn-edit-page">Edit in modal</a>	                                        
+                                            <li><a href="texteditor?fileName=${modulePage.name}" target="_blank" title="Edit as text"><i class="fa fa-edit"></i> Edit as text</a></li>
 	                                        <li><a href="${modulePage.name}?goto" target="_blank" title="View page"><i class="fa fa-eye"></i> View</a></li>
 	                                        <li class="divider"></li>
 	                                        <li><a href="${modulePage.path}" class="btn-delete-page" title="Delete page"><i class="fa fa-times"></i> Delete</a></li>
@@ -229,7 +232,7 @@
                             </label>
                             <div class="col-md-10">
                                 <button class="btn btn-warning btn-sm btn-add-cert #if($page.actions('certificate') == '[null,null,]')btn-add-first#end" type="button" title="Add certificate"><i class="fa fa-plus"></i> <span>Add</span></button>
-                                <div class="certificates-wrapper #if($page.actions('certificate') == '[null,null,]')hide#end">
+                                <div class="certificates-wrapper #if($page.actions('certificate') == '[null,null,]') hide #end">
                                     #foreach($action in $page.actions("certificate"))
                                     <div class="certificate clearfix">
                                         <div class="input-group input-group-sm">
@@ -261,7 +264,7 @@
                             </label>
                             <div class="col-md-10">
                                 <button class="btn btn-warning btn-sm btn-add-reward #if($page.actions('reward') == '[null,null,]')btn-add-first#end" type="button" title="Add reward"><i class="fa fa-plus"></i> <span>Add</span></button>
-                                <div class="rewards-wrapper #if($page.actions('reward') == '[null,null,]')hide#end">
+                                <div class="rewards-wrapper #if($page.actions('reward') == '[null,null,]') hide #end">
                                     #foreach($action in $page.actions("reward"))
                                     <div class="reward clearfix">
                                         <div class="input-group input-group-sm">
@@ -305,6 +308,7 @@
             <div class="modal-body">
                 <form method="POST" action="." class="form-horizontal">
                     <input type="hidden" name="pageName" />
+                    <input type="hidden" name="order" />
                     <input type="hidden" name="template" value="learner/modulePage" />
                     <div class="form-group">
                         <label for="pageTitle" class="control-label col-md-3">Enter page title</label>
@@ -334,6 +338,7 @@
             <div class="modal-body">
                 <form method="POST" action="." class="form-horizontal">
                     <input type="hidden" name="pageName" />
+                    <input type="hidden" name="order" />
                     <input type="hidden" name="template" value="learner/quizPage" />
                     <div class="form-group">
                         <label for="quizTitle" class="control-label col-md-2">Enter quiz title</label>
@@ -363,7 +368,7 @@
 
         <script type="text/javascript" >
             var themePath = "${page.themePath}";
-            Bob.onDOMReady(function() {
+            $(function () {
                 initManageModule("../../..", themePath);
             });
         </script>

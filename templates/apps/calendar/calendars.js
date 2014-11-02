@@ -56,6 +56,11 @@ function initViewEvent() {
         }
         closeModals();
         checkGuestList(guestList);
+        if( Msg ) {
+            Msg.info("Thank you for registering");
+        } else {
+            alert("Thank you")
+        }
     });
 }
 

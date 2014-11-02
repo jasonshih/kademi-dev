@@ -133,7 +133,7 @@ function showImportFromUrl() {
             },
             error: function(resp) {
                 log("error", resp);
-                alert("err");
+                Msg.error('err');
             }
         });
     }

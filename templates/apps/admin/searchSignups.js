@@ -32,7 +32,7 @@ function initAddUsersToGroup() {
         log('btn-add-group', node, node.is(':checked'));
         var checkBoxes = $('#table-members').find('tbody td input[name=toAddId]:checked');
         if (checkBoxes.length == 0) {
-            alert('Please select the users you want to remove by clicking the checkboxs to the right');
+            Msg.error('Please select the users you want to remove by clicking the checkboxs to the right');
         } else {
             var groupName = $('#groupSelect').val();
             if (confirm('Are you sure you want to add ' + checkBoxes.length + ' users to group ' + groupName + '?')) {
@@ -49,16 +49,16 @@ function doAddUsers(checkBoxes, groupName) {
         dataType: 'json',
         url: '?group=' + groupName,
         success: function(data) {
-            log('success', data)
+            log('success', data);
             if (data.status) {
-                alert('Added members ok');
-                window.location.reload();
+                Msg.success('Added members ok');
+                $('#table-members').reloadFragment();
             } else {
-                alert('There was a problem adding users. Please try again and contact the administrator if you still have problems');
+                Msg.error('There was a problem adding users. Please try again and contact the administrator if you still have problems');
             }
         },
         error: function(resp) {
-            alert('An error occured. Please try again');
+            Msg.error('An error occured. Please try again');
         }
     });
 }          

@@ -34,13 +34,14 @@
 			#if( $programs.isEmpty() )
 				<p>No programs have been created yet. <a href="../manageCourses" class="btn btn-sm btn-primary">Add a program</a></p>
 			#else
+            <p>Protip: This shows programs and courses for your most recently edited website versions.</p>
 				<div class="article-wrapper">
 					#foreach($program in $programs)
 						#set($website = $program.closest("website"))
 						<article class="$program.name">
 							<span class="article-name">
-								<a href="$program.href">$website.name/$program.name</a>
-								<span>$program.title</span>
+								<a href="$program.href" title="$website.name/$program.name">$website.name/$program.name</a>
+								<span>$program.title ( $program.parent.parent.name )</span>
 							</span>
 							<aside class="article-more-infor">
 								<form>

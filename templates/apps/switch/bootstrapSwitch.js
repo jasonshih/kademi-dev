@@ -249,6 +249,6 @@
   };
 }(jQuery);
 
-Bob.onDOMReady(function () {
+$(function () {
   $('.switch')['bootstrapSwitch']();
 });

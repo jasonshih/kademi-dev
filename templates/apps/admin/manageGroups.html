@@ -4,79 +4,84 @@
         <link href="manageGroup.css" rel="stylesheet" type="text/css" />
         <link href="/templates/apps/learner/groupsAdminPortlet.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="manageGroup.js">//</script>
+        <script type="text/javascript" src="/static/js/jquery.forms.js">//</script>
         <script type="text/javascript" src="/templates/apps/learner/groupsAdminPortlet.js">//</script>
     </head>
     <body class="manageModulePages">
         <p><a class="btn btn-sm btn-success btn-add-group" href="#"><i class="fa fa-plus"></i> Add new group</a></p>
-        #foreach($group in $page.children)
-        <div class="panel panel-default group">
-            <div class="panel-heading">
-                <i class="clip-users"></i>
-                <span class="group-name">$group.name</span>
-                <div class="btn-group btn-group-xs">
-                    <button data-toggle="dropdown" class="btn btn-sm btn-default btn-squared dropdown-toggle" type="button">
-                        <span class="caret"></span>
-                    </button>
-                    <ul role="menu" class="dropdown-menu">
-                        <li><a href="" class="btn-rename-group">Rename this group</a></li>
-                        <li><a href="$group.name/members" class="btn-view-group-member">View members</a></li>
-                        <li><a href="" class="btn-copy-member">Copy members from group</a></li>
-                        <li class="divider"></li>
-                        <li><a href="" class="btn-delete-group">Delete this group</a></li>
-                    </ul>
+        <div id="group-wrapper" class="panel-group">
+            #foreach($group in $page.children)
+            <div class="panel panel-default group">
+                <div class="panel-heading" data-toggle="collapse" data-parent="#group-wrapper" data-target="#group-${foreach.count}">
+                    <i class="clip-users"></i>
+                    <span class="group-name clickable">$group.name</span>
+                    <div class="btn-group btn-group-xs">
+                        <button data-toggle="dropdown" class="btn btn-sm btn-default btn-squared dropdown-toggle" type="button">
+                            <span class="caret"></span>
+                        </button>
+                        <ul role="menu" class="dropdown-menu">
+                            <li><a href="" class="btn-rename-group">Rename this group</a></li>
+                            <li><a href="$group.name/members" class="btn-view-group-member">View members</a></li>
+                            <li><a href="" class="btn-copy-member">Copy members from group</a></li>
+                            <li class="divider"></li>
+                            <li><a href="" class="btn-delete-group">Delete this group</a></li>
+                        </ul>
+                    </div>
+                    <div class="panel-tools">
+                        <div class="btn-group">
+                            <a href="$group.name" class="btn btn-primary btn-sm">Registration: $group.regoModeText</a>
+                            <a href="$group.name/members"class="btn btn-info btn-sm">$group.numMembers Members</a>
+                        </div>
+                    </div>
                 </div>
-                <div class="panel-tools">
-                    <div class="btn-group">
-                        <a href="$group.name" class="btn btn-primary btn-sm">Registration: $group.regoModeText</a>
-                        <a href="$group.name/members"class="btn btn-info btn-sm">$group.numMembers Members</a>
+                <div id="group-${foreach.count}" class="collapse">
+                    <div class="panel-body">
+                        #portlets("groupDetails")
+
+                        <h4>Roles</h4>
+                        <hr class="hr-sm" />
+                        <p class="role-action">
+                            <a href="#modal-edit-roles" data-toggle="modal" class="btn btn-sm btn-success btn-add-role-group pull-right"><i class="fa fa-plus"></i> Add roles</a>
+                        </p>
+                        <div class="blocks-wrapper roles-wrapper">
+                            #foreach($role in $group.children.ofType.role)
+                            <span class="block role">
+                                <span class="block-name">$role.title</span>
+                                <a class="btn btn-xs btn-danger btn-remove-role" href="$role.href" title="Remove this role"><i class="fa fa-times"></i></a>
+                            </span>
+                            #end
+                        </div>
+
+                        <h4>Website access</h4>
+                        <hr class="hr-sm" />
+                        <div class="article-wrapper showed-action websites-list">
+                            #set($signups = $group.signupPages)
+                            #if( $signups.isEmpty() )
+                            <p>This user group does not have access to any websites</p>
+                            #else
+                            #foreach($p in $signups.keySet())
+                            <article>
+                                <span class="article-name">
+                                    <a target="_blank" href="http://${p}${formatter.portString}"><b>$p</b></a>
+                                </span>
+                                #if( $group.publicSignup )
+                                <aside class="article-action">
+                                    <a target="_blank" href="$signups.get($p)" class="btn btn-sm btn-primary">Signup page</a>
+                                </aside>
+                                #else
+                                <aside class="article-more-infor">
+                                    No signup page
+                                </aside>
+                                #end
+                            </article>
+                            #end
+                            #end
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="panel-body">
-                #portlets("groupDetails")
-
-                <h4>Roles</h4>
-                <hr class="hr-sm" />
-                <p class="role-action">
-                    <a href="#modal-edit-roles" data-toggle="modal" class="btn btn-sm btn-success btn-add-role-group pull-right"><i class="fa fa-plus"></i> Add roles</a>
-                </p>                
-                <div class="blocks-wrapper roles-wrapper">
-                    #foreach($role in $group.children.ofType.role)
-                    <span class="block role">
-                        <span class="block-name">$role.title</span>
-                        <a class="btn btn-xs btn-danger btn-remove-role" href="$role.href" title="Remove this role"><i class="fa fa-times"></i></a>
-                    </span>
-                    #end
-                </div>
-
-                <h4>Website access</h4>
-                <hr class="hr-sm" />
-                <div class="article-wrapper showed-action websites-list">
-                    #set($signups = $group.signupPages)
-                    #if( $signups.isEmpty() )
-                    <p>This user group does not have access to any websites</p>
-                    #else
-                    #foreach($p in $signups.keySet())
-                    <article>
-                        <span class="article-name">
-                            <a target="_blank" href="http://${p}${formatter.portString}"><b>$p</b></a>
-                        </span>
-                        #if( $group.publicSignup )
-                        <aside class="article-action">
-                            <a target="_blank" href="$signups.get($p)" class="btn btn-sm btn-primary">Signup page</a>
-                        </aside>
-                        #else
-                        <aside class="article-more-infor">
-                            No signup page
-                        </aside>
-                        #end
-                    </article>
-                    #end
-                    #end
-                </div>
-            </div>
+            #end
         </div>
-        #end
 
         <div class="modal modal-sm fade" aria-hidden="true" tabindex="-1" id="modal-edit-roles">
             <div class="modal-header">
@@ -130,20 +135,23 @@
                 <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
                 <h4 class="modal-title">Edit Group</h4>
             </div>
-            <div class="modal-body">
-                <div class="form-horizontal">
-                    <div class="form-group">
-                        <label class="label-control col-md-4" for="name">Group name</label>
-                        <div class="col-md-8">
-                            <input class="form-control" type="text" name="name" id="name" value="" placeholder="Group name" />
+            <form class="form-horizontal" action="" method="post">            
+                <div class="modal-body">
+                    <p>Please use simple characters only, like letters and numbers, and do not use spaces and punctuation etc.</p>
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="label-control col-md-4" for="name">Group name</label>
+                            <div class="col-md-8">
+                                <input class="form-control reallySimpleChars" type="text" name="name" id="name" value="" placeholder="Group name" />
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                <button class="btn btn-sm btn-primary btn-save-group" type="button">Save</button>
-            </div>
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                    <button class="btn btn-sm btn-primary btn-save-group" type="submit">Save</button>
+                </div>
+            </form>                    
         </div>
 
         <div id="modal-rego-mode" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
@@ -188,7 +196,7 @@
         </div>
 
         <script type="text/javascript" >
-            Bob.onDOMReady(function() {
+            $(function() {
                 initGroupAdminPortlet();
                 initManageGroup();
             });

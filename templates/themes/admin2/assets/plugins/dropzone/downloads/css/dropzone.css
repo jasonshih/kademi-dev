@@ -191,6 +191,15 @@
 .dropzone .dz-default.dz-message span {
   display: none;
 }
+@media (max-width: 499px) {
+    .dropzone .dz-default.dz-message {
+        background-position: 0 -123px;
+        width: 268px;
+        margin-left: -134px;
+        height: 174px;
+        margin-top: -87px;
+    }
+}
 .dropzone.dz-square .dz-default.dz-message {
   background-position: 0 -123px;
   width: 268px;

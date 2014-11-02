@@ -42,7 +42,7 @@ function initUploadUsers() {
 	var resultUploadCsv = modalUploadCsv.find('.upload-results');
 	$("#do-upload-csv").mupload({
 		buttonText: "<i class=\"clip-folder\"></i> Upload spreadsheet",
-		url: "users.csv",
+		url: "users.csv?insertMode=true",
 		useJsonPut: false,
 		oncomplete: function (data, name, href) {
 			flog("oncomplete:", data.result.data, name, href);
@@ -51,7 +51,7 @@ function initUploadUsers() {
 			resultUploadCsv.find('.num-unmatched').text(data.result.data.unmatched.length);
 			showUnmatched(resultUploadCsv, data.result.data.unmatched);
 			resultUploadCsv.show();
-			alert("Upload completed. Please review any unmatched members below, or refresh the page to see the updated list of members");
+			Msg.success("Upload completed. Please review any unmatched members below, or refresh the page to see the updated list of members");
 		}
 	});
 
@@ -60,8 +60,10 @@ function initUploadUsers() {
 		flog("click", e.target);
 		if ($(e.target).is(":checked")) {
 			formUploadCsv.attr("action", "users.csv?insertMode=true");
+            flog("allow insert:",formUploadCsv );
 		} else {
 			formUploadCsv.attr("action", "users.csv");
+            flog("do not allow insert:",formUploadCsv,formUploadCsv.attr("action") );
 		}
 	});
 }
@@ -105,7 +107,7 @@ function doSearch() {
 			$("#table-users").replaceWith($fragment);
 		},
 		error: function (resp) {
-			alert("An error occured doing the user search. Please check your internet connection and try again");
+			Msg.error("An error occured doing the user search. Please check your internet connection and try again");
 		}
 	});
 }
@@ -123,12 +125,12 @@ function doUpdateUserId(newUserId) {
 			if (data.status) {
 				window.location.reload();
 			} else {
-				alert("Could not change the user's ID: " + data.messages);
+				Msg.error("Could not change the user's ID: " + data.messages);
 			}
 
 		},
 		error: function (resp) {
-			alert("An error occured attempting to update the userID. Please check your internet connection");
+			Msg.error("An error occured attempting to update the userID. Please check your internet connection");
 		}
 	});
 }
@@ -228,7 +230,9 @@ function initNewUserForm() {
 			flog("done new user", resp);
 			if (resp.nextHref) {
 				window.location.href = resp.nextHref;
-			}
+			} else {
+                Msg.info('Saved');
+            }
 			modal.modal('hide');
 		}
 	});
@@ -275,7 +279,7 @@ function doOrgSearch() {
 			flog("frag", $fragment);
 		},
 		error: function (resp) {
-			alert("An error occurred searching for organisations");
+			Msg.error("An error occurred searching for organisations");
 		}
 	});
 }
@@ -286,7 +290,7 @@ function initRemoveUsers() {
 		flog("removeUsers", node, node.is(":checked"));
 		var checkBoxes = $('#table-users').find('tbody input[name=toRemoveId]:checked');
 		if (checkBoxes.length == 0) {
-			alert("Please select the users you want to remove by clicking the checkboxs to the right");
+			Msg.error("Please select the users you want to remove by clicking the checkboxs to the right");
 		} else {
 			if (confirm("Are you sure you want to remove " + checkBoxes.length + " users?")) {
 				doRemoveUsers(checkBoxes);
@@ -303,7 +307,7 @@ function initAddToGroup() {
 		flog("addToGroup", node, node.is(":checked"));
 		var checkBoxes = $('#table-users').find('tbody input[name=toRemoveId]').filter(':checked');
 		if (checkBoxes.length === 0) {
-			alert("Please select the users you want to add by clicking the checkboxs to the right");
+			Msg.error("Please select the users you want to add by clicking the checkboxs to the right");
 		} else {
 			modal.modal('show');
 		}
@@ -329,13 +333,13 @@ function doAddUsersToGroup(groupName, checkBoxes) {
 			$("#modal-add-to-group").modal('hide');
 			if (data.status) {
 				doSearch();
-				alert("Added users ok");
+				Msg.success("Added users ok");
 			} else {
-				alert("There was a problem adding users. Please try again and contact the administrator if you still have problems");
+				Msg.error("There was a problem adding users. Please try again and contact the administrator if you still have problems");
 			}
 		},
 		error: function (resp) {
-			alert("An error occurred adding users. You might not have permission to do this");
+			Msg.error("An error occurred adding users. You might not have permission to do this");
 		}
 	});
 }
@@ -350,13 +354,13 @@ function doRemoveUsers(checkBoxes) {
 			flog("success", data);
 			if (data.status) {
 				doSearch();
-				alert("Removed users ok");
+				Msg.success("Removed users ok");
 			} else {
-				alert("There was a problem removing users. Please try again and contact the administrator if you still have problems");
+				Msg.error("There was a problem removing users. Please try again and contact the administrator if you still have problems");
 			}
 		},
 		error: function (resp) {
-			alert("An error occurred removing users. You might not have permission to do this");
+			Msg.error("An error occurred removing users. You might not have permission to do this");
 		}
 	});
 }
@@ -392,7 +396,7 @@ function showLoginAs(profileId) {
 				.html(newList);
 		},
 		error: function (resp) {
-			alert("An error occured loading websites. Please try again");
+			Msg.error("An error occured loading websites. Please try again");
 		}
 	});
 }

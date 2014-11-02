@@ -10,7 +10,8 @@
                 oncomplete: function(data) {
                     flog("finished upload", data);
                 },
-                isInCkeditor: false
+                isInCkeditor: false,
+                isFullWidth: true
             }, options);
 
             flog("init milton uploads", container);
@@ -42,6 +43,10 @@
                 form.css("position: relative");
                 if (config.useDropzone) {
                     form.addClass("dropzone");
+
+                    if (config.isFullWidth) {
+                        form.addClass("dropzone-fullwidth");
+                    }
                 }
                 form.attr("id", config.id);
                 container.append(form);
@@ -64,8 +69,7 @@
                         maxFilesize: 500.0, // MB
                         addRemoveLinks: true,
                         parallelUploads: 1,
-                        uploadMultiple: false
-                        ,
+                        uploadMultiple: false,
                         init: function() {
                             this.on("success", function(file, resp) {
                                 flog("success1", resp);
@@ -113,7 +117,8 @@
                     }
 
                     flog("Now invoke dropzone plugin...", dzConfig);
-                    form.dropzone(dzConfig);
+                    var dropzone = form.dropzone(dzConfig);
+                    container.data('dropzone', form.data('dropzone'));
                     flog("Finished dropzone init", Dropzone);
                 });
             } else {
@@ -122,6 +127,7 @@
             }
 
             flog("done fileupload init");
+            return container;
         },
         initFallback: function (container, config, actionUrl) {
             container.addClass('fallback-upload');
@@ -134,7 +140,8 @@
                 flog("already have fallback css");
             }
 
-            $.getScriptOnce('/templates/themes/admin2/assets/plugins/jQuery-File-Upload/js/jquery.fileupload.js', function () {
+            $.getScriptOnce('/static/js/jquery-fileupload-9.5.2/js/jquery.iframe-transport.js');
+            $.getScriptOnce('/static/js/jquery-fileupload-9.5.2/js/jquery.fileupload.js', function () {
                 flog('All scripts for fallback are loaded!');
                 var buttonClass = config.isInCkeditor ? 'cke_dialog_ui_button cke_dialog_ui_button_ok' : 'btn btn-success';
                 var spanClass = config.isInCkeditor ? 'cke_dialog_ui_button' : '';
@@ -150,25 +157,26 @@
                 }
 
                 var button = $(
-                    '<button id="' + config.id + '" type="button" class="' + buttonClass + ' fileinput-button fallback-button">' +
+                    '<span id="' + config.id + '" type="button" class="' + buttonClass + ' fileinput-button fallback-button">' +
                         '<span class="' + spanClass + '">' + config.buttonText + '</span>' +
                         '<span class="fallback-progress"></span>' +
                         '<input type="file" name="files[]" data-url="' + actionUrl + '" />' +
-                    '</button>'
+                    '</span>'
                 );
 
                 container.append(button);
 
                 // Initialize the jQuery File Upload widget:
-                button.fileupload({
+                var fileUpload = button.fileupload({
                     url: actionUrl,
                     dataType: 'json',
                     done: function (e, data) {
                         button.find('.fallback-progress').hide();
+                        flog(data);
 
-                        var file = data.result[0];
+                        var file = data.files[0];
 
-                        config.oncomplete.call(this, file, file.originalName, file.href);
+                        config.oncomplete.call(this, data, file.name, file.href);
                     },
                     progressall: function (e, data) {
                         var progress = parseInt(data.loaded / data.total * 100, 10);
@@ -177,8 +185,13 @@
                             'width',
                             progress + '%'
                         );
+                    },
+                    fail: function (e, data) {
+                        alert("An error occured uploading because: " + data.errorThrown);
                     }
                 });
+
+                container.data('fileUpload', fileUpload);
             });
         },
         setUrl: function(url) {

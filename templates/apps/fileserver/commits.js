@@ -3,9 +3,11 @@ function initManageRepoHistory() {
 }
 
 function initEvents() {
+    var wrapper = $('#commit-wrapper');
+
 	$('abbr.timeago').timeago();
 
-	$('.btn-restore-repo').click(function (e) {
+    wrapper.on('click', '.btn-restore-repo', function (e) {
 		var node = $(e.target);
 		var hash = node.attr('rel');
 		confirmRevert(hash, null, {
@@ -13,7 +15,8 @@ function initEvents() {
 				return '.'
 			},
 			afterRevertFn: function () {
-				window.location.reload();
+                Msg.success('Reverted to ' + hash + '!');
+                wrapper.reloadFragment();
 			}
 		});
 	});
@@ -41,13 +44,14 @@ function setHash(link, newHash) {
 		success: function (data) {
 			log('done', data);
 			if (data.status) {
-				window.location.reload();
+                Msg.success('Reverted to ' + newHash + '!');
+                $('#commit-wrapper').reloadFragment();
 			} else {
-				alert('An error occured updating the branch: ' + data.messages);
+				Msg.error('An error occured updating the branch: ' + data.messages);
 			}
 		},
 		error: function (resp) {
-			alert('Sorry, couldnt update public access: ' + resp);
+			Msg.error('Sorry, couldnt update public access: ' + resp);
 		}
 	});
 }

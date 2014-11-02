@@ -45,7 +45,7 @@
             </table>
         </section>
         <script type="text/javascript">
-            Bob.onDOMReady(function () {
+            $(function () {
                 $("a.btn-create").click(function(e) {
 
                     var a = $(this);
@@ -70,12 +70,12 @@
                                 window.location.href = data.nextHref;
                             } else {
                                 log("error", data);
-                                alert("Sorry, couldnt create: " + data);
+                                Msg.error("Sorry, couldnt create: " + data);
                             }
                         },
                         error: function(resp) {
                             log("error", resp);
-                            alert("Sorry, couldnt save - " + resp);
+                            Msg.error("Sorry, couldnt save - " + resp);
                         }
                     });          
                 } catch(e) {

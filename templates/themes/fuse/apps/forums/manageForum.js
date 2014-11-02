@@ -189,7 +189,7 @@ function addForum() {
         },
         error: function(resp) {
             log("error", resp);
-            alert("err");
+            Msg.error('err');
         }
     });          
     
@@ -227,7 +227,7 @@ function addTopic(forumName) {
         },
         error: function(resp) {
             log("error", resp);
-            alert("err");
+            Msg.error('err');
         }
     });          
                 
@@ -288,7 +288,7 @@ function renameForum(forumDiv) {
         },
         error: function(resp) {
             log("error", resp);
-            alert("err");
+            Msg.error('err');
         }
     });    
 }
@@ -317,7 +317,7 @@ function renameTopic(topicLi) {
         },
         error: function(resp) {
             log("error", resp);
-            alert("err");
+            Msg.error('err');
         }
     });    
 }

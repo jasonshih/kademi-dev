@@ -7,6 +7,34 @@
         <link href="calendars.css" rel="stylesheet" type="text/css" />
     </head>
     <body class="add-container">
+        #set($cals = $page.children.ofType.calendar)
+        #if( $cals.size() == 0 )
+        <p class="lead">No calendars are currently available</p>
+        #elseif( $cals.size() == 1 )
+        #if( $page.writable )
+        <div class="pull-right text-right">
+            <i>You can create events from the calendar page</i>
+            <br/>
+            <a class="btn btn-success add-event" href="$cals.first.href">
+                <span class="glyphicon glyphicon-plus"></span>
+                Create event
+            </a>
+        </div>
+        <div class="clearfix"></div>
+        #end        
+        #else
+        <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                Select a calendar <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                #foreach($cal in $page.children.ofType.calendar)
+                <li><a href="$cal.href">$cal.title</a></li>
+                #end
+            </ul>
+        </div>        
+        #end
+
         <h3>Upcoming events</h3>
         <div class="row">
             <div class="calendar-events col-lg-6">

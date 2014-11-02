@@ -8,7 +8,7 @@
         </p>
 
         <div class="btn-group">
-            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+            <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown">
                 Create new alert <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu">
@@ -21,15 +21,17 @@
         <div class="table-responsive">
             <table class="table table-striped table-hover">
                 <colgroup>
+                    <col style="width: 60px;"/>
                     <col />
-                    <col />
+                    <col />                    
                     <col style="width: 120px;" />
                 </colgroup>
                 <thead>
                     <tr>
                         <th></th>
                         <th class="title" rel="asc">Title</th>
-                        <th class="action"></th>
+                        <th class="">Description</th>
+                        <th class=""></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -50,7 +52,8 @@
                             <i class="fa fa-exclamation-circle text-danger"></i>
                             #end                                          
                         </td>
-                        <td><a href="$alert.href">$alert.description</a></td>
+                        <td><a href="$alert.href">$alert.title</a></td>
+                        <td>$alert.description</td>
                         <td class="action">
                             <div class="btn-group btn-group-sm">
                                 <a href="$alert.href" class="btn btn-sm btn-primary btn-sm"> <i class="fa fa-edit"></i> Edit
@@ -60,10 +63,10 @@
                                 </button>
                                 <ul class="dropdown-menu pull-right" role="menu">
                                     <li role="presentation">
-                                        <a role="menuitem" tabindex="-1" href="$alert.href" class="Edit EditReward"><i class="fa fa-edit"></i> Edit</a>
+                                        <a role="menuitem" tabindex="-1" href="$alert.href" class=""><i class="fa fa-edit"></i> Edit</a>
                                     </li>
                                     <li role="presentation">
-                                        <a role="menuitem" tabindex="-1" href="$alert.href" class="Delete DeleteReward"><i class="fa fa-times"></i> Delete</a>
+                                        <a role="menuitem" tabindex="-1" href="$alert.href" class="alert-delete"><i class="fa fa-times"></i> Delete</a>
                                     </li>
                                 </ul>
                             </div>                                                                               
@@ -74,5 +77,18 @@
                 </tbody>
             </table>
         </div>
+        <script type="text/javascript">
+            $(function(){
+                $("body").on("click", ".alert-delete", function(e){
+                    e.preventDefault();
+                    var link = $(e.target).closest("a");
+                    var href = link.attr("href");
+                    confirmDelete(href, getFileName(href), function(){
+                        link.closest("tr").remove();
+                        Msg.info("Deleted alert");
+                    });
+                });
+            });
+        </script>
     </body>
 </html>

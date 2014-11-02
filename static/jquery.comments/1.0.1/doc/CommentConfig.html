@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <!--<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Roboto:300,300italic,400,400italic,500,500italic,700,700italic" />
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="http://www.kademi.co/theme/--theme--theme-params.less,--theme--css--custom.css,.compile.less?858869523" />
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>-->
+    
+    <style type="text/css">
+    .name, .signature {
+        font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+    }
+    </style>
+</head>
+<body>
+<div>
+<div class="row" id="jsdoc-container">
+    <div class="col-md-9">
+        
+
+
+
+<section class="section-content">
+    <header>
+        <h2>
+        CommentConfig
+        </h2>
+        
+    </header>  
+
+    <article>
+        <div class="container-overview">
+        
+        
+        
+            
+                <p class="description alert alert-info">The default configurations of comments</p>
+            
+            
+            
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props table table-hover table-bordered table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		<th>Default</th>
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name">pageUrl</td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type label label-info">String</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    window.location
+                
+                </td>
+            
+            
+            <td class="description last">The url of the resource to add comments to. Must end with a slash</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name">streamSelector</td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type label label-info">String</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    .comments-stream
+                
+                </td>
+            
+            
+            <td class="description last">The selector of stream wrapper which wraps all comments</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name">renderCommentFn</td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type label label-info">function</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">The callback function to render the markup for a comment. Takes the following arguments user, comment, commentDate, where user is an object containing name, href, photoHref</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name">clearContainerFn</td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type label label-info">function</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">The callback function to clear the comments container. Takes no arguments</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name">ajaxLoadingFn</td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type label label-info">function</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">The callback function to show ajax loading. Takes one argument isLoading (true/false)</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name">commentsPerPage</td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type label label-info">Number</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    10
+                
+                </td>
+            
+            
+            <td class="description last">The number of comments will be showed per page</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name">paginateFn</td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type label label-info">function</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">The callback function to render the markeup for pagination</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name">aggregated</td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type label label-info">Boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+            
+            <td class="description last">If true will list all comments under the given page</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    <dt class="tag-version">Version:</dt>
+    <dd class="tag-version"><ul class="dummy"><li>1.0.1</li></ul></dd>
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="jquery.comments-1.0.1.js.html">jquery.comments-1.0.1.js</a>, <a href="jquery.comments-1.0.1.js.html#line2">line 2</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+            
+            
+        
+        </div>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    </article>
+
+</section>  
+
+
+
+    </div>
+    <div class="col-md-3">
+        <div data-offset-bottom="200" data-offset-top="60" data-spy="affix" role="complementary" class="affix-top">
+            <ul class="nav sidebar-nav"><li><a href="index.html">Index</a></li><li><a data-target="#classes-collapse" data-toggle="collapse" href="#classes">Classes</a><ul class="collapse collapse-in" id="classes-collapse"><li><a href="$.html">$</a></li><li><a href="$.fn.html">fn</a></li><li><a href="$.fn.comments.html">comments</a></li></ul></li><li><a data-target="#namespaces-collapse" data-toggle="collapse" href="#namespaces">Namespaces</a><ul class="collapse collapse-in" id="namespaces-collapse"><li><a href="CommentConfig.html">CommentConfig</a></li></ul></li></ul><a class="back-to-top" href="#top">Back to top</a>
+        </div>
+    </div>
+</div>
+</div>
+<script type="text/javascript">
+    setTimeout(function () {
+        var counter = 0;
+        var numbered;
+        var source = document.getElementsByClassName('prettyprint source');
+
+        if (source && source[0]) {
+            source = source[0].getElementsByTagName('code')[0];
+
+            numbered = source.innerHTML.split('\n');
+            numbered = numbered.map(function(item) {
+                counter++;
+                return '<span id="line' + counter + '" class="line"></span>' + item;
+            });
+
+            source.innerHTML = numbered.join('\n');
+        }
+    }, 200);
+</script>
+</body>
+</html>

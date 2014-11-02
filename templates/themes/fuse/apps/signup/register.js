@@ -75,7 +75,7 @@ function initRegisterForms(afterRegisterHref, callback) {
                 $fragment.show();
             },
             error: function(resp) {
-                alert("err");
+                Msg.error('err');
             }
         });      
     }            

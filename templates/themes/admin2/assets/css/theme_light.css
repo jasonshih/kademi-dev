@@ -134,9 +134,10 @@ ul.main-navigation-menu li > ul.sub-menu > li.open > a, ul.main-navigation-menu 
 	color: #555555;
 }
 
-.main-content .container {
+.main-content > .container {
 	border-left: 1px solid #D9D9D9;
 	border-bottom: 1px solid #D9D9D9;
+
 }
 body.rtl .main-content .container {
 	border-left: none;

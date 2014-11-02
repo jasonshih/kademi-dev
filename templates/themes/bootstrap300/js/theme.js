@@ -51,54 +51,38 @@ $(function() {
     });
     initPrintLink();
     initVideos();
-    //initCleanModals();
+    initContentFeatures();
 });
 
-var targetModalLink;
-function initCleanModals() {
 
-    // TODO: doesnt play nicely with other modals. Need to add a class so it only applies when needed
-
-    $("body").on("click", 'a.modalLink', function(e) {
-        targetModalLink = $(e.target);
+function initContentFeatures() {
+    flog("initContentFeatures");
+    // Add or remove collapsed class to panels, so we can use that to switch the glyphicon symbol
+    $(document).on("shown.bs.collapse", function(e) {
+        var n = $(e.target);                
+        n.closest(".panel.dropdown-btn")
+            .removeClass("collapsed")
+            .find(".glyphicon").removeClass("glyphicon-chevron-right").addClass("glyphicon-chevron-down");
     });
-
-    $('body').on('hidden', '.modal', function() {
-        $(this).removeData('modal');
-    });
-
-    $("body").on("show", function(e) {
-        var modal = $(e.target);
-        var forms = modal.find("form");
-        forms.find(":input").not(':button, :submit, :reset, :hidden')
-                .val('')
-                .removeAttr('checked')
-                .removeAttr('selected');
+    $(document).on("hidden.bs.collapse", function(e) {
+        var n = $(e.target);
+        
+        n.closest(".panel.dropdown-btn")
+            .addClass("collapsed")
+            .find(".glyphicon").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-right");
 
     });
-
-    $("body").on("shown", function(e) {
-        var modal = $(e.target);
-        var forms = modal.find("form");
-        forms.find("legend a.btn").remove();
-        modal.find("h3").html(forms.find("legend").text());
-
-        forms.forms({
-            callback: function() {
-                modal.modal("hide");
-                var cont = targetModalLink.closest(".well, .container");
-                if (cont.attr("id")) {
-                    var url = window.location.pathname;
-                    url += "?" + Math.random() + " #" + cont.attr("id") + " > *";
-                    cont.load(url);
-                } else {
-                    window.location.reload();
-                }
-            }
-        });
-        modal.find("a.btn-primary").click(function() {
-            forms.submit();
-        });
+    
+    // Find any dropdown-btn and add appropriate classes and markup to allow dynamic dropdowns
+    var dropdowns = $(".dropdown-btn");
+    dropdowns.addClass("collapsed")
+            .find(".panel-body").wrap("<div class='panel-collapse collapse'></div>");    
+    dropdowns.find(".panel-title").append("<span class='glyphicon glyphicon-chevron-right'></span>");
+    
+    // dropdown-btn needs explicit collapse, because we dont want to use ID's, required for attributes usage    
+    $(document).on("click", ".dropdown-btn .panel-heading", function(e) {
+        var n = $(e.target);
+        n.closest(".panel").find(".panel-collapse").collapse("toggle");
     });
 }
 

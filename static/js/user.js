@@ -79,7 +79,7 @@ function doLogin(form) {
         },
         dataType: "text",
         success: function() {
-            alert('logged in ok');
+            flog('logged in ok');
         },
         error: function() {
             alert('There was a problem logging you in');

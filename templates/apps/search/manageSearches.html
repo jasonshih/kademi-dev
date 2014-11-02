@@ -45,7 +45,7 @@
                     <b>Change repository</b> $page.closest("repository").name <span class="caret"></span>
                 </a>
                 <ul role="menu" class="dropdown-menu list">
-                    #foreach($w in $page.closest("repository").parent.children)
+                    #foreach($w in $page.closest("repository").parent.children.sortByName)
                     <li class="list-item"><a href="${w.href}manageSearch">$w.name</a></li>
                     #end
                 </ul>
