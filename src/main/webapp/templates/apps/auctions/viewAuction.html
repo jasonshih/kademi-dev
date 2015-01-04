@@ -1,0 +1,53 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>$page.title</title>
+    </head>
+    <body>
+        <div class="container">
+            <h3></h3>
+
+            <div class="row row-fluid">
+                <div class="span6 col-md-8 well">                    
+                    <div class="details">
+                        <h4>$page.title</h4>
+                        <legend style="font-size: 0.8em">Created By <a href="$page.createdBy.href">$page.createdBy.name</a></legend>
+                        <div class="clearfix">
+                            $page.description
+                        </div>
+                    </div>
+                </div>
+                <div class="span6 col-md-4">                  
+                    <div class="details well">
+                        <h4>Current Bid</h4>
+                        <form id="bidForm" method="POST" action=".">
+                            <input class="regex required" type="text" size="5" name="auctionBidValue" value="$!page.currentBidValue"data-regex="^[0-9]+$"/>
+                            <button data-type="form-submit" class="btn btn-md btn-primary">
+                                Place Bid
+                            </button>
+                        </form>
+                        <div>
+                            Current Bid: $$!page.currentBidValue
+                            <br/>
+                            Bid Count: $page.currentBidCount
+                            <br/>
+                            End Date: $formatter.formatDateTime($page.auctionEndDate)
+                        </div>
+                    </div>
+                    <div class="details well">
+                        <h4>Bid History</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            $(function () {
+                $("#bidForm").forms({
+                    callback: function (resp) {
+                        flog("done", resp);
+                        Msg.success('Bid Placed');
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,196 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Manage Auction</title>
+    </head>
+    <body>
+        <form action="" method="POST" role="form">
+            <div id="manageAuction" class="MainContent tabbable">
+                <div class="clearfix">
+                    <div class="pull-right">
+                        <button class="btn btn-sm btn-success">
+                            <span class="glyphicon glyphicon-floppy-disk"></span>
+                            Save
+                        </button>
+                        <button class="btn btn-sm btn-warning Cancel" type="button">
+                            Cancel
+                        </button>
+                    </div>
+                    <ul class="TabNav nav nav-tabs tab-bricky pull-left">
+                        <li class=""><a href="#details" data-toggle="tab">Details</a></li>
+                        <li class=""><a href="#history" data-toggle="tab">History</a></li>
+                    </ul>
+                </div>
+                <div class="tab-content">
+                    <div class="tab-pane Details" id="details">
+                        <table class="Details form-horizontal">
+                            <colgroup>
+                                <col width="20%" />
+                                <col width="80%" />
+                            </colgroup>
+                            <tbody>
+                                <tr>
+                                    <td>Auction title</td>
+                                    <td>
+                                        <div class="form-group">
+                                            <div class="col-sm-4">
+                                                <input type="text" name="title" placeholder="Enter a name here" value="$page.auctionTitle" class="form-control required" />
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Auction Type</td>
+                                    <td>
+                                        <div class="form-group">
+                                            <div class="col-sm-2">
+                                                <select name="auctionType" class="form-control">
+                                                    #foreach($st in $page.auctionTypesMap.entrySet())
+                                                    $formatter.option($st.key, $st.value, $page.auctionType)
+                                                    #end
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Website</td>
+                                    <td>
+                                        <div class="form-group">
+                                            <div class="col-sm-2">
+                                                <select name="website" class="form-control">
+                                                    #foreach($st in $page.organisation.websites())
+                                                    $formatter.option($st.name, $st.name, $page.website.name)
+                                                    #end
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Template</td>
+                                    <td>
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <input type="text" name="template" value="$!page.template"/>
+                                                <br/>
+                                                <i>Leave blank for default, otherwise a path to a template, eg /learner/competition.html</i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Start Value</td>
+                                    <td>
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <input type="text" name="auctionStartValue" value="$!page.auctionStartValue"/>
+                                                <br/>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Reserve Value</td>
+                                    <td>
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <input type="number" name="auctionReserveValue" value="$!page.auctionReserveValue"/>
+                                                <br/>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>   
+                                <tr>
+                                    <td>Choose a start date</td>
+                                    <td>
+                                        <div class="form-group">
+                                            <div class="col-sm-5">
+                                                <div class="input-group">
+                                                    <input type="text" id="auctionStartDate" name="auctionStartDate" placeholder="Start date" data-provide="datetimepicker" value="$formatter.formatDateTime($page.auctionStartDate, $page.organisation.timezone)" class="form-control date-time" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Choose a end date</td>
+                                    <td>
+                                        <div class="form-group">
+                                            <div class="col-sm-5">
+                                                <div class="input-group">
+                                                    <input type="text" id="auctionEndDate" name="auctionEndDate" placeholder="End date" data-provide="datetimepicker" value="$formatter.formatDateTime($page.auctionEndDate, $page.organisation.timezone)" class="form-control date-time" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>							
+                                <tr>
+                                    <td>
+                                        Description<br />
+                                        <small><i>This copy will sit next to the image and tell the user about the auction</i></small>
+                                    </td>
+                                    <td>
+                                        <div class="form-group editor-wrapper">
+                                            <div class="col-sm-12">
+                                                <textarea cols="120" name="auctionDescription" rows="10" class="htmleditor" placeholder="">$formatter.htmlEncode($page.description)</textarea>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Notes
+                                        <br /><small><i>These notes are for internal purposes only.</i></small>
+                                    </td>
+                                    <td>
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <textarea cols="120" class="form-control" name="notes" rows="10" placeholder="Enter your notes here">$!page.notes</textarea>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="tab-pane" id="history">
+                        <button class="btn btn-sm btn-primary Add AddGroup" data-toggle="modal" data-target="#modalGroup"><i class="fa fa-plus"></i> Add/remove groups</button>
+                        <div class="well margin-top-10">Add user groups to rewards to allow these users to directly enter the competition. These users will see the reward on their dashboard when it is active.</div>
+                        <div class="GroupList">
+                            #foreach($g in $page.selectedGroups)
+                            <button class="btn btn-sm btn-default reset-margin-bottom" type="button">$g.name</button>
+                            #end
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <script type="text/javascript">
+            $(function () {
+                $("form").forms({
+                    callback: function (resp) {
+                        flog("done", resp);
+                        Msg.success("Saved ok");
+                    },
+                    error: function () {
+                        Msg.error("Some information is not valid. Please check the reward details");
+                    }
+                });
+
+                $(".Cancel").click(function () {
+                    window.location = "../";
+                });
+
+                var date = new Date();
+                date.setDate(date.getDate() - 1);
+
+                $('.date-time').datetimepicker({
+                    format: "DD/MM/YYYY HH:mm",
+                    startDate: date
+                });
+                initHtmlEditors();
+            });
+        </script>
+    </body>
+</html>

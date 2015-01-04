@@ -1,0 +1,111 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>$view.title</title> 
+    </head>
+    <body>
+        <p>
+            <button type="button" class="btn btn-sm btn-primary addRewardStore" data-toggle="modal" data-target="#addRewardStoreModal"><i class="fa fa-plus"></i> Create a Reward Store</button>
+        </p>
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table id="auction-wrapper" class="table table-striped table-hover">
+                        <colgroup>
+                            <col width="" />
+                            <col width="180px" />
+
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+
+
+                                <th class="action"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="rewardStoreList">
+                            #foreach($v in $page.children)
+                            <tr>
+                                <td><a href="$v.name">$v.title</a></td>
+
+                                <td class="action">
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="$v.name" class="btn btn-sm btn-info"><i class="fa fa-cog"></i> Manage</a>
+                                        <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
+                                            <span class="caret"></span>
+                                            <span class="sr-only">Toggle Dropdown</span>
+                                        </button>
+                                        <ul role="menu" class="dropdown-menu pull-right">
+                                            <li><a class="XAuction" href="$v.name"><i class="glyphicon glyphicon-remove"></i> Delete</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            #end
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="addRewardStoreModal" class="modal fade" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Add Reward Store</h4>
+            </div>
+            <div class="modal-body">
+                <form action="." method="POST" class="form-horizontal createCategory">
+                    <input type="hidden" name="action" value="create"/>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="websiteName">Website</label>
+                        <div class="col-md-8">
+                            <select name="websiteName" class="form-control">
+                                #foreach($website in $page.find("/websites").children.ofType.website)
+                                <option value="$website.name">$website.title</option>
+                                #end
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="rewardName">Reward</label>
+                        <div class="col-md-8">
+                            <select name="rewardName" class="form-control">
+                                #foreach($reward in $page.availableRewards)
+                                <option value="$reward.name">$reward.title</option>
+                                #end
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Create reward store</button>
+            </div>
+        </div>        
+
+        <script type="text/javascript">
+            $(function () {
+                var modal = $("#addRewardStoreModal");
+                var form = modal.find("form");
+
+                form.forms({
+                    callback: function (resp) {
+                        flog("done", resp);
+                        modal.modal('hide');
+                        Msg.success("Created new reward store");
+                        $('#rewardStoreList').reloadFragment({
+                            whenComplete: function () {
+                                $('abbr.timeago').timeago();
+                            }
+                        });
+                    }
+                });
+
+                var date = new Date();
+                date.setDate(date.getDate() - 1)
+            });
+        </script>            
+    </body>
+</html>

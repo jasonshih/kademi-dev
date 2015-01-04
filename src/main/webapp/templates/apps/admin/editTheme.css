@@ -1,0 +1,43 @@
+.themes {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.themes li {
+    float: left;
+    width: 300px;
+    border: solid grey 1px;
+    margin: 10px;
+    height: 180px;
+    position: relative;
+    margin-left: 0;
+    margin-right: 20px;
+    overflow: hidden;
+}
+.themes li.current-theme {
+    border-bottom: solid green 6px;
+}
+.themes.ajax-loading li {
+    opacity: 0.50;
+}
+.themes li .ajax-loader {
+    display: none;
+}
+.themes li > a img {
+    width: 300px; 
+}
+.themes li h2 {
+    text-align: center;
+    padding-top: 60px;
+    border: none;
+    font-size: 24px;
+}
+.themes li.ajax-loading {
+    opacity: 0.80;
+}
+.themes li.ajax-loading .ajax-loader {
+    left: 130px;
+    top: 90px;
+    position: absolute;
+    display: block;
+}

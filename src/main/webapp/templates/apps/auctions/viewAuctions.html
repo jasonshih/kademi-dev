@@ -1,0 +1,32 @@
+<html>
+    <head>
+        <title>$page.title</title>
+        <script type="text/javascript" src="/static/js/jquery.timeago.js">//</script>        
+    </head>    
+    <body class="blogs-home add-container">
+        <div class="row">
+            <div class="col-lg-9 col-md-9">
+                #foreach($auction in $page.children)
+                <div class="hero thumbnail well col-md-12">
+                    <div class="hero-body">                        
+                        <h2 class="hero-heading"><a href="$auction.href">$auction.title</a></h2>
+
+                        $!auction.description
+
+                        <div class="clearfix">
+                            <abbr class="pull-left timeago" title="$formatter.formatDateISO8601($auction.auctionEndDate)">$auction.auctionEndDate</abbr>
+                        </div>
+                    </div>
+                </div>
+       	        <hr style="clear: both" />
+                #end
+            </div> <!-- End primary section -->
+        </div>
+        <script type="text/javascript">
+            jQuery.timeago.settings.allowFuture = true;
+            jQuery(document).ready(function () {
+                $(".timeago").timeago();
+            });
+        </script>          
+    </body>
+</html>

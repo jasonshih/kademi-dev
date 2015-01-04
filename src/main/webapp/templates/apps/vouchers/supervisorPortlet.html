@@ -1,0 +1,49 @@
+
+<hr/>
+
+<div class="container">
+    <p class='lead'>Voucher Summary</p>
+
+    <div class="row">    
+        #set( $vouchers = $page.find("/vouchers") )
+
+        #if( $vouchers.voucherSummary.empty )
+        <p>There are no currently active voucher types</p>
+        #else
+        <div>
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th colspan="3">Voucher</th>
+                        <th colspan="2">Idle</th>
+                        <th colspan="2">Pending</th>
+                        <th colspan="2">Redeemed</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    #foreach($voucherType in $vouchers.voucherSummary)
+                    <tr>
+                        <th>$voucherType.title</th>
+                        <td>$voucherType.total</td>
+                        <td>$voucherType.cashValue</td>
+
+                        <td>$!voucherType.states.I.number</td>
+                        <td>$!voucherType.states.I.cashValue</td>
+
+                        <td>$!voucherType.states.P.number</td>
+                        <td>$!voucherType.states.P.cashValue</td>
+
+                        <td>$!voucherType.states.R.number</td>
+                        <td>$!voucherType.states.R.cashValue</td>
+
+                    </tr>
+                    #end
+
+                </tbody>
+            </table>
+        </div>
+        #end
+
+    </div> 
+</div>
+

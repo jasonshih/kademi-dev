@@ -1,0 +1,249 @@
+<html>
+    <head>
+        <title>Edit Event</title>
+        <link href="calendars.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="calendars.js">//</script>
+        <style>
+            .well-rsvp {
+                display: none;
+            }
+        </style>
+    </head>    
+    <body class="calendar-event add-container">        
+        <ul class="breadcrumb">
+            <li>
+                <p><a href="../">Calendars</a></p>
+            </li>
+            <li>
+                <a href="$page.parent.href" class="active">$page.parent.title</a>
+            </li>
+        </ul>
+        <div class="row">                       
+            <div class="col-md-8">
+                <div class="grid simple">
+                    <div class="grid-title">
+                        <h3>$page.title</h3>
+                    </div>
+                    <div class="grid-body">
+                        <div class="calendar-event-byline">
+                            #if( $page.organisor )
+                            <small class="author">By <a href="/users/$event.organisor.name/public">$page.organisor.formattedName</a></small>
+                            #end
+                            #if( $event.location )
+                            <small class="location">At $page.location</small>
+                            #end
+                            <small>
+                                Starts $formatter.formatDate( $page.startDate, $page.timezone )
+                                (<abbr title="$formatter.formatDateISO8601($page.startDate)" class="timeago">$formatter.formatDateTime($page.startDate, $page.timezone)</abbr>)
+                            </small>
+                        </div>
+
+                        <div class='calendar-event-content'>
+                            #if( $page.description )
+                            $page.description
+                            #else
+                            This event has no description
+                            #end
+                        </div>
+                    </div>
+                </div>
+
+                #if( !$page.attendees.isEmpty() )
+                <hr/>
+
+                <div class="grid simple attendees">
+                    <div class="grid-title">
+                        <h3>$page.attendees.size() attending</h3>
+                    </div>
+                    <div class="grid-body">
+                        <ul class='attendees'>
+                            #foreach($profile in $page.attendees)
+                            <li>
+                                <a href="$profile.href" class="profilePic">
+                                    #if( $profile.photoHash )
+                                    <img alt="" src="/_hashes/files/$profile.photoHash">
+                                    #else
+                                    <img alt="" src="/templates/apps/user/profile.png">
+                                    #end
+                                </a>
+                                <a href="$profile.href" class="user" title="$profile.name">$profile.name</a>
+                            </li>
+                            #end
+                        </ul>
+                    </div>
+                </div>
+                #end
+            </div>
+
+            <div class="col-md-4">
+                #if( $page.allowRegistration )
+                    <div class="grid simple well-rsvp rsvp-nouser">
+                        <div class="grid-body">
+                            <button class='btn btn-sm btn-info requiresUser' onclick="showRsvpPanel()">Register now</button>
+                        </div>
+                    </div>
+
+                    <div class="grid simple well-rsvp rsvp-yes">
+                        <div class="grid-body">
+                            <h3>You're attending
+                                #if( $page.allowGuests )
+                            <span class="num-guests">
+                                with <b class="num-guests-count">$page.myGuests.size()</b> guest(s)
+                            </span>
+                                #end
+                            </h3>
+                            <p>You've accepted the invitation</p>
+                            <button class='btn btn-sm btn-info rsvp-change'>Change</button>
+                        </div>
+                    </div>
+
+                    <div class="grid simple well-rsvp rsvp-no">
+                        <div class="grid-body">
+                            <h3>You're not attending</h3>
+                            <p>You've indicated that you will not be attending</p>
+                            <button class='btn btn-sm btn-info rsvp-change'>Change</button>
+                        </div>
+                    </div>
+
+                    <div class="grid simple well-rsvp rsvp-form">
+                        <div class="grid-body">
+                            <form method="POST" action="$page.name" class="form-horizontal form-horizontal-block rsvp" role="form">
+                                <div class="radio">
+                                    <input type="radio" name="rsvp" value="ACCEPTED" id="rsvp-yes" />
+                                    <label for="rsvp-yes" >
+                                        Yes, I'm coming
+                                    </label>
+                                </div>
+
+                                <p class="clearfix">
+                                    <a class="btn btn-sm btn-primary btn-small guests-add pull-right">Add a guest</a>
+                                </p>
+
+                                #if( $page.allowGuests )
+                                <div class="guests">
+                                    <p class='guests-intro'>I'm bringing the following guests:</p>
+                                    <ul class="guests">
+                                        #foreach($guest in $page.myGuests)
+                                        <li>
+                                            <a class='pull-right guests-delete' href='#'><span class="glyphicon glyphicon-remove-circle"></span></a>
+                                            <a href="#" class="guest-edit">$guest.firstName $guest.surname</a>
+                                            #if( $guest.orgName )
+                                            of $guest.orgName
+                                            #end
+                                            <input type="hidden" name="guestFirstName" value="$!guest.firstName"/>
+                                            <input type="hidden" name="guestSurname" value="$!guest.surname"/>
+                                            <input type="hidden" name="guestEmail" value="$!guest.email"/>
+                                            <input type="hidden" name="guestOrgName" value="$!guest.orgName"/>
+                                        </li>
+                                        #end
+                                    </ul>
+                                </div>
+                                <hr/>
+                                #end
+
+                                <div class="radio">
+                                    <input type="radio" name="rsvp" value="DECLINED" id="rsvp-no" />
+                                    <label for="rsvp-no" >
+                                        No, I will not be attending
+                                    </label>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-sm-10">
+                                        <br/>
+                                        <button type='submit' class="btn btn-sm btn-success">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                            Submit attendance
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                #end
+
+                <div class="grid simple event-information">
+                    <div class="grid-title">
+                        <h4>Event information</h4>
+                    </div>
+                    <div class="grid-body">
+                        <table class="table">
+                            <tbody>
+                                #if( $page.organisor )
+                                <tr>
+                                    <th>Organiser</th>
+                                    <td>$page.organisor.formattedName</td>
+                                </tr>
+                                #end
+
+                                #if( $page.location )
+                                <tr>
+                                    <th>Location</th>
+                                    <td>$page.location</td>
+                                </tr>
+                                #end
+
+                                <tr>
+                                    <th>Start</th>
+                                    <td>
+                                        $formatter.formatDateTime(  $page.startDate, $page.timezone )
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Finish</th>
+                                    <td>$formatter.formatDateTime( $page.endDate, $page.timezone )</td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>             
+        </div>
+
+        <div class="modal fade guests-modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form role="form">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">Add a guest</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="newGuestFirstName">First name</label>
+                                <input type="text" class="form-control" required='true' id="newGuestFirstName" placeholder="Guest's first name">
+                            </div>
+                            <div class="form-group">
+                                <label for="newGuestSurame">Surname</label>
+                                <input type="text" class="form-control" required='true' id="newGuestSurname" placeholder="Guest's surname">
+                            </div>
+                            <div class="form-group">
+                                <label for="newGuestEmail">Email address</label>
+                                <input type="email" class="form-control" id="newGuestEmail" placeholder="Enter email">
+                            </div>
+                            <div class="form-group">
+                                <label for="newGuestOrg">Organisation</label>
+                                <input type="text" class="form-control" id="newGuestOrg" placeholder="Guest's organisation">
+                            </div>                            
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-sm btn-primary">Add/edit guest</button>
+                        </div>
+                    </form>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+
+        #portlets("userDataModal")
+
+        <script type="text/javascript">
+            var rsvpStatus = "$page.rsvpStatus";
+            $(function () {
+                initViewEvent();
+            });
+
+        </script>
+    </body>
+</html>

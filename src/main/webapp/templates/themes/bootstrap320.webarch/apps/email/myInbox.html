@@ -1,0 +1,66 @@
+<html>
+    <head>
+        <title>Notifications</title>
+        <link href="myInbox.less" rel="stylesheet" type="text/css" media="all" />
+        <script type="text/javascript" src="myInbox.js">//</script>
+    </head>
+    <body class="myInbox add-container">
+        #set($messages = $page.inbox.children)
+        #if($messages.isEmpty())
+            <div class="row">
+                <div class="col-md-4 col-md-offset-4">
+                    <div class="alert alert-block alert-info">
+                        <h4 class="alert-heading"><i class="fa fa-info-circle"></i> You have no notifications!</h4>
+                    </div>
+                </div>
+            </div>
+        #else
+            <div class="row">
+                <div class="col-md-4 tabs-left">
+                    <div class="grid simple">
+                        <div class="grid-title">
+                            <h3>Messages</h3>
+                        </div>
+                        <div class="grid-body messages">
+                            #foreach($msg in $messages)
+                                #set($activeClass = $formatter.ifEqual("vertical green","",$msg.name,$page.name))
+                                <div class="grid simple $activeClass message">
+                                    <div class="grid-body no-border">
+                                        <a href="$msg.href">
+                                            <abbr class="pull-right timeago" title="$formatter.formatDateISO8601($msg.date)">$msg.date</abbr>
+                                            <strong class="from">$msg.fromStr</strong>
+                                            <p>$msg.subject</p>
+                                        </a>
+                                    </div>
+                                </div>
+                            #end
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    #if($page.is("message"))
+                    <div class="grid simple">
+                        <div class="grid-body">
+                            #if( $page.html )
+                            $!page.html
+                            #else
+                            $!page.text
+                            #end
+                        </div>
+                    </div>
+                    #end
+                </div>
+            </div>
+        #end
+
+        #set($markRead = $page.is("message") and !$page.read)
+        <script type="text/javascript">
+            jQuery(document).ready(function() {
+                jQuery("abbr.timeago").timeago();
+                initMessage($markRead, "");
+            });
+        </script>          
+    </body>
+</html>
+
+

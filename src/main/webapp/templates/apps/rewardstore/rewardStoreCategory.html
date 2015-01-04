@@ -1,0 +1,76 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Reward store</title>
+
+    </head>
+    <body>
+        <div class='container'>
+            <div style='position: relative'>
+                <h1>$page.title</h1>
+
+                <div class='col-md-4' style='position: absolute; right: 0; top: 0'>
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button">
+                                <span class='glyphicon glyphicon-search'></span>
+                            </button>
+                        </span>
+                        <input type="text" class="form-control" id="product-query" placeholder="Search in this category"/>
+                    </div>
+                </div>
+            </div>
+
+            <hr/>
+
+            #set( $products = $page.searchProducts( $request.params.q ) )
+            <div id='products-list'>
+                #if( $products.isEmpty() )
+                <b class=''>No products were found matching the critieria</b>
+                #else
+                <div class='row'>
+                #foreach($p in $products )
+                <div class="col-md-4" style="background-image: url($p.image)">
+                    $p.title
+                </div>
+                #end
+                </div>
+                #end
+            </div>
+
+        </div>
+
+        <script type="text/javascript">
+            $(function () {
+                initSearchProduct();
+            });
+
+            function initSearchProduct() {
+                $("#product-query").keyup(function () {
+                    typewatch(function () {
+                        flog("do search");
+                        doProductSearch();
+                    }, 500);
+                });
+            }
+
+            function doProductSearch() {
+                var query = $("#product-query").val();
+                flog("doSearch", query);
+                var newUrl = window.location.pathname + "?q=" + query;
+                window.history.replaceState("", "", newUrl);
+                $.ajax({
+                    type: 'GET',
+                    url: newUrl,
+                    success: function (data) {
+                        flog("success", data);
+                        var fragment = $(data).find("#products-list");
+                        $("#products-list").replaceWith(fragment);
+                    },
+                    error: function (resp) {
+                        Msg.error("An error occured doing the product search. Please check your internet connection and try again");
+                    }
+                });
+            }
+        </script>
+    </body>
+</html>

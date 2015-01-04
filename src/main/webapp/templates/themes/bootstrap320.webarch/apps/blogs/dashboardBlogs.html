@@ -1,0 +1,31 @@
+<hr/>
+
+<p class='lead'>Recent articles</p>
+
+<div class="row">    
+    #foreach($article in $dashboardArticles)
+    <div class="col-lg-4 col-md-6 col-sm-6 large">
+        #set($image = false)
+        #set($image = $article.bestSquareImageHref)
+
+        <div class="grid simple">
+            <div class="grid-title">
+                <h3><a href="${article.href}" class="requiresUser">${article.title}</a></h3>
+            </div>
+            <div class="grid-body tile">
+                #if( $image )
+                <div style="background-image: url('${image}/alt-300-300.png')" class="tile-image">
+                    <a href="${article.href}" class="requiresUser"><span>View</span></a>
+                </div>
+                #end
+
+                <div class="tile-content">
+                    <p>$!article.brief</p>
+                </div>
+            </div>
+        </div>
+    </div>   
+    #end
+</div> 
+
+

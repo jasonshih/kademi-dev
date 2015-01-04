@@ -1,0 +1,42 @@
+<html>
+    <head>
+        <title>My Files</title>
+    </head>    
+    <body class="directory add-container">
+        <div class="grid simple">
+            <div class="grid-title">
+                <div class="btn-group pull-right">
+                    <button class="newFolder Btn btn btn-success">
+                        <i class="icon-folder-open"></i>
+                        New Folder
+                    </button>
+                </div>
+                <h2>My Files</h2>
+            </div>
+            <div class="grid-body">
+                <div class="row">
+                    #foreach($folder in $user.children.dirs )
+                    <div class="span3 col-md-3">
+                        <div class="well">
+                            <h3><a href="$folder.href">$folder.name</a></h3>
+                        </div>
+                    </div>
+                    #end
+                </div>
+            </div>
+        </div>
+
+        <script>
+            jQuery(document).ready(function() {
+                $(".newFolder").click(function(e) {
+                    var parentHref = userUrl;
+                    showCreateFolder(parentHref, "New folder", "Please enter a name for the new folder", function() {
+                        window.location.reload();
+                    });
+                });
+
+            });
+        </script>
+    </body>
+</html>
+
