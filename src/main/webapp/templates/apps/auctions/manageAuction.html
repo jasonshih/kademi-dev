@@ -155,13 +155,22 @@
                     </div>
 
                     <div class="tab-pane" id="history">
-                        <button class="btn btn-sm btn-primary Add AddGroup" data-toggle="modal" data-target="#modalGroup"><i class="fa fa-plus"></i> Add/remove groups</button>
-                        <div class="well margin-top-10">Add user groups to rewards to allow these users to directly enter the competition. These users will see the reward on their dashboard when it is active.</div>
-                        <div class="GroupList">
-                            #foreach($g in $page.selectedGroups)
-                            <button class="btn btn-sm btn-default reset-margin-bottom" type="button">$g.name</button>
+                        <table class="table table-striped">
+                            <tr>
+                                <td>Created</td>
+                                <td><abbr title="$formatter.formatDateISO8601($page.createdDate)" class="timeago">$page.createdDate</abbr></td>
+                                <td></td>
+                                <td><a href="$page.createdBy.href">$page.createdBy.name</a></td>
+                            </tr>
+                            #foreach($c in $page.bidHistory)
+                            <tr>
+                                <td>Bid</td>
+                                <td><abbr title="$formatter.formatDateISO8601($c.changeDate)" class="timeago">$c.changeDate</abbr></td>
+                                <td>$c.bidValue</td>
+                                <td><a href="$c.changeBy.href">$c.changedBy.name</a></td>
+                            </tr>
                             #end
-                        </div>
+                        </table>
                     </div>
                 </div>
             </div>
