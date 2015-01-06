@@ -48,7 +48,7 @@
             <tbody id="vouchers-table-body">
                 #foreach($v in $vouchersPage.vouchers)
                 <tr>
-                    <td><a href='$v.voucherTypeCode/$v.voucherId'>$v.voucherId</a></td>
+                    <td><a href='/vouchers/$v.voucherTypeCode/$v.voucherId'>$v.voucherId</a></td>
                     <td>$v.voucherTypeTitle</td>
                     <td>$vouchersPage.statusText( $v.status )</td>
                     <td><abbr title="$formatter.formatDateISO8601($v.statusDate)" class="timeago">$!v.statusDate</abbr></td>
