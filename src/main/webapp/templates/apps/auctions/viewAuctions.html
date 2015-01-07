@@ -6,7 +6,7 @@
     <body class="blogs-home add-container">
         <div class="row">
             <div class="col-lg-9 col-md-9">
-                #foreach($auction in $page.children)
+                #foreach($auction in $page.childrenWithPermission)
                 <div class="hero thumbnail well col-md-12">
                     <div class="hero-body">                        
                         <h2 class="hero-heading"><a href="$auction.href">$auction.title</a></h2>

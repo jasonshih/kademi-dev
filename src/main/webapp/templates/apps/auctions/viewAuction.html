@@ -55,7 +55,6 @@
                 $("#bidForm").forms({
                     callback: function (resp) {
                         flog("done", resp);
-                        console.log(resp);
                         $("#BidInfo").reloadFragment({
                             whenComplete: function () {
                                 $('abbr.timeago').timeago();
