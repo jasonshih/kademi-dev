@@ -14,6 +14,12 @@
             .search-group {
                 width: 200px;
             }
+            .product-inreward-details {
+                display: none;
+            }
+            .in-reward-true .product-inreward-details {
+                display: block;
+            }
         </style>        
         <link href="https://gitcdn.github.io/bootstrap-toggle/2.1.0/css/bootstrap-toggle.min.css" rel="stylesheet"/> 
         <script src="https://gitcdn.github.io/bootstrap-toggle/2.1.0/js/bootstrap-toggle.min.js">//</script>        
@@ -50,7 +56,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
 
 
                     <div class="table-responsive">
@@ -60,17 +66,19 @@
                                 <col width="" />
                                 <col width="" />
                                 <col width="15%" />
-                                <col width="16%" />
+                                <col width="16%" />                                
                                 <col data-sort="false" width="100px" />
+                                <col width="30px" />
                             </colgroup>
                             <thead>
                                 <tr>
                                     <th>Code</th>
                                     <th>Title</th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
+                                    <th>Margin</th>
+                                    <th>Pts Multiplier</th>
+                                    <th></th>                                    
                                     <th class="action"></th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             #set( $products = $page.searchProducts( $request.params.q, $request.params.all, $request.params.l ))
@@ -81,15 +89,20 @@
                                 </tr>
                                 #else
                                 #foreach($p in $products )
-                                <tr>
+                                <tr class='in-reward-$p.inReward' id='product-$p.productId'>
                                     <td><a href='$p.productId'>$p.name</a></td>
                                     <td>$formatter.htmlEncode($p.title)</td>
-                                    <td></td>
-                                    <td></td>
+                                    <td>$!p.margin</td>
+                                    <td>$!p.multiplier</td>
                                     <td></td>
                                     <td class="">                                                    
                                         <input $formatter.ifTrue( $p.inReward, "checked", "" ) class="product-toggle" data-toggle="toggle" data-on="In" data-off="Out" data-onstyle="success" data-offstyle="danger" type="checkbox" value="true" />
                                     </td>
+                                    <td>
+                                        <a href="$p.productId" class="product-inreward-details">
+                                            <span class="glyphicon glyphicon-cog"></span>
+                                        </a>
+                                    </td>                                    
                                 </tr>
                                 #end
                                 #end
@@ -100,7 +113,34 @@
             </div>
         </div>              
 
-
+        <div id="editProductInRewardModal" class="modal fade" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Product in Reward Details</h4>
+            </div>
+            <div class="modal-body">
+                <form action="$page.href" method="POST" class="form-horizontal createProduct">
+                    <p>You an override the default margin and points multiplier for this product:</p>
+                    <input type="hidden" name="rewardProductId" value=""/>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="title">Margin</label>
+                        <div class="col-md-8">
+                            <input class="form-control required" id="title" type="text" name="margin" maxlength="250" placeholder="Margin as percentage, eg 5 for 5%" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="baseCost">Points multiplier</label>
+                        <div class="col-md-8">
+                            <input class="form-control numeric" id="baseCost" type="text" name="multiplier" maxlength="20" placeholder="Base cost of the product" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Create product</button>
+            </div>
+        </div>
 
         <script type="text/javascript">
             $(function () {
@@ -124,7 +164,38 @@
                     var v = target.prop("checked");
                     updateProductIncluded(productName, v);
                 });
+                var productInRewardModal = $("#editProductInRewardModal");
+                $("#table-products").on("click", ".product-inreward-details", function (e) {
+                    e.preventDefault();
+                    var target = $(e.target).closest("a");
+                    loadProductInReward(target.attr("href"), productInRewardModal);
+                });
+                productInRewardModal.find("form").forms({
+                    callback: function() {
+                        Msg.info("Saved");
+                        productInRewardModal.modal("hide");
+                    }
+                });
             });
+
+            function loadProductInReward(href, productInRewardModal) {
+                $.ajax({
+                    type: 'GET',
+                    url: href,
+                    success: function (data) {
+                        flog("success", data);
+                        var $fragment = $(data).find("#product-in-reward-fields");
+                        flog("frag", $fragment);
+                        var form = productInRewardModal.find("form");
+                        form.html($fragment);
+                        form.attr("action", href);
+                        productInRewardModal.modal("show");
+                    },
+                    error: function (resp) {
+                        Msg.error("An error occured doing the user search. Please check your internet connection and try again");
+                    }
+                });
+            }
 
             function initSearchProduct() {
                 $("#product-query").keyup(function () {
@@ -176,8 +247,13 @@
                     },
                     success: function (response) {
                         flog("response", response, response.status);
-                        if( response.status ) {
+                        if (response.status) {
                             Msg.info("Updated " + productId);
+                            if( included ) {
+                                $("#product-" + productId).addClass("in-reward-true");
+                            } else {
+                                $("#product-" + productId).removeClass("in-reward-true");
+                            }
                         } else {
                             Msg.error("There was an error changing the product inclusion status");
                         }

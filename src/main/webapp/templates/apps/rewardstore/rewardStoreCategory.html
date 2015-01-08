@@ -1,7 +1,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>Reward store</title>
-
+        <link rel="stylesheet" type="text/css" href="reward-store.css" />
     </head>
     <body>
         <div class='container'>
@@ -28,11 +28,17 @@
                 <b class=''>No products were found matching the critieria</b>
                 #else
                 <div class='row'>
-                #foreach($p in $products )
-                <div class="col-md-4" style="background-image: url($p.image)">
-                    $p.title
-                </div>
-                #end
+                    #foreach($p in $products )
+                    #set($bg = "")
+                    #if( $p.primaryImageId )
+                    #set($bg = "url(/products/$p.productCode/$p.primaryImageId)")
+                    #end
+                    <a class="col-md-3 product-tile" href="$p.productId" style="background-image: $bg">
+                        <div class="product-tile-inner">
+                            <span>$p.title</span>
+                        </div>
+                    </a>
+                    #end
                 </div>
                 #end
             </div>

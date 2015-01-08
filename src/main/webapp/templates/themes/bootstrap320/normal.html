@@ -27,12 +27,12 @@
         <script type="text/javascript" src="/static/bootstrap-msg/0.3/bootstrap-msg.min.js">//</script>
 
         <script type="text/javascript" language="javascript">
-            jQuery(function($) {
+            jQuery(function ($) {
                 //themeCssFiles.push("/templates/themes/fuse/theme.less");
                 //initTheme();
             });
         </script>
-    
+
         <link href="/theme/less/bootstrap.less" rel="stylesheet" media="all"/>  
         <link href="/theme/theme-params.less" rel="stylesheet" media="all"/>  
 
@@ -55,9 +55,9 @@
 
         #set($website = $page.closest("website"))        
         #if( $formatter.isNull($website.themeAttributes.navbarStyle) )
-            #set($navType = "navbar-default")
+        #set($navType = "navbar-default")
         #else
-            #set($navType = $website.themeAttributes.navbarStyle)
+        #set($navType = $website.themeAttributes.navbarStyle)
         #end
         <div class="navbar navbar-fixed-top $navType" id="nav-top" role="navigation">
             <div class="navbar-header">
@@ -72,18 +72,19 @@
 
             </div>
             #if( $formatter.isNull($website.themeAttributes.navbarItemsStyle) )
-                #set($navItemsType = "nav navbar-nav")
+            #set($navItemsType = "nav navbar-nav")
             #else
-                #set($navItemsType = $website.themeAttributes.navbarItemsStyle)
+            #set($navItemsType = $website.themeAttributes.navbarItemsStyle)
             #end
 
             #if( $formatter.isNull($website.themeAttributes.navItemsDiv) )
-                #set($navItemsDiv = "nav-right")
+            #set($navItemsDiv = "nav-right")
             #else
-                #set($navItemsDiv = $website.themeAttributes.navItemsDiv)
+            #set($navItemsDiv = $website.themeAttributes.navItemsDiv)
             #end        
 
             <div class="navbar-collapse collapse navbar-main-collapse">
+                #portlets("shoppingCart")   
                 <ul class="$navItemsType $navItemsDiv navbar-right">
                     #foreach($item in $menu.items)
                     <li class="$formatter.ifTrue($item.active, 'active', '')"><a class="nav-${item.id}" href="$item.href" shape="rect">$item.text</a></li>
@@ -156,7 +157,7 @@
         #portlets("endOfPage")  <!-- hard coded into ContentApp at the moment, sorry :( -->
 
         <script>
-            $(function() {
+            $(function () {
                 // allow page templates to add a container around the whole content area
                 $("body.add-container").find("#maincontentContainer").addClass("container");
             });

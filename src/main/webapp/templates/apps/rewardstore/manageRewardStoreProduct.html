@@ -1,0 +1,30 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Manage Product in Reward</title>
+    </head>
+    <body>
+        <form action="$page.href" method="POST" class="form-horizontal details-form">
+            <div id='product-in-reward-fields'>
+                <p>You an override the default margin and points multiplier for this product:</p>
+                <div class="form-group">
+                    <label class="col-md-3 control-label" for="margin">Margin</label>
+                    <div class="col-md-8">
+                        <input value='$!page.productInReward.margin' class="form-control required" type="text" name="margin" maxlength="250" placeholder="Margin as percentage, eg 5 for 5%" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label" for="multiplier">Points multiplier</label>
+                    <div class="col-md-8">
+                        <input value='$!page.productInReward.multiplier' class="form-control numeric" type="text" name="multiplier" maxlength="20" placeholder="Base cost of the product" />
+                    </div>
+                </div>
+            </div>
+            <button type='submit'>Save</button>
+        </form>
+        <script type="text/javascript">
+            $(function () {
+                $("form.details-form").forms({});
+            });
+        </script>        
+    </body>
+</html>
