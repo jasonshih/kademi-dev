@@ -2,6 +2,7 @@
     <head>
         <title>$page.title</title>
         <script src="/static/reload-fragment/1.0.1/jquery.reload-fragment-1.0.1.js" type="text/javascript" >//</script>
+        <script src="viewAuction.js" type="text/javascript">//</script>
     </head>
     <body>
         <div class="container">
@@ -19,7 +20,7 @@
                 </div>
                 <div id="BidInfo" class="span6 col-md-4"> 
                     #if($page.auctionClosed)
-                    <div class="details well">
+                    <div id="bidFromDiv" class="details well">
                         <h4>Current Bid</h4>
                         <form id="bidForm" method="POST" action=".">
                             <input class="regex required" type="text" size="5" name="auctionBidValue" value="$!page.currentBidValue"data-regex="^[0-9-.]+$"/>
@@ -28,24 +29,26 @@
                             </button>
                         </form>
                         <div>
-                            Current Bid: $$!page.currentBidValue
+                            Current Bid: $<span id="bidCurrentValue">$!page.currentBidValue</span>
                             <br/>
-                            Bid Count: $page.currentBidCount
+                            Bid Count: <span id="bidCount">$page.currentBidCount</span>
                             <br/>
-                            End Date: $formatter.formatDateTime($page.auctionEndDate)
+                            End Date: <span>$formatter.formatDateTime($page.auctionEndDate)</span>
                         </div>
                     </div>
                     #end
                     <div class="details well">
                         <h4>Bid History</h4>
-                        <table class="table">
-                            #foreach($c in $page.bidHistory)
-                            <tr>
-                                <td>$c.bidValue</td>
-                                <td><abbr title="$formatter.formatDateISO8601($c.changeDate)" class="timeago">$c.changeDate</abbr></td>
-                                <td><a href="$c.changeBy.href">$c.changedBy.name</a></td>
-                            </tr>
-                            #end
+                        <table id="bidHistory" class="table">
+                            <tbody>
+                                #foreach($c in $page.bidHistory)
+                                <tr>
+                                    <td>$c.bidValue</td>
+                                    <td><abbr title="$formatter.formatDateISO8601($c.changeDate)" class="timeago">$c.changeDate</abbr></td>
+                                    <td><a href="$c.changeBy.href">$c.changedBy.name</a></td>
+                                </tr>
+                                #end
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -53,59 +56,8 @@
         </div>
         <script>
             $(function () {
-                $('abbr.timeago').timeago();
-                bidForm();
-
-                function initWebsockets() {
-                    var path = getAuctionPath(window.location.pathname);
-                    log("initWebsockets", window.location.host, path);
-                    var b64ContentId = Base64.encode(path);
-                    try {
-                        wsocket = new WebSocket("ws://" + window.location.host + "/comments/" + window.location.host + "/auctionBid/" + b64ContentId);
-                        wsocket.onmessage = function (evt) {
-                            var c = $.parseJSON(evt.data);
-                            log("onMessage", c);
-                            var dt = new Date(c.date);
-                            //config.renderCommentFn(c.user, dt, c.comment, c.id);
-                        };
-                        log("done initWebsockets");
-                    } catch (e) {
-                        // TODO: setup polling to load comments every minute or so
-                        log("Websocket initialisation failed. Live comment stream is not available");
-                    }
-                }
-
-                initWebsockets();
+                initViewAuction();
             });
-
-            function getAuctionPath(path) {
-                path = stripFragment(path); // remove any fragment like #section
-                if (path.endsWith('/')) {
-                    path = path.substring(0, path.length - 1);
-                }
-                var pos = path.lastIndexOf('/');
-                return path.substring(pos+1);
-            }
-
-            function bidForm() {
-                $("#bidForm").forms({
-                    callback: function (resp) {
-                        flog("done", resp);
-                        console.log(resp);
-                        $("#BidInfo").reloadFragment({
-                            whenComplete: function () {
-                                $('abbr.timeago').timeago();
-                                bidForm();
-                            }
-                        });
-                        Msg.success('Bid Placed');
-                    },
-                    error: function (resp) {
-                        flog("error", resp);
-                        Msg.error("Incorrect Value");
-                    }
-                });
-            }
         </script>
     </body>
 </html>
