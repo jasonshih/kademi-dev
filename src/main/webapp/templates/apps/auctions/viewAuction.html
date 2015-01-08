@@ -17,7 +17,8 @@
                         </div>
                     </div>
                 </div>
-                <div id="BidInfo" class="span6 col-md-4">                  
+                <div id="BidInfo" class="span6 col-md-4"> 
+                    #if($page.auctionClosed)
                     <div class="details well">
                         <h4>Current Bid</h4>
                         <form id="bidForm" method="POST" action=".">
@@ -34,6 +35,7 @@
                             End Date: $formatter.formatDateTime($page.auctionEndDate)
                         </div>
                     </div>
+                    #end
                     <div class="details well">
                         <h4>Bid History</h4>
                         <table class="table">
@@ -52,22 +54,7 @@
         <script>
             $(function () {
                 $('abbr.timeago').timeago();
-                $("#bidForm").forms({
-                    callback: function (resp) {
-                        flog("done", resp);
-                        $("#BidInfo").reloadFragment({
-                            whenComplete: function () {
-                                $('abbr.timeago').timeago();
-                                bidForm();
-                            }
-                        });
-                        Msg.success('Bid Placed');
-                    },
-                    error: function (resp) {
-                        flog("error", resp);
-                        Msg.error("Incorrect Value");
-                    }
-                });
+                bidForm();
 
                 function initWebsockets() {
                     var path = getAuctionPath(window.location.pathname);
@@ -108,6 +95,7 @@
                         $("#BidInfo").reloadFragment({
                             whenComplete: function () {
                                 $('abbr.timeago').timeago();
+                                bidForm();
                             }
                         });
                         Msg.success('Bid Placed');
