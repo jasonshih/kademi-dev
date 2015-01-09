@@ -150,7 +150,20 @@
                                     <td>
                                         <div class="form-group editor-wrapper">
                                             <div class="col-sm-12">
-                                                <textarea cols="120" name="auctionDescription" rows="10" class="htmleditor" placeholder="">$formatter.htmlEncode($page.description)</textarea>
+                                                <textarea cols="120" name="auctionDescription" rows="10" class="htmleditor toolbar-Lite" placeholder="">$!page.description</textarea>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Body<br />
+                                        <small><i>This copy will sit next to the image and tell the user about the auction</i></small>
+                                    </td>
+                                    <td>
+                                        <div class="form-group editor-wrapper">
+                                            <div class="col-sm-12">
+                                                <textarea cols="120" name="body" rows="10" class="htmleditor" placeholder="">$!page.body</textarea>
                                             </div>
                                         </div>
                                     </td>
