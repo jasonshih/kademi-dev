@@ -550,14 +550,14 @@ function checkOneOf(target1, target2, message) {
 
 
 // Passes if target's value is either empty or a number. Spaces etc are not allowed
-function checkNumeric(target) {
+function checkNumeric(target, form) {
     if (typeof target == "string") {
         target = $("#" + target);
     }
     var n = target.val();
     if (n) {
         if (!isNumber(n)) {
-            showValidation(target, "Please enter only numeric digits");
+            showValidation(target, "Please enter only numeric digits", form);
             return false;
         } else {
             return true;
