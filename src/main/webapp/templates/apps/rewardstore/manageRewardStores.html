@@ -13,13 +13,14 @@
                     <table id="auction-wrapper" class="table table-striped table-hover">
                         <colgroup>
                             <col width="" />
+                            <col width="" />
                             <col width="180px" />
 
                         </colgroup>
                         <thead>
                             <tr>
                                 <th>Title</th>
-
+                                <th>Website</th>
 
                                 <th class="action"></th>
                             </tr>
@@ -28,6 +29,7 @@
                             #foreach($v in $page.children)
                             <tr>
                                 <td><a href="$v.name">$v.title</a></td>
+                                <td>$v.rewardWebsite.name</td>
 
                                 <td class="action">
                                     <div class="btn-group btn-group-sm">

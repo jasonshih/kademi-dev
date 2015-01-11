@@ -10,16 +10,16 @@
             <h1>Checkout</h1>
             <div class="contentForm">
                 <div class="htmleditor" id="body"> 
-                    <div role="tabpanel">
+                    <div role="tabpanel" id="checkout-tabs">
                         <ul class="nav nav-tabs" role="tablist">
-                            <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">1. Items</a></li>
-                            <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">2. Shipping Address</a></li>
-                            <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">3. Confirm and Order</a></li>
+                            <li role="presentation" class="active"><a href="#tab-items" aria-controls="tab-items" role="tab" data-toggle="tab">1. Items</a></li>
+                            <li role="presentation"><a href="#tab-shipping" aria-controls="tab-shipping" role="tab" data-toggle="tab">2. Shipping Address</a></li>
+                            <li role="presentation"><a href="#tab-final" aria-controls="tab-final" role="tab" data-toggle="tab">3. Confirm and Order</a></li>
                         </ul>
 
                         <!-- Tab panes -->
                         <div class="tab-content">
-                            <div role="tabpanel" class="tab-pane active" id="home">
+                            <div role="tabpanel" class="tab-pane active" id="tab-items">
                                 <br/>
                                 <p>Please review your selected items below:</p>
                                 <br/>
@@ -29,57 +29,62 @@
                                             <th></th>
                                             <th>Item Description</th>
                                             <th>Quantity</th>
-                                            <th>Points</th>
+                                            <th>Amount</th>
                                             <th>Sub-total</th>
                                         </tr>
-                                    </thead>
+                                    </thead>                                    
                                     <tbody>
+                                        #set( $items = $page.shoppingCartItemPages )
+                                        #if( $items.empty )
+                                        #else
+                                        #foreach($item in $items )
                                         <tr>
                                             <td>
-                                                <img src="/images/cosmo.jpeg" style="max-width: 200px; max-height: 200px"/>
+                                                #if( $item.productImageHref )
+                                                <img src="$item.productImageHref" style="max-width: 200px; max-height: 200px"/>
+                                                #end
                                             </td>
-                                            <td>Sophisticated, glamorous and inspirational, Cosmopolitan is a monthly magazine for the young woman who wants it all, good looks, a successful career and great relationships. All the latest fashion and beauty news as well as advice on career, relationships and health issues. Please note that it may take six to eight weeks for your first issue to be delivered.</td>
+                                            <td>$item.productDescription</td>
                                             <td>1</td>
-                                            <td>1000</td>
-                                            <td>1000</td>
+                                            <td>$item.productPurchaseCost</td>
+                                            <td>$page.calcSubTotal( $item.productPurchaseCost, 1 )</td>
                                         </tr>
+                                        #end
+                                        #end
                                     </tbody>
                                 </table>
 
-                                <button type="submit" class="btn btn-lg btn-success wizard-btn">Next >></button>
+                                <button type="submit" class="btn btn-lg btn-success wizard-btn wizard-btn-1">Next >></button>
                             </div>
-                            <div role="tabpanel" class="tab-pane" id="profile">
+                            <div role="tabpanel" class="tab-pane" id="tab-shipping">
                                 <div class="row">
                                     <div class="col-md-6">
                                         <form role="form">
+                                            #set( $add = $page.shippingAddresses.get(0) )
                                             <div class="form-group">
-                                                <label for="exampleInputEmail1">Address line 1</label>
-                                                <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email" value="123 Somewhere Place"/>
+                                                <label for="addressLine1">Address line 1</label>
+                                                <input class="form-control" id="addressLine1" placeholder="Address line 1" value="$!add.addressLine1"/>
                                             </div>
                                             <div class="form-group">
-                                                <label for="exampleInputEmail1">Address line 2</label>
-                                                <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email" value="Unit 10"/>
+                                                <label for="addressLine2">Address line 2</label>
+                                                <input class="form-control" id="addressLine2" placeholder="Address line 2" value="$!add.addressLine2"/>
                                             </div>
                                             <div class="form-group">
-                                                <label for="exampleInputEmail1">Suburb</label>
-                                                <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email" value="Parnell"/>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1">Postcode</label>
-                                                <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email" value="0900"/>
+                                                <label for="postcode">Postcode</label>
+                                                <input class="form-control" id="postcode" placeholder="Postcode" value="$!add.postcode"/>
                                             </div>
 
                                             <div class="form-group">
-                                                <label for="exampleInputEmail1">City</label>
-                                                <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email" value="Auckland"/>
+                                                <label for="state">State</label>
+                                                <input class="form-control" id="state" placeholder="State" value="$!add.state"/>
                                             </div>
 
                                         </form>
                                     </div>
                                 </div>
-                                <button type="submit" class="btn btn-lg btn-success wizard-btn">Next >></button>
+                                <button type="submit" class="btn btn-lg btn-success wizard-btn wizard-btn-2">Next >></button>
                             </div>
-                            <div role="tabpanel" class="tab-pane" id="messages">
+                            <div role="tabpanel" class="tab-pane" id="tab-final">
                                 <div class="row">
                                     <div class="col-md-8">
                                         <table class="table table-striped">
@@ -119,13 +124,18 @@
                                         <br/>
                                     </div>
                                 </div>
-                                <button class="btn btn-lg btn-success wizard-btn">Place order</button>
+                                <button class="btn btn-lg btn-success wizard-btn wizard-btn-final">Place order</button>
                             </div>
                         </div>
 
 
                         <script type="text/javascript">
                             $(function () {
+                                $(".wizard-btn-1").click(function(e) {
+                                    e.preventDefault();
+                                    flog("next", $("#tab-shipping"));
+                                    $('#checkout-tabs a[href="#tab-shipping"]').tab("show");
+                                });
                             });
 
                         </script>
