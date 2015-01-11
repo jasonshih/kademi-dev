@@ -59,24 +59,34 @@
                             <div role="tabpanel" class="tab-pane" id="tab-shipping">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <form role="form">
+                                        <br/>
+                                        <br/>
+                                        <form role="form" class="form-horizontal">
                                             #set( $add = $page.shippingAddresses.get(0) )
                                             <div class="form-group">
-                                                <label for="addressLine1">Address line 1</label>
-                                                <input class="form-control" id="addressLine1" placeholder="Address line 1" value="$!add.addressLine1"/>
+                                                <label for="addressLine1" class="col-sm-3 control-label">Address line 1</label>
+                                                <div class="col-sm-9">
+                                                    <input class="form-control" id="addressLine1" placeholder="Address line 1" value="$!add.addressLine1"/>
+                                                </div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="addressLine2">Address line 2</label>
-                                                <input class="form-control" id="addressLine2" placeholder="Address line 2" value="$!add.addressLine2"/>
+                                                <label for="addressLine2" class="col-sm-3 control-label">Address line 2</label>
+                                                <div class="col-sm-9">
+                                                    <input class="form-control" id="addressLine2" placeholder="Address line 2" value="$!add.addressLine2"/>
+                                                </div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="postcode">Postcode</label>
-                                                <input class="form-control" id="postcode" placeholder="Postcode" value="$!add.postcode"/>
+                                                <label for="postcode" class="col-sm-3 control-label">Postcode</label>
+                                                <div class="col-sm-9">
+                                                    <input class="form-control" id="postcode" placeholder="Postcode" value="$!add.postcode"/>
+                                                </div>
                                             </div>
 
                                             <div class="form-group">
-                                                <label for="state">State</label>
-                                                <input class="form-control" id="state" placeholder="State" value="$!add.state"/>
+                                                <label for="state" class="col-sm-3 control-label">State</label>
+                                                <div class="col-sm-9">
+                                                    <input class="form-control" id="state" placeholder="State" value="$!add.state"/>
+                                                </div>
                                             </div>
 
                                         </form>
@@ -131,7 +141,7 @@
 
                         <script type="text/javascript">
                             $(function () {
-                                $(".wizard-btn-1").click(function(e) {
+                                $(".wizard-btn-1").click(function (e) {
                                     e.preventDefault();
                                     flog("next", $("#tab-shipping"));
                                     $('#checkout-tabs a[href="#tab-shipping"]').tab("show");
