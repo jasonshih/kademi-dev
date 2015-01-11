@@ -1,7 +1,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>Product Details</title>
-        <link rel="stylesheet" type="text/css" href="reward-store.css" />
+        <link rel="stylesheet" type="text/css" href="checkout.css" />
         <script src="/static/reload-fragment/1.0.1/jquery.reload-fragment-1.0.1.js" >//</script>
     </head>
     <body class="">
@@ -31,11 +31,15 @@
                                                 <th>Quantity</th>
                                                 <th>Amount</th>
                                                 <th>Sub-total</th>
+                                                <th></th>
                                             </tr>
                                         </thead>                                    
                                         <tbody>
                                             #set( $items = $page.shoppingCartItemPages )
                                             #if( $items.empty )
+                                            <tr>
+                                                <td colspan="5">You have not added any items to your shopping cart</td>
+                                            </tr>
                                             #else
                                             #foreach($item in $items )
                                             <tr>
@@ -51,13 +55,19 @@
                                                 </td>
                                                 <td class="cost">$item.productPurchaseCost</td>
                                                 <td class="subtotal">$page.calcSubTotal( $item.productPurchaseCost, 1 )</td>
+                                                <td>
+                                                    <button class="remove btn btn-danger">
+                                                        <span class="glyphicon glyphicon-remove"></span>
+                                                    </button>
+                                                </td>
                                             </tr>
                                             #end
                                             #end
                                         </tbody>
                                     </table>
-
+                                    #if( !$items.empty )
                                     <button type="submit" class="btn btn-lg btn-success wizard-btn wizard-btn-1">Next >></button>
+                                    #end
                                 </div>
                                 <div role="tabpanel" class="tab-pane" id="tab-shipping">
                                     <div class="row">
@@ -68,7 +78,7 @@
                                             <div class="form-group">
                                                 <label for="addressLine1" class="col-sm-3 control-label">Address line 1</label>
                                                 <div class="col-sm-9">
-                                                    <input class="form-control" name="addressLine1" placeholder="Address line 1" value="$!add.addressLine1"/>
+                                                    <input class="form-control required" required="true" name="addressLine1" placeholder="Address line 1" value="$!add.addressLine1"/>
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -80,7 +90,7 @@
                                             <div class="form-group">
                                                 <label for="postcode" class="col-sm-3 control-label">Postcode</label>
                                                 <div class="col-sm-9">
-                                                    <input class="form-control" name="postcode" placeholder="Postcode" value="$!add.postcode"/>
+                                                    <input class="form-control required" required="true" name="postcode" placeholder="Postcode" value="$!add.postcode"/>
                                                 </div>
                                             </div>
 
@@ -150,9 +160,9 @@
                                     var ok = true;
                                     form.find(".quantity").each(function (i, n) {
                                         var inp = $(n);
-                                        if (checkNumeric(target, form)) {
-                                            var num = target.val();
-                                            var tr = target.closest("tr");
+                                        if (checkNumeric(inp, form)) {
+                                            var num = inp.val();
+                                            var tr = inp.closest("tr");
                                             var cost = tr.find(".cost").text();
                                             var newSubtotal = num * cost;
                                             flog("num,cost,sub", num, cost, newSubtotal);
@@ -176,6 +186,11 @@
                                     e.preventDefault();
                                     form.submit();
                                 });
+                                panels.on("click", ".remove", function (e) {
+                                    var tr = $(e.target).closest("tr");
+                                    tr.remove();
+                                    Msg.info("Removed item");
+                                });
                                 panels.on("change", ".quantity", function (e) {
                                     flog("q change");
                                     var target = $(e.target);
@@ -193,9 +208,13 @@
 
 
                                 form.forms({
-                                    callback: function () {
-                                        Msg.info("Your order has been placed");
-                                        $("#checkout-panels").reloadFragment();
+                                    callback: function (resp, form) {
+                                        if (resp.status) {
+                                            Msg.info("Your order has been placed");
+                                            $("#checkout-panels").reloadFragment();
+                                        } else {
+                                            Msg.error("Sorry, an error occured placing your order. Please refresh the page and try again");
+                                        }
                                     }
                                 });
                             });
