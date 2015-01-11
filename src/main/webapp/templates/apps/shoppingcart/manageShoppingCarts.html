@@ -19,30 +19,18 @@
                         </colgroup>
                         <thead>
                             <tr>
-                                <th>Title</th>
-                                <th>Website</th>
+                                <th>User</th>
+                                <th>Date</th>
 
                                 <th class="action"></th>
                             </tr>
                         </thead>
                         <tbody id="rewardStoreList">
-                            #foreach($v in $page.children)
+                            #foreach($v in $page.carts)
                             <tr>
-                                <td><a href="$v.name">$v.title</a></td>
-                                <td>$v.rewardWebsite.name</td>
+                                <td><a href="$v.name">$v.profile.formattedName</a></td>
+                                <td>$v.orderedDate</td>
 
-                                <td class="action">
-                                    <div class="btn-group btn-group-sm">
-                                        <a href="$v.name" class="btn btn-sm btn-info"><i class="fa fa-cog"></i> Manage</a>
-                                        <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
-                                            <span class="caret"></span>
-                                            <span class="sr-only">Toggle Dropdown</span>
-                                        </button>
-                                        <ul role="menu" class="dropdown-menu pull-right">
-                                            <li><a class="XAuction" href="$v.name"><i class="glyphicon glyphicon-remove"></i> Delete</a></li>
-                                        </ul>
-                                    </div>
-                                </td>
                             </tr>
                             #end
                         </tbody>
