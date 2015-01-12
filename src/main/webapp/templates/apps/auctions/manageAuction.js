@@ -3,8 +3,9 @@ function initManageAuction() {
     initGroupModal();
     initDateTimePickers();
     initOrgSearch();
-    initOrgListBtn()
+    initOrgListBtn();
     initHtmlEditors();
+    initImageUploaderViewer();
 }
 
 function initForms() {
@@ -57,7 +58,7 @@ function initOrgSearch() {
             doOrgSearch();
         }, 500);
     });
-    $("#modalOrganisations").on("show", function(){
+    $("#modalOrganisations").on("show", function () {
         doOrgSearch();
     });
 }
@@ -185,4 +186,49 @@ function setOrgRecipient(orgId, orgFormattedName, isRecip) {
     } catch (e) {
         flog("exception in createJob", e);
     }
+}
+
+function initImageUploaderViewer() {
+    $('#btn-change-ava').upcropImage({
+        buttonContinueText: 'Save',
+        url: window.location.pathname, // this is actually the default value anyway
+        onCropComplete: function (resp) {
+            flog("onCropComplete:", resp, resp.nextHref);
+            Msg.info("Done");
+            $("#product-images").reloadFragment();
+        },
+        onContinue: function (resp) {
+            flog("onContinue:", resp, resp.result.nextHref);
+            $.ajax({
+                url: window.location.pathname,
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    uploadedHref: resp.result.nextHref,
+                    applyImage: true
+                },
+                success: function (resp) {
+                    if (resp.status) {
+                        Msg.info("Done");
+                        $("#product-images").reloadFragment();
+                    } else {
+                        alert("Sorry, an error occured updating your profile image");
+                    }
+                },
+                error: function () {
+                    alert('Sorry, we couldn\'t save your profile image.');
+                }
+            });
+        }
+    });
+
+    $("#product-images").on("click", ".del-image", function (e) {
+        e.preventDefault();
+        var target = $(e.target).closest("a");
+        var href = target.attr("href");
+        var name = getFileName(href);
+        confirmDelete(href, name, function () {
+            target.closest(".product-image-thumb").remove();
+        });
+    });
 }
