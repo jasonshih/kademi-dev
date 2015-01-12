@@ -41,6 +41,7 @@
                             <mainClass>co.kademi.server.Kademi</mainClass>
                             <additionalClasspathElements>
                                 <additionalClasspathElement>/var/lib/tomcat8/shared/classes</additionalClasspathElement>
+                                <additionalClasspathElement>/var/lib/tomcat8/shared/postgresql-9.0-801.jdbc4.jar</additionalClasspathElement>
                             </additionalClasspathElements>
                         </configuration>
                         <executions>                            
