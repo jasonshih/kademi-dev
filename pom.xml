@@ -15,5 +15,55 @@
         </plugins>
     </build>
       
+    <dependencies>     
+        <dependency>
+            <groupId>com.fuselms</groupId>
+            <artifactId>kademi-server</artifactId>
+            <version>3.8.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.7</version>
+        </dependency>
+    </dependencies>
+    
+    <profiles>
+        <profile>
+            <id>run-grizzly</id>                
+            <build>              
+                <plugins>                                      
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.3.2</version>
+                        <configuration>
+                            <mainClass>co.kademi.server.Kademi</mainClass>
+                            <systemProperties>
+                                <property>
+                                    <key>kademi.port</key>
+                                    <value>80</value>
+                                </property>
+                            </systemProperties>                            
+                            <additionalClasspathElements>
+                                <additionalClasspathElement>/var/lib/tomcat8/shared/classes</additionalClasspathElement>
+                                <additionalClasspathElement>/var/lib/tomcat8/shared/postgresql-9.0-801.jdbc4.jar</additionalClasspathElement>
+                            </additionalClasspathElements>
+                        </configuration>
+                        <executions>                            
+                            <execution>
+                                <id>run</id>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>java</goal>
+                                </goals>
+                            </execution>
+                        </executions>   
+                    </plugin> 
+                                                                      					
+                </plugins>
+            </build>         
+        </profile>         
+    </profiles>
 </project>
 
