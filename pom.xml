@@ -15,5 +15,12 @@
         </plugins>
     </build>
       
+    <dependencies>     
+        <dependency>
+            <groupId>com.fuselms</groupId>
+            <artifactId>kademi-server</artifactId>
+            <version>3.8.6</version>
+        </dependency>
+    </dependencies>
 </project>
 
