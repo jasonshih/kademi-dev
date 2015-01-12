@@ -61,5 +61,16 @@
             </build>         
         </profile>         
     </profiles>
+    
+    <repositories>
+        <repository>
+            <id>kademi-private</id>
+            <url>http://repository.kademi.co/maven-private</url>
+        </repository>
+        <repository>
+            <id>milton-repo</id>
+            <url>http://milton.io/maven</url>
+        </repository>
+    </repositories>      
 </project>
 
