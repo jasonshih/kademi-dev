@@ -8,20 +8,15 @@
                 width: 160px;
                 cursor: pointer;
             }
-
-            .profile-photo img {
-                width: 62px;
-                height: 62px;
-                float: left;
-            }
-
-            .profile-photo img + div {
-                margin-left: 70px;
-            }
             .del-image {
                 position: absolute;
                 top: 10px;
                 right: 25px;
+            }
+            .mk-default{
+                position: absolute;
+                top: 10px;
+                left: 25px;
             }
         </style>
     </head>
@@ -155,7 +150,7 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        Picture<br />
+                                        Pictures<br />
                                         <small><i>This image will sit next to the description</i></small>
                                     </td>
                                     <td>
@@ -175,6 +170,12 @@
                                                             <a class="del-image btn btn-xs btn-danger" href="$href">
                                                                 <span class="fa fa-times"></span>
                                                             </a>
+                                                            <div class="mk-default" data-role="fieldcontain">
+                                                                <fieldset data-role="controlgroup">
+                                                                    $formatter.checkbox($href, $page.isPrimaryImage($href))
+                                                                    <label for="$href" class="label-sm"> Primary</label>
+                                                                </fieldset>
+                                                            </div>
                                                         </div>
                                                         #end
                                                     </div>

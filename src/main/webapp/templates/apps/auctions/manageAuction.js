@@ -6,6 +6,55 @@ function initManageAuction() {
     initOrgListBtn();
     initHtmlEditors();
     initImageUploaderViewer();
+    initPictureCheckbox();
+}
+
+function getImageId(pathname) {
+    return pathname.substr(pathname.lastIndexOf('/') + 1);
+}
+
+function initPictureCheckbox() {
+    $(".mk-default input[type=checkbox]").click(function () {
+        var $chk = $(this);
+        var isRecip = $chk.is(":checked");
+        flog("checkbox click", $chk, isRecip);
+        setImageDefault($chk, isRecip);
+    });
+}
+
+function setImageDefault(chk, isRecip) {
+    flog("setImageDefault", chk.attr("name"), isRecip);
+    try {
+        $.ajax({
+            type: 'POST',
+            url: chk.attr("name").substr(0, chk.attr("name").lastIndexOf('/') + 1),
+            data: {
+                imageDefault: true,
+                imageID: getImageId(chk.attr("name")),
+                isRecip: isRecip
+            },
+            dataType: "json",
+            success: function (data) {
+                if (data.status) {
+                    flog("saved ok", data);
+                    $("#product-images").reloadFragment({
+                        whenComplete: function () {
+                            initPictureCheckbox();
+                        }
+                    });
+                } else {
+                    flog("error", data);
+                    Msg.error("Sorry, couldnt save " + data);
+                }
+            },
+            error: function (resp) {
+                flog("error", resp);
+                Msg.error("Sorry, couldnt save - " + resp);
+            }
+        });
+    } catch (e) {
+        flog("exception in createJob", e);
+    }
 }
 
 function initForms() {
@@ -195,7 +244,11 @@ function initImageUploaderViewer() {
         onCropComplete: function (resp) {
             flog("onCropComplete:", resp, resp.nextHref);
             Msg.info("Done");
-            $("#product-images").reloadFragment();
+            $("#product-images").reloadFragment({
+                whenComplete: function () {
+                    initPictureCheckbox();
+                }
+            });
         },
         onContinue: function (resp) {
             flog("onContinue:", resp, resp.result.nextHref);
@@ -210,7 +263,11 @@ function initImageUploaderViewer() {
                 success: function (resp) {
                     if (resp.status) {
                         Msg.info("Done");
-                        $("#product-images").reloadFragment();
+                        $("#product-images").reloadFragment({
+                            whenComplete: function () {
+                                initPictureCheckbox();
+                            }
+                        });
                     } else {
                         alert("Sorry, an error occured updating your profile image");
                     }
