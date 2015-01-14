@@ -32,6 +32,20 @@
                         <button class="btn btn-sm btn-warning Cancel" type="button">
                             Cancel
                         </button>
+                        <div class="btn-group">
+                            <a class="btn btn-sm btn-default article-preview" target="_blank" href="$page.href?goto=">Preview</a>
+                            <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu pull-right" role="menu">
+                                <li><a>Select a version:</a></li>
+                                <li class="divider"></li>
+                                #foreach($version in $page.website.branches)
+                                <li><a target="_blank" href="$page.href?goto=$!version.name">$!version.name</a></li>
+                                #end
+                            </ul>
+                        </div>
                     </div>
                     <ul class="TabNav nav nav-tabs tab-bricky pull-left">
                         <li class=""><a href="#details" data-toggle="tab">Details</a></li>
@@ -66,6 +80,20 @@
                                                 <select name="auctionType" class="form-control">
                                                     #foreach($st in $page.auctionTypesMap.entrySet())
                                                     $formatter.option($st.key, $st.value, $page.auctionType)
+                                                    #end
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Status</td>
+                                    <td>
+                                        <div class="form-group">
+                                            <div class="col-sm-2">
+                                                <select name="status" class="form-control">
+                                                    #foreach($st in $page.statuses)
+                                                    $formatter.option($st.name(), $st.name(), null)
                                                     #end
                                                 </select>
                                             </div>

@@ -42,8 +42,8 @@
                                 </property>
                             </systemProperties>                            
                             <additionalClasspathElements>
-                                <additionalClasspathElement>/var/lib/tomcat8/shared/classes</additionalClasspathElement>
-                                <additionalClasspathElement>/var/lib/tomcat8/shared/postgresql-9.0-801.jdbc4.jar</additionalClasspathElement>
+                                <additionalClasspathElement>/var/lib/kademi/conf</additionalClasspathElement>
+                                <additionalClasspathElement>/var/lib/kademi/lib/postgresql-9.0-801.jdbc4.jar</additionalClasspathElement>
                             </additionalClasspathElements>
                         </configuration>
                         <executions>                            
