@@ -398,6 +398,45 @@
                                 
                             </div>
                         </div> <!-- End award CPD -->
+                        
+                        <div class="panel panel-default"> <!-- start Send SMS -->
+                            <div class="panel-heading">
+                                <i class="clip-chk">$formatter.checkbox("smsEnabled", "smsEnabled", $page.job.smsEnabled)</i>
+                                <label for="smsEnabled">Send an sms</label>
+                            </div>
+                            <div class="panel-body panel-toggled" data-toggled="display" data-actor="#smsEnabled">
+                                <p>
+                                    Send an SMS to group(s)
+                                    |
+                                    <a href='#' class='refresh-alerts text-success'>Refresh SMS Providers</a>
+                                </p>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label class="control-label col-md-2" for="smsMessage">Message to send</label>
+                                            <div class="col-md-8">
+                                                <input type="text" class="form-control required-if-shown" name="smsMessage" id="smsMessage" value="$!page.job.smsMessage" />
+                                            </div>
+                                        </div>
+                                    </div> <!-- end row -->
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label class="control-label col-md-2" for="smsMessage">SMS Providers</label>
+                                            <div class="col-md-8" id="smsprovider-list">
+                                                <select name="smsProvider" id="smsProvider" class="form-control required-if-shown">
+                                                    $formatter.option( "", "[Please select]", null )
+                                                    #foreach($app in $page.smsProviders )
+                                                    $formatter.option( $app.instanceId, $app.getTitle($page.organisation, null), $page.job.smsProvider )
+                                                    #end
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div> <!-- end row -->
+                                </div>
+                            </div>
+                        </div> <!-- End actviate alert -->
 
                     </div> <!-- End content of Actions tab -->
 
