@@ -5,20 +5,20 @@
     </head>
     <body class='add-container'>
         <div id="voucherContent">
-            #if( $page.redeemed )
-            <h3>
-                This voucher was redeemed <abbr title="$formatter.formatDateISO8601($page.statusDate)" class="timeago">$page.statusDate</abbr>
-                by $page.changedBy.name
-            </h3>
-            #else
-            
-            #end
-
             #if( !$page.redeemed )
             <button class="btn btn-success" data-toggle="modal" data-target="#redeemVoucherModal">Redeem</button>
             <button class="btn btn-success" data-toggle="modal" data-target="#allocateVoucherModal">Allocate</button>
-            #end
             <button class="btn btn-danger" data-toggle="modal" data-target="#changeStatusModal">Change status</button>
+            #else
+            <div class="alert alert-info">
+                <button class="btn btn-danger pull-right" data-toggle="modal" data-target="#changeStatusModal">Change status</button>
+                <h3 style="margin-top: 10px">
+                    This voucher was redeemed <abbr title="$formatter.formatDateISO8601($page.statusDate)" class="timeago">$page.statusDate</abbr>
+                    by $page.changedBy.name
+                </h3>
+            </div>
+            #end
+                        
 
             <hr/>
 
@@ -46,14 +46,14 @@
             <table class="table table-striped">
                 <tr>
                     <td>Created</td>
-                    <td>$page.createdDate</td>
+                    <td><abbr title="$formatter.formatDateISO8601($page.createdDate)" class="timeago">$page.createdDate</abbr></td>
                     <td><a href="$page.createdBy.href">$page.createdBy.name</a></td>
                     <td></td>
                 </tr>
                 #foreach($c in $page.changeLog)
                 <tr>
-                    <td>$!c.status</td>
-                    <td>$c.changeDate</td>
+                    <td>$page.statusText( $c.status )</td>
+                    <td><abbr title="$formatter.formatDateISO8601($c.changeDate)" class="timeago">$c.changeDate</abbr></td>
                     <td><a href="$c.changeBy.href">$c.changeBy.name</a></td>
                     <td>$!c.notes</td>
                 </tr>
@@ -137,20 +137,13 @@
                                     </select>
                                 </div>
                             </div>
-
-                            <div class="form-group">
-                                <label for="allocatedToId" class="col-sm-3 control-label">Allocated to:</label>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="allocatedToId" name="allocatedToId"  />
-                                    <small><i>Optional. If specified, should be a name, email address or member ID</i></small>
-                                </div>
-                            </div>                    
+                 
                             <textarea name="notes" id="notes" rows="5" style="width: 100%"></textarea>
                             <small><i>Optional, you may enter any notes here</i></small>                                            
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Allocate</button>
+                            <button type="submit" class="btn btn-primary">Change</button>
                         </div> 
                     </form>
                 </div><!-- /.modal-content -->

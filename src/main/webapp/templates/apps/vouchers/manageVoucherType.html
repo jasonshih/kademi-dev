@@ -209,7 +209,11 @@
                                             <td>$v.voucherTypeTitle</td>
                                             <td>$!page.statusText($v.status)</td>
                                             <td><abbr title="$formatter.formatDateISO8601($v.statusDate)" class="timeago">$!v.statusDate</abbr></td>
-                                            <td>$!v.statusChangedBy.name</td>
+                                            <td>
+                                                #if( $v.changedBy )
+                                                <a href="/manageUsers/$v.changedBy.userId">$v.changedBy.name</a>
+                                                #end
+                                            </td>
                                             <td class="action text-right">
                                                 #if( $v.status == '' || $v.status == 'P' )
                                                 <a href="$v.voucherTypeCode/$v.voucherId" class="btn btn-sm btn-success voucher-redeem" ><i class="fa fa-plus"></i> Redeem</a>
