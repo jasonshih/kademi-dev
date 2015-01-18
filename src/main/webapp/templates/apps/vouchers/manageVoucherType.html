@@ -36,7 +36,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label" for="name">Name/Code</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control required simpleChars" id="productName" name="name" value="$page.voucherType.name" />
+                                <input type="text" class="form-control required simpleChars reallySimpleChars" id="name" name="name" value="$page.voucherType.name" />
                                 <small><i>A unique identifier for this voucher type, simple characters only, no spaces etc</i></small>
                             </div>
                         </div>
@@ -286,12 +286,21 @@
                 $('abbr.timeago').timeago();
                 
                 $("#voucherDetails").forms({
-                    callback: function (e) {
+                    callback: function (resp, form) {
                         Msg.info("Saved ok");
+                        flog("callback", resp);
+                        var newName = $("input[name=name]").val();
+                        flog("check names", oldName, newName);
+                        if( oldName != newName ) {
+                            flog("redirect");
+                            window.location = "../" + newName;
+                        }
+                        
                     }
                 });
+                var oldName = $("input[name=name]").val();
                 $("#createVouchersForm").forms({
-                    callback: function (e) {
+                    callback: function () {
                         Msg.info("Created vouchers");
                         $("#createVouchersModal").modal('hide');
                         $("#vouchers-table-body").reloadFragment({
