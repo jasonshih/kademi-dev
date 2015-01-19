@@ -34,7 +34,8 @@
                 for( i=0; i<comments.length; i++ ) {
                     var comment = comments[i];
                     var dt = new Date(comment.date);
-                    var url = "http://" + comment.contentDomain + comment.contentHref + cookieAuth;
+                    //var url = "http://" + comment.contentDomain + comment.contentHref + cookieAuth;
+                    var url = comment.contentHref;
                     displayPost(comment.user, dt, comment.notes, comment.contentTitle, url); // pageTitle and pagePath are only present for aggregated results
                 }
                 jQuery(".barList abbr").timeago();
