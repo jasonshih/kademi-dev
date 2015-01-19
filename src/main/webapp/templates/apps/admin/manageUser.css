@@ -15,8 +15,7 @@
 	position: relative;
 }
 
-#do-upload-csv,
-#do-upload-training-results-csv {
+#do-upload-csv, #do-upload-training-results-csv {
 	width: 190px;
 	cursor: pointer;
 }
