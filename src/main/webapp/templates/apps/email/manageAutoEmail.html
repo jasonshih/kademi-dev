@@ -798,11 +798,23 @@
                 });
 
                 var ln = sms_txt_max - $("#smsMessage").val().length;
-                $("#sms-char-remaining").text(ln + " characters remaining");
+                if (ln < 0) {
+                    $("#sms-char-remaining").text(Math.abs(ln) + " characters over");
+                    $("#sms-char-remaining").css('color', 'red');
+                } else {
+                    $("#sms-char-remaining").text(ln + " characters remaining");
+                    $("#sms-char-remaining").css('color', '');
+                }
 
                 $("#smsMessage").keyup(function () {
                     var ln = sms_txt_max - $("#smsMessage").val().length;
-                    $("#sms-char-remaining").text(ln + " characters remaining");
+                    if (ln < 0) {
+                        $("#sms-char-remaining").text(Math.abs(ln) + " characters over");
+                        $("#sms-char-remaining").css('color', 'red');
+                    } else {
+                        $("#sms-char-remaining").text(ln + " characters remaining");
+                        $("#sms-char-remaining").css('color', '');
+                    }
                 });
             }
         </script>
