@@ -343,7 +343,7 @@
                                 </div>                                                               
                             </div>
                         </div> <!-- End actviate alert -->
-                        
+
                         <div class="panel panel-default"> <!-- start award CPD -->
                             <div class="panel-heading">
                                 <i class="clip-chk">$formatter.checkbox("awardCpdEnabled", "awardCpdEnabled", $page.job.awardCpdEnabled)</i>
@@ -395,10 +395,10 @@
                                         </div>                                       
                                     </div> <!-- end row -->
                                 </div>                                                               
-                                
+
                             </div>
                         </div> <!-- End award CPD -->
-                        
+
                         <div class="panel panel-default"> <!-- start Send SMS -->
                             <div class="panel-heading">
                                 <i class="clip-chk">$formatter.checkbox("smsEnabled", "smsEnabled", $page.job.smsEnabled)</i>
@@ -408,14 +408,15 @@
                                 <p>
                                     Send an SMS to group(s)
                                     |
-                                    <a href='#' class='refresh-alerts text-success'>Refresh SMS Providers</a>
+                                    <a href='#' class='refresh-sms text-success'>Refresh SMS Providers</a>
                                 </p>
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-12">
                                             <label class="control-label col-md-2" for="smsMessage">Message to send</label>
                                             <div class="col-md-8">
-                                                <input type="text" class="form-control required-if-shown" name="smsMessage" id="smsMessage" value="$!page.job.smsMessage" />
+                                                <textarea type="text" class="form-control required-if-shown" name="smsMessage" id="smsMessage">$!page.job.smsMessage</textarea>
+                                                <span id="sms-char-remaining">160 Characters Remaining</span>
                                             </div>
                                         </div>
                                     </div> <!-- end row -->
@@ -448,15 +449,15 @@
                                 <label for="includeUser">Include the user that cause the event</label>
                             </div>
                             <div class="panel-body">
-                                
+
                                 <div class="alert alert-warning">
                                     Warning: ALL members of selected groups will be emailed each time this trigger is fired. <br/>
                                     <b>If you only want a single recipient from an event use the checkbox above</b>
                                 </div>
-                                
-                                
+
+
                                 <button class="btn btn-sm btn-success btn-add-group" data-toggle="modal" data-target="#modal-choose-group"><i class="fa fa-plus"></i> Add recipient groups</button>
-                                                                
+
                                 <hr class="hr-sm" />
                                 <div class="blocks-wrapper recipient">
                                     #foreach($g in $page.groupRecipients)
@@ -582,7 +583,7 @@
                                             #else
                                             <i class="fa fa-exclamation-circle text-muted"></i>
                                             #end
-                                            
+
                                             <abbr title="EmailItemID: $item.id">
                                                 #if( $item.edmConverted )
                                                 <span class="label label-success">Converted</span>
@@ -729,6 +730,8 @@
                 $(".refresh-rewards").click(function () {
                     $("#rewards-container").reloadFragment();
                 });
+
+                initSmsField();
             });
 
             function initHistorySearch() {
@@ -785,6 +788,22 @@
                     }
                 });
 
+            }
+
+            function initSmsField() {
+                var sms_txt_max = 160;
+                $(".refresh-sms").click(function (e) {
+                    e.preventDefault();
+                    $("#smsprovider-list").reloadFragment();
+                });
+
+                var ln = sms_txt_max - $("#smsMessage").val().length;
+                $("#sms-char-remaining").text(ln + " characters remaining");
+
+                $("#smsMessage").keyup(function () {
+                    var ln = sms_txt_max - $("#smsMessage").val().length;
+                    $("#sms-char-remaining").text(ln + " characters remaining");
+                });
             }
         </script>
     </body>
