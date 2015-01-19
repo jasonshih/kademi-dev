@@ -53,14 +53,6 @@
                     <td>$vouchersPage.statusText( $v.status )</td>
                     <td><abbr title="$formatter.formatDateISO8601($v.statusDate)" class="timeago">$!v.statusDate</abbr></td>
                     <td>$!v.statusChangedBy.name</td>
-                    <td class="action text-right">
-                        #if( $v.status == '' || $v.status == 'P' )
-                        <a href="/vouchers/$v.voucherTypeCode/$v.voucherId" class="btn btn-sm btn-success voucher-redeem" ><i class="fa fa-plus"></i> Redeem</a>
-                        #end
-                        #if( $v.status == '' )
-                        <a href="/vouchers/$v.voucherTypeCode/$v.voucherId" class="btn btn-sm btn-warning voucher-pending" ><i class="fa fa-question"></i> Pending</a>
-                        #end
-                    </td>
                 </tr>
                 #end
             </tbody>
