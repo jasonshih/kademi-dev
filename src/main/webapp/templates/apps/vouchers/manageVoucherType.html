@@ -36,7 +36,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label" for="name">Name/Code</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control required simpleChars" id="productName" name="name" value="$page.voucherType.name" />
+                                <input type="text" class="form-control required simpleChars reallySimpleChars" id="name" name="name" value="$page.voucherType.name" />
                                 <small><i>A unique identifier for this voucher type, simple characters only, no spaces etc</i></small>
                             </div>
                         </div>
@@ -94,7 +94,7 @@
                             <label class="col-sm-2 control-label" for="cashValue">Cash value</label>
                             <div class="col-sm-6">
                                 <input type="text" class="form-control" name="cashValue" value="$!page.voucherType.cashValue"/>                                
-                                <small><i>If specified, vouchers will only be valid for a certain number of days once issued</i></small>
+                                <small><i>Used to track exposure and liabilities in reporting.</i></small>
                             </div>                            
                         </div>
 
@@ -209,7 +209,11 @@
                                             <td>$v.voucherTypeTitle</td>
                                             <td>$!page.statusText($v.status)</td>
                                             <td><abbr title="$formatter.formatDateISO8601($v.statusDate)" class="timeago">$!v.statusDate</abbr></td>
-                                            <td>$!v.statusChangedBy.name</td>
+                                            <td>
+                                                #if( $v.changedBy )
+                                                <a href="/manageUsers/$v.changedBy.userId">$v.changedBy.name</a>
+                                                #end
+                                            </td>
                                             <td class="action text-right">
                                                 #if( $v.status == '' || $v.status == 'P' )
                                                 <a href="$v.voucherTypeCode/$v.voucherId" class="btn btn-sm btn-success voucher-redeem" ><i class="fa fa-plus"></i> Redeem</a>
@@ -286,12 +290,21 @@
                 $('abbr.timeago').timeago();
                 
                 $("#voucherDetails").forms({
-                    callback: function (e) {
+                    callback: function (resp, form) {
                         Msg.info("Saved ok");
+                        flog("callback", resp);
+                        var newName = $("input[name=name]").val();
+                        flog("check names", oldName, newName);
+                        if( oldName != newName ) {
+                            flog("redirect");
+                            window.location = "../" + newName;
+                        }
+                        
                     }
                 });
+                var oldName = $("input[name=name]").val();
                 $("#createVouchersForm").forms({
-                    callback: function (e) {
+                    callback: function () {
                         Msg.info("Created vouchers");
                         $("#createVouchersModal").modal('hide');
                         $("#vouchers-table-body").reloadFragment({
