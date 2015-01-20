@@ -50,14 +50,17 @@
                             </div>
                             #if( $page.hasOptins() )
                             <div class="form-group">
-                                #foreach($optin in $page.optins)                                    
-                                <label class="col-sm-9" for="optins_${optin.optinGroup.name}">
-                                <div >
-                                    <input type="checkbox" name="optins" value="$optin.optinGroup.name" id="optins_${optin.optinGroup.name}" />
+                                <div class="col-sm-offset-3 col-sm-12">
+                                    <div class="checkbox">
+                                        #foreach($optin in $page.optins)                                    
+                                        <label class="col-sm-9" for="optins_${optin.optinGroup.name}">
+                                            <input type="checkbox" name="optins" value="$optin.optinGroup.name" id="optins_${optin.optinGroup.name}" />
+                                            $optin.message
+                                        </label>
+                                        #end
+                                    </div> 
                                 </div>
-                                    $optin.message</label>
-                                #end
-                            </div>  
+                            </div>
                             #end
                             <div class="form-group">
                                 <div class="col-sm-offset-3 col-sm-9">
