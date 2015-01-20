@@ -1,0 +1,71 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>$view.title</title>
+    </head>
+    <body class="manageApplications appsContainer">
+
+
+        <article class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Currently running tasks</h3>
+            </div>
+
+            <div class="panel-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Task</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                <tbody>
+                    #foreach($item in $page.children)
+                    <tr>
+                        <td>$item.link</td>
+                        <td></td>
+                    </tr>
+                    #end
+                </tbody>
+                    
+                </table>
+            </div>
+        </article>
+
+        
+
+
+
+        <script type="text/javascript">
+            $(function () {
+                $("form.maintForm").forms({
+                    callback: function (resp) {
+                        flog("resp", resp);
+                        $("span.now").text(resp.data);
+                        Msg.success("Done");
+                    }
+                });
+                $("form.runTasksForm").forms({
+                    callback: function (resp) {
+                        flog("resp", resp);
+                        Msg.info("Scheduled tasks are now running");
+                        window.location.reload();
+                    }
+                });
+                $("form.clearLocksForm").forms({
+                    callback: function (resp) {
+                        flog("resp", resp);
+                        Msg.success("Locks have been deleted");
+                        window.location.reload();
+                    }
+                });
+                $("form.restoreRepoForm").forms({
+                    callback: function (resp) {
+                        flog("resp", resp);
+                        Msg.success("Repository restored");
+                        window.location.reload();
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>

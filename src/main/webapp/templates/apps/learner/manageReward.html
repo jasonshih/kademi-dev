@@ -18,7 +18,7 @@
                             <span class="glyphicon glyphicon-floppy-disk"></span>
                             Save
                         </button>
-                        
+
                         <div class="btn-group">
                             <a class="btn btn-sm btn-default article-preview" target="_blank" href="$page.href?goto=">Preview</a>
                             <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
@@ -33,11 +33,11 @@
                                 #end
                             </ul>
                         </div>
-                        
+
                         <button class="btn btn-sm btn-warning Cancel" type="button">
                             Cancel
                         </button>
-                        
+
                     </div>
                     <ul class="TabNav nav nav-tabs tab-bricky pull-left">
                         <li class=""><a href="#details" data-toggle="tab">Details</a></li>
@@ -264,7 +264,7 @@
                             <br/>
                             <h3>Quiz</h3>
                             <p>If you would like this to be a quiz, please enter answers below. If not provided answers will not be checked.</p>
-                            
+
                             #foreach($i in [1..5])
                             <div class="form-group">
                                 <label for="answer1" class="col-sm-3 control-label">Answer $i</label>
@@ -276,7 +276,7 @@
                             </div>
                             #end
                         </div>
-                        
+
                     </div>
 
                     <div class="tab-pane" id="restrictions">
@@ -368,8 +368,8 @@
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
         <script type="text/javascript">
             var quiz = $formatter.toJson($page.quiz);
-            $(function() {
-                $("select.pointsType").click(function() {
+            $(function () {
+                $("select.pointsType").click(function () {
                     showHidePointsOrgType();
                 });
                 showHidePointsOrgType();
