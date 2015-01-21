@@ -71,6 +71,11 @@
                                         <span class="glyphicon glyphicon-time"></span>
                                         $e.statusText
                                     </p>
+                                    #elseif( $e.sendStatus == sni' )
+                                    <p class="label label-warning">
+                                        <span class="glyphicon glyphicon-time"></span>
+                                        $e.statusText
+                                    </p>
                                     #elseif( $e.sendStatus == 'np' )
                                     <p class="label label-danger">
                                         <span class="glyphicon glyphicon-remove"></span>
