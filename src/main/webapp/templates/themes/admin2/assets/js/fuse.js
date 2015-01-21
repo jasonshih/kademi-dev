@@ -166,7 +166,7 @@ function initChkAll() {
             var chks = table.find('tbody input:checkbox');
 
             chkAll.on('click', function () {
-                chks.attr('checked', chkAll.is(':checked'));
+                chks.prop('checked', chkAll.is(':checked'));
             });
         });
     });
