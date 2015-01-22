@@ -67,7 +67,7 @@ function initForms() {
             Msg.success("Saved ok");
         },
         error: function () {
-            Msg.error("Some information is not valid. Please check the reward details");
+            Msg.error("Some information is not valid. Please check the auction details");
         }
     });
 }
