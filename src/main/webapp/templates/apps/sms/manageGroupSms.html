@@ -1,0 +1,110 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>$view.title</title>
+        <link href="manageGroupSms.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="manageGroupSms.js">//</script>
+    </head>
+    <body class="manageSms">
+        <p class="clearfix">
+            <a class="btn btn-sm btn-success btn-add-email" data-toggle="modal" href="#modal-add-email"><i class="fa fa-plus"></i> Create new sms</a>
+        </p>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-envelope-o"></i>Auto sms triggers
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover" id="email-trigger-wrapper">
+                        <colgroup>
+                            <col class="icon" />
+                            <col />
+                            <col />
+                            <col />
+                            <col style="width: 100px" />
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th class="icon">Status</th>
+                                <th>Date</th>
+                                <th>Name</th>
+                                <th>No. sms's</th>
+                                <th class="action"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="smsTbody">
+                            #foreach($sms in $page.children)
+                            <tr class="smsStatus$!{sms.status}">
+                                <td class="icon" title="$!sms.status">
+                                    #if($sms.status == "Draft" )
+                                    <i class="fa fa-edit text-muted"></i>
+                                    #elseif($sms.status == "Preparing" )
+                                    <i class="fa fa-refresh text-warning"></i>
+                                    #elseif($sms.status == "Running" )
+                                    <i class="fa fa-exclamation-circle text-warning"></i>
+                                    #elseif($sms.status == "Completed" )
+                                    <i class="fa fa-check-circle text-success"></i>
+                                    #elseif($sms.status == "Cancelled" )
+                                    <i class="fa fa-times text-danger"></i>
+                                    #else
+                                    $!sms.status
+                                    #end
+                                </td>
+                                <td>$formatter.formatDate($sms.statusDate)</td>
+                                <td>$formatter.htmlEncode($sms.title)</td>
+                                <td>$sms.numItems</td>
+                                <td class="action" style="">
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="$sms.name" class="btn btn-sm btn-info btn-sm">
+                                            <i class="fa fa-edit"></i> Edit
+                                        </a>
+                                        <button class="btn btn-sm btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu pull-right" role="menu">
+                                            #if($sms.status == "Draft" )
+                                            <li><a href="$sms.name" class="btn-edit-sms" title="Edit"><i class="fa fa-edit"></i> Edit</a></li>
+                                            #else
+                                            <li><a href="$sms.name" class="btn-view-sms" title="View"><i class="clip-eye"></i> View</a></li>
+                                            #end
+                                            <li><a href="$sms.name" class="btn-dup-sms" title="Duplicate"><i class="fa fa-copy"></i> Duplicate</a></li>
+                                            <li class="divider"></li>
+                                            <li><a href="$sms.name" class="btn-delete-sms" title="Delete"><i class="fa fa-times"></i> Delete</a></li>
+                                        </ul>
+                                    </div>                                    
+                                </td>
+                            </tr>
+                            #end
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-add-email" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                <h4 class="modal-title">Create group sms</h4>
+            </div>
+            <div class="modal-body">
+                <form id="SmsForm" method="POST" action="." class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="smsTitle">Enter sms title</label>
+                        <div class="col-md-8">
+                            <input type="text" name="smsTitle" id="Smsname" value="" placeholder="A name for the sms job" class="required simpleChars form-control" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                <button class="btn btn-sm btn-primary" data-dismiss="modal" data-type="form-submit" type="button">Save</button>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            $(function () {
+                initManageSms();
+            });
+        </script>
+    </body>
+</html>
