@@ -1,0 +1,86 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 22/01/2015, 5:23:24 PM
+    Author     : dylan
+*/
+
+.icon {
+    width: 60px;
+    text-align: center;
+}
+
+.icon i {
+    font-size: 30px;
+}
+
+#send {
+    text-align: center;
+}
+
+#status-tools div > * {
+    display: none;
+}
+
+#status-tools.Draft div .Draft,
+#status-tools.Running div .Running,
+#status-tools.Completed div .Completed,
+#status-tools.Preparing div .Preparing {
+    display: inline-block;
+}
+
+.notsent,
+.send-progress {
+    display: none;
+}
+
+#status {
+    text-align: center;
+}
+
+#status .progress {
+    height: 40px;
+    position: relative;
+    width: 300px;
+    margin: 0 auto;
+}
+
+.progress-bar {
+    padding-top: 10px;
+}
+
+#status .progress .stats {
+    position: absolute;
+    color: #fff;
+    text-shadow: 0 0 1px rgba(0, 0, 0, 0.6);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    text-align: center;
+    line-height: 40px;
+}
+
+#emails {
+    text-align: left;
+}
+
+#status .status-wrapper .status {
+    display: none;
+}
+
+#status.status_r .status-wrapper > .status.status_p,
+#status.status_p .status-wrapper > .status.status_p {
+    display: block;
+}
+
+#status.status_c .status-wrapper > .status.status_c {
+    display: block;
+}
+
+#status.status_p .status.status_p send-progress {
+    display: inline-block;
+}
