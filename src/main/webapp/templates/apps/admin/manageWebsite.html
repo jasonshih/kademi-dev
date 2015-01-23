@@ -82,6 +82,7 @@
                 <li class=""><a data-toggle="tab" href="#panel_theme"><i class="green fa fa-home"></i> Theme</a></li>
                 <li class=""><a data-toggle="tab" href="#panel_groups"><i class="green fa fa-home"></i> Group access</a></li>
                 <li class=""><a data-toggle="tab" href="#panel_mailserver"><i class="green fa fa-home"></i> Mail server</a></li>
+                <li class=""><a data-toggle="tab" href="#panel_sslserver"><i class="green fa fa-home"></i> SLL server</a></li>
                 <li class=""><a data-toggle="tab" href="#panel_apps"><i class="green fa fa-home"></i> Apps</a></li>
             </ul>
             
@@ -254,6 +255,43 @@
                                  <textarea name="dkimPrivateKey" class="form-control">$!page.dkimPrivateKey</textarea>
                              </div>
                          </div>
+                         <div class="form-group"> 
+                             <div class="col-sm-offset-3 col-sm-6">
+                                 <button type="submit" class="btn btn-sm btn-success">Save Changes</button>
+                             </div>
+                         </div>
+                     </form>
+                 </div>
+                
+                <div id="panel_sslserver" class="tab-pane">
+                     <form name="frmDetails" action="." method="post" class="form-horizontal details" role="form">
+                         <div class="alert alert-danger pageMessage">.</div> 
+                         <p class=""/>
+                         <div class="form-group"> 
+                             <label for="keyStorePass" class="col-sm-3 control-label">Key Store Password</label> 
+                             <div class="col-sm-6">
+                                 <input type="text" name="keyStorePass" value="$!page.website.keyStorePass" class="form-control" />
+                             </div>
+                         </div>
+                         <div class="form-group">
+                             <label for="keyStoreFile" class="col-sm-3 control-label">Key Store File</label>
+                             <div class="col-sm-6">
+                                 <textarea name="keyStoreFile" rows="5"  class="form-control">$!page.website.keyStoreFile</textarea>
+                             </div>
+                         </div>     
+                         
+                         <div class="form-group"> 
+                             <label for="trustStorePass" class="col-sm-3 control-label">Trust Store Password</label> 
+                             <div class="col-sm-6">
+                                 <input type="text" name="trustStorePass" value="$!page.website.trustStorePass" class="form-control" />
+                             </div>
+                         </div>
+                         <div class="form-group">
+                             <label for="trustStoreFile" class="col-sm-3 control-label">Trust Store File</label>
+                             <div class="col-sm-6">
+                                 <textarea name="trustStoreFile" rows="5" class="form-control">$!page.website.trustStoreFile</textarea>
+                             </div>
+                         </div>                         
                          <div class="form-group"> 
                              <div class="col-sm-offset-3 col-sm-6">
                                  <button type="submit" class="btn btn-sm btn-success">Save Changes</button>
