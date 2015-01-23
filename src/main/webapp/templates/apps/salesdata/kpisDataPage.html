@@ -1,0 +1,21 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>KPI's</title>
+    </head>
+    <body class="">
+        <div class="container">
+            <h1>Kpi's</h1>        
+            #if( $page.children.isEmpty() )
+            <p class="lead-text">There are no data series assigned to you at the moment.</p>
+            #else
+            #foreach($kpi in $page.children)        
+            <div class="panel panel-default" id="series-container">
+                <div class="panel-heading">                
+                    <h4 class="panel-title">$kpi.title</h4>                                
+                </div>
+            </div>
+            #end
+            #end
+        </div>
+    </body>
+</html>
