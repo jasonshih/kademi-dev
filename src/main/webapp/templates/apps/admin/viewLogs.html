@@ -1,0 +1,105 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>$view.title</title>
+    </head>
+    <body class="manageApplications appsContainer">
+
+
+        <article class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Logs</h3>
+            </div>
+
+            <div class="panel-body">
+                <table class="table table-bordered" id="logsTable">
+                    <colgroup>
+                        <col style="width: 100px" />
+                        <col/>
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Level</th>
+                            <th>Message</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logsBody">
+                        #foreach($event in $page.recent)
+                        <tr>
+                            <td><abbr title="$formatter.formatDateISO8601($event.date)" class="timeago">$event.date</abbr></td>
+                            <td>$event.level</td>
+                            <td>$event.message</td>
+                        </tr>                        
+                        #end
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td>Beginning listening...</td>
+                        </tr>
+                    </tbody>
+
+                </table>
+                <button class="btn btn-info logs-clear">Clear</button>
+                <label>
+                    <input type="checkbox" class="logs-follow"/>
+                    Follow
+                </label>
+
+            </div>
+        </article>
+
+
+
+
+        <script type="text/javascript">
+            var orgId = "$page.organisation.id";
+
+            $(function () {
+                $('abbr.timeago').timeago();
+                initWebsockets();
+                $(".logs-clear").click(function () {
+                    $('#logsBody').html("");
+                });
+                $(".logs-follow").click(function(){
+                    followToggle();
+                });
+                followToggle();
+            });
+
+            var following = false;
+            function followToggle() {
+                following = $(".logs-follow").prop("checked");
+            }
+
+            function initWebsockets() {
+                flog("initWebsockets", orgId);
+                var b64ContentId = Base64.encode(orgId);
+                try {
+                    wsocket = new WebSocket("ws://" + window.location.host + "/comments/" + window.location.host + "/logging/" + b64ContentId);
+                    wsocket.onmessage = function (evt) {
+                        var c = $.parseJSON(evt.data);
+                        flog("message", c);
+                        for (var i = 0; i < c.length; i++) {
+                            processReceivedLog(c[i]);
+                        }
+                        $('abbr.timeago').timeago();
+                        if( following ) {
+                            $("html, body").animate({ scrollTop: $(document).height() }, "fast");
+                        }
+                    };
+                    flog("done initWebsockets");
+                } catch (e) {
+                    // TODO: setup polling to load comments every minute or so
+                    flog("Websocket initialisation failed");
+                }
+            }
+
+            function processReceivedLog(c) {
+                var dt = moment(c.data);
+                var tr = $('<tr><td><abbr title="' + dt.format(moment.ISO_8601) + '" class="timeago">' + dt.format() + '</abbr></td><td>' + c.level + '</td><td>' + c.message + '</td></tr>');
+                $('#logsBody').append(tr);
+                tr.find('abbr.timeago').timeago();
+            }
+        </script>
+    </body>
+</html>

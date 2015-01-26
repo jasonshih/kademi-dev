@@ -6,7 +6,7 @@ function initViewAuction() {
 
 function initWebsockets() {
     var path = getAuctionPath(window.location.pathname);
-    log("initWebsockets", window.location.host, path);
+    flog("initWebsockets", window.location.host, path);
     var b64ContentId = Base64.encode(path);
     try {
         wsocket = new WebSocket("ws://" + window.location.host + "/comments/" + window.location.host + "/auctionBid/" + b64ContentId);
@@ -56,7 +56,7 @@ function bidForm() {
             Msg.success('Bid Placed');
         },
         error: function (resp) {
-            flog("error", resp);
+            fflog("error", resp);
             //Msg.error("Incorrect Value");
         }
     });
