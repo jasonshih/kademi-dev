@@ -1,15 +1,14 @@
-function initViewAuction() {
+function initViewAuction(WSUri) {
     $('abbr.timeago').timeago();
     bidForm();
-    initWebsockets();
+    initWebsockets(WSUri);
 }
 
-function initWebsockets() {
+function initWebsockets(WSUri) {
     var path = getAuctionPath(window.location.pathname);
-    flog("initWebsockets", window.location.host, path);
-    var b64ContentId = Base64.encode(path);
+    flog("initWebsockets", window.location.host, "ws://" + window.location.host + "/comments/" + window.location.host + "/auctionBid/" + WSUri);
     try {
-        wsocket = new WebSocket("ws://" + window.location.host + "/comments/" + window.location.host + "/auctionBid/" + b64ContentId);
+        wsocket = new WebSocket("ws://" + window.location.host + "/comments/" + window.location.host + "/auctionBid/" + WSUri);
         wsocket.onmessage = function (evt) {
             var c = $.parseJSON(evt.data);
             if (c.beanType != null && c.beanType == "auctionBid") {
