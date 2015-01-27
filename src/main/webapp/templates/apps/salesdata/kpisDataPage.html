@@ -1,21 +1,57 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>KPI's</title>
+        <style>
+            .clickableRow {
+                cursor: pointer;
+            }
+        </style>
     </head>
     <body class="">
         <div class="container">
-            <h1>Kpi's</h1>        
-            #if( $page.children.isEmpty() )
-            <p class="lead-text">There are no data series assigned to you at the moment.</p>
-            #else
-            #foreach($kpi in $page.children)        
-            <div class="panel panel-default" id="series-container">
-                <div class="panel-heading">                
-                    <h4 class="panel-title">$kpi.title</h4>                                
+            <div class="panel panel-default">
+                <div id="productsTableContainer" class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>KPI</th>
+                                    <th>Aggregation</th>
+                                    <th>Aggregation Period</th>
+                                    <th>Progress</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                #if( $page.children.isEmpty() )
+                                <tr>
+                                    <td>No KPI's have been assigned to you.</td>
+                                </tr>
+                                #else
+                                #foreach($kpi in $page.children)
+                                <tr class="clickableRow" href="$kpi.name">
+                                    <td><a href='$kpi.name'>$kpi.title</a></td>
+                                    #if($kpi.aggregationName)
+                                    <td>$kpi.aggregationName</td>
+                                    #else
+                                    <td>No Aggregation</td>
+                                    #end
+                                    <td>$kpi.period</td>
+                                    <td>$kpi.progress</td>
+                                </tr>
+                                #end
+                                #end
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-            #end
-            #end
         </div>
+        <script>
+            jQuery(document).ready(function ($) {
+                $(".clickableRow").click(function () {
+                    window.document.location = $(this).attr("href");
+                });
+            });
+        </script>
     </body>
 </html>
