@@ -93,6 +93,15 @@ function initCRUDFiles() {
 
         $('#modal-upload').modal('show');
     });
+    tableFiles.on('click', '.btn-new-text-file', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        var name = prompt("Please enter a name for the new file");
+        if( name !== null ) {
+            putEmptyFile(name);
+        }
+    });    
 
     $('#importFromUrl').click(function(e) {
         e.stopPropagation();
@@ -362,4 +371,20 @@ function showImportFromUrl() {
             }
         });
     }
+}
+
+function putEmptyFile(name) {
+    $.ajax({
+        type: 'PUT',
+        url: name,
+        data: "",
+        dataType: 'text',
+        success: function(resp) {
+            Msg.success('Created file ' + name);
+            reloadFileList();
+        },
+        error: function(resp) {
+            Msg.error('An error occured creating file ' + name + " - " + resp.messages);
+        }
+    });
 }
