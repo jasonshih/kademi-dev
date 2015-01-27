@@ -26,15 +26,13 @@
                     <tbody id="logsBody">
                         #foreach($event in $page.recent)
                         <tr>
-                            <td><abbr title="$formatter.formatDateISO8601($event.date)" class="timeago">$event.date</abbr></td>
                             <td>$event.level</td>
                             <td>$event.message</td>
+                            <td><abbr title="$formatter.formatDateISO8601($event.date)" class="timeago">$event.date</abbr></td>                            
                         </tr>                        
                         #end
                         <tr>
-                            <td></td>
-                            <td></td>
-                            <td>Beginning listening...</td>
+                            <td colspan="3">Beginning listening...</td>
                         </tr>
                     </tbody>
 
@@ -60,7 +58,7 @@
                 $(".logs-clear").click(function () {
                     $('#logsBody').html("");
                 });
-                $(".logs-follow").click(function(){
+                $(".logs-follow").click(function () {
                     followToggle();
                 });
                 followToggle();
@@ -83,8 +81,8 @@
                             processReceivedLog(c[i]);
                         }
                         $('abbr.timeago').timeago();
-                        if( following ) {
-                            $("html, body").animate({ scrollTop: $(document).height() }, "fast");
+                        if (following) {
+                            $("html, body").animate({scrollTop: $("#logsBody").height() + 200}, "fast");
                         }
                     };
                     flog("done initWebsockets");
@@ -96,8 +94,32 @@
 
             function processReceivedLog(c) {
                 var dt = moment(c.data);
-                var tr = $('<tr><td><abbr title="' + dt.format(moment.ISO_8601) + '" class="timeago">' + dt.format() + '</abbr></td><td>' + c.level + '</td><td>' + c.message + '</td></tr>');
+                var labelType = c.level.toLowerCase();
+                if( labelType == "error") {
+                    labelType = "danger";
+                }
+                var tr = $("<tr>" +
+                        "<td><span class='label label-" + labelType + "'>" + c.level + "</span></td>" +
+                        "<td class='message'></td>" +
+                        "<td><abbr title='" + dt.format(moment.ISO_8601) + "' class='timeago'>" + dt.format() + "</abbr></td>" +
+                        "</tr>");
+                tr.find(".message").text(c.message);
+                
                 $('#logsBody').append(tr);
+                if (c.callstack !== null && c.callstack.length > 0 ) {
+                    tr = $("<tr>" +
+                            "<td class='causes' colspan='3'></td>" +
+                            "</tr>");
+                    var ul = $("<ul>");
+                    $.each(c.callstack, function(i,n) {
+                        var li = $("<li>");
+                        li.text(n);
+                        ul.append(li);
+                        
+                    });
+                    tr.find(".causes").append(ul);
+                    $('#logsBody').append(tr);
+                }
                 tr.find('abbr.timeago').timeago();
             }
         </script>
