@@ -14,10 +14,9 @@ function initManageAutoEmails() {
     });    
 }
 
-function initModalAddEmailTrigger() {
-    flog("initModalAddEmail");
-    var modal = $('#modal-add-email');
-
+function initModalAddEmailTrigger() {    
+    var modal = $('#modal-add-trigger');
+    flog("initModalAddEmail", modal);
     modal.find('form').forms({
         validate: function(form) {
             flog("manageEmail.js: check radio", form);

@@ -5,9 +5,11 @@
         <script type="text/javascript" src="manageEmail.js">//</script>
     </head>
     <body>
+        #if( $page.emailTrigger )
         <p>
-            <a class="btn btn-success btn-add-trigger" data-toggle="modal" href="#modal-add-trigger"><i class="fa fa-plus"></i> Add trigger</a>
+            <a class="btn btn-success btn-add-trigger" data-toggle="modal" href="#modal-add-trigger-manual"><i class="fa fa-plus"></i> Add trigger</a>
         </p>
+        #end
         <div class="panel panel-default">
             <div class="panel-heading">
                 <i class="fa fa-envelope-o"></i>
@@ -33,7 +35,13 @@
                                     <th class="action"><button title="Delete selected queued triggers" class="btn btn-sm btn-danger btn-remove"><i class="clip-minus-circle "></i></button></th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="triggers-body">
+                                #set($timers = $page.model.recentTriggerTimers)
+                                #if( $timers.isEmpty() )
+                                <tr >
+                                    <td colspan="5">There are currently no delayed triggers</td>
+                                </tr>
+                                #else
                                 #foreach($tt in $page.model.recentTriggerTimers)
                                 <tr >
                                     <td><abbr title="ID: $tt.emailTrigger.id">$tt.emailTrigger.name</abbr></td>
@@ -45,6 +53,7 @@
                                     </td>
                                 </tr>
                                 #end
+                                #end
                             </tbody>
                         </table>
                     </div>
@@ -52,7 +61,7 @@
             </div>
         </div>
 
-        <div id="modal-add-trigger" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
+        <div id="modal-add-trigger-manual" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
             <div class="modal-header">
                 <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
                 <h4 class="modal-title">Manually create trigger</h4>
@@ -69,8 +78,8 @@
                     <div class="form-group">
                         <label class="control-label col-md-4" for="fireAt">Date to process</label>
                         <div class="col-md-8">
-                            <div class="input-group date-time-picker date" data-date="31/01/2013 15:55" data-format="dd/mm/yyyy hh:ii">
-                                <input type="text" name="fireAt" id="fireAt" value="" placeholder="31/01/2013 15:55" class="required form-control" />
+                            <div class="input-group date-time-picker date" >
+                                <input type="text" name="fireAt" id="fireAt" value="" class="required form-control" />
                                 <span class="input-group-addon"><span class="glyphicon-time glyphicon"></span></span>
                             </div>
 
@@ -86,41 +95,25 @@
 
         <script type="text/javascript">
             $(function () {
-                initManageEmailTrigger();
-                $(".select.select-all").click(function(e) {
-                    e.preventDefault();
-                    $(".triggers-table").find("input[type=checkbox]").prop("checked", true);
+
+                var modal = $('#modal-add-trigger-manual');
+                flog("initModalAddEmail", modal);
+                modal.find('form').forms({
+                    callback: function (data) {
+                        flog('saved ok', data);
+                        modal.modal('hide');
+                        Msg.success("Manual trigger created");
+                        $('#triggers-body').reloadFragment();
+                    }
                 });
-                $(".select.select-invert").click(function(e) {
-                    e.preventDefault();
-                    $(".triggers-table").find("input[type=checkbox]").each(function(i, n) {
-                        var chk = $(n);
-                        var checked = chk.prop("checked");
-                        log("chk", chk, "checked=", checked);
-                        if (checked) {
-                            chk.prop("checked", false);
-                        } else {
-                            chk.prop("checked", true);
-                            log("set checked", chk, "confirm", chk.is(":checked"));
-                        }
-                    });
+                
+                $(".form-triggers").forms({
+                    callback: function() {
+                        Msg.info("Deleted delayed triggers");
+                        $('#triggers-body').reloadFragment();
+                    }
                 });
 
-                $(".select.select-next").click(function(e) {
-                    e.preventDefault();
-                    // Find first unchecked box and check it and following up to max of 20
-                    var count = 0;
-                    $(".triggers-table").find("input[type=checkbox]").each(function(i, n) {
-                        var chk = $(n);
-                        var checked = chk.prop("checked");
-                        log("select next: chk", chk, "checked=", checked, "count=", count);
-                        if (!checked && count < 20) {
-                            log("set checked", chk);
-                            chk.prop("checked", true);
-                            count++;
-                        }
-                    });
-                });
             });
         </script>
     </body>
