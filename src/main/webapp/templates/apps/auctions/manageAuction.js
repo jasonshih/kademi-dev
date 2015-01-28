@@ -247,6 +247,7 @@ function setOrgRecipient(orgId, orgFormattedName, isRecip) {
 function initImageUploaderViewer() {
     $('#btn-change-ava').upcropImage({
         buttonContinueText: 'Save',
+        ratio : '',
         url: window.location.pathname, // this is actually the default value anyway
         onCropComplete: function (resp) {
             flog("onCropComplete:", resp, resp.nextHref);
