@@ -28,9 +28,9 @@
                         <tbody id="rewardStoreList">
                             #foreach($v in $page.carts)
                             <tr>
-                                <td><a href="$v.name">$v.profile.formattedName</a></td>
+                                <td>$v.profile.formattedName</td>
                                 <td>$v.orderedDate</td>
-
+                                <td>$v.class</td>
                             </tr>
                             #end
                         </tbody>

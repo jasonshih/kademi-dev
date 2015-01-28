@@ -5,13 +5,19 @@
     </head>
     <body>
         <div class="row">
+            <div style="padding-left: 30px;padding-right: 30px">
             #foreach($cat in $page.children.ofType.category)
-            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 square-box">
-                <a href="$cat.name">
-                    <span>$cat.title</span>
-                </a>
-            </div>
+            #set($bg = "")
+            #if( $cat.imageHref )
+            #set($bg = "url($cat.imageHref)")
             #end
+            <a class="col-md-3 product-tile" href="$cat.name" style="background-image: $bg">
+                <div class="product-tile-inner">
+                    <span>$cat.title</span>
+                </div>
+            </a>
+            #end
+            </div>
         </div>
 
         <script type="text/javascript">

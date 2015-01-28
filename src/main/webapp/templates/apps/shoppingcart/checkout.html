@@ -31,10 +31,10 @@
                                                 <th>Quantity</th>
                                                 <th>Amount</th>
                                                 <th>Sub-total</th>
-                                                <th></th>
+                                                <th class="deleteItem"></th>
                                             </tr>
                                         </thead>                                    
-                                        <tbody>
+                                        <tbody id="itemsTableBody">
                                             #set( $items = $page.shoppingCartItemPages )
                                             #if( $items.empty )
                                             <tr>
@@ -50,12 +50,12 @@
                                                 </td>
                                                 <td>$item.productDescription</td>
                                                 <td>
-                                                    <input type="text" class="form-control quantity" value="1" name="quentity.${foreach.count}" style="width: 50px" />
-                                                    <input type="hidden" name="item.${foreach.count}" value="$item.href" />
+                                                    <input type="text" class="form-control quantity" value="1" name="quantity.${foreach.count}" style="width: 50px" />
+                                                    <input type="hidden" class="itemHref" name="item.${foreach.count}" value="$item.href" />
                                                 </td>
                                                 <td class="cost">$item.productPurchaseCost</td>
                                                 <td class="subtotal">$page.calcSubTotal( $item.productPurchaseCost, 1 )</td>
-                                                <td>
+                                                <td class="deleteItem">
                                                     <button class="remove btn btn-danger">
                                                         <span class="glyphicon glyphicon-remove"></span>
                                                     </button>
@@ -118,7 +118,7 @@
                                                         <th>Sub-total</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody>
+                                                <tbody id="confirmTableBody">
                                                     <tr>
                                                         <td>
                                                             <img src="/images/cosmo.jpeg" style="max-width: 200px; max-height: 200px"/>
@@ -172,6 +172,15 @@
                                         }
                                     });
                                     if (ok) {
+                                        $("#confirmTableBody").html($("#itemsTableBody").html());
+                                        $("#confirmTableBody").find("input.quantity").each(function (i, n) {
+                                            var node = $(n);
+                                            var q = node.val();
+                                            node.replaceWith("<span>" + q + "</span>");
+                                            flog("q", node)
+                                        });
+                                        $("#confirmTableBody").find(".deleteItem, .itemHref").remove();
+
                                         $('#checkout-tabs a[href="#tab-shipping"]').tab("show");
                                     } else {
                                         Msg.error("Please enter valid quantities");
@@ -189,6 +198,8 @@
                                 panels.on("click", ".remove", function (e) {
                                     var tr = $(e.target).closest("tr");
                                     tr.remove();
+                                    var href = tr.find("input.itemHref").val();
+                                    doRemoveFromCart(href);
                                     Msg.info("Removed item");
                                 });
                                 panels.on("change", ".quantity", function (e) {
@@ -217,6 +228,25 @@
                                         }
                                     }
                                 });
+
+                                function doRemoveFromCart(href) {
+                                    flog("doRemoveFromCart", href);
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: "/checkout",
+                                        data: {
+                                            removeItemHref: href
+                                        },
+                                        datatype: "json",
+                                        success: function (data) {
+                                            Msg.info("Removed item from your shopping cart");
+                                            $("#itemsTableBody").reloadFragment();
+                                        },
+                                        error: function (resp) {
+                                            Msg.error("An error occured adding the product to your shopping cart. Please check your internet connection and try again");
+                                        }
+                                    });
+                                }
                             });
 
                         </script>
