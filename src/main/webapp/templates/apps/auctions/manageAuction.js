@@ -17,7 +17,7 @@ function initPictureCheckbox() {
     $(".mk-default label").click(function (e) {
         $chk = $(this).find("input[type=checkbox]");
         flog($chk, e.target.localName);
-        if(e.target.localName === "label"){
+        if (e.target.localName === "label") {
             $chk.check(!$chk.is(":checked"));
         }
         var isRecip = $chk.is(":checked");
@@ -64,6 +64,9 @@ function setImageDefault(chk, isRecip) {
 function initForms() {
     $(".Cancel").click(function () {
         window.location = "../";
+    });
+    $('#auctionTitle').keyup(function () {
+        $('#auctionTitle').val($('#auctionTitle').val().replace(/[^a-zA-Z0-9 ]/g, ''));
     });
     $("form").forms({
         callback: function (resp) {
