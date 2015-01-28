@@ -12,10 +12,14 @@ function initManageAuction() {
 function getImageId(pathname) {
     return pathname.substr(pathname.lastIndexOf('/') + 1);
 }
-
+var $chk;
 function initPictureCheckbox() {
-    $(".mk-default input[type=checkbox]").click(function () {
-        var $chk = $(this);
+    $(".mk-default label").click(function (e) {
+        $chk = $(this).find("input[type=checkbox]");
+        flog($chk, e.target.localName);
+        if(e.target.localName === "label"){
+            $chk.check(!$chk.is(":checked"));
+        }
         var isRecip = $chk.is(":checked");
         flog("checkbox click", $chk, isRecip);
         setImageDefault($chk, isRecip);
