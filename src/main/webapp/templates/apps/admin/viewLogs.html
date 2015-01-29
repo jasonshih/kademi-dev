@@ -86,7 +86,9 @@
                         }
                         $('abbr.timeago').timeago();
                         if (following) {
-                            $("html, body").animate({scrollTop: $("#logsBody").height() + 200}, "fast");
+                            $("html, body").animate({scrollTop: $("#logsTable").height()}, 10);
+                            //$(window).scrollTop($("#logsTable").height());
+                            
                         }
                     };
                     flog("done initWebsockets");
