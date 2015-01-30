@@ -46,24 +46,45 @@
                             <button class="reject btn btn-danger">Reject</button>
                         </td>
                     </tr>
-                    <!-- <tr id="" class="collapse det-$app.id">
-                        <td colspan="3"></td>
-                        <td>Name</td>
-                        <td colspan="4">$!app.member.firstName $!app.member.surName</td>
-                    </tr> -->
-                    #if( $app.fields.nvPairs.size() > 0 )
+                    #if($app.member.firstName || $app.member.surName || $app.fields.nvPairs.size() > 0)
                     <tr class="det-$app.id">
-                        <td colspan="7" style="color: #707070;">
-                            <div class="det-div-$app.id row collapse in">
+                        <td colspan="7" style="color: #707070; display: none;">
+                            <div class="det-div-$app.id row collapse">
                                 <div class="col-md-2">Field Name</div>
                                 <div class="col-md-2">Property Value</div>
                             </div>
                         </td>
                     </tr> 
+                    #end
+                    #if($app.member.firstName)
+                    <tr class="det-$app.id">
+                        <td id="det-$app.id" colspan="7" class="hiddenRow" style="display: none;">
+                            <div class="collapse det-div-$app.id">
+                                <div class="row">
+                                    <div class="col-md-2">firstName</div>
+                                    <div class="col-md-5">$app.member.firstName</div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr> 
+                    #end
+                    #if($app.member.surName)
+                    <tr class="det-$app.id">
+                        <td id="det-$app.id" colspan="7" class="hiddenRow" style="display: none;">
+                            <div class="collapse det-div-$app.id">
+                                <div class="row">
+                                    <div class="col-md-2">surName</div>
+                                    <div class="col-md-5">$app.member.surName</div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr> 
+                    #end
+                    #if( $app.fields.nvPairs.size() > 0 )
                     #foreach($field in $app.fields.nvPairs)
-                    <tr class="det-$app.id hiddenRow">
-                        <td colspan="7" class="hiddenRow">
-                            <div class="collapse in det-div-$app.id">
+                    <tr class="det-$app.id">
+                        <td id="det-$app.id" colspan="7" class="hiddenRow" style="display: none;">
+                            <div class="collapse det-div-$app.id">
                                 <div class="row">
                                     <div class="col-md-2">$field.name</div>
                                     <div class="col-md-5">$field.propValue</div>
