@@ -1,62 +1,84 @@
 #if($applications.size() > 0 )
 <div class="container">
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <i class="clip-home"></i>
-        Pending membership applications
-    </div>
-    <div class="panel-body pendingAccounts">
-        <article class="Note">This portlet shows membership applications which have not been processed. Please review them and 
-            accept those which appear legitimate, this will allow those users access to your site
-        </article>    
-        <table class="data table table-striped">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th></th>
-                    <th>Nickname</th>
-                    <th>Group</th>
-                    <th>Email</th>
-                    <th>Organisation</th>
-                    <th>Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                #foreach($app in $applications)
-                <tr data-toggle="collapse" data-target=".det-$app.id">
-                    <td>
-                        <input type="hidden" name="appId" value="$app.id"/>
-                        <button class="accept btn btn-success">Accept</button>
-                    </td>
-                    <td>
-                        <button class="reject btn btn-danger">Reject</button>
-                    </td>
-                    <td>$app.member.nickName</td>
-                    <td>$app.groupEntity.name</td>
-                    <td>$app.member.email</td>
-                    <td>$app.withinOrg.titleOrId</td>
-                    <td><abbr title="$formatter.formatDateISO8601($app.createdDate)" class="timeago">$app.createdDate</abbr></td>
-                </tr>
-                <tr id="" class="collapse det-$app.id">
-                    <td colspan="3"></td>
-                    <td>Name</td>
-                    <td colspan="4">$!app.member.firstName $!app.member.surName</td>
-                </tr>
-                #if( $app.fields.nvPairs.size() > 0 )
-                #foreach($field in $app.fields.nvPairs)
-                <tr id="" class="collapse det-$app.id">
-                    <td colspan="3"></td>
-                    <td>$field.name</td>
-                    <td colspan="4">$field.propValue</td>
-                </tr>                
-                #end
-                #end
-                #end
-            </tbody>
-        </table>
-        <script type="text/javascript" src="/static/js/jquery.timeago.js" >//</script>
-        <script type="text/javascript" src="/templates/apps/signup/pending.js">//</script>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <i class="clip-home"></i>
+            Pending membership applications
+        </div>
+        <div class="panel-body pendingAccounts">
+            <article class="Note">This portlet shows membership applications which have not been processed. Please review them and 
+                accept those which appear legitimate, this will allow those users access to your site
+            </article>    
+            <table class="data table table-striped">
+                <colgroup>
+                    <col width="" />
+                    <col width="" />
+                    <col width="" />
+                    <col width="" />
+                    <col width="" />
+                    <col width="71px" />
+                    <col width="71px" />
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>Nickname</th>
+                        <th>Group</th>
+                        <th>Email</th>
+                        <th>Organisation</th>
+                        <th>Date</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    #foreach($app in $applications)
+                    <tr data-toggle="collapse" data-target=".det-div-$app.id">
+                        <td>$app.member.nickName</td>
+                        <td>$app.groupEntity.name</td>
+                        <td>$app.member.email</td>
+                        <td>$app.withinOrg.titleOrId</td>
+                        <td><abbr title="$formatter.formatDateISO8601($app.createdDate)" class="timeago">$app.createdDate</abbr></td>
+                        <td>
+                            <input type="hidden" name="appId" value="$app.id"/>
+                            <button class="accept btn btn-success">Accept</button>
+                        </td>
+                        <td>
+                            <button class="reject btn btn-danger">Reject</button>
+                        </td>
+                    </tr>
+                    <!-- <tr id="" class="collapse det-$app.id">
+                        <td colspan="3"></td>
+                        <td>Name</td>
+                        <td colspan="4">$!app.member.firstName $!app.member.surName</td>
+                    </tr> -->
+                    #if( $app.fields.nvPairs.size() > 0 )
+                    <tr class="det-$app.id">
+                        <td colspan="7" style="color: #707070;">
+                            <div class="det-div-$app.id row collapse in">
+                                <div class="col-md-2">Field Name</div>
+                                <div class="col-md-2">Property Value</div>
+                            </div>
+                        </td>
+                    </tr> 
+                    #foreach($field in $app.fields.nvPairs)
+                    <tr class="det-$app.id hiddenRow">
+                        <td colspan="7" class="hiddenRow">
+                            <div class="collapse in det-div-$app.id">
+                                <div class="row">
+                                    <div class="col-md-2">$field.name</div>
+                                    <div class="col-md-5">$field.propValue</div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>                
+                    #end
+                    #end
+                    #end
+                </tbody>
+            </table>
+            <script type="text/javascript" src="/static/js/jquery.timeago.js" >//</script>
+            <script type="text/javascript" src="/templates/apps/signup/pending.js">//</script>
+        </div>
     </div>
 </div>
-    </div>
 #end

@@ -1,5 +1,6 @@
 $(function () {
     $("abbr.timeago").timeago();
+    $('.collapse').collapse();
     $(".pendingAccounts button.accept").click(function(e) {
         e.stopPropagation();
         e.preventDefault();
@@ -16,6 +17,7 @@ $(function () {
     function setStatus(btn, isEnabled) {   
         var tr = btn.closest("tr");
         var appId = tr.find("input[name=appId]").val();
+        var details = $(".det-" + appId);
         log("setStatus", appId, isEnabled);
         $.ajax({
             type: 'POST',
@@ -32,6 +34,7 @@ $(function () {
                     return;
                 }
                 tr.remove();
+                details.remove();
             },
             error: function(resp) {
                 log("error", resp);
