@@ -17,3 +17,6 @@ body#editor {
 .cke_panel_listItem .jumbotron {
     padding: 10px;
 }
+body#editor .btn {
+     -moz-user-select: inherit;
+}
