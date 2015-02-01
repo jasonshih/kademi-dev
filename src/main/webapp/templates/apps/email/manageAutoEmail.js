@@ -38,7 +38,7 @@ function initFormTriggers() {
         }
     });
 }
-
+var p;
 function initManageAutoEmail() {
     flog("initManageAutoEmail");
     initHtmlEditors($('.htmleditor'), getStandardEditorHeight(), null, null, 'autogrow');
@@ -55,7 +55,7 @@ function initManageAutoEmail() {
             $(panel).find('.required-if-shown').not(':hidden').addClass('required');
         },
         'unchecked.toggled': function(e, panel) {
-            $(panel).find('.required-if-shown').not(':hidden').removeClass('required');
+            $(panel).find('.required-if-shown').removeClass('required');
         }
     });
 

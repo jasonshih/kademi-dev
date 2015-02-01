@@ -222,12 +222,13 @@
                                         <div class="col-md-6">
                                             <label class="control-label col-md-4" for="groupToJoin">Group to join</label>
                                             <div class="col-md-8">
-                                                <select name="groupToJoinName" id="groupToJoin" class="form-control required-if-shown">
+                                                <select name="groupToJoinName" title="lala Land" id="groupToJoin" class="form-control required-if-shown">
                                                     $formatter.option( "", "[Please select]", $page.job.groupToJoin.name )
                                                     #foreach($group in $page.organisation.groups)
                                                     $formatter.option( $group.name, $group.name, $page.job.groupToJoin.name )
                                                     #end
                                                 </select>
+                                                <div class="help-block with-errors"></div>
                                             </div>
                                         </div>
                                     </div>
