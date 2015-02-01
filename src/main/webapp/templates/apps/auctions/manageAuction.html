@@ -98,7 +98,7 @@
                                             <div class="col-sm-2">
                                                 <select name="status" class="form-control">
                                                     #foreach($st in $page.statuses)
-                                                    $formatter.option($st.name(), $st.name(), null)
+                                                    $formatter.option($st.name(), $st.name(), $page.status.name())
                                                     #end
                                                 </select>
                                             </div>
@@ -238,7 +238,7 @@
                                 <tr>
                                     <td>
                                         Body<br />
-                                        <small><i>This copy will sit next to the image and tell the user about the auction</i></small>
+                                        <small><i>This will be seen by users when viewing an auction</i></small>
                                     </td>
                                     <td>
                                         <div class="form-group editor-wrapper">
