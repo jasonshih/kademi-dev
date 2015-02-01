@@ -68,6 +68,7 @@
 							<col width="" />
 							<col width="15%" />
 							<col width="16%" />
+                            <col width="" />
 							<col data-sort="false" width="100px" />
 							<col data-sort="false" width="30px" />
 						</colgroup>
@@ -78,6 +79,7 @@
 								<th>Surname</th>
 								<th>Email</th>
 								<th>Contact</th>
+                                <th>Primary group</th>
 								<th class="action"></th>
 								<th><input type="checkbox" name="toRemoveId" class="chk-all" /></th>
 							</tr>
@@ -90,6 +92,7 @@
 								<td>$formatter.htmlEncode($p.surName)</td>
 								<td><a href="mailto:$p.email">$p.email</a></td>
 								<td>$!p.phone</td>
+                                <td>$page.primaryGroup($p)</td>
 								<td class="action">
 									<div class="btn-group btn-group-sm">
 										<a href="$p.id" class="btn btn-sm btn-primary btn-sm"> <i class="fa fa-edit"></i> Edit
