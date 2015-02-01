@@ -69,6 +69,7 @@ function initRegisterForms(afterRegisterHref, callback) {
                         suggestion: Handlebars.compile('<p><strong>{{title}}</strong> {{address}}, {{postcode}}</p>')
                     }
                 });
+                $('.tt-hint').removeClass('required');
                 $("#orgName").on("typeahead:selected", function(e, datum) {
                     log("Selected", e, datum);
                     $("#orgId").val(datum.orgId);
