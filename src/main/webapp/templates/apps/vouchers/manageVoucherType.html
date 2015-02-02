@@ -190,7 +190,6 @@
                                         <col width="" />
                                         <col width="" />
                                         <col width="" />
-                                        <col width="" />
                                         <col width="280px" />
                                     </colgroup>
                                     <thead>
@@ -200,7 +199,6 @@
                                             <th>Status</th>
                                             <th>Date</th>
                                             <th>By</th>
-                                            <th class="action"></th>
                                         </tr>
                                     </thead>
                                     <tbody id="vouchers-table-body">
@@ -219,15 +217,7 @@
                                                 #if( $v.changedBy )
                                                 <a href="/manageUsers/$v.changedBy.userId">$v.changedBy.name</a>
                                                 #end
-                                            </td>
-                                            <td class="action text-right">
-                                                #if( $v.status == '' || $v.status == 'P' )
-                                                <a href="$v.voucherTypeCode/$v.voucherId" class="btn btn-sm btn-success voucher-redeem" ><i class="fa fa-plus"></i> Redeem</a>
-                                                #end
-                                                #if( $v.status == '' )
-                                                <a href="$v.voucherTypeCode/$v.voucherId" class="btn btn-sm btn-warning voucher-pending" ><i class="fa fa-question"></i> Pending</a>
-                                                #end
-                                            </td>
+                                            </td>                                            
                                         </tr>
                                         #end
                                         #end
@@ -251,7 +241,7 @@
             <div class="modal-body">
                 <div class="row upload">
                     <div class="col-sm-12">
-                        <div class="btn btn-primary btn-sm input uploadCsv" id="doUploadCsv"></div>
+                        <div class="input uploadCsv" id="doUploadCsv"></div>
                         <div class="results" style="display: none">
                             <p>
                                 <strong>Num inserted:</strong>

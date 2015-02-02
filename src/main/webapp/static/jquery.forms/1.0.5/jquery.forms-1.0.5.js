@@ -16,7 +16,6 @@
  */
 
 (function ($) {
-
     $.fn.forms = function (options) {
 
         $.getScriptOnce("/static/js/moment-with-langs.min.js");
@@ -192,6 +191,23 @@ function postForm(form, valiationMessageSelector, validationFailedMessage, callb
         if (enc == "multipart/form-data") {
             ajaxOpts.processData = false;
             ajaxOpts.contentType = false;
+        }
+        ajaxOpts.beforeSend = function (xhr, options) { // et toc !
+            options.data = data;
+//            xhr.upload.onprogress = function (event) {
+//                _options.progress(event.position, event.total);
+//            }
+            /**
+             * You can use https://github.com/francois2metz/html5-formdata for a fake FormData object
+             * Only work with Firefox 3.6
+             */
+            if (data.fake) {
+                xhr.setRequestHeader("Content-Type", "multipart/form-data; boundary=" + data.boundary);
+                // with fake FormData object, we must use sendAsBinary
+                xhr.send = function (data) {
+                    xhr.sendAsBinary(data.toString());
+                }
+            }
         }
 
         $.ajax(ajaxOpts);
@@ -755,3 +771,40 @@ function validatePassword(pw, options) {
     return true;
 }
 
+/**
+ * Emulate FormData for some browsers
+ * MIT License
+ * (c) 2010 François de Metz
+ */
+(function(w) {
+    if (w.FormData)
+        return;
+    function FormData() {
+        this.fake = true;
+        this.boundary = "--------FormData" + Math.random();
+        this._fields = [];
+    }
+    FormData.prototype.append = function(key, value) {
+        this._fields.push([key, value]);
+    }
+    FormData.prototype.toString = function() {
+        var boundary = this.boundary;
+        var body = "";
+        this._fields.forEach(function(field) {
+            body += "--" + boundary + "\r\n";
+            // file upload
+            if (field[1].name) {
+                var file = field[1];
+                body += "Content-Disposition: form-data; name=\""+ field[0] +"\"; filename=\""+ file.name +"\"\r\n";
+                body += "Content-Type: "+ file.type +"\r\n\r\n";
+                body += file.getAsBinary() + "\r\n";
+            } else {
+                body += "Content-Disposition: form-data; name=\""+ field[0] +"\";\r\n\r\n";
+                body += field[1] + "\r\n";
+            }
+        });
+        body += "--" + boundary +"--";
+        return body;
+    }
+    w.FormData = FormData;
+})(window);
