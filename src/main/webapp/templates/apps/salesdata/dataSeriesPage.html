@@ -10,7 +10,23 @@
     <body class="">
         <div class="container">
             <div class="panel panel-default">
-                <div id="productsTableContainer" class="panel-body">
+                <div id="kpisTableContainer" class="panel-body">
+                    <div class="table-responsive">
+                        #set($leaderboard = $page.leaderboard)
+                        <table class="table table-striped table-hover">
+                            #foreach($ranking in $leaderboard.highestResults(10))
+                            <tr>
+                                <td>$ranking.rank</td>
+                                <td>$ranking.participant.name</td>
+                            </tr>
+                            #end
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel panel-default">
+                <div id="kpisTableContainer" class="panel-body">
                     <div class="table-responsive">
                         <table class="table table-striped table-hover">
                             <thead>
