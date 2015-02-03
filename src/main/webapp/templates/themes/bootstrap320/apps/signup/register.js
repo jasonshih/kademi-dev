@@ -27,6 +27,7 @@ function initRegisterForms(afterRegisterHref, callback) {
             } else {
                 log("created account ok, logging in...", resp, form);
                 var userName = form.find("input[name=email]").val();
+                userName = userName.toLowerCase();
                 var password = form.find("input[name=password]").val();
                 doLogin(userName, password, {
                     afterLoginUrl: afterRegisterHref,

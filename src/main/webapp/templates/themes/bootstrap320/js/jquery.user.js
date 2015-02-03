@@ -64,7 +64,7 @@
             $("input", container).removeClass("errorField");
             $(config.valiationMessageSelector, this).hide(100);
             try {
-                var userName = $("input[name=email]", container).val();
+                var userName = $("input[name=email]", container).val();                
                 var password = $("input[type=password]", container).val();
                 if (userName === null || userName.length === 0) {
                     $("input[type=text]", container).closest(".control-group")
