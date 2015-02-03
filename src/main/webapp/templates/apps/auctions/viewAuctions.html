@@ -16,10 +16,10 @@
                 #foreach($auction in $page.childrenWithPermission)
                 <div class="hero thumbnail well col-md-12">
                     <h2 class="hero-heading"><a href="$auction.href">$auction.title</a></h2>
-                    <div class="hero-body">                        
-                        #if( $auction.primaryImageHref )
+                    <div class="hero-body">      
+                        #if( $auction.bestSquareImageHref )
                         <a href="$auction.href">
-                            <img class="auction-image hero-image" src="/auctions/$auction.name/$auction.primaryImageId" />
+                            <img class="auction-image hero-image" src="$auction.bestSquareImageHref" />
                         </a>
                         #end
 
