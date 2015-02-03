@@ -29,7 +29,11 @@
                             </button>
                         </form>
                         <div>
-                            Current Bid: $<span id="bidCurrentValue">$!page.currentBidValue</span>
+                            #if($page.currentBidValue)
+                            Current Bid: $<span id="bidCurrentValue">$page.currentBidValue</span>
+                            #else
+                            Current Bid: $<span id="bidCurrentValue">$page.auctionStartValue</span>
+                            #end
                             <br/>
                             Bid Count: <span id="bidCount">$page.currentBidCount</span>
                             <br/>
