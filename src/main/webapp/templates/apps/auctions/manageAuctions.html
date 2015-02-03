@@ -161,9 +161,6 @@
                     $('#auctionEndDate').data("DateTimePicker").setDate(d);
                     $('#auctionEndDate').focus();
                 });
-                $('#auctionTitle').keyup(function () {
-                    $('#auctionTitle').val($('#auctionTitle').val().replace(/[^a-zA-Z0-9 ]/g, ''));
-                });
 
                 $('#auction-wrapper').on('click', '.XAuction', function (e) {
                     e.preventDefault();

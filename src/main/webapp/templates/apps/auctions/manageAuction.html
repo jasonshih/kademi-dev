@@ -25,7 +25,7 @@
         </style>
     </head>
     <body>
-        <form action="" method="POST" role="form">
+        <form id="mainForm" action="" method="POST" role="form">
             <div id="manageAuction" class="MainContent tabbable">
                 <div class="clearfix">
                     <div class="pull-right">
@@ -194,26 +194,24 @@
                                             <div class="panel-body">
                                                 <div class="row">
                                                     <div class="col-xs-4 col-md-2">
-                                                        <button id="btn-change-ava" class="btn btn-success">Add image</button>
+                                                        <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-add-image">
+                                                            <i class="fa fa-plus"></i> Add image
+                                                        </button>
                                                     </div>
                                                     <div id="product-images">
-                                                        #foreach($href in $page.imageHrefs)
+                                                        #foreach($i in $page.images)
                                                         <div class="col-xs-6 col-md-3 product-image-thumb">
-                                                            <a href="$href" class="thumbnail"><img src="$href/alt-150-150.png"/></a>
-                                                            <a class="del-image btn btn-xs btn-danger" href="$href">
+                                                            <a href="$i.href" target="_blank" class="thumbnail"><img src="$i.href/alt-150-150.png"/></a>
+                                                            <a class="del-image btn btn-xs btn-danger" href="$i.href">
                                                                 <span class="fa fa-times"></span>
                                                             </a>
-                                                            <div class="mk-default" data-role="fieldcontain">
-                                                                <fieldset data-role="controlgroup">
-                                                                    <div class="checkbox">
-                                                                        <label class="col-sm-9" for="$href">
-                                                                                $formatter.checkbox($href, $page.isPrimaryImage($href))
-                                                                                Primary
-                                                                        </label>
-                                                                    </div>
-
-                                                                </fieldset>
-                                                            </div>
+                                                            <span class="label label-default">
+                                                                #if( $i.orientation )
+                                                                $i.orientation
+                                                                #else
+                                                                Default
+                                                                #end
+                                                            </span>
                                                         </div>
                                                         #end
                                                     </div>
@@ -397,6 +395,42 @@
                 <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
+
+        <div id="modal-add-image" class="modal modal-md fade">
+            <div class="upcrop-zone"></div>
+            <div class="edit-image-zone hide">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Add new image</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="$page.href" method="POST" class="form-horizontal">
+                        <input type="hidden" name="hash" />
+                        <div class="form-group">
+                            <div class="errorHandler alert alert-danger no-display pageMessage">.</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" for="newTagName">Preview</label>
+                            <div class="col-sm-9">
+                                <p><img src="" class="img-responsive preview" /></p>
+                                <button class="btn btn-sm btn-success btn-add-other-img" type="button">Upload other image</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" for="newTagName">File name</label>
+                            <div class="col-sm-9">
+                                <input type="text" name="fileName" class="form-control required" required="true" />
+                            </div>
+                        </div>
+                        <input type="hidden" name="orientation" value="" />
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary btn-sm" data-type="form-submit">Save image</button>
+                </div>
+            </div>
+        </div> 
 
         <script type="text/javascript">
             $(function () {
