@@ -1,331 +1,331 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
-	<head>
-		<title>$view.title</title>
-		<link rel="stylesheet" type="text/css" href="manageUser.css" />
-		<script type="text/javascript" src="manageUser.js">//</script>
-	</head>
+    <head>
+        <title>$view.title</title>
+        <link rel="stylesheet" type="text/css" href="manageUser.css" />
+        <script type="text/javascript" src="manageUser.js">//</script>
+    </head>
     <body class="manage-users">
-		<div class="clearfix">
-			<div class="btn-group pull-right">
-				<a role="button" href="users.csv" class="btn btn-info btn-sm">Open Users CSV</a>
-				<button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
-					<span class="caret"></span>
-				</button>
-				<ul class="dropdown-menu" role="menu">
-					<li class="presentation" role="menuitem"><a href="#" class="btn-upload-users-csv">Upload Users CSV</a></li>
-					<li class="presentation" role="menuitem"><a role="button" href="users.csv">Open Users CSV</a></li>
-					<li class="presentation" role="menuitem"><a href="#" class="btn-match-orgs">Match orgs</a></li> 
-					#portlets("manageUsersTools")
-				</ul>
-			</div>
-			<p class="pull-left">
-				<a href="#" class="btn btn-success btn-sm btn-add-user"><i class="fa fa-plus"></i> Add new user</a> 
-			</p>
-		</div>
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<i class="fa fa-cog"></i> Users
-			</div>
-			<div class="panel-body">
-				<div class="clearfix form-horizontal">
-					<div class="btn-group pull-right">
-						<button type="button" class="btn btn-sm btn-default btn-add-to-group">Add to Group</button>
-						<button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
-							<span class="caret"></span>
-						</button>
-						<ul class="dropdown-menu" role="menu">
-							<li><a href="#" class="btn-add-to-group">Add to Group</a></li>
-							<li class="divider"></li>
-							<li><a href="#" class="btn-remove-users">Remove</a></li>
-						</ul>
-					</div>
-					<p class="input-group search-user input-group-sm">
-						<input type="text" id="user-query" class="form-control" placeholder="Search for user here" value="" /> 
-						<span class="input-group-btn">
-							<button class="btn btn-sm btn-default" type="button" data-type="clearer" data-target="#user-query">
-								<i class="fa fa-times"></i>
-							</button>
-						</span>
-					</p>
-					<div class="form-group">
-						<label for="search-group" class="col-sm-1 control-label">Group:</label>
-						<div class="col-sm-3">
-							<select name="searchGroup" id="search-group" class="form-control input-sm">
-								<option value="">&nbsp;</option>
-								#foreach($group in $page.organisation.groups)
-								<option value="$group.name">$group.name</option> 
-								#end
-							</select>
-						</div>
-					</div>
-				</div>
-	
-				<div class="table-responsive">
-					<table id="table-users" class="table table-striped table-hover">
-						<colgroup>
-							<col width="15%" />
-							<col width="" />
-							<col width="" />
-							<col width="15%" />
-							<col width="16%" />
+        <div class="clearfix">
+            <div class="btn-group pull-right">
+                <a role="button" href="users.csv" class="btn btn-info btn-sm">Open Users CSV</a>
+                <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li class="presentation" role="menuitem"><a href="#" class="btn-upload-users-csv">Upload Users CSV</a></li>
+                    <li class="presentation" role="menuitem"><a role="button" href="users.csv">Open Users CSV</a></li>
+                    <li class="presentation" role="menuitem"><a href="#" class="btn-match-orgs">Match orgs</a></li> 
+                    #portlets("manageUsersTools")
+                </ul>
+            </div>
+            <p class="pull-left">
+                <a href="#" class="btn btn-success btn-sm btn-add-user"><i class="fa fa-plus"></i> Add new user</a> 
+            </p>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-cog"></i> Users
+            </div>
+            <div class="panel-body">
+                <div class="clearfix form-horizontal">
+                    <div class="btn-group pull-right">
+                        <button type="button" class="btn btn-sm btn-default btn-add-to-group">Add to Group</button>
+                        <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#" class="btn-add-to-group">Add to Group</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#" class="btn-remove-users">Remove</a></li>
+                        </ul>
+                    </div>
+                    <p class="input-group search-user input-group-sm">
+                        <input type="text" id="user-query" class="form-control" placeholder="Search for user here" value="" /> 
+                        <span class="input-group-btn">
+                            <button class="btn btn-sm btn-default" type="button" data-type="clearer" data-target="#user-query">
+                                <i class="fa fa-times"></i>
+                            </button>
+                        </span>
+                    </p>
+                    <div class="form-group">
+                        <label for="search-group" class="col-sm-1 control-label">Group:</label>
+                        <div class="col-sm-3">
+                            <select name="searchGroup" id="search-group" class="form-control input-sm">
+                                <option value="">&nbsp;</option>
+                                #foreach($group in $page.organisation.groups)
+                                <option value="$group.name">$group.name</option> 
+                                #end
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table id="table-users" class="table table-striped table-hover">
+                        <colgroup>
+                            <col width="15%" />
                             <col width="" />
-							<col data-sort="false" width="100px" />
-							<col data-sort="false" width="30px" />
-						</colgroup>
-						<thead>
-							<tr>
-								<th>Nick name</th>
-								<th>Given</th>
-								<th>Surname</th>
-								<th>Email</th>
-								<th>Contact</th>
+                            <col width="" />
+                            <col width="15%" />
+                            <col width="16%" />
+                            <col width="" />
+                            <col data-sort="false" width="100px" />
+                            <col data-sort="false" width="30px" />
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>Nick name</th>
+                                <th>Given</th>
+                                <th>Surname</th>
+                                <th>Email</th>
+                                <th>Contact</th>
                                 <th>Primary group</th>
-								<th class="action"></th>
-								<th><input type="checkbox" name="toRemoveId" class="chk-all" /></th>
-							</tr>
-						</thead>
-						<tbody>
-							#foreach($p in $page.searchResults)
-							<tr>
-								<td><a href='$p.id'> #if($p.nickName) $formatter.htmlEncode($p.nickName) #else $p.name #end </a></td>
-								<td>$formatter.htmlEncode($p.firstName)</td>
-								<td>$formatter.htmlEncode($p.surName)</td>
-								<td><a href="mailto:$p.email">$p.email</a></td>
-								<td>$!p.phone</td>
-                                <td>$page.primaryGroup($p)</td>
-								<td class="action">
-									<div class="btn-group btn-group-sm">
-										<a href="$p.id" class="btn btn-sm btn-primary btn-sm"> <i class="fa fa-edit"></i> Edit
-										</a>
-										<button class="btn btn-sm btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
-											<span class="caret"></span>
-										</button>
-										<ul class="dropdown-menu pull-right" role="menu">
-											<li><a href="$p.id"><i class="fa fa-edit"></i> User details</a></li>
-											<li><a href="$p.id" class="btn-login-as"><i class="clip-user"></i> Login as this user</a></li>
-										</ul>
-									</div>
-								</td>
-								<td><input type="checkbox" name="toRemoveId" value="$p.id" /></td>
-							</tr>
-							#end
-						</tbody>
-					</table>
-				</div>
-			</div>
-		</div>
+                                <th class="action"></th>
+                                <th><input type="checkbox" name="toRemoveId" class="chk-all" /></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            #foreach($p in $page.searchResults)
+                            <tr>
+                                <td><a href='$p.id'> #if($p.nickName) $formatter.htmlEncode($p.nickName) #else $p.name #end </a></td>
+                                <td>$formatter.htmlEncode($p.firstName)</td>
+                                <td>$formatter.htmlEncode($p.surName)</td>
+                                <td><a href="mailto:$p.email">$p.email</a></td>
+                                <td>$!p.phone</td>
+                                <td>$!page.primaryGroup($p)</td>
+                                <td class="action">
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="$p.id" class="btn btn-sm btn-primary btn-sm"> <i class="fa fa-edit"></i> Edit
+                                        </a>
+                                        <button class="btn btn-sm btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu pull-right" role="menu">
+                                            <li><a href="$p.id"><i class="fa fa-edit"></i> User details</a></li>
+                                            <li><a href="$p.id" class="btn-login-as"><i class="clip-user"></i> Login as this user</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td><input type="checkbox" name="toRemoveId" value="$p.id" /></td>
+                            </tr>
+                            #end
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
-		<div id="modal-new-user" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
-			<div class="modal-header">
-				<button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-				<h4 class="modal-title">New user</h4>
-			</div>
-			<div class="modal-body">
-				#set($groups = $page.groups) #if($groups.isEmpty())
-				<p class="alert alert-error">You must create at least one group
-					in this or a parent organisation before you can add users</p>
-				#else
-				<form method="post" action="new" class="form-horizontal">
-					<div class="form-group">
-						<label class="control-label col-md-3" for="newUserNickName">Nick name</label>
-						<div class="col-md-9">
-							<input type="text" name="nickName" id="newUserNickName" class="required form-control" />
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="control-label col-md-3" for="newUserEmail">Email</label>
-						<div class="col-md-9">
-							<input type="text" name="email" id="newUserEmail" class="email required form-control" />
-						</div>
-					</div>
-					<hr />
-					<h4>Group membership</h4>
-					<p>
-						<i>Please select a group and an organisation to make this user
-							a member of</i>
-					</p>
-					<div class="groups">
-						<div class="form-group">
-							<label class="control-label col-md-2" for="newUserEmail">Organisation</label>
-							<div class="col-md-10">
-								<input type="text" class="form-control required" autocomplete="off" name="orgTitle" id="orgTitle" value="$page.organisation.formattedName" /> 
+        <div id="modal-new-user" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                <h4 class="modal-title">New user</h4>
+            </div>
+            <div class="modal-body">
+                #set($groups = $page.groups) #if($groups.isEmpty())
+                <p class="alert alert-error">You must create at least one group
+                    in this or a parent organisation before you can add users</p>
+                #else
+                <form method="post" action="new" class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="newUserNickName">Nick name</label>
+                        <div class="col-md-9">
+                            <input type="text" name="nickName" id="newUserNickName" class="required form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="newUserEmail">Email</label>
+                        <div class="col-md-9">
+                            <input type="text" name="email" id="newUserEmail" class="email required form-control" />
+                        </div>
+                    </div>
+                    <hr />
+                    <h4>Group membership</h4>
+                    <p>
+                        <i>Please select a group and an organisation to make this user
+                            a member of</i>
+                    </p>
+                    <div class="groups">
+                        <div class="form-group">
+                            <label class="control-label col-md-2" for="newUserEmail">Organisation</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control required" autocomplete="off" name="orgTitle" id="orgTitle" value="$page.organisation.formattedName" /> 
                                 <input type="hidden" class="required" autocomplete="off" name="orgId" id="orgId" value="$page.organisation.id" />
-							</div>
-						</div>
-						<div class="form-group">
-							<div id="org-search">
-								<div class="table-responsive">
-									<table class="table table-striped table-hover table-condensed">
-										#if( $page.orgSearchResults.isEmpty() )
-										<tbody>
-											<tr>
-												<td>No matching organisations found</td>
-											</tr>
-										</tbody>
-										#else
-										<thead>
-											<tr>
-												<th>Id</th>
-												<th>Title</th>
-											</tr>
-										</thead>
-										<tbody>
-											#foreach($org in $page.orgSearchResults)
-											<tr>
-												<td><a href="$org.id">$org.orgId</a></td>
-												<td><a href="$org.id">$!org.title</a></td>
-											</tr>
-											#end
-										<tbody>#end
-									</table>
-								</div>
-							</div>
-						</div>
-	
-						<h4>Group:</h4>
-						<div class="memberships-wrapper">
-							<ul class="row memberships-list">
-								#foreach($group in $groups) #set($id = "radGroup_" + $group.name)
-								<li class="col-md-4 membership" title="$group.name" style="list-style-type: none;">
-									<div class="clearfix">
-										<label for="$id">$formatter.radio($id, "group", false, $group.name) $group.name</label>
-									</div>
-								</li> #end
-							</ul>
-						</div>
-					</div>
-				</form>
-				#end
-			</div>
-			<div class="modal-footer">
-				<button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-				<button class="btn btn-sm btn-primary" data-type="form-submit" type="button">Save</button>
-			</div>
-		</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div id="org-search">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover table-condensed">
+                                        #if( $page.orgSearchResults.isEmpty() )
+                                        <tbody>
+                                            <tr>
+                                                <td>No matching organisations found</td>
+                                            </tr>
+                                        </tbody>
+                                        #else
+                                        <thead>
+                                            <tr>
+                                                <th>Id</th>
+                                                <th>Title</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            #foreach($org in $page.orgSearchResults)
+                                            <tr>
+                                                <td><a href="$org.id">$org.orgId</a></td>
+                                                <td><a href="$org.id">$!org.title</a></td>
+                                            </tr>
+                                            #end
+                                            <tbody>#end
+                                                </table>
+                                                </div>
+                                                </div>
+                                                </div>
 
-		<div id="modal-upload-csv" class="modal modal-lg fade" aria-hidden="true" tabindex="-1">
-			<div class="modal-header">
-				<button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-				<h4 class="modal-title">Upload Users CSV</h4>
-			</div>
-			<div class="modal-body">
-				<div class="upload">
-					<div class="btn-upload" id='do-upload-csv'></div>
-					<br />
-                    <!--
-					<div class="allow-inserts">
-						<input type="checkbox" id="allow-inserts" /> <label for="allow-inserts">Allow inserts</label>
-					</div>
-                    -->
-				</div>
-				<br />
-				<div class="upload-results">
-					<p>
-						<strong>No. inserted:</strong> 
-						<span class="badge badge-success num-inserted">-</span> 
-						<strong>No. updated:</strong> 
-						<span class="badge badge-success num-updated">-</span> 
-						<strong>Unmatched rows:</strong> 
-						<span class="badge badge-danger num-unmatched">-</span>
-					</p>
-					<div class="table-responsive">
-						<table class="table table-striped table-hover table-condensed">
-							<tbody>
-								<tr>
-									<td></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
-			</div>
-			<div class="modal-footer">
-				<button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-			</div>
-		</div>
+                                                <h4>Group:</h4>
+                                                <div class="memberships-wrapper">
+                                                    <ul class="row memberships-list">
+                                                        #foreach($group in $groups) #set($id = "radGroup_" + $group.name)
+                                                        <li class="col-md-4 membership" title="$group.name" style="list-style-type: none;">
+                                                            <div class="clearfix">
+                                                                <label for="$id">$formatter.radio($id, "group", false, $group.name) $group.name</label>
+                                                            </div>
+                                                        </li> #end
+                                                    </ul>
+                                                </div>
+                                                </div>
+                                                </form>
+                                                #end
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                                                    <button class="btn btn-sm btn-primary" data-type="form-submit" type="button">Save</button>
+                                                </div>
+                                                </div>
 
-		<div id="modal-match-orgs-csv" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
-			<div class="modal-header">
-				<button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-				<h4 class="modal-title">Match organisations CSV</h4>
-			</div>
-			<div class="modal-body">
-				<p>
-					Use this form to location organisation ID's for the organisation
-					titles in your users spreadsheet. Upload your users spreadsheet and
-					the system will attempt to locate existing organisations, and return
-					an updated spreadsheet. <b>This will not make any change your
-						server data.</b>
-				</p>
-				<form method="POST" action="matchOrgs.csv"
-					enctype="multipart/form-data">
-					<div data-provides="fileupload" class="fileupload fileupload-new">
-						<div class="input-group input-group-sm">
-							<div class="form-control uneditable-input">
-								<i class="fa fa-file fileupload-exists"></i> <span class="fileupload-preview"></span>
-							</div>
-							<div class="input-group-btn">
-								<div class="btn btn-sm btn-light-grey btn-file">
-									<span class="fileupload-new"><i class="fa fa-folder-open-o"></i> Select file</span> 
-									<span class="fileupload-exists"><i class="fa fa-folder-open-o"></i> Change</span> 
-									<input type="file" class="file-input" name="usersCsv" />
-								</div>
-								<a data-dismiss="fileupload" class="btn btn-sm btn-light-grey fileupload-exists" href="#">
-									<i class="fa fa-times"></i> Remove
-								</a>
-								<button class="btn btn-sm btn-primary" type="submit">Upload</button>
-							</div>
-						</div>
-					</div>
-				</form>
-			</div>
-			<div class="modal-footer">
-				<button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-			</div>
-		</div>
+                                                <div id="modal-upload-csv" class="modal modal-lg fade" aria-hidden="true" tabindex="-1">
+                                                    <div class="modal-header">
+                                                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                                                        <h4 class="modal-title">Upload Users CSV</h4>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="upload">
+                                                            <div class="btn-upload" id='do-upload-csv'></div>
+                                                            <br />
+                                                            <!--
+                                                                                <div class="allow-inserts">
+                                                                                        <input type="checkbox" id="allow-inserts" /> <label for="allow-inserts">Allow inserts</label>
+                                                                                </div>
+                                                            -->
+                                                        </div>
+                                                        <br />
+                                                        <div class="upload-results">
+                                                            <p>
+                                                                <strong>No. inserted:</strong> 
+                                                                <span class="badge badge-success num-inserted">-</span> 
+                                                                <strong>No. updated:</strong> 
+                                                                <span class="badge badge-success num-updated">-</span> 
+                                                                <strong>Unmatched rows:</strong> 
+                                                                <span class="badge badge-danger num-unmatched">-</span>
+                                                            </p>
+                                                            <div class="table-responsive">
+                                                                <table class="table table-striped table-hover table-condensed">
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                                                    </div>
+                                                </div>
 
-		<div id="modal-login-as" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
-			<div class="modal-header">
-				<button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-				<h4 class="modal-title">Login as User</h4>
-			</div>
-			<div class="modal-body">
-				<p>Below is the list of websites this user has access to:</p>
-				<ul>
-					<li>Please wait...</li>
-				</ul>
-			</div>
-			<div class="modal-footer">
-				<button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-			</div>
-		</div>
+                                                <div id="modal-match-orgs-csv" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
+                                                    <div class="modal-header">
+                                                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                                                        <h4 class="modal-title">Match organisations CSV</h4>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>
+                                                            Use this form to location organisation ID's for the organisation
+                                                            titles in your users spreadsheet. Upload your users spreadsheet and
+                                                            the system will attempt to locate existing organisations, and return
+                                                            an updated spreadsheet. <b>This will not make any change your
+                                                                server data.</b>
+                                                        </p>
+                                                        <form method="POST" action="matchOrgs.csv"
+                                                              enctype="multipart/form-data">
+                                                            <div data-provides="fileupload" class="fileupload fileupload-new">
+                                                                <div class="input-group input-group-sm">
+                                                                    <div class="form-control uneditable-input">
+                                                                        <i class="fa fa-file fileupload-exists"></i> <span class="fileupload-preview"></span>
+                                                                    </div>
+                                                                    <div class="input-group-btn">
+                                                                        <div class="btn btn-sm btn-light-grey btn-file">
+                                                                            <span class="fileupload-new"><i class="fa fa-folder-open-o"></i> Select file</span> 
+                                                                            <span class="fileupload-exists"><i class="fa fa-folder-open-o"></i> Change</span> 
+                                                                            <input type="file" class="file-input" name="usersCsv" />
+                                                                        </div>
+                                                                        <a data-dismiss="fileupload" class="btn btn-sm btn-light-grey fileupload-exists" href="#">
+                                                                            <i class="fa fa-times"></i> Remove
+                                                                        </a>
+                                                                        <button class="btn btn-sm btn-primary" type="submit">Upload</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                                                    </div>
+                                                </div>
 
-		<div id="modal-add-to-group" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
-			<div class="modal-header">
-				<button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-				<h4 class="modal-title">Add Users to Group</h4>
-			</div>
-			<div class="modal-body">
-				<p>Please choose which group to add users to</p>
-				<div class="groups-wrapper">
-					<ul class="groups-list row" style="margin-left: 20px;">
-						#foreach($group in $page.groups)
-						<li class="col-md-6 group"><a href="$group.name">$group.name</a></li>
-						#end
-					</ul>
-				</div>
-			</div>
-			<div class="modal-footer">
-				<button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-			</div>
-		</div>
+                                                <div id="modal-login-as" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
+                                                    <div class="modal-header">
+                                                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                                                        <h4 class="modal-title">Login as User</h4>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>Below is the list of websites this user has access to:</p>
+                                                        <ul>
+                                                            <li>Please wait...</li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                                                    </div>
+                                                </div>
 
-		<script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
-		<script type="text/javascript">
-	        $(function () {
-	            initManageUsers();
-	        });
-	    </script>
-		#portlets("manageUsersBottom")
-	</body>
-</html>
+                                                <div id="modal-add-to-group" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
+                                                    <div class="modal-header">
+                                                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                                                        <h4 class="modal-title">Add Users to Group</h4>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>Please choose which group to add users to</p>
+                                                        <div class="groups-wrapper">
+                                                            <ul class="groups-list row" style="margin-left: 20px;">
+                                                                #foreach($group in $page.groups)
+                                                                <li class="col-md-6 group"><a href="$group.name">$group.name</a></li>
+                                                                #end
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                                                    </div>
+                                                </div>
+
+                                                <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
+                                                <script type="text/javascript">
+            $(function () {
+                initManageUsers();
+            });
+                                                </script>
+                                                #portlets("manageUsersBottom")
+                                                </body>
+                                                </html>
