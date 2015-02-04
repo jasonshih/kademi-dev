@@ -1,6 +1,7 @@
 function initManageExtraField() {
+    flog("initManageExtraField");
     initCRUDExtraField();
-    initModal();
+    initExtraFieldModal();
     initExtraFIeld();
 }
 
@@ -21,8 +22,8 @@ function initCRUDExtraField() {
     // Add extra field
     $('.btn-add-extra-field').on('click', function (e) {
         e.preventDefault();
-
-        openModal();
+        flog("initCRUDExtraField - add field");
+        openExtraFieldModal();
     });
 
     var tableField = $('#table-extra-field');
@@ -38,7 +39,7 @@ function initCRUDExtraField() {
 
         tr.addClass('editing');
 
-        openModal(key, value);
+        openExtraFieldModal(key, value);
     });
 
     // Delete extra field
@@ -75,7 +76,8 @@ function initCRUDExtraField() {
     });
 }
 
-function openModal(key, value) {
+function openExtraFieldModal(key, value) {
+    flog("openExtraFieldModal");
     var modal = $('#modal-extra-field');
 
     if (key && value) {
@@ -128,7 +130,7 @@ function renderOption(optionText) {
     );
 }
 
-function initModal() {
+function initExtraFieldModal() {
     var modal = $('#modal-extra-field');
     var chkRequire = $('#extra-field-required');
     var txtText = $('#extra-field-text');
