@@ -7,15 +7,17 @@
     <body class="manage-users">
         <div class="clearfix">
             <div class="btn-group pull-right">
-                <a role="button" href="users.csv" class="btn btn-info btn-sm">Open Users CSV</a>
+                <a role="button" href="users.csv" class="btn btn-info btn-sm" download="users.csv">Open Users CSV</a>
                 <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
                     <li class="presentation" role="menuitem"><a href="#" class="btn-upload-users-csv">Upload Users CSV</a></li>
-                    <li class="presentation" role="menuitem"><a role="button" href="users.csv">Open Users CSV</a></li>
+                    <li class="presentation" role="menuitem"><a role="button" href="users.csv" download="users.csv">Open Users CSV</a></li>
                     <li class="presentation" role="menuitem"><a href="#" class="btn-match-orgs">Match orgs</a></li> 
                     #portlets("manageUsersTools")
+                    <li class="divider"></li>
+                    <li class="presentation" role="menuitem"><a role="button" href="unsubscribers.csv" download="unsubscribers.csv">Open Unsubscribers CSV</a></li>
                 </ul>
             </div>
             <p class="pull-left">
