@@ -6,16 +6,15 @@
     </head>
     <body class="">
         <div class="container">
-
             <h1>Checkout</h1>
-            <span class="pull-right">Balance <span class="badge label-primary">$!page.balance</span></span>
             <div class="contentForm">
                 <div class="" id="checkout-panels"> 
+                    <span class="pull-right">Balance <span class="badge label-primary">$!page.balance</span></span>
                     <div role="tabpanel" id="checkout-tabs">
-                        <ul class="nav nav-tabs" role="tablist">
+                        <ul class="nav nav-tabs" id="myTabs" role="tablist">
                             <li role="presentation" class="active"><a href="#tab-items" aria-controls="tab-items" role="tab" data-toggle="tab">1. Items</a></li>
-                            <li role="presentation"><a href="#tab-shipping" aria-controls="tab-shipping" role="tab" data-toggle="tab">2. Shipping Address</a></li>
-                            <li role="presentation"><a href="#tab-final" aria-controls="tab-final" role="tab" data-toggle="tab">3. Confirm and Order</a></li>
+                            <li role="presentation" class="disabled"><a href="#tab-shipping" aria-controls="tab-shipping" role="tab" data-toggle="tab">2. Shipping Address</a></li>
+                            <li role="presentation" class="disabled"><a href="#tab-final" aria-controls="tab-final" role="tab" data-toggle="tab">3. Confirm and Order</a></li>
                         </ul>
                         <form role="form" class="form-horizontal" method="post" action="$page.href">
                             <!-- Tab panes -->
@@ -134,7 +133,7 @@
                                         </div>
                                         <div class="col-md-4" style="border-left: 1px solid #dddddd">
                                             <div class="">
-                                                <p class="lead">
+                                                <p class="lead ship-address">
                                                     123 Somewhere Place<br/>
                                                     Unit 10<br/>
                                                     Parnell<br/>
@@ -150,108 +149,145 @@
                                 </div>
                             </div>
                         </form>                        
-
-
-                        <script type="text/javascript">
-                            $(function () {
-                                var panels = $("#checkout-panels");
-                                var form = $("#checkout-panels form");
-                                panels.on("click", ".wizard-btn-1", function (e) {
-                                    e.preventDefault();
-                                    var ok = true;
-                                    form.find(".quantity").each(function (i, n) {
-                                        var inp = $(n);
-                                        if (checkNumeric(inp, form)) {
-                                            var num = inp.val();
-                                            var tr = inp.closest("tr");
-                                            var cost = tr.find(".cost").text();
-                                            var newSubtotal = num * cost;
-                                            flog("num,cost,sub", num, cost, newSubtotal);
-                                            tr.find(".subtotal").text(newSubtotal);
-                                        } else {
-                                            ok = false;
-                                        }
-                                    });
-                                    if (ok) {
-                                        $("#confirmTableBody").html($("#itemsTableBody").html());
-                                        $("#confirmTableBody").find("input.quantity").each(function (i, n) {
-                                            var node = $(n);
-                                            var q = node.val();
-                                            node.replaceWith("<span>" + q + "</span>");
-                                            flog("q", node)
-                                        });
-                                        $("#confirmTableBody").find(".deleteItem, .itemHref").remove();
-
-                                        $('#checkout-tabs a[href="#tab-shipping"]').tab("show");
-                                    } else {
-                                        Msg.error("Please enter valid quantities");
-                                    }
-                                });
-                                panels.on("click", ".wizard-btn-2", function (e) {
-                                    e.preventDefault();
-                                    $('#checkout-tabs a[href="#tab-final"]').tab("show");
-                                });
-
-                                panels.on("click", ".wizard-btn-final", function (e) {
-                                    e.preventDefault();
-                                    form.submit();
-                                });
-                                panels.on("click", ".remove", function (e) {
-                                    var tr = $(e.target).closest("tr");
-                                    tr.remove();
-                                    var href = tr.find("input.itemHref").val();
-                                    doRemoveFromCart(href);
-                                    Msg.info("Removed item");
-                                });
-                                panels.on("change", ".quantity", function (e) {
-                                    flog("q change");
-                                    var target = $(e.target);
-                                    if (checkNumeric(target, form)) {
-                                        var num = target.val();
-                                        var tr = target.closest("tr");
-                                        var cost = tr.find(".cost").text();
-                                        var newSubtotal = num * cost;
-                                        flog("num,cost,sub", num, cost, newSubtotal);
-                                        tr.find(".subtotal").text(newSubtotal);
-                                    } else {
-                                        Msg.error("Please enter a valid quantity");
-                                    }
-                                });
-
-
-                                form.forms({
-                                    callback: function (resp, form) {
-                                        if (resp.status) {
-                                            Msg.info("Your order has been placed");
-                                            $("#checkout-panels").reloadFragment();
-                                        } else {
-                                            Msg.error("Sorry, an error occured placing your order. Please refresh the page and try again");
-                                        }
-                                    }
-                                });
-
-                                function doRemoveFromCart(href) {
-                                    flog("doRemoveFromCart", href);
-                                    $.ajax({
-                                        type: 'POST',
-                                        url: "/checkout",
-                                        data: {
-                                            removeItemHref: href
-                                        },
-                                        datatype: "json",
-                                        success: function (data) {
-                                            Msg.info("Removed item from your shopping cart");
-                                            $("#itemsTableBody").reloadFragment();
-                                        },
-                                        error: function (resp) {
-                                            Msg.error("An error occured adding the product to your shopping cart. Please check your internet connection and try again");
-                                        }
-                                    });
-                                }
-                            });
-
-                        </script>
-
                     </div>
-                    </body>
-                    </html>
+                </div>
+            </div>
+            <script type="text/javascript">
+                $(function () {
+                    initCheckout();
+                    initCheckoutPanels();
+                });
+
+                function initCheckout() {
+                    var form = $("#checkout-panels form");
+                    form.forms({
+                        callback: function (resp, form) {
+                            if (resp.status) {
+                                Msg.info("Your order has been placed");
+                                $("#checkout-panels").reloadFragment({
+                                    whenComplete : function(){
+                                        initCheckout();
+                                        initCheckoutPanels();
+                                    }
+                                });
+                            } else {
+                                Msg.error("Sorry, an error occured placing your order. Please refresh the page and try again");
+                            }
+                        }
+                    });
+                }
+                
+                function initCheckoutPanels(){
+                    var panels = $("#checkout-panels");
+                    var form = $("#checkout-panels form");
+                    panels.on("click", ".wizard-btn-1", function (e) {
+                        e.preventDefault();
+                        var ok = true;
+                        form.find(".quantity").each(function (i, n) {
+                            var inp = $(n);
+                            if (checkNumeric(inp, form)) {
+                                var num = inp.val();
+                                var tr = inp.closest("tr");
+                                var cost = tr.find(".cost").text();
+                                var newSubtotal = num * cost;
+                                flog("num,cost,sub", num, cost, newSubtotal);
+                                tr.find(".subtotal").text(newSubtotal);
+                            } else {
+                                ok = false;
+                            }
+                        });
+                        if (ok) {
+                            $("#confirmTableBody").html($("#itemsTableBody").html());
+                            $("#confirmTableBody").find("input.quantity").each(function (i, n) {
+                                var node = $(n);
+                                var q = node.val();
+                                node.replaceWith("<span>" + q + "</span>");
+                                flog("q", node)
+                            });
+                            $("#confirmTableBody").find(".deleteItem, .itemHref").remove();
+
+                            var tabs = $('#checkout-tabs a[href="#tab-shipping"]');
+                            tabs.parent().removeClass("disabled")
+                            tabs.tab("show");
+                        } else {
+                            Msg.error("Please enter valid quantities");
+                        }
+                    });
+                    panels.on("click", ".wizard-btn-2", function (e) {
+                        e.preventDefault();
+                        if (checkRequiredFields(form)) {
+                            var addr = $(".ship-address");
+                            addr.empty();
+                            var addr1 = $('#tab-shipping input[name="addressLine1"]').val();
+                            var addr2 = $('#tab-shipping input[name="addressLine2"]').val();
+                            var postCode = $('#tab-shipping input[name="postcode"]').val();
+                            var state = $('#tab-shipping input[name="state"]').val();
+                            addr.append(addr1)
+                                    .append('</br>')
+                                    .append(addr2)
+                                    .append('</br>')
+                                    .append(postCode)
+                                    .append('</br>')
+                                    .append(state);
+                            resetValidation(form);
+                            var tabs = $('#checkout-tabs a[href="#tab-final"]');
+                            tabs.parent().removeClass("disabled")
+                            tabs.tab("show");
+                        }
+                    });
+
+                    panels.on("click", ".wizard-btn-final", function (e) {
+                        e.preventDefault();
+                        form.submit();
+                    });
+                    panels.on("click", ".remove", function (e) {
+                        var tr = $(e.target).closest("tr");
+                        tr.remove();
+                        var href = tr.find("input.itemHref").val();
+                        doRemoveFromCart(href);
+                        Msg.info("Removed item");
+                    });
+                    panels.on("change", ".quantity", function (e) {
+                        flog("q change");
+                        var target = $(e.target);
+                        if (checkNumeric(target, form)) {
+                            var num = target.val();
+                            var tr = target.closest("tr");
+                            var cost = tr.find(".cost").text();
+                            var newSubtotal = num * cost;
+                            flog("num,cost,sub", num, cost, newSubtotal);
+                            tr.find(".subtotal").text(newSubtotal);
+                        } else {
+                            Msg.error("Please enter a valid quantity");
+                        }
+                    });
+                    $('#myTabs').on("click",'a',function (e) {
+                        if ($(this.parentNode).hasClass("disabled")) {
+                            e.preventDefault();
+                            return false;
+                        }
+                    });
+                }
+
+                function doRemoveFromCart(href) {
+                    flog("doRemoveFromCart", href);
+                    $.ajax({
+                        type: 'POST',
+                        url: "/checkout",
+                        data: {
+                            removeItemHref: href
+                        },
+                        datatype: "json",
+                        success: function (data) {
+                            Msg.info("Removed item from your shopping cart");
+                            $("#itemsTableBody").reloadFragment();
+                        },
+                        error: function (resp) {
+                            Msg.error("An error occured adding the product to your shopping cart. Please check your internet connection and try again");
+                        }
+                    });
+                }
+            </script>
+        </div>
+    </body>
+</html>
