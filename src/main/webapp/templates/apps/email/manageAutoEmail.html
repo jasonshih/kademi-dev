@@ -224,7 +224,7 @@
                                             <div class="col-md-8">
                                                 <select name="groupToJoinName" title="lala Land" id="groupToJoin" class="form-control required-if-shown">
                                                     $formatter.option( "", "[Please select]", $page.job.groupToJoin.name )
-                                                    #foreach($group in $page.organisation.groups)
+                                                    #foreach($group in $page.allGroups)
                                                     $formatter.option( $group.name, $group.name, $page.job.groupToJoin.name )
                                                     #end
                                                 </select>
@@ -250,8 +250,8 @@
                                             <div class="col-md-8">
                                                 <select name="removeFromGroupName" id="removeFromGroup" class="form-control required-if-shown">
                                                     $formatter.option( "", "[Please select]", $page.job.removeFromGroup.name )
-                                                    #foreach($group in $page.organisation.groups)
-                                                    $formatter.option( $group.name, $group.name, $page.job.groupToJoin.name )
+                                                    #foreach($group in $page.allGroups)
+                                                    $formatter.option( $group.name, $group.name, $page.job.removeFromGroup.name )
                                                     #end
                                                 </select>
                                             </div>
