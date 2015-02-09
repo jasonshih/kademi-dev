@@ -119,8 +119,7 @@
                 var query = $("#email-query").val();
                 flog("doSearch", query);
                 var ack = false;
-                flog(viewAck);
-                if(viewAck != null){
+                if (viewAck != null) {
                     ack = viewAck;
                 }
                 var data = {
@@ -138,6 +137,7 @@
                         var $fragment = $(data).find("#table-users");
                         $("#table-users").replaceWith($fragment);
                         $('abbr.timeago').timeago();
+                        $('.view-acknowledge').attr('view-ack', ack);
                         initAcknowledge();
                         initViewAck();
                     },
@@ -163,6 +163,7 @@
                                 whenComplete: function () {
                                     $('abbr.timeago').timeago();
                                     initAcknowledge();
+                                    initViewAck();
                                 }
                             });
                         },
@@ -172,14 +173,24 @@
                     });
                 });
             }
-            
-            function initViewAck(){
-                $('.view-acknowledge').on('click', function(e){
+
+            function initViewAck() {
+                var cc = $('.view-acknowledge');
+                cc.on('click', function (e) {
                     e.preventDefault;
-                    var reportRange = $('#report-range').data('daterangepicker');
-                    reportRange.updateView();
-                    reportRange.cb(reportRange.startDate, reportRange.endDate, reportRange.chosenLabel, true);
+                    if ($('.view-acknowledge').attr('view-ack') == "true") {
+                        doSearch();
+                    } else {
+                        doSearch(null, null, null, true);
+                    }
                 });
+
+                if ($('.view-acknowledge').attr('view-ack')) {
+                    flog("view-ack", cc.attr('view-ack'));
+                    cc.text("Hide Acknowledged");
+                }else{
+                    cc.text("View Acknowledged");
+                }
             }
         </script>
     </body>
