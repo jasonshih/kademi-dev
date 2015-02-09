@@ -41,7 +41,7 @@
                     <aside class="list-item-controller">
                         <a href="#" class="copy btn btn-xs btn-primary pull-right" title="Copy this to a new version"><i class="fa fa-copy"></i></a>
                         #if( $b.live )
-                        
+
                         #else
                         <a href="${b.href}" class="hide-branch pull-right btn-xs btn btn-warning" title="Hide this version. Can be restored from the manage versions screen"><i class="clip-eye"></i></a>
                         #end
@@ -73,7 +73,7 @@
                 </ul>            
             </div>
         </div>          
-        
+
         <div class="clearfix"></div>
         <br />
         <div class="tabbable">
@@ -82,10 +82,10 @@
                 <li class=""><a data-toggle="tab" href="#panel_theme"><i class="green fa fa-home"></i> Theme</a></li>
                 <li class=""><a data-toggle="tab" href="#panel_groups"><i class="green fa fa-home"></i> Group access</a></li>
                 <li class=""><a data-toggle="tab" href="#panel_mailserver"><i class="green fa fa-home"></i> Mail server</a></li>
-                <li class=""><a data-toggle="tab" href="#panel_sslserver"><i class="green fa fa-home"></i> SLL server</a></li>
+                <li class=""><a data-toggle="tab" href="#panel_sslserver"><i class="green fa fa-home"></i> HTTPS server</a></li>
                 <li class=""><a data-toggle="tab" href="#panel_apps"><i class="green fa fa-home"></i> Apps</a></li>
             </ul>
-            
+
             <div class="tab-content">
                 <div id="panel_details" class="tab-pane active">
                     <form name="frmDetails" action="." method="post" class="form-horizontal details" role="form">
@@ -102,7 +102,7 @@
                                 <input type="text" name="name" id="websiteName" value="$!page.website.name" class="required simpleChars form-control" required="true" />                                
                             </div>
                             <div class="col-sm-4">
-                            <small>This is a code which forms part of the address to your site ie <b>id</b>.olhub.com. It must be unique.</small>
+                                <small>This is a code which forms part of the address to your site ie <b>id</b>.olhub.com. It must be unique.</small>
                             </div>
                         </div>
 
@@ -113,7 +113,7 @@
                                 <small>This is the publicly visible name of your website</small>
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="domainName" class="col-sm-3 control-label">Domain name</label>
                             <div class="col-sm-6">
@@ -121,7 +121,7 @@
                                 <small>If you have your own domain enter it here - eg www.mycompany.com. Update your DNS settings with a CNAME record pointing to www.olhub.com</small>
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="aliasTo" class="col-sm-3 control-label">Alias for</label>
                             <div class="col-sm-6">
@@ -159,17 +159,17 @@
                                     #set($theme = $page.currentTheme)
                                     #set($publicTheme = "")
                                     #if( $theme )
-                                        #if( $theme.previewImage )
-                                            #set($publicTheme = $theme.name)
+                                    #if( $theme.previewImage )
+                                    #set($publicTheme = $theme.name)
                                     <img style="width: 150px" src="/templates/themes/$theme.name/$theme.previewImage" />
-                                        #else
-                                            #set($publicTheme = $theme.name)
-                                            $theme.title
-                                        #end
+                                    #else
+                                    #set($publicTheme = $theme.name)
+                                    $theme.title
+                                    #end
                                     #else
                                     No selected theme
                                     #end
-                                     <i class="fa fa-arrow-circle-right"></i>
+                                    <i class="fa fa-arrow-circle-right"></i>
                                 </a>
                                 <input type="hidden" name="publicTheme" value="$publicTheme"/>
                                 <a class="btn btn-blue btn-sm pull-right" href="themeSelect">Browse the theme library <i class="fa fa-arrow-circle-right"></i></a>
@@ -202,7 +202,7 @@
                         </div>
                     </form>                    
                 </div> <!-- End theme -->
-                
+
                 <div id="panel_groups" class="tab-pane">
                     <div class="Content Recipient">
                         <button class="btn btn-sm btn-default AddGroup" data-toggle="modal" data-target="#modalGroup"><i class="fa fa-plus"></i> Add/remove groups</button>
@@ -235,71 +235,145 @@
                         </div>
                     </div>                    
                 </div> <!-- End groups -->
-                
-                 <div id="panel_mailserver" class="tab-pane">
-                     <form name="frmDetails" action="." method="post" class="form-horizontal details" role="form">
-                         <div class="alert alert-danger pageMessage">.</div> 
-                         <p class="">DKIM is a way to increase the number of emails which reach your recipients, by
-                         reducing your spam score. It does this by adding a digital signature to each email signed
-                         signed and verified by your DNS.</p>
-                         <p>To get a DKIM certificate and <a href="http://www.port25.com/support/domainkeysdkim-wizard/" target="_blank">setup your domain for DKIM please see here</a></p>
-                         <div class="form-group"> 
-                             <label for="dkimSelector" class="col-sm-3 control-label">DKIM Selector</label> 
-                             <div class="col-sm-6">
-                                 <input type="text" name="dkimSelector" value="$!page.dkimSelector" class="form-control" />
-                             </div>
-                         </div>
-                         <div class="form-group">
-                             <label for="dkimPrivateKey" class="col-sm-3 control-label">DKIM Private key</label>
-                             <div class="col-sm-6">
-                                 <textarea name="dkimPrivateKey" class="form-control">$!page.dkimPrivateKey</textarea>
-                             </div>
-                         </div>
-                         <div class="form-group"> 
-                             <div class="col-sm-offset-3 col-sm-6">
-                                 <button type="submit" class="btn btn-sm btn-success">Save Changes</button>
-                             </div>
-                         </div>
-                     </form>
-                 </div>
-                
+
+                <div id="panel_mailserver" class="tab-pane">
+                    <form name="frmDetails" action="." method="post" class="form-horizontal details" role="form">
+                        <div class="alert alert-danger pageMessage">.</div> 
+                        <p class="">DKIM is a way to increase the number of emails which reach your recipients, by
+                            reducing your spam score. It does this by adding a digital signature to each email signed
+                            signed and verified by your DNS.</p>
+                        <p>To get a DKIM certificate and <a href="http://www.port25.com/support/domainkeysdkim-wizard/" target="_blank">setup your domain for DKIM please see here</a></p>
+                        <div class="form-group"> 
+                            <label for="dkimSelector" class="col-sm-3 control-label">DKIM Selector</label> 
+                            <div class="col-sm-6">
+                                <input type="text" name="dkimSelector" value="$!page.dkimSelector" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="dkimPrivateKey" class="col-sm-3 control-label">DKIM Private key</label>
+                            <div class="col-sm-6">
+                                <textarea name="dkimPrivateKey" class="form-control">$!page.dkimPrivateKey</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group"> 
+                            <div class="col-sm-offset-3 col-sm-6">
+                                <button type="submit" class="btn btn-sm btn-success">Save Changes</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
                 <div id="panel_sslserver" class="tab-pane">
-                     <form name="frmDetails" action="." method="post" class="form-horizontal details" role="form">
-                         <div class="alert alert-danger pageMessage">.</div> 
-                         <p class=""/>
-                         <div class="form-group"> 
-                             <label for="keyStorePass" class="col-sm-3 control-label">Key Store Password</label> 
-                             <div class="col-sm-6">
-                                 <input type="text" name="keyStorePass" value="$!page.website.keyStorePass" class="form-control" />
-                             </div>
-                         </div>
-                         <div class="form-group">
-                             <label for="keyStoreFile" class="col-sm-3 control-label">Key Store File</label>
-                             <div class="col-sm-6">
-                                 <textarea name="keyStoreFile" rows="5"  class="form-control">$!page.website.keyStoreFile</textarea>
-                             </div>
-                         </div>     
-                         
-                         <div class="form-group"> 
-                             <label for="trustStorePass" class="col-sm-3 control-label">Trust Store Password</label> 
-                             <div class="col-sm-6">
-                                 <input type="text" name="trustStorePass" value="$!page.website.trustStorePass" class="form-control" />
-                             </div>
-                         </div>
-                         <div class="form-group">
-                             <label for="trustStoreFile" class="col-sm-3 control-label">Trust Store File</label>
-                             <div class="col-sm-6">
-                                 <textarea name="trustStoreFile" rows="5" class="form-control">$!page.website.trustStoreFile</textarea>
-                             </div>
-                         </div>                         
-                         <div class="form-group"> 
-                             <div class="col-sm-offset-3 col-sm-6">
-                                 <button type="submit" class="btn btn-sm btn-success">Save Changes</button>
-                             </div>
-                         </div>
-                     </form>
-                 </div>
-                
+                    <p>
+                        <a href="#" class="btn btn-sm btn-success" data-toggle="modal" data-target="#addWebsiteHttpsModal" ><i class="fa fa-plus"></i> Configure New HTTPS Certificate</a>
+                    </p>
+
+                    <div class="modal fade" id="addWebsiteHttpsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="myModalLabel">Create new HTTPS Configuration </h4>
+                        </div>
+                        <div class="modal-body">
+                            <form class="form-horizontal" method="POST" action=".">
+                                <div class="form-group">
+                                    <label for="title" class="col-sm-3 control-label">Title</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control regex required" required="true" id="title" name="title" data-regex="^[a-zA-Z0-9-]+$" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="certificateText" class="col-sm-3 control-label">Certificate Text</label>
+                                    <div class="col-sm-8">
+                                        <textarea id = "certificateText" name="certificateText" rows="8" data-regex="^[a-zA-Z0-9-]+$" class="form-control"></textarea>
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="privateKeyText" class="col-sm-3 control-label">Private Key Text </label>
+                                    <div class="col-sm-8">
+                                        <textarea id = "privateKeyText" name="privateKeyText" rows="8" data-regex="^[a-zA-Z0-9-]+$" class="form-control"></textarea>
+
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Create</button>
+                        </div>
+                    </div><!-- /.modal -->
+
+
+                    <table id="certificate-types-table" class="table table-striped table-hover">
+                        <colgroup>
+                            <col width="" />
+                            <col width="" />
+                            <col width="" />
+                            <col width="" />
+                            <col width="" />
+                            <col width="" />
+                            <col width="" />
+                            <col width="180px" />
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th >Expiry Date</th>
+                                <th >Certificate</th>                                
+                                <th >Private Key</th>
+                                <th >Created By</th>
+                                <th >Created Date</th>                                
+                                <th >Status</th>
+                                <th class="action"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            #foreach($cer in $page.certificates)
+                            <tr>
+                                <td>$cer.title</td>
+                                <td>$formatter.formatDate($cer.expiryDate)</td>
+                                <td>$cer.certificateText</td>
+                                <td>$cer.privateKeyText</td>
+                                <td>$cer.createdBy.name</td>
+                                <td>$formatter.formatDate($cer.createdDate)</td>                                
+                                <td>
+                                    <div class="$cer.status">
+                                        #if($cer.status == "Active")
+                                        #set($status = "success")
+                                        #elseif($cer.status == "Passivate")
+                                        #set($status = "danger")
+                                        #elseif($cer.status == "Delete")
+                                        #set($status = "warning")
+                                        #else
+                                        #set($status = "default")
+                                        #end
+                                        <span class="label label-sm label-$status">$cer.status</span>
+                                    </div>
+                                </td>
+
+                                <td class="action">
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="$cer.id" class="btn btn-sm btn-info"><i class="fa fa-eye"></i>View</a>
+                                        <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
+                                            <span class="caret"></span>
+                                            <span class="sr-only">Toggle Dropdown</span>
+                                        </button>
+                                        <ul role="menu" class="dropdown-menu pull-right">
+                                            <li><a href="$cer.id" ><i class="glyphicon glyphicon-edit"></i> Certificate</a></li>
+                                            <li><a href="$cer.id" ><i class="glyphicon glyphicon-edit"></i> Private Key</a></li>
+                                            <li><a href="#" > ------------</a></li>
+                                            <li><a href="$cer.id" ><i class="glyphicon glyphicon-fire"></i> Active</a></li>
+                                            <li><a href="$cer.id" ><i class="glyphicon glyphicon-adjust"></i> Passivate</a></li>
+                                            <li><a href="$cer.id" ><i class="glyphicon glyphicon-remove"></i> Delete</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            #end
+                        </tbody>
+                    </table>
+                </div>
+
                 <div id="panel_apps" class="tab-pane appsContainer">
                     <div class="well">
                         <p>Applications control large chunks of functionality, like forums or emails. You can add them to websites</p>
@@ -416,9 +490,21 @@
                 initPublishingMenu("");
                 initHtmlEditors($(".htmleditor"), "60px", "200px", 'embed_video,modal', 'resize,elementspath');
                 $("form.details").forms({
-                    callback: function() {
+                    callback: function () {
                         flog("Saved Ok!");
                         Msg.info("Saved");
+                    }
+                });
+
+                var modal = $("#addWebsiteHttpsModal");
+                var form = modal.find(" form");
+
+                form.forms({
+                    callback: function (resp) {
+                        flog("done", resp);
+                        modal.modal('hide');
+                        Msg.success(form.find('[name=title]').val() + ' is created!');
+                        $('#certificate-types-table').reloadFragment();
                     }
                 });
             });
