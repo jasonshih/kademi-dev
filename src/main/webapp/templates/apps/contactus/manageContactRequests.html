@@ -5,11 +5,11 @@
     <body class="manageEmail">
         <p class="well">Below is a list of recently received contacts from your websites. Click on an item to see more information</p>
         <div class="panel panel-default">
-	        <div class="panel-heading">
-		        <i class="fa fa-envelope-o"></i>
-		        Request
-	        </div>
-	        <div class="panel-body">
+            <div class="panel-heading">
+                <i class="fa fa-envelope-o"></i>
+                Request
+            </div>
+            <div class="panel-body">
                 <div class="clearfix form-horizontal">
                     <div class="input-group date-range pull-right col-md-4 col-sm-6">
                         <label for="report-range" class="input-group-addon">Time</label>
@@ -24,49 +24,68 @@
                         </span>
                     </div>
                 </div>
-                
-		        <div class="table-responsive">
-			        <table id="table-users" class="table table-striped table-hover">
-				        <colgroup>
-					        <col />
-					        <col />
-					        <col />
-					        <col />
-					        <col style="width: 80px" />
-				        </colgroup>
-				        <thead>
-					        <tr>
-						        <th>Date</th>
-						        <th>Name</th>
-						        <th>Phone</th>
-						        <th>Email</th>
-						        <th class="action"></th>
-					        </tr>
-				        </thead>
-				        <tbody>
-					        #foreach($cr in $page.recent)
-					        <tr>
-						        <td><abbr class="timeago" title="$cr.createdDate">$formatter.formatDate($cr.createdDate)</abbr></td>
-						        <td>$formatter.htmlEncode($cr.firstName) $formatter.htmlEncode($cr.surName)</td>
-						        <td>$formatter.htmlEncode($cr.phone)</td>
-						        <td>$!cr.email</td>
-						        <td class="action">
-							        <a class="btn btn-sm btn-success" href="$cr.id">View </a>
-						        </td>
-					        </tr>
-					        #end
-				        </tbody>
-					</table>
-		        </div>
-	        </div>
+
+                <div class="table-responsive">
+                    <table id="table-users" class="table table-striped table-hover">
+                        <colgroup>
+                            <col style="width: 50px;"/>
+                            <col />
+                            <col />
+                            <col />
+                            <col />
+                            <col style="width: 100px" />
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Name</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                <th class="action">
+                                    <a class="btn btn-sm btn-success view-acknowledge" href="#">View Acknowledged</a>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            #foreach($cr in $page.recent)
+                            <tr>
+                                <td>
+                                    #if($cr.acknowledgedDate)
+                                    <span class="glyphicon glyphicon-ok"></span>
+                                    #else
+                                    <span class="glyphicon glyphicon-envelope"></span>
+                                    #end
+                                </td>
+                                <td><abbr class="timeago" title="$cr.createdDate">$formatter.formatDate($cr.createdDate)</abbr></td>
+                                <td>$formatter.htmlEncode($cr.firstName) $formatter.htmlEncode($cr.surName)</td>
+                                <td>$formatter.htmlEncode($cr.phone)</td>
+                                <td>$!cr.email</td>
+                                <td class="action">
+                                    <div class="btn-group btn-group-sm">
+                                        <a class="btn btn-sm btn-success" href="$cr.id">View </a>
+                                        <button type="button" class="btn btn-sm dropdown-toggle btn-success" data-toggle="dropdown">
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul role="menu" class="dropdown-menu pull-right">
+                                            <li><a class="acknowledge" href="$cr.id"><i class="glyphicon glyphicon-ok"></i> Acknowledge</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            #end
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-        
+
         <script type="text/javascript">
-            $(function() {
+            $(function () {
                 $('abbr.timeago').timeago();
                 flog("Init email history");
-                $("#email-query").keyup(function() {
-                    typewatch(function() {
+                $("#email-query").keyup(function () {
+                    typewatch(function () {
                         flog("do search");
                         doSearch();
                     }, 500);
@@ -74,7 +93,7 @@
 
                 var reportRange = $('#report-range');
 
-                reportRange.exist(function() {
+                reportRange.exist(function () {
                     flog("init report range");
                     reportRange.daterangepicker({
                         format: 'DD/MM/YYYY', // YYYY-MM-DD
@@ -86,39 +105,82 @@
                             'This Year': [moment().startOf('year'), moment()],
                         },
                     },
-                            function(start, end) {
+                            function (start, end, label, viewAck) {
                                 flog('onChange', start, end);
-                                doSearch(start, end);
+                                doSearch(start, end, label, viewAck);
                             }
                     );
                 });
-
+                initAcknowledge();
+                initViewAck();
             });
 
-            function doSearch(startDate, endDate) {
+            function doSearch(startDate, endDate, label, viewAck) {
                 var query = $("#email-query").val();
                 flog("doSearch", query);
+                var ack = false;
+                flog(viewAck);
+                if(viewAck != null){
+                    ack = viewAck;
+                }
                 var data = {
                     q: query,
                     startDate: formatDate(startDate),
-                    finishDate: formatDate(endDate)
+                    finishDate: formatDate(endDate),
+                    acknowledge: ack
                 };
                 $.ajax({
                     type: 'GET',
                     url: window.location.pathname,
                     data: data,
-                    success: function(data) {
+                    success: function (data) {
                         flog("success", data);
                         var $fragment = $(data).find("#table-users");
                         $("#table-users").replaceWith($fragment);
                         $('abbr.timeago').timeago();
+                        initAcknowledge();
+                        initViewAck();
                     },
-                    error: function(resp) {
+                    error: function (resp) {
                         Msg.error("An error occured doing the user search. Please check your internet connection and try again");
                     }
                 });
             }
-
+            function initAcknowledge() {
+                $('.acknowledge').on('click', function (e) {
+                    e.preventDefault();
+                    flog(e.currentTarget.href);
+                    $.ajax({
+                        type: 'POST',
+                        url: e.currentTarget.href,
+                        data: {
+                            acknowledge: true
+                        },
+                        success: function (data) {
+                            flog("success", data);
+                            Msg.success("Contect Request Acknowledged.");
+                            $("#table-users").reloadFragment({
+                                whenComplete: function () {
+                                    $('abbr.timeago').timeago();
+                                    initAcknowledge();
+                                }
+                            });
+                        },
+                        error: function (resp) {
+                            Msg.error("There was an error: " + resp);
+                        }
+                    });
+                });
+            }
+            
+            function initViewAck(){
+                $('.view-acknowledge').on('click', function(e){
+                    e.preventDefault;
+                    var reportRange = $('#report-range').data('daterangepicker');
+                    reportRange.updateView();
+                    reportRange.cb(reportRange.startDate, reportRange.endDate, reportRange.chosenLabel, true);
+                });
+            }
         </script>
     </body>
 </html>

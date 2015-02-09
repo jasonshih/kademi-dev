@@ -21,6 +21,7 @@ function initManageCalendars() {
         callback: function () {
             modalAdd.modal('hide');
             Msg.success(formAdd.find('input[name=name]').val() + ' is created!');
+            formAdd.trigger('reset');
             wrapper.reloadFragment({
                 whenComplete: function () {
                     initEditModal();

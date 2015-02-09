@@ -7,6 +7,7 @@ function initManageAuction() {
     initHtmlEditors();
     initImageUploaderViewer();
     initManageAuctionImage();
+    $('abbr.timeago').timeago();
 }
 
 function getImageId(pathname) {
@@ -207,7 +208,7 @@ function initImageUploaderViewer() {
 }
 
 function initManageAuctionImage() {
-    var imageContainer = $('#images-container');
+    var imageContainer = $('#product-images');
     var addImageModal = $('#modal-add-image');
     addImageModal.find('form.form-horizontal').forms({
         callback: function() {
