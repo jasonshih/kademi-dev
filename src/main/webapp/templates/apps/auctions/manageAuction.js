@@ -7,6 +7,7 @@ function initManageAuction() {
     initHtmlEditors();
     initImageUploaderViewer();
     initManageAuctionImage();
+    $('abbr.timeago').timeago();
 }
 
 function getImageId(pathname) {
