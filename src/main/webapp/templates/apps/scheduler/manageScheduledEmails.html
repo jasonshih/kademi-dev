@@ -22,7 +22,7 @@
                                 <tr>
                                     <th width="20%">Start</th>
                                     <th width="20%">End</th>
-                                    <th width="">Name</th>
+                                    <th width="">Title</th>
                                     <th width="10%">Enabled</th>
                                     <th width="100px"></th>
                                 </tr>
@@ -37,7 +37,7 @@
                                 <tr class="emailStatus$!{email.job.enabled}" data-name="$email.name">
                                     <td class="Date">$formatter.formatDate($email.job.startDate)</td>
                                     <td class="Date">$formatter.formatDate($email.job.endDate)</td>
-                                    <td class="Name">$formatter.htmlEncode($email.title)</td>
+                                    <td class="Name">$formatter.htmlEncode($email.job.title)</td>
                                     <td><span class="Status">$!email.job.enabled</span></td>
                                     <td>
                                         <div class="btn-group btn-group-sm">
