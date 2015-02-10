@@ -70,6 +70,7 @@ function initManageCalendar() {
     form.forms({
         callback: function () {
             modal.modal('hide');
+            form.trigger('reset');
             Msg.success('Event is created!');
             $('#event-wrapper').reloadFragment();
             initFullCalendar();

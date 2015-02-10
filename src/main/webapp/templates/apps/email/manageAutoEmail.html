@@ -310,7 +310,22 @@
                                             </div>
                                         </div>
                                     </div> <!-- end row -->
-                                </div>                                
+                                </div> 
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="control-label col-md-4" for="rewardPointsTag">Tag</label>
+                                            <div class="col-md-8">
+                                                <select name="rewardPointsTag" id="rewardPointsTag" class="form-control required-if-shown">
+                                                    $formatter.option( "", "[Please select]", $page.job.rewardPointsTag )
+                                                    #foreach($tag in $page.pointsTags)
+                                                    $formatter.option( $tag.name, $tag.title, $page.job.rewardPointsTag )
+                                                    #end
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div> <!-- end row -->
+                                </div> 
                             </div>
                         </div> <!-- End reward --> 
 

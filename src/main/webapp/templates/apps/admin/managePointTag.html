@@ -1,0 +1,134 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Manage: $page.title</title>
+    </head>
+    <body>
+        <form name="frmDetails" action="$page.name" method="post" class="form-horizontal tags-form">
+            <div class="pull-right page-action">
+                <button class="btn btn-sm btn-primary" type="submit">Save changes</button>
+            </div>
+
+            <div class="tabbable">
+                <ul class="nav nav-tabs tab-bricky">
+                    <li><a data-toggle="tab" href="#general">General</a></li>
+                    <li><a data-toggle="tab" href="#points">Points</a></li>
+                    <li><a data-toggle="tab" href="#debits">Debits</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div id="general" class="tab-pane">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="title">Title</label>
+                            <div class="col-md-8">
+                                <input type="text" name="title" id="title" value="$!page.pointsTag.title" placeholder="" class="required form-control"  required="true" />
+                            </div>
+                        </div>               
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="notes">Notes<small>For internal use.</small></label>
+                            <div class="col-md-8">
+                                <textarea cols="100" name="notes" id="notes" rows="10" placeholder="" class="form-control">$!page.pointsTag.notes</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End content of General tab -->
+
+                    <div id="points" class="tab-pane">
+                        <div class="pull-right">
+                            <a class="btn btn-sm btn-default periods-delete" href="points.csv" download="points.csv">
+                                <span class="glyphicon glyphicon-download"></span>
+                                Save Points CSV
+                            </a>
+                        </div>
+                        <br/>
+
+                        <p>Shows points allocated with this tag</p>
+
+                        <table class="table table-bordered table-striped" id="table-periods">
+                            <colgroup>
+                                <col />
+                                <col />
+                                <col />
+                                <col />
+                                <col />
+                            </colgroup>                            
+                            <thead>
+                                <tr>
+                                    <th>Reward</th>
+                                    <th>Points</th>
+                                    <th>Issued Date</th>
+                                    <th>Issued To</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                #foreach($points in $page.awardedPoints)
+                                <tr>
+                                    <td><a href="/rewards/${points.reward.name}">$points.reward.title</a></td>
+                                    <td>$points.numPoints</td>
+                                    <td>$formatter.formatDateTime($points.issuedDate)</td>
+                                    <td><a href="/manageUsers/${points.issuedFor.id}">$points.issuedFor.name</a></td>
+                                </tr>
+                                #end
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div id="debits" class="tab-pane">
+                        <div class="pull-right">
+                            <a class="btn btn-sm btn-default periods-delete" href="debits.csv" download="debits.csv">
+                                <span class="glyphicon glyphicon-download"></span>
+                                Save Debits CSV
+                            </a>
+                        </div>
+                        <br/>
+
+                        <p>Shows debits allocated with this tag</p>
+
+                        <table class="table table-bordered table-striped" id="table-periods">
+                            <colgroup>
+                                <col />
+                                <col />
+                                <col />
+                                <col />
+                            </colgroup>                            
+                            <thead>
+                                <tr>
+                                    <th>Reward</th>
+                                    <th>Points</th>
+                                    <th>Reason</th>
+                                    <th>Issued Date</th>
+                                    <th>Rewarded To</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                #foreach($debit in $page.DebitPoints)
+                                <tr>
+                                    <td><a href="/rewards/${debit.points.reward.name}">$debit.points.reward.title</a></td>
+                                    <td>$debit.numPoints</td>
+                                    <td>$!debit.reason</td>
+                                    <td>$formatter.formatDateTime($debit.issuedDate)</td>
+                                    <td><a href="/manageUsers/${points.issuedFor.id}">$debit.points.issuedFor.name</a></td>
+                                </tr>
+                                #end
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+        <script type="text/javascript">
+            $(function () {
+                $('.tags-form').forms({
+                    callback: function (resp) {
+                        flog("done tag changes", resp);
+                        if (resp.nextHref) {
+                            window.location.href = resp.nextHref;
+                        } else {
+                            Msg.info('Changes Saved!');
+                        }
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>
