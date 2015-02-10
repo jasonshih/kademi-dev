@@ -44,6 +44,7 @@
                                 <th>Issued date/time</th>
                                 <th>No. Points</th>
                                 <th>Reason</th>
+                                <th>Tag</th>
                                 <th class="center">
                                     <div class="checkbox-table">
                                         <label>
@@ -66,6 +67,7 @@
                                 <td>$formatter.formatDateLong( $p.issuedDate )</td>
                                 <td>$p.numPoints</td>
                                 <td>$p.reason</td>
+                                <td>$!p.pointsTag.title</td>
                                 <td class="center">
                                     <div class="checkbox-table">
                                         <label>
@@ -152,6 +154,18 @@
                             <select name="awardedReward" required="true" id="" class="form-control input-sm required">
                                 #foreach($reward in $page.rewards)
                                 <option value="$reward.name">$reward.title</option> 
+                                #end
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="pointsTag" class="col-md-3 control-label">Tag</label>
+                        <div class="col-md-9">
+                            <select name="awardPointsTag" class="form-control input-sm">
+                                <option value="">[None]</option> 
+                                #foreach($pointTag in $page.pointTags)
+                                <option value="$pointTag.name">$pointTag.title</option>
                                 #end
                             </select>
                         </div>
