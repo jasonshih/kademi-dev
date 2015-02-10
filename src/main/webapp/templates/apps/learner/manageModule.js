@@ -362,7 +362,8 @@ function checkFormControlState(type, afterRemoveLastOne) {
                 });
                 content.find('label').attr('for', numRewards);
 
-                content.find('select').attr('name', 'reward' + i);
+                content.find('select[data-basename="reward"]').attr('name', 'reward' + i);
+                content.find('select[data-basename="pointTag"]').attr('name', 'pointTag' + i);
             } else if (type === 'certificate') {
                 var points = 'points' + i;
                 var pointsInp = content.find('input');
