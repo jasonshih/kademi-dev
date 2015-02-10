@@ -507,7 +507,9 @@
                 $("#certificate-types-table").on("click", ".cert-delete", function (e) {
                     e.preventDefault();
                     var id = $(e.target).closest("a").attr("href");
-                    deleteCert(id);
+                    if( confirm("Are you sure you want to delete this certificate?") ) {
+                        deleteCert(id);
+                    }
                 });
                 $("#certificate-types-table").on("click", ".cert-activate", function (e) {
                     e.preventDefault();
@@ -545,7 +547,7 @@
             function deleteCert(id) {
                 $.ajax({
                     type: 'POST',
-                    datatype: 'json',
+                    dataType: 'json',
                     url: window.location.pathname,
                     data: {
                         deleteCertId: id
