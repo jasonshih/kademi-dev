@@ -311,43 +311,32 @@
                             <col width="" />
                             <col width="" />
                             <col width="" />
-                            <col width="" />
-                            <col width="" />
                             <col width="180px" />
                         </colgroup>
                         <thead>
                             <tr>
                                 <th>Title</th>
                                 <th >Expiry Date</th>
-                                <th >Certificate</th>                                
-                                <th >Private Key</th>
                                 <th >Created By</th>
                                 <th >Created Date</th>                                
                                 <th >Status</th>
                                 <th class="action"></th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="certificates-body">
                             #foreach($cer in $page.certificates)
                             <tr>
                                 <td>$cer.title</td>
                                 <td>$formatter.formatDate($cer.expiryDate)</td>
-                                <td>$cer.certificateText</td>
-                                <td>$cer.privateKeyText</td>
                                 <td>$cer.createdBy.name</td>
                                 <td>$formatter.formatDate($cer.createdDate)</td>                                
                                 <td>
                                     <div class="$cer.status">
-                                        #if($cer.status == "Active")
-                                        #set($status = "success")
-                                        #elseif($cer.status == "Passivate")
-                                        #set($status = "danger")
-                                        #elseif($cer.status == "Delete")
-                                        #set($status = "warning")
+                                        #if($cer.status == "A")
+                                        <span class="label label-sm label-success">Active</span>
                                         #else
-                                        #set($status = "default")
-                                        #end
-                                        <span class="label label-sm label-$status">$cer.status</span>
+                                        <span class="label label-sm label-warning">Inactive</span>
+                                        #end                                        
                                     </div>
                                 </td>
 
@@ -362,9 +351,13 @@
                                             <li><a href="$cer.id" ><i class="glyphicon glyphicon-edit"></i> Certificate</a></li>
                                             <li><a href="$cer.id" ><i class="glyphicon glyphicon-edit"></i> Private Key</a></li>
                                             <li><a href="#" > ------------</a></li>
-                                            <li><a href="$cer.id" ><i class="glyphicon glyphicon-fire"></i> Active</a></li>
-                                            <li><a href="$cer.id" ><i class="glyphicon glyphicon-adjust"></i> Passivate</a></li>
-                                            <li><a href="$cer.id" ><i class="glyphicon glyphicon-remove"></i> Delete</a></li>
+                                            #if($cer.status == "A")
+                                            <li><a href="$cer.id" class="cert-passivate" ><i class="glyphicon glyphicon-adjust"></i> Passivate</a></li>
+                                            #else
+                                            <li><a href="$cer.id" class="cert-activate"><i class="glyphicon glyphicon-fire"></i> Activate</a></li>
+                                            #end
+                                                                                        
+                                            <li><a href="$cer.id" class="cert-delete" ><i class="glyphicon glyphicon-remove"></i> Delete</a></li>
                                         </ul>
                                     </div>
                                 </td>
@@ -489,6 +482,7 @@
                 initManageWebsite();
                 initPublishingMenu("");
                 initHtmlEditors($(".htmleditor"), "60px", "200px", 'embed_video,modal', 'resize,elementspath');
+                initCerts();
                 $("form.details").forms({
                     callback: function () {
                         flog("Saved Ok!");
@@ -508,6 +502,63 @@
                     }
                 });
             });
+
+            function initCerts() {
+                $("#certificate-types-table").on("click", ".cert-delete", function (e) {
+                    e.preventDefault();
+                    var id = $(e.target).closest("a").attr("href");
+                    deleteCert(id);
+                });
+                $("#certificate-types-table").on("click", ".cert-activate", function (e) {
+                    e.preventDefault();
+                    var id = $(e.target).closest("a").attr("href");
+                    updateCertStatus(id, "A");
+                });
+                $("#certificate-types-table").on("click", ".cert-passivate", function (e) {
+                    e.preventDefault();
+                    var id = $(e.target).closest("a").attr("href");
+                    updateCertStatus(id, "");
+                });
+                
+            }
+
+            function updateCertStatus(id, status) {
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    url: window.location.pathname,
+                    data: {
+                        certId: id,
+                        updateCertStatus: status
+                    },
+                    success: function (data) {
+                        Msg.info("Updated certificate");
+                        $("#certificates-body").reloadFragment();
+                    },
+                    error: function (resp) {
+                        Msg.error("An error occured updating the certificate");
+                    }
+                });
+            }
+
+
+            function deleteCert(id) {
+                $.ajax({
+                    type: 'POST',
+                    datatype: 'json',
+                    url: window.location.pathname,
+                    data: {
+                        deleteCertId: id
+                    },
+                    success: function (data) {
+                        Msg.info("Deleted certificate");
+                        $("certificates-body").reloadFragment();
+                    },
+                    error: function (resp) {
+                        Msg.error("An error occured deleting the certificate");
+                    }
+                });
+            }
         </script>        
     </body>
 </html>
