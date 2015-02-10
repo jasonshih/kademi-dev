@@ -185,7 +185,7 @@
                     }
                 });
 
-                if ($('.view-acknowledge').attr('view-ack')) {
+                if ($('.view-acknowledge').attr('view-ack') == "true") {
                     flog("view-ack", cc.attr('view-ack'));
                     cc.text("Hide Acknowledged");
                 }else{
