@@ -19,7 +19,7 @@
                     </div>
                 </div>
                 <div id="BidInfo" class="span6 col-md-4"> 
-                    #if($page.auctionClosed)
+                    #if(!$page.auctionClosed)
                     <div id="bidFromDiv" class="details well">
                         <h4>Current Bid</h4>
                         <form id="bidForm" method="POST" action=".">
