@@ -57,6 +57,7 @@
                                     <th>Points</th>
                                     <th>Issued Date</th>
                                     <th>Issued To</th>
+                                    <th>Reason</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -65,7 +66,8 @@
                                     <td><a href="/rewards/${points.reward.name}">$points.reward.title</a></td>
                                     <td>$points.numPoints</td>
                                     <td>$formatter.formatDateTime($points.issuedDate)</td>
-                                    <td><a href="/manageUsers/${points.issuedFor.id}">$points.issuedFor.name</a></td>
+                                    <td>$points.issuedTo.formattedName</td>
+                                    <td>$!points.reason</td>
                                 </tr>
                                 #end
                             </tbody>
@@ -106,7 +108,7 @@
                                     <td>$debit.numPoints</td>
                                     <td>$!debit.reason</td>
                                     <td>$formatter.formatDateTime($debit.issuedDate)</td>
-                                    <td><a href="/manageUsers/${points.issuedFor.id}">$debit.points.issuedFor.name</a></td>
+                                    <td>$debit.points.issuedTo.formattedName</td>
                                 </tr>
                                 #end
                             </tbody>

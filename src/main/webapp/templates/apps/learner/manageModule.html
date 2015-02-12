@@ -279,6 +279,14 @@
                                                 #end
                                             </select>
                                         </div>
+                                        <div class="input-group input-group-sm">
+                                            <select name="pointTag$foreach.index" class="form-control" data-basename="pointTag">
+                                                <option value="">[No Tag]</option>
+                                                #foreach($p in $page.pointsTag)
+                                                $formatter.option($p.name, $p.title, $action.tag)
+                                                #end
+                                            </select>
+                                        </div>
                                         <div class="btn-group btn-group-sm">
                                             <a href="#" class="btn btn-sm btn-danger btn-delete-reward"><i class="fa fa-times"></i></a>
                                         </div>
