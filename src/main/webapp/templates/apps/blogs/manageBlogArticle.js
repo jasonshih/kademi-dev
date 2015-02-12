@@ -165,6 +165,9 @@ function initManageArticleImage() {
             data = data.result;
         }
         var hash = data.data;
+        if(typeof hash == "object"){
+            hash = hash.file;
+        }
         flog("setAddImageFormData: data=", data);
         flog("setAddImageFormData: hash=", hash);
 
