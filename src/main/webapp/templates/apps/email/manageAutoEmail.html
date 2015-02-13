@@ -171,7 +171,7 @@
                                             <div class="col-md-8">
                                                 <select name="themeSiteId" id="themeSiteId" class="form-control required-if-shown">
                                                     $formatter.option("", "[Please select]", $page.themeSiteId)
-                                                    #foreach($website in $page.organisation.websites)
+                                                    #foreach($website in $rootFolder.websites)
                                                     $formatter.option($website.id, $website.name, $page.themeSiteId)
                                                     #end
                                                 </select>
