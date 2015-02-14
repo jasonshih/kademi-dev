@@ -59,6 +59,7 @@
                             </tr>
                             #end
                             #end
+                            
                             #if( $page.profile )
                             #set($memberships = $page.profile.memberships( $page.organisation ) )
                             #if( $memberships.isEmpty() )
@@ -69,7 +70,10 @@
                             #else
                             <tr>
                                 <th>Profile</th>
-                                <td><a href="/manageUsers/$page.profile.id">$page.profile.formattedName</a></td>
+                                <td>
+                                    <a href="/manageUsers/$page.profile.id">$page.profile.formattedName</a>
+                                    <a href="/manageUsers/$page.profile.id#webactivity-tab" class="btn btn-info pull-right">Browing history</a>
+                                </td>
                             </tr>
                             <tr>
                                 <th>Member of</th>
@@ -116,65 +120,6 @@
         </div>
         #end
 
-        <div class="row">
-            <div class="col-md-6 col-sm-12">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <i class="clip-stats"></i>
-                        Viewed web pages <small><em>(Last 7 days)</em></small>
-                    </div>
-                    <div class="panel-body">
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover table-condensed">
-                                <thead>
-                                    <tr>
-                                        <th>Page</th>
-                                        <th>Date</th>
-                                        <th>From</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    #foreach($log in $page.logs)
-                                    <tr>
-                                        <td><a href="http://$log.reqHost/$log.url">$log.url</a></td>
-                                        <td>$formatter.formatDateTime( $log.reqDate )</td>
-                                        <td><a href="$log.referrer">$!formatter.getFileName( $log.referrer )</a></td>
-                                    </tr>
-                                    #end
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-sm-12">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <i class="clip-stats"></i>
-                        Form submits and actions <small><em>(Last 7 days)</em></small>
-                    </div>
-                    <div class="panel-body">
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover table-condensed">
-                                <thead>
-                                    <tr>
-                                        <th>Page</th>
-                                        <th>Date</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    #foreach($log in $page.actions)
-                                    <tr>
-                                        <td><a href="http://$log.reqHost/$log.url">$log.url</a></td>
-                                        <td>$formatter.formatDateTime( $log.reqDate )</td>
-                                    </tr>
-                                    #end
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        
     </body>
 </html>
