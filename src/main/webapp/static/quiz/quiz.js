@@ -2,6 +2,8 @@ var selectedCourse = null;
 
 function loadQuizEditor(modal, data) {
     flog("loadQuizEditor. Data=", data);
+    modal.find("input[name=maxAttempts]").val( data.maxAttempts );
+    modal.find("input[name=passMarkPerc]").val( data.passMarkPerc );
     modal.find('#quiz-questions').html(data.body);
     var olQuiz = modal.find('ol.quiz');
     if (olQuiz.length === 0) {
@@ -80,12 +82,16 @@ function prepareQuizForSave(quizWrapper, data) {
         data.pageTitle = quizWrapper.find('input[name=pageTitle]').val();
         data.template = quizWrapper.find('input[name=template]').val();
         data.order = quizWrapper.find('input[name=order]').val();
+        data.maxAttempts = quizWrapper.find('input[name=maxAttempts]').val();
+        data.passMarkPerc = quizWrapper.find('input[name=passMarkPerc]').val();
     } else {
         data = {
             pageName: quizWrapper.find('input[name=pageName]').val(),
             pageTitle: quizWrapper.find('input[name=pageTitle]').val(),
             template: quizWrapper.find('input[name=template]').val(),
-            order: quizWrapper.find('input[name=order]').val()
+            order: quizWrapper.find('input[name=order]').val(),
+            maxAttempts: quizWrapper.find('input[name=maxAttempts]').val(),
+            passMarkPerc: quizWrapper.find('input[name=passMarkPerc]').val()
         };
     }
 

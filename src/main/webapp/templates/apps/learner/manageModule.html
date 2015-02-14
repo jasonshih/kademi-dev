@@ -124,45 +124,45 @@
                     <h4>$page.title</h4>
                     <hr />
                     <form method="POST" action="" class="modulePages">
-	                    <div id="pages-list" class="article-wrapper article-draggable">
-	                        #set($order = 0)
-	                        #foreach($modulePage in $page.children.ofType.Page.sortByIntField("order"))
-	                        #set($order = $order +1)
-	                        #set($classes = "clip-file-2")
-	                        #set($type = "file")
-	                        #if($modulePage.html.is("quizPage"))
-	                        #set($classes = "clip-question")
-	                        #set($type = "quiz")
-	                        #end
-	                        <article class="page $type">
-	                            <input type="hidden" name="${modulePage.name}" value="$order"/>
-	                            <i class="$classes"></i>
-	                            <span class="article-name">$modulePage.title</span>
-	                            <aside class="article-action">
-	                                <button type="button" class="btn btn-sm btn-move-file btn-info" title="Move up or down">
-	                                    <i class="glyphicon glyphicon-sort"></i>
-	                                </button>
-	                                <div class="btn-group btn-group-sm">
+                        <div id="pages-list" class="article-wrapper article-draggable">
+                            #set($order = 0)
+                            #foreach($modulePage in $page.children.ofType.Page.sortByIntField("order"))
+                            #set($order = $order +1)
+                            #set($classes = "clip-file-2")
+                            #set($type = "file")
+                            #if($modulePage.html.is("quizPage"))
+                            #set($classes = "clip-question")
+                            #set($type = "quiz")
+                            #end
+                            <article class="page $type">
+                                <input type="hidden" name="${modulePage.name}" value="$order"/>
+                                <i class="$classes"></i>
+                                <span class="article-name">$modulePage.title</span>
+                                <aside class="article-action">
+                                    <button type="button" class="btn btn-sm btn-move-file btn-info" title="Move up or down">
+                                        <i class="glyphicon glyphicon-sort"></i>
+                                    </button>
+                                    <div class="btn-group btn-group-sm">
                                         <a role="button" href="?htmleditor=${modulePage.name}" target="_blank" class="btn btn-sm btn-info" title="Edit page">
                                             <i class="fa fa-edit"></i> 
                                             Edit
                                         </a>
-	                                    
-	                                    <button type="button" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown">
-	                                        <span class="caret"></span>
-	                                    </button>
-	                                    <ul class="dropdown-menu pull-right">
+
+                                        <button type="button" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown">
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu pull-right">
                                             <li><a href="${modulePage.name}" class="btn-edit-page"><i class="clip-popout"></i> Edit in modal</a>
-                                            <li><a href="texteditor?fileName=${modulePage.name}" target="_blank" title="Edit as HTML"><i class="clip-code"></i> Edit as HTML</a></li>
-	                                        <li><a href="${modulePage.name}?goto" target="_blank" title="View page"><i class="fa fa-eye"></i> View</a></li>
-	                                        <li class="divider"></li>
-	                                        <li><a href="${modulePage.path}" class="btn-delete-page" title="Delete page"><i class="fa fa-times"></i> Delete</a></li>
-	                                    </ul>
-	                                </div>
-	                            </aside>
-	                        </article>
-	                        #end
-	                    </div>
+                                                <li><a href="texteditor?fileName=${modulePage.name}" target="_blank" title="Edit as HTML"><i class="clip-code"></i> Edit as HTML</a></li>
+                                                <li><a href="${modulePage.name}?goto" target="_blank" title="View page"><i class="fa fa-eye"></i> View</a></li>
+                                                <li class="divider"></li>
+                                                <li><a href="${modulePage.path}" class="btn-delete-page" title="Delete page"><i class="fa fa-times"></i> Delete</a></li>
+                                        </ul>
+                                    </div>
+                                </aside>
+                            </article>
+                            #end
+                        </div>
                     </form>
                 </div>
                 <!-- End content of Module list tab -->
@@ -348,20 +348,43 @@
                     <input type="hidden" name="pageName" />
                     <input type="hidden" name="order" />
                     <input type="hidden" name="template" value="learner/quizPage" />
-                    <div class="form-group">
-                        <label for="quizTitle" class="control-label col-md-2">Enter quiz title</label>
-                        <div class="col-md-4">
-                            <input type="text" name="pageTitle" id="quizTitle" class="form-control" value="" placeholder="A title for the new page" />
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label for="quizTitle" class="control-label col-md-3">Enter quiz title</label>
+                                <div class="col-md-9">
+                                    <input type="text" name="pageTitle" id="quizTitle" class="form-control" value="" placeholder="A title for the new page" />
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="btn-group">
-                                <button class="btn btn-sm btn-success btn-add-question dropdown-toggle" data-toggle="dropdown">
-                                    <i class="fa fa-plus"></i> Add a question <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu pull-right">
-                                    <li><a href="#" class="btn-multiple">Multiple choice</a></li>
-                                    <li><a href="#" class="btn-textbox">Textbox</a></li>
-                                </ul>
+                        <div class="col-md-4">
+                                <div class="btn-group">
+                                    <button class="btn btn-sm btn-success btn-add-question dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fa fa-plus"></i> Add a question <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu pull-right">
+                                        <li><a href="#" class="btn-multiple">Multiple choice</a></li>
+                                        <li><a href="#" class="btn-textbox">Textbox</a></li>
+                                    </ul>
+                                </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="maxAttempts" class="control-label col-md-4">Maximum attempts</label>
+                                <div class="col-md-6">
+                                    <input type="text" name="maxAttempts" id="maxAttempts" class="form-control" value="" placeholder="" />
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="passMarkPerc" class="control-label col-md-4">Pass mark %</label>
+                                <div class="col-md-6">
+                                    <input type="text" name="passMarkPerc" id="passMarkPerc" class="form-control" value="" placeholder="" />
+                                </div>                        
                             </div>
                         </div>
                     </div>
