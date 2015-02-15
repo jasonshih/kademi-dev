@@ -116,7 +116,7 @@ function doLogin(userName, password, config, container) {
                         window.location.href = resp.nextHref;
                     } else {
                         flog("login: no afterLoginUrl and no nextHref, so reload");
-                        window.location.reload();
+                        window.location.reload(true);
                     }                    
                 } else if( config.afterLoginUrl.startsWith("/")) {
                     // if config has an absolute path the redirect to it
@@ -128,7 +128,7 @@ function doLogin(userName, password, config, container) {
                         flog("Not doing redirect because afterLoginUrl=='none'");
                     } else if( config.afterLoginUrl === "reload") {
                         flog("Reload current location");
-                        window.location.reload();
+                        window.location.reload(true);
                     } else {
                         // if config has a relative path, then evaluate it relative to the user's own url in response
                         flog("redirect to2: " + userUrl + config.afterLoginUrl);
