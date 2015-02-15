@@ -241,9 +241,10 @@
             dataType: 'json',
             success: function (resp) {
                 flog('saved course', resp);
-                if (resp.status) {
+                if (resp.status) {                    
                     $("#moduleprogress-body").reloadFragment({
                         whenComplete: function () {
+                            Msg.info("Updated ok");
                             jQuery("abbr.timeago").timeago();
                         }
                     });

@@ -12,20 +12,7 @@
                 <button class="btn btn-sm btn-primary" type="submit">
                     <span class="glyphicon glyphicon-floppy-disk"></span>
                     Save changes
-                </button>
-                <div class="btn-group">
-                    <button class="btn btn-sm btn-success btn-sent-test" type="button">
-                        <span class="glyphicon glyphicon-send"></span>
-                        Send test
-                    </button>
-                    <button type="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown" type="button">
-                        <span class="caret"></span>
-                        <span class="sr-only">Toggle Dropdown</span>
-                    </button>
-                    <ul class="dropdown-menu pull-right" role="menu">
-                        <li><a href="#" class="btn-sent-test-choose">Enter recipient address</a></li>
-                    </ul>
-                </div>
+                </button>                
             </div>
 
             <div class="tabbable">
@@ -180,7 +167,7 @@
                                         <div class="form-group">
                                             <label class="control-label col-md-4" for="subject">Email subject</label>
                                             <div class="col-md-8">
-                                                <input type="text" name="subject" id="subject" value="$!page.subject" placeholder="Enter the email subject here" class="form-control required-if-shown" />
+                                                <textarea style="height: 70px" name="subject" id="subject" value="" placeholder="Enter the email subject here" class="form-control required-if-shown">$!page.subject</textarea>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -191,6 +178,22 @@
                                         </div>
                                     </div>
                                     <div class="col-md-6">
+                                        <div class="pull-right">
+                                            <div class="btn-group">
+                                                <button class="btn btn-success btn-sent-test" type="button">
+                                                    <span class="glyphicon glyphicon-send"></span>
+                                                    Send test
+                                                </button>
+                                                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" type="button">
+                                                    <span class="caret"></span>
+                                                    <span class="sr-only">Toggle Dropdown</span>
+                                                </button>
+                                                <ul class="dropdown-menu pull-right" role="menu">
+                                                    <li><a href="#" class="btn-sent-test-choose">Enter recipient address</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div style="clear: both"></div>
                                         <div class="add-attachment btn-upload"></div>
                                         <div class="article-wrapper article-sm showed-action attachments-list">
                                             #foreach($att in $page.job.attachments)
@@ -206,6 +209,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                <hr style="clear: both"/>
                                 <textarea class="htmleditor" cols="100" name="html" placeholder="">$!page.html</textarea>
                             </div>
                         </div>
@@ -455,6 +459,44 @@
                             </div>
                         </div> <!-- End actviate alert -->
 
+                        <div class="panel panel-default"> <!-- start insert data series -->
+                            <div class="panel-heading">
+                                <i class="clip-chk">$formatter.checkbox("dataSeriesEnabled", "dataSeriesEnabled", $page.job.dataSeriesEnabled)</i>
+                                <label for="dataSeriesEnabled">Insert into a data series</label>
+                            </div>
+                            <div class="panel-body panel-toggled" data-toggled="display" data-actor="#dataSeriesEnabled">
+                                <p>
+                                    Add a data point to a data series(s)
+                                    |
+                                    <a href='#' class='refresh-dataseries text-success'>Refresh Data series</a>
+                                </p>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label class="control-label col-md-2" for="dataSeriesAmountMvel">Enter an expression (MVEL)</label>
+                                            <div class="col-md-8">
+                                                <textarea type="text" class="form-control required-if-shown" name="dataSeriesAmountMvel" id="smsMessage">$!page.job.dataSeriesAmountMvel</textarea>
+                                            </div>
+                                        </div>
+                                    </div> <!-- end row -->
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label class="control-label col-md-2" for="dataSeriesName">Data Series</label>
+                                            <div class="col-md-8" id="dataseries-list">
+                                                <select name="dataSeriesName" id="dataSeriesName" class="form-control required-if-shown">
+                                                    $formatter.option( "", "[Please select]", null )
+                                                    #foreach($series in $page.find("/sales").children )
+                                                    $formatter.option( $series.name, $series.title, $page.job.dataSeriesName )
+                                                    #end
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div> <!-- end row -->
+                                </div>
+                            </div>
+                        </div> <!-- End actviate alert -->
                     </div> <!-- End content of Actions tab -->
 
 
@@ -745,6 +787,9 @@
                 });
                 $(".refresh-rewards").click(function () {
                     $("#rewards-container").reloadFragment();
+                });
+                $(".refresh-dataseries").click(function () {
+                    $("#dataseries-list").reloadFragment();
                 });
 
                 initSmsField();
