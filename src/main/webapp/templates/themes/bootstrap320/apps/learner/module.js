@@ -803,7 +803,7 @@ function checkSubmit(e) {
         return;
     }
     if (!isQuizComplete(e)) { // there might not be a quiz, which is ok
-        flog("Quiz is not complete");
+        flog("Quiz is not complete (bs320)");
         e.preventDefault();
         e.stopPropagation();
         return;
