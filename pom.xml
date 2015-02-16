@@ -4,7 +4,7 @@
     <groupId>co.kademi</groupId>
     <artifactId>kademi-dev</artifactId>
     <packaging>war</packaging>
-    <version>4.0.8</version>
+    <version>4.0.9</version>
         
     <build>
         <plugins>            
@@ -40,6 +40,10 @@
                                     <key>kademi.port</key>
                                     <value>80</value>
                                 </property>
+                                <property>
+                                    <key>kademi.port</key>
+                                    <value>443</value>
+                                </property>                                
                             </systemProperties>                            
                             <additionalClasspathElements>
                                 <additionalClasspathElement>/var/lib/kademi/conf</additionalClasspathElement>
