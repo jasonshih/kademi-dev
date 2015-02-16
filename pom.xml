@@ -41,7 +41,7 @@
                                     <value>80</value>
                                 </property>
                                 <property>
-                                    <key>kademi.port</key>
+                                    <key>kademi.secure.port</key>
                                     <value>443</value>
                                 </property>                                
                             </systemProperties>                            
