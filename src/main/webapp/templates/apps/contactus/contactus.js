@@ -1,5 +1,5 @@
 function initContactUs() {
-    $("form").forms({
+    $("form.contactus").forms({
         callback: function() {
             $("form.contactus").animate({opacity: 0}, 500, function() {
                 $("form.contactus").hide();
