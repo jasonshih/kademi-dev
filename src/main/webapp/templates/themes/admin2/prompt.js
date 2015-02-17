@@ -8,7 +8,7 @@ var myPromptModal;
  *  form
  */
 function myPrompt(id, url, title, instructions, caption, buttonName, buttonText, inputClass, inputPlaceholder, callback) {
-    log('myPrompt');
+    flog('myPrompt');
     var existing = $('#' + id);
     if(existing ) {
         existing.remove();
@@ -20,12 +20,12 @@ function myPrompt(id, url, title, instructions, caption, buttonName, buttonText,
     var inputId = id + '_';
     
     myPromptModal.html(        
+            '<form method="POST" class="form-horizontal" action="' + url + '">' +            
         '<div class="modal-header">' +
            '<button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>' +
            '<h4 class="modal-title">' + title + '</h4>' +
         '</div>' +
         '<div class="modal-body">' +
-            '<form method="POST" class="form-horizontal" action="' + url + '">' +
                 instructions + 
                 '<div class="clearfix"></div>' +
                 '<br /><br />' + 
@@ -36,17 +36,18 @@ function myPrompt(id, url, title, instructions, caption, buttonName, buttonText,
                         '<input type="text" class="required form-control ' + inputClass + ' id="' + inputId + '" name="' + buttonName + '" placeholder="' + inputPlaceholder + '" />'+
                     '</div>' +
                 '</div>' +
-            '</form>' +
         '</div>' +
         '<div class="modal-footer">' +
            '<button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>' +
-           '<button class="btn btn-sm btn-primary" data-type="form-submit" type="button">' + buttonText + '</button>' +
-        '</div>'
+           '<button class="btn btn-sm btn-primary" data-type="form-submit" type="submit">' + buttonText + '</button>' +
+        '</div>' +
+        '</form>'
     );
     
     var form = myPromptModal.find('form');
     
     form.submit(function(e) {
+        flog("submit");
         e.preventDefault();
         resetValidation(form);
         

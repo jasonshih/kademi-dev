@@ -8,7 +8,7 @@ var myPromptModal;
  *  form
  */
 function myPrompt(id, url, title, instructions, caption, buttonName, buttonText, inputClass, inputPlaceholder, callback) {
-    log('myPrompt');
+    flog('myPrompt');
     var existing = $('#' + id);
     if(existing ) {
         existing.remove();
@@ -46,6 +46,7 @@ function myPrompt(id, url, title, instructions, caption, buttonName, buttonText,
     
     form.submit(function(e) {
         e.preventDefault();
+        flog("submit");
         resetValidation(form);
         
         if( checkRequiredFields(form)) {
