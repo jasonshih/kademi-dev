@@ -10,10 +10,6 @@
         <script type="text/javascript" src="/static/js/managePublishing.js">//</script>
         <!-- <script src="/theme/assets/plugins/bootstrap-switch/static/js/bootstrap-switch.min.js">//</script> -->
         <!-- <script type="text/javascript" src="/templates/themes/admin/prompt.js">//</script> -->
-        <style>
-            #doUploadPK form {width: 155px;}
-            #doUploadCer form {width: 155px;}
-        </style>
     </head>
     <body class="manageWebsite">
         #set($currentBranch = $page.closest("branch"))
@@ -324,240 +320,251 @@
 
                                         </div>
                                     </div>
-                                    <tbody id="certificate-body">
-                                        </form>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                                            <!--button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Create</button-->
-                                        </div>
-                                        </div><!-- /.modal -->
+                                </tbody>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                            <!--button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Create</button-->
+                        </div>
+                    </div><!-- /.modal -->
 
 
-                                        <table id="certificate-types-table" class="table table-striped table-hover">
-                                            <colgroup>
-                                                <col width="" />
-                                                <col width="" />
-                                                <col width="" />
-                                                <col width="" />
-                                                <col width="" />
-                                                <col width="180px" />
-                                            </colgroup>
-                                            <thead>
-                                                <tr>
-                                                    <th>Title</th>
-                                                    <th >Start Date</th>                                    
-                                                    <th >Expiry Date</th>
-                                                    <th >Created By</th>
-                                                    <th >Status</th>
-                                                    <th class="action"></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="certificates-body">
-                                                #foreach($cer in $page.certificates)
-                                                <tr>
-                                                    <td>$cer.title</td>
-                                                    <td>$formatter.formatDate($cer.startDate)</td>  
-                                                    <td>$formatter.formatDate($cer.expiryDate)</td>
-                                                    <td>$cer.createdBy.name</td>
-                                                    <td>
-                                                        <div class="$cer.status">
-                                                            #if($cer.status == "A")
-                                                            <span class="label label-sm label-success">&nbspActive&nbsp</span>
-                                                            #else
-                                                            <span class="label label-sm label-warning">Inactive</span>
-                                                            #end                                        
-                                                        </div>
-                                                    </td>
+                    <table id="certificate-types-table" class="table table-striped table-hover">
+                        <colgroup>
+                            <col width="" />
+                            <col width="" />
+                            <col width="" />
+                            <col width="" />
+                            <col width="" />
+                            <col width="180px" />
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th >Start Date</th>                                    
+                                <th >Expiry Date</th>
+                                <th >Created By</th>
+                                <th >Status</th>
+                                <th class="action"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="certificates-body">
+                            #foreach($cer in $page.certificates)
+                            <tr>
+                                <td>$cer.title</td>
+                                <td>$formatter.formatDate($cer.startDate)</td>  
+                                <td>$formatter.formatDate($cer.expiryDate)</td>
+                                <td>$cer.createdBy.name</td>
+                                <td>
+                                    <div class="$cer.status">
+                                        #if($cer.status == "A")
+                                        <span class="label label-sm label-success">&nbspActive&nbsp</span>
+                                        #else
+                                        <span class="label label-sm label-warning">Inactive</span>
+                                        #end                                        
+                                    </div>
+                                </td>
 
-                                                    <td class="action">
-                                                        <div class="btn-group btn-group-sm">
-                                                            <a href="#" class= "btn btn-sm btn-info pull-left" data-toggle="dropdown" ><i class="fa fa-cog"></i>&nbsp&nbspMenu</a>
-                                                            <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
-                                                                <span class="caret"></span>
-                                                                <span class="sr-only">Toggle Dropdown</span>
-                                                            </button>
-                                                            <ul role="menu" class="dropdown-menu pull-right">
-                                                                <li><a href="$cer.id" class="cert-view" ><i class="fa fa-eye"></i> View </a></li>
-                                                                <li><a href="$cer.id" class="upload_cert" data-toggle="modal" data-target="#modalUploadCer">
-                                                                        <span class="glyphicon glyphicon-upload"></span>
-                                                                        Certificate
-                                                                    </a></li>
-                                                                <li><a href="$cer.id" class="upload_pk" data-toggle="modal" data-target="#modalUploadPK">
-                                                                        <span class="glyphicon glyphicon-upload"></span>
-                                                                        Private Key
-                                                                    </a></li>
-                                                                <li><a href="#"  class = "center">-------------</a></li>
-                                                                #if($cer.status == "A")
-                                                                <li><a href="$cer.id" class="cert-passivate" ><i class="glyphicon glyphicon-adjust"></i> Passivate</a></li>
-                                                                #else
-                                                                <li><a href="$cer.id" class="cert-activate"><i class="glyphicon glyphicon-fire"></i> Activate</a></li>
-                                                                #end
-
-                                                                <li><a href="$cer.id" class="cert-delete" ><i class="glyphicon glyphicon-remove"></i> Delete</a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                #end
-                                            </tbody>
-                                        </table>
-                                        </div>
-
-                                        <div id="panel_apps" class="tab-pane appsContainer">
-                                            <div class="well">
-                                                <p>Applications control large chunks of functionality, like forums or emails. You can add them to websites</p>
-                                                <p>Applications are made available for websites by activating them on your organisation's Manage Applications page. Available apps are then shown on the website apps list where they can be turned on or off as required.</p>
-                                            </div>
-
-                                            #set($apps = $page.apps)
-                                            #if( $apps.isEmpty() )
-                                            <div class="well">
-                                                <p>No applications are available. This means that the parent organisation has disabled them</p>
-                                            </div>        
+                                <td class="action">
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="#" class= "btn btn-sm btn-info pull-left" data-toggle="dropdown" ><i class="fa fa-cog"></i>&nbsp&nbspMenu</a>
+                                        <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
+                                            <span class="caret"></span>
+                                            <span class="sr-only">Toggle Dropdown</span>
+                                        </button>
+                                        <ul role="menu" class="dropdown-menu pull-right">
+                                            <li><a href="$cer.id" class="cert-view" ><i class="fa fa-eye"></i> View </a></li>
+                                            <li><a href="$cer.id" class="update_cert" data-toggle="modal" data-target="#modalUpdateCert">
+                                                    <span class="glyphicon glyphicon-edit"></span>
+                                                    Certificate
+                                                </a></li>
+                                            <li><a href="$cer.id" class="update_pk" data-toggle="modal" data-target="#modalUpdatePK">
+                                                    <span class="glyphicon glyphicon-edit"></span>
+                                                    Private Key
+                                                </a></li>
+                                            <li><a href="#"  class = "center">-------------</a></li>
+                                            #if($cer.status == "A")
+                                            <li><a href="$cer.id" class="cert-passivate" ><i class="glyphicon glyphicon-adjust"></i> Passivate</a></li>
+                                            #else
+                                            <li><a href="$cer.id" class="cert-activate"><i class="glyphicon glyphicon-fire"></i> Activate</a></li>
                                             #end
-                                            <div class="appsContainer">
-                                                <div class="table-responsive">
-                                                    <table class="table table-striped table-hover">
-                                                        #foreach($app in $apps )
-                                                        <tr>
-                                                            <td class="CheckBoxWrapper">
-                                                                $formatter.bsswitch("chk_${app.appId}", $app.appId, $app.enabled, $app.appId)
-                                                                <label for="chk_${app.appId}"></label>
-                                                            </td>
-                                                            <td>
-                                                                <h4>$page.getTitle($app.appId)</h4>
-                                                                <p>$page.getSummary($app.appId)</p>
-                                                            </td>
-                                                            <td>
-                                                                #if( $page.hasSettings($app) )
-                                                                <button class="btn btn-primary btn-sm settings" data-toggle="modal" data-target="#settings_${app.appId}"><i class="fa fa-cog"></i> Settings</button>
-                                                                #end
-                                                            </td>
-                                                        </tr>
-                                                        #end
-                                                    </table>
-                                                </div>
-                                            </div>
 
-                                            #foreach($app in $page.apps)
-                                            #if($page.hasSettings($app))
-                                            <div class="modal fade settings" id="settings_${app.appId}" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                                    <h4 class="modal-title">Edit Application: $app.appId</h4>
-                                                </div>
-                                                <div class="modal-body ModalContent">
-                                                    <form method="POST" action="." class="form-horizontal" role="form">
-                                                        <input type="hidden" name="settingsAppId" value="$app.appId"/>
-                                                        #appSettings($app.appId)
-                                                    </form>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
-                                                    <button type="button" class="btn btn-primary btn-sm" data-type="form-submit">Save</button>
-                                                </div>
-                                            </div>
-                                            #end
-                                            #end
-                                        </div> <!-- End apps -->
-                                        </div>
-                                        </div>        
+                                            <li><a href="$cer.id" class="cert-delete" ><i class="glyphicon glyphicon-remove"></i> Delete</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            #end
+                        </tbody>
+                    </table>
+                </div>
 
-                                        <div id="modalGroup" class="modal fade" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
-                                            <div class="modal-header">
-                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                                <h4 class="modal-title">Choose groups</h4>
-                                            </div>
-                                            <div class="modal-body">
-                                                <table class="">
-                                                    #foreach($g in $page.allGroups)
-                                                    <tr>
-                                                        <td>
-                                                            <div class="col-sm-offset-3">
-                                                                <label class="checkbox-inline">
-                                                                    $formatter.checkbox($g.name, $page.isSelected($g) ) $g.name
-                                                                </label>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    #end
-                                                </table>
-                                            </div>
-                                        </div>
+                <div id="panel_apps" class="tab-pane appsContainer">
+                    <div class="well">
+                        <p>Applications control large chunks of functionality, like forums or emails. You can add them to websites</p>
+                        <p>Applications are made available for websites by activating them on your organisation's Manage Applications page. Available apps are then shown on the website apps list where they can be turned on or off as required.</p>
+                    </div>
 
-                                        <div id="modal-menu" class="modal fade" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
-                                            <div class="modal-header">
-                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                                <h4 class="modal-title">Add/edit menu</h4>
-                                            </div>
-                                            <div class="modal-body">
-                                                <form class="form-horizontal">
-                                                    <div class="form-group">
-                                                        <label for="menu-text" class="control-label col-md-4">Text:</label>
-                                                        <div class="col-md-8">
-                                                            <input id="menu-text" class="form-control required" placeholder="Menu text" value="" />
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="menu-link" class="control-label col-md-4">Link:</label>
-                                                        <div class="col-md-8">
-                                                            <input id="menu-link" class="form-control required" placeholder="Menu link" value="" />
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
-                                                <button type="button" class="btn btn-primary btn-sm btn-save-menu" data-type="form-submit">Save</button>
-                                            </div>
-                                        </div>
+                    #set($apps = $page.apps)
+                    #if( $apps.isEmpty() )
+                    <div class="well">
+                        <p>No applications are available. This means that the parent organisation has disabled them</p>
+                    </div>        
+                    #end
+                    <div class="appsContainer">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                #foreach($app in $apps )
+                                <tr>
+                                    <td class="CheckBoxWrapper">
+                                        $formatter.bsswitch("chk_${app.appId}", $app.appId, $app.enabled, $app.appId)
+                                        <label for="chk_${app.appId}"></label>
+                                    </td>
+                                    <td>
+                                        <h4>$page.getTitle($app.appId)</h4>
+                                        <p>$page.getSummary($app.appId)</p>
+                                    </td>
+                                    <td>
+                                        #if( $page.hasSettings($app) )
+                                        <button class="btn btn-primary btn-sm settings" data-toggle="modal" data-target="#settings_${app.appId}"><i class="fa fa-cog"></i> Settings</button>
+                                        #end
+                                    </td>
+                                </tr>
+                                #end
+                            </table>
+                        </div>
+                    </div>
 
-                                        <div id="modalUploadCer" class="modal fade">
-                                            <div class="modal-header">
-                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                                <h4 class="modal-title">Upload Certificate</h4>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div class="row upload">
-                                                    <div class="col-sm-12">
-                                                        <div class="input upload" id="doUploadCer"></div>
+                    #foreach($app in $page.apps)
+                    #if($page.hasSettings($app))
+                    <div class="modal fade settings" id="settings_${app.appId}" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">Edit Application: $app.appId</h4>
+                        </div>
+                        <div class="modal-body ModalContent">
+                            <form method="POST" action="." class="form-horizontal" role="form">
+                                <input type="hidden" name="settingsAppId" value="$app.appId"/>
+                                #appSettings($app.appId)
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary btn-sm" data-type="form-submit">Save</button>
+                        </div>
+                    </div>
+                    #end
+                    #end
+                </div> <!-- End apps -->
+            </div>
+        </div>        
 
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
-                                            </div>
-                                        </div>
+        <div id="modalGroup" class="modal fade" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Choose groups</h4>
+            </div>
+            <div class="modal-body">
+                <table class="">
+                    #foreach($g in $page.allGroups)
+                    <tr>
+                        <td>
+                            <div class="col-sm-offset-3">
+                                <label class="checkbox-inline">
+                                    $formatter.checkbox($g.name, $page.isSelected($g) ) $g.name
+                                </label>
+                            </div>
+                        </td>
+                    </tr>
+                    #end
+                </table>
+            </div>
+        </div>
+
+        <div id="modal-menu" class="modal fade" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Add/edit menu</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label for="menu-text" class="control-label col-md-4">Text:</label>
+                        <div class="col-md-8">
+                            <input id="menu-text" class="form-control required" placeholder="Menu text" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="menu-link" class="control-label col-md-4">Link:</label>
+                        <div class="col-md-8">
+                            <input id="menu-link" class="form-control required" placeholder="Menu link" value="" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary btn-sm btn-save-menu" data-type="form-submit">Save</button>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modalUpdateCert" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Create/Update Certificate Text (X.509 Type)</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" method="" action=".">
+                    <tbody id=¡±certificateKey-body">
+                        <div class="form-group">
+                            <input type="hidden" id = "updateCertId" name="updateCertId" value="">
+                                <div class="col-sm-12">
+                                    <textarea id = "certificateTextUpdate" name="certificateTextUpdate" rows="18" class="form-control"></textarea>
+                                </div>
+                        </div>
+                    </tbody>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Update</button>
+            </div>
+        </div><!-- /.modal -->
+
+        <div class="modal fade" id="modalUpdatePK" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Create/Update Private Key Text (PEM Encoded)</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" method="" action=".">
+                    <tbody id="privateKey-body">
+                        <div class="form-group">
+                            <input type="hidden" id = "updatePKid" name="updatePKid" value="">
+                                <div class="col-sm-12">
+                                    <textarea id = "privateKeyTextUpdate" name="privateKeyTextUpdate" rows="18" class="form-control"></textarea>
+                                </div>
+                        </div>
+                    </tbody>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Update</button>
+            </div>
+        </div><!-- /.modal -->
 
 
-                                        <div id="modalUploadPK" class="modal fade">
-                                            <div class="modal-header">
-                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                                <h4 class="modal-title">Upload Private Key</h4>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div class="row upload">
-                                                    <div class="col-sm-12">
-                                                        <div class="input upload" id="doUploadPK"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
 
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
-                                            </div>
-                                        </div>
-
-                                        <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
-                                        <script type="text/javascript">
+        <script type="text/javascript">
             $(function () {
                 flog("page init initManageWebsite");
                 initManageWebsite();
                 initPublishingMenu("");
                 initHtmlEditors($(".htmleditor"), "60px", "200px", 'embed_video,modal', 'resize,elementspath');
                 initCerts();
+
                 $("form.details").forms({
                     callback: function () {
                         flog("Saved Ok!");
@@ -572,10 +579,35 @@
                     callback: function (resp) {
                         flog("done", resp);
                         modal.modal('hide');
-                        Msg.success(form.find('[name=title]').val() + ' is created!');
+                        Msg.success(form.find('[name=title]').val() + ' is updated!');
                         $('#certificate-types-table').reloadFragment();
                     }
                 });
+
+                var updatePKmodal = $("#modalUpdatePK");
+                var updatePKform = updatePKmodal.find(" form");
+
+                updatePKform.forms({
+                    callback: function (resp) {
+                        flog("done", resp);
+                        updatePKmodal.modal('hide');
+                        Msg.success(resp.messages, 6000);
+                        $('#certificate-types-table').reloadFragment();
+                    }
+                });
+
+                var updateCertModal = $("#modalUpdateCert");
+                var updateCertform = updateCertModal.find(" form");
+
+                updateCertform.forms({
+                    callback: function (resp) {
+                        flog("done", resp);
+                        updateCertModal.modal('hide');
+                        Msg.success(resp.messages, 6000);
+                        $('#certificate-types-table').reloadFragment();
+                    }
+                });
+                
             });
 
             function initCerts() {
@@ -597,56 +629,21 @@
                     updateCertStatus(id, "");
                 });
 
-                $("#certificate-types-table").on("click", ".upload_pk", function (e) {
+                $("#certificate-types-table").on("click", ".update_pk", function (e) {
                     e.preventDefault();
 
                     var id = $(e.target).closest("a").attr("href");
-                    var urlStr = "private.key?certId=" + id;
-
-                    $('#doUploadPK').empty();
-
-                    var mup = $("#doUploadPK").mupload({
-                        buttonText: "<i class=\"clip-folder\"></i> Upload Private Key File.(PEM Encoded.)",
-                        url: urlStr,
-                        useJsonPut: false,
-                        oncomplete: function (data, name) {
-                            flog("success", data);
-                            log("oncomplete:", data, name);
-                            if (data.result.status) {
-                                Msg.success("Upload completed.");
-                            } else {
-                                Msg.error("Upload error: <br>  " + data.result.messages, 10000);
-                            }
-                            $("#certificates-body").reloadFragment();
-                        }
-                    });
-
+                    $("#updatePKid").val(id);
+                    $("#privateKeyTextUpdate").text();
 
                 });
 
-                $("#certificate-types-table").on("click", ".upload_cert", function (e) {
+                $("#certificate-types-table").on("click", ".update_cert", function (e) {
                     e.preventDefault();
 
                     var id = $(e.target).closest("a").attr("href");
-                    var urlStr = "certificate.key?certId=" + id;
-
-                    $('#doUploadCer').empty();
-
-                    $("#doUploadCer").mupload({
-                        buttonText: "<i class=\"clip-folder\"></i> Upload Certificate File.(X.509 Type)",
-                        url: urlStr,
-                        useJsonPut: false,
-                        oncomplete: function (data, name, href) {
-                            log("oncomplete:", data, name, href);
-                            flog("success", data);
-                            if (data.result.status) {
-                                Msg.success("Upload completed.");
-                            } else {
-                                Msg.error("Upload error: <br>  " + data.result.messages, 10000);
-                            }
-                            $("#certificates-body").reloadFragment();
-                        }
-                    });
+                    $("#updateCertId").val(id);
+                    $("#certificateTextUpdate").text();
                 });
 
                 $("#certificate-types-table").on("click", ".cert-view", function (e) {
@@ -720,6 +717,6 @@
                     }
                 });
             }
-                                        </script>        
-                                        </body>
-                                        </html>
+        </script>        
+    </body>
+</html>
