@@ -28,7 +28,9 @@
                         <tr>
                             #set($labelType = $event.level.toLowerCase())
                             #if($labelType == "error")
-                                #set($labelType = "danger")                            
+                                #set($labelType = "danger")
+                            #elseif($labelType == "warn")
+                                #set($labelType = "warning")
                             #end
                             <td><span class="label label-$labelType" >$event.level</span></td>
                             <td>$event.message</td>
