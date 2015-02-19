@@ -243,10 +243,13 @@ function initComments(pageUrl) {
         currentUser.href = userUrl;
     });
 
-    $("#comments").comments({
-        currentUser: currentUser,
-        pageUrl: pageUrl
-    });
+    var comments = $("#comments");
+    if( comments.length > 0 ) {
+        comments.comments({
+            currentUser: currentUser,
+            pageUrl: pageUrl
+        });
+    }
 }
 
 
