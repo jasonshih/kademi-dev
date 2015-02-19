@@ -10,6 +10,7 @@
             }
             #doUploadCsv form {width: 155px;}
         </style>
+        <script type="text/javascript" src="/theme/apps/admin/manageExtraField.js">//</script>
     </head>
     <body>
 
@@ -22,7 +23,7 @@
             </div>
             <div class="tab-content">
                 <div class="tab-pane Details" id="details">
-                    
+
                     #if( $page.canEdit )
                     #else
                     <div class="alert alert-warning">
@@ -90,7 +91,7 @@
                                 </div>
                             </div>
                         </div>                        
-                        
+
                         <div class="form-group">
                             <label class="col-sm-2 control-label" for="cashValue">Cash value</label>
                             <div class="col-sm-6">
@@ -118,24 +119,66 @@
 
                     </form>
                     <div class="clearfix"></div>
+                    <div class="panel panel-default panel-fields">
+                        <div class="panel-heading">
+                            <i class="clip-question"></i> What extra fields do you to collect for each record?
+                        </div>
+                        <div class="panel-body">
+                            <p>
+                                <button type="button" class="btn btn-sm btn-success btn-add-extra-field"><i class="fa fa-plus"></i> Add field</button>
+                            </p>
+                            <table id="table-extra-field" class="table table-hover table-stripled" data-group-href="$page.href">
+                                <colgroup>
+                                    <col />
+                                    <col />
+                                    <col />
+                                    <col />
+                                    <col style="width: 150px" />
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Text</th>
+                                        <th>Required</th>
+                                        <th>Options</th>
+                                        <th class="action">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    #foreach($field in $page.dataCaptureFields.entrySet())
+                                    <tr class="extra-field">
+                                        <td>
+                                            <input type="hidden" value="$field.key" name="key" />
+                                            <input type="hidden" value="$field.value" name="value" />
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    #end
+                                </tbody>
+                            </table>            
+                        </div>
+                    </div>                      
                 </div>
 
-              
-                
+
+
                 <div class="tab-pane" id="vouchers">
-                    
+
                     <button class="btn btn-success pull-right" data-toggle="modal" data-target="#createVouchersModal">Create vouchers</button>
-                    
+
                     <a class="btn btn-primary pull-right" href="vouchers.csv" >
                         <span class="glyphicon glyphicon-list-alt"></span>
                         Export to CSV
                     </a>
-                    
+
                     <a class="btn btn-success pull-right" href="#" data-toggle="modal" data-target="#modalUploadCsv">
                         <span class="glyphicon glyphicon-upload"></span>
                         Upload CSV
                     </a>
-                    
+
                     <div class="col-md-6">
                         <table class="table" id="voucher-summary">
                             <colgroup>
@@ -159,7 +202,7 @@
                                 </tr>
                             </tbody>
                         </table>
-                        
+
                         <hr/>
                     </div>
 
@@ -318,25 +361,68 @@
             </div>                            
         </div>        
 
+        <div id="modal-extra-field" class="modal fade" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Add extra field</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" action="$page.href" method="POST">
+                    <input id="extra-field-value" type="hidden" name="addFieldValue" />
+                    <div class="form-group">
+                        <label for="extra-field-name" class="control-label col-md-4">Name:</label>
+                        <div class="col-md-8">
+                            <input id="extra-field-name" type="text" class="form-control required" name="addFieldName" placeholder="Field text" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="extra-field-required" class="control-label col-md-4">Required:</label>
+                        <div class="col-md-8">
+                            <input id="extra-field-required" type="checkbox" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="extra-field-text" class="control-label col-md-4">Text:</label>
+                        <div class="col-md-8">
+                            <input id="extra-field-text" class="form-control required" placeholder="Field text" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label  class="control-label col-md-4">Option:</label>
+                        <div class="col-md-8">
+                            <button type="button" class="btn btn-sm btn-add-option btn-info">Add option</button>
+                        </div>
+                    </div>
+                    <div id="options-wrapper"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary btn-sm btn-save-menu" data-type="form-submit">Save</button>
+            </div>
+        </div>
+
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
         <script type="text/javascript">
             $(function () {
-                
+
                 initSearchVoucher();
-                
+
+                initManageExtraField();
+
                 $('abbr.timeago').timeago();
-                
+
                 $("#voucherDetails").forms({
                     callback: function (resp, form) {
                         Msg.info("Saved ok");
                         flog("callback", resp);
                         var newName = $("input[name=name]").val();
                         flog("check names", oldName, newName);
-                        if( oldName != newName ) {
+                        if (oldName != newName) {
                             flog("redirect");
                             window.location = "../" + newName;
                         }
-                        
+
                     }
                 });
                 var oldName = $("input[name=name]").val();
@@ -363,14 +449,14 @@
                     selectOrgModal.modal("hide");
                     $(".change-redeeming-org .org-title").text(val);
                 });
-                
-                 $("#doUploadCsv").mupload({
+
+                $("#doUploadCsv").mupload({
                     buttonText: "<i class=\"clip-folder\"></i> Upload spreadsheet",
                     url: "vouchers.csv",
                     useJsonPut: false,
-                    oncomplete: function(data, name, href) {
+                    oncomplete: function (data, name, href) {
                         log("oncomplete:", data.result.data, name, href);
-                        if( data.result.status ) {
+                        if (data.result.status) {
                             $(".results .numUpdated").text(data.result.data.numUpdated);
                             $(".results .numInserted").text(data.result.data.numInserted);
                             $(".results .numUnmatched").text(data.result.data.unmatched.length);
@@ -408,7 +494,7 @@
                     }
                 });
             }
-            
+
             function reloadVouchers() {
                 $("#vouchers-table-body").reloadFragment({
                     whenComplete: function () {
@@ -416,22 +502,22 @@
                     }
                 });
             }
-            
+
             function showUnmatched(unmatched) {
                 var unmatchedTable = $(".results table");
                 var tbody = unmatchedTable.find("tbody");
                 tbody.html("");
-                $.each(unmatched, function(i, row) {
+                $.each(unmatched, function (i, row) {
                     log("unmatched", row);
                     var tr = $("<tr>");
-                    $.each(row, function(ii, field) {
+                    $.each(row, function (ii, field) {
                         tr.append("<td>" + field + "</td>");
-                    }); 
+                    });
                     tbody.append(tr);
                 });
                 unmatchedTable.show();
             }
-            
+
         </script>
     </body>
 </html>

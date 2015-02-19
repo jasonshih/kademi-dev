@@ -30,7 +30,7 @@
                             <col width="" />
                             <col width="" />
                             <col width="" />
-                            <col width="280px" />
+                            <col width="100px" />
                         </colgroup>
                         <thead>
                             <tr>
@@ -39,30 +39,23 @@
                                 <th>Status</th>
                                 <th>Date</th>
                                 <th>By</th>
-                                <th class="action"></th>
+                                <th><input type="checkbox" name="voucher-ids" class="chk-all" /></th>
                             </tr>
                         </thead>
                         <tbody id="vouchers-table-body">
                             #if( $page.vouchers.empty )
                             <tr>
-                                <td colspan="5">No vouchers</td>
+                                <td colspan="6">No vouchers</td>
                             </tr>
                             #else
                             #foreach($v in $page.vouchers)
-                            <tr>
+                            <tr>                                
                                 <td><a href='$v.voucherTypeCode/$v.voucherId'>$v.voucherId</a></td>
                                 <td>$v.voucherTypeTitle</td>
                                 <td>$!page.statusText($v.status)</td>
                                 <td><abbr title="$formatter.formatDateISO8601($v.statusDate)" class="timeago">$!v.statusDate</abbr></td>
                                 <td>$!v.statusChangedBy.name</td>
-                                <td class="action text-right">
-                                    #if( $v.status == '' || $v.status == 'P' )
-                                    <a href="$v.voucherTypeCode/$v.voucherId" class="btn btn-sm btn-success voucher-redeem" ><i class="fa fa-plus"></i> Redeem</a>
-                                    #end
-                                    #if( $v.status == '' )
-                                    <a href="$v.voucherTypeCode/$v.voucherId" class="btn btn-sm btn-warning voucher-pending" ><i class="fa fa-question"></i> Pending</a>
-                                    #end
-                                </td>
+                                <td><input type="checkbox" name="voucher-ids" value="$v.id" /></td>
                             </tr>
                             #end
                             #end
@@ -166,6 +159,18 @@
                     $("#voucher-query").val("");
                 });
                 
+                $('.chk-all').exist(function () {
+                    this.each(function () {
+                        var chkAll = $(this);
+                        var table = chkAll.parents('table');
+                        flog("table", table);
+                        chkAll.on('click', function () {
+                            flog("clci", chks);
+                            var chks = table.find('tbody input:checkbox');
+                            chks.prop('checked', chkAll.is(':checked'));
+                        });
+                    });
+                });                
                 $('abbr.timeago').timeago();
             });
             function initSearchVoucher() {
