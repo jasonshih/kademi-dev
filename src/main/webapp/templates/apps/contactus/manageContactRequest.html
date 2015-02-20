@@ -26,6 +26,10 @@
                                 <td>$page.contactRequest.website.name</td>
                             </tr>
                             <tr>
+                                <th>Contact form</th>
+                                <th>$page.contactRequest.contactForm</th>
+                            </tr>
+                            <tr>
                                 <th>Email</th>
                                 <td>
                                     #if( $page.contactRequest.email )
@@ -79,7 +83,7 @@
                                 <th>Member of</th>
                                 <td>
                                     #foreach($gm in $memberships)
-                                    <span>$gm.groupEntity.name</span>,
+                                    <span class="label label-info">$gm.groupEntity.name</span>,
                                     #end
                                 </td>
                             </tr>
