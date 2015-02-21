@@ -53,6 +53,7 @@
                                 </tr>
                                 #else
                                 #foreach($kpi in $page.children)
+                                    #if( $kpi.available )
                                 <tr class="" href="$kpi.name">
                                     <td><a href='$kpi.name'>$kpi.title</a></td>
                                     #if($kpi.aggregationName)
@@ -61,11 +62,12 @@
                                     <td>No Aggregation</td>
                                     #end
                                     <td>$kpi.period</td>
-                                    <td>$kpi.target</td>
-                                    <td>$kpi.progress</td>                                    
-                                    <td>$kpi.periodElapsedPerc</td>
-                                    <td>$kpi.progressPerc</td>
+                                    <td>$!kpi.target</td>
+                                    <td>$!kpi.progress</td>                                    
+                                    <td>$!kpi.periodElapsedPerc</td>
+                                    <td>$!kpi.progressPerc</td>
                                 </tr>
+                                    #end
                                 #end
                                 #end
                             </tbody>
@@ -75,6 +77,7 @@
             </div>
             
             #foreach($kpi in $page.children)
+            #if( $kpi.available )
             <div class="panel panel-default">
                 <div class="panel-heading">
                     My Records - $kpi.title
@@ -86,6 +89,9 @@
                                 <tr>
                                     <th>Date</th>
                                     <th>Amount</th>
+                                    #foreach($field in $page.extraFieldNames)
+                                    <th>$field</th>
+                                    #end
                                 </tr>
                             </thead>
                             <tbody>
@@ -93,6 +99,9 @@
                                 <tr class="" >
                                     <td>$rec.periodFrom</td>
                                     <td>$rec.amount</td>
+                                    #foreach($field in $page.extraFieldNames)
+                                    <td>$!rec.extraFields.get( $field )</td>
+                                    #end                                    
                                 </tr>
                                 #end
                             </tbody>
@@ -100,6 +109,7 @@
                     </div>
                 </div>
             </div>
+            #end
             #end
         </div>
         <script>
