@@ -20,6 +20,13 @@
                             </span>
                         </div>
                     </div>
+                    <div class="col-lg-6">
+                        <div class="pull-right">
+                            <button class="btn btn-success" data-toggle="modal" data-target="#redeemVoucherModal">Redeem</button>
+                            <button class="btn btn-success" data-toggle="modal" data-target="#allocateVoucherModal">Allocate</button>
+                            <button class="btn btn-danger" data-toggle="modal" data-target="#changeStatusModal">Change status</button>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="table-responsive">
@@ -64,8 +71,8 @@
                 </div>
             </div>
         </div>
-        
-        
+
+
         <div class="modal fade" id="redeemVoucherModal">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -76,7 +83,7 @@
                         </div>
                         <div class="modal-body">                   
                             <p>
-                                
+
                                 Redeeming organisation: 
                                 <select name="redeemingOrg">
                                     #foreach($org in $page.redeemingOrgs)
@@ -96,7 +103,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="modal fade" id="pendingVoucherModal">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -122,11 +129,11 @@
         <script type="text/javascript">
             $(function () {
                 initSearchVoucher();
-                table = $("#vouchers-table");                
-                
+                table = $("#vouchers-table");
+
                 var redeemVoucherModal = $("#redeemVoucherModal");
                 redeemVoucherModal.find("form").forms({
-                    callback: function() {
+                    callback: function () {
                         Msg.info("Redeemed ok");
                         redeemVoucherModal.modal('hide');
                         reloadVouchers();
@@ -141,7 +148,7 @@
 
                 var pendingVoucherModal = $("#pendingVoucherModal");
                 pendingVoucherModal.find("form").forms({
-                    callback: function() {
+                    callback: function () {
                         Msg.info("Set pending ok");
                         pendingVoucherModal.modal('hide');
                         reloadVouchers();
@@ -153,12 +160,12 @@
                     pendingVoucherModal.find("form").attr("action", href);
                     pendingVoucherModal.modal();
                 });
-                        
-                $("#voucher-query-container .glyphicon-remove").click(function(e){
+
+                $("#voucher-query-container .glyphicon-remove").click(function (e) {
                     e.preventDefault();
                     $("#voucher-query").val("");
                 });
-                
+
                 $('.chk-all').exist(function () {
                     this.each(function () {
                         var chkAll = $(this);
@@ -170,7 +177,7 @@
                             chks.prop('checked', chkAll.is(':checked'));
                         });
                     });
-                });                
+                });
                 $('abbr.timeago').timeago();
             });
             function initSearchVoucher() {
@@ -200,7 +207,7 @@
             }
             function reloadVouchers() {
                 $("#vouchers-table-body").reloadFragment({
-                    whenComplete: function(){
+                    whenComplete: function () {
                         $('abbr.timeago').timeago();
                     }
                 });
