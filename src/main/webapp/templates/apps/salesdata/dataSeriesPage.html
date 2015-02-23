@@ -27,7 +27,46 @@
                     </div>
                 </div>
             </div>
-            
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    My History
+                </div>                
+                <div id="kpisTableContainer" class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>From</th>
+                                    <th>To</th>
+                                    <th>Value</th>
+                                    #foreach($x in $page.getExtraFieldNames())
+                                    <th>$x</th>
+                                    #end
+                                </tr>
+                            </thead>
+                            <tbody>
+                                #if( $page.history.isEmpty() )
+                                <tr>
+                                    <td>No Sales have been assigned to you.</td>
+                                </tr>
+                                #else
+                                #foreach($rec in $page.history)
+                                <tr>
+                                    <td>$rec.id 2</td>
+                                    <td>$rec.periodTo</td>
+                                    <td>$rec.periodFrom</td>
+                                    <td>$rec.amount</td>
+                                </tr>
+                                #end
+                                #end
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
             <div class="panel panel-default">
                 <div class="panel-heading">
                     My KPI's
@@ -53,7 +92,7 @@
                                 </tr>
                                 #else
                                 #foreach($kpi in $page.children)
-                                    #if( $kpi.available )
+                                #if( $kpi.available )
                                 <tr class="" href="$kpi.name">
                                     <td><a href='$kpi.name'>$kpi.title</a></td>
                                     #if($kpi.aggregationName)
@@ -67,7 +106,7 @@
                                     <td>$!kpi.periodElapsedPerc</td>
                                     <td>$!kpi.progressPerc</td>
                                 </tr>
-                                    #end
+                                #end
                                 #end
                                 #end
                             </tbody>
@@ -75,7 +114,7 @@
                     </div>
                 </div>
             </div>
-            
+
             #foreach($kpi in $page.children)
             #if( $kpi.available )
             <div class="panel panel-default">
