@@ -276,7 +276,7 @@
                                     |
                                     <a target="_blank" href='/rewards'>Go to rewards</a>
                                     |
-                                    <a href='#' class='refresh-rewards text-success'>Refresh alerts list</a>
+                                    <a href='#' class='refresh-rewards text-success'>Refresh rewards list</a>
                                 </p>                                
                                 <div class="form-group">
                                     <div class="row">
@@ -296,9 +296,19 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <label class="control-label col-md-4" for="groupToJoin">No. rewards/points</label>
+                                            <label class="control-label col-md-4" for="numRewards">No. rewards/points</label>
                                             <div class="col-md-8">
                                                 <input type="text" name="numRewards" id="numRewards" value="$!page.job.numRewards" class="form-control required-if-shown" />
+                                            </div>
+                                        </div>
+                                    </div> <!-- end row -->
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="control-label col-md-4" for="numRewardsMVEL">Expression</label>
+                                            <div class="col-md-8">
+                                                <textarea name="numRewardsMVEL" id="numRewardsMVEL" class="form-control" rows="5">$!page.job.numRewardsMVEL</textarea>
                                             </div>
                                         </div>
                                     </div> <!-- end row -->
@@ -320,7 +330,7 @@
                                         <div class="col-md-6">
                                             <label class="control-label col-md-4" for="rewardPointsTag">Tag</label>
                                             <div class="col-md-8">
-                                                <select name="rewardPointsTag" id="rewardPointsTag" class="form-control required-if-shown">
+                                                <select name="rewardPointsTag" id="rewardPointsTag" class="form-control">
                                                     $formatter.option( "", "[Please select]", $page.job.rewardPointsTag )
                                                     #foreach($tag in $page.pointsTags)
                                                     $formatter.option( $tag.name, $tag.title, $page.job.rewardPointsTag )
