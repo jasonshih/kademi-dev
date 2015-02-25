@@ -1,0 +1,5 @@
+<p class="lead">    
+    #set($to = $formatter.now())
+    #set($from = $formatter.addDays($to, -30))
+    $page.userResource.dailyVisits($from, $to).size() daily visits in the last month, across all websites
+</p>
