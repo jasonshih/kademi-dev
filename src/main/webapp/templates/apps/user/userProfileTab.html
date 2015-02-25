@@ -11,7 +11,7 @@
             </tr>
         </thead>
         <tbody>
-    #foreach($visit in $page.userResource.dailyVisits($from, $to))
+    #foreach($visit in $page.userResource.dailyVisits( $from, $to, $website.website))
     <tr>
         <td>$visit.date</td>
         <td>$visit.count</td>
