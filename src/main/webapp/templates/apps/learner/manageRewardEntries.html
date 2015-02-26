@@ -51,6 +51,72 @@
 	                                </div>
 	                            </td>
 	                        </tr>
+                            <tr class="details">
+                                <td></td>
+                                <td colspan="6">
+                                    <div class="blocks-wrapper">
+                                        #foreach($m in $member.memberships)
+                                        #foreach($f in $m.fields.nvPairs)
+                                        <div class="block"><b>$f.name</b> : $f.propValue</div>
+                                        #end
+                                        #end  
+                                    </div>
+                                </td>
+                            </tr>
+                            
+	                        #end
+	                    </tbody>
+	                </table>
+	            </div>
+                
+                #set( $page.submissions)
+                <div class="table-responsive">
+	                <table class="entries table table-striped table-hover table-full-width">
+	                    <thead>
+	                        <tr>
+	                            <th>Full name</th>
+	                            <th>Organisation</th>
+	                            <th>Email</th>
+	                            <th>Date awarded</th>
+	                            <th>For</th>
+	                            <th class="center">
+	                                <div class="checkbox-table">
+	                                    <label>
+	                                        <input type="checkbox" name="toRemoveId" class="grey entries selectAll"/>
+	                                    </label>
+	                                </div>
+	                            </th>
+	                        </tr>
+	                    </thead>
+	                    <tbody>
+	                        #foreach($entry in $page.entries)
+	                        <tr>
+	                            <td>$entry.awardedTo.formattedName</td>
+	                            <td>$page.orgForEntry($entry)</td>
+	                            <td>$entry.awardedTo.email</td>
+	                            <td>$formatter.formatDate($entry.awardedDate)</td>
+	                            <td>$page.awardedForTitle($entry)</td>
+	                            <td class="center">
+	                                <div class="checkbox-table">
+	                                    <label>
+	                                      <input type="checkbox" name="toRemoveId" value="$entry.id"/>
+	                                    </label>
+	                                </div>
+	                            </td>
+	                        </tr>
+                            <tr class="details">
+                                <td></td>
+                                <td colspan="6">
+                                    <div class="blocks-wrapper">
+                                        #foreach($m in $member.memberships)
+                                        #foreach($f in $m.fields.nvPairs)
+                                        <div class="block"><b>$f.name</b> : $f.propValue</div>
+                                        #end
+                                        #end  
+                                    </div>
+                                </td>
+                            </tr>
+                            
 	                        #end
 	                    </tbody>
 	                </table>
