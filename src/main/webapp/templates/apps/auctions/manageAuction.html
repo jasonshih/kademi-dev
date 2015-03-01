@@ -53,7 +53,6 @@
                     </div>
                     <ul class="TabNav nav nav-tabs tab-bricky pull-left">
                         <li class=""><a href="#details" data-toggle="tab">Details</a></li>
-                        <li class=""><a href="#dAlert" data-toggle="tab">Dashboard Alert</a></li>
                         <li class=""><a href="#groups" data-toggle="tab">Groups</a></li>
                         <li class=""><a href="#organisations" data-toggle="tab">Organisations</a></li>
                         <li class=""><a href="#history" data-toggle="tab">History</a></li>
@@ -256,68 +255,6 @@
                                         <div class="form-group">
                                             <div class="col-sm-12">
                                                 <textarea cols="120" class="form-control" name="notes" rows="10" placeholder="Enter your notes here">$!page.notes</textarea>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <!-- Dashboard Alerts -->
-                    <div class="tab-pane Details" id="dAlert">
-                        <table class="Details form-horizontal">
-                            <colgroup>
-                                <col width="20%" />
-                                <col width="80%" />
-                            </colgroup>
-                            <tbody>
-                                <tr>
-                                    <td>Alert title</td>
-                                    <td>
-                                        <div class="form-group">
-                                            <div class="col-sm-4">
-                                                <input type="text" id="auctionTitle" name="alertTitle" placeholder="Enter title here" value="$!page.alertTitle" class="form-control" />
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Alert Type</td>
-                                    <td>
-                                        <div class="form-group">
-                                            <div class="col-sm-2">
-                                                <select name="alertType" class="form-control">
-                                                    #foreach($type in $page.allTypes)
-                                                    $formatter.option($type, $formatter.capitalizeString($type), $page.alertType)
-                                                    #end
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Position</td>
-                                    <td>
-                                        <div class="form-group">
-                                            <div class="col-sm-2">
-                                                <select name="alertPosition" class="form-control">
-                                                    #foreach($p in $page.allPositions)
-                                                    $formatter.option($p, $formatter.capitalizeString($p), $page.alertPosition)
-                                                    #end
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>  
-                                <tr>
-                                    <td>
-                                        Body<br />
-                                        <small><i>This copy will sit next to the image and tell the user about the auction</i></small>
-                                    </td>
-                                    <td>
-                                        <div class="form-group editor-wrapper">
-                                            <div class="col-sm-12">
-                                                <textarea cols="120" name="alertBody" rows="10" placeholder="">$!page.alertBody</textarea>
                                             </div>
                                         </div>
                                     </td>
