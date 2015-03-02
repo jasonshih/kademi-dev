@@ -143,7 +143,11 @@
                                         <i class="glyphicon glyphicon-sort"></i>
                                     </button>
                                     <div class="btn-group btn-group-sm">
-                                        <a role="button" href="${modulePage.name}" class="btn btn-sm btn-info btn-edit-page" title="Edit page">
+                                        #if($type == "quiz")
+                                        <a role="button" href="${modulePage.name}" class="btn btn-sm btn-info btn-edit-page" title="Edit quiz">
+                                        #else
+                                        <a role="button" href="?htmleditor=${modulePage.name}" target="_blank" class="btn btn-sm btn-info" title="Edit page">
+                                        #end
                                             <i class="fa fa-edit"></i> 
                                             Edit
                                         </a>
