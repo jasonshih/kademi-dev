@@ -240,10 +240,32 @@
                 <div id="panel_mailserver" class="tab-pane">
                     <form name="frmDetails" action="." method="post" class="form-horizontal details" role="form">
                         <div class="alert alert-danger pageMessage">.</div> 
+
+                        <h3>Setting up DNS for email</h3>
+                        <p>Spam is a big problem, and most email applications and servers try to prevent it. There are several 
+                            ways for email senders increase the level of trust with email receivers, to increase the number of emails
+                            that get through. The main ones are:
+                        </p>
+                        <h4>SPF</h4>
+                        <p>
+                            Add a line like this to your DNS records
+                        </p>
+                        <pre class="prettyprint">
+mydomain.com. 600 IN SPF "v=spf1 mx a a:113-21-225-92.c.hd.net.nz -all"
+</pre>
+
+                        <h4>DKIM</h4>
                         <p class="">DKIM is a way to increase the number of emails which reach your recipients, by
                             reducing your spam score. It does this by adding a digital signature to each email signed
-                            signed and verified by your DNS.</p>
+                            signed and verified by your DNS.</p>                        
+                        <p>
+                            To use DKIM you need to generate public and private keys as below ,and add the public key to your DNS, and then insert
+                            your private key below.
+                        </p>
                         <p>To get a DKIM certificate and <a href="http://docs.kademi.co/howtos/devs/setting-up-dkim.html" target="_blank">setup your domain for DKIM please see here</a></p>
+                        
+                        <hr/>
+                        
                         <div class="form-group"> 
                             <label for="dkimSelector" class="col-sm-3 control-label">DKIM Selector</label> 
                             <div class="col-sm-6">
