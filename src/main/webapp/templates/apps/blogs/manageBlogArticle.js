@@ -54,6 +54,28 @@ function initManageBlogArticle() {
 
     initGroupEditing();
     initManageArticleImage();
+    initManageArticleFiles();
+}
+
+function initManageArticleFiles() {
+    var filesContainer = $('#files-container');
+    var addFileModal = $('#modal-add-file');
+    addFileModal.find('form.form-horizontal').forms({
+        callback: function(resp, form) {
+            filesContainer.reloadFragment();
+            $(".modal").modal("hide");
+            form[0].reset();
+        }
+    });
+    filesContainer.on('click', '.file-delete', function(e) {
+        e.preventDefault();
+        var href = $(e.target).closest('a').attr('href');
+        flog('delete image', $(e.target), href);
+
+        confirmDelete(href, href, function() {
+            filesContainer.reloadFragment();
+        });
+    });    
 }
 
 function initManageArticleImage() {
