@@ -71,7 +71,7 @@
 			valiationMessageSelector: ".pageMessage",
 			validationFailedMessage: "Some inputs are not valid.",
             emailErrorMessage : "Please check the format of your email address, it should read like ben@somewhere.com",
-            requiredErrorMessage: ""
+            requiredErrorMessage: "Please enter all required fields"
 		}, options);
 
 		flog("msgs", config.valiationMessageSelector, form, $(config.valiationMessageSelector, form));
@@ -442,7 +442,7 @@ function checkPasswordsMatch(form) {
  * We assume the field to validate has an id of "email"
  */
 function checkValidEmailAddress(form, config) {
-	var target = $("#email, input.email", form); // either with id of email, or with class email
+	var target = $("#email, input.email, input[name=email]", form); // either with id of email, or with class email
 	var emailAddress = target.val();
 
 	if (emailAddress) {

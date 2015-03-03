@@ -42,6 +42,8 @@
             loginFailedMessage: "Sorry, those login details were not recognised.",
             userNameProperty: "_loginUserName",
             passwordProperty: "_loginPassword",
+            emailErrorMessage : "Please check the format of your email address, it should read like ben@somewhere.com",
+            requiredErrorMessage: "Please enter all required fields",            
             loginCallback: function() {
 
             }
@@ -53,9 +55,6 @@
 
         var container = this;
         flog("init login form", $("form", this));
-        $("form", this).click(function(e) {
-            flog("click", e);
-        });
         $("form", this).submit(function(e) {
             flog("jquery.user.js(bootstrap320): login", window.location.pathname);
             e.stopPropagation();
@@ -63,6 +62,14 @@
 
             $("input", container).removeClass("errorField");
             $(config.valiationMessageSelector, this).hide(100);
+            
+            if( !checkRequiredFields(form, config) ) {
+                    $("input[type=text]", container).closest(".control-group")
+                            .addClass("error")
+                            .find("span").text(config.requiredFieldsMessage);
+                    return false;
+            }
+                        
             try {
                 var userName = $("input[name=email]", container).val();                
                 var password = $("input[type=password]", container).val();
