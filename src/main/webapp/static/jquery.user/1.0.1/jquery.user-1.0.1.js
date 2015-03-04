@@ -56,7 +56,8 @@
         var container = this;
         flog("init login form", $("form", this));
         $("form", this).submit(function(e) {
-            flog("jquery.user.js(bootstrap320): login", window.location.pathname);
+            var form = $(this);
+            flog("jquery.user.js(bootstrap320): login", form);
             e.stopPropagation();
             e.preventDefault();
 
