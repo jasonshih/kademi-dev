@@ -248,10 +248,11 @@
                         </p>
                         <h4>SPF</h4>
                         <p>
-                            Add a line like this to your DNS records
+                            Add a line like this to your DNS records:
                         </p>
                         <pre class="prettyprint">
-mydomain.com. 600 IN TXT "v=spf1 mx a a:113-21-225-92.c.hd.net.nz -all"
+
+mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
 </pre>
 
                         <h4>DKIM</h4>
