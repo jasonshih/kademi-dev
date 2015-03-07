@@ -178,156 +178,157 @@
                                                 <td><a href="$org.id">$!org.title</a></td>
                                             </tr>
                                             #end
-                                            <tbody>#end
-                                                </table>
-                                                </div>
-                                                </div>
-                                                </div>
+                                        </tbody>
+                                        #end
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
 
-                                                <h4>Group:</h4>
-                                                <div class="memberships-wrapper">
-                                                    <ul class="row memberships-list">
-                                                        #foreach($group in $groups) #set($id = "radGroup_" + $group.name)
-                                                        <li class="col-md-4 membership" title="$group.name" style="list-style-type: none;">
-                                                            <div class="clearfix">
-                                                                <label for="$id">$formatter.radio($id, "group", false, $group.name) $group.name</label>
-                                                            </div>
-                                                        </li> #end
-                                                    </ul>
-                                                </div>
-                                                </div>
-                                                </form>
-                                                #end
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                                                    <button class="btn btn-sm btn-primary" data-type="form-submit" type="button">Save</button>
-                                                </div>
-                                                </div>
+                        <h4>Group:</h4>
+                        <div class="memberships-wrapper">
+                            <ul class="row memberships-list">
+                                #foreach($group in $groups) #set($id = "radGroup_" + $group.name)
+                                <li class="col-md-4 membership" title="$group.name" style="list-style-type: none;">
+                                    <div class="clearfix">
+                                        <label for="$id">$formatter.radio($id, "group", false, $group.name) $group.name</label>
+                                    </div>
+                                </li> #end
+                            </ul>
+                        </div>
+                    </div>
+                </form>
+                #end
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                <button class="btn btn-sm btn-primary" data-type="form-submit" type="button">Save</button>
+            </div>
+        </div>
 
-                                                <div id="modal-upload-csv" class="modal modal-lg fade" aria-hidden="true" tabindex="-1">
-                                                    <div class="modal-header">
-                                                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                                                        <h4 class="modal-title">Upload Users CSV</h4>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <div class="upload">
-                                                            <div class="btn-upload" id='do-upload-csv'></div>
-                                                            <br />
-                                                            <!--
-                                                                                <div class="allow-inserts">
-                                                                                        <input type="checkbox" id="allow-inserts" /> <label for="allow-inserts">Allow inserts</label>
-                                                                                </div>
-                                                            -->
-                                                        </div>
-                                                        <br />
-                                                        <div class="upload-results">
-                                                            <p>
-                                                                <strong>No. inserted:</strong> 
-                                                                <span class="badge badge-success num-inserted">-</span> 
-                                                                <strong>No. updated:</strong> 
-                                                                <span class="badge badge-success num-updated">-</span> 
-                                                                <strong>Unmatched rows:</strong> 
-                                                                <span class="badge badge-danger num-unmatched">-</span>
-                                                            </p>
-                                                            <div class="table-responsive">
-                                                                <table class="table table-striped table-hover table-condensed">
-                                                                    <tbody>
-                                                                        <tr>
-                                                                            <td></td>
-                                                                        </tr>
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                                                    </div>
-                                                </div>
+        <div id="modal-upload-csv" class="modal modal-lg fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                <h4 class="modal-title">Upload Users CSV</h4>
+            </div>
+            <div class="modal-body">
+                <div class="upload">
+                    <div class="btn-upload" id='do-upload-csv'></div>
+                    <br />
+                    <!--
+                                        <div class="allow-inserts">
+                                                <input type="checkbox" id="allow-inserts" /> <label for="allow-inserts">Allow inserts</label>
+                                        </div>
+                    -->
+                </div>
+                <br />
+                <div class="upload-results">
+                    <p>
+                        <strong>No. inserted:</strong> 
+                        <span class="badge badge-success num-inserted">-</span> 
+                        <strong>No. updated:</strong> 
+                        <span class="badge badge-success num-updated">-</span> 
+                        <strong>Unmatched rows:</strong> 
+                        <span class="badge badge-danger num-unmatched">-</span>
+                    </p>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover table-condensed">
+                            <tbody>
+                                <tr>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+            </div>
+        </div>
 
-                                                <div id="modal-match-orgs-csv" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
-                                                    <div class="modal-header">
-                                                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                                                        <h4 class="modal-title">Match organisations CSV</h4>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <p>
-                                                            Use this form to location organisation ID's for the organisation
-                                                            titles in your users spreadsheet. Upload your users spreadsheet and
-                                                            the system will attempt to locate existing organisations, and return
-                                                            an updated spreadsheet. <b>This will not make any change your
-                                                                server data.</b>
-                                                        </p>
-                                                        <form method="POST" action="matchOrgs.csv"
-                                                              enctype="multipart/form-data">
-                                                            <div data-provides="fileupload" class="fileupload fileupload-new">
-                                                                <div class="input-group input-group-sm">
-                                                                    <div class="form-control uneditable-input">
-                                                                        <i class="fa fa-file fileupload-exists"></i> <span class="fileupload-preview"></span>
-                                                                    </div>
-                                                                    <div class="input-group-btn">
-                                                                        <div class="btn btn-sm btn-light-grey btn-file">
-                                                                            <span class="fileupload-new"><i class="fa fa-folder-open-o"></i> Select file</span> 
-                                                                            <span class="fileupload-exists"><i class="fa fa-folder-open-o"></i> Change</span> 
-                                                                            <input type="file" class="file-input" name="usersCsv" />
-                                                                        </div>
-                                                                        <a data-dismiss="fileupload" class="btn btn-sm btn-light-grey fileupload-exists" href="#">
-                                                                            <i class="fa fa-times"></i> Remove
-                                                                        </a>
-                                                                        <button class="btn btn-sm btn-primary" type="submit">Upload</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                                                    </div>
-                                                </div>
+        <div id="modal-match-orgs-csv" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                <h4 class="modal-title">Match organisations CSV</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Use this form to location organisation ID's for the organisation
+                    titles in your users spreadsheet. Upload your users spreadsheet and
+                    the system will attempt to locate existing organisations, and return
+                    an updated spreadsheet. <b>This will not make any change your
+                        server data.</b>
+                </p>
+                <form method="POST" action="matchOrgs.csv"
+                      enctype="multipart/form-data">
+                    <div data-provides="fileupload" class="fileupload fileupload-new">
+                        <div class="input-group input-group-sm">
+                            <div class="form-control uneditable-input">
+                                <i class="fa fa-file fileupload-exists"></i> <span class="fileupload-preview"></span>
+                            </div>
+                            <div class="input-group-btn">
+                                <div class="btn btn-sm btn-light-grey btn-file">
+                                    <span class="fileupload-new"><i class="fa fa-folder-open-o"></i> Select file</span> 
+                                    <span class="fileupload-exists"><i class="fa fa-folder-open-o"></i> Change</span> 
+                                    <input type="file" class="file-input" name="usersCsv" />
+                                </div>
+                                <a data-dismiss="fileupload" class="btn btn-sm btn-light-grey fileupload-exists" href="#">
+                                    <i class="fa fa-times"></i> Remove
+                                </a>
+                                <button class="btn btn-sm btn-primary" type="submit">Upload</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+            </div>
+        </div>
 
-                                                <div id="modal-login-as" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
-                                                    <div class="modal-header">
-                                                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                                                        <h4 class="modal-title">Login as User</h4>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <p>Below is the list of websites this user has access to:</p>
-                                                        <ul>
-                                                            <li>Please wait...</li>
-                                                        </ul>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                                                    </div>
-                                                </div>
+        <div id="modal-login-as" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                <h4 class="modal-title">Login as User</h4>
+            </div>
+            <div class="modal-body">
+                <p>Below is the list of websites this user has access to:</p>
+                <ul>
+                    <li>Please wait...</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+            </div>
+        </div>
 
-                                                <div id="modal-add-to-group" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
-                                                    <div class="modal-header">
-                                                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                                                        <h4 class="modal-title">Add Users to Group</h4>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <p>Please choose which group to add users to</p>
-                                                        <div class="groups-wrapper">
-                                                            <ul class="groups-list row" style="margin-left: 20px;">
-                                                                #foreach($group in $page.groups)
-                                                                <li class="col-md-6 group"><a href="$group.name">$group.name</a></li>
-                                                                #end
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                                                    </div>
-                                                </div>
+        <div id="modal-add-to-group" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                <h4 class="modal-title">Add Users to Group</h4>
+            </div>
+            <div class="modal-body">
+                <p>Please choose which group to add users to</p>
+                <div class="groups-wrapper">
+                    <ul class="groups-list row" style="margin-left: 20px;">
+                        #foreach($group in $page.groups)
+                        <li class="col-md-6 group"><a href="$group.name">$group.name</a></li>
+                        #end
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+            </div>
+        </div>
 
-                                                <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
-                                                <script type="text/javascript">
+        <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
+        <script type="text/javascript">
             $(function () {
                 initManageUsers();
             });
-                                                </script>
-                                                #portlets("manageUsersBottom")
-                                                </body>
-                                                </html>
+        </script>
+        #portlets("manageUsersBottom")
+    </body>
+</html>
