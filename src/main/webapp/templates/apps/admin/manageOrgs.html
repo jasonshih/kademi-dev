@@ -71,7 +71,7 @@
                                     <td>$org.parentPath</td>
                                     <td>$!org.phone</td>
                                     <td>$!org.address</td>
-                                    <td class="action">
+                                    <td class="action">                                        
                                         <div class="btn-group btn-group-sm">
                                             <button type="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown">
                                                 <i class="clip-settings"></i>
@@ -81,6 +81,10 @@
                                                 <li><a href="${org.href}viewDetails">View users and details</a></li>
                                                 <li><a href="${org.href}organisations">Manage child orgs</a></li>
                                                 <li><a href="${org.href}manageRepos">File manager</a></li>
+                                                #if( $org.org.adminDomain )
+                                                <li class="divider"></li>  
+                                                <li><a href="$page.href?gotoDomain=${org.org.adminDomain}">Admin dashboard</a></li>
+                                                #end
                                                 <li class="divider"></li>
                                                 <li><a class="btn-delete-org" href="${org.href}">Delete this organisation</a></li>
                                             </ul>
