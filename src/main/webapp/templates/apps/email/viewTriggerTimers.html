@@ -24,7 +24,7 @@
                                 <col />
                                 <col />
                                 <col />
-                                <col style="width: 80px" />
+                                <col style="width: 160px" />
                             </colgroup>
                             <thead>
                                 <tr>
@@ -32,7 +32,14 @@
                                     <th>User</th>
                                     <th>Status</th>
                                     <th>Due Date</th>
-                                    <th class="action"><button title="Delete selected queued triggers" class="btn btn-sm btn-danger btn-remove"><i class="clip-minus-circle "></i></button></th>
+                                    <th class="action">
+                                        <button title="Set timer due date to now to fire immediately" class="btn btn-sm btn-success btn-fire" type="button">
+                                            <i class="fa fa-play-circle "></i>
+                                        </button>
+                                        <button title="Delete selected queued triggers" class="btn btn-sm btn-danger btn-remove">
+                                            <i class="clip-minus-circle "></i>
+                                        </button>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody id="triggers-body">
@@ -106,14 +113,61 @@
                         $('#triggers-body').reloadFragment();
                     }
                 });
-                
+
                 $(".form-triggers").forms({
-                    callback: function() {
+                    validate: function() {
+                        if( confirm("Are you sure you want to remove the selected triggers?") ) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    },
+                    callback: function () {
                         Msg.info("Deleted delayed triggers");
                         $('#triggers-body').reloadFragment();
                     }
                 });
 
+                $(".btn-fire").click(function (e) {
+                    e.preventDefault();
+                    var form = $(".form-triggers");
+                    var checked = form.find("input[type=checkbox]:checked");
+                    if( checked.length === 0 ) {
+                        Msg.info("Please select some triggers to fire immediately");
+                        return;
+                    }
+                    var c = confirm("Are you sure you want to fire " + checked.length +" triggers?");
+                    if( !c ) {
+                        return;
+                    }
+                    var data = form.serialize();
+                    data +="&Fire=true";
+                    flog("data", data);
+                    //return;
+                    
+                    $.ajax({
+                        type: 'POST',
+                        url: window.location.href,
+                        data: data,
+                        dataType: "json",
+                        error: function (resp) {
+                            flog('error', resp);
+                            Msg.error('err');
+                        },
+                        success: function(resp) {
+                            flog("resp", resp);
+                            if( resp.status ) {
+                                Msg.info("Fired triggers OK");
+                                $('#triggers-body').reloadFragment();
+                            } else {
+                                Msg.error("Sorry, an error occured attempting to fire the selected triggers: " + resp.messages);
+                            }
+                        },
+                        error: function() {
+                            Msg.error("Sorry, an error occured attempting to fire the selected triggers");
+                        }
+                    });
+                });
             });
         </script>
     </body>
