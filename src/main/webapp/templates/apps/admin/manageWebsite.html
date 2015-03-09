@@ -253,7 +253,7 @@
                         <pre class="prettyprint">
 
 mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
-</pre>
+                        </pre>
 
                         <h4>DKIM</h4>
                         <p class="">DKIM is a way to increase the number of emails which reach your recipients, by
@@ -264,9 +264,9 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
                             your private key below.
                         </p>
                         <p>To get a DKIM certificate and <a href="http://docs.kademi.co/howtos/devs/setting-up-dkim.html" target="_blank">setup your domain for DKIM please see here</a></p>
-                        
+
                         <hr/>
-                        
+
                         <div class="form-group"> 
                             <label for="dkimSelector" class="col-sm-3 control-label">DKIM Selector</label> 
                             <div class="col-sm-6">
@@ -335,14 +335,12 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
                                         <label for="certificateText" class="col-sm-3 control-label">Certificate Text</label>
                                         <div class="col-sm-8">
                                             <textarea id = "certificateText" name="certificateText" rows="8" class="form-control"></textarea>
-
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label for="privateKeyText" class="col-sm-3 control-label">Private Key Text </label>
                                         <div class="col-sm-8">
                                             <textarea id = "privateKeyText" name="privateKeyText" rows="8"  cols=30  class="form-control"></textarea>
-
                                         </div>
                                     </div>
                                 </tbody>
@@ -399,7 +397,7 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
                                             <span class="sr-only">Toggle Dropdown</span>
                                         </button>
                                         <ul role="menu" class="dropdown-menu pull-right">
-                                            <li><a href="$cer.id" class="cert-view" ><i class="fa fa-eye"></i> View </a></li>
+                                            <li><a href="$cer.id" class="cert-view" data-toggle="modal" data-target="#viewWebsiteHttpsModal"><i class="fa fa-eye"></i> View </a></li>
                                             <li><a href="$cer.id" class="update_cert" data-toggle="modal" data-target="#modalUpdateCert">
                                                     <span class="glyphicon glyphicon-edit"></span>
                                                     Certificate
