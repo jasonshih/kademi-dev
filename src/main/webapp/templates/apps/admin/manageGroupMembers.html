@@ -25,7 +25,11 @@
                     <h5>
                         <label class="label-control">Showing: </label>
                         <label class="label-control count">$page.members.size()</label>
-                        <label class="label-control"> users </label>
+                        <label class="label-control"> users
+                            #if( $page.members.size() < $page.totalMembers )
+                            of $page.totalMembers
+                            #end
+                        </label>
                     </h5>
                 </div>
                 <div class="col-md-3">
@@ -36,11 +40,6 @@
                     </select>
                 </div>
 
-                #if( $page.members.size() < $page.members.totalMembers
-                <div class="alert alert-info">
-                    Displaying $page.members.size() of $page.members.totalMembers members
-                </div>
-                #end
                 <table class="Summary members table table-hover">
                     <thead>
                         <tr>
