@@ -28,6 +28,7 @@ function initProductVariants() {
             if( resp.status ) {
                 Msg.info("Saved");
                 modal.modal("hide");
+                $("#product-variants-body").reloadFragment();
             } else {
                 Msg.error("An error occured saving the option");
             }
@@ -38,8 +39,26 @@ function initProductVariants() {
         var target = $(e.target);
         var ppId = target.closest(".product-parameter").data("product-parameter-id");
         modal.find("input[name=productParameterId]").val(ppId);
+        modal.find("input[name=productOptionId]").val("");
+        modal.find("input[name=name]").val("");
+        modal.find("input[name=title]").val("");
+        modal.find("input[name=cost]").val("");
+        
         modal.modal("show");
     });
+    $("#variants").on("click", ".btn-edit-variant", function(e) {
+        e.preventDefault();
+        var target = $(e.target);
+        var tr = target.closest("tr");
+        var ppId = target.closest(".product-parameter").data("product-parameter-id");
+        modal.find("input[name=productParameterId]").val(ppId);
+        var optId = target.closest("a").attr("href");
+        modal.find("input[name=productOptionId]").val(optId);
+        modal.find("input[name=name]").val( tr.find(".variant-name").text() );
+        modal.find("input[name=title]").val( tr.find(".variant-title").text() );
+        modal.find("input[name=cost]").val( tr.find(".variant-cost").text() );
+        modal.modal("show");
+    });    
 }
 
 function initProductImages() {
