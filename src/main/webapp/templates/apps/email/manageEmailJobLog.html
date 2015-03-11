@@ -11,18 +11,53 @@
                 Total Emails: <span class="badge badge-info">$page.model.items.size()</span>
             </div>
             <div class="panel-body">
-                
-                <button class="btn btn-success pull-right" id="btn-reset-emails">
-                    <span class="fa fa-ambulance"></span>
-                    Reset selected emails
-                </button>
-                
-                <button class="btn btn-danger pull-right" id="btn-reset-job" style="margin-right: 20px">
-                    <span class="fa fa-play-circle"></span>
-                    Restart job
-                </button>
-                
-                <input type="text" placeholder="Filter logs" class="filter-logs" />
+
+                <div class="row">
+                    <button class="btn btn-success pull-right" id="btn-reset-emails">
+                        <span class="fa fa-ambulance"></span>
+                        Reset selected emails
+                    </button>
+
+                    <div class="col-lg-2">
+                        <input type="text" placeholder="Filter logs" class="filter-logs form-control" />
+                    </div>
+
+                    <div class="col-lg-2">
+                        <div class="input-group">
+                            <input type="text" class="form-control max-results" aria-label="Max results" placeholder="Max results" value="${page.maxResults}" />
+                            <span class="input-group-btn">
+                                <button class="btn btn-default options-refresh" type="button">Refresh</button>
+                            </span>
+                        </div><!-- /input-group -->
+                    </div>
+                    <div class="col-lg-2">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                Status <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu options-status" role="menu">
+                                <li><a href="">All</a></li>
+                                <li><a href="f">Failed</a></li>
+                                <li><a href="c">Completed</a></li>
+                                <li><a href="p">Pending</a></li>
+                                <li><a href="r">Retrying</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-2">
+
+                    </div>
+                    <div class="col-lg-2">
+                        <button class="btn btn-danger" id="btn-reset-job">
+                            <span class="fa fa-play-circle"></span>
+                            Restart job
+                        </button>
+                    </div>
+
+                </div>
+
+
+
                 <table class="table table-striped table-hover" id="email-items">
                     <colgroup>
                         <col width="" />
@@ -84,16 +119,17 @@
             </div>
         </div>
         <script type="text/javascript">
+            var searchStatus = "$!{page.searchStatus}";
             $(function () {
-                $("#email-items-body").on("click",'.item', function (e) {
+                $("#email-items-body").on("click", '.item', function (e) {
                     var tr = $(this);
                     flog("to see send attempts", tr);
                     tr.nextUntil('.item').toggle(300);
                 });
-                $("#email-items-body").on("click",'input[type=checkbox]', function (e) {
+                $("#email-items-body").on("click", 'input[type=checkbox]', function (e) {
                     e.stopPropagation();
                 });
-                                
+
                 $(".filter-logs").keyup(function () {
                     typewatch(function () {
                         flog("do search");
@@ -105,15 +141,32 @@
                     var chks = $("#email-items").find("tr.item:visible input[type=checkbox]:checked");
                     submitEmailResets(chks);
                 });
-                
+
                 $("#btn-reset-job").click(function (e) {
                     e.preventDefault();
                     submitResetJob();
                 });
+                $(".options-refresh").click(function (e) {
+                    e.preventDefault();
+                    var max = $(".max-results").val();
+                    refreshWithOptions(max, searchStatus);
+                });
+                $(".options-status a").click(function (e) {
+                    e.preventDefault();
+                    searchStatus = $(e.target).closest("a").attr("href");
+                    var max = $(".max-results").val();
+
+                    refreshWithOptions(max, searchStatus);
+                });
             });
-            
-            function initEmailItems() {
-                
+
+            function refreshWithOptions(max, status) {
+                var href = window.location.pathname + "?maxResults=" + max + "&status=" + status;
+                window.history.pushState("", "Email log search", href);
+                flog("refreshWithOptions", href);
+                $("#email-items-body").reloadFragment({
+                    url: href
+                });
             }
 
             function submitEmailResets(chks) {
@@ -126,21 +179,17 @@
                         success: function (resp) {
                             flog('got results', resp);
                             Msg.info("Done");
-                            $("#email-items-body").reloadFragment({
-                                whenComplete: function() {
-                                    
-                                }
-                            });
+                            $("#email-items-body").reloadFragment();
                         },
                         error: function (resp) {
                             Msg.error('Sorry, an error occured reseting the email items');
                         }
                     });
                 } catch (e) {
-                    flog('exception in submitEmailResets', e);                    
+                    flog('exception in submitEmailResets', e);
                 }
             }
-            
+
             function submitResetJob(chks) {
                 try {
                     $.ajax({
@@ -152,8 +201,8 @@
                             flog('got results', resp);
                             Msg.info("Done");
                             $("#email-items-body").reloadFragment({
-                                whenComplete: function() {
-                                    
+                                whenComplete: function () {
+
                                 }
                             });
                         },
@@ -164,13 +213,14 @@
                 } catch (e) {
                     flog('exception in createJob', e);
                 }
-            }            
+            }
 
             function doFilter(search) {
                 flog("dofilter", search);
+                var arr = search.split(" ");
                 $("#email-items").find("tbody tr.item").each(function (i, n) {
                     var tr = $(n);
-                    if (matches(tr, search)) {
+                    if (matches(tr, arr)) {
                         tr.show();
                     } else {
                         tr.hide();
@@ -183,8 +233,10 @@
                 var tds = tr.find("td");
                 for (var i = 0; i < tds.length; i++) {
                     var td = tds[i];
-                    if (td.innerHTML.indexOf(search) >= 0) {
-                        return true;
+                    for (var n = 0; n < search.length; n++) {
+                        if (td.innerHTML.indexOf(search) >= 0) {
+                            return true;
+                        }
                     }
                 }
                 return false;
