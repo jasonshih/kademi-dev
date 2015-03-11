@@ -5,71 +5,190 @@
     <body class="manageEmailJobLog">
         <p class="well">Click a row to see send attempts</p>
 
-	    <div class="panel panel-default">
-		    <div class="panel-heading">
-			    <i class="clip-file-2"></i>
-			    Total Emails: <span class="badge badge-info">$page.model.items.size()</span>
-		    </div>
-		    <div class="panel-body">
-			    <div class="table-responsive">
-				    <table class="table table-striped table-hover">
-				        <colgroup>
-				            <col width="" />
-                            <col width="" />
-                            <col width="" />
-				            <col width="" />
-				            <col width="" />
-				            <col width="100px" />
-				        </colgroup>
-					    <thead>
-						    <tr>
-                                <th>To</th>
-                                <th colspan="2">Name</th>
-							    <th>Date</th>
-							    <th>Subject</th>
-							    <th>Status</th>
-						    </tr>
-					    </thead>
-					    <tbody>
-						    #foreach($item in $page.model.items)
-						    <tr class="item">
-                                <td><a href='/emails/$item.id'>$item.recipientAddress</a></td>
-                                <td>$item.recipient.firstName</td>
-                                <td>$item.recipient.surName</td>
-							    <td>$formatter.formatAge( $item.sendStatusDate )</td>
-							    <td>$item.subject</td>
-							    <td>                                    
-                                    <acronym title="EDM-ID: $item.id" >
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="clip-file-2"></i>
+                Total Emails: <span class="badge badge-info">$page.model.items.size()</span>
+            </div>
+            <div class="panel-body">
+                
+                <button class="btn btn-success pull-right" id="btn-reset-emails">
+                    <span class="fa fa-ambulance"></span>
+                    Reset selected emails
+                </button>
+                
+                <button class="btn btn-danger pull-right" id="btn-reset-job" style="margin-right: 20px">
+                    <span class="fa fa-play-circle"></span>
+                    Restart job
+                </button>
+                
+                <input type="text" placeholder="Filter logs" class="filter-logs" />
+                <table class="table table-striped table-hover" id="email-items">
+                    <colgroup>
+                        <col width="" />
+                        <col width="" />
+                        <col width="" />
+                        <col width="" />
+                        <col width="" />
+                        <col width="100px" />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>To</th>
+                            <th colspan="2">Name</th>
+                            <th>Date</th>
+                            <th>Subject</th>
+                            <th>Status</th>
+                            <th>
+                                <input type="checkbox" class="chk-all"/>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="email-items-body">
+                        #foreach($item in $page.model.items)
+                        <tr class="item">
+                            <td><a href='/emails/$item.id'>$item.recipientAddress</a></td>
+                            <td>$!item.recipient.firstName</td>
+                            <td>$!item.recipient.surName</td>
+                            <td>$formatter.formatAge( $item.sendStatusDate )</td>
+                            <td>$item.subject</td>
+                            <td>                                    
+                                <acronym title="EDM-ID: $item.id" >
                                     #if( $item.edmConverted )
                                     <span class="label label-success">Converted</span>
                                     #elseif( $item.readStatus )
                                     <span class="label label-success">Opened</span>
+                                    #elseif( $item.statusText == "complete" )
+                                    <span class="label label-success">Complete</span>
+                                    #elseif( $item.statusText == "failed" )
+                                    <span class="label label-danger">Failed</span>
+
                                     #else
-                                    $item.statusText
+                                    <span class="label label-default">$item.statusText</span>                                    
                                     #end
-                                    </acronym>
-                                </td>
-						    </tr>
-						    #foreach($attempt in $item.emailSendAttempts)
-						    <tr class="attempt" style="display: none;">
-							    <td></td>
-							    <td colspan="3">$attempt.status - $formatter.formatAge( $attempt.statusDate )</td>
-						    </tr>
-						    #end
-						    #end
-					    </tbody>
-				    </table>
-			    </div>
-		    </div>
-	    </div>
+                                </acronym>
+                            </td>
+                            <td>
+                                <input type="checkbox" name="emailItemIds" value="$item.id" />
+                            </td>
+                        </tr>
+                        #foreach($attempt in $item.emailSendAttempts)
+                        <tr class="attempt" style="display: none;">
+                            <td></td>
+                            <td colspan="6">$attempt.status - $formatter.formatAge( $attempt.statusDate )</td>
+                        </tr>
+                        #end
+                        #end
+                    </tbody>
+                </table>
+            </div>
+        </div>
         <script type="text/javascript">
             $(function () {
-                $('.item').on('click', function() {
+                $("#email-items-body").on("click",'.item', function (e) {
                     var tr = $(this);
                     flog("to see send attempts", tr);
                     tr.nextUntil('.item').toggle(300);
                 });
+                $("#email-items-body").on("click",'input[type=checkbox]', function (e) {
+                    e.stopPropagation();
+                });
+                                
+                $(".filter-logs").keyup(function () {
+                    typewatch(function () {
+                        flog("do search");
+                        doFilter($(".filter-logs").val());
+                    }, 500);
+                });
+                $("#btn-reset-emails").click(function (e) {
+                    e.preventDefault();
+                    var chks = $("#email-items").find("tr.item:visible input[type=checkbox]:checked");
+                    submitEmailResets(chks);
+                });
+                
+                $("#btn-reset-job").click(function (e) {
+                    e.preventDefault();
+                    submitResetJob();
+                });
             });
+            
+            function initEmailItems() {
+                
+            }
+
+            function submitEmailResets(chks) {
+                try {
+                    $.ajax({
+                        type: 'POST',
+                        url: window.location.pathname,
+                        data: chks,
+                        dataType: 'json',
+                        success: function (resp) {
+                            flog('got results', resp);
+                            Msg.info("Done");
+                            $("#email-items-body").reloadFragment({
+                                whenComplete: function() {
+                                    
+                                }
+                            });
+                        },
+                        error: function (resp) {
+                            Msg.error('Sorry, an error occured reseting the email items');
+                        }
+                    });
+                } catch (e) {
+                    flog('exception in submitEmailResets', e);                    
+                }
+            }
+            
+            function submitResetJob(chks) {
+                try {
+                    $.ajax({
+                        type: 'POST',
+                        url: window.location.pathname,
+                        data: "resetEmailJob=true",
+                        dataType: 'json',
+                        success: function (resp) {
+                            flog('got results', resp);
+                            Msg.info("Done");
+                            $("#email-items-body").reloadFragment({
+                                whenComplete: function() {
+                                    
+                                }
+                            });
+                        },
+                        error: function (resp) {
+                            Msg.error('Sorry, an error occured reseting the email job');
+                        }
+                    });
+                } catch (e) {
+                    flog('exception in createJob', e);
+                }
+            }            
+
+            function doFilter(search) {
+                flog("dofilter", search);
+                $("#email-items").find("tbody tr.item").each(function (i, n) {
+                    var tr = $(n);
+                    if (matches(tr, search)) {
+                        tr.show();
+                    } else {
+                        tr.hide();
+                    }
+
+                });
+            }
+
+            function matches(tr, search) {
+                var tds = tr.find("td");
+                for (var i = 0; i < tds.length; i++) {
+                    var td = tds[i];
+                    if (td.innerHTML.indexOf(search) >= 0) {
+                        return true;
+                    }
+                }
+                return false;
+            }
         </script>        
     </body>
 </html>
