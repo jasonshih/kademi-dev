@@ -25,7 +25,11 @@
                     <h5>
                         <label class="label-control">Showing: </label>
                         <label class="label-control count">$page.members.size()</label>
-                        <label class="label-control"> users </label>
+                        <label class="label-control"> users
+                            #if( $page.members.size() < $page.totalMembers )
+                            of $page.totalMembers
+                            #end
+                        </label>
                     </h5>
                 </div>
                 <div class="col-md-3">
@@ -49,6 +53,7 @@
                         </tr>
                     </thead>
                     <tbody>
+                        
                         #foreach($member in $page.members)
                         #set($pwdDate = false)
                         #set($pwdDate = $member.thisUser.passwordCredentialDate)
