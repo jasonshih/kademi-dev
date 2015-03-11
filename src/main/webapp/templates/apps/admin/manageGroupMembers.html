@@ -36,6 +36,11 @@
                     </select>
                 </div>
 
+                #if( $page.members.size() < $page.members.totalMembers
+                <div class="alert alert-info">
+                    Displaying $page.members.size() of $page.members.totalMembers members
+                </div>
+                #end
                 <table class="Summary members table table-hover">
                     <thead>
                         <tr>
@@ -49,6 +54,7 @@
                         </tr>
                     </thead>
                     <tbody>
+                        
                         #foreach($member in $page.members)
                         #set($pwdDate = false)
                         #set($pwdDate = $member.thisUser.passwordCredentialDate)
