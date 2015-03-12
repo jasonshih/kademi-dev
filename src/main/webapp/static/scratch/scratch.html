@@ -1,35 +1,379 @@
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#submit').click(function (event) {
+<html>
 
-            $.ajax({
-                url: "/eway",
-                type: 'POST',
-                dataType: 'json',
-                data: {
-                    name: $('#Name').val(),
-                    expiryMonth: $('#ExpiryMonth').val(),
-                    expiryYear: $('#ExpiryYear').val(),
-                    totalAmount: $('#TotalAmount').val() * 100,
-                    currencyCode: $('#CurrencyCode').val(),
-                    number: eCrypt.encryptValue($('#Number').val()),
-                    cvn: eCrypt.encryptValue($('#CVN').val())
 
-                },
-                success: function (data) {
-                    if (data.status) {
-                        flog("success", data);
-                        Msg.success(data.messages, 6000);
-                    } else {
-                        flog("error", data);
-                        Msg.error("Could not process the transaction " + data.messages, 30000);
-                    }
-                },
-                error: function (resp) {
-                    flog("errors", resp);
-                    Msg.error("An error occured!\r\n" + data.messages, 6000);
-                }
+    <head>
+
+
+        <title>My Dashboard</title>
+
+
+        <style>
+
+
+
+
+
+            form.poll-form input[type=radio] {
+
+
+                float: left;
+
+
+                margin-right: 15px;
+
+
+            }
+
+
+
+
+
+            form.poll-form label.radio {
+
+
+
+
+
+            }            
+
+
+            .dashboard .well {
+
+
+
+
+
+            }
+
+
+            .well.well-community {
+
+
+                background: white;
+
+
+                min-height: 170px;
+
+
+            }
+
+
+        </style>
+
+
+    </head>
+
+
+    <body class="dashboard">
+
+
+        <div class="">
+
+
+            <div class="">
+
+
+                <div class="col-md-8 dash-primary">
+
+                    #portlets("beforeDashboardPrimary")
+                    <!-- Start dashboardPrimary  -->
+
+                    #portlets("dashboardPrimary")
+
+                    <!-- End dashboardPrimary  -->
+                    #portlets("afterDashboardPrimary")
+                    <div class="row">
+                        #foreach($reward in $page.find("/rewards").children.ofType.reward.ofTypeOr("poll", "photo") )
+                        #if( $reward.userUploadEnabled )
+
+                        <div class="col-md-4">
+                            <div class="well well-community">
+                                <h4>$reward.title</h4>
+                                #if( $reward.entriesForUser.isEmpty() )
+                                <p>
+                                    <strong>$reward.staticMessage</strong>
+                                </p>
+
+                                <form action="$reward.href" method="post" class="upload-form">
+                                    <input type="hidden" name="entry"/>
+                                    <input type="hidden" name="userAttachmentHash"/>
+                                    <div class="form-group">
+                                        <div class="upload-button"></div>
+                                    </div>
+                                </form>
+                                #else
+                                <!-- confirmation message -->
+
+                                <p><strong>Thanks for entering the contest.</strong> We&rsquo;ll publish the results&nbsp;soon.</p>
+                                <p><a class="blackText" href="$reward.href">Learn more &rsaquo;</a></p>
+                                #end
+                            </div>
+                        </div>
+                        #else
+
+                        <div class="col-md-8">
+                            <div class="well well-community">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h4>$reward.title</h4>
+                                        <strong>$reward.staticMessage</strong>
+                                    </div>
+                                    <div class="col-md-6">
+                                        #if( $reward.entriesForUser.isEmpty() )
+                                        <form action="$reward.href" method="post" class="white poll-form">
+                                            <input type="hidden" name="entry"/>
+                                            $reward.quizHtml
+                                            <div class="submitPoll relative">
+                                                <div class="row">
+                                                    <div class="col-xs-7 col-sm-6"><button type="submit" class="btn btn-success">Vote</button></div>									
+                                                </div>
+                                            </div>
+                                        </form>  							
+                                        #else				
+                                        <!-- For multi question surveys use allPollResults -->
+
+                                            #set( $pollResults = $reward.pollResults)
+
+
+                                        <div class="pollGraph">
+                                            #foreach($item in $pollResults.entrySet() )
+                                            <div class="graphItem" data-option-total="$item.value">
+                                                <strong class="blackText">$item.key <span>($item.value)</span></strong>
+                                                <div class="bar"><span>0</span></div>
+                                            </div>
+                                            #end
+                                        </div>
+                                        <p class="muted">Thanks for taking part.</p>
+                                        #end                                
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                                #end                        
+                        #end
+                    </div>
+                </div>
+
+
+                <div class="col-md-4 dash-secondary">
+
+
+                    <div class="row">
+
+
+                        #set( $myPointsReward = $page.find("/rewards/my-points") )
+
+
+
+
+
+                        #if( $myPointsReward.active && $myPointsReward.status == "a" )
+
+
+                        <div class="col-md-6">
+                            <a href="/store" style="text-decoration:none !important;">
+
+                                <div class="well well-inverse text-center">
+
+
+                                    <h3>Your points</h3>
+
+
+                                    <h1><strong>$myPointsReward.myPointsTotal</strong></h1>
+
+
+                                </div>
+                            </a>
+
+                        </div>
+
+
+                        #end
+
+
+
+
+
+                        #set( $salesDataPage = $page.find("/sales") )
+
+
+                        #if( $salesDataPage ) 
+
+
+                        <div class="col-md-6">
+
+
+                            <div class="well well-inverse text-center">
+
+
+                                <h3>Your sales</h3>
+
+
+                                <h1><strong>$420</strong></h1>
+
+
+                            </div>
+
+
+                        </div>
+
+
+                        #end
+
+
+                    </div>
+
+
+                    #portlets("dashboardSecondary")
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+        #portlets("dashboardBottom")
+
+
+
+
+
+        <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
+
+
+        <script type="text/javascript">
+
+
+            $(function () {
+
+
+
+
+
+                var uploadForms = $(".upload-form");
+
+
+
+
+
+                uploadForms.each(function (i, n) {
+
+
+                    var form = $(n);
+
+
+                    var btn = form.find(".upload-button");
+
+
+                    var actionHref = form.attr("action");
+
+
+                    // Configure an upload button to upload to the rewards upload folder
+
+
+                    btn.mupload({
+                        buttonText: "Upload",
+                        url: actionHref + "uploads/", // upload to the special rewards upload folder. But this does not create the entry
+
+
+                        oncomplete: function (data, name, href) {
+
+
+                            flog("file uploaded", name, href);
+
+
+                            // set the file hash into the entry form and submit
+
+
+                            var hash = getFileName(href);
+
+
+                            form.find("input[name=userAttachmentHash]").val(hash);
+
+
+                            form.submit();
+
+
+                        }
+
+
+                    });
+
+
+                    // configure this form to post the entry with the hash of the uploaded file
+
+
+                    form.forms({
+                        callback: function (result, thisForm) {
+
+
+                            flog("result", result);
+
+
+                            //alert("Done. Now go to reward page..." + thisForm.attr("action"));
+
+
+                            window.location = thisForm.attr("action");
+
+
+                        }
+
+
+                    });
+
+
+
+
+
+                });
+
+
+
+
+
+                var pollForms = $(".poll-form");
+
+
+                pollForms.each(function (i, n) {
+
+
+                    var form = $(n);
+
+
+                    form.forms({
+                        callback: function (result) {
+
+
+                            flog("result", result);
+
+
+                            window.location = form.attr("action");
+
+
+                        }
+
+
+                    });
+
+
+                });
+
+
             });
-        });
-    });
-</script>
+
+
+        </script>         
+
+
+    </body>
+
+
+</html>
+
+
+
+

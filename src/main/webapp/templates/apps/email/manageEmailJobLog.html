@@ -107,12 +107,6 @@
                                 <input type="checkbox" name="emailItemIds" value="$item.id" />
                             </td>
                         </tr>
-                        #foreach($attempt in $item.emailSendAttempts)
-                        <tr class="attempt" style="display: none;">
-                            <td></td>
-                            <td colspan="6">$attempt.status - $formatter.formatAge( $attempt.statusDate )</td>
-                        </tr>
-                        #end
                         #end
                     </tbody>
                 </table>
