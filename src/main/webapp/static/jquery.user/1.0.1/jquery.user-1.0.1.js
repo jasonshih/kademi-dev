@@ -64,7 +64,7 @@
             $("input", container).removeClass("errorField");
             $(config.valiationMessageSelector, this).hide(100);
             
-            resetValidation(form);
+            resetValidation(container);
             if( !checkRequiredFields(form, config) ) {
                     $("input[type=text]", container).closest(".control-group")
                             .addClass("error")
