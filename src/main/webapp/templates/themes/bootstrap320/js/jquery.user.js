@@ -62,7 +62,10 @@
             e.preventDefault();
 
             $("input", container).removeClass("errorField");
+            
             $(config.valiationMessageSelector, this).hide(100);
+            var form = $(this);
+            resetValidation(container);
             try {
                 var userName = $("input[name=email]", container).val();                
                 var password = $("input[type=password]", container).val();
