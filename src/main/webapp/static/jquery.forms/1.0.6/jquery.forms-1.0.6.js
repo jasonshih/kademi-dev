@@ -214,9 +214,13 @@ function postForm(form, valiationMessageSelector, validationFailedMessage, callb
 		}
 
 		$.ajax(ajaxOpts);
-	} catch (e) {
-		flog("exception submitting form", e);
-		alert("Sorry, an error occured attempting to submit the form. Please contact the site administrator");
+    } catch (e) {
+        if (errorHandler) {
+            errorHandler(null, form, valiationMessageSelector, errorCallback);
+        } else {        
+            flog("exception submitting form", e);
+            alert("Sorry, an error occured attempting to submit the form. Please contact the site administrator");
+        }
 	}
 }
 
