@@ -984,3 +984,6 @@ fieldset hr {
 .breadcrumb a {
      color: #555555;
 }
+.alert h3 {
+    margin-top: 0;
+}
