@@ -48,8 +48,9 @@ function initCRUDGroup() {
         flog('delete', href);
         confirmDelete(href, name, function () {
             flog('remove ', this);
-
+            var folder = btn.closest('.folder');
             btn.closest('.group').remove();
+            folder.find(".group-count").text(folder.find(".group").size());
         });
     });
 
@@ -314,14 +315,15 @@ function showGroupFolderModal(name, title, type, action, data) {
 
     $("#folderModalAction").attr("name", action);
 
-    if (data) {
-        if (data.name) {
-            modal.find('input[name=name]').val(data.name);
+    if (typeof data !== "undefined") {
+        flog(data);
+        if (data.oldFolderName !== null) {
+            modal.find("#name").attr("name", "newFolderName");
+            modal.find("#name").val(data.oldFolderName);
+            modal.find("#name").parent().append('<input class="form-control" type="hidden" name="oldFolderName" value="' + data.oldFolderName + '"/>')
         }
-
-        if (data.group) {
-            modal.attr('data-group', data.group);
-        }
+    } else {
+        modal.find('[name="oldFolderName"]').remove();
     }
 
     modal.modal('show');
@@ -458,7 +460,7 @@ function initCopyMembers() {
     });
 }
 
-function initGroupFolder(){
+function initGroupFolder() {
     var body = $(document.body);
     body.on('click', '.btn-remove-from-folder', function (e) {
         flog('click', this);
@@ -472,7 +474,7 @@ function initGroupFolder(){
         href = $.URLEncode(href) + '/';
         /*name, url, data, callback*/
         addGroupFolder(folderName, href, "removeFromFolder=removeFromFolder&folderName=" + folderName, function () {
-            Msg.success('Success');
+            Msg.success("Removed group from " + folderName);
             $('#groups-folders').reloadFragment();
         });
     });
@@ -489,14 +491,14 @@ function initGroupFolder(){
         href = '.';
         /*name, url, data, callback*/
         var r = confirm("Are you sure you want to delete " + folderName);
-        if (r){
-            addGroupFolder(folderName, href, "deleteFolder=deleteFolder&folderName=" + folderName, function () {
-                Msg.success('Success');
+        if (r) {
+            addGroupFolder(folderName, href, "deleteFolder=deleteFolder&folderName=" + $.URLEncode(folderName), function () {
+                Msg.success(folderName + ' has been deleted');
                 $('#groups-folders').reloadFragment();
             });
         }
     });
-    
+
     var addGroupToFolder = $('#modal-addGroupToFolder');
 
     body.on('click', '.btn-add-to-folder', function (e) {
@@ -520,7 +522,7 @@ function initGroupFolder(){
             $('#groups-folders').reloadFragment();
         }
     });
-    
+
     var groupFolder = $('#modal-groupFolder');
     groupFolder.find('form').submit(function (e) {
         e.preventDefault();
@@ -534,24 +536,91 @@ function initGroupFolder(){
             if (type === 'Add') {
                 addGroupFolder(name, window.location.pathname, groupFolder.find('form').serialize(), function (name, resp) {
                     Msg.success(name + ' is created!');
-                    $('#groups-folders').reloadFragment();
-                    $("#groupFoldersSelect").reloadFragment();
                 });
 
             } else { // If is editing Group
-                var groupDiv = $('div.group').filter('[data-group=' + modal.attr('data-group') + ']');
-                var groupNameSpan = groupDiv.find('span.group-name');
-                var src = groupNameSpan.text();
-                src = $.URLEncode(src);
-                var dest = name;
-                dest = window.location.pathname + dest;
-                move(src, dest, function () {
-                    groupNameSpan.text(name);
+                var name = $(groupFolder.find("[name=newFolderName]")).val();
+                addGroupFolder(name, window.location.pathname, groupFolder.find('form').serialize(), function (name, resp) {
+                    Msg.success(name + ' is updated!');
                 });
             }
-
+            window.location.reload();
             groupFolder.modal('hide');
             resetModalControl();
+        }
+    });
+
+    body.on('click', ".btn-rename-folder", function (e) {
+        e.preventDefault();
+        var folderName = $(e.target.closest(".folder")).data("name");
+        showGroupFolderModal('Folder', 'Update folder name', 'Update', "renameFolder", {oldFolderName: folderName});
+    });
+
+    var startFolder;
+    $('.group').draggable({
+        revert: "invalid",
+        axis: "y",
+        start: function (event, ui) {
+            flog("draggable start", event, ui);
+            drapEventStart = event;
+            startFolder = $(event.currentTarget.closest(".folder"));
+            if (startFolder != null) {
+                startFolder.find(".group-count").text(startFolder.find(".group").size());
+            }
+            clearTimeout(checkTimer);
+            checkTimer = null;
+        },
+        stop: function (event, ui) {
+            flog("draggable stop", event, ui);
+            //var folder = $(event.currentTarget.closest(".folder"));
+            if (startFolder != null) {
+                startFolder.find(".group-count").text(startFolder.find(".group").size());
+            }
+        }
+    });
+
+    var checkTimer;
+    $('.folder').droppable({
+        accept: ".group",
+        greedy: true,
+        drop: function (event, ui) {
+            var groupName = ui.draggable.attr("id");
+            var folderName = $(this).data("name");
+            $(this).find(".panel-group").append(ui.draggable.css({position: "relative", top: "", left: ""}));
+            addGroupFolder(groupName, groupName, "addToFolder=addToFolder&folderName=" + folderName, function (name, resp) {
+                Msg.success("Moved " + groupName + " to " + folderName);
+            });
+            $(this).find(".group-count").text($(this).find(".group").size());
+            var currentTarget = $(this);
+            setTimeout(function () {
+                flog(currentTarget.find(".group").size());
+                currentTarget.find(".group-count").text(currentTarget.find(".group").size());
+            }, 150);
+            flog($(this).find(".group").size());
+        },
+        over: function (event, ui) {
+            flog(event, ui);
+        },
+        out: function (event, ui) {
+        }
+    });
+
+    $(".container").droppable({
+        accept: ".group",
+        greedy: true,
+        drop: function (event, ui) {
+            flog("Dropped In Container");
+            var groupName = ui.draggable.attr("id");
+            //var folderName = $(this).data("name");
+            //$(this).find(".panel-group").append(ui.draggable.css({position: "relative", top:"", left:""}));
+            //updateGroupFolder(groupName, folderName);
+            $(this).find("#group-wrapper").append(ui.draggable.css({position: "relative", top: "", left: ""}));
+            addGroupFolder(groupName, groupName, "removeFromFolder=removeFromFolder", function (name, resp) {
+                Msg.success("Removed " + groupName + " from folder");
+            });
+        },
+        over: function (event, ui) {
+            flog(event, ui);
         }
     });
 }

@@ -4,7 +4,7 @@
     </head>
     <body>
         #macro(genGroups $group $wrapper $folder)
-        <div class="panel panel-default group">
+        <div id="$group.name" class="panel panel-default group">
             #if($folder)
             <div class="panel-heading" data-toggle="collapse" data-parent="#${wrapper}" data-target="#group-$folder.name.replaceAll('[^A-Za-z0-9]','')-${foreach.count}">
             #else

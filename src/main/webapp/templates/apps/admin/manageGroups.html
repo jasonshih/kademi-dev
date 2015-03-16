@@ -9,14 +9,15 @@
     </head>
     <body class="manageModulePages">
         #parse("/templates/apps/admin/manageGroupsMacros.html")
+        <div class="temp-div hide"></div>
         <p class="">
             <a class="btn btn-sm btn-success btn-add-group" href="#"><i class="fa fa-plus"></i> Add new group</a>
             <a class="btn btn-sm btn-info btn-add-groupFolder" href="#"><i class="fa fa-plus"></i> Add new folder</a>
         </p>
         <div id="groups-folders">
-            <div id="folder-wrapper" class="panel-group">
+            <div id="folder-wrapper" class="panel-folder">
                 #foreach($folder in $page.groupFolders)
-                <div class="panel panel-default group">
+                <div data-name="$folder.name" class="panel panel-default folder">
                     <div class="panel-heading" data-toggle="collapse" data-parent="#folder-wrapper" data-target="#folder-${foreach.count}">
                         <i class="clip-folder"></i>
                         <span class="folder-name clickable">$folder.name</span>
@@ -32,7 +33,7 @@
                         </div>
                         <div class="panel-tools">
                             <div class="btn-group">
-                                <a href="$group.name/members"class="btn btn-info btn-sm">$page.getChildrenInFolder($folder).size() Groups </a>
+                                <a class="btn btn-info btn-sm"><span class="group-count">$page.getChildrenInFolder($folder).size()</span> Groups </a>
                             </div>
                         </div>
                     </div>
@@ -51,9 +52,9 @@
             </div>
             <div id="group-wrapper" class="panel-group">
             #foreach($group in $page.children)
-            #if(!$group.groupFolder)
-            #genGroups($group "group-wrapper" false)
-            #end
+                #if(!$group.groupFolder)
+                    #genGroups($group "group-wrapper" false)
+                #end
             #end
             </div>
         </div>
