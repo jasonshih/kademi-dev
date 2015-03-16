@@ -1,0 +1,91 @@
+<html>
+    <head>
+        <title></title>
+    </head>
+    <body>
+        #macro(genGroups $group $wrapper $folder)
+        <div class="panel panel-default group">
+            #if($folder)
+            <div class="panel-heading" data-toggle="collapse" data-parent="#${wrapper}" data-target="#group-${folder.name}-${foreach.count}">
+            #else
+            <div class="panel-heading" data-toggle="collapse" data-parent="#${wrapper}" data-target="#group-${foreach.count}">
+            #end
+                <i class="clip-users"></i>
+                <span class="group-name clickable">$group.name</span>
+                <div class="btn-group btn-group-xs">
+                    <button data-toggle="dropdown" class="btn btn-sm btn-default btn-squared dropdown-toggle" type="button">
+                        <span class="caret"></span>
+                    </button>
+                    <ul role="menu" class="dropdown-menu">
+                        <li><a href="" class="btn-rename-group">Rename this group</a></li>
+                        <li><a href="$group.name/members" class="btn-view-group-member">View members</a></li>
+                        <li><a href="" class="btn-copy-member">Copy members from group</a></li>
+                        #if($folder)
+                        <li><a href="$folder.name" class="btn-remove-from-folder">Remove From Folder</a></li>
+                        #else
+                        <li><a href="" class="btn-add-to-folder">Add To Folder</a></li>
+                        #end
+                        <li class="divider"></li>
+                        <li><a href="" class="btn-delete-group">Delete this group</a></li>
+                    </ul>
+                </div>
+                <div class="panel-tools">
+                    <div class="btn-group">
+                        <a href="$group.name" class="btn btn-primary btn-sm">Registration: $group.regoModeText</a>
+                        <a href="$group.name/members"class="btn btn-info btn-sm">$group.numMembers Members</a>
+                    </div>
+                </div>
+            </div>
+            #if($folder)
+            <div id="group-${folder.name}-${foreach.count}" class="collapse">
+            #else
+            <div id="group-${foreach.count}" class="collapse">
+            #end
+                <div class="panel-body">
+                    #portlets("groupDetails")
+
+                    <h4>Roles</h4>
+                    <hr class="hr-sm" />
+                    <p class="role-action">
+                        <a href="#modal-edit-roles" data-toggle="modal" class="btn btn-sm btn-success btn-add-role-group pull-right"><i class="fa fa-plus"></i> Add roles</a>
+                    </p>
+                    <div class="blocks-wrapper roles-wrapper">
+                        #foreach($role in $group.children.ofType.role)
+                        <span class="block role">
+                            <span class="block-name">$role.title</span>
+                            <a class="btn btn-xs btn-danger btn-remove-role" href="$role.href" title="Remove this role"><i class="fa fa-times"></i></a>
+                        </span>
+                        #end
+                    </div>
+
+                    <h4>Website access</h4>
+                    <hr class="hr-sm" />
+                    <div class="article-wrapper showed-action websites-list">
+                        #set($signups = $group.signupPages)
+                        #if( $signups.isEmpty() )
+                        <p>This user group does not have access to any websites</p>
+                        #else
+                        #foreach($p in $signups.keySet())
+                        <article>
+                            <span class="article-name">
+                                <a target="_blank" href="http://${p}${formatter.portString}"><b>$p</b></a>
+                            </span>
+                            #if( $group.publicSignup )
+                            <aside class="article-action">
+                                <a target="_blank" href="$signups.get($p)" class="btn btn-sm btn-primary">Signup page</a>
+                            </aside>
+                            #else
+                            <aside class="article-more-infor">
+                                No signup page
+                            </aside>
+                            #end
+                        </article>
+                        #end
+                        #end
+                    </div>
+                </div>
+            </div>
+        </div>
+        #end
+    </body>
+</html>
