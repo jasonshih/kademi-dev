@@ -6,7 +6,7 @@
         #macro(genGroups $group $wrapper $folder)
         <div class="panel panel-default group">
             #if($folder)
-            <div class="panel-heading" data-toggle="collapse" data-parent="#${wrapper}" data-target="#group-${folder.name}-${foreach.count}">
+            <div class="panel-heading" data-toggle="collapse" data-parent="#${wrapper}" data-target="#group-$folder.name.replaceAll('[^A-Za-z0-9]','')-${foreach.count}">
             #else
             <div class="panel-heading" data-toggle="collapse" data-parent="#${wrapper}" data-target="#group-${foreach.count}">
             #end
@@ -37,7 +37,7 @@
                 </div>
             </div>
             #if($folder)
-            <div id="group-${folder.name}-${foreach.count}" class="collapse">
+            <div id="group-$folder.name.replaceAll('[^A-Za-z0-9]','')-${foreach.count}" class="collapse">
             #else
             <div id="group-${foreach.count}" class="collapse">
             #end
@@ -47,7 +47,7 @@
                     <h4>Roles</h4>
                     <hr class="hr-sm" />
                     <p class="role-action">
-                        <a href="#modal-edit-roles" data-toggle="modal" class="btn btn-sm btn-success btn-add-role-group pull-right"><i class="fa fa-plus"></i> Add roles</a>
+                        <a href="#modal-edit-roles" data-toggle="modal" data-group="$group.name" class="btn btn-sm btn-success btn-add-role-group pull-right"><i class="fa fa-plus"></i> Add roles</a>
                     </p>
                     <div class="blocks-wrapper roles-wrapper">
                         #foreach($role in $group.children.ofType.role)
