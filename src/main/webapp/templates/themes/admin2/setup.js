@@ -27,13 +27,11 @@ function initPlaceHolderForDateTime() {
             dateFormat: "dd/mm/yy",
             stepMinute: 10
         });
-        _this.after(
-                $('<img src="/static/common/icon_calendar.png" alt="" width="21" height="24" class="DateTimeIcon" />')
-                .bind("click", function(e) {
-                    e.preventDefault();
-                    _this.trigger("focus");
-                })
-        );
+        flog("datepicker", _this.closest(".input-group").find(".input-group-addon"));
+        _this.closest(".input-group").find(".input-group-addon").click(function() {
+            flog("trigger");
+            _this.trigger("focus");
+        });
         flog("datepicker", _this);
     });
 }
