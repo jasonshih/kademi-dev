@@ -41,6 +41,7 @@
                     </div>
                     <ul class="TabNav nav nav-tabs tab-bricky pull-left">
                         <li class=""><a href="#details" data-toggle="tab">Details</a></li>
+                        <li class=""><a href="#rewardContent" data-toggle="tab">Content</a></li>
                         <li class=""><a href="#groups" data-toggle="tab">Groups</a></li>
                         <li class=""><a href="#entryForm" data-toggle="tab">Entry Form</a></li>
                         <li class=""><a href="#restrictions" data-toggle="tab">Restrictions</a></li>
@@ -55,6 +56,7 @@
                                 <col width="20%" />
                                 <col width="80%" />
                             </colgroup>
+                            
                             <tbody>
                                 <tr>
                                     <td>Reward title</td>
@@ -217,21 +219,15 @@
                                     </td>
                                 </tr>
                                 -->
-                                <tr>
-                                    <td>
-                                        Details<br />
-                                        <small><i>This copy will sit next to the image and tell the user about the competition or reward.</i></small>
-                                    </td>
-                                    <td>
-                                        <div class="form-group">
-                                            <div class="col-sm-12">
-                                                <textarea cols="120" name="details" rows="10" class="htmleditor" placeholder="Enter the details here">$formatter.htmlEncode($page.details)</textarea>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
                             </tbody>
                         </table>
+                        
+                    </div>
+                    
+                    <div class="tab-pane Details" id="rewardContent">
+                        <small><i>This copy will sit next to the image and tell the user about the competition or reward.</i></small>
+                        
+                        <textarea cols="120" name="details" rows="10" class="htmleditor" placeholder="Enter the details here">$formatter.htmlEncode($page.details)</textarea>
                     </div>
 
                     <div class="tab-pane" id="groups">

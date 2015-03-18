@@ -16,10 +16,17 @@
                 Auto email triggers
             </div>
             <div class="panel-body">
+                <div class="input-group date-range col-md-4">
+                    <label for="report-range" class="input-group-addon">Time</label>
+                    <input type="text" id="report-range" placeholder="Choose a date range" value="" class="form-control" />
+                </div>                          
+                <div class="clearfix"></div>
+                <hr/>                
                 <form method="POST" action="$page.name" class="form-triggers">
                     <div class="table-responsive">
                         <table id="trigger-wrapper" class="table table-striped table-hover">
                             <colgroup>
+                                <col />
                                 <col />
                                 <col />
                                 <col />
@@ -31,6 +38,7 @@
                                     <th>Trigger</th>
                                     <th>User</th>
                                     <th>Status</th>
+                                    <th>Created Date</th>
                                     <th>Due Date</th>
                                     <th class="action">
                                         <button title="Set timer due date to now to fire immediately" class="btn btn-sm btn-success btn-fire" type="button">
@@ -43,18 +51,27 @@
                                 </tr>
                             </thead>
                             <tbody id="triggers-body">
-                                #set($timers = $page.model.recentTriggerTimers)
+                                #set($timers = $page.timers)
                                 #if( $timers.isEmpty() )
                                 <tr >
                                     <td colspan="5">There are currently no delayed triggers</td>
                                 </tr>
                                 #else
-                                #foreach($tt in $page.model.recentTriggerTimers)
+                                #foreach($tt in $timers)
                                 <tr >
                                     <td><abbr title="ID: $tt.emailTrigger.id">$tt.emailTrigger.name</abbr></td>
                                     <td><a href="/manageUsers/$tt.fireForProfile.id/">$tt.fireForProfile.email</a></td>
-                                    <td>$page.status($tt)</td>
-                                    <td>$tt.fireAt</td>
+                                    <td>
+                                        #if( $page.statusCode($tt) == "c" )
+                                        <span class="label label-success">$page.status($tt)</span>
+                                        #elseif( $page.statusCode($tt) == "r" )
+                                        <span class="label label-warning">$page.status($tt)</span>                                        
+                                        #else
+                                        <span class="label label-default">$page.status($tt)</span>
+                                        #end
+                                    </td>
+                                    <td>$formatter.formatDateTime( $tt.createdAt )</td>
+                                    <td>$formatter.formatDateTime($tt.fireAt )</td>
                                     <td class="action">
                                         $formatter.checkbox($tt.id, "triggerId", false, $tt.id)
                                     </td>
@@ -79,19 +96,30 @@
                     <div class="form-group">
                         <label class="control-label col-md-4" for="profileEmail">Enter email</label>
                         <div class="col-md-8">
-                            <input type="text" name="profileEmail" id="profileEmail" value="" placeholder="Member's email address" class="required form-control" />
+                            <input type="text" name="profileEmail" id="profileEmail" value="$user.email" placeholder="Member's email address" class="required form-control" />
                         </div>
                     </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-4" for="createdAt">Fake created date</label>
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <input type="text" name="createdAt" placeholder="Pretend it was created at" data-format="DD/MM/YYYY" value="$formatter.formatDateTime( $formatter.addHours( $formatter.now, -1 ) )" class="form-control" />
+                                <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <label class="control-label col-md-4" for="fireAt">Date to process</label>
                         <div class="col-md-8">
-                            <div class="input-group date-time-picker date" >
-                                <input type="text" name="fireAt" id="fireAt" value="" class="required form-control" />
-                                <span class="input-group-addon"><span class="glyphicon-time glyphicon"></span></span>
+                            <div class="input-group">
+                                <input type="text" name="fireAt" placeholder="Due date" data-format="DD/MM/YYYY" value="$formatter.formatDateTime( $formatter.addHours( $formatter.now, 1 ) )" class="form-control" />
+                                <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
                             </div>
-
                         </div>
                     </div>
+
                 </form>
             </div>
             <div class="modal-footer">
@@ -102,7 +130,7 @@
 
         <script type="text/javascript">
             $(function () {
-
+                initHistorySearch();
                 var modal = $('#modal-add-trigger-manual');
                 flog("initModalAddEmail", modal);
                 modal.find('form').forms({
@@ -115,8 +143,8 @@
                 });
 
                 $(".form-triggers").forms({
-                    validate: function() {
-                        if( confirm("Are you sure you want to remove the selected triggers?") ) {
+                    validate: function () {
+                        if (confirm("Are you sure you want to remove the selected triggers?")) {
                             return true;
                         } else {
                             return false;
@@ -132,19 +160,19 @@
                     e.preventDefault();
                     var form = $(".form-triggers");
                     var checked = form.find("input[type=checkbox]:checked");
-                    if( checked.length === 0 ) {
+                    if (checked.length === 0) {
                         Msg.info("Please select some triggers to fire immediately");
                         return;
                     }
-                    var c = confirm("Are you sure you want to fire " + checked.length +" triggers?");
-                    if( !c ) {
+                    var c = confirm("Are you sure you want to fire " + checked.length + " triggers?");
+                    if (!c) {
                         return;
                     }
                     var data = form.serialize();
-                    data +="&Fire=true";
+                    data += "&Fire=true";
                     flog("data", data);
                     //return;
-                    
+
                     $.ajax({
                         type: 'POST',
                         url: window.location.href,
@@ -154,21 +182,75 @@
                             flog('error', resp);
                             Msg.error('err');
                         },
-                        success: function(resp) {
+                        success: function (resp) {
                             flog("resp", resp);
-                            if( resp.status ) {
+                            if (resp.status) {
                                 Msg.info("Fired triggers OK");
                                 $('#triggers-body').reloadFragment();
                             } else {
                                 Msg.error("Sorry, an error occured attempting to fire the selected triggers: " + resp.messages);
                             }
                         },
-                        error: function() {
+                        error: function () {
                             Msg.error("Sorry, an error occured attempting to fire the selected triggers");
                         }
                     });
                 });
             });
+            function initHistorySearch() {
+                var reportRange = $('#report-range');
+
+                reportRange.exist(function () {
+                    flog("init report range");
+                    reportRange.daterangepicker({
+                        format: 'DD/MM/YYYY', // YYYY-MM-DD
+                        ranges: {
+                            'Last 7 Days': [moment().subtract('days', 6), moment()],
+                            'Last 30 Days': [moment().subtract('days', 29), moment()],
+                            'This Month': [moment().startOf('month'), moment().endOf('month')],
+                            'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
+                            'This Year': [moment().startOf('year'), moment()],
+                        },
+                    },
+                            function (start, end) {
+                                flog('onChange', start, end);
+                                doHistorySearch(start, end);
+                            });
+                });
+            }
+
+            function doHistorySearch(startDate, endDate) {
+                flog('doHistorySearch', startDate, endDate);
+
+                var data = {
+                    startDate: formatDate(startDate),
+                    finishDate: formatDate(endDate)
+                };
+                flog("data", data);
+
+                var target = $("#triggers-body");
+                //target.load();
+
+                var dates = "startDate=" + formatDate(startDate) + "&finishDate=" + formatDate(endDate);
+                var baseHref = window.location.pathname + "?" + dates;
+                var href = baseHref;
+                $("a.history-csv").attr("href", "email-history.csv?" + dates);
+
+                $.ajax({
+                    type: "GET",
+                    url: href,
+                    dataType: 'html',
+                    success: function (content) {
+                        flog('response', content);
+                        var newBody = $(content).find("#triggers-body");
+                        flog("newBody", newBody);
+                        target.replaceWith(newBody);
+                        jQuery("abbr.timeago").timeago();
+                        window.history.pushState(null, "Email History", href);
+                    }
+                });
+
+            }
         </script>
     </body>
 </html>

@@ -821,11 +821,10 @@
                             'This Year': [moment().startOf('year'), moment()],
                         },
                     },
-                            function (start, end) {
-                                flog('onChange', start, end);
-                                doHistorySearch(start, end);
-                            }
-                    );
+                    function (start, end) {
+                        flog('onChange', start, end);
+                        doHistorySearch(start, end);
+                    });
                 });
             }
 
