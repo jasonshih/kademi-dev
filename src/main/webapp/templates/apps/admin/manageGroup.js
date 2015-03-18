@@ -356,7 +356,32 @@ function initGroupModal() {
             if (type === 'Add') {
                 createFolder(name, null, function (name, resp) {
                     Msg.success(name + ' is created!');
-                    $('#groups-folders').reloadFragment();
+                    $('#groups-folders').reloadFragment({
+                        onComplete: function () {
+                            var startFolder;
+                            $('.group').draggable({
+                                revert: "invalid",
+                                axis: "y",
+                                start: function (event, ui) {
+                                    flog("draggable start", event, ui);
+                                    drapEventStart = event;
+                                    startFolder = $(event.currentTarget.closest(".folder"));
+                                    if (startFolder != null) {
+                                        startFolder.find(".group-count").text(startFolder.find(".group").size());
+                                    }
+                                    clearTimeout(checkTimer);
+                                    checkTimer = null;
+                                },
+                                stop: function (event, ui) {
+                                    flog("draggable stop", event, ui);
+                                    //var folder = $(event.currentTarget.closest(".folder"));
+                                    if (startFolder != null) {
+                                        startFolder.find(".group-count").text(startFolder.find(".group").size());
+                                    }
+                                }
+                            });
+                        }
+                    });
                 });
 
             } else { // If is editing Group
