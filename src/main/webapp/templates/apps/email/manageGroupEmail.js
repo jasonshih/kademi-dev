@@ -172,13 +172,6 @@ function validateEmail() {
         return false;
     }
 
-    // Check it has a message
-    var msg = $('textarea[name=html]').val();
-    if (msg == null || msg.length == 0) {
-        Msg.error('Please enter a message to send');
-        return false;
-    }
-
     // Check subject
     var subject = $('input[name=subject]').val();
     if (subject == null || subject.length == 0) {
