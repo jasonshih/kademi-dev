@@ -145,9 +145,11 @@
                             </div>
                         </div>                        
                     </div>
-                    <!-- End content of General tab -->
-                    <p>The KPI will only users who belong to ALL of the selected groups</p>
+                    <!-- End content of General tab -->                    
                     <div id="groups" class="tab-pane">  <!-- groups -->
+                        <div class="alert alert-info">
+                            <p>The KPI will only users who belong to ALL of the selected groups</p>
+                        </div>
                         <table class="">
                             #foreach($g in $page.allGroups)
                             <tr>
