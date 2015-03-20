@@ -158,9 +158,13 @@ function confirmRevert(hash, tbody, config) {
 
 function revert(hash, tbody, config) {
     try {
+        var url = config.getPageUrl();
+        if( !url.endsWith("/")) {
+            url = url + "/";
+        }
         $.ajax({
             type: "POST",
-            url: config.getPageUrl() + '/.history',
+            url: url + '.history',
             data: {
                 revertHash: hash
             },
