@@ -162,10 +162,10 @@ function initChkAll() {
     $('.chk-all').exist(function () {
         this.each(function () {
             var chkAll = $(this);
-            var table = chkAll.parents('table');
-            var chks = table.find('tbody input:checkbox');
 
             chkAll.on('click', function () {
+                var table = chkAll.parents('table');
+                var chks = table.find('tbody input:checkbox');                
                 chks.prop('checked', chkAll.is(':checked'));
             });
         });

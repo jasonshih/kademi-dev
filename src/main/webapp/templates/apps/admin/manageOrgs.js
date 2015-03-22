@@ -214,6 +214,7 @@
         initUploadOrgIdCsv();
         initCRUDOrg();
         initSearchOrg();
+        initRemoveOrgs();
     };
 
 })(jQuery, window, document);
@@ -231,25 +232,64 @@ function initSearchOrg() {
             doSearch();
         }
     });
+	$("#searchOrgType").change(function () {
+		doSearch();
+	});    
 }
 
 
 function doSearch() {
-    flog("doSearch");
-    var newUrl = window.location.pathname + "?q=" + $("#org-query").val();
+    flog("doSearch", $("#searchOrgType"));
+    var newUrl = window.location.pathname + "?q=" + $("#org-query").val() + "&searchOrgType=" + $("#searchOrgType").val();
     $.ajax({
         type: 'GET',
         url: newUrl,
         success: function(data) {
             flog("success", data);
             window.history.pushState("", document.title, newUrl);
-            var $fragment = $(data).find("#search-results");
+            var $fragment = $(data).find("#searchResults");
             flog("replace", $("#se"));
             flog("frag", $fragment);
-            $("#search-results").replaceWith($fragment);
+            $("#searchResults").replaceWith($fragment);
         },
         error: function(resp) {
             Msg.error("err");
         }
     });
+}
+
+function initRemoveOrgs() {
+	$(".btn-orgs-remove").click(function (e) {
+		var node = $(e.target);
+		flog("remove orgs", node, node.is(":checked"));
+		var checkBoxes = $('#searchResults').find('input[name=toRemoveId]:checked');
+		if (checkBoxes.length === 0) {
+			Msg.error("Please select the organisations you want to remove by clicking the checkboxs to the right");
+		} else {
+			if (confirm("Are you sure you want to remove " + checkBoxes.length + " organisations?")) {
+				doRemoveOrgs(checkBoxes);
+			}
+		}
+	});
+}
+
+function doRemoveOrgs(checkBoxes) {
+	$.ajax({
+		type: 'POST',
+		data: checkBoxes,
+		dataType: "json",
+		url: window.location.pathname,
+		success: function (data) {
+			flog("success", data);
+			if (data.status) {
+				doSearch();
+				Msg.success("Removed organisations ok");
+			} else {
+				Msg.error("There was a problem removing organisations. Please try again and contact the administrator if you still have problems");
+			}
+		},
+		error: function (resp) {
+			Msg.error("An error occurred removing organisations. You might not have permission to do this");
+		}
+	});
 }

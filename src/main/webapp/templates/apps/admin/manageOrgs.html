@@ -5,7 +5,21 @@
         <link href="manageOrgs.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
         <script type="text/javascript" src="manageOrgs.js" bottom="true">//</script>
+        <style>
+.search-user, .search-user-group {
+	float: left;
+}
 
+.search-user {
+	width: 300px;
+	margin-right: 10px;
+}
+
+.search-user-group {
+	width: 200px;
+}
+            
+        </style>
     </head>
     <body class="manage-business-unit">
         <div id="manage-business-unit">
@@ -29,16 +43,32 @@
                 <div class="panel-heading"><i class="clip-folder"></i> Business Units</div>
                 <div class="panel-body">
                     <div class="form-horizontal">
+                        <div class="btn-group pull-right">
+                            <button type="button" class="btn btn-sm btn-default btn-orgs-remove">Remove</button>
+                            <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#" class="btn-orgs-assign-orgtype">Assign to org type</a></li>
+                            </ul>
+                        </div>
+                        <p class="input-group search-user input-group-sm">
+                            <input type="text" id="org-query" class="form-control" placeholder="Search for organisations here" value="" />
+                            <span class="input-group-btn">
+                                <button class="btn btn-sm btn-default" type="button" data-type="clearer" data-target="#org-query">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </span>
+                        </p>
                         <div class="form-group">
-                            <div class="col-md-5">
-                                <div class="input-group input-group-sm">
-                                    <input type="text" id="org-query" class="form-control" placeholder="Search for organisations here" value="" />
-                                <span class="input-group-btn">
-                                    <button class="btn btn-sm btn-default" type="button" data-type="clearer" data-target="#org-query">
-                                        <i class="fa fa-times"></i>
-                                    </button>
-                                </span>
-                                </div>
+                            <label for="search-group" class="col-sm-1 control-label">Type</label>
+                            <div class="col-sm-2">
+                                <select name="searchOrgType" id="searchOrgType" class="form-control input-sm">
+                                    <option value="">&nbsp;</option>
+                                    #foreach($orgType in $rootFolder.orgTypes)
+                                    <option value="$orgType.name">$orgType.displayName</option> 
+                                    #end
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -52,6 +82,7 @@
                                 <col style="width: 10%" />
                                 <col style="width: 15%" />
                                 <col style="width: 120px" />
+                                <col style="width: 50px" />
                             </colgroup>
                             <thead>
                                 <tr>
@@ -61,6 +92,7 @@
                                     <th>Phone</th>
                                     <th>Address</th>
                                     <th class="action">Action</th>
+                                    <th><input type="checkbox" name="toRemoveId" class="chk-all" /></th>
                                 </tr>
                             </thead>
                             <tbody id="searchResults" class="search-results">
@@ -90,6 +122,7 @@
                                             </ul>
                                         </div>
                                     </td>
+                                    <td><input type="checkbox" name="toRemoveId" value="$org.actualId" /></td>
                                 </tr>
                                 #end
                             </tbody>
