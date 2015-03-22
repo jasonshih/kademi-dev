@@ -103,8 +103,8 @@ function doSearch() {
 		url: window.location.pathname + "?q=" + query + "&g=" + groupName,
 		success: function (data) {
 			flog("success", data);
-			var $fragment = $(data).find("#table-users");
-			$("#table-users").replaceWith($fragment);
+			var $fragment = $(data).find("#table-users-body");
+			$("#table-users-body").replaceWith($fragment);
 		},
 		error: function (resp) {
 			Msg.error("An error occured doing the user search. Please check your internet connection and try again");
