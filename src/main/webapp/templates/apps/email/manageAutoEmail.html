@@ -547,17 +547,27 @@
                                     </div> <!-- end row -->
                                 </div>
                                 <div class="form-group">
-                                    #foreach($i in [1..3])
+                                    #set($fieldNames = $formatter.newArrayList())
+                                    #foreach($a in $page.dataSeriesCustomFields.entrySet())
+                                        #if($fieldNames.add($a.key)) #end
+                                    #end
+                                    #foreach($i in [0..2])
                                     <div class="customField-wrapper">
                                         <div class="customField clearfix">
                                             <label class="control-label col-md-2" for="dataSeriesAmountMvel${i}">Custom Field ${i}</label>
                                             <div class="col-md-8 input-group input-group-sm">
                                                 <label for="dataSeriesCustomFieldName${i}" class="input-group-addon">Name</label>
-                                                <input type="text" class="form-control" value="" id="dataSeriesCustomFieldName${i}" name="dataSeriesCustomFieldName${i}" data-basename="dataSeriesCustomFieldName"/>
+                                                #set($keyName = "")
+                                                #set($keyValue = "")
+                                                #if($fieldNames.size() > $i)
+                                                    #set($keyName = $fieldNames[$i])
+                                                    #set($keyValue = $page.dataSeriesCustomFields.get($keyName))
+                                                #end
+                                                <input type="text" class="form-control" value="$!keyName" id="dataSeriesCustomFieldName${i}" name="dataSeriesCustomFieldName${i}" data-basename="dataSeriesCustomFieldName"/>
                                             </div>
                                             <div class="input-group input-group-sm">
                                                 <label for="dataSeriesCustomFieldMvel${i}" class="input-group-addon">MVEL</label>
-                                                <textarea type="text" class="form-control" id="dataSeriesCustomFieldMvel${i}" name="dataSeriesCustomFieldMvel${i}" data-basename="dataSeriesCustomFieldMvel"></textarea>
+                                                <textarea type="text" class="form-control" id="dataSeriesCustomFieldMvel${i}" name="dataSeriesCustomFieldMvel${i}" data-basename="dataSeriesCustomFieldMvel">$!keyValue</textarea>
                                             </div>
                                         </div>
                                     </div>
