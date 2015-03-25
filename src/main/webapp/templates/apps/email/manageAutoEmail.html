@@ -1,6 +1,32 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>$view.title</title>
+        <style>
+            .customField-wrapper {
+                padding-top: 10px;
+            }
+
+            .customField-wrapper .customField {
+                margin-top: 5px;
+            }
+
+            .customField-wrapper .customField:first-child {
+                margin-top: 0;
+            }
+
+            .customField-wrapper .customField > * {
+                float: left;
+                margin-right: 10px;
+            }
+
+            .customField-wrapper .customField > .input-group{
+                width: 220px;
+            }
+
+            .customField-wrapper .customField > .input-group + select {
+                width: 200px;
+            }
+        </style>
         <script type="text/javascript" src="/static/js/jquery.fileupload.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
         <script type="text/javascript" src="manageAutoEmail.js">//</script>
@@ -224,7 +250,7 @@
                                     </div>
                                 </div>
                                 <iframe class="well" style="width: 100%; height: 400px; overflow: scroll; margin-top: 15px" src="./?rawBodyHtml" >
-                                    
+
                                 </iframe>                                
                             </div>
                         </div>
@@ -500,7 +526,7 @@
                                         <div class="col-md-12">
                                             <label class="control-label col-md-2" for="dataSeriesAmountMvel">Enter an expression (MVEL)</label>
                                             <div class="col-md-8">
-                                                <textarea type="text" class="form-control required-if-shown" name="dataSeriesAmountMvel" id="smsMessage">$!page.job.dataSeriesAmountMvel</textarea>
+                                                <textarea type="text" class="form-control required-if-shown" name="dataSeriesAmountMvel" id="dataSeriesAmountMvel">$!page.job.dataSeriesAmountMvel</textarea>
                                             </div>
                                         </div>
                                     </div> <!-- end row -->
@@ -519,6 +545,33 @@
                                             </div>
                                         </div>
                                     </div> <!-- end row -->
+                                </div>
+                                <div class="form-group">
+                                    #set($fieldNames = $formatter.newArrayList())
+                                    #foreach($a in $page.dataSeriesCustomFields.entrySet())
+                                        #if($fieldNames.add($a.key)) #end
+                                    #end
+                                    #foreach($i in [0..2])
+                                    <div class="customField-wrapper">
+                                        <div class="customField clearfix">
+                                            <label class="control-label col-md-2" for="dataSeriesAmountMvel${i}">Custom Field ${i}</label>
+                                            <div class="col-md-8 input-group input-group-sm">
+                                                <label for="dataSeriesCustomFieldName${i}" class="input-group-addon">Name</label>
+                                                #set($keyName = "")
+                                                #set($keyValue = "")
+                                                #if($fieldNames.size() > $i)
+                                                    #set($keyName = $fieldNames[$i])
+                                                    #set($keyValue = $page.dataSeriesCustomFields.get($keyName))
+                                                #end
+                                                <input type="text" class="form-control" value="$!keyName" id="dataSeriesCustomFieldName${i}" name="dataSeriesCustomFieldName${i}" data-basename="dataSeriesCustomFieldName"/>
+                                            </div>
+                                            <div class="input-group input-group-sm">
+                                                <label for="dataSeriesCustomFieldMvel${i}" class="input-group-addon">MVEL</label>
+                                                <textarea type="text" class="form-control" id="dataSeriesCustomFieldMvel${i}" name="dataSeriesCustomFieldMvel${i}" data-basename="dataSeriesCustomFieldMvel">$!keyValue</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    #end
                                 </div>
                             </div>
                         </div> <!-- End actviate alert -->
@@ -835,10 +888,10 @@
                             'This Year': [moment().startOf('year'), moment()],
                         },
                     },
-                    function (start, end) {
-                        flog('onChange', start, end);
-                        doHistorySearch(start, end);
-                    });
+                            function (start, end) {
+                                flog('onChange', start, end);
+                                doHistorySearch(start, end);
+                            });
                 });
             }
 

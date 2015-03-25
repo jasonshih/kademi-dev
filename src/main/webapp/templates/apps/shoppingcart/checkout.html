@@ -35,7 +35,7 @@
                                             </tr>
                                         </thead>                                    
                                         <tbody id="itemsTableBody">
-                                            #set( $items = $page.shoppingCartItemPages )
+                                            #set( $items = $page.shoppingCartItemBeans )
                                             #if( $items.empty )
                                             <tr>
                                                 <td colspan="5">You have not added any items to your shopping cart</td>
@@ -44,17 +44,17 @@
                                             #foreach($item in $items )
                                             <tr>
                                                 <td>
-                                                    #if( $item.productImageHref )
-                                                    <img src="$item.productImageHref" style="max-width: 200px; max-height: 200px"/>
+                                                    #if( $item.itemPage.productImageHref )
+                                                    <img src="$item.itemPage.productImageHref" style="max-width: 200px; max-height: 200px"/>
                                                     #end
                                                 </td>
-                                                <td>$item.productDescription</td>
+                                                <td>$!item.itemPage.productDescription</td>
                                                 <td>
-                                                    <input type="text" class="form-control quantity" value="1" name="quantity.${foreach.count}" style="width: 50px" />
-                                                    <input type="hidden" class="itemHref" name="item.${foreach.count}" value="$item.href" />
+                                                    <input type="text" class="form-control quantity" value="$item.quantity" name="quantity.${foreach.count}" style="width: 50px" />
+                                                    <input type="hidden" class="itemHref" name="item.${foreach.count}" value="$item.itemPage.href" />
                                                 </td>
-                                                <td class="cost">$item.productPurchaseCost</td>
-                                                <td class="subtotal">$page.calcSubTotal( $item.productPurchaseCost, 1 )</td>
+                                                <td class="cost">$item.itemPage.productPurchaseCost</td>
+                                                <td class="subtotal">$page.calcSubTotal( $item.itemPage.productPurchaseCost, $item.quantity )</td>
                                                 <td class="deleteItem">
                                                     <button class="remove btn btn-danger">
                                                         <span class="glyphicon glyphicon-remove"></span>
@@ -255,8 +255,10 @@
                             var tr = target.closest("tr");
                             var cost = tr.find(".cost").text();
                             var newSubtotal = num * cost;
-                            flog("num,cost,sub", num, cost, newSubtotal);
+                            var href = target.next(".itemHref").val();
+                            flog("num,cost,sub,href", num, cost, newSubtotal, href);
                             tr.find(".subtotal").text(newSubtotal);
+                            doQuantityUpdate(href, num);
                         } else {
                             Msg.error("Please enter a valid quantity");
                         }
@@ -280,6 +282,26 @@
                         datatype: "json",
                         success: function (data) {
                             Msg.info("Removed item from your shopping cart");
+                            $("#itemsTableBody").reloadFragment();
+                        },
+                        error: function (resp) {
+                            Msg.error("An error occured adding the product to your shopping cart. Please check your internet connection and try again");
+                        }
+                    });
+                }
+                
+                function doQuantityUpdate(href, quantity) {
+                    flog("doQuantityUpdate", href);
+                    $.ajax({
+                        type: 'POST',
+                        url: "/checkout",
+                        data: {
+                            changeItemHrefQuantity: href,
+                            quantity: quantity
+                        },
+                        datatype: "json",
+                        success: function (data) {
+                            Msg.info("Updated item in your shopping cart");
                             $("#itemsTableBody").reloadFragment();
                         },
                         error: function (resp) {
