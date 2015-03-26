@@ -1,41 +1,92 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>$view.title</title>
-    </head>
-    <body class="manageApplications appsContainer">
+        <style>
+            .filter-msg, .filter-user {
+                display:none;
+            }
 
-
+            .rTable {
+                display: block;width: 100%;
+            } 
+            .rTableHeading, .rTableBody, .rTableFoot, .rTableRow{
+                clear: both; 
+            }
+            .rTableHead, .rTableFoot{
+                background-color: #DDD;   
+                font-weight: bold; 
+            } 
+            .rTableCell, .rTableHead { 
+                border: 1px solid #999999;   
+                float: left;  
+                height: 17px;   
+                overflow: hidden;   
+                padding: 3px 1.8%;  
+                width: 28%; 
+            } .rTable:after {   
+                visibility: hidden;   
+                display: block;   
+                font-size: 0;   
+                content: " ";   
+                clear: both;   
+                height: 0; }
+            </style>
+        </head>
+        <body class="manageApplications appsContainer">
         <article class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">Logs</h3>
             </div>
-
             <div class="panel-body">
-                <table class="table table-bordered" id="logsTable">
+                <div class="clearfix form-horizontal">                   
+                    <div class="input-group search-user input-group-sm col-md-5 col-sm-6">
+                        <input type="text" id="user-query" class="form-control user-query" placeholder="Filter by User" value="" /> 
+                        <span class="input-group-btn">
+                            <button class="btn btn-sm btn-default" type="button" data-type="clearer" data-target="#user-query">
+                                <i class="fa fa-times"></i>
+                            </button>
+                        </span>
+
+                        <input type="text" id="message-query" class="form-control message-query" placeholder="Filter message" value="" /> 
+                        <span class="input-group-btn">
+                            <button class="btn btn-sm btn-default" type="button" data-type="clearer" data-target="#message-query">
+                                <i class="fa fa-times"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+                <br/>
+                <table class="table table-bordered table-hover" id="logsTable">
                     <colgroup>
+                        <col style="width: 55px" />
                         <col style="width: 100px" />
                         <col/>
+                        <col style="width: 160px"/>
                     </colgroup>
                     <thead>
                         <tr>
                             <th>Level</th>
+                            <th>User</th>
                             <th>Message</th>
                             <th>Date</th>
                         </tr>
                     </thead>
                     <tbody id="logsBody">
                         #foreach($event in $page.recent)
-                        <tr>
-                            #set($labelType = $event.level.toLowerCase())
-                            #if($labelType == "error")
-                            #set($labelType = "danger")
-                            #elseif($labelType == "warn")
-                            #set($labelType = "warning")
-                            #elseif($labelType == "trace")
-                            #set($labelType = "default")
-                            #end
+                        #set($labelType = $event.level.toLowerCase())
+                        #if($labelType == "error")
+                        #set($labelType = "danger")
+                        #elseif($labelType == "warn")
+                        #set($labelType = "warning")
+                        #elseif($labelType == "trace")
+                        #set($labelType = "default")
+                        #end
+                        <tr class="$labelType">
                             <td><span class="label label-$labelType" >$event.level</span></td>
-                            <td>$event.message</td>
+                            <td>#if($event.userName)
+                                <a target="_blank" class="userName" href="$event.userHref">$event.userName</a>
+                            </td>#end
+                            <td class="message">$event.message</td>
                             <td><abbr title="$formatter.formatDateISO8601($event.date)" class="timeago">$event.date</abbr></td>                            
                         </tr>                        
                         #end
@@ -50,12 +101,8 @@
                     <input type="checkbox" class="logs-follow"/>
                     Follow
                 </label>
-
             </div>
         </article>
-
-
-
 
         <script type="text/javascript">
             var orgId = "$page.organisation.id";
@@ -70,6 +117,19 @@
                     followToggle();
                 });
                 followToggle();
+
+                $("body").on('change', '.message-query', function (e) {
+                    var val = $(this).val();
+                    flog('message-query change', val);
+                    filterTableByMsg(val);
+                });
+
+                $("body").on('change', '.user-query', function (e) {
+                    var val = $(this).val();
+                    flog('user-query change', val);
+                    filterTableByUser(val);
+                });
+
             });
 
             var following = false;
@@ -84,15 +144,17 @@
                     wsocket = new WebSocket("ws://" + window.location.host + "/comments/" + window.location.host + "/logging/" + b64ContentId);
                     wsocket.onmessage = function (evt) {
                         var c = $.parseJSON(evt.data);
-                        flog("message", c);
+                        var filterMsg = $("#message-query").val().toLowerCase();
+                        var filterUser = $("#user-query").val().toLowerCase();
                         for (var i = 0; i < c.length; i++) {
-                            processReceivedLog(c[i]);
+                            processReceivedLog(c[i], filterMsg, filterUser);
                         }
                         $('abbr.timeago').timeago();
+                        followToggle();
+
                         if (following) {
                             $("html, body").animate({scrollTop: $("#logsTable").height()}, 10);
                             //$(window).scrollTop($("#logsTable").height());
-
                         }
                     };
                     flog("done initWebsockets");
@@ -102,40 +164,93 @@
                 }
             }
 
-            function processReceivedLog(c) {
+            function processReceivedLog(c, filterMsg, filterUser) {
                 var dt = moment(c.data);
                 var labelType = c.level.toLowerCase();
-                if (labelType == "error") {
-                    labelType = "danger";
-                } else if (labelType == "warn") {
-                    labelType = "warning";
-                }
-                else if (labelType == "trace") {
-                    labelType = "default";
-                }
-                var tr = $("<tr>" +
-                        "<td><span class='label label-" + labelType + "'>" + c.level + "</span></td>" +
-                        "<td class='message'></td>" +
-                        "<td><abbr title='" + dt.format(moment.ISO_8601) + "' class='timeago'>" + dt.format() + "</abbr></td>" +
-                        "</tr>");
-                tr.find(".message").text(c.message);
-
-                $('#logsBody').append(tr);
-                if (c.callstack !== null && c.callstack.length > 0) {
-                    tr = $("<tr>" +
-                            "<td class='causes' colspan='3'></td>" +
+                if ((filterMsg === "" || c.message.toLowerCase().contains(filterMsg)) && (filterUser == "" || c.userName.toLowerCase().contains(filterUser))) {
+                    if (labelType == "error") {
+                        labelType = "danger";
+                    } else if (labelType == "warn") {
+                        labelType = "warning";
+                    }
+                    else if (labelType == "trace") {
+                        labelType = "default";
+                    }
+                    var tr = $("<tr class='" + labelType + "'>" +
+                            "<td><span class='label label-" + labelType + "'>" + c.level + "</span></td>" +
+                            "<td><a class='userName' target='_blank' href='" + c.userHref + "'>" + c.userName + "</a></td>" +
+                            "<td class='message'></td>" +
+                            "<td><abbr title='" + dt.format(moment.ISO_8601) + "' class='timeago'>" + dt.format() + "</abbr></td>" +
                             "</tr>");
-                    var ul = $("<ul>");
-                    $.each(c.callstack, function (i, n) {
-                        var li = $("<li>");
-                        li.text(n);
-                        ul.append(li);
+                    tr.find(".message").text(c.message);
 
-                    });
-                    tr.find(".causes").append(ul);
                     $('#logsBody').append(tr);
+                    if (c.callstack !== null && c.callstack.length > 0) {
+                        tr = $("<tr>" +
+                                "<td class='causes' colspan='3'></td>" +
+                                "</tr>");
+                        var ul = $("<ul>");
+                        $.each(c.callstack, function (i, n) {
+                            var li = $("<li>");
+                            li.text(n);
+                            ul.append(li);
+
+                        });
+                        tr.find(".causes").append(ul);
+                        $('#logsBody').append(tr);
+                    }
+                    tr.find('abbr.timeago').timeago();
                 }
-                tr.find('abbr.timeago').timeago();
+            }
+
+            function filterTableByMsg(val) {
+                var logBody = $("#logsBody");
+                if (val !== "") {
+                    logBody.find("tr").each(function (e) {
+                        if (!$(this).hasClass("filter-user") && $(this).find(".message").length > 0) {
+                            var msg = $(this).find(".message").text();
+                            msg = msg.toLowerCase();
+                            if (msg.contains(val.toLowerCase())) {
+                                $(this).removeClass("filter-msg");
+                            } else {
+                                $(this).addClass("filter-msg");
+                            }
+                        }
+                    });
+                } else {
+                    logBody.find("tr").removeClass("filter-msg");
+                }
+            }
+
+            function filterTableByUser(val) {
+                var logBody = $("#logsBody");
+                if (val !== "") {
+                    logBody.find("tr").each(function (e) {
+                        if (!$(this).hasClass("filter-msg") && $(this).find(".userName")) {
+                            var msg = $(this).find(".userName").text().toLowerCase();
+                            flog("User Name Found", msg);
+                            if (msg !== "" && msg.contains(val.toLowerCase())) {
+                                $(this).removeClass("filter-user")
+                            } else {
+                                $(this).addClass("filter-user");
+                            }
+                        }
+                    });
+                } else {
+                    logBody.find("tr").removeClass("filter-user");
+                }
+            }
+
+            function trimTable(limit) {
+                if (limit == null) {
+                    limit = 50;
+                }
+                var logBody = $("#logsBody");
+                var logTable = logBody.find("tr");
+                flog("Table Size", logTable.length, "Limit", limit)
+                if (logTable.length > limit) {
+                    logBody.find("tr:gt(" + (limit - 1) + ")").remove()
+                }
             }
         </script>
     </body>
