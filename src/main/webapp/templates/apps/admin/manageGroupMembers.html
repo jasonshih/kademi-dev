@@ -138,7 +138,9 @@
                         #set($rowClass = "noPassword")
                         #end
                         <tr class="$rowClass">
-                            <td>$!member.thisUser.nickName</td>
+                            <td>
+                                <a href="/manageUsers/$member.thisUser.id">$!member.thisUser.nickName</a>
+                            </td>
                             <td>$!member.thisUser.firstName</td>
                             <td>$!member.thisUser.surName</td>
                             <td>$!member.thisUser.phone</td>
