@@ -4,14 +4,14 @@
     <groupId>co.kademi</groupId>
     <artifactId>kademi-dev</artifactId>
     <packaging>war</packaging>
-    <version>4.7.5</version>
-        
+    <version>4.7.6</version>
+
     <build>
-        <plugins>            
+        <plugins>
         </plugins>
     </build>
-      
-    <dependencies>     
+
+    <dependencies>
         <dependency>
             <groupId>com.fuselms</groupId>
             <artifactId>kademi-server</artifactId>
@@ -23,12 +23,12 @@
             <version>1.7.7</version>
         </dependency>
     </dependencies>
-    
+
     <profiles>
         <profile>
-            <id>run-grizzly</id>                
-            <build>              
-                <plugins>                                      
+            <id>run-grizzly</id>
+            <build>
+                <plugins>
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
@@ -43,14 +43,14 @@
                                 <property>
                                     <key>kademi.secure.port</key>
                                     <value>443</value>
-                                </property>                                
-                            </systemProperties>                            
+                                </property>
+                            </systemProperties>
                             <additionalClasspathElements>
                                 <additionalClasspathElement>/var/lib/kademi/conf</additionalClasspathElement>
                                 <additionalClasspathElement>/var/lib/kademi/lib/postgresql-9.0-801.jdbc4.jar</additionalClasspathElement>
                             </additionalClasspathElements>
                         </configuration>
-                        <executions>                            
+                        <executions>
                             <execution>
                                 <id>run</id>
                                 <phase>compile</phase>
@@ -58,14 +58,14 @@
                                     <goal>java</goal>
                                 </goals>
                             </execution>
-                        </executions>   
-                    </plugin> 
-                                                                      					
+                        </executions>
+                    </plugin>
+
                 </plugins>
-            </build>         
-        </profile>         
+            </build>
+        </profile>
     </profiles>
-    
+
     <repositories>
         <repository>
             <id>kademi-private</id>
@@ -75,6 +75,6 @@
             <id>milton-repo</id>
             <url>http://milton.io/maven</url>
         </repository>
-    </repositories>      
+    </repositories>
 </project>
 
