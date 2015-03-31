@@ -26,6 +26,9 @@
             .customField-wrapper .customField > .input-group + select {
                 width: 200px;
             }
+            .email-item{
+                cursor:pointer;
+            }
         </style>
         <script type="text/javascript" src="/static/js/jquery.fileupload.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
@@ -549,7 +552,7 @@
                                 <div class="form-group">
                                     #set($fieldNames = $formatter.newArrayList())
                                     #foreach($a in $page.dataSeriesCustomFields.entrySet())
-                                        #if($fieldNames.add($a.key)) #end
+                                    #if($fieldNames.add($a.key)) #end
                                     #end
                                     #foreach($i in [0..2])
                                     <div class="customField-wrapper">
@@ -560,8 +563,8 @@
                                                 #set($keyName = "")
                                                 #set($keyValue = "")
                                                 #if($fieldNames.size() > $i)
-                                                    #set($keyName = $fieldNames[$i])
-                                                    #set($keyValue = $page.dataSeriesCustomFields.get($keyName))
+                                                #set($keyName = $fieldNames[$i])
+                                                #set($keyValue = $page.dataSeriesCustomFields.get($keyName))
                                                 #end
                                                 <input type="text" class="form-control" value="$!keyName" id="dataSeriesCustomFieldName${i}" name="dataSeriesCustomFieldName${i}" data-basename="dataSeriesCustomFieldName"/>
                                             </div>
@@ -712,7 +715,7 @@
                                 </thead>
                                 <tbody id="history-table-body">
                                     #foreach($item in $page.history)
-                                    <tr>
+                                    <tr href="/emails/$item.id" class="email-item">
                                         <td class="icon" title="$!email.status">
                                             #if($item.sendStatus == "c" )
                                             <i class="fa fa-check-circle text-success"></i>                                            
@@ -745,7 +748,6 @@
                                         <td>
                                             <abbr class="pull-right timeago" title="$formatter.formatDateISO8601($item.sendStatusDate)">$item.sendStatusDate</abbr>
                                         </td>
-
                                     </tr>
                                     #end
                                 </tbody>
@@ -871,6 +873,20 @@
                 });
 
                 initSmsField();
+
+                $("body").on('click', '.email-item', function (e) {
+                    e.preventDefault();
+                    var item = $(this);
+                    var href = item.attr("href")
+                    var win = window.open(href, '_blank');
+                    if (win) {
+                        //Browser has allowed it to be opened
+                        win.focus();
+                    } else {
+                        //Broswer has blocked it
+                        alert('Please allow popups for this site');
+                    }
+                });
             });
 
             function initHistorySearch() {
