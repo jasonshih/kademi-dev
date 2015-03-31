@@ -1,7 +1,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title>$view.title</title> 
+        <title>$view.title</title>
         <script src="https://secure.ewaypayments.com/scripts/eCrypt.js">//</script>
     </head>
 
@@ -14,58 +14,119 @@
 
         <div class="tab-content">
             <div id="panel_pay" class="tab-pane">
-                <form class="form-horizontal" data-eway-encrypt-key="vF2SEUdV8mzbMvpq46BW5K/MrcmY+y45JCpV406g4HxJTUkEQDHIUTPx7NFhohsIJ8rpqaM/IZlaPMOsWrIACxXiHWPxY2W6h7ti3/1A/GTJdATPeGZictzl1ZYoQw4t4sgNthFagju/S0LGvkiW+cD8rV0AVtO6DG9Pju5JW0vsg8WToGLlvXVBtgY0r9fuxMM/6FYwQ5BC/oKdQ9+GArFfZtVwCOZ87PG9FIK+cu0Up+6/V4RVoMddg6N+pbb8gxXpaZa0OfmMa2lpCbMRxnFf0jlDKD9M8qElxdWoVL5xAnZjAjobXDUYLgWR3bNiux+5t0UAJiUBhNS7+eNUPQ==">
+                #set( $encKey = $page.getEncryptionKey($request.params.websiteBranch))
+                #if( $encKey )
+                #else
+                <div class="alert alert-warning">There is no encryption key for this website. Payments will fail unless you are PCI-DSS Compliant</div>
+                #end
+
+                <div class="btn-group publishing pull-right">
+
+                    <a class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+                        <b>Send payment to site:</b>
+                        $!request.params.websiteBranch
+                        <span class="caret"></span>
+                    </a>
+                    <ul role="menu" class="dropdown-menu list branches">
+                        #foreach($w in $page.find("/websites").children.ofType.website)
+                        #foreach($b in $w.children.ofType.branch)
+                        <li role="presentation" class="list-item">
+                        <a href="$page.href?websiteBranch=$b.repository.name/$b.name" class="branch noclear">$b.repository.name/$b.name</a>
+                        </li>
+                        #end
+                        #end
+                    </ul>
+                </div>
+
+
+                <form class="form-horizontal" data-eway-encrypt-key="$!encKey">
                     <div class="form-group">
                         <div class="col-sm-3 col-offset-sm-3">
                             <input id="submit" class="btn btn-sm btn-info" type="button" value="Payment via eWAY" />
-                        </div>                        
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Name" class="col-sm-3 control-label">Website/Version</label>
+                        <div class="col-sm-3">
+                            <input  class="form-control required" type="text" id="websiteBranch" name="websiteBranch" value="$!request.params.websiteBranch"/>
+                        </div>
                     </div>
 
                     <div class="form-group">
                         <label for="Name" class="col-sm-3 control-label">Card Name</label>
                         <div class="col-sm-3">
-                            <input type="text" class="form-control required" required="true" id="Name" name="Name" value = "Lee YOU"/>	                            
+                            <input type="text" class="form-control required" required="true" id="Name" name="Name" value = "Just A Test"/>
                         </div>
                     </div>
+
                     <div class="form-group">
                         <label for="Number" class="col-sm-3 control-label">Card Number</label>
                         <div class="col-sm-3">
-                            <input type="text" class="form-control required" required="true" id="Number" name="Number" data-regex="^[0-9]+$" value = "4444333322221111"/>	                            
+                            <input type="text" class="form-control required" required="true" id="Number" name="Number" data-regex="^[0-9]+$" value = "4444333322221111"/>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="ExpiryMonth" class="col-sm-3 control-label">ExpiryMonth</label>
                         <div class="col-sm-3">
-                            <input type="text" class="form-control required" required="true" id="ExpiryMonth" name="ExpiryMonth" data-regex="^[0-9]+$" value="12"/>	                            
+                            <input type="text" class="form-control required" required="true" id="ExpiryMonth" name="ExpiryMonth" data-regex="^[0-9]+$" value="12"/>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="ExpiryYear" class="col-sm-3 control-label">ExpiryYear</label>
                         <div class="col-sm-3">
-                            <input type="text" class="form-control required" required="true" id="ExpiryYear" name="ExpiryYear" data-regex="^[0-9]+$" value="23"/>	                            
+                            <input type="text" class="form-control required" required="true" id="ExpiryYear" name="ExpiryYear" data-regex="^[0-9]+$" value="23"/>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="CVN" class="col-sm-3 control-label">CVN</label>
                         <div class="col-sm-3">
-                            <input type="text" class="form-control required" required="true" id="CVN" name="CVN" data-regex="^[0-9]+$" value="567"/>	                            
+                            <input type="text" class="form-control required" required="true" id="CVN" name="CVN" data-regex="^[0-9]+$" value="567"/>
                         </div>
-                    </div>      
+                    </div>
 
                     <div class="form-group">
                         <label for="TotalAmount" class="col-sm-3 control-label">TotalAmount</label>
                         <div class="col-sm-3">
-                            <input type="text" class="form-control required" required="true" id="TotalAmount" name="TotalAmount" data-regex="^[0-9]+$" value="897"/>	                            
+                            <input type="text" class="form-control required" required="true" id="TotalAmount" name="TotalAmount" data-regex="^[0-9]+$" value="897"/>
                         </div>
-                    </div>   
+                    </div>
                     <div class="form-group">
                         <label for="CurrencyCode" class="col-sm-3 control-label">CurrencyCode</label>
                         <div class="col-sm-3">
-                            <input type="text" class="form-control required" required="true" id="CurrencyCode" name="CurrencyCode" value="AUD"/> 
+                            <input type="text" class="form-control required" required="true" id="CurrencyCode" name="CurrencyCode" value="AUD"/>
                         </div>
-                    </div>  
+                    </div>
+
+                    <hr/>
+                    <div class="form-group">
+                        <label for="frequency" class="col-sm-3 control-label">Recurring frequency</label>
+                        <div class="col-sm-3">
+                            <select name="frequency" id="frequency" class="form-control">
+                                <option value="">Not recurring</option>
+                                <option value="WEEKLY">WEEKLY</option>
+                                <option value="MONTHLY">MONTHLY</option>
+                                <option value="ANNUAL">ANNUAL</option>
+
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="multiples" class="col-sm-3 control-label">Multiples/Rate</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" required="true" id="multiples" name="multiples" value=""/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="multiples" class="col-sm-3 control-label">Immediate payment</label>
+                        <div class="col-sm-3">
+                            <input type="checkbox" class="form-control" required="true" id="immediate" name="immediate" value="true"/>
+                        </div>
+                    </div>
+
 
                 </form>
             </div>
@@ -80,7 +141,7 @@
                         <col width="" />
                         <col width="" />
                         <col width="" />
-                        <col width="" />                        
+                        <col width="" />
                     </colgroup>
                     <thead>
                         <tr>
@@ -88,36 +149,31 @@
                             <th >Card Number</th>
                             <th >Total Amount</th>
                             <th >Currency</th>
-                            <th >Purchase Status</th>                        
-                            <th >Created Date</th>    
-                            <th >Created By</th>                             
+                            <th >Purchase Status</th>
+                            <th >Created Date</th>
+                            <th >Created By</th>
                             <th>Organisation</th>
-                        </tr> 
+                        </tr>
                     </thead>
                     <tbody id="payments-body">
                         #foreach($payment in $page.paymentTransactionByOrg)
                         <tr>
-                            #set($Integer = 0)
-
-                            #set($amount=$Integer.parseInt($payment.totalAmount) / 100)
-                            
-
                             <td>$payment.transactionID</td>
-                            <td>$payment.cardNumber</td>
-                            <td>$amount</td>
-                            <td>$payment.currencyCode</td>  
+                            <td>$!payment.cardNumber</td>
+                            <td>$!totalAmount</td>
+                            <td>$payment.currencyCode</td>
                             <td>
                                 <div class="$payment.transactionStatus">
-                                    #if($payment.transactionStatus == "true")
-                                    <span class="label label-sm label-success">successful</span>
+                                    #if($payment.status)
+                                    <span class="label label-sm label-success">Successful</span>
                                     #else
                                     <span class="label label-sm label-warning">Failed </span>
-                                    #end                                        
+                                    #end
                                 </div>
-                            </td>                         
-                            <td>$formatter.formatDate($payment.createdDate)</td>
+                            </td>
+                            <td>$formatter.formatDateTime($payment.createdDate)</td>
                             <td>$payment.createdBy.name</td>
-                            <td>$payment.org.title</td>                            
+                            <td>$payment.org.title</td>
 
                         </tr>
                         #end
@@ -130,7 +186,7 @@
         <script type="text/javascript">
             $(document).ready(function () {
                 $('#submit').click(function (event) {
-
+                    flog("send payment", $('#websiteBranch').val());
                     $.ajax({
                         url: "/eWayTest",
                         type: 'POST',
@@ -139,16 +195,25 @@
                             name: $('#Name').val(),
                             expiryMonth: $('#ExpiryMonth').val(),
                             expiryYear: $('#ExpiryYear').val(),
-                            totalAmount: $('#TotalAmount').val() * 100,
+                            totalAmount: $('#TotalAmount').val(),
                             currencyCode: $('#CurrencyCode').val(),
+                            websiteBranch: $('#websiteBranch').val(),
+                            frequency: $('#frequency').val(),
+                            multiples: $('#multiples').val(),
+                            immediate: $('#immediate').val(),
                             number: eCrypt.encryptValue($('#Number').val()),
                             cvn: eCrypt.encryptValue($('#CVN').val())
 
                         },
                         success: function (data) {
                             flog("success", data);
-                            Msg.success(data.messages, 6000);
-                            $('#payments-body').reloadFragment();
+                            if (data.status) {
+                                Msg.success("Success", 6000);
+                                $('#payments-body').reloadFragment();
+                            } else {
+                                Msg.error("There was a problem. Please see the transaction history for details");
+                                $('#payments-body').reloadFragment();
+                            }
                         },
                         error: function (resp) {
                             flog("errors", resp);
