@@ -6,33 +6,47 @@
                 display:none;
             }
 
-            .rTable {
-                display: block;width: 100%;
-            } 
-            .rTableHeading, .rTableBody, .rTableFoot, .rTableRow{
-                clear: both; 
+            .col-row > div{
+                border-top: 1px solid #ddd;
+                border-right: 1px solid #ddd;
+                position: relative;
+                min-height: 1px;
+                float: left;
+                padding: 5px;
+                border-collapse: collapse;
+                border-spacing: 0;
+                box-sizing: border-box;
             }
-            .rTableHead, .rTableFoot{
-                background-color: #DDD;   
-                font-weight: bold; 
-            } 
-            .rTableCell, .rTableHead { 
-                border: 1px solid #999999;   
-                float: left;  
-                height: 17px;   
-                overflow: hidden;   
-                padding: 3px 1.8%;  
-                width: 28%; 
-            } .rTable:after {   
-                visibility: hidden;   
-                display: block;   
-                font-size: 0;   
-                content: " ";   
-                clear: both;   
-                height: 0; }
-            </style>
-        </head>
-        <body class="manageApplications appsContainer">
+            .col-row:nth-child(even){
+                background-color: #f9f9f9;
+            }
+            .row-header > div{
+                color: #707070;
+                border: 1px solid #ddd;
+                direction: ltr;
+                font-family: 'Open+Sans', sans-serif;
+                font-size: 13px;
+                font-weight: bold;
+            }
+            .col-row .col-lvl{
+                width:5%;
+            }
+            .col-row .col-user{
+                width:5%;
+            }
+            .col-row .col-msg{
+                width:75%;
+            }
+            .col-row .col-date{
+                width:15%;
+            }
+
+            .col-row .causes{
+                width:100%;
+            }
+        </style>
+    </head>
+    <body class="manageApplications appsContainer">
         <article class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">Logs</h3>
@@ -56,57 +70,54 @@
                     </div>
                 </div>
                 <br/>
-                <table class="table table-bordered table-hover" id="logsTable">
-                    <colgroup>
-                        <col style="width: 55px" />
-                        <col style="width: 100px" />
-                        <col/>
-                        <col style="width: 160px"/>
-                    </colgroup>
-                    <thead>
-                        <tr>
-                            <th>Level</th>
-                            <th>User</th>
-                            <th>Message</th>
-                            <th>Date</th>
-                        </tr>
-                    </thead>
-                    <tbody id="logsBody">
-                        #foreach($event in $page.recent)
-                        #set($labelType = $event.level.toLowerCase())
-                        #if($labelType == "error")
-                        #set($labelType = "danger")
-                        #elseif($labelType == "warn")
-                        #set($labelType = "warning")
-                        #elseif($labelType == "trace")
-                        #set($labelType = "default")
-                        #end
-                        <tr class="$labelType">
-                            <td><span class="label label-$labelType" >$event.level</span></td>
-                            <td>#if($event.userName)
-                                <a target="_blank" class="userName" href="$event.userHref">$event.userName</a>
-                            </td>#end
-                            <td class="message">$event.message</td>
-                            <td><abbr title="$formatter.formatDateISO8601($event.date)" class="timeago">$event.date</abbr></td>                            
-                        </tr>                        
-                        #end
-                        <tr>
-                            <td colspan="3">Beginning listening...</td>
-                        </tr>
-                    </tbody>
-
-                </table>
-                <button class="btn btn-info logs-clear">Clear</button>
-                <label>
-                    <input type="checkbox" class="logs-follow"/>
-                    Follow
-                </label>
+                <div class="panel panel-default">
+                    <!-- Default panel contents -->
+                    <div class="container-fluid">
+                        <div class="row col-row row-header">
+                            <div class="col-lvl">Level</div>
+                            <div class="col-user">User</div>
+                            <div class="col-msg">Message</div>
+                            <div class="col-date">Date</div>
+                        </div>
+                        <div id="logsBody">
+                            #foreach($event in $page.recent)
+                            #set($labelType = $event.level.toLowerCase())
+                            #if($labelType == "error")
+                            #set($labelType = "danger")
+                            #elseif($labelType == "warn")
+                            #set($labelType = "warning")
+                            #elseif($labelType == "trace")
+                            #set($labelType = "default")
+                            #end
+                            <div class="info row col-row">
+                                <div class="col-lvl"><span class="label label-$labelType" >$event.level</span></div>
+                                <div class="col-user"><a target="_blank" class="userName" href="$!event.userHref">$!event.userName</a></div>
+                                <div class="col-msg">$event.message</div>
+                                <div class="col-date"><abbr title="$formatter.formatDateISO8601($event.date)" class="timeago">$event.date</abbr></div>
+                            </div>
+                            #end
+                            <div class="info row col-row">
+                                <div style="width:100%;">Beginning listening...</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <button class="btn btn-info logs-clear">Clear</button>
+                        <label>
+                            <input type="checkbox" class="logs-follow"/>
+                            Follow
+                        </label>
+                    </div>
+                </div>
             </div>
         </article>
 
         <script type="text/javascript">
             var orgId = "$page.organisation.id";
-
+            var following = false;
+            var itemsToAppend = [];
+            var appendTimer = null;
+            var maxLimit = 5000;
             $(function () {
                 $('abbr.timeago').timeago();
                 initWebsockets();
@@ -132,9 +143,9 @@
 
             });
 
-            var following = false;
             function followToggle() {
                 following = $(".logs-follow").prop("checked");
+                flog("Following", following);
             }
 
             function initWebsockets() {
@@ -143,24 +154,41 @@
                 try {
                     wsocket = new WebSocket("ws://" + window.location.host + "/comments/" + window.location.host + "/logging/" + b64ContentId);
                     wsocket.onmessage = function (evt) {
+                        flog('Received Logs');
                         var c = $.parseJSON(evt.data);
                         var filterMsg = $("#message-query").val().toLowerCase();
                         var filterUser = $("#user-query").val().toLowerCase();
                         for (var i = 0; i < c.length; i++) {
                             processReceivedLog(c[i], filterMsg, filterUser);
                         }
-                        $('abbr.timeago').timeago();
-                        followToggle();
+                        //$("#logsBody").append(itemsBuffer);
 
-                        if (following) {
-                            $("html, body").animate({scrollTop: $("#logsTable").height()}, 10);
-                            //$(window).scrollTop($("#logsTable").height());
+                        if (appendTimer != null) {
+                            clearTimeout(appendTimer);
+                            appendTimer = null;
                         }
+                        appendTimer = setTimeout(appendItems, 250);
                     };
                     flog("done initWebsockets");
                 } catch (e) {
                     // TODO: setup polling to load comments every minute or so
                     flog("Websocket initialisation failed");
+                }
+            }
+
+            function appendItems() {
+                appendTimer = null;
+                
+                flog("Appending with " + itemsToAppend.length + " logs");
+                $("#logsBody").append(itemsToAppend);
+                $('abbr.timeago').timeago();
+                trimTable(maxLimit);
+                if (following) {
+                    $("html, body").animate({scrollTop: $("#logsBody").height()}, 500);
+                }
+
+                while (itemsToAppend.length > 0) {
+                    itemsToAppend.pop();
                 }
             }
 
@@ -176,19 +204,19 @@
                     else if (labelType == "trace") {
                         labelType = "default";
                     }
-                    var tr = $("<tr class='" + labelType + "'>" +
-                            "<td><span class='label label-" + labelType + "'>" + c.level + "</span></td>" +
-                            "<td><a class='userName' target='_blank' href='" + c.userHref + "'>" + c.userName + "</a></td>" +
-                            "<td class='message'></td>" +
-                            "<td><abbr title='" + dt.format(moment.ISO_8601) + "' class='timeago'>" + dt.format() + "</abbr></td>" +
-                            "</tr>");
-                    tr.find(".message").text(c.message);
+                    var row = $('<div class="' + labelType + ' row col-row">' +
+                            '<div class="col-lvl"><span class="label label-' + labelType + '" >' + c.level + '</span></div>' +
+                            '<div class="col-user"><a target="_blank" class="userName" href="' + c.userHref + '">' + c.userName + '</a></div>' +
+                            '<div class="col-msg"> </div>' +
+                            '<div class="col-date"><abbr title="' + dt.format(moment.ISO_8601) + '" class="timeago">' + dt.format() + '</abbr></div>' +
+                            '</div>');
+                    row.find(".col-msg").text(c.message);
 
-                    $('#logsBody').append(tr);
+                    itemsToAppend.push(row);
                     if (c.callstack !== null && c.callstack.length > 0) {
-                        tr = $("<tr>" +
-                                "<td class='causes' colspan='3'></td>" +
-                                "</tr>");
+                        row = $('<div class="row col-row">' +
+                                "<div class='causes'></div>" +
+                                "</div>");
                         var ul = $("<ul>");
                         $.each(c.callstack, function (i, n) {
                             var li = $("<li>");
@@ -196,19 +224,18 @@
                             ul.append(li);
 
                         });
-                        tr.find(".causes").append(ul);
-                        $('#logsBody').append(tr);
+                        row.find(".causes").append(ul);
+                        itemsToAppend.push(row);
                     }
-                    tr.find('abbr.timeago').timeago();
                 }
             }
 
             function filterTableByMsg(val) {
                 var logBody = $("#logsBody");
                 if (val !== "") {
-                    logBody.find("tr").each(function (e) {
-                        if (!$(this).hasClass("filter-user") && $(this).find(".message").length > 0) {
-                            var msg = $(this).find(".message").text();
+                    logBody.find(".col-row").each(function (e) {
+                        if (!$(this).hasClass("filter-user") && $(this).find(".col-msg").length > 0) {
+                            var msg = $(this).find(".col-msg").text();
                             msg = msg.toLowerCase();
                             if (msg.contains(val.toLowerCase())) {
                                 $(this).removeClass("filter-msg");
@@ -225,7 +252,7 @@
             function filterTableByUser(val) {
                 var logBody = $("#logsBody");
                 if (val !== "") {
-                    logBody.find("tr").each(function (e) {
+                    logBody.find(".col-row").each(function (e) {
                         if (!$(this).hasClass("filter-msg") && $(this).find(".userName")) {
                             var msg = $(this).find(".userName").text().toLowerCase();
                             flog("User Name Found", msg);
@@ -246,10 +273,10 @@
                     limit = 50;
                 }
                 var logBody = $("#logsBody");
-                var logTable = logBody.find("tr");
+                var logTable = logBody.find(".col-row");
                 flog("Table Size", logTable.length, "Limit", limit)
                 if (logTable.length > limit) {
-                    logBody.find("tr:gt(" + (limit - 1) + ")").remove()
+                    logBody.find(".col-row:lt(" + (logTable.length - limit) + ")").remove()
                 }
             }
         </script>
