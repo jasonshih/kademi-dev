@@ -81,7 +81,7 @@
                                     #foreach($w in $page.find("/websites").children.ofType.website)
                                     #foreach($b in $w.children.ofType.branch)
                                     <li role="presentation" class="list-item select-website">
-                                        <a href="$page.href?websiteBranch=$b.repository.name/$b.name" class="branch noclear">$b.repository.name/$b.name</a>
+                                        <a href="$page.href?websiteBranch=$b.repository.name/$b.name#panel_pay-tab" class="branch noclear">$b.repository.name/$b.name</a>
                                     </li>
                                     #end
                                     #end
@@ -107,7 +107,7 @@
                                 #foreach($w in $page.find("/websites").children.ofType.website)
                                 #foreach($b in $w.children.ofType.branch)
                                 <li role="presentation" class="list-item select-website">
-                                    <a href="$page.href?websiteBranch=$b.repository.name/$b.name" class="branch noclear">$b.repository.name/$b.name</a>
+                                    <a href="$page.href?websiteBranch=$b.repository.name/$b.name#panel_pay-tab" class="branch noclear">$b.repository.name/$b.name</a>
                                 </li>
                                 #end
                                 #end
@@ -262,13 +262,6 @@
 
         <script type="text/javascript">
             $(document).ready(function () {
-                $("body").on("click", ".select-website", function (e) {
-                    e.preventDefault();
-                    flog("reload");
-                    $("#paymentDetails").reloadFragment({
-                        url: $(e.target).attr("href")
-                    });
-                });
                 $("body").on('click', '#paymentBtn', function (e) {
                     e.preventDefault();
 
