@@ -136,10 +136,20 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="domainName" class="col-sm-3 control-label">Redirect to</label>
+                            <label for="redirectTo" class="col-sm-3 control-label">Redirect to</label>
                             <div class="col-sm-6">
                                 <input type="url" name="redirectTo" value="$!page.website.redirectTo" class="href form-control"/>
                                 <small>If you want visitors to this site to be immediately redirected elsewhere, enter the full address to redirect to here.</small>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="forceHttps" class="col-sm-3 control-label">Force HTTPS</label>
+                            <div class="col-sm-6">
+                                <select name="forceHttps" id="aliasTo" class="form-control">
+                                    $formatter.option(false, "No", $page.forceHttps)
+                                    $formatter.option(true, "Yes", $page.forceHttps)
+                                </select>
+                                <small>If you want visitors to this site to be forced to use HTTPS.</small>
                             </div>
                         </div>
                         <div class="form-group">
@@ -316,45 +326,9 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
                         </div>
                     </div><!-- /.modal -->                                    
 
-                    <div class="modal fade" id="viewWebsiteHttpsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="modal-title" id="myModalLabel">View HTTPS Configuration </h4>
-                        </div>
-                        <div class="modal-body">
-                            <form class="form-horizontal" method="" action=".">
-                                <tbody id="certificate-body">
-                                    <div class="form-group">
-                                        <label for="title" class="col-sm-3 control-label">Title</label>
-                                        <div class="col-sm-8">
-                                            <input type="text" class="form-control regex required" required="true" id="certTitle" name="certTitle"  />
-
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="certificateText" class="col-sm-3 control-label">Certificate Text</label>
-                                        <div class="col-sm-8">
-                                            <textarea id = "certificateText" name="certificateText" rows="8" class="form-control"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="privateKeyText" class="col-sm-3 control-label">Private Key Text </label>
-                                        <div class="col-sm-8">
-                                            <textarea id = "privateKeyText" name="privateKeyText" rows="8"  cols=30  class="form-control"></textarea>
-                                        </div>
-                                    </div>
-                                </tbody>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                            <!--button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Create</button-->
-                        </div>
-                    </div><!-- /.modal -->
-
-
                     <table id="certificate-types-table" class="table table-striped table-hover">
                         <colgroup>
+                            <col width="" />
                             <col width="" />
                             <col width="" />
                             <col width="" />
@@ -366,10 +340,11 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
                         <thead>
                             <tr>
                                 <th>Title</th>
-                                <th >Start Date</th>                                    
-                                <th >Expiry Date</th>
-                                <th >Created By</th>
-                                <th >Status</th>
+                                <th>Start Date</th>                                    
+                                <th>Expiry Date</th>
+                                <th  class="text-center">Private Key</th>
+                                <th>Created By</th>
+                                <th>Status</th>
                                 <th>Chain Certificates</th>
                                 <th class="action">Action</th>
                             </tr>
@@ -380,6 +355,11 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
                                 <td>$cer.title</td>
                                 <td>$formatter.formatDate($cer.startDate)</td>  
                                 <td>$formatter.formatDate($cer.expiryDate)</td>
+                                #if($cer.privateKeyText)
+                                <td class="text-center lead"><i style="color:green" class="fa fa-check-circle text-muted"></i></td>
+                                #else
+                                <td class="text-center lead"><i class="fa fa-exclamation-circle text-muted"></i></td>
+                                #end
                                 <td>$cer.createdBy.name</td>
                                 <td>
                                     <div class="$cer.status">
@@ -392,7 +372,7 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
                                 </td>
 
                                 <td>
-                                    <a class= "btn btn-sm btn-info" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample"><span class="badge">$cer.rootCertificates.size()</span> Modify</a>
+                                    <a class= "btn btn-sm btn-info" data-toggle="collapse" href="#rootCert-$cer.id" aria-expanded="false" aria-controls="rootCert-$cer.id"><span class="badge">$cer.rootCertificates.size()</span> Modify</a>
                                 </td>
 
                                 <td class="action">
@@ -403,16 +383,20 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
                                             <span class="sr-only">Toggle Dropdown</span>
                                         </button>
                                         <ul role="menu" class="dropdown-menu pull-right">
-                                            <li><a href="$cer.id" class="cert-view" data-toggle="modal" data-target="#viewWebsiteHttpsModal"><i class="fa fa-eye"></i> View </a></li>
                                             <li><a href="$cer.id" class="update_cert" data-toggle="modal" data-target="#modalUpdateCert">
-                                                    <span class="glyphicon glyphicon-edit"></span>
+                                                    <span class="glyphicon glyphicon-certificate"></span>
                                                     Certificate
                                                 </a></li>
                                             <li><a href="$cer.id" class="update_pk" data-toggle="modal" data-target="#modalUpdatePK">
-                                                    <span class="glyphicon glyphicon-edit"></span>
+                                                    <span class="fa fa-key"></span>
                                                     Private Key
                                                 </a></li>
-                                            <li><a href="#"  class = "center">-------------</a></li>
+                                            <li class="divider"></li>
+                                            <li><a href="#" data-certid="$cer.id" class="viewCreateCsr" data-toggle="modal" data-target="#genCsrModal">
+                                                    <span class="fa fa-ticket"></span>
+                                                    Create/View CSR
+                                                </a></li>
+                                            <li class="divider"></li>
                                             #if($cer.status == "A")
                                             <li><a href="$cer.id" class="cert-passivate" ><i class="glyphicon glyphicon-adjust"></i> Passivate</a></li>
                                             #else
@@ -425,19 +409,19 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="7">
-                                    <div class="collapse" id="collapseExample">
+                                <td colspan="14">
+                                    <div class="collapse accordian-body" id="rootCert-$cer.id">
                                         <div class="panel panel-default">
                                             <!-- Default panel contents -->
                                             <div class="panel-heading">Root & Intermediate Certificates</div>
                                             <div class="panel-body">
                                                 <button type="button" class="btn btn-sm btn-info btn-add-root-cert" data-certid="$cer.id"><i class="fa fa-plus"></i> Upload a new certificate</button>
                                             </div>
-
                                             <!-- Table -->
                                             <table class="table table-striped">
                                                 <colgroup>
                                                     <col width="100px" />
+                                                    <col/>
                                                     <col/>
                                                     <col/>
                                                     <col/>
@@ -608,6 +592,82 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
             <div class="modal-footer">
                 <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Update</button>
+            </div>
+        </div><!-- /.modal -->
+
+        <div class="modal fade" id="genCsrModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Certificate Request</h4>
+            </div>
+            <div class="modal-body">
+                <p class="well">Please fill in the details below</p>
+                <form method="POST" action="." class="form-horizontal">
+                    <div class="form-group">
+                        <input type="hidden" name="generateCsr" value="true" />
+                        <input type="hidden" name="certId" id="certId" value="" />
+                        <label class="control-label col-md-4" for="csr_cn">Common Name</label>
+                        <div class="col-md-8">
+                            <input type="text" name="csr_cn" id="csr_cn" placeholder="Common Name" class="required form-control" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-4" for="csr_ou">Organizational Unit</label>
+                        <div class="col-md-8">
+                            <input type="text" name="csr_ou" id="csr_ou" placeholder="Organizational Unit" class="required form-control" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-4" for="csr_o">Organization Name</label>
+                        <div class="col-md-8">
+                            <input type="text" name="csr_o" id="csr_o" placeholder="Organization Name" class="required form-control" />
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="control-label col-md-4" for="csr_l">Location</label>
+                        <div class="col-md-8">
+                            <input type="text" name="csr_l" id="csr_l" placeholder="Location" class="required form-control" />
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="control-label col-md-4" for="csr_st">State</label>
+                        <div class="col-md-8">
+                            <input type="text" name="csr_st" id="csr_st" placeholder="State" class="required form-control" />
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="control-label col-md-4" for="csr_c">Country</label>
+                        <div class="col-md-8">
+                            <select name="csr_c" id="csr_c" class="required form-control">
+                                #set($countryCodes = $formatter.countryCodes)
+                                #foreach($cc in $countryCodes.list)
+                                $formatter.option($cc.alpha2Code, $cc.englishShortName, false)
+                                #end
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="control-label col-md-4" for="csr_email">Email</label>
+                        <div class="col-md-8">
+                            <input type="text" name="csr_email" id="csr_email" placeholder="Email" class="email form-control" />
+                        </div>
+                    </div>
+                </form>
+                <div id="csrTextGroup" class="form-group">
+                    <div class="col-sm-12">
+                        <textarea id = "csrText" name="csrText" rows="12" class="form-control"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Create</button>
             </div>
         </div><!-- /.modal -->
 
@@ -793,7 +853,27 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
                     if (confirm("Are you sure you want to delete this certificate?")) {
                         deleteRootCert(certId, href)
                     }
-                    //deleteRootCert(certId, href);
+                });
+                
+                $("body").on('click', '.viewCreateCsr', function(e){
+                    e.preventDefault();
+                    var certId = $(this).data("certid");
+                    viewCsr(certId);
+                });
+                
+                $("#genCsrModal").find("form").forms({
+                    callback: function (resp) {
+                        flog("Saved Ok!");
+                        Msg.info(resp.messages[0]);
+                        var csrGroup = $("#csrTextGroup");
+                        var csr = csrGroup.find("#csrText");
+                        if (resp.data.csrText == "") {
+                            csrGroup.hide();
+                        } else {
+                            csrGroup.show();
+                            csr.val(resp.data.csrText);
+                        }
+                    }
                 });
             });
 
@@ -832,39 +912,6 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
                     $("#updateCertId").val(id);
                     $("#certificateTextUpdate").text();
                 });
-
-                $("#certificate-types-table").on("click", ".cert-view", function (e) {
-                    e.preventDefault();
-                    var id = $(e.target).closest("a").attr("href");
-                    viewCert(id);
-                });
-            }
-
-            function viewCert(id) {
-                $("#certTitle").val("");
-                $("#certificateText").text("");
-                $("#privateKeyText").text("");
-
-                $.ajax({
-                    type: 'POST',
-                    dataType: 'json',
-                    url: window.location.pathname,
-                    data: {
-                        viewCertId: id
-                    },
-                    success: function (resp) {
-                        flog("success", resp);
-
-                        $("#certTitle").val(resp.data.title).attr('readonly', true);
-                        $("#certificateText").text(resp.data.certificateText).attr('readonly', true);
-                        $("#privateKeyText").text(resp.data.privateKeyText).attr('readonly', true);
-                        $("#viewWebsiteHttpsModal").modal('show');
-                    },
-                    error: function (resp) {
-                        Msg.error("An error occured viewing the certificate");
-                    }
-                });
-
             }
 
             function updateCertStatus(id, status) {
@@ -886,6 +933,36 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
                 });
             }
 
+            function viewCsr(id) {
+                var certID = $("#certId");
+                var csr = $("#csrText");
+                var csrGroup = $("#csrTextGroup");
+                certID.val(id);
+                csr.val("");
+
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    url: window.location.pathname,
+                    data: {
+                        viewCsrId: id
+                    },
+                    success: function (resp) {
+                        flog("success", resp);
+                        if (resp.data.csrText == "") {
+                            csrGroup.hide();
+                        } else {
+                            csrGroup.show();
+                            csr.val(resp.data.csrText);
+                        }
+                        $("#genCsrModal").modal('show');
+                    },
+                    error: function (resp) {
+                        Msg.error("An error occured viewing the certificate");
+                    }
+                });
+
+            }
 
             function deleteCert(id) {
                 $.ajax({
@@ -904,7 +981,7 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
                     }
                 });
             }
-            
+
             function deleteRootCert(certId, rootCertid) {
                 $.ajax({
                     type: 'POST',
@@ -912,7 +989,7 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
                     url: window.location.pathname,
                     data: {
                         deleteRootCertId: rootCertid,
-                        certId : certId
+                        certId: certId
                     },
                     success: function (data) {
                         Msg.info("Deleted certificate");
