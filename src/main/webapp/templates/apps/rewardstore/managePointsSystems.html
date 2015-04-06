@@ -1,0 +1,108 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Manage Rewards</title>
+        <link href="manageReward.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="manageReward.js">//</script>
+    </head>
+    <body>
+        <section id="manageReward" class="MainContent">
+            <p class="clearfix">
+                <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#addRewardModal"><i class="fa fa-plus"></i> Add new competition or reward</button>
+                <a href="points/" class="pull-right btn btn-sm btn-info">Review points</a>
+            </p>
+            <div id="addRewardModal" class="modal fade">
+                <form action="." method="POST" class="addReward">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Add new reward</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <div class="errorHandler alert alert-danger no-display pageMessage">.</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="newTitle">Enter reward name</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" name="newTitle" id="newTitle" placeholder="Reward title" class="form-control required" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary btn-sm">Save changes</button>
+                    </div>
+                </form>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <colgroup>
+                                <col width="15%" />
+                                <col width="" />
+                                <col width="25%" />
+                                <col width="100px" />
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th class="status" rel="asc">Status</th>
+                                    <th class="title" rel="asc">Title</th>
+                                    <th>Entries number</th>
+                                    <th class="action"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                #foreach($r in $page.children.ofType.manageReward)
+                                <tr>
+                                    <td>
+                                        <div class="$r.StatusClass">
+                                            #if($r.StatusClass == "Active")
+                                            #set($status = "success")
+                                            #elseif($r.StatusClass == "Expired")
+                                            #set($status = "danger")
+                                            #elseif($r.StatusClass == "Fullfilled")
+                                            #set($status = "warning")
+                                            #else
+                                            #set($status = "default")
+                                            #end
+                                            <span class="label label-sm label-$status">$r.statusClass</span>
+                                        </div>
+                                    </td>
+                                    <td><a href="$r.name">$r.rewardTitle</a></td>
+                                    <td><a href="entries-${r.name}.html" class="entries">$r.numEntries entries</a></td>
+                                    <td class="action">
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="$r.name" class="btn btn-sm btn-primary btn-sm"> <i class="fa fa-edit"></i> Edit
+                                            </a>
+                                            <button class="btn btn-sm btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu pull-right" role="menu">
+                                                <li role="presentation">
+                                                    <a role="menuitem" tabindex="-1" href="$r.name" class="Edit EditReward"><i class="fa fa-edit"></i> Edit</a>
+                                                </li>
+                                                <li role="presentation">
+                                                    <a role="menuitem" tabindex="-1" href="$r.name" class="Delete DeleteReward"><i class="fa fa-times"></i> Delete</a>
+                                                </li>
+                                            </ul>
+                                        </div>                                                                               
+                                    </td>
+                                </tr>
+                                #end
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <script type="text/javascript">
+            $(function () {
+                initManageReward();
+            });
+        </script>
+    </body>
+</html>

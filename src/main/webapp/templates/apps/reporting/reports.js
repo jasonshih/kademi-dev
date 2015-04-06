@@ -4,7 +4,7 @@ $(function () {
     var itemsContainer = $('#items');
     var reportRange = $('#report-range');
 
-    reportRange.exist(function() {
+    reportRange.exist(function () {
         flog("init report range");
         reportRange.daterangepicker({
             format: 'DD/MM/YYYY', // YYYY-MM-DD
@@ -16,21 +16,65 @@ $(function () {
                 'This Year': [moment().startOf('year'), moment()],
             },
         },
-                function(start, end) {
+                function (start, end) {
                     flog('onChange', start, end);
-                    runReportWithDateRange(start, end, reportContainer, itemsContainer, window.location.pathname);
-                    updateDatedLinks();
+                    updateHref();
+                    runReportWithDateRange( reportContainer, itemsContainer);
                 }
         );
     });
+
+    $(".report").on("click", ".toggle-select-org", function (e) {
+        flog("click select toggle org");
+        e.preventDefault();
+        var a = $(e.target);
+        var id = a.attr("href");
+        if (a.hasClass("active")) {
+            a.removeClass("active");
+        } else {
+            a.addClass("active");
+        }
+        flog("toggle org", id, a);
+        updateHref();
+        runReportWithDateRange( reportContainer, itemsContainer);
+    });
+
+    var sIds = getParameterByName("ids");
+    var ids = sIds.split(",");
+    $.each(ids, function (i, n) {
+        if (n != "") {
+            flog("select active", $(".report a.toggle-select-org[href=" + n + "]"));
+            $(".report a.toggle-select-org[href=" + n + "]").addClass("active");
+        }
+    });
+
+    $('.report').on('hide.bs.dropdown', function () {
+        return false;
+    });
 });
 
-
-
-function updateDatedLinks() {
+function updateHref() {
+    var href = window.location.pathname + "?";
+    var ids = "";
+    $(".report .toggle-select-org.active").each(function (i, n) {
+        ids += $(n).attr("href") + ",";
+    });
+    href += "ids=" + ids;
     var reportRange = $('#report-range');
+    var arr = reportRange.val().split('-');
+    var startDate = '';
+    var finishDate = '';
+    if (arr.length > 0) {
+        startDate = arr[0].trim();
+    }
+    if (arr.length > 1) {
+        finishDate = arr[1];
+    }
 
-    $('a.dated').each(function(i, n) {
+    href += '&startDate=' + startDate + '&finishDate=' + finishDate;
+    history.pushState(null, null, href);
+
+    $('a.dated').each(function (i, n) {
         var target = $(n);
         var href = target.attr('href');
         log('href', href);
@@ -39,44 +83,53 @@ function updateDatedLinks() {
         if (pos > 0) {
             href = href.substring(0, pos);
         }
-        log('href2', href);
 
-        var arr = reportRange.val().split('-');
-        var data = {};
-        var startDate = '';
-        var finishDate = '';
-        if (arr.length > 0) {
-            startDate = arr[0].trim();
-        }
-        if (arr.length > 1) {
-            finishDate = arr[1];
-        }
-
-        href += '?startDate=' + startDate + '&finishDate=' + finishDate;
+        href += '?startDate=' + startDate + '&finishDate=' + finishDate + "&ids=" + ids;
         target.attr('href', href);
     });
+}
+
+function arrayContains(arr, obj) {
+    var i = arr.length;
+    while (i--) {
+        if (arr[i] == obj) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function removeFromArray(arr) {
+    var what, a = arguments, L = a.length, ax;
+    while (L > 1 && arr.length) {
+        what = a[--L];
+        while ((ax = arr.indexOf(what)) !== -1) {
+            arr.splice(ax, 1);
+        }
+    }
+    return arr;
+}
+
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+    var results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
 function runReport(startDate, reportContainer, itemsContainer, href) {
     runReportWithDateRange(startDate, null, reportContainer, itemsContainer, href);
 }
 
-function runReportWithDateRange(startDate, endDate, reportContainer, itemsContainer, href) {
-    flog('runReport', startDate, endDate);
+function runReportWithDateRange(reportContainer, itemsContainer) {
+    flog("runReportWithDateRange");
     $('.pageMessage').hide(100);
-
-    var data = {
-        startDate: formatDate(startDate),
-        finishDate: formatDate(endDate)
-    };
-    flog("data", data);
 
     $.ajax({
         type: "GET",
-        url: href,
+        url: window.location,
         dataType: 'json',
-        data: data,
-        success: function(resp) {
+        success: function (resp) {
             flog('response', resp.data);
 
             if (resp.data !== null && resp.data.data.length === 0) {
@@ -111,7 +164,7 @@ function showGraph(graphData, reportContainer, itemsContainer) {
                 if (graphData.itemFields) {
                     var table = $('<div class="table-responsive"><table class="table table-bordered table-striped table-hover table-condensed"><thead><tr></tr></thead><tbody><tr></tr></tbody></table></div>');
                     var trHeader = table.find('thead tr');
-                    $.each(graphData.itemFields, function(i, f) {
+                    $.each(graphData.itemFields, function (i, f) {
                         var td = $('<th>');
                         td.text(f);
                         trHeader.append(td);
@@ -119,10 +172,10 @@ function showGraph(graphData, reportContainer, itemsContainer) {
 
                     if (graphData.items) {
                         var tbody = table.find('tbody');
-                        $.each(graphData.items, function(i, item) {
+                        $.each(graphData.items, function (i, item) {
                             var tr = $('<tr>');
 //                            log('item', item);
-                            $.each(graphData.itemFields, function(i, f) {
+                            $.each(graphData.itemFields, function (i, f) {
 //                                log('field', f);
                                 var td = $('<td>');
                                 td.text(item[f]);
@@ -150,7 +203,7 @@ function showLine(reportContainer, graphData) {
         labels: graphData.labels,
         hideHover: true,
         xLabels: 'day',
-        dateFormat: function(x) {
+        dateFormat: function (x) {
             var dt = new Date(x).formatDDMMYYYY();
             //var dt = new Date(x).toString();
             //log('formatted date', x, dt, new Date(x).formatDDMMYYYY());

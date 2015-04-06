@@ -15,3 +15,9 @@
 .date-range {
 	width: 230px;
 }
+.toggle-select-org span {
+    display: none;
+}
+.toggle-select-org.active span {
+    display: inline;
+}

@@ -11,15 +11,17 @@
 	text-align: center;
 }
 
-#status-tools div > * {
+.status-tools .status-tool {
 	display: none;
+    width: 120px;
 }
 
-#status-tools.Draft div .Draft,
-#status-tools.Running div .Running,
-#status-tools.Completed div .Completed,
-#status-tools.Preparing div .Preparing {
-	display: inline-block;
+.status-tools.Draft .Draft,
+.status-tools.Running .Running,
+.status-tools.Completed .Completed,
+.status-tools.Cancelled .Cancelled,
+.status-tools.Preparing .Preparing {
+	display: inline-block !important;
 }
 
 .notsent,

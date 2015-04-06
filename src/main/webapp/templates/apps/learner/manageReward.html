@@ -3,11 +3,11 @@
         <title>Manage Reward</title>
         <link rel="stylesheet" type="text/css" href="manageReward.css" />
         <link rel="stylesheet" type="text/css" href="/static/quiz/quiz.css"  />
-       	<script type="text/javascript" src="manageReward.js">//</script>        
-        <script type="text/javascript" src="/static/inline-edit/inline-edit.js">//</script>        
+       	<script type="text/javascript" src="manageReward.js">//</script>
+        <script type="text/javascript" src="/static/inline-edit/inline-edit.js">//</script>
         <script type="text/javascript" src="/templates/themes/admin/prompt.js">//</script>
         <script type="text/javascript" src="/static/quiz/quiz.js">//</script>
-        <script type="text/javascript" src="/static/js/jquery-ui-1.10.3.custom.min.js">//</script>        
+        <script type="text/javascript" src="/static/js/jquery-ui-1.10.3.custom.min.js">//</script>
     </head>
     <body>
         <form action="" method="POST" class="manageRewardForm" role="form">
@@ -56,7 +56,7 @@
                                 <col width="20%" />
                                 <col width="80%" />
                             </colgroup>
-                            
+
                             <tbody>
                                 <tr>
                                     <td>Reward title</td>
@@ -84,32 +84,6 @@
                                 </tr>
 
                                 <tr>
-                                    <td>Points system</td>
-                                    <td>
-                                        <div class="form-group">
-                                            <div class="col-sm-4">
-                                                <select name="pointsType" class="pointsType form-control">
-                                                    $formatter.option("", "No points system", $page.reward.pointsType)
-                                                    #foreach($st in $page.pointsOptionsMap.entrySet())
-                                                    $formatter.option($st.key, $st.value, $page.pointsType)
-                                                    #end
-                                                </select>
-                                            </div>
-                                            <div class="col-sm-3">
-                                                <span class="pointsOrgType">To organisation type:</span>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <select name="pointsOrgType" class="pointsOrgType form-control" style="float: none">
-                                                    $formatter.option("", "[Any]", $page.pointsOrgType)
-                                                    #foreach($orgType in $page.orgTypes)
-                                                    $formatter.option($orgType.name, $orgType.displayName, $page.pointsOrgType)
-                                                    #end
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>     
-                                <tr>
                                     <td>One per recipient</td>
                                     <td>
                                         <div class="form-group">
@@ -124,7 +98,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                                
+
                                 <tr>
                                     <td>Valid for days</td>
                                     <td>
@@ -136,7 +110,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                                
+
                                 <tr>
                                     <td>Choose an expiry date</td>
                                     <td>
@@ -150,7 +124,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                                
+
                                 <tr>
                                     <td>Template</td>
                                     <td>
@@ -161,7 +135,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                </tr>                                
+                                </tr>
                                 <tr>
                                     <td>
                                         Notes
@@ -201,7 +175,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                </tr>							
+                                </tr>
                                 <!--
                                 <tr>
                                     <td>Email confirmation</td>
@@ -221,12 +195,12 @@
                                 -->
                             </tbody>
                         </table>
-                        
+
                     </div>
-                    
+
                     <div class="tab-pane Details" id="rewardContent">
                         <small><i>This copy will sit next to the image and tell the user about the competition or reward.</i></small>
-                        
+
                         <textarea cols="120" name="details" rows="10" class="htmleditor" placeholder="Enter the details here">$formatter.htmlEncode($page.details)</textarea>
                     </div>
 
@@ -242,7 +216,7 @@
 
                     <div class="tab-pane" id="entryForm">
                         <div class="well reset-margin-bottom">
-                            You can add entry form items here. Just enable the item you want and 
+                            You can add entry form items here. Just enable the item you want and
                             fill in its required fields.
                         </div>
                         <div class="entryFormItem">
@@ -358,7 +332,7 @@
                     #end
                 </div>
             </div>
-        </div>        
+        </div>
 
         <div id="modalAddRestriction" class="modal fade">
             <form class="addRestrictionForm">
@@ -385,17 +359,12 @@
                     <button type="submit" class="btn btn-primary btn-sm">Add</button>
                 </div>
             </form>
-        </div>        
+        </div>
 
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
         <script type="text/javascript">
             var quiz = $formatter.toJson($page.quiz);
             $(function () {
-                $("select.pointsType").click(function () {
-                    showHidePointsOrgType();
-                });
-                showHidePointsOrgType();
-
                 initEditReward(quiz);
                 //function to initiate bootstrap-datepicker
                 $('.date-picker').datepicker({
@@ -403,14 +372,6 @@
                 });
                 $('.TabNav a:first').tab('show');
             });
-
-            function showHidePointsOrgType() {
-                if ($("select.pointsType").val() == "POINTS_ORG") {
-                    $(".pointsOrgType").show();
-                } else {
-                    $(".pointsOrgType").hide();
-                }
-            }
         </script>
     </body>
 </html>
