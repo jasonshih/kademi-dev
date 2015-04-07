@@ -84,6 +84,8 @@ function prepareQuizForSave(quizWrapper, data) {
         data.order = quizWrapper.find('input[name=order]').val();
         data.maxAttempts = quizWrapper.find('input[name=maxAttempts]').val();
         data.passMarkPerc = quizWrapper.find('input[name=passMarkPerc]').val();
+        data.passMarkPerc = quizWrapper.find('input[name=passMarkPerc]').val();
+        data.passMarkPerc = quizWrapper.find('input[name=passMarkPerc]').val();
     } else {
         data = {
             pageName: quizWrapper.find('input[name=pageName]').val(),
@@ -281,20 +283,20 @@ function ensureOneEmptyRadio(ol) {
     addRadioToMulti(ol);
 }
 
-function addRadioToMulti(ol) {    
+function addRadioToMulti(ol) {
     var question = ol.closest('li').attr('class');
     flog('addRadioToMulti', ol, question);
     var answerId = Math.floor(Math.random() * 1000000);
     var li = $('<li></li>');
     li.append($('<input type="radio" id="answer_' + answerId + '" value="' + answerId + '"/>'));
-    li.append($('<label for="answer_' + answerId + '">[Enter answer text here]</label>'));    
+    li.append($('<label for="answer_' + answerId + '">[Enter answer text here]</label>'));
     ol.append(li);
-    
+
     // Do this after appending
     var inputs = li.closest("ol").find('input');
     flog("Set name!", inputs, question);
     inputs.attr('name', question); // make the name of all radios the question
-    
+
 }
 
 /**
