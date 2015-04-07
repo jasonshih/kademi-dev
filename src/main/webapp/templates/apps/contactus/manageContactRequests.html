@@ -69,6 +69,8 @@
                                         </button>
                                         <ul role="menu" class="dropdown-menu pull-right">
                                             <li><a class="acknowledge" href="$cr.id"><i class="glyphicon glyphicon-ok"></i> Acknowledge</a></li>
+                                            <li class="divider"></li>
+                                            <li><a class="delete" href="$cr.id" data-email="$cr.email"><i class="fa fa-times"></i> Delete</a></li>
                                         </ul>
                                     </div>
                                 </td>
@@ -113,6 +115,19 @@
                 });
                 initAcknowledge();
                 initViewAck();
+                
+                $('body').on('click', '.delete', function(e){
+                    e.preventDefault();
+                    var button = $(this);
+                    var href = window.location.pathname + button.attr('href');
+                    var email = button.data("email");
+                    var tr = button.closest("tr");
+                    flog(href, email, tr);
+                    confirmDelete(href, email, function(){
+                        tr.remove();
+                        Msg.info("Deleted " + email + " successfully");
+                    });
+                });
             });
 
             function doSearch(startDate, endDate, label, viewAck) {
