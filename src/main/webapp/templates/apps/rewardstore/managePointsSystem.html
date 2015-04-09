@@ -3,14 +3,14 @@
         <title>Manage Reward</title>
         <link rel="stylesheet" type="text/css" href="manageReward.css" />
         <link rel="stylesheet" type="text/css" href="/static/quiz/quiz.css"  />
-       	<script type="text/javascript" src="manageReward.js">//</script>
+       	<script type="text/javascript" src="managePointsSystem.js">//</script>
         <script type="text/javascript" src="/static/inline-edit/inline-edit.js">//</script>
         <script type="text/javascript" src="/templates/themes/admin/prompt.js">//</script>
         <script type="text/javascript" src="/static/quiz/quiz.js">//</script>
         <script type="text/javascript" src="/static/js/jquery-ui-1.10.3.custom.min.js">//</script>
     </head>
     <body>
-        <form action="" method="POST" class="manageRewardForm" role="form">
+        <form action="" method="POST" class="managePointsSystem" role="form">
             <div id="manageReward" class="MainContent tabbable">
                 <div class="clearfix">
                     <div class="pull-right">
@@ -110,6 +110,17 @@
                     showHidePointsOrgType();
                 });
                 showHidePointsOrgType();
+                $("form.managePointsSystem").forms({
+                    callback: function (resp) {
+                        flog("done");
+                        if( resp.status ) {
+                            Msg.info("Saved");
+                        } else {
+                            Msg.error("Sorry, couldnt save");
+                        }
+
+                    }
+                });
             });
 
             function showHidePointsOrgType() {
