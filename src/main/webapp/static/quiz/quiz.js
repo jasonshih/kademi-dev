@@ -4,6 +4,8 @@ function loadQuizEditor(modal, data) {
     flog("loadQuizEditor. Data=", data);
     modal.find("input[name=maxAttempts]").val( data.maxAttempts );
     modal.find("input[name=passMarkPerc]").val( data.passMarkPerc );
+    modal.find("select[name=batchMode]").val( data.batchMode );
+    modal.find("input[name=batchSize]").val( data.batchSize );
     modal.find('#quiz-questions').html(data.body);
     var olQuiz = modal.find('ol.quiz');
     if (olQuiz.length === 0) {
@@ -83,8 +85,8 @@ function prepareQuizForSave(quizWrapper, data) {
         data.template = quizWrapper.find('input[name=template]').val();
         data.order = quizWrapper.find('input[name=order]').val();
         data.maxAttempts = quizWrapper.find('input[name=maxAttempts]').val();
-        data.passMarkPerc = quizWrapper.find('input[name=passMarkPerc]').val();
-        data.passMarkPerc = quizWrapper.find('input[name=passMarkPerc]').val();
+        data.batchMode = quizWrapper.find('select[name=batchMode]').val();
+        data.batchSize = quizWrapper.find('input[name=batchSize]').val();
         data.passMarkPerc = quizWrapper.find('input[name=passMarkPerc]').val();
     } else {
         data = {
@@ -93,6 +95,8 @@ function prepareQuizForSave(quizWrapper, data) {
             template: quizWrapper.find('input[name=template]').val(),
             order: quizWrapper.find('input[name=order]').val(),
             maxAttempts: quizWrapper.find('input[name=maxAttempts]').val(),
+            batchMode : quizWrapper.find('select[name=batchMode]').val(),
+            batchSize : quizWrapper.find('input[name=batchSize]').val(),
             passMarkPerc: quizWrapper.find('input[name=passMarkPerc]').val()
         };
     }
