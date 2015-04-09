@@ -27,24 +27,24 @@
                             <col width="" />
                             <col width=""/>
                             <col width="140px" />
-                            <col data-sort="false" width="60px" />
+                            <col width="60px" />
                         </colgroup>
                         <thead>
                             <tr>
                                 <th>Recipient</th>
                                 <th>Message</th>
                                 <th>Provider</th>
-                                <th>Date</th>
+                                <th class="text-center">Date</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
-                            #foreach($e in $page.smsHistory)
-                            <tr>
+                            #foreach($e in $page.children)
+                            <tr>$formatter.getCountryCodeOfOrg()
                                 <td>$e.smsRecipient.formattedName</td>
                                 <td>$e.smsMsg</td>
-                                <td>$e.providerAppId</td>
-                                <td><abbr title="$formatter.formatDateISO8601($e.createdDate)" class="timeago">$!e.createdDate</abbr></td>
+                                <td>$e.providerName</td>
+                                <td class="text-center"><abbr title="$formatter.formatDateISO8601($e.createdDate)" class="timeago">$!e.createdDate</abbr></td>
                                 <td>
                                     #if( $e.sendStatus == 'r' )
                                     <p class="label label-warning">
