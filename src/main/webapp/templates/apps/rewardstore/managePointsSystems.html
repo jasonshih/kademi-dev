@@ -7,7 +7,7 @@
     <body>
         <section id="manageReward" class="MainContent">
             <p class="clearfix">
-                <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#addRewardModal"><i class="fa fa-plus"></i> Add new competition or reward</button>
+                <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#addRewardModal"><i class="fa fa-plus"></i> Add new points system</button>
                 <a href="points/" class="pull-right btn btn-sm btn-info">Review points</a>
             </p>
             <div id="addRewardModal" class="modal fade">
@@ -42,38 +42,22 @@
                     <div class="table-responsive">
                         <table class="table table-striped table-hover">
                             <colgroup>
-                                <col width="15%" />
                                 <col width="" />
                                 <col width="25%" />
                                 <col width="100px" />
                             </colgroup>
                             <thead>
                                 <tr>
-                                    <th class="status" rel="asc">Status</th>
                                     <th class="title" rel="asc">Title</th>
-                                    <th>Entries number</th>
+                                    <th>Total points</th>
                                     <th class="action"></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 #foreach($r in $page.children.ofType.manageReward)
                                 <tr>
-                                    <td>
-                                        <div class="$r.StatusClass">
-                                            #if($r.StatusClass == "Active")
-                                            #set($status = "success")
-                                            #elseif($r.StatusClass == "Expired")
-                                            #set($status = "danger")
-                                            #elseif($r.StatusClass == "Fullfilled")
-                                            #set($status = "warning")
-                                            #else
-                                            #set($status = "default")
-                                            #end
-                                            <span class="label label-sm label-$status">$r.statusClass</span>
-                                        </div>
-                                    </td>
                                     <td><a href="$r.name">$r.rewardTitle</a></td>
-                                    <td><a href="entries-${r.name}.html" class="entries">$r.numEntries entries</a></td>
+                                    <td>$r.totalPoints points</td>
                                     <td class="action">
                                         <div class="btn-group btn-group-sm">
                                             <a href="$r.name" class="btn btn-sm btn-primary btn-sm"> <i class="fa fa-edit"></i> Edit

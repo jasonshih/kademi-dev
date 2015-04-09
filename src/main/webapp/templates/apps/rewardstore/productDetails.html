@@ -12,7 +12,7 @@
                         $page.title
                         <a href="$page.href" class="pull-right btn-sm btn btn-primary cart-add">
                             <span class="glyphicon glyphicon-shopping-cart"></span>
-                            Add to cart                            
+                            Add to cart
                         </a>
                     </h2>
                     <div class="productNotes">$!page.description</div>
@@ -24,12 +24,16 @@
                             <img style="width:100%" src="$page.primaryImageHref" />
                         </a>
                         #end
-                        <span class="label label-success priceLabel">$page.productPurchaseCost Points</span>                            
+                        <span class="label label-success priceLabel">
+                            #if( $page.productPurchaseCost )
+                            $page.productPurchaseCost Points
+                            #end
+                        </span>
                     </div>
                     #portlets("productDetailsSidebar")
-                </div>        
+                </div>
             </div>
-            #if( $page.myOrders.size() gt 0 )            
+            #if( $page.myOrders.size() gt 0 )
             <div class="row">
                 <h4>My Past Orders</h4>
                 <div class="table-responsive">
@@ -59,7 +63,7 @@
                     </table>
                 </div>
             </div>
-            #end            
+            #end
 
             <script type="text/javascript">
                 $(function () {

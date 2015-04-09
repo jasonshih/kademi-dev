@@ -52,9 +52,9 @@
             </div>
             #end
         </div> <!-- end repo and branch selection -->
-        
+
         <br/><br/>
-        
+
         <div class="well">
             <p>
             If the search index for a repository becomes out of date and inconsistent with the content,
@@ -63,7 +63,7 @@
             <p>
                 This will not normally be required.
             </p>
-            
+
             <h4>Please confirm you are on the correct repository before proceeding:</h4>
             <p>
                 Repository: <b>$page.closest("repository").name</b>
@@ -76,9 +76,29 @@
 	            <form method="post" action="" class="form-horizontal" role="form">
 	                <button class="btn btn-warning btn-lg btn-reindex btn-block"><i class="fa fa-arrow-circle-right"></i> <span class="lbl-reindex-action">Re-index</span> : $page.closest("repository").name</button>
 	            </form>
-	        </div>            
+	        </div>
         </div>
-        
+
+        <h2>Indexes</h2>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>No. items</th>
+                </tr>
+            </thead>
+            <tbody>
+                #foreach($index in $page.children)
+                <tr>
+                    <td>
+                        <a href="$index.name">$index.name</a>
+                    </td>
+                    <td>$index.numItems</td>
+                </tr>
+                #end
+            </tbody>
+        </table>
+
         <script type="text/javascript">
             $(document).ready(function() {
                 initReindexForms();
