@@ -4,11 +4,11 @@
         <style>
             .DateTimeIcon {
                 display: none;
-            }       
+            }
             .upload-results {
                 display: none;
             }
-        </style>        
+        </style>
     </head>
     <body class="">
 
@@ -22,14 +22,17 @@
                     <span class="fa fa-dollar"></span>
                     Allocate rewards
                 </button>
-                <button class="btn btn-sm btn-primary" type="submit">Save changes</button>
+                <button class="btn btn-sm btn-success" type="submit">
+                    <span class="fa fa-save"></span>
+                    Save changes
+                </button>
             </div>
 
             <div class="tabbable">
                 <ul class="nav nav-tabs tab-bricky">
                     <li><a data-toggle="tab" href="#general">General</a></li>
                     <li><a data-toggle="tab" href="#groups">Groups</a></li>
-                    <li><a data-toggle="tab" href="#levels">Levels</a></li>                    
+                    <li><a data-toggle="tab" href="#levels">Rewards & Levels</a></li>
                     <li><a data-toggle="tab" href="#criteria">Criteria</a></li>
                     <li><a data-toggle="tab" href="#notes">Notes</a></li>
                     <li><a data-toggle="tab" href="#history">History</a></li>
@@ -51,9 +54,112 @@
                         </div>
 
                         <div class="form-group">
+                            <label class="control-label col-md-3" for="aggregation">
+                                Aggregation
+                                <small>How should values be merged over the KPI period</small>
+                            </label>
+                            <div class="col-md-8">
+                                <select name="aggregation" id="aggregation" class="form-control required" required="true" >
+                                    <option value="">[Not selected]</option>
+                                    #foreach($agg in $page.aggregationTypes.entrySet() )
+                                    $formatter.option($agg.key, $agg.value, $page.kpi.aggregation)
+                                    #end
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="notes">
+                                Aggregation period
+                                <small>Over what period should criteria be assessed?</small></label>
+                            <div class="col-md-3 col-sm-4 col-xs-12">
+                                <div class="input-group pull-left">
+                                    <input type="text" class="text-center form-control" value="$!page.kpi.periodMultiples" name="periodMultiples" />
+                                    <div class="input-group-btn">
+                                        <button data-toggle="dropdown" class="btn btn-default dropdown-toggle timer-unit" type="button">$!page.kpi.frequency <span class="caret"></span></button>
+                                        <ul role="menu" class="dropdown-menu pull-right timer-units">
+                                            #foreach($unit in $page.allFrequencies)
+                                            <li><a href="#">$unit</a></li>
+                                            #end
+                                        </ul>
+                                    </div>
+                                    <input type="hidden" name="frequency" class="timer-unit" value="$!page.kpi.frequency"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="searchUp">
+                                Search Up
+                                <small>Select true for data where more is better (ie sales), and select false when less is better (ie num complaints)</small>
+                            </label>
+                            <div class="col-md-8">
+                                <select name="searchUp" id="searchUp" class="form-control required" >
+                                    $formatter.option("false", "No - search down because less is better", $page.searchUp)
+                                    $formatter.option("true", "Yes - search up because more is better", $page.searchUp)
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="orderingField">
+                                Ordering
+                                <small>In what order should the KPI's be listed</small>
+                            </label>
+                            <div class="col-md-8">
+                                <input type="text" name="orderingField" placeholder="Ordering" value="$!page.orderingField" class="form-control numeric" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="aggregation">
+                                Start date
+                                <small>Date of the first assessment period</small>
+                            </label>
+                            <div class="col-md-8">
+                                <div class="col-sm-5">
+                                    <div class="input-group">
+                                        <input type="text" name="startDate" placeholder="Start date" data-format="DD/MM/YYYY" value="$formatter.formatDate($!page.kpi.startDate)" class="form-control DateTime" />
+                                        <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End content of General tab -->
+                    <div id="groups" class="tab-pane">  <!-- groups -->
+                        <div class="alert alert-info">
+                            <p>The KPI will only users who belong to ALL of the selected groups</p>
+                        </div>
+                        <table class="">
+                            #foreach($g in $page.allGroups)
+                            <tr>
+                                <td>
+                                    <div class="col-sm-offset-3">
+                                        <label class="checkbox-inline">
+                                            $formatter.checkbox("appliesToGroupIds", "appliesToGroupIds", $page.isSelected($g), $g.id ) $g.name
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+                            #end
+                        </table>
+                    </div> <!-- end groups -->
+
+                    <div id="notes" class="tab-pane">  <!-- notes -->
+                        <small>For internal use.</small>
+                        <textarea cols="100" name="notes" id="notes" rows="20" placeholder="" class="form-control">$!page.kpi.notes</textarea>
+                    </div> <!-- end notes -->
+
+                    <div id="criteria" class="tab-pane">  <!-- criteria -->
+                        <small>Advanced: additional criteria rules as XML</small>
+                        <textarea cols="100" name="extraCriteria" id="extraCriteria" rows="20" placeholder="" class="form-control">$!page.kpi.extraCriteria</textarea>
+                    </div> <!-- end criteria -->
+
+                    <div id="levels" class="tab-pane"> <!-- levels -->
+                        <div class="form-group">
                             <label class="control-label col-md-3" for="reward">
                                 Reward
-                                <small>Allocate points to this reward</small>
                             </label>
                             <div class="col-md-8">
                                 <select name="reward" id="reward" class="form-control" >
@@ -82,110 +188,28 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label class="control-label col-md-3" for="aggregation">
-                                Aggregation
-                                <small>How should values be merged over the KPI period</small>
-                            </label>
-                            <div class="col-md-8">
-                                <select name="aggregation" id="aggregation" class="form-control required" required="true" >
-                                    <option value="">[Not selected]</option>
-                                    #foreach($agg in $page.aggregationTypes.entrySet() )
-                                    $formatter.option($agg.key, $agg.value, $page.kpi.aggregation)
-                                    #end
-                                </select>                                
+                        <div class="well">
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="reward">
+                                    Top achievers
+                                    <small>Allocate points to the top achievers in this KPI</small>
+                                </label>
+                                <div class="col-md-8">
+                                    <input type="text" name="numTopAchievers" id="numTopAchievers" value="$!page.kpi.numTopAchievers" placeholder="How many of the top achievers" class="form-control"  />
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="form-group">
-                            <label class="control-label col-md-3" for="notes">
-                                Aggregation period
-                                <small>Over what period should criteria be assessed?</small></label>
-                            <div class="col-md-3 col-sm-4 col-xs-12">
-                                <div class="input-group pull-left">
-                                    <input type="text" class="text-center form-control" value="$!page.kpi.periodMultiples" name="periodMultiples" />
-                                    <div class="input-group-btn">
-                                        <button data-toggle="dropdown" class="btn btn-default dropdown-toggle timer-unit" type="button">$!page.kpi.frequency <span class="caret"></span></button>
-                                        <ul role="menu" class="dropdown-menu pull-right timer-units">
-                                            #foreach($unit in $page.allFrequencies)
-                                            <li><a href="#">$unit</a></li>
-                                            #end                                                            
-                                        </ul>
-                                    </div>       
-                                    <input type="hidden" name="frequency" class="timer-unit" value="$!page.kpi.frequency"/>
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="reward">
+                                    Points
+                                    <small>MVEL expression for how many points to award top achievers</small>
+                                </label>
+                                <div class="col-md-8">
+                                    <input type="text" name="topAchieverPointsExpr" id="topAchieverPointsExpr" value="$!page.kpi.topAchieverPointsExpr" placeholder="A number or expression for the number of points to award" class="form-control"  />
                                 </div>
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label class="control-label col-md-3" for="searchUp">
-                                Search Up
-                                <small>Select true for data where more is better (ie sales), and select false when less is better (ie num complaints)</small>
-                            </label>
-                            <div class="col-md-8">
-                                <select name="searchUp" id="searchUp" class="form-control required" >
-                                    $formatter.option("false", "No - search down because less is better", $page.searchUp)
-                                    $formatter.option("true", "Yes - search up because more is better", $page.searchUp)
-                                </select>                                
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="control-label col-md-3" for="orderingField">
-                                Ordering
-                                <small>In what order should the KPI's be listed</small>
-                            </label>
-                            <div class="col-md-8">
-                                <input type="text" name="orderingField" placeholder="Ordering" value="$!page.orderingField" class="form-control numeric" />                               
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="control-label col-md-3" for="aggregation">
-                                Start date
-                                <small>Date of the first assessment period</small>
-                            </label>
-                            <div class="col-md-8">
-                                <div class="col-sm-5">
-                                    <div class="input-group">
-                                        <input type="text" name="startDate" placeholder="Start date" data-format="DD/MM/YYYY" value="$formatter.formatDate($!page.kpi.startDate)" class="form-control DateTime" />
-                                        <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>                        
-                    </div>
-                    <!-- End content of General tab -->                    
-                    <div id="groups" class="tab-pane">  <!-- groups -->
-                        <div class="alert alert-info">
-                            <p>The KPI will only users who belong to ALL of the selected groups</p>
-                        </div>
-                        <table class="">
-                            #foreach($g in $page.allGroups)
-                            <tr>
-                                <td>
-                                    <div class="col-sm-offset-3">
-                                        <label class="checkbox-inline">
-                                            $formatter.checkbox("appliesToGroupIds", "appliesToGroupIds", $page.isSelected($g), $g.id ) $g.name
-                                        </label>
-                                    </div>
-                                </td>
-                            </tr>
-                            #end
-                        </table>                        
-                    </div> <!-- end groups -->
-
-                    <div id="notes" class="tab-pane">  <!-- notes -->
-                        <small>For internal use.</small>
-                        <textarea cols="100" name="notes" id="notes" rows="20" placeholder="" class="form-control">$!page.kpi.notes</textarea>
-                    </div> <!-- end notes -->           
-
-                    <div id="criteria" class="tab-pane">  <!-- criteria -->
-                        <small>Advanced: additional criteria rules as XML</small>
-                        <textarea cols="100" name="extraCriteria" id="extraCriteria" rows="20" placeholder="" class="form-control">$!page.kpi.extraCriteria</textarea>
-                    </div> <!-- end criteria -->                       
-
-                    <div id="levels" class="tab-pane"> <!-- levels -->
                         <div class="alert alert-info">
                             <p>Create levels for this data series to reward your users when they achieve certain threshholds.</p>
                         </div>
@@ -203,7 +227,7 @@
                                     <li class="divider"></li>
                                     <li><a href="kpiLevels.csv" title="exportCSV"><i class="glyphicon glyphicon-download"></i> Export CSV</a></li>
                                 </ul>
-                            </div> 
+                            </div>
                         </div>
                         <hr/>
                         <table class="table table-bordered table-striped">
@@ -263,7 +287,7 @@
                                 <tr>
                                     <td colspan="3">There are no KPI levels defined yet</td>
                                 </tr>
-                                #end                                
+                                #end
                             </tbody>
                         </table>
                     </div>
@@ -288,7 +312,7 @@
                                 <col width="" />
                                 <col width="" />
                                 <col data-sort="false" width="30px" />
-                            </colgroup>                            
+                            </colgroup>
                             <thead>
                                 <tr>
                                     <th>Start</th>
@@ -304,7 +328,7 @@
                                     <td>$period.endDate</td>
                                     <td>$period.createdDate</td>
                                     <td>
-                                        <input type="checkbox" name="deletePeriodId" value="$period.id"/>
+                                        <input type="checkbox" class="deletePeriodId" value="$period.id"/>
                                     </td>
                                 </tr>
                                 #end
@@ -375,11 +399,11 @@
                 <br />
                 <div class="upload-results">
                     <p>
-                        <strong>No. inserted:</strong> 
-                        <span class="badge badge-success num-inserted">-</span> 
-                        <strong>No. updated:</strong> 
-                        <span class="badge badge-success num-updated">-</span> 
-                        <strong>Unmatched rows:</strong> 
+                        <strong>No. inserted:</strong>
+                        <span class="badge badge-success num-inserted">-</span>
+                        <strong>No. updated:</strong>
+                        <span class="badge badge-success num-updated">-</span>
+                        <strong>Unmatched rows:</strong>
                         <span class="badge badge-danger num-unmatched">-</span>
                     </p>
                     <div class="table-responsive">
@@ -551,7 +575,7 @@
                 $(".periods-delete").click(function (e) {
                     var node = $(e.target);
                     flog("initRemovePeriods", $("#periods-table"));
-                    var checkBoxes = $("#table-periods").find('tbody input[name=deletePeriodId]:checked');
+                    var checkBoxes = $("#table-periods").find('tbody input.deletePeriodId:checked');
                     if (checkBoxes.length === 0) {
                         Msg.error("Please select the periods you want to remove by clicking the checkboxs to the right");
                     } else {
