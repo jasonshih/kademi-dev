@@ -27,6 +27,7 @@
                     <ul class="TabNav nav nav-tabs tab-bricky pull-left">
                         <li class=""><a href="#details" data-toggle="tab">Details</a></li>
                         <li class=""><a href="#rewardContent" data-toggle="tab">Content</a></li>
+                        <li class=""><a href="#groups" data-toggle="tab">Groups</a></li>
                     </ul>
                 </div>
                 <div class="tab-content">
@@ -97,7 +98,15 @@
                         <textarea cols="120" name="details" rows="10" class="htmleditor" placeholder="Enter the details here">$formatter.htmlEncode($page.details)</textarea>
                     </div>
 
-
+                    <div class="tab-pane" id="groups">
+                        <button class="btn btn-sm btn-primary Add AddGroup" data-toggle="modal" data-target="#modalGroup"><i class="fa fa-plus"></i> Add/remove groups</button>
+                        <div class="well margin-top-10">Add user groups to rewards to allow these users to directly enter the competition. These users will see the reward on their dashboard when it is active.</div>
+                        <div class="GroupList">
+                            #foreach($g in $page.selectedGroups)
+                            <button class="btn btn-sm btn-default reset-margin-bottom" type="button">$g.name</button>
+                            #end
+                        </div>
+                    </div>
                 </div>
             </div>
         </form>

@@ -1,0 +1,84 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Manage Index</title>
+        <script type="text/javascript" src="search.js">//</script>
+    </head>
+    <body>
+        <h1>$page.name</h1>
+
+        #set($items = $page.items)
+
+        #if( $page.error )
+        <div class="alert alert-warning">$page.error</div>
+        #end
+
+        <form method="POST" action="$page.href">
+            <textarea name="q" class="form-control" placeholder="Query">$!request.params.q</textarea>
+            <textarea name="aggs" class="form-control" placeholder="Aggregations">$!request.params.aggs</textarea>
+            <input type="text" name="fields" placeholder="Fields to display" value="$!request.params.fields" class="form-control" />
+            <br/>
+            <button type="submit" class="btn btn-info col-md-4">Query</button>
+        </form>
+
+        <br style="clear: both"/>
+        <hr style="clearfix"/>
+
+        #if( $items.aggregations )
+        <h2>Aggregations</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <td>Item</td>
+                    <td>Fields</td>
+                </tr>
+            </thead>
+            <tbody>
+                #foreach($entry in $items.aggregations.asMap.entrySet())
+                <tr>
+                    <th>$entry.key</th>
+                    <th></th>
+                </tr>
+                    #if( $entry.value.buckets )
+                    #foreach($bucket in $entry.value.buckets)
+                    <tr>
+                        <td>$bucket.key</td>
+                        <td>$bucket.docCount</td>
+                    </tr>
+                    #end
+                    #else
+                    #end
+
+                #end
+            </tbody>
+        </table>
+
+        #end
+        <h2>Search items</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <td>Item</td>
+                    <td>Fields</td>
+                </tr>
+            </thead>
+            <tbody>
+                #foreach($hit in $items.hits.hits)
+                <tr>
+                    <td>$hit.id</td>
+                    <td>
+                        #foreach($field in $hit.fields.entrySet())
+                        $field.key=$field.value.value,
+                        #end
+                    </td>
+                </tr>
+                #end
+            </tbody>
+        </table>
+
+        <script type="text/javascript">
+            $(document).ready(function() {
+
+            });
+        </script>
+    </body>
+</html>

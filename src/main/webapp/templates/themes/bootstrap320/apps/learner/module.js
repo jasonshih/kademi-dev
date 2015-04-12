@@ -72,6 +72,17 @@ function initModuleNav(pStatUrl, pFinished) {
     });
 }
 
+function tidyUpQuiz() {
+    // Hack: Need to hide quiz elements which have quiz editor help text
+    $("ol.quiz li p").each(function(i, n) {
+        var node = $(n);
+        var text = node.text();
+        if (text.startsWith("[")) {
+            node.hide();
+        }
+    });
+}
+
 function initPageNav() {
 //    prettyPrint(); // TODO: hook up seperately
     $(".pages a")
@@ -94,14 +105,7 @@ function initPageNav() {
         }
     });
 
-    // Hack: Need to hide quiz elements which have quiz editor help text
-    $("ol.quiz li p").each(function(i, n) {
-        var node = $(n);
-        var text = node.text();
-        if (text.startsWith("[")) {
-            node.hide();
-        }
-    });
+    tidyUpQuiz();
 
     if (!isCompletable || currentPageIndex() > progressPage) {
         flog("show when complete");
@@ -896,11 +900,16 @@ function isQuizComplete(e) {
                     $(e.target).click();
                 } else {
                     flog('quiz validated returned false', response);
-                    alert("Please check your answers");
-                    $.each(response.fieldMessages, function(i, n) {
-                        var inp = quiz.find("li." + n.field);
-                        inp.addClass("error");
-                    });
+                    if( response.data && response.data.nextQuizBatch ) {
+                        quiz.find("ol.quiz").replaceWith(response.data.nextQuizBatch);
+                        tidyUpQuiz();
+                    } else {
+                        alert("Please check your answers");
+                        $.each(response.fieldMessages, function(i, n) {
+                            var inp = quiz.find("li." + n.field);
+                            inp.addClass("error");
+                        });
+                    }
                 }
             },
             error: function(response) {
