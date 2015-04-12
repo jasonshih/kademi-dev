@@ -40,8 +40,8 @@
                         </thead>
                         <tbody>
                             #foreach($e in $page.children)
-                            <tr>$formatter.getCountryCodeOfOrg()
-                                <td>$e.smsRecipient.formattedName</td>
+                            <tr class="clickable" data-target="" data-href="$e.href">
+                                <td>$e.smsRecipient.phone</td>
                                 <td>$e.smsMsg</td>
                                 <td>$e.providerName</td>
                                 <td class="text-center"><abbr title="$formatter.formatDateISO8601($e.createdDate)" class="timeago">$!e.createdDate</abbr></td>
@@ -134,6 +134,16 @@
                                 doSearch(start, end);
                             }
                     );
+                });
+                
+                $('body').on('click', '.clickable', function(e){
+                    e.preventDefault();
+                    var row = $(this);
+                    var target = row.data('target');
+                    var href = row.data('href');
+                    flog(target, href);
+                    var aTag = $('<a target="'+target+'" href="'+href+'"></a>');
+                    aTag[0].click();
                 });
 
             });
