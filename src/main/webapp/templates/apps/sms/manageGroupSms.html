@@ -20,6 +20,7 @@
                             <col />
                             <col />
                             <col />
+                            <col />
                             <col style="width: 100px" />
                         </colgroup>
                         <thead>
@@ -28,6 +29,7 @@
                                 <th>Date</th>
                                 <th>Name</th>
                                 <th>No. sms's</th>
+                                <th>Sent</th>
                                 <th class="action"></th>
                             </tr>
                         </thead>
@@ -43,8 +45,6 @@
                                     <i class="fa fa-exclamation-circle text-warning"></i>
                                     #elseif($sms.status == "Completed" )
                                     <i class="fa fa-check-circle text-success"></i>
-                                    #elseif($sms.status == "Cancelled" )
-                                    <i class="fa fa-times text-danger"></i>
                                     #else
                                     $!sms.status
                                     #end
@@ -52,6 +52,7 @@
                                 <td>$formatter.formatDate($sms.statusDate)</td>
                                 <td>$formatter.htmlEncode($sms.title)</td>
                                 <td>$sms.numItems</td>
+                                <td>$sms.sentCount</td>
                                 <td class="action" style="">
                                     <div class="btn-group btn-group-sm">
                                         <a href="$sms.name" class="btn btn-sm btn-info btn-sm">
