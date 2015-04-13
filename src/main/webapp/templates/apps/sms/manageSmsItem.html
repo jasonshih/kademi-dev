@@ -2,91 +2,136 @@
     <head>
         <title>Sms Item</title>
     </head>
-    <body>        
-        <div id="sms-item-info">
-            <table class="table status-$page.sendStatus">
-                <colgroup>
-                    <col width="160px"/>
-                    <col/>
-                </colgroup>
-                <tbody>
-                    <tr>
-                        <td>Status</td>
-                        <td>
-                            #if( $page.sendStatus == 'r' )
-                            <p class="label label-warning">
-                                <span class="glyphicon glyphicon-repeat"></span>
-                                $page.statusText - $page.numAttempts
-                            </p>
-                            #elseif( $page.sendStatus == 's' )
-                            <p class="label label-success">
-                                <span class="glyphicon glyphicon-ok"></span>
-                                $page.statusText
-                            </p>
-                            #elseif( $page.sendStatus == 'p' )
-                            <p class="label label-warning">
-                                <span class="glyphicon glyphicon-time"></span>
-                                $page.statusText
-                            </p>
-                            #elseif( $page.sendStatus == 'q' )
-                            <p class="label label-warning">
-                                <span class="glyphicon glyphicon-time"></span>
-                                $page.statusText
-                            </p>
-                            #elseif( $page.sendStatus == 'i' )
-                            <p class="label label-warning">
-                                <span class="glyphicon glyphicon-time"></span>
-                                $page.statusText
-                            </p>
-                            #elseif( $page.sendStatus == 'sn' )
-                            <p class="label label-warning">
-                                <span class="glyphicon glyphicon-time"></span>
-                                $page.statusText
-                            </p>
-                            #elseif( $page.sendStatus == 'np' )
-                            <p class="label label-danger">
-                                <span class="glyphicon glyphicon-remove"></span>
-                                $page.statusText
-                            </p>
-                            #elseif( $page.sendStatus == 'd' )
-                            <p class="label label-success">
-                                <span class="glyphicon glyphicon-ok"></span>
-                                $page.statusText
-                            </p>
-                            #else
-                            <p class="label label-danger">
-                                <span class="glyphicon glyphicon-remove"></span>
-                                $page.statusText
-                            </p>
-                            #end 
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>To</td>
-                        <td>$page.smsRecipient.phone</td>
-                    </tr>     
-                    <tr>
-                        <td>Provider</td>
-                        <td>$page.providerName</td>
-                    </tr>      
-                    <tr>
-                        <td>Cost</td>
-                        <td>$!page.costCurrency $!page.costAmount</td>
-                    </tr> 
-                    <tr>
-                        <td style='vertical-align: top'>Send attempts</td>
-                        <td>
-                            <ul>
-                                #foreach($attempt in $page.sendAttempts)
-                                <li>$attempt.statusCode: $attempt.statusDescription, at $attempt.statusDate</li>
-                                #end
-                            </ul>
-                        </td>
-                    </tr>
-                <tbody>
-            </table>
+    <body>       
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-envelope"></i> SMS
+            </div>
+            <div class="panel-body">
+                <div id="sms-item-info">
+                    <table class="table status-$page.sendStatus">
+                        <colgroup>
+                            <col width="160px"/>
+                            <col/>
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <td>Status</td>
+                                <td>
+                                    #if( $page.sendStatus == 'r' )
+                                    <p class="label label-warning">
+                                        <span class="glyphicon glyphicon-repeat"></span>
+                                        $page.statusText - $page.numAttempts
+                                    </p>
+                                    #elseif( $page.sendStatus == 's' )
+                                    <p class="label label-success">
+                                        <span class="glyphicon glyphicon-ok"></span>
+                                        $page.statusText
+                                    </p>
+                                    #elseif( $page.sendStatus == 'p' )
+                                    <p class="label label-warning">
+                                        <span class="glyphicon glyphicon-time"></span>
+                                        $page.statusText
+                                    </p>
+                                    #elseif( $page.sendStatus == 'q' )
+                                    <p class="label label-warning">
+                                        <span class="glyphicon glyphicon-time"></span>
+                                        $page.statusText
+                                    </p>
+                                    #elseif( $page.sendStatus == 'i' )
+                                    <p class="label label-warning">
+                                        <span class="glyphicon glyphicon-time"></span>
+                                        $page.statusText
+                                    </p>
+                                    #elseif( $page.sendStatus == 'sn' )
+                                    <p class="label label-warning">
+                                        <span class="glyphicon glyphicon-time"></span>
+                                        $page.statusText
+                                    </p>
+                                    #elseif( $page.sendStatus == 'np' )
+                                    <p class="label label-danger">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                        $page.statusText
+                                    </p>
+                                    #elseif( $page.sendStatus == 'd' )
+                                    <p class="label label-success">
+                                        <span class="glyphicon glyphicon-ok"></span>
+                                        $page.statusText
+                                    </p>
+                                    #else
+                                    <p class="label label-danger">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                        $page.statusText
+                                    </p>
+                                    #end 
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>To</td>
+                                <td>$page.smsRecipient.phone</td>
+                            </tr>     
+                            <tr>
+                                <td>Provider</td>
+                                <td>$page.providerName</td>
+                            </tr>      
+                            <tr>
+                                <td>Cost</td>
+                                <td>$!page.costCurrency $!page.costAmount</td>
+                            </tr> 
+                            <tr>
+                                <td>Message</td>
+                                <td>$page.smsMsg</td>
+                            </tr> 
+                            <tr>
+                                <td style='vertical-align: top'>Send attempts</td>
+                                <td>
+                                    <ul>
+                                        #foreach($attempt in $page.sendAttempts)
+                                        <li>$attempt.statusCode: $attempt.statusDescription, at $attempt.statusDate</li>
+                                        #end
+                                    </ul>
+                                </td>
+                            </tr>
+                        <tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-        <h4>Message</h4>
-        <p>$page.smsMsg</p>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-envelope"></i> SMS Replies
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <colgroup>
+                            <col />
+                            <col />
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>From</th>                                
+                                <th>Message</th>
+                                <th>Received</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            #foreach($reply in $page.smsReplies)
+                            <tr>
+                                <td>$!reply.from</td>
+                                <td>$!reply.message</td>
+                                <td><abbr title="$formatter.formatDateISO8601($reply.receivedDate)" class="timeago">$!reply.receivedDate</abbr></td>
+                            </tr>
+                            #end
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <script>
+            $(function(){
+                $('abbr.timeago').timeago();
+            });
+        </script>
     </body>
 </html>
