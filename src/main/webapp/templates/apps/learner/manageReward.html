@@ -3,11 +3,15 @@
         <title>Manage Reward</title>
         <link rel="stylesheet" type="text/css" href="manageReward.css" />
         <link rel="stylesheet" type="text/css" href="/static/quiz/quiz.css"  />
-       	<script type="text/javascript" src="manageReward.js">//</script>
-        <script type="text/javascript" src="/static/inline-edit/inline-edit.js">//</script>
+        <link href="https://gitcdn.github.io/bootstrap-toggle/2.1.0/css/bootstrap-toggle.min.css" rel="stylesheet"/> 
+       	<script type="text/javascript" src="manageReward.js">//</script>        
+        <script type="text/javascript" src="/static/inline-edit/inline-edit.js">//</script>        
         <script type="text/javascript" src="/templates/themes/admin/prompt.js">//</script>
         <script type="text/javascript" src="/static/quiz/quiz.js">//</script>
-        <script type="text/javascript" src="/static/js/jquery-ui-1.10.3.custom.min.js">//</script>
+        <script type="text/javascript" src="/static/js/jquery-ui-1.10.3.custom.min.js">//</script>        
+        <script type="text/javascript" src="/static/bootstrap-upcrop-image/1.0/bootstrap-upcrop-image.js">//</script>
+        <script src="https://gitcdn.github.io/bootstrap-toggle/2.1.0/js/bootstrap-toggle.min.js">//</script>
+        <script type="text/javascript" src="/theme/apps/admin/manageExtraField.js">//</script>
     </head>
     <body>
         <form action="" method="POST" class="manageRewardForm" role="form">
@@ -69,6 +73,16 @@
                                     </td>
                                 </tr>
                                 <tr>
+                                    <td>Sub title</td>
+                                    <td>
+                                        <div class="form-group">
+                                            <div class="col-sm-4">
+                                                <input type="text" name="subTitle" placeholder="Enter a name here" value="$!page.reward.subTitle" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <td>Status</td>
                                     <td>
                                         <div class="form-group">
@@ -83,6 +97,32 @@
                                     </td>
                                 </tr>
 
+                                <!--<tr>
+                                    <td>Points system</td>
+                                    <td>
+                                        <div class="form-group">
+                                            <div class="col-sm-4">
+                                                <select name="pointsType" class="pointsType form-control">
+                                                    $formatter.option("", "No points system", $page.reward.pointsType)
+                                                    #foreach($st in $page.pointsOptionsMap.entrySet())
+                                                    $formatter.option($st.key, $st.value, $page.pointsType)
+                                                    #end
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <span class="pointsOrgType">To organisation type:</span>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <select name="pointsOrgType" class="pointsOrgType form-control" style="float: none">
+                                                    $formatter.option("", "[Any]", $page.pointsOrgType)
+                                                    #foreach($orgType in $page.orgTypes)
+                                                    $formatter.option($orgType.name, $orgType.displayName, $page.pointsOrgType)
+                                                    #end
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>--> 
                                 <tr>
                                     <td>One per recipient</td>
                                     <td>
@@ -135,7 +175,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                </tr>
+                                </tr>                                
                                 <tr>
                                     <td>
                                         Notes
@@ -164,7 +204,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Choose a end date</td>
+                                    <td>Choose an end date</td>
                                     <td>
                                         <div class="form-group">
                                             <div class="col-sm-5">
@@ -175,7 +215,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                </tr>
+                                </tr>							
                                 <!--
                                 <tr>
                                     <td>Email confirmation</td>
@@ -195,13 +235,84 @@
                                 -->
                             </tbody>
                         </table>
-
+                        <div class="panel panel-default panel-fields">
+                            <div class="panel-heading">
+                                <i class="clip-question"></i> Custom fields for this reward:
+                            </div>
+                            <div class="panel-body">
+                                <p>
+                                    <button type="button" class="btn btn-sm btn-success btn-add-extra-field"><i class="fa fa-plus"></i> Add custom field</button>
+                                </p>
+                                <table id="table-extra-field" class="table table-hover table-stripled" data-group-href="$page.href">
+                                    <colgroup>
+                                        <col />
+                                        <col />
+                                        <col />
+                                        <col />
+                                        <col style="width: 150px" />
+                                    </colgroup>
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Text</th>
+                                            <th></th>
+                                            <th></th>
+                                            <th class="action">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        #foreach($field in $page.extraFields.entrySet())
+                                        <tr class="extra-field">
+                                            <td>
+                                                <input type="hidden" value="$field.key" name="key" />
+                                                <input type="hidden" value="$field.value" name="value" />
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        #end
+                                    </tbody>
+                                </table>            
+                            </div>
+                        </div>                      
                     </div>
 
                     <div class="tab-pane Details" id="rewardContent">
-                        <small><i>This copy will sit next to the image and tell the user about the competition or reward.</i></small>
+                        <i>This copy will sit next to the image and tell the user about the competition or reward.</i>
 
                         <textarea cols="120" name="details" rows="10" class="htmleditor" placeholder="Enter the details here">$formatter.htmlEncode($page.details)</textarea>
+
+                        <br/>
+                        <i>This copy will be displayed to the winners.</i>
+                        <textarea cols="120" name="winners" rows="10" class="htmleditor" placeholder="Enter the winners here">$formatter.htmlEncode($page.winners)</textarea>
+                        <hr/>
+
+                        <i>The image to be used with competition copy.</i>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <i class="clip-pictures"></i>Image
+                            </div>
+                            <div class="panel-body">
+                                <div>
+                                    #set($image = $page.imageHref )
+                                    #if( $image )
+                                    <div id="reward-image">
+                                        <a href="$image" target="_blank" class="thumbnail"><img style="width: 150px" src="$image/alt-150-150.png"/></a>
+                                        <!-- 
+                                        <a id="delete-image" class="btn btn-xs btn-danger" href="$image">
+                                                <span class="fa fa-times"></span>
+                                        </a>
+                                        -->
+                                    </div>
+                                    <button id="btn-change-img" class="btn btn-success" type="button" data-toggle="modal" data-target="#modal-add-image">Change image</button>
+                                    #else
+                                    <button id="btn-change-img" class="btn btn-success" type="button" data-toggle="modal" data-target="#modal-add-image">Add image</button>
+                                    #end
+                                </div>  
+                            </div>                
+                        </div>
                     </div>
 
                     <div class="tab-pane" id="groups">
@@ -216,7 +327,7 @@
 
                     <div class="tab-pane" id="entryForm">
                         <div class="well reset-margin-bottom">
-                            You can add entry form items here. Just enable the item you want and
+                            You can add entry form items here. Just enable the item you want and 
                             fill in its required fields.
                         </div>
                         <div class="entryFormItem">
@@ -280,7 +391,7 @@
                             <button class="btn btn-sm btn-primary addRestriction" data-toggle="modal" data-target="#modalAddRestriction"><i class="fa fa-plus"></i> Add a restriction</button>
                         </div>
                         <br />
-                        <div class="well">Add restrictions which will prevent rewards from being given unless they have been ment.</div>
+                        <div class="well">Add restrictions which will prevent rewards from being given unless they have been met.</div>
                         <ul class="restrictionList clearfix" style="padding-left: 0px;">
                             #foreach($r in $page.restrictions)
                             <li>
@@ -332,7 +443,7 @@
                     #end
                 </div>
             </div>
-        </div>
+        </div>        
 
         <div id="modalAddRestriction" class="modal fade">
             <form class="addRestrictionForm">
@@ -359,19 +470,64 @@
                     <button type="submit" class="btn btn-primary btn-sm">Add</button>
                 </div>
             </form>
+        </div>        
+
+        <div id="modal-extra-field" class="modal fade" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Add custom field</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" action="$page.href" method="POST">
+                    <input id="extra-field-value" type="hidden" name="addFieldValue" />
+                    <div class="form-group">
+                        <label for="extra-field-name" class="control-label col-md-4">Name:</label>
+                        <div class="col-md-8">
+                            <input id="extra-field-name" type="text" class="form-control required" name="addFieldName" placeholder="Field text" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="extra-field-text" class="control-label col-md-4">Text:</label>
+                        <div class="col-md-8">
+                            <input id="extra-field-text" class="form-control required" placeholder="Field text" value="" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary btn-sm btn-save-menu" data-type="form-submit">Save</button>
+            </div>
         </div>
 
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
         <script type="text/javascript">
             var quiz = $formatter.toJson($page.quiz);
             $(function () {
+                $("select.pointsType").click(function () {
+                    showHidePointsOrgType();
+                });
+                showHidePointsOrgType();
+
                 initEditReward(quiz);
                 //function to initiate bootstrap-datepicker
                 $('.date-picker').datepicker({
                     autoclose: true
                 });
                 $('.TabNav a:first').tab('show');
+
+                initRewardImages();
+                initManageExtraField();
             });
+
+            function showHidePointsOrgType() {
+                if ($("select.pointsType").val() == "POINTS_ORG") {
+                    $(".pointsOrgType").show();
+                } else {
+                    $(".pointsOrgType").hide();
+                }
+            }
+
         </script>
     </body>
 </html>

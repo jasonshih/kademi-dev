@@ -82,6 +82,52 @@ function initGroupEditing() {
     });
 }
 
+function initRewardImages() {
+    $("#delete-image").on("click", "", function (e) {
+        e.preventDefault();
+        var target = $(e.target).closest("a");
+        var href = target.attr("href");
+        var name = getFileName(href);
+        confirmDelete(href, name, function () {
+        	$("#reward-image").reloadFragment();
+        });
+//        $("#reward-image").reloadFragment();
+    });
+    $('#btn-change-img').upcropImage({
+        buttonContinueText: 'Save',
+        url: window.location.pathname, // this is actually the default value anyway
+        onCropComplete: function (resp) {
+            flog("onCropComplete:", resp, resp.nextHref);
+            $("#reward-image").reloadFragment();
+        },
+        onContinue: function (resp) {
+            flog("onContinue:", resp, resp.result.nextHref);
+            $.ajax({
+                url: window.location.pathname,
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    uploadedHref: resp.result.nextHref,
+                    applyImage: true
+                },
+                success: function (resp) {
+                    flog("success");
+                    if (resp.status) {
+                        Msg.info("Done");
+                        $("#reward-image").reloadFragment();
+                    } else {
+                        Msg.error("An error occurred processing the image");
+                    }
+                },
+                error: function () {
+                    alert('Sorry, we couldn\'t save your image.');
+                }
+            });
+        }
+    });
+}
+
+
 function setGroupRecipient(name, isRecip) {
     flog("setGroupRecipient", name, isRecip);
     try {
