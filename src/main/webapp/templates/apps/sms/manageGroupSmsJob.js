@@ -9,6 +9,7 @@ function initManageSmsJob() {
     initShowRecipients();
     initChooseGroup();
     initSendTest();
+    initSend();
 }
 
 function initChooseGroup() {
@@ -109,6 +110,13 @@ function initSendTest() {
     });
 }
 
+function initSend(){
+    $('body').on('click', '.btn-send-sms', function(e){
+        e.preventDefault();
+        doSendSms();
+    });
+}
+
 function doSendTest() {
     flog("doSendTest");
     $.ajax({
@@ -120,6 +128,25 @@ function doSendTest() {
         },
         success: function (resp) {
             Msg.success('A test has been sent to your phone number');
+            //onTestResponse(resp);
+        },
+        error: function (resp) {
+            Msg.error('Sorry, we couldnt send the test. Please contact the administator to help find the problem.');
+        }
+    });
+}
+
+function doSendSms() {
+    flog("doSendTest");
+    $.ajax({
+        type: 'POST',
+        url: window.location.pathname,
+        datatype: 'json',
+        data: {
+            sendSmsJob: true
+        },
+        success: function (resp) {
+            Msg.success('Sms sending has been initiated. If there is a large number of users this might take some time.');
             //onTestResponse(resp);
         },
         error: function (resp) {
