@@ -13,15 +13,18 @@
         #end
 
         <form method="POST" action="$page.href">
-            <textarea name="q" class="form-control" placeholder="Query">$!request.params.q</textarea>
-            <textarea name="aggs" class="form-control" placeholder="Aggregations">$!request.params.aggs</textarea>
-            <input type="text" name="fields" placeholder="Fields to display" value="$!request.params.fields" class="form-control" />
+            <textarea name="source" style="height: 500px" class="form-control" placeholder="JSON source">$!request.params.source</textarea>
             <br/>
             <button type="submit" class="btn btn-info col-md-4">Query</button>
         </form>
 
         <br style="clear: both"/>
         <hr style="clearfix"/>
+
+        #if( $items )
+            <pre>$items
+            </pre>
+        #end
 
         #if( $items.aggregations )
         <h2>Aggregations</h2>
@@ -77,9 +80,10 @@
 
         <div class="well">
             <h3>Example</h3>
-            Fields: title,content
             <pre>{
+  "query" : {
     "term" : { "content" : "farm" }
+}
 }</pre>
         </div>
 
