@@ -6,7 +6,7 @@
     <div class="panel-body">
         <ul class="messages-list">
             <li><em>Loading comments..</em></li>
-        </ul>        
+        </ul>
     </div>
 </div>
 #set($basePath = "/")
@@ -21,7 +21,7 @@
 
     function initPosts(basePath) {
         $.getJSON(basePath + "_postSearch?a", function(response) {
-            log("got posts response", response);
+            flog("got posts response", response);
             processPosts(response);
         });
     }
@@ -63,7 +63,7 @@
         var subject = "posted in " + pageTitle;
         li.find(".messages-item-subject").html(subject);
         li.find(".messages-item-preview").text(comment);
-        
+
         var formattedDate = date.toISOString(formattedDate);
         li.find(".messages-item-time .text").text(formattedDate).attr("title", formattedDate);
 
@@ -80,7 +80,7 @@
         <img class="messages-item-avatar" src="/templates/apps/user/profile.png" alt="">
         <span class="messages-item-from">Name</span>
         <div class="messages-item-time">
-            <span class="text timeago">10:23 PM</span>            
+            <span class="text timeago">10:23 PM</span>
         </div>
         <span class="messages-item-subject">Lorem ipsumdolor sit amet ...</span>
         <span class="messages-item-preview">Lorem ipsum dolor sit amet, consec tetur adipisicing elit, sed do antera ...</span>

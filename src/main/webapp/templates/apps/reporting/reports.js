@@ -118,7 +118,29 @@ function getParameterByName(name) {
 }
 
 function runReport(startDate, reportContainer, itemsContainer, href) {
-    runReportWithDateRange(startDate, null, reportContainer, itemsContainer, href);
+    flog("runReport");
+    $('.pageMessage').hide(100);
+    var data = {
+        startDate: formatDate(startDate)
+    };
+    $.ajax({
+        type: "GET",
+        url: href,
+        dataType: 'json',
+        data: data,
+        success: function (resp) {
+            flog('response', resp.data);
+
+            if (resp.data !== null && resp.data.data.length === 0) {
+                $('.pageMessage').html('No data was found for the given criteria').show(300);
+                $(".details-items-wrapper").hide();
+            } else {
+                showGraph(resp.data, reportContainer, itemsContainer);
+                $(".details-items-wrapper").show();
+            }
+
+        }
+    });
 }
 
 function runReportWithDateRange(reportContainer, itemsContainer) {
