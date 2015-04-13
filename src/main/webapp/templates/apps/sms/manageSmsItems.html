@@ -27,24 +27,24 @@
                             <col width="" />
                             <col width=""/>
                             <col width="140px" />
-                            <col data-sort="false" width="60px" />
+                            <col width="60px" />
                         </colgroup>
                         <thead>
                             <tr>
                                 <th>Recipient</th>
                                 <th>Message</th>
                                 <th>Provider</th>
-                                <th>Date</th>
+                                <th class="text-center">Date</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
-                            #foreach($e in $page.smsHistory)
-                            <tr>
-                                <td>$e.smsRecipient.formattedName</td>
+                            #foreach($e in $page.children)
+                            <tr class="clickable" data-target="" data-href="$e.href">
+                                <td>$e.smsRecipient.phone</td>
                                 <td>$e.smsMsg</td>
-                                <td>$e.providerAppId</td>
-                                <td><abbr title="$formatter.formatDateISO8601($e.createdDate)" class="timeago">$!e.createdDate</abbr></td>
+                                <td>$e.providerName</td>
+                                <td class="text-center"><abbr title="$formatter.formatDateISO8601($e.createdDate)" class="timeago">$!e.createdDate</abbr></td>
                                 <td>
                                     #if( $e.sendStatus == 'r' )
                                     <p class="label label-warning">
@@ -134,6 +134,16 @@
                                 doSearch(start, end);
                             }
                     );
+                });
+                
+                $('body').on('click', '.clickable', function(e){
+                    e.preventDefault();
+                    var row = $(this);
+                    var target = row.data('target');
+                    var href = row.data('href');
+                    flog(target, href);
+                    var aTag = $('<a target="'+target+'" href="'+href+'"></a>');
+                    aTag[0].click();
                 });
 
             });

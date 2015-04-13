@@ -60,7 +60,7 @@
                                 <col width="20%" />
                                 <col width="80%" />
                             </colgroup>
-                            
+
                             <tbody>
                                 <tr>
                                     <td>Reward title</td>
@@ -97,7 +97,7 @@
                                     </td>
                                 </tr>
 
-                                <tr>
+                                <!--<tr>
                                     <td>Points system</td>
                                     <td>
                                         <div class="form-group">
@@ -122,7 +122,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                </tr>     
+                                </tr>--> 
                                 <tr>
                                     <td>One per recipient</td>
                                     <td>
@@ -138,7 +138,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                                
+
                                 <tr>
                                     <td>Valid for days</td>
                                     <td>
@@ -150,7 +150,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                                
+
                                 <tr>
                                     <td>Choose an expiry date</td>
                                     <td>
@@ -164,7 +164,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                                
+
                                 <tr>
                                     <td>Template</td>
                                     <td>
@@ -235,84 +235,84 @@
                                 -->
                             </tbody>
                         </table>
-                    <div class="panel panel-default panel-fields">
-                        <div class="panel-heading">
-                            <i class="clip-question"></i> Custom fields for this reward:
-                        </div>
-                        <div class="panel-body">
-                            <p>
-                                <button type="button" class="btn btn-sm btn-success btn-add-extra-field"><i class="fa fa-plus"></i> Add custom field</button>
-                            </p>
-                            <table id="table-extra-field" class="table table-hover table-stripled" data-group-href="$page.href">
-                                <colgroup>
-                                    <col />
-                                    <col />
-                                    <col />
-                                    <col />
-                                    <col style="width: 150px" />
-                                </colgroup>
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Text</th>
-                                        <th></th>
-                                        <th></th>
-                                        <th class="action">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    #foreach($field in $page.extraFields.entrySet())
-                                    <tr class="extra-field">
-                                        <td>
-                                            <input type="hidden" value="$field.key" name="key" />
-                                            <input type="hidden" value="$field.value" name="value" />
-                                        </td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    #end
-                                </tbody>
-                            </table>            
-                        </div>
-                    </div>                      
+                        <div class="panel panel-default panel-fields">
+                            <div class="panel-heading">
+                                <i class="clip-question"></i> Custom fields for this reward:
+                            </div>
+                            <div class="panel-body">
+                                <p>
+                                    <button type="button" class="btn btn-sm btn-success btn-add-extra-field"><i class="fa fa-plus"></i> Add custom field</button>
+                                </p>
+                                <table id="table-extra-field" class="table table-hover table-stripled" data-group-href="$page.href">
+                                    <colgroup>
+                                        <col />
+                                        <col />
+                                        <col />
+                                        <col />
+                                        <col style="width: 150px" />
+                                    </colgroup>
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Text</th>
+                                            <th></th>
+                                            <th></th>
+                                            <th class="action">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        #foreach($field in $page.extraFields.entrySet())
+                                        <tr class="extra-field">
+                                            <td>
+                                                <input type="hidden" value="$field.key" name="key" />
+                                                <input type="hidden" value="$field.value" name="value" />
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        #end
+                                    </tbody>
+                                </table>            
+                            </div>
+                        </div>                      
                     </div>
 
                     <div class="tab-pane Details" id="rewardContent">
                         <i>This copy will sit next to the image and tell the user about the competition or reward.</i>
-                        
+
                         <textarea cols="120" name="details" rows="10" class="htmleditor" placeholder="Enter the details here">$formatter.htmlEncode($page.details)</textarea>
 
-						<br/>
+                        <br/>
                         <i>This copy will be displayed to the winners.</i>
                         <textarea cols="120" name="winners" rows="10" class="htmleditor" placeholder="Enter the winners here">$formatter.htmlEncode($page.winners)</textarea>
-                    <hr/>
+                        <hr/>
 
-					<i>The image to be used with competition copy.</i>
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <i class="clip-pictures"></i>Image
-                        </div>
-                        <div class="panel-body">
-                            <div>
-                                #set($image = $page.imageHref )
-                                #if( $image )
+                        <i>The image to be used with competition copy.</i>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <i class="clip-pictures"></i>Image
+                            </div>
+                            <div class="panel-body">
+                                <div>
+                                    #set($image = $page.imageHref )
+                                    #if( $image )
                                     <div id="reward-image">
                                         <a href="$image" target="_blank" class="thumbnail"><img style="width: 150px" src="$image/alt-150-150.png"/></a>
                                         <!-- 
-                                    	<a id="delete-image" class="btn btn-xs btn-danger" href="$image">
-                                        	<span class="fa fa-times"></span>
-                                    	</a>
-                                    	-->
+                                        <a id="delete-image" class="btn btn-xs btn-danger" href="$image">
+                                                <span class="fa fa-times"></span>
+                                        </a>
+                                        -->
                                     </div>
                                     <button id="btn-change-img" class="btn btn-success" type="button" data-toggle="modal" data-target="#modal-add-image">Change image</button>
-                                #else
-                					<button id="btn-change-img" class="btn btn-success" type="button" data-toggle="modal" data-target="#modal-add-image">Add image</button>
-                                #end
-                            </div>  
-                        </div>                
-                    </div>
+                                    #else
+                                    <button id="btn-change-img" class="btn btn-success" type="button" data-toggle="modal" data-target="#modal-add-image">Add image</button>
+                                    #end
+                                </div>  
+                            </div>                
+                        </div>
                     </div>
 
                     <div class="tab-pane" id="groups">

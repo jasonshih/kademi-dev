@@ -7,6 +7,47 @@ function initManageSmsJob() {
     initSmsField();
     initFormDetails();
     initShowRecipients();
+    initChooseGroup();
+    initSendTest();
+    initSend();
+}
+
+function initChooseGroup() {
+    initChooseGroupModal();
+    initRemoveRecipientGroup();
+}
+
+function initChooseGroupModal() {
+    var modal = $('#modal-choose-group');
+
+    modal.find('input:radio').on('click', function () {
+        var radioBtn = $(this);
+
+        flog('a');
+
+        flog("radiobutton click", radioBtn, radioBtn.is(":checked"));
+        setGroupRecipient(radioBtn.attr('name'), radioBtn.val());
+    });
+}
+
+function initRemoveRecipientGroup() {
+    var blockWrapper = $('#recipients');
+    flog('initRemoveRecipientGroup');
+
+    blockWrapper.on('click', '.btn-remove-role', function (e) {
+        flog('click', this);
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (confirm('Are you sure you want to remove this group?')) {
+            var btn = $(this);
+            flog('do it', btn);
+
+            var href = btn.attr('href');
+            setGroupRecipient(href, "none");
+            $('#modal-choose-group').find('input:radio').filter('[name=' + href + ']').removeAttr('checked');
+        }
+    });
 }
 
 function initSmsField() {
@@ -21,7 +62,8 @@ function initSmsField() {
         $("#sms-char-remaining").css('color', '');
     }
 
-    $("#smsMsg").keyup(function () {
+    $('#smsMsg').bind('input propertychange', function (e) {
+        flog(e);
         var ln = sms_txt_max - $("#smsMsg").val().length;
         if (ln < 0) {
             $("#sms-char-remaining").text(Math.abs(ln) + " characters over");
@@ -33,7 +75,7 @@ function initSmsField() {
     });
 }
 
-function initFormDetails(){
+function initFormDetails() {
     $('form[name=frmDetails]').forms({
         valiationMessageSelector: ".page-validation",
         callback: function () {
@@ -58,6 +100,58 @@ function initShowRecipients() {
         }
 
         showRecipients(recipientsWrapper.find('table tbody'));
+    });
+}
+
+function initSendTest() {
+    $('body').on('click', '.btn-sent-test', function(e){
+        e.preventDefault();
+        doSendTest();
+    });
+}
+
+function initSend(){
+    $('body').on('click', '.btn-send-sms', function(e){
+        e.preventDefault();
+        doSendSms();
+    });
+}
+
+function doSendTest() {
+    flog("doSendTest");
+    $.ajax({
+        type: 'POST',
+        url: window.location.pathname,
+        datatype: 'json',
+        data: {
+            sendTest: true
+        },
+        success: function (resp) {
+            Msg.success('A test has been sent to your phone number');
+            //onTestResponse(resp);
+        },
+        error: function (resp) {
+            Msg.error('Sorry, we couldnt send the test. Please contact the administator to help find the problem.');
+        }
+    });
+}
+
+function doSendSms() {
+    flog("doSendTest");
+    $.ajax({
+        type: 'POST',
+        url: window.location.pathname,
+        datatype: 'json',
+        data: {
+            sendSmsJob: true
+        },
+        success: function (resp) {
+            Msg.success('Sms sending has been initiated. If there is a large number of users this might take some time.');
+            //onTestResponse(resp);
+        },
+        error: function (resp) {
+            Msg.error('Sorry, we couldnt send the test. Please contact the administator to help find the problem.');
+        }
     });
 }
 
@@ -95,5 +189,39 @@ function showRecipients(tableBody) {
         });
     } catch (e) {
         flog('exception in createJob', e);
+    }
+}
+
+function setGroupRecipient(name, groupType) {
+    flog("setGroupRecipient", name, groupType);
+    try {
+        $.ajax({
+            type: 'POST',
+            url: window.location.href,
+            data: {
+                group: name,
+                groupType: groupType
+            },
+            success: function (data) {
+                flog("saved ok", name);
+
+                var blockWrapper = $('#recipients').find('.blocks-wrapper');
+                blockWrapper.find('.block.' + name).remove();
+
+                flog("add to list");
+                blockWrapper.filter('.' + groupType).append(
+                        '<span class="block ' + name + '">' +
+                        '<span class="block-name">' + name + '</span>' +
+                        '<a class="btn btn-xs btn-danger btn-remove-role" href="' + name + '" title="Remove this role"><i class="clip-minus-circle "></i></a>' +
+                        '</span>'
+                        );
+            },
+            error: function (resp) {
+                flog("error", resp);
+                Msg.error('err');
+            }
+        });
+    } catch (e) {
+        flog("exception in createJob", e);
     }
 }

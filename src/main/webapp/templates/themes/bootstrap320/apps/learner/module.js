@@ -72,6 +72,17 @@ function initModuleNav(pStatUrl, pFinished) {
     });
 }
 
+function tidyUpQuiz() {
+    // Hack: Need to hide quiz elements which have quiz editor help text
+    $("ol.quiz li p").each(function(i, n) {
+        var node = $(n);
+        var text = node.text();
+        if (text.startsWith("[")) {
+            node.hide();
+        }
+    });
+}
+
 function initPageNav() {
 //    prettyPrint(); // TODO: hook up seperately
     $(".pages a")
@@ -94,14 +105,7 @@ function initPageNav() {
         }
     });
 
-    // Hack: Need to hide quiz elements which have quiz editor help text
-    $("ol.quiz li p").each(function(i, n) {
-        var node = $(n);
-        var text = node.text();
-        if (text.startsWith("[")) {
-            node.hide();
-        }
-    });
+    tidyUpQuiz();
 
     if (!isCompletable || currentPageIndex() > progressPage) {
         flog("show when complete");
@@ -137,7 +141,7 @@ function initPageNav() {
     } else {
         var c = currentPageIndex();
         var p = progressPageIndex();
-        if (!p || c > p) { // only save current page if it is the furthest yet visited            
+        if (!p || c > p) { // only save current page if it is the furthest yet visited
             window.setTimeout(function() {
                 flog("do save progress because we changed page");
                 save();
@@ -179,7 +183,7 @@ function doRestoreFields() {
 }
 
 /**
- * Called on page load and expand events, checks to see what progress navigation 
+ * Called on page load and expand events, checks to see what progress navigation
  * elements should be enabled
  */
 function checkProgressPageVisibility() {
@@ -665,7 +669,7 @@ function showCompletedMessage() {
 
 function currentPageIndex() {
     var pages = $(".pages a.modPage");
-    //flog("pages", pages, "active=", pages.filter(".active") );    
+    //flog("pages", pages, "active=", pages.filter(".active") );
     var current = pages.filter(".active").attr("href");
     var currentIndex = 0;
     var all = pages;
@@ -791,7 +795,7 @@ function initModalLinks() {
 /**
  * Called when the user clicks next, checks to see if there is a quiz on the page
  * , and if so it is checked for correctness
- * 
+ *
  * Also checks to see if this is the last page, in which case a finished dialog is
  * displayed
  */
@@ -878,7 +882,7 @@ function isQuizComplete(e) {
 
     quiz.addClass("processing");
 
-    // Check the quiz against the database        
+    // Check the quiz against the database
     var pageName = getFileName(window.location.pathname);
     quiz.find("input[name=quiz]").val(pageName);
     try {
@@ -894,19 +898,18 @@ function isQuizComplete(e) {
                     flog('quiz validated ok', response);
                     quiz.addClass("validated");
                     $(e.target).click();
-                    //                    if( isLastPage() ) {        
-                    //                        completed();
-                    //                    } else {
-                    //                        flog("re-click next");
-                    //                        $(e.target).click();
-                    //                    }
                 } else {
                     flog('quiz validated returned false', response);
-                    alert("Please check your answers");
-                    $.each(response.fieldMessages, function(i, n) {
-                        var inp = quiz.find("li." + n.field);
-                        inp.addClass("error");
-                    });
+                    if( response.data && response.data.nextQuizBatch ) {
+                        quiz.find("ol.quiz").replaceWith(response.data.nextQuizBatch);
+                        tidyUpQuiz();
+                    } else {
+                        alert("Please check your answers");
+                        $.each(response.fieldMessages, function(i, n) {
+                            var inp = quiz.find("li." + n.field);
+                            inp.addClass("error");
+                        });
+                    }
                 }
             },
             error: function(response) {

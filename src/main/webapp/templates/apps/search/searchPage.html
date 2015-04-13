@@ -1,6 +1,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title>Elastic Search</title>
+        <title>Search</title>
         <link rel="stylesheet" type="text/css" href="search.css" />
         <script type="text/javascript" src="search.js">//</script>
     </head>
@@ -15,7 +15,7 @@
                 </div>
             </form>
 
-            <div id="search-results">                
+            <div id="search-results">
                 #if ($page.hit.totalHits)
                     <p class="totals text-muted">
                         <small>
@@ -38,7 +38,7 @@
                         <div class="result">
                             #if( $page.public )
                             <h3><a href="$hit.path">$hit.title</a></h3>
-                            #else                            
+                            #else
                             <h3>
                                 <a href="${page.managePath( $hit.branch )}$hit.path/..">$hit.title</a>
                             </h3>
@@ -59,7 +59,7 @@
                 #if ($totalHits == $pageNumber * $size)
                     #set($pageNumber = $pageNumber - 1)
                 #end
-                
+
                 #if ($pageNumber >= 1)
                     <div class="pagination-wrapper">
                         <ul class="pagination">
