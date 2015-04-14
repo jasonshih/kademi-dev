@@ -51,6 +51,7 @@
                     <li><a data-toggle="tab" href="#action">Actions</a></li>
                     <li><a data-toggle="tab" href="#recipients">Recipients</a></li>
                     <li><a data-toggle="tab" href="#history">Email History</a></li>
+                    <li><a data-toggle="tab" href="#smsHistory">SMS History</a></li>
                 </ul>
                 <div class="tab-content">
                     <!-- Start content of General tab -->
@@ -85,7 +86,6 @@
                                 <div class="form-group">
                                     <label class="control-label col-md-4" for="eventId">Event type</label>
                                     <div class="col-md-8">
-
                                         <select id="eventId" name="eventId" class="form-control">
                                             <option value="-">[Choose]</option>
                                             #foreach($eventId in $mapOfTriggerTypes.keySet())
@@ -257,6 +257,46 @@
                                 </iframe>                                
                             </div>
                         </div>
+
+                        <div class="panel panel-default"> <!-- start Send SMS -->
+                            <div class="panel-heading">
+                                <i class="clip-chk">$formatter.checkbox("smsEnabled", "smsEnabled", $page.job.smsEnabled)</i>
+                                <label for="smsEnabled">Send an sms</label>
+                            </div>
+                            <div class="panel-body panel-toggled" data-toggled="display" data-actor="#smsEnabled">
+                                <p>
+                                    Send an SMS to group(s)
+                                    |
+                                    <a href='#' class='refresh-sms text-success'>Refresh SMS Providers</a>
+                                </p>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label class="control-label col-md-2" for="smsMessage">Message to send</label>
+                                            <div class="col-md-8">
+                                                <textarea type="text" class="form-control required-if-shown" name="smsMessage" id="smsMessage">$!page.job.smsMessage</textarea>
+                                                <span id="sms-char-remaining">160 Characters Remaining</span>
+                                            </div>
+                                        </div>
+                                    </div> <!-- end row -->
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label class="control-label col-md-2" for="smsMessage">SMS Providers</label>
+                                            <div class="col-md-8" id="smsprovider-list">
+                                                <select name="smsProvider" id="smsProvider" class="form-control required-if-shown">
+                                                    $formatter.option( "", "[Please select]", null )
+                                                    #foreach($app in $page.smsProviders )
+                                                    $formatter.option( $app.instanceId, $app.getTitle($page.organisation, null), $page.job.smsProvider )
+                                                    #end
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div> <!-- end row -->
+                                </div>
+                            </div>
+                        </div> <!-- End sms-->
 
                         <div class="panel panel-default"> <!-- start add to group -->
                             <div class="panel-heading">
@@ -473,46 +513,6 @@
                             </div>
                         </div> <!-- End award CPD -->
 
-                        <div class="panel panel-default"> <!-- start Send SMS -->
-                            <div class="panel-heading">
-                                <i class="clip-chk">$formatter.checkbox("smsEnabled", "smsEnabled", $page.job.smsEnabled)</i>
-                                <label for="smsEnabled">Send an sms</label>
-                            </div>
-                            <div class="panel-body panel-toggled" data-toggled="display" data-actor="#smsEnabled">
-                                <p>
-                                    Send an SMS to group(s)
-                                    |
-                                    <a href='#' class='refresh-sms text-success'>Refresh SMS Providers</a>
-                                </p>
-                                <div class="form-group">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <label class="control-label col-md-2" for="smsMessage">Message to send</label>
-                                            <div class="col-md-8">
-                                                <textarea type="text" class="form-control required-if-shown" name="smsMessage" id="smsMessage">$!page.job.smsMessage</textarea>
-                                                <span id="sms-char-remaining">160 Characters Remaining</span>
-                                            </div>
-                                        </div>
-                                    </div> <!-- end row -->
-                                </div>
-                                <div class="form-group">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <label class="control-label col-md-2" for="smsMessage">SMS Providers</label>
-                                            <div class="col-md-8" id="smsprovider-list">
-                                                <select name="smsProvider" id="smsProvider" class="form-control required-if-shown">
-                                                    $formatter.option( "", "[Please select]", null )
-                                                    #foreach($app in $page.smsProviders )
-                                                    $formatter.option( $app.instanceId, $app.getTitle($page.organisation, null), $page.job.smsProvider )
-                                                    #end
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div> <!-- end row -->
-                                </div>
-                            </div>
-                        </div> <!-- End actviate alert -->
-
                         <div class="panel panel-default"> <!-- start insert data series -->
                             <div class="panel-heading">
                                 <i class="clip-chk">$formatter.checkbox("dataSeriesEnabled", "dataSeriesEnabled", $page.job.dataSeriesEnabled)</i>
@@ -715,7 +715,7 @@
                                 </thead>
                                 <tbody id="history-table-body">
                                     #foreach($item in $page.history)
-                                    <tr href="/emails/$item.id" class="email-item">
+                                    <tr href="/emails/$item.id" class="email-item clickable">
                                         <td class="icon" title="$!email.status">
                                             #if($item.sendStatus == "c" )
                                             <i class="fa fa-check-circle text-success"></i>                                            
@@ -755,6 +755,59 @@
                         </div>
                     </div>
                     <!-- End content of History tab -->
+
+                    <!-- Start content of SMS History tab -->
+                    <div id="smsHistory" class="tab-pane">
+                        <div class="btn-group pull-right">
+                            <a class="btn btn-info sms-history-csv" href="sms-history.csv?smsStartDate=$!request.params.smsStartDate&smsFinishDate=$!request.params.smsFinishDate">
+                                Export to CSV
+                                <span class="glyphicon glyphicon-cloud-download"></span>
+                            </a>
+                            <button type="button" class="refresh-sms-history btn btn-success">
+                                Refresh
+                                <span class="glyphicon glyphicon-refresh"></span>
+                            </button>
+                        </div>
+
+                        <div class="input-group date-range col-md-4">
+                            <label for="sms-report-range" class="input-group-addon">Time</label>
+                            <input type="text" id="sms-report-range" placeholder="Choose a date range" value="" class="form-control" />
+                        </div>                          
+                        <div class="clearfix"></div>
+                        <hr/>
+
+                        <div class="table-responsive" id="sms-history-table">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Status</th>                                        
+                                        <th colspan="3">Recipient</th>
+                                        <th style="text-align: right">Status Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="sms-history-table-body">
+                                    #foreach($sms in $page.smsHistory)
+                                    <tr href="/smsHistory/$sms.id" class="sms-item clickable">
+                                        <td class="icon" title="$!sms.statusText">
+                                            #if($sms.sendStatus == "s" || $sms.sendStatus == "d")
+                                            <i class="fa fa-check-circle text-success"></i>                                            
+                                            #else
+                                            <i class="fa fa-exclamation-circle text-muted"></i>
+                                            #end
+                                        </td>                                 
+                                        <td>$sms.smsRecipient.phone</td>
+                                        <td>$!sms.smsRecipient.firstName</td>
+                                        <td>$!sms.smsRecipient.surName</td>                                        
+                                        <td>
+                                            <abbr class="pull-right timeago" title="$formatter.formatDateISO8601($sms.sendStatusDate)">$sms.sendStatusDate</abbr>
+                                        </td>
+                                    </tr>
+                                    #end
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- End content of Sms History tab -->
                 </div>
             </div>
         </form>
@@ -855,6 +908,16 @@
                     e.preventDefault();
                     $("#history-table").reloadFragment();
                 });
+
+                $(".refresh-sms-history").click(function (e) {
+                    e.preventDefault();
+                    $("#sms-history-table").reloadFragment({
+                        whenComplete: function () {
+                            $('#sms-history-table').find("abbr.timeago").timeago();
+                        }
+                    });
+                });
+
                 $(".timer-units li").click(function (e) {
                     e.preventDefault();
                     var unit = $(e.target).text();
@@ -862,6 +925,7 @@
                 });
                 jQuery("abbr.timeago").timeago();
                 initHistorySearch();
+                initSmsHistorySearch();
                 $(".refresh-alerts").click(function () {
                     $("#alerts-list").reloadFragment();
                 });
@@ -875,6 +939,20 @@
                 initSmsField();
 
                 $("body").on('click', '.email-item', function (e) {
+                    e.preventDefault();
+                    var item = $(this);
+                    var href = item.attr("href")
+                    var win = window.open(href, '_blank');
+                    if (win) {
+                        //Browser has allowed it to be opened
+                        win.focus();
+                    } else {
+                        //Broswer has blocked it
+                        alert('Please allow popups for this site');
+                    }
+                });
+                
+                $("body").on('click', '.sms-item', function (e) {
                     e.preventDefault();
                     var item = $(this);
                     var href = item.attr("href")
@@ -939,6 +1017,59 @@
                         target.replaceWith(newBody);
                         jQuery("abbr.timeago").timeago();
                         window.history.pushState(null, "Email History", href);
+                    }
+                });
+
+            }
+
+            function initSmsHistorySearch() {
+                var smsReportRange = $('#sms-report-range');
+
+                smsReportRange.exist(function () {
+                    flog("init sms report range");
+                    smsReportRange.daterangepicker({
+                        format: 'DD/MM/YYYY', // YYYY-MM-DD
+                        ranges: {
+                            'Last 7 Days': [moment().subtract('days', 6), moment()],
+                            'Last 30 Days': [moment().subtract('days', 29), moment()],
+                            'This Month': [moment().startOf('month'), moment().endOf('month')],
+                            'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
+                            'This Year': [moment().startOf('year'), moment()],
+                        },
+                    },
+                            function (start, end) {
+                                flog('onChange', start, end);
+                                doSMSHistorySearch(start, end);
+                            });
+                });
+            }
+
+            function doSMSHistorySearch(startDate, endDate) {
+                flog('doSMSHistorySearch', startDate, endDate);
+
+                var data = {
+                    startDate: formatDate(startDate),
+                    finishDate: formatDate(endDate)
+                };
+                flog("data", data);
+
+                var target = $("#sms-history-table-body");
+
+                var dates = "smsStartDate=" + formatDate(startDate) + "&smsFinishDate=" + formatDate(endDate);
+                var baseHref = window.location.pathname + "?" + dates;
+                var href = baseHref + "#history-tab";
+                $("a.sms-history-csv").attr("href", "sms-history.csv?" + dates);
+
+                $.ajax({
+                    type: "GET",
+                    url: href,
+                    dataType: 'html',
+                    success: function (content) {
+                        flog('response', content);
+                        var newBody = $(content).find("#sms-history-table-body");
+                        target.replaceWith(newBody);
+                        $('#sms-history-table').find("abbr.timeago").timeago();
+                        window.history.pushState(null, "SMS History", href);
                     }
                 });
 
