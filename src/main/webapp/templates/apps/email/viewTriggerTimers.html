@@ -116,7 +116,7 @@
                                     <th>Created Date</th>
                                     <th>Due Date</th>
                                     <th class="action">
-                                        <button title="Set timer due date to now to fire immediately" class="btn btn-sm btn-success btn-fire" type="button">
+                                        <button title="Set timer due date to now to fire immediately" class="btn btn-sm btn-success btn-fire" #if(!$page.emailTrigger) disabled="disabled" #end type="button">
                                             <i class="fa fa-play-circle "></i>
                                         </button>
                                         <button title="(Un)Select all shown triggers" class="btn btn-sm btn-default btn-select-all">
