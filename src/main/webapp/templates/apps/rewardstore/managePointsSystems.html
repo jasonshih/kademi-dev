@@ -44,12 +44,14 @@
                             <colgroup>
                                 <col width="" />
                                 <col width="25%" />
+                                <col width="25%" />
                                 <col width="100px" />
                             </colgroup>
                             <thead>
                                 <tr>
                                     <th class="title" rel="asc">Title</th>
                                     <th>Total points</th>
+                                    <th>Total debits</th>
                                     <th class="action"></th>
                                 </tr>
                             </thead>
@@ -58,6 +60,7 @@
                                 <tr>
                                     <td><a href="$r.name">$r.rewardTitle</a></td>
                                     <td>$r.totalPoints points</td>
+                                    <td>$r.totalDebits points</td>
                                     <td class="action">
                                         <div class="btn-group btn-group-sm">
                                             <a href="$r.name" class="btn btn-sm btn-primary btn-sm"> <i class="fa fa-edit"></i> Edit
