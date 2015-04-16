@@ -116,7 +116,7 @@
                                     <th>Created Date</th>
                                     <th>Due Date</th>
                                     <th class="action">
-                                        <button title="Set timer due date to now to fire immediately" class="btn btn-sm btn-success btn-fire" type="button">
+                                        <button title="Set timer due date to now to fire immediately" class="btn btn-sm btn-success btn-fire" #if(!$page.emailTrigger) disabled="disabled" #end type="button">
                                             <i class="fa fa-play-circle "></i>
                                         </button>
                                         <button title="(Un)Select all shown triggers" class="btn btn-sm btn-default btn-select-all">
@@ -208,96 +208,96 @@
 
         <script type="text/javascript">
             var selectState = false;
-            $(function () {
-                initHistorySearch();
-                var modal = $('#modal-add-trigger-manual');
-                flog("initModalAddEmail", modal);
-                modal.find('form').forms({
-                    callback: function (data) {
-                        flog('saved ok', data);
-                        modal.modal('hide');
-                        Msg.success("Manual trigger created");
-                        $('#triggers-body').reloadFragment();
-                    }
-                });
-
-                $(".form-triggers").forms({
-                    validate: function () {
-                        if (confirm("Are you sure you want to remove the selected triggers?")) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    },
-                    callback: function () {
-                        Msg.info("Deleted delayed triggers");
-                        $('#triggers-body').reloadFragment({
-                            whenComplete: function () {
-                                selectState = false;
-                                flog("Reload Complete", selectState);
+                    var uploadTaskName = #if ($page.emailTrigger) "${page.uploadTaskName}"; #else false; #end
+                    $(function () {
+                        initHistorySearch();
+                        var modal = $('#modal-add-trigger-manual');
+                        flog("initModalAddEmail", modal);
+                        modal.find('form').forms({
+                            callback: function (data) {
+                                flog('saved ok', data);
+                                modal.modal('hide');
+                                Msg.success("Manual trigger created");
+                                $('#triggers-body').reloadFragment();
                             }
                         });
-                    }
-                });
-
-                $(".btn-fire").click(function (e) {
-                    e.preventDefault();
-                    var form = $(".form-triggers");
-                    var checked = form.find("input[type=checkbox]:checked");
-                    if (checked.length === 0) {
-                        Msg.info("Please select some triggers to fire immediately");
-                        return;
-                    }
-                    var c = confirm("Are you sure you want to fire " + checked.length + " triggers?");
-                    if (!c) {
-                        return;
-                    }
-                    var data = form.serialize();
-                    data += "&Fire=true";
-                    flog("data", data);
-                    //return;
-
-                    $.ajax({
-                        type: 'POST',
-                        url: window.location.href,
-                        data: data,
-                        dataType: "json",
-                        error: function (resp) {
-                            flog('error', resp);
-                            Msg.error('err');
-                        },
-                        success: function (resp) {
-                            flog("resp", resp);
-                            if (resp.status) {
-                                Msg.info("Fired triggers OK");
+                        $(".form-triggers").forms({
+                            validate: function () {
+                                if (confirm("Are you sure you want to remove the selected triggers?")) {
+                                    return true;
+                                } else {
+                                    return false;
+                                }
+                            },
+                            callback: function () {
+                                Msg.info("Deleted delayed triggers");
                                 $('#triggers-body').reloadFragment({
                                     whenComplete: function () {
                                         selectState = false;
                                         flog("Reload Complete", selectState);
-                                        $("[name=triggerId]").prop("checked", selectState);
                                     }
                                 });
-                            } else {
-                                Msg.error("Sorry, an error occured attempting to fire the selected triggers: " + resp.messages);
                             }
-                        },
-                        error: function () {
-                            Msg.error("Sorry, an error occured attempting to fire the selected triggers");
-                        }
-                    });
-                });
-                initUploadCSV();
-                checkUploadStatus();
+                        });
+                        $(".btn-fire").click(function (e) {
+                            e.preventDefault();
+                            var form = $(".form-triggers");
+                            var checked = form.find("input[type=checkbox]:checked");
+                            if (checked.length === 0) {
+                                Msg.info("Please select some triggers to fire immediately");
+                                return;
+                            }
+                            var c = confirm("Are you sure you want to fire " + checked.length + " triggers?");
+                            if (!c) {
+                                return;
+                            }
+                            var data = form.serialize();
+                            data += "&Fire=true";
+                            flog("data", data);
+                            //return;
 
-                $('body').on('click', '.btn-select-all', function (e) {
-                    e.preventDefault();
-                    selectState = (selectState ? false : true);
-                    $("[name=triggerId]").prop("checked", selectState);
-                });
-            });
+                            $.ajax({
+                                type: 'POST',
+                                url: window.location.href,
+                                data: data,
+                                dataType: "json",
+                                error: function (resp) {
+                                    flog('error', resp);
+                                    Msg.error('err');
+                                },
+                                success: function (resp) {
+                                    flog("resp", resp);
+                                    if (resp.status) {
+                                        Msg.info("Fired triggers OK");
+                                        $('#triggers-body').reloadFragment({
+                                            whenComplete: function () {
+                                                selectState = false;
+                                                flog("Reload Complete", selectState);
+                                                $("[name=triggerId]").prop("checked", selectState);
+                                            }
+                                        });
+                                    } else {
+                                        Msg.error("Sorry, an error occured attempting to fire the selected triggers: " + resp.messages);
+                                    }
+                                },
+                                error: function () {
+                                    Msg.error("Sorry, an error occured attempting to fire the selected triggers");
+                                }
+                            });
+                        });
+                        initUploadCSV();
+                        if (uploadTaskName !== false) {
+                            checkUploadStatus();
+                        }
+
+                        $('body').on('click', '.btn-select-all', function (e) {
+                            e.preventDefault();
+                            selectState = (selectState ? false : true);
+                            $("[name=triggerId]").prop("checked", selectState);
+                        });
+                    });
             function initHistorySearch() {
                 var reportRange = $('#report-range');
-
                 reportRange.exist(function () {
                     flog("init report range");
                     reportRange.daterangepicker({
@@ -319,13 +319,11 @@
 
             function doHistorySearch(startDate, endDate) {
                 flog('doHistorySearch', startDate, endDate);
-
                 var data = {
                     startDate: formatDate(startDate),
                     finishDate: formatDate(endDate)
                 };
                 flog("data", data);
-
                 var target = $("#triggers-body");
                 //target.load();
 
@@ -333,7 +331,6 @@
                 var baseHref = window.location.pathname + "?" + dates;
                 var href = baseHref;
                 $("a.history-csv").attr("href", "email-history.csv?" + dates);
-
                 $.ajax({
                     type: "GET",
                     url: href,
@@ -347,16 +344,13 @@
                         window.history.pushState(null, "Email History", href);
                     }
                 });
-
             }
             function initUploadCSV() {
                 var modalUploadCsv = $("#modal-upload-csv");
                 $(".uploadCsv").click(function (e) {
                     e.preventDefault();
-
                     modalUploadCsv.show(500);
                 });
-
                 $("#do-upload-csv").mupload({
                     buttonText: "<i class=\"clip-folder\"></i> Upload csv",
                     url: "triggerTimers.csv",
@@ -390,7 +384,7 @@
                 $.ajax({
                     type: 'GET',
                     dataType: "json",
-                    url: "/tasks/${page.uploadTaskName}",
+                    url: "/tasks/" + uploadTaskName,
                     success: function (result) {
                         flog("success", result);
                         if (result.data) {
@@ -408,7 +402,6 @@
                                 resultUploadCsv.find('.num-unmatched').text("-");
                             }
                             resultUploadCsv.show();
-
                             var modalUploadCsv = $("#modal-upload-csv");
                             modalUploadCsv.show(500);
                             if (result.data.statusInfo.complete) {
