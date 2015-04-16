@@ -24,23 +24,25 @@
                             <col width="" />
                             <col width="" />
                             <col width="" />
-                            <col width="" />
                         </colgroup>
                         <thead>
                             <tr>
                                 <th>Transaction ID</th>
+                                <th >Purchaser</th>
                                 <th >Total Amount</th>
                                 <th >Currency</th>
                                 <th >Purchase Status</th>
                                 <th >Created Date</th>
-                                <th >Created By</th>
-                                <th>Organisation</th>
                             </tr>
                         </thead>
                         <tbody id="payments-body">
                             #foreach($payment in $page.paymentTransactionByOrg)
                             <tr>
                                 <td>$!payment.transactionID</td>
+                                <td>
+                                    <a href="/manageUsers/$payment.createdBy.id">$payment.createdBy.formattedName</a>
+                                </td>
+
                                 #if( $payment.amount )
                                 <td>$!payment.amount</td>
                                 <td>$!payment.currencyCode</td>
@@ -59,9 +61,6 @@
                                     </div>
                                 </td>
                                 <td>$formatter.formatDateTime($payment.createdDate)</td>
-                                <td>$payment.createdBy.name</td>
-                                <td>$payment.org.title</td>
-
                             </tr>
                             #end
                         </tbody>
@@ -174,6 +173,29 @@
                                 </div>
                                 <div class="col-sm-5">
                                     <input type="text" class="form-control required" required="true" id="phone" name="phone" value = "555-1234"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email" class="col-sm-3 control-label">Customer Address</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control required" required="true" id="addressLine1" name="addressLine1" value = "123 Sea St"/>
+                                </div>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control required" required="true" id="addressLine2" name="addressLine2" value = "Cronulla"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email" class="col-sm-3 control-label">City/State/Postcode</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="city" name="city" value = "Sydney"/>
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="state" name="state" value = "NSW"/>
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="postCode" name="postCode" value = "2000"/>
                                 </div>
                             </div>
 
@@ -308,6 +330,12 @@
                             surName: $('#surName').val(),
                             phone : $('#phone').val(),
                             email : $('#email').val(),
+
+                            addressLine1 : $('#addressLine1').val(),
+                            addressLine2 : $('#addressLine2').val(),
+                            city : $('#city').val(),
+                            state : $('#state').val(),
+                            postCode : $('#postCode').val(),
 
                             number: eCrypt.encryptValue(num),
                             cvn: eCrypt.encryptValue(cvn)
