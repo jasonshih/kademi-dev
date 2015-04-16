@@ -28,6 +28,8 @@
                         <li class=""><a href="#details" data-toggle="tab">Details</a></li>
                         <li class=""><a href="#rewardContent" data-toggle="tab">Content</a></li>
                         <li class=""><a href="#groups" data-toggle="tab">Groups</a></li>
+                        <li class=""><a href="#points" data-toggle="tab">Points</a></li>
+                        <li class=""><a href="#debits" data-toggle="tab">Debits</a></li>
                     </ul>
                 </div>
                 <div class="tab-content">
@@ -107,6 +109,86 @@
                             #end
                         </div>
                     </div>
+
+                    <div class="tab-pane" id="points">
+                        <div class="pull-right">
+                            <a class="btn btn-sm btn-default periods-delete" href="points.csv" download="points.csv">
+                                <span class="glyphicon glyphicon-download"></span>
+                                Save Points CSV
+                            </a>
+                        </div>
+                        <br/>
+
+                        <p>Shows points allocated with this tag</p>
+
+                        <table class="table table-bordered table-striped" id="table-periods">
+                            <colgroup>
+                                <col />
+                                <col />
+                                <col />
+                                <col />
+                                <col />
+                            </colgroup>                            
+                            <thead>
+                                <tr>
+                                    <th>Points</th>
+                                    <th>Issued Date</th>
+                                    <th>Issued To</th>
+                                    <th>Reason</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                #foreach($points in $page.awardedPoints)
+                                <tr>
+                                    <td>$points.numPoints</td>
+                                    <td>$formatter.formatDateTime($points.issuedDate)</td>
+                                    <td>$points.issuedTo.formattedName</td>
+                                    <td>$!points.reason</td>
+                                </tr>
+                                #end
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="tab-pane" id="debits">
+                        <div class="pull-right">
+                            <a class="btn btn-sm btn-default periods-delete" href="debits.csv" download="debits.csv">
+                                <span class="glyphicon glyphicon-download"></span>
+                                Save Debits CSV
+                            </a>
+                        </div>
+                        <br/>
+
+                        <p>Shows debits allocated with this tag</p>
+
+                        <table class="table table-bordered table-striped" id="table-periods">
+                            <colgroup>
+                                <col />
+                                <col />
+                                <col />
+                                <col />
+                            </colgroup>                            
+                            <thead>
+                                <tr>
+                                    <th>Points</th>
+                                    <th>Issued Date</th>
+                                    <th>Rewarded To</th>
+                                    <th>Reason</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                #foreach($debit in $page.debitPoints)
+                                <tr>
+                                    <td>$debit.numPoints</td>
+                                    <td>$formatter.formatDateTime($debit.issuedDate)</td>
+                                    <td>$debit.points.issuedTo.formattedName</td>
+                                    <td>$!debit.reason</td>
+                                </tr>
+                                #end
+                            </tbody>
+                        </table>
+                    </div>
+
                 </div>
             </div>
         </form>
@@ -122,7 +204,7 @@
                 $("form.managePointsSystem").forms({
                     callback: function (resp) {
                         flog("done");
-                        if( resp.status ) {
+                        if (resp.status) {
                             Msg.info("Saved");
                         } else {
                             Msg.error("Sorry, couldnt save");
