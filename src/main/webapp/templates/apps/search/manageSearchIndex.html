@@ -22,8 +22,8 @@
         <hr style="clearfix"/>
 
         #if( $items )
-            <pre>$items
-            </pre>
+        <pre>$items
+        </pre>
         #end
 
         #if( $items.aggregations )
@@ -41,15 +41,15 @@
                     <th>$entry.key</th>
                     <th></th>
                 </tr>
-                    #if( $entry.value.buckets )
-                    #foreach($bucket in $entry.value.buckets)
-                    <tr>
-                        <td>$bucket.key</td>
-                        <td>$bucket.docCount</td>
-                    </tr>
-                    #end
-                    #else
-                    #end
+                #if( $entry.value.buckets )
+                #foreach($bucket in $entry.value.buckets)
+                <tr>
+                    <td>$bucket.key</td>
+                    <td>$bucket.docCount</td>
+                </tr>
+                #end
+                #else
+                #end
 
                 #end
             </tbody>
@@ -81,14 +81,25 @@
         <div class="well">
             <h3>Example</h3>
             <pre>{
+"fields": ["title", "category","tags"],
   "query" : {
     "term" : { "content" : "farm" }
+},
+"aggregations": {
+        "category": {
+            "terms": { "field": "category" },
+"aggregations": {
+        "tags": {
+            "terms": { "field": "tags" }
+        }
 }
-}</pre>
+        }
+    }
+}
         </div>
 
         <script type="text/javascript">
-            $(document).ready(function() {
+            $(document).ready(function () {
 
             });
         </script>

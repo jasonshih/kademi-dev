@@ -587,9 +587,17 @@
             }
 
             function doRemovePeriods(checkBoxes) {
+                var vals = "";
+                checkBoxes.each(function(i,n){
+                        vals += $(n).val() + ",";
+                });
+                var data = {
+                        deletePeriodId : vals
+                };
+                flog("periodis", data);
                 $.ajax({
                     type: 'POST',
-                    data: checkBoxes,
+                    data: data,
                     dataType: "json",
                     url: window.location.pathname,
                     success: function (data) {
