@@ -6,6 +6,7 @@ function initContentSearch() {
         var query = $(this).val();
         typewatch(function() {
             // Load fragment
+            flog("do search", $('#search-results'));
             $('#search-results').load('contentSearch?q=' + encodeURIComponent(query.trim()) + ' #search-results > *');
         }, 500);
     });
@@ -26,7 +27,7 @@ function initReindexForms() {
             flog("The contents of current repository have been re-indexed", resp);
             // Should be disabled the Re-index button while processing, just enable after re-index thread was started
             $(".btn-reindex").attr({"disabled": "disabled"});
-            
+
             // Load state of re-indexing process
             setTimeout(function(){reIndexState()}, 1500);
         }
@@ -46,7 +47,7 @@ function reIndexState() {
 				$(".pageMessage").empty();
 				$(".pageMessage").html("<b>Re-Indexing Status: </b><i class=\"badge badge-info\">" + data + "</i> files have been processed");
 			}
-			
+
 			var lblReindex = $(".lbl-reindex-action");
 			if (state == 'PENDING' || state == 'PROCESSING') {
 				if (state == 'PROCESSING') {
@@ -61,14 +62,14 @@ function reIndexState() {
 					flog("RE-INDEXING PROCESS HAVE BEEN STOPPED BY SOMEONE!!!");
 					$(".btn-reindex").removeAttr("disabled");
 				}
-				
+
 				// Throw exception message
 				if (!status) {
 					Msg.error(state);
 				}
 				lblReindex.empty();
 				lblReindex.html("Re-index");
-				
+
 				setTimeout(function() {
 					// Should be closed message after 5 minutes
 					$(".pageMessage").css({"display":"none"});
