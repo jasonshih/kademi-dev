@@ -1,0 +1,137 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Manage Databse</title>
+    </head>
+    <body class="">
+
+        <form name="frmDetails" action="." method="post" class="form-horizontal database-form">
+            <div class="pull-right page-action">
+                <button class="btn btn-sm btn-success" type="submit">
+                    <span class="fa fa-save"></span>
+                    Save changes
+                </button>
+            </div>
+
+            <div class="tabbable">
+                <ul class="nav nav-tabs tab-bricky">
+                    <li><a data-toggle="tab" href="#general">Details</a></li>
+                    <li><a data-toggle="tab" href="#notes">Notes</a></li>
+                    <li><a data-toggle="tab" href="#records">Records</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div id="general" class="tab-pane">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="title">Name</label>
+                            <div class="col-md-8">
+                                <input type="text" name="name" id="name" value="$page.name" placeholder="" class="required form-control"  required="true" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="title">Title</label>
+                            <div class="col-md-8">
+                                <input type="text" name="title" id="title" value="$page.title" placeholder="" class="required form-control"  required="true" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="notes" class="tab-pane">  <!-- notes -->
+                        <small>For internal use.</small>
+                        <textarea cols="100" name="notes" id="notes" rows="20" placeholder="" class="form-control">$!page.notes</textarea>
+                    </div> <!-- end notes -->
+
+
+
+                    <div id="records" class="tab-pane">
+
+                        <div class="pull-right">
+                            <a type="button" class="btn btn-sm btn-success" href="#addModal" data-toggle="modal">
+                                <span class="glyphicon glyphicon-plus"></span>
+                                Add record
+                            </a>
+
+                            <button type="button" class="btn btn-sm btn-danger">
+                                <span class="glyphicon glyphicon-remove"></span>
+                                Delete
+                            </button>
+                        </div>
+
+                        <br/>
+
+                        <table class="table table-bordered table-striped" id="table-periods">
+                            <colgroup>
+                                <col width="" />
+                                <col width="" />
+                                <col width="" />
+                                <col data-sort="false" width="30px" />
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>Start</th>
+                                    <th>End</th>
+                                    <th>Processed date</th>
+                                    <th><input type="checkbox" name="deletePeriodId" class="chk-all" /></th>
+                                </tr>
+                            </thead>
+                            <tbody id="records-body">
+                                #foreach($doc in $page.listDocs())
+                                <tr>
+                                    <td><a href="$doc.name">$doc.name</a></td>
+                                    <td>$doc.docType</td>
+                                    <td>$doc.createdDate</td>
+                                </tr>
+                                #end
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div id="addModal" class="modal fade level-modal" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Add Record</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" method="POST" action="." id="addRecordForm">
+                    <div class="form-group">
+                        <label for="newName" class="col-sm-3 control-label">Simple name</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control regex required" required="true" id="newName" name="newName" data-regex="^[a-zA-Z0-9-]+$" />
+                            <span class="help-block"><small>Simple characters only, no punctuation, dots, etc, all lower case, not a domain name</small></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="docType" class="col-sm-3 control-label">Type</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" required="true" id="docType" name="docType" />
+                        </div>
+                    </div>
+
+                    <textarea name="json" class="form-control"></textarea>
+
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-sm btn-success" data-type="form-submit">Save</button>
+            </div>
+        </div>
+
+
+
+
+        <script type="text/javascript">
+            $(function () {
+                $("#addRecordForm").forms({
+                    callback: function() {
+                        Msg.info("Done");
+                        $("#records-body").reloadFragment();
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>
