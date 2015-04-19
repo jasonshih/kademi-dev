@@ -1,0 +1,51 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Manage Databse</title>
+    </head>
+    <body class="">
+
+        <form name="frmDetails" action="." method="post" class="form-horizontal record-form">
+            <div class="pull-right page-action">
+                <button class="btn btn-sm btn-success" type="submit">
+                    <span class="fa fa-save"></span>
+                    Save changes
+                </button>
+            </div>
+
+            <div class="tabbable">
+                <ul class="nav nav-tabs tab-bricky">
+                    <li><a data-toggle="tab" href="#general" class="active">Details</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div id="general" class="tab-pane">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="title">Name</label>
+                            <div class="col-md-8">
+                                $page.name
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="docType">Type</label>
+                            <div class="col-md-8">
+                                $!page.docType
+                            </div>
+                        </div>
+                        <textarea name="json" class="form-control" style="height: 400px">$!page.json</textarea>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+
+        <script type="text/javascript">
+            $(function () {
+                $("#addRecordForm").forms({
+                    callback: function() {
+                        Msg.info("Done");
+                        $("#records-body").reloadFragment();
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>
