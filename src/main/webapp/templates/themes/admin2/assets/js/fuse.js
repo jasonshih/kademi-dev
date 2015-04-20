@@ -153,8 +153,12 @@ function initTabbable() {
         $(window).on('hashchange', function () {
             var hash = window.location.hash.replace('-tab', '');
             flog('hashchanged', hash);
-            $('.tabbable .nav-tabs a[href=' + hash + ']').trigger('click');
+            var tabbable = $('.tabbable .nav-tabs a[href=' + hash + ']');
+            tabbable.trigger('click');
         }).trigger('hashchange');
+
+
+
     });
 }
 
@@ -165,7 +169,7 @@ function initChkAll() {
 
             chkAll.on('click', function () {
                 var table = chkAll.parents('table');
-                var chks = table.find('tbody input:checkbox');                
+                var chks = table.find('tbody input:checkbox');
                 chks.prop('checked', chkAll.is(':checked'));
             });
         });

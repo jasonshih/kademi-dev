@@ -21,7 +21,7 @@
             <div class="btn-group publishing pull-right">
                 #if( $currentBranch.live )
                 <a href="/repositories/$page.closest("repository").name/manageBranches" class="islive btn btn-sm btn-danger">
-                    <i class="fa fa-gear"></i>
+                   <i class="fa fa-gear"></i>
                     LIVE
                 </a>
                 #else
@@ -30,7 +30,7 @@
                     PUBLISH
                 </a>
                 <a href="/repositories/$page.closest("repository").name/manageBranches" class="btn btn-sm btn-primary">
-                    <i class="fa fa-gear"></i>
+                   <i class="fa fa-gear"></i>
                     Manage versions
                 </a>
                 #end
@@ -131,7 +131,7 @@
                                     <th  class="action">
                                         <div class="btn-group">
                                             <a title="Paste" href="$page.href" class="btn btn-success btn-sm btn-paste requires-clipboard" data-clipboard="default" href="$page.href"><i class="fa fa-paste"></i></a>
-                                            <a title="Create a folder" class="btn btn-success btn-sm btn-create-folder" href=""><i class="clip-folder-plus"></i></a>                                            
+                                            <a title="Create a folder" class="btn btn-success btn-sm btn-create-folder" href=""><i class="clip-folder-plus"></i></a>
                                             <a title="Upload files" class="btn btn-success btn-sm btn-upload-file" href=""><i class="fa fa-cloud-upload"></i></a>
                                             <a title="Create text file" class="btn btn-success btn-sm btn-new-text-file" href=""><i class="fa fa-file-text-o"></i></a>
                                         </div>
@@ -167,7 +167,7 @@
                                             <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cog"></i> <span class="caret"></span></button>
                                             <ul class="dropdown-menu pull-right" role="menu">
                                                 <li><a href="${f.path}" class="btn-rename-file" title="Rename folder"><i class="fa fa-edit"></i> Rename</a></li>
-                                                <li class="divider"></li>                                                
+                                                <li class="divider"></li>
                                                 <li><a href="$f.href" class="btn-copy"><span class="fa fa-copy"></span> Copy</a></li>
                                                 <li><a href="$f.href" class="btn-cut"><span class="fa fa-cut"></span> Cut</a></li>
                                                 <li class="requires-clipboard" data-clipboard="default"><a href="$f.href" class="btn-paste"><span class="fa fa-paste"></span> Paste</a></li>
@@ -186,7 +186,7 @@
                                 #set($aClass = $formatter.ifTrue($f.is("image"), "show-color-box group1 cboxElement", ""))
                                 #set($linkToFile = $f.href)
                                 #if(!$isImage)
-                                    #set($linkToFile = "texteditor?fileName=" + $f.name)
+                                #set($linkToFile = "texteditor?fileName=" + $f.name)
                                 #end
 
                                 <tr class="$type">
@@ -207,8 +207,8 @@
                                                 <li><a href="${f.path}" class='btn-history-file' title="Show history"><i class="clip-history"></i> Show history</a></li>
                                                 <li class="divider"></li>
                                                 <li><a href="$f.href" class="btn-copy"><span class="fa fa-copy"></span> Copy</a></li>
-                                                <li><a href="$f.href" class="btn-cut"><span class="fa fa-cut"></span> Cut</a></li>                                                
-                                                <li class="divider"></li>                                                
+                                                <li><a href="$f.href" class="btn-cut"><span class="fa fa-cut"></span> Cut</a></li>
+                                                <li class="divider"></li>
                                                 <li><a href="${f.path}" class="btn-delete-file" title="Delete file"><i class="fa fa-times"></i> Delete</a></li>
                                             </ul>
                                         </div>
@@ -224,40 +224,64 @@
         </div>
 
         <div id="modal-add-page" class="modal modal-lg fade modal-fuse-editor" aria-hidden="true" tabindex="-1">
-            <div class="modal-header">
-                <button aria-hidden="true" data-type="modal-dismiss" class="close" type="button">&times;</button>
-                <h4 class="modal-title">Add/edit web page</h4>
-            </div>
-            <div class="modal-body">
-                <form method="POST" action="." class="form-horizontal">
+            <form method="POST" action="$page.href" class="form-horizontal">
+                <div class="modal-header">
+                    <button aria-hidden="true" data-type="modal-dismiss" class="close" type="button">&times;</button>
+                    <input type="text" name="title" id="title" class="form-control required" style="width: 80%" value="" placeholder="A title for the new page" />
+                </div>
+                <div class="modal-body">
                     <input type="hidden" name="pageName" value="" />
-                    <div class="form-group">
-                        <label for="title" class="control-label col-md-2">Page title</label>
-                        <div class="col-md-4">
-                            <input type="text" name="title" id="title" class="form-control required" value="" placeholder="A title for the new page" />
-                        </div>
-                        <label for="template" class="control-label col-md-2">Page template</label>
-                        <div class="col-md-4">
-                            <select name="template" id="template" class="form-control">
-                                <option value="">None</option>
-                                #foreach($templateEntry in $page.closest("branch").getTemplates($page).entrySet() )
-                                <option value="$templateEntry.key">$templateEntry.value</option>
-                                #end
-                            </select>
+                    <div class="tabbable">
+                        <ul class="nav nav-tabs nav-fileeditor nav-suppress-href">
+                            <li><a data-toggle="tab" href="#editor-content">Content</a></li>
+                            <li><a data-toggle="tab" href="#editor-info">Info</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div id="editor-content" class="tab-pane">
+                                <textarea name="body" id="body" class="htmleditor toolbar-Full"></textarea>
+                            </div>
+                            <div id="editor-info" class="tab-pane">
+                                <div class="form-group">
+                                    <label for="template" class="control-label col-md-3">Page template</label>
+                                    <div class="col-md-4">
+                                        <select name="template" id="template" class="form-control">
+                                            <option value="">None</option>
+                                            #foreach($templateEntry in $page.closest("branch").getTemplates($page).entrySet() )
+                                            <option value="$templateEntry.key">$templateEntry.value</option>
+                                            #end
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="itemType" class="control-label col-md-3">Item type</label>
+                                    <div class="col-md-4">
+                                        <input type="text" name="itemType" id="itemType" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="category" class="control-label col-md-3">Category</label>
+                                    <div class="col-md-4">
+                                        <input type="text" name="category" id="category" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="tags" class="control-label col-md-3">Tags</label>
+                                    <div class="col-md-4">
+                                        <input type="text" name="tags" id="tags" />
+                                    </div>
+                                </div>
+
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="col-md-12">
-                            <textarea name="body" id="body" class="htmleditor toolbar-Full"></textarea>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-sm btn-default" data-type="modal-dismiss" type="button">Close</button>
-                <button class="btn btn-sm btn-primary btn-img btn-history-page hidden" type="button">History <img class='ajax-loader' src='/static/common/loading.gif' /></button>
-                <button class="btn btn-sm btn-primary btn-img" data-type="form-submit" type="button">Save <img class='ajax-loader' src='/static/common/loading.gif' /></button>
-            </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-default" data-type="modal-dismiss" type="button">Close</button>
+                    <button class="btn btn-sm btn-primary btn-img btn-history-page hidden" type="button">History <img class='ajax-loader' src='/static/common/loading.gif' /></button>
+                    <button class="btn btn-sm btn-primary btn-img" data-type="form-submit" type="button">Save <img class='ajax-loader' src='/static/common/loading.gif' /></button>
+                </div>
+            </form>
         </div>
 
 
@@ -366,14 +390,14 @@
                 });
                 flog("dropz", Dropzone);
                 var dz = Dropzone.forElement("#uploadFileDropzone");
-                dz.on("success", function(file) {
+                dz.on("success", function (file) {
                     flog("added file", file);
                     reloadFileList();
                 });
-                dz.on("error", function(file, errorMessage) {
+                dz.on("error", function (file, errorMessage) {
                     Msg.error("An error occured uploading: " + file.name + " because: " + errorMessage);
-                });                
+                });
             });
-        </script>        
+        </script>
     </body>
 </html>
