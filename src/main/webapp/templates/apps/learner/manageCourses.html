@@ -40,7 +40,7 @@
                         #else
                         <a href="${b.href}" class="hide-branch pull-right btn-xs btn btn-warning" title="Hide this version. Can be restored from the manage versions screen"><i class="clip-eye"></i></a>
                         #end
-                    </aside>                    
+                    </aside>
                     <a href="${b.href}manageCourses" class="branch noclear">
                         $b.name
                     </a>
@@ -51,15 +51,15 @@
 
         <div class="btn-group" #if (!$page.externalUrl) title="Please add at least 1 course to View website" #end>
             #if ($page.externalUrl)
-                <a target='_blank' href='${page.externalUrl}' class='btn btn-sm btn-success'>
-                    <i class="fa fa-arrow-circle-right"></i>
-                    View website
-                </a>
+            <a target='_blank' href='${page.externalUrl}' class='btn btn-sm btn-success'>
+                <i class="fa fa-arrow-circle-right"></i>
+                View website
+            </a>
             #else
-                <a class="btn btn-sm btn-success disabled" title="Please add at least 1 course to View website">
-                    <i class="fa fa-arrow-circle-right"></i>
-                    View website
-                </a>
+            <a class="btn btn-sm btn-success disabled" title="Please add at least 1 course to View website">
+                <i class="fa fa-arrow-circle-right"></i>
+                View website
+            </a>
             #end
             <div class="btn-group" title="">
                 <a class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
@@ -114,43 +114,43 @@
                         <ul id="courses-list" class="courses-list">
                             #set($levels = $page.closest("program").children.ofType.folder.sortByIntField("order").groupByField("level") )
                             #foreach($level in $levels.values())
-                                #foreach($course in $level)
-                                    <li class="course clearfix" id="course-${course.name}">
-                                        <aside class="pull-right">
-                                            <div class="btn-group btn-group-sm">
-                                                <button type="button" class="btn btn-sm btn-default btn-move-course" title="Move up or down"><i class="glyphicon glyphicon-sort"></i></button>
-                                                <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown">
-                                                    <i class="fa fa-cog"></i>
-                                                </button>
-                                                <ul class="dropdown-menu pull-right" role="menu">
-                                                    <li><a class="btn-edit-course" href="${course.href}">Edit details</a></li>
-                                                    <li><a href="${course.href}?format=pdf" target="_blank">Export to PDF</a></li>
-                                                    <li><a href="${course.href}?format=text" target="_blank">Export to text</a></li>
-                                                    <li><a href="#" class="btn-add-splitter">Add splitter below</a></li>
-                                                    <li><a href="#" class="btn-copy-course">Copy this course</a></li>
-                                                    <li><a href="#" class="btn-cut-course">Cut this course</a></li>
-                                                    <li class="divider"></li>
-                                                    <li><a class="btn-delete-course" href="${course.href}">Delete this course</a></li>
-                                                </ul>
-                                            </div>
-                                        </aside>
-                                        <a href="$course.href">$course.name - $course.title</a>
-                                    </li>
-                                #end
-                                <li class="course splitter clearfix">
-                                    <aside class="pull-right">
-                                        <div class="btn-group btn-group-sm">
-                                            <button type="button" class="btn btn-sm btn-default btn-move-splitter"><i class="glyphicon glyphicon-sort"></i></button>
-                                            <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown">
-                                                <i class="fa fa-cog"></i>
-                                            </button>
-                                            <ul class="dropdown-menu pull-right" role="menu">
-                                                <li><a href="" class="btn-delete-splitter">Delete splitter</a></li>
-                                            </ul>
-                                        </div>
-                                    </aside>
-                                    <span>Level Splitter</span>
-                                </li>
+                            #foreach($course in $level)
+                            <li class="course clearfix" id="course-${course.name}">
+                                <aside class="pull-right">
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="button" class="btn btn-sm btn-default btn-move-course" title="Move up or down"><i class="glyphicon glyphicon-sort"></i></button>
+                                        <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown">
+                                            <i class="fa fa-cog"></i>
+                                        </button>
+                                        <ul class="dropdown-menu pull-right" role="menu">
+                                            <li><a class="btn-edit-course" href="${course.href}">Edit details</a></li>
+                                            <li><a href="${course.href}?format=pdf" target="_blank">Export to PDF</a></li>
+                                            <li><a href="${course.href}?format=text" target="_blank">Export to text</a></li>
+                                            <li><a href="#" class="btn-add-splitter">Add splitter below</a></li>
+                                            <li><a href="#" class="btn-copy-course">Copy this course</a></li>
+                                            <li><a href="#" class="btn-cut-course">Cut this course</a></li>
+                                            <li class="divider"></li>
+                                            <li><a class="btn-delete-course" href="${course.href}">Delete this course</a></li>
+                                        </ul>
+                                    </div>
+                                </aside>
+                                <a href="$course.href">$course.name - $course.title</a>
+                            </li>
+                            #end
+                            <li class="course splitter clearfix">
+                                <aside class="pull-right">
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="button" class="btn btn-sm btn-default btn-move-splitter"><i class="glyphicon glyphicon-sort"></i></button>
+                                        <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown">
+                                            <i class="fa fa-cog"></i>
+                                        </button>
+                                        <ul class="dropdown-menu pull-right" role="menu">
+                                            <li><a href="" class="btn-delete-splitter">Delete splitter</a></li>
+                                        </ul>
+                                    </div>
+                                </aside>
+                                <span>Level Splitter</span>
+                            </li>
                             #end
                         </ul>
                         <p class="pull-right">
@@ -171,46 +171,46 @@
 
                         <ul id="modules-list" class="modules-list">
                             #foreach($level in $levels.values())
-                                #foreach($module in $level)
-                                    <li class="module clearfix" data-author-notes="$!module.notes" id="${module.name}">
-                                        <aside class="pull-right">
-                                            <div class="btn-group btn-group-sm">
-                                                <button type="button" class="btn btn-sm btn-default btn-move-module"><i class="glyphicon glyphicon-sort"></i></button>
-                                                <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown">
-                                                    <i class="fa fa-cog"></i>
-                                                </button>
-                                                <ul class="dropdown-menu pull-right" role="menu">
-                                                    <li><a href="${module.name}" class="btn-edit-module" role="button">Edit module</a></li>
-                                                    <li><a href="${module.name}">Manage this module</a></li>
-                                                    <li><a href="${module.name}?goto=" target="_blank">View module</a></li>
-                                                    <li><a href="#" class="btn-add-splitter">Add splitter below</a></li>
-                                                    <li><a href="#" class="btn-duplicate-module">Duplicate</a></li>
-                                                    <li><a href="${module.name}?format=pdf" target="_blank">Export to PDF</a></li>
-                                                    <li><a href="${module.name}?format=text" target="_blank">Export to text</a></li>
-                                                    <li><a href="#" class="btn-copy-module">Copy this module</a></li>
-                                                    <li><a href="#" class="btn-cut-module">Cut this module</a></li>
-                                                    <li class="divider"></li>
-                                                    <li><a class="btn-delete-module" href="${module.name}">Delete this module</a></li>
-                                                </ul>
-                                            </div>
-                                        </aside>
-                                        <a href="$module.href">$module.name - $module.title</a>
-                                    </li>
-                                #end
-                                <li class="module splitter clearfix">
-                                    <aside class="pull-right">
-                                        <div class="btn-group btn-group-sm">
-                                            <button type="button" class="btn btn-sm btn-default btn-move-splitter"><i class="glyphicon glyphicon-sort"></i></button>
-                                            <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown">
-                                                <i class="fa fa-cog"></i>
-                                            </button>
-                                            <ul class="dropdown-menu pull-right" role="menu">
-                                                <li><a href="" class="btn-delete-splitter">Delete splitter</a></li>
-                                            </ul>
-                                        </div>
-                                    </aside>
-                                    <span>Level Splitter</span>
-                                </li>
+                            #foreach($module in $level)
+                            <li class="module clearfix" data-author-notes="$!module.notes" id="${module.name}">
+                                <aside class="pull-right">
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="button" class="btn btn-sm btn-default btn-move-module"><i class="glyphicon glyphicon-sort"></i></button>
+                                        <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown">
+                                            <i class="fa fa-cog"></i>
+                                        </button>
+                                        <ul class="dropdown-menu pull-right" role="menu">
+                                            <li><a href="${module.name}" class="btn-edit-module" role="button">Edit module</a></li>
+                                            <li><a href="${module.name}">Manage this module</a></li>
+                                            <li><a href="${module.name}?goto=" target="_blank">View module</a></li>
+                                            <li><a href="#" class="btn-add-splitter">Add splitter below</a></li>
+                                            <li><a href="#" class="btn-duplicate-module">Duplicate</a></li>
+                                            <li><a href="${module.name}?format=pdf" target="_blank">Export to PDF</a></li>
+                                            <li><a href="${module.name}?format=text" target="_blank">Export to text</a></li>
+                                            <li><a href="#" class="btn-copy-module">Copy this module</a></li>
+                                            <li><a href="#" class="btn-cut-module">Cut this module</a></li>
+                                            <li class="divider"></li>
+                                            <li><a class="btn-delete-module" href="${module.name}">Delete this module</a></li>
+                                        </ul>
+                                    </div>
+                                </aside>
+                                <a href="$module.href">$module.name - $module.title</a>
+                            </li>
+                            #end
+                            <li class="module splitter clearfix">
+                                <aside class="pull-right">
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="button" class="btn btn-sm btn-default btn-move-splitter"><i class="glyphicon glyphicon-sort"></i></button>
+                                        <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown">
+                                            <i class="fa fa-cog"></i>
+                                        </button>
+                                        <ul class="dropdown-menu pull-right" role="menu">
+                                            <li><a href="" class="btn-delete-splitter">Delete splitter</a></li>
+                                        </ul>
+                                    </div>
+                                </aside>
+                                <span>Level Splitter</span>
+                            </li>
                             #end
                         </ul>
                         <p class="pull-right">
@@ -250,6 +250,28 @@
                             <textarea name="programNotes" id="programNotes" placeholder="Author notes" maxlength="255" cols="2" rows="2" class="form-control"></textarea>
                         </div>
                     </div>
+
+                    <div class="form-group">
+                        <label for="" class="control-label col-md-3">Search fields</label>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="itemType" class="control-label col-md-3">Type</label>
+                        <div class="col-md-3">
+                            <input type="text" id="itemType" class="form-control" name="itemType" value="" placeholder="Top level category for search" />
+                        </div>
+                        <label for="category" class="control-label col-md-3">Category</label>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control"  name="category" id="category" value=""/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tags" class="control-label col-md-3">Tags</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control"  name="tags" id="tags" value=""/>
+                        </div>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -264,7 +286,7 @@
                     <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
                     <h4 class="modal-title">Course Details</h4>
                 </div>
-                <div class="modal-body">                
+                <div class="modal-body">
                     <input type="hidden" name="originalCourseName" value=""  />
                     <div class="form-group">
                         <label for="programTitle" class="control-label col-md-2">Course code</label>
@@ -290,13 +312,35 @@
                         <div class="col-md-10">
                             <textarea name="courseDescription" id="courseDescription" placeholder="Displayed to users" maxlength="" cols="4" rows="2" class="form-control  htmleditor"></textarea>
                         </div>
-                    </div>                
+                    </div>
+                    <div class="form-group">
+                        <label for="" class="control-label col-md-3">Search fields</label>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="itemType" class="control-label col-md-3">Type</label>
+                        <div class="col-md-3">
+                            <input type="text" id="itemType" class="form-control" name="itemType" value="" placeholder="Top level category for search" />
+                        </div>
+                        <label for="category" class="control-label col-md-3">Category</label>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control"  name="category" id="category" value=""/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tags" class="control-label col-md-3">Tags</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control"  name="tags" id="tags" value=""/>
+                        </div>
+                    </div>
+
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
                     <button class="btn btn-sm btn-primary" data-type="form-submit" type="button">Save</button>
                 </div>
-            </form>        
+            </form>
         </div>
 
         <div id="moduleModal" class="modal modal-sm fade" tabindex="-1" aria-hidden="true">
@@ -325,7 +369,7 @@
                         <div class="col-md-8">
                             <textarea name="moduleNotes" id="moduleNotes" placeholder="Author notes" maxlength="255" cols="4" rows="2" class="form-control"></textarea>
                         </div>
-                    </div>                
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>

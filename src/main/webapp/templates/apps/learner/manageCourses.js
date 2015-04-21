@@ -163,7 +163,7 @@ function initCopyCutPaste() {
         var oldProgram = getFolderPath(oldUrl);
         var newProgram = getFolderPath(window.location.pathname);
         var newUrl = newProgram + "/" + courseId + '/';
-        
+
         flog("CutCopy", oldUrl, newUrl);
 
         var isCut = false;
@@ -192,7 +192,7 @@ function initCopyCutPaste() {
         var moduleCookie = getPasteCookie('module');
         var oldUrl = moduleCookie.cutUrl || moduleCookie.pasteUrl;
         var moduleId = oldUrl.replace(/^.+\/([a-zA-Z0-9]*)\/$/, '$1');
-        var newUrl = $('#courses-list').find('li.active').children('a').attr('href') + moduleId + '/';        
+        var newUrl = $('#courses-list').find('li.active').children('a').attr('href') + moduleId + '/';
 
         var isCut = false;
         if (moduleCookie.cutUrl) {
@@ -536,13 +536,16 @@ function showEditCourse(liCourse, courseHref, form, modal) {
     // Load title and notes into modal form
     $.ajax({
         type: 'GET',
-        url: courseHref + '_DAV/PROPFIND?fields=milton:title,milton:body,milton:notes&depth=0',
+        url: courseHref + '_DAV/PROPFIND?fields=milton:title,milton:body,milton:notes,milton:itemType,milton:searchCategory,milton:searchTags&depth=0',
         dataType: 'json',
         success: function (resp) {
             if (resp) {
                 var p = resp[0];
                 flog('set fields', p);
                 form.find('input[name=courseTitle]').val(p.title);
+                form.find('input[name=itemType]').val(p.itemType);
+                form.find('input[name=category]').val(p.category);
+                form.find('input[name=tags]').val(p.tags);
                 form.find('textarea[name=courseNotes]').val(p.notes);
                 form.find('textarea[name=courseDescription]').val(p.body);
 
@@ -628,13 +631,16 @@ function showEditProgram(programHref, form, modal) {
     // Load title and notes into modal form
     $.ajax({
         type: 'GET',
-        url: programHref + '_DAV/PROPFIND?fields=milton:title,milton:body&depth=0',
+        url: programHref + '_DAV/PROPFIND?fields=milton:title,milton:body,milton:itemType,milton:searchCategory,milton:searchTags&depth=0',
         dataType: 'json',
         success: function (resp) {
             if (resp) {
                 var p = resp[0];
                 flog('set fields', p);
                 form.find('input[name=programTitle]').val(p.title);
+                form.find('input[name=itemType]').val(p.itemType);
+                form.find('input[name=category]').val(p.category);
+                form.find('input[name=tags]').val(p.tags);
                 form.find('textarea').val(p.body);
             }
             modal.modal('show');
