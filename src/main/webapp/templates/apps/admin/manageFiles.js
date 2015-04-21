@@ -101,7 +101,7 @@ function initCRUDFiles() {
         if( name !== null ) {
             putEmptyFile(name);
         }
-    });    
+    });
 
     $('#importFromUrl').click(function(e) {
         e.stopPropagation();
@@ -132,7 +132,7 @@ function initFilesLayout() {
     });
     $('abbr.timeago').timeago();
 }
-    
+
 function initFiles() {
     initFilesLayout();
     var tableFiles = $('#table-files');
@@ -319,7 +319,7 @@ function loadModalEditorContent(modal, name) {
             var t = data.template;
             if (!t.endsWith('.html'))
                 t += '.html';
-            flog('select template', t, modal.find('select option[value="' + t + '"]'));            
+            flog('select template', t, modal.find('select option[value="' + t + '"]'));
             modal.find('select option').each(function(i, n) {
                 var opt = $(n);
                 //flog('compare', opt.attr('value'),t );
@@ -330,6 +330,9 @@ function loadModalEditorContent(modal, name) {
                 }
             });
             modal.find('input[name=title]').val(data.title);
+            modal.find('input[name=itemType]').val(data.itemType);
+            modal.find('input[name=category]').val(data.category);
+            modal.find('input[name=tags]').val(data.tags);
             modal.find('textarea').val(data.body);
             openFuseModal(modal);
         },

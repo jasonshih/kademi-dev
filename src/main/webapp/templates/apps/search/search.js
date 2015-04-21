@@ -36,7 +36,7 @@ function initReindexForms() {
 
 function reIndexState() {
 	$.ajax({
-		url: location.href + "Status",
+		url: location.href + "../manageSearchStatus",
 		success: function(res) {
 			flog("Response", res);
 			var resp = $.parseJSON(res);

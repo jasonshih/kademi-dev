@@ -40,8 +40,11 @@
                             <div class="result">
                                 #if( $page.public )
                                 <div class="pull-right">
+                                    #if( $hit.itemType )
+                                    <span class="label label-info">$hit.itemType</span>
+                                    #end
                                     #if( $hit.category )
-                                    <span class="label label-info">$hit.category</span>
+                                    <span class="label label-primary">$hit.category</span>
                                     #end
                                     #foreach( $tag in $hit.tags )
                                     <span class="label label-info">$tag</span>
@@ -96,16 +99,15 @@
                 <div class="col-md-4">
                     <ul class="nav nav-pills nav-stacked">
                         #foreach($bucket in $page.searchResults.buckets)
-                        <li class="$formatter.paramSelected('categories', $bucket.key, 'active')">
-                            <a href="$page.href?$formatter.toggleParamVal( 'categories', $bucket.key )">
+                        <li class="$formatter.paramSelected('term-itemType', $bucket.key, 'active')">
+                            <a href="$page.href?$formatter.toggleParamVal( 'term-itemType', $bucket.key )">
                                 <span class="badge pull-right">$bucket.docCount</span>
                                 $bucket.text
                             </a>
                             #if( $bucket.buckets )
                                 #foreach($sub in $bucket.buckets)
-                                    #set( $arg = $bucket.key + "/" + $sub.key )
-                            <li class="$formatter.paramSelected('tags', $arg, 'active')">
-                                <a href="$page.href?$formatter.toggleParamVal( 'tags', $arg )">
+                            <li class="$formatter.paramSelected('term-category', $sub.key, 'active')">
+                                <a href="$page.href?$formatter.toggleParamVal( 'term-category', $sub.key )">
                                     <span class="badge pull-right">$sub.docCount</span>
                                     - $sub.text
                                 </a>

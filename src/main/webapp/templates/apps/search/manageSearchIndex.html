@@ -13,13 +13,35 @@
         #end
 
         <form method="POST" action="$page.href">
-            <textarea name="source" style="height: 500px" class="form-control" placeholder="JSON source">$!request.params.source</textarea>
+            <textarea name="source" style="height: 250px" class="form-control" placeholder="JSON source">$!request.params.source</textarea>
             <br/>
             <button type="submit" class="btn btn-info col-md-4">Query</button>
         </form>
 
         <br style="clear: both"/>
         <hr style="clearfix"/>
+
+        <h2>Search items</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <td>Item</td>
+                    <td>Fields</td>
+                </tr>
+            </thead>
+            <tbody>
+                #foreach($hit in $items.hits.hits)
+                <tr>
+                    <td>$hit.id</td>
+                    <td>
+                        #foreach($field in $hit.fields.entrySet())
+                        $field.key=$field.value.value,
+                        #end
+                    </td>
+                </tr>
+                #end
+            </tbody>
+        </table>
 
         #if( $items )
         <pre>$items
@@ -56,27 +78,7 @@
         </table>
 
         #end
-        <h2>Search items</h2>
-        <table class="table">
-            <thead>
-                <tr>
-                    <td>Item</td>
-                    <td>Fields</td>
-                </tr>
-            </thead>
-            <tbody>
-                #foreach($hit in $items.hits.hits)
-                <tr>
-                    <td>$hit.id</td>
-                    <td>
-                        #foreach($field in $hit.fields.entrySet())
-                        $field.key=$field.value.value,
-                        #end
-                    </td>
-                </tr>
-                #end
-            </tbody>
-        </table>
+
 
         <div class="well">
             <h3>Example</h3>
@@ -95,8 +97,19 @@
 }
         }
     }
+}</pre>
+<pre>{
+"fields": ["title", "content","category","tags"],
+  "query" : {
+    "match_all" : {  }
 }
+        }
+    }
+}
+</pre>
         </div>
+
+
 
         <script type="text/javascript">
             $(document).ready(function () {
