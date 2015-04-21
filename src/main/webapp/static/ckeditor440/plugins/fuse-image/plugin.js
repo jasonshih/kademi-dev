@@ -64,7 +64,7 @@ CKEDITOR.plugins.add('fuse-image',
                 log("add to editor", editor);
                 return {
                     title: 'Insert/Edit Image',
-                    minWidth: 900,
+                    minWidth: 600,
                     minHeight: 480,
                     contents: [
                         {
