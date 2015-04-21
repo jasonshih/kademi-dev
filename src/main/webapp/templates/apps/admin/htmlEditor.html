@@ -8,6 +8,7 @@
     <body class="">
         #set($fname = $params.fileName)
         #set($file = $folder.child($fname))
+        #set($useRelative = $params.useRelative)
 
         <div id="editor-wrapper">
             <div class="clearfix editor-toolbar">
