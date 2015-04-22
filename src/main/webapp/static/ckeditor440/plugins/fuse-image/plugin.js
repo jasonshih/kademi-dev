@@ -64,7 +64,7 @@ CKEDITOR.plugins.add('fuse-image',
                 log("add to editor", editor);
                 return {
                     title: 'Insert/Edit Image',
-                    minWidth: 600,
+                    minWidth: 400,
                     minHeight: 480,
                     contents: [
                         {
@@ -73,7 +73,7 @@ CKEDITOR.plugins.add('fuse-image',
                             elements: [
                                 {
                                     type: 'html',
-                                    html: "<div id='imageTree' class='tree'></div><div id='imagePreview'><div id='imageUploaded'></div><div class='imageEditor'><div id='imageContainer'></div></div></div>",
+                                    html: "<div id='imageTree' class='tree'></div><div id='imagePreview' style='max-width: 60px;'><div id='imageUploaded'></div><div class='imageEditor'><div id='imageContainer'></div></div></div>",
                                     commit: function (data) {
                                         log("commit, data=", data);
                                     }
@@ -118,7 +118,7 @@ CKEDITOR.plugins.add('fuse-image',
                         if (previewImg.length == 0) {
                             previewImg = $("<img/>");
                             imageCont.prepend(previewImg);
-                            imageCont.append(loremIpsum());
+                            //imageCont.append(loremIpsum()); 
                         }
 
                         var imageFloat = $("#imageUploaded").siblings("#imageFloat");
