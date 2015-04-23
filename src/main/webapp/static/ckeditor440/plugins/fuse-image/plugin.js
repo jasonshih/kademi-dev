@@ -87,7 +87,6 @@ CKEDITOR.plugins.add('fuse-image',
                         onShow: function () {
                             var sel = editor.getSelection();
                             var element = sel.getStartElement();
-                            $("#imageTree.tree").mtree("refreshSelected");
                             log("onShow", sel, element, editor, editor.getData());
                             if (element) {
                                 element = element.getAscendant('img', true);
@@ -254,6 +253,8 @@ CKEDITOR.plugins.add('fuse-image',
                                         }
                                     }
                                 });
+                            }else{
+                                $("#imageTree.tree").mtree("refreshSelected");
                             }
                         },
                         onOk: function () {
