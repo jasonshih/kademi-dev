@@ -49,6 +49,7 @@ CKEDITOR.plugins.add('fuse-image',
                 //
                 editor.element.getDocument().appendStyleSheet(this.path + 'imagePlugin.css');
                 editor.element.getDocument().appendStyleSheet('/static/common/plugin.css');
+                editor.element.getDocument().appendStyleSheet('/static/js/themes/default/style.css');
 
                 $.getScriptOnce(('/static/js/jquery.jstree.js'));
                 $.getScriptOnce(('/static/js/jquery.hotkeys.js'));
@@ -68,7 +69,6 @@ CKEDITOR.plugins.add('fuse-image',
                         title: 'Insert/Edit Image',
                         minWidth: 900,
                         minHeight: 480,
-                        autoUpdateElement: true,
                         contents: [
                             {
                                 id: 'fuse-image',
@@ -76,7 +76,23 @@ CKEDITOR.plugins.add('fuse-image',
                                 elements: [
                                     {
                                         type: 'html',
-                                        html: "<div id='imageTree' class='tree'></div><div id='imagePreview'><div id='imageUploaded'></div><div class='imageEditor'><div id='imageContainer'></div></div></div>",
+                                        html: '<div class="pull-left">'
+                                                + '	<div id="imageTree" class="tree"></div>'
+                                                + '</div>'
+                                                + '<div role="tabpanel">'
+                                                + ' <ul class="nav nav-tabs" role="tablist">'
+                                                + '     <li role="presentation" class="active"><a href="#upload" aria-controls="upload" role="tab" data-toggle="tab">Upload</a></li>'
+                                                + '     <li role="presentation"><a href="#preview" aria-controls="preview" role="tab" data-toggle="tab">Preview</a></li>'
+                                                + ' </ul>'
+                                                + ' <div class="tab-content">'
+                                                + '     <div role="tabpanel" class="tab-pane fade active in" id="upload">'
+                                                + '         <div id="imageUploaded"></div>'
+                                                + '     </div>'
+                                                + '     <div role="tabpanel" class="tab-pane fade" id="preview">'
+                                                + '         <div id="imagePreview"><div class="imageEditor"><div id="imageContainer"></div></div></div>'
+                                                + '     </div>'
+                                                + ' </div>'
+                                                + '</div>',
                                         commit: function (data) {
                                             log("commit, data=", data);
                                         }
@@ -130,7 +146,7 @@ CKEDITOR.plugins.add('fuse-image',
                                 //imageCont.append(loremIpsum()); 
                             }
 
-                            var imageFloat = $("#imageUploaded").siblings("#imageFloat");
+                            var imageFloat = $("#imagePreview").siblings("#imageFloat");
                             if (imageFloat.length == 0) {
                                 imageFloat = $("<select id='imageFloat'><option value=''>No alignment/float</option><option value='Left'>Align Left</option><option value='Right'>Align Right</option></select>");
                                 imageFloat.click(function () {
@@ -141,7 +157,7 @@ CKEDITOR.plugins.add('fuse-image',
                                         flog("set align", previewImg, val)
                                     }
                                 });
-                                $("#imageUploaded").before(imageFloat);
+                                $("#imagePreview").before(imageFloat);
 
                                 imageFloat.before(
                                         '<div id="image-size">' +
@@ -208,8 +224,9 @@ CKEDITOR.plugins.add('fuse-image',
 
                                         var img = imageCont.find("img");
 
-                                        setImage(img, url, h, false, false);
+                                        setImage(img, selectedVideoUrl, h, false, false);
                                         log("done set img", img);
+                                        setImage(img, selectedVideoUrl, h, false, false);
                                     },
                                     isInCkeditor: true
                                 });
@@ -222,6 +239,7 @@ CKEDITOR.plugins.add('fuse-image',
                                         url = "";
                                         getHashFromUrl(href);
                                         flog("oncomplete", data, hash);
+                                        $("#imageTree").mtree("addFile", name, href);
                                         $("#imageTree.tree").mtree("refreshSelected");
                                         url = href;
                                     }
@@ -253,7 +271,7 @@ CKEDITOR.plugins.add('fuse-image',
                                         }
                                     }
                                 });
-                            }else{
+                            } else {
                                 $("#imageTree.tree").mtree("refreshSelected");
                             }
                         },
@@ -338,6 +356,7 @@ function setImage(img, src, hash, width, height, keepRatio) {
 
         var originalWidth = img.width();
         var originalHeight = img.height();
+        flog("image Width=", originalWidth, " Height=", originalHeight);
 
         if (!keepRatio) {
             var ratio = originalWidth / originalHeight;
@@ -381,12 +400,12 @@ function loremIpsum() {
     return string;
 }
 
-function getHashFromUrl(Url){
+function getHashFromUrl(Url) {
     var t = "/_DAV/PROPFIND?fields=milton:hash";
     $.ajax({
-        url:  Url + t,
+        url: Url + t,
         cache: false
-    }).done(function(data){
+    }).done(function (data) {
         var hash = data[0].hash;
         flog(hash);
     });

@@ -178,8 +178,9 @@
             options.selectedItem = node;
             var icon = node.find('> a > ins.jstree-icon');
             var url = toFullUrl(node, options);
+            var hash = toHash(node, options);
             if (icon.hasClass('file')) {
-                options.onselectFile(node, url);
+                options.onselectFile(node, url, hash);
             } else {
                 options.onselectFolder(node, url);
             }
