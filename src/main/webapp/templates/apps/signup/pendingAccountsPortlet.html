@@ -32,6 +32,7 @@
                 </thead>
                 <tbody>
                     #foreach($app in $applications)
+                    <form name="form_$app.id">
                     <tr data-toggle="collapse" data-target=".det-div-$app.id">
                         <td>$app.member.nickName</td>
                         <td>$app.groupEntity.name</td>
@@ -80,8 +81,8 @@
                         </td>
                     </tr> 
                     #end
-                    #if( $app.fields.nvPairs.size() > 0 )
-                    #foreach($field in $app.fields.nvPairs)
+                    #if( $app.renderedAdminFields.nvPairs.size() > 0 )
+                    #foreach($field in $app.renderedAdminFields.nvPairs)
                     <tr class="det-$app.id">
                         <td id="det-$app.id" colspan="7" class="hiddenRow" style="display: none;">
                             <div class="collapse det-div-$app.id">
@@ -95,6 +96,7 @@
                     #end
                     #end
                     #end
+                    </form>
                 </tbody>
             </table>
             <script type="text/javascript" src="/static/js/jquery.timeago.js" >//</script>

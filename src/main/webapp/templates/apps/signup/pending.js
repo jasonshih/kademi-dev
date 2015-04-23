@@ -23,10 +23,15 @@ $(function () {
     });
 
     function setStatus(btn, isEnabled) {
-        var tr = btn.closest("tr");
-        var appId = tr.find("input[name=appId]").val();
+        var form = btn.closest("form");
+        var appId = form.find("input[name=appId]").val();
         var details = $(".det-" + appId);
-        log("setStatus", appId, isEnabled);
+        flog("setStatus", appId, isEnabled);
+        flog(form);
+        form.find("input,select").each(function() {
+            
+        });
+        /*
         $.ajax({
             type: 'POST',
             url: "pendingApps", // Post to orgfolder/pendingApps
@@ -41,7 +46,7 @@ $(function () {
                     Msg.error("An error occured processing the request. Please refresh the page and try again: " + data.messages);
                     return;
                 }
-                tr.remove();
+                form.remove();
                 details.remove();
             },
             error: function (resp) {
@@ -49,5 +54,6 @@ $(function () {
                 Msg.error("An error occured processing the request. Please refresh the page and try again");
             }
         });
+        */
     }
 });
