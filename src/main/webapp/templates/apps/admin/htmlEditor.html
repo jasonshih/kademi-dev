@@ -8,7 +8,7 @@
     <body class="">
         #set($fname = $params.fileName)
         #set($file = $folder.child($fname))
-        #set($useRelative = $params.useRelative)
+        #set($useHash = $params.useHash)
 
         <div id="editor-wrapper">
             <div class="clearfix editor-toolbar">
@@ -23,6 +23,7 @@
         #end
 
         <script type="text/javascript">
+            var useHash = "$!useHash";
             $(function () {
                 themeCssFiles.push('/static/editor/editor.css'); // just to format the editor itself a little
                 themeCssFiles.push('/static/prettify/prettify.css');

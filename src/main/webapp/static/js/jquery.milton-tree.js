@@ -1,4 +1,4 @@
-(function($) {
+(function ($) {
     var methods = {
         init: function (options) {
             var container = this;
@@ -30,6 +30,7 @@
             }, options);
             config.hrefMap = new Array();
             config.nodeMap = new Object();
+            config.hashMap = new Object();
             flog('set options on', this);
             this.data('options', config);
 
@@ -39,15 +40,15 @@
                 var spanClass = config.isInCkeditor ? 'cke_dialog_ui_button' : '';
 
                 container.prepend(
-                    '<div class="milton-tree-toolbar">' +
-	                    '<a class="btn-delete-tree ' + buttonClass + '" title="Delete">' +
-	                    	'<span class="' + spanClass + '"><i class="fa fa-times"></i></span>' +
-	                    '</a> ' +
-	                    '<a class="btn-add-folder ' + buttonPrimaryClass + '" title="Add Folder">' +
-	                    	'<span class="' + spanClass + '"><i class="fa fa-plus"></i></span>' +
-	                    '</a> ' +
-                    '</div>'
-                );
+                        '<div class="milton-tree-toolbar">' +
+                        '<a class="btn-delete-tree ' + buttonClass + '" title="Delete">' +
+                        '<span class="' + spanClass + '"><i class="fa fa-times"></i></span>' +
+                        '</a> ' +
+                        '<a class="btn-add-folder ' + buttonPrimaryClass + '" title="Add Folder">' +
+                        '<span class="' + spanClass + '"><i class="fa fa-plus"></i></span>' +
+                        '</a> ' +
+                        '</div>'
+                        );
                 container.find('.btn-delete-tree').on('click', function (e) {
                     e.preventDefault();
 
@@ -97,7 +98,7 @@
             var url = toFullUrl(node, options);
             return url;
         },
-        refreshSelected: function() {
+        refreshSelected: function () {
             var options = this.data('options');
             var tree = this.find('.jstree')[0];
             $.jstree._reference(tree).refresh(options.selectedItem);
@@ -177,8 +178,9 @@
             options.selectedItem = node;
             var icon = node.find('> a > ins.jstree-icon');
             var url = toFullUrl(node, options);
+            var hash = toHash(node, options);
             if (icon.hasClass('file')) {
-                options.onselectFile(node, url);
+                options.onselectFile(node, url, hash);
             } else {
                 options.onselectFolder(node, url);
             }
@@ -204,7 +206,7 @@ function initTree(tree, config) {
     config.hrefMap = [];
     config.nodeMapNextId = 0;
 
-    tree.bind('loaded.jstree', function() {
+    tree.bind('loaded.jstree', function () {
         flog('tree loaded', config.pagePath);
         if (config.pagePath) {
             var relPagePath = config.pagePath.substring(config.basePath.length, config.pagePath.length);
@@ -228,7 +230,6 @@ function initTree(tree, config) {
                     return url;
                 },
                 dataType: 'json',
-
                 // this function is executed in the instance"s scope (this refers to the tree instance)
                 // the parameter is the node being loaded (may be -1, 0, or undefined when loading the root nodes)
                 'data': function (n) {
@@ -253,14 +254,15 @@ function initTree(tree, config) {
                                 value.state = 'closed'; // set the initial state
                                 //value.data = value.name; // copy name to required property
                                 var icon = 'file';
-                                if (value.iscollection) icon = 'folder';
+                                if (value.iscollection)
+                                    icon = 'folder';
                                 value.data = {
                                     title: value.name,
                                     icon: icon
                                 };
                                 value.metadata = value;
                                 value.attr = {
-                                    id: createNodeId(value.href, config), // set the id attribute so we know its href
+                                    id: createNodeId(value.href, value.hash, config), // set the id attribute so we know its href
                                     'class': value.templateName
                                 };
                                 newData[newData.length] = value;
@@ -293,12 +295,14 @@ function initTree(tree, config) {
         $.jstree._reference(tree[0]).open_node(node);
 
         var icon = node.find('> a > ins.jstree-icon');
-        flog('base url', toUrl(node, config));
+        flog('base url', toUrl(node, config), node);
         var url = toFullUrl(node, config);
+        var hash = toHash(node, config);
+        flog("item hash", hash);
         if (icon.hasClass('file')) {
-            config.onselectFile(node, url);
+            config.onselectFile(node, url, hash);
         } else {
-            config.onselectFolder(node, url);
+            config.onselectFolder(node, url, hash);
         }
     });
 }
@@ -315,7 +319,7 @@ function autoOpen(tree, config, loadUrl, part, urlParts) {
         flog('Couldnt find node', nodeId);
         return;
     }
-    tree.mtree('select', node, function() {
+    tree.mtree('select', node, function () {
         autoOpen(tree, config, loadUrl, part + 1, urlParts);
     });
 
@@ -330,6 +334,21 @@ function toUrl(n, config) {
         var url = config.nodeMap[id];
         if (url) {
             return url;
+        } else {
+            return '';
+        }
+    } else {
+        return '';
+    }
+}
+
+function toHash(n, config){
+    if (n.attr) {
+        var id = n.attr('id');
+        flog('toHash', n, id);
+        var hash = config.hashMap[id];
+        if (hash) {
+            return hash;
         } else {
             return '';
         }
@@ -358,12 +377,15 @@ function toFullUrl(n, config) {
     return url;
 }
 
-function createNodeId(href, config) {
+function createNodeId(href, hash, config) {
     var newId = 'node_' + config.nodeMapNextId;
     config.nodeMapNextId = config.nodeMapNextId + 1;
     var newHref = href.replace(config.basePath, '');
     config.nodeMap[newId] = newHref;
     config.hrefMap[newHref] = newId;
+    if(hash !== null && hash !== ""){
+        config.hashMap[newId] = hash;
+    }
     flog('createNodeId', href, config.hrefMap);
     return newId;
 }
@@ -378,7 +400,7 @@ function toPropFindUrl(path, config) {
     if (!url.endsWith('/')) {
         url += '/';
     }
-    url = url + '_DAV/PROPFIND?fields=name,getcontenttype>contentType,href,iscollection&depth=1';
+    url = url + '_DAV/PROPFIND?fields=name,milton:hash,getcontenttype>contentType,href,iscollection&depth=1';
     //flog('toPropFindUrl','base:', config.basePath, 'path:', path,'final url:', url);
     return url;
 }
@@ -419,10 +441,14 @@ function isExcluded(href, config) {
 }
 
 function isDisplayableFileHref(href, config) {
-    if (href == "Thumbs.db") return false;
-    if (endsWith(href, "/regs/")) return false;
-    if (endsWith(href, ".MOI")) return false;
-    if (endsWith(href, ".THM")) return false;
+    if (href == "Thumbs.db")
+        return false;
+    if (endsWith(href, "/regs/"))
+        return false;
+    if (endsWith(href, ".MOI"))
+        return false;
+    if (endsWith(href, ".THM"))
+        return false;
     return true;
 }
 
@@ -431,7 +457,7 @@ function deleteTreeItem(config) {
     var href = config.basePath + toUrl(node, config);
     var name = node.find('a').text();
     flog('deleteTreeItem', config.selectedItem, name, href);
-    confirmDelete(href, name, function() {
+    confirmDelete(href, name, function () {
         config.ondelete(node);
         node.remove();
     });
@@ -453,7 +479,7 @@ function createTreeItemFolder(tree, config) {
     flog('createTreeItemFolder', node, name, href);
     var newName = prompt('Please enter a name for the new folder');
     if (newName) {
-        createFolder(newName, href, function() {
+        createFolder(newName, href, function () {
             var treeNode = tree.find('.jstree')[0];
             var nodeToRefresh = node[0];
             flog('refresh tree', tree, treeNode, 'selected', nodeToRefresh);
