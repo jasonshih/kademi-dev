@@ -16,11 +16,15 @@ $(function () {
                 'This Year': [moment().startOf('year'), moment()],
             },
         },
-                function (start, end) {
-                    flog('onChange', start, end);
-                    updateHref();
+        function (start, end) {
+            flog('onChange', start, end);
+            updateHref();
+            $("#reportResult").reloadFragment({
+                whenComplete: function() {
                     runReportWithDateRange( reportContainer, itemsContainer);
                 }
+            });
+        }
         );
     });
 
@@ -51,7 +55,10 @@ $(function () {
     $('.report').on('hide.bs.dropdown', function () {
         return false;
     });
+
+    runReportWithDateRange( reportContainer, itemsContainer);
 });
+
 
 function updateHref() {
     var href = window.location.pathname + "?";
@@ -89,33 +96,6 @@ function updateHref() {
     });
 }
 
-function arrayContains(arr, obj) {
-    var i = arr.length;
-    while (i--) {
-        if (arr[i] == obj) {
-            return true;
-        }
-    }
-    return false;
-}
-
-function removeFromArray(arr) {
-    var what, a = arguments, L = a.length, ax;
-    while (L > 1 && arr.length) {
-        what = a[--L];
-        while ((ax = arr.indexOf(what)) !== -1) {
-            arr.splice(ax, 1);
-        }
-    }
-    return arr;
-}
-
-function getParameterByName(name) {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
-    var results = regex.exec(location.search);
-    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-}
 
 function runReport(startDate, reportContainer, itemsContainer, href) {
     flog("runReport");
@@ -143,9 +123,11 @@ function runReport(startDate, reportContainer, itemsContainer, href) {
     });
 }
 
-function runReportWithDateRange(reportContainer, itemsContainer) {
-    flog("runReportWithDateRange");
+function runReportWithDateRange() {
+    flog("runReportWithDateRange", window.location);
     $('.pageMessage').hide(100);
+    var reportContainer = $('#annual');
+    var itemsContainer = $('#items');
 
     $.ajax({
         type: "GET",
@@ -242,4 +224,32 @@ function showBar(reportContainer, graphData) {
         ykeys: graphData.ykeys,
         labels: graphData.labels
     });
+}
+
+function arrayContains(arr, obj) {
+    var i = arr.length;
+    while (i--) {
+        if (arr[i] == obj) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function removeFromArray(arr) {
+    var what, a = arguments, L = a.length, ax;
+    while (L > 1 && arr.length) {
+        what = a[--L];
+        while ((ax = arr.indexOf(what)) !== -1) {
+            arr.splice(ax, 1);
+        }
+    }
+    return arr;
+}
+
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+    var results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
