@@ -34,9 +34,7 @@
                 <tr>
                     <td>$hit.id</td>
                     <td>
-                        #foreach($field in $hit.fields.entrySet())
-                        $field.key=$field.value.value,
-                        #end
+                        $hit.sourceAsString
                     </td>
                 </tr>
                 #end

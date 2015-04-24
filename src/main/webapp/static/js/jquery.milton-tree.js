@@ -104,14 +104,14 @@
             $.jstree._reference(tree).refresh(options.selectedItem);
         },
         // Add a file node to the current node
-        addFile: function (name, href) {
-            flog('mtree:addFile', name, href);
+        addFile: function (name, href, hash) {
             var options = this.data('options');
             var tree = this.find('.jstree');
+            flog('mtree:addFile', name, href, options);
             var js = {
                 data: name,
                 attr: {
-                    'id': createNodeId(href, options)
+                    'id': createNodeId(href, hash, options)
                 }
             };
             var parentNode = $(options.selectedItem);
@@ -178,8 +178,9 @@
             options.selectedItem = node;
             var icon = node.find('> a > ins.jstree-icon');
             var url = toFullUrl(node, options);
+            var hash = toHash(node, options);
             if (icon.hasClass('file')) {
-                options.onselectFile(node, url);
+                options.onselectFile(node, url, hash);
             } else {
                 options.onselectFolder(node, url);
             }
@@ -341,7 +342,7 @@ function toUrl(n, config) {
     }
 }
 
-function toHash(n, config){
+function toHash(n, config) {
     if (n.attr) {
         var id = n.attr('id');
         flog('toHash', n, id);
@@ -377,12 +378,13 @@ function toFullUrl(n, config) {
 }
 
 function createNodeId(href, hash, config) {
+    flog("createNodeId", href, hash, config);
     var newId = 'node_' + config.nodeMapNextId;
     config.nodeMapNextId = config.nodeMapNextId + 1;
     var newHref = href.replace(config.basePath, '');
     config.nodeMap[newId] = newHref;
     config.hrefMap[newHref] = newId;
-    if(hash !== null && hash !== ""){
+    if (hash !== null && hash !== "") {
         config.hashMap[newId] = hash;
     }
     flog('createNodeId', href, config.hrefMap);
