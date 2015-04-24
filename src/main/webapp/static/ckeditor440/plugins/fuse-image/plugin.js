@@ -228,6 +228,13 @@ CKEDITOR.plugins.add('fuse-image',
                                         log("done set img", img);
                                         setImage(img, selectedVideoUrl, h, false, false);
                                     },
+                                    ondelete: function (node) {
+                                        src = "";
+                                        hash = "";
+                                        var img = imageCont.find("img");
+                                        img.hide();
+                                        
+                                    },
                                     isInCkeditor: true
                                 });
                                 $("#imageUploaded").mupload({
@@ -237,10 +244,8 @@ CKEDITOR.plugins.add('fuse-image',
                                     oncomplete: function (data, name, href) {
                                         hash = "";
                                         url = "";
-                                        getHashFromUrl(href);
-                                        flog("oncomplete", data, hash);
-                                        $("#imageTree").mtree("addFile", name, href);
-                                        $("#imageTree.tree").mtree("refreshSelected");
+                                        AddFileToTree(name, href)
+                                        //$("#imageTree.tree").mtree("refreshSelected");
                                         url = href;
                                     }
                                 });
@@ -327,6 +332,7 @@ CKEDITOR.plugins.add('fuse-image',
 
 function setImage(img, src, hash, width, height, keepRatio) {
     flog("setImage", img, src, hash, width, height, keepRatio);
+    img.show();
     var tempImg = document.createElement('img');
     tempImg.src = src;
     try {
@@ -408,5 +414,17 @@ function getHashFromUrl(Url) {
     }).done(function (data) {
         var hash = data[0].hash;
         flog(hash);
+    });
+}
+
+function AddFileToTree(name, href) {
+    var t = "/_DAV/PROPFIND?fields=milton:hash";
+    $.ajax({
+        url: href + t,
+        cache: false
+    }).done(function (data) {
+        var hash = data[0].hash;
+        flog("oncomplete", data, hash);
+        $("#imageTree.tree").mtree("addFile", name, href, hash);
     });
 }
