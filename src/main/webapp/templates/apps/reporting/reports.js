@@ -19,7 +19,9 @@ $(function () {
         function (start, end) {
             flog('onChange', start, end);
             updateHref();
+            flog("relod results", window.location);
             $("#reportResult").reloadFragment({
+                url: window.location, // need to give explicitly, becuse otherwise querystring gets stripped
                 whenComplete: function() {
                     runReportWithDateRange( reportContainer, itemsContainer);
                 }
@@ -28,29 +30,20 @@ $(function () {
         );
     });
 
-    $(".report").on("click", ".toggle-select-org", function (e) {
+    $(".report").on("click", ".term-select", function (e) {
         flog("click select toggle org");
         e.preventDefault();
-        var a = $(e.target);
-        var id = a.attr("href");
-        if (a.hasClass("active")) {
-            a.removeClass("active");
-        } else {
-            a.addClass("active");
-        }
-        flog("toggle org", id, a);
-        updateHref();
-        runReportWithDateRange( reportContainer, itemsContainer);
+        var target = $(e.target).closest("a");
+        var newHref = target.attr("href");
+        history.pushState(null, null, newHref );
+        $("#reportResult").reloadFragment({
+            url: window.location, // need to give explicitly, becuse otherwise querystring gets stripped
+            whenComplete: function() {
+                runReportWithDateRange( reportContainer, itemsContainer);
+            }
+        });
     });
 
-    var sIds = getParameterByName("ids");
-    var ids = sIds.split(",");
-    $.each(ids, function (i, n) {
-        if (n != "") {
-            flog("select active", $(".report a.toggle-select-org[href=" + n + "]"));
-            $(".report a.toggle-select-org[href=" + n + "]").addClass("active");
-        }
-    });
 
     $('.report').on('hide.bs.dropdown', function () {
         return false;
@@ -61,12 +54,7 @@ $(function () {
 
 
 function updateHref() {
-    var href = window.location.pathname + "?";
-    var ids = "";
-    $(".report .toggle-select-org.active").each(function (i, n) {
-        ids += $(n).attr("href") + ",";
-    });
-    href += "ids=" + ids;
+    var uri = URI(window.location);
     var reportRange = $('#report-range');
     var arr = reportRange.val().split('-');
     var startDate = '';
@@ -78,21 +66,19 @@ function updateHref() {
         finishDate = arr[1];
     }
 
-    href += '&startDate=' + startDate + '&finishDate=' + finishDate;
-    history.pushState(null, null, href);
+    uri.setSearch("startDate", startDate);
+    uri.setSearch("finishDate", finishDate);
+
+    flog("New dated uri", uri.toString());
+    history.pushState(null, null, uri.toString() );
 
     $('a.dated').each(function (i, n) {
         var target = $(n);
         var href = target.attr('href');
-        log('href', href);
-
-        var pos = href.indexOf('?');
-        if (pos > 0) {
-            href = href.substring(0, pos);
-        }
-
-        href += '?startDate=' + startDate + '&finishDate=' + finishDate + "&ids=" + ids;
-        target.attr('href', href);
+        var datedUri = URI(href);
+        var newDatedHref = datedUri.search( uri.search() ).toString();
+        flog('new href', href, newDatedHref, target);
+        target.attr('href', newDatedHref);
     });
 }
 
