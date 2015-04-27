@@ -16,50 +16,45 @@ $(function () {
                 'This Year': [moment().startOf('year'), moment()],
             },
         },
-                function (start, end) {
-                    flog('onChange', start, end);
-                    updateHref();
+        function (start, end) {
+            flog('onChange', start, end);
+            updateHref();
+            flog("relod results", window.location);
+            $("#reportResult").reloadFragment({
+                url: window.location, // need to give explicitly, becuse otherwise querystring gets stripped
+                whenComplete: function() {
                     runReportWithDateRange( reportContainer, itemsContainer);
                 }
+            });
+        }
         );
     });
 
-    $(".report").on("click", ".toggle-select-org", function (e) {
+    $(".report").on("click", ".term-select", function (e) {
         flog("click select toggle org");
         e.preventDefault();
-        var a = $(e.target);
-        var id = a.attr("href");
-        if (a.hasClass("active")) {
-            a.removeClass("active");
-        } else {
-            a.addClass("active");
-        }
-        flog("toggle org", id, a);
-        updateHref();
-        runReportWithDateRange( reportContainer, itemsContainer);
+        var target = $(e.target).closest("a");
+        var newHref = target.attr("href");
+        history.pushState(null, null, newHref );
+        $("#reportResult").reloadFragment({
+            url: window.location, // need to give explicitly, becuse otherwise querystring gets stripped
+            whenComplete: function() {
+                runReportWithDateRange( reportContainer, itemsContainer);
+            }
+        });
     });
 
-    var sIds = getParameterByName("ids");
-    var ids = sIds.split(",");
-    $.each(ids, function (i, n) {
-        if (n != "") {
-            flog("select active", $(".report a.toggle-select-org[href=" + n + "]"));
-            $(".report a.toggle-select-org[href=" + n + "]").addClass("active");
-        }
-    });
 
     $('.report').on('hide.bs.dropdown', function () {
         return false;
     });
+
+    runReportWithDateRange( reportContainer, itemsContainer);
 });
 
+
 function updateHref() {
-    var href = window.location.pathname + "?";
-    var ids = "";
-    $(".report .toggle-select-org.active").each(function (i, n) {
-        ids += $(n).attr("href") + ",";
-    });
-    href += "ids=" + ids;
+    var uri = URI(window.location);
     var reportRange = $('#report-range');
     var arr = reportRange.val().split('-');
     var startDate = '';
@@ -71,51 +66,22 @@ function updateHref() {
         finishDate = arr[1];
     }
 
-    href += '&startDate=' + startDate + '&finishDate=' + finishDate;
-    history.pushState(null, null, href);
+    uri.setSearch("startDate", startDate);
+    uri.setSearch("finishDate", finishDate);
+
+    flog("New dated uri", uri.toString());
+    history.pushState(null, null, uri.toString() );
 
     $('a.dated').each(function (i, n) {
         var target = $(n);
         var href = target.attr('href');
-        log('href', href);
-
-        var pos = href.indexOf('?');
-        if (pos > 0) {
-            href = href.substring(0, pos);
-        }
-
-        href += '?startDate=' + startDate + '&finishDate=' + finishDate + "&ids=" + ids;
-        target.attr('href', href);
+        var datedUri = URI(href);
+        var newDatedHref = datedUri.search( uri.search() ).toString();
+        flog('new href', href, newDatedHref, target);
+        target.attr('href', newDatedHref);
     });
 }
 
-function arrayContains(arr, obj) {
-    var i = arr.length;
-    while (i--) {
-        if (arr[i] == obj) {
-            return true;
-        }
-    }
-    return false;
-}
-
-function removeFromArray(arr) {
-    var what, a = arguments, L = a.length, ax;
-    while (L > 1 && arr.length) {
-        what = a[--L];
-        while ((ax = arr.indexOf(what)) !== -1) {
-            arr.splice(ax, 1);
-        }
-    }
-    return arr;
-}
-
-function getParameterByName(name) {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
-    var results = regex.exec(location.search);
-    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-}
 
 function runReport(startDate, reportContainer, itemsContainer, href) {
     flog("runReport");
@@ -143,9 +109,11 @@ function runReport(startDate, reportContainer, itemsContainer, href) {
     });
 }
 
-function runReportWithDateRange(reportContainer, itemsContainer) {
-    flog("runReportWithDateRange");
+function runReportWithDateRange() {
+    flog("runReportWithDateRange", window.location);
     $('.pageMessage').hide(100);
+    var reportContainer = $('#annual');
+    var itemsContainer = $('#items');
 
     $.ajax({
         type: "GET",
@@ -242,4 +210,32 @@ function showBar(reportContainer, graphData) {
         ykeys: graphData.ykeys,
         labels: graphData.labels
     });
+}
+
+function arrayContains(arr, obj) {
+    var i = arr.length;
+    while (i--) {
+        if (arr[i] == obj) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function removeFromArray(arr) {
+    var what, a = arguments, L = a.length, ax;
+    while (L > 1 && arr.length) {
+        what = a[--L];
+        while ((ax = arr.indexOf(what)) !== -1) {
+            arr.splice(ax, 1);
+        }
+    }
+    return arr;
+}
+
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+    var results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }

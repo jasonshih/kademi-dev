@@ -30,12 +30,12 @@
                 if (config.url) {
                     url = config.url;
                 }
-                flog('[Reload fragment] Request url is: ' + url);
+                flog('[Reload fragment] Request url=', url);
 
                 if (config.selector) {
                     selector = config.selector;
                 }
-                flog('[Reload fragment] Selector is: ' + selector);
+                flog('[Reload fragment] Selector=', selector);
 
                 target.load(url + ' ' + selector + ' > *', function(response, status, xhr) {
                     if (typeof config.whenComplete === 'function') {
