@@ -30,9 +30,8 @@
                         <th></th>
                     </tr>
                 </thead>
+                #foreach($app in $applications)
                 <tbody>
-                    #foreach($app in $applications)
-                    <form name="form_$app.id">
                     <tr data-toggle="collapse" data-target=".det-div-$app.id">
                         <td>$app.member.nickName</td>
                         <td>$app.groupEntity.name</td>
@@ -95,9 +94,8 @@
                     </tr>                
                     #end
                     #end
-                    #end
-                    </form>
                 </tbody>
+                #end
             </table>
             <script type="text/javascript" src="/static/js/jquery.timeago.js" >//</script>
             <script type="text/javascript" src="/templates/apps/signup/pending.js">//</script>

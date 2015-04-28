@@ -23,37 +23,39 @@ $(function () {
     });
 
     function setStatus(btn, isEnabled) {
-        var form = btn.closest("form");
-        var appId = form.find("input[name=appId]").val();
+        var tbody = btn.closest("tbody");
+        var appId = tbody.find("input[name=appId]").val();
         var details = $(".det-" + appId);
         flog("setStatus", appId, isEnabled);
-        flog(form);
-        form.find("input,select").each(function() {
-            
+        var fields = tbody.find(":input");
+        var ajaxData = {
+                applicationId: appId,
+                enable: isEnabled
+            };
+        fields.each(function() {
+        	if (this.name) {
+        		ajaxData[this.name] = this.value;
+        	}
         });
-        /*
+
         $.ajax({
             type: 'POST',
             url: "pendingApps", // Post to orgfolder/pendingApps
             dataType: "json",
-            data: {
-                applicationId: appId,
-                enable: isEnabled
-            },
+            data: ajaxData,
             success: function (data) {
                 log("response", data);
                 if (!data.status) {
-                    Msg.error("An error occured processing the request. Please refresh the page and try again: " + data.messages);
+                    Msg.error("An error occurred processing the request. Please refresh the page and try again: " + data.messages);
                     return;
                 }
-                form.remove();
+                tbody.remove();
                 details.remove();
             },
             error: function (resp) {
                 log("error", resp);
-                Msg.error("An error occured processing the request. Please refresh the page and try again");
+                Msg.error("An error occurred processing the request. Please refresh the page and try again");
             }
         });
-        */
     }
 });
