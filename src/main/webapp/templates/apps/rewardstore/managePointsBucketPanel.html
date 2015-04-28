@@ -1,0 +1,10 @@
+<h3>Total Points:</h3>
+<p class="lead">    
+    #set($totalPoints = 0)
+    #foreach($pB in $pointsBalance)
+        #if($pB.balance)
+            #set($totalPoints = $totalPoints + $pB.balance)
+        #end
+    #end
+    $totalPoints
+</p>
