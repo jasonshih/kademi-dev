@@ -2,10 +2,10 @@ function initManageExtraField() {
     flog("initManageExtraField");
     initCRUDExtraField();
     initExtraFieldModal();
-    initExtraFIeld();
+    initExtraField();
 }
 
-function initExtraFIeld() {
+function initExtraField() {
     var table = $('#table-extra-field');
     var tbody = table.find('tbody');
 
@@ -85,12 +85,14 @@ function openExtraFieldModal(key, value) {
         var chkRequire = $('#extra-field-required');
         var txtText = $('#extra-field-text');
         var optionWrapper = $('#options-wrapper');
+        var orgSel = $('#org-sel');
 
         txtName.val(key);
 
         var values = getValue(value, key);
 
         chkRequire.prop('checked', values.require);
+    	orgSel.prop('checked', values.orgSel);
         txtText.val(values.text);
 
         var optionString = '';
@@ -136,14 +138,26 @@ function initExtraFieldModal() {
     var txtText = $('#extra-field-text');
     var optionWrapper = $('#options-wrapper');
     var btnAddOption = modal.find('.btn-add-option');
+    var orgSel = $('#org-sel');
 
     // Add options
     btnAddOption.on('click', function (e) {
         e.preventDefault();
+        if (!orgSel.prop('checked')) {
+        	optionWrapper.append(
+        		renderOption()
+        	);
+        }
+    });
 
-        optionWrapper.append(
-            renderOption()
-        );
+    // Add group selector
+    orgSel.on('click', function (e) {
+        if (orgSel.prop('checked')) {
+        	optionWrapper.html('');
+        	btnAddOption.addClass('disabled');
+        } else {
+        	btnAddOption.removeClass('disabled');
+        }
     });
 
     // Delete options
@@ -172,16 +186,20 @@ function initExtraFieldModal() {
             }
 
             // Options
-            valueString += 'options(';
-            var options = [];
-            optionWrapper.find('input:text').each(function () {
-                var input = $(this);
-                var optionText = input.val().trim();
+            if (orgSel.prop('checked')) {
+            	valueString += 'orgs();';
+            } else {
+            	valueString += 'options(';
+            	var options = [];
+            	optionWrapper.find('input:text').each(function () {
+            		var input = $(this);
+            		var optionText = input.val().trim();
 
-                options.push(optionText);
-            });
-            valueString += options.join(',');
-            valueString += ');';
+            		options.push(optionText);
+            	});
+            	valueString += options.join(',');
+            	valueString += ');';
+            }
 
             // Text
             valueString += 'text=' + txtText.val().trim();
@@ -203,7 +221,7 @@ function initExtraFieldModal() {
 
                 modal.modal('hide');
             } else {
-                Msg.error('Couldnt add the field. Please check your input and try again');
+                Msg.error('Could not add the field. Please check your input and try again');
             }
         }
     });
@@ -212,6 +230,7 @@ function initExtraFieldModal() {
 function getValue(value, key) {    
     var values = value.split(';');
     var isRequired = false;
+    var isOrgSel = false;
 
     var text = key;
     var options = "";
@@ -219,18 +238,21 @@ function getValue(value, key) {
         var s = values[i];
         if( s.startsWith("text=")) {
             text = s.substring(5);
-        } else if( s.startsWith("options")) {
+        } else if (s.startsWith("options")) {
             options = s;
             options = options.replace(/^options\((.*)\)$/, '$1');
-        } else if( s === "required") {
+        } else if (s === "required") {
             isRequired = true;
+        } else if (s.startsWith("orgs(")) {
+        	isOrgSel = true;
         }
     }
 
     return {
         require: isRequired,
         text: text,
-        options: options
+        options: options,
+        orgSel: isOrgSel
     };
 }
 
