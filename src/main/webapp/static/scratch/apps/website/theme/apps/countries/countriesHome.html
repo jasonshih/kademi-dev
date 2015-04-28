@@ -1,0 +1,37 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Countries</title>
+    </head>
+    <body class="manageProjects">
+        <h2>Countries</h2>
+        <table class="table">
+        <thead>
+            <tr>
+                <th>Region</th>
+                <th>No. Countries</th>
+            </tr>
+        </thead>
+        <tbody>
+        #foreach($region in $page.find("/jsondb/").children )
+        #if( $region.name.startsWith("region-"))
+        <tr>
+            <td>
+                <a href="$region.name">$region.title</a>
+            </td>
+            <td>$region.numRecords</td>
+        </tr>
+        #end
+        #end
+        </tbody>
+        </table>
+
+        <script type="text/javascript">
+
+        </script>
+    </body>
+</html>
+            
+            
+            
+            
+            
