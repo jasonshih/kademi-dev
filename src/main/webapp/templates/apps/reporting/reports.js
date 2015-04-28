@@ -36,6 +36,7 @@ $(function () {
         var target = $(e.target).closest("a");
         var newHref = target.attr("href");
         history.pushState(null, null, newHref );
+        updateLinksWithParameters();
         $("#reportResult").reloadFragment({
             url: window.location, // need to give explicitly, becuse otherwise querystring gets stripped
             whenComplete: function() {
@@ -71,7 +72,11 @@ function updateHref() {
 
     flog("New dated uri", uri.toString());
     history.pushState(null, null, uri.toString() );
+    updateLinksWithParameters();
+}
 
+function updateLinksWithParameters() {
+    var uri = URI(window.location);
     $('a.dated').each(function (i, n) {
         var target = $(n);
         var href = target.attr('href');
@@ -81,7 +86,6 @@ function updateHref() {
         target.attr('href', newDatedHref);
     });
 }
-
 
 function runReport(startDate, reportContainer, itemsContainer, href) {
     flog("runReport");
