@@ -1,0 +1,22 @@
+<h3>Points Balance</h3>
+<i>not quite working yet</i>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Reward</th>
+            <th>Date</th>
+            <th>Points</th>
+            <th>Reason</th>
+        </tr>
+    </thead>
+    <tbody>
+        #foreach($p in $allPoints)
+        <tr>
+            <td>$p.reward.name</td>
+            <td>$p.issuedDate</td>
+            <td>$p.numPoints</td>
+            <td>$p.reason</td>
+        </tr>
+        #end
+    </tbody>
+</table>
