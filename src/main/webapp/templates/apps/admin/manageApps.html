@@ -51,7 +51,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Create database</button>
+                    <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Create app</button>
                 </div>
             </div><!-- /.modal -->
         </div>
@@ -63,7 +63,7 @@
                         <col style="width: 60%" />
                         <col style="width: 150px"/>
                     </colgroup>
-                    <tbody>
+                    <tbody id="my-apps-body">
                     #foreach($app in $page.appRepos )
                     <tr>
                         <td>
