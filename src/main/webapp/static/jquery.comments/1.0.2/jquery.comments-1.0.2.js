@@ -21,15 +21,15 @@
             'pageUrl': window.location,
             'streamSelector': ".comments-stream",
             'renderCommentFn': function (user, date, comment, commentId) {
-                log("renderCommentFn-101-standard", user, "container=", container, "commentId=", commentId);
+                flog("renderCommentFn-101-standard", user, "container=", container, "commentId=", commentId);
                 if (user === null) {
-                    log("no user so dont render");
+                    flog("no user so dont render");
                     return;
                 }
                 var outerDiv = $("#" + commentId);
-                
+
                 if (outerDiv.length === 0) {
-                    log("add comment");
+                    flog("add comment");
                     outerDiv = $("<div class='forumReply'></div>");
                     outerDiv.attr("id", commentId);
                     var commentStream = container.find(config.streamSelector);
@@ -49,7 +49,7 @@
                         hour: date.getHours(),
                         minute: date.getMinutes()
                     };
-                    
+
                     var dateSpan = $("<abbr title='" + date.toISOString() + "' class='auxText'>" + toDisplayDateNoTime(dt) + "</abbr>");
 
                     var toolsDiv = $("<div></div>");
@@ -59,7 +59,7 @@
                     outerDiv.append(dateSpan);
                     outerDiv.append(toolsDiv);
                 } else {
-                    log("update");
+                    flog("update");
                     // Just update
                     outerDiv.find(".cmt").html(comment);
                 }
@@ -78,7 +78,7 @@
             },
             itemsPerPage: 10,
             'paginateFn': function (comments, config, container) {
-                log("paginateFn-101-standard", comments, config, container);
+                flog("paginateFn-101-standard", comments, config, container);
 
                 var totalComments = comments.length;
                 var itemsPerPage = config.itemsPerPage;
@@ -107,10 +107,10 @@
                     });
                 }
             },
-            'aggregated': false  // if true will list all comments under the given page 
+            'aggregated': false  // if true will list all comments under the given page
         }, options);
 
-        log("register submit event", $("form", this));
+        flog("register submit event", $("form", this));
 
         $("form", this).submit(function (e) {
             e.preventDefault();
@@ -118,7 +118,7 @@
             try {
                 sendNewForumComment(config.pageUrl, $("textarea", this), config.renderCommentFn, config.currentUser);
             } catch (e) {
-                log("exception sending forum comment", e);
+                flog("exception sending forum comment", e);
             }
             return false;
         });
@@ -129,27 +129,27 @@
 
     function initWebsockets(config) {
         var path = getFolderPath(window.location.pathname);
-        log("initWebsockets", window.location.host, path);
+        flog("initWebsockets", window.location.host, path);
         var b64ContentId = Base64.encode(path);
         try {
             wsocket = new WebSocket("ws://" + window.location.host + "/comments/" + window.location.host + "/content/" + b64ContentId);
             wsocket.onmessage = function (evt) {
                 var c = $.parseJSON(evt.data);
-                log("onMessage", c);
+                flog("onMessage", c);
                 var dt = new Date(c.date);
                 config.renderCommentFn(c.user, dt, c.comment, c.id);
             };
-            log("done initWebsockets");
+            flog("done initWebsockets");
         } catch (e) {
             // TODO: setup polling to load comments every minute or so
-            log("Websocket initialisation failed. Live comment stream is not available");
+            flog("Websocket initialisation failed. Live comment stream is not available");
         }
     }
 
 })(jQuery);
 
 function sendNewForumComment(pageUrl, commentInput, renderComment, currentUser) {
-    log("sendNewForumComment", pageUrl, commentInput, currentUser);
+    flog("sendNewForumComment", pageUrl, commentInput, currentUser);
     if (currentUser.href === null) {
         alert("You must be logged in to post comments");
         return;
@@ -175,7 +175,7 @@ function sendNewForumComment(pageUrl, commentInput, renderComment, currentUser) 
             ajaxLoadingOff();
             commentInput.val('');
             commentInput.keyup();
-            log("resp", resp.status, resp);
+            flog("resp", resp.status, resp);
             if (resp.status) {
                 currentDate = new Date();
                 var c = resp.data;
@@ -192,6 +192,7 @@ function sendNewForumComment(pageUrl, commentInput, renderComment, currentUser) 
 }
 
 function loadComments(config, container) {
+    flog("loadComments");
     var page = config.pageUrl;
     var renderCommentFn = config.renderCommentFn;
     var clearContainerFn = config.clearContainerFn;
@@ -205,11 +206,11 @@ function loadComments(config, container) {
     url += "_comments";
 
     $.getJSON(url,function (response) {
-        log("got comments response", response);
+        flog("got comments response", response);
         clearContainerFn();
         processComments(response, config, container);
     }).fail(function () {
-        log("Failed to load comments", container);
+        flog("Failed to load comments", container);
         clearContainerFn();
         if (container) {
             container.hide();
