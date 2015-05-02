@@ -281,6 +281,10 @@
             </div>
         </div>
 
+
+        #if( $request.hostHeader.contains(":") )
+        <i>Dev mode</i>
+        #else
 <!--Start of Zopim Live Chat Script-->
 <script type="text/javascript">
 var ua = navigator.userAgent.toLowerCase(),
@@ -296,6 +300,7 @@ type='text/javascript';e.parentNode.insertBefore($,e)})(document,'script');
 }
 </script>
 <!--End of Zopim Live Chat Script-->
+        #end
     </body>
     <!-- end: BODY -->
 </html>
