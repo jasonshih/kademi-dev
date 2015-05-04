@@ -17,6 +17,7 @@
                     <li><a data-toggle="tab" href="#general">Details</a></li>
                     <li><a data-toggle="tab" href="#notes">Notes</a></li>
                     <li><a data-toggle="tab" href="#records">Records</a></li>
+                    <li><a data-toggle="tab" href="#query">Query</a></li>
                 </ul>
                 <div class="tab-content">
                     <div id="general" class="tab-pane">
@@ -31,6 +32,13 @@
                             <label class="control-label col-md-3" for="title">Title</label>
                             <div class="col-md-8">
                                 <input type="text" name="title" id="title" value="$page.title" placeholder="" class="required form-control"  required="true" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="template">Template</label>
+                            <div class="col-md-8">
+                                <input type="text" name="template" id="template" value="$!page.template" placeholder="" class="required form-control"  required="true" />
                             </div>
                         </div>
 
@@ -97,6 +105,80 @@
                             </tbody>
                         </table>
                     </div>
+                    <div id="query" class="tab-pane">
+                        #set($items = $page.searchResponse)
+
+
+                        <textarea name="source" id="queryText" style="height: 250px" class="form-control" placeholder="JSON source">$!request.params.source</textarea>
+                        <br/>
+                        <button type="button" id="queryBtn" class="btn btn-info col-md-4">Query</button>
+
+                        <br style="clear: both"/>
+                        <hr style="clearfix"/>
+                        <div id="searchResults">
+                            #if( $page.error )
+                            <div class="alert alert-warning">$page.error</div>
+                            #end
+
+                            #if( $items )
+                            <h2>Search items</h2>
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <td>Item</td>
+                                        <td>Fields</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    #foreach($hit in $items.hits.hits)
+                                    <tr>
+                                        <td>$hit.id</td>
+                                        <td>
+                                            $hit.sourceAsString
+                                        </td>
+                                    </tr>
+                                    #end
+                                </tbody>
+                            </table>
+
+                            #if( $items )
+                            <pre>$items
+                            </pre>
+                            #end
+
+                            #if( $items.aggregations )
+                            <h2>Aggregations</h2>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <td>Item</td>
+                                        <td>Fields</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    #foreach($entry in $items.aggregations.asMap.entrySet())
+                                    <tr>
+                                        <th>$entry.key</th>
+                                        <th></th>
+                                    </tr>
+                                    #if( $entry.value.buckets )
+                                    #foreach($bucket in $entry.value.buckets)
+                                    <tr>
+                                        <td>$bucket.key</td>
+                                        <td>$bucket.docCount</td>
+                                    </tr>
+                                    #end
+                                    #else
+                                    #end
+
+                                    #end
+                                </tbody>
+                            </table>
+
+                            #end
+                            #end
+                        </div>
+                    </div>
                 </div>
             </div>
         </form>
@@ -140,9 +222,9 @@
         <script type="text/javascript">
             $(function () {
                 $(".database-form").forms({
-                    callback: function(resp) {
-                        if( resp.status ) {
-                            if( resp.nextHref !== getFileName(window.location.pathname) ) {
+                    callback: function (resp) {
+                        if (resp.status) {
+                            if (resp.nextHref !== getFileName(window.location.pathname)) {
                                 Msg.info("Renamed db, redirecting..");
                                 window.location.href = "../" + resp.nextHref;
                             } else {
@@ -155,10 +237,27 @@
                     }
                 });
                 $("#addRecordForm").forms({
-                    callback: function() {
+                    callback: function () {
                         Msg.info("Done");
                         $("#records-body").reloadFragment();
                     }
+                });
+                $("#queryBtn").click(function (e) {
+                    e.preventDefault();
+                    var q = $("#queryText").val();
+                    flog("query", q, $("#query"));
+                    $.ajax({
+                        url: window.location.pathname,
+                        method: "POST",
+                        data: {
+                            source: q
+                        },
+                        success: function(resp) {
+                            flog("resp", resp);
+                            var html= $(resp);
+                            $("#searchResults").html( html.find("#searchResults > *") );
+                        }
+                    });
                 });
             });
         </script>
