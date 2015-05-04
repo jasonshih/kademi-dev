@@ -67,6 +67,7 @@ function initHelp() {
  */
 function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
     flog("initHtmlEditors: height=", height, "removePlugins", removePlugins);
+    flog("initHtmlEditors: elements=", elements, "editorSkin", editorSkin);
 //    if (!$('.htmleditor').ckeditor) {
 //        log("ckeditor jquery adapter is not loaded");
 //        return;/
@@ -104,6 +105,7 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
 
         toolbar = "Default"; // HACK!!
         flog("using toolbar", toolbar, "=>", toolbarSets[toolbar]);
+        
         flog("themeCssFiles", themeCssFiles);
         flog("editorSkin", editorSkin);
         var config = {

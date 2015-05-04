@@ -3,7 +3,7 @@
         <title>Text editor</title>
         <link rel="template" href="editorBase" />
         <script type="text/javascript" src="htmlEditor.js">//</script>
-        <link rel="stylesheet" type="text/css" href="textEditor.css" />        
+        <link rel="stylesheet" type="text/css" href="textEditor.css" />   
     </head>
     <body class="">
         #set($fname = $params.fileName)
@@ -31,6 +31,7 @@
                 $("link[rel=editor-stylesheet]").each(function (i, n) {
                     var cssPath = $(n).attr("href");
                     themeCssFiles.push(cssPath);
+                    $(n).remove();
                 });
                 initHtmlEditorPage('$fname');
             });

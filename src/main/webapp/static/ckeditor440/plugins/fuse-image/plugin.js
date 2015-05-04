@@ -76,11 +76,11 @@ CKEDITOR.plugins.add('fuse-image',
                                 elements: [
                                     {
                                         type: 'html',
-                                        html: '<div class="pull-left">'
+                                        html:     '<div class="">'
                                                 + '	<div id="imageTree" class="tree"></div>'
                                                 + '</div>'
                                                 + '<div role="tabpanel">'
-                                                + ' <ul class="nav nav-tabs" role="tablist">'
+                                                + ' <ul class="nav nav-tabs" role="tablist" id="imageTabs">'
                                                 + '     <li role="presentation" class="active"><a href="#upload" aria-controls="upload" role="tab" data-toggle="tab">Upload</a></li>'
                                                 + '     <li role="presentation"><a href="#preview" aria-controls="preview" role="tab" data-toggle="tab">Preview</a></li>'
                                                 + ' </ul>'
@@ -218,6 +218,7 @@ CKEDITOR.plugins.add('fuse-image',
                                         $("#imageUploaded").mupload("setUrl", selectedVideoUrl);
                                     },
                                     onselectFile: function (n, selectedVideoUrl, h) {
+                                        $('#imageTabs a[href="#preview"]').tab("show");
                                         url = selectedVideoUrl;
                                         hash = h;
                                         flog("selected file1", n, url, h);
@@ -387,7 +388,7 @@ function setImage(img, src, hash, width, height, keepRatio) {
                     $('#image-height').val(img.height());
                 }
             });
-        }, 0);
+        }, 1);
     };
 }
 

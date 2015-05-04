@@ -277,7 +277,8 @@ function initTree(tree, config) {
             }
         },
         'themes': {
-            'theme': config.theme
+            'theme': config.theme,
+            'url' : '/static/js/themes/default/style.css'
         },
         'ui': {
             'select_limit': 1,
