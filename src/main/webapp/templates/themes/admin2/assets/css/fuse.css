@@ -16,7 +16,7 @@ h2 {
     font-weight: 300;
 }
 
-.page-header h1 {	
+.page-header h1 {
     font-family: Roboto !important;
     font-weight: 300 !important;
 }
@@ -48,7 +48,7 @@ h6 {
 /* ============================================================================
    Btn
    ============================================================================ */
-/* primary */	
+/* primary */
 .btn-primary {
     color: #ffffff;
     background-color: #494949;
@@ -598,11 +598,6 @@ label small {
     width: auto;
 }
 
-#imageTree,
-#myVidTree {
-    width: 200px;
-    float: left;
-}
 
 .milton-image-select-container .milton-image-preview,
 .vidEditor {
@@ -610,14 +605,10 @@ label small {
 }
 
 .imageEditor {
-    height: 260px !important;
-    width: 678px !important;
+    min-height: 400px !important;
+    min-width: 400px !important;
 }
 
-#myVidPreview,
-#imagePreview {
-    margin-left: 220px;
-}
 
 #myVidPreview .myUploaded,
 #imagePreview #imageUploaded {
@@ -979,7 +970,7 @@ fieldset hr {
 .flush-left {
     border-bottom-left-radius: 0;
     border-left: 0 none;
-    border-top-left-radius: 0;    
+    border-top-left-radius: 0;
 }
 .breadcrumb a {
      color: #555555;

@@ -76,23 +76,27 @@ CKEDITOR.plugins.add('fuse-image',
                                 elements: [
                                     {
                                         type: 'html',
-                                        html:     '<div class="">'
-                                                + '	<div id="imageTree" class="tree"></div>'
-                                                + '</div>'
-                                                + '<div role="tabpanel">'
-                                                + ' <ul class="nav nav-tabs" role="tablist" id="imageTabs">'
-                                                + '     <li role="presentation" class="active"><a href="#upload" aria-controls="upload" role="tab" data-toggle="tab">Upload</a></li>'
-                                                + '     <li role="presentation"><a href="#preview" aria-controls="preview" role="tab" data-toggle="tab">Preview</a></li>'
-                                                + ' </ul>'
-                                                + ' <div class="tab-content">'
-                                                + '     <div role="tabpanel" class="tab-pane fade active in" id="upload">'
-                                                + '         <div id="imageUploaded"></div>'
-                                                + '     </div>'
-                                                + '     <div role="tabpanel" class="tab-pane fade" id="preview">'
-                                                + '         <div id="imagePreview"><div class="imageEditor"><div id="imageContainer"></div></div></div>'
-                                                + '     </div>'
-                                                + ' </div>'
-                                                + '</div>',
+                                        html:     '<div class="row" style="width: 100%; max-width: 900px">'
+                                                + '  <div class="col-md-4">'
+                                                + '    <div id="imageTree" class="tree"></div>'
+                                                + '  </div>'
+                                                + '  <div class="col-md-8">'
+                                                + '    <div role="tabpanel">'
+                                                + '      <ul class="nav nav-tabs" role="tablist" id="imageTabs">'
+                                                + '        <li role="presentation" class="active"><a href="#upload" aria-controls="upload" role="tab" data-toggle="tab">Upload</a></li>'
+                                                + '        <li role="presentation"><a href="#preview" aria-controls="preview" role="tab" data-toggle="tab">Preview</a></li>'
+                                                + '      </ul>'
+                                                + '      <div class="tab-content">'
+                                                + '        <div role="tabpanel" class="tab-pane fade active in" id="upload">'
+                                                + '          <div id="imageUploaded"></div>'
+                                                + '        </div>'
+                                                + '        <div role="tabpanel" class="tab-pane fade" id="preview">'
+                                                + '          <div id="imagePreview"><div class="imageEditor"><div id="imageContainer"></div></div></div>'
+                                                + '        </div>'
+                                                + '      </div>'
+                                                + '    </div>' // end tabpabel
+                                                + '  </div>' // end col-md-8
+                                                + '</div>', // end row
                                         commit: function (data) {
                                             log("commit, data=", data);
                                         }
@@ -143,7 +147,7 @@ CKEDITOR.plugins.add('fuse-image',
                             if (previewImg.length == 0) {
                                 previewImg = $("<img/>");
                                 imageCont.prepend(previewImg);
-                                //imageCont.append(loremIpsum()); 
+                                //imageCont.append(loremIpsum());
                             }
 
                             var imageFloat = $("#imagePreview").siblings("#imageFloat");
@@ -227,14 +231,14 @@ CKEDITOR.plugins.add('fuse-image',
 
                                         setImage(img, selectedVideoUrl, h, false, false);
                                         log("done set img", img);
-                                        setImage(img, selectedVideoUrl, h, false, false);
+                                        //setImage(img, selectedVideoUrl, h, false, false);
                                     },
                                     ondelete: function (node) {
                                         src = "";
                                         hash = "";
                                         var img = imageCont.find("img");
                                         img.hide();
-                                        
+
                                     },
                                     isInCkeditor: true
                                 });
@@ -311,7 +315,7 @@ CKEDITOR.plugins.add('fuse-image',
 
                             if (this.insertMode) {
                                 flog("insert mode", this.insertMode, img);
-                                img.addClass("img-responsive"); // defaul to responsive for sizing 
+                                img.addClass("img-responsive"); // defaul to responsive for sizing
                                 editor.insertElement(img);
                             } else {
                                 flog("update mode", this.insertMode, img);
@@ -335,50 +339,49 @@ function setImage(img, src, hash, width, height, keepRatio) {
     flog("setImage", img, src, hash, width, height, keepRatio);
     img.show();
     var tempImg = document.createElement('img');
-    tempImg.src = src;
-    try {
-        img.resizable("destroy");
-    } catch (e) {
-    }
-
-    img.attr('style', '');
 
     tempImg.onload = function () {
-        img.attr("data-filename", src)
-        img.attr("data-hash", hash);
-        flog(hash, !(hash === "undefined"), useHash);
-        if (hash && !(hash === "undefined") && useHash === "true") {
-            flog("Using Hash=", hash);
-            img.attr("src", baseHashUrl + hash);
-        } else {
-            img.attr("src", src);
-        }
+        window.setTimeout(function(){
+            flog("image loaded", tempImg, "width=", img.width());
+            img.attr("data-filename", src)
+            img.attr("data-hash", hash);
+            var h = (typeof(useHash) !== "undefined" ? useHash : "false" );
+            flog(hash, !(hash === "undefined"), h);
+            if (hash && !(hash === "undefined") && h === "true") {
+                flog("Using Hash=", hash);
+                img.attr("src", baseHashUrl + hash);
+            } else {
+                img.attr("src", src);
+            }
 
-        if (width && height) {
-            img.css({
-                width: width,
-                height: height
+            if (width && height) {
+                flog("set height and width", height, width);
+                img.css({
+                    width: width,
+                    height: height
+                });
+            } else {
+                flog("ignoring height and width");
+            }
+
+            var originalWidth = img.width();
+            var originalHeight = img.height();
+            flog("image Width=", originalWidth, " Height=", originalHeight);
+
+            if (!keepRatio) {
+                var ratio = originalWidth / originalHeight;
+                $('#image-width').attr('data-ratio', ratio);
+                $('#image-height').attr('data-ratio', ratio);
+            }
+
+            $('#image-width').val(originalWidth).attr({
+                'data-width': originalWidth
             });
-        }
+            $('#image-height').val(originalHeight).attr({
+                'data-height': originalHeight
+            });
 
-        var originalWidth = img.width();
-        var originalHeight = img.height();
-        flog("image Width=", originalWidth, " Height=", originalHeight);
 
-        if (!keepRatio) {
-            var ratio = originalWidth / originalHeight;
-            $('#image-width').attr('data-ratio', ratio);
-            $('#image-height').attr('data-ratio', ratio);
-        }
-
-        $('#image-width').val(originalWidth).attr({
-            'data-width': originalWidth
-        });
-        $('#image-height').val(originalHeight).attr({
-            'data-height': originalHeight
-        });
-
-        setTimeout(function () {
             img.resizable({
                 aspectRatio: true,
                 maxWidth: 1000,
@@ -388,8 +391,19 @@ function setImage(img, src, hash, width, height, keepRatio) {
                     $('#image-height').val(img.height());
                 }
             });
-        }, 1);
+            flog("done resizable", img);
+
+        }, 200);
+
     };
+    tempImg.src = src;
+    try {
+        img.resizable("destroy");
+    } catch (e) {
+    }
+
+    img.attr('style', '');
+
 }
 
 /**

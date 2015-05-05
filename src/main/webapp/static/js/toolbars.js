@@ -1,4 +1,4 @@
-var editorSkin = "moono";
+var editorSkin = "bootstrapck";
 
 var toolbarSets = {};
 
@@ -21,7 +21,7 @@ toolbarSets["Full"] = [
 	{ name: 'tools' },
 	{ name: 'layouts' },
 	{ name: 'about' }
-    
+
 //    {name: 'clipboard', groups: ['clipboard', 'undo']},
 //    {name: 'editing', groups: ['find', 'selection', 'spellchecker']},
 //    {name: 'links'},
@@ -68,9 +68,9 @@ toolbarSets["Default"] = [
     {name: 'links'},
     {name: 'insert'},
     {name: 'forms'},
-    {name: 'tools'},    
+    {name: 'tools'},
     {name: 'others'},
-    //{name: 'colors'},    
+    //{name: 'colors'},
     {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
     {name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align']},
     {name: 'styles'},
