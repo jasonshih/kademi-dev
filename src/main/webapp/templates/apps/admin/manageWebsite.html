@@ -342,7 +342,8 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
                                 <th>Title</th>
                                 <th>Start Date</th>                                    
                                 <th>Expiry Date</th>
-                                <th  class="text-center">Private Key</th>
+                                <th class="text-center">Certificate</th>
+                                <th class="text-center">Private Key</th>
                                 <th>Created By</th>
                                 <th>Status</th>
                                 <th>Chain Certificates</th>
@@ -355,10 +356,23 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
                                 <td>$cer.title</td>
                                 <td>$formatter.formatDate($cer.startDate)</td>  
                                 <td>$formatter.formatDate($cer.expiryDate)</td>
-                                #if($cer.privateKeyText)
-                                <td class="text-center lead"><i style="color:green" class="fa fa-check-circle text-muted"></i></td>
-                                #else
-                                <td class="text-center lead"><i class="fa fa-exclamation-circle text-muted"></i></td>
+                                #set($certS = $page.getCertificateStatus($cer))
+                                #if($certS == "not-valid")
+                                <td class="text-center lead"><i title="This certificate is not valid for the current domain name" style="color:red" class="fa fa-times-circle text-muted"></i></td>
+                                #elseif($certS == "valid")
+                                <td class="text-center lead"><i title="This certificate is valid for the current domain name" style="color:green" class="fa fa-check-circle text-muted"></i></td>
+                                #elseif($certS == "none")
+                                <td class="text-center lead"><i title="No certificate has been uploaded" class="fa fa-exclamation-circle text-muted"></i></td>
+                                #end
+                                #set($pkS = $page.getPrivateKeyStatus($cer))
+                                #if($pkS == "none")
+                                <td class="text-center lead"><i title="No private key has been uploaded" class="fa fa-exclamation-circle text-muted"></i></td>
+                                #elseif($pkS == "no-certificate")
+                                <td class="text-center lead"><i title="Private key present but no certificate has been uploaded" style="color:green" class="fa fa-exclamation-circle text-muted"></i></td>
+                                #elseif($pkS == "valid")
+                                <td class="text-center lead"><i title="Private key is valid for current certificate" style="color:green" class="fa fa-check-circle text-muted"></i></td>
+                                #elseif($pkS == "not-valid")
+                                <td class="text-center lead"><i title="This private is not valid for the current certificate" style="color:red" class="fa fa-times-circle text-muted"></i></td>
                                 #end
                                 <td>$cer.createdBy.name</td>
                                 <td>
