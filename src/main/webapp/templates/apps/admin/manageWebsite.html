@@ -803,7 +803,7 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
                     callback: function (resp) {
                         flog("done", resp);
                         modal.modal('hide');
-                        Msg.success(form.find('[name=title]').val() + ' is updated!');
+                        Msg.success(form.find('[name=title]').val() + ' has been created!');
                         $('#certificate-types-table').reloadFragment();
                     }
                 });
