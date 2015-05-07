@@ -593,7 +593,7 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
         <div class="modal fade" id="modalUpdateCert" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">Create/Update Certificate Text (X.509 Type)</h4>
+                <h4 class="modal-title" id="myModalLabel">Upload Certificate Text (X.509)</h4>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal" method="" action=".">
@@ -616,72 +616,81 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
         <div class="modal fade" id="genCsrModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">Certificate Request</h4>
+                <h4 class="modal-title" id="myModalLabel">Certificate Signing Request</h4>
             </div>
             <div class="modal-body">
-                <p class="well">Please fill in the details below</p>
+                <p class="well csrForm">Please fill in the details below</p>
                 <form method="POST" action="." class="form-horizontal">
-                    <div class="form-group">
-                        <input type="hidden" name="generateCsr" value="true" />
-                        <input type="hidden" name="certId" id="certId" value="" />
-                        <label class="control-label col-md-4" for="csr_cn">Common Name</label>
-                        <div class="col-md-8">
-                            <input type="text" name="csr_cn" id="csr_cn" placeholder="Common Name" class="required form-control" />
+                    <div class="csrForm">
+                        <div class="form-group">
+                            <input type="hidden" name="generateCsr" value="true" />
+                            <input type="hidden" name="certId" id="certId" value="" />
+                            <label class="control-label col-md-4" for="csr_cn">Common Name</label>
+                            <div class="col-md-8">
+                                <input type="text" name="csr_cn" id="csr_cn" placeholder="Common Name" class="required form-control" />
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label class="control-label col-md-4" for="csr_ou">Organizational Unit</label>
-                        <div class="col-md-8">
-                            <input type="text" name="csr_ou" id="csr_ou" placeholder="Organizational Unit" class="required form-control" />
+                        <div class="form-group">
+                            <label class="control-label col-md-4" for="csr_ou">Organizational Unit</label>
+                            <div class="col-md-8">
+                                <input type="text" name="csr_ou" id="csr_ou" placeholder="Organizational Unit" class="required form-control" />
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label class="control-label col-md-4" for="csr_o">Organization Name</label>
-                        <div class="col-md-8">
-                            <input type="text" name="csr_o" id="csr_o" placeholder="Organization Name" class="required form-control" />
+                        <div class="form-group">
+                            <label class="control-label col-md-4" for="csr_o">Organization Name</label>
+                            <div class="col-md-8">
+                                <input type="text" name="csr_o" id="csr_o" placeholder="Organization Name" class="required form-control" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-4" for="csr_l">Location</label>
+                            <div class="col-md-8">
+                                <input type="text" name="csr_l" id="csr_l" placeholder="Location" class="required form-control" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-4" for="csr_st">State</label>
+                            <div class="col-md-8">
+                                <input type="text" name="csr_st" id="csr_st" placeholder="State" class="required form-control" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-4" for="csr_c">Country</label>
+                            <div class="col-md-8">
+                                <select name="csr_c" id="csr_c" class="required form-control">
+                                    #set($countryCodes = $formatter.countryCodes)
+                                    #foreach($cc in $countryCodes.list)
+                                    $formatter.option($cc.alpha2Code, $cc.englishShortName, false)
+                                    #end
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-4" for="csr_email">Email</label>
+                            <div class="col-md-8">
+                                <input type="text" name="csr_email" id="csr_email" placeholder="Email" class="email form-control" />
+                            </div>
                         </div>
                     </div>
-                    
-                    <div class="form-group">
-                        <label class="control-label col-md-4" for="csr_l">Location</label>
-                        <div class="col-md-8">
-                            <input type="text" name="csr_l" id="csr_l" placeholder="Location" class="required form-control" />
+                    <div class="viewCsr">
+                        <div>
+                            <p>
+                                <a href="#" class="btn btn-sm btn-success btn-gen-new-csr" ><i class="fa fa-plus"></i> Generate a new CSR</a>
+                            </p>
                         </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="control-label col-md-4" for="csr_st">State</label>
-                        <div class="col-md-8">
-                            <input type="text" name="csr_st" id="csr_st" placeholder="State" class="required form-control" />
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="control-label col-md-4" for="csr_c">Country</label>
-                        <div class="col-md-8">
-                            <select name="csr_c" id="csr_c" class="required form-control">
-                                #set($countryCodes = $formatter.countryCodes)
-                                #foreach($cc in $countryCodes.list)
-                                $formatter.option($cc.alpha2Code, $cc.englishShortName, false)
-                                #end
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="control-label col-md-4" for="csr_email">Email</label>
-                        <div class="col-md-8">
-                            <input type="text" name="csr_email" id="csr_email" placeholder="Email" class="email form-control" />
+                        <div id="csrTextGroup" class="form-group">
+                            <div class="col-md-12">
+                                <textarea id = "csrText" name="csrText" rows="12" class="form-control" readonly style="cursor: text; resize: none;"></textarea>
+                            </div>
                         </div>
                     </div>
                 </form>
-                <div id="csrTextGroup" class="form-group">
-                    <div class="col-sm-12">
-                        <textarea id = "csrText" name="csrText" rows="12" class="form-control"></textarea>
-                    </div>
-                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
@@ -721,7 +730,7 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
         <div class="modal fade" id="modalUpdatePK" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">Create/Update Private Key Text (PEM Encoded)</h4>
+                <h4 class="modal-title" id="myModalLabel">Upload Private Key Text (PEM Encoded)</h4>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal" method="" action=".">
@@ -872,22 +881,37 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
                         deleteRootCert(certId, href)
                     }
                 });
-                
-                $("body").on('click', '.viewCreateCsr', function(e){
+
+                $("body").on('click', '.viewCreateCsr', function (e) {
                     e.preventDefault();
                     var certId = $(this).data("certid");
                     viewCsr(certId);
                 });
                 
-                $("#genCsrModal").find("form").forms({
+                var genCSRModal = $("#genCsrModal");
+
+                $('body').on('click', '.btn-gen-new-csr', function (e) {
+                    e.preventDefault();
+                    if (confirm("Are you sure you want to create a new CSR? Please note this will also replace the current Private Key")) {
+                        $("#csrTextGroup").hide();
+                        genCSRModal.find('.viewCsr').hide();
+                        genCSRModal.find('.csrForm').show();
+                    }
+                });
+
+                genCSRModal.find("form").forms({
                     callback: function (resp) {
                         flog("Saved Ok!");
                         Msg.info(resp.messages[0]);
                         var csrGroup = $("#csrTextGroup");
                         var csr = csrGroup.find("#csrText");
-                        if (resp.data.csrText == "") {
+                        if (resp.data.csrText === "") {
                             csrGroup.hide();
+                            genCSRModal.find('.viewCsr').hide();
+                            genCSRModal.find('.csrForm').show();
                         } else {
+                            genCSRModal.find('.viewCsr').show();
+                            genCSRModal.find('.csrForm').hide();
                             csrGroup.show();
                             csr.val(resp.data.csrText);
                         }
@@ -969,7 +993,11 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
                         flog("success", resp);
                         if (resp.data.csrText == "") {
                             csrGroup.hide();
+                            $("#genCsrModal").find('.viewCsr').hide("fade");
+                            $("#genCsrModal").find('.csrForm').show("fade");
                         } else {
+                            $("#genCsrModal").find('.viewCsr').show("fade");
+                            $("#genCsrModal").find('.csrForm').hide("fade");
                             csrGroup.show();
                             csr.val(resp.data.csrText);
                         }
