@@ -30,23 +30,36 @@ function initManageModule(baseHref, themePath) {
 
 function initCssForEditor(themePath) {
     flog('initCssForEditor. Themepath=', themePath);
-    themePath = '/templates/themes/bootstrap320/'; // HACK!! Loading from an actual theme doesnt work when its not a base theme (eg united)
-    flog('initCssForEditor. Themepath=', themePath);
-    //cssPath += ',' + themePath + 'theme.less,/static/common/contentStyles.less';
-    var cssPath = '';
-    cssPath += themePath + 'less/bootstrap.less';
-    cssPath += ',';
-    cssPath += evaluateRelativePath(window.location.pathname, '../../../../theme/theme-params.less');
-    flog('initCssForEditor2', cssPath);
-    cssPath = cssPath.replaceAll('/', '--');
-    cssPath = '/' + cssPath + '.compile.less';
-    flog('initCssForEditor3', cssPath);
+    var cssPath;
+    if( themePath !== "/templates/themes/fuse/") {
+        themePath = '/templates/themes/bootstrap320/'; // HACK!! Loading from an actual theme doesnt work when its not a base theme (eg united)
+        flog('initCssForEditor. Using bootstrap', themePath);
+        cssPath = themePath + 'less/bootstrap.less';
+        cssPath += ',';
+        cssPath += evaluateRelativePath(window.location.pathname, '../../../../theme/theme-params.less');
+        flog('initCssForEditor2', cssPath);
+        cssPath = cssPath.replaceAll('/', '--');
+        cssPath = '/' + cssPath + '.compile.less';
+        flog('initCssForEditor3', cssPath);
+
+    } else {
+        // This is the old fuse theme
+        cssPath = "/templates/themes/fuse/theme.less,";
+        cssPath += evaluateRelativePath(window.location.pathname, '../../../../theme/theme-params.less');
+        cssPath += "," + "/static/common/contentStyles.less";
+        cssPath = cssPath.replaceAll('/', '--');
+        cssPath = '/' + cssPath + '.compile.less';
+//        cssPath = ',' + themePath + 'theme.less,/static/common/contentStyles.less';
+        flog('initCssForEditor-non-bs: cssPath=', cssPath);
+    }
+
+
 
     flog('push theme css file for editor', cssPath);
     themeCssFiles.push(cssPath);
     themeCssFiles.push('/static/editor/editor.css'); // just to format the editor itself a little
     themeCssFiles.push('/static/prettify/prettify.css');
-        
+
     templatesPath = themePath + 'editor-templates.js'; // override default defined in toolbars.js
     stylesPath = themePath + 'styles.js'; // override default defined in toolbars.js
     flog('override default templates and styles', templatesPath, stylesPath);
@@ -250,17 +263,17 @@ function initCRUDModulePages() {
         flog('initAddPageModal: click');
         // Make sure inputs are cleared
         modal.find('input[type=text], textarea,input[name=pageName]').val('');
-        
+
         // Find highest order value and increment for new page
         var lastOrder = $("#pages-list input[type=hidden]").last().val();
         flog("lastOrder", lastOrder);
         if( lastOrder === null || lastOrder === "") {
             lastOrder = 0;
         }
-        
+
         lastOrder = Number(lastOrder);
-        var newOrderVal = lastOrder + 1;       
-        
+        var newOrderVal = lastOrder + 1;
+
         flog("newOrderVal", newOrderVal);
         form.find("input[name=order]").val(newOrderVal);
 
@@ -352,7 +365,7 @@ function checkFormControlState(type, afterRemoveLastOne) {
 
         contents.each(function(i) {
             var content = $(this);
-            
+
             if (type === 'reward') {
                 var numRewards = 'numRewards' + i;
 
@@ -498,7 +511,7 @@ function checkEditListsValid() {
                 item.find('select.requiredIf, input.requiredIf').each(function() {
                     var input = $(this);
                     var val = input.val().trim();
-                    
+
                     if (val === '') {
                         isOk = false;
 
@@ -534,7 +547,7 @@ function saveModulePages() {
     });
 
     showLoadingOverlay();
-    
+
     $.ajax({
         type: 'POST',
         url: '',
@@ -562,20 +575,20 @@ function initAddQuizModal() {
 
         modal.find('input[type=text], textarea,input[name=pageName]').val('');
         modal.find('#quiz-questions').html('<ol class="quiz"></ol>');
-        
+
         // Find highest order value and increment for new page
         var lastOrder = $("#pages-list input[type=hidden]").last().val();
         flog("lastOrder", lastOrder);
         if( lastOrder === null || lastOrder === "") {
             lastOrder = 0;
         }
-        
+
         lastOrder = Number(lastOrder);
-        var newOrderVal = lastOrder + 1;       
-        
+        var newOrderVal = lastOrder + 1;
+
         flog("newOrderVal", newOrderVal);
-        form.find("input[name=order]").val(newOrderVal);        
-        
+        form.find("input[name=order]").val(newOrderVal);
+
         form.unbind().submit(function(e) {
             e.preventDefault();
             doSavePage(form, null, true);
@@ -638,7 +651,7 @@ function loadModalEditorContent(modal, name, isQuiz) {
 
             if (isQuiz) {
                 loadQuizEditor(modal, data);
-            } else {               
+            } else {
                 //CKEDITOR.instances["body"].setData(data.body)
                 modal.find('textarea').val(data.body);
                 flog("set values", data.title, data.body, CKEDITOR.instances["body"]);

@@ -544,8 +544,8 @@ function showEditCourse(liCourse, courseHref, form, modal) {
                 flog('set fields', p);
                 form.find('input[name=courseTitle]').val(p.title);
                 form.find('input[name=itemType]').val(p.itemType);
-                form.find('input[name=category]').val(p.category);
-                form.find('input[name=tags]').val(p.tags);
+                form.find('input[name=category]').val(p.searchCategory);
+                form.find('input[name=tags]').val(p.searchTags);
                 form.find('textarea[name=courseNotes]').val(p.notes);
                 form.find('textarea[name=courseDescription]').val(p.body);
 
@@ -639,8 +639,8 @@ function showEditProgram(programHref, form, modal) {
                 flog('set fields', p);
                 form.find('input[name=programTitle]').val(p.title);
                 form.find('input[name=itemType]').val(p.itemType);
-                form.find('input[name=category]').val(p.category);
-                form.find('input[name=tags]').val(p.tags);
+                form.find('input[name=category]').val(p.searchCategory);
+                form.find('input[name=tags]').val(p.searchTags);
                 form.find('textarea').val(p.body);
             }
             modal.modal('show');

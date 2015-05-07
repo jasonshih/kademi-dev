@@ -1,379 +1,115 @@
-<html>
-
-
-    <head>
-
-
-        <title>My Dashboard</title>
-
-
-        <style>
-
-
-
-
-
-            form.poll-form input[type=radio] {
-
-
-                float: left;
-
-
-                margin-right: 15px;
-
-
-            }
-
-
-
-
-
-            form.poll-form label.radio {
-
-
-
-
-
-            }            
-
-
-            .dashboard .well {
-
-
-
-
-
-            }
-
-
-            .well.well-community {
-
-
-                background: white;
-
-
-                min-height: 170px;
-
-
-            }
-
-
-        </style>
-
-
-    </head>
-
-
-    <body class="dashboard">
-
-
-        <div class="">
-
-
-            <div class="">
-
-
-                <div class="col-md-8 dash-primary">
-
-                    #portlets("beforeDashboardPrimary")
-                    <!-- Start dashboardPrimary  -->
-
-                    #portlets("dashboardPrimary")
-
-                    <!-- End dashboardPrimary  -->
-                    #portlets("afterDashboardPrimary")
-                    <div class="row">
-                        #foreach($reward in $page.find("/rewards").children.ofType.reward.ofTypeOr("poll", "photo") )
-                        #if( $reward.userUploadEnabled )
-
-                        <div class="col-md-4">
-                            <div class="well well-community">
-                                <h4>$reward.title</h4>
-                                #if( $reward.entriesForUser.isEmpty() )
-                                <p>
-                                    <strong>$reward.staticMessage</strong>
-                                </p>
-
-                                <form action="$reward.href" method="post" class="upload-form">
-                                    <input type="hidden" name="entry"/>
-                                    <input type="hidden" name="userAttachmentHash"/>
-                                    <div class="form-group">
-                                        <div class="upload-button"></div>
-                                    </div>
-                                </form>
-                                #else
-                                <!-- confirmation message -->
-
-                                <p><strong>Thanks for entering the contest.</strong> We&rsquo;ll publish the results&nbsp;soon.</p>
-                                <p><a class="blackText" href="$reward.href">Learn more &rsaquo;</a></p>
-                                #end
-                            </div>
-                        </div>
-                        #else
-
-                        <div class="col-md-8">
-                            <div class="well well-community">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <h4>$reward.title</h4>
-                                        <strong>$reward.staticMessage</strong>
-                                    </div>
-                                    <div class="col-md-6">
-                                        #if( $reward.entriesForUser.isEmpty() )
-                                        <form action="$reward.href" method="post" class="white poll-form">
-                                            <input type="hidden" name="entry"/>
-                                            $reward.quizHtml
-                                            <div class="submitPoll relative">
-                                                <div class="row">
-                                                    <div class="col-xs-7 col-sm-6"><button type="submit" class="btn btn-success">Vote</button></div>									
-                                                </div>
-                                            </div>
-                                        </form>  							
-                                        #else				
-                                        <!-- For multi question surveys use allPollResults -->
-
-                                            #set( $pollResults = $reward.pollResults)
-
-
-                                        <div class="pollGraph">
-                                            #foreach($item in $pollResults.entrySet() )
-                                            <div class="graphItem" data-option-total="$item.value">
-                                                <strong class="blackText">$item.key <span>($item.value)</span></strong>
-                                                <div class="bar"><span>0</span></div>
-                                            </div>
-                                            #end
-                                        </div>
-                                        <p class="muted">Thanks for taking part.</p>
-                                        #end                                
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                                #end                        
-                        #end
-                    </div>
+<head>
+    <title>Dashboard</title>
+    <link rel='template' href='/theme/apps/bluefin/bluefin-base.html' /></head>
+</head>
+<body>
+    #set($projects = $page.find("/jsondb/bluefin-projects") )
+    #set($searchResults = $page.attributes.searchResults)
+
+    <div class="col-sm-9 right">
+        <div class="row">
+            <div class="col-sm-12 skill_tags">
+                <div class="alert alert-info alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><img src="/theme/img/close.png" alt="" /></button>
+                    Hard skills
                 </div>
-
-
-                <div class="col-md-4 dash-secondary">
-
-
-                    <div class="row">
-
-
-                        #set( $myPointsReward = $page.find("/rewards/my-points") )
-
-
-
-
-
-                        #if( $myPointsReward.active && $myPointsReward.status == "a" )
-
-
-                        <div class="col-md-6">
-                            <a href="/store" style="text-decoration:none !important;">
-
-                                <div class="well well-inverse text-center">
-
-
-                                    <h3>Your points</h3>
-
-
-                                    <h1><strong>$myPointsReward.myPointsTotal</strong></h1>
-
-
-                                </div>
-                            </a>
-
-                        </div>
-
-
-                        #end
-
-
-
-
-
-                        #set( $salesDataPage = $page.find("/sales") )
-
-
-                        #if( $salesDataPage ) 
-
-
-                        <div class="col-md-6">
-
-
-                            <div class="well well-inverse text-center">
-
-
-                                <h3>Your sales</h3>
-
-
-                                <h1><strong>$420</strong></h1>
-
-
-                            </div>
-
-
-                        </div>
-
-
-                        #end
-
-
-                    </div>
-
-
-                    #portlets("dashboardSecondary")
-
-
+                <div class="alert alert-info alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><img src="/theme/img/close.png" alt="" /></button>
+                    Hard skills
                 </div>
-
-
+                <div class="alert alert-info alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><img src="/theme/img/close.png" alt="" /></button>
+                    Hard skills
+                </div>
+                <div class="alert alert-info alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><img src="/theme/img/close.png" alt="" /></button>
+                    Hard skills
+                </div>
+                <div class="alert alert-info alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><img src="/theme/img/close.png" alt="" /></button>
+                    Hard skills
+                </div>
             </div>
+        </div><!--end skill_tags-->
+        <div class="row people">
+            <div class="col-md-6">
+                <!-- TODO: Integrate with the dashboard alerts app -->
+                <div class="alert alert-success label-info">
+                    <p>We've just added 10 new profiles to your account. Contact Jane on 0423 456 for more info on this. </p>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><img src="/theme/img/close2.png" alt="" /></button>
+                </div>
+            </div>
+            #set($cands = $searchResults.hits.hits)
 
+            #foreach($cand in $cands)
+            #set($c = $projects.child($cand.id).jsonObject )
+            <div class="col-md-6">
+                <div class="media">
+                    <div class="media-left">
+                        <a href="/candidates/$cand.id/">
+                            <img class="media-object" src="/theme/img/man.png" alt="">
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <h2 class="media-heading">$cand.fields.firstName.value $cand.fields.surName.value</h2>
+                        <h3>$cand.fields.currentTitle.value $cand.fields.currentCompany.value</h3>
+                        <h4>
+                            <!-- TODO: not sure what field/fields this should come from -->
+                            Has bonorum nominati cu, ignota concludaturque cu eam. Case vocent audire mei ut. Verterem honestatis et...
+                        </h4>
+                    </div>
+                    <div class="media-right">
+                        <div class="dropdown">
+                            <button class="btn btn-info label-info dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+                                <span class="glyphicon glyphicon-chevron-down"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="/candidates/$cand.name">Add to shortlist</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="/candidates/$cand.name">View profile</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" data-toggle="modal" data-target="#Modal"  href="#">Enquire</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div><!--end each profile-->
+            #end
 
+        </div><!--end people-->
+        #if( $searchResults )
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="right-bottom label-default">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h1>$searchResults.hits.totalHits</h1>
+                            <p>Candidates identified</p>
+
+                        </div>
+                        <div class="col-md-8">
+                            #foreach( $agg in $searchResults.aggregations)
+                            #if( $agg.name.endsWith("Bar") )
+                            #foreach( $bucket in $agg.buckets)
+                            #if( $bucket.docCount > 0 )
+                            <div class="bottom_progressbar">
+                                <p>$bucket.key</p>
+                                #set($pc = $formatter.toPercent($bucket.docCount, $searchResults.hits.totalHits, false, false) )
+                                <div class="progress">
+                                    <div class="progress-bar label-info" role="progressbar" aria-valuenow="$pc" aria-valuemin="0" aria-valuemax="100" style="width: ${pc}%;">
+                                        ${pc}%
+                                    </div>
+                                </div>
+                            </div>
+                            #end
+                            #end
+                            #end
+                            #end
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+        #end
 
-
-        #portlets("dashboardBottom")
-
-
-
-
-
-        <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
-
-
-        <script type="text/javascript">
-
-
-            $(function () {
-
-
-
-
-
-                var uploadForms = $(".upload-form");
-
-
-
-
-
-                uploadForms.each(function (i, n) {
-
-
-                    var form = $(n);
-
-
-                    var btn = form.find(".upload-button");
-
-
-                    var actionHref = form.attr("action");
-
-
-                    // Configure an upload button to upload to the rewards upload folder
-
-
-                    btn.mupload({
-                        buttonText: "Upload",
-                        url: actionHref + "uploads/", // upload to the special rewards upload folder. But this does not create the entry
-
-
-                        oncomplete: function (data, name, href) {
-
-
-                            flog("file uploaded", name, href);
-
-
-                            // set the file hash into the entry form and submit
-
-
-                            var hash = getFileName(href);
-
-
-                            form.find("input[name=userAttachmentHash]").val(hash);
-
-
-                            form.submit();
-
-
-                        }
-
-
-                    });
-
-
-                    // configure this form to post the entry with the hash of the uploaded file
-
-
-                    form.forms({
-                        callback: function (result, thisForm) {
-
-
-                            flog("result", result);
-
-
-                            //alert("Done. Now go to reward page..." + thisForm.attr("action"));
-
-
-                            window.location = thisForm.attr("action");
-
-
-                        }
-
-
-                    });
-
-
-
-
-
-                });
-
-
-
-
-
-                var pollForms = $(".poll-form");
-
-
-                pollForms.each(function (i, n) {
-
-
-                    var form = $(n);
-
-
-                    form.forms({
-                        callback: function (result) {
-
-
-                            flog("result", result);
-
-
-                            window.location = form.attr("action");
-
-
-                        }
-
-
-                    });
-
-
-                });
-
-
-            });
-
-
-        </script>         
-
-
-    </body>
-
-
+    </div><!--end right-->
+</body>
 </html>
-
-
-
-
