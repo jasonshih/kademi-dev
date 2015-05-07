@@ -270,13 +270,14 @@
                                 <th>Amount</th>
                                 <th>Frequency</th>
                                 <th>No. payments</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             #set($recurring = $page.recurringTransactions)
                             #if( $recurring.size() > 0 )
                             #foreach( $r in $recurring)
-                            <tr>
+                            <tr id="tr_$r.id">
                                 <td>
                                     <a href="/manageUsers/$r.purchaser.id">$r.purchaser.formattedName</a>
                                 </td>
@@ -285,6 +286,12 @@
                                 <td>$r.amount $r.currencyCode</td>
                                 <td>$r.periodMultiples $r.frequency</td>
                                 <td>$r.paymentResults.size()</td>
+                                <td>
+                                	<a id="$r.id" class="btn btn-danger btn-sm cancelPayment">
+                        				<span class="glyphicon glyphicon-remove"></span>  
+                        					Cancel payment
+                    				</a>
+								</td>
                             </tr>
                             #end
                             #else
@@ -357,6 +364,37 @@
                             alert("Error attempting to process payment: " + resp);
                         }
                     });
+                });
+                
+                $(".cancelPayment").click(function(e) {
+                	e.preventDefault();
+                    var pid = this.getAttribute("id");
+                    flog("payment.id=".concat(pid));
+                    if (confirm("Are you sure you want to cancel this recurring payment?")) {
+                    	$.ajax({
+	                    	url: "/payments",
+	                        type: 'POST',
+	                        dataType: 'json',
+	                        data: {
+	                        	action: "cancel",
+	                        	txId: pid
+	                        },
+	                        success: function (data) {
+	                            flog("success", data);
+	                            if (data.status) {
+	                                Msg.success("Success", 6000);
+	                                $("#tr_".concat(pid)).remove();
+	                            } else {
+	                                Msg.error("Error attempting to cancel recurring payment");
+	                                showErrors(data.messages, data.fieldMessages);
+	                            }
+	                        },
+	                        error: function (resp) {
+	                            flog("errors", resp);
+	                            alert("Error attempting to cancel recurring payment: " + resp);
+	                        }
+	                    });
+                    }
                 });
             });
             function showErrors(messages, fieldMessages) {
