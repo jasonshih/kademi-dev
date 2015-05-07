@@ -357,12 +357,16 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
                                 <td>$formatter.formatDate($cer.startDate)</td>  
                                 <td>$formatter.formatDate($cer.expiryDate)</td>
                                 #set($certS = $page.getCertificateStatus($cer))
-                                #if($certS == "not-valid")
-                                <td class="text-center lead"><i title="This certificate is not valid for the current domain name" style="color:red" class="fa fa-times-circle text-muted"></i></td>
+                                #if($certS == "notvalid")
+                                <td class="text-center lead"><i title="This certificate is not valid for the current domain name." style="color:red" class="fa fa-times-circle text-muted"></i></td>
+                                #elseif($certS == "selfsigned-notvalid")
+                                <td class="text-center lead"><i title="This certificate is not valid for the current domain name. This certificate if self-signed." style="color:red" class="fa fa-times-circle text-muted"></i></td>
                                 #elseif($certS == "valid")
-                                <td class="text-center lead"><i title="This certificate is valid for the current domain name" style="color:green" class="fa fa-check-circle text-muted"></i></td>
+                                <td class="text-center lead"><i title="This certificate is valid for the current domain name." style="color:green" class="fa fa-check-circle text-muted"></i></td>
+                                #elseif($certS == "selfsigned-valid")
+                                <td class="text-center lead"><i title="This certificate is valid for the current domain name. This certificate if self-signed." style="color:orange" class="fa fa-check-circle text-muted"></i></td>
                                 #elseif($certS == "none")
-                                <td class="text-center lead"><i title="No certificate has been uploaded" class="fa fa-exclamation-circle text-muted"></i></td>
+                                <td class="text-center lead"><i title="No certificate has been uploaded." class="fa fa-exclamation-circle text-muted"></i></td>
                                 #end
                                 #set($pkS = $page.getPrivateKeyStatus($cer))
                                 #if($pkS == "none")
