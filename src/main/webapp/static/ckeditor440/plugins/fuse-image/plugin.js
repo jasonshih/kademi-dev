@@ -293,7 +293,8 @@ CKEDITOR.plugins.add('fuse-image',
                                 returnUrl = returnUrl.substring(pagePath.length + 1); // convert to relative path
                             }
                             flog("onOk", url, pagePath, "=", returnUrl, "hash=", hash);
-                            if (hash !== "" && useHash === "true") {
+
+                            if (hash !== "" && typeof(useHash) !== "undefined" && useHash === "true") {
                                 flog("Using Hash=", hash);
                                 img.setAttribute("src", baseHashUrl + hash);
                             } else {
