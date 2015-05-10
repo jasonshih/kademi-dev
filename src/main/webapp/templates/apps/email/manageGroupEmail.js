@@ -225,7 +225,7 @@ function pollStatus() {
                 if (resp.data.statusCode === '') {
                     setTimeout(pollStatus, 2000);
                 } else if (resp.data.statusCode === 's') {
-                    statusTools.attr('class', 'Canceled page-action');                    
+                    statusTools.attr('class', 'Canceled page-action');
                 } else if (resp.data.statusCode !== 'c') {
                     statusTools.attr('class', 'Running page-action');
                     setTimeout(pollStatus, 2000);
@@ -266,7 +266,7 @@ function displayStatus(data) {
 
         $('.send-progress').show();
         if (data.statusCode == "s") {
-            $('.progress').hide();            
+            $('.progress').hide();
         } else {
             $('.progress').show();
         }
@@ -295,7 +295,7 @@ function displayStatus(data) {
         if (data.totalToSend && data.totalToSend > 0) {
             txtProgress += data.totalToSend + ' in total to send';
         } else {
-            txtProgress = 'Preparing emails...';
+            txtProgress = data.statusDescription;
         }
 
         progressBar.next().text(txtProgress);
