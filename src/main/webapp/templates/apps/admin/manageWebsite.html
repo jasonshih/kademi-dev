@@ -694,7 +694,7 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Create</button>
+                <button type="button" class="btn btn-sm btn-primary btn-create" data-type="form-submit">Create</button>
             </div>
         </div><!-- /.modal -->
 
@@ -791,6 +791,7 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
         </div>
 
         <script type="text/javascript">
+            var csr = {};
             $(function () {
                 flog("page init initManageWebsite");
                 initManageWebsite();
@@ -878,7 +879,7 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
                     var certId = $(this).data("certid");
                     flog("rootCertId", href, "certId", certId);
                     if (confirm("Are you sure you want to delete this certificate?")) {
-                        deleteRootCert(certId, href)
+                        deleteRootCert(certId, href);
                     }
                 });
 
@@ -887,7 +888,7 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
                     var certId = $(this).data("certid");
                     viewCsr(certId);
                 });
-                
+
                 var genCSRModal = $("#genCsrModal");
 
                 $('body').on('click', '.btn-gen-new-csr', function (e) {
@@ -896,10 +897,15 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
                         $("#csrTextGroup").hide();
                         genCSRModal.find('.viewCsr').hide();
                         genCSRModal.find('.csrForm').show();
+                        genCSRModal.find('.btn-create').show("fade");
                     }
                 });
 
                 genCSRModal.find("form").forms({
+                    validate: function () {
+                        Msg.info("Sending CSR Request...");
+                        return true;
+                    },
                     callback: function (resp) {
                         flog("Saved Ok!");
                         Msg.info(resp.messages[0]);
@@ -909,9 +915,11 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
                             csrGroup.hide();
                             genCSRModal.find('.viewCsr').hide();
                             genCSRModal.find('.csrForm').show();
+                            genCSRModal.find('.btn-create').show("fade");
                         } else {
                             genCSRModal.find('.viewCsr').show();
                             genCSRModal.find('.csrForm').hide();
+                            genCSRModal.find('.btn-create').hide("fade");
                             csrGroup.show();
                             csr.val(resp.data.csrText);
                         }
@@ -995,9 +1003,11 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
                             csrGroup.hide();
                             $("#genCsrModal").find('.viewCsr').hide("fade");
                             $("#genCsrModal").find('.csrForm').show("fade");
+                            $("#genCsrModal").find('.btn-create').show("fade");
                         } else {
                             $("#genCsrModal").find('.viewCsr').show("fade");
                             $("#genCsrModal").find('.csrForm').hide("fade");
+                            $("#genCsrModal").find('.btn-create').hide("fade");
                             csrGroup.show();
                             csr.val(resp.data.csrText);
                         }
