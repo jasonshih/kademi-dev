@@ -14,14 +14,14 @@
                 <ul class="dropdown-menu" role="menu">
                     <li class="presentation" role="menuitem"><a href="#" class="btn-upload-users-csv">Upload Users CSV</a></li>
                     <li class="presentation" role="menuitem"><a role="button" href="users.csv" download="users.csv">Open Users CSV</a></li>
-                    <li class="presentation" role="menuitem"><a href="#" class="btn-match-orgs">Match orgs</a></li> 
+                    <li class="presentation" role="menuitem"><a href="#" class="btn-match-orgs">Match orgs</a></li>
                     #portlets("manageUsersTools")
                     <li class="divider"></li>
                     <li class="presentation" role="menuitem"><a role="button" href="unsubscribers.csv" download="unsubscribers.csv">Open Unsubscribers CSV</a></li>
                 </ul>
             </div>
             <p class="pull-left">
-                <a href="#" class="btn btn-success btn-sm btn-add-user"><i class="fa fa-plus"></i> Add new user</a> 
+                <a href="#" class="btn btn-success btn-sm btn-add-user"><i class="fa fa-plus"></i> Add new user</a>
             </p>
         </div>
         <div class="panel panel-default">
@@ -42,7 +42,7 @@
                         </ul>
                     </div>
                     <p class="input-group search-user input-group-sm">
-                        <input type="text" id="user-query" class="form-control" placeholder="Search for user here" value="" /> 
+                        <input type="text" id="user-query" class="form-control" placeholder="Search for user here" value="" />
                         <span class="input-group-btn">
                             <button class="btn btn-sm btn-default" type="button" data-type="clearer" data-target="#user-query">
                                 <i class="fa fa-times"></i>
@@ -55,7 +55,7 @@
                             <select name="searchGroup" id="search-group" class="form-control input-sm">
                                 <option value="">&nbsp;</option>
                                 #foreach($group in $rootFolder.groups)
-                                <option value="$group.name">$group.name</option> 
+                                <option value="$group.name">$group.name</option>
                                 #end
                             </select>
                         </div>
@@ -150,7 +150,7 @@
                         <div class="form-group">
                             <label class="control-label col-md-2" for="newUserEmail">Organisation</label>
                             <div class="col-md-10">
-                                <input type="text" class="form-control required" autocomplete="off" name="orgTitle" id="orgTitle" value="$page.organisation.formattedName" /> 
+                                <input type="text" class="form-control required" autocomplete="off" name="orgTitle" id="orgTitle" value="$page.organisation.formattedName" />
                                 <input type="hidden" class="required" autocomplete="off" name="orgId" id="orgId" value="$page.organisation.id" />
                             </div>
                         </div>
@@ -212,6 +212,19 @@
                 <h4 class="modal-title">Upload Users CSV</h4>
             </div>
             <div class="modal-body">
+                <p>Please use the following column order <b>exactly</b>. First row is ignored.</p>
+                <ul>
+                    <li>MemberOfOrg - optional. If present should be the OrgID of a child organisation</li>
+                    <li>Group - the name of the group to add the user to. Required</li>
+                    <li>UserName - optional, users will receive an auto-generated user name if not provided</li>
+                    <li>NickName - optional, defaults to first name</li>
+                    <li>Email - required</li>
+                    <li>FirstName - optional</li>
+                    <li>SurName - optional</li>
+                    <li>Phone - optional</li>
+                    <li>New password - optional. If provided the password will be applied to the profile</li>
+                </ul>
+                <p>To unsubscribe users, provide the special keyword <b>!UNSUB!</b> as the group name</b></p>
                 <div class="upload">
                     <div class="btn-upload" id='do-upload-csv'></div>
                     <br />
@@ -224,11 +237,11 @@
                 <br />
                 <div class="upload-results">
                     <p>
-                        <strong>No. inserted:</strong> 
-                        <span class="badge badge-success num-inserted">-</span> 
-                        <strong>No. updated:</strong> 
-                        <span class="badge badge-success num-updated">-</span> 
-                        <strong>Unmatched rows:</strong> 
+                        <strong>No. inserted:</strong>
+                        <span class="badge badge-success num-inserted">-</span>
+                        <strong>No. updated:</strong>
+                        <span class="badge badge-success num-updated">-</span>
+                        <strong>Unmatched rows:</strong>
                         <span class="badge badge-danger num-unmatched">-</span>
                     </p>
                     <div class="table-responsive">
@@ -269,8 +282,8 @@
                             </div>
                             <div class="input-group-btn">
                                 <div class="btn btn-sm btn-light-grey btn-file">
-                                    <span class="fileupload-new"><i class="fa fa-folder-open-o"></i> Select file</span> 
-                                    <span class="fileupload-exists"><i class="fa fa-folder-open-o"></i> Change</span> 
+                                    <span class="fileupload-new"><i class="fa fa-folder-open-o"></i> Select file</span>
+                                    <span class="fileupload-exists"><i class="fa fa-folder-open-o"></i> Change</span>
                                     <input type="file" class="file-input" name="usersCsv" />
                                 </div>
                                 <a data-dismiss="fileupload" class="btn btn-sm btn-light-grey fileupload-exists" href="#">
