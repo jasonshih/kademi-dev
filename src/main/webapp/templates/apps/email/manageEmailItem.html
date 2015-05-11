@@ -4,10 +4,10 @@
         <link href="myInbox.less" rel="stylesheet" type="text/css" media="all" />
         <script type="text/javascript" src="myInbox.js">//</script>
     </head>
-    <body>        
+    <body>
         <div id="email-item-info">
             <p>
-            <a class="btn btn-primary pull-right" href="$page.href" target="_blank">                
+            <a class="btn btn-primary pull-right" href="$page.href" target="_blank">
                 Open in new window
                 <span class="glyphicon glyphicon-arrow-right"></span>
             </a>
@@ -49,22 +49,22 @@
                 <tr>
                     <td>To</td>
                     <td>$page.recipientAddress</td>
-                </tr>     
+                </tr>
                 <tr>
                     <td>Subject</td>
                     <td>$page.subject</td>
-                </tr>               
+                </tr>
 
                 <tr>
                     <td style='vertical-align: top'>Attachments</td>
                     <td>
                         <ul>
-                            #foreach($attachment in $page.children)
+                            #foreach($attachment in $page.attachments)
                             <li><a href="/_hashes/files/$attachment.fileHash">$attachment.fileName</a></li>
                             #end
                         </ul>
                     </td>
-                </tr>               
+                </tr>
                 <tr>
                     <td style='vertical-align: top'>Send attempts</td>
                     <td>
@@ -74,7 +74,7 @@
                             #end
                         </ul>
                     </td>
-                </tr>  
+                </tr>
             </table>
         </div>
         <h4>Message content</h4>
