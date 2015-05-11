@@ -1,6 +1,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title>$view.title</title> 
+        <title>$view.title</title>
     </head>
     <body>
         <div class="alert alert-info">
@@ -32,7 +32,15 @@
                         <tbody id="rewardStoreList">
                             #foreach($v in $page.children)
                             <tr>
-                                <td class="clickable"><a class="cartLink" href="$v.href">$!v.cart.cartId</a></td>
+                                <td class="clickable">
+                                    <a class="cartLink" href="$v.href">
+                                        #if( $v.cart.cartId )
+                                        $v.cart.cartId
+                                        #else
+                                        $v.cart.id
+                                        #end
+                                    </a>
+                                </td>
                                 <td><a href="/manageUsers/$v.cart.profile.id" target="_blank">$v.cart.profile.formattedName</a></td>
                                 <td>$v.cart.orderedDate</td>
                                 <td class="text-center">$formatter.toDecimal($v.totalItems, 0)</td>
@@ -44,20 +52,20 @@
                     </table>
                 </div>
             </div>
-        </div>   
+        </div>
 
         <script type="text/javascript">
             $(function () {
                 $('body').on('click', '.cartLink', function(e){
                     e.preventDefault();
                 });
-                
+
                 $('body').on('click', '.clickable', function(e){
                     var btn = $(this);
                     var href = btn.find('.cartLink').attr("href");
                     window.location = href;
                 });
             });
-        </script>            
+        </script>
     </body>
 </html>
