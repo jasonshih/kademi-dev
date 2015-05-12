@@ -1,11 +1,11 @@
-(function($, win, doc, undefined) {
+(function ($, win, doc, undefined) {
     function showErrors($result, errors) {
         var $table = $result.find('table'),
                 $tbody = $table.find('tbody');
 
         $tbody.html('');
 
-        $.each(errors, function(i, row) {
+        $.each(errors, function (i, row) {
             log('error:', row);
 
             var $tr = $('<tr>');
@@ -23,12 +23,12 @@
 
         $tbody.html('');
 
-        $.each(unmatched, function(i, row) {
+        $.each(unmatched, function (i, row) {
             log('unmatched', row);
 
             var $tr = $('<tr>');
 
-            $.each(row, function(ii, field) {
+            $.each(row, function (ii, field) {
                 $tr.append('<td>' + field + '</td>');
             });
             $tbody.append($tr);
@@ -38,7 +38,7 @@
     }
 
     var ModalEditOrg = {
-        init: function() {
+        init: function () {
             var self = this;
             self.$modal = $('#modal-edit-org').modal({
                 show: false
@@ -48,7 +48,7 @@
             self.$selects = self.$form.find('select');
 
             self.$form.forms({
-                callback: function(resp) {
+                callback: function (resp) {
                     log('done', resp);
                     Msg.success($('#orgTitle').val() + ' is saved!');
                     $('#search-results').reloadFragment();
@@ -58,7 +58,7 @@
 
             self.$modal.find('')
         },
-        show: function(href) {
+        show: function (href) {
             var self = this,
                     $modal = self.$modal,
                     $form = self.$form,
@@ -81,14 +81,14 @@
                     type: 'GET',
                     url: href,
                     dataType: 'json',
-                    success: function(response) {
+                    success: function (response) {
                         log('success', response);
                         for (var key in response.data) {
                             $modal.find('[name="' + key + '"]').val(response.data[key]);
                             $modal.modal('show');
                         }
                     },
-                    error: function(response) {
+                    error: function (response) {
                         Msg.error('err');
                     }
                 });
@@ -96,17 +96,17 @@
                 $modal.modal('show');
             }
         },
-        hide: function() {
+        hide: function () {
             this.$modal.modal('hide');
         }
     };
 
-    var initUploadCsv = function() {
+    var initUploadCsv = function () {
         // Upload CSV
         var modalUploadCsv = $('#modal-upload-csv');
         var resultUploadCsv = modalUploadCsv.find('.upload-results');
         var form = modalUploadCsv.find("form");
-        form.submit(function(e) {
+        form.submit(function (e) {
             e.preventDefault();
             var f = form[0];
             flog("init form data", f);
@@ -119,8 +119,8 @@
                 cache: false,
                 processData: false,
                 contentType: false,
-                success: function(result) {
-                    flog("success", result);                    
+                success: function (result) {
+                    flog("success", result);
                     if (result.status) {
                         resultUploadCsv.find('.num-updated').text(result.data.numUpdated);
                         resultUploadCsv.find('.num-unmatched').text(result.data.unmatched.length);
@@ -137,7 +137,7 @@
             buttonText: '<i class="clip-folder"></i> Upload spreadsheet',
             url: 'orgs.csv',
             useJsonPut: false,
-            oncomplete: function(data, name, href) {
+            oncomplete: function (data, name, href) {
                 flog('oncomplete:', data.result, name, href);
                 if (data.result.status) {
                     resultUploadCsv.find('.num-updated').text(data.result.data.numUpdated);
@@ -150,7 +150,7 @@
             }
         });
         var $formUploadCsv = modalUploadCsv.find('form');
-        $('#allow-inserts').on('click', function(e) {
+        $('#allow-inserts').on('click', function (e) {
             flog('click', e.target);
             if (this.checked) {
                 $formUploadCsv.attr('action', 'orgs.csv?insertMode=true');
@@ -160,7 +160,7 @@
         });
     };
 
-    var initUploadOrgIdCsv = function() {
+    var initUploadOrgIdCsv = function () {
         // Upload OrgId CSV
         var $modalUploadOrgidCsv = $('#modal-upload-orgid-csv');
         var $resultUploadOrgidCsv = $modalUploadOrgidCsv.find('.upload-results');
@@ -168,7 +168,7 @@
             buttonText: '<i class="clip-folder"></i> Upload OrgIDs spreadsheet',
             url: 'orgIds.csv',
             useJsonPut: false,
-            oncomplete: function(data, name, href) {
+            oncomplete: function (data, name, href) {
                 log('oncomplete:', data.result, name, href);
                 if (data.result.status) {
                     $resultUploadOrgidCsv.find('.num-update').text(data.result.data.numUpdated);
@@ -182,15 +182,15 @@
         });
     };
 
-    var initCRUDOrg = function() {
+    var initCRUDOrg = function () {
         var $body = $(doc.body);
 
-        $body.on('click', '.btn-delete-org', function(e) {
+        $body.on('click', '.btn-delete-org', function (e) {
             e.preventDefault();
 
             var href = $(this).attr('href');
 
-            confirmDelete(href, getFileName(href), function() {
+            confirmDelete(href, getFileName(href), function () {
                 win.location.reload();
             });
         });
@@ -201,40 +201,41 @@
 //            ModalEditOrg.show($(this).attr('href'));
 //        });
 
-        $('.btn-add-org').on('click', function(e) {
+        $('.btn-add-org').on('click', function (e) {
             e.preventDefault();
 
             ModalEditOrg.show(null);
         });
     };
 
-    win.initManageOrgs = function() {
+    win.initManageOrgs = function () {
         ModalEditOrg.init();
         initUploadCsv();
         initUploadOrgIdCsv();
         initCRUDOrg();
         initSearchOrg();
         initRemoveOrgs();
+        initEditPath()();
     };
 
 })(jQuery, window, document);
 
 function initSearchOrg() {
     $("#org-query").on({
-        keyup: function() {
-            typewatch(function() {
+        keyup: function () {
+            typewatch(function () {
                 flog("do search");
                 doSearch();
             }, 500);
         },
-        change: function() {
+        change: function () {
             flog("do search");
             doSearch();
         }
     });
-	$("#searchOrgType").change(function () {
-		doSearch();
-	});    
+    $("#searchOrgType").change(function () {
+        doSearch();
+    });
 }
 
 
@@ -244,7 +245,7 @@ function doSearch() {
     $.ajax({
         type: 'GET',
         url: newUrl,
-        success: function(data) {
+        success: function (data) {
             flog("success", data);
             window.history.pushState("", document.title, newUrl);
             var $fragment = $(data).find("#searchResults");
@@ -252,44 +253,81 @@ function doSearch() {
             flog("frag", $fragment);
             $("#searchResults").replaceWith($fragment);
         },
-        error: function(resp) {
+        error: function (resp) {
             Msg.error("err");
         }
     });
 }
 
 function initRemoveOrgs() {
-	$(".btn-orgs-remove").click(function (e) {
-		var node = $(e.target);
-		flog("remove orgs", node, node.is(":checked"));
-		var checkBoxes = $('#searchResults').find('input[name=toRemoveId]:checked');
-		if (checkBoxes.length === 0) {
-			Msg.error("Please select the organisations you want to remove by clicking the checkboxs to the right");
-		} else {
-			if (confirm("Are you sure you want to remove " + checkBoxes.length + " organisations?")) {
-				doRemoveOrgs(checkBoxes);
-			}
-		}
-	});
+    $(".btn-orgs-remove").click(function (e) {
+        var node = $(e.target);
+        flog("remove orgs", node, node.is(":checked"));
+        var checkBoxes = $('#searchResults').find('input[name=toRemoveId]:checked');
+        if (checkBoxes.length === 0) {
+            Msg.error("Please select the organisations you want to remove by clicking the checkboxs to the right");
+        } else {
+            if (confirm("Are you sure you want to remove " + checkBoxes.length + " organisations?")) {
+                doRemoveOrgs(checkBoxes);
+            }
+        }
+    });
 }
 
 function doRemoveOrgs(checkBoxes) {
-	$.ajax({
-		type: 'POST',
-		data: checkBoxes,
-		dataType: "json",
-		url: window.location.pathname,
-		success: function (data) {
-			flog("success", data);
-			if (data.status) {
-				doSearch();
-				Msg.success("Removed organisations ok");
-			} else {
-				Msg.error("There was a problem removing organisations. Please try again and contact the administrator if you still have problems");
-			}
-		},
-		error: function (resp) {
-			Msg.error("An error occurred removing organisations. You might not have permission to do this");
-		}
-	});
+    $.ajax({
+        type: 'POST',
+        data: checkBoxes,
+        dataType: "json",
+        url: window.location.pathname,
+        success: function (data) {
+            flog("success", data);
+            if (data.status) {
+                doSearch();
+                Msg.success("Removed organisations ok");
+            } else {
+                Msg.error("There was a problem removing organisations. Please try again and contact the administrator if you still have problems");
+            }
+        },
+        error: function (resp) {
+            Msg.error("An error occurred removing organisations. You might not have permission to do this");
+        }
+    });
+}
+
+function initEditPath() {
+    $('body').on('click', '.btn-edit-path', function (e) {
+        e.preventDefault();
+        var btn = $(this);
+        var path = btn.data("path");
+        var orgId = btn.data("orgid");
+        var p = prompt("Path", path);
+        if (p !== null && path !== p) {
+            flog("Actual Org ID", orgId, "Old Path", path, "New Path", p);
+            updateOrgPath(orgId, p);
+        }
+    });
+}
+
+function updateOrgPath(orgId, newPath) {
+    $.ajax({
+        type: 'POST',
+        data: {
+            updateOrgPath: newPath,
+            actualID: orgId
+        },
+        url: window.location.pathname,
+        success: function (data) {
+            flog("success", data);
+            if (data.status) {
+                doSearch();
+                Msg.success("Successfully updated path");
+            } else {
+                Msg.error("There was a problem updating the organisation path.");
+            }
+        },
+        error: function (resp) {
+            Msg.error("An error occurred updating the organisation. You might not have permission to do this");
+        }
+    });
 }
