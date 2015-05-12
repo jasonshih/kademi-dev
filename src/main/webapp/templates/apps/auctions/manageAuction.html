@@ -301,6 +301,14 @@
                                 <td><a href="$page.createdBy.href">$page.winningBid.changedBy.name</a></td>
                             </tr>
                             #end
+                            #if($page.auctionClosed)
+                            <tr>
+                                <td>Closed</td>
+                                <td><abbr title="$formatter.formatDateISO8601($page.auction.auctionProcessedDate)" class="timeago">$page.auction.auctionProcessedDate</abbr></td>
+                                <td></td>
+                                <td><a href="$page.createdBy.href">$page.createdBy.name</a></td>
+                            </tr>
+                            #end
                         </table>
                     </div>
 

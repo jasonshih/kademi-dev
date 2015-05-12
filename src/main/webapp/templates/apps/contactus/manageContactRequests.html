@@ -129,32 +129,32 @@
                     var href = button.closest('tr').data('href');
                     window.location.href = href;
                 });
-                
-                $('body').on('change', '.check-all', function(e){
+
+                $('body').on('change', '.check-all', function (e) {
                     flog($(this).is(":checked"));
                     var checkedStatus = this.checked;
                     $('body').find(':checkbox.request-check').prop('checked', checkedStatus);
                 });
-                
-                $('body').on('click', '.btn-delete-requests', function(e){
+
+                $('body').on('click', '.btn-delete-requests', function (e) {
                     e.preventDefault();
                     var listToDelete = [];
                     amountDeleted = 0;
                     $('body').find(':checkbox.request-check:checked').each(function () {
                         listToDelete.add($(this));
                     });
-                    if(listToDelete.length > 0 && confirm("Are you sure you want to delete " + listToDelete.length + " requests?")){
-                        listToDelete.forEach(function(item, count){
-                            var href = item.data('href');
-                            item.closest('tr').remove();
-                            flog(href);
-                            deleteFile(href);
-                            amountDeleted++;
-                            if((count + 1) === listToDelete.length){
-                                Msg.info("Deleted " + amountDeleted + " requests");
-                                $('body').find('.check-all').check(false).change();
-                            }
-                        });
+                    if (listToDelete.length > 0 && confirm("Are you sure you want to delete " + listToDelete.length + " requests?")) {
+                        deleteContactRequests(listToDelete);
+                    }
+                });
+                $('.view-acknowledge').on('click', function (e) {
+                    e.preventDefault;
+                    if ($('.view-acknowledge').attr('view-ack') === "true") {
+                        $('.view-acknowledge').html("<i class=\"fa fa-refresh fa-spin\"></i>Hide Acknowledged");
+                        doSearch();
+                    } else {
+                        $('.view-acknowledge').html("<i class=\"fa fa-refresh fa-spin\"></i>View Acknowledged");
+                        doSearch(null, null, null, true);
                     }
                 });
             });
@@ -220,21 +220,25 @@
 
             function initViewAck() {
                 var cc = $('.view-acknowledge');
-                cc.on('click', function (e) {
-                    e.preventDefault;
-                    if ($('.view-acknowledge').attr('view-ack') == "true") {
-                        doSearch();
-                    } else {
-                        doSearch(null, null, null, true);
-                    }
-                });
 
-                if ($('.view-acknowledge').attr('view-ack') == "true") {
+                if (cc.attr('view-ack') === "true") {
                     flog("view-ack", cc.attr('view-ack'));
                     cc.text("Hide Acknowledged");
                 } else {
                     cc.text("View Acknowledged");
                 }
+            }
+
+            function deleteContactRequests(listToDelete) {
+                for (var i = 0; i < listToDelete.length; i++) {
+                    var item = listToDelete[i];
+                    var href = item.data('href');
+                    item.closest('tr').remove();
+                    flog(href);
+                    deleteFile(href);
+                }
+                Msg.info("Deleted " + listToDelete.length + " requests");
+                $('body').find('.check-all').check(false).change();
             }
         </script>
     </body>
