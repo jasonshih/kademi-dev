@@ -58,6 +58,23 @@
 
         <article class="panel panel-default">
             <div class="panel-heading">
+                <h3 class="panel-title">Payment Scheduler</h3>
+            </div>
+            <div class="panel-body">
+                <p>Turn the payment scheduler for recurring payments on or off. (Checked equals ON.)</p>
+                <br/>
+                <form method="POST" action="maint" class="maintForm" >
+                	<input type="hidden" name="checkPaymentScheduler" value="true" />
+                    <input type="checkbox" name="enablePaymentScheduler" value="schedule" $page.paymentSchedulerEnabled />
+                    &nbsp;
+                    <button class="btn-sm btn btn-warning">Submit</button>
+                    <label for="schedule"></label>
+                </form>
+            </div>
+        </article>
+
+        <article class="panel panel-default">
+            <div class="panel-heading">
                 <h3 class="panel-title">Manually initiate scheduled tasks</h3>
             </div>
 

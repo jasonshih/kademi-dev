@@ -10,6 +10,30 @@
         <script type="text/javascript" src="/static/js/managePublishing.js">//</script>
         <!-- <script src="/theme/assets/plugins/bootstrap-switch/static/js/bootstrap-switch.min.js">//</script> -->
         <!-- <script type="text/javascript" src="/templates/themes/admin/prompt.js">//</script> -->
+        <style>
+            .btn-file {
+                position: relative;
+                overflow: hidden;
+            }
+            .btn-file input[type=file] {
+                position: absolute;
+                top: 0;
+                right: 0;
+                min-width: 100%;
+                min-height: 100%;
+                font-size: 100px;
+                text-align: right;
+                filter: alpha(opacity=0);
+                opacity: 0;
+                background: red;
+                cursor: inherit;
+                display: block;
+            }
+            .file-input {
+                background-color: white !important;
+                cursor: text !important;
+            }
+        </style>
     </head>
 
     <body class="manageWebsite">
@@ -593,23 +617,36 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
         <div class="modal fade" id="modalUpdateCert" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">Upload Certificate Text (X.509)</h4>
+                <h4 class="modal-title" id="myModalLabel">Upload Certificate (X.509)</h4>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal" method="" action=".">
-                    <tbody id="certificateKey-body">
-                        <div class="form-group">
-                            <input type="hidden" id = "updateCertId" name="updateCertId" value="">
-                                <div class="col-sm-12">
-                                    <textarea id = "certificateTextUpdate" name="certificateTextUpdate" rows="18" class="form-control"></textarea>
-                                </div>
+                <form class="form-horizontal" method="POST" action="." enctype="multipart/form-data">
+                    <h4>Upload a File</h4>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <span class="input-group-btn">
+                                    <span class="btn btn-primary btn-file">
+                                        Browse&hellip; <input name="file" type="file" />
+                                    </span>
+                                </span>
+                                <input type="text" class="form-control file-input" readonly>
+                            </div>
                         </div>
-                    </tbody>
+                    </div>
+                    <hr/>
+                    <h4>Upload raw text</h4>
+                    <div class="form-group">
+                        <input type="hidden" id = "updateCertId" name="updateCertId" value="updateCertId" />
+                        <div class="col-sm-12">
+                            <textarea id = "certificateTextUpdate" name="certificateTextUpdate" rows="10" class="form-control"></textarea>
+                        </div>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Update</button>
+                <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Upload</button>
             </div>
         </div><!-- /.modal -->
 
@@ -701,29 +738,42 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
         <div class="modal fade" id="modalUpdateRootCert" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">Create Certificate Text (X.509 Type)</h4>
+                <h4 class="modal-title" id="myModalLabel">Upload Certificate (X.509)</h4>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal" method="POST" action=".">
-                    <tbody id="certificateKey-body">
-                        <div class="form-group">
-                            <input type="hidden" name="createRootCert" value="true" />
-                            <input type="hidden" class="certId" id = "certId" name="certId" value="" />
-                            <div class="col-sm-12">
-                                <label for="certTitle">Certificate Title</label>
-                                <input type="text" id = "certTitle" name="certTitle" class="form-control"></input>
-                            </div>
-                            <div class="col-sm-12">
-                                <label for="rootRertificateTextUpdate">Certificate Text</label>
-                                <textarea id="certText" name="certText" rows="18" class="form-control"></textarea>
+                <form class="form-horizontal" method="POST" action="." enctype="multipart/form-data">
+                    <h4>Upload Files</h4>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <span class="input-group-btn">
+                                    <span class="btn btn-primary btn-file">
+                                        Browse&hellip; <input name="file" type="file" multiple="true"/>
+                                    </span>
+                                </span>
+                                <input type="text" class="form-control file-input" readonly>
                             </div>
                         </div>
-                    </tbody>
+                    </div>
+                    <hr/>
+                    <h4>Upload raw text</h4>
+                    <div class="form-group">
+                        <input type="hidden" name="createRootCert" value="true" />
+                        <input type="hidden" class="certId" id = "certId" name="certId" value="" />
+                        <div class="col-sm-12">
+                            <label for="certTitle">Certificate Title</label>
+                            <input type="text" id = "certTitle" name="certTitle" class="form-control"></input>
+                        </div>
+                        <div class="col-sm-12">
+                            <label for="certText">Certificate Text</label>
+                            <textarea id="certText" name="certText" rows="10" class="form-control"></textarea>
+                        </div>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Create</button>
+                <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Upload</button>
             </div>
         </div><!-- /.modal -->
 
@@ -924,6 +974,28 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
                             csr.val(resp.data.csrText);
                         }
                     }
+                });
+
+                $(document).on('change', '.btn-file :file', function () {
+                    var input = $(this),
+                            numFiles = input.get(0).files ? input.get(0).files.length : 1,
+                            label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+                    input.trigger('fileselect', [numFiles, label]);
+                });
+
+                $(document).ready(function () {
+                    $('.btn-file :file').on('fileselect', function (event, numFiles, label) {
+                        var input = $(this).parents('.input-group').find(':text'),
+                                log = numFiles > 1 ? numFiles + ' files selected' : label;
+
+                        if (input.length) {
+                            input.val(log);
+                        } else {
+                            if (log)
+                                alert(log);
+                        }
+
+                    });
                 });
             });
 
