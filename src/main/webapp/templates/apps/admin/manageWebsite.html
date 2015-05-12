@@ -414,7 +414,7 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
                                 </td>
 
                                 <td>
-                                    <a class= "btn btn-sm btn-info" data-toggle="collapse" href="#rootCert-$cer.id" aria-expanded="false" aria-controls="rootCert-$cer.id"><span class="badge">$cer.rootCertificates.size()</span> Modify</a>
+                                    <a class= "btn btn-sm btn-info" data-toggle="collapse" href="#rootCert-$cer.id" aria-expanded="false" aria-controls="rootCert-$cer.id"><span class="badge rootCertCount">$cer.rootCertificates.size()</span> Modify</a>
                                 </td>
 
                                 <td class="action">
@@ -786,18 +786,31 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
         <div class="modal fade" id="modalUpdatePK" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">Upload Private Key Text (PEM Encoded)</h4>
+                <h4 class="modal-title" id="myModalLabel">Upload Private Key (RSA/PEM Encoded)</h4>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal" method="" action=".">
-                    <tbody id="privateKey-body">
-                        <div class="form-group">
-                            <input type="hidden" id = "updatePKid" name="updatePKid" value="">
-                                <div class="col-sm-12">
-                                    <textarea id = "privateKeyTextUpdate" name="privateKeyTextUpdate" rows="18" class="form-control"></textarea>
-                                </div>
+                <form class="form-horizontal" method="" action="." enctype="multipart/form-data">
+                    <h4>Upload a File</h4>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <span class="input-group-btn">
+                                    <span class="btn btn-primary btn-file">
+                                        Browse&hellip; <input name="file" type="file" multiple="true"/>
+                                    </span>
+                                </span>
+                                <input type="text" class="form-control file-input" readonly>
+                            </div>
                         </div>
-                    </tbody>
+                    </div>
+                    <hr/>
+                    <h4>Upload raw text</h4>
+                    <div class="form-group">
+                        <input type="hidden" id = "updatePKid" name="updatePKid" value="true" />
+                        <div class="col-sm-12">
+                            <textarea id = "privateKeyTextUpdate" name="privateKeyTextUpdate" rows="10" class="form-control"></textarea>
+                        </div>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -935,7 +948,7 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
                     var certId = $(this).data("certid");
                     flog("rootCertId", href, "certId", certId);
                     if (confirm("Are you sure you want to delete this certificate?")) {
-                        deleteRootCert(certId, href);
+                        deleteRootCert(certId, href, $(this).closest("tr"));
                     }
                 });
 
@@ -1010,7 +1023,7 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
                     e.preventDefault();
                     var id = $(e.target).closest("a").attr("href");
                     if (confirm("Are you sure you want to delete this certificate?")) {
-                        deleteCert(id);
+                        deleteCert(id, $(e.target).closest("tr"));
                     }
                 });
                 $("#certificate-types-table").on("click", ".cert-activate", function (e) {
@@ -1098,7 +1111,7 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
 
             }
 
-            function deleteCert(id) {
+            function deleteCert(id, tr) {
                 $.ajax({
                     type: 'POST',
                     dataType: 'json',
@@ -1108,7 +1121,8 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
                     },
                     success: function (data) {
                         Msg.info("Deleted certificate");
-                        $("#certificates-body").reloadFragment();
+                        tr.remove();
+                        //$("#certificates-body").reloadFragment();
                     },
                     error: function (resp) {
                         Msg.error("An error occured deleting the certificate");
@@ -1116,7 +1130,7 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
                 });
             }
 
-            function deleteRootCert(certId, rootCertid) {
+            function deleteRootCert(certId, rootCertid, tr) {
                 $.ajax({
                     type: 'POST',
                     dataType: 'json',
@@ -1127,7 +1141,19 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
                     },
                     success: function (data) {
                         Msg.info("Deleted certificate");
-                        $("#certificates-body").reloadFragment();
+                        var tbody = tr.closest("tbody");
+                        tr.remove();
+                        var rows = tbody.find("tr");
+                        $(".rootCertCount").text(rows.size());
+                        if (rows.size() > 0) {
+                            rows.each(function (index, item) {
+                                $(item).find("td.first").text(index + 1);
+                            });
+                        } else {
+                            tbody.append('<tr>'
+                                    + '<td colspan="3">You have no root/intermediate certificates</td>'
+                                    + '</tr>');
+                        }
                     },
                     error: function (resp) {
                         Msg.error("An error occured deleting the certificate");
