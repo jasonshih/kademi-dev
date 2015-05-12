@@ -6,7 +6,14 @@
         <div class="alert alert-info">
             This page shows you recent shopping carts from your customers.
         </div>
-
+        <div class="clearfix">
+            <button class="btn btn-danger deleteCart pull-right"><i class="glyphicon glyphicon-trash"></i> Delete Selected</button>
+            <div class="input-group date-range col-md-3" style="margin-right: 5px">
+                <label for="report-range" class="input-group-addon">Time</label>
+                <input type="text" id="report-range" placeholder="Choose a date range" value="" class="form-control" />
+            </div>
+        </div>
+        <hr/>
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="table-responsive">
@@ -17,7 +24,7 @@
                             <col width="15%" />
                             <col width="" />
                             <col width="" />
-                            <col width="180px" />
+                            <col width="10px" />
                         </colgroup>
                         <thead>
                             <tr>
@@ -26,10 +33,10 @@
                                 <th>Date</th>
                                 <th class="text-center">Items</th>
                                 <th class="text-center">Amount</th>
-                                <th class="action"></th>
+                                <th><input type="checkbox" class="check-all"/></th>
                             </tr>
                         </thead>
-                        <tbody id="rewardStoreList">
+                        <tbody id="shoppingCartList">
                             #foreach($v in $page.children)
                             <tr>
                                 <td class="clickable">
@@ -45,7 +52,7 @@
                                 <td>$v.cart.orderedDate</td>
                                 <td class="text-center">$formatter.toDecimal($v.totalItems, 0)</td>
                                 <td class="text-center">$formatter.formatCurrency($v.totalCost)</td>
-                                <td></td>
+                                <th><input type="checkbox" data-cartid="$v.href" class="cart-check"/></th>
                             </tr>
                             #end
                         </tbody>
@@ -56,16 +63,93 @@
 
         <script type="text/javascript">
             $(function () {
-                $('body').on('click', '.cartLink', function(e){
+                $('body').on('click', '.cartLink', function (e) {
                     e.preventDefault();
                 });
 
-                $('body').on('click', '.clickable', function(e){
+                $('body').on('click', '.clickable', function (e) {
                     var btn = $(this);
                     var href = btn.find('.cartLink').attr("href");
                     window.location = href;
                 });
+
+                $('body').on('change', '.check-all', function (e) {
+                    var checkedStatus = this.checked;
+                    $('body').find(':checkbox.cart-check').prop('checked', checkedStatus);
+                });
+
+                $('body').on('click', '.deleteCart', function (e) {
+                    e.preventDefault();
+                    var listToDelete = [];
+                    $('body').find(':checkbox.cart-check:checked').each(function () {
+                        listToDelete.add($(this).data("cartid"));
+                    });
+                    if (listToDelete.length > 0 && confirm("Are you sure you want to delete " + listToDelete.length + " shopping carts?")) {
+                        $('body').find('.check-all').check(false).change();
+                        flog(listToDelete.join(','));
+                        deleteCarts(listToDelete);
+                    }
+                });
+
+                initHistorySearch();
             });
+
+            function deleteCarts(listToDelete) {
+                for (var i = 0; i < listToDelete.length; i++) {
+                    deleteFile(listToDelete[i]);
+                    $("input[data-cartid=\"" + listToDelete[i] + "\"]").closest("tr").remove()
+                }
+                Msg.info("Successfully deleted " + listToDelete.length + " carts");
+            }
+
+            function initHistorySearch() {
+                var reportRange = $('#report-range');
+
+                reportRange.exist(function () {
+                    flog("init report range");
+                    reportRange.daterangepicker({
+                        format: 'DD/MM/YYYY', // YYYY-MM-DD
+                        ranges: {
+                            'Last 7 Days': [moment().subtract('days', 6), moment()],
+                            'Last 30 Days': [moment().subtract('days', 29), moment()],
+                            'This Month': [moment().startOf('month'), moment().endOf('month')],
+                            'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
+                            'This Year': [moment().startOf('year'), moment()],
+                        },
+                    },
+                            function (start, end) {
+                                flog('onChange', start, end);
+                                doHistorySearch(start, end);
+                            }
+                    );
+                });
+
+                function doHistorySearch(startDate, endDate) {
+                    flog('doHistorySearch', startDate, endDate);
+
+                    var data = {
+                        startDate: formatDate(startDate),
+                        finishDate: formatDate(endDate)
+                    };
+                    flog("data", data);
+
+                    var target = $("#history-table-body");
+                    $.ajax({
+                        type: "GET",
+                        url: window.location.pathname,
+                        dataType: 'html',
+                        data: data,
+                        success: function (content) {
+                            flog('response', content);
+                            var newBody = $(content).find("#history-table-body");
+                            flog("newBody", newBody);
+                            target.replaceWith(newBody);
+                            jQuery("abbr.timeago").timeago();
+                        }
+                    });
+
+                }
+            }
         </script>
     </body>
 </html>
