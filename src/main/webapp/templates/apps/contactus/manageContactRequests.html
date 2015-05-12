@@ -147,6 +147,16 @@
                         deleteContactRequests(listToDelete);
                     }
                 });
+                $('.view-acknowledge').on('click', function (e) {
+                    e.preventDefault;
+                    if ($('.view-acknowledge').attr('view-ack') === "true") {
+                        $('.view-acknowledge').html("<i class=\"fa fa-refresh fa-spin\"></i>Hide Acknowledged");
+                        doSearch();
+                    } else {
+                        $('.view-acknowledge').html("<i class=\"fa fa-refresh fa-spin\"></i>View Acknowledged");
+                        doSearch(null, null, null, true);
+                    }
+                });
             });
 
             function doSearch(startDate, endDate, label, viewAck) {
@@ -210,16 +220,8 @@
 
             function initViewAck() {
                 var cc = $('.view-acknowledge');
-                cc.on('click', function (e) {
-                    e.preventDefault;
-                    if ($('.view-acknowledge').attr('view-ack') == "true") {
-                        doSearch();
-                    } else {
-                        doSearch(null, null, null, true);
-                    }
-                });
 
-                if ($('.view-acknowledge').attr('view-ack') == "true") {
+                if (cc.attr('view-ack') === "true") {
                     flog("view-ack", cc.attr('view-ack'));
                     cc.text("Hide Acknowledged");
                 } else {
