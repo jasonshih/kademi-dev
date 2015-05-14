@@ -3,7 +3,7 @@
         <title>Text editor</title>
         <link rel="template" href="editorBase" />
         <script type="text/javascript" src="htmlEditor.js">//</script>
-        <link rel="stylesheet" type="text/css" href="textEditor.css" />   
+        <link rel="stylesheet" type="text/css" href="textEditor.css" />
     </head>
     <body class="">
         #set($fname = $params.fileName)
@@ -15,7 +15,7 @@
                 <button class="btn btn-success btn-save-file pull-right" >Save file</button>
                 <h3 class="pull-left">$file.name</h3>
             </div>
-            <textarea id="editor" class="">$formatter.htmlEncode($file.body)</textarea>
+            <textarea id="editor" class="toolbar-Full">$formatter.htmlEncode($file.body)</textarea>
         </div>
 
         #foreach($cssPath in $file.cssPaths)
