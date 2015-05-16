@@ -179,8 +179,8 @@
                                 <label class="control-label col-sm-2" for="subject">Sending Preference</label>
                                 <div class="col-md-8">
                                     <select name="sendPreference" class="form-control required-if-shown">
-                                        <option value="both">Send To Both</option>
-                                        <option value="sms">Prefer SMS</option>
+                                        $formatter.option("both", "Send To Both", $page.job.sendPreference)
+                                        $formatter.option("sms", "Prefer SMS", $page.job.sendPreference)
                                     </select>
                                 </div>
                             </div>
