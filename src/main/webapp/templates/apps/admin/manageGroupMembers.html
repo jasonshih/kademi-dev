@@ -52,7 +52,7 @@
                                 <th>Phone</th>
                                 <td>Optional</td>
                             </tr>
-                            
+
                         </tbody>
                     </table>
                 </div>
@@ -60,12 +60,12 @@
             <br />
             <div class="upload-results">
                 <p>
-                    <strong>Lines processed:</strong> 
-                    <span class="badge badge-success lines-processed">-</span> 
-                    
-                    <strong>No. inserted:</strong> 
-                    <span class="badge badge-success num-inserted">-</span> 
-                    <strong>Failed:</strong> 
+                    <strong>Lines processed:</strong>
+                    <span class="badge badge-success lines-processed">-</span>
+
+                    <strong>No. inserted:</strong>
+                    <span class="badge badge-success num-inserted">-</span>
+                    <strong>Failed:</strong>
                     <span class="badge badge-danger num-unmatched">-</span>
                 </p>
                 <div class="table-responsive">
@@ -140,14 +140,15 @@
                             <td>
                                 <a href="/manageUsers/$member.thisUser.id">$!member.thisUser.nickName</a>
                             </td>
+                            <td>$!member.primaryMembership.org.title</td>
                             <td>$!member.thisUser.firstName</td>
                             <td>$!member.thisUser.surName</td>
                             <td>$!member.thisUser.phone</td>
                             <td>$!member.thisUser.email</td>
                             <td>
-                                #if( $pwdDate )                            
-                                <abbr title="$formatter.formatDateISO8601($pwdDate)" class="info timeago">$!pwdDate</abbr>                    
-                                #end                            
+                                #if( $pwdDate )
+                                <abbr title="$formatter.formatDateISO8601($pwdDate)" class="info timeago">$!pwdDate</abbr>
+                                #end
                             </td>
                             <td><input type="checkbox" name="toRemoveId" value="$member.thisUser.id" /></td>
                         </tr>
@@ -286,7 +287,7 @@
                             resultUploadCsv.show();
 
                             var modalUploadCsv = $("#modal-upload-csv");
-                            modalUploadCsv.show(500);                            
+                            modalUploadCsv.show(500);
                             if( result.data.statusInfo.complete ) {
                                 // finished
                                 var dt = result.data.statusInfo.completedDate;
@@ -297,8 +298,8 @@
                                 // running
                                 jobTitle.text("Import running...");
                                 $(".upload").hide();
-                            }                      
-                            
+                            }
+
                         } else {
                             // waiting to start
                             jobTitle.text("Waiting for import job to start ...");
@@ -313,6 +314,6 @@
                     }
                 });
             }
-        </script>  
+        </script>
     </body>
 </html>
