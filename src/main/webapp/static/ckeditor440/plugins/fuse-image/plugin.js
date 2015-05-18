@@ -76,7 +76,7 @@ CKEDITOR.plugins.add('fuse-image',
                                 elements: [
                                     {
                                         type: 'html',
-                                        html:     '<div class="row" style="width: 100%; max-width: 900px">'
+                                        html: '<div class="row" style="width: 100%; max-width: 900px">'
                                                 + '  <div class="col-md-4">'
                                                 + '    <div id="imageTree" class="tree"></div>'
                                                 + '  </div>'
@@ -294,7 +294,7 @@ CKEDITOR.plugins.add('fuse-image',
                             }
                             flog("onOk", url, pagePath, "=", returnUrl, "hash=", hash);
 
-                            if (hash !== "" && typeof(useHash) !== "undefined" && useHash === "true") {
+                            if (hash !== "" && typeof (useHash) !== "undefined" && useHash === "true") {
                                 flog("Using Hash=", hash);
                                 img.setAttribute("src", baseHashUrl + hash);
                             } else {
@@ -342,11 +342,11 @@ function setImage(img, src, hash, width, height, keepRatio) {
     var tempImg = document.createElement('img');
 
     tempImg.onload = function () {
-        window.setTimeout(function(){
-            flog("image loaded", tempImg, "width=", img.width());
+        window.setTimeout(function () {
+            flog("image loaded", tempImg, "width=", tempImg.width, "height=", tempImg.height);
             img.attr("data-filename", src)
             img.attr("data-hash", hash);
-            var h = (typeof(useHash) !== "undefined" ? useHash : "false" );
+            var h = (typeof (useHash) !== "undefined" ? useHash : "false");
             flog(hash, !(hash === "undefined"), h);
             if (hash && !(hash === "undefined") && h === "true") {
                 flog("Using Hash=", hash);
@@ -354,6 +354,10 @@ function setImage(img, src, hash, width, height, keepRatio) {
             } else {
                 img.attr("src", src);
             }
+            img.attr("src", tempImg.src)
+
+            var originalWidth = tempImg.width;
+            var originalHeight = tempImg.height;
 
             if (width && height) {
                 flog("set height and width", height, width);
@@ -363,10 +367,13 @@ function setImage(img, src, hash, width, height, keepRatio) {
                 });
             } else {
                 flog("ignoring height and width");
+                img.css({
+                    width: originalWidth,
+                    height: originalHeight
+                });
             }
 
-            var originalWidth = img.width();
-            var originalHeight = img.height();
+
             flog("image Width=", originalWidth, " Height=", originalHeight);
 
             if (!keepRatio) {
@@ -394,17 +401,16 @@ function setImage(img, src, hash, width, height, keepRatio) {
             });
             flog("done resizable", img);
 
-        }, 200);
+        }, 0);
 
     };
-    tempImg.src = src;
     try {
         img.resizable("destroy");
     } catch (e) {
     }
 
     img.attr('style', '');
-
+    tempImg.src = src;
 }
 
 /**
