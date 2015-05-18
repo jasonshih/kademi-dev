@@ -1,93 +1,101 @@
 <div id="programs-list-$group.name" data-role="group-programs">
-	<h4>Available Programs</h4>
-	<hr class="hr-sm" />
-	<div class="programs-list article-wrapper">
-	    #foreach($enrolement in $programs.enrolementsForGroup($group.group))
-	    <article>
-	        #set($p = $enrolement.program)
-	        #if( $enrolement.isCourse() )
-	            <a href="$p.href" class="article-name">$enrolement.website.name / $enrolement.programCode / $enrolement.courseCode</a>
-	        #else
-	            <a href="$p.href" class="article-name">$enrolement.website.name / $enrolement.programCode</a>
-	        #end
-	        <aside class="article-more-infor">
-	            #if($enrolement.completable)
-	                <b class="text-success">Completable</b>
-	            #else
-	                <b class="text-muted">View only</b>
-	            #end
-	        </aside>
-	    </article>
-	    #end
-	</div>
-	<p class="clearfix article-wrapper-action">
-		<a class="btn btn-sm btn-success btn-add-program pull-right" data-toggle="modal" href="#modal-edit-$group.name"><i class="fa fa-plus"></i> Add/remove programs & courses</a>
-	</p>
+    <h4>Available Programs</h4>
+    <hr class="hr-sm" />
+    <div class="programs-list article-wrapper">
+        #foreach($enrolement in $programs.enrolementsForGroup($group.group))
+        <article>
+            #set($p = $enrolement.program)
+            #if( $enrolement.isCourse() )
+            <a href="$p.href" class="article-name">$enrolement.website.name / $enrolement.programCode / $enrolement.courseCode</a>
+            #else
+            <a href="$p.href" class="article-name">$enrolement.website.name / $enrolement.programCode</a>
+            #end
+            <aside class="article-more-infor">
+                #if($enrolement.completable)
+                <b class="text-success">Completable</b>
+                #else
+                <b class="text-muted">View only </b>
+                #end
+                #set($website = $p.closest("website"))
+                #set($id = "programs-list-$group.name")
+                #if( $enrolement.isCourse() )
+                    #set($href = $p.href + $enrolement.courseCode)
+                #else
+                    #set($href = $p.href)
+                #end
+                <a href="#" title="Remove module from group" data-id="$id" data-href="$href" data-groupname="$group.name" class="btn btn-sm btn-danger btn-remove-module"><i class="fa fa-times"></i></a>
+            </aside>
+        </article>
+        #end
+    </div>
+    <p class="clearfix article-wrapper-action">
+        <a class="btn btn-sm btn-success btn-add-program pull-right" data-toggle="modal" href="#modal-edit-$group.name"><i class="fa fa-plus"></i> Add/remove programs & courses</a>
+    </p>
 
-	<div id="modal-edit-$group.name" class="modal modal-md fade modal-edit-programs" aria-hidden="true" tabindex="-1" data-program-id="programs-list-$group.name">
-		<div class="modal-header">
-			<button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-			<h4 class="modal-title">Edit programs for group: <span>$group.name</span></h4>
-		</div>
-		<div class="modal-body">
-			#set($programs = $programs.allPrograms)
-			#if( $programs.isEmpty() )
-				<p>No programs have been created yet. <a href="../manageCourses" class="btn btn-sm btn-primary">Add a program</a></p>
-			#else
+    <div id="modal-edit-$group.name" class="modal modal-md fade modal-edit-programs" aria-hidden="true" tabindex="-1" data-program-id="programs-list-$group.name">
+        <div class="modal-header">
+            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+            <h4 class="modal-title">Edit programs for group: <span>$group.name</span></h4>
+        </div>
+        <div class="modal-body">
+            #set($programs = $programs.allPrograms)
+            #if( $programs.isEmpty() )
+            <p>No programs have been created yet. <a href="../manageCourses" class="btn btn-sm btn-primary">Add a program</a></p>
+            #else
             <p>Protip: This shows programs and courses for your most recently edited website versions.</p>
-				<div class="article-wrapper">
-					#foreach($program in $programs)
-						#set($website = $program.closest("website"))
-						<article class="$program.name">
-							<span class="article-name">
-								<a href="$program.href" title="$website.name/$program.name">$website.name/$program.name</a>
-								<span>$program.title ( $program.parent.parent.name )</span>
-							</span>
-							<aside class="article-more-infor">
-								<form>
-									#set($id = $group.name + "-" + $website.name + $program.name + "-completable")
-									$formatter.radio($id, "status", $programs.isCompletable($group.group, $program), "Completable" )
-									<label for="$id">Completable</label>
+            <div class="article-wrapper">
+                #foreach($program in $programs)
+                #set($website = $program.closest("website"))
+                <article class="$program.name">
+                    <span class="article-name">
+                        <a href="$program.href" title="$website.name/$program.name">$website.name/$program.name</a>
+                        <span>$program.title ( $program.parent.parent.name )</span>
+                    </span>
+                    <aside class="article-more-infor">
+                        <form>
+                            #set($id = $group.name + "-" + $website.name + $program.name + "-completable")
+                            $formatter.radio($id, "status", $programs.isCompletable($group.group, $program), "Completable" )
+                            <label for="$id">Completable</label>
 
-									#set($id = $group.name + "-" + $website.name + $program.name + "-viewable")
-									$formatter.radio($id, "status", $programs.isSelected($group.group, $program), "Viewable" )
-									<label for="$id">Viewable</label>
+                            #set($id = $group.name + "-" + $website.name + $program.name + "-viewable")
+                            $formatter.radio($id, "status", $programs.isSelected($group.group, $program), "Viewable" )
+                            <label for="$id">Viewable</label>
 
-									#set($id = $group.name + "-" + $website.name + $program.name + "-na")
-									$formatter.radio($id, "status", $programs.notSelected($group.group, $program), "" )
-									<label for="$id">Not available</label>
-								</form>
-							</aside>
-						</article>
-						#foreach($course in $program.children.ofType.course)
-							<article class="article-sub">
-								<span class="article-name">
-									<a href="$course.href">$course.name</a>
-									<span>$course.title</span>
-								</span>
-								<aside class="article-more-infor">
-									<form>
-										#set($id = $group.name + "-" + $website.name + $program.name + $course + "-completable")
-										$formatter.radio($id, "status", $programs.isCompletable($group.group, $program), "Completable" )
-										<label for="$id">Completable</label>
+                            #set($id = $group.name + "-" + $website.name + $program.name + "-na")
+                            $formatter.radio($id, "status", $programs.notSelected($group.group, $program), "" )
+                            <label for="$id">Not available</label>
+                        </form>
+                    </aside>
+                </article>
+                #foreach($course in $program.children.ofType.course)
+                <article class="article-sub">
+                    <span class="article-name">
+                        <a href="$course.href">$course.name</a>
+                        <span>$course.title</span>
+                    </span>
+                    <aside class="article-more-infor">
+                        <form>
+                            #set($id = $group.name + "-" + $website.name + $program.name + $course + "-completable")
+                            $formatter.radio($id, "status", $programs.isCompletable($group.group, $program), "Completable" )
+                            <label for="$id">Completable</label>
 
-										#set($id = $group.name + "-" + $website.name + $program.name + $course + "-viewable")
-										$formatter.radio($id, "status", $programs.isSelected($group.group, $program), "Viewable" )
-										<label for="$id">Viewable</label>
+                            #set($id = $group.name + "-" + $website.name + $program.name + $course + "-viewable")
+                            $formatter.radio($id, "status", $programs.isSelected($group.group, $program), "Viewable" )
+                            <label for="$id">Viewable</label>
 
-										#set($id = $group.name + "-" + $website.name + $program.name + $course + "-na")
-										$formatter.radio($id, "status", $programs.notSelected($group.group, $program), "" )
-										<label for="$id">Not available</label>
-									</form>
-								</aside>
-							</article>
-						#end
-					#end
-				</div>
-			#end
-		</div>
-		<div class="modal-footer">
-			<button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-		</div>
-	</div>
+                            #set($id = $group.name + "-" + $website.name + $program.name + $course + "-na")
+                            $formatter.radio($id, "status", $programs.notSelected($group.group, $program), "" )
+                            <label for="$id">Not available</label>
+                        </form>
+                    </aside>
+                </article>
+                #end
+                #end
+            </div>
+            #end
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+        </div>
+    </div>
 </div>
