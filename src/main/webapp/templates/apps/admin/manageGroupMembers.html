@@ -119,6 +119,7 @@
                             <th>Nickname</th>
                             <th>First name</th>
                             <th>Surname</th>
+                            <th>Organisation</th>
                             <th>Phone</th>
                             <th>Email</th>
                             <th>Password set</th>
@@ -140,9 +141,9 @@
                             <td>
                                 <a href="/manageUsers/$member.thisUser.id">$!member.thisUser.nickName</a>
                             </td>
-                            <td>$!member.primaryMembership.org.title</td>
                             <td>$!member.thisUser.firstName</td>
                             <td>$!member.thisUser.surName</td>
+                            <td>$!member.thisUser.membership($page.parent.group).withinOrg.formattedName</td>
                             <td>$!member.thisUser.phone</td>
                             <td>$!member.thisUser.email</td>
                             <td>

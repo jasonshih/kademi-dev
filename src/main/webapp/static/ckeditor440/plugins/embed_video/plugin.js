@@ -89,12 +89,33 @@ CKEDITOR.plugins.add( 'embed_video',
                     [
                     {
                         type : 'html',
-                        html:
+                        /*html:
                             "<div id='myVidTree' class='tree'></div>" +
                             "<div id='myVidPreview'>" +
                                 "<div class='myUploaded'></div>" +
                                 "<div class='vidEditor'><div id='vidContainer' class='jp-video'></div></div>" +
-                            "</div>",
+                            "</div>",*/
+                        html: '<div class="row" style="width: 100%; max-width: 900px">'
+                            + '  <div class="col-md-4">'
+                            + '    <div id="myVidTree" class="tree"></div>'
+                            + '  </div>'
+                            + '  <div class="col-md-8">'
+                            + '    <div role="tabpanel">'
+                            + '      <ul class="nav nav-tabs" role="tablist" id="imageTabs">'
+                            + '        <li role="presentation" class="active"><a href="#upload" aria-controls="upload" role="tab" data-toggle="tab">Upload</a></li>'
+                            + '        <li role="presentation"><a href="#preview" aria-controls="preview" role="tab" data-toggle="tab">Preview</a></li>'
+                            + '      </ul>'
+                            + '      <div class="tab-content">'
+                            + '        <div role="tabpanel" class="tab-pane fade active in" id="upload">'
+                            + '          <div class="myUploaded"></div>'
+                            + '        </div>'
+                            + '        <div role="tabpanel" class="tab-pane fade" id="preview">'
+                            + '          <div id="myVidPreview"><div class="vidEditor"><div id="vidContainer" class="jp-video"></div></div></div>'
+                            + '        </div>'
+                            + '      </div>'
+                            + '    </div>' // end tabpabel
+                            + '  </div>' // end col-md-8
+                            + '</div>', // end row
                         commit: function(data) {
                             log("commit, data=", data);
                         }
@@ -139,7 +160,7 @@ CKEDITOR.plugins.add( 'embed_video',
                             onselectFolder: function(n) {
                                 var selectedVideoUrl = $("#myVidTree").mtree("getSelectedFolderUrl");
                                 log("onselect: folder=", url);
-                                $("#myVidTree").parent().find(".myUploaded").mupload("setUrl", selectedVideoUrl);
+                                $(".myUploaded").mupload("setUrl", selectedVideoUrl);
                             },
                             onselectFile: function(n, selectedVideoUrl) {
                                 url = selectedVideoUrl;
@@ -150,7 +171,7 @@ CKEDITOR.plugins.add( 'embed_video',
                             },
                             isInCkeditor: true
                         });                
-                        $("#myVidTree").parent().find(".myUploaded").mupload({
+                        $(".myUploaded").mupload({
                             isInCkeditor: true,
                             buttonText: "Upload video",
                             useDropzone: true,
