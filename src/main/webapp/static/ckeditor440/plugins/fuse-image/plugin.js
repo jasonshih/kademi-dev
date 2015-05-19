@@ -365,11 +365,23 @@ function setImage(img, src, hash, width, height, keepRatio) {
                     width: width,
                     height: height
                 });
+                $('#image-width').val(width).attr({
+                    'data-width': originalWidth
+                });
+                $('#image-height').val(height).attr({
+                    'data-height': originalHeight
+                });
             } else {
                 flog("ignoring height and width");
                 img.css({
                     width: originalWidth,
                     height: originalHeight
+                });
+                $('#image-width').val(originalWidth).attr({
+                    'data-width': originalWidth
+                });
+                $('#image-height').val(originalHeight).attr({
+                    'data-height': originalHeight
                 });
             }
 
@@ -381,14 +393,6 @@ function setImage(img, src, hash, width, height, keepRatio) {
                 $('#image-width').attr('data-ratio', ratio);
                 $('#image-height').attr('data-ratio', ratio);
             }
-
-            $('#image-width').val(originalWidth).attr({
-                'data-width': originalWidth
-            });
-            $('#image-height').val(originalHeight).attr({
-                'data-height': originalHeight
-            });
-
 
             img.resizable({
                 aspectRatio: true,
