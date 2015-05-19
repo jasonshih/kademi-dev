@@ -2,7 +2,7 @@
 
 /**
  *  Editor support: Note that this relies on a global variable called toolbarSets
- *  
+ *
  *  A default is defined in toolbars.js. You should override that file in your
  *  application to get the toolbars you want
  */
@@ -62,7 +62,7 @@ function initHelp() {
 
 /**
  * Make sure you push any required css files into "themeCssFiles" before calling
- * 
+ *
  * See /static/js/toolbars.js
  */
 function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
@@ -84,7 +84,7 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
     }
     flog("removePlugins", removePlugins);
     log("prepare html editors", elements);
-    
+
     elements.each(function(i, n) {
         var inp = $(n);
 
@@ -105,15 +105,16 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
 
         toolbar = "Default"; // HACK!!
         flog("using toolbar", toolbar, "=>", toolbarSets[toolbar]);
-        
+
         flog("themeCssFiles", themeCssFiles);
         flog("editorSkin", editorSkin);
+        var currentFolder = getFolderPath(window.location.pathname);
         var config = {
             skin: editorSkin,
             allowedContent: true, // DISABLES Advanced Content Filter. This is so templates with classes are allowed through
             contentsCss: themeCssFiles, // mainCssFile,
             bodyId: "editor",
-            templates_files: ['/static/editor/templates.js'],
+            templates_files: [templatesPath],
             templates_replaceContent: false,
             toolbarGroups: toolbarSets[toolbar],
             extraPlugins: extraPlugins,
@@ -121,7 +122,8 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
             enterMode: "P",
             forceEnterMode: true,
             filebrowserBrowseUrl: '/static/fckfilemanager/browser/default/browser.html?Type=Image&Connector=/fck_connector.html',
-            filebrowserUploadUrl: '/uploader/upload',
+            // filebrowserBrowseUrl: currentFolder + '/_ckbrowser.html?Type=Image&Connector=/fck_connector.html', // TODO
+            filebrowserUploadUrl: '/fck_connector.html?CurrentFolder=' + currentFolder,
             format_tags: 'p;h1;h2;h3;h4;h5;h6', // removed p2
             format_p2: {
                 element: 'p',
@@ -140,7 +142,8 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
             config.width = width;
         }
 
-        config.stylesSet = 'myStyles:/theme/styles.js'; // TODO: needs to be configurable, based on theme
+        //config.stylesSet = 'myStyles:/theme/styles.js'; // TODO: needs to be configurable, based on theme
+        config.stylesSet = "myStyles:" + stylesPath;
         flog("create editor", inp, config);
         var editor = inp.ckeditor(config).editor;
         //var editor = CKEDITOR.instances["body"];
@@ -192,11 +195,11 @@ function initPrintLink() {
 /**
  *  Although this function is defined here in the theme, it should be called
  *  from each page.
- *  
+ *
  *  Each page should decide what url to pass as the pageUrl, as this can be used
  *  to share comments across pages (such as when the logical context is the folder
  *  the pages are in, rather then each page)
- *  
+ *
  *  Eg initComments(window.location.pathname);
  */
 function initComments(pageUrl) {
@@ -272,8 +275,8 @@ function initSelectAll() {
 
 
 /**
- *  Uses the new jwplayer and HLS. Replaces images with the video-jw class with a 
- *  jwPlayer control, which loads the video from a path either derived from 
+ *  Uses the new jwplayer and HLS. Replaces images with the video-jw class with a
+ *  jwPlayer control, which loads the video from a path either derived from
  *  the image src, or from the data-video-src attribute if present
  */
 function initVideos() {
@@ -315,8 +318,8 @@ function replaceImagesWithJWPlayer(images) {
 
 function buildJWPlayer(itemToReplace, count, src, posterHref) {
     flog("itemToReplace", itemToReplace);
-    
-    
+
+
     var h = itemToReplace.height();
     if (h < 100) {
         h = 360;
