@@ -68,6 +68,7 @@
                 </div>
 
                 <div id="panel_pay" class="tab-pane" >
+
                     <div id="paymentDetails">
                         #set( $encKey = $page.getEncryptionKey($request.params.websiteBranch))
 
@@ -259,6 +260,61 @@
                 </div>
 
                 <div id="recurring" class="tab-pane" >
+			#if ($page.canDownloadCustomerData())
+            <div class="btn-group publishing pull-right">
+                <a href="#" class="btn btn-sm btn-info" data-toggle="modal" data-target="#dctModal" >Download Customer Data</a>
+
+                <div class="modal fade" id="dctModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">Download Customer Tokens</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal" method="POST" action="${page.href}customers.csv">
+                            <div class="form-group">
+                                <label for="dctStartDate" class="col-sm-3 control-label">Start Date</label>
+                                <div class="col-sm-8">
+                                    <input type='text' class="form-control date required" id="dctStartDate" name="dctStartDate" readonly style="cursor:pointer;"/>
+                                    <span class="help-block"><small>Payments must be set up on or after the start date</small></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="dctEndDate" class="col-sm-3 control-label">End Date</label>
+                                <div class="col-sm-8">
+                                    <input type='text' class="form-control date required" id="dctEndDate" name="dctEndDate" readonly style="cursor:pointer;"/>
+                                    <span class="help-block"><small>Payments must be set up before the end date</small></span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Download</button>
+                    </div>
+
+					<script type="text/javascript">
+					$(function () {
+		                $('#dctStartDate').datetimepicker();
+		                $('#dctStartDate').data("DateTimePicker").format = "DD/MM/YYYY HH:mm";
+		                $('#dctEndDate').datetimepicker();
+		                $('#dctEndDate').data("DateTimePicker").format = "DD/MM/YYYY HH:mm";
+
+		                $('#dctStartDate').change(function (e) {
+		                    $('#dctEndDate').data("DateTimePicker").setStartDate(new Date($('#dctStartDate').data("DateTimePicker").getDate()));
+		                    var d = new Date($('#dctStartDate').data("DateTimePicker").getDate());
+		                    d.setDate(d.getDate() + 1);
+		                    $('#dctEndDate').data("DateTimePicker").setDate(d);
+		                    $('#dctEndDate').focus();
+		                });
+
+		                $('#dctEndDate').change(function (e) {
+		                    $('#dctStartDate').data("DateTimePicker").setEndDate(new Date($('#dctEndDate').data("DateTimePicker").getDate()));
+		                });
+					});
+					</script>
+                </div><!-- /.modal -->
+            </div>
+            #end
                     <table class="table table-striped">
                         <thead>
                             <tr>
