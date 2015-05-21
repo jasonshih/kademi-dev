@@ -22,7 +22,13 @@
                 <i class="clip-users"></i>
                 #end
 
-                <span class="group-name clickable">$group.name</span>
+                <span class="group-name clickable">
+                    #if( $group.groupType == "P" )
+                    <b class="text-success">$group.name</b>
+                    #else
+                    $group.name
+                    #end
+                </span>
                 <div class="btn-group btn-group-xs">
                     <button data-toggle="dropdown" class="btn btn-sm btn-default btn-squared dropdown-toggle" type="button">
                         <span class="caret"></span>
