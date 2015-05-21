@@ -11,6 +11,7 @@
             #end
             <div class="panel-heading" data-toggle="collapse" data-parent="#${wrapper}" data-target="#group${$folderName}-${foreach.count}">
                 #set($typeColour = "btn-info")
+                
                 #if( $group.groupType == "P" )
                 #set($typeColour = "btn-success")
                 <i class="clip-users"></i>
