@@ -685,13 +685,30 @@ function currentPageIndex() {
 
 function progressPageIndex() {
     var pages = $(".pages a.modPage");
-    var currentPageLink = pages.find("a[href='" + progressPage + "']");
+    // BM: don't ask me why this aint working ... works everywhere else but not for MB
+    //var currentPageLink = pages.find("a[href='" + progressPage + "']");
+    for( var i=0; i<pages.length; i++) {
+        var link = $(pages[i]);
+        var href = link.attr("href");
+        if( href == progressPage ) {
+            //flog("equal", href, progressPage);
+            currentPageLink = link;
+            break;
+        } else {
+            //flog("not equal", href, progressPage);
+        }
+    }
+    //flog("progressPageIndex", progressPage, pages, currentPageLink);
     var current = currentPageLink.attr("href");
     var currentIndex = 0;
     var all = pages;
+    flog("look for current page");
     all.each(function(index) {
         if ($(this).attr("href") === current) {
+            flog("found current page", index);
             currentIndex = index;
+        } else {
+            flog("nope, not this one", $(this).attr("href"), current);
         }
     });
     return currentIndex;
