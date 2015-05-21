@@ -1,11 +1,11 @@
 function initManagePointsSystems() {
     flog("initManagePointsSystems");
     initController();
-    $("#manageReward .Add").click(function() {
+    $("#manageReward .Add").click(function () {
         showAddReward(this);
     });
     $("#manageReward form.addReward").forms({
-        callback: function(resp) {
+        callback: function (resp) {
             flog("done");
             window.location.href = resp.nextHref;
         }
@@ -15,12 +15,12 @@ function initManagePointsSystems() {
 
 function initController() {
     //Bind event for Delete reward
-    $("body").on("click", "a.DeleteReward", function(e) {
+    $("body").on("click", "a.DeleteReward", function (e) {
         e.preventDefault();
         var link = $(e.target).closest("a");
         var href = link.attr("href");
 
-        confirmDelete(href, href, function() {
+        confirmDelete(href, href, function () {
             flog("remove it");
             link.closest("tr").remove();
             link.closest("li").remove();
@@ -30,7 +30,7 @@ function initController() {
 }
 
 function initGroupEditing() {
-    $("#modalGroup input[type=checkbox]").click(function() {
+    $("#modalGroup input[type=checkbox]").click(function () {
         var $chk = $(this);
         flog("checkbox click", $chk, $chk.is(":checked"));
         var isRecip = $chk.is(":checked");
@@ -49,16 +49,18 @@ function setGroupRecipient(name, isRecip) {
                 isRecip: isRecip
             },
             dataType: "json",
-            success: function(data) {
+            success: function (data) {
                 if (data.status) {
                     flog("saved ok", data);
                     if (isRecip) {
-                        $(".GroupList").append('<button class="btn btn-sm btn-default reset-margin-bottom" type="button" style="margin-right: 5px;">' + name + '</button>');
+                        var newBtn = '<div id="group_' + name + '" class="btn btn-sm btn-default">'
+                                + '<span> ' + name + ' </span>'
+                                + '<a href="#" name="' + name + '" class="btn btn-xs btn-danger btn-remove-group" title="Delete"> <i class="fa fa-times"></i></a>'
+                                + '</div>';
+                        $(".GroupList").append($(newBtn));
                         flog("appended to", $(".GroupList"));
                     } else {
-                        var toRemove = $(".GroupList button").filter(function() {
-                            return $(this).text() == name;
-                        });
+                        var toRemove = $("#group_" + name);
                         toRemove.remove();
                     }
                 } else {
@@ -66,7 +68,7 @@ function setGroupRecipient(name, isRecip) {
                     Msg.error("Sorry, couldnt save " + data);
                 }
             },
-            error: function(resp) {
+            error: function (resp) {
                 flog("error", resp);
                 Msg.error("Sorry, couldnt save - " + resp);
             }

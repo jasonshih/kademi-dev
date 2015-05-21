@@ -45,11 +45,13 @@
                                 <col width="" />
                                 <col width="25%" />
                                 <col width="25%" />
+                                <col width="25%" />
                                 <col width="100px" />
                             </colgroup>
                             <thead>
                                 <tr>
                                     <th class="title" rel="asc">Title</th>
+                                    <th>Groups</th>
                                     <th>Total points</th>
                                     <th>Total debits</th>
                                     <th class="action"></th>
@@ -59,6 +61,11 @@
                                 #foreach($r in $page.children.ofType.manageReward)
                                 <tr>
                                     <td><a href="$r.name">$r.rewardTitle</a></td>
+                                    #set($l = $formatter.newArrayList())
+                                    #foreach($g in $r.selectedGroups)
+                                        #if($l.add($g.name)) #end
+                                    #end
+                                    <td>$formatter.toCsv($l)</td>
                                     <td>$r.totalPoints points</td>
                                     <td>$r.totalDebits points</td>
                                     <td class="action">
