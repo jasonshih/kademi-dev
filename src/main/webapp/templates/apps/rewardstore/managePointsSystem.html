@@ -116,7 +116,10 @@
                         <div class="well margin-top-10">Add user groups to rewards to allow these users to directly enter the competition. These users will see the reward on their dashboard when it is active.</div>
                         <div class="GroupList">
                             #foreach($g in $page.selectedGroups)
-                            <button class="btn btn-sm btn-default reset-margin-bottom" type="button">$g.name</button>
+                            <div id="group_$g.name" class="btn btn-sm btn-default">
+                                <span> $g.name </span>
+                                <a href="#" name="$g.name" class="btn btn-xs btn-danger btn-remove-group" title="Delete"> <i class="fa fa-times"></i></a>
+                            </div>
                             #end
                         </div>
                     </div>
@@ -243,6 +246,15 @@
                     }
                 });
                 initGroupEditing();
+                
+                $('body').on('click', '.btn-remove-group', function(e){
+                    e.preventDefault();
+                    var btn = $(this);
+                    var name = btn.attr("name");
+                    setGroupRecipient(name, false);
+                    btn.closest('div').remove();
+                    $("#modalGroup input[name=" + name + "]").check(false);
+                });
             });
 
             function showHidePointsOrgType() {
