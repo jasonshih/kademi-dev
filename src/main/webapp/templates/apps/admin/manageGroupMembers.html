@@ -92,6 +92,8 @@
                     <ul class="dropdown-menu" role="menu">
                         <li class="presentation" role="menuitem"><a href="#" class="btn-upload-users-csv">Upload CSV</a></li>
                         <li class="presentation" role="menuitem"><a role="button" href="members.csv" download="members.csv">Open CSV</a></li>
+                        <li class="divider" />
+                        <li class="presentation" role="menuitem"><a role="button" href="unsubscribers.csv" download="unsubscribers.csv">Open Unsubscribers CSV</a></li>
                     </ul>
                 </div>
                 <div class="col-md-2">
@@ -127,7 +129,6 @@
                         </tr>
                     </thead>
                     <tbody>
-
                         #foreach($member in $page.members)
                         #set($pwdDate = false)
                         #set($pwdDate = $member.thisUser.passwordCredentialDate)
