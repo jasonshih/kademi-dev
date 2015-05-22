@@ -685,8 +685,12 @@ function currentPageIndex() {
 
 function progressPageIndex() {
     var pages = $(".pages a.modPage");
+    if( pages.length == 0) {
+        return 0;
+    }
     // BM: don't ask me why this aint working ... works everywhere else but not for MB
     //var currentPageLink = pages.find("a[href='" + progressPage + "']");
+    var currentPageLink = $(pages[0]);
     for( var i=0; i<pages.length; i++) {
         var link = $(pages[i]);
         var href = link.attr("href");
@@ -918,6 +922,7 @@ function isQuizComplete(e) {
                 } else {
                     flog('quiz validated returned false', response);
                     if( response.data && response.data.nextQuizBatch ) {
+                        flog("looks like we have another batch..", response.data.nextQuizBatch);
                         quiz.find("ol.quiz").replaceWith(response.data.nextQuizBatch);
                         tidyUpQuiz();
                     } else {
