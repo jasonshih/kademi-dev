@@ -61,11 +61,11 @@
                                 #foreach($r in $page.children.ofType.manageReward)
                                 <tr>
                                     <td><a href="$r.name">$r.rewardTitle</a></td>
-                                    #set($l = $formatter.newArrayList())
+                                    <td>
                                     #foreach($g in $r.selectedGroups)
-                                        #if($l.add($g.name)) #end
+                                        #genGroup($g)
                                     #end
-                                    <td>$formatter.toCsv($l)</td>
+                                    </td>
                                     <td>$r.totalPoints points</td>
                                     <td>$r.totalDebits points</td>
                                     <td class="action">
@@ -93,6 +93,24 @@
                 </div>
             </div>
         </section>
+        #macro(genGroup $group)
+            #set($gc = "label label-info")
+            #set($gIcon = "")
+            #if( $group.groupType == "P" || !$group.groupType)
+                #set($gc = "label label-success")
+                #set($gIcon = "clip-users")
+            #elseif( $group.groupType == "S" )
+                #set($gc = "label label-info")
+                #set($gIcon = "fa fa-trophy")
+            #elseif( $group.groupType == "M" )
+                #set($gc = "label label-info")
+                #set($gIcon = "fa fa-envelope")
+            #end
+            <div class="$gc" style="margin-right: 2.5px; margin-bottom: 5px; display: inline-block;">
+                <i class="$gIcon"></i>
+                <span class="block-name" title="$group.name">$group.name</span>
+            </div>
+        #end
         <script type="text/javascript">
             $(function () {
                 initManagePointsSystems();
