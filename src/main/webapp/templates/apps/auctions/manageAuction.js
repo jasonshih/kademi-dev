@@ -1,6 +1,7 @@
 function initManageAuction() {
     initForms();
     initGroupModal();
+    initGroupDelete();
     initDateTimePickers();
     initOrgSearch();
     initOrgListBtn();
@@ -35,7 +36,18 @@ function initGroupModal() {
         var $chk = $(this);
         flog("checkbox click", $chk, $chk.is(":checked"));
         var isRecip = $chk.is(":checked");
-        setGroupRecipient($chk.attr("name"), isRecip);
+        var groupType = $chk.closest('label').data("grouptype");
+        setGroupRecipient($chk.attr("name"), groupType, isRecip);
+    });
+}
+
+function initGroupDelete(){
+    $('body').on('click', '.btn-delete-group', function(e){
+        e.preventDefault();
+        var btn = $(this);
+        var name = btn.attr("href");
+        setGroupRecipient(name, "", false);
+        $("#modalGroup input[name=" + name + "]").check(false);
     });
 }
 
@@ -110,7 +122,7 @@ function doOrgSearch() {
     });
 }
 
-function setGroupRecipient(name, isRecip) {
+function setGroupRecipient(name, groupType, isRecip) {
     flog("setGroupRecipient", name, isRecip);
     try {
         $.ajax({
@@ -125,12 +137,28 @@ function setGroupRecipient(name, isRecip) {
                 if (data.status) {
                     flog("saved ok", data);
                     if (isRecip) {
-                        $(".GroupList").append('<button class="btn btn-sm btn-default reset-margin-bottom" type="button" style="margin-right: 5px;">' + name + '</button>');
+                        var groupClass = "";
+                        var groupIcon = "";
+                        if(groupType === "P" || groupType === ""){
+                            groupClass = "alert alert-success";
+                            groupIcon = "clip-users";
+                        }else if(groupType === "S"){
+                            groupClass = "alert alert-info";
+                            groupIcon = "fa fa-trophy";
+                        }else if(groupType === "M"){
+                            groupClass = "alert alert-info";
+                            groupIcon = "fa fa-envelope";
+                        }
+                        var newBtn = '<span id="group_' + name + '" class="group-list ' + groupClass + '">'
+                                + '<i class="' + groupIcon + '"></i>'
+                                + '<span class="block-name" title="' + name + '">' + name + '</span>'
+                                + '<a href="' + name + '" class="btn btn-xs btn-danger btn-delete-group" title="Delete access for group ' + name + '"><i href="' + name + '" class="fa fa-times"></i></a>'
+                                + '</span>';
+                        //$(".GroupList").append('<button class="btn btn-sm btn-default reset-margin-bottom" type="button" style="margin-right: 5px;">' + name + '</button>');
+                        $(".GroupList").append(newBtn);
                         flog("appended to", $(".GroupList"));
                     } else {
-                        var toRemove = $(".GroupList button").filter(function () {
-                            return $(this).text() == name;
-                        });
+                        var toRemove = $("#group_" + name);
                         toRemove.remove();
                     }
                 } else {
@@ -211,7 +239,7 @@ function initManageAuctionImage() {
     var imageContainer = $('#product-images');
     var addImageModal = $('#modal-add-image');
     addImageModal.find('form.form-horizontal').forms({
-        callback: function() {
+        callback: function () {
             imageContainer.reloadFragment();
             $(".modal").modal("hide");
         }
@@ -226,36 +254,36 @@ function initManageAuctionImage() {
         ratio: 0,
         isEmbedded: true,
         embeddedTemplate:
-            '<div class="upcrop-embedded" id="{{upcropId}}">' +
+                '<div class="upcrop-embedded" id="{{upcropId}}">' +
                 '<div class="modal-header">' +
-                    '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
-                    '<h4 class="modal-title">Upload and crop image</h4>' +
+                '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
+                '<h4 class="modal-title">Upload and crop image</h4>' +
                 '</div>' +
                 '<div class="modal-body">' +
-                    '<div class="form-horizontal">' +
-                        '<div class="form-group orientation hide">' +
-                            '<label class="col-sm-3 control-label" for="newTagName">Orientation</label>' +
-                            '<div class="col-sm-9">' +
-                                '<select class="form-control">' +
-                                    '<option value="">Default</option>' +
-                                    '<option value="square">Square</option>' +
-                                    '<option value="vertical">Vertical</option>' +
-                                    '<option value="horizontal">Horizontal</option>' +
-                                '</select>' +
-                            '</div>' +
-                        '</div>' +
-                    '</div>' +
-                    '{{upcropZone}}' +
+                '<div class="form-horizontal">' +
+                '<div class="form-group orientation hide">' +
+                '<label class="col-sm-3 control-label" for="newTagName">Orientation</label>' +
+                '<div class="col-sm-9">' +
+                '<select class="form-control">' +
+                '<option value="">Default</option>' +
+                '<option value="square">Square</option>' +
+                '<option value="vertical">Vertical</option>' +
+                '<option value="horizontal">Horizontal</option>' +
+                '</select>' +
+                '</div>' +
+                '</div>' +
+                '</div>' +
+                '{{upcropZone}}' +
                 '</div>' +
                 '<div class="modal-footer">' +
-                    '<div class="pull-left">' +
-                        '{{buttonUploadOther}}' +
-                    '</div>' +
-                    '<button class="btn btn-default btn-cancel" type="button" data-dismiss="modal">Cancel</button> ' +
-                    '{{buttonCrop}} ' +
-                    '{{buttonContinue}}' +
-                '</div>'+
-            '</div>'
+                '<div class="pull-left">' +
+                '{{buttonUploadOther}}' +
+                '</div>' +
+                '<button class="btn btn-default btn-cancel" type="button" data-dismiss="modal">Cancel</button> ' +
+                '{{buttonCrop}} ' +
+                '{{buttonContinue}}' +
+                '</div>' +
+                '</div>'
         ,
         onUploadComplete: function (data, name, href) {
             flog("manageAuction.js: onUploadComplete");
@@ -285,11 +313,11 @@ function initManageAuctionImage() {
                         break;
 
                     case 'vertical':
-                        ratio = 1/2;
+                        ratio = 1 / 2;
                         break;
 
                     case 'horizontal':
-                        ratio = 2/1;
+                        ratio = 2 / 1;
                         break;
 
                     default:
@@ -316,7 +344,7 @@ function initManageAuctionImage() {
             data = data.result;
         }
         var hash = data.data;
-        if(typeof hash == "object"){
+        if (typeof hash == "object") {
             hash = hash.file;
         }
         flog("setAddImageFormData: data=", data);
