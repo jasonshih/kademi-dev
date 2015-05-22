@@ -5,13 +5,31 @@
     <body>
         #macro(genGroups $group $wrapper $folder)
         <div id="$group.name" class="panel panel-default group">
+            #set( $folderName = "")
             #if($folder)
-            <div class="panel-heading" data-toggle="collapse" data-parent="#${wrapper}" data-target="#group-$folder.name.replaceAll('[^A-Za-z0-9]','')-${foreach.count}">
-            #else
-            <div class="panel-heading" data-toggle="collapse" data-parent="#${wrapper}" data-target="#group-${foreach.count}">
+            #set( $folderName = "-" + $folder.name.replaceAll('[^A-Za-z0-9]','') )
             #end
+            <div class="panel-heading" data-toggle="collapse" data-parent="#${wrapper}" data-target="#group${$folderName}-${foreach.count}">
+                #set($typeColour = "btn-info")
+                
+                #if( $group.groupType == "P" )
+                #set($typeColour = "btn-success")
                 <i class="clip-users"></i>
-                <span class="group-name clickable">$group.name</span>
+                #elseif( $group.groupType == "S" )
+                <i class="fa fa-trophy"></i>
+                #elseif( $group.groupType == "M" )
+                <i class="fa fa-envelope"></i>
+                #else
+                <i class="clip-users"></i>
+                #end
+
+                <span class="group-name clickable">
+                    #if( $group.groupType == "P" )
+                    <b class="text-success">$group.name</b>
+                    #else
+                    $group.name
+                    #end
+                </span>
                 <div class="btn-group btn-group-xs">
                     <button data-toggle="dropdown" class="btn btn-sm btn-default btn-squared dropdown-toggle" type="button">
                         <span class="caret"></span>
@@ -31,8 +49,17 @@
                 </div>
                 <div class="panel-tools">
                     <div class="btn-group">
-                        <a href="$group.name" class="btn btn-primary btn-sm">Registration: $group.regoModeText</a>
-                        <a href="$group.name/members"class="btn btn-info btn-sm">$group.numMembers Members</a>
+                        <a href="$group.name" class="btn $typeColour btn-sm">
+                            <i class="fa fa-cog"></i>
+                            #if( $group.groupType == "P" )
+                            $group.regoModeText
+                            #end
+                            $group.groupTypeText
+                        </a>
+                        <a href="$group.name/members"class="btn btn-info btn-sm">
+                            <i class="clip-users"></i>
+                            $group.numMembers Members
+                        </a>
                     </div>
                 </div>
             </div>
