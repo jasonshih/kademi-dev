@@ -73,8 +73,8 @@
                     <abbr class="timeago" title="$formatter.formatDateISO8601($ms.modifiedDate)">$!ms.modifiedDate</abbr>
                 </td>
                 <td>
-                    #if( $ms.currentQuizAttempts.size() > 0 )
-                    <a class="show-attempts" href="ms-${ms.id}">$ms.currentQuizAttempts.size()</a>
+                    #if( $ms.quizAttempts.size() > 0 )
+                    <a class="show-attempts" href="ms-${ms.id}">$ms.quizAttempts.size()</a>
                     #end
                 </td>
                 <td>
@@ -94,22 +94,22 @@
                     </a>
                 </td>
             </tr>
-                #foreach($attempt in $ms.quizAttempts)
+                #foreach($attempt in $formatter.sortByProperty( $ms.quizAttempts ,"id" ))
                 <tr style="display: none" class="ms-${ms.id}">
                     <td colspan="4"></td>
                     <td>
-                        $formatter.formatAge($attempt.createdDate)
+                        <abbr class="timeago" title="$formatter.formatDateISO8601($attempt.createdDate)">$attempt.createdDate</abbr>
                     </td>
                     <td>$attempt.quizName</td>
-                    <td>
-                        #if( $attempt.passed )
-                        <span class="label label-success">Passed</span>
+                    <td colspan="3">
+                        #if( $attempt.ignoredBy )
+                        <span class="label label-info" title="Attempt ID $attempt.id, ${attempt.scorePerc}%">Ignored by $!attempt.ignoredBy.name</</span>
+                        #elseif( $attempt.passed )
+                        <span class="label label-success" title="Attempt ID $attempt.id">Passed $attempt.scorePerc %</span>
                         #else
-                        <span class="label label-warning">Failed</span>
+                        <span class="label label-warning" title="Attempt ID $attempt.id">Failed $attempt.scorePerc %</span>
                         #end
                     </td>
-                    <td>$attempt.scorePerc %</td>
-                    <td>$!attempt.ignoredBy.name</td>
                 </tr>
                 #end
             #end
