@@ -75,7 +75,7 @@
 
         <hr class="clearfix"/>
         <button class="btn btn-sm btn-default btn-show-import pull-right" >Import</button>
-        <div class="tabbable">
+        <div class="tabbable" id="filesContainer">
             <ul class="nav nav-tabs tab-bricky">
                 <li><a data-toggle="tab" href="#pages">Pages of <span class="badge badge-danger">$page.title</span></a></li>
                 <li><a data-toggle="tab" href="#files">Files &amp; Folders of <span class="badge badge-danger">$page.name</span></a></li>
@@ -142,10 +142,10 @@
                                 #if (!$page.is("branch"))
                                 <tr class="folder">
                                     <td class="icon">
-                                        <a href="../#files-tab"><i class="fa fa-reply"></i></a>
+                                        <a href="../#files-tab" class="pjax"><i class="fa fa-reply"></i></a>
                                     </td>
                                     <td class="left">
-                                        <a href="../#files-tab">Parent Directory</a>
+                                        <a href="../#files-tab" class="pjax">Parent Directory</a>
                                     </td>
                                     <td></td>
                                     <td></td>
@@ -155,10 +155,10 @@
                                 #foreach($f in $page.subFolders)
                                 <tr class="folder">
                                     <td class="icon">
-                                        <a href="$f.href#files-tab"><i class="clip-folder"></i></a>
+                                        <a href="$f.href#files-tab" class="pjax"><i class="clip-folder"></i></a>
                                     </td>
                                     <td class="left">
-                                        <a href="${f.href}#files-tab">$f.name</a>
+                                        <a href="${f.href}#files-tab"  class="pjax">$f.name</a>
                                     </td>
                                     <td><abbr title="$formatter.formatDateISO8601($f.modifiedDate)" class="timeago">$!f.modifiedDate</abbr></td>
                                     <td></td>
@@ -397,7 +397,31 @@
                 dz.on("error", function (file, errorMessage) {
                     Msg.error("An error occured uploading: " + file.name + " because: " + errorMessage);
                 });
+                initPjax();
             });
+            function initPjax() {
+                var container = $("#filesContainer");
+                var files = $("#files");
+                flog("initPjax", container);
+                container.on("click", "a.pjax", function(e) {
+                    flog("click pjax");
+                    e.preventDefault();
+                    var href = $(e.target).closest("a").attr("href");
+                    files.reloadFragment({
+                        url: href,
+                        whenComplete: function(response, status, xhr) {
+                            flog("done",  response, status, xhr);
+                            window.history.pushState("", href, href);
+                            var dom = $(response);
+                            var pages = $("#pages");
+                            flog("update pages", pages);
+                            pages.html( dom.find("#pages > *") );
+                            initFilesLayout();
+                            initCopyCutPaste();
+                        }
+                    });
+                });
+            }
         </script>
     </body>
 </html>
