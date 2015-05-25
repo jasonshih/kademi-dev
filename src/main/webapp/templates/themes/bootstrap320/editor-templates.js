@@ -13,7 +13,7 @@ CKEDITOR.addTemplates('default',{
         image:'template-show-hide.png',
         description:'A button which causes all following content to be initially hidden, and is only shown when clicked',
         //html:'<h6 class="btnHideFollowing">Type the title here</h6>'
-        html:'<h6 type="button" class="btn btn-default btnHideFollowing"><span>Action here</span> <span class="caret">&nbsp;</span></h6>'
+        html:'<h6 type="button" class="btn btn-default btnHideFollowing"><span>Action here</span></h6>'
     },
     {
         title:'Accentuated box',
