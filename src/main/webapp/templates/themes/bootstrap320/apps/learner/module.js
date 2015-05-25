@@ -107,15 +107,21 @@ function initPageNav() {
 
     tidyUpQuiz();
 
-    if (!isCompletable || currentPageIndex() > progressPage) {
+    var isBeyondCurrent = progressPageIndex() > currentPageIndex();
+    if ( isBeyondCurrent) {
         flog("show when complete");
         $("ol.quiz input").prop("disabled", true);
         $(".when-complete").show();
         $(".when-not-complete").hide();
     } else {
-        flog("show when not complete");
-        $(".when-complete").hide();
-        $(".when-not-complete").show();
+        if( isCompletable ) {
+            flog("show when not complete");
+            $(".when-complete").hide();
+            $(".when-not-complete").show();
+        } else {
+            $(".when-complete").hide();
+            $(".when-not-complete").hide();
+        }
     }
 
     initLearningContentStyles();
