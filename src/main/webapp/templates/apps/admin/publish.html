@@ -7,27 +7,28 @@
     <body class="dashboard">
         <div id="publish" class="MainContent">
             <p class="well">Use this page to make this branch live. That means this version will be seen when users go to this website's main address. You can change back to the previous version if you need to.</p>
-            <p>
-	            #set($repo = $page.closest("repository") )
-	            #if( $repo.live )
-	            Current version: <b>$page.closest("repository").live.name</b>
-	                #if( $repo.is("website") )
-	                    - <a href="$repo.externalUrl" target="_blank" class="btn btn-xs btn-info">View <i class="fa fa-arrow-circle-right"></i></a>
-	                #end
-	            #else
-	            <b>There is currently no live version</b>
-	            #end
-            </p>
-            <p>
-                #set($newBranch = $page.closest("branch") )
-                Change to version: <b>$newBranch.name</b>
-                #if( $repo.is("website") )
-                - <a href="$page.closest('branch').externalUrl" target="_blank" class="btn btn-xs btn-info">View <i class="fa fa-arrow-circle-right"></i></a>
-                #end
-            </p>
+            #set($newBranch = $page.closest("branch") )
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td>Current</td>
+                        <td>$page.closest("repository").live.name</td>
+                        <td>$page.closest("repository").live.themeName</td>
+                        <td><a href="$repo.externalUrl" target="_blank" class="btn btn-warning">View <i class="fa fa-arrow-circle-right"></i></a></td>
+                    </tr>
+                    <tr>
+                        <td>Change to</td>
+                        <td>$newBranch.name</td>
+                        <td>$newBranch.themeName</td>
+                        <td><a href="$page.closest('branch').externalUrl" target="_blank" class="btn btn-success">View <i class="fa fa-arrow-circle-right"></i></a></td>
+                    </tr>
+                </tbody>
+            </table>
 
-            <form action="$page.name" method="POST">
-                <button class="btn btn-sm btn-primary">Publish $page.closest("branch").name Now</button>
+            <hr/>
+
+            <form action="$page.name" method="POST" class="text-center">
+                <button class="btn btn-lg btn-success">Publish $page.closest("branch").name Now</button>
             </form>
         </div>
         <script type="text/javascript">
@@ -38,7 +39,7 @@
                     }
                 });
             });
-        </script>               
+        </script>
     </body>
 </html>
 
