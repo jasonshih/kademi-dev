@@ -16,32 +16,32 @@ function initCopyCutPaste() {
 function initImport() {
     var modal = $('#modal-import');
 
-    $('.btn-show-import').on('click', function(e) {
+    $('.btn-show-import').on('click', function (e) {
         e.preventDefault();
 
         modal.modal('show');
     });
 
     modal.find('form').forms({
-        callback: function(resp) {
+        callback: function (resp) {
             flog('resp', resp);
             Msg.info('The importer is running')
         }
     });
 
-    $('.btn-import-status').on('click', function(e) {
+    $('.btn-import-status').on('click', function (e) {
         e.preventDefault();
 
-        $.getJSON(window.location.pathname + '?importStatus', function(data) {
+        $.getJSON(window.location.pathname + '?importStatus', function (data) {
             $('#import-status-result').val(data.messages).show(300);
         });
     });
 }
 
 function initCRUDPages() {
-    var pageList = $('#page-list');
+    var container = $("#filesContainer");
 
-    pageList.on('click', '.btn-edit-page', function(e) {
+    container.on('click', '.btn-edit-page', function (e) {
         e.preventDefault();
         flog('click edit page', e, this);
         var a = $(this);
@@ -50,7 +50,7 @@ function initCRUDPages() {
         showEditModal(name, article);
     });
 
-    pageList.on('click', '.btn-delete-page', function(e) {
+    container.on('click', '.btn-delete-page', function (e) {
         e.stopPropagation();
         e.preventDefault();
         var target = $(this);
@@ -58,7 +58,7 @@ function initCRUDPages() {
         flog('click delete. href', href);
         var name = getFileName(href);
         var article = target.closest('article');
-        confirmDelete(href, name, function() {
+        confirmDelete(href, name, function () {
             flog('deleted', article);
             article.remove();
             Msg.success('Deleted ' + name);
@@ -67,43 +67,34 @@ function initCRUDPages() {
 }
 
 function initCRUDFiles() {
-    var tableFiles = $('#table-files');
-//    $('#my-upload').mupload({
-//        url: window.location.pathname,
-//        buttonText: '<i class="clip-folder"></i> Upload a file',
-//        oncomplete: function(data, name, href) {
-//            // reload the file list
-//            flog('uploaded ok, now reload file list');
-//            reloadFileList();
-//        }
-//    });
+    var container = $("#filesContainer");
 
-    tableFiles.on('click', '.btn-create-folder', function(e) {
+    container.on('click', '.btn-create-folder', function (e) {
         e.stopPropagation();
         e.preventDefault();
         var parentHref = window.location.pathname;
-        showCreateFolder(parentHref, 'New folder', 'Please enter a name for the new folder', function() {
+        showCreateFolder(parentHref, 'New folder', 'Please enter a name for the new folder', function () {
             reloadFileList();
         });
     });
 
-    tableFiles.on('click', '.btn-upload-file', function(e) {
+    container.on('click', '.btn-upload-file', function (e) {
         e.stopPropagation();
         e.preventDefault();
 
         $('#modal-upload').modal('show');
     });
-    tableFiles.on('click', '.btn-new-text-file', function(e) {
+    container.on('click', '.btn-new-text-file', function (e) {
         e.stopPropagation();
         e.preventDefault();
 
         var name = prompt("Please enter a name for the new file");
-        if( name !== null ) {
+        if (name !== null) {
             putEmptyFile(name);
         }
     });
 
-    $('#importFromUrl').click(function(e) {
+    $('#importFromUrl').click(function (e) {
         e.stopPropagation();
         e.preventDefault();
 
@@ -126,7 +117,7 @@ function initFilesLayout() {
     flog('initFiles');
     var tableFiles = $('#table-files');
 
-    tableFiles.find('a.show-color-box').each(function(i, n) {
+    tableFiles.find('a.show-color-box').each(function (i, n) {
         var href = $(n).attr('href');
         $(n).attr('href', href + '/alt-640-360.png');
     });
@@ -135,8 +126,8 @@ function initFilesLayout() {
 
 function initFiles() {
     initFilesLayout();
-    var tableFiles = $('#table-files');
-    tableFiles.on('click', '.btn-delete-file', function(e) {
+    var container = $("#filesContainer");
+    container.on('click', '.btn-delete-file', function (e) {
         e.preventDefault();
 
         var target = $(this);
@@ -145,20 +136,20 @@ function initFiles() {
         var name = getFileName(href);
         var tr = target.closest('tr');
 
-        confirmDelete(href, name, function() {
+        confirmDelete(href, name, function () {
             flog('deleted', tr);
             tr.remove();
             Msg.success('Deleted ' + name);
         });
     });
 
-    tableFiles.on('click', '.btn-rename-file', function(e) {
+    container.on('click', '.btn-rename-file', function (e) {
         e.preventDefault();
         e.stopPropagation();
 
         var target = $(this);
         var href = target.attr('href');
-        promptRename(href, function(resp, sourceHref, destHref) {
+        promptRename(href, function (resp, sourceHref, destHref) {
             var sourceName = getFileName(sourceHref);
             var destName = getFileName(destHref);
             reloadFileList();
@@ -166,13 +157,39 @@ function initFiles() {
         });
     });
 
-    tableFiles.on('click', '.btn-history-file', function(e) {
+    // Call history stuff directly, so we can reload
+    var config = {
+        "pageUrl": null,
+        "showPreview": true,
+        "afterRevertFn": function () {
+            window.location.reload();
+        },
+        "getPageUrl": function (target) {
+            if (target) {
+                var href = target.attr('href');
+                flog("getPageUrl: href", href);
+                if (href && href.length > 0 && href !== "#") {
+                    return href;
+                }
+            }
+            if (this.pageUrl !== null) {
+                return this.pageUrl;
+            } else {
+                return window.location.pathname;
+            }
+        }
+    };
+
+    container.on('click', '.btn-history-file', function (e) {
         e.stopPropagation();
         e.preventDefault();
-    });
-
-    $('.btn-history-file').history({
-        modal: $('#modal-history')
+        var link = $(e.target).closest("a");
+        flog('show history', link);
+        link.addClass("loading");
+        var modal = $('#modal-history');
+        loadHistory(modal.find("tbody"), config, link);
+        modal.modal("show");
+        link.removeClass("loading");
     });
 }
 
@@ -182,7 +199,7 @@ function initAddPageModal() {
 
     var modal = $('#modal-add-page');
 
-    initFuseModal(modal, function() {
+    initFuseModal(modal, function () {
         modal.find('.modal-body').css('height', getStandardModalEditorHeight());
         initHtmlEditors(modal.find('.htmleditor'), getStandardEditorHeight(), null, null, standardRemovePlugins + ',autogrow'); // disable autogrow
     });
@@ -193,13 +210,13 @@ function initAddPageModal() {
 
     var form = modal.find('form');
 
-    $('.btn-add-page').click(function(e) {
+    $('.btn-add-page').click(function (e) {
         e.preventDefault();
         flog('initAddPageModal: click');
 
         form.find('input[type=text], textarea,input[name=pageName]').val('');
         form.unbind();
-        form.submit(function(e) {
+        form.submit(function (e) {
             flog('submit clicked', this);
             e.preventDefault();
             //createPage(modal.find('form'));
@@ -217,7 +234,7 @@ function showEditModal(name, pageArticle) {
     form.find('input[name=pageName]').val(name);
     form.find('input[type=text], textarea').val('');
     form.unbind();
-    form.submit(function(e) {
+    form.submit(function (e) {
         e.preventDefault();
         e.stopPropagation();
         flog('edit submit click', this);
@@ -230,7 +247,7 @@ function showEditModal(name, pageArticle) {
     btnHistoryPage.history({
         pageUrl: name,
         showPreview: false,
-        afterRevertFn: function() {
+        afterRevertFn: function () {
             loadModalEditorContent(modal, name);
         },
         modal: $('#modal-history')
@@ -277,7 +294,7 @@ function doSavePage(form, pageArticle) {
             url: url,
             data: data,
             dataType: 'json',
-            success: function(data) {
+            success: function (data) {
                 flog('set enabled', form.find('button[type=submit]'));
                 form.add(modal).removeClass('ajax-processing');
                 form.find('button[type=submit]').removeAttr('disabled');
@@ -295,7 +312,7 @@ function doSavePage(form, pageArticle) {
                     Msg.error('There was an error saving the page: ' + data.messages);
                 }
             },
-            error: function(resp) {
+            error: function (resp) {
                 form.add(modal).removeClass('ajax-processing');
                 form.find('button[type=submit]').removeAttr('disabled');
                 flog('error', resp);
@@ -313,14 +330,14 @@ function loadModalEditorContent(modal, name) {
         type: 'GET',
         url: name + '?type=json',
         dataType: 'json',
-        success: function(resp) {
+        success: function (resp) {
             var data = resp.data;
             flog('resp', resp);
             var t = data.template;
             if (!t.endsWith('.html'))
                 t += '.html';
             flog('select template', t, modal.find('select option[value="' + t + '"]'));
-            modal.find('select option').each(function(i, n) {
+            modal.find('select option').each(function (i, n) {
                 var opt = $(n);
                 //flog('compare', opt.attr('value'),t );
                 if (t.startsWith(opt.attr('value'))) {
@@ -336,7 +353,7 @@ function loadModalEditorContent(modal, name) {
             modal.find('textarea').val(data.body);
             openFuseModal(modal);
         },
-        error: function(resp) {
+        error: function (resp) {
             flog('error', resp);
             Msg.error('err: couldnt load page data');
         }
@@ -358,7 +375,7 @@ function showImportFromUrl() {
             data: {
                 importFromUrl: url
             },
-            success: function(data) {
+            success: function (data) {
                 flog('response', data);
                 if (!data.status) {
                     Msg.error('Failed to import');
@@ -368,7 +385,7 @@ function showImportFromUrl() {
                     window.location.reload();
                 }
             },
-            error: function(resp) {
+            error: function (resp) {
                 flog('error', resp);
                 Msg.error('err');
             }
@@ -382,11 +399,11 @@ function putEmptyFile(name) {
         url: name,
         data: "",
         dataType: 'text',
-        success: function(resp) {
+        success: function (resp) {
             Msg.success('Created file ' + name);
             reloadFileList();
         },
-        error: function(resp) {
+        error: function (resp) {
             Msg.error('An error occured creating file ' + name + " - " + resp.messages);
         }
     });
