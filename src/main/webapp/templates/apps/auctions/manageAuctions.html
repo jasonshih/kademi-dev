@@ -1,6 +1,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title>$view.title</title> 
+        <title>$view.title</title>
     </head>
     <body>
         <div class="">
@@ -76,18 +76,23 @@
                             <col width="" />
                             <col width="" />
                             <col width="" />
+                            <col width="" />
+                            <col width="" />
+                            <col width="" />
                             <col width="130px" />
-
                         </colgroup>
                         <thead>
                             <tr>
                                 <th class="text-center">Status</th>
-                                <th>Auction Title</th>
+                                <th>Title</th>
                                 <th>Groups</th>
                                 <th>Auction Type</th>
                                 <th>Current Bids</th>
-                                <th>Created</th>
+                                <th>Start</th>
+                                <th>Finish</th>
                                 <th>Website</th>
+                                <th>Leading</th>
+                                <th>Bid</th>
                                 <th class="action"></th>
                             </tr>
                         </thead>
@@ -115,8 +120,23 @@
                                 </td>
                                 <td>$v.auctionTypesMap.get($v.auctionType)</td>
                                 <td>$!v.currentBidCount</td>
-                                <td><abbr title="$formatter.formatDateISO8601($v.createdDate)" class="timeago">$v.createdDate</abbr></td>
+                                <td><abbr title="$formatter.formatDateISO8601($v.auctionStartDate)" class="timeago">$v.auctionStartDate</abbr></td>
+                                <td><abbr title="$formatter.formatDateISO8601($v.auctionEndDate)" class="timeago">$v.auctionEndDate</abbr></td>
                                 <td>$v.website.name</td>
+                                <td>
+                                    #if( $v.winningBid )
+                                    <a class="btn btn-success" href="/manageUsers/$v.winningBid.changedBy.userId">
+                                        <span class="glyphicon glyphicon-exclamation-sign"></span>
+                                        $v.winningBid.changedBy.name
+                                    </a>
+
+                                    #elseif( $v.leadingBid )
+                                    <a href="/manageUsers/$v.leadingBid.changedBy.userId">$v.leadingBid.changedBy.name</a>
+                                    #end
+                                </td>
+                                <td>
+                                    $!v.leadingBid.bidValue
+                                </td>
                                 <td class="action">
                                     <div class="btn-group btn-group-sm">
                                         <a href="$v.name" class="btn btn-sm btn-info"><i class="fa fa-cog"></i> Manage</a>
@@ -156,6 +176,7 @@
         #end
         <script type="text/javascript">
             $(function () {
+                jQuery.timeago.settings.allowFuture = true;
                 $('abbr.timeago').timeago();
                 flog("initManageWebsites");
                 var modal = $("#addWebsiteModal");
@@ -182,7 +203,6 @@
                 $('#auctionEndDate').data("DateTimePicker").format = "DD/MM/YYYY HH:mm";
 
                 $('#auctionStartDate').change(function (e) {
-                    console.log(new Date($('#auctionStartDate').data("DateTimePicker").getDate()));
                     $('#auctionEndDate').data("DateTimePicker").setStartDate(new Date($('#auctionStartDate').data("DateTimePicker").getDate()));
                     var d = new Date($('#auctionStartDate').data("DateTimePicker").getDate());
                     d.setDate(d.getDate() + 1);
@@ -199,6 +219,6 @@
                     });
                 });
             });
-        </script>            
+        </script>
     </body>
 </html>

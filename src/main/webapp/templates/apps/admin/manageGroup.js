@@ -59,9 +59,10 @@ function initCRUDGroup() {
 
         var btn = $(this);
         var selectGroup = btn.parents('div.group');
-
+        var groupName = btn.closest('.btn-group').prev().text().trim();
+        flog("groupName", groupName);
         showGroupModal('Group', 'Rename group', 'Rename', {
-            name: btn.closest('.btn-group').prev().text(),
+            name: groupName,
             group: selectGroup.attr('data-group')
         });
     });
@@ -431,7 +432,7 @@ function addGroupFolder(name, url, data, callback) {
 
 /**
  * Called from the manageGroupRegoMode.html template
- * 
+ *
  * @returns {undefined}
  */
 function initRegoMode() {
