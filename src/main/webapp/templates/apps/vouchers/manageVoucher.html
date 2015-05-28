@@ -36,6 +36,12 @@
                             <th>Allocated to</th>
                             <td>$!page.allocatedToId</td>
                         </tr>
+                        #foreach($customField in $page.customFields)
+                        <tr>
+                            <th>$customField.text</th>
+                            <td>$page.customFieldValue($customField.name)</td>
+                        </tr>
+                        #end
                     </tbody>
                 </table>
             </div>
@@ -71,7 +77,7 @@
             <div class="modal-body">
                 <p>Redeeming a voucher means it has been used for a purchase and cannot be used again.</p>
                 <i>Optional, you may enter any notes here</i>
-                <form class="form-horizontal" method="POST" action="$page.href" id="redeemVoucherForm">                    
+                <form class="form-horizontal" method="POST" action="$page.href" id="redeemVoucherForm">
                     <textarea name="notes" id="notes" rows="5" style="width: 100%"></textarea>
                     <input type="hidden" name="redeem"/>
                 </form>
@@ -79,7 +85,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary" data-type="form-submit">Redeem</button>
-            </div>                            
+            </div>
         </div>
 
         <div class="modal fade" id="allocateVoucherModal" tabindex="-1" role="dialog" aria-labelledby="allocateVoucherModal" aria-hidden="true">
@@ -88,7 +94,7 @@
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                 <h4 class="modal-title" id="myModalLabel">Allocate voucher</h4>
             </div>
-            <form class="form-horizontal" method="POST" action="$page.href" id="redeemVoucherForm">                    
+            <form class="form-horizontal" method="POST" action="$page.href" id="redeemVoucherForm">
                 <div class="modal-body">
                     <p>Allocating a voucher means it has been purchased by that user and cant be offered to anyone else.</p>
                     <div class="form-group">
@@ -100,14 +106,14 @@
                     </div>
                     <i>Optional, you may enter any notes here</i>
 
-                    <textarea name="notes" id="notes" rows="5" style="width: 100%"></textarea>                
+                    <textarea name="notes" id="notes" rows="5" style="width: 100%"></textarea>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary" >Allocate</button>
-                </div>                            
+                </div>
             </form>
-        </div>        
+        </div>
 
         <div class="modal fade" id="changeStatusModal" tabindex="-1" role="dialog" aria-labelledby="changeStatusModal" aria-hidden="true">
 
@@ -118,7 +124,7 @@
             <div class="modal-body">
                 <p>You can fix mistakes or undo transactions by forcing the voucher to a different status. Note that all changes are logged.</p>
 
-                <form class="form-horizontal" method="POST" action="$page.href" id="redeemVoucherForm">                    
+                <form class="form-horizontal" method="POST" action="$page.href" id="redeemVoucherForm">
                     <div class="form-group">
                         <label for="status" class="col-sm-3 control-label">New status:</label>
                         <div class="col-sm-8">
@@ -130,16 +136,16 @@
                             </select>
                         </div>
                     </div>
-                 
+
                     <textarea name="notes" id="notes" rows="5" style="width: 100%"></textarea>
-                    <small><i>Optional, you may enter any notes here</i></small>                    
+                    <small><i>Optional, you may enter any notes here</i></small>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary" data-type="form-submit">Change</button>
-            </div>                            
-        </div>              
+            </div>
+        </div>
 
 
 
