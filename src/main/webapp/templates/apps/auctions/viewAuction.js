@@ -55,7 +55,7 @@ function bidForm() {
             Msg.success('Bid Placed');
         },
         error: function (resp) {
-            fflog("error", resp);
+            flog("error", resp);
             //Msg.error("Incorrect Value");
         }
     });

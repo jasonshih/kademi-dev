@@ -90,7 +90,7 @@
                                     <td>Auction Type</td>
                                     <td>
                                         <div class="form-group">
-                                            <div class="col-sm-2">
+                                            <div class="col-sm-4">
                                                 <select name="auctionType" class="form-control">
                                                     #foreach($st in $page.auctionTypesMap.entrySet())
                                                     $formatter.option($st.key, $st.value, $page.auctionType)
@@ -104,7 +104,7 @@
                                     <td>Status</td>
                                     <td>
                                         <div class="form-group">
-                                            <div class="col-sm-2">
+                                            <div class="col-sm-4">
                                                 <select name="status" class="form-control">
                                                     #foreach($st in $page.statuses)
                                                     $formatter.option($st.name(), $st.name(), $page.status.name())
@@ -118,7 +118,7 @@
                                     <td>Website</td>
                                     <td>
                                         <div class="form-group">
-                                            <div class="col-sm-2">
+                                            <div class="col-sm-4">
                                                 <select name="website" class="form-control">
                                                     #foreach($st in $page.organisation.websites())
                                                     $formatter.option($st.name, $st.name, $page.website.name)
@@ -132,7 +132,7 @@
                                     <td>Reward</td>
                                     <td>
                                         <div class="form-group">
-                                            <div class="col-sm-2">
+                                            <div class="col-sm-4">
                                                 <select name="auctionReward" class="form-control">
                                                     <option value="">[None]</option>
                                                     #foreach($reward in $page.rewards)
@@ -165,7 +165,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                </tr>  
+                                </tr>
                                 <tr>
                                     <td>Choose a start date</td>
                                     <td>
@@ -224,8 +224,8 @@
                                                         </div>
                                                         #end
                                                     </div>
-                                                </div>  
-                                            </div>                
+                                                </div>
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>
@@ -462,7 +462,7 @@
                     <button type="button" class="btn btn-primary btn-sm" data-type="form-submit">Save image</button>
                 </div>
             </div>
-        </div> 
+        </div>
         #macro(genGroup $group)
             #set($gc = "")
             #set($gIcon = "")
@@ -474,7 +474,7 @@
                 #set($gIcon = "fa fa-trophy")
             #elseif( $group.groupType == "M" )
                 #set($gc = "alert alert-info")
-                #set($gIcon = "fa fa-envelope")                
+                #set($gIcon = "fa fa-envelope")
             #end
             <span id="group_$group.name" class="group-list $gc">
                 <i class="$gIcon"></i>
