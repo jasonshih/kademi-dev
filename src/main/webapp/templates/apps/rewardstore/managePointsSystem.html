@@ -24,6 +24,10 @@
             <div id="manageReward" class="MainContent tabbable">
                 <div class="clearfix">
                     <div class="pull-right">
+                        <a href="/rewards/points/" class="btn btn-sm btn-primary">
+                            <span class="glyphicon glyphicon-star"></span>
+                            Review Points
+                        </a>
                         <button class="btn btn-sm btn-success">
                             <span class="glyphicon glyphicon-floppy-disk"></span>
                             Save
@@ -98,7 +102,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                </tr>  
+                                </tr>
                                 <tr>
                                     <td>
                                         Notes
@@ -243,7 +247,7 @@
         #set($gIcon = "fa fa-trophy")
         #elseif( $group.groupType == "M" )
         #set($gc = "alert alert-info")
-        #set($gIcon = "fa fa-envelope")                
+        #set($gIcon = "fa fa-envelope")
         #end
         <span id="group_$group.name" class="group-list $gc">
             <i class="$gIcon"></i>

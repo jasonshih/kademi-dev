@@ -1,5 +1,19 @@
 #foreach($reward in $allPoints.keySet() )
+#set( $rs = $page.find("/reward-store/").child($reward.name) )
+
 <h1><a href="/points-buckets/$reward.name">$reward.title</a></h1>
+<table class="table table-striped">
+    <tr>
+        <th>Current</th>
+        <td colspan="3">$rs.balance($page.thisProfile) pts</td>
+    </tr>
+    <tr>
+        <th>Available</th>
+        <td colspan="3">$rs.availableBalance($page.thisProfile) pts</td>
+    </tr>
+</table>
+
+
 <table class="table table-striped">
     <thead>
         <tr>
