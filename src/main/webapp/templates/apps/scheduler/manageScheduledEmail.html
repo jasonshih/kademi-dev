@@ -65,7 +65,7 @@
                                     <select name="hrefTemplate" class="form-control">
                                         <option value="">No attachment</option> 
                                         #foreach($att in $page.attachmentChoices) 
-                                        $formatter.option($att.path, $att.title, $page.job.hrefTemplate) 
+                                            $formatter.option($att.path, $att.title, $page.job.hrefTemplate) 
                                         #end
                                     </select>
                                 </div>
