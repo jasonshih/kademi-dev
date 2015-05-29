@@ -1,6 +1,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title>$view.title</title>
+        <title>Maintenance</title>
         <style>
             .stacktraces {
                 min-width: 700px;
@@ -39,7 +39,7 @@
                 </form>
             </div>
         </article>
-        
+
         <article class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">Simulate the time</h3>
@@ -64,12 +64,28 @@
                 <p>Turn the payment scheduler for recurring payments on or off. (Checked equals ON.)</p>
                 <br/>
                 <form method="POST" action="maint" class="maintForm" >
-                	<input type="hidden" name="checkPaymentScheduler" value="true" />
+                    <input type="hidden" name="checkPaymentScheduler" value="true" />
                     <input type="checkbox" name="enablePaymentScheduler" value="schedule" $page.paymentSchedulerEnabled />
                     &nbsp;
                     <button class="btn-sm btn btn-warning">Submit</button>
                     <label for="schedule"></label>
                 </form>
+            </div>
+        </article>
+
+        <article class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Find Resource from URL</h3>
+            </div>
+            <div class="panel-body">
+                <p>Find the resource class of a URL</p>
+                <br/>
+                <form method="POST" action="maint" class="findResourceForm" >
+                    <input type="text" name="findResourceFromURL" value="" />
+                    <button class="btn-sm btn btn-warning">Submit</button>
+                </form>
+                <br/>
+                <p id="findResourceClass"></p>
             </div>
         </article>
 
@@ -223,6 +239,13 @@
                         flog("resp", resp);
                         Msg.success("Repository restored");
                         window.location.reload();
+                    }
+                });
+
+                $("form.findResourceForm").forms({
+                    callback: function (resp) {
+                        flog("resp", resp);
+                        $("#findResourceClass").text(resp.messages[0]);
                     }
                 });
             });
