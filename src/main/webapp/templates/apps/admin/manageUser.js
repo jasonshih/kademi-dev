@@ -27,7 +27,7 @@ function initChangeUserId() {
 function initRemoveCreds() {
     $('body').on('click', '.btn-remove-creds', function (e) {
         e.preventDefault();
-        if (confirm("Are you sure?")) {
+        if (confirm("Are you sure you want to remove this users password and credentials? They will not be able to login.")) {
             doRemoveCreds();
         }
     });
