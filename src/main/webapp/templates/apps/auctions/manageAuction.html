@@ -22,6 +22,15 @@
                 border: 1px solid #ddd;
                 border-radius: 4px;
             }
+
+            .group-list{
+                margin-bottom: 5px;
+                display: inline-block;
+                border-radius: 5px;
+                margin-right: 5px;
+                padding: 5px 10px;
+                padding-right: 5px;
+            }
         </style>
     </head>
     <body>
@@ -81,7 +90,7 @@
                                     <td>Auction Type</td>
                                     <td>
                                         <div class="form-group">
-                                            <div class="col-sm-2">
+                                            <div class="col-sm-4">
                                                 <select name="auctionType" class="form-control">
                                                     #foreach($st in $page.auctionTypesMap.entrySet())
                                                     $formatter.option($st.key, $st.value, $page.auctionType)
@@ -95,7 +104,7 @@
                                     <td>Status</td>
                                     <td>
                                         <div class="form-group">
-                                            <div class="col-sm-2">
+                                            <div class="col-sm-4">
                                                 <select name="status" class="form-control">
                                                     #foreach($st in $page.statuses)
                                                     $formatter.option($st.name(), $st.name(), $page.status.name())
@@ -109,7 +118,7 @@
                                     <td>Website</td>
                                     <td>
                                         <div class="form-group">
-                                            <div class="col-sm-2">
+                                            <div class="col-sm-4">
                                                 <select name="website" class="form-control">
                                                     #foreach($st in $page.organisation.websites())
                                                     $formatter.option($st.name, $st.name, $page.website.name)
@@ -123,7 +132,7 @@
                                     <td>Reward</td>
                                     <td>
                                         <div class="form-group">
-                                            <div class="col-sm-2">
+                                            <div class="col-sm-4">
                                                 <select name="auctionReward" class="form-control">
                                                     <option value="">[None]</option>
                                                     #foreach($reward in $page.rewards)
@@ -156,7 +165,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                </tr>  
+                                </tr>
                                 <tr>
                                     <td>Choose a start date</td>
                                     <td>
@@ -215,8 +224,8 @@
                                                         </div>
                                                         #end
                                                     </div>
-                                                </div>  
-                                            </div>                
+                                                </div>
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>
@@ -317,7 +326,8 @@
                         <div class="well margin-top-10">Add user groups to auction to allow these users to directly access the auction.</div>
                         <div class="GroupList">
                             #foreach($g in $page.selectedGroups)
-                            <button class="btn btn-sm btn-default reset-margin-bottom" type="button">$g.name</button>
+                            <!-- <button class="btn btn-sm btn-default reset-margin-bottom" type="button">$g.name</button> -->
+                            #genGroup($g)
                             #end
                         </div>
                     </div>
@@ -349,7 +359,7 @@
                     <div class="panel panel-default">
                         <div class="panel-body membership">
                             <label for="$g.name">$g.name</label>
-                            <label class="pull-right">$formatter.checkbox($g.name, $page.isGroupSelected($g))</label>
+                            <label class="pull-right" data-groupType="$!g.groupType">$formatter.checkbox($g.name, $page.isGroupSelected($g))</label>
                         </div>
                     </div>
                     #end
@@ -452,8 +462,26 @@
                     <button type="button" class="btn btn-primary btn-sm" data-type="form-submit">Save image</button>
                 </div>
             </div>
-        </div> 
-
+        </div>
+        #macro(genGroup $group)
+            #set($gc = "")
+            #set($gIcon = "")
+            #if( $group.groupType == "P" || !$group.groupType)
+                #set($gc = "alert alert-success")
+                #set($gIcon = "clip-users")
+            #elseif( $group.groupType == "S" )
+                #set($gc = "alert alert-info")
+                #set($gIcon = "fa fa-trophy")
+            #elseif( $group.groupType == "M" )
+                #set($gc = "alert alert-info")
+                #set($gIcon = "fa fa-envelope")
+            #end
+            <span id="group_$group.name" class="group-list $gc">
+                <i class="$gIcon"></i>
+                <span class="block-name" title="$group.name">$group.name</span>
+                <a href="$group.name" class="btn btn-xs btn-danger btn-delete-group" title="Delete access for group $group.name"><i href="$group.name" class="fa fa-times"></i></a>
+            </span>
+        #end
         <script type="text/javascript">
             $(function () {
                 initManageAuction();

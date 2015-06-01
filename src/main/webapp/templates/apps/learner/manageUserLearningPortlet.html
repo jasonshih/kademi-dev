@@ -66,13 +66,17 @@
                         #end
                     </abbr>
                 </td>
-                <td>                            
+                <td>
                     <abbr class="timeago" title="$formatter.formatDateISO8601($ms.createdDate)">$!ms.createdDate</abbr>
                 </td>
-                <td>                            
+                <td>
                     <abbr class="timeago" title="$formatter.formatDateISO8601($ms.modifiedDate)">$!ms.modifiedDate</abbr>
                 </td>
-                <td>$ms.currentQuizAttempts.size()</td>
+                <td>
+                    #if( $ms.quizAttempts.size() > 0 )
+                    <a class="show-attempts" href="ms-${ms.id}">$ms.quizAttempts.size()</a>
+                    #end
+                </td>
                 <td>
                     #foreach($file in $certs.files)
                     #if( $file.name.startsWith($ms.moduleCode)  )
@@ -90,6 +94,24 @@
                     </a>
                 </td>
             </tr>
+                #foreach($attempt in $formatter.sortByProperty( $ms.quizAttempts ,"id" ))
+                <tr style="display: none" class="ms-${ms.id}">
+                    <td colspan="4"></td>
+                    <td>
+                        <abbr class="timeago" title="$formatter.formatDateISO8601($attempt.createdDate)">$attempt.createdDate</abbr>
+                    </td>
+                    <td>$attempt.quizName</td>
+                    <td colspan="3">
+                        #if( $attempt.ignoredBy )
+                        <span class="label label-info" title="Attempt ID $attempt.id, ${attempt.scorePerc}%">Ignored by $!attempt.ignoredBy.name</</span>
+                        #elseif( $attempt.passed )
+                        <span class="label label-success" title="Attempt ID $attempt.id">Passed $attempt.scorePerc %</span>
+                        #else
+                        <span class="label label-warning" title="Attempt ID $attempt.id">Failed $attempt.scorePerc %</span>
+                        #end
+                    </td>
+                </tr>
+                #end
             #end
             #end
         </tbody>
@@ -144,7 +166,7 @@
             <tr>
                 <td>$re.reward.name</td>
                 <td>$re.reason</td>
-                <td>                            
+                <td>
                     <abbr class="pull-right timeago" title="$formatter.formatDateISO8601($re.awardedDate)">$re.awardedDate</abbr>
                 </td>
             </tr>
@@ -175,7 +197,7 @@
                 <td>$p.numPoints</td>
                 <td>$p.reason</td>
                 <td>
-                    <abbr class="pull-right timeago" title="$formatter.formatDateISO8601($p.issuedDate)">$p.issuedDate</abbr>                            
+                    <abbr class="pull-right timeago" title="$formatter.formatDateISO8601($p.issuedDate)">$p.issuedDate</abbr>
                 </td>
             </tr>
             #end
@@ -217,7 +239,7 @@
         <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
         <button type="button" data-type="form-submit" class="btn btn-sm btn-primary">Save</button>
     </div>
-</div> 
+</div>
 <script src="/templates/apps/learner/profileAdminPortlet.js">//</script>
 <script type="text/javascript">
     $(function () {
@@ -228,7 +250,11 @@
             if (confirm("This will clear the user's record of learning for this module and allow them to start it again. Are you sure you want to continue?")) {
                 doModuleReset(id);
             }
-
+        });
+        $(".show-attempts").click(function(e) {
+            e.preventDefault();
+            var c = $(e.target).attr("href");
+            $("." + c).toggle(200);
         });
     });
     function doModuleReset(id) {
@@ -241,7 +267,7 @@
             dataType: 'json',
             success: function (resp) {
                 flog('saved course', resp);
-                if (resp.status) {                    
+                if (resp.status) {
                     $("#moduleprogress-body").reloadFragment({
                         whenComplete: function () {
                             Msg.info("Updated ok");

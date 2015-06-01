@@ -8,12 +8,26 @@
         <script type="text/javascript" src="/templates/themes/admin/prompt.js">//</script>
         <script type="text/javascript" src="/static/quiz/quiz.js">//</script>
         <script type="text/javascript" src="/static/js/jquery-ui-1.10.3.custom.min.js">//</script>
+        <style>
+            .group-list{
+                margin-bottom: 5px;
+                display: inline-block;
+                border-radius: 5px;
+                margin-right: 5px;
+                padding: 5px 10px;
+                padding-right: 5px;
+            }
+        </style>
     </head>
     <body>
         <form action="" method="POST" class="managePointsSystem" role="form">
             <div id="manageReward" class="MainContent tabbable">
                 <div class="clearfix">
                     <div class="pull-right">
+                        <a href="/rewards/points/" class="btn btn-sm btn-primary">
+                            <span class="glyphicon glyphicon-star"></span>
+                            Review Points
+                        </a>
                         <button class="btn btn-sm btn-success">
                             <span class="glyphicon glyphicon-floppy-disk"></span>
                             Save
@@ -88,7 +102,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                </tr>  
+                                </tr>
                                 <tr>
                                     <td>
                                         Notes
@@ -116,10 +130,7 @@
                         <div class="well margin-top-10">Add user groups to rewards to allow these users to directly enter the competition. These users will see the reward on their dashboard when it is active.</div>
                         <div class="GroupList">
                             #foreach($g in $page.selectedGroups)
-                            <div id="group_$g.name" class="btn btn-sm btn-default">
-                                <span> $g.name </span>
-                                <a href="#" name="$g.name" class="btn btn-xs btn-danger btn-remove-group" title="Delete"> <i class="fa fa-times"></i></a>
-                            </div>
+                            #genGroup($g)
                             #end
                         </div>
                     </div>
@@ -218,14 +229,32 @@
                     <div class="panel panel-default">
                         <div class="panel-body membership">
                             <label for="$g.name">$g.name</label>
-                            <label class="pull-right">$formatter.checkbox($g.name, $page.isSelected($g))</label>
+                            <label class="pull-right" data-groupType="$!g.groupType">$formatter.checkbox($g.name, $page.isSelected($g))</label>
                         </div>
                     </div>
                     #end
                 </div>
             </div>
         </div>
-
+        #macro(genGroup $group)
+        #set($gc = "")
+        #set($gIcon = "")
+        #if( $group.groupType == "P" || !$group.groupType)
+        #set($gc = "alert alert-success")
+        #set($gIcon = "clip-users")
+        #elseif( $group.groupType == "S" )
+        #set($gc = "alert alert-info")
+        #set($gIcon = "fa fa-trophy")
+        #elseif( $group.groupType == "M" )
+        #set($gc = "alert alert-info")
+        #set($gIcon = "fa fa-envelope")
+        #end
+        <span id="group_$group.name" class="group-list $gc">
+            <i class="$gIcon"></i>
+            <span class="block-name" title="$group.name">$group.name</span>
+            <a href="$group.name" class="btn btn-xs btn-danger btn-remove-group" title="Delete access for group $group.name"><i href="$group.name" class="fa fa-times"></i></a>
+        </span>
+        #end
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
         <script type="text/javascript">
             var quiz = $formatter.toJson($page.quiz);
@@ -246,13 +275,13 @@
                     }
                 });
                 initGroupEditing();
-                
-                $('body').on('click', '.btn-remove-group', function(e){
+
+                $('body').on('click', '.btn-remove-group', function (e) {
                     e.preventDefault();
                     var btn = $(this);
-                    var name = btn.attr("name");
-                    setGroupRecipient(name, false);
-                    btn.closest('div').remove();
+                    var name = btn.attr("href");
+                    setGroupRecipient(name, "", false);
+                    btn.closest('span').remove();
                     $("#modalGroup input[name=" + name + "]").check(false);
                 });
             });

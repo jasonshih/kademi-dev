@@ -14,7 +14,7 @@
                     <span class="glyphicon glyphicon-star"></span>
                     Manage Rewards
                 </a>
-                
+
                 <div class="btn-group" style="margin-bottom: 15px">
                     <a class="btn btn-success btn-sm" href="#" data-toggle="modal" data-target="#modal-new-points">
                         <span class="glyphicon glyphicon-plus"></span>
@@ -29,7 +29,7 @@
                         Export to CSV
                     </a>
                     <a class="btn btn-danger btn-sm removeUsers">
-                        <span class="glyphicon glyphicon-remove"></span>  
+                        <span class="glyphicon glyphicon-remove"></span>
                         Remove points
                     </a>
                 </div>
@@ -62,8 +62,8 @@
                             #else
                             #foreach($p in $page.recentPoints)
                             <tr>
-                                <td><a href="../$p.reward.name">$p.reward.name</a></td>
-                                <td>$p.issuedTo.formattedName</td>
+                                <td><a href="/points-buckets/$p.reward.name">$p.reward.name</a></td>
+                                <td><a href="/manageUsers/$p.issuedTo.id">$p.issuedTo.formattedName</a></td>
                                 <td>$formatter.formatDateLong( $p.issuedDate )</td>
                                 <td>$p.numPoints</td>
                                 <td>$p.reason</td>
@@ -131,7 +131,7 @@
                 <h4 class="modal-title">Assign points to user</h4>
             </div>
             <form method="post" action="$page.href" class="form-horizontal" id="new-points-form">
-                <div class="modal-body">                
+                <div class="modal-body">
                     <p>Please specify a users email to assign points to.</p>
 
                     <div class="form-group">
@@ -146,24 +146,24 @@
                         <div class="col-md-9">
                             <input type="text" name="awardNumPoints" required="true" id="awardNumPoints" class="numeric required form-control" />
                         </div>
-                    </div>                    
+                    </div>
 
                     <div class="form-group">
                         <label for="search-group" class="col-md-3 control-label">Reward</label>
                         <div class="col-md-9">
                             <select name="awardedReward" required="true" id="" class="form-control input-sm required">
                                 #foreach($reward in $page.rewards)
-                                <option value="$reward.name">$reward.title</option> 
+                                <option value="$reward.name">$reward.title</option>
                                 #end
                             </select>
                         </div>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="pointsTag" class="col-md-3 control-label">Tag</label>
                         <div class="col-md-9">
                             <select name="awardPointsTag" class="form-control input-sm">
-                                <option value="">[None]</option> 
+                                <option value="">[None]</option>
                                 #foreach($pointTag in $page.pointTags)
                                 <option value="$pointTag.name">$pointTag.title</option>
                                 #end
@@ -177,8 +177,8 @@
                     <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
                     <button class="btn btn-sm btn-primary" data-type="form-submit" type="button">Save</button>
                 </div>
-            </form>            
-        </div>        
+            </form>
+        </div>
 
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
         <script type="text/javascript">

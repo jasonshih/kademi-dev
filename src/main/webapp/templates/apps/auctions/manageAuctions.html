@@ -1,6 +1,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title>$view.title</title> 
+        <title>$view.title</title>
     </head>
     <body>
         <div class="">
@@ -19,8 +19,7 @@
                         <div class="form-group">
                             <label for="auctionTitle" class="col-sm-3 control-label">Auction Title</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control regex required" required="true" id="auctionTitle" name="auctionTitle" />
-                                <span class="help-block"><small>Simple characters only, no punctuation, etc</small></span>
+                                <input type="text" class="form-control required" required="true" id="auctionTitle" name="auctionTitle" />
                             </div>
                         </div>
                         <div class="form-group">
@@ -80,23 +79,20 @@
                             <col width="" />
                             <col width="" />
                             <col width="" />
-                            <col width="180px" />
-
+                            <col width="130px" />
                         </colgroup>
                         <thead>
                             <tr>
                                 <th class="text-center">Status</th>
-                                
-                                <th>Auction Title</th>
-
-                                <th colspan="2">Auction Type</th>
-
-                                <th colspan="2">Current Bids</th>
-
-                                <th colspan="2">Created</th>
-
-                                <th colspan="2">Website</th>
-
+                                <th>Title</th>
+                                <th>Groups</th>
+                                <th>Auction Type</th>
+                                <th>Current Bids</th>
+                                <th>Start</th>
+                                <th>Finish</th>
+                                <th>Website</th>
+                                <th>Leading</th>
+                                <th>Bid</th>
                                 <th class="action"></th>
                             </tr>
                         </thead>
@@ -109,24 +105,38 @@
                                     #elseif($v.auctionState == "active")
                                     <i class="fa fa-check-circle text-success"></i>
                                     #elseif($v.auctionState == "closed")
-                                    <i class="fa fa-exclamation-circle text-muted"></i>
+                                    <i class="fa fa-exclamation-circle text-danger"></i>
                                     #elseif($v.auctionState == "open")
                                     <i class="fa fa-check-circle text-success"></i>
                                     #else
                                     <i class="fa fa-exclamation-circle text-danger"></i>
                                     #end
                                 </td>
-                                
                                 <td><a href="$v.href">$v.auctionTitle</a></td>
+                                <td>
+                                    #foreach($g in $v.selectedGroups)
+                                        #genGroup($g)
+                                    #end
+                                </td>
+                                <td>$v.auctionTypesMap.get($v.auctionType)</td>
+                                <td>$!v.currentBidCount</td>
+                                <td><abbr title="$formatter.formatDateISO8601($v.auctionStartDate)" class="timeago">$v.auctionStartDate</abbr></td>
+                                <td><abbr title="$formatter.formatDateISO8601($v.auctionEndDate)" class="timeago">$v.auctionEndDate</abbr></td>
+                                <td>$v.website.name</td>
+                                <td>
+                                    #if( $v.winningBid )
+                                    <a class="btn btn-success" href="/manageUsers/$v.winningBid.changedBy.userId">
+                                        <span class="fa fa-check-circle"></span>
+                                        $v.winningBid.changedBy.name
+                                    </a>
 
-                                <td colspan="2">$v.auctionTypesMap.get($v.auctionType)</td>
-
-                                <td colspan="2">$!v.currentBidCount</td>
-
-                                <td colspan="2"><abbr title="$formatter.formatDateISO8601($v.createdDate)" class="timeago">$v.createdDate</abbr></td>
-
-                                <td colspan="2">$v.website.name</td>
-
+                                    #elseif( $v.leadingBid )
+                                    <a href="/manageUsers/$v.leadingBid.changedBy.userId">$v.leadingBid.changedBy.name</a>
+                                    #end
+                                </td>
+                                <td>
+                                    $!v.leadingBid.bidValue
+                                </td>
                                 <td class="action">
                                     <div class="btn-group btn-group-sm">
                                         <a href="$v.name" class="btn btn-sm btn-info"><i class="fa fa-cog"></i> Manage</a>
@@ -146,8 +156,27 @@
                 </div>
             </div>
         </div>
+        #macro(genGroup $group)
+            #set($gc = "label label-info")
+            #set($gIcon = "")
+            #if( $group.groupType == "P" || !$group.groupType)
+                #set($gc = "label label-success")
+                #set($gIcon = "clip-users")
+            #elseif( $group.groupType == "S" )
+                #set($gc = "label label-info")
+                #set($gIcon = "fa fa-trophy")
+            #elseif( $group.groupType == "M" )
+                #set($gc = "label label-info")
+                #set($gIcon = "fa fa-envelope")
+            #end
+            <div class="$gc" style="margin-right: 2.5px; margin-bottom: 5px; display: inline-block;">
+                <i class="$gIcon"></i>
+                <span class="block-name" title="$group.name">$group.name</span>
+            </div>
+        #end
         <script type="text/javascript">
             $(function () {
+                jQuery.timeago.settings.allowFuture = true;
                 $('abbr.timeago').timeago();
                 flog("initManageWebsites");
                 var modal = $("#addWebsiteModal");
@@ -174,7 +203,6 @@
                 $('#auctionEndDate').data("DateTimePicker").format = "DD/MM/YYYY HH:mm";
 
                 $('#auctionStartDate').change(function (e) {
-                    console.log(new Date($('#auctionStartDate').data("DateTimePicker").getDate()));
                     $('#auctionEndDate').data("DateTimePicker").setStartDate(new Date($('#auctionStartDate').data("DateTimePicker").getDate()));
                     var d = new Date($('#auctionStartDate').data("DateTimePicker").getDate());
                     d.setDate(d.getDate() + 1);
@@ -191,6 +219,6 @@
                     });
                 });
             });
-        </script>            
+        </script>
     </body>
 </html>
