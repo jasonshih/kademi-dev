@@ -42,7 +42,7 @@ function initCRUDGroup() {
         e.preventDefault();
 
         var btn = $(this);
-        var name = btn.closest('.btn-group').prev().text();
+        var name = btn.closest('.btn-group').prev().text().trim();
         var href = $.URLEncode(name);
 
         flog('delete', href);
@@ -124,7 +124,7 @@ function initCRUDRole() {
                 Msg.error('Please select a target for the role');
                 return;
             }
-            appliesToText = select.find('option:checked').text();
+            appliesToText = select.find('option:checked').text().trim();
         } else {
             appliesToText = 'their own organisation';
         }
@@ -133,7 +133,7 @@ function initCRUDRole() {
         flog('currentGroupDiv', currentGroupDiv);
 
         var groupHref = currentRoleGroup;
-        var roleName = btn.closest('.article-action').prev().text();
+        var roleName = btn.closest('.article-action').prev().text().trim();
 
         addRoleToGroup(groupHref, roleName, appliesToTypeVal, appliesToVal, function (resp) {
             if (appliesToVal.length == 0) {
@@ -451,9 +451,9 @@ function initRegoMode() {
 
 function setRegoMode(currentRegoModeLink, selectedRegoModeLink) {
     var val = selectedRegoModeLink.attr('rel');
-    var text = selectedRegoModeLink.text();
+    var text = selectedRegoModeLink.text().trim();
     var data = 'milton:regoMode=' + val;
-    var href = currentRegoModeLink.closest('div.Group').find('header div > span').text();
+    var href = currentRegoModeLink.closest('div.Group').find('header div > span').text().trim();
     href = $.URLEncode(href) + '/';
     flog('setRegoMode: val=', val, 'text=', text, 'data=', data, 'href=', href);
     proppatch(href, data, function () {
@@ -470,7 +470,7 @@ function initCopyMembers() {
         e.preventDefault();
 
         var btn = $(this);
-        var href = btn.closest('div.group').find('span.group-name').text();
+        var href = btn.closest('div.group').find('span.group-name').text().trim();
         modal.find('span.group-name').text(href);
         href = $.URLEncode(href) + '/';
         modal.find('form').attr('action', href);
@@ -494,7 +494,7 @@ function initGroupFolder() {
         e.preventDefault();
 
         var btn = $(this);
-        var href = btn.closest('div.group').find('span.group-name').text();
+        var href = btn.closest('div.group').find('span.group-name').text().trim();
         var folderName = btn.attr("href");
         flog(href, folderName);
         //modal.find('span.group-name').text(href);
@@ -533,7 +533,7 @@ function initGroupFolder() {
         e.preventDefault();
 
         var btn = $(this);
-        var href = btn.closest('div.group').find('span.group-name').text();
+        var href = btn.closest('div.group').find('span.group-name').text().trim();
         flog(href);
         //modal.find('span.group-name').text(href);
         href = $.URLEncode(href) + '/';
