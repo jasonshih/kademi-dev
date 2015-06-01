@@ -388,10 +388,11 @@ function initGroupModal() {
             } else { // If is editing Group
                 var groupDiv = $('div.group').filter('[data-group=' + modal.attr('data-group') + ']');
                 var groupNameSpan = groupDiv.find('span.group-name');
-                var src = groupNameSpan.text();
+                var src = groupNameSpan.text().trim();
                 src = $.URLEncode(src);
                 var dest = name;
                 dest = window.location.pathname + dest;
+                flog("move group", src, dest);
                 move(src, dest, function () {
                     groupNameSpan.text(name);
                 });
@@ -562,17 +563,22 @@ function initGroupFolder() {
             if (type === 'Add') {
                 addGroupFolder(name, window.location.pathname, groupFolder.find('form').serialize(), function (name, resp) {
                     Msg.success(name + ' is created!');
+                    window.location.reload();
+                    groupFolder.modal('hide');
+                    resetModalControl();
+
                 });
 
             } else { // If is editing Group
                 var name = $(groupFolder.find("[name=newFolderName]")).val();
                 addGroupFolder(name, window.location.pathname, groupFolder.find('form').serialize(), function (name, resp) {
                     Msg.success(name + ' is updated!');
+                    window.location.reload();
+                    groupFolder.modal('hide');
+                    resetModalControl();
+
                 });
             }
-            window.location.reload();
-            groupFolder.modal('hide');
-            resetModalControl();
         }
     });
 
