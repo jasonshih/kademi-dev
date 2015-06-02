@@ -50,32 +50,22 @@ $(function () {
         return false;
     });
 
-    $(".agg-filter").change(function(e) {
+    $(".report").on("change", ".agg-filter", function(e) {
     	e.preventDefault();
     	var input = $(e.target);
     	var tbody = input.closest("tbody");
-    	$.ajax({
-            type: "GET",
+    	var name = input.attr("name");
+    	var value = input.val();
+    	var uri = URI(window.location);
+    	uri.setSearch("filter-".concat(name), value);
+
+        history.pushState(null, null, uri.toString() );
+        updateLinksWithParameters();
+
+        $("#reportResult").reloadFragment({
             url: window.location,
-            dataType: "json",
-            data: {
-            	action: "facet",
-            	name: input.attr("name"),
-            	filter: input.val()
-            },
-            success: function (resp) {
-            	var buckets = $(resp.data.buckets);
-                flog(buckets);
-                if (buckets.size() > 0) {
-//                	tbody.find("tr.agg-row").remove();
-//                	buckets.each(function(idx) {
-//                		
-//                	});
-                }
-            },
-            error: function (resp) {
-                log("error", resp);
-                Msg.error("An error occurred processing the request. Please refresh the page and try again");
+            whenComplete: function() {
+                runReportWithDateRange( reportContainer, itemsContainer);
             }
         });
     });
