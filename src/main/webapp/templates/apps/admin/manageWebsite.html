@@ -153,7 +153,7 @@
                                 <select name="aliasTo" id="aliasTo" class="form-control">
                                     <option value="">[None]</option>
                                     #foreach($w in $page.otherWebsites)
-                                    $formatter.option($w.name, $w.name, $page.website.aliasTo)
+                                    $formatter.option($w.name, $w.name, $!page.website.aliasTo.name)
                                     #end
                                 </select>
                                 <small>If selected this website will be an alias for accessing the selected site.</small>
