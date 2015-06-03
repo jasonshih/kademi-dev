@@ -30,7 +30,7 @@
                                 $!page.docType
                             </div>
                         </div>
-                        <textarea name="json" class="form-control" style="height: 400px">$!page.json</textarea>
+                        <textarea id="jsonText" name="json" class="form-control" style="height: 400px">$!page.json</textarea>
                     </div>
                 </div>
             </div>
@@ -40,12 +40,26 @@
         <script type="text/javascript">
             $(function () {
                 $("#addRecordForm").forms({
-                    callback: function() {
+                    callback: function () {
                         Msg.info("Done");
                         $("#records-body").reloadFragment();
                     }
                 });
             });
+
+            function format() {
+                var textArea = $("#jsonText");
+                var e = JSON.parse(textArea.val());
+                var t = JSON.stringify(e, null, "\t");
+                textArea.val(t);
+            }
+
+            function compact() {
+                var textArea = $("#jsonText");
+                var e = JSON.parse(textArea.val());
+                var t = JSON.stringify(e);
+                textArea.val(t);
+            }
         </script>
     </body>
 </html>
