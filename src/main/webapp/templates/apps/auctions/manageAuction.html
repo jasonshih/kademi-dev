@@ -467,13 +467,13 @@
             #set($gc = "")
             #set($gIcon = "")
             #if( $group.groupType == "P" || !$group.groupType)
-                #set($gc = "alert alert-success")
+                #set($gc = "label label-success")
                 #set($gIcon = "clip-users")
             #elseif( $group.groupType == "S" )
-                #set($gc = "alert alert-info")
+                #set($gc = "label label-info")
                 #set($gIcon = "fa fa-trophy")
             #elseif( $group.groupType == "M" )
-                #set($gc = "alert alert-info")
+                #set($gc = "label label-info")
                 #set($gIcon = "fa fa-envelope")
             #end
             <span id="group_$group.name" class="group-list $gc">
