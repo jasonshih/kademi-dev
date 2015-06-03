@@ -978,3 +978,9 @@ fieldset hr {
 .alert h3 {
     margin-top: 0;
 }
+
+body .form-control::-moz-placeholder {
+    color: #ccc;
+    opacity: 1;
+}
+body .form-control::-webkit-input-placeholder { color:#CCC; }
