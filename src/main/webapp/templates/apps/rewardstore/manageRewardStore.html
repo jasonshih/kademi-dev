@@ -20,16 +20,16 @@
             .in-reward-true .product-inreward-details {
                 display: block;
             }
-        </style>        
-        <link href="https://gitcdn.github.io/bootstrap-toggle/2.1.0/css/bootstrap-toggle.min.css" rel="stylesheet"/> 
-        <script src="https://gitcdn.github.io/bootstrap-toggle/2.1.0/js/bootstrap-toggle.min.js">//</script>        
+        </style>
+        <link href="https://gitcdn.github.io/bootstrap-toggle/2.1.0/css/bootstrap-toggle.min.css" rel="stylesheet"/>
+        <script src="https://gitcdn.github.io/bootstrap-toggle/2.1.0/js/bootstrap-toggle.min.js">//</script>
     </head>
     <body>
         <div id="rewardStoreContent">
             <div class="tabbable">
                 <ul class="nav nav-tabs tab-bricky">
                     <li><a data-toggle="tab" href="#products">Products</a></li>
-                    <li><a data-toggle="tab" href="#general">General</a></li>                    
+                    <li><a data-toggle="tab" href="#general">General</a></li>
                 </ul>
                 <div class="tab-content">
                     <div id="general" class="tab-pane">
@@ -42,13 +42,25 @@
                                         <div class="col-md-9">
                                             <input type="text" name="name" id="name" value="$page.rewardStore.name" placeholder="" class="required form-control"  required="true" />
                                         </div>
-                                    </div>                                          
+                                    </div>
+
                                     <div class="form-group">
                                         <label class="control-label col-md-3" for="title">Title</label>
                                         <div class="col-md-9">
                                             <input type="text" name="title" id="title" value="$page.rewardStore.title" placeholder="" class="required form-control"  required="true" />
                                         </div>
-                                    </div>                                      
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3" for="title">Points bucket</label>
+                                        <div class="col-md-9">
+                                            <a href="/points-buckets/$page.pointsBucket.name" class="btn btn-info">
+                                                <span class="fa fa-trophy"></span>
+                                                $page.pointsBucket.title
+                                            </a>
+                                        </div>
+                                    </div>
+
 
                                     <div class="form-group">
                                         <label class="control-label col-md-3" for="gstRate">GST</label>
@@ -59,7 +71,7 @@
                                             </span>
 
                                         </div>
-                                    </div>                                      
+                                    </div>
 
                                     <div class="form-group">
                                         <label class="control-label col-md-3" for="pointsMultiplier">Points Multiplier</label>
@@ -69,21 +81,21 @@
                                                 <i>Multiply buy price by this to get the points value</i>
                                             </span>
                                         </div>
-                                    </div>                                      
+                                    </div>
 
                                     <div class="form-group">
                                         <label class="control-label col-md-3" for="margin">Your margin</label>
                                         <div class="col-md-9">
                                             <input type="text" name="margin" id="margin" value="$!page.rewardStore.margin" placeholder="0.20 for 20%" class="form-control"  />
                                         </div>
-                                    </div>                                      
+                                    </div>
 
                                     <div class="form-group">
                                         <label class="control-label col-md-3" for="margin2">Client margin</label>
                                         <div class="col-md-9">
                                             <input type="text" name="margin2" id="margin2" value="$!page.rewardStore.margin2" placeholder="0.05 for 5%" class="form-control"  />
                                         </div>
-                                    </div>                                      
+                                    </div>
 
                                     <div class="form-group">
                                         <label class="control-label col-md-3" for="cashDivisor">Cash Divisor</label>
@@ -91,9 +103,9 @@
                                             <input type="text" name="cashDivisor" id="cashDivisor" value="$!page.rewardStore.cashDivisor" placeholder="2, to halve points to get cash equivalent" class="form-control"  />
                                             <span class="help-block">
                                                 <i>Used to calculate an equivalent cash value of points. Points are divided by this value</i>
-                                            </span>                                            
+                                            </span>
                                         </div>
-                                    </div>                                      
+                                    </div>
 
                                     <div class="form-group">
                                         <div class="col-md-offset-3 col-md-9">
@@ -102,7 +114,7 @@
                                                 Save
                                             </button>
                                         </div>
-                                    </div>                                        
+                                    </div>
                                 </form>
 
                             </div>
@@ -120,7 +132,7 @@
                             </a>
 
                             <p class="input-group search input-group-sm">
-                                <input type="text" id="product-query" class="form-control" placeholder="Search for products here" value="" /> 
+                                <input type="text" id="product-query" class="form-control" placeholder="Search for products here" value="" />
                                 <span class="input-group-btn">
                                     <button class="btn btn-sm btn-default" type="button" data-type="clearer" data-target="#product-query">
                                         <i class="fa fa-times"></i>
@@ -137,9 +149,9 @@
                                     <select name="searchOrg" id="search-library" class="form-control input-sm">
                                         <option value="">My library</option>
                                         #foreach($org in $page.parentOrgsWithProducts)
-                                        <option value="$org.id">$org.formattedName</option> 
+                                        <option value="$org.id">$org.formattedName</option>
                                         #end
-                                    </select>                                            
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -153,7 +165,7 @@
                                     <col width="" />
                                     <col width="" />
                                     <col width="15%" />
-                                    <col width="16%" />                                
+                                    <col width="16%" />
                                     <col data-sort="false" width="100px" />
                                     <col width="30px" />
                                 </colgroup>
@@ -163,7 +175,7 @@
                                         <th>Title</th>
                                         <th>Margin</th>
                                         <th>Pts Multiplier</th>
-                                        <th></th>                                    
+                                        <th></th>
                                         <th class="action"></th>
                                         <th></th>
                                     </tr>
@@ -182,24 +194,24 @@
                                         <td>$!p.margin</td>
                                         <td>$!p.multiplier</td>
                                         <td></td>
-                                        <td class="">                                                    
+                                        <td class="">
                                             <input $formatter.ifTrue( $p.inReward, "checked", "" ) class="product-toggle" data-toggle="toggle" data-on="In" data-off="Out" data-onstyle="success" data-offstyle="danger" type="checkbox" value="true" />
                                         </td>
                                         <td>
                                             <a href="$p.productId" class="product-inreward-details">
                                                 <span class="glyphicon glyphicon-cog"></span>
                                             </a>
-                                        </td>                                    
+                                        </td>
                                     </tr>
                                     #end
                                     #end
                                 </tbody>
                             </table>
-                        </div>                        
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>              
+        </div>
 
         <div id="editProductInRewardModal" class="modal fade" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
             <div class="modal-header">

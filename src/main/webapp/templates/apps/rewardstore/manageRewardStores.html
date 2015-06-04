@@ -1,6 +1,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title>$view.title</title> 
+        <title>$view.title</title>
     </head>
     <body>
         <p>
@@ -20,8 +20,10 @@
                         <thead>
                             <tr>
                                 <th>Title</th>
+                                <th>Points bucket</th>
+                                <th>Groups</th>
                                 <th>Website</th>
-
+                                <th>No. products</th>
                                 <th class="action"></th>
                             </tr>
                         </thead>
@@ -29,7 +31,14 @@
                             #foreach($v in $page.children)
                             <tr>
                                 <td><a href="$v.name">$v.title</a></td>
+                                <td><a href="/points-bucket/$v.pointsBucket.name">$v.pointsBucket.title</></td>
+                                <td>
+                                    #foreach($g in $v.selectedGroups)
+                                        #genGroup($g)
+                                    #end
+                                </td>
                                 <td>$v.rewardWebsite.name</td>
+                                <td>$v.numProducts</td>
 
                                 <td class="action">
                                     <div class="btn-group btn-group-sm">
@@ -85,7 +94,26 @@
                 <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Create reward store</button>
             </div>
-        </div>        
+        </div>
+
+        #macro(genGroup $group)
+            #set($gc = "label label-info")
+            #set($gIcon = "")
+            #if( $group.groupType == "P" || !$group.groupType)
+                #set($gc = "label label-success")
+                #set($gIcon = "clip-users")
+            #elseif( $group.groupType == "S" )
+                #set($gc = "label label-info")
+                #set($gIcon = "fa fa-trophy")
+            #elseif( $group.groupType == "M" )
+                #set($gc = "label label-info")
+                #set($gIcon = "fa fa-envelope")
+            #end
+            <div class="$gc" style="margin-right: 2.5px; margin-bottom: 5px; display: inline-block;">
+                <i class="$gIcon"></i>
+                <span class="block-name" title="$group.name">$group.name</span>
+            </div>
+        #end
 
         <script type="text/javascript">
             $(function () {
@@ -123,6 +151,6 @@
             });
 
 
-        </script>            
+        </script>
     </body>
 </html>
