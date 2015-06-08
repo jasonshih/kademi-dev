@@ -7,16 +7,52 @@
     <body class="dashboard">
 
         <div id="dashboard-wrapper" class="row">
-	        <div class="col-md-8">
-		        #portlets("adminDashboardPrimaryAnnounce")
+            <div class="col-md-8">
+                #portlets("adminDashboardPrimaryAnnounce")
                 <div class="row">
                     #portlets("adminDashboardPrimary")
                 </div>
-	        </div>
-	        <div class="col-md-4">
-		        #portlets("adminDashboardSecondary")
-	        </div>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="clip-stack-empty"></i>
+                        History
+                    </div>
+                    <div class="panel-body" id="recentList">
+                        <ul class="list-group">
+
+                        </ul>
+
+                    </div>
+                </div>
+
+                #portlets("adminDashboardSecondary")
+            </div>
         </div>
+        <script type="text/javascript">
+            $(function () {
+                var recent = getRecentItems();
+                if (recent !== null) {
+                    flog("recent", recent);
+                    var list = $("#recentList ul");
+                    for (var i = recent.length-1; i > (recent.length-10) && i > 0; i--) {
+                        flog("i " , i)
+                        var item = recent[i];
+                        flog("item", item);
+                        var li = $("<li class='list-group-item'><a href='" + item.url + "'>xx</a></li>");
+                        list.append(li)
+                        flog("a", li.find("a"), item.url);
+                        li.find("a").attr("href", item.url);
+                        li.find("a").text(item.title);
+                        flog("li", li);
+                    }
+                } else {
+                    flog("no recent list");
+                }
+            });
+        </script>
+
     </body>
 </html>
 

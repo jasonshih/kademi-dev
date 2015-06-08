@@ -388,6 +388,7 @@
         <script type="text/javascript" >
             var themePath = "${page.themePath}";
             $(function () {
+                setRecentItem( window.location.pathname, window.location.pathname );
                 initManageFiles();
                 Dropzone.autoDiscover = false;
                 $(".dropzone").dropzone({
@@ -421,6 +422,7 @@
                         whenComplete: function(response, status, xhr) {
                             flog("done",  response, status, xhr);
                             window.history.pushState("", href, href);
+                            setRecentItem( window.location.pathname, window.location.pathname );
                             var dom = $(response);
                             var pages = $("#pages");
                             flog("update pages", pages);

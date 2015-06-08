@@ -513,3 +513,64 @@ $(window).load(function () {
         $('head link').last().after('<link rel="stylesheet" type="text/css" href="/theme/assets/plugins/jquery-ui/jquery-ui-1.10.3.full.css" />');
     }
 });
+
+
+function showLoginAs(profileId) {
+    var modal = $("#modal-login-as");
+    modal.find("ul").html("<li>Please wait...</li>");
+    modal.modal('show');
+    $.ajax({
+        type: 'GET',
+        url: profileId + "?availWebsites",
+        dataType: "json",
+        success: function (response) {
+            flog("success", response.data);
+            var newList = "";
+            if (response.data.length > 0) {
+                $.each(response.data, function (i, n) {
+                    newList += "<li><a target='_blank' href='" + profileId + "?loginTo=" + n + "'>" + n + "</a></li>";
+                });
+            } else {
+                newList += "<li>The user does not have access to any websites. Check the user's group memberships, and that those groups have been added to the right websites</li>";
+            }
+            modal.find("ul")
+                    .empty()
+                    .html(newList);
+        },
+        error: function (resp) {
+            Msg.error("An error occured loading websites. Please try again");
+        }
+    });
+}
+
+function setRecentItem(title, url) {
+    flog("setRecentItem", title, url);
+    if(typeof(Storage) !== "undefined") {
+        //localStorage.removeItem("recent");
+        var recentList = JSON.parse(localStorage.getItem("recent"));  // an associative array, key is the url
+        if( recentList == null ) {
+            recentList = new Array();
+        } else {
+
+        }
+        flog("recent", recentList);
+        var item = {
+            title: title,
+            url: url
+        };
+        recentList.push( item );
+        localStorage.setItem("recent", JSON.stringify(recentList));
+        flog("recent2", recentList);
+    } else {
+        return;
+    }
+}
+
+function getRecentItems() {
+    if(typeof(Storage) !== "undefined") {
+        var recentList = JSON.parse(localStorage.getItem("recent"));  // an associative array, key is the url
+        return recentList;
+    } else {
+        return null;
+    }
+}

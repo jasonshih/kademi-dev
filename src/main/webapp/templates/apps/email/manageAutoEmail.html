@@ -929,6 +929,7 @@
             var emailEnabled = $formatter.format($page.emailEnabled);
             var smsEnabled = $formatter.format($page.smsEnabled);
                     $(function () {
+                        setRecentItem( document.title, window.location.pathname );
                         initManageAutoEmail();
                         $(".refresh-history").click(function (e) {
                             e.preventDefault();
