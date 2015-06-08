@@ -4,12 +4,15 @@
 <h1><a href="/points-buckets/$reward.name">$reward.title</a></h1>
 <table class="table table-striped">
     <tr>
-        <th>Current</th>
-        <td colspan="3">$rs.balance($page.thisProfile) pts</td>
-    </tr>
-    <tr>
-        <th>Available</th>
-        <td colspan="3">$rs.availableBalance($page.thisProfile) pts</td>
+        <th>Current balance</th>
+        <td colspan="3">
+            #set( $current = $rs.balance($page.thisProfile) )
+            #set( $avail = $rs.availableBalance($page.thisProfile) )
+            $current pts
+            #if( $current != $avail )
+            (available $avail)
+            #end
+        </td>
     </tr>
 </table>
 
@@ -25,31 +28,16 @@
     <tbody>
         #foreach($p in $allPoints.get($reward))
         <tr>
-            <td>$p.numPoints</td>
-            <td>$p.issuedDate</td>
-            <td>$p.reason</td>
+            <td>
+                #if( $p.txType == "C" )
+                <span class="label label-success">+ $p.numPoints</span>
+                #else
+                <span class="label label-warning">- $p.numPoints</span>
+                #end
+            </td>
+            <td>$p.date</td>
+            <td>$p.description</td>
         </tr>
-        #end
-    </tbody>
-</table>
-
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Debits</th>
-            <th>Date</th>
-            <th>Reason</th>
-        </tr>
-    </thead>
-    <tbody>
-        #foreach($p in $allPoints.get($reward))
-        #foreach($d in $p.debits)
-        <tr>
-            <td>$d.numPoints</td>
-            <td>$d.issuedDate</td>
-            <td>$d.reason</td>
-        </tr>
-        #end
         #end
     </tbody>
 </table>

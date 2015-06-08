@@ -93,3 +93,13 @@ function initTextEditor(fileName) {
         fullscreenEditor(false);
     });
 }
+
+function initLoadingOverlay() {
+    if (!findLoadingOverlay()[0]) {
+        $('.main-content').children('.container').prepend('<div class="loading-overlay hide"></div>');
+    }
+}
+
+function findLoadingOverlay() {
+    return $('.main-content').children('.container').find('.loading-overlay');
+}
