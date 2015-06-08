@@ -542,3 +542,35 @@ function showLoginAs(profileId) {
         }
     });
 }
+
+function setRecentItem(title, url) {
+    flog("setRecentItem", title, url);
+    if(typeof(Storage) !== "undefined") {
+        //localStorage.removeItem("recent");
+        var recentList = JSON.parse(localStorage.getItem("recent"));  // an associative array, key is the url
+        if( recentList == null ) {
+            recentList = new Array();
+        } else {
+
+        }
+        flog("recent", recentList);
+        var item = {
+            title: title,
+            url: url
+        };
+        recentList.push( item );
+        localStorage.setItem("recent", JSON.stringify(recentList));
+        flog("recent2", recentList);
+    } else {
+        return;
+    }
+}
+
+function getRecentItems() {
+    if(typeof(Storage) !== "undefined") {
+        var recentList = JSON.parse(localStorage.getItem("recent"));  // an associative array, key is the url
+        return recentList;
+    } else {
+        return null;
+    }
+}
