@@ -1,5 +1,6 @@
 function initProfile() {
-    flog("initProfile");
+    flog("initProfile - profile.js");
+    initProfileLoginAs();
     initOrgSearch();
     initNewMembershipForm();
     $("form").not("#modal-membership form").forms({
@@ -67,5 +68,15 @@ function reloadMemberships() {
         error: function (resp) {
             Msg.error("error: " + resp);
         }
+    });
+}
+
+
+function initProfileLoginAs() {
+    flog("initLoginAs");
+    $("body").on("click", ".btn-login-as", function (e) {
+        e.preventDefault();
+        flog("login as");
+        showLoginAs(""); // on the current page
     });
 }
