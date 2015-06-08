@@ -272,54 +272,49 @@
                 </div> <!-- End groups -->
 
                 <div id="panel_mailserver" class="tab-pane">
-                    <form name="frmDetails" action="." method="post" class="form-horizontal details" role="form">
-                        <div class="alert alert-danger pageMessage">.</div> 
+                    <div class="alert alert-danger pageMessage">.</div> 
 
-                        <h3>Setting up DNS for email</h3>
-                        <p>Spam is a big problem, and most email applications and servers try to prevent it. There are several 
-                            ways for email senders increase the level of trust with email receivers, to increase the number of emails
-                            that get through. The main ones are:
-                        </p>
-                        <h4>SPF</h4>
-                        <p>
-                            Add a line like this to your DNS records:
-                        </p>
-                        <pre class="prettyprint">
+                    <h3>Setting up DNS for email</h3>
+                    <p>Spam is a big problem, and most email applications and servers try to prevent it. There are several 
+                        ways for email senders increase the level of trust with email receivers, to increase the number of emails
+                        that get through. The main ones are:
+                    </p>
+                    <h4>SPF</h4>
+                    <p>
+                        Add a line like this to your DNS records:
+                    </p>
+                    <pre class="prettyprint">mydomain.com. 600 IN TXT "v=spf1 include:_spf.olhub.com ~all"</pre>
 
-mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
-                        </pre>
-
-                        <h4>DKIM</h4>
-                        <p class="">DKIM is a way to increase the number of emails which reach your recipients, by
-                            reducing your spam score. It does this by adding a digital signature to each email signed
-                            signed and verified by your DNS.</p>                        
-                        <p>
-                            To use DKIM you need to generate public and private keys as below ,and add the public key to your DNS, and then insert
-                            your private key below.
-                        </p>
-                        <p>To get a DKIM certificate and <a href="http://docs.kademi.co/howtos/devs/setting-up-dkim.html" target="_blank">setup your domain for DKIM please see here</a></p>
-
-                        <hr/>
-
-                        <div class="form-group"> 
-                            <label for="dkimSelector" class="col-sm-3 control-label">DKIM Selector</label> 
-                            <div class="col-sm-6">
-                                <input type="text" name="dkimSelector" value="$!page.dkimSelector" class="form-control" />
-                            </div>
+                    <h4>DKIM</h4>
+                    <p class="">DKIM is a way to increase the number of emails which reach your recipients, by
+                        reducing your spam score. It does this by adding a digital signature to each email signed
+                        signed and verified by your DNS.</p>                        
+                    <p>
+                        To use DKIM you need to generate public and private keys as below ,and add the public key to your DNS, and then insert
+                        your private key below.
+                    </p>
+                    <p>To get a DKIM certificate and <a href="http://docs.kademi.co/howtos/devs/setting-up-dkim.html" target="_blank">setup your domain for DKIM please see here</a></p>
+                    #set($hasDkim = false)
+                    #if($page.dkimPrivateKey && $page.dkimSelector)
+                    #set($hasDkim = true)
+                    <p><strong>DNS Host name (TXT record name):</strong></p>
+                    <pre class="prettyprint">${page.dkimSelector}._domainKey</pre>
+                    <p><strong>TXT record value:</strong></p>
+                    <pre class="prettyprint">$page.dKimDnsTxt</pre>
+                    #end
+                    <div class='row'>
+                        <div class="col-sm-6">
+                            #if($hasDkim)
+                            #set($btnText = "Generate new DKIM key")
+                            #else
+                            #set($btnText = "Generate DKIM key")
+                            #end
+                            <a href="#" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-gen-dkim">$btnText</a>
+                            #if($hasDkim)
+                            <a href="#" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-send-test">Send Test Email</a>
+                            #end
                         </div>
-                        <div class="form-group">
-                            <label for="dkimPrivateKey" class="col-sm-3 control-label">DKIM Private key</label>
-                            <div class="col-sm-6">
-                                <textarea name="dkimPrivateKey" class="form-control">$!page.dkimPrivateKey</textarea>
-                            </div>
-                        </div>
-                        <div class="form-group"> 
-                            <div class="col-sm-offset-3 col-sm-6">
-                                <button type="submit" class="btn btn-sm btn-success">Save Changes</button>
-                                <a href="#" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-send-test">Send Test Email</a>
-                            </div>
-                        </div>
-                    </form>
+                    </div>
                 </div>
 
                 <div id="panel_sslserver" class="tab-pane">
@@ -819,6 +814,31 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
             </div>
         </div><!-- /.modal -->
 
+        <div id="modal-gen-dkim" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                <h4 class="modal-title">Generate DKIM Key</h4>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="." class="form-horizontal">
+                    <div class="alert alert-danger">
+                        If you are currently authenticating email from this domain, generating a new TXT record might cause email's to fail until the DNS record has been updated.
+                    </div>
+                    <input type="hidden" name="genDkim" value="true"/>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="dkimsel">DKIM Selector</label>
+                        <div class="col-md-8">
+                            <input type="text" name="dkimsel" value="" placeholder="DomainKey Selector (e.g. key1)" class="form-control" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                <button class="btn btn-sm btn-success" data-type="form-submit" type="button"><i class="fa fa-plus"></i> Generate</button>
+            </div>
+        </div>
+
         <div id="modal-send-test" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
             <div class="modal-header">
                 <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
@@ -906,8 +926,20 @@ mydomain.com. 600 IN TXT "v=spf1 mx a ip4:113.21.225.92 -all"
                     callback: function (resp) {
                         flog("Sent DKIM Test", resp);
                         sendTestDkimModal.modal("hide");
-                        Msg.info("Test Message has been Sent");
+                        Msg.info("DKIM Successfully generated");
                         onTestResponse(resp);
+                    }
+                });
+
+                var genDkimModal = $("#modal-gen-dkim");
+                var genDkimForm = genDkimModal.find(" form");
+
+                genDkimForm.forms({
+                    callback: function (resp) {
+                        flog("done", resp);
+                        genDkimModal.modal('hide');
+                        Msg.success(resp.messages, 6000);
+                        $('#panel_mailserver').reloadFragment();
                     }
                 });
 
