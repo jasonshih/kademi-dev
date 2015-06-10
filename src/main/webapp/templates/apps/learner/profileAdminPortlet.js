@@ -50,8 +50,9 @@ function initAdminProfile() {
 
 	$(document.body).on('click', '.btn-delete-download', function (e) {
 		e.preventDefault();
+		flog(href);
 		var target = $(e.target);
-		var href = target.attr('href');
+		var href = target.closest('a').attr('href');
 		var name = getFileName(href);
 		confirmDelete(href, name, function () {
 			target.closest('div').remove();

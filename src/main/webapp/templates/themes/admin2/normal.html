@@ -45,9 +45,21 @@
         <!-- end: MAIN CSS -->
         <!-- start: CSS REQUIRED FOR THIS PAGE ONLY -->
         <!-- end: CSS REQUIRED FOR THIS PAGE ONLY -->
-        <link rel="shortcut icon" href="favicon.ico" />
 
-
+        <!-- For Chrome for Android: -->
+        <link rel="icon" sizes="192x192" href="/theme/assets/images/favicon/favicon-192.png">
+        <!-- For iPhone 6 Plus with @3× display: -->
+        <link rel="apple-touch-icon-precomposed" sizes="180x180" href="/theme/assets/images/favicon/favicon-180.png">
+        <!-- For iPad with @2× display running iOS ≥ 7: -->
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="/theme/assets/images/favicon/favicon-152.png">
+        <!-- For iPad with @2× display running iOS ≤ 6: -->
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/theme/assets/images/favicon/favicon-144.png">
+        <!-- For iPhone with @2× display running iOS ≥ 7: -->
+        <link rel="apple-touch-icon-precomposed" sizes="120x120" href="/theme/assets/images/favicon/favicon-120.png">
+        <!-- For the iPad mini and the first- and second-generation iPad (@1× display) on iOS ≤ 6: -->
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/theme/assets/images/favicon/favicon-72.png">
+        <!-- For non-Retina iPhone, iPod Touch, and Android 2.1+ devices: -->
+        <link rel="apple-touch-icon-precomposed" href="/theme/assets/images/favicon/favicon-57.png"><!-- 57×57 -->
         <!-- start: MAIN JAVASCRIPTS -->
         <!--[if lt IE 9]>
         <script src="assets/plugins/respond.min.js">//</script>
@@ -285,21 +297,35 @@
         #if( $request.hostHeader.contains(":") )
         <i>Dev mode</i>
         #else
-<!--Start of Zopim Live Chat Script-->
-<script type="text/javascript">
-var ua = navigator.userAgent.toLowerCase(),
-platform = navigator.platform.toLowerCase();
-platformName = ua.match(/ip(?:ad|od|hone)/) ? 'ios' : (ua.match(/(?:webos|android)/) || platform.match(/mac|win|linux/) || ['other'])[0],
-isMobile = /ios|android|webos/.test(platformName);
-if (!isMobile) {
-window.$zopim||(function(d,s){var z=$zopim=function(c){z._.push(c)},$=z.s=
-d.createElement(s),e=d.getElementsByTagName(s)[0];z.set=function(o){z.set.
-_.push(o)};z._=[];z.set._=[];$.async=!0;$.setAttribute('charset','utf-8');
-$.src='//v2.zopim.com/?2nKbRpXKUmYJXwm07KHHlZLNXFdpF9PE';z.t=+new Date;$.
-type='text/javascript';e.parentNode.insertBefore($,e)})(document,'script');
-}
-</script>
-<!--End of Zopim Live Chat Script-->
+        <!--Start of Zopim Live Chat Script-->
+        <script type="text/javascript">
+            var ua = navigator.userAgent.toLowerCase(),
+                    platform = navigator.platform.toLowerCase();
+            platformName = ua.match(/ip(?:ad|od|hone)/) ? 'ios' : (ua.match(/(?:webos|android)/) || platform.match(/mac|win|linux/) || ['other'])[0],
+                    isMobile = /ios|android|webos/.test(platformName);
+            if (!isMobile) {
+                window.$zopim || (function (d, s) {
+                    var z = $zopim = function (c) {
+                        z._.push(c)
+                    }, $ = z.s =
+                            d.createElement(s), e = d.getElementsByTagName(s)[0];
+                    z.set = function (o) {
+                        z.set.
+                                _.push(o)
+                    };
+                    z._ = [];
+                    z.set._ = [];
+                    $.async = !0;
+                    $.setAttribute('charset', 'utf-8');
+                    $.src = '//v2.zopim.com/?2nKbRpXKUmYJXwm07KHHlZLNXFdpF9PE';
+                    z.t = +new Date;
+                    $.
+                            type = 'text/javascript';
+                    e.parentNode.insertBefore($, e)
+                })(document, 'script');
+            }
+        </script>
+        <!--End of Zopim Live Chat Script-->
         #end
     </body>
     <!-- end: BODY -->
