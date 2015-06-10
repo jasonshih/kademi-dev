@@ -390,23 +390,6 @@
             $(function () {
                 setRecentItem( window.location.pathname, window.location.pathname );
                 initManageFiles();
-                Dropzone.autoDiscover = false;
-                $(".dropzone").dropzone({
-                    paramName: "file", // The name that will be used to transfer the file
-                    maxFilesize: 500.0, // MB
-                    addRemoveLinks: true,
-                    parallelUploads: 1,
-                    uploadMultiple: false
-                });
-                flog("dropz", Dropzone);
-                var dz = Dropzone.forElement("#uploadFileDropzone");
-                dz.on("success", function (file) {
-                    flog("added file", file);
-                    reloadFileList();
-                });
-                dz.on("error", function (file, errorMessage) {
-                    Msg.error("An error occured uploading: " + file.name + " because: " + errorMessage);
-                });
                 initPjax();
             });
             function initPjax() {
@@ -422,6 +405,10 @@
                         whenComplete: function(response, status, xhr) {
                             flog("done",  response, status, xhr);
                             window.history.pushState("", href, href);
+                            var formAction = window.location.pathname + "_DAV/PUT?overwrite=true";
+                            $("#modal-upload form").attr("action", formAction);
+                            var dz = Dropzone.forElement("#uploadFileDropzone");
+                            dz.options.url = formAction;
                             setRecentItem( window.location.pathname, window.location.pathname );
                             var dom = $(response);
                             var pages = $("#pages");

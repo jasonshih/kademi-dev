@@ -6,6 +6,27 @@ function initManageFiles() {
     initAddPageModal();
     initCRUDFiles();
     initCopyCutPaste();
+    initUpload();
+}
+
+function initUpload() {
+    Dropzone.autoDiscover = false;
+    $(".dropzone").dropzone({
+        paramName: "file", // The name that will be used to transfer the file
+        maxFilesize: 500.0, // MB
+        addRemoveLinks: true,
+        parallelUploads: 1,
+        uploadMultiple: false
+    });
+    var dz = Dropzone.forElement("#uploadFileDropzone");
+    flog("dropz", Dropzone, dz, dz.options.url);
+    dz.on("success", function (file) {
+        flog("added file", file);
+        reloadFileList();
+    });
+    dz.on("error", function (file, errorMessage) {
+        Msg.error("An error occured uploading: " + file.name + " because: " + errorMessage);
+    });
 }
 
 function initCopyCutPaste() {
@@ -105,6 +126,7 @@ function initCRUDFiles() {
 }
 
 function reloadFileList() {
+    flog("reloadFileList");
     $('#table-files-body').reloadFragment({
         whenComplete: function () {
             //initPseudoClasses();
