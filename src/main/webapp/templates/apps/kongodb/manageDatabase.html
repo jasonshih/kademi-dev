@@ -49,7 +49,6 @@
                                     <option value="">[NONE]</option>
                                     #foreach($website in $page.find("/websites").children.ofType.website)
                                     $formatter.option($website.name, $website.name, $page.websiteName)
-                                    <option value="$website.name">$website.name</option>
                                     #end
                                 </select>
                             </div>

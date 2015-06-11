@@ -4,7 +4,7 @@
     </head>
     <body class="">
 
-        <form name="frmDetails" action="." method="post" class="form-horizontal record-form">
+        <form name="frmDetails" action="$page.href" method="post" class="form-horizontal record-form">
             <div class="pull-right page-action">
                 <button class="btn btn-sm btn-success" type="submit">
                     <span class="fa fa-save"></span>
@@ -39,10 +39,9 @@
 
         <script type="text/javascript">
             $(function () {
-                $("#addRecordForm").forms({
+                $(".record-form").forms({
                     callback: function () {
                         Msg.info("Done");
-                        $("#records-body").reloadFragment();
                     }
                 });
             });
