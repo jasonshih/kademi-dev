@@ -224,7 +224,11 @@
                             #set($href = "#")
                             #set($href = $rootItem.href)
                             <a href="$href">
-                                <i class="fuse-icon $rootItem.id"></i>
+                                #if($rootItem.cssClass)
+                                    <i class="fuse-icon-fa $rootItem.id $rootItem.cssClass"></i>
+                                #else
+                                    <i class="fuse-icon $rootItem.id"></i>
+                                #end
                                 <span class="title">$rootItem.text</span>
 
                                 #if( !$rootItem.items.isEmpty() )
@@ -241,6 +245,9 @@
                                 #foreach($sectionItem in $subItems)
                                 <li class="$formatter.ifTrue( $sectionItem.active, "active open", "" )">
                                     <a href="$sectionItem.href">
+                                        #if($sectionItem.cssClass)
+                                            <i class="fuse-icon-fa $sectionItem.id $sectionItem.cssClass"></i>
+                                        #end
                                         <span class="title">$sectionItem.text</span>
 
                                         #if( $sectionItem.active )

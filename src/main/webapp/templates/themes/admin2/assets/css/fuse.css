@@ -767,6 +767,15 @@ ul.main-navigation-menu li > ul.sub-menu > li {
     color: #555;
 }
 
+.fuse-icon-fa {
+    font-style: normal;
+    font-variant: normal;
+    font-weight: normal;
+    line-height: 1;
+    text-transform: none;
+    color: #555;
+}
+
 .fuse-icon.menuWebsiteManager,
 .fuse-icon.menuReporting {
     font-family: FontAwesome;
