@@ -297,8 +297,11 @@ CKEDITOR.plugins.add('fuse-image',
                             if (hash !== "" && typeof (useHash) !== "undefined" && useHash === "true") {
                                 flog("Using Hash=", hash);
                                 img.setAttribute("src", baseHashUrl + hash);
+                                img.setAttribute('data-cke-saved-src', baseHashUrl + hash);
                             } else {
+                                flog("Using returnUrl", returnUrl);
                                 img.setAttribute("src", returnUrl);
+                                img.setAttribute('data-cke-saved-src', returnUrl);
                             }
                             var imageEditor = $(".imageEditor");
                             var previewImage = imageEditor.find("#imageContainer img");
