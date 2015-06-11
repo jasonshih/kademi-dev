@@ -36,16 +36,17 @@
                 if (recent !== null) {
                     flog("recent", recent);
                     var list = $("#recentList ul");
+                    var seen = new Array();
                     for (var i = recent.length-1; i > (recent.length-10) && i > 0; i--) {
-                        flog("i " , i)
                         var item = recent[i];
-                        flog("item", item);
-                        var li = $("<li class='list-group-item'><a href='" + item.url + "'>xx</a></li>");
-                        list.append(li)
-                        flog("a", li.find("a"), item.url);
-                        li.find("a").attr("href", item.url);
-                        li.find("a").text(item.title);
-                        flog("li", li);
+                        var pos = $.inArray(item.url, seen);
+                        if( pos < 0 ) {
+                            seen.push(item.url);
+                            var li = $("<li class='list-group-item'><a href='" + item.url + "'>xx</a></li>");
+                            list.append(li)
+                            li.find("a").attr("href", item.url);
+                            li.find("a").text(item.title);
+                        }
                     }
                 } else {
                     flog("no recent list");
