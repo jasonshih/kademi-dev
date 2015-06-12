@@ -38,7 +38,7 @@
                         <div class="form-group">
                             <label class="control-label col-md-3" for="template">Template</label>
                             <div class="col-md-8">
-                                <input type="text" name="template" id="template" value="$!page.template" placeholder="" class="required form-control"  required="true" />
+                                <input type="text" name="templat    e" id="template" value="$!page.template" placeholder="" class="required form-control"  required="true" />
                             </div>
                         </div>
 
@@ -51,6 +51,21 @@
                                     $formatter.option($website.name, $website.name, $page.websiteName)
                                     #end
                                 </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="allowRest">Allow REST</label>
+                            <div class="col-md-8">
+                                $formatter.checkbox("allowRest", "allowRest", $page.allowRest)
+                                <br/>Allow REST operations, ie retrieving and setting content as JSON
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="allowRest">Readonly</label>
+                            <div class="col-md-8">
+                                $formatter.checkbox("readonly", "readonly", $page.readonly)
                             </div>
                         </div>
                     </div>
