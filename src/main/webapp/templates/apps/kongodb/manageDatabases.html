@@ -1,4 +1,3 @@
-
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>KongoDB: Manage Databases</title>
@@ -45,6 +44,8 @@
                 <col width="" />
                 <col width="" />
                 <col width="" />
+                <col width="" />
+                <col width="180px" />
             </colgroup>
             <thead>
                 <tr>
@@ -52,6 +53,7 @@
                     <th >Title</th>
                     <th>Template</th>
                     <th >No. records</th>
+                    <th class="text-center">Actions</th>
                 </tr>
             </thead>
             <tbody id="databases-body">
@@ -66,6 +68,18 @@
                     <td>$db.title</td>
                     <td>$!db.template</td>
                     <td>$db.numRecords</td>
+                    <td class="action text-center">
+                        <div class="btn-group btn-group-sm">
+                            <a href="$db.name" class="btn btn-sm btn-info"><i class="fa fa-cog"></i> Manage</a>
+                            <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <ul role="menu" class="dropdown-menu pull-right">
+                                <li><a class="delete-db" data-title="$db.title" href="$db.name"><i class="glyphicon glyphicon-remove"></i> Delete</a></li>
+                            </ul>
+                        </div>
+                    </td>
                 </tr>
                 #end
                 #end
@@ -80,12 +94,24 @@
                 var form = modal.find(" form");
 
                 form.forms({
-                    callback: function(resp) {
+                    callback: function (resp) {
                         flog("done", resp);
                         modal.modal('hide');
                         Msg.success(form.find('[name=newName]').val() + ' is created!');
                         $('#databases-body').reloadFragment();
                     }
+                });
+
+                $('body').on('click', '.delete-db', function (e) {
+                    e.preventDefault();
+                    var btn = $(this);
+                    var tr = btn.closest('tr');
+                    var href = btn.attr('href');
+                    var title = btn.data('title');
+                    confirmDelete(href, title, function () {
+                        Msg.success("Successfully deleted " + title);
+                        tr.remove();
+                    });
                 });
             });
         </script>
