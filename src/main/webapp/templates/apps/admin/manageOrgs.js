@@ -260,9 +260,9 @@ function doSearch() {
     });
 }
 
-function doSearchAndSort() {
+function doSearchAndSort(direction) {
     flog("doSearch", $("#searchOrgType"));
-    var newUrl = window.location.pathname + "?q=" + $("#org-query").val() + "&searchOrgType=" + $("#searchOrgType").val()+ "&sortid=true";
+    var newUrl = window.location.pathname + "?q=" + $("#org-query").val() + "&searchOrgType=" + $("#searchOrgType").val()+ "&sortid=" + direction;
     $.ajax({
         type: 'GET',
         url: newUrl,
@@ -296,8 +296,11 @@ function initRemoveOrgs() {
 }
 
 function initSortById() {
-	$(".btn-orgs-sort-all").click(function (e) {
-		doSearchAndSort();
+	$(".btn-orgs-sort-all-asc").click(function (e) {
+		doSearchAndSort('asc');
+	});
+	$(".btn-orgs-sort-all-desc").click(function (e) {
+		doSearchAndSort('desc');
 	});
 }
 
