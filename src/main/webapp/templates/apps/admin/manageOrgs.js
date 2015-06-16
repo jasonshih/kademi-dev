@@ -215,7 +215,8 @@
         initCRUDOrg();
         initSearchOrg();
         initRemoveOrgs();
-        initEditPath()();
+        initSortById();
+        initEditPath();
     };
 
 })(jQuery, window, document);
@@ -259,6 +260,26 @@ function doSearch() {
     });
 }
 
+function doSearchAndSort(direction) {
+    flog("doSearch", $("#searchOrgType"));
+    var newUrl = window.location.pathname + "?q=" + $("#org-query").val() + "&searchOrgType=" + $("#searchOrgType").val()+ "&sortid=" + direction;
+    $.ajax({
+        type: 'GET',
+        url: newUrl,
+        success: function (data) {
+            flog("success", data);
+            window.history.pushState("", document.title, newUrl);
+            var $fragment = $(data).find("#searchResults");
+            flog("replace", $("#se"));
+            flog("frag", $fragment);
+            $("#searchResults").replaceWith($fragment);
+        },
+        error: function (resp) {
+            Msg.error("err");
+        }
+    });
+}
+
 function initRemoveOrgs() {
     $(".btn-orgs-remove").click(function (e) {
         var node = $(e.target);
@@ -272,6 +293,15 @@ function initRemoveOrgs() {
             }
         }
     });
+}
+
+function initSortById() {
+	$(".btn-orgs-sort-all-asc").click(function (e) {
+		doSearchAndSort('asc');
+	});
+	$(".btn-orgs-sort-all-desc").click(function (e) {
+		doSearchAndSort('desc');
+	});
 }
 
 function doRemoveOrgs(checkBoxes) {

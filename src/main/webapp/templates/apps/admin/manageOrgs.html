@@ -50,6 +50,8 @@
                             </button>
                             <ul class="dropdown-menu" role="menu">
                                 <li><a href="#" class="btn-orgs-assign-orgtype">Assign to org type</a></li>
+                                <li><a href="#" class="btn-orgs-sort-all-asc">Sort all by ID Asc</a></li>
+                                <li><a href="#" class="btn-orgs-sort-all-desc">Sort all by ID Desc</a></li>
                             </ul>
                         </div>
                         <p class="input-group search-user input-group-sm">
@@ -91,6 +93,7 @@
                                     <th>Path</th>
                                     <th>Phone</th>
                                     <th>Address</th>
+                                    <th>Members</th>
                                     <th class="action">Action</th>
                                     <th><input type="checkbox" name="toRemoveId" class="chk-all" /></th>
                                 </tr>
@@ -103,6 +106,7 @@
                                     <td>$org.parentPath</td>
                                     <td>$!org.phone</td>
                                     <td>$!org.address</td>
+                                    <td>$!org.memberCount</td>
                                     <td class="action">                                        
                                         <div class="btn-group btn-group-sm">
                                             <button type="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown">
