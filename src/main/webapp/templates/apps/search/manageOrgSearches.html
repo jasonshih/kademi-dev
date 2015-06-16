@@ -1,0 +1,77 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Manage Search</title>
+        <script type="text/javascript" src="search.js">//</script>
+    </head>
+    <body>
+        <div class="clearfix">
+
+            <h2>Indexes</h2>
+            <div class="manage-search">
+                <form method="post" action="$page.href" class="form-horizontal reindexForm" role="form">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Index name</th>
+                                <th>Type</th>
+                                <th>No. items</th>
+                                <th style="width:120px"><input class="check-all" type="checkbox"/> Select All</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            #foreach($index in $page.appIndexers)
+                            <tr>
+                                <td>
+                                    <a href="$index.id">$index.id</a>
+                                </td>
+                                <td>
+                                    $index.getLocalIndexName($page.organisation)
+                                </td>
+                                <td>$index.indexItemType</td>
+                                <td>$page.numItems( $index )</td>
+                                <td><input type="checkbox" class="idx-check" name="indexerIds" value="$index.id"/></td>
+                            </tr>
+                            #end
+                        </tbody>
+                    </table>
+                    <p class="pageMessage" style="display: none"></p>
+                    <br/>
+                    <button class="btn btn-warning btn-lg btn-reindex btn-block"><i class="fa fa-arrow-circle-right"></i> <span class="lbl-reindex-action">Re-index selected indexes</span></button>
+                </form>
+            </div>
+
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $(".reindexForm").forms({
+                        confirmMessage: "Processing, Please Wait...",
+                        callback: function (resp) {
+                            flog("The contents of current repository have been re-indexed", resp);
+                            // Should be disabled the Re-index button while processing, just enable after re-index thread was started
+                            //$(".btn-reindex").attr({"disabled": "disabled"});
+
+                        }
+                    });
+
+                    $('.check-all').change(function () {
+                        var checked = this.checked;
+                        $(this.closest('form')).find('.idx-check').each(function () {
+                            this.checked = checked;
+                            if (this.checked) {
+                                $(this.closest('tr')).addClass('well');
+                            } else {
+                                $(this.closest('tr')).removeClass('well');
+                            }
+                        });
+                    });
+                    $('.idx-check').change(function () {
+                        if (this.checked) {
+                            $(this.closest('tr')).addClass('well');
+                        } else {
+                            $(this.closest('tr')).removeClass('well');
+                        }
+                    });
+                });
+            </script>
+    </body>
+</html>

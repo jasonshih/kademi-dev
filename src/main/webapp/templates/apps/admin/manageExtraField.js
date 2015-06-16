@@ -83,6 +83,7 @@ function openExtraFieldModal(key, value) {
     if (key && value) {
         var txtName = $('#extra-field-name');
         var chkRequire = $('#extra-field-required');
+        var chkIndexed = $('#extra-field-indexed');
         var txtText = $('#extra-field-text');
         var optionWrapper = $('#options-wrapper');
         var orgSel = $('#org-sel');
@@ -92,12 +93,14 @@ function openExtraFieldModal(key, value) {
         var values = getValue(value, key);
 
         chkRequire.prop('checked', values.require);
+        flog("indexed", chkIndexed, values.indexed);
+        chkIndexed.prop('checked', values.indexed);
     	orgSel.prop('checked', values.orgSel);
         txtText.val(values.text);
 
         var optionString = '';
-        if (values.options) {      
-            var options = values.options.split(',');      
+        if (values.options) {
+            var options = values.options.split(',');
             $.each(options, function (i, item) {
                 optionString += renderOption(item);
             });
@@ -135,6 +138,7 @@ function renderOption(optionText) {
 function initExtraFieldModal() {
     var modal = $('#modal-extra-field');
     var chkRequire = $('#extra-field-required');
+    var chkIndex = $('#extra-field-indexed');
     var txtText = $('#extra-field-text');
     var optionWrapper = $('#options-wrapper');
     var btnAddOption = modal.find('.btn-add-option');
@@ -185,6 +189,10 @@ function initExtraFieldModal() {
                 valueString += 'required;';
             }
 
+            if( chkIndex.is(":checked")) {
+                valueString += 'indexed;';
+            }
+
             // Options
             if (orgSel.prop('checked')) {
             	valueString += 'orgs();';
@@ -227,10 +235,11 @@ function initExtraFieldModal() {
     });
 }
 
-function getValue(value, key) {    
+function getValue(value, key) {
     var values = value.split(';');
     var isRequired = false;
     var isOrgSel = false;
+    var isIndexed = false;
 
     var text = key;
     var options = "";
@@ -243,6 +252,8 @@ function getValue(value, key) {
             options = options.replace(/^options\((.*)\)$/, '$1');
         } else if (s === "required") {
             isRequired = true;
+        } else if (s === "indexed") {
+            isIndexed = true;
         } else if (s.startsWith("orgs(")) {
         	isOrgSel = true;
         }
@@ -252,7 +263,8 @@ function getValue(value, key) {
         require: isRequired,
         text: text,
         options: options,
-        orgSel: isOrgSel
+        orgSel: isOrgSel,
+        indexed: isIndexed
     };
 }
 
@@ -260,6 +272,7 @@ function buildExtraField(key, value) {
     var string = '';
     var values = getValue(value, key);
     var required = values.require ? '<i class="clip-notification-2 text-danger"></i>' : '';
+    var indexed = values.indexed ? '<i class="clip-notification-2 text-danger"></i>' : '';
     var text = values.text;
     var options = values.options.replace(/,/g, ', ');
 
@@ -274,6 +287,8 @@ function buildExtraField(key, value) {
 
     // Required
     string += '<td>' + required + '</td>';
+
+    string += '<td>' + indexed + '</td>';
 
     // Options
     string += '<td>' + options + '</td>';

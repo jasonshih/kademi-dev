@@ -161,6 +161,7 @@
                             <th>Name</th>
                             <th>Text</th>
                             <th>Required</th>
+                            <th>Indexed</th>
                             <th>Options</th>
                             <th class="action">Action</th>
                         </tr>
@@ -172,6 +173,7 @@
                                 <input type="hidden" value="$field.key" name="key" />
                                 <input type="hidden" value="$field.value" name="value" />
                             </td>
+                            <td></td>
                             <td></td>
                             <td></td>
                             <td></td>
@@ -207,6 +209,12 @@
                         <label for="org-sel" class="control-label col-md-4">Organisation selection:</label>
                         <div class="col-md-8">
                             <input id="org-sel" type="checkbox" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="org-sel" class="control-label col-md-4">Search index</label>
+                        <div class="col-md-8">
+                            <input id="extra-field-indexed" type="checkbox" />
                         </div>
                     </div>
                     <div class="form-group">
