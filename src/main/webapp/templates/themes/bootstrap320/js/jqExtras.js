@@ -3,6 +3,8 @@
  *  after jquery
  */
 (function($) {
+    $.ajaxSetup({ cache: false }); // fix caching problem with some corp proxy servers
+
     $.getScriptOnce = function(url, successhandler) {
         if ($.inArray(url, $.getScriptOnce.loaded) === -1) {
             $.getScriptOnce.loaded.push(url);
@@ -310,7 +312,7 @@ function promptRename(sourceHref, callback) {
 }
 
 function move(sourceHref, destHref, callback) {
-    //    ajaxLoadingOn();    
+    //    ajaxLoadingOn();
     var url = "_DAV/MOVE";
     if (sourceHref) {
         var s = sourceHref;
