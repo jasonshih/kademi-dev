@@ -366,6 +366,7 @@
 
         #macro( showFacetBucket $b $indent )
         #set($termParamName = "term-" + $b.aggName)
+        #if( $b.count > 0 )
         <tr class="agg-row $formatter.paramSelected($termParamName, $b.termName, 'success')">
             <td>
                 <div class="col-md-offset-$indent">
@@ -374,6 +375,8 @@
             </td>
             <td align="right">$b.count</td>
         </tr>
+        #end
+        
         #foreach($sub in $b.buckets)
         #showFacetBucket($sub, $formatter.addNum($indent, 1) )
         #end
