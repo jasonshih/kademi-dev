@@ -390,6 +390,7 @@
                         url: $(e.target).closest("a").attr("href"),
                         whenComplete : function(response) {
                             flog("complete", response);
+                            Msg.info("Refreshed", 1500)
                             var inner = $(response).find("#aggregationsContainer > *");
                             $("#aggregationsContainer").html(inner);
                         }
