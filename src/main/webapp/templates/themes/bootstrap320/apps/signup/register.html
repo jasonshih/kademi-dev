@@ -2,7 +2,7 @@
     <head>
         <title>$view.title</title>
     </head>
-    <body class="regoPage">        
+    <body class="regoPage">
         <div class="container">
             <h1>Registration</h1>
 
@@ -42,29 +42,29 @@
                             <div class="controls col-md-9">
                                 $field.html
                             </div>
-                        </div>                            
+                        </div>
                         #end
 
                         #if( $page.hasOrgs )
-                        #if( $groupRegoPage.regoOrgType )
-                        #set($orgType = $groupRegoPage.regoOrgType)
-                        #else
-                        #set($orgType = "Organisation")                                        
-                        #end
+                            #if( $groupRegoPage.regoOrgType )
+                                #set($orgType = $groupRegoPage.regoOrgType)
+                            #else
+                                #set($orgType = "Organisation")
+                            #end
 
-                        <div class="control-group form-group">
-                            <label class="control-label col-md-3" for="orgName">$orgType</label>
-                            <div class="controls col-md-9">
-                                <input type="hidden" name="orgId" id="orgId" />
-                                <input class="required form-control" type="text" name="orgName" id="orgName" autocomplete="off" placeholder="Choose your $orgType" />
+                            <div class="control-group form-group">
+                                <label class="control-label col-md-3" for="orgName">$orgType</label>
+                                <div class="controls col-md-9">
+                                    <input type="hidden" name="orgId" id="orgId" />
+                                    <input class="required form-control" type="text" name="orgName" id="orgName" autocomplete="off" placeholder="Choose your $orgType" />
+                                </div>
                             </div>
-                        </div>
                         #end
 
                         #if( $page.hasOptins() )
                         <div class="control-group form-group">
                             <div class="controls col-md-9 col-md-offset-3">
-                                #foreach($optin in $page.optins)                                    
+                                #foreach($optin in $page.optins)
                                 <label for="optins_${optin.optinGroup.name}">
                                     <input type="checkbox" name="optins" value="$optin.optinGroup.name" id="optins_${optin.optinGroup.name}" />
                                     $optin.message
@@ -72,7 +72,7 @@
                                 #end
 
                             </div>
-                        </div>  
+                        </div>
                         #end
 
                         <div class="control-group form-group">
@@ -80,7 +80,7 @@
                                 <button type="submit" class="btn btn-primary">Register</button>
                                 <a href="/index.html" class="btn">Cancel</a>
                             </div>
-                        </div>                            
+                        </div>
                     </fieldset>
                 </form>
 
@@ -88,7 +88,7 @@
 
                 <br class="clearfix" />
 
-            </div> 
+            </div>
         </div>
 
 
@@ -106,17 +106,17 @@
                     </div>
                     <div class="modal-footer">
                         <a href="/" type="button" class="btn btn-primary">Close</a>
-                    </div>                    
+                    </div>
                 </div>
             </div>
-        </div>        
+        </div>
 
-        <script type="text/javascript" src="/theme/apps/signup/register.js">//</script>        
+        <script type="text/javascript" src="/theme/apps/signup/register.js">//</script>
         <script type="text/javascript">
             $(document).ready(function() {
                 initRegister("/dashboard");
             });
-        </script>        
-    </body>    
-</html> 
+        </script>
+    </body>
+</html>
 
