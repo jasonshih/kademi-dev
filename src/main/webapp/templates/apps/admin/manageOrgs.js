@@ -217,9 +217,47 @@
         initRemoveOrgs();
         initSortById();
         initEditPath();
+        initSort();
     };
 
 })(jQuery, window, document);
+
+
+function initSort() {
+	flog('initSort()');
+	$('.sort-field').on('click', function (e) {
+        e.preventDefault();
+        var a = $(e.target);
+        var search = window.location.search;
+    	flog(search);
+        var field = a.attr('id');
+        var dir = 'asc';
+        if (field == getSearchValue(search, 'sortfield')) {
+        	if (getSearchValue(search, 'sortdir') == 'asc') {
+        		dir = 'desc';
+        	} else {
+        		dir = 'asc'
+        	}
+        }
+        doSearchAndSort(field, dir);
+    });
+}
+
+
+function getSearchValue(search, key) {
+	if (search.charAt(0) == '?') {
+		search = search.substr(1);
+	}
+	parts = search.split('&');
+	for (var i = 0; i < parts.length; i++) {
+		entry = parts[i].split('=');
+		if (key == entry[0]) {
+			return entry[1];
+		}
+	}
+	return '';
+}
+
 
 function initSearchOrg() {
     $("#org-query").on({
@@ -260,9 +298,8 @@ function doSearch() {
     });
 }
 
-function doSearchAndSort(direction) {
-    flog("doSearch", $("#searchOrgType"));
-    var newUrl = window.location.pathname + "?q=" + $("#org-query").val() + "&searchOrgType=" + $("#searchOrgType").val()+ "&sortid=" + direction;
+function doSearchAndSort(field, direction) {
+    var newUrl = window.location.pathname + "?q=" + $("#org-query").val() + "&searchOrgType=" + $("#searchOrgType").val() + "&sortfield=" + field + "&sortdir=" + direction;
     $.ajax({
         type: 'GET',
         url: newUrl,
@@ -297,10 +334,10 @@ function initRemoveOrgs() {
 
 function initSortById() {
 	$(".btn-orgs-sort-all-asc").click(function (e) {
-		doSearchAndSort('asc');
+		doSearchAndSort('id', 'asc');
 	});
 	$(".btn-orgs-sort-all-desc").click(function (e) {
-		doSearchAndSort('desc');
+		doSearchAndSort('id', 'desc');
 	});
 }
 
