@@ -552,7 +552,7 @@ function replaceImagesWithJWPlayer(images) {
         } else {
             log("replaceImagesWithJWPlayer: Using data-video-src", src);
         }
-        src += "/alt-hls.m3u8";
+//        src += "/alt-hls.m3u8";
         log("jwplayer item", img, i, src);
         buildJWPlayer(img, i + 10, src, posterUrl);
     });
