@@ -295,7 +295,7 @@ function replaceImagesWithJWPlayer(images) {
         } else {
             flog("replaceImagesWithJWPlayer: Using data-video-src", src);
         }
-//        src += "/alt-hls.m3u8";
+        src += "/alt-hls.m3u8";
         flog("jwplayer item", img, i, src);
         buildJWPlayer(img, i + 10, src, posterUrl);
     });
