@@ -34,12 +34,23 @@ function initForm() {
 
     form.forms({
         callback: function (resp) {
-            flog(resp);
+            if (resp.status) {
+                Msg.success("Successfully saved.");
+                setUrl();
+            } else {
+                Msg.warning("Oh No! Something went wrong!")
+            }
         },
         error: function () {
             flog("Error");
         }
     });
+}
+
+function setUrl(){
+    var appName = $("#appName");
+    
+    history.pushState(null, null, "/manageApps/" + appName.val() + '/');
 }
 
 function initUpload() {
