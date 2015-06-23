@@ -71,7 +71,7 @@
 
         <!-- Fuse specific scripts. We might be able to remove some of these after admin2 integration -->
         <script type="text/javascript" src="/static/js/common.js">//</script>
-        <script type="text/javascript" src="/static/jquery.forms/1.0.8//jquery.forms-1.0.8.js">//</script>
+        <script type="text/javascript" src="/static/jquery.forms/1.0.8/jquery.forms-1.0.8.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.user.js">//</script>
         <script type="text/javascript" src="/static/js/file.js" bottom="true">//</script>
         <script type="text/javascript" src="/static/js/toolbars.js" bottom="true">//</script>
@@ -149,6 +149,11 @@
 
                     <!-- start: TOP NAVIGATION MENU -->
                     <ul class="nav navbar-right">
+                        <li class="">
+                            <div style="padding: 5px 10px; display: none" class="ajaxLoader">
+                                <img src="/static/common/ajax-loader.gif" class="image" />
+                            </div>
+                        </li>
                         <li class="dropdown fuse-header-item">
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                 Logged into: $page.organisation.formattedName
@@ -275,7 +280,7 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <ol class="breadcrumb">
-                                #if( $page.parent )
+                                #if( $page.parent.title )
                                 <li>
                                     <a href="$page.parent.href">
                                         $page.parent.title
