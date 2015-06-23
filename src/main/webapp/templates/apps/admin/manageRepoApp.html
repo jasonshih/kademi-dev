@@ -1,0 +1,169 @@
+<html>
+    <head>
+        <title>Manage Repo App</title>
+        <link rel="stylesheet" href="/theme/assets/plugins/dropzone/downloads/css/dropzone.css"/>
+        <style>
+            .gallery-img{
+                display: block;
+                //width:400px;
+                height:150px;
+                width: auto;
+                height: auto;
+            }
+
+            .gallery-img img{
+                max-width:400px;
+                max-height:150px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="tabbable">
+            <ul id="myTab" class="nav nav-tabs tab-bricky">
+                <li class="active">
+                    <a href="#details" data-toggle="tab"><i class="fa fa-home"></i> Details</a>
+                </li>
+                <li class="">
+                    <a href="#reviews" data-toggle="tab"><i class="fa fa-star-o"></i> Reviews</a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane active" id="details">
+                    <form action="." method="POST" enctype="multipart/form-data" class="form-horizontal">
+                        <input type="hidden" name="details" value="details"/>
+                        <div class="form-group">
+                            <div class="errorHandler alert alert-danger no-display pageMessage">.</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="name">Name</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control required simpleChars" id="name" name="name" value="$page.name" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="title">Title</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control required" name="title" value="$page.title" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="price">App Provider</label>
+                            <div class="col-sm-9">
+                                $formatter.checkbox("appProvider", "appProvider", $page.app.appProvider)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="price">Theme Provider</label>
+                            <div class="col-sm-9">
+                                $formatter.checkbox("themeProvider", "themeProvider", $page.app.themeProvider)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="published">Published</label>
+                            <div class="col-sm-9">
+                                <div class="checkbox">
+                                    <label>
+                                        $formatter.checkbox("published", "published", $page.app.published)
+                                        If ticked users will be able to purchased this app.
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group for-published" #if(!$page.app.published) style="display: none;" #end>
+                            <label class="col-sm-2 control-label" for="price">Price</label>
+                            <div class="col-sm-9">
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">$</span>
+                                    <input type="number" min="0" class="form-control numeric" name="price" value="$page.app.price" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group for-published" #if(!$page.app.published) style="display: none;" #end>
+                            <label class="col-sm-2 control-label" for="brief">Short Brief</label>
+                            <div class="col-sm-9">
+                                <textarea id="brief" name="brief" class="form-control limited" maxLength="200" cols="100" rows="5">$!page.app.brief</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group for-published" #if(!$page.app.published) style="display: none;" #end>
+                            <label class="col-sm-2 control-label" for="description">Description</label>
+                            <div class="col-sm-9">
+                                <textarea id="description" name="description" class="htmleditor toolbar-Lite" cols="100" rows="5">$!page.app.description</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group for-published" #if(!$page.app.published) style="display: none;" #end>
+                            <label class="col-sm-2 control-label">Screenshots</label>
+                            <div class="col-sm-9" id="screenshot-div">
+                                <div style="margin-bottom: 5px;">
+                                    <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-image-upload">
+                                        <i class="fa fa-plus"></i> Add screenshots
+                                    </button>
+                                </div>
+                                <div class="panel panel-default" id="screenshots-panel">
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div id="screenshots">
+                                                #foreach($i in $page.app.screenshots)
+                                                <div class="col-md-3 col-sm-4 gallery-img">
+                                                    <div class="wrap-image" data-href="$i.name">
+                                                        <a class="group1 cboxElement" href="$i.name" title="$i.name">
+                                                            <img src="$i.name" alt="" class="img-responsive">
+                                                        </a>
+                                                        <div class="tools tools-bottom">
+                                                            <a href="$i.name" data-title="$i.name" class="delete-screenshot pull-right" title="Delete $i.name">
+                                                                <i class="fa fa-trash"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                #end
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-9">
+                                <button type="submit" class="btn btn-sm btn-primary">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="tab-pane" id="reviews">
+                    Reviews
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-image-upload" class="modal modal-md fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                <h4 class="modal-title">Upload images</h4>
+            </div>
+            <div class="modal-body">
+                <form action="$page.href" class="dropzone dropzone-fullwidth" id="uploadImageDropzone">
+                    <input type="hidden" name="uploadScreenshots" value="true"/>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+            </div>
+        </div>
+
+        <script src="/theme/assets/plugins/jquery-inputlimiter/jquery.inputlimiter.1.3.1.min.js">//
+        </script>
+        <script src="/theme/assets/plugins/dropzone/downloads/dropzone.min.js">//
+        </script>
+        <script src="/theme/assets/js/pages-gallery.js">//
+        </script>
+        <script type="text/javascript" src="/theme/apps/admin/manageRepoApp.js">//
+        </script>
+        <script>
+            $(function () {
+                initManageRepoApp();
+            });
+        </script>
+    </body>
+</html>

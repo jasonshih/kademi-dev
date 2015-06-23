@@ -249,10 +249,12 @@ function getSearchValue(search, key) {
 		search = search.substr(1);
 	}
 	parts = search.split('&');
-	for (var i = 0; i < parts.length; i++) {
-		entry = parts[i].split('=');
-		if (key == entry[0]) {
-			return entry[1];
+	if (parts) {
+		for (var i = 0; i < parts.length; i++) {
+			entry = parts[i].split('=');
+			if (entry && key == entry[0]) {
+				return entry[1];
+			}
 		}
 	}
 	return '';
@@ -342,6 +344,9 @@ function initSortById() {
 }
 
 function doRemoveOrgs(checkBoxes) {
+	var search = window.location.search;
+	var field = getSearchValue(search, 'sortfield');
+	var dir = getSearchValue(search, 'sortdir');
     $.ajax({
         type: 'POST',
         data: checkBoxes,
@@ -350,7 +355,7 @@ function doRemoveOrgs(checkBoxes) {
         success: function (data) {
             flog("success", data);
             if (data.status) {
-                doSearch();
+            	doSearchAndSort(field, dir);
                 Msg.success("Removed organisations ok");
             } else {
                 Msg.error("There was a problem removing organisations. Please try again and contact the administrator if you still have problems");
