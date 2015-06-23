@@ -993,3 +993,11 @@ body .form-control::-moz-placeholder {
     opacity: 1;
 }
 body .form-control::-webkit-input-placeholder { color:#CCC; }
+
+.ajaxLoader {
+    display: none;
+}
+
+body.ajax-loading .ajaxLoader {
+    display: block;
+}

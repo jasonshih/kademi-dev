@@ -1,0 +1,62 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Manage Search</title>
+        <script type="text/javascript" src="search.js">//</script>
+    </head>
+    <body>
+
+        <h1>$page.name</h1>
+
+        <div>
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="#records" aria-controls="records" role="tab" data-toggle="tab">Records</a></li>
+                <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Mappings</a></li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="records">
+                    <input type="text" name="q" />
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <td>Item</td>
+                                <td>Fields</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            #foreach($hit in $page.records.hits.hits)
+                            <tr>
+                                <td>$hit.id</td>
+                                <td>$hit.type</td>
+                                <td>
+                                    $hit.sourceAsString
+                                </td>
+                            </tr>
+                            #end
+                        </tbody>
+                    </table>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="profile">
+                    #set( $mappings = $page.mappings )
+                    #foreach( $typeName in $mappings.keySet() )
+                    <h2>$typeName</h2>
+                    <pre class="prettyprint">$mappings.get($typeName)</pre>
+                    #end
+                </div>
+            </div>
+
+        </div>
+
+
+
+
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+
+            });
+        </script>
+    </body>
+</html>

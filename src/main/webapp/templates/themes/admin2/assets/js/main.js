@@ -583,6 +583,15 @@ var Main = function () {
             runSaveSetting();
             runCustomSetting();
             runClearSetting();
+
+            $( document ).ajaxStart(function() {
+                flog("ajax start");
+                $("body").addClass("ajax-loading");
+            });
+            $( document ).ajaxStop(function() {
+                flog("ajax stop");
+                $("body").removeClass("ajax-loading");
+            });
         }
     };
 }();

@@ -1,0 +1,59 @@
+<html>
+    <head>
+        <title>Martket Place</title>
+        <style>
+            .app {
+                color: #555555;
+                cursor: pointer;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="tabbable">
+            <ul id="myTab" class="nav nav-tabs tab-bricky">
+                <li class="active">
+                    <a href="#browse" data-toggle="tab"><i class="fa fa-cart-plus"></i> Browse</a>
+                </li>
+                <li class="">
+                    <a href="#purchased" data-toggle="tab"><i class="fa fa-download"></i> Purchased</a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane active" id="browse">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12">
+                                #foreach($i in [0..25])
+                                <div class="col-md-2">
+                                    <div class="thumbnail app">
+                                        <img src="/theme/apps/marketplace/no_preview.png" alt="">
+                                        <div class="caption">
+                                            <h4 class="pull-right">$24.99</h4>
+                                            <h4>First Product</h4>
+                                            <p>See more snippets like this online store item at Bootsnipp - http://bootsnipp.com.</p>
+                                        </div>
+                                        <div class="ratings">
+                                            <p class="pull-right">15 reviews</p>
+                                            <p class="star-rating">
+                                                <span class="fa fa-star"></span>
+                                                <span class="fa fa-star"></span>
+                                                <span class="fa fa-star-half-o"></span>
+                                                <span class="fa fa-star-o"></span>
+                                                <span class="fa fa-star-o"></span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                #end
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane" id="purchased">
+
+                    </div>
+                </div>
+            </div>
+    </body>
+</html>
