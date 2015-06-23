@@ -20,22 +20,31 @@
                 </div>
             </div>
 
+            #set( $products = $page.searchProducts( $request.params.q ) )
+            #if( $products.hits.hits.size() == 1 )
+            Displaying 1 product
+            #elseif(  $products.hits.hits.size() > 1 )
+            Displaying $products.hits.hits.size() products
+            #end
+
+
             <hr/>
 
-            #set( $products = $page.searchProducts( $request.params.q ) )
-            <div id='products-list'>
-                #if( $products.isEmpty() )
+            <div id='products-list' class="container">
+                #if( $products.hits.hits.size() == 0 )
                 <b class=''>No products were found matching the critieria</b>
                 #else
                 <div class='row'>
-                    #foreach($p in $products )
+
+
+                    #foreach($p in $products.hits.hits )
                     #set($bg = "")
-                    #if( $p.primaryImageId )
-                    #set($bg = "url(/products/$p.productCode/$p.primaryImageId)")
+                    #if( $p.fields.primaryImageId.value )
+                    #set($bg = "url($p.fields.product.value/$p.fields.primaryImageId.value)")
                     #end
-                    <a class="col-md-3 product-tile" href="$p.productId" style="background-image: $bg">
+                    <a class="col-md-3 product-tile" href="$p.fields.product.value" style="background-image: $bg">
                         <div class="product-tile-inner">
-                            <span>$p.title</span>
+                            <span>$p.fields.title.value</span>
                         </div>
                     </a>
                     #end

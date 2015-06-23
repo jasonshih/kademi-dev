@@ -6,19 +6,19 @@
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
         <script type="text/javascript" src="manageOrgs.js" bottom="true">//</script>
         <style>
-.search-user, .search-user-group {
-	float: left;
-}
+            .search-user, .search-user-group {
+                float: left;
+            }
 
-.search-user {
-	width: 300px;
-	margin-right: 10px;
-}
+            .search-user {
+                width: 300px;
+                margin-right: 10px;
+            }
 
-.search-user-group {
-	width: 200px;
-}
-            
+            .search-user-group {
+                width: 200px;
+            }
+
         </style>
     </head>
     <body class="manage-business-unit">
@@ -67,8 +67,9 @@
                             <div class="col-sm-2">
                                 <select name="searchOrgType" id="searchOrgType" class="form-control input-sm">
                                     <option value="">&nbsp;</option>
+                                    <option value="NONE">[No type]</option>
                                     #foreach($orgType in $rootFolder.orgTypes)
-                                    <option value="$orgType.name">$orgType.displayName</option> 
+                                    <option value="$orgType.name">$orgType.displayName</option>
                                     #end
                                 </select>
                             </div>
@@ -78,16 +79,18 @@
                     <div class="table-responsive">
                         <table id="search-results" class="table table-striped table-hover">
                             <colgroup>
+                                <col style="width: 150px" />
                                 <col />
                                 <col style="width: 10%" />
                                 <col style="width: 10%" />
                                 <col style="width: 10%" />
                                 <col style="width: 15%" />
                                 <col style="width: 120px" />
-                                <col style="width: 50px" />
+                                <col style="width: 120px" />
                             </colgroup>
                             <thead>
                                 <tr>
+                                    <th><a class="sort-field" id="orgId" href="#">ID</a></th>
                                     <th><a class="sort-field" id="title" href="#">Name</a></th>
                                     <th><a class="sort-field" id="orgType" href="#">Type</a></th>
                                     <th><a class="sort-field" id="parentOrgLinks" href="#">Path</a></th>
@@ -101,16 +104,20 @@
                             <tbody id="searchResults" class="search-results">
                                 #foreach($org in $page.searchResults)
                                 <tr>
+                                    <td>$org.id</td>
                                     <td>$formatter.htmlEncode($org.title)</td>
                                     <td>$org.orgTypeName</td>
                                     <td>$org.parentPath</td>
                                     <td>$!org.phone</td>
                                     <td>$!org.address</td>
                                     <td>$!org.memberCount</td>
-                                    <td class="action">                                        
+                                    <td class="action">
                                         <div class="btn-group btn-group-sm">
-                                            <button type="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown">
-                                                <i class="clip-settings"></i>
+                                            <a href="$p.id" class="btn btn-sm btn-primary btn-sm">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                            <button class="btn btn-sm btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+                                                <span class="caret"></span>
                                             </button>
                                             <ul class="dropdown-menu pull-right" role="menu">
                                                 <li><a class="btn-edit-org" role="button" href="${org.href}edit">Edit details</a></li>
@@ -119,7 +126,7 @@
                                                 <li><a href="${org.href}organisations">Manage child orgs</a></li>
                                                 <li><a href="${org.href}manageRepos">File manager</a></li>
                                                 #if( $org.org.adminDomain )
-                                                <li class="divider"></li>  
+                                                <li class="divider"></li>
                                                 <li><a href="$page.href?gotoDomain=${org.org.adminDomain}">Admin dashboard</a></li>
                                                 #end
                                                 <li class="divider"></li>
@@ -127,7 +134,7 @@
                                             </ul>
                                         </div>
                                     </td>
-                                    <td><input type="checkbox" name="toRemoveId" value="$org.actualId" /></td>
+                                    <td><input type="checkbox" name="toRemoveId" value="$org.actualId" tabindex="$foreach.count" /></td>
                                 </tr>
                                 #end
                             </tbody>
@@ -165,7 +172,7 @@
                                 <label>
                                     <input type="checkbox" name="insertMode" value="true" /> Allow inserts
                                 </label>
-                            </div>                            
+                            </div>
                             <button type="submit" class="btn btn-warning">Upload Organisations CSV</button>
                         </form>
                     </div><br />
@@ -306,7 +313,7 @@
                 </div>
             </div>
             <script type="text/javascript">
-                $(function() {
+                $(function () {
                     initManageOrgs();
                 });
             </script>
