@@ -77,41 +77,7 @@
                 </div>
             </div><!-- /.modal -->
         </div>
-
-        <!-- Settings Modal -->
-        <div class="modal fade" id="AppSettingsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">App Settings</h4>
-            </div>
-            <div class="modal-body">
-                <form class="form-horizontal" method="POST" action="$page.href">
-                    <input type="hidden" id="appSettingsID" name="appSettingsID" value=""/>
-                    <div class="form-group">
-                        <label for="appTitle" class="col-sm-3 control-label">Title</label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control required" required="true" id="appTitle" name="appTitle" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="providesTheme" class="col-sm-3 control-label">Theme Provider</label>
-                        <div class="col-sm-8">
-                            <input type="checkbox" class="form-control" value="true" id="providesTheme" name="providesTheme" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="providesApp" class="col-sm-3 control-label">App Provider</label>
-                        <div class="col-sm-8">
-                            <input type="checkbox" class="form-control" value="true" id="providesApp" name="providesApp" />
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Save</button>
-            </div>
-        </div>        
+   
         <!-- End Settings Modal -->
 
         <div class="table-responsive">
@@ -156,14 +122,14 @@
                         </td>
                         <td class="text-center action">
                             <div class="btn-group btn-group-sm">
-                                <a href="/repositories/$app.appName#files-tab" class="btn btn-sm btn-info btn-sm">
-                                    <i class="fa fa-edit"></i> Edit
+                                <a href="$app.name" class="btn btn-sm btn-info btn-sm">
+                                    <i class="fa fa-cog"></i> Manage
                                 </a>
                                 <button class="btn btn-sm btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu pull-right" role="menu">
-                                    <li><a href="$app.id" class="btn-edit-app" title="Edit"><i class="fa fa-cog"></i> Settings</a></li>
+                                    <li><a href="$app.id" class="btn-edit-app" title="Edit"><i class="fa fa-edit"></i> Edit Files</a></li>
                                     <li class="divider"></li>
                                     <li><a href="$app.appName" class="btn-delete-app" title="Delete"><i class="fa fa-times"></i> Delete</a></li>
                                 </ul>

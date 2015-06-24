@@ -1,6 +1,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title>Manage Databse</title>
+        <title>Manage Database</title>
+        <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
+        <script type="text/javascript" src="manageDatabase.js" bottom="true">//</script>
     </head>
     <body class="">
 
@@ -88,6 +90,11 @@
                     <div id="records" class="tab-pane">
 
                         <div class="pull-right">
+                            <a type="button" class="btn btn-sm btn-success" href="#csvModal" data-toggle="modal">
+                                <span class="glyphicon glyphicon-plus"></span>
+                                Import CSV
+                            </a>
+
                             <a type="button" class="btn btn-sm btn-success" href="#addModal" data-toggle="modal">
                                 <span class="glyphicon glyphicon-plus"></span>
                                 Add record
@@ -239,7 +246,45 @@
             </div>
         </div>
 
-
+		<div id="csvModal" class="modal fade level-modal" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Import records from CSV</h4>
+            </div>
+            <div class="modal-body">
+                    <p>Instructions for uploading JSON records from CSV data</p>
+                    <ol>
+                        <li>The first column must have the header, &quot;name&quot;.</li>
+                        <li>The second column must have the header, &quot;docType&quot;.</li>
+                        <li>All data are treated as strings.</li>
+                        <li>Escape double quotes ( &quot; ) with a second double quote ( &quot;&quot; )</li>
+                        <li>The backslash or reverse solidus is ignored.</li>
+                        <li>Records with the same name will be updated with the most recent entry.</li>
+                    </ol>
+                <div class="upload">
+                    <div class="btn-upload" id='do-upload-csv'></div>
+                </div>
+                <br/>
+                <div class="upload-results" id="do-upload-csv">
+                    <p>
+                        <strong>No. uploaded:</strong> <span class="badge badge-success num-updated">-</span>
+                        <strong>Invalid rows:</strong> <span class="badge badge-danger num-errors">-</span>
+                    </p>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover table-condensed">
+                            <tbody>
+                                <tr>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+            </div>
+		</div>
 
 
         <script type="text/javascript">
@@ -263,9 +308,9 @@
                     e.preventDefault();
                     var checkBoxes = $('.deleteDoc:checked');
                     if (checkBoxes.length == 0) {
-                        Msg.error("Please select the documents you want to remove by clicking the checkboxs to the right");
+                        Msg.error("Please select the records you want to remove by clicking the checkboxs to the right");
                     } else {
-                        if (confirm("Are you sure you want to remove " + checkBoxes.length + " documents?")) {
+                        if (confirm("Are you sure you want to remove " + checkBoxes.length + " records?")) {
                             doRemoveDocs(checkBoxes);
                         }
                     }
@@ -303,13 +348,13 @@
                             flog("success", data);
                             if (data.status) {
                                 $("#records-body").reloadFragment();
-                                Msg.success("Removed users ok");
+                                Msg.success("Removed records ok");
                             } else {
-                                Msg.error("There was a problem removing users. Please try again and contact the administrator if you still have problems");
+                                Msg.error("There was a problem removing records. Please try again and contact the administrator if you still have problems");
                             }
                         },
                         error: function (resp) {
-                            Msg.error("An error occurred removing users. You might not have permission to do this");
+                            Msg.error("An error occurred removing records. You might not have permission to do this");
                         }
                     });
                 }
