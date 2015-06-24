@@ -1,0 +1,23 @@
+#foreach($entry in $salesRecordsMap.entrySet())
+<h3>$entry.key</h3>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>From</th>
+            <th>To</th>
+            <th>Rewards Issued Date</th>
+            <th>Amount</th>
+        </tr>
+    </thead>
+	<tbody>
+    	#foreach($record in $entry.value)
+		<tr>
+    		<td>$formatter.formatDate($record.periodFrom, $page.organisation.timezone)</td>
+    		<td>$formatter.formatDate($record.periodTo, $page.organisation.timezone)</td>
+    		<td>$formatter.formatDate($record.rewardsIssuedDate, $page.organisation.timezone)</td>
+    		<td>$record.amount</td>
+		</tr>
+		#end
+	</tbody>
+</table>
+#end
