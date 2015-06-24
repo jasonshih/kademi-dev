@@ -5,6 +5,47 @@
     </head>
     <body>
         <div>
+            <div class="clearfix">
+                #set($currentBranch = $page.closest("branch"))
+                #if( $currentBranch )
+                <div class="btn-group publishing pull-right">
+
+                    <a class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+                        <b>Editing version:</b>
+                        $currentBranch.name
+                        <span class="caret"></span>
+                    </a>
+                    <ul role="menu" class="dropdown-menu list branches">
+                        #foreach($b in $page.closest("branch").parent.children.ofType.branch)
+                        <li role="presentation" class="list-item">
+                            <a href="${b.href}" class="branch noclear">
+                                $b.name
+                            </a>
+                        </li>
+                        #end
+                    </ul>
+                </div>
+                #end
+
+                <div class="dropdown pull-left">
+                    <a class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+                        #if( $page.closest("repository") )
+                        <b>Manage repository indexes: </b> $page.closest("repository").name
+                        #else
+                        Managing root indexes
+                        #end
+                        <span class="caret"></span>
+                    </a>
+                    <ul role="menu" class="dropdown-menu list">
+                        <li class="list-item"><a href="/manageSearch">Manage organisation indexes</a></li>
+                        #foreach($w in $page.find("/websites").children)
+                        <li class="list-item"><a href="${w.current.href}manageSearch">$w.name</a></li>
+                        #end
+                    </ul>
+                </div>
+            </div>
+
+            <hr/>
 
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
@@ -13,76 +54,77 @@
             </ul>
 
             <!-- Tab panes -->
-            <div class="tab-content">
-                <div role="tabpanel" class="tab-pane active" id="home">
-                    <h2>App Indexers</h2>
-                    <div class="manage-search">
-                        <form method="post" action="$page.href" class="form-horizontal reindexForm" role="form">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Index name</th>
-                                        <th>Type</th>
-                                        <th>No. items</th>
-                                        <th style="width:120px"><input class="check-all" type="checkbox"/> Select All</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    #foreach($index in $page.appIndexers)
-                                    <tr>
-                                        <td>
-                                            <a href="$index.id">$index.id</a>
-                                        </td>
-                                        <td>
-                                            $page.localIndexName($index)
-                                        </td>
-                                        <td>$index.indexItemType</td>
-                                        <td>$!page.numItems( $index )</td>
-                                        <td><input type="checkbox" class="idx-check" name="indexerIds" value="$index.id"/></td>
-                                    </tr>
-                                    #end
-                                </tbody>
-                            </table>
-                            <p class="pageMessage" style="display: none"></p>
-                            <br/>
-                            <button class="btn btn-warning btn-lg btn-reindex btn-block"><i class="fa fa-arrow-circle-right"></i> <span class="lbl-reindex-action">Re-index selected indexes</span></button>
-                        </form>
+            <div id="searchInfo">
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="home">
+                        <h2>App Indexers</h2>
+                        <div class="manage-search">
+                            <form method="post" action="$page.href" class="form-horizontal reindexForm" role="form">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Index name</th>
+                                            <th>Type</th>
+                                            <th>No. items</th>
+                                            <th style="width:120px"><input class="check-all" type="checkbox"/> Select All</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        #foreach($index in $page.appIndexers)
+                                        <tr>
+                                            <td>
+                                                $index.id
+                                            </td>
+                                            <td>
+                                                $page.localIndexName($index)
+                                            </td>
+                                            <td>$index.indexItemType</td>
+                                            <td>$!page.numItems( $index )</td>
+                                            <td><input type="checkbox" class="idx-check" name="indexerIds" value="$index.id"/></td>
+                                        </tr>
+                                        #end
+                                    </tbody>
+                                </table>
+                                <p class="pageMessage" style="display: none"></p>
+                                <br/>
+                                <button class="btn btn-warning btn-lg btn-reindex btn-block"><i class="fa fa-arrow-circle-right"></i> <span class="lbl-reindex-action">Re-index selected indexes</span></button>
+                            </form>
+                        </div>
                     </div>
-                </div>
-                <div role="tabpanel" class="tab-pane" id="profile">
-                    <h2>Elastic Indexes</h2>
-                    <div class="manage-search">
-                        <form method="post" action="$page.href" class="form-horizontal reindexForm" role="form">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Index name</th>
-                                        <th>No. items</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    #foreach($entry in $page.mapOfIndexers.entrySet())
-                                    <tr>
-                                        <td>
-                                            <a href="$entry.key">$entry.key</a>
-                                        </td>
-                                        <td>
-                                            #foreach($i in $entry.value)
-                                            $i.id ,
-                                            #end
-                                        </td>
-                                        <td>$!page.numItems( $entry.key )</td>
-                                    </tr>
-                                    #end
-                                </tbody>
-                            </table>
-                        </form>
+                    <div role="tabpanel" class="tab-pane" id="profile">
+                        <h2>Elastic Indexes</h2>
+                        <div class="manage-search">
+                            <form method="post" action="$page.href" class="form-horizontal reindexForm" role="form">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Index name</th>
+                                            <th>No. items</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        #foreach($entry in $page.mapOfIndexers.entrySet())
+                                        <tr>
+                                            <td>
+                                                <a href="$entry.key">$entry.key</a>
+                                            </td>
+                                            <td>
+                                                #foreach($i in $entry.value)
+                                                $i.id ,
+                                                #end
+                                            </td>
+                                            <td>$!page.numItems( $entry.key )</td>
+                                        </tr>
+                                        #end
+                                    </tbody>
+                                </table>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-
         </div>
 
 
@@ -94,13 +136,18 @@
         <script type="text/javascript">
             $(document).ready(function () {
                 $(".reindexForm").forms({
-                    confirmMessage: "Processing, Please Wait...",
                     callback: function (resp) {
+                        Msg.success("Completed reindexing");
                         flog("The contents of current repository have been re-indexed", resp);
                         // Should be disabled the Re-index button while processing, just enable after re-index thread was started
                         //$(".btn-reindex").attr({"disabled": "disabled"});
-
+                        $("#searchInfo").reloadFragment();
+                    },
+                    validate: function () {
+                        Msg.info("Beginning processing...");
+                        return true;
                     }
+
                 });
 
                 $('.check-all').change(function () {
