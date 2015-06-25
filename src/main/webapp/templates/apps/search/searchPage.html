@@ -50,12 +50,10 @@
                                     <span class="label label-info">$tag</span>
                                     #end
                                 </div>
-                                <h3><a href="$hit.path">$hit.title</a></h3>
-                                #else
-                                <h3>
-                                    <a href="${page.managePath( $hit.branch )}$hit.path/..">$hit.title</a>
-                                </h3>
                                 #end
+                                <h3>
+                                    <a href="$hit.path">$hit.title</a>
+                                </h3>
                                 <p class="text-success">$hit.path</p>
                                 <p>
                                     #foreach( $match in $hit.matches)
