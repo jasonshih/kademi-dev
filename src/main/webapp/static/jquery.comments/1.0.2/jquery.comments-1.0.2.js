@@ -137,7 +137,7 @@
                 var c = $.parseJSON(evt.data);
                 flog("onMessage", c);
                 var dt = new Date(c.date);
-                config.renderCommentFn(c.user, dt, c.comment, c.id);
+                config.renderCommentFn(c.user, dt, c.comment, c.id, c);
             };
             flog("done initWebsockets");
         } catch (e) {
