@@ -6,6 +6,11 @@
             <th>From</th>
             <th>To</th>
             <th>Amount</th>
+            #if ($usersSalesSeries.get($entry.key).fieldset.pairsOrdered)
+            #foreach ($field in $usersSalesSeries.get($entry.key).fieldset.pairsOrdered)
+            <th>$field.name</th>
+            #end
+            #end
         </tr>
     </thead>
 	<tbody>
@@ -14,6 +19,11 @@
     		<td>$formatter.formatDate($record.periodFrom, $page.organisation.timezone)</td>
     		<td>$formatter.formatDate($record.periodTo, $page.organisation.timezone)</td>
     		<td>$record.amount</td>
+            #if ($usersSalesSeries.get($entry.key).fieldset.pairsOrdered)
+	            #foreach ($field in $usersSalesSeries.get($entry.key).fieldset.pairsOrdered)
+		    		<td>$!record.fields.get($field.name)</td>
+	            #end
+            #end
 		</tr>
 		#end
 	</tbody>
