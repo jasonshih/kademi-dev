@@ -425,6 +425,8 @@
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
         <script type="text/javascript">
             $(function () {
+                var pageName = getFileName(window.location.pathname);
+                setRecentItem( document.title + " (" + pageName + ")", window.location.pathname );
                 var kpiName = "$page.kpi.name";
                 $(".timeago").timeago();
                 $(".timer-units li").click(function (e) {
