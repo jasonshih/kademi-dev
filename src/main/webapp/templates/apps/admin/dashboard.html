@@ -2,7 +2,17 @@
     <head>
         <title>$view.title</title>
         <script type="text/javascript" src="/templates/apps/reporting/reports.js">//</script>
-
+        <style>
+            #recentList ul {
+                margin: 0;
+                padding: 0;
+                list-style: none;
+            }
+            #recentList ul li {
+                padding: 10px 15px;
+                border-bottom: solid lightgrey 1px;
+            }
+        </style>
     </head>
     <body class="dashboard">
 
@@ -19,8 +29,8 @@
                         <i class="clip-stack-empty"></i>
                         History
                     </div>
-                    <div class="panel-body" id="recentList">
-                        <ul class="list-group">
+                    <div class="" id="recentList">
+                        <ul class="list" style="">
 
                         </ul>
 
@@ -42,7 +52,7 @@
                         var pos = $.inArray(item.url, seen);
                         if( pos < 0 ) {
                             seen.push(item.url);
-                            var li = $("<li class='list-group-item'><a href='" + item.url + "'>xx</a></li>");
+                            var li = $("<li class=''><a href='" + item.url + "'>xx</a></li>");
                             list.append(li)
                             li.find("a").attr("href", item.url);
                             li.find("a").text(item.title);
