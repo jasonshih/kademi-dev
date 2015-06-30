@@ -1,115 +1,13 @@
-<head>
-    <title>Dashboard</title>
-    <link rel='template' href='/theme/apps/bluefin/bluefin-base.html' /></head>
-</head>
-<body>
-    #set($projects = $page.find("/jsondb/bluefin-projects") )
-    #set($searchResults = $page.attributes.searchResults)
-
-    <div class="col-sm-9 right">
-        <div class="row">
-            <div class="col-sm-12 skill_tags">
-                <div class="alert alert-info alert-dismissible" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><img src="/theme/img/close.png" alt="" /></button>
-                    Hard skills
-                </div>
-                <div class="alert alert-info alert-dismissible" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><img src="/theme/img/close.png" alt="" /></button>
-                    Hard skills
-                </div>
-                <div class="alert alert-info alert-dismissible" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><img src="/theme/img/close.png" alt="" /></button>
-                    Hard skills
-                </div>
-                <div class="alert alert-info alert-dismissible" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><img src="/theme/img/close.png" alt="" /></button>
-                    Hard skills
-                </div>
-                <div class="alert alert-info alert-dismissible" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><img src="/theme/img/close.png" alt="" /></button>
-                    Hard skills
-                </div>
-            </div>
-        </div><!--end skill_tags-->
-        <div class="row people">
-            <div class="col-md-6">
-                <!-- TODO: Integrate with the dashboard alerts app -->
-                <div class="alert alert-success label-info">
-                    <p>We've just added 10 new profiles to your account. Contact Jane on 0423 456 for more info on this. </p>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><img src="/theme/img/close2.png" alt="" /></button>
-                </div>
-            </div>
-            #set($cands = $searchResults.hits.hits)
-
-            #foreach($cand in $cands)
-            #set($c = $projects.child($cand.id).jsonObject )
-            <div class="col-md-6">
-                <div class="media">
-                    <div class="media-left">
-                        <a href="/candidates/$cand.id/">
-                            <img class="media-object" src="/theme/img/man.png" alt="">
-                        </a>
-                    </div>
-                    <div class="media-body">
-                        <h2 class="media-heading">$cand.fields.firstName.value $cand.fields.surName.value</h2>
-                        <h3>$cand.fields.currentTitle.value $cand.fields.currentCompany.value</h3>
-                        <h4>
-                            <!-- TODO: not sure what field/fields this should come from -->
-                            Has bonorum nominati cu, ignota concludaturque cu eam. Case vocent audire mei ut. Verterem honestatis et...
-                        </h4>
-                    </div>
-                    <div class="media-right">
-                        <div class="dropdown">
-                            <button class="btn btn-info label-info dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-                                <span class="glyphicon glyphicon-chevron-down"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                <li role="presentation"><a role="menuitem" tabindex="-1" href="/candidates/$cand.name">Add to shortlist</a></li>
-                                <li role="presentation"><a role="menuitem" tabindex="-1" href="/candidates/$cand.name">View profile</a></li>
-                                <li role="presentation"><a role="menuitem" tabindex="-1" data-toggle="modal" data-target="#Modal"  href="#">Enquire</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div><!--end each profile-->
-            #end
-
-        </div><!--end people-->
-        #if( $searchResults )
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="right-bottom label-default">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <h1>$searchResults.hits.totalHits</h1>
-                            <p>Candidates identified</p>
-
-                        </div>
-                        <div class="col-md-8">
-                            #foreach( $agg in $searchResults.aggregations)
-                            #if( $agg.name.endsWith("Bar") )
-                            #foreach( $bucket in $agg.buckets)
-                            #if( $bucket.docCount > 0 )
-                            <div class="bottom_progressbar">
-                                <p>$bucket.key</p>
-                                #set($pc = $formatter.toPercent($bucket.docCount, $searchResults.hits.totalHits, false, false) )
-                                <div class="progress">
-                                    <div class="progress-bar label-info" role="progressbar" aria-valuenow="$pc" aria-valuemin="0" aria-valuemax="100" style="width: ${pc}%;">
-                                        ${pc}%
-                                    </div>
-                                </div>
-                            </div>
-                            #end
-                            #end
-                            #end
-                            #end
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        #end
-
-    </div><!--end right-->
-</body>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title></title>
+        <link rel="template" href="theme/plain" />
+    </head>
+    <body>
+        #content
+        <center>
+            <a href="http://$page.closest('website').domainName/profile?$page.model.login"><small>To unsubscribe please login to your profile page</small></a>
+        </center>
+        <img src="http://$page.closest('website').domainName/ack?i=$page.emailItem.id" height="1" width="1" alt=""/>
+    </body>
 </html>
