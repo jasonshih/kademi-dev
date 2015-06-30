@@ -152,7 +152,12 @@
                 flog("initWebsockets", orgId);
                 var b64ContentId = Base64.encode(orgId);
                 try {
-                    wsocket = new WebSocket("ws://" + window.location.host + "/comments/" + window.location.host + "/logging/" + b64ContentId);
+                    var proto = "ws://";
+                    if (window.location.protocol === "https:") {
+                        proto = "wss://";
+                    }
+                    var url = window.location.host + "/comments/" + window.location.host + "/logging/" + b64ContentId;
+                    wsocket = new WebSocket(proto + url);
                     wsocket.onmessage = function (evt) {
                         flog('Received Logs');
                         var c = $.parseJSON(evt.data);
@@ -178,7 +183,7 @@
 
             function appendItems() {
                 appendTimer = null;
-                
+
                 flog("Appending with " + itemsToAppend.length + " logs");
                 $("#logsBody").append(itemsToAppend);
                 $('abbr.timeago').timeago();
