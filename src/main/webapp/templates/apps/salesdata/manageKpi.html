@@ -311,6 +311,7 @@
                                 <col width="" />
                                 <col width="" />
                                 <col width="" />
+                                <col width="" />
                                 <col data-sort="false" width="30px" />
                             </colgroup>
                             <thead>
@@ -318,6 +319,7 @@
                                     <th>Start</th>
                                     <th>End</th>
                                     <th>Processed date</th>
+                                    <th>Rewards issued date</th>
                                     <th><input type="checkbox" name="deletePeriodId" class="chk-all" /></th>
                                 </tr>
                             </thead>
@@ -327,6 +329,13 @@
                                     <td>$period.startDate</td>
                                     <td>$period.endDate</td>
                                     <td>$period.createdDate</td>
+                                    <td>
+                                        #if( $period.rewardsIssuedDate )
+                                        $period.rewardsIssuedDate
+                                        #else
+                                        <span class="label label-danger">Rewards not issued</span>
+                                        #end
+                                    </td>
                                     <td>
                                         <input type="checkbox" class="deletePeriodId" value="$period.id"/>
                                     </td>
