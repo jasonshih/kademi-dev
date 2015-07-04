@@ -18,7 +18,9 @@ function initGroupAdminPortlet() {
         var id = btn.data("id");
         var href = btn.data("href");
         var groupname = btn.data("groupname");
-        removeGroupProgram(groupname, href, id);
+        if( confirm("Are you sure you want to remove the enrolement to " + href + "?") ) {
+            removeGroupProgram(groupname, href, id);
+        }
     });
 
 
