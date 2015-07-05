@@ -15,11 +15,11 @@ function initGroupAdminPortlet() {
     $(document.body).on('click', '.btn-remove-module', function (e) {
         e.preventDefault();
         var btn = $(this);
-        var id = btn.data("id");
+        var enrolId = btn.data("id");
         var href = btn.data("href");
-        var groupname = btn.data("groupname");
-        if( confirm("Are you sure you want to remove the enrolement to " + href + "?") ) {
-            removeGroupProgram(groupname, href, id);
+        var elem = btn.closest('article');
+        if (confirm("Are you sure you want to remove the enrolement to " + href + "?")) {
+            removeGroupProgram(enrolId, elem);
         }
     });
 
@@ -57,20 +57,20 @@ function saveGroupProgram(groupName, itemHref, radioBtn, modal) {
     }
 }
 
-function removeGroupProgram(groupName, itemHref, hId) {
-    flog(groupName, itemHref, hId);
+function removeGroupProgram(enrolId, elem) {
+    flog(enrolId);
     try {
         $.ajax({
             type: 'POST',
-            url: itemHref,
+            url: window.location.pathname,
             data: {
-                group: groupName,
-                enrolement: ""
+                enrolementId: enrolId,
+                removeEnrolement: true
             },
             dataType: 'json',
             success: function (response) {
                 flog('saved ok', response);
-                $('#' + hId).load(window.location.pathname + ' #' + hId + '> *');
+                elem.remove();
             },
             error: function (resp) {
                 flog('error', resp);

@@ -23,7 +23,7 @@
                 #else
                     #set($href = $p.href)
                 #end
-                <a href="#" title="Remove module from group" data-id="$id" data-href="$href" data-groupname="$group.name" class="btn btn-sm btn-danger btn-remove-module"><i class="fa fa-times"></i></a>
+                <a href="#" title="Remove module from group" data-id="$!enrolement.enrolement.id" data-href="$href" class="btn btn-sm btn-danger btn-remove-module"><i class="fa fa-times"></i></a>
             </aside>
         </article>
         #end
