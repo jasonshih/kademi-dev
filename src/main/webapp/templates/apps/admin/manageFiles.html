@@ -115,11 +115,11 @@
                 <div id="files" class="tab-pane">
                     <div style="padding: 15px">
                         <ol class="breadcrumb">
-                        #foreach($p in $page.asList.parents.reverse)
-                        #if( $p.is("physicalFolder") || $p.is("branch") )
-                        <li><a href="$p.href" class="pjax">$p.name</a></li>
-                        #end
-                        #end
+                            #foreach($p in $page.asList.parents.reverse)
+                            #if( $p.is("physicalFolder") || $p.is("branch") )
+                            <li><a href="$p.href" class="pjax">$p.name</a></li>
+                            #end
+                            #end
                         </ol>
                     </div>
                     <div class="table-responsive">
@@ -236,7 +236,11 @@
             <form method="POST" action="$page.href" class="form-horizontal">
                 <div class="modal-header">
                     <button aria-hidden="true" data-type="modal-dismiss" class="close" type="button">&times;</button>
-                    <input type="text" name="title" id="title" class="form-control required" style="width: 80%" value="" placeholder="A title for the new page" />
+                    <div style="margin-left: 15px; margin-right: 15px">
+                        <div class="form-group">
+                            <input type="text" name="title" id="title" class="form-control required" style="width: 80%" value="" placeholder="A title for the new page" />
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-body">
                     <input type="hidden" name="pageName" value="" />
@@ -288,7 +292,7 @@
                 <div class="modal-footer">
                     <button class="btn btn-sm btn-default" data-type="modal-dismiss" type="button">Close</button>
                     <button class="btn btn-sm btn-primary btn-img btn-history-page hidden" type="button">History <img class='ajax-loader' src='/static/common/loading.gif' /></button>
-                    <button class="btn btn-sm btn-primary btn-img" data-type="form-submit" type="button">Save <img class='ajax-loader' src='/static/common/loading.gif' /></button>
+                    <button class="btn btn-sm btn-success btn-img" data-type="form-submit" type="button">Save & Close <img class='ajax-loader' src='/static/common/loading.gif' /></button>
                 </div>
             </form>
         </div>
@@ -388,7 +392,7 @@
         <script type="text/javascript" >
             var themePath = "${page.themePath}";
             $(function () {
-                setRecentItem( window.location.pathname, window.location.pathname );
+                setRecentItem(window.location.pathname, window.location.pathname);
                 initManageFiles();
                 initPjax();
             });
@@ -396,24 +400,24 @@
                 var container = $("#filesContainer");
                 var files = $("#files");
                 flog("initPjax", container);
-                container.on("click", "a.pjax", function(e) {
+                container.on("click", "a.pjax", function (e) {
                     flog("click pjax");
                     e.preventDefault();
                     var href = $(e.target).closest("a").attr("href");
                     files.reloadFragment({
                         url: href,
-                        whenComplete: function(response, status, xhr) {
-                            flog("done",  response, status, xhr);
+                        whenComplete: function (response, status, xhr) {
+                            flog("done", response, status, xhr);
                             window.history.pushState("", href, href);
                             var formAction = window.location.pathname + "_DAV/PUT?overwrite=true";
                             $("#modal-upload form").attr("action", formAction);
                             var dz = Dropzone.forElement("#uploadFileDropzone");
                             dz.options.url = formAction;
-                            setRecentItem( window.location.pathname, window.location.pathname );
+                            setRecentItem(window.location.pathname, window.location.pathname);
                             var dom = $(response);
                             var pages = $("#pages");
                             flog("update pages", pages);
-                            pages.html( dom.find("#pages > *") );
+                            pages.html(dom.find("#pages > *"));
                             initFilesLayout();
                             initCopyCutPaste();
                         }

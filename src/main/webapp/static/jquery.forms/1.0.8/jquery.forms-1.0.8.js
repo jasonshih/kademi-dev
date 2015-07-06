@@ -318,7 +318,11 @@ function checkRequiredFields(form, config) {
             isOk = false;
         }
     } else {
-        showMessage(config.requiredErrorMessage, form);
+        if( config ) {
+            showMessage(config.requiredErrorMessage, form);
+        } else {
+            showMessage("Please check required fields", form);
+        }
     }
     return isOk;
 }
