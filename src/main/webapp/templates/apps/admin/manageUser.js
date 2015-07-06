@@ -9,6 +9,7 @@ function initManageUsers() {
     initAddToGroup();
     initUploadUsers();
     initLoginAs();
+    initAggregations();
 }
 
 function initChangeUserId() {
@@ -107,9 +108,13 @@ function doSearch() {
     var query = $("#user-query").val();
     var groupName = $("#search-group").val();
     flog("doSearch", query, groupName);
+    var uri = URI(window.location);
+	uri.setSearch("q", query);
+	uri.setSearch("g", groupName);
+	flog("doSearch", uri.toString());
     $.ajax({
         type: 'GET',
-        url: window.location.pathname + "?q=" + query + "&g=" + groupName,
+        url: uri.toString(),
         success: function (data) {
             flog("success", data);
             var $fragment = $(data).find("#table-users-body");
@@ -403,4 +408,30 @@ function initLoginAs() {
         var profileId = $(e.target).attr("href");
         showLoginAs(profileId);
     });
+}
+
+function initAggregations() {
+	$("body").on("change", ".agg-filter", function(e) {
+		e.preventDefault();
+		var input = $(e.target);
+		flog(input);
+		var tbody = input.closest("tbody");
+		var name = input.attr("name");
+		var value = input.val();
+		var uri = URI(window.location);
+		uri.setSearch("filter-".concat(name), value);
+
+		history.pushState(null, null, uri.toString());
+
+		$("#aggregationsContainer").reloadFragment({
+			url : window.location
+		});
+
+		$("#table-users-body").reloadFragment({
+			url : window.location,
+			whenComplete : function() {
+				doSearch();
+			}
+		});
+	});
 }
