@@ -344,7 +344,7 @@
             <tr>
                 <td colspan="2">
                     $agg.title&nbsp;
-                    #if( $agg.buckets.size() > 5 || $!params.get("filter-$agg.name"))
+                    #if (! $agg.noFilter && ($agg.buckets.size() > 5 || $!params.get("filter-$agg.name")))
                     <span style="float: right">
                         #if ( $agg.name != "action" )
                         <span class="input-group input-group-sm">
