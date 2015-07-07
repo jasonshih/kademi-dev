@@ -10,6 +10,7 @@ function initManageUsers() {
     initUploadUsers();
     initLoginAs();
     initAggregations();
+    initSort();
 }
 
 function initChangeUserId() {
@@ -434,4 +435,54 @@ function initAggregations() {
 			}
 		});
 	});
+}
+
+function initSort() {
+	flog('initSort()');
+	$('.sort-field').on('click', function (e) {
+        e.preventDefault();
+        var a = $(e.target);
+        var uri = URI(window.location);
+        var field = a.attr('id');
+
+        var dir = 'asc';
+        if (field == getSearchValue(window.location.search, 'sortfield')
+        		&& 'asc' == getSearchValue(window.location.search, 'sortdir')) {
+        	dir = 'desc';
+        }
+        uri.setSearch('sortfield', field);
+        uri.setSearch('sortdir', dir);
+
+        $.ajax({
+            type: 'GET',
+            url: uri.toString(),
+            success: function (data) {
+                flog("success", data);
+                window.history.pushState("", document.title, uri.toString());
+                var $fragment = $(data).find("#table-users-body");
+                flog("replace", $("#se"));
+                flog("frag", $fragment);
+                $("#table-users-body").replaceWith($fragment);
+            },
+            error: function (resp) {
+                Msg.error("err");
+            }
+        });
+    });
+}
+
+function getSearchValue(search, key) {
+	if (search.charAt(0) == '?') {
+		search = search.substr(1);
+	}
+	parts = search.split('&');
+	if (parts) {
+		for (var i = 0; i < parts.length; i++) {
+			entry = parts[i].split('=');
+			if (entry && key == entry[0]) {
+				return entry[1];
+			}
+		}
+	}
+	return '';
 }
