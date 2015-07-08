@@ -9,6 +9,8 @@ function initManageUsers() {
     initAddToGroup();
     initUploadUsers();
     initLoginAs();
+    initAggregations();
+    initSort();
 }
 
 function initChangeUserId() {
@@ -107,9 +109,13 @@ function doSearch() {
     var query = $("#user-query").val();
     var groupName = $("#search-group").val();
     flog("doSearch", query, groupName);
+    var uri = URI(window.location);
+	uri.setSearch("q", query);
+	uri.setSearch("g", groupName);
+	flog("doSearch", uri.toString());
     $.ajax({
         type: 'GET',
-        url: window.location.pathname + "?q=" + query + "&g=" + groupName,
+        url: uri.toString(),
         success: function (data) {
             flog("success", data);
             var $fragment = $(data).find("#table-users-body");
@@ -403,4 +409,80 @@ function initLoginAs() {
         var profileId = $(e.target).attr("href");
         showLoginAs(profileId);
     });
+}
+
+function initAggregations() {
+	$("body").on("change", ".agg-filter", function(e) {
+		e.preventDefault();
+		var input = $(e.target);
+		flog(input);
+		var tbody = input.closest("tbody");
+		var name = input.attr("name");
+		var value = input.val();
+		var uri = URI(window.location);
+		uri.setSearch("filter-".concat(name), value);
+
+		history.pushState(null, null, uri.toString());
+
+		$("#aggregationsContainer").reloadFragment({
+			url : window.location
+		});
+
+		$("#table-users-body").reloadFragment({
+			url : window.location,
+			whenComplete : function() {
+				doSearch();
+			}
+		});
+	});
+}
+
+function initSort() {
+	flog('initSort()');
+	$('.sort-field').on('click', function (e) {
+        e.preventDefault();
+        var a = $(e.target);
+        var uri = URI(window.location);
+        var field = a.attr('id');
+
+        var dir = 'asc';
+        if (field == getSearchValue(window.location.search, 'sortfield')
+        		&& 'asc' == getSearchValue(window.location.search, 'sortdir')) {
+        	dir = 'desc';
+        }
+        uri.setSearch('sortfield', field);
+        uri.setSearch('sortdir', dir);
+
+        $.ajax({
+            type: 'GET',
+            url: uri.toString(),
+            success: function (data) {
+                flog("success", data);
+                window.history.pushState("", document.title, uri.toString());
+                var $fragment = $(data).find("#table-users-body");
+                flog("replace", $("#se"));
+                flog("frag", $fragment);
+                $("#table-users-body").replaceWith($fragment);
+            },
+            error: function (resp) {
+                Msg.error("err");
+            }
+        });
+    });
+}
+
+function getSearchValue(search, key) {
+	if (search.charAt(0) == '?') {
+		search = search.substr(1);
+	}
+	parts = search.split('&');
+	if (parts) {
+		for (var i = 0; i < parts.length; i++) {
+			entry = parts[i].split('=');
+			if (entry && key == entry[0]) {
+				return entry[1];
+			}
+		}
+	}
+	return '';
 }
