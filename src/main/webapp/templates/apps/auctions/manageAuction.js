@@ -41,8 +41,8 @@ function initGroupModal() {
     });
 }
 
-function initGroupDelete(){
-    $('body').on('click', '.btn-delete-group', function(e){
+function initGroupDelete() {
+    $('body').on('click', '.btn-delete-group', function (e) {
         e.preventDefault();
         var btn = $(this);
         var name = btn.attr("href");
@@ -139,13 +139,13 @@ function setGroupRecipient(name, groupType, isRecip) {
                     if (isRecip) {
                         var groupClass = "";
                         var groupIcon = "";
-                        if(groupType === "P" || groupType === ""){
+                        if (groupType === "P" || groupType === "") {
                             groupClass = "alert alert-success";
                             groupIcon = "clip-users";
-                        }else if(groupType === "S"){
+                        } else if (groupType === "S") {
                             groupClass = "alert alert-info";
                             groupIcon = "fa fa-trophy";
-                        }else if(groupType === "M"){
+                        } else if (groupType === "M") {
                             groupClass = "alert alert-info";
                             groupIcon = "fa fa-envelope";
                         }
@@ -299,7 +299,7 @@ function initManageAuctionImage() {
             upcropZone.find('.orientation select').val('');
         },
         onContinue: function (data, name) {
-            setAddImageFormData(data, name, true);
+            setAddImageFormData(data, name, true, true);
         },
         onCropComplete: setAddImageFormData,
         onReady: function (upcropContainer) {
@@ -339,7 +339,7 @@ function initManageAuctionImage() {
         }
     });
 
-    function setAddImageFormData(data, name, ignoreOrientation) {
+    function setAddImageFormData(data, name, ignoreOrientation, isContinue) {
         if (data.result) {
             data = data.result;
         }
@@ -347,8 +347,14 @@ function initManageAuctionImage() {
         if (typeof hash == "object") {
             hash = hash.file;
         }
+
+        var isCrop = typeof isContinue === 'undefined';
+
         flog("setAddImageFormData: data=", data);
         flog("setAddImageFormData: hash=", hash);
+        flog("setAddImageFormData: isCrop=", isCrop);
+        
+        name = name.replace(/\.[^/.]+$/, "") + ".png";
 
         addImageModal.find('.preview').attr('src', data.nextHref);
         addImageModal.find('input[name=hash]').val(hash); // the hash of the 'file' file input that was uploaded
