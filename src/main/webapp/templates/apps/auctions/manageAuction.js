@@ -353,8 +353,9 @@ function initManageAuctionImage() {
         flog("setAddImageFormData: data=", data);
         flog("setAddImageFormData: hash=", hash);
         flog("setAddImageFormData: isCrop=", isCrop);
-        
-        name = name.replace(/\.[^/.]+$/, "") + ".png";
+        if (isCrop) {
+            name = name.replace(/\.[^/.]+$/, "") + ".png";
+        }
 
         addImageModal.find('.preview').attr('src', data.nextHref);
         addImageModal.find('input[name=hash]').val(hash); // the hash of the 'file' file input that was uploaded
