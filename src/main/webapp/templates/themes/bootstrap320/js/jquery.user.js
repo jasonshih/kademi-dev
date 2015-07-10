@@ -122,11 +122,13 @@ function doLogin(userName, password, config, container) {
     }
 
     var chk = container.find("input[name=keepLoggedIn]");
-    var keepLoggedIn = chk.prop("checked");
+    if( chk ) {
+        var keepLoggedIn = chk.prop("checked");
+        data["keepLoggedIn"] = keepLoggedIn;
+    }
 
     data[userNameProperty] = userName;
     data[passwordProperty] = password;
-    data["keepLoggedIn"] = keepLoggedIn;
     flog("login", data);
     $.ajax({
         type: 'POST',
