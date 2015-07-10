@@ -24,7 +24,7 @@
                         <span class="fa fa-times"></span>
                         Remove Selected
                     </button>
-                    
+
                 </div>
             </header>
             <div class="Content Details">
@@ -83,7 +83,7 @@
         </section>
 
         <hr/>
-        
+
         <section  class="MainContent">
             <header class="clearfix">
                 <h4 class="col-sm-5">Submissions and answers</h4>
@@ -92,8 +92,12 @@
                         <span class="fa fa-table"></span>
                         Export as CSV
                     </a>
+                    <button class="btn btn-danger btn-sm removeAnswers" style="margin-left: 30px">
+                        <span class="fa fa-times"></span>
+                        Remove Selected
+                    </button>
                 </div>
-                
+
             </header>
             <div class="Content Details">
                 <div class="table-responsive">
@@ -104,6 +108,13 @@
                                 #foreach($answerKey in $page.submissionAnswerKeys)
                                 <th>$answerKey</th>
                                 #end
+                                <th class="center">
+                                    <div class="checkbox-table">
+                                        <label>
+                                            <input type="checkbox" name="removeAnswer" class="grey answers selectAll"/>
+                                        </label>
+                                    </div>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -112,7 +123,14 @@
                                 <td>$sub.profile.firstName $sub.profile.surName</td>
                                 #foreach($answerKey in $page.submissionAnswerKeys)
                                 <th>$!sub.answers.get( $answerKey )</th>
-                                #end                                
+                                #end
+                                <td class="center">
+                                    <div class="checkbox-table">
+                                        <label>
+                                            <input type="checkbox" name="removeAnswer" value="$sub.id"/>
+                                        </label>
+                                    </div>
+                                </td>
                             </tr>
                             #end
                         </tbody>
@@ -137,6 +155,14 @@
                             doRemoveEntries(checkBoxes);
                         }
                     }
+                });
+            }
+
+            function initRemoveAnswers() {
+                $('body').on('click', '.removeAnswers', function (e) {
+                    e.preventDefault();
+                    var btn = $(this);
+                    
                 });
             }
             function doRemoveEntries(checkBoxes) {
