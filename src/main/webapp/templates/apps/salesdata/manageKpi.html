@@ -268,7 +268,10 @@
                                         <span class="label label-danger">No threshhold set</span>
                                         #end
                                     </td>
-                                    <td>$!level.awardAmount</td>
+                                    <td>
+                                        $!level.awardAmount
+                                        $!level.awardAmountExpr
+                                    </td>
                                     <td class="action">
                                         <div class="btn-group btn-group-sm">
                                             <a href="$level.id .edit-form" class="btn btn-sm btn-info btn-edit-level" data-toggle="modal" data-target="#editLevelModal"  ><i class="fa fa-cog"></i> Edit</a>
