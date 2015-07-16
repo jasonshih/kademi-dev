@@ -34,6 +34,8 @@
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
         <script type="text/javascript" src="manageAutoEmail.js">//</script>
         <script type="text/javascript" src="manageEmail.js">//</script>
+        <link rel="stylesheet" href="/theme/assets/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" />
+        <script src="/theme/assets/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js">//</script>
     </head>
     <body class="manageAutoEmail">
         <form name="frmDetails" action="." method="post" class="form-horizontal">
@@ -126,6 +128,18 @@
                                                         </ul>
                                                     </div>
                                                     <input type="hidden" name="timerUnitName" class="timer-unit" value="$!page.job.timerUnit"/>
+                                                </div>
+                                            </div>
+                                            <br/>
+                                            <div class="clearfix">
+                                                <div class="input-group pull-left">
+                                                    <span class="input-group-addon">Fire the next event at:</span>
+                                                    <div class="input-group input-append bootstrap-timepicker">
+                                                        <input type="text" data-minute-step="1" name="timerTime" data-default-time="$!page.job.timerTime" class="form-control time-picker" />
+                                                        <span class="input-group-addon add-on">
+                                                            <i class="fa fa-clock-o"></i>
+                                                        </span>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <br/>
@@ -928,93 +942,94 @@
         <script type="text/javascript">
             var emailEnabled = $formatter.format($page.emailEnabled);
             var smsEnabled = $formatter.format($page.smsEnabled);
-                    $(function () {
-                        setRecentItem( document.title, window.location.pathname );
-                        initManageAutoEmail();
-                        $(".refresh-history").click(function (e) {
-                            e.preventDefault();
-                            $("#history-table").reloadFragment();
-                        });
+            $(function () {
+                setRecentItem(document.title, window.location.pathname);
+                initManageAutoEmail();
+                $(".refresh-history").click(function (e) {
+                    e.preventDefault();
+                    $("#history-table").reloadFragment();
+                });
 
-                        $(".refresh-sms-history").click(function (e) {
-                            e.preventDefault();
-                            $("#sms-history-table").reloadFragment({
-                                whenComplete: function () {
-                                    $('#sms-history-table').find("abbr.timeago").timeago();
-                                }
-                            });
-                        });
-
-                        $(".timer-units li").click(function (e) {
-                            e.preventDefault();
-                            var unit = $(e.target).text();
-                            $(".timer-unit").text(unit).val(unit);
-                        });
-                        jQuery("abbr.timeago").timeago();
-                        initHistorySearch();
-                        initSmsHistorySearch();
-                        $(".refresh-alerts").click(function () {
-                            $("#alerts-list").reloadFragment();
-                        });
-                        $(".refresh-rewards").click(function () {
-                            $("#rewards-container").reloadFragment();
-                        });
-                        $(".refresh-dataseries").click(function () {
-                            $("#dataseries-list").reloadFragment();
-                        });
-
-                        initSmsField();
-
-                        $("body").on('click', '.email-item', function (e) {
-                            e.preventDefault();
-                            var item = $(this);
-                            var href = item.attr("href")
-                            var win = window.open(href, '_blank');
-                            if (win) {
-                                //Browser has allowed it to be opened
-                                win.focus();
-                            } else {
-                                //Broswer has blocked it
-                                alert('Please allow popups for this site');
-                            }
-                        });
-
-                        $("body").on('click', '.sms-item', function (e) {
-                            e.preventDefault();
-                            var item = $(this);
-                            var href = item.attr("href")
-                            var win = window.open(href, '_blank');
-                            if (win) {
-                                //Browser has allowed it to be opened
-                                win.focus();
-                            } else {
-                                //Broswer has blocked it
-                                alert('Please allow popups for this site');
-                            }
-                        });
-
-                        $('body').on('change', '#smsEnabled', function (e) {
-                            e.preventDefault();
-                            var chk = $(this);
-                            smsEnabled = chk.is(":checked");
-                            if (emailEnabled && smsEnabled) {
-                                $('#send-preference').show();
-                            } else {
-                                $('#send-preference').hide();
-                            }
-                        });
-
-                        $('body').on('change', '#emailEnabled', function (e) {
-                            e.preventDefault();
-                            var chk = $(this);
-                            emailEnabled = chk.is(":checked");
-                            if (emailEnabled && smsEnabled) {
-                                $('#send-preference').show();
-                            } else {
-                                $('#send-preference').hide();
-                            }
-                        });
+                $(".refresh-sms-history").click(function (e) {
+                    e.preventDefault();
+                    $("#sms-history-table").reloadFragment({
+                        whenComplete: function () {
+                            $('#sms-history-table').find("abbr.timeago").timeago();
+                        }
                     });
+                });
+
+                $(".timer-units li").click(function (e) {
+                    e.preventDefault();
+                    var unit = $(e.target).text();
+                    $(".timer-unit").text(unit).val(unit);
+                });
+                jQuery("abbr.timeago").timeago();
+                initHistorySearch();
+                initSmsHistorySearch();
+                $(".refresh-alerts").click(function () {
+                    $("#alerts-list").reloadFragment();
+                });
+                $(".refresh-rewards").click(function () {
+                    $("#rewards-container").reloadFragment();
+                });
+                $(".refresh-dataseries").click(function () {
+                    $("#dataseries-list").reloadFragment();
+                });
+
+                initSmsField();
+
+                $("body").on('click', '.email-item', function (e) {
+                    e.preventDefault();
+                    var item = $(this);
+                    var href = item.attr("href")
+                    var win = window.open(href, '_blank');
+                    if (win) {
+                        //Browser has allowed it to be opened
+                        win.focus();
+                    } else {
+                        //Broswer has blocked it
+                        alert('Please allow popups for this site');
+                    }
+                });
+
+                $("body").on('click', '.sms-item', function (e) {
+                    e.preventDefault();
+                    var item = $(this);
+                    var href = item.attr("href")
+                    var win = window.open(href, '_blank');
+                    if (win) {
+                        //Browser has allowed it to be opened
+                        win.focus();
+                    } else {
+                        //Broswer has blocked it
+                        alert('Please allow popups for this site');
+                    }
+                });
+
+                $('body').on('change', '#smsEnabled', function (e) {
+                    e.preventDefault();
+                    var chk = $(this);
+                    smsEnabled = chk.is(":checked");
+                    if (emailEnabled && smsEnabled) {
+                        $('#send-preference').show();
+                    } else {
+                        $('#send-preference').hide();
+                    }
+                });
+
+                $('body').on('change', '#emailEnabled', function (e) {
+                    e.preventDefault();
+                    var chk = $(this);
+                    emailEnabled = chk.is(":checked");
+                    if (emailEnabled && smsEnabled) {
+                        $('#send-preference').show();
+                    } else {
+                        $('#send-preference').hide();
+                    }
+                });
+                $('.time-picker').timepicker();
+            });
 
             function initHistorySearch() {
                 var reportRange = $('#report-range');
