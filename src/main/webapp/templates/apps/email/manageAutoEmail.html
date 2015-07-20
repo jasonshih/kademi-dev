@@ -132,6 +132,10 @@
                                             </div>
                                             <br/>
                                             <div class="clearfix">
+                                                <label class="col-md-4">Specify Timer Time  $formatter.checkbox("useTimerTime","useTimerTime", $page.job.useTimerTime)</label>
+                                            </div>
+                                            <br/>
+                                            <div class="clearfix" id="fireAtTime" #if(!$page.job.useTimerTime) style="display:none;" #end>
                                                 <div class="input-group pull-left">
                                                     <span class="input-group-addon">Fire the next event at:</span>
                                                     <div class="input-group input-append bootstrap-timepicker">
@@ -962,7 +966,7 @@
                 $(".timer-units li").click(function (e) {
                     e.preventDefault();
                     var unit = $(e.target).text();
-                    $(".timer-unit").text(unit).val(unit);
+                    $(".timer-unit").text(unit).val(unit).change();
                 });
                 jQuery("abbr.timeago").timeago();
                 initHistorySearch();
@@ -1029,6 +1033,16 @@
                     }
                 });
                 $('.time-picker').timepicker();
+                $('body').on('change', '#useTimerTime', function (e) {
+                    var btn = $(this);
+                    var isChecked = btn.is(":checked");
+                    flog(isChecked);
+                    if (isChecked) {
+                        $('#fireAtTime').show();
+                    } else {
+                        $('#fireAtTime').hide();
+                    }
+                });
             });
 
             function initHistorySearch() {
