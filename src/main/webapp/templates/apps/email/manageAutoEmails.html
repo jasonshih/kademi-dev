@@ -58,11 +58,11 @@
                                         <col />
                                         <col />
                                         <col />
-                                        <col style="width: 100px" />
+                                        <col style="width: 150px" />
                                     </colgroup>
                                     <thead>
                                         <tr>
-                                            <th>Status</th>                                
+                                            <th>Status XX</th>
                                             <th>Name</th>
                                             <th>Description</th>
                                             <th>Sent</th>
@@ -100,11 +100,11 @@
                             <col />
                             <col />
                             <col />
-                            <col style="width: 100px" />
+                            <col style="width: 150px" />
                         </colgroup>
                         <thead>
                             <tr>
-                                <th>Status</th>                                
+                                <th>Status</th>
                                 <th>Name</th>
                                 <th>Description</th>
                                 <th>Sent</th>
@@ -142,14 +142,14 @@
                     </div>
                     <div class="form-group">
                         <label class="col-md-3 control-label" for="name">Event type</label>
-                        <div class="col-md-8">                            
+                        <div class="col-md-8">
                             #foreach($tt in $page.emailTriggerTypes)
                             <div class="radio">
                                 <label>
                                     <input type="radio" name="eventId" id="" value="$tt.eventId" class="required">
                                         $tt.eventDescription
                                 </label>
-                            </div>                            
+                            </div>
                             #end
                         </div>
                     </div>
@@ -170,11 +170,11 @@
         #macro(genRows $email)
         <tr class="emailStatus$!{email.status} email-row" data-seriesname="$email.name">
             <td class="lead">
-                #if($email.status == "Enabled" )                                    
-                <i class="fa fa-check-circle text-success"></i>                                            
+                #if($email.status == "Enabled" )
+                <i class="fa fa-check-circle text-success"></i>
                 #else
                 <i class="fa fa-exclamation-circle text-muted"></i>
-                #end                                    
+                #end
             </td>
 
             <td>$!email.job.title</td>
@@ -200,7 +200,7 @@
                         <li class="divider"></li>
                         <li><a href="$email.name" class="btn-delete-email" title="Delete"><i class="fa fa-times"></i> Delete</a></li>
                     </ul>
-                </div>  
+                </div>
 
             </td>
         </tr>
