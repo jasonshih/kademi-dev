@@ -132,12 +132,13 @@
                                             </div>
                                             <br/>
                                             <div class="clearfix">
-                                                <label class="col-md-4">Specify Timer Time  $formatter.checkbox("useTimerTime","useTimerTime", $page.job.useTimerTime)</label>
+                                                <label class="col-md-4">Specify Timer Time  $formatter.checkbox("useTimerTime","useTimerTime", $page.useTimerTime)</label>
                                             </div>
                                             <br/>
-                                            <div class="clearfix" id="fireAtTime" #if(!$page.job.useTimerTime) style="display:none;" #end>
+                                            #set( $hideTimerStyle = $formatter.ifTrue( $page.useTimerTime , "", "none" ) )
+                                            <div class="clearfix" id="fireAtTime" style="display: ${hideTimerStyle};">
                                                 <div class="input-group pull-left">
-                                                    <span class="input-group-addon">Fire the next event at:</span>
+                                                    <span class="input-group-addon">Fire the next event at: </span>
                                                     <div class="input-group input-append bootstrap-timepicker">
                                                         <input type="text" data-minute-step="1" name="timerTime" data-default-time="$!page.job.timerTime" class="form-control time-picker" />
                                                         <span class="input-group-addon add-on">
@@ -1041,6 +1042,7 @@
                         $('#fireAtTime').show();
                     } else {
                         $('#fireAtTime').hide();
+                        $("input[name=timerTime]").val("");
                     }
                 });
             });
