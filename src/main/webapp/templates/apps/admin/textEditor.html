@@ -1,12 +1,21 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>Text editor</title>
-        <script type="text/javascript" src="/static/ace/src-noconflict/ace.js">//</script>
+        <script type="text/javascript" src="/static/ace/1.2.0/src-noconflict/ace.js">//</script>
         <script type="text/javascript" src="/static/js/keymap.js">//</script>
         <script type="text/javascript" src="/static/jquery.fullscreen/jquery.fullscreen-0.4.1.min.js">//</script>
         <script type="text/javascript" src="textEditor.js">//</script>
         <link rel="stylesheet" type="text/css" href="textEditor.css" />
         <link rel="template" href="editorBase" />
+        <style type="text/css" media="screen">
+            #editor {
+                position: absolute;
+                top: 60px;
+                right: 0;
+                bottom: 10px;
+                left: 0;
+            }
+        </style>
     </head>
     <body class="">
         #set($fname = $params.fileName)
@@ -26,10 +35,10 @@
                 <h3 class="pull-left">$fname</h3>
             </div>
             <div id="editor" class="hide">#if($file.textContent)
-$formatter.htmlEncode($file.textContent)
-#else
-$formatter.htmlEncode($request.params.content)
-#end
+                $formatter.htmlEncode($file.textContent)
+                #else
+                $formatter.htmlEncode($request.params.content)
+                #end
             </div>
         </div>
 

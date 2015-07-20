@@ -16,8 +16,9 @@ function initTextEditor(fileName) {
 //    editor.setTheme("ace/theme/github");
     editor.getSession().setMode("ace/mode/" + editorMode);
     editor.setOptions({
-        minLines: editor.getSession().$rowLengthCache.length,
-        maxLines: Infinity
+        minLines: editor.getSession().$rowLengthCache.length
+//        ,
+//        maxLines: Infinity
     });
 
     $('#editor').removeClass('hide');
