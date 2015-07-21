@@ -10,10 +10,6 @@
                 <div class="col-md-8">
                     <h2>
                         $page.title
-                        <a href="$page.href" class="pull-right btn-sm btn btn-primary cart-add">
-                            <span class="glyphicon glyphicon-shopping-cart"></span>
-                            Add to cart
-                        </a>
                     </h2>
                     <div class="productNotes">$!page.description</div>
                 </div>
@@ -29,6 +25,22 @@
                             $page.productPurchaseCost Points
                             #end
                         </span>
+                        <br/>
+
+                        #foreach( $param in $page.parameters)
+                        <label>$param.title</label>
+                        <select name="param-$param.name">
+                            #foreach( $opt in $param.options)
+                            <option name="$opt.name">$opt.title</option>
+                            #end
+                        </select>
+                        #end
+
+                        <a href="$page.href" class="pull-right btn-lg btn btn-primary cart-add">
+                            <span class="glyphicon glyphicon-shopping-cart"></span>
+                            Add to cart
+                        </a>
+
                     </div>
                     #portlets("productDetailsSidebar")
                 </div>
