@@ -8,7 +8,7 @@
         <div class="container">
             <h1>Checkout</h1>
             <div class="contentForm">
-                <div class="" id="checkout-panels"> 
+                <div class="" id="checkout-panels">
                     <span class="pull-right">Balance <span class="badge label-primary">$!page.balance</span></span>
                     <div role="tabpanel" id="checkout-tabs">
                         <ul class="nav nav-tabs" id="myTabs" role="tablist">
@@ -33,7 +33,7 @@
                                                 <th>Sub-total</th>
                                                 <th class="deleteItem"></th>
                                             </tr>
-                                        </thead>                                    
+                                        </thead>
                                         <tbody id="itemsTableBody">
                                             #set( $items = $page.shoppingCartItemBeans )
                                             #if( $items.empty )
@@ -48,7 +48,11 @@
                                                     <img src="$item.itemPage.productImageHref" style="max-width: 200px; max-height: 200px"/>
                                                     #end
                                                 </td>
-                                                <td>$!item.itemPage.productDescription</td>
+                                                <td>
+                                                    <h2>$item.itemPage.productTitle</h2>
+                                                    <p class="lead">$item.class</p>
+                                                    $!item.itemPage.productDescription
+                                                </td>
                                                 <td>
                                                     <input type="text" class="form-control quantity" value="$item.quantity" name="quantity.${foreach.count}" style="width: 50px" />
                                                     <input type="hidden" class="itemHref" name="item.${foreach.count}" value="$item.itemPage.href" />
@@ -129,7 +133,7 @@
                                                         <td>1000</td>
                                                     </tr>
                                                 </tbody>
-                                            </table>                        
+                                            </table>
                                         </div>
                                         <div class="col-md-4" style="border-left: 1px solid #dddddd">
                                             <div class="">
@@ -148,7 +152,7 @@
                                     <button class="btn btn-lg btn-success wizard-btn wizard-btn-final">Place order</button>
                                 </div>
                             </div>
-                        </form>                        
+                        </form>
                     </div>
                 </div>
             </div>
@@ -176,7 +180,7 @@
                         }
                     });
                 }
-                
+
                 function initCheckoutPanels(){
                     var panels = $("#checkout-panels");
                     var form = $("#checkout-panels form");
@@ -289,7 +293,7 @@
                         }
                     });
                 }
-                
+
                 function doQuantityUpdate(href, quantity) {
                     flog("doQuantityUpdate", href);
                     $.ajax({

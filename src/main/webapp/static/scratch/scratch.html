@@ -1,13 +1,8 @@
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <title></title>
-        <link rel="template" href="theme/plain" />
-    </head>
-    <body>
-        #content
-        <center>
-            <a href="http://$page.closest('website').domainName/profile?$page.model.login"><small>To unsubscribe please login to your profile page</small></a>
-        </center>
-        <img src="http://$page.closest('website').domainName/ack?i=$page.emailItem.id" height="1" width="1" alt=""/>
-    </body>
-</html>
+<h1>&nbsp;</h1>
+
+<p>User&#39;s name: @{formatter.htmlEncode(profile.formattedName)}&nbsp;
+    <span style="line-height: 1.42857143;">User&#39;s organisation: @{formatter.htmlEncode(userOrganisation.formattedName)}&nbsp;</span>
+    <span style="line-height: 1.42857143;">Completed date: @{formatter.formatDate(completedDate)}&nbsp;</span>
+    <span style="line-height: 1.42857143;"> Expires&nbsp;on:&nbsp;&nbsp;{noformat} &nbsp; @{formatter.getDayOfMonth(completedDate)}</span>
+    <span style="line-height: 1.42857143;">@{formatter.getMonth(completedDate)}/ @{formatter.getYear(completedDate) } </span>
+</p>
