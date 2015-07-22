@@ -34,12 +34,13 @@
                 </div>
                 <h3 class="pull-left">$fname</h3>
             </div>
-            <div id="editor" class="hide">#if($file.textContent)
-                $formatter.htmlEncode($file.textContent)
-                #else
-                $formatter.htmlEncode($request.params.content)
-                #end
-            </div>
+            #set($text = "")
+            #if($file.textContent)
+                #set($text = $formatter.htmlEncode($file.textContent))
+            #else
+                #set($text = $formatter.htmlEncode($request.params.content))
+            #end
+            <div id="editor" class="hide">$text</div>
         </div>
 
         <script type="text/javascript">
