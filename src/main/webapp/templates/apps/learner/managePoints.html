@@ -54,7 +54,7 @@
                                 </th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="pointsBody">
                             #if( $page.recentPoints.isEmpty() )
                             <tr>
                                 <td colspan="6">There are no recent results</td>
@@ -201,6 +201,8 @@
                     callback: function(resp) {
                         if( resp.status ) {
                             Msg.info("Assigned points OK");
+                            $('#modal-new-points').modal('hide');
+                            $('#pointsBody').reloadFragment();
                         } else {
                             alert("An error occured and the points may not have been assigned. Please refresh the page and try again");
                         }
@@ -235,7 +237,7 @@
                         log("success", data)
                         if (data.status) {
                             Msg.success("Removed points records");
-                            window.location.reload();
+                            $('#pointsBody').reloadFragment();
                         } else {
                             Msg.error("There was a problem removing points records. Please try again and contact the administrator if you still have problems");
                         }
