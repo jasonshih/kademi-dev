@@ -54,7 +54,7 @@
                                 </th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="pointsBody">
                             #if( $page.recentPoints.isEmpty() )
                             <tr>
                                 <td colspan="6">There are no recent results</td>
@@ -132,6 +132,7 @@
             </div>
             <form method="post" action="$page.href" class="form-horizontal" id="new-points-form">
                 <div class="modal-body">
+                    <p class="alert alert-danger">Please note that any applicable allocation rules will also be processed.</p>
                     <p>Please specify a users email to assign points to.</p>
 
                     <div class="form-group">
@@ -182,9 +183,9 @@
 
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
         <script type="text/javascript">
-            $(function() {
+            $(function () {
                 initSelectAll();
-                $(".removeUsers").click(function(e) {
+                $(".removeUsers").click(function (e) {
                     var node = $(e.target);
                     log("removeUsers", node, node.is(":checked"));
                     var checkBoxes = node.closest(".Content").find("tbody td input[name=toRemoveId]:checked");
@@ -198,9 +199,11 @@
                 });
 
                 $("#new-points-form").forms({
-                    callback: function(resp) {
-                        if( resp.status ) {
+                    callback: function (resp) {
+                        if (resp.status) {
                             Msg.info("Assigned points OK");
+                            $('#modal-new-points').modal('hide');
+                            $('#pointsBody').reloadFragment();
                         } else {
                             alert("An error occured and the points may not have been assigned. Please refresh the page and try again");
                         }
@@ -211,7 +214,7 @@
                     buttonText: "<i class=\"clip-folder\"></i> Upload spreadsheet",
                     url: "points.csv",
                     useJsonPut: false,
-                    oncomplete: function(data, name, href) {
+                    oncomplete: function (data, name, href) {
                         log("oncomplete:", data.result.data, name, href);
                         $(".results .numUpdated").text(data.result.data.numUpdated);
                         $(".results .numInserted").text(data.result.data.numInserted);
@@ -231,16 +234,16 @@
                     data: checkBoxes,
                     dataType: "json",
                     url: "",
-                    success: function(data) {
+                    success: function (data) {
                         log("success", data)
                         if (data.status) {
                             Msg.success("Removed points records");
-                            window.location.reload();
+                            $('#pointsBody').reloadFragment();
                         } else {
                             Msg.error("There was a problem removing points records. Please try again and contact the administrator if you still have problems");
                         }
                     },
-                    error: function(resp) {
+                    error: function (resp) {
                         Msg.error("An error occurred removing points. You might not have permission to do this");
                     }
                 });
@@ -250,10 +253,10 @@
                 var unmatchedTable = $(".results table");
                 var tbody = unmatchedTable.find("tbody");
                 tbody.html("");
-                $.each(unmatched, function(i, row) {
+                $.each(unmatched, function (i, row) {
                     log("unmatched", row);
                     var tr = $("<tr>");
-                    $.each(row, function(ii, field) {
+                    $.each(row, function (ii, field) {
                         tr.append("<td>" + field + "</td>");
                     });
                     tbody.append(tr);
