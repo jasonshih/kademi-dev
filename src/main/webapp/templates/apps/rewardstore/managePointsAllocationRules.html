@@ -22,6 +22,9 @@
                 <li><a href="rules.csv" title="Export CSV"><i class="glyphicon glyphicon-download"></i> Export CSV</a></li>
             </ul>
         </div>
+        <a href="#" class="btn btn-sm btn-danger btn-sm pull-right delete-rules" >
+            <i class="fa fa-trash"></i> Delete
+        </a>
         <div class="panel panel-default">
             <div id="rulesTableContainer" class="panel-body">
                 <div class="table-responsive">
@@ -33,6 +36,7 @@
                             <col/>
                             <col/>
                             <col style="width: 120px;"/>
+                            <col width="10px" />
                         </colgroup>
                         <thead>
                             <tr class="series-row odd ui-draggable">
@@ -42,6 +46,7 @@
                                 <th>Add Value</th>
                                 <th>Multiply Value</th>
                                 <th class="action text-center">Action</th>
+                                <th><input type="checkbox" class="check-all"/></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -70,6 +75,7 @@
                                         </ul>
                                     </div>
                                 </td>
+                                <th><input type="checkbox"data-ruleid="$p.rule.name" class="rule-check"/></th>
                             </tr>
                             #end
                         </tbody>
@@ -136,101 +142,11 @@
             </div>
         </div>
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
+        <script src="/theme/apps/rewardstore/managePointsAllocationRules.js" type="text/javascript"></script>
         <script>
             $(function () {
-                var createModal = $('#modal-new-rule');
-                var createForm = createModal.find('form');
-
-                createForm.forms({
-                    callback: function (resp) {
-                        if (resp.status) {
-                            Msg.success(resp.messages[0]);
-                            createModal.modal('hide');
-                            createForm.trigger('reset');
-                            $('#rulesTableContainer').reloadFragment();
-                        } else {
-                            Msg.warning(resp.message[0]);
-                        }
-                    }
-                });
-
-                $('body').on('click', '.delete-rule', function (e) {
-                    e.preventDefault();
-                    var btn = $(this);
-                    var title = btn.data('title');
-                    var href = btn.attr('href');
-                    var row = btn.closest('tr');
-                    confirmDelete(href, title, function () {
-                        row.hide('fast', function () {
-                            row.remove();
-                        });
-                    });
-                });
-
-                $('body').on('click', '.duplicate-rule', function (e) {
-                    e.preventDefault();
-                    var btn = $(this);
-                    var ruleId = btn.attr('href');
-                    $.ajax({
-                        type: 'POST',
-                        url: window.location.pathname,
-                        data: {
-                            duplicateRule: ruleId,
-                        },
-                        dataType: "json",
-                        success: function (data) {
-                            if (data.status) {
-                                Msg.success(data.messages[0]);
-                                $('#rulesTableContainer').reloadFragment();
-                            } else {
-                                flog("error", data);
-                                Msg.error("Sorry, couldnt duplicate " + data);
-                            }
-                        },
-                        error: function (resp) {
-                            flog("error", resp);
-                            Msg.error("Sorry, couldnt duplicate - " + resp);
-                        }
-                    });
-                });
-
-                initRulesCsv();
+                initManagePointsAllocationRule();
             });
-
-            function initRulesCsv() {
-                var modalUploadCsv = $("#modal-upload-csv");
-
-                var resultUploadCsv = modalUploadCsv.find('.upload-results');
-                $("#do-upload-csv").mupload({
-                    buttonText: "<i class=\"clip-folder\"></i> Upload spreadsheet",
-                    url: "rules.csv",
-                    useJsonPut: false,
-                    oncomplete: function (data, name, href) {
-                        flog("oncomplete:", data.result.data, name, href);
-                        resultUploadCsv.find('.num-updated').text(data.result.data.numUpdated);
-                        resultUploadCsv.find('.num-inserted').text(data.result.data.numInserted);
-                        resultUploadCsv.find('.num-unmatched').text(data.result.data.unmatched.length);
-                        showUnmatched(resultUploadCsv, data.result.data.unmatched);
-                        resultUploadCsv.show();
-                        Msg.success("Upload completed. Please review any unmatched members below, or refresh the page to see the updated list of products");
-                        $("#rulesTableContainer").reloadFragment();
-                    }
-                });
-            }
-
-            function showUnmatched(resultUploadCsv, unmatched) {
-                var unmatchedTable = resultUploadCsv.find("table");
-                var tbody = unmatchedTable.find("tbody");
-                tbody.html("");
-                $.each(unmatched, function (i, row) {
-                    flog("unmatched", row);
-                    var tr = $("<tr>");
-                    $.each(row, function (ii, field) {
-                        tr.append("<td>" + field + "</td>");
-                    });
-                    tbody.append(tr);
-                });
-            }
         </script>
     </body>
 </html>
