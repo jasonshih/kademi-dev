@@ -1,11 +1,27 @@
 <html>
     <head>
         <title>Points Allocation Rules</title>
+        <style>
+            .upload-results {
+                display: none;
+            }
+        </style>
     </head>
     <body>
-        <p class="">
-            <a class="btn btn-sm btn-success" href="#" data-toggle="modal" data-target="#modal-new-rule"><i class="fa fa-plus"></i> New Points Allocation Rule</a>
-        </p>
+        <div class="btn-group btn-group-sm">
+            <a href="#" class="btn btn-sm btn-success btn-sm" data-toggle="modal" data-target="#modal-new-rule">
+                <i class="fa fa-plus"></i> New Points Allocation Rule
+            </a>
+            <button class="btn btn-sm btn-success btn-sm dropdown-toggle" data-toggle="dropdown">
+                <span class="caret"></span>
+            </button>
+            <hr/>
+            <ul class="dropdown-menu pull-right" role="menu">
+                <li><a href="#" title="Upload CSV" id="uploadCsv" data-toggle="modal" data-target="#modal-upload-csv"><i class="glyphicon glyphicon-upload"></i> Upload CSV</a></li>
+                <li class="divider"></li>
+                <li><a href="rules.csv" title="Export CSV"><i class="glyphicon glyphicon-download"></i> Export CSV</a></li>
+            </ul>
+        </div>
         <div class="panel panel-default">
             <div id="rulesTableContainer" class="panel-body">
                 <div class="table-responsive">
@@ -29,7 +45,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            #foreach($p in $page.children)
+                            #foreach($p in $page.children.ofType('rule'))
                             <tr>
                                 <td>$p.name</td>
                                 <td>$p.title</td>
@@ -83,6 +99,43 @@
                 </div>
             </form>
         </div>
+
+        <div id="modal-upload-csv" class="modal modal-lg fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                <h4 class="modal-title">Upload Allocation Rule CSV</h4>
+            </div>
+            <div class="modal-body">
+                <div class="upload">
+                    <div class="btn-upload" id='do-upload-csv'></div>
+                    <br />
+                </div>
+                <br />
+                <div class="upload-results">
+                    <p>
+                        <strong>No. inserted:</strong>
+                        <span class="badge badge-success num-inserted">-</span>
+                        <strong>No. updated:</strong>
+                        <span class="badge badge-success num-updated">-</span>
+                        <strong>Unmatched rows:</strong>
+                        <span class="badge badge-danger num-unmatched">-</span>
+                    </p>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover table-condensed">
+                            <tbody>
+                                <tr>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+            </div>
+        </div>
+        <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
         <script>
             $(function () {
                 var createModal = $('#modal-new-rule');
@@ -140,7 +193,44 @@
                         }
                     });
                 });
+
+                initRulesCsv();
             });
+
+            function initRulesCsv() {
+                var modalUploadCsv = $("#modal-upload-csv");
+
+                var resultUploadCsv = modalUploadCsv.find('.upload-results');
+                $("#do-upload-csv").mupload({
+                    buttonText: "<i class=\"clip-folder\"></i> Upload spreadsheet",
+                    url: "rules.csv",
+                    useJsonPut: false,
+                    oncomplete: function (data, name, href) {
+                        flog("oncomplete:", data.result.data, name, href);
+                        resultUploadCsv.find('.num-updated').text(data.result.data.numUpdated);
+                        resultUploadCsv.find('.num-inserted').text(data.result.data.numInserted);
+                        resultUploadCsv.find('.num-unmatched').text(data.result.data.unmatched.length);
+                        showUnmatched(resultUploadCsv, data.result.data.unmatched);
+                        resultUploadCsv.show();
+                        Msg.success("Upload completed. Please review any unmatched members below, or refresh the page to see the updated list of products");
+                        $("#rulesTableContainer").reloadFragment();
+                    }
+                });
+            }
+
+            function showUnmatched(resultUploadCsv, unmatched) {
+                var unmatchedTable = resultUploadCsv.find("table");
+                var tbody = unmatchedTable.find("tbody");
+                tbody.html("");
+                $.each(unmatched, function (i, row) {
+                    flog("unmatched", row);
+                    var tr = $("<tr>");
+                    $.each(row, function (ii, field) {
+                        tr.append("<td>" + field + "</td>");
+                    });
+                    tbody.append(tr);
+                });
+            }
         </script>
     </body>
 </html>
