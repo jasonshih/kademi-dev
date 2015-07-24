@@ -1,4 +1,4 @@
-#foreach($entry in $salesRecordsMap.entrySet())
+#foreach($entry in $dataSeries.recordsMap.entrySet())
 <h3>$entry.key</h3>
 <table class="table table-bordered table-striped">
     <thead>
@@ -6,8 +6,8 @@
             <th>From</th>
             <th>To</th>
             <th>Amount</th>
-            #if ($usersSalesSeries.get($entry.key).fieldset.pairsOrdered)
-            #foreach ($field in $usersSalesSeries.get($entry.key).fieldset.pairsOrdered)
+            #if ($dataSeries.usersSeries.get($entry.key).fieldset.pairsOrdered)
+            #foreach ($field in $dataSeries.usersSeries.get($entry.key).fieldset.pairsOrdered)
             <th>$field.name</th>
             #end
             #end
@@ -19,8 +19,8 @@
     		<td>$formatter.formatDate($record.periodFrom, $page.organisation.timezone)</td>
     		<td>$formatter.formatDate($record.periodTo, $page.organisation.timezone)</td>
     		<td>$record.amount</td>
-            #if ($usersSalesSeries.get($entry.key).fieldset.pairsOrdered)
-	            #foreach ($field in $usersSalesSeries.get($entry.key).fieldset.pairsOrdered)
+            #if ($dataSeries.userSeries.get($entry.key).fieldset.pairsOrdered)
+	            #foreach ($field in $dataSeries.usersSeries.get($entry.key).fieldset.pairsOrdered)
 		    		<td>$!record.fields.get($field.name)</td>
 	            #end
             #end

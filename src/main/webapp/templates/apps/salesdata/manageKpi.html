@@ -165,7 +165,7 @@
                                 <select name="reward" id="reward" class="form-control" >
                                     <option value="">[No points]</option>
                                     #foreach($reward in $page.rewards)
-                                    $formatter.option($reward.name, $reward.name, $page.kpi.reward.name)
+                                    $formatter.option($reward.name, $reward.title, $page.kpi.reward.name)
                                     #end
                                 </select>
                                 <p><small>To allocate points for achieving levels, select the reward here</small></p>
