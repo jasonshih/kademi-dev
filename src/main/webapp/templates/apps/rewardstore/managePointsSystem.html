@@ -136,6 +136,16 @@
                     </div>
 
                     <div class="tab-pane" id="points">
+                        <div class="btn-group pull-right">
+                            <button class="btnRemovePoints btn btn-danger btn-sm" type="button"><i class="fa fa-remove"></i> Remove</button>
+                            <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu pull-right" role="menu">
+                                <li class="presentation" role="menuitem"><a href="#" class="btn-clear-history"><i class="fa fa-trash"></i> Clear History</a></li>
+                            </ul>
+                        </div>
+
                         <div class="pull-right">
                             <a class="btn btn-sm btn-default periods-delete" href="points.csv" download="points.csv">
                                 <span class="glyphicon glyphicon-download"></span>
@@ -144,9 +154,9 @@
                         </div>
                         <br/>
 
-                        <p>Shows points allocated with this tag</p>
+                        <p>Shows points allocated (max 1000 records)</p>
 
-                        <table class="table table-bordered table-striped" id="table-periods">
+                        <table class="table table-bordered table-striped" id="tablePoints">
                             <colgroup>
                                 <col />
                                 <col />
@@ -160,15 +170,17 @@
                                     <th>Issued Date</th>
                                     <th>Issued To</th>
                                     <th>Reason</th>
+                                    <th><input   type="checkbox" name="toRemoveId" class="chk-all" value="" /></th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="tablePointsBody">
                                 #foreach($points in $page.awardedPoints)
                                 <tr>
                                     <td>$points.numPoints</td>
                                     <td>$formatter.formatDateTime($points.issuedDate)</td>
                                     <td>$points.issuedTo.formattedName</td>
                                     <td>$!points.reason</td>
+                                    <td><input type="checkbox" name="toRemoveId" value="$points.id" /></td>
                                 </tr>
                                 #end
                             </tbody>
@@ -255,6 +267,10 @@
             <a href="$group.name" class="btn btn-xs btn-danger btn-remove-group" title="Delete access for group $group.name"><i href="$group.name" class="fa fa-times"></i></a>
         </span>
         #end
+
+
+
+
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
         <script type="text/javascript">
             var quiz = $formatter.toJson($page.quiz);
@@ -284,6 +300,8 @@
                     btn.closest('span').remove();
                     $("#modalGroup input[name=" + name + "]").check(false);
                 });
+                initRemovePoints();
+                initClearAllPoints();
             });
 
             function showHidePointsOrgType() {
@@ -293,6 +311,75 @@
                     $(".pointsOrgType").hide();
                 }
             }
+
+
+            function initRemovePoints() {
+                $(".btnRemovePoints").click(function (e) {
+                    e.preventDefault();
+                    var node = $(e.target);
+                    flog("initRemoveSalesData", node, node.is(":checked"));
+                    var checkBoxes = $('#tablePoints').find('tbody input[name=toRemoveId]:checked');
+                    if (checkBoxes.length === 0) {
+                        Msg.error("Please select the points you want to remove by clicking the checkboxs to the right");
+                    } else {
+                        if (confirm("Are you sure you want to remove " + checkBoxes.length + " points?")) {
+                            doRemovePoints(checkBoxes);
+                        }
+                    }
+                });
+            }
+
+            function initClearAllPoints() {
+                // btn-clear-history
+                $('body').on('click', '.btn-clear-history', function (e) {
+                    e.preventDefault();
+                    if (confirm("Are you sure you want to clear all records? This can not be undone!")) {
+                        $.ajax({
+                            type: 'POST',
+                            data: {
+                                clearHistory: true
+                            },
+                            dataType: "json",
+                            url: "",
+                            success: function (data) {
+                                flog("success", data);
+                                if (data.status) {
+                                    $('#tablePoints tbody').empty();
+                                    Msg.success("Removed points ok");
+                                } else {
+                                    Msg.error("There was a problem removing points. Please try again and contact the administrator if you still have problems");
+                                }
+                            },
+                            error: function (resp) {
+                                Msg.error("An error occurred removing points. You might not have permission to do this");
+                            }
+                        });
+                    }
+                });
+            }
+
+            function doRemovePoints(checkBoxes) {
+                Msg.info("Deleting...", 2000);
+                $.ajax({
+                    type: 'POST',
+                    data: checkBoxes,
+                    dataType: "json",
+                    url: "",
+                    success: function (data) {
+                        flog("success", data);
+                        if (data.status) {
+                            Msg.success("Removed points ok");
+                            $("#tablePointsBody").reloadFragment();
+                        } else {
+                            Msg.error("There was a problem removing points. Please try again and contact the administrator if you still have problems");
+                        }
+                    },
+                    error: function (resp) {
+                        Msg.error("An error occurred removing points. You might not have permission to do this");
+                    }
+                });
+            }
+
         </script>
     </body>
 </html>
