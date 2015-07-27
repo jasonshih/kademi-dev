@@ -176,7 +176,9 @@
                                         <th>Margin</th>
                                         <th>Pts Multiplier</th>
                                         <th></th>
-                                        <th class="action"></th>
+                                        <th class="text-center">
+                                            <input class="product-all-toggle" type="checkbox" />
+                                        </th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -194,8 +196,8 @@
                                         <td>$!p.margin</td>
                                         <td>$!p.multiplier</td>
                                         <td></td>
-                                        <td class="">
-                                            <input $formatter.ifTrue( $p.inReward, "checked", "" ) class="product-toggle" type="checkbox" value="true" />
+                                        <td class="text-center">
+                                            <input $formatter.ifTrue( $p.inReward, "checked", "" ) data-pid="$p.productId" class="product-toggle" type="checkbox" value="true" />
                                         </td>
                                         <td>
                                             <a href="$p.productId" class="product-inreward-details">
@@ -244,9 +246,9 @@
                 //$(".product-toggle").bootstrapToggle();
                 $("#table-products").on("change", ".product-toggle", function (e) {
                     var target = $(e.target);
-                    var productName = target.closest("tr").find("a").attr("href");
+                    var productName = target.closest("tr").find("a").html();
                     var v = target.prop("checked");
-                    updateProductIncluded(productName, v);
+                    updateProductIncluded(target.data('pid'), productName, v);
                 });
                 var productInRewardModal = $("#editProductInRewardModal");
                 $("#table-products").on("click", ".product-inreward-details", function (e) {
@@ -259,6 +261,20 @@
                         Msg.info("Saved");
                         productInRewardModal.modal("hide");
                     }
+                });
+                
+                $('body').on('change', '.product-all-toggle', function (e) {
+                    e.preventDefault();
+                    var btn = $(this);
+                    Msg.info('Updating all products');
+                    var isChecked = btn.is(':checked');
+                    var ids = [];
+                    var allIds = $('.product-toggle');
+                    allIds.each(function(count, item){
+                        ids.push($(item).data('pid'));
+                    });
+                    
+                    updateProductSelected(ids.join(','), isChecked);
                 });
             });
 
@@ -320,7 +336,7 @@
                 });
             }
 
-            function updateProductIncluded(productId, included) {
+            function updateProductIncluded(productId, productName, included) {
                 $.ajax({
                     type: "POST",
                     url: window.location.pathname,
@@ -332,14 +348,46 @@
                     success: function (response) {
                         flog("response", response, response.status);
                         if (response.status) {
-                            Msg.info("Updated " + productId);
                             if (included) {
+                                Msg.info("Added " + productName);
                                 $("#product-" + productId).addClass("in-reward-true");
                             } else {
+                                Msg.info("Removed " + productName);
                                 $("#product-" + productId).removeClass("in-reward-true");
                             }
                         } else {
                             Msg.error("There was an error changing the product inclusion status");
+                        }
+                    },
+                    error: function (event, XMLHttpRequest, ajaxOptions, thrownError) {
+                        flog('error saving moduleStatus', event, XMLHttpRequest, ajaxOptions, thrownError);
+                        Msg.error("There was an error changing the product inclusion status");
+                    }
+                });
+            }
+
+            function updateProductSelected(productIds, included) {
+                var data = {};
+                if (included) {
+                    data['addProductIds'] = productIds;
+                } else {
+                    data['removeProductIds'] = productIds;
+                }
+                $.ajax({
+                    type: "POST",
+                    url: window.location.pathname,
+                    datatype: "json",
+                    data: data,
+                    success: function (response) {
+                        flog("response", response, response.status);
+                        if (response.status) {
+                            Msg.info(response.messages.first());
+                            var ids = productIds.split(',');
+                            ids.each(function (val) {
+                                $('.product-toggle[data-pid=' + val + ']').prop('checked', included);
+                            });
+                        } else {
+                            Msg.error("There was an error changing the product status");
                         }
                     },
                     error: function (event, XMLHttpRequest, ajaxOptions, thrownError) {
