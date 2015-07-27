@@ -189,13 +189,13 @@
                                     #else
                                     #foreach($p in $products )
                                     <tr class='in-reward-$p.inReward' id='product-$p.productId'>
-                                        <td><a href='$p.productId'>$p.name</a></td>
+                                        <td><a href='/products/$p.productId'>$p.name</a></td>
                                         <td>$formatter.htmlEncode($p.title)</td>
                                         <td>$!p.margin</td>
                                         <td>$!p.multiplier</td>
                                         <td></td>
                                         <td class="">
-                                            <input $formatter.ifTrue( $p.inReward, "checked", "" ) class="product-toggle" data-toggle="toggle" data-on="In" data-off="Out" data-onstyle="success" data-offstyle="danger" type="checkbox" value="true" />
+                                            <input $formatter.ifTrue( $p.inReward, "checked", "" ) class="product-toggle" type="checkbox" value="true" />
                                         </td>
                                         <td>
                                             <a href="$p.productId" class="product-inreward-details">
@@ -241,7 +241,7 @@
                     }
                 });
                 initSearchProduct();
-                $(".product-toggle").bootstrapToggle();
+                //$(".product-toggle").bootstrapToggle();
                 $("#table-products").on("change", ".product-toggle", function (e) {
                     var target = $(e.target);
                     var productName = target.closest("tr").find("a").attr("href");
@@ -312,7 +312,7 @@
                         var fragment = $(data).find("#products-list");
                         flog("frag", fragment, $("#products-list"));
                         $("#products-list").replaceWith(fragment);
-                        $(".product-toggle").bootstrapToggle();
+                        //$(".product-toggle").bootstrapToggle();
                     },
                     error: function (resp) {
                         Msg.error("An error occured doing the user search. Please check your internet connection and try again");
