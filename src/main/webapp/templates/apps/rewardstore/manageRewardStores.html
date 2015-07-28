@@ -31,7 +31,7 @@
                             #foreach($v in $page.children)
                             <tr>
                                 <td><a href="$v.name">$v.title</a></td>
-                                <td><a href="/points-bucket/$v.pointsBucket.name">$v.pointsBucket.title</></td>
+                                <td><a href="/points-buckets/$v.pointsBucket.name">$v.pointsBucket.title</a></td>
                                 <td>
                                     #foreach($g in $v.selectedGroups)
                                         #genGroup($g)
