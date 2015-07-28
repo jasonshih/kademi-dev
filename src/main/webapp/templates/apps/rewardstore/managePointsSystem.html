@@ -154,7 +154,18 @@
                         </div>
                         <br/>
 
-                        <p>Shows points allocated (max 1000 records)</p>
+                        <div class="input-group date-range col-md-4 pull-left">
+                            <label for="report-range" class="input-group-addon">Time</label>
+                            <input type="text" id="report-range" placeholder="Choose a date range" value="" class="form-control" />
+                        </div>
+
+                        <div class="input-group col-md-4">
+                            <label for="data-query" class="input-group-addon">Search</label>
+                            <input type="text" id="data-query" placeholder="Search" value="" class="form-control" />
+                        </div>
+
+                        <div class="clearfix"></div>
+                        <hr/>
 
                         <table class="table table-bordered table-striped" id="tablePoints">
                             <colgroup>
@@ -174,7 +185,7 @@
                                 </tr>
                             </thead>
                             <tbody id="tablePointsBody">
-                                #foreach($points in $page.awardedPoints)
+                                #foreach($points in $page.history)
                                 <tr>
                                     <td>$points.numPoints</td>
                                     <td>$formatter.formatDateTime($points.issuedDate)</td>
@@ -273,7 +284,10 @@
 
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
         <script type="text/javascript">
-            var quiz = $formatter.toJson($page.quiz);
+            var startDate = null;
+            var endDate = null;
+            var searchQ = null;
+
             $(function () {
                 $("select.pointsType").click(function () {
                     showHidePointsOrgType();
@@ -302,6 +316,25 @@
                 });
                 initRemovePoints();
                 initClearAllPoints();
+
+                initHistorySearch();
+
+                $('body').on('keypress', '#data-query', function (e) {
+                    var code = e.keyCode || e.which;
+                    if (code == 13) {
+                        e.preventDefault();
+                        $(this).change();
+                        return false;
+                    }
+                });
+
+                $('body').on('change', '#data-query', function (e) {
+                    e.preventDefault();
+                    var inp = $(this);
+                    searchQ = inp.val();
+                    flog(searchQ);
+                    doHistorySearch();
+                });
             });
 
             function showHidePointsOrgType() {
@@ -376,6 +409,61 @@
                     },
                     error: function (resp) {
                         Msg.error("An error occurred removing points. You might not have permission to do this");
+                    }
+                });
+            }
+
+            function initHistorySearch() {
+                var reportRange = $('#report-range');
+
+                reportRange.exist(function () {
+                    flog("init report range");
+                    reportRange.daterangepicker({
+                        format: 'DD/MM/YYYY', // YYYY-MM-DD
+                        ranges: {
+                            'Last 7 Days': [moment().subtract('days', 6), moment()],
+                            'Last 30 Days': [moment().subtract('days', 29), moment()],
+                            'This Month': [moment().startOf('month'), moment().endOf('month')],
+                            'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
+                            'This Year': [moment().startOf('year'), moment()],
+                        },
+                    },
+                            function (start, end) {
+                                flog('onChange', start, end);
+                                startDate = start;
+                                endDate = end;
+                                doHistorySearch();
+                            }
+                    );
+                });
+            }
+
+            function doHistorySearch() {
+                flog('doHistorySearch', startDate, endDate, searchQ);
+                Msg.info("Doing search...", 2000);
+
+                var data = {
+                    startDate: formatDate(startDate),
+                    finishDate: formatDate(endDate),
+                    dataQuery: searchQ
+                };
+                flog("data", data);
+
+                var target = $("#tablePointsBody");
+                target.load();
+
+                $.ajax({
+                    type: "GET",
+                    url: window.location.pathname,
+                    dataType: 'html',
+                    data: data,
+                    success: function (content) {
+                        flog('response', content);
+                        Msg.success("Search complete", 2000);
+                        var newBody = $(content).find("#tablePointsBody");
+                        target.replaceWith(newBody);
+                        $("abbr.timeago").timeago();
+                        flog("done insert and timeago", $("abbr.timeago"));
                     }
                 });
             }
