@@ -2,7 +2,7 @@ function initHtmlEditorPage(fileName, cssPaths) {
     flog("initHtmlEditorPage");
     initLoadingOverlay();
     var h = $(window).height() - 180;
-    initHtmlEditors( $("#editor"), h , null, "", standardRemovePlugins + ",autogrow" );
+    initHtmlEditors($("#editor"), h, null, "", standardRemovePlugins + ",autogrow");
 
     var btnSave = $('.btn-save-file');
 
@@ -30,9 +30,15 @@ function initHtmlEditorPage(fileName, cssPaths) {
             }
         })
     });
-
     
-    $(window).resize(function(){
+    $(window).on('keydown', function (e) {
+        if (e.ctrlKey && e.keyCode === keymap.S) {
+            e.preventDefault();
+            btnSave.trigger('click');
+        }
+    });
+
+    $(window).resize(function () {
         $("#cke_1_contents").css("height", ($(window).height() - 180) + "px");
     });
 
