@@ -8,6 +8,9 @@
         <script type="text/javascript" src="manageMenu.js">//</script>
         <script type="text/javascript" src="manageApps.js">//</script>
         <script type="text/javascript" src="/static/js/managePublishing.js">//</script>
+        <script type="text/javascript" src="/static/bootstrap-upcrop-image/1.0/bootstrap-upcrop-image.js">//</script>
+        <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
+
         <!-- <script src="/theme/assets/plugins/bootstrap-switch/static/js/bootstrap-switch.min.js">//</script> -->
         <!-- <script type="text/javascript" src="/templates/themes/admin/prompt.js">//</script> -->
         <style>
@@ -70,14 +73,14 @@
                         #else
                         <a href="${b.href}" class="hide-branch pull-right btn-xs btn btn-warning" title="Hide this version. Can be restored from the manage versions screen"><i class="clip-eye"></i></a>
                         #end
-                    </aside>                    
+                    </aside>
                     <a href="${b.href}" class="branch noclear">
                         $b.name
                     </a>
                 </li>
                 #end
             </ul>
-        </div>        
+        </div>
 
         <div class="btn-group">
             <a target='_blank' href='$page.href?goto=' class="btn btn-sm btn-success">
@@ -90,14 +93,14 @@
                 <a class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" href="#">
                     <b>Change website:</b> $page.closest("website").name
                     <span class="caret"></span>
-                </a>            
+                </a>
                 <ul role="menu" class="dropdown-menu list">
                     #foreach($w in $page.closest("website").parent.children)
                     <li class="list-item"><a href="${w.href}">$w.name</a></li>
-                    #end                               
-                </ul>            
+                    #end
+                </ul>
             </div>
-        </div>          
+        </div>
 
         <div class="clearfix"></div>
         <br />
@@ -124,12 +127,13 @@
                         <div class="form-group">
                             <label for="websiteName" class="col-sm-3 control-label">Website ID</label>
                             <div class="col-sm-2">
-                                <input type="text" name="name" id="websiteName" value="$!page.website.name" class="required simpleChars form-control" required="true" />                                
+                                <input type="text" name="name" id="websiteName" value="$!page.website.name" class="required simpleChars form-control" required="true" />
                             </div>
                             <div class="col-sm-4">
                                 <small>This is a code which forms part of the address to your site ie <b>id</b>.olhub.com. It must be unique.</small>
                             </div>
                         </div>
+
 
                         <div class="form-group">
                             <label for="websiteTitle" class="col-sm-3 control-label">Display name</label>
@@ -181,7 +185,27 @@
                                 <button type="submit" class="btn btn-sm btn-success">Save details</button>
                             </div>
                         </div>
-                    </form>                    
+                    </form>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="clip-pictures"></i>Website image
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-xs-4 col-md-2">
+                                    <button id="btn-change-ava" class="btn btn-success">Select image</button>
+                                </div>
+                                <div id="websiteImage">
+                                    #if( $page.imageHash )
+                                    <div class="col-xs-6 col-md-3 product-image-thumb">
+                                        <div class="thumbnail"><img src="/_hashes/files/$page.imageHash/alt-150-150.png"/></div>
+                                    </div>
+                                    #end
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div> <!-- End Details -->
 
                 <div id="panel_theme" class="tab-pane">
@@ -222,7 +246,7 @@
                                 <textarea id="menu" name="menu" class="form-control limited" rows="5">$!page.themeAttributes.menu</textarea>
                             </div>
                         </div>
-                        #foreach( $customField in $page.customFields ) 
+                        #foreach( $customField in $page.customFields )
                         <div class="form-group">
                             <label for="menu" class="col-sm-3 control-label">$customField.text</label>
                             <div class="col-sm-6">
@@ -235,7 +259,7 @@
                                 <button type="submit" class="btn btn-sm btn-success">Save Changes</button>
                             </div>
                         </div>
-                    </form>                    
+                    </form>
                 </div> <!-- End theme -->
 
                 <div id="panel_groups" class="tab-pane">
@@ -247,7 +271,7 @@
                             #foreach($g in $page.selectedGroups)
                             <div class="alert alert-info">
                                 <span class="fa fa-users"></span>
-                                <a href="/groups/$g.name/members">$g.name</a> 
+                                <a href="/groups/$g.name/members">$g.name</a>
                                 #if( $g.groupType == "P" )
                                 - Primary group
                                 #elseif( $g.groupType == "M" )
@@ -268,14 +292,14 @@
                             </div>
                             #end
                         </div>
-                    </div>                    
+                    </div>
                 </div> <!-- End groups -->
 
                 <div id="panel_mailserver" class="tab-pane">
-                    <div class="alert alert-danger pageMessage">.</div> 
+                    <div class="alert alert-danger pageMessage">.</div>
 
                     <h3>Setting up DNS for email</h3>
-                    <p>Spam is a big problem, and most email applications and servers try to prevent it. There are several 
+                    <p>Spam is a big problem, and most email applications and servers try to prevent it. There are several
                         ways for email senders increase the level of trust with email receivers, to increase the number of emails
                         that get through. The main ones are:
                     </p>
@@ -288,7 +312,7 @@
                     <h4>DKIM</h4>
                     <p class="">DKIM is a way to increase the number of emails which reach your recipients, by
                         reducing your spam score. It does this by adding a digital signature to each email signed
-                        signed and verified by your DNS.</p>                        
+                        signed and verified by your DNS.</p>
                     <p>
                         To use DKIM you need to generate public and private keys as below ,and add the public key to your DNS, and then insert
                         your private key below.
@@ -343,7 +367,7 @@
                             <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
                             <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Create</button>
                         </div>
-                    </div><!-- /.modal -->                                    
+                    </div><!-- /.modal -->
 
                     <table id="certificate-types-table" class="table table-striped table-hover">
                         <colgroup>
@@ -359,7 +383,7 @@
                         <thead>
                             <tr>
                                 <th>Title</th>
-                                <th>Start Date</th>                                    
+                                <th>Start Date</th>
                                 <th>Expiry Date</th>
                                 <th class="text-center">Certificate</th>
                                 <th class="text-center">Private Key</th>
@@ -373,7 +397,7 @@
                             #foreach($cer in $page.certificates)
                             <tr>
                                 <td>$cer.title</td>
-                                <td>$formatter.formatDate($cer.startDate)</td>  
+                                <td>$formatter.formatDate($cer.startDate)</td>
                                 <td>$formatter.formatDate($cer.expiryDate)</td>
                                 #set($certS = $page.getCertificateStatus($cer))
                                 #if($certS == "notvalid")
@@ -404,7 +428,7 @@
                                         <span class="label label-sm label-success">&nbspActive&nbsp</span>
                                         #else
                                         <span class="label label-sm label-warning">Inactive</span>
-                                        #end                                        
+                                        #end
                                     </div>
                                 </td>
 
@@ -479,7 +503,7 @@
                                                     <tr>
                                                         <td>$foreach.count</td>
                                                         <td>$!rootCert.title</td>
-                                                        <td>$formatter.formatDate($rootCert.startDate)</td>  
+                                                        <td>$formatter.formatDate($rootCert.startDate)</td>
                                                         <td>$formatter.formatDate($rootCert.expiryDate)</td>
                                                         <td><a href="$rootCert.id" data-certid="$cer.id" class= "btn btn-sm btn-danger btn-delete-rootCert"><i class="fa fa-times"></i> Delete</a></td>
                                                     </tr>
@@ -510,7 +534,7 @@
                     #if( $apps.isEmpty() )
                     <div class="well">
                         <p>No applications are available. This means that the parent organisation has disabled them</p>
-                    </div>        
+                    </div>
                     #end
                     <div class="appsContainer">
                         <div class="table-responsive">
@@ -558,7 +582,7 @@
                     #end
                 </div> <!-- End apps -->
             </div>
-        </div>        
+        </div>
 
         <div id="modalGroup" class="modal fade" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
             <div class="modal-header">
@@ -1203,6 +1227,6 @@
                     }
                 });
             }
-        </script>        
+        </script>
     </body>
 </html>

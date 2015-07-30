@@ -3,6 +3,43 @@ function initManageWebsite() {
     initGroupCheckbox();
     initApps();
     initManageMenu();
+    initManageWebsiteImage();
+}
+
+function initManageWebsiteImage() {
+    $('#btn-change-ava').upcropImage({
+        buttonContinueText: 'Save',
+        url: window.location.pathname, // this is actually the default value anyway
+        onCropComplete: function (resp) {
+            flog("onCropComplete:", resp, resp.nextHref);
+            $("#websiteImage").reloadFragment();
+        },
+        onContinue: function (resp) {
+            flog("onContinue:", resp, resp.result.nextHref);
+            $.ajax({
+                url: window.location.pathname,
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    uploadedHref: resp.result.nextHref,
+                    applyImage: true
+                },
+                success: function (resp) {
+                    flog("success");
+                    if (resp.status) {
+                        Msg.info("Done");
+                        $("#websiteImage").reloadFragment();
+                    } else {
+                        Msg.error("An error occured processing the product image");
+                    }
+                },
+                error: function () {
+                    alert('Sorry, we couldn\'t save your profile image.');
+                }
+            });
+        }
+    });
+
 }
 
 function initGroupCheckbox() {
@@ -33,7 +70,7 @@ function setGroupRecipient(name, isRecip) {
 //                        $(".GroupList").append("<div class=\"alert alert-block alert-info\"><span class=\"fa fa-users\"></span>" + name + "</div>");
 //                        log("appended to", $(".GroupList"));
 //                    } else {
-//                        var toRemove = $(".GroupList div").filter(function () {                            
+//                        var toRemove = $(".GroupList div").filter(function () {
 //                            var thisName = $(this).find("a").text();
 //                            flog("filter", this, thisName);
 //                            return thisName === name;

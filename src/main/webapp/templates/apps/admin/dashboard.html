@@ -19,6 +19,32 @@
         <div id="dashboard-wrapper" class="row">
             <div class="col-md-8">
                 #portlets("adminDashboardPrimaryAnnounce")
+                <!-- Display website tiles -->
+                <div class="row">
+                    #foreach( $website in $page.organisation.websites)
+                    <div class="col-md-3 col-sm-4 gallery-img">
+                        <div class="wrap-image">
+                            <a title="Clip-One Business Card" href="/websites/$website.name/$website.liveBranch/?goto=" class="group1 cboxElement" target="_blank">
+                                <p class="lead tileText">$website.name</p>
+                                #if( $website.imageHash )
+                                <img class="img-responsive" alt="" src="/_hashes/files/$website.imageHash">
+                                #else
+                                <img class="img-responsive" alt="" src="/static/images/clipone-01.jpg">
+                                #end
+                            </a>
+                            <div class="tools tools-bottom">
+                                <a href="/websites/$website.name/$website.liveBranch/">
+                                    <span class="glyphicon glyphicon-cog"></span>
+                                </a>
+                                <a href="/repositories/$website.name/$website.liveBranch/">
+                                    <span class="glyphicon glyphicon-folder-close"></span>
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+                    #end
+                </div>
                 <div class="row">
                     #portlets("adminDashboardPrimary")
                 </div>
@@ -47,10 +73,10 @@
                     flog("recent", recent);
                     var list = $("#recentList ul");
                     var seen = new Array();
-                    for (var i = recent.length-1; i > (recent.length-10) && i > 0; i--) {
+                    for (var i = recent.length - 1; i > (recent.length - 10) && i > 0; i--) {
                         var item = recent[i];
                         var pos = $.inArray(item.url, seen);
-                        if( pos < 0 ) {
+                        if (pos < 0) {
                             seen.push(item.url);
                             var li = $("<li class=''><a href='" + item.url + "'>xx</a></li>");
                             list.append(li)

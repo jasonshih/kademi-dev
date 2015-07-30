@@ -78,7 +78,10 @@
                                         <div class="col-md-6">
                                             <br/>
                                             <br/>
+                                            #set( $add = false )
+                                            #if( $page.shippingAddresses.size() > 0 )
                                             #set( $add = $page.shippingAddresses.get(0) )
+                                            #end
                                             <div class="form-group">
                                                 <label for="addressLine1" class="col-sm-3 control-label">Address line 1</label>
                                                 <div class="col-sm-9">
