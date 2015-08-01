@@ -22,14 +22,16 @@
                 <!-- Display website tiles -->
                 <div class="row">
                     #foreach( $website in $page.organisation.websites())
+                    #if( $website.redirecTo )
+                    #else
                     <div class="col-md-3 col-sm-4 gallery-img">
                         <div class="wrap-image">
                             <a title="Clip-One Business Card" href="/websites/$website.name/$website.liveBranch/?goto=" class="group1 cboxElement" target="_blank">
                                 <p class="lead tileText">$website.name</p>
                                 #if( $website.imageHash )
-                                <img class="img-responsive" alt="" src="/_hashes/files/$website.imageHash">
+                                <img class="img-responsive" alt="" src="/_hashes/files/$website.imageHash" style="height: 178px; width: 237px">
                                 #else
-                                <img class="img-responsive" alt="" src="/static/images/clipone-01.jpg">
+                                <img class="img-responsive" alt="" src="/static/images/website-icon.png">
                                 #end
                             </a>
                             <div class="tools tools-bottom">
@@ -43,6 +45,7 @@
                             </div>
                         </div>
                     </div>
+                    #end
                     #end
                 </div>
                 <div class="row">
