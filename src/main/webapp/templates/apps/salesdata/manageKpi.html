@@ -440,7 +440,7 @@
                                         #set( $level = false)
                                         #set( $level = $page.progressLevel( $page.queryProfile, $page.queryStart, $page.queryFinish ) )
                                         #if( $level )
-                                            $level
+                                        <span class="badge badge-info">$level.levelName</span> Actual = $formatter.formatNumeric($level.actual) vs target $formatter.formatNumeric($level.target)
                                         #else
                                             Did not meet any levels
                                         #end

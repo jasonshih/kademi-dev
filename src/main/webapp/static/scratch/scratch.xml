@@ -1,101 +1,34 @@
-<MultiStep>
-    <nextSteps>
-        <DatabaseSourceStep providerId="survey">
-            <next class="co.kademi.server.integration.impl.MapStep">
-                <keyColumn column="0">
-                    <expr>value.profile.userId</expr>
-                </keyColumn>
-                <valueColumn column="0"/>
-                <keyAttribute>r1</keyAttribute>
-            </next>
-            <column field="rewardNames">
-                <value class="string">rego-survey</value>
-            </column>
-        </DatabaseSourceStep>
-        <DatabaseSourceStep providerId="survey">
-            <next class="ExcelOutputStep">
-                <firstSheetTitle>My first sheet</firstSheetTitle>
-                <headers>
-                    <string>Email</string>
-                    <string>First Name</string>
-                    <string>Last Name</string>
-                    <string>Rate Knowledge - Rego survey</string>
-                    <string>Rate Knowledge - Final survey</string>
-                    <string>Flea treatment Brand - Rego survey</string>
-                    <string>Flea treatment Brand - Final survey</string>
-                    <string>Flea prevention Brand - Rego survey</string>
-                    <string>Flea prevention Brand - Final survey</string>
-                    <string>Heartworm prevention Brand - Rego survey</string>
-                    <string>Heartworm prevention Brand - Final survey</string>
-                    <string>Intestinal worm treatment Brand - Rego survey</string>
-                    <string>Intestinal treatment Brand - Final survey</string>
-                    <string>Tick control Brand - Rego survey</string>
-                    <string>Tick control Brand - Final survey</string>
-                    <string>Combination (all-in-one) Brand - Rego survey</string>
-                    <string>Combination (all-in-one) Brand - Final survey</string>
-                </headers>
-                <column field="email" column="0">
-                    <expr>value.profile.email</expr>
-                </column>
-                <column field="firstName" column="0">
-                    <expr>value.profile.firstName</expr>
-                </column>
-                <column field="surName" column="0">
-                    <expr>value.profile.surName</expr>
-                </column>
-                <column field="ReccomendBasedOnRego" column="0">
-                    <expr>value.answers.?answer1RateKnowledge</expr>
-                </column>
-                <column field="ReccomendBasedOnC4" column="0">
-                    <expr>value.answers.?answer1RateKnowledge</expr>
-                </column>
-                <column field="FleaTreatmentRego" column="0">
-                    <expr>value.answers.?answer3FleaTreatmentBrand</expr>
-                </column>
-                <column field="FleaTreatmentC4" column="0">
-                    <expr>value.answers.?answer3FleaTreatmentBrand</expr>
-                </column>
-                <column field="FleaPreventionRego" column="0">
-                    <expr>value.answers.?answer4FleaPreventionBrand</expr>
-                </column>
-                <column field="FleaPreventionC4" column="0">
-                    <expr>value.answers.?answer4FleaPreventionBrand</expr>
-                </column>
-                <column field="HeartwormPreventionRego" column="0">
-                    <expr>value.answers.?answer5HeartwormPreventionBrand</expr>
-                </column>
-                <column field="HeartwormPreventionC4" column="0">
-                    <expr>value.answers.?answer5HeartwormPreventionBrand</expr>
-                </column>
-                <column field="IntestinalWormTreatmentRego" column="0">
-                    <expr>value.answers.?answer6intestinalWormTreatmentBrand</expr>
-                </column>
-                <column field="IntestinalWormTreatmentC4" column="0">
-                    <expr>value.answers.?answer6intestinalWormTreatmentBrand</expr>
-                </column>
-                <column field="TickControlRego" column="0">
-                    <expr>value.answers.?answer7TickControlBrand</expr>
-                </column>
-                <column field="TickControlC4" column="0">
-                    <expr>value.answers.?answer7TickControlBrand</expr>
-                </column>
-                <column field="CombinationBrandRego" column="0">
-                    <expr>value.answers.?answer8TickControlBrand</expr>
-                </column>
-                <column field="CombinationBrandC4" column="0">
-                    <expr>value.answers.?answer8TickControlBrand</expr>
-                </column>
-
-            </next>
-            <column field="rewardNames" >
-                <value class="string">c4-survey</value>
-            </column>
-        </DatabaseSourceStep>
-    </nextSteps>
-</MultiStep>
-
-
-
-
-
-
+<or nature="OR">
+    <and nature="AND">
+        <expr propertyName="fields.name" ignoreCase="false" op="=">
+            <value class="string">category</value>
+        </expr>
+        <org.hibernate.criterion.LikeExpression>
+            <propertyName>fields.propValue</propertyName>
+            <value class="string">cars-metro-new</value>
+            <ignoreCase>true</ignoreCase>
+        </org.hibernate.criterion.LikeExpression>
+    </and>
+    <and nature="AND">
+        <and nature="AND">
+            <expr propertyName="fields.name" ignoreCase="false" op="=">
+                <value class="string">isdemo</value>
+            </expr>
+            <org.hibernate.criterion.LikeExpression>
+                <propertyName>fields.propValue</propertyName>
+                <value class="string">true</value>
+                <ignoreCase>true</ignoreCase>
+            </org.hibernate.criterion.LikeExpression>
+        </and>
+        <and nature="AND">
+            <expr propertyName="fields.name" ignoreCase="false" op="=">
+                <value class="string">category</value>
+            </expr>
+            <org.hibernate.criterion.LikeExpression>
+                <propertyName>fields.propValue</propertyName>
+                <value class="string">cars-metro-pov</value>
+                <ignoreCase>true</ignoreCase>
+            </org.hibernate.criterion.LikeExpression>
+        </and>
+    </and>
+</or>
