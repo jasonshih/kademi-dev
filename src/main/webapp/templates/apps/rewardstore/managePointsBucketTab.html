@@ -2,32 +2,25 @@
 #set( $rs = $page.find("/points-buckets/").child($reward.name) )
 
 <h1><a href="/points-buckets/$reward.name">$reward.title</a></h1>
-<table class="table table-striped">
-    <tr>
-        <th>Current balance</th>
-        <td colspan="3">
-            #set( $current = $rs.balance($page.profile) )
-            #set( $avail = $rs.availableBalance($page.profile) )
-            $current pts
-            #if( $current != $avail )
-            (available $avail)
-            #end
-        </td>
-    </tr>
-</table>
-
 
 <table class="table table-striped">
+    <colgroup>
+        <col width="250px"/>
+        <col />
+        <col width="10%"/>
+    </colgroup>
     <thead>
         <tr>
-            <th>Credits</th>
             <th>Date</th>
             <th>Reason</th>
+            <th>Credits</th>
         </tr>
     </thead>
     <tbody>
         #foreach($p in $allPoints.get($reward))
         <tr>
+            <td>$p.date</td>
+            <td>$p.description</td>
             <td>
                 #if( $p.txType == "C" )
                 <span class="label label-success">+ $p.numPoints</span>
@@ -35,12 +28,30 @@
                 <span class="label label-warning">- $p.numPoints</span>
                 #end
             </td>
-            <td>$p.date</td>
-            <td>$p.description</td>
+        </tr>
+        #end
+        <tr>
+            #set( $current = $rs.balance($page.profile) )
+            <td></td>
+            <td class="text-right">
+                <span>Total Points:</span>
+            </td>
+            <td>
+                <strong>$current pts</strong>
+            </td>
+        </tr>
+        #set( $avail = $rs.availableBalance($page.profile) )
+        #if($current == $avail)
+        <tr>
+            <td></td>
+            <td class="text-right">
+                <span>Available Points:</span>
+            </td>
+            <td>
+                <strong>$avail pts</strong>
+            </td>
         </tr>
         #end
     </tbody>
 </table>
-
 #end
-
