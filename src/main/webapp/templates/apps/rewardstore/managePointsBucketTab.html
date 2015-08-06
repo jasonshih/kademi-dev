@@ -6,8 +6,8 @@
     <tr>
         <th>Current balance</th>
         <td colspan="3">
-            #set( $current = $rs.balance() )
-            #set( $avail = $rs.availableBalance() )
+            #set( $current = $rs.balance($page.profile) )
+            #set( $avail = $rs.availableBalance($page.profile) )
             $current pts
             #if( $current != $avail )
             (available $avail)
