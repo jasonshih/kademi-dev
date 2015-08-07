@@ -38,6 +38,7 @@
                     <li><a data-toggle="tab" href="#history">History</a></li>
                     <li><a data-toggle="tab" href="#results">Results</a></li>
                     <li><a data-toggle="tab" href="#query">Query</a></li>
+                    <li><a data-toggle="tab" href="#leaderboard">Leaderboard</a></li>
                 </ul>
                 <div class="tab-content">
                     <div id="general" class="tab-pane">
@@ -442,7 +443,7 @@
                                         #if( $level )
                                         <span class="badge badge-info">$level.levelName</span> Actual = $formatter.formatNumeric($level.actual) vs target $formatter.formatNumeric($level.target)
                                         #else
-                                            Did not meet any levels
+                                        Did not meet any levels
                                         #end
                                     </td>
 
@@ -520,6 +521,75 @@
                             </table>
                             #else
                             <div class="alert alert-info">Query did not match any records</div>
+                            #end
+                        </div>
+                    </div>
+                    <div id="leaderboard" class="tab-pane">
+                        <p>Generate a leaderboard for this KPI over a specified date range</p>
+
+                        <div class="input-group date-range col-md-4 pull-left">
+                            <label for="report-range" class="input-group-addon">Time</label>
+                            <input type="text" id="leaderboardDateRange" placeholder="Choose a date range" value="" class="form-control" />
+                        </div>
+
+                        <button class="btn btn-info" id="runLeaderboard">
+                            <span class="glyphicon glyphicon-play-circle"></span>
+                            Query
+                        </button>
+
+                        <div class="clearfix"></div>
+                        <hr/>
+
+                        <div id="leaderboardResults">
+                            #if( $request.params.leaderboard )
+                            #set( $startDate = $formatter.toDate( $request.params.startDate ) )
+                            #set( $endDate = $formatter.toDate( $request.params.endDate ) )
+                            #set( $lb = $page.getLeaderboard($startDate, $endDate))
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Rank</th>
+                                        <th>Amount</th>
+                                        <th>Participant</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="leaderboardBody">
+                                    #foreach($item in $lb.highestResults )
+                                    #set( $plusOne = $item.rank + 1 )
+                                    <tr>
+                                        <td>$plusOne</td>
+                                        <td>
+                                            #if( $item.amount )
+                                            $item.amount
+                                            #else
+                                            No value
+                                            #end
+                                        </td>
+                                        <td>
+                                            <!-- either a profilebean or orgdata -->
+                                            #if( $item.profile) <!-- is individual -->
+                                            <a href="/manageUsers/$item.profile.userId">$item.profile.name ($item.profile.userName)</a>
+                                            #else
+                                            <a href="/manageOrgs/$item.org.orgId">$item.org.title</a>
+                                            #end
+                                        </td>
+                                        <td>
+                                            #if( $item.profile)
+                                            #foreach($orgAndGroup in $item.profile.primaryMemberships().groupByOrg.entrySet() )
+                                            <span class="label label-success">
+                                                <b>$orgAndGroup.value.first.groupName</b>
+                                                in
+                                                $orgAndGroup.key.title
+                                            </span>
+                                            #end
+                                            #end
+                                        </td>
+                                    </tr>
+                                    #end
+                                </tbody>
+                            </table>
+                            #else
+                            <p>Press the query button above to generate the leaderboard<p>
                             #end
                         </div>
                     </div>
@@ -683,6 +753,55 @@
 
                 initKpiLevelCsv();
                 initQuery();
+                initLeaderboard();
+            });
+
+            function initLeaderboard() {
+                var leaderboardRange = $('#leaderboardDateRange');
+                flog("initLeaderboard", leaderboardRange);
+                leaderboardRange.daterangepicker(
+                        {
+                            format: 'DD/MM/YYYY', // YYYY-MM-DD
+                            ranges: {
+                                'Last 7 Days': [moment().subtract('days', 6), moment()],
+                                'Last 30 Days': [moment().subtract('days', 29), moment()],
+                                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                                'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
+                                'This Year': [moment().startOf('year'), moment()],
+                            },
+                        },
+                        function (start, end) {
+                            flog('onChange', start, end);
+                            startDate = start;
+                            endDate = end;
+                        }
+                );
+
+                var drp = leaderboardRange.data('daterangepicker');
+                flog("drp", drp);
+                $("#runLeaderboard").click(function (e) {
+                    e.preventDefault();
+                    var startDate = drp.startDate;
+                    var endDate = drp.endDate;
+                    flog("drp", drp);
+                    var val = leaderboardRange.val();
+                    var url;
+                    if( val != "") {
+                        url = window.location.pathname + "?startDate=" + formatDate(startDate) + "&endDate=" + formatDate(endDate) + "&leaderboard=true";
+                    }else {
+                        url = window.location.pathname + "?leaderboard=true";
+                    }
+                    $("#leaderboardResults").reloadFragment({
+                        url: url,
+                        whenComplete: function () {
+                            Msg.info("Loaded leaderboard");
+                        }
+                    });
+
+                });
+            }
+
+            function initQuery() {
                 $('body').on('keypress', '#data-query', function (e) {
                     var code = e.keyCode || e.which;
                     if (code == 13) {
@@ -699,9 +818,7 @@
                     flog(searchQ);
                     doQuery();
                 });
-            });
 
-            function initQuery() {
                 var reportRange = $('#report-range');
 
                 reportRange.exist(function () {
