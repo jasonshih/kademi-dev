@@ -441,13 +441,18 @@
                                         #set( $level = false)
                                         #set( $level = $page.progressLevel( $page.queryProfile, $page.queryStart, $page.queryFinish ) )
                                         #if( $level )
-                                        <span class="badge badge-info">$level.levelName</span> Actual = $formatter.formatNumeric($level.actual) vs target $formatter.formatNumeric($level.target)
+                                        <span class="badge badge-info">$level.levelName</span>
+                                        Actual = $formatter.formatNumeric($level.actual) vs target $formatter.formatNumeric($level.target)
                                         #else
                                         Did not meet any levels
                                         #end
                                     </td>
 
                                 </tr>
+                            </table>
+
+                            <p class="lead">Level thresholds</p>
+                            <table class="table table-striped">
                                 #foreach($levelName in $page.levelNames)
                                 <tr>
                                     <th>$levelName</th>
