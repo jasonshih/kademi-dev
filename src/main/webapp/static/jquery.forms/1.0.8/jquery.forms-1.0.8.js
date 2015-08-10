@@ -70,7 +70,7 @@
             confirmMessage: null,
             valiationMessageSelector: ".pageMessage",
             validationFailedMessage: "Some inputs are not valid.",
-            networkErrorMessage: "Sorry, I couldnt reach the webserver. Please check your internet connection",
+            networkErrorMessage: "Sorry, there appears to be a problem with the network or server. Please check your internet connection. If you're connected ok this might be a glitch in the system.",
             emailErrorMessage: "Please check the format of your email address, it should read like ben@somewhere.com",
             requiredErrorMessage: "Please enter all required fields"
         }, options);
