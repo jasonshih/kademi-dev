@@ -401,6 +401,13 @@
                             #if( $page.queryRecords )
                             <table class="table table-striped">
                                 <tr>
+                                    <th>Partipiant</th>
+                                    <td colspan="2">
+                                        <a href="/manageUsers/$page.queryProfile.userId">$page.queryProfile.userName</a>
+                                    </td>
+                                </tr>
+
+                                <tr>
                                     <th>Progress</th>
                                     <td colspan="2">
                                         #set( $prog = $page.getProgress( $page.queryProfile, $page.queryStart, $page.queryFinish ) )
