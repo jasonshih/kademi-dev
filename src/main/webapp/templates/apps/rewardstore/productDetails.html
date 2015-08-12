@@ -3,6 +3,7 @@
         <title>Product Details</title>
         <link rel="stylesheet" type="text/css" href="reward-store.css" />
         <script src="/static/reload-fragment/1.0.1/jquery.reload-fragment-1.0.1.js" >//</script>
+        <script type="text/javascript" src="/static/uri/1.15.1/URI.js">//</script>
     </head>
     <body class="">
         <div class="container">
@@ -15,16 +16,20 @@
                 </div>
                 <div class="col-md-4">
                     <div style="margin-left:15px;" class="well addToCartContainer">
-                        #if( $page.primaryImageHref )
-                        <a onclick="" href="#">
-                            <img style="width:100%" src="$page.primaryImageHref" />
-                        </a>
-                        #end
-                        <span class="label label-success priceLabel">
-                            #if( $page.productPurchaseCost )
-                            $page.productPurchaseCost Points
+                        <div id="addToCartSection">
+                            #if( $page.primaryImageHref )
+                            <a onclick="" href="#">
+                                <img style="width:100%" src="$page.primaryImageHref" />
+                            </a>
                             #end
-                        </span>
+                            <span class="label label-success priceLabel">
+                                #set( $opts = $page.selectedParameterOptions )
+                                #set( $price = $page.getPurchaseAmount($opts) )
+                                #if( $price )
+                                $price.amount Points
+                                #end
+                            </span>
+                        </div>
                         <br/>
 
                         #foreach( $param in $page.parameters)
@@ -88,6 +93,17 @@
             <script type="text/javascript">
                 $(function () {
                     $("abbr.timeago").timeago();
+                    $(".productParameterSelect").change(function(e) {
+                        var optSelect = $(this);
+                        flog("productParameterSelect changed", optSelect);
+                        var uri = URI(window.location);
+                        uri.setSearch( optSelect.attr("name"), optSelect.val());
+                        flog("New uri", uri.toString());
+                        history.pushState(null, null, uri.toString() );
+                        $("#addToCartSection").reloadFragment({
+                            url: uri.toString()
+                        });
+                    });
                     $(".cart-add").click(function (e) {
                         e.preventDefault();
                         var target = $(e.target);

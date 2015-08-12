@@ -50,11 +50,13 @@
                                                 </td>
                                                 <td>
                                                     <h2>$item.itemPage.productTitle</h2>
+                                                    $item.itemPage.selectedParameterOptions
+
                                                     $!item.itemPage.productDescription
                                                 </td>
                                                 <td>
                                                     <input type="text" class="form-control quantity" value="$item.quantity" name="quantity.${foreach.count}" style="width: 50px" />
-                                                    <input type="hidden" class="itemHref" name="item.${foreach.count}" value="$item.itemPage.href" />
+                                                    <input type="hidden" class="itemHref" name="item.${foreach.count}" value="$item.href" />
                                                 </td>
                                                 <td class="cost">$item.itemPage.productPurchaseCost</td>
                                                 <td class="subtotal">$page.calcSubTotal( $item.itemPage.productPurchaseCost, $item.quantity )</td>
