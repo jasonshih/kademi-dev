@@ -75,6 +75,11 @@
                                         </label>
                                     </div>
                                 </td>
+                                <td>
+                                    <a href="$p.id" class="btn btn-primary btnEditPoints">
+                                        <span class="glyphicon glyphicon-pencil"></span>
+                                    </a>
+                                </td>                                
                             </tr>
                             #end
                             #end
@@ -181,10 +186,76 @@
             </form>
         </div>
 
+        <div id="modalEditPoints" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                <h4 class="modal-title">Edit points</h4>
+            </div>
+            <form method="post" action="" class="form-horizontal" id="new-points-form">
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="newUserEmail">No. of points</label>
+                        <div class="col-md-9">
+                            <input type="text" name="numPoints" required="true" id="awardNumPoints" class="numeric required form-control" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="newUserEmail">Reason</label>
+                        <div class="col-md-9">
+                            <input type="text" name="reason" required="true" id="" class="required form-control" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                    <button class="btn btn-sm btn-primary" data-type="form-submit" type="button">Save</button>
+                </div>
+            </form>
+        </div>
+        
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
         <script type="text/javascript">
             $(function () {
                 initSelectAll();
+                
+                var editModal = $("#modalEditPoints");
+                var modalForm = editModal.find("form");
+                modalForm.forms({
+                    callback: function(resp) {
+                        if( resp.status) {
+                            Msg.success("Points record updated ok");
+                            editModal.modal("hide");
+                            $("#pointsBody").reloadFragment();
+                        } else {
+                            Msg.error("Sorry, there was a problem updating the points record");
+                        }
+                    }
+                });
+                $("#pointsBody").on("click", ".btnEditPoints", function(e) {
+                    e.preventDefault();
+                    var href = $(e.target).closest("a").attr("href");                    
+                    modalForm.attr("action", href);
+                    $.ajax({
+                        url: href,
+                        dataType: "json",
+                        success: function (data) {
+                            flog("success", data)
+                            if (data.status) {
+                                modalForm.find("input[name=numPoints]").val(data.data.numPoints);
+                                modalForm.find("input[name=reason]").val(data.data.reason);
+                                editModal.modal("show");                                
+                            } else {
+                                Msg.error("There was a problem loading the points record");
+                            }
+                        },
+                        error: function (resp) {
+                            Msg.error("There was a problem loading the point record");
+                        }                        
+                    });
+                });
+                
                 $(".removeUsers").click(function (e) {
                     var node = $(e.target);
                     log("removeUsers", node, node.is(":checked"));
