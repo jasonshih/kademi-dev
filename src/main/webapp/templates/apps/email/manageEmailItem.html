@@ -44,11 +44,23 @@
                 </tr>
                 <tr>
                     <td>From</td>
-                    <td>$page.fromAddress</td>
+                    <td>
+                        #if( $page.emailItem.sender )
+                        <a href="/manageUsers/$page.emailItem.sender.id">$page.fromAddress</a>
+                        #else
+                        $page.fromAddress
+                        #end
+                    </td>
                 </tr>
                 <tr>
                     <td>To</td>
-                    <td>$page.recipientAddress</td>
+                    <td>
+                        #if( $page.emailItem.recipient )
+                        <a href="/manageUsers/$page.emailItem.recipient.id">$page.recipientAddress</a> ($page.emailItem.recipient.name)
+                        #else
+                        $page.recipientAddress
+                        #end
+                    </td>
                 </tr>
                 <tr>
                     <td>Subject</td>
