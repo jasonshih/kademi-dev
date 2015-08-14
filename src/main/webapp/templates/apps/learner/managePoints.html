@@ -34,7 +34,20 @@
                     </a>
                 </div>
                 <br/>
-                <div class="well">Showing the most recent points awarded</div>
+
+                <div class="input-group date-range col-md-4 pull-left">
+                    <label for="report-range" class="input-group-addon">Time</label>
+                    <input type="text" id="report-range" placeholder="Choose a date range" value="" class="form-control" />
+                </div>
+
+                <div class="input-group col-md-4">
+                    <label for="data-query" class="input-group-addon">Search</label>
+                    <input type="text" id="data-query" placeholder="Search" value="" class="form-control" />
+                </div>
+
+                <div class="clearfix"></div>
+                <hr/>
+
                 <div class="table-responsive">
                     <table class="table table-striped table-hover">
                         <thead>
@@ -60,7 +73,7 @@
                                 <td colspan="6">There are no recent results</td>
                             </tr>
                             #else
-                            #foreach($p in $page.recentPoints)
+                            #foreach($p in $page.history)
                             <tr>
                                 <td><a href="/points-buckets/$p.reward.name">$p.reward.name</a></td>
                                 <td><a href="/manageUsers/$p.issuedTo.id">$p.issuedTo.formattedName</a></td>
@@ -79,7 +92,7 @@
                                     <a href="$p.id" class="btn btn-primary btnEditPoints">
                                         <span class="glyphicon glyphicon-pencil"></span>
                                     </a>
-                                </td>                                
+                                </td>
                             </tr>
                             #end
                             #end
@@ -214,126 +227,12 @@
                 </div>
             </form>
         </div>
-        
+
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
         <script type="text/javascript">
             $(function () {
-                initSelectAll();
-                
-                var editModal = $("#modalEditPoints");
-                var modalForm = editModal.find("form");
-                modalForm.forms({
-                    callback: function(resp) {
-                        if( resp.status) {
-                            Msg.success("Points record updated ok");
-                            editModal.modal("hide");
-                            $("#pointsBody").reloadFragment();
-                        } else {
-                            Msg.error("Sorry, there was a problem updating the points record");
-                        }
-                    }
-                });
-                $("#pointsBody").on("click", ".btnEditPoints", function(e) {
-                    e.preventDefault();
-                    var href = $(e.target).closest("a").attr("href");                    
-                    modalForm.attr("action", href);
-                    $.ajax({
-                        url: href,
-                        dataType: "json",
-                        success: function (data) {
-                            flog("success", data)
-                            if (data.status) {
-                                modalForm.find("input[name=numPoints]").val(data.data.numPoints);
-                                modalForm.find("input[name=reason]").val(data.data.reason);
-                                editModal.modal("show");                                
-                            } else {
-                                Msg.error("There was a problem loading the points record");
-                            }
-                        },
-                        error: function (resp) {
-                            Msg.error("There was a problem loading the point record");
-                        }                        
-                    });
-                });
-                
-                $(".removeUsers").click(function (e) {
-                    var node = $(e.target);
-                    log("removeUsers", node, node.is(":checked"));
-                    var checkBoxes = node.closest(".Content").find("tbody td input[name=toRemoveId]:checked");
-                    if (checkBoxes.length == 0) {
-                        Msg.error("Please select the points you want to remove by clicking the checkboxs to the right");
-                    } else {
-                        if (confirm("Are you sure you want to remove " + checkBoxes.length + " points records?")) {
-                            doRemovePoints(checkBoxes);
-                        }
-                    }
-                });
-
-                $("#new-points-form").forms({
-                    callback: function (resp) {
-                        if (resp.status) {
-                            Msg.info("Assigned points OK");
-                            $('#modal-new-points').modal('hide');
-                            $('#pointsBody').reloadFragment();
-                        } else {
-                            alert("An error occured and the points may not have been assigned. Please refresh the page and try again");
-                        }
-                    }}
-                );
-
-                $("#doUploadCsv").mupload({
-                    buttonText: "<i class=\"clip-folder\"></i> Upload spreadsheet",
-                    url: "points.csv",
-                    useJsonPut: false,
-                    oncomplete: function (data, name, href) {
-                        log("oncomplete:", data.result.data, name, href);
-                        $(".results .numUpdated").text(data.result.data.numUpdated);
-                        $(".results .numInserted").text(data.result.data.numInserted);
-                        $(".results .numUnmatched").text(data.result.data.unmatched.length);
-                        showUnmatched(data.result.data.unmatched);
-                        $(".results").show();
-                        Msg.success("Upload completed. Please review any unmatched members below, or refresh the page to see the updated list of members");
-                    }
-                });
-
+                initManagePoints();
             });
-
-
-            function doRemovePoints(checkBoxes) {
-                $.ajax({
-                    type: 'POST',
-                    data: checkBoxes,
-                    dataType: "json",
-                    url: "",
-                    success: function (data) {
-                        log("success", data)
-                        if (data.status) {
-                            Msg.success("Removed points records");
-                            $('#pointsBody').reloadFragment();
-                        } else {
-                            Msg.error("There was a problem removing points records. Please try again and contact the administrator if you still have problems");
-                        }
-                    },
-                    error: function (resp) {
-                        Msg.error("An error occurred removing points. You might not have permission to do this");
-                    }
-                });
-            }
-
-            function showUnmatched(unmatched) {
-                var unmatchedTable = $(".results table");
-                var tbody = unmatchedTable.find("tbody");
-                tbody.html("");
-                $.each(unmatched, function (i, row) {
-                    log("unmatched", row);
-                    var tr = $("<tr>");
-                    $.each(row, function (ii, field) {
-                        tr.append("<td>" + field + "</td>");
-                    });
-                    tbody.append(tr);
-                });
-                unmatchedTable.show();
-            }
         </script>
     </body>
 </html>
