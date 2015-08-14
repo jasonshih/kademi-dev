@@ -50,7 +50,10 @@
                                                 </td>
                                                 <td>
                                                     <h2>$item.itemPage.productTitle</h2>
-                                                    $item.itemPage.selectedParameterOptions
+
+                                                    #foreach( $opt in $item.itemPage.selectedOptions( $item.itemPage.selectedParameterOptions ) )
+                                                    <p class="lead">$opt.title</p>
+                                                    #end
 
                                                     $!item.itemPage.productDescription
                                                 </td>
@@ -129,9 +132,9 @@
                                                 <tbody id="confirmTableBody">
                                                     <tr>
                                                         <td>
-                                                            <img src="/images/cosmo.jpeg" style="max-width: 200px; max-height: 200px"/>
+
                                                         </td>
-                                                        <td>Sophisticated, glamorous and inspirational, Cosmopolitan is a monthly magazine for the young woman who wants it all, good looks, a successful career and great relationships. All the latest fashion and beauty news as well as advice on career, relationships and health issues. Please note that it may take six to eight weeks for your first issue to be delivered.</td>
+                                                        <td>[Description]</td>
                                                         <td>1</td>
                                                         <td>1000</td>
                                                         <td>1000</td>
