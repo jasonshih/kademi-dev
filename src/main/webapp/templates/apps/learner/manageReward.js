@@ -14,7 +14,7 @@ function initManagePoints() {
             }
         }
     });
-    $("#pointsBody").on("click", ".btnEditPoints", function (e) {
+    $("#pointsTable").on("click", ".btnEditPoints", function (e) {
         e.preventDefault();
         var href = $(e.target).closest("a").attr("href");
         modalForm.attr("action", href);
