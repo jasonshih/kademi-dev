@@ -36,6 +36,27 @@ function initManagePoints() {
             }
         });
     });
+        
+    var createDebitModal = $("#modalCreateDebit");
+    var createDebitForm = createDebitModal.find("form");
+    createDebitForm.forms({
+        callback: function (resp) {
+            if (resp.status) {
+                Msg.success("Points debit created ok");
+                createDebitModal.modal("hide");
+                $("#pointsBody").reloadFragment();
+            } else {
+                Msg.error("Sorry, there was a problem creating the debit record");
+            }
+        }
+    });    
+    $("#pointsTable").on("click", ".btnAddDebit", function (e) {
+        e.preventDefault();
+        flog("add debit", href);
+        var href = $(e.target).closest("a").attr("href");
+        createDebitForm.attr("action", href);
+        createDebitModal.modal("show");
+    });    
 
     $(".removeUsers").click(function (e) {
         var node = $(e.target);
