@@ -136,21 +136,20 @@
                     </div>
 
                     <div class="tab-pane" id="points">
-                        <div class="btn-group pull-right">
-                            <button class="btnRemovePoints btn btn-danger btn-sm" type="button"><i class="fa fa-remove"></i> Remove</button>
-                            <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown">
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu pull-right" role="menu">
-                                <li class="presentation" role="menuitem"><a href="#" class="btn-clear-history"><i class="fa fa-trash"></i> Clear History</a></li>
-                            </ul>
-                        </div>
-
                         <div class="pull-right">
                             <a class="btn btn-sm btn-default periods-delete" href="points.csv" download="points.csv">
                                 <span class="glyphicon glyphicon-download"></span>
                                 Save Points CSV
                             </a>
+                            <div class="btn-group">
+                                <button class="btnRemovePoints btn btn-danger btn-sm" type="button"><i class="fa fa-remove"></i> Remove</button>
+                                <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu pull-right" role="menu">
+                                    <li class="presentation" role="menuitem"><a href="#" class="btn-clear-history"><i class="fa fa-trash"></i> Clear All</a></li>
+                                </ul>
+                            </div>
                         </div>
                         <br/>
 
@@ -173,7 +172,7 @@
                                 <col />
                                 <col />
                                 <col />
-                                <col />
+                                <col width="25px;"/>
                             </colgroup>
                             <thead>
                                 <tr>
@@ -200,21 +199,31 @@
 
                     <div class="tab-pane" id="debits">
                         <div class="pull-right">
-                            <a class="btn btn-sm btn-default periods-delete" href="debits.csv" download="debits.csv">
+                            <a class="btn btn-sm btn-default" href="debits.csv">
                                 <span class="glyphicon glyphicon-download"></span>
                                 Save Debits CSV
                             </a>
+                            <div class="btn-group">
+                                <button class="btnRemoveDebits btn btn-danger btn-sm" type="button"><i class="fa fa-remove"></i> Remove</button>
+                                <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu pull-right" role="menu">
+                                    <li class="presentation" role="menuitem"><a href="#" class="btn-clear-debits"><i class="fa fa-trash"></i> Remove All</a></li>
+                                </ul>
+                            </div>
                         </div>
                         <br/>
 
                         <p>Shows debits allocated with this tag</p>
 
-                        <table class="table table-bordered table-striped" id="table-periods">
+                        <table class="table table-bordered table-striped" id="table-debits">
                             <colgroup>
                                 <col />
                                 <col />
                                 <col />
                                 <col />
+                                <col width="25px;"/>
                             </colgroup>
                             <thead>
                                 <tr>
@@ -222,6 +231,7 @@
                                     <th>Issued Date</th>
                                     <th>Rewarded To</th>
                                     <th>Reason</th>
+                                    <th><input type="checkbox" name="removeDebitsId" class="chk-all" value="" /></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -231,6 +241,7 @@
                                     <td>$formatter.formatDateTime($debit.issuedDate)</td>
                                     <td>$debit.points.issuedTo.formattedName</td>
                                     <td>$!debit.reason</td>
+                                    <td><input type="checkbox" name="removeDebitsId" value="$debit.id" /></td>
                                 </tr>
                                 #end
                             </tbody>
@@ -316,6 +327,9 @@
                 });
                 initRemovePoints();
                 initClearAllPoints();
+
+                initDeleteDebits();
+                initClearAllDebits();
 
                 initHistorySearch();
 
@@ -464,6 +478,70 @@
                         target.replaceWith(newBody);
                         $("abbr.timeago").timeago();
                         flog("done insert and timeago", $("abbr.timeago"));
+                    }
+                });
+            }
+
+            function initDeleteDebits() {
+                $("body").on('click', '.btnRemoveDebits', function (e) {
+                    e.preventDefault();
+                    var checkBoxes = $('#table-debits').find('tbody input[name=removeDebitsId]:checked');
+                    if (checkBoxes.length === 0) {
+                        Msg.error("Please select the debits you want to remove by clicking the checkboxs to the right");
+                    } else {
+                        if (confirm("Are you sure you want to remove " + checkBoxes.length + " debits?")) {
+                            doRemoveDebits(checkBoxes);
+                        }
+                    }
+                });
+            }
+
+            function doRemoveDebits(checkBoxes) {
+                Msg.info("Deleting...", 2000);
+                $.ajax({
+                    type: 'POST',
+                    data: checkBoxes,
+                    dataType: "json",
+                    success: function (data) {
+                        flog("success", data);
+                        if (data.status) {
+                            Msg.success("Removed debits ok");
+                            $("#table-debits").reloadFragment();
+                        } else {
+                            Msg.error("There was a problem removing debits. Please try again and contact the administrator if you still have problems");
+                        }
+                    },
+                    error: function (resp) {
+                        Msg.error("An error occurred removing debits. You might not have permission to do this");
+                    }
+                });
+            }
+
+            function initClearAllDebits() {
+                // btn-clear-history
+                $('body').on('click', '.btn-clear-debits', function (e) {
+                    e.preventDefault();
+                    if (confirm("Are you sure you want to clear all records? This can not be undone!")) {
+                        $.ajax({
+                            type: 'POST',
+                            data: {
+                                clearDebits: true
+                            },
+                            dataType: "json",
+                            url: "",
+                            success: function (data) {
+                                flog("success", data);
+                                if (data.status) {
+                                    $('#table-debits tbody').empty();
+                                    Msg.success("Removed points ok");
+                                } else {
+                                    Msg.error("There was a problem removing debits. Please try again and contact the administrator if you still have problems");
+                                }
+                            },
+                            error: function (resp) {
+                                Msg.error("An error occurred removing debits. You might not have permission to do this");
+                            }
+                        });
                     }
                 });
             }

@@ -72,7 +72,7 @@
                     <td>
                         <ul>
                             #foreach($attachment in $page.attachments)
-                            <li><a href="/_hashes/files/$attachment.fileHash">$attachment.fileName</a></li>
+                            <li><a href="/_hashes/files/$attachment.fileHash" download="$attachment.fileName">$attachment.fileName</a></li>
                             #end
                         </ul>
                     </td>
@@ -91,7 +91,7 @@
         </div>
         <h4>Message content</h4>
         <hr/>
-        <iframe style="border: none; width: 100%; min-height: 400px" srcdoc="$formatter.htmlEncode( $page.emailHtml )"></iframe>
+        <iframe style="border: none; width: 100%; min-height: 400px" src="/viewEmail?emailId=$page.emailItem.id"></iframe>
         <br/>
         <hr/>
         <br/>
