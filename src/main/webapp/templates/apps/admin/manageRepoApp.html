@@ -48,6 +48,12 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="col-sm-2 control-label" for="notes">Summary</label>
+                            <div class="col-sm-9">
+                                <textarea id="notes" name="notes" class="form-control limited" maxLength="200" cols="100" rows="5">$!page.app.notes</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-sm-2 control-label" for="price">App Provider</label>
                             <div class="col-sm-9">
                                 $formatter.checkbox("appProvider", "appProvider", $page.app.appProvider)
