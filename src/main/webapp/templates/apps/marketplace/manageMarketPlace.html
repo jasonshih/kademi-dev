@@ -4,7 +4,10 @@
         <style>
             .app {
                 color: #555555;
-                cursor: pointer;
+            }
+            .app a, a:active, a:hover, a:focus, a:link{
+                color: #555555;
+                text-decoration: none;
             }
         </style>
     </head>
@@ -24,24 +27,26 @@
                     <div class="container">
                         <div class="row">
                             <div class="col-md-12">
-                                #foreach($i in [0..25])
+                                #foreach($app in $page.children.ofType("app"))
                                 <div class="col-md-2">
                                     <div class="thumbnail app">
-                                        <img src="/theme/apps/marketplace/no_preview.png" alt="">
+                                        <a href="#">
+                                            <img src="/theme/apps/marketplace/no_preview.png" alt="">
+                                        </a>
                                         <div class="caption">
-                                            <h4 class="pull-right">$24.99</h4>
-                                            <h4>First Product</h4>
-                                            <p>See more snippets like this online store item at Bootsnipp - http://bootsnipp.com.</p>
+                                            <h4 class="pull-right">
+                                                #if(!$app.appRepository.price || $app.appRepository.price == 0)
+                                                Free
+                                                #else
+                                                $$app.appRepository.price
+                                                #end
+                                            </h4>
+                                            <h4><a href="#">$app.appRepository.title</a></h4>
+                                            <p>$app.appRepository.brief</p>
                                         </div>
                                         <div class="ratings">
                                             <p class="pull-right">15 reviews</p>
-                                            <p class="star-rating">
-                                                <span class="fa fa-star"></span>
-                                                <span class="fa fa-star"></span>
-                                                <span class="fa fa-star-half-o"></span>
-                                                <span class="fa fa-star-o"></span>
-                                                <span class="fa fa-star-o"></span>
-                                            </p>
+                                            #genRatings(3.5)
                                         </div>
                                     </div>
                                 </div>
@@ -49,11 +54,26 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="tab-pane" id="purchased">
 
-                    <div class="tab-pane" id="purchased">
-
-                    </div>
                 </div>
             </div>
+        </div>
+
+        #macro(genRatings $rating)
+        <p class="star-rating">
+            #foreach($i in [0..4])
+            #set($a = $rating - $i)
+            #if($a > 0.5)
+            <span class="fa fa-star"></span>
+            #elseif($a == 0.5)
+            <span class="fa fa-star-half-o"></span>
+            #else
+            <span class="fa fa-star-o"></span>
+            #end
+            #end
+        </p>
+        #end
     </body>
 </html>
