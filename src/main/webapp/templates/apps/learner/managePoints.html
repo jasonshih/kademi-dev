@@ -35,15 +35,47 @@
                 </div>
                 <br/>
 
-                <div class="input-group date-range col-md-4 pull-left">
-                    <label for="report-range" class="input-group-addon">Time</label>
-                    <input type="text" id="report-range" placeholder="Choose a date range" value="" class="form-control" />
+                <div class="">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="input-group date-range">
+                                <label for="report-range" class="input-group-addon">Time</label>
+                                <input type="text" id="report-range" placeholder="Choose a date range" value="" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="input-group">
+                                <label for="data-query" class="input-group-addon">Search</label>
+                                <input type="text" id="data-query" placeholder="Search" value="" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="input-group">
+                                <label for="searchGroup" class="input-group-addon">Group</label>
+                                <select name="searchGroup" id="searchGroup" class="form-control">
+                                    <option value="">&nbsp;</option>
+                                    #foreach($group in $rootFolder.groups)
+                                    <option value="$group.name">$group.name</option>
+                                    #end
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="input-group">
+                                <label for="searchReward" class="input-group-addon">Reward</label>
+                                <select name="searchReward" id="searchReward" class="form-control">
+                                    <option value="">&nbsp;</option>
+                                    #foreach($r in $page.rewards)
+                                    <option value="$r.name">$r.title</option>
+                                    #end
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
 
-                <div class="input-group col-md-4">
-                    <label for="data-query" class="input-group-addon">Search</label>
-                    <input type="text" id="data-query" placeholder="Search" value="" class="form-control" />
-                </div>
+
 
                 <div class="clearfix"></div>
                 <hr/>
@@ -75,7 +107,7 @@
                             #else
                             #foreach($p in $page.history)
                             <tr>
-                                <td><a href="/points-buckets/$p.reward.name">$p.reward.name</a></td>
+                                <td><a href="/points-buckets/$p.reward.name">$p.reward.title</a></td>
                                 <td><a href="/manageUsers/$p.issuedTo.id">$p.issuedTo.formattedName</a></td>
                                 <td>$formatter.formatDateLong( $p.issuedDate )</td>
                                 <td>$p.numPoints</td>
@@ -95,7 +127,7 @@
                                     <a href="$p.id" class="btn btn-danger btnAddDebit" title="Create a debit against this credit record">
                                         <span class="fa fa-dollar"></span>
                                     </a>
-                                    
+
                                 </td>
                             </tr>
                             #end
@@ -231,7 +263,7 @@
                 </div>
             </form>
         </div>
-        
+
         <div id="modalCreateDebit" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
             <div class="modal-header">
                 <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
