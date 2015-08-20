@@ -1,7 +1,7 @@
 #foreach($reward in $allPoints.keySet() )
 #set( $rs = $page.find("/points-buckets/").child($reward.name) )
 
-<h1><a href="/points-buckets/$reward.name">$reward.title</a></h1>
+<h2><a href="/points-buckets/$reward.name">$reward.title</a></h2>
 
 <table class="table table-striped">
     <colgroup>
@@ -58,7 +58,7 @@
 
 <hr/>
 
-<h4>Points</h4>
+<h2><a href="/points-buckets/">Points</a></h2>
 
 <p>This shows all points which have been issued for the current user. Note that this
 is sometimes different to points issued to a user as shown in the table above, such
@@ -69,7 +69,9 @@ as when team points are being used.</p>
         <thead>
             <tr>
                 <th>Reward</th>
-                <th>For</th>
+                <th>Issued to / for</th>
+                <th>Points</th>
+                <th>Reason</th>
                 <th>Date</th>
             </tr>
         </thead>
@@ -81,6 +83,22 @@ as when team points are being used.</p>
             #else
             #foreach($p in $points)
             <tr>
+                <td><a href="/points-buckets/$p.reward.name">$p.reward.name</a></td>
+                <td>
+                    #if( $p.issuedTo.type == "P" )
+                    <a href="/manageUsers/$p.issuedTo.id">$p.issuedTo.formattedName</a>
+                    #else
+                    <a href="/organisations/$p.issuedTo.orgId/viewDetails">$p.issuedTo.formattedName</a>
+                    #end
+
+                    /
+
+                    #if( $p.issuedFor.type == "P" )
+                    <a href="/manageUsers/$p.issuedFor.id">$p.issuedFor.formattedName</a>
+                    #else
+                    <a href="/organisations/$p.issuedFor.orgId/viewDetails">$p.issuedFor.formattedName</a>
+                    #end
+                </td>
                 <td>$p.numPoints</td>
                 <td>$p.reason</td>
                 <td>
