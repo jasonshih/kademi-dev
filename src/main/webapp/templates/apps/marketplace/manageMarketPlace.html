@@ -1,15 +1,7 @@
 <html>
     <head>
         <title>Martket Place</title>
-        <style>
-            .app {
-                color: #555555;
-            }
-            .app a, a:active, a:hover, a:focus, a:link{
-                color: #555555;
-                text-decoration: none;
-            }
-        </style>
+        <link href="manageMarketPlace.css" rel="stylesheet" type="text/css"/>
     </head>
     <body>
         <div class="tabbable">
@@ -30,23 +22,22 @@
                                 #foreach($app in $page.children.ofType("app"))
                                 <div class="col-md-2">
                                     <div class="thumbnail app">
-                                        <a href="#">
-                                            <img src="/theme/apps/marketplace/no_preview.png" alt="">
+                                        <a href="$app.href">
+                                            <img src="/theme/apps/marketplace/no_logo.png" alt="$app.title">
                                         </a>
                                         <div class="caption">
-                                            <h4 class="pull-right">
+                                            <h4 class="title"><a href="$app.href">$app.appRepository.title<span class="parag-end"></span></a></h4>
+                                            <p>$app.appRepository.brief</p>
+                                        </div>
+                                        <div class="ratings">
+                                            <p class="pull-right">
                                                 #if(!$app.appRepository.price || $app.appRepository.price == 0)
                                                 Free
                                                 #else
                                                 $$app.appRepository.price
                                                 #end
-                                            </h4>
-                                            <h4><a href="#">$app.appRepository.title</a></h4>
-                                            <p>$app.appRepository.brief</p>
-                                        </div>
-                                        <div class="ratings">
-                                            <p class="pull-right">15 reviews</p>
-                                            #genRatings(3.5)
+                                            </p>
+                                            #genRatings(3.5, 14)
                                         </div>
                                     </div>
                                 </div>
@@ -61,8 +52,8 @@
             </div>
         </div>
 
-        #macro(genRatings $rating)
-        <p class="star-rating">
+        #macro(genRatings $rating $reviewCount)
+        <p class="star-rating" title="$reviewCount reviews">
             #foreach($i in [0..4])
             #set($a = $rating - $i)
             #if($a > 0.5)
