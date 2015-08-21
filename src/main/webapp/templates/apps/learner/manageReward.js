@@ -36,7 +36,7 @@ function initManagePoints() {
             }
         });
     });
-        
+
     var createDebitModal = $("#modalCreateDebit");
     var createDebitForm = createDebitModal.find("form");
     createDebitForm.forms({
@@ -49,14 +49,14 @@ function initManagePoints() {
                 Msg.error("Sorry, there was a problem creating the debit record");
             }
         }
-    });    
+    });
     $("#pointsTable").on("click", ".btnAddDebit", function (e) {
         e.preventDefault();
         flog("add debit", href);
         var href = $(e.target).closest("a").attr("href");
         createDebitForm.attr("action", href);
         createDebitModal.modal("show");
-    });    
+    });
 
     $(".removeUsers").click(function (e) {
         var node = $(e.target);
@@ -100,22 +100,6 @@ function initManagePoints() {
 
     initHistorySearch();
 
-    $('body').on('keypress', '#data-query', function (e) {
-        var code = e.keyCode || e.which;
-        if (code == 13) {
-            e.preventDefault();
-            $(this).change();
-            return false;
-        }
-    });
-
-    $('body').on('change', '#data-query', function (e) {
-        e.preventDefault();
-        var inp = $(this);
-        searchQ = inp.val();
-        flog(searchQ);
-        doHistorySearch();
-    });
 }
 
 function initEditReward(quiz) {
@@ -500,7 +484,6 @@ function showUnmatched(unmatched) {
 
 var startDate = null;
 var endDate = null;
-var searchQ = null;
 
 function initHistorySearch() {
     var reportRange = $('#report-range');
@@ -525,16 +508,48 @@ function initHistorySearch() {
                 }
         );
     });
+
+
+    $('body').on('keypress', '#data-query', function (e) {
+        var code = e.keyCode || e.which;
+        if (code == 13) {
+            e.preventDefault();
+            $(this).change();
+            return false;
+        }
+    });
+
+    $('body').on('change', '#data-query', function (e) {
+        e.preventDefault();
+        var inp = $(this);
+        searchQ = inp.val();
+        flog(searchQ);
+        doHistorySearch();
+    });
+
+    $('body').on('change', '#searchGroup', function (e) {
+        e.preventDefault();
+        doHistorySearch();
+    });
+
+    $('body').on('change', '#searchReward', function (e) {
+        e.preventDefault();
+        doHistorySearch();
+    });
 }
 
 function doHistorySearch() {
     flog('doHistorySearch', startDate, endDate, searchQ);
     Msg.info("Doing search...", 2000);
 
+    var searchQ = $("#data-query").val();
+    var searchGroup = $("#searchGroup").val();
     var data = {
         startDate: formatDate(startDate),
         finishDate: formatDate(endDate),
-        dataQuery: searchQ
+        dataQuery: $("#data-query").val(),
+        searchGroup: $("#searchGroup").val(),
+        searchReward: $("#searchReward").val(),
     };
     flog("data", data);
 
@@ -550,10 +565,8 @@ function doHistorySearch() {
             flog('response', content);
             Msg.success("Search complete", 2000);
             var newBody = $(content).find("#pointsBody");
-            flog("update target", target);
             target.replaceWith(newBody);
             $("abbr.timeago").timeago();
-            flog("done insert and timeago", $("abbr.timeago"));
         }
     });
 }
