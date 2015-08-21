@@ -1,0 +1,36 @@
+.thumbnail img {
+    width: 100%;
+}
+
+.ratings {
+    padding-right: 10px;
+    color: #555555;
+    cursor: default;
+}
+
+.thumbnail {
+    padding: 0;
+}
+
+.thumbnail .caption-full {
+    padding: 9px;
+    color: #333;
+}
+
+.app a,.app a:active,.app a:hover,.app a:focus,.app a:link{
+    color: #555555;
+    text-decoration: none;
+}
+
+.animated {
+    -webkit-transition: height 0.2s;
+    -moz-transition: height 0.2s;
+    transition: height 0.2s;
+}
+
+.stars{
+    margin: 20px 0;
+    font-size: 24px;
+    color: #555555;
+    cursor: pointer;
+}

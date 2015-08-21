@@ -26,15 +26,15 @@
                                             <img src="/theme/apps/marketplace/no_logo.png" alt="$app.title">
                                         </a>
                                         <div class="caption">
-                                            <h4 class="title"><a href="$app.href">$app.appRepository.title<span class="parag-end"></span></a></h4>
-                                            <p>$app.appRepository.brief</p>
+                                            <h4 class="title"><a href="$app.href">$app.title<span class="parag-end"></span></a></h4>
+                                            <p>$app.brief</p>
                                         </div>
                                         <div class="ratings">
                                             <p class="pull-right">
-                                                #if(!$app.appRepository.price || $app.appRepository.price == 0)
+                                                #if(!$app.price || $app.price == 0)
                                                 Free
                                                 #else
-                                                $$app.appRepository.price
+                                                $$app.price
                                                 #end
                                             </p>
                                             #genRatings(3.5, 14)
