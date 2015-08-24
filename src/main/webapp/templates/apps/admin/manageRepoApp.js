@@ -3,6 +3,10 @@ function initManageRepoApp() {
     initInputLimiter();
     initForPublished();
     initForm();
+    initMarketForm();
+    initPublishApp();
+    initRePublishApp();
+    initUnPublishApp();
     initUpload();
     initScreenshotDelete();
     PagesGallery.init();
@@ -45,6 +49,81 @@ function initForm() {
         },
         error: function () {
             flog("Error");
+        }
+    });
+}
+
+function initMarketForm() {
+    var marketForm = $('#market').find('form');
+
+    marketForm.forms({
+        callback: function (resp) {
+            if (resp.status) {
+                Msg.success("Saved");
+            }
+        }
+    });
+}
+
+function initPublishApp() {
+    $('body').on('click', '.publishApp', function (e) {
+        e.preventDefault();
+        if (confirm("Are you sure you want to publish this app?")) {
+            $.ajax({
+                type: 'POST',
+                url: window.location.pathname,
+                data: {publishApp: true},
+                dataType: 'json',
+                success: function (data) {
+                    flog("success", data);
+                    window.location.reload();
+                },
+                error: function (resp) {
+                    Msg.error("An error occured doing the publish. Please check your internet connection and try again");
+                }
+            });
+        }
+    });
+}
+
+function initRePublishApp() {
+    $('body').on('click', '.rePublishApp', function (e) {
+        e.preventDefault();
+        if (confirm("Are you sure you want to re-publish this app?")) {
+            $.ajax({
+                type: 'POST',
+                url: window.location.pathname,
+                data: {publishApp: true},
+                dataType: 'json',
+                success: function (data) {
+                    flog("success", data);
+                    window.location.reload();
+                },
+                error: function (resp) {
+                    Msg.error("An error occured doing the publish. Please check your internet connection and try again");
+                }
+            });
+        }
+    });
+}
+
+function initUnPublishApp() {
+    $('body').on('click', '.unPublishApp', function (e) {
+        e.preventDefault();
+        if (confirm("Are you sure you want to un publish this app?")) {
+            $.ajax({
+                type: 'POST',
+                url: window.location.pathname,
+                data: {unPublishApp: true},
+                dataType: 'json',
+                success: function (data) {
+                    flog("success", data);
+                    window.location.reload();
+                },
+                error: function (resp) {
+                    Msg.error("An error occured doing the publish. Please check your internet connection and try again");
+                }
+            });
         }
     });
 }
@@ -121,3 +200,20 @@ function addScreenshot(file) {
 
     newDiv.show("slow");
 }
+
+var initCreateMarketItem = function () {
+    var marketItemModal = $('#makeMarketItem');
+    var marketItemForm = marketItemModal.find('form');
+
+    marketItemForm.forms({
+        callback: function (resp) {
+            flog("Callback ", resp);
+            if (resp.status) {
+                marketItemModal.modal('hide');
+                window.location.reload();
+            } else {
+                Msg.warning(resp.messages.first());
+            }
+        }
+    });
+};

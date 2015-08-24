@@ -23,18 +23,28 @@
         </style>
     </head>
     <body>
+        #set($marketItem = false)
+        #set($marketItem = $page.marketPlaceItem)
         <div class="tabbable">
             <ul id="myTab" class="nav nav-tabs tab-bricky">
                 <li class="active">
                     <a href="#details" data-toggle="tab"><i class="fa fa-home"></i> Details</a>
                 </li>
-                <li class="">
+                #if($marketItem)
+                <li>
                     <a href="#reviews" data-toggle="tab"><i class="fa fa-star-o"></i> Reviews</a>
                 </li>
+                <li>
+                    <a href="#market" data-toggle="tab"><i class="fa fa-cog"></i> Market Place</a> 
+                </li>
+                #end
             </ul>
 
             <div class="tab-content">
                 <div class="tab-pane active" id="details">
+                    #if(!$marketItem)
+                    <button type="button" data-toggle="modal" data-target="#makeMarketItem" class="btn btn-sm btn-success pull-right"><i class="fa fa-shopping-cart"></i> Create Market Place Item</button>
+                    #end
                     <form action="." method="POST" enctype="multipart/form-data" class="form-horizontal">
                         <input type="hidden" name="details" value="details"/>
                         <div class="form-group">
@@ -71,38 +81,72 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label" for="published">Published</label>
-                            <div class="col-sm-9">
-                                <div class="checkbox">
-                                    <label>
-                                        $formatter.checkbox("published", "published", $page.app.published)
-                                        If ticked users will be able to purchased this app.
-                                    </label>
-                                </div>
+                            <div class="col-sm-offset-2 col-sm-9">
+                                <button type="submit" class="btn btn-sm btn-primary">Save</button>
                             </div>
                         </div>
-                        <div class="form-group for-published" #if(!$page.app.published) style="display: none;" #end>
+                    </form>
+                </div>
+
+                #if($marketItem)
+                <div class="tab-pane" id="reviews">
+                    <div class="row">
+                        #set($reviews = $marketItem.appRatings)
+                        #if(!$reviews || $reviews.empty)
+                        <div class="col-md-12">
+                            No ratings have been submitted
+                        </div>
+                        #else
+                        #foreach($review in $reviews)
+                        <div class="col-md-12">
+                            <hr/>
+                            #genRating($review.rating)
+                            $review.reviewedBy.formattedName from $review.organisation.formattedName
+                            <span class="pull-right"><abbr title="$review.reviewedOn" class="timeago">$formatter.formatDateISO8601($review.reviewedOn)</abbr></span>
+                            <p>$review.review</p>
+                        </div>
+                        #end
+                        #end
+                    </div>
+                </div>
+
+                <div class="tab-pane" id="market">
+                    <form action="." method="POST" enctype="multipart/form-data" class="form-horizontal">
+                        <input type="hidden" name="marketDetails" value="true"/>
+                        <div class="pull-right" id="marketButtons">
+                            #if(!$marketItem.published)
+                            <button type="button" class="btn btn-info publishApp"><i class="fa fa-check"></i> Publish</button>
+                            #else
+                            <button type="button" class="btn btn-info rePublishApp"><i class="fa fa-refresh"></i> Re-Publish</button>
+                            <button type="button" class="btn btn-danger unPublishApp"><i class="fa fa-times"></i> Un-Publish</button>
+                            #end
+                            <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Save</button>
+                        </div>
+                        <div class="clearfix">
+                        </div>
+                        <br/>
+                        <div class="form-group">
                             <label class="col-sm-2 control-label" for="price">Price</label>
                             <div class="col-sm-9">
                                 <div class="input-group">
                                     <span class="input-group-addon" id="basic-addon1">$</span>
-                                    <input type="number" min="0" step="0.01" class="form-control numeric" name="price" value="$page.app.price" />
+                                    <input type="number" min="0" step="0.01" class="form-control numeric" name="price" value="$!marketItem.price" />
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group for-published" #if(!$page.app.published) style="display: none;" #end>
+                        <div class="form-group">
                             <label class="col-sm-2 control-label" for="brief">Short Brief</label>
                             <div class="col-sm-9">
-                                <textarea id="brief" name="brief" class="form-control limited" maxLength="200" cols="100" rows="5">$!page.app.brief</textarea>
+                                <textarea id="brief" name="brief" class="form-control limited" maxLength="200" cols="100" rows="5">$!marketItem.brief</textarea>
                             </div>
                         </div>
-                        <div class="form-group for-published" #if(!$page.app.published) style="display: none;" #end>
+                        <div class="form-group">
                             <label class="col-sm-2 control-label" for="description">Description</label>
                             <div class="col-sm-9">
-                                <textarea id="description" name="description" class="htmleditor toolbar-Lite" cols="100" rows="5">$!page.app.description</textarea>
+                                <textarea id="description" name="description" class="htmleditor toolbar-Lite" cols="100" rows="5">$!marketItem.description</textarea>
                             </div>
                         </div>
-                        <div class="form-group for-published" #if(!$page.app.published) style="display: none;" #end>
+                        <div class="form-group">
                             <label class="col-sm-2 control-label">Banner</label>
                             <div class="col-sm-9">
                                 <div class="fileinput fileinput-new" data-provides="fileinput">
@@ -121,7 +165,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group for-published" #if(!$page.app.published) style="display: none;" #end>
+                        <div class="form-group">
                             <label class="col-sm-2 control-label">Logo</label>
                             <div class="col-sm-9">
                                 <div class="fileinput fileinput-new" data-provides="fileinput">
@@ -140,7 +184,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group for-published" #if(!$page.app.published) style="display: none;" #end>
+                        <div class="form-group">
                             <label class="col-sm-2 control-label">Screenshots</label>
                             <div class="col-sm-9" id="screenshot-div">
                                 <div style="margin-bottom: 5px;">
@@ -162,44 +206,20 @@
                                                             <a href="$i.name" data-title="$i.name" class="delete-screenshot pull-right" title="Delete $i.name">
                                                                 <i class="fa fa-trash"></i>
                                                             </a>
-                                                        </div>
+                                                        </div>                                                
                                                     </div>
                                                 </div>
-                                                #end
+                                                #end                                                
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <div class="col-sm-offset-2 col-sm-9">
-                                <button type="submit" class="btn btn-sm btn-primary">Save</button>
-                            </div>
-                        </div>
                     </form>
                 </div>
 
-                <div class="tab-pane" id="reviews">
-                    <div class="row">
-                        #set($reviews = $page.appRatings)
-                        #if(!$reviews || $reviews.empty)
-                        <div class="col-md-12">
-                            No ratings have been submitted
-                        </div>
-                        #else
-                            #foreach($review in $page.appRatings)
-                            <div class="col-md-12">
-                                <hr/>
-                                #genRating($review.rating)
-                                $review.reviewedBy.formattedName from $review.organisation.formattedName
-                                <span class="pull-right"><abbr title="$review.reviewedOn" class="timeago">$formatter.formatDateISO8601($review.reviewedOn)</abbr></span>
-                                <p>$review.review</p>
-                            </div>
-                            #end
-                        #end
-                    </div>
-                </div>
+                #end
             </div>
         </div>
 
@@ -217,6 +237,30 @@
                 <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
             </div>
         </div>
+        #if(!$marketItem)
+        <div id="makeMarketItem" class="modal modal-md fade" aria-hidden="true">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                <h4 class="modal-title">Create Market Item</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" method="POST" action=".">
+                    <input type="hidden" name="createMarketItem" value="true"/>
+                    <div class="form-group">
+                        <label for="newName" class="col-sm-3 control-label">Unique name</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control regex required" required="required" name="uniqueName" data-regex="^[a-zA-Z0-9-]+$" />
+                            <span class="help-block"><small>Simple characters only, no punctuation, dots, etc, all lower case, not a domain name</small></span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Create</button>
+            </div>
+        </div>
+        #end
 
         <script src="/theme/assets/plugins/jquery-inputlimiter/jquery.inputlimiter.1.3.1.min.js">//
         </script>
@@ -232,6 +276,9 @@
         <script>
             $(function () {
                 initManageRepoApp();
+                        #if (!$marketItem)
+                        initCreateMarketItem();
+                        #end
             });
         </script>
         #macro(genRating $rating)
