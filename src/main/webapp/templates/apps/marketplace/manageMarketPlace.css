@@ -29,7 +29,11 @@
 }
 
 .thumbnail img {
-    width: 100%;
+    display: block;
+    width: auto;
+    height: auto;
+    max-height: 150px;
+    max-width: 320px;
 }
 
 .ratings {

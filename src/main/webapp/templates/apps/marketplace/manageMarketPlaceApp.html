@@ -9,9 +9,9 @@
             <div class="col-md-9">
                 <div class="thumbnail">
                     #set($banner = "/theme/apps/marketplace/no_banner.png")
-                    #set($bannerImg = $page.children.ofType("BANNER").first)
+                    #set($bannerImg = $page.banner)
                     #if($bannerImg)
-                        #set($banner = $bannerImg.href)
+                        #set($banner = $bannerImg.name)
                     #end
                     <img class="img-responsive" src="$banner" alt="">
                     <div class="caption-full">
@@ -41,7 +41,15 @@
                                     $!page.description
                                 </div>
                             </div>
-                            <div role="tabpanel" class="tab-pane fade" id="screenshots">...</div>
+                            <div role="tabpanel" class="tab-pane fade" id="screenshots">
+                                #if($page.screenshots.empty)
+                                    Sorry there are no screenshots available
+                                #else
+                                    #foreach($img in $page.screenshots)
+                                        <img src="$img.name" class="img-responsive">
+                                    #end
+                                #end
+                            </div>
                             <div role="tabpanel" class="tab-pane fade" id="reviews">
                                 <div class="text-right">
                                     <a class="btn btn-success btn-green" href="#reviews-anchor" id="open-review-box">Leave a Review</a>
@@ -49,7 +57,8 @@
 
                                 <div class="row" id="post-review-box" style="display:none;">
                                     <div class="col-md-12">
-                                        <form accept-charset="UTF-8" action="" method="post">
+                                        <form accept-charset="UTF-8" id="reviewForm" action="" method="POST">
+                                            <input type="hidden" name="submitReview" value="submitReview"/>
                                             <input id="ratings-hidden" name="rating" type="hidden"> 
                                             <textarea class="form-control animated limited" maxLength="200" rows="5" id="new-review" name="comment" placeholder="Enter your review here..."></textarea>
 
@@ -65,12 +74,15 @@
 
                                 <hr>
                                 <div class="row">
+                                    #foreach($review in $page.appRatings)
                                     <div class="col-md-12">
-                                        #genRating(3)
-                                        Anonymous
-                                        <span class="pull-right">12 days ago</span>
-                                        <p>I've alredy ordered another one!</p>
+                                        <hr/>
+                                        #genRating($review.rating)
+                                        $review.reviewedBy.formattedName from $review.organisation.formattedName
+                                        <span class="pull-right"><abbr title="$review.reviewedOn" class="timeago">$formatter.formatDateISO8601($review.reviewedOn)</abbr></span>
+                                        <p>$review.review</p>
                                     </div>
+                                    #end
                                 </div>
                             </div>
                         </div>
@@ -115,7 +127,7 @@
         </script>
         <script>
             $(function () {
-                initInputLimiter();
+                initMarketPlaceApp();
             });
         </script>
     </body>

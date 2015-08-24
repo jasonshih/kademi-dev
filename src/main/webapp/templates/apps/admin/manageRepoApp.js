@@ -6,6 +6,8 @@ function initManageRepoApp() {
     initUpload();
     initScreenshotDelete();
     PagesGallery.init();
+    
+    $('abbr.timeago').timeago();
 }
 
 function initInputLimiter() {

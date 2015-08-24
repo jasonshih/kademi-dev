@@ -16,6 +16,10 @@
                 max-width:400px;
                 max-height:150px;
             }
+            .star-rating{
+                color: #555555;
+                cursor: default;
+            }
         </style>
     </head>
     <body>
@@ -148,7 +152,7 @@
                                     <div class="panel-body">
                                         <div class="row">
                                             <div id="screenshots">
-                                                #foreach($i in $page.app.screenshots)
+                                                #foreach($i in $page.screenshots)
                                                 <div class="col-md-3 col-sm-4 gallery-img">
                                                     <div class="wrap-image" data-href="$i.name">
                                                         <a class="group1 cboxElement" href="$i.name" title="$i.name">
@@ -177,7 +181,22 @@
                 </div>
 
                 <div class="tab-pane" id="reviews">
-                    Reviews
+                    <div class="row">
+                        #set($reviews = $page.appRatings)
+                        #if(!$reviews || $reviews.empty)
+                            No ratings have been submitted
+                        #else
+                            #foreach($review in $page.appRatings)
+                            <div class="col-md-12">
+                                <hr/>
+                                #genRating($review.rating)
+                                $review.reviewedBy.formattedName from $review.organisation.formattedName
+                                <span class="pull-right"><abbr title="$review.reviewedOn" class="timeago">$formatter.formatDateISO8601($review.reviewedOn)</abbr></span>
+                                <p>$review.review</p>
+                            </div>
+                            #end
+                        #end
+                    </div>
                 </div>
             </div>
         </div>
@@ -213,5 +232,19 @@
                 initManageRepoApp();
             });
         </script>
+        #macro(genRating $rating)
+        <p class="star-rating" title="$rating/5 stars">
+            #foreach($i in [0..4])
+            #set($a = $rating - $i)
+            #if($a > 0.5)
+            <span class="fa fa-star"></span>
+            #elseif($a == 0.5)
+            <span class="fa fa-star-half-o"></span>
+            #else
+            <span class="fa fa-star-o"></span>
+            #end
+            #end
+        </p>
+        #end
     </body>
 </html>

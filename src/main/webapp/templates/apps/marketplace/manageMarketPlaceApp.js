@@ -1,9 +1,21 @@
+function initMarketPlaceApp() {
+    initInputLimiter();
+    initSubmitReview();
+    
+    $('abbr.timeago').timeago();
+}
+
 function initInputLimiter() {
     $('.limited').inputlimiter({
         remText: 'You only have %n character%s remaining...',
         remFullText: 'Stop typing! You\'re not allowed any more characters!',
         limitText: 'You\'re allowed to input %n character%s into this field.'
     });
+}
+
+function initSubmitReview() {
+    var reviewForm = $('#reviewForm');
+    reviewForm.forms();
 }
 
 (function (e) {
