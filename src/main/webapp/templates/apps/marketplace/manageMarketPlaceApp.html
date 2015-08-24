@@ -74,14 +74,20 @@
 
                                 <hr>
                                 <div class="row">
-                                    #foreach($review in $page.appRatings)
-                                    <div class="col-md-12">
-                                        <hr/>
-                                        #genRating($review.rating)
-                                        $review.reviewedBy.formattedName from $review.organisation.formattedName
-                                        <span class="pull-right"><abbr title="$review.reviewedOn" class="timeago">$formatter.formatDateISO8601($review.reviewedOn)</abbr></span>
-                                        <p>$review.review</p>
+                                    #if(!$page.appRatings || $page.appRatings.empty)
+                                    <div class="no-reviews col-md-12">
+                                        Be the first to review this app!
                                     </div>
+                                    #else
+                                        #foreach($review in $page.appRatings)
+                                        <div class="col-md-12">
+                                            <hr/>
+                                            #genRating($review.rating)
+                                            $review.reviewedBy.formattedName from &quot;$review.organisation.formattedName&quot;
+                                            <span class="pull-right"><abbr title="$review.reviewedOn" class="timeago">$formatter.formatDateISO8601($review.reviewedOn)</abbr></span>
+                                            <p>$review.review</p>
+                                        </div>
+                                        #end
                                     #end
                                 </div>
                             </div>

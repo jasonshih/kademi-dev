@@ -15,7 +15,11 @@ function initInputLimiter() {
 
 function initSubmitReview() {
     var reviewForm = $('#reviewForm');
-    reviewForm.forms();
+    reviewForm.forms({
+        callback: function(resp){
+            flog("Callback: resp");
+        }
+    });
 }
 
 (function (e) {

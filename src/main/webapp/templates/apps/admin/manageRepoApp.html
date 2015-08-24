@@ -107,7 +107,7 @@
                             <div class="col-sm-9">
                                 <div class="fileinput fileinput-new" data-provides="fileinput">
                                     <div class="fileinput-new thumbnail" style="width: 533px; height: 200px;">
-                                        <img src="/theme/apps/marketplace/no_banner.png" alt="...">
+                                        <img src="/theme/apps/marketplace/no_banner.png" alt="No Banner">
                                     </div>
                                     <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 533px; max-height: 200px;"></div>
                                     <div>
@@ -126,7 +126,7 @@
                             <div class="col-sm-9">
                                 <div class="fileinput fileinput-new" data-provides="fileinput">
                                     <div class="fileinput-new thumbnail" style="width: 320px; height: 150px;">
-                                        <img src="/theme/apps/marketplace/no_logo.png" alt="...">
+                                        <img src="/theme/apps/marketplace/no_logo.png" alt="No Logo">
                                     </div>
                                     <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 320px; max-height: 150px;"></div>
                                     <div>
@@ -184,7 +184,9 @@
                     <div class="row">
                         #set($reviews = $page.appRatings)
                         #if(!$reviews || $reviews.empty)
+                        <div class="col-md-12">
                             No ratings have been submitted
+                        </div>
                         #else
                             #foreach($review in $page.appRatings)
                             <div class="col-md-12">
