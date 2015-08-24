@@ -148,8 +148,8 @@
                                         <span class="label label-default">$page.status($tt)</span>
                                         #end
                                     </td>
-                                    <td>$formatter.formatDateTime( $tt.createdAt )</td>
-                                    <td>$formatter.formatDateTime($tt.fireAt )</td>
+                                    <td>$formatter.formatDateTime( $tt.createdAt , $page.organisation.timezone)</td>
+                                    <td>$formatter.formatDateTime($tt.fireAt , $page.organisation.timezone)</td>
                                     <td class="action">
                                         $formatter.checkbox($tt.id, "triggerId", false, $tt.id)
                                     </td>
