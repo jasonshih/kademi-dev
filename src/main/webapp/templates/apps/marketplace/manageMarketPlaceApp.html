@@ -11,7 +11,7 @@
                     #set($banner = "/theme/apps/marketplace/no_banner.png")
                     #set($bannerImg = $page.banner)
                     #if($bannerImg)
-                        #set($banner = $bannerImg.name)
+                    #set($banner = $bannerImg.name)
                     #end
                     <img class="img-responsive" src="$banner" alt="">
                     <div class="caption-full">
@@ -43,11 +43,11 @@
                             </div>
                             <div role="tabpanel" class="tab-pane fade" id="screenshots">
                                 #if($page.screenshots.empty)
-                                    Sorry there are no screenshots available
+                                Sorry there are no screenshots available
                                 #else
-                                    #foreach($img in $page.screenshots)
-                                        <img src="$img.name" class="img-responsive">
-                                    #end
+                                #foreach($img in $page.screenshots)
+                                <img src="$img.name" class="img-responsive">
+                                #end
                                 #end
                             </div>
                             <div role="tabpanel" class="tab-pane fade" id="reviews">
@@ -72,23 +72,44 @@
                                     </div>
                                 </div>
 
-                                <hr>
+
                                 <div class="row">
                                     #if(!$page.appRatings || $page.appRatings.empty)
                                     <div class="no-reviews col-md-12">
                                         Be the first to review this app!
                                     </div>
-                                    #else
-                                        #foreach($review in $page.appRatings)
-                                        <div class="col-md-12">
-                                            <hr/>
-                                            #genRating($review.rating)
-                                            $review.reviewedBy.formattedName from &quot;$review.organisation.formattedName&quot;
-                                            <span class="pull-right"><abbr title="$review.reviewedOn" class="timeago">$formatter.formatDateISO8601($review.reviewedOn)</abbr></span>
-                                            <p>$review.review</p>
-                                        </div>
-                                        #end
                                     #end
+                                    <div class="col-md-10">
+                                        <section class="comment-list">
+                                            #foreach($review in $page.appRatings)
+                                            <article class="row">
+                                                <div class="col-md-2 col-sm-2 hidden-xs">
+                                                    <figure class="thumbnail">
+                                                        #set($photoUrl = "/templates/apps/user/profile.png")
+                                                        #if($review.reviewedBy.photoHash)
+                                                        #set($photoUrl = "/_hashes/files/" + $review.reviewedBy.photoHash)
+                                                        #end
+                                                        <img class="img-responsive" src="$photoUrl" />
+                                                    </figure>
+                                                </div>
+                                                <div class="col-md-10 col-sm-10">
+                                                    <div class="panel panel-default arrow left">
+                                                        <div class="panel-body">
+                                                            <header class="text-left">
+                                                                <div class="comment-user"><i class="fa fa-user"></i> $review.reviewedBy.formattedName</div>
+                                                                <div><i class="fa fa-smile-o"></i> #genRating($review.rating)</div>
+                                                                <span><i class="fa fa-clock-o"></i> <abbr title="$review.reviewedOn" class="timeago">$formatter.formatDateISO8601($review.reviewedOn)</abbr></span>
+                                                            </header>
+                                                            <div class="comment-post">
+                                                                <p>$review.review</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </article>
+                                            #end
+                                        </section>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -114,7 +135,7 @@
         #end
 
         #macro(genRating $rating)
-        <p class="star-rating" title="$rating/5 stars">
+        <span class="star-rating" title="$rating/5 stars">
             #foreach($i in [0..4])
             #set($a = $rating - $i)
             #if($a > 0.5)
@@ -125,7 +146,7 @@
             <span class="fa fa-star-o"></span>
             #end
             #end
-        </p>
+        </span>
         #end
         <script src="/theme/apps/marketplace/manageMarketPlaceApp.js" type="text/javascript">//
         </script>
