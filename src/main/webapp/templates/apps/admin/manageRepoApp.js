@@ -231,10 +231,13 @@ function updateImageHref(elem, href, cl, deleted) {
     elem.find('.cboxElement').attr('href', href);
     elem.find('img').attr('src', href + '?' + (new Date).getTime());
     elem.find('.delete-logo').attr('href', href);
+    elem.find('.delete-banner').attr('href', href);
     if (deleted) {
         elem.find('.delete-logo').addClass(cl);
+        elem.find('.delete-banner').addClass(cl);
     } else {
         elem.find('.delete-logo').removeClass(cl);
+        elem.find('.delete-banner').removeClass(cl);
     }
 }
 
