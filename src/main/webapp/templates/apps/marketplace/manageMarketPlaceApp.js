@@ -17,7 +17,7 @@ function initSubmitReview() {
     var reviewForm = $('#reviewForm');
     reviewForm.forms({
         callback: function(resp){
-            flog("Callback: resp");
+            flog("Callback: resp", resp);
         }
     });
 }
