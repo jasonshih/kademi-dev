@@ -229,20 +229,16 @@
                     }
                 });
                 
-                $('body').on('click', '.btn-edit-app', function(e){
+                $('body').on('click', '.btn-delete-app', function(e){
                     e.preventDefault();
                     var btn = $(this);
-                    var tr = btn.closest("tr");
-                    var appTitle = tr.find(".appTitle").text();
-                    var appId = btn.attr("href");
-                    var providesApp = tr.find(".appProvider").length > 0;
-                    var providesTheme = tr.find(".themeProvider").length > 0;
-                    flog(appTitle, providesApp, providesTheme, appId);
-                    appSettingsModal.find("#appTitle").val(appTitle);
-                    appSettingsModal.find("#appSettingsID").val(appId);
-                    appSettingsModal.find("#providesTheme").prop('checked', providesTheme);
-                    appSettingsModal.find("#providesApp").prop('checked', providesApp);
-                    appSettingsModal.modal("show");
+                    var href = btn.attr('href');
+                    var tr = btn.closest('tr');
+                    var title = tr.find('.appTitle').text();
+                    
+                    confirmDelete(href, title, function(){
+                        tr.remove();
+                    });
                 });
             });
         </script>

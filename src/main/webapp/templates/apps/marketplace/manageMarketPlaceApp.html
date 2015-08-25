@@ -11,17 +11,17 @@
                     #set($banner = "/theme/apps/marketplace/no_banner.png")
                     #set($bannerImg = $page.banner)
                     #if($bannerImg)
-                        #set($banner = $bannerImg.name + '/alt-800-300.png')
+                    #set($banner = $bannerImg.name + '/alt-800-300.png')
                     #end
                     <img class="img-responsive" src="$banner" alt="">
                     <div class="caption-full">
                         <h4 class="pull-right">
                             <button type="button" class="btn btn-sm btn-green">
-                            #if(!$page.price || $page.price == 0)
-                            Free
-                            #else
-                            $$page.price
-                            #end
+                                #if(!$page.price || $page.price == 0)
+                                Free
+                                #else
+                                $$page.price
+                                #end
                             </button>
                         </h4>
                         <h4 class="app"><a href="#">$page.title</a>
@@ -44,13 +44,17 @@
                                 </div>
                             </div>
                             <div role="tabpanel" class="tab-pane fade" id="screenshots">
-                                #if($page.screenshots.empty)
-                                Sorry there are no screenshots available
-                                #else
-                                #foreach($img in $page.screenshots)
-                                <img src="$img.name" class="img-responsive">
-                                #end
-                                #end
+                                <div class="row">
+                                    #if($page.screenshots.empty)
+                                    Sorry there are no screenshots available
+                                    #else
+                                    #foreach($img in $page.screenshots)
+                                    <div class="col-md-4">
+                                        <img src="$img.name" class="img-responsive img-thumbnail">
+                                    </div>
+                                    #end
+                                    #end
+                                </div>
                             </div>
                             <div role="tabpanel" class="tab-pane fade" id="reviews">
                                 <div class="text-right">

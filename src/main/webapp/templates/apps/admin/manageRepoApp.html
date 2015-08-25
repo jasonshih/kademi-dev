@@ -81,13 +81,13 @@
 
             <div class="tab-content">
                 <div class="tab-pane active" id="details">
-                    <div class="pull-right">
-                        #if(!$marketItem)
-                        <button type="button" data-toggle="modal" data-target="#makeMarketItem" class="btn btn-sm btn-success"><i class="fa fa-shopping-cart"></i> Create Market Place Item</button>
-                        #end
-                        <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-save"></i> Save</button>
-                    </div>
                     <form action="." method="POST" enctype="multipart/form-data" class="form-horizontal">
+                        <div class="pull-right">
+                            #if(!$marketItem)
+                            <button type="button" data-toggle="modal" data-target="#makeMarketItem" class="btn btn-sm btn-success"><i class="fa fa-shopping-cart"></i> Create Market Place Item</button>
+                            #end
+                            <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-save"></i> Save</button>
+                        </div>
                         <input type="hidden" name="details" value="details"/>
                         <div class="form-group">
                             <div class="errorHandler alert alert-danger no-display pageMessage">.</div>
@@ -163,28 +163,43 @@
                         </div>
                         <br/>
                         <div class="form-group">
+                            <label class="col-sm-2 control-label">Unique Name</label>
+                            <div class="col-sm-9">
+                                <div class="input-group">
+                                    <span>
+                                        <label class="control-label">$!marketItem.name</label>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-sm-2 control-label" for="price">Price</label>
                             <div class="col-sm-9">
                                 <div class="input-group">
                                     <span class="input-group-addon" id="basic-addon1">$</span>
                                     <input type="number" min="0" step="0.01" class="form-control numeric" name="price" value="$!marketItem.price" />
                                 </div>
+                                <small>If the price is left blank or is set to 0 then the item will be marked as free.</small>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label" for="brief">Short Brief</label>
                             <div class="col-sm-9">
                                 <textarea id="brief" name="brief" class="form-control limited" maxLength="200" cols="100" rows="5">$!marketItem.brief</textarea>
+                                <small>This text will show in the gallery view of the market place.</small>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label" for="description">Description</label>
                             <div class="col-sm-9">
                                 <textarea id="description" name="description" class="htmleditor toolbar-Lite" cols="100" rows="5">$!marketItem.description</textarea>
+                                <small>This is the full description of this item.</small>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">Banner</label>
+                            <label class="col-sm-2 control-label">Banner 
+                                <small>Recommended size 800x300 px</small>
+                            </label>
                             <div class="col-sm-9" id="bannerImage">
                                 #set($banner = "/theme/apps/marketplace/no_banner.png")
                                 #if($page.banner)
@@ -202,16 +217,18 @@
                                         <a href="$banner" data-title="$bannerTitle" class="delete-banner pull-right #if(!$page.banner)noBanner#end" title="Delete Banner">
                                             <i class="fa fa-trash"></i>
                                         </a>
-                                    </div>                                                
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">Logo</label>
+                            <label class="col-sm-2 control-label">Logo
+                                <small>Recommended size 320x150 px</small>
+                            </label>
                             <div class="col-sm-9" id="logoImage">
                                 #set($logo = "/theme/apps/marketplace/no_logo.png")
                                 #if($page.logo)
-                                    #set($logo = $page.logo.name)
+                                #set($logo = $page.logo.name)
                                 #end
                                 <div class="app-logo wrap-image">
                                     <a class="cboxElement" href="$logo" title="Logo">
@@ -358,9 +375,9 @@
         <script>
             $(function () {
                 initManageRepoApp();
-                #if (!$marketItem)
-                initCreateMarketItem();
-                #end
+                        #if (!$marketItem)
+                        initCreateMarketItem();
+                        #end
             });
         </script>
         #macro(genRating $rating)
