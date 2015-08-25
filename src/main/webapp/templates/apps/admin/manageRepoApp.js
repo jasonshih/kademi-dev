@@ -8,6 +8,10 @@ function initManageRepoApp() {
     initRePublishApp();
     initUnPublishApp();
     initUpload();
+    initBannerUpload();
+    initDeleteBanner();
+    initLogoUpload();
+    initDeleteLogo();
     initScreenshotDelete();
     PagesGallery.init();
 
@@ -136,7 +140,7 @@ function setUrl() {
 
 function initUpload() {
     Dropzone.autoDiscover = false;
-    $(".dropzone").dropzone({
+    $("#uploadImageDropzone").dropzone({
         paramName: "screenshots", // The name that will be used to transfer the file
         maxFilesize: 500.0, // MB
         addRemoveLinks: true,
@@ -156,6 +160,82 @@ function initUpload() {
         dz.removeAllFiles();
         //$('#screenshot-div').reloadFragment();
     });
+}
+
+function initBannerUpload() {
+    var bannerImage = $("#bannerImage");
+    $('#upload-banner').upcropImage({
+        buttonContinueText: 'Save',
+        url: window.location.pathname, // this is actually the default value anyway
+        ratio: 8 / 3,
+        fieldName: "banner",
+        onCropComplete: function (resp) {
+            flog("onCropComplete:", resp, resp.nextHref);
+            updateImageHref(bannerImage, resp.nextHref, 'noBanner', false);
+        },
+        onContinue: function (resp) {
+            flog("onContinue:", resp, resp.result.nextHref);
+            updateImageHref(bannerImage, resp.result.nextHref, 'noBanner', false);
+        }
+    });
+}
+
+function initDeleteBanner() {
+    var bannerImage = $("#bannerImage");
+    $('body').on('click', '.delete-banner', function (e) {
+        e.preventDefault();
+        var btn = $(this);
+        var href = btn.attr('href');
+
+        confirmDelete(href, "the banner", function (resp) {
+            updateImageHref(bannerImage, '/theme/apps/marketplace/no_banner.png', 'noBanner', true);
+        });
+    });
+}
+
+function initLogoUpload() {
+    var btn = $('#upload-logo');
+    var logoImage = $('#logoImage');
+    btn.upcropImage({
+        buttonContinueText: 'Save',
+        ratio: 32 / 15,
+        url: window.location.pathname,
+        fieldName: "logo",
+        onCropComplete: function (resp) {
+            flog("onCropComplete:", resp, resp.nextHref);
+            updateImageHref(logoImage, resp.nextHref, 'noLogo', false);
+        },
+        onContinue: function (resp) {
+            flog("onContinue:", resp, resp.result.nextHref);
+            Msg.info("Done");
+            updateImageHref(logoImage, resp.result.nextHref, 'noLogo', false);
+        }
+    });
+}
+
+function initDeleteLogo() {
+    var logoImage = $('#logoImage');
+    $('body').on('click', '.delete-logo', function (e) {
+        e.preventDefault();
+        var btn = $(this);
+        var href = btn.attr('href');
+
+        confirmDelete(href, "the logo", function (resp) {
+            updateImageHref(logoImage, '/theme/apps/marketplace/no_logo.png', 'noLogo', true);
+        });
+    });
+}
+
+function updateImageHref(elem, href, cl, deleted) {
+    flog("updateImageHref", elem, href, deleted);
+    elem.find('.cboxElement').attr('href', href);
+    elem.find('img').attr('src', href + '?' + (new Date).getTime());
+    elem.find('.delete-logo').attr('href', href);
+    if (deleted) {
+        elem.find('.delete-logo').addClass(cl);
+    } else {
+        elem.find('.delete-logo').removeClass(cl);
+    }
 }
 
 function initScreenshotDelete() {

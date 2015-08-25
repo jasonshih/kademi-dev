@@ -20,6 +20,42 @@
                 color: #555555;
                 cursor: default;
             }
+
+            .app-logo{
+                display: inline-block;
+                max-height:150px;
+                max-width :320px;
+                width: auto;
+                height: auto;
+            }
+
+            .app-logo img{
+                max-height:150px;
+                max-width :320px;
+                width: auto;
+                height: auto;
+            }
+
+            .app-logo .noLogo{
+                display:none !important;
+            }
+
+            .app-banner{
+                display: inline-block;
+                max-width: 533px; 
+                max-height: 200px;
+                width: auto;
+                height: auto;
+            }
+
+            .app-banner img{
+                max-width: 533px; 
+                max-height: 200px;
+            }
+
+            .app-banner .noBanner{
+                display:none !important;
+            }
         </style>
     </head>
     <body>
@@ -37,14 +73,20 @@
                 <li>
                     <a href="#market" data-toggle="tab"><i class="fa fa-cog"></i> Market Place</a> 
                 </li>
+                <li>
+                    <a href="#history" data-toggle="tab"><i class="fa fa-history"></i> Publish History</a> 
+                </li>
                 #end
             </ul>
 
             <div class="tab-content">
                 <div class="tab-pane active" id="details">
-                    #if(!$marketItem)
-                    <button type="button" data-toggle="modal" data-target="#makeMarketItem" class="btn btn-sm btn-success pull-right"><i class="fa fa-shopping-cart"></i> Create Market Place Item</button>
-                    #end
+                    <div class="pull-right">
+                        #if(!$marketItem)
+                        <button type="button" data-toggle="modal" data-target="#makeMarketItem" class="btn btn-sm btn-success"><i class="fa fa-shopping-cart"></i> Create Market Place Item</button>
+                        #end
+                        <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-save"></i> Save</button>
+                    </div>
                     <form action="." method="POST" enctype="multipart/form-data" class="form-horizontal">
                         <input type="hidden" name="details" value="details"/>
                         <div class="form-group">
@@ -80,11 +122,6 @@
                                 $formatter.checkbox("themeProvider", "themeProvider", $page.app.themeProvider)
                             </div>
                         </div>
-                        <div class="form-group">
-                            <div class="col-sm-offset-2 col-sm-9">
-                                <button type="submit" class="btn btn-sm btn-primary">Save</button>
-                            </div>
-                        </div>
                     </form>
                 </div>
 
@@ -115,12 +152,12 @@
                         <input type="hidden" name="marketDetails" value="true"/>
                         <div class="pull-right" id="marketButtons">
                             #if(!$marketItem.published)
-                            <button type="button" class="btn btn-info publishApp"><i class="fa fa-check"></i> Publish</button>
+                            <button type="button" class="btn btn-sm btn-info publishApp"><i class="fa fa-check"></i> Publish</button>
                             #else
-                            <button type="button" class="btn btn-info rePublishApp"><i class="fa fa-refresh"></i> Re-Publish</button>
-                            <button type="button" class="btn btn-danger unPublishApp"><i class="fa fa-times"></i> Un-Publish</button>
+                            <button type="button" class="btn btn-sm btn-info rePublishApp"><i class="fa fa-refresh"></i> Re-Publish</button>
+                            <button type="button" class="btn btn-sm btn-danger unPublishApp"><i class="fa fa-times"></i> Un-Publish</button>
                             #end
-                            <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Save</button>
+                            <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-save"></i> Save</button>
                         </div>
                         <div class="clearfix">
                         </div>
@@ -148,38 +185,45 @@
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Banner</label>
-                            <div class="col-sm-9">
-                                <div class="fileinput fileinput-new" data-provides="fileinput">
-                                    <div class="fileinput-new thumbnail" style="width: 533px; height: 200px;">
-                                        <img src="/theme/apps/marketplace/no_banner.png" alt="No Banner">
-                                    </div>
-                                    <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 533px; max-height: 200px;"></div>
-                                    <div>
-                                        <span class="btn btn-light-grey btn-file">
-                                            <span class="fileinput-new"><i class="fa fa-image"></i> Select image</span>
-                                            <span class="fileinput-exists"><i class="fa fa-image"></i> Change</span>
-                                            <input type="file" name="bannerImg">
-                                        </span>
-                                        <a href="#" class="btn btn-danger fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i> Remove</a>
-                                    </div>
+                            <div class="col-sm-9" id="bannerImage">
+                                #set($banner = "/theme/apps/marketplace/no_banner.png")
+                                #if($page.banner)
+                                #set($banner = $page.banner.name + '?' + $formatter.now.time)
+                                #end
+                                #set($bannerTitle = "No Banner")
+                                <div class="app-banner wrap-image" data-href="$banner">
+                                    <a class="banner-logo cboxElement" href="$banner" title="Banner">
+                                        <img src="$banner" alt="" class="img-responsive">
+                                    </a>
+                                    <div class="tools tools-bottom">
+                                        <a href="#" class="upload-banner" id="upload-banner" title="Change/Upload Banner">
+                                            <i class="fa fa-plus"></i>
+                                        </a>
+                                        <a href="$banner" data-title="$bannerTitle" class="delete-banner pull-right #if(!$page.banner)noBanner#end" title="Delete Banner">
+                                            <i class="fa fa-trash"></i>
+                                        </a>
+                                    </div>                                                
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Logo</label>
-                            <div class="col-sm-9">
-                                <div class="fileinput fileinput-new" data-provides="fileinput">
-                                    <div class="fileinput-new thumbnail" style="width: 320px; height: 150px;">
-                                        <img src="/theme/apps/marketplace/no_logo.png" alt="No Logo">
-                                    </div>
-                                    <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 320px; max-height: 150px;"></div>
-                                    <div>
-                                        <span class="btn btn-light-grey btn-file">
-                                            <span class="fileinput-new"><i class="fa fa-image"></i> Select image</span>
-                                            <span class="fileinput-exists"><i class="fa fa-image"></i> Change</span>
-                                            <input type="file" name="logoImg">
-                                        </span>
-                                        <a href="#" class="btn btn-danger fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i> Remove</a>
+                            <div class="col-sm-9" id="logoImage">
+                                #set($logo = "/theme/apps/marketplace/no_logo.png")
+                                #if($page.logo)
+                                    #set($logo = $page.logo.name)
+                                #end
+                                <div class="app-logo wrap-image">
+                                    <a class="cboxElement" href="$logo" title="Logo">
+                                        <img src="$logo#if($page.logo)?$formatter.now.time#end" alt="" class="img-responsive">
+                                    </a>
+                                    <div class="tools tools-bottom">
+                                        <a href="#" class="upload-logo" id="upload-logo" title="Change/Upload Logo">
+                                            <i class="fa fa-plus"></i>
+                                        </a>
+                                        <a href="$logo" data-title="Logo" class="delete-logo pull-right #if(!$page.logo)noLogo#end" title="Delete Logo">
+                                            <i class="fa fa-trash"></i>
+                                        </a>                                        
                                     </div>
                                 </div>
                             </div>
@@ -217,6 +261,43 @@
                             </div>
                         </div>
                     </form>
+                </div>
+
+                <div class="tab-pane" id="history">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Title</th>
+                                    <th>Brief</th>
+                                    <th>Price</th>
+                                    <th>Published By</th>
+                                    <th>Published Date</th>
+                                    <th>Branch</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                #foreach($item in $page.publishedItems)
+                                <tr>
+                                    <th scope="row">$foreach.count</th>
+                                    <td>$!item.title</td>
+                                    <td>$!item.brief</td>
+                                    <td>
+                                        #if(!$item.price || $item.price == 0)
+                                        Free
+                                        #else
+                                        $$item.price
+                                        #end
+                                    </td>
+                                    <td>$item.publishedBy.formattedName</td>
+                                    <td><abbr title="$item.publishedDate">$formatter.formatDateTime($item.publishedDate, $page.organisation.timezone)</abbr></td>
+                                    <td>$item.branch.name (commit-$item.commit.id)</td>
+                                </tr>
+                                #end
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
                 #end
@@ -273,12 +354,13 @@
         </script>
         <script type="text/javascript" src="/theme/apps/admin/manageRepoApp.js">//
         </script>
+        <script type="text/javascript" src="/static/bootstrap-upcrop-image/1.0/bootstrap-upcrop-image.js">//</script>
         <script>
             $(function () {
                 initManageRepoApp();
-                        #if (!$marketItem)
-                        initCreateMarketItem();
-                        #end
+                #if (!$marketItem)
+                initCreateMarketItem();
+                #end
             });
         </script>
         #macro(genRating $rating)

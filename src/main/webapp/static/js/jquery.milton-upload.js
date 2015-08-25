@@ -120,7 +120,7 @@
                     flog("Now invoke dropzone plugin...", dzConfig);
                     var dropzone = form.dropzone(dzConfig);
                     container.data('dropzone', form.data('dropzone'));
-                    flog("Finished dropzone init", Dropzone);
+                    flog("Finished dropzone init", dropzone);
                 });
             } else {
                 flog('init fallback for dropzone');
@@ -171,6 +171,7 @@
                 var fileUpload = button.fileupload({
                     url: actionUrl,
                     dataType: 'json',
+                    paramName: config.fieldName,
                     done: function (e, data) {
                         button.find('.fallback-progress').hide();
                         flog(data);
