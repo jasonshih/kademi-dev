@@ -164,11 +164,13 @@
                                 <div class="tab-content">
                                     <div class="tab-pane active" id="condition-expr">
                                         <div class="form-group">
-                                            <label class="control-label col-md-4" for="conditionScriptMvel">Advanced</label>
-                                            <div class="col-md-8">
-                                                <p>You can enter a rule expression below using MVEL syntax, the trigger will only fire if this evaluates to true. Eg</p>
-                                                <pre>event.numAttempts < 3</pre>
+                                            <label class="control-label col-md-2" for="conditionScriptMvel">Advanced</label>
+                                            <div class="col-md-10">
+                                                <p>You can enter a rule expression below using MVEL syntax, the trigger will only fire if this evaluates to true.</p>                                                
                                                 <textarea name="conditionScriptMvel" id="conditionScriptMvel" class="form-control" rows="5">$!page.job.conditionScriptMvel</textarea>
+                                                
+                                                <h3>Example rule</h3>
+                                                <pre>event.numAttempts < 3</pre>
                                             </div>
                                         </div>
 
