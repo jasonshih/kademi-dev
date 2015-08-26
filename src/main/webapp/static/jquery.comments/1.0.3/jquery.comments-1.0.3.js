@@ -153,10 +153,10 @@
 
 function sendNewForumComment(pageUrl, commentInput, renderComment, currentUser) {
     flog("sendNewForumComment", pageUrl, commentInput, currentUser);
-    if (currentUser.href === null) {
-        alert("You must be logged in to post comments");
-        return;
-    }
+//    if (currentUser.href === null) {
+//        alert("You must be logged in to post comments");
+//        return;
+//    }
     var comment = commentInput.val();
     commentInput.removeClass("errorField");
     if (comment.trim().length < 1) {
