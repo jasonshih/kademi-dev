@@ -84,7 +84,7 @@
                     <form action="." method="POST" enctype="multipart/form-data" class="form-horizontal">
                         <div class="pull-right">
                             #if(!$marketItem)
-                            <button type="button" data-toggle="modal" data-target="#makeMarketItem" class="btn btn-sm btn-success"><i class="fa fa-shopping-cart"></i> Create Market Place Item</button>
+                            <button type="button" data-toggle="modal" data-target="#makeMarketItem" class="btn btn-sm btn-success"><i class="fa fa-shopping-cart"></i> Add to market place</button>
                             #end
                             <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-save"></i> Save</button>
                         </div>
@@ -177,9 +177,9 @@
                             <div class="col-sm-9">
                                 <div class="input-group">
                                     <span class="input-group-addon" id="basic-addon1">$</span>
-                                    <input type="number" min="0" step="0.01" class="form-control numeric" name="price" value="$!marketItem.price" />
+                                    <input disabled="disabled" type="number" min="0" step="0.01" class="form-control numeric" name="price" value="$!marketItem.price" />
                                 </div>
-                                <small>If the price is left blank or is set to 0 then the item will be marked as free.</small>
+                                <small>Only free items are currently supported.</small>
                             </div>
                         </div>
                         <div class="form-group">
