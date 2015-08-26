@@ -1,7 +1,7 @@
 function initMarketPlaceApp() {
     initInputLimiter();
     initSubmitReview();
-
+    initInstallApp();
     $('abbr.timeago').timeago();
 }
 
@@ -30,6 +30,33 @@ function initSubmitReview() {
                     openReviewBtn.fadeIn(200);
                 });
                 closeReviewBtn.hide();
+            });
+        }
+    });
+}
+
+function initInstallApp() {
+    $('body').on('click', '.btn-install-app', function (e) {
+        e.preventDefault();
+        var btn = $(this);
+        var title = btn.data('title');
+        if (confirm('Are you sure you want to install ' + title + '?')) {
+            $.ajax({
+                type: 'POST',
+                url: window.location.pathname,
+                data: {installItem: true},
+                dataType: 'json',
+                success: function (data) {
+                    flog("success", data);
+                    if(data.status){
+                        Msg.success('Successfully installed ' + title);
+                    }else{
+                        Msg.warning('There was a problem installing ' + title + '. Please contact your system administrator.')
+                    }
+                },
+                error: function (resp) {
+                    Msg.error("An error occured doing the publish. Please check your internet connection and try again");
+                }
             });
         }
     });
