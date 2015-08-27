@@ -113,13 +113,19 @@ function doSearch() {
 	uri.setSearch("q", query);
 	uri.setSearch("g", groupName);
 	flog("doSearch", uri.toString());
+    var newHref = uri.toString();
+    window.history.pushState("", newHref, newHref);
+    Msg.info("Searching...", 50000);
     $.ajax({
         type: 'GET',
-        url: uri.toString(),
+        url: newHref,
         success: function (data) {
+            Msg.info("Search complete", 5000);
             flog("success", data);
-            var $fragment = $(data).find("#table-users-body");
+            var newDom = $(data);
+            var $fragment = newDom.find("#table-users-body");
             $("#table-users-body").replaceWith($fragment);
+            $("#searchStats").replaceWith(newDom.find("#searchStats"));
         },
         error: function (resp) {
             Msg.error("An error occured doing the user search. Please check your internet connection and try again");
