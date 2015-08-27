@@ -10,7 +10,7 @@
                 width: 100%;
                 white-space: nowrap;
             }
-            #table-users td {
+            #table-users td.text {
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
@@ -123,15 +123,15 @@
                             #foreach($p in $page.searchResults)
                             #set( $groupName = $page.groupName( $p.fields.get("memberships.group").value ) )
                             <tr>
-                                <td>
+                                <td class="text">
                                     <span title="$formatter.htmlEncode($p.fields.firstName.value) $formatter.htmlEncode($p.fields.surName.value)">
                                         $formatter.htmlEncode($p.fields.firstName.value)
                                         $formatter.htmlEncode($p.fields.surName.value)
                                     </span>
                                 </td>
-                                <td><a href="mailto:$p.fields.email.value">$p.fields.email.value</a></td>
-                                <td>$!p.fields.phone.value</td>
-                                <td>
+                                <td class="text"><a href="mailto:$p.fields.email.value">$p.fields.email.value</a></td>
+                                <td class="text">$!p.fields.phone.value</td>
+                                <td class="text">
                                     #if( $groupName )
                                     <a title="$groupName" href="/manageGroups/$groupName/">$groupName</a>
                                     #end
@@ -150,7 +150,7 @@
                                         </ul>
                                     </div>
                                 </td>
-                                <td><input type="checkbox" name="toRemoveId" value="$p.id" /></td>
+                                <td><input type="checkbox" name="toRemoveId" value="$p.fields.userId.value" /></td>
                             </tr>
                             #end
                         </tbody>
