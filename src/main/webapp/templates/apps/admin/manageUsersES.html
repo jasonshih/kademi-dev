@@ -4,6 +4,18 @@
         <link rel="stylesheet" type="text/css" href="manageUser.css" />
         <script type="text/javascript" src="/static/uri/1.15.1/URI.js">//</script>
         <script type="text/javascript" src="manageUser.js">//</script>
+        <style>
+            #table-users {
+                table-layout: fixed;
+                width: 100%;
+                white-space: nowrap;
+            }
+            #table-users td {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              }
+        </style>
     </head>
     <body class="manage-users">
         <div class="row">
@@ -79,8 +91,8 @@
                     <table id="table-users" class="table table-striped table-hover">
                         <colgroup>
                             <col width="" />
-                            <col width="15%" />
-                            <col width="16%" />
+                            <col width="220px" />
+                            <col width="120px" />
                             <col width="" />
                             <col data-sort="false" width="150px" />
                             <col data-sort="false" width="30px" />
@@ -109,14 +121,21 @@
                         </thead>
                         <tbody id="table-users-body">
                             #foreach($p in $page.searchResults)
+                            #set( $groupName = $page.groupName( $p.fields.get("memberships.group").value ) )
                             <tr>
                                 <td>
-                                    $formatter.htmlEncode($p.fields.firstName.value)
-                                    $formatter.htmlEncode($p.fields.surName.value)
+                                    <span title="$formatter.htmlEncode($p.fields.firstName.value) $formatter.htmlEncode($p.fields.surName.value)">
+                                        $formatter.htmlEncode($p.fields.firstName.value)
+                                        $formatter.htmlEncode($p.fields.surName.value)
+                                    </span>
                                 </td>
-                                <td><a href="mailto:$p.email">$p.fields.email.value</a></td>
-                                <td>$!p.phone</td>
-                                <td>$page.groupName( $p.fields.get("memberships.group").value )</td>
+                                <td><a href="mailto:$p.fields.email.value">$p.fields.email.value</a></td>
+                                <td>$!p.fields.phone.value</td>
+                                <td>
+                                    #if( $groupName )
+                                    <a title="$groupName" href="/manageGroups/$groupName/">$groupName</a>
+                                    #end
+                                </td>
                                 <td class="action">
                                     <div class="btn-group btn-group-sm">
                                         <a href="$p.fields.userId.value" class="btn btn-sm btn-primary btn-sm">
