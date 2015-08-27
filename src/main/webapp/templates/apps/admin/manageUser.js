@@ -330,6 +330,7 @@ function doOrgSearch() {
 
 function initRemoveUsers() {
     $(".btn-remove-users").click(function (e) {
+        e.preventDefault();
         var node = $(e.target);
         flog("removeUsers", node, node.is(":checked"));
         var checkBoxes = $('#table-users').find('tbody input[name=toRemoveId]:checked');
