@@ -1,0 +1,51 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <i class="clip-bubble-4"></i>
+        Stream
+        <div class="panel-tools">
+            <a href="#" class="btn btn-xs btn-link panel-collapse collapses">
+            </a>
+            <a href="#" class="btn btn-xs btn-link panel-expand">
+                <i class="fa fa-resize-full"></i>
+            </a>
+        </div>
+    </div>
+    <div style="height:460px" class="panel-body panel-scroll ps-container ps-active-y">
+        <ol class="discussion">
+            <li class="other">
+                <div class="avatar">
+                    <img src="/theme/assets/images/avatar-4.jpg" alt="">
+                </div>
+                <div class="messages">
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+                    </p>
+                    <span class="time"> 51 min </span>
+                </div>
+            </li>
+
+        </ol>
+        <div class="ps-scrollbar-x-rail" style="width: 438px; display: none; left: 0px; bottom: 3px;">
+            <div class="ps-scrollbar-x" style="left: 0px; width: 0px;"></div>
+        </div>
+        <div class="ps-scrollbar-y-rail" style="top: 0px; height: 460px; display: inherit; right: 3px;">
+            <div class="ps-scrollbar-y" style="top: 0px; height: 338px;"></div>
+        </div>
+    </div>
+    <script>
+        $(function () {
+            $.ajax({
+                type: 'GET',
+                url: "/stream",
+                dataType: 'json',
+                success: function (resp) {
+                    flog("stream: ", resp);
+                },
+                error: function (resp) {
+                    flog('error', resp);
+                    Msg.error('err: couldnt load page data');
+                }
+            });
+        });
+    </script>
+</div>

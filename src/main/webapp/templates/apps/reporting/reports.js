@@ -69,10 +69,13 @@ $(function () {
             }
         });
     });
-
-    runReportWithDateRange( reportContainer, itemsContainer);
 });
 
+function runReportsFirst() {
+    var reportContainer = $('#annual');
+    var itemsContainer = $('#items');
+    runReportWithDateRange( reportContainer, itemsContainer);
+}
 
 function updateHref() {
     var uri = URI(window.location);
