@@ -11,12 +11,12 @@
         </div>
     </div>
     <div style="height:460px" class="panel-body panel-scroll ps-container ps-active-y">
-        <ol class="discussion">
+        <ol class="discussion" id="streamBody">
             <li class="other">
                 <div class="avatar">
                     <img src="/theme/assets/images/avatar-4.jpg" alt="">
                 </div>
-                <div class="messages">
+                <div id="streamBody">
                     <p>
                         Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
                     </p>
@@ -32,20 +32,51 @@
             <div class="ps-scrollbar-y" style="top: 0px; height: 338px;"></div>
         </div>
     </div>
+
+    <script src="/static/handlebars/3.0.3/handlebars-v3.0.3.js"></script>
+    <script id="entry-template" type="text/x-handlebars-template">
+        <div class="entry">
+        {{#each hits.hits}}
+        <li class="other">
+            <div class="avatar">
+                <img src="/users/{{fields.userName}}/pic" alt="">
+            </div>
+            <div class='messages'>
+                <p>
+                <a href="/users/{{fields.fullName}}/">{{fields.fullName}}</a> {{fields.message}} <a href="/{{fields.appliesTo}}/{{fields.path}}">{{fields.itemTitle}}</a>
+                </p>
+                <span class="time timeago" title="{{dateFromLong fields.eventDate}}">{{fields.eventDate}}</span>
+            </div>
+        </li>
+
+        {{/each}}
+        </div>
+    </script>
     <script>
-        $(function () {
-            $.ajax({
-                type: 'GET',
-                url: "/stream",
-                dataType: 'json',
-                success: function (resp) {
-                    flog("stream: ", resp);
-                },
-                error: function (resp) {
-                    flog('error', resp);
-                    Msg.error('err: couldnt load page data');
-                }
-            });
+    $(function () {
+        Handlebars.registerHelper('dateFromLong', function (millis) {
+            var date = new Date(millis[0]);
+            return date.toISOString();
         });
+        $.ajax({
+            type: 'GET',
+            url: "/stream",
+            dataType: 'json',
+            success: function (resp) {
+                flog("stream: ", resp);
+                var source = $("#entry-template").html();
+                var template = Handlebars.compile(source);
+                var html = template(resp);
+                flog("html", html);
+                var streamBody = $("#streamBody");
+                streamBody.html(html);
+                jQuery("span.timeago", streamBody).timeago();
+            },
+            error: function (resp) {
+                flog('error', resp);
+                Msg.error('err: couldnt load page data');
+            }
+        });
+    });
     </script>
 </div>
