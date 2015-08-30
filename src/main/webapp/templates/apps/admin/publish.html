@@ -1,6 +1,5 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title>$view.title</title>
         <link href="publish.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="publish.js">//</script>
     </head>
@@ -13,13 +12,15 @@
                     <tr>
                         <td>Current</td>
                         <td>$page.closest("repository").live.name</td>
-                        <td>$page.closest("repository").live.themeName</td>
+                        <td>
+                            $!page.closest("repository").live.themeName
+                        </td>
                         <td><a href="$repo.externalUrl" target="_blank" class="btn btn-warning">View <i class="fa fa-arrow-circle-right"></i></a></td>
                     </tr>
                     <tr>
                         <td>Change to</td>
                         <td>$newBranch.name</td>
-                        <td>$newBranch.themeName</td>
+                        <td>$!newBranch.themeName</td>
                         <td><a href="$page.closest('branch').externalUrl" target="_blank" class="btn btn-success">View <i class="fa fa-arrow-circle-right"></i></a></td>
                     </tr>
                 </tbody>

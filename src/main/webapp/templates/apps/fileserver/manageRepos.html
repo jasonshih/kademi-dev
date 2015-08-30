@@ -55,7 +55,7 @@
                                     <i class="fa fa-code"></i>
                                     #else
                                     <i class="fa fa-folder-o"></i>
-                                    #end                                                                        
+                                    #end
                                 </td>
                                 <td>
                                     <h5><a href="/repositories/$w.name" class="repo">$w.name</a></h5>
@@ -74,7 +74,8 @@
                                             <span class="caret"></span>
                                         </button>
                                         <ul class="dropdown-menu pull-right" role="menu">
-                                            <li><a href="../repositories/$w.name/$w.liveBranch/commits" class="">History</a></li>
+                                            <li><a href="../repositories/$w.name/$w.liveBranch/commits" class="">History (Live)</a></li>
+                                            <li><a href="../repositories/$w.name/manageBranches" class="">Branches and History</a></li>
                                             <li><a class="transfer-ownership" href="../repositories/$w.name">Transfer ownership</a></li>
                                             <li>
                                                 <a class="btn-delete-repo" href="../repositories/$w.name"><span class="glyphicon glyphicon-remove"></span> Delete</a>
@@ -109,7 +110,7 @@
                 <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
                 <button class="btn btn-sm btn-primary" data-type="form-submit" type="button">Save</button>
             </div>
-        </div>        
+        </div>
 
         <script type="text/javascript">
             $(function () {

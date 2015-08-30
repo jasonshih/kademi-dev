@@ -1,0 +1,80 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <i class="clip-bubble-4"></i>
+        Stream
+        <div class="panel-tools">
+            <a href="/searchStream" class="btn btn-xs">
+                <i class="fa fa-searchStream"></i> Search
+            </a>
+            <a href="#" class="btn btn-xs btn-link panel-collapse collapses"></a>
+            <a href="#" class="btn btn-xs btn-link panel-expand">
+                <i class="fa fa-resize-full"></i>
+            </a>
+        </div>
+    </div>
+    <div style="height:460px" class="panel-body panel-scroll ps-container ps-active-y">
+        <ol class="discussion" id="streamBody">
+            <li class="text-center">
+                <i class="fa fa-spinner fa-spin" style="font-size: 24px"></i>
+            </li>
+
+        </ol>
+        <div class="ps-scrollbar-x-rail" style="width: 438px; display: none; left: 0px; bottom: 3px;">
+            <div class="ps-scrollbar-x" style="left: 0px; width: 0px;"></div>
+        </div>
+        <div class="ps-scrollbar-y-rail" style="top: 0px; height: 460px; display: inherit; right: 3px;">
+            <div class="ps-scrollbar-y" style="top: 0px; height: 338px;"></div>
+        </div>
+    </div>
+
+    <script src="/static/handlebars/3.0.3/handlebars-v3.0.3.js"></script>
+    <script id="entry-template" type="text/x-handlebars-template">
+        <div class="entry">
+        {{#each hits.hits}}
+        <li class="other">
+            <div class="avatar">
+                <img src="/users/{{fields.userName}}/pic" alt="">
+            </div>
+            <div class='messages'>
+                <p>
+                <a href="/users/{{fields.fullName}}/">{{fields.fullName}}</a> {{fields.message}} <a href="/{{fields.appliesTo}}/{{fields.path}}">{{fields.itemTitle}}</a>
+                </p>
+                <span class="time timeago" title="{{dateFromLong fields.eventDate}}">{{fields.eventDate}}</span>
+            </div>
+        </li>
+
+        {{/each}}
+        </div>
+    </script>
+    <script>
+    $(function () {
+        Handlebars.registerHelper('dateFromLong', function (millis) {
+            if( millis ) {
+                var date = new Date(millis[0]);
+                return date.toISOString();
+            } else {
+                return "";
+            }
+        });
+        $.ajax({
+            type: 'GET',
+            url: "/stream",
+            dataType: 'json',
+            success: function (resp) {
+                flog("stream: ", resp);
+                var source = $("#entry-template").html();
+                var template = Handlebars.compile(source);
+                var html = template(resp);
+                flog("html", html);
+                var streamBody = $("#streamBody");
+                streamBody.html(html);
+                jQuery("span.timeago", streamBody).timeago();
+            },
+            error: function (resp) {
+                flog('error', resp);
+                Msg.error('err: couldnt load page data');
+            }
+        });
+    });
+    </script>
+</div>
