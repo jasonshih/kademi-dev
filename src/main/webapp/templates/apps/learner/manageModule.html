@@ -5,6 +5,7 @@
         <link href="/static/quiz/quiz.css" rel="stylesheet" type="text/css" />
         <link href="/static/history/jquery.history.css" rel="stylesheet" type="text/css" />
         <link href="/static/js/milton-image-select.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="/theme/assets/plugins/dropzone/downloads/css/dropzone.css"/>
 
         <script type="text/javascript" src="/static/history/jquery.history.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.timeago.js">//</script>
@@ -120,6 +121,7 @@
                     <div class="btn-group btn-group-sm pull-right">
                         <a title="Add quiz" href="#" class="btn btn-sm btn-success btn-quiz-page"><i class="clip-question"></i></a>
                         <a title="Add page" href="#" class="btn btn-sm btn-success btn-add-page"><i class="fa fa-plus"></i></a>
+                        <a title="Upload scorm module" href="#" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-upload-scorm"><i class="fa fa-cloud-upload"></i></a>
                     </div>
                     <h4>$page.title</h4>
                     <hr />
@@ -340,6 +342,20 @@
             </div>
         </div>
         #end
+
+        <script src="/theme/assets/plugins/dropzone/downloads/dropzone.min.js">//</script>
+        <div id="modal-upload-scorm" class="modal modal-md fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                <h4 class="modal-title">Upload Scorm File</h4>
+            </div>
+            <div class="modal-body">
+                <form action="${page.href}" class="dropzone dropzone-fullwidth" id="uploadScormFileDropzone"></form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+            </div>
+        </div>
 
         <div id="modal-add-page" class="modal modal-lg fade modal-fuse modal-fuse-editor" aria-hidden="true" tabindex="-1">
             <div class="modal-header">

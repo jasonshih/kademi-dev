@@ -66,7 +66,13 @@
                                         #end
                                     </td>
                                     <td><abbr title="$formatter.formatDateISO8601($post.date)" class="timeago">$post.date</abbr></td>
-                                    <td><a href="$post.user.href">$post.user.name</a></td>
+                                    <td>
+                                        #if($post.user)
+                                        <a href="$post.user.href">$post.user.name</a>
+                                        #else
+                                        Anonymous
+                                        #end
+                                    </td>
                                     <td class="action">
                                         <div class="btn-group btn-group">
                                             <button class="btn btn-success dropdown-toggle" data-toggle="dropdown" type="button">

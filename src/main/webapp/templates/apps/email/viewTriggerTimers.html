@@ -46,16 +46,16 @@
             <br />
             <div class="upload-results">
                 <p>
-                    <strong>Lines processed:</strong> 
-                    <span class="badge badge-success lines-processed">-</span> 
+                    <strong>Lines processed:</strong>
+                    <span class="badge badge-success lines-processed">-</span>
 
-                    <strong>No. inserted:</strong> 
-                    <span class="badge badge-success num-inserted">-</span> 
+                    <strong>No. inserted:</strong>
+                    <span class="badge badge-success num-inserted">-</span>
 
-                    <strong>No. updated:</strong> 
-                    <span class="badge badge-success num-updated">-</span> 
+                    <strong>No. updated:</strong>
+                    <span class="badge badge-success num-updated">-</span>
 
-                    <strong>Failed:</strong> 
+                    <strong>Failed:</strong>
                     <span class="badge badge-danger num-unmatched">-</span>
                 </p>
                 <div class="table-responsive">
@@ -94,9 +94,9 @@
                 <div class="input-group date-range col-md-4">
                     <label for="report-range" class="input-group-addon">Time</label>
                     <input type="text" id="report-range" placeholder="Choose a date range" value="" class="form-control" />
-                </div>                          
+                </div>
                 <div class="clearfix"></div>
-                <hr/>                
+                <hr/>
                 <form method="POST" action="$page.name" class="form-triggers">
                     <div class="table-responsive">
                         <table id="trigger-wrapper" class="table table-striped table-hover">
@@ -137,19 +137,19 @@
                                 #else
                                 #foreach($tt in $timers)
                                 <tr >
-                                    <td><abbr title="ID: $tt.emailTrigger.id">$tt.emailTrigger.name</abbr></td>
+                                    <td><a href="/autoEmails/$tt.emailTrigger.name">$tt.emailTrigger.title</a></td>
                                     <td><a href="/manageUsers/$tt.fireForProfile.id/">$tt.fireForProfile.email</a></td>
                                     <td>
                                         #if( $page.statusCode($tt) == "c" )
                                         <span class="label label-success">$page.status($tt)</span>
                                         #elseif( $page.statusCode($tt) == "r" )
-                                        <span class="label label-warning">$page.status($tt)</span>                                        
+                                        <span class="label label-warning">$page.status($tt)</span>
                                         #else
                                         <span class="label label-default">$page.status($tt)</span>
                                         #end
                                     </td>
-                                    <td>$formatter.formatDateTime( $tt.createdAt )</td>
-                                    <td>$formatter.formatDateTime($tt.fireAt )</td>
+                                    <td>$formatter.formatDateTime( $tt.createdAt , $page.organisation.timezone)</td>
+                                    <td>$formatter.formatDateTime($tt.fireAt , $page.organisation.timezone)</td>
                                     <td class="action">
                                         $formatter.checkbox($tt.id, "triggerId", false, $tt.id)
                                     </td>

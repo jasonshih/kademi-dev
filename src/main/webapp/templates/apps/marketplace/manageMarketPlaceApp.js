@@ -1,9 +1,118 @@
+function initMarketPlaceApp() {
+    initInputLimiter();
+    initSubmitReview();
+    initInstallApp();
+    $('abbr.timeago').timeago();
+}
+
 function initInputLimiter() {
     $('.limited').inputlimiter({
         remText: 'You only have %n character%s remaining...',
         remFullText: 'Stop typing! You\'re not allowed any more characters!',
         limitText: 'You\'re allowed to input %n character%s into this field.'
     });
+}
+
+function initSubmitReview() {
+    var reviewForm = $('#reviewForm');
+    var reviewBox = $('#post-review-box');
+    var newReview = $('#new-review');
+    var openReviewBtn = $('#open-review-box');
+    var closeReviewBtn = $('#close-review-box');
+    reviewForm.forms({
+        callback: function (resp) {
+            flog("Callback: resp", resp);
+            addReview(resp.data);
+            closeReviewBtn.click(function (e) {
+                e.preventDefault();
+                reviewBox.slideUp(300, function () {
+                    newReview.focus();
+                    openReviewBtn.fadeIn(200);
+                });
+                closeReviewBtn.hide();
+            });
+        }
+    });
+}
+
+function initInstallApp() {
+    $('body').on('click', '.btn-install-app', function (e) {
+        e.preventDefault();
+        var btn = $(this);
+        var title = btn.data('title');
+        if (confirm('Are you sure you want to install ' + title + '?')) {
+            $.ajax({
+                type: 'POST',
+                url: window.location.pathname,
+                data: {installItem: true},
+                dataType: 'json',
+                success: function (data) {
+                    flog("success", data);
+                    if(data.status){
+                        Msg.success('Successfully installed ' + title);
+                    }else{
+                        Msg.warning('There was a problem installing ' + title + '. Please contact your system administrator.')
+                    }
+                },
+                error: function (resp) {
+                    Msg.error("An error occured doing the publish. Please check your internet connection and try again");
+                }
+            });
+        }
+    });
+}
+
+function addReview(data) {
+    var reviewsList = $('#reviews-list');
+    var profileImg = '/templates/apps/user/profile.png';
+    if (data.photoHash !== null && data.photoHash.length > 0) {
+        profileImg = "/_hashes/files/" + data.photoHash;
+    }
+    var reviewedOn = new Date(parseInt(data.reviewedOn, 10));
+    var template = $('<section class="comment-list">'
+            + '    <article class="row">'
+            + '        <div class="col-md-2 col-sm-2 hidden-xs">'
+            + '            <figure class="thumbnail">'
+            + '                <img class="img-responsive" src="' + profileImg + '" />'
+            + '            </figure>'
+            + '        </div>'
+            + '        <div class="col-md-10 col-sm-10">'
+            + '            <div class="panel panel-default arrow left">'
+            + '                <div class="panel-body">'
+            + '                    <header class="text-left">'
+            + '                        <div class="comment-user"><i class="fa fa-user"></i> ' + data.reviewedBy + '</div>'
+            + '                        <div><i class="fa fa-smile-o"></i> ' + genRating(data.rating) + '</div>'
+            + '                        <span><i class="fa fa-clock-o"></i> <abbr title=" ' + reviewedOn + '" class="timeago">' + reviewedOn.toISOString() + '</abbr></span>'
+            + '                    </header>'
+            + '                    <div class="comment-post">'
+            + '                        <p>' + data.review + '</p>'
+            + '                    </div>'
+            + '                </div>'
+            + '            </div>'
+            + '        </div>'
+            + '    </article>'
+            + '</section>');
+
+    template.find('.timeago').timeago();
+
+    reviewsList.append(template);
+}
+
+function genRating(rating) {
+    var r = '<span class="star-rating" title="' + rating + '/5 stars">';
+    for (var i = 0; i < 5; i++) {
+        var a = rating - i;
+        if (a > 0.5) {
+            r = r + '<span class="fa fa-star"></span>';
+        } else if (a == 0.5) {
+            r = r + '<span class="fa fa-star-half-o"></span>';
+        } else {
+            r = r + '<span class="fa fa-star-o"></span>';
+        }
+    }
+    r = r + '</span>';
+
+    return r;
 }
 
 (function (e) {

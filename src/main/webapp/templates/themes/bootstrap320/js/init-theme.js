@@ -338,7 +338,8 @@ function buildJWPlayer(itemToReplace, count, src, posterHref) {
 //        file: src,
 //        height: h,
 //        image: posterHref,
-        flashplayer: "/static/jwplayer/6.10/jwplayer.flash.swf",
+        flashplayer : "/static/jwplayer/6.10/jwplayer.flash.swf",
+        html5player : "/static/jwplayer/6.10/jwplayer.html5.js",
         width: "100%",
         aspectratio: w + ":" + h,
         androidhls: true, //enable hls on android 4.1+

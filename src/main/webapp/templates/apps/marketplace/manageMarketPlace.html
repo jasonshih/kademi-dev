@@ -23,7 +23,11 @@
                                 <div class="col-md-2">
                                     <div class="thumbnail app">
                                         <a href="$app.href">
-                                            <img src="/theme/apps/marketplace/no_logo.png" alt="$app.title">
+                                            #set($logo = "/theme/apps/marketplace/no_logo.png")
+                                            #if($app.logo)
+                                                #set($logo = $app.href + $app.logo.name + "/alt-320-150.png")
+                                            #end
+                                            <img src="$logo" alt="$app.title">
                                         </a>
                                         <div class="caption">
                                             <h4 class="title"><a href="$app.href">$app.title<span class="parag-end"></span></a></h4>

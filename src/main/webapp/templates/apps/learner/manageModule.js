@@ -1,6 +1,6 @@
 function initManageModule(baseHref, themePath) {
     flog("initManageModule", baseHref, themePath);
-    window.request_url = function() {
+    window.request_url = function () {
         var str = '';
         var p = getSelectedProgram();
         if (p) {
@@ -24,6 +24,7 @@ function initManageModule(baseHref, themePath) {
     initAddQuizModal();
     initFormDetails();
     initQuizBuilder();
+    initScormUpload();
 
     window.onbeforeunload = isModalOpen;
 }
@@ -31,7 +32,7 @@ function initManageModule(baseHref, themePath) {
 function initCssForEditor(themePath) {
     flog('initCssForEditor. Themepath=', themePath);
     var cssPath;
-    if( themePath !== "/templates/themes/fuse/") {
+    if (themePath !== "/templates/themes/fuse/") {
         themePath = '/templates/themes/bootstrap320/'; // HACK!! Loading from an actual theme doesnt work when its not a base theme (eg united)
         flog('initCssForEditor. Using bootstrap', themePath);
         cssPath = themePath + 'less/bootstrap.less';
@@ -74,7 +75,7 @@ function initThumbnail() {
     thumbSel.mselect({
         basePath: basePath,
         pagePath: pagePath,
-        onSelectFile: function(selectedUrl) {
+        onSelectFile: function (selectedUrl) {
             // selectedUrl is absolute, need relative to module
             flog('selectedUrl', selectedUrl, this);
             thumbSel.val(selectedUrl);
@@ -143,13 +144,13 @@ function initDropdownMix() {
     var mainContent = $('.main-content').children('.container');
     var btnShowMix = $('.btn-show-mix');
 
-    var adjustDropdownWidth = function() {
+    var adjustDropdownWidth = function () {
         dropdown.css('width', mainContent.width());
     };
 
     adjustDropdownWidth();
 
-    $(window).resize(function() {
+    $(window).resize(function () {
         adjustDropdownWidth();
     });
 
@@ -161,7 +162,7 @@ function initDropdownMix() {
         }
     });
 
-    btnShowMix.on('click', function(e) {
+    btnShowMix.on('click', function (e) {
         e.preventDefault();
 
         mixWrapper[mixWrapper.hasClass('open') ? 'removeClass' : 'addClass']('open');
@@ -172,7 +173,7 @@ function initDropdownMix() {
     var modulesList = $('#modules-wrapper').find('.modules-list');
 
     // Add event for item of Program list
-    programsList.on('click', 'a', function(e) {
+    programsList.on('click', 'a', function (e) {
         e.preventDefault();
 
         var a = $(this);
@@ -188,7 +189,7 @@ function initDropdownMix() {
             uploadCurrentModule(mixWrapper);
 
             var url = propfindHref(a.attr('href'));
-            $.getJSON(url, function(data) {
+            $.getJSON(url, function (data) {
                 var courseStr = '';
 
                 for (var i = 1; i < data.length; i++) {
@@ -204,7 +205,7 @@ function initDropdownMix() {
     });
 
     // Add event for item of Course list
-    coursesList.on('click', 'a', function(e) {
+    coursesList.on('click', 'a', function (e) {
         e.preventDefault();
 
         var a = $(this);
@@ -218,7 +219,7 @@ function initDropdownMix() {
             uploadCurrentModule(mixWrapper);
 
             var url = propfindHref(a.attr('href'));
-            $.getJSON(url, function(data) {
+            $.getJSON(url, function (data) {
                 var moduleStr = '';
                 for (var i = 1; i < data.length; i++) {
                     flog('module', data[i]);
@@ -234,7 +235,7 @@ function initDropdownMix() {
     });
 
     // Add event for item of Module list
-    modulesList.on('click', 'a', function(e) {
+    modulesList.on('click', 'a', function (e) {
         var a = $(this);
 
         if (!a.hasClass('active')) {
@@ -253,12 +254,12 @@ function initCRUDModulePages() {
     var modal = $('#modal-add-page');
     var form = modal.find('form');
 
-    initFuseModal(modal, function() {
+    initFuseModal(modal, function () {
         modal.find('.modal-body').css('height', getStandardModalEditorHeight());
         initHtmlEditors(modal.find('.htmleditor'), getStandardEditorHeight(), null, null, standardRemovePlugins + ',autogrow'); // disable autogrow
     });
 
-    $('.btn-add-page').click(function(e) {
+    $('.btn-add-page').click(function (e) {
         e.preventDefault();
         flog('initAddPageModal: click');
         // Make sure inputs are cleared
@@ -267,7 +268,7 @@ function initCRUDModulePages() {
         // Find highest order value and increment for new page
         var lastOrder = $("#pages-list input[type=hidden]").last().val();
         flog("lastOrder", lastOrder);
-        if( lastOrder === null || lastOrder === "") {
+        if (lastOrder === null || lastOrder === "") {
             lastOrder = 0;
         }
 
@@ -277,7 +278,7 @@ function initCRUDModulePages() {
         flog("newOrderVal", newOrderVal);
         form.find("input[name=order]").val(newOrderVal);
 
-        form.unbind().submit(function(e) {
+        form.unbind().submit(function (e) {
             flog('submit clicked', e.target);
             e.preventDefault();
             //createPage(modal.find('form'));
@@ -295,19 +296,19 @@ function initModuleList() {
     var cont = $('div.Content');
     pagesList.sortable({
         items: 'article',
-        sort: function() {
+        sort: function () {
             if (cont.hasClass('ajax-loading')) {
                 return false;
             }
             $(this).removeClass('ui-state-default');
         },
-        update: function() {
+        update: function () {
             flog('module page change order');
             saveModulePages();
         }
     });
 
-    pagesList.on('click', '.btn-edit-page', function(e) {
+    pagesList.on('click', '.btn-edit-page', function (e) {
         e.preventDefault();
 
         flog('click edit', e, this);
@@ -319,7 +320,7 @@ function initModuleList() {
     });
 
     // Delete button
-    pagesList.on('click', 'a.btn-delete-page', function(e) {
+    pagesList.on('click', 'a.btn-delete-page', function (e) {
         e.preventDefault();
 
         flog('Delete page', $(this));
@@ -329,7 +330,7 @@ function initModuleList() {
         var href = a.attr('href');
         var name = parent.find('> span.article-name').text();
 
-        confirmDelete(href, name, function() {
+        confirmDelete(href, name, function () {
             flog('remove', parent);
             parent.remove();
         });
@@ -353,7 +354,7 @@ function checkFormControlState(type, afterRemoveLastOne) {
         wrappers = allWrappers.all;
     }
 
-    wrappers.each(function() {
+    wrappers.each(function () {
         var wrapper = $(this);
         var btnAdd = wrapper.prev();
         var contents = wrapper.children('div');
@@ -363,7 +364,7 @@ function checkFormControlState(type, afterRemoveLastOne) {
             btnAdd[contents.length === 0 ? 'addClass' : 'removeClass']('btn-add-first');
         }
 
-        contents.each(function(i) {
+        contents.each(function (i) {
             var content = $(this);
 
             if (type === 'reward') {
@@ -399,7 +400,7 @@ function initFormControl(name) {
 
     checkFormControlState();
 
-    btnAdd.on('click', function(e) {
+    btnAdd.on('click', function (e) {
         e.preventDefault();
 
         if (btnAdd.hasClass('btn-add-first')) {
@@ -415,7 +416,7 @@ function initFormControl(name) {
         checkFormControlState(name);
     });
 
-    wrapper.on('click', '.btn-delete-' + name, function(e) {
+    wrapper.on('click', '.btn-delete-' + name, function (e) {
         e.preventDefault();
 
         var btn = $(this);
@@ -442,7 +443,7 @@ function initFormDetails() {
     var formDetails = detailsWrapper.find('form');
 
     var addFirst = $('.addFirst');
-    addFirst.click(function(e) {
+    addFirst.click(function (e) {
         e.preventDefault();
         var btn = $(e.target);
         var editList = btn.closest('.editList');
@@ -454,7 +455,7 @@ function initFormDetails() {
     initFormControl('certificate');
     initFormControl('reward');
 
-    $('.certificates-wrapper').on('click', 'a.btn-preview-certificate', function(e) {
+    $('.certificates-wrapper').on('click', 'a.btn-preview-certificate', function (e) {
         e.preventDefault();
 
         var btn = $(this);
@@ -470,21 +471,21 @@ function initFormDetails() {
 
     var chkEmailConfirm = $('#emailConfirm');
     var contentEmailConfirm = $('#email-confirm-content');
-    var checkEmailConfirm = function() {
+    var checkEmailConfirm = function () {
         contentEmailConfirm[chkEmailConfirm.is(':checked') ? 'removeClass' : 'addClass']('hide');
     };
     checkEmailConfirm();
 
     // For email
-    chkEmailConfirm.on('click', function() {
+    chkEmailConfirm.on('click', function () {
         checkEmailConfirm();
     });
 
     $('#moduleDetailsForm').forms({
-        validate: function(form) {
+        validate: function (form) {
             return checkEditListsValid();
         },
-        callback: function(resp) {
+        callback: function (resp) {
             flog('Module details saved', resp);
             Msg.info("Saved");
             if (resp.nextHref && resp.nextHref !== decodeURIComponent(window.location.pathname)) {
@@ -500,15 +501,15 @@ function checkEditListsValid() {
     flog('checkEditListsValid');
     var isOk = true;
 
-    $('.certificates-wrapper, .rewards-wrapper').each(function(i) {
+    $('.certificates-wrapper, .rewards-wrapper').each(function (i) {
         var wrapper = $(this);
         var values = [];
 
         if (!wrapper.hasClass('hide')) {
-            wrapper.children().each(function(rowIndex) {
+            wrapper.children().each(function (rowIndex) {
                 var item = $(this);
 
-                item.find('select.requiredIf, input.requiredIf').each(function() {
+                item.find('select.requiredIf, input.requiredIf').each(function () {
                     var input = $(this);
                     var val = input.val().trim();
 
@@ -540,7 +541,7 @@ function saveModulePages() {
     var order = 0;
 
     flog('saveModulePages');
-    $('#pages-list').find('article.page').each(function(i, node) {
+    $('#pages-list').find('article.page').each(function (i, node) {
         var page = $(node);
         order++;
         $('input', page).attr('value', order);
@@ -553,11 +554,11 @@ function saveModulePages() {
         url: '',
         data: $('form.modulePages').serialize(),
         dataType: 'json',
-        success: function(resp) {
+        success: function (resp) {
             hideLoadingOverlay();
             flog('saved module', resp);
         },
-        error: function(resp) {
+        error: function (resp) {
             hideLoadingOverlay();
             Msg.error('Sorry couldnt update module');
         }
@@ -570,7 +571,7 @@ function initAddQuizModal() {
 
     modal.find('.modal-body').css('min-height', getStandardModalHeight());
 
-    $('.btn-quiz-page').click(function(e) {
+    $('.btn-quiz-page').click(function (e) {
         e.preventDefault();
 
         modal.find('input[type=text], textarea,input[name=pageName]').val('');
@@ -579,7 +580,7 @@ function initAddQuizModal() {
         // Find highest order value and increment for new page
         var lastOrder = $("#pages-list input[type=hidden]").last().val();
         flog("lastOrder", lastOrder);
-        if( lastOrder === null || lastOrder === "") {
+        if (lastOrder === null || lastOrder === "") {
             lastOrder = 0;
         }
 
@@ -589,7 +590,7 @@ function initAddQuizModal() {
         flog("newOrderVal", newOrderVal);
         form.find("input[name=order]").val(newOrderVal);
 
-        form.unbind().submit(function(e) {
+        form.unbind().submit(function (e) {
             e.preventDefault();
             doSavePage(form, null, true);
         });
@@ -615,7 +616,7 @@ function showEditModal(name, pageArticle) {
 
     openFuseModal(editModal);
 
-    form.unbind().submit(function(e) {
+    form.unbind().submit(function (e) {
         e.preventDefault();
         e.stopPropagation();
         flog('edit submit click', e.target);
@@ -625,7 +626,7 @@ function showEditModal(name, pageArticle) {
     editModal.find('.btn-history').unbind().history({
         pageUrl: name,
         showPreview: false,
-        afterRevertFn: function() {
+        afterRevertFn: function () {
             loadModalEditorContent(editModal, name, isQuiz);
         }
     });
@@ -644,7 +645,7 @@ function loadModalEditorContent(modal, name, isQuiz) {
         type: 'GET',
         url: name + '?type=json',
         dataType: 'json',
-        success: function(resp) {
+        success: function (resp) {
             var data = resp.data;
             flog('set into', modal, modal.find('input[name=pageTitle]'));
             modal.find('input[name=pageTitle]').val(data.title);
@@ -657,7 +658,7 @@ function loadModalEditorContent(modal, name, isQuiz) {
                 flog("set values", data.title, data.body, CKEDITOR.instances["body"]);
             }
         },
-        error: function(resp) {
+        error: function (resp) {
             flog('error', resp);
             Msg.error('err: couldnt load page data');
         }
@@ -702,7 +703,7 @@ function doSavePage(form, pageArticle, isQuiz) {
             url: form.attr('action'),
             data: data,
             dataType: 'json',
-            success: function(data) {
+            success: function (data) {
                 flog('set enabled', modal.find('button[data-type=form-submit]'));
                 form.removeClass('ajax-processing');
                 modal.find('button[data-type=form-submit]').removeAttr('disabled');
@@ -722,7 +723,7 @@ function doSavePage(form, pageArticle, isQuiz) {
                     Msg.error('There was an error saving the page: ' + data.messages);
                 }
             },
-            error: function(resp) {
+            error: function (resp) {
                 form.removeClass('ajax-processing');
                 flog('error', resp);
                 Msg.error('Sorry, an error occured saving your changes. If you have entered editor content that you dont want to lose, please switch the editor to source view, then copy the content. Then refresh the page and re-open the editor and paste the content back in.');
@@ -737,4 +738,24 @@ function doSavePage(form, pageArticle, isQuiz) {
 function addPageToList(pageName, href, title, isQuiz, orderVal) {
     flog('newRow', title, isQuiz);
     $("#pages-list").reloadFragment();
+}
+
+function initScormUpload() {
+    Dropzone.autoDiscover = false;
+    $("#uploadScormFileDropzone.dropzone").dropzone({
+        paramName: "scormModule", // The name that will be used to transfer the file
+        maxFilesize: 500.0, // MB
+        addRemoveLinks: true,
+        parallelUploads: 1,
+        uploadMultiple: false,
+        acceptedMimeTypes: 'application/zip'
+    });
+    var dz = Dropzone.forElement("#uploadScormFileDropzone");
+    flog("dropz", Dropzone, dz, dz.options.url);
+    dz.on("success", function (file) {
+        flog("added file", file);
+    });
+    dz.on("error", function (file, errorMessage) {
+        Msg.error("An error occured uploading: " + file.name + " because: " + errorMessage);
+    });
 }

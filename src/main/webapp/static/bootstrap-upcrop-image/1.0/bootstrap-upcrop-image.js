@@ -1,4 +1,4 @@
-(function($) {
+(function ($) {
     var DEFAULTS = {
         buttonUploadText: 'Upload',
         buttonUploadOtherText: 'Upload other',
@@ -17,45 +17,46 @@
         bgOpacity: 0.4,
         bgColor: '#fff',
         isEmbedded: false,
+        fieldName: "file",
         modalTemplate:
-            '<div class="modal fade" id="{{upcropId}}">' +
+                '<div class="modal fade" id="{{upcropId}}">' +
                 '<div class="modal-dialog">' +
-                    '<div class="modal-content">' +
-                        '<div class="modal-header">' +
-                            '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
-                            '<h4 class="modal-title">{{modalTitle}}</h4>' +
-                        '</div>' +
-                        '<div class="modal-body">' +
-                            '{{upcropZone}}' +
-                        '</div>' +
-                        '<div class="modal-footer">' +
-                            '<div class="pull-left">' +
-                                '{{buttonUploadOther}}' +
-                            '</div>' +
-                            '<button class="btn btn-default" type="button" data-dismiss="modal">Cancel</button> ' +
-                            '{{buttonCrop}} ' +
-                            '{{buttonContinue}}' +
-                        '</div>' +
-                    '</div>' +
+                '<div class="modal-content">' +
+                '<div class="modal-header">' +
+                '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
+                '<h4 class="modal-title">{{modalTitle}}</h4>' +
                 '</div>' +
-            '</div>',
+                '<div class="modal-body">' +
+                '{{upcropZone}}' +
+                '</div>' +
+                '<div class="modal-footer">' +
+                '<div class="pull-left">' +
+                '{{buttonUploadOther}}' +
+                '</div>' +
+                '<button class="btn btn-default" type="button" data-dismiss="modal">Cancel</button> ' +
+                '{{buttonCrop}} ' +
+                '{{buttonContinue}}' +
+                '</div>' +
+                '</div>' +
+                '</div>' +
+                '</div>',
         embeddedTemplate:
-            '<div class="upcrop-embedded" id="{{upcropId}}">' +
+                '<div class="upcrop-embedded" id="{{upcropId}}">' +
                 '{{upcropZone}}' +
                 '<div class="clearfix">' +
-                    '<div class="pull-left">' +
-                        '{{buttonUploadOther}}' +
-                    '</div>' +
-                    '<div class="pull-right">' +
-                        '{{buttonContinue}} ' +
-                        '{{buttonCrop}}' +
-                    '</div>' +
+                '<div class="pull-left">' +
+                '{{buttonUploadOther}}' +
                 '</div>' +
-            '</div>'
+                '<div class="pull-right">' +
+                '{{buttonContinue}} ' +
+                '{{buttonCrop}}' +
+                '</div>' +
+                '</div>' +
+                '</div>'
     };
 
     var methods = {
-        init: function(options) {
+        init: function (options) {
             var target = $(this);
 
             if (target.data('upcrop')) {
@@ -97,7 +98,7 @@
             var dataContinue;
 
             // Action for button `Upload other`
-            btnUploadOther.click(function(e) {
+            btnUploadOther.click(function (e) {
                 e.preventDefault();
 
                 uploadZone.removeClass('hide');
@@ -121,7 +122,7 @@
                     config.onUploadOther.apply(this, upcropContainer);
                 }
             });
-            
+
             // Action for button `Continue`
             btnContinue.on('click', function (e) {
                 e.preventDefault();
@@ -143,7 +144,7 @@
             var uploadedName;
 
             // Action for button `Crop`
-            btnCrop.click(function(e) {
+            btnCrop.click(function (e) {
                 e.preventDefault();
 
                 var url = txtUrl.val();
@@ -168,8 +169,8 @@
                         type: 'POST',
                         dataType: 'json',
                         data: data,
-                        success: function(resp) {
-                            if( resp.status ) {
+                        success: function (resp) {
+                            if (resp.status) {
                                 if (typeof config.onCropComplete === 'function') {
                                     var newArgs = [resp, uploadedName];
                                     config.onCropComplete.apply(this, newArgs);
@@ -182,7 +183,7 @@
                                 alert("Sorry, an error occured updating your profile image");
                             }
                         },
-                        error: function() {
+                        error: function () {
                             alert('Sorry, we couldnt crop your profile image.');
                         }
                     });
@@ -212,7 +213,7 @@
                 flog('already have upcrop css');
             }
 
-            var showPreview = function(coords) {
+            var showPreview = function (coords) {
                 txtX.val(coords.x);
                 txtY.val(coords.y);
                 txtW.val(coords.w);
@@ -228,11 +229,11 @@
                     href = img.attr('src');
                 }
 
-                img.attr('src', href).load(function() {
+                img.attr('src', href).load(function () {
                     img.Jcrop({
                         onChange: showPreview,
                         onSelect: showPreview,
-                        onRelease: function() {
+                        onRelease: function () {
                             btnCrop.addClass('hide');
                             txtX.val('');
                             txtY.val('');
@@ -242,7 +243,7 @@
                         aspectRatio: config.ratio === 'auto' ? img.width() / img.height() : config.ratio,
                         bgOpacity: config.bgOpacity,
                         bgColor: config.bgColor
-                    }, function() {
+                    }, function () {
                         cropZone.find('.jcrop-holder').children().eq(0).hide();
                     });
 
@@ -267,17 +268,18 @@
                 });
             };
 
-            $.getScriptOnce('/static/js/jquery.milton-upload.js', function() {
+            $.getScriptOnce('/static/js/jquery.milton-upload.js', function () {
                 uploadZone.mupload({
                     url: config.url,
+                    fieldName: config.fieldName,
                     useJsonPut: false, // Just do a POST
                     useDropzone: true,
-                    oncomplete: function(data, name, href) {
+                    oncomplete: function (data, name, href) {
                         dataContinue = arguments;
                         flog('uploaded image: ', data, name, data.result.nextHref);
                         uploadedHref = data.result.nextHref;
                         uploadedName = name;
-                        href = data.result.nextHref + '?' + Math.round(Math.random() * 123456789);                        
+                        href = data.result.nextHref + '?' + Math.round(Math.random() * 123456789);
                         flog("href:", href);
 
                         txtUrl.val(href);
@@ -289,7 +291,7 @@
 
                         // Load the href into an img not attached to the DOM to get the original sizes
                         var sizingImg = new Image();
-                        sizingImg.onload = function() {
+                        sizingImg.onload = function () {
                             realWidth = sizingImg.width;
                             realHeight = sizingImg.height;
                             dimMultiplier = realWidth / cropZone.find('.image-wrapper').width();
@@ -327,7 +329,6 @@
 
             return target;
         },
-
         getJcropApi: function () {
             var target = $(this);
             var upcropData = target.data('upcrop');
@@ -343,7 +344,7 @@
         }
     };
 
-    $.fn.upcropImage = function(method) {
+    $.fn.upcropImage = function (method) {
         flog("upcropImage", this);
         if (methods[method]) {
             return methods[ method ].apply(this, Array.prototype.slice.call(arguments, 1));
@@ -365,20 +366,20 @@
     function getButtonContinue(config) {
         return '<button class="btn btn-info btn-continue hide" type="button">' + config.buttonContinueText + '</button>';
     }
-    
+
     function getUpcropZone(config) {
         return (
-            '<input type="hidden" value="" name="x" />' +
-            '<input type="hidden" value="" name="y" />' +
-            '<input type="hidden" value="" name="w" />' +
-            '<input type="hidden" value="" name="h" />' +
-            '<input type="hidden" value="" name="url" />' +
-            '<div class="upload-zone"></div>' +
-            '<div class="crop-zone hide clearfix">' +
+                '<input type="hidden" value="" name="x" />' +
+                '<input type="hidden" value="" name="y" />' +
+                '<input type="hidden" value="" name="w" />' +
+                '<input type="hidden" value="" name="h" />' +
+                '<input type="hidden" value="" name="url" />' +
+                '<div class="upload-zone"></div>' +
+                '<div class="crop-zone hide clearfix">' +
                 config.cropHint +
                 '<div class="image-wrapper"><img class="image-crop" src="" width="100%" /></div>' +
-            '</div>'
-        );
+                '</div>'
+                );
     }
 
     function initUpCropModal(target, config, dataUpCrop) {
@@ -402,8 +403,8 @@
     function initUpCropEmbedded(target, config, dataUpCrop) {
         flog('Init upcrop embedded');
         target.html(
-            renderTemplate(config.embeddedTemplate, dataUpCrop)
-        );
+                renderTemplate(config.embeddedTemplate, dataUpCrop)
+                );
     }
 
     function renderTemplate(templateString, data) {
