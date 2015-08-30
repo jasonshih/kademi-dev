@@ -3,8 +3,10 @@
         <i class="clip-bubble-4"></i>
         Stream
         <div class="panel-tools">
-            <a href="#" class="btn btn-xs btn-link panel-collapse collapses">
+            <a href="/searchStream" class="btn btn-xs">
+                <i class="fa fa-searchStream"></i> Search
             </a>
+            <a href="#" class="btn btn-xs btn-link panel-collapse collapses"></a>
             <a href="#" class="btn btn-xs btn-link panel-expand">
                 <i class="fa fa-resize-full"></i>
             </a>
@@ -12,16 +14,8 @@
     </div>
     <div style="height:460px" class="panel-body panel-scroll ps-container ps-active-y">
         <ol class="discussion" id="streamBody">
-            <li class="other">
-                <div class="avatar">
-                    <img src="/theme/assets/images/avatar-4.jpg" alt="">
-                </div>
-                <div id="streamBody">
-                    <p>
-                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
-                    </p>
-                    <span class="time"> 51 min </span>
-                </div>
+            <li class="text-center">
+                <i class="fa fa-spinner fa-spin" style="font-size: 24px"></i>
             </li>
 
         </ol>
@@ -55,8 +49,12 @@
     <script>
     $(function () {
         Handlebars.registerHelper('dateFromLong', function (millis) {
-            var date = new Date(millis[0]);
-            return date.toISOString();
+            if( millis ) {
+                var date = new Date(millis[0]);
+                return date.toISOString();
+            } else {
+                return "";
+            }
         });
         $.ajax({
             type: 'GET',
