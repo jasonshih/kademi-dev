@@ -161,8 +161,8 @@ function initCopyCutPaste() {
         var oldUrl = courseCookie.cutUrl || courseCookie.pasteUrl;
         var courseId = oldUrl.replace(/^.+\/([a-zA-Z0-9]*)\/$/, '$1');
         var oldProgram = getFolderPath(oldUrl);
-        var newProgram = getFolderPath(window.location.pathname);
-        var newUrl = newProgram + "/" + courseId + '/';
+        var newProgram = window.location.pathname;
+        var newUrl = newProgram + '/' + courseId + '/';
 
         flog("CutCopy", oldUrl, newUrl);
 
