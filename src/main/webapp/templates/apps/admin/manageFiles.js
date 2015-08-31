@@ -13,7 +13,7 @@ function initUpload() {
     Dropzone.autoDiscover = false;
     $(".dropzone").dropzone({
         paramName: "file", // The name that will be used to transfer the file
-        maxFilesize: 500.0, // MB
+        maxFilesize: 2000.0, // MB
         addRemoveLinks: true,
         parallelUploads: 1,
         uploadMultiple: false
