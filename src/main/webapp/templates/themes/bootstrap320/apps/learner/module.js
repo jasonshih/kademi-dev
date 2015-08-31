@@ -59,6 +59,8 @@ function initModuleNav(pStatUrl, pFinished) {
             e.preventDefault();
             return false;
         }
+        
+        checkSubmit(e);
     });
     flog("setup pjax", $('.pages a'));
     $(document).pjax2('.panelBox', {
