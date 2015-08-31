@@ -24,6 +24,24 @@
                 }
                 return "";
             });
+            Handlebars.registerHelper('lowerCase', function (s) {
+                if (s) {
+                    s = s[0];
+                    return s.toLowerCase();
+                }
+                return "";
+            });
+            Handlebars.registerHelper('itemId', function () {
+                return this["_id"];
+            });
+            Handlebars.registerHelper('itemTypeIcon', function (itemType) {
+                if( itemType ) {
+                    itemType = itemType[0];
+                    return "fa fa-" + itemType;
+                }
+                return "fa fa-info";
+            });
+
             this.data("streamConfig", config);
         },
         load: function (streamHref) {
@@ -43,7 +61,7 @@
                     var html = streamTemplate(resp);
                     flog("html", html);
                     container.html(html);
-                    $("span.timeago", streamBody).timeago();
+                    $(".timeago", streamBody).timeago();
                 },
                 error: function (resp) {
                     flog('error', resp);

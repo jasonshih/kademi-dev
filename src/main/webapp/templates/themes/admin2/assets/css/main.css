@@ -4191,8 +4191,8 @@ body.header-default .daterangepicker {
 }
 .discussion .avatar {
     position: relative;
-    width: 50px;
-    height: 50px;
+    width: 70px;
+    height: 70px;
     display: inline;
     overflow: hidden;
 }
@@ -4216,6 +4216,7 @@ body.header-default .daterangepicker {
 .other .messages {
     margin-left: 62px;
     background: #E5E5EA;
+    overflow: hidden;
 }
 .other .avatar {
     float: left;
