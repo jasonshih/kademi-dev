@@ -36,13 +36,13 @@
             {{#each hits.hits}}
             <li class="other">
                 <div class="avatar">
-                    <img src="/users/{{fields.userName}}/pic" alt="">
+                    <img class="img img-circle" src="/users/{{fields.userName}}/pic" alt="">
                     <br/>
                     <a href="/users/{{fields.fullName}}/">{{fields.fullName}}</a>
                 </div>
                 <div class='messages'>
                     <p>
-                        {{fields.message}} <a href="{{itemHref}}">{{fields.itemTitle}}</a>
+                        {{fields.actionDesc}} <a href="{{itemHref}}">{{fields.itemTitle}}</a>
                     </p>
                     <p>
                         <span class="label label-{{lowerCase fields.category}}">

@@ -4196,7 +4196,10 @@ body.header-default .daterangepicker {
     display: inline;
     overflow: hidden;
 }
-
+.discussion .avatar img {
+    width: 50px;
+    height: 50px;
+}
 .other .messages:after {
     -moz-border-bottom-colors: none;
     -moz-border-left-colors: none;
