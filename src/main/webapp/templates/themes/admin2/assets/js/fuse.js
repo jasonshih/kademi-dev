@@ -491,6 +491,25 @@ function formatDateTime(l) {
     }
 }
 
+function initAjaxStatus() {
+    var depth = 0;
+    $( document ).ajaxStart(function() {
+        depth++;
+        flog("ajax start", depth);
+        $( "#mainSpinner" ).show();
+    });
+    $( document ).ajaxStop(function() {
+        depth--;
+        flog("ajax stop", depth);
+        if( depth < 0 ) {
+            depth = 0;
+        }
+        if( depth == 0 ) {
+            $( "#mainSpinner" ).hide();
+        }
+    });
+}
+
 $(function () {
     flog("Fuse init");
     initLoadingOverlay();
@@ -502,6 +521,7 @@ $(function () {
     initFuseModals();
     initClearer();
     initTable();
+    initAjaxStatus();
 
     $('.main-navigation-menu').children('li').children('a[href=#]').on('click', function (e) {
         e.preventDefault();
