@@ -440,11 +440,16 @@
                 $("#aggregationsContainer").on("click", ".term-select", function (e) {
                     e.preventDefault();
                     $(e.target).closest("tr").toggleClass("success");
+                    var newHref = $(e.target).closest("a").attr("href");
+                    window.history.pushState("", newHref, newHref);
+
                     $("#table-users-body").reloadFragment({
-                        url: $(e.target).closest("a").attr("href"),
+                        url: newHref,
                         whenComplete: function (response) {
                             flog("complete", response);
                             Msg.info("Refreshed", 1500)
+                            var newDom = $(response);
+                            $("#searchStats").replaceWith(newDom.find("#searchStats"));
                             var inner = $(response).find("#aggregationsContainer > *");
                             $("#aggregationsContainer").html(inner);
                         }
