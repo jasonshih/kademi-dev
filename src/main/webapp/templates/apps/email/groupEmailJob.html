@@ -2,6 +2,8 @@
     <head>
         <title>$view.title</title>
         <link href="manageGroupEmail.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="/static/js/jquery.fileupload.js">//</script>
+        <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
         <script type="text/javascript" src="manageGroupEmail.js">//</script>
         <script type="text/javascript" src="manageEmail.js">//</script>
     </head>
@@ -219,6 +221,24 @@
                                     $formatter.option($website.id, $website.name, $page.themeSiteId)
                                     #end
                                 </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                <div class="add-attachment btn-upload"></div>
+                                <div class="article-wrapper article-sm showed-action attachments-list">
+                                    #foreach($att in $page.attachments)
+                                    <article>
+                                        <span class="article-name">
+                                            <a target="_blank" href="/_hashes/files/$att.attachmentHash">$att.attachmentFilename</a>
+                                        </span>
+                                        <aside class="article-action">
+                                            <a class="btn btn-sm btn-xs btn-danger btn-delete-attachment" href="$att.attachmentFilename" title="Remove"><i class="clip-minus-circle"></i></a>
+                                        </aside>
+                                    </article>
+                                    #end
+                                </div>
                             </div>
                         </div>
 
