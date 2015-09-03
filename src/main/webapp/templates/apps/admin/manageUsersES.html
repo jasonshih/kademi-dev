@@ -168,7 +168,7 @@
             </div> <!-- end aggregations -->
         </div>
 
-        <div id="modal-new-user" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
+        <div id="modal-new-user" class="modal modal-lg fade" aria-hidden="true">
             <div class="modal-header">
                 <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
                 <h4 class="modal-title">New user</h4>
@@ -186,6 +186,18 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label class="control-label col-md-3" for="newUserFirstName">First name</label>
+                        <div class="col-md-9">
+                            <input type="text" name="firstName" id="newUserFirstName" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="newUserSurName">Surname</label>
+                        <div class="col-md-9">
+                            <input type="text" name="surName" id="newUserSurName" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label class="control-label col-md-3" for="newUserEmail">Email</label>
                         <div class="col-md-9">
                             <input type="text" name="email" id="newUserEmail" class="email required form-control" />
@@ -199,6 +211,17 @@
                     </p>
                     <div class="groups">
                         <div class="form-group">
+                            <label class="control-label col-md-2" for="groups">Group</label>
+                            <div class="col-md-10">
+                                <select name="group" id="newUserGroupSelect" data-placeholder="Select a group" class="form-control" style="width: 100%">
+                                    <option></option>
+                                    #foreach($group in $groups)
+                                    $formatter.option($group.name, $group.name, false)
+                                    #end
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="control-label col-md-2" for="newUserEmail">Organisation</label>
                             <div class="col-md-10">
                                 <input type="text" class="form-control required" autocomplete="off" name="orgTitle" id="orgTitle" value="$page.organisation.formattedName" />
@@ -207,6 +230,7 @@
                         </div>
                         <div class="form-group">
                             <div id="org-search">
+                                $page.class
                                 <div class="table-responsive">
                                     <table class="table table-striped table-hover table-condensed">
                                         #if( $page.orgSearchResults.isEmpty() )
@@ -234,18 +258,6 @@
                                     </table>
                                 </div>
                             </div>
-                        </div>
-
-                        <h4>Group:</h4>
-                        <div class="memberships-wrapper">
-                            <ul class="row memberships-list">
-                                #foreach($group in $groups) #set($id = "radGroup_" + $group.name)
-                                <li class="col-md-4 membership" title="$group.name" style="list-style-type: none;">
-                                    <div class="clearfix">
-                                        <label for="$id">$formatter.radio($id, "group", false, $group.name) $group.name</label>
-                                    </div>
-                                </li> #end
-                            </ul>
                         </div>
                     </div>
                 </form>

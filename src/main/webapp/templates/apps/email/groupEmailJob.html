@@ -225,7 +225,7 @@
                         </div>
 
                         <div class="form-group">
-                            <div class="col-md-10">
+                            <div class="col-md-6">
                                 <div class="add-attachment btn-upload"></div>
                                 <div class="article-wrapper article-sm showed-action attachments-list">
                                     #foreach($att in $page.attachments)
@@ -240,10 +240,8 @@
                                     #end
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-md-10">
+                            
+                            <div class="col-md-6">
                                 <div class="well">
                                     $formatter.checkbox("passwordReset", "passwordReset", $page.job.passwordReset, "true")
                                     <label for="passwordReset" style="float: none">Password reset. Only send to users without a password</label>
