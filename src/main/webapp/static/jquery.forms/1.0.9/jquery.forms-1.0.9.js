@@ -336,7 +336,7 @@ function checkRegex(form) {
         var message = input.attr('data-message');
 
         if (regex.test(value)) {
-            isOk = true;
+            // all ok
         } else {
             isOk = false;
 
