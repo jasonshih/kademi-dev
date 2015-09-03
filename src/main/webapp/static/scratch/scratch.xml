@@ -1,34 +1,46 @@
-<or nature="OR">
-    <and nature="AND">
-        <expr propertyName="fields.name" ignoreCase="false" op="=">
-            <value class="string">category</value>
-        </expr>
-        <org.hibernate.criterion.LikeExpression>
-            <propertyName>fields.propValue</propertyName>
-            <value class="string">cars-metro-new</value>
-            <ignoreCase>true</ignoreCase>
-        </org.hibernate.criterion.LikeExpression>
-    </and>
-    <and nature="AND">
-        <and nature="AND">
-            <expr propertyName="fields.name" ignoreCase="false" op="=">
-                <value class="string">isdemo</value>
-            </expr>
-            <org.hibernate.criterion.LikeExpression>
-                <propertyName>fields.propValue</propertyName>
-                <value class="string">true</value>
-                <ignoreCase>true</ignoreCase>
-            </org.hibernate.criterion.LikeExpression>
-        </and>
-        <and nature="AND">
-            <expr propertyName="fields.name" ignoreCase="false" op="=">
-                <value class="string">category</value>
-            </expr>
-            <org.hibernate.criterion.LikeExpression>
-                <propertyName>fields.propValue</propertyName>
-                <value class="string">cars-metro-pov</value>
-                <ignoreCase>true</ignoreCase>
-            </org.hibernate.criterion.LikeExpression>
-        </and>
-    </and>
-</or>
+<RecordExecutionStep>
+    <preventDuplicates>false</preventDuplicates>
+    <execIdTemplate>StarClass-Dealer-Targets_2015</execIdTemplate>
+    <next class="TransactionStep" alwaysRollback="false">
+        <next class="ExcelInputStep">
+            <useXml>true</useXml>
+            <processRows>true</processRows>
+            <nextSheetSteps>
+                <NextSheetStep sheetNum="0" startRow="2">
+                    <next class="JsRowStep">
+                        <!-- Execute the next step for each month, setting the month number into attribute monthNum -->
+                        <jsPath>/integration/integration.js</jsPath>
+                        <execFn>foreachMonth</execFn>
+                        <next class="SalesDataInserter" mode="updateOrInsert" logInserts="true" logUpdates="true">
+                            <seriesName>star-class-partspurchase-data</seriesName>
+                            <column field="attributedTo" columnName="D">
+                                <expr>
+                                    org = pipeline.thisOrg.findChildOrgByField("StoreCode", value);
+                                    if(org != null){
+                                    return org.orgId;
+                                    }
+                                    return null;
+                                </expr>
+                            </column>
+                            <column field="amount" >
+                                <!-- column G + 10*month -->
+                                <expr><![CDATA[
+                                                    col = 2 + formatter.toInteger(pipeline.attributes.monthNum);
+                                                    if (0 >= row[col]) { return 1; } else { return row[col]; }
+                                                ]]></expr>
+                            </column>
+
+                            <column field="fromDate">
+                                <expr>formatter.monthStart(formatter.now, pipeline.attributes.monthNum)</expr>
+                            </column>
+                            <column field="toDate">
+                                <expr>formatter.monthEnd(formatter.now, pipeline.attributes.monthNum)</expr>
+                            </column>
+                        </next>
+
+                    </next>
+                </NextSheetStep>
+            </nextSheetSteps>
+        </next>
+    </next>
+</RecordExecutionStep>
