@@ -120,6 +120,11 @@
                             </tr>
                         </thead>
                         <tbody id="table-users-body">
+                            #if( $page.searchResults.isEmpty() )
+                            <tr>
+                                <td colspan="6">No profiles found</td>
+                            </tr>
+                            #else
                             #foreach($p in $page.searchResults)
                             #set( $groupName = $page.groupName( $p.fields.get("memberships.group").value ) )
                             <tr>
@@ -152,6 +157,7 @@
                                 </td>
                                 <td><input type="checkbox" name="toRemoveId" value="$p.fields.userId.value" /></td>
                             </tr>
+                            #end
                             #end
                         </tbody>
                     </table>

@@ -1,0 +1,73 @@
+
+
+<h4>Emails sent to this profile</h4>
+<div class="table-responsive">
+    <table class="table table-striped table-hover" id="moduleprogress-table">
+        <thead>
+            <tr>
+                <td>From</td>
+                <th>Subject</th>
+                <th>Status</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody id="moduleprogress-body">
+            #foreach($email in $emails)
+            <tr>
+                <td>
+                    <a href="/emails/$email.id">$email.fromAddress</a>
+                </td>
+                <td>$email.subject</td>
+                <td>
+                    #if( $email.sendStatus == 'r' )
+                    <p class="label label-warning">
+                        <span class="glyphicon glyphicon-repeat"></span>
+                        $email.statusText - $page.numAttempts
+                    </p>
+                    #elseif( $email.sendStatus == 'c' )
+                    #if( $email.edmConverted )
+                    <p class="label label-success">
+                        <span class="fa fa-trophy"></span>
+                        Converted
+                    </p>
+
+                    #elseif( $email.readStatus )
+                    <p class="label label-success">
+                        <span class="fa fa-eye"></span>
+                        Read
+                    </p>
+
+                    #else
+                    <p class="label label-default">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        Sent ok
+                    </p>
+                    #end
+                    #elseif( $email.sendStatus == 'p' )
+                    <p class="label label-warning">
+                        <span class="glyphicon glyphicon-time"></span>
+                        $email.statusText
+                    </p>
+                    #elseif( $email.sendStatus == 'f' )
+                    <p class="label label-danger">
+                        <span class="glyphicon glyphicon-remove"></span>
+                        $email.statusText
+                    </p>
+
+                    #else
+                    <span class="glyphicon glyphicon-time"></span> Preparing..
+                    #end
+                </td>
+                <td>
+                    <abbr class="pull-right timeago" title="$formatter.formatDateISO8601($email.sendStatusDate)">$email.sendStatusDate</abbr>
+                </td>
+            </tr>
+            #end
+        </tbody>
+    </table>
+</div>
+<script>
+    $(function(){
+        $("abbr.timeago").timeago();
+    });
+</script>

@@ -1,20 +1,20 @@
 /**
  *
  *  jquery.login.js
- *  
+ *
  *  Depends on user.js, common.js and jquery.forms.js (1.0.6+)
- *  
+ *
  *  The target should be a div containing
  *  - a form
  *  - <p> with id validationMessage
  *  - input type text for the username
  *  - input type password for the password
- *  
+ *
  *  Additionally, will prompt the user to register or login for any links of class requiresUser
  *
  * Config:
  * urlSuffix: is appended to the current page url to make the url to POST the login request to. Default /.ajax
- * afterLoginUrl: the page to redirect to after login. Default index.html.  3 possibilities 
+ * afterLoginUrl: the page to redirect to after login. Default index.html.  3 possibilities
  *      null = do a location.reload()
  *      "none" - literal value "none" means no redirect
  *      "something" or "" = a relative path, will be avaluated relative to the user's url (returned in cookie)
@@ -26,7 +26,7 @@
  *  userNameProperty: property name to use in sending request to server
  *  passwordProperty
  *  loginCallback: called after successful login
- * 
+ *
  */
 
 (function($) {
@@ -43,7 +43,7 @@
             userNameProperty: "_loginUserName",
             passwordProperty: "_loginPassword",
             emailErrorMessage : "Please check the format of your email address, it should read like ben@somewhere.com",
-            requiredErrorMessage: "Please enter all required fields",            
+            requiredErrorMessage: "Please enter all required fields",
             loginCallback: function() {
 
             }
@@ -63,7 +63,7 @@
 
             $("input", container).removeClass("errorField");
             $(config.valiationMessageSelector, this).hide(100);
-            
+
             resetValidation(container);
             if( !checkRequiredFields(form, config) ) {
                     $("input[type=text]", container).closest(".control-group")
@@ -71,9 +71,9 @@
                             .find("span").text(config.requiredFieldsMessage);
                     return false;
             }
-                        
+
             try {
-                var userName = $("input[name=email]", container).val();                
+                var userName = $("input[name=email]", container).val();
                 var password = $("input[type=password]", container).val();
                 if (userName === null || userName.length === 0) {
                     $("input[type=text]", container).closest(".control-group")
@@ -88,7 +88,7 @@
             }
             return false;
         });
-        flog("init requiresUser links");        
+        flog("init requiresUser links");
         // use a body class to ensure is only inited once
         $("body").not("body.requiresUserDone").addClass("requiresUserDone").on("click", "a.requiresUser, button.requiresUser", function(e) {
             var target = $(e.target);
@@ -103,7 +103,7 @@
                     //target.click();
 
                 });
-            } else{ 
+            } else{
                 flog("all good, carry on...");
             }
         });
@@ -160,7 +160,7 @@ function doLogin(userName, password, config, container) {
                         flog("Not doing redirect because afterLoginUrl=='none'");
                     } else if( config.afterLoginUrl === "reload") {
                         window.location.reload(true);
-                        
+
                     } else {
                         // if config has a relative path, then evaluate it relative to the user's own url in response
                         flog("redirect to2: " + userUrl + config.afterLoginUrl);
@@ -216,9 +216,9 @@ function initUser() {
         userName = userUrl.substr(0, userUrl.length - 1); // drop trailing slash
         var pos = userUrl.indexOf("users");
         userName = userName.substring(pos + 6);
-        
+
         flog("current userName", userName);
-        
+
         $("#currentuser").attr("href", userUrl);
         $(".requiresuser").show();
         $(".sansuser").hide();
@@ -317,14 +317,14 @@ function showRegisterOrLoginModal(callbackOnLoggedIn) {
                 $(".loginCont").user({
                     afterLoginUrl: "none",
                     loginCallback: function() {
-                        closeModals();                        
+                        closeModals();
                         flog("logged in ok, process callback", callbackOnLoggedIn);
                         $('body').trigger('userLoggedIn', [userUrl, userName]);
                         callbackOnLoggedIn();
                     }
                 });
                 initRegisterForms("none", function() {
-                    closeModals();                     
+                    closeModals();
                     flog("registered and logged in ok, process callback");
                     $('body').trigger('userLoggedIn', [userUrl, userName]);
                     callbackOnLoggedIn();
