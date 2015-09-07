@@ -1,126 +1,106 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>Manage Contact Requests</title>
+        <link href="/static/nvd3/nv.d3.css" rel="stylesheet" />
     </head>
     <body class="manageEmail">
-        <p class="well">Below is a list of recently received contacts from your websites. Click on an item to see more information</p>
-        <div class="panel panel-default">            
-            <div class="panel-heading">
-                <i class="fa fa-envelope-o"></i>
-                Request
+        <div class="row">
+            <div class="col-lg-4 col-md-4 col-sm-6">
+                <div class="input-group date-range">
+                    <label for="report-range" class="input-group-addon">Time</label>
+                    <input type="text" id="dateRange" placeholder="Choose a date range" value="" class="form-control" />
+                </div>
+            </div><!-- /.col-lg-6 -->
+            <div class="col-lg-4 col-md-4 col-sm-6">
+                <div class="input-group search-user input-group-sm">
+                    <input type="text" id="searchQuery" class="form-control" placeholder="Search by recipient or subject" value="" />
+                    <span class="input-group-btn">
+                        <button class="btn btn-sm btn-default" type="button" data-type="clearer" data-target="#searchQuery">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </span>
+                </div>
+            </div><!-- /.col-lg-6 -->
+            <div class="col-md-2 col-sm-2">
+                <label style="line-height: 30px;">
+                    <input type="checkbox" class="view-acknowledge"/>
+                    View Acknowledged
+                </label>
             </div>
-            <div class="panel-body">
-                <div class="row">
-                    <div class="col-lg-4 col-md-4 col-sm-6">
-                        <div class="input-group date-range">
-                            <label for="report-range" class="input-group-addon">Time</label>
-                            <input type="text" id="report-range" placeholder="Choose a date range" value="" class="form-control" />
-                        </div> 
-                    </div><!-- /.col-lg-6 -->
-                    <div class="col-lg-4 col-md-4 col-sm-6">
-                        <div class="input-group search-user input-group-sm">
-                            <input type="text" id="email-query" class="form-control" placeholder="Search by recipient or subject" value="" /> 
-                            <span class="input-group-btn">
-                                <button class="btn btn-sm btn-default" type="button" data-type="clearer" data-target="#email-query">
-                                    <i class="fa fa-times"></i>
-                                </button>
-                            </span>
-                        </div>
-                    </div><!-- /.col-lg-6 -->
-                    <div class="col-md-2 col-sm-2">
-                        <a class="btn btn-sm btn-success view-acknowledge" href="#">View Acknowledged</a>
-                    </div>
-                    <div class="col-md-2 col-sm-2 pull-right">
-                        <a href="#" class="btn btn-danger pull-right btn-delete-requests" role="button"><i class="fa fa-times"></i> Delete</a>
-                    </div>
-                </div><!-- /.row -->
-                <div class="table-responsive">
-                    <table id="table-users" class="table table-striped table-hover">
-                        <colgroup>
-                            <col style="width: 50px;"/>
-                            <col />
-                            <col />
-                            <col />
-                            <col />
-                            <col style="width: 100px" />
-                            <col style="width: 100px" />
-                        </colgroup>
-                        <thead>
-                            <tr>
-                                <th>Status</th>
-                                <th>Date</th>
-                                <th>Name</th>
-                                <th>Phone</th>
-                                <th>Email</th>
-                                <th>Action</th>
-                                <th class="action"><input type="checkbox" class="check-all"/></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            #foreach($cr in $page.recent)
-                            <tr data-href="$cr.id">
-                                <td class="clickable">
-                                    #if($cr.acknowledgedDate)
-                                    <span class="glyphicon glyphicon-ok"></span>
-                                    #else
-                                    <span class="glyphicon glyphicon-envelope"></span>
-                                    #end
-                                </td>
-                                <td class="clickable"><abbr class="timeago" title="$cr.createdDate">$formatter.formatDate($cr.createdDate)</abbr></td>
-                                <td class="clickable">$formatter.htmlEncode($cr.firstName) $formatter.htmlEncode($cr.surName)</td>
-                                <td class="clickable">$formatter.htmlEncode($cr.phone)</td>
-                                <td class="clickable">$!cr.email</td>
-                                <td class="action">
-                                    <div class="btn-group btn-group-sm">
-                                        <a class="btn btn-sm btn-success" href="$cr.id">View </a>
-                                        <button type="button" class="btn btn-sm dropdown-toggle btn-success" data-toggle="dropdown">
-                                            <span class="caret"></span>
-                                        </button>
-                                        <ul role="menu" class="dropdown-menu pull-right">
-                                            <li><a class="acknowledge" href="$cr.id"><i class="glyphicon glyphicon-ok"></i> Acknowledge</a></li>
-                                        </ul>
-                                    </div>
-                                </td>
-                                <td class="action"><input type="checkbox" data-href="$page.href$cr.id" class="request-check"/></td>
-                            </tr>
-                            #end
-                        </tbody>
-                    </table>
+            <div class="col-md-2 col-sm-2 pull-right">
+                <a href="#" class="btn btn-danger pull-right btn-delete-requests" role="button"><i class="fa fa-times"></i> Delete</a>
+            </div>
+        </div><!-- /.row -->
+        <div class="row">
+            <div class="col-md-8">
+                <div id='chart'>
+                    <svg id="visualisation" width="100%" height="300"></svg>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div id="donut-chart">
+                    <svg id="donutChart" width="100%" height="300"></svg>
                 </div>
             </div>
         </div>
+        <div class="table-responsive">
+            <table id="table-users" class="table table-striped table-hover">
+                <colgroup>
+                    <col style="width: 50px;"/>
+                    <col />
+                    <col />
+                    <col />
+                    <col />
+                    <col style="width: 100px" />
+                    <col style="width: 100px" />
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Action</th>
+                        <th class="action"><input type="checkbox" class="check-all"/></th>
+                    </tr>
+                </thead>
+                <tbody id="contactRequestsBody">
+                    <tr>
+                        <td colspan="7" style="text-align: center">Please wait <i class="fa fa-spinner fa-spin"></i></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <script type="text/javascript" src="/static/uri/1.15.1/URI.js">//</script>
+        <script src="/static/handlebars/3.0.3/handlebars-v3.0.3.js">//</script>
+        <script id="entry-template" class="hide"  type="text/x-handlebars-template">
+            {{#each hits.hits}}
+            <tr data-href="{{fields.contactRequest}}">
+                <td class="clickable">
+                    <span class="glyphicon glyphicon-envelope"></span>
+                </td>
+                <td class="clickable">
+                    <a href="{{fields.contactRequest}}" class="timeago" title="{{dateFromLong fields.createdDate}}">{{fields.createdDate}}</a>
+                </td>
+                <td class="clickable">{{fields.firstName}} {{fields.surName}}</td>
+                <td class="clickable">{{fields.phone}}</td>
+                <td class="clickable">{{fields.email}}</td>
+                <td class="action">
+                    <a class="acknowledge btn btn-success" href="{{fields.contactRequest}}"><i class="glyphicon glyphicon-ok"></i> Hide</a>
+                </td>
+                <td class="action"><input type="checkbox" data-href="{{fields.contactRequest}}" class="request-check"/></td>
+            </tr>
+            {{/each}}
+        </script>
+
+        <script src="/theme/apps/contactus/jquery.contactRequests.js"></script>
+        <script src="/static/d3/d3.v3.js">//</script>
+        <script src="/static/nvd3/nv.d3.js">//</script>
 
         <script type="text/javascript">
             $(function () {
-                $('abbr.timeago').timeago();
-                flog("Init email history");
-                $("#email-query").keyup(function () {
-                    typewatch(function () {
-                        flog("do search");
-                        doSearch();
-                    }, 500);
-                });
-
-                var reportRange = $('#report-range');
-
-                reportRange.exist(function () {
-                    flog("init report range");
-                    reportRange.daterangepicker({
-                        format: 'DD/MM/YYYY', // YYYY-MM-DD
-                        ranges: {
-                            'Last 7 Days': [moment().subtract('days', 6), moment()],
-                            'Last 30 Days': [moment().subtract('days', 29), moment()],
-                            'This Month': [moment().startOf('month'), moment().endOf('month')],
-                            'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
-                            'This Year': [moment().startOf('year'), moment()],
-                        },
-                    },
-                            function (start, end, label, viewAck) {
-                                flog('onChange', start, end);
-                                doSearch(start, end, label, viewAck);
-                            }
-                    );
-                });
                 initAcknowledge();
                 initViewAck();
 
@@ -149,7 +129,7 @@
                 });
                 $('.view-acknowledge').on('click', function (e) {
                     e.preventDefault;
-                    if ($('.view-acknowledge').attr('view-ack') === "true") {
+                    if ($('.view-acknowledge').data('view-ack') === "true") {
                         $('.view-acknowledge').html("<i class=\"fa fa-refresh fa-spin\"></i>Hide Acknowledged");
                         doSearch();
                     } else {
@@ -157,43 +137,76 @@
                         doSearch(null, null, null, true);
                     }
                 });
+
+
+                var reportRange = $('#dateRange');
+                var searchQuery = $("#searchQuery");
+
+                function doSearch() {
+                    var uri = URI(window.location);
+                    var arr = reportRange.val().split('-');
+                    var startDate = '';
+                    var finishDate = '';
+                    if (arr.length > 0) {
+                        startDate = arr[0].trim();
+                    }
+                    if (arr.length > 1) {
+                        finishDate = arr[1];
+                    }
+
+                    var viewAck = $('.view-acknowledge').prop('checked');
+
+                    uri.setSearch("search", searchQuery.val());
+                    uri.setSearch("startDate", startDate);
+                    uri.setSearch("finishDate", finishDate);
+                    uri.setSearch("acked", viewAck);
+
+                    history.pushState(null, null, uri.toString());
+                    uri.path("/contactRequestSearch");
+                    var searchHref = uri.toString();
+                    flog("nav", searchHref);
+
+                    $("#contactRequestsBody").contactRequests("load", searchHref);
+                }
+
+                reportRange.exist(function () {
+                    reportRange.daterangepicker({
+                        format: 'DD/MM/YYYY', // YYYY-MM-DD
+                        ranges: {
+                            'Last 7 Days': [moment().subtract('days', 6), moment()],
+                            'Last 30 Days': [moment().subtract('days', 29), moment()],
+                            'This Month': [moment().startOf('month'), moment().endOf('month')],
+                            'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
+                            'This Year': [moment().startOf('year'), moment()],
+                        },
+                    },
+                            function (start, end) {
+                                flog('onChange', start, end);
+                                doSearch();
+                            }
+                    );
+                });
+
+                $("#searchQuery").keyup(function () {
+                    typewatch(function () {
+                        flog("do search");
+                        doSearch();
+                    }, 500);
+                });
+
+
+                $("#contactRequestsBody").contactRequests();
+                var uri = URI(window.location);
+                uri.path("/contactRequestSearch");
+                var searchHref = uri.toString();
+                $("#contactRequestsBody").contactRequests("load", searchHref);
             });
 
-            function doSearch(startDate, endDate, label, viewAck) {
-                var query = $("#email-query").val();
-                flog("doSearch", query);
-                var ack = false;
-                if (viewAck != null) {
-                    ack = viewAck;
-                }
-                var data = {
-                    q: query,
-                    startDate: formatDate(startDate),
-                    finishDate: formatDate(endDate),
-                    acknowledge: ack
-                };
-                $.ajax({
-                    type: 'GET',
-                    url: window.location.pathname,
-                    data: data,
-                    success: function (data) {
-                        flog("success", data);
-                        var $fragment = $(data).find("#table-users");
-                        $("#table-users").replaceWith($fragment);
-                        $('abbr.timeago').timeago();
-                        $('.view-acknowledge').attr('view-ack', ack);
-                        initAcknowledge();
-                        initViewAck();
-                    },
-                    error: function (resp) {
-                        Msg.error("An error occured doing the user search. Please check your internet connection and try again");
-                    }
-                });
-            }
+
+
             function initAcknowledge() {
-                $('.acknowledge').on('click', function (e) {
+                $("#contactRequestsBody").on('click', '.acknowledge', function (e) {
                     e.preventDefault();
-                    flog(e.currentTarget.href);
                     $.ajax({
                         type: 'POST',
                         url: e.currentTarget.href,
@@ -202,14 +215,10 @@
                         },
                         success: function (data) {
                             flog("success", data);
-                            Msg.success("Contect Request Acknowledged.");
-                            $("#table-users").reloadFragment({
-                                whenComplete: function () {
-                                    $('abbr.timeago').timeago();
-                                    initAcknowledge();
-                                    initViewAck();
-                                }
-                            });
+                            var uri = URI(window.location);
+                            uri.path("/contactRequestSearch");
+                            var searchHref = uri.toString();
+                            $("#contactRequestsBody").contactRequests("load", searchHref);
                         },
                         error: function (resp) {
                             Msg.error("There was an error: " + resp);
@@ -240,6 +249,7 @@
                 Msg.info("Deleted " + listToDelete.length + " requests");
                 $('body').find('.check-all').check(false).change();
             }
+
         </script>
     </body>
 </html>
