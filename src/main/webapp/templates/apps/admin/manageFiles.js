@@ -7,11 +7,12 @@ function initManageFiles() {
     initCRUDFiles();
     initCopyCutPaste();
     initUpload();
+    initUploadZip();
 }
 
 function initUpload() {
     Dropzone.autoDiscover = false;
-    $(".dropzone").dropzone({
+    $("#modal-upload .dropzone").dropzone({
         paramName: "file", // The name that will be used to transfer the file
         maxFilesize: 2000.0, // MB
         addRemoveLinks: true,
@@ -19,6 +20,27 @@ function initUpload() {
         uploadMultiple: false
     });
     var dz = Dropzone.forElement("#uploadFileDropzone");
+    flog("dropz", Dropzone, dz, dz.options.url);
+    dz.on("success", function (file) {
+        flog("added file", file);
+        reloadFileList();
+    });
+    dz.on("error", function (file, errorMessage) {
+        Msg.error("An error occured uploading: " + file.name + " because: " + errorMessage);
+    });
+}
+
+function initUploadZip() {
+    Dropzone.autoDiscover = false;
+    $("#modal-upload-zip .dropzone").dropzone({
+        paramName: "zip", // The name that will be used to transfer the file
+        maxFilesize: 2000.0, // MB
+        addRemoveLinks: true,
+        parallelUploads: 1,
+        uploadMultiple: false,
+        acceptedFiles: "application/zip,application/x-compressed,application/x-zip-compressed,multipart/x-zip"
+    });
+    var dz = Dropzone.forElement("#uploadZipDropzone");
     flog("dropz", Dropzone, dz, dz.options.url);
     dz.on("success", function (file) {
         flog("added file", file);
@@ -105,6 +127,14 @@ function initCRUDFiles() {
 
         $('#modal-upload').modal('show');
     });
+    
+    container.on('click', '.btn-upload-zip', function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        $('#modal-upload-zip').modal('show');
+    });
+    
     container.on('click', '.btn-new-text-file', function (e) {
         e.stopPropagation();
         e.preventDefault();

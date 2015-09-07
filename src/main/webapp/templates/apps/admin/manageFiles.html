@@ -142,6 +142,7 @@
                                             <a title="Paste" href="$page.href" class="btn btn-success btn-sm btn-paste requires-clipboard" data-clipboard="default" href="$page.href"><i class="fa fa-paste"></i></a>
                                             <a title="Create a folder" class="btn btn-success btn-sm btn-create-folder" href=""><i class="clip-folder-plus"></i></a>
                                             <a title="Upload files" class="btn btn-success btn-sm btn-upload-file" href=""><i class="fa fa-cloud-upload"></i></a>
+                                            <a title="Upload and extract a ZIP file" class="btn btn-success btn-sm btn-upload-zip" href=""><i class="fa fa-upload"></i></a>
                                             <a title="Create text file" class="btn btn-success btn-sm btn-new-text-file" href=""><i class="fa fa-file-text-o"></i></a>
                                         </div>
                                     </th>
@@ -312,6 +313,20 @@
             </div>
         </div>
 
+        <div id="modal-upload-zip" class="modal modal-md fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                <h4 class="modal-title">Upload zip files</h4>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="uploadZip" value="uploadZip"/>
+                <form action="${page.href}" class="dropzone dropzone-fullwidth" id="uploadZipDropzone"></form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+            </div>
+        </div>
+
         <div id="modal-import" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
             <div class="modal-header">
                 <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
@@ -404,15 +419,22 @@
                     flog("click pjax");
                     e.preventDefault();
                     var href = $(e.target).closest("a").attr("href");
+                    var name = $(e.target).closest("a").text();
+                    flog($(e.target).closest("a"));
                     files.reloadFragment({
                         url: href,
                         whenComplete: function (response, status, xhr) {
                             flog("done", response, status, xhr);
+                            document.title = name;
                             window.history.pushState("", href, href);
                             var formAction = window.location.pathname + "_DAV/PUT?overwrite=true";
+                            var zipFormAction = window.location.pathname;
                             $("#modal-upload form").attr("action", formAction);
                             var dz = Dropzone.forElement("#uploadFileDropzone");
                             dz.options.url = formAction;
+                            $("#modal-upload-zip form").attr("action", zipFormAction);
+                            var dz2 = Dropzone.forElement("#uploadZipDropzone");
+                            dz2.options.url = zipFormAction;
                             setRecentItem(window.location.pathname, window.location.pathname);
                             var dom = $(response);
                             var pages = $("#pages");
