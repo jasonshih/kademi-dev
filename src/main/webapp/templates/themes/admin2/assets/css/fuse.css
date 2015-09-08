@@ -986,7 +986,7 @@ fieldset hr {
     border-top-left-radius: 0;
 }
 .breadcrumb a {
-     color: #555555;
+    color: #555555;
 }
 .alert h3 {
     margin-top: 0;
@@ -1004,4 +1004,8 @@ body .form-control::-webkit-input-placeholder { color:#CCC; }
 
 body.ajax-loading .ajaxLoader {
     display: block;
+}
+
+.table-responsive {
+    padding-bottom: 220px;
 }
