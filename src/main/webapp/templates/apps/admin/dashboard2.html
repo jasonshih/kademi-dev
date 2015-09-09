@@ -1,0 +1,98 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>$view.title</title>
+        <script type="text/javascript" src="/templates/apps/reporting/reports.js">//</script>
+        <style>
+            #recentList ul {
+                margin: 0;
+                padding: 0;
+                list-style: none;
+            }
+            #recentList ul li {
+                padding: 10px 15px;
+                border-bottom: solid lightgrey 1px;
+            }
+        </style>
+    </head>
+    <body class="dashboard">
+
+        <div id="dashboard-wrapper" class="row">
+            <div class="col-md-8">
+                #portlets("adminDashboardPrimaryAnnounce")
+                <!-- Display website tiles -->
+                <div class="row">
+                    #foreach( $website in $page.organisation.websites())
+                    #if( $website.redirecTo )
+                    #else
+                    <div class="col-md-3 col-sm-4 gallery-img">
+                        <div class="wrap-image">
+                            <a title="$!website.title" href="/websites/$website.name/$website.liveBranch/?goto=" class="group1 cboxElement" target="_blank">
+                                <p class="lead tileText">$website.name</p>
+                                #if( $website.imageHash )
+                                <img class="img-responsive" alt="" src="/_hashes/files/$website.imageHash" style="height: 178px; width: 100%;">
+                                #else
+                                <img class="img-responsive" alt="" src="/static/images/website-icon.png">
+                                #end
+                            </a>
+                            <div class="tools tools-bottom">
+                                <a href="/websites/$website.name/$website.liveBranch/">
+                                    <span class="glyphicon glyphicon-cog"></span>
+                                </a>
+                                <a href="/repositories/$website.name/$website.liveBranch/">
+                                    <span class="glyphicon glyphicon-folder-close"></span>
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+                    #end
+                    #end
+                </div>
+                <div class="row">
+                    #portlets("adminDashboardPrimary")
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="clip-stack-empty"></i>
+                        History
+                    </div>
+                    <div class="" id="recentList">
+                        <ul class="list" style="">
+
+                        </ul>
+
+                    </div>
+                </div>
+                #portlets("adminDashboardStream")
+                #portlets("adminDashboardSecondary")
+            </div>
+        </div>
+        <script type="text/javascript">
+            $(function () {
+                var recent = getRecentItems();
+                if (recent !== null) {
+                    flog("recent", recent);
+                    var list = $("#recentList ul");
+                    var seen = new Array();
+                    for (var i = recent.length - 1; i > (recent.length - 10) && i > 0; i--) {
+                        var item = recent[i];
+                        var pos = $.inArray(item.url, seen);
+                        if (pos < 0) {
+                            seen.push(item.url);
+                            var li = $("<li class=''><a href='" + item.url + "'>xx</a></li>");
+                            list.append(li)
+                            li.find("a").attr("href", item.url);
+                            li.find("a").text(item.title);
+                        }
+                    }
+                } else {
+                    flog("no recent list");
+                }
+            });
+        </script>
+
+    </body>
+</html>
+
