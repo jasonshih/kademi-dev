@@ -2,6 +2,10 @@
     <head>
         <title>$view.title</title>
         <script type="text/javascript" src="/templates/apps/reporting/reports.js">//</script>
+        <script type="text/javascript" src="/static/masonry/3.3.2/masonry.pkgd.min.js">//</script>
+        <script type="text/javascript" src="/static/easy-pie-chart/2.1.7/jquery.easypiechart.min.js">//</script>
+
+        <link href="dashboard2.css" rel="stylesheet" type="text/css" />
         <style>
             #recentList ul {
                 margin: 0;
@@ -11,6 +15,13 @@
             #recentList ul li {
                 padding: 10px 15px;
                 border-bottom: solid lightgrey 1px;
+            }
+            .grid-item {
+                opacity: 0;
+            }
+            .grid-sizer {
+                height: 0 !important;
+                min-height: 0 !important;
             }
         </style>
     </head>
@@ -22,7 +33,7 @@
                 <!-- Display website tiles -->
                 <div class="row">
                     #foreach( $website in $page.organisation.websites())
-                    #if( $website.redirecTo )
+                    #if( $website.redirectTo )
                     #else
                     <div class="col-md-3 col-sm-4 gallery-img">
                         <div class="wrap-image">
@@ -49,7 +60,11 @@
                     #end
                 </div>
                 <div class="row">
-                    #portlets("adminDashboardPrimary")
+                    <div class="grid">
+                        <div class="grid-sizer col-md-1"></div>
+
+                        #portlets("adminDashboardPrimaryMasonry")
+                    </div>
                 </div>
             </div>
             <div class="col-md-4">
@@ -71,6 +86,24 @@
         </div>
         <script type="text/javascript">
             $(function () {
+                var grid = $('.grid');
+
+                function onLayout() {
+                    flog("onlayout", grid.find(".grid-item"));
+                    grid.find(".grid-item").animate({
+                        opacity: 1,
+                    }, 1000, function() {
+                        flog("complete");
+                    });
+                }
+                // bind event listener
+                grid.on( 'layoutComplete', onLayout );
+
+                grid.masonry({
+                    columnWidth: ".grid-sizer",
+                    gutter: 0
+                });
+
                 var recent = getRecentItems();
                 if (recent !== null) {
                     flog("recent", recent);

@@ -1,0 +1,129 @@
+<div class="grid-item col-md-4 grid-item--width4">
+    <div class="panel panel-primary statCard">
+        <div class="panel-heading">
+            <div class="row">
+                <a href="/manageUsers" style="display: block">
+                    <div class="col-xs-3">
+                        <i class="fa fa-user fa-5x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge">0</div>
+                        <div>profiles</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="grid-item col-md-4 grid-item--width4">
+    <div class="panel panel-primary statCard">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-xs-3">
+                    <i class="fa fa-users fa-5x"></i>
+                </div>
+                <div class="col-xs-9 text-right">
+                    <div class="huge">0</div>
+                    <div>groups</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="grid-item col-md-4 grid-item--width4">
+    <div class="panel panel-primary statCard">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-xs-3">
+                    <i class="fa fa-users fa-5x"></i>
+                </div>
+                <div class="col-xs-9 text-right">
+                    <div class="huge">0</div>
+                    <div>organisations</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="grid-item col-md-4 grid-item--width4">
+    <div class="dash-widget-item bgm-teal" id="site-visits">
+        <div class="dash-widget-header">
+            <div class="p-20">
+                <div class="dash-widget-visits"><canvas style="display: inline-block; width: 223px; height: 95px; vertical-align: top;" width="223" height="95"></canvas></div>
+            </div>
+
+            <div class="dash-widget-title">For the past 30 days</div>
+        </div>
+
+        <div class="p-20">
+
+            <small>Page Views</small>
+            <h3 class="m-0 f-400">47,896,536</h3>
+
+            <br/>
+
+            <small>Site Visitors</small>
+            <h3 class="m-0 f-400">24,456,799</h3>
+        </div>
+    </div>
+</div>
+
+<div class="grid-item col-md-4 grid-item--width4">
+    <div class="dash-widget-item" id="pie-charts">
+        <div class="bgm-pink">
+
+            <div class="text-center p-20 m-t-25">
+                <div data-percent="75" class="easy-pie emailsMainPie largePie">
+                    <div class="figure">45</div>
+                    <div class="pie-title">Total Emails Sent</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-t-20 p-b-20 text-center">
+            <div data-percent="56" class="easy-pie emailsSubPie smallPie bluePie">
+                <div class="figure">56</div>
+                <div class="pie-title">Bounce Rate</div>
+            </div>
+            <div data-percent="84" class="easy-pie emailsSubPie smallPie orangePie">
+                <div class="figure">84</div>
+                <div class="pie-title">Total Opened</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        $('.emailsMainPie').easyPieChart({
+            size: 148,
+            trackColor: 'rgba(255,255,255,0.2)',
+            scaleColor: 'rgba(255,255,255,0.5)',
+            barColor: 'rgba(255,255,255,0.7)',
+            lineWidth: 7,
+            lineCap: 'butt',
+        });
+
+        $('.emailsSubPie.bluePie').easyPieChart({
+            size: 95,
+            trackColor: '#eee',
+            scaleColor: '#ccc',
+            barColor: '#2196F3',
+            lineWidth: 7,
+            lineCap: 'butt',
+        });
+
+        $('.emailsSubPie.orangePie').easyPieChart({
+            size: 95,
+            trackColor: '#eee',
+            scaleColor: '#ccc',
+            barColor: '#FFC107',
+            lineWidth: 7,
+            lineCap: 'butt',
+        });
+
+    });
+</script>
