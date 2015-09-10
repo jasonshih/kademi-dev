@@ -127,10 +127,8 @@
                                 #set($optin = $page.optin($group))
                                 $formatter.checkbox($groupId, "optinGroup", $formatter.isNotNull($optin), $group.name)
                                 $group.name
-                            </label>
-                            <div class="col-sm-7">
                                 <input type="text" name="${groupId}_Desc" class="form-control" placeholder="Invitation message to users" value="$!optin.message" />
-                            </div>
+                            </label>
                         </div>
                     </div>
                     #end
