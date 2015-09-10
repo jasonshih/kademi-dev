@@ -52,12 +52,24 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label class="control-label col-md-3" for="title">Points bucket</label>
+                                        <label class="control-label col-md-3" for="reward">Points bucket</label>
                                         <div class="col-md-9">
-                                            <a href="/points-buckets/$page.pointsBucket.name" class="btn btn-info">
-                                                <span class="fa fa-trophy"></span>
-                                                $page.pointsBucket.title
-                                            </a>
+                                            <select name="reward" class="form-control">
+                                                #foreach($pb in $page.availableRewards)
+                                                $formatter.option($pb.name, $pb.title, $page.pointsBucket.name)
+                                                #end
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3" for="website">Website</label>
+                                        <div class="col-md-9">
+                                            <select name="website" class="form-control">
+                                                #foreach($website in $page.find("/websites").children.ofType.website)
+                                                $formatter.option($website.name, $website.title, $page.rewardWebsite.name)
+                                                #end
+                                            </select>
                                         </div>
                                     </div>
 
@@ -262,7 +274,7 @@
                         productInRewardModal.modal("hide");
                     }
                 });
-                
+
                 $('body').on('change', '.product-all-toggle', function (e) {
                     e.preventDefault();
                     var btn = $(this);
@@ -270,10 +282,10 @@
                     var isChecked = btn.is(':checked');
                     var ids = [];
                     var allIds = $('.product-toggle');
-                    allIds.each(function(count, item){
+                    allIds.each(function (count, item) {
                         ids.push($(item).data('pid'));
                     });
-                    
+
                     updateProductSelected(ids.join(','), isChecked);
                 });
             });
