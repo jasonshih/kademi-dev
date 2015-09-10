@@ -213,8 +213,11 @@
 <script src="/templates/apps/learner/profileAdminPortlet.js">//</script>
 <script type="text/javascript">
     $(function () {
+        flog("init elearning admin", $("#moduleprogress-body"), $("#moduleprogress-body").find(".modulestatus-reset"));
         initAdminProfile();
-        $("#moduleprogress-table").on("click", ".modulestatus-reset", function (e) {
+
+        $("#moduleprogress-body").on("click", ".modulestatus-reset", function (e) {
+            flog("click");
             e.preventDefault();
             var id = $(e.target).closest("a").attr("href");
             if (confirm("This will clear the user's record of learning for this module and allow them to start it again. Are you sure you want to continue?")) {
