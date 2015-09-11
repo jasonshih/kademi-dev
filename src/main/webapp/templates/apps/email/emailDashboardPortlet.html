@@ -1,0 +1,56 @@
+#set( $stats = $applications.email.emailStats )
+<div class="grid-item col-lg-4 col-md-4 col-sm-6 col-x2-12  grid-item--width4">
+    <div class="dash-widget-item" id="pie-charts">
+        <div class="bgm-pink">
+            <div class="text-center p-20 m-t-25">
+                <div data-percent="$stats.deliveryRatePerc" class="easy-pie emailsMainPie largePie">
+                    <div class="figure">$stats.total</div>
+                    <div class="pie-title">Total Emails Sent</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-t-20 p-b-20 text-center">
+            <div data-percent="$stats.openRatePerc" class="easy-pie emailsSubPie smallPie bluePie">
+                <div class="figure">$stats.openRatePerc</div>
+                <div class="pie-title">Open rate</div>
+            </div>
+            <div data-percent="$stats.convertedRatePerc" class="easy-pie emailsSubPie smallPie orangePie">
+                <div class="figure">$stats.convertedRatePerc</div>
+                <div class="pie-title">Conversion rate</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        $('.emailsMainPie').easyPieChart({
+            size: 148,
+            trackColor: 'rgba(255,255,255,0.2)',
+            scaleColor: 'rgba(255,255,255,0.5)',
+            barColor: 'rgba(255,255,255,0.7)',
+            lineWidth: 7,
+            lineCap: 'butt',
+        });
+
+        $('.emailsSubPie.bluePie').easyPieChart({
+            size: 95,
+            trackColor: '#eee',
+            scaleColor: '#ccc',
+            barColor: '#2196F3',
+            lineWidth: 7,
+            lineCap: 'butt',
+        });
+
+        $('.emailsSubPie.orangePie').easyPieChart({
+            size: 95,
+            trackColor: '#eee',
+            scaleColor: '#ccc',
+            barColor: '#FFC107',
+            lineWidth: 7,
+            lineCap: 'butt',
+        });
+
+    });
+</script>

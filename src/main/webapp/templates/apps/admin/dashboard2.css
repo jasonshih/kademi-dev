@@ -3,16 +3,12 @@
 }
 
 
-#site-visits {
-    color: rgba(255, 255, 255, 0.9);
-}
-
-#site-visits .dash-widget-header {
+.dash-widget-header {
     padding-bottom: 38px;
     background-color: rgba(0, 0, 0, 0.13);
 }
 
-#site-visits .dash-widget-title {
+.dash-widget-title {
     bottom: 0;
     background: rgba(0, 0, 0, 0.15);
     color: rgba(255, 255, 255, 0.9);
@@ -25,7 +21,6 @@
 
 .dash-widget-item {
     position: relative;
-    min-height: 350px;
     margin-bottom: 30px;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
     border-radius: 4px;
@@ -260,23 +255,23 @@
 }
 
 .p-20 {
-  padding: 20px !important;
+    padding: 20px !important;
 }
 
 .p-t-20 {
-  padding-top: 20px !important;
+    padding-top: 20px !important;
 }
 
 .p-b-20 {
-  padding-bottom: 20px !important;
+    padding-bottom: 20px !important;
 }
 
 .p-l-20 {
-  padding-left: 20px !important;
+    padding-left: 20px !important;
 }
 
 .p-r-20 {
-  padding-right: 20px !important;
+    padding-right: 20px !important;
 }
 
 
@@ -285,60 +280,60 @@
  */
 
 .epc-item {
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
-  position: relative;
-  margin-bottom: 30px;
-  padding: 30px 20px;
-  text-align: center;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
+    position: relative;
+    margin-bottom: 30px;
+    padding: 30px 20px;
+    text-align: center;
 }
 
 .easy-pie {
-  display: inline-block;
-  position: relative;
-  padding: 0 5px 10px;
+    display: inline-block;
+    position: relative;
+    padding: 0 5px 10px;
 }
 
 .easy-pie .figure {
-  position: absolute;
-  font-weight: 300;
-  width: 100%;
-  line-height: 100%;
-  left: 0;
+    position: absolute;
+    font-weight: 300;
+    width: 100%;
+    line-height: 100%;
+    left: 0;
 }
 
 .easy-pie.largePie .figure {
-  margin-top: 49px;
-  font-size: 50px;
-  text-align: center;
+    margin-top: 49px;
+    font-size: 50px;
+    text-align: center;
 }
 
 .easy-pie.largePie .figure:not([class*="c-"]) {
-  color: rgba(255, 255, 255, 0.7);
+    color: rgba(255, 255, 255, 0.7);
 }
 
 .easy-pie.largePie .figure:after {
-  font-size: 30px;
+    font-size: 30px;
 }
 
 .easy-pie.largePie .pie-title {
-  color: #fff;
+    color: #fff;
 }
 
 .easy-pie:not(.largePie) .figure {
-  font-size: 26px;
-  margin-top: 37px;
+    font-size: 26px;
+    margin-top: 37px;
 }
 
 .easy-pie:not(.largePie) .figure:after {
-  font-size: 20px;
+    font-size: 20px;
 }
 
 .easy-pie .pie-title {
-  position: absolute;
-  width: 100%;
-  text-align: center;
-  bottom: -3px;
-  left: 0;
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    bottom: -3px;
+    left: 0;
 }
 
 .statCard a {
@@ -347,4 +342,8 @@
 .statCard a:hover {
     color: white;
     opacity: 0.8;
+}
+
+body .nvd3.nv-pie .nv-pie-title {
+    fill: white;
 }
