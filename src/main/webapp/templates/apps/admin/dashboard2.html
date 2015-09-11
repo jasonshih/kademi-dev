@@ -6,6 +6,7 @@
         <script type="text/javascript" src="/static/easy-pie-chart/2.1.7/jquery.easypiechart.min.js">//</script>
 
         <link href="dashboard2.css" rel="stylesheet" type="text/css" />
+        <link href="/static/nvd3/nv.d3.css" rel="stylesheet" />
         <style>
             #recentList ul {
                 margin: 0;
@@ -23,6 +24,13 @@
                 height: 0 !important;
                 min-height: 0 !important;
             }
+            .wrap-image {
+                width: 100%;
+                height: 160px;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: cover;
+            }
         </style>
     </head>
     <body class="dashboard">
@@ -36,14 +44,14 @@
                     #if( $website.redirectTo )
                     #else
                     <div class="col-md-3 col-sm-4 gallery-img">
-                        <div class="wrap-image">
+                        #if( $website.imageHash )
+                        #set( $bgimage = "/_hashes/files/$website.imageHash" )
+                        #else
+                        #set( $bgimage = "/static/images/website-icon.png" )
+                        #end
+                        <div class="wrap-image" style="background-image: url($bgimage)">
                             <a title="$!website.title" href="/websites/$website.name/$website.liveBranch/?goto=" class="group1 cboxElement" target="_blank">
                                 <p class="lead tileText">$website.name</p>
-                                #if( $website.imageHash )
-                                <img class="img-responsive" alt="" src="/_hashes/files/$website.imageHash" style="height: 178px; width: 100%;">
-                                #else
-                                <img class="img-responsive" alt="" src="/static/images/website-icon.png">
-                                #end
                             </a>
                             <div class="tools tools-bottom">
                                 <a href="/websites/$website.name/$website.liveBranch/">
@@ -59,6 +67,62 @@
                     #end
                     #end
                 </div>
+                <div class="row">
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-x2-12">
+                        <div class="panel panel-primary statCard">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <a href="/manageUsers">
+                                        <div class="col-xs-3">
+                                            <i class="fa fa-user fa-5x"></i>
+                                        </div>
+                                        <div class="col-xs-9 text-right">
+                                            <div class="huge">$rootFolder.numProfiles</div>
+                                            <div>profiles</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-x2-12">
+                        <div class="panel panel-primary statCard">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <a href="/groups">
+                                        <div class="col-xs-3">
+                                            <i class="fa fa-users fa-5x"></i>
+                                        </div>
+                                        <div class="col-xs-9 text-right">
+                                            <div class="huge">$rootFolder.numGroups</div>
+                                            <div>groups</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-x2-12">
+                        <div class="panel panel-primary statCard">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <a href="/organisations">
+                                        <div class="col-xs-3">
+                                            <i class="fa fa-sitemap fa-5x"></i>
+                                        </div>
+                                        <div class="col-xs-9 text-right">
+                                            <div class="huge">$rootFolder.numOrgs</div>
+                                            <div>organisations</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="row">
                     <div class="grid">
                         <div class="grid-sizer col-md-1"></div>
@@ -84,6 +148,10 @@
                 #portlets("adminDashboardSecondary")
             </div>
         </div>
+
+        <script src="/static/d3/d3.v3.js">//</script>
+        <script src="/static/nvd3/nv.d3.js">//</script>
+        <script src="/static/sparkleline/2.1.2/jquery.sparkline.min.js">//</script>
         <script type="text/javascript">
             $(function () {
                 var grid = $('.grid');
@@ -92,12 +160,12 @@
                     flog("onlayout", grid.find(".grid-item"));
                     grid.find(".grid-item").animate({
                         opacity: 1,
-                    }, 1000, function() {
+                    }, 1000, function () {
                         flog("complete");
                     });
                 }
                 // bind event listener
-                grid.on( 'layoutComplete', onLayout );
+                grid.on('layoutComplete', onLayout);
 
                 grid.masonry({
                     columnWidth: ".grid-sizer",
@@ -124,6 +192,51 @@
                     flog("no recent list");
                 }
             });
+
+            function sparklineBar(div, values, width, height, barWidth, barColor, barSpacing) {
+                div.sparkline(values, {
+                    type: 'bar',
+                    height: height,
+                    width: width,
+//                    barWidth: barWidth,
+                    barColor: barColor,
+                    barSpacing: barSpacing
+                })
+            }
+
+            function sparklineLine(div, values, width, height, lineColor, fillColor, lineWidth, maxSpotColor, minSpotColor, spotColor, spotRadius, hSpotColor, hLineColor) {
+                div.sparkline(values, {
+                    type: 'line',
+                    width: width,
+                    height: height,
+                    lineColor: lineColor,
+                    fillColor: fillColor,
+                    lineWidth: lineWidth,
+                    maxSpotColor: maxSpotColor,
+                    minSpotColor: minSpotColor,
+                    spotColor: spotColor,
+                    spotRadius: spotRadius,
+                    highlightSpotColor: hSpotColor,
+                    highlightLineColor: hLineColor
+                });
+            }
+
+            function sparklinePie(div, values, width, height, sliceColors) {
+                div.sparkline(values, {
+                    type: 'pie',
+                    width: width,
+                    height: height,
+                    sliceColors: sliceColors,
+                    offset: 0,
+                    borderWidth: 0
+                });
+            }
+
+            function formatNumeric(a) {
+                a = a + "";
+                a = a.replace(new RegExp("^(\\d{" + (a.length % 3 ? a.length % 3 : 0) + "})(\\d{3})", "g"), "$1,$2").replace(/(\d{3})+?/gi, "$1 ").trim();
+                return a;
+            }
         </script>
 
     </body>
