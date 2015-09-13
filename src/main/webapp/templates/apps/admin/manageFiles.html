@@ -19,6 +19,11 @@
         <div class="clearfix">
             #set($currentBranch = $page.closest("branch"))
             <div class="btn-group publishing pull-right">
+                <a href="${currentBranch.href}commits" class="publish btn btn-sm btn-info">
+                    <i class="fa fa-clock-o"></i>
+                    History
+                </a>
+
                 #if( $currentBranch.live )
                 <a href="/repositories/$page.closest("repository").name/manageBranches" class="islive btn btn-sm btn-danger">
                    <i class="fa fa-gear"></i>
