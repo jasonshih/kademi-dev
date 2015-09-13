@@ -11,12 +11,24 @@
         </div>
 
         <div class="p-t-20 p-b-20 text-center">
-            <div data-percent="$stats.openRatePerc" class="easy-pie emailsSubPie smallPie bluePie">
-                <div class="figure">$stats.openRatePerc</div>
+            <div data-percent="$!stats.openRatePerc" class="easy-pie emailsSubPie smallPie bluePie">
+                <div class="figure">
+                    #if( $stats.openRatePerc )
+                    $stats.openRatePerc
+                    #else
+                    N/A
+                    #end
+                </div>
                 <div class="pie-title">Open rate</div>
             </div>
-            <div data-percent="$stats.convertedRatePerc" class="easy-pie emailsSubPie smallPie orangePie">
-                <div class="figure">$stats.convertedRatePerc</div>
+            <div data-percent="$!stats.convertedRatePerc" class="easy-pie emailsSubPie smallPie orangePie">
+                <div class="figure">
+                    #if( $stats.convertedRatePerc )
+                    $stats.convertedRatePerc
+                    #else
+                    N/A
+                    #end                    
+                </div>
                 <div class="pie-title">Conversion rate</div>
             </div>
         </div>
