@@ -41,7 +41,7 @@
                 <!-- Display website tiles -->
                 <div class="row">
                     #foreach( $website in $page.organisation.websites())
-                    #if( $website.redirectTo )
+                    #if( $website.redirectTo.length() > 0 )
                     #else
                     <div class="col-md-3 col-sm-4 gallery-img">
                         #if( $website.imageHash )
@@ -68,7 +68,7 @@
                     #end
                 </div>
                 <div class="row">
-                    <div class="col-lg-4 col-md-4 col-sm-6 col-x2-12">
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-x2-12">
                         <div class="panel panel-primary statCard">
                             <div class="panel-heading">
                                 <div class="row">
@@ -86,7 +86,7 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-4 col-md-4 col-sm-6 col-x2-12">
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-x2-12">
                         <div class="panel panel-primary statCard">
                             <div class="panel-heading">
                                 <div class="row">
@@ -104,7 +104,7 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-4 col-md-4 col-sm-6 col-x2-12">
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-x2-12">
                         <div class="panel panel-primary statCard">
                             <div class="panel-heading">
                                 <div class="row">
@@ -114,13 +114,14 @@
                                         </div>
                                         <div class="col-xs-9 text-right">
                                             <div class="huge">$rootFolder.numOrgs</div>
-                                            <div>organisations</div>
+                                            <div>orgs</div>
                                         </div>
                                     </a>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    #portlets("adminDashboardQuickLinks")
                 </div>
 
                 <div class="row">

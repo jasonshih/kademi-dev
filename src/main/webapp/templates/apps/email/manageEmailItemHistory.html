@@ -4,7 +4,7 @@
         <link href="myInbox.less" rel="stylesheet" type="text/css" media="all" />
         <script type="text/javascript" src="myInbox.js">//</script>
     </head>
-    <body>                
+    <body>
         <div class="panel panel-default">
             <div class="panel-heading">
                 <i class="fa fa-envelope"></i> Email history
@@ -14,9 +14,9 @@
                     <div class="input-group date-range pull-right col-md-4 col-sm-6">
                         <label for="report-range" class="input-group-addon">Time</label>
                         <input type="text" id="report-range" placeholder="Choose a date range" value="" class="form-control" />
-                    </div>                    
+                    </div>
                     <div class="input-group search-user input-group-sm col-md-6 col-sm-6">
-                        <input type="text" id="email-query" class="form-control" placeholder="Search by recipient or subject" value="" /> 
+                        <input type="text" id="email-query" class="form-control" placeholder="Search by recipient or subject" value="" />
                         <span class="input-group-btn">
                             <button class="btn btn-sm btn-default" type="button" data-type="clearer" data-target="#email-query">
                                 <i class="fa fa-times"></i>
@@ -49,13 +49,24 @@
                                 <td>$e.subject</td>
                                 <td><abbr title="$formatter.formatDateISO8601($e.createdDate)" class="timeago">$!e.createdDate</abbr></td>
                                 <td>
-                                    #if( $e.sendStatus == 'r' )
+                                    #if( $e.edmConverted )
+                                    <p class="label label-success">
+                                        <span class="glyphicon glyphicon-ok"></span>
+                                        Converted
+                                    </p>
+                                    #elseif( $e.readStatus )
+                                    <p class="label label-primary">
+                                        <span class="glyphicon glyphicon-ok"></span>
+                                        Opened
+                                    </p>
+
+                                    #elseif( $e.sendStatus == 'r' )
                                     <p class="label label-warning">
                                         <span class="glyphicon glyphicon-repeat"></span>
                                         $e.statusText - $e.numAttempts
                                     </p>
                                     #elseif( $e.sendStatus == 'c' )
-                                    <p class="label label-success">
+                                    <p class="label label-default">
                                         <span class="glyphicon glyphicon-ok"></span>
                                         $e.statusText
                                     </p>
@@ -72,12 +83,12 @@
 
                                     #else
                                     <span class="glyphicon glyphicon-time"></span> Preparing..
-                                    #end                                    
+                                    #end
                                 </td>
                             </tr>
                             #end
                         </tbody>
-                    </table>                    
+                    </table>
                 </div>
                 #if( $page.searchResults.size() >= 1000 )
                 <p class="label label-warning">Displaying maximum results</p>

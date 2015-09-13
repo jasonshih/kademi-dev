@@ -1040,7 +1040,6 @@ body.ajax-loading .ajaxLoader {
     height: auto;
     background-image: none;
     box-shadow: none;
-    min-height: 100px;
 }
 .huge {
     font-size: 32px;
