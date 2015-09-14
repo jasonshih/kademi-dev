@@ -1,9 +1,6 @@
 h3 {
-    margin: 0 0 20px;
-}
-
-#editor {
-    min-height: 400px;
+    margin: 0;
+    line-height: 30px;
 }
 
 #editor .ace_content {
@@ -11,20 +8,45 @@ h3 {
 }
 
 #editor-wrapper {
-    padding-top: 20px;
-    overflow-y: auto;
     background: #fff;
 }
 
-#editor-wrapper .editor-toolbar {
-    padding: 0 20px;
+#editor-loading {
+    float: left;
+    position: relative;
+    top: -4px;
 }
 
-#editor-wrapper.fullscreen-mode #editor {
+.shortcut-switcher-wrapper {
+    width: 180px;
+}
+
+.font-size-switcher-wrapper {
+    width: 150px;
+}
+
+.theme-switcher-wrapper {
+    width: 250px;
+}
+
+.file-type-wrapper {
+    width: 180px;
+}
+
+#editor-wrapper .editor-toolbar {
+    padding: 15px 15px 0;
+    box-shadow: 0 0 3px rgba(0, 0, 0, .3);
+    position: relative;
+    z-index: 2;
+    height: 60px;
+}
+
+#editor-wrapper #editor {
     position: absolute;
     left: 0;
     bottom: 0;
     right: 0;
-    top: 66px;
+    top: 60px;
     height: auto !important;
+    z-index: 1;
 }

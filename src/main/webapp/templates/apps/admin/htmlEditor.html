@@ -2,6 +2,11 @@
     <head>
         <title>Text editor</title>
         <link rel="template" href="editorBase" />
+        <script type="text/javascript" src="/static/js/init-theme.js" bottom="true">//</script>
+        <script type="text/javascript" src="/static/js/file.js" bottom="true">//</script>
+        <script type="text/javascript" src="/static/js/toolbars.js" bottom="true">//</script>
+        <script type="text/javascript" src="/static/ckeditor440/ckeditor.js" bottom="true">//</script>
+        <script type="text/javascript" src="/static/ckeditor440/adapters/jquery.js" bottom="true">//</script>
         <script type="text/javascript" src="/static/js/keymap.js">//</script>
         <script type="text/javascript" src="htmlEditor.js">//</script>
         <link rel="stylesheet" type="text/css" href="textEditor.css" />
@@ -13,7 +18,12 @@
 
         <div id="editor-wrapper">
             <div class="clearfix editor-toolbar">
-                <button class="btn btn-success btn-save-file pull-right" >Save file</button>
+                <div class="btn-toolbar pull-right" role="toolbar">
+                    <i class="fa fa-spinner fa-spin fa-3x fa-fw" id="editor-loading"></i>
+                    <div class="btn-group btn-group-sm">
+                        <button class="btn btn-success btn-save-file">Save file</button>
+                    </div>
+                </div>
                 <h3 class="pull-left">$file.name</h3>
             </div>
             <textarea id="editor" class="toolbar-Full">$formatter.htmlEncode($file.body)</textarea>
@@ -36,6 +46,7 @@
                 });
                 initHtmlEditorPage('$fname');
             });
+
             window.onbeforeunload = function (e) {
                 e.returnValue = "Are you sure you would like to leave the editor? You will lose any unsaved changes";
             }
