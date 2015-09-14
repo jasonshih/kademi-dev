@@ -1,7 +1,61 @@
-.grid-item {
-
+#recentList ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
 
+#recentList ul li {
+    padding: 10px 15px;
+    border-bottom: solid lightgrey 1px;
+}
+
+.grid-item {
+    opacity: 0;
+}
+
+.grid-sizer {
+    height: 0 !important;
+    min-height: 0 !important;
+}
+
+.wrap-image {
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    background-size: auto 100%;
+    padding-bottom: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+.wrap-image .tileText {
+    bottom: 35px;
+    top: auto;
+    margin: 0;
+    width: auto;
+    left: 0;
+    right: 0;
+}
+
+.wrap-image .tileText:hover {
+    text-decoration: none;
+    color: #000;
+}
+
+@media screen and (min-width: 1199px) {
+    .wrap-image {
+        padding-bottom: 50%;
+    }
+
+    .wrap-image .tools.tools-bottom {
+        left: 50%;
+    }
+
+    .wrap-image .tileText {
+        top: 0;
+        left: 50%;
+        padding-top: 20px;
+    }
+}
 
 .dash-widget-header {
     padding-bottom: 38px;
@@ -18,7 +72,6 @@
     color: rgba(255, 255, 255, 0.9);
 }
 
-
 .dash-widget-item {
     position: relative;
     margin-bottom: 30px;
@@ -27,7 +80,7 @@
     height: 350px;
 }
 
-.dash-widget-item h3  {
+.dash-widget-item h3 {
     padding: 0;
     margin: 0;
 }
@@ -73,7 +126,6 @@
 .dash-widget-item:hover .dash-widget-header .actions {
     display: block;
 }
-
 
 /*
  * Material Background Colors
@@ -275,7 +327,6 @@
     padding-right: 20px !important;
 }
 
-
 /*
  * Easy Pie Charts
  */
@@ -340,6 +391,7 @@
 .statCard a {
     color: white;
 }
+
 .statCard a:hover {
     color: white;
     opacity: 0.8;

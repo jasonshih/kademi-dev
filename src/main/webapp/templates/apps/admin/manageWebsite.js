@@ -10,7 +10,7 @@ function initManageWebsiteImage() {
     $('#btn-change-ava').upcropImage({
         buttonContinueText: 'Save',
         url: window.location.pathname, // this is actually the default value anyway
-        ratio: 4 / 3,
+        ratio: 1/1,
         onCropComplete: function (resp) {
             flog("onCropComplete:", resp, resp.nextHref);
             $("#websiteImage").reloadFragment();

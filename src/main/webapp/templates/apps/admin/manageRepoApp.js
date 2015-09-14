@@ -259,18 +259,20 @@ function initScreenshotDelete() {
 function addScreenshot(file) {
     var screenshots = $('#screenshots');
 
-    var newDiv = $("<div class=\"col-md-3 col-sm-4 gallery-img\" style=\"display:none;\">\n" +
-            "         <div class=\"wrap-image\" data-href=\"" + "SCREENSHOT_" + file.name + "\">\n" +
-            "          <a class=\"group1 cboxElement\" href=\"" + "SCREENSHOT_" + file.name + "\" title=\"" + file.name + "\">\n" +
-            "            <img src=\"" + "SCREENSHOT_" + file.name + "\" alt=\"\" class=\"img-responsive\">\n" +
-            "          </a>\n" +
-            "          <div class=\"tools tools-bottom\">\n" +
-            "          <a href=\"" + "SCREENSHOT_" + file.name + "\" data-title=\"" + file.name + "\" class=\"delete-screenshot pull-right\" title=\"Delete " + file.name + "\">\n" +
-            "          <i class=\"fa fa-trash\"></i>\n" +
-            "          </a>\n" +
-            "       </div>\n" +
-            "   </div>\n" +
-            "</div>");
+    var newDiv = $(
+        '<div class="col-md-3 col-sm-4 gallery-img" style="display:none;">\n' +
+        '    <div class="wrap-image" data-href="' + 'SCREENSHOT_' + file.name + '">\n' +
+        '        <a class="group1 cboxElement" href="' + 'SCREENSHOT_' + file.name + '" title="' + file.name + '">\n' +
+        '            <img src="' + 'SCREENSHOT_' + file.name + '" alt="" class="img-responsive">\n' +
+        '        </a>\n' +
+        '        <div class="tools tools-bottom">\n' +
+        '            <a href="' + 'SCREENSHOT_' + file.name + '" data-title="' + file.name + '" class="delete-screenshot pull-right" title="Delete ' + file.name + '">\n' +
+        '            <i class="fa fa-trash"></i>\n' +
+        '            </a>\n' +
+        '        </div>\n' +
+        '    </div>\n' +
+        '</div>'
+    );
 
     newDiv.find(".group1").colorbox({
         rel: 'group1',
