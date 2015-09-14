@@ -138,7 +138,7 @@
                         #end
                     </tbody>
                 </table>
-            </div>            
+            </div>
         </article>
 
         <article class="panel panel-default">
@@ -186,11 +186,11 @@
                                     <a href="$entry.requestData.url" parent="_blank">$entry.requestData.url</a>
                                     <br/>
                                     <acronym title="$entry.requestData.started">$entry.requestData.durationMillis ms</acronym>
-                                </p>    
-                                #end                                
+                                </p>
+                                #end
                             </td>
                             <td>
-                                $entry.thread.state  
+                                $entry.thread.state
                                 <br/>
                                 $entry.threadCpuTimeSecs secs cpu
                             </td>
@@ -209,6 +209,25 @@
             </div>
         </article>
 
+        <article class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Cache statistics</h3>
+            </div>
+            <div class="panel-body">
+                <table class="stacktraces table table-striped">
+                    #foreach($cache in $page.caches )
+                    <tr>
+                        <td><a href="#$group.name">$cache.name</a></td>
+                        <td>$cache.status</td>
+                        <td>$cache.size</td>
+                        <td>$cache.cacheConfiguration.maxEntriesLocalHeap</td>
+                        <td>$cache.cacheConfiguration.maxEntriesLocalDisk</td>
+                        <td>$cache.statistics</td>
+                    </tr>
+                    #end
+                </table>
+            </div>
+        </article>
 
 
         <script type="text/javascript">
