@@ -1,7 +1,49 @@
 function initTextEditor(fileName) {
     var DEFAULT_THEME = 'ace/theme/textmate';
+    var DEFAULT_FONT_SIZE = '12px';
+    var DEFAULT_SHORTCUT = '';
+    var DEFAULT_WORD_WRAP = '';
+
+    var storageName = location.pathname + location.search;
+
+    var initTheme = $.cookie('text-editor-theme') || DEFAULT_THEME;
+    var initFontSize = $.cookie('text-editor-fontsize') || DEFAULT_FONT_SIZE;
+    var initShortcut = $.cookie('text-editor-shortcut') || DEFAULT_SHORTCUT;
+    var initWordWrap = $.cookie('text-editor-wordwrap') || DEFAULT_WORD_WRAP;
 
     var editor = ace.edit('editor');
+    var storeSetting = function (key, value) {
+        $.cookie(key, value, {
+            path: '/',
+            expires: 999
+        });
+    };
+    var setTheme = function (theme) {
+        storeSetting('text-editor-theme', theme);
+        editor.setTheme(theme);
+    };
+    var setFontSize = function (fontSize) {
+        storeSetting('text-editor-fontsize', fontSize);
+        editor.container.style.fontSize = fontSize;
+        editor.updateFontSize();
+    };
+    var setShortcut = function (shortcut) {
+        storeSetting('text-editor-shortcut', shortcut);
+        editor.setKeyboardHandler(shortcut);
+    };
+    var setWordWrap = function (wordWrap) {
+        storeSetting('text-editor-wordwrap', wordWrap);
+
+        var btn = $('.btn-word-wrap');
+
+        if (wordWrap) {
+            btn.addClass('active');
+            editor.getSession().setUseWrapMode('free');
+        } else {
+            btn.removeClass('active');
+            editor.getSession().setUseWrapMode('');
+        }
+    };
 
     // Format of editor
     var extension = fileName.substr(fileName.lastIndexOf('.') + 1, fileName.length) || 'txt';
@@ -10,8 +52,8 @@ function initTextEditor(fileName) {
     }).trigger('change');
 
     // Theme of editor
-    $('#theme-switcher').val(DEFAULT_THEME).on('change', function () {
-        editor.setTheme(this.value);
+    $('#theme-switcher').val(initTheme).on('change', function () {
+        setTheme(this.value);
     });
 
     // Word wrap of editor
@@ -21,30 +63,31 @@ function initTextEditor(fileName) {
         var btn = $(this);
 
         if (btn.hasClass('active')) {
-            btn.removeClass('active');
-            editor.getSession().setUseWrapMode('');
+            setWordWrap('');
         } else {
-            btn.addClass('active');
-            editor.getSession().setUseWrapMode('free');
+            setWordWrap('free');
         }
     });
 
     // Font size of editor
-    $('#font-size-switcher').val('12px').on('change', function () {
-        editor.container.style.fontSize = this.value;
-        editor.updateFontSize();
+    $('#font-size-switcher').val(initFontSize).on('change', function () {
+        setFontSize(this.value);
     });
 
     // Shortcut of editor
-    $('#shortcut-switcher').val('').on('change', function () {
-        editor.setKeyboardHandler(this.value);
+    setShortcut(initShortcut);
+    $('#shortcut-switcher').val(initShortcut).on('change', function () {
+        setShortcut(this.value);
     });
 
     // Remove Shortcut for showing setting panel
     editor.commands.removeCommands(["showSettingsMenu"]);
 
     editor.setOptions({
-        minLines: editor.getSession().$rowLengthCache.length
+        minLines: editor.getSession().$rowLengthCache.length,
+        theme: initTheme,
+        wrap: initWordWrap,
+        fontSize: initFontSize
     });
 
     $('#editor').removeClass('hide');
@@ -75,6 +118,8 @@ function initTextEditor(fileName) {
             success: function () {
                 Msg.success('File is saved!');
                 hideLoadingIcon();
+
+                localStorage.setItem(storageName, fileContent);
             },
             error: function (e) {
                 Msg.error(e.status + ': ' + e.statusText);
@@ -82,6 +127,11 @@ function initTextEditor(fileName) {
             }
         })
     });
+
+    var localCode = localStorage.getItem(storageName);
+    if (localCode && confirm('We found a version of this file in your local. Do you want to restore it?')) {
+        editor.setValue(localCode);
+    }
 
     initFullScreenMode();
     hideLoadingIcon();
