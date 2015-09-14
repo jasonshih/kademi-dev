@@ -96,11 +96,12 @@
                     .x(function (d) {
                         if( d.key == "404" ) {
                             return "Not found";
-                        } else if( d.key == "401" || d.key == "403" ) {
+                        } else if( d.key == "400" || d.key == "401" || d.key == "403" ) {
                             return "Permissions";
                         } else if( d.key == "500" ) {
                             return "Server error";
                         }
+                        return d;
                     })
                     .y(function (d) {
                         return d.doc_count;
