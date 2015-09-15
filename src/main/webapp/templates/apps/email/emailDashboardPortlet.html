@@ -4,7 +4,13 @@
         <div class="bgm-pink">
             <div class="text-center p-20 m-t-25">
                 <div data-percent="$stats.deliveryRatePerc" class="easy-pie emailsMainPie largePie">
-                    <div class="figure">$stats.total</div>
+                    <div class="figure">
+                        #if( $stats.total )
+                        $stats.total
+                        #else
+                        N/A
+                        #end
+                    </div>
                     <div class="pie-title">Total Emails Sent</div>
                 </div>
             </div>
@@ -27,7 +33,7 @@
                     $stats.convertedRatePerc
                     #else
                     N/A
-                    #end                    
+                    #end
                 </div>
                 <div class="pie-title">Conversion rate</div>
             </div>
