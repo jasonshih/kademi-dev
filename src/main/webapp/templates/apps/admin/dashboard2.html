@@ -24,15 +24,22 @@
                         #else
                         #set( $bgimage = "/static/images/website-icon-squared.png" )
                         #end
-                        <div class="wrap-image" style="background-image: url($bgimage)">
+                        <div class="wrap-image">
+                            <a href="/websites/$website.name/$website.liveBranch/?goto=" target="_blank" style="background-image: url($bgimage)" class="dashWebsiteImage">
+
+                            </a>
                             <a title="$!website.title" href="/websites/$website.name/$website.liveBranch/?goto=" class="group1 lead tileText cboxElement" target="_blank">
                                 $website.name
-                                <span class="visible-lg">
+                                <br/>
+                                <small style="font-size: 12px">
                                     #if ($website.domainName && $website.domainName != "")
                                     $website.domainName<br />
                                     #end
-                                    $!website.liveBranch
-                                </span>
+                                    <br/>
+                                    <i>
+                                        Branch: $!website.liveBranch
+                                    </i>
+                                </small>
                             </a>
                             <div class="tools tools-bottom">
                                 <a href="/websites/$website.name/$website.liveBranch/">
