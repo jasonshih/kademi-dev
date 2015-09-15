@@ -48,15 +48,15 @@
                     </ul>
                 </div>
                 <div class="panel-tools">
-                    <div class="btn-group">
-                        <a href="$group.name" class="btn $typeColour btn-sm">
+                    <div class="btn-group btn-group-sm">
+                        <a href="$group.name" class="btn $typeColour">
                             <i class="fa fa-cog"></i>
                             #if( $group.groupType == "P" )
                             $group.regoModeText
                             #end
                             $group.groupTypeText
                         </a>
-                        <a href="$group.name/members"class="btn btn-info btn-sm">
+                        <a href="$group.name/members"class="btn btn-info">
                             <i class="clip-users"></i>
                             $group.numMembers Members
                         </a>

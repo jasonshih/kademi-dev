@@ -141,11 +141,11 @@ function initCRUDRole() {
             }
             //$('#groups-folders').reloadFragment();
             currentGroupDiv.find('.roles-wrapper').append(
-                    '<span class="block role">' +
-                    '<span>' + roleName + ', on ' + appliesToText + '</span> ' +
-                    '<a class="btn btn-xs btn-danger btn-remove-role" href="' + resp.nextHref + '" title="Remove this role"><i class="fa fa-times"></i></a>' +
-                    '</span>'
-                    );
+                '<span class="block role">' +
+                '<span>' + roleName + ', on ' + appliesToText + '</span> ' +
+                '<a class="btn btn-xs btn-danger btn-remove-role" href="' + resp.nextHref + '" title="Remove this role"><i class="fa fa-times"></i></a>' +
+                '</span>'
+            );
         });
     });
 }
@@ -233,7 +233,6 @@ function setGroupRole(groupName, roleName, isRecip, permissionList) {
 }
 
 
-
 function addOrderGroup() {
     $('div.group').each(function (i) {
         $(this).attr('data-group', i);
@@ -244,28 +243,28 @@ function addOrderProgramList() {
     var tempControl = $('#modalListController').html();
     $('#modalGroup tr[rel=Program] ul.ListItem li').each(function (i) {
         $(this)
-                .attr('data-program', i)
-                .append(tempControl)
-                .find('label', 'input')
-                .each(function () {
-                    var _this = $(this);
-                    var _randomId = Math.round(Math.random() * 100000);
-                    var _for = _this.attr('for') || null;
-                    var _name = _this.attr('name') || null;
-                    var _id = _this.attr('id') || null;
+            .attr('data-program', i)
+            .append(tempControl)
+            .find('label', 'input')
+            .each(function () {
+                var _this = $(this);
+                var _randomId = Math.round(Math.random() * 100000);
+                var _for = _this.attr('for') || null;
+                var _name = _this.attr('name') || null;
+                var _id = _this.attr('id') || null;
 
-                    if (_for) {
-                        _this.attr('for', _for + _randomId);
-                    }
+                if (_for) {
+                    _this.attr('for', _for + _randomId);
+                }
 
-                    if (_name) {
-                        _this.attr('name', _name + _randomId);
-                    }
+                if (_name) {
+                    _this.attr('name', _name + _randomId);
+                }
 
-                    if (_id) {
-                        _this.attr('id', _id + _randomId);
-                    }
-                });
+                if (_id) {
+                    _this.attr('id', _id + _randomId);
+                }
+            });
     });
 }
 
@@ -363,6 +362,7 @@ function initGroupModal() {
                             $('.group').draggable({
                                 revert: "invalid",
                                 axis: "y",
+                                handle: '.btn-order',
                                 start: function (event, ui) {
                                     flog("draggable start", event, ui);
                                     drapEventStart = event;
@@ -592,6 +592,7 @@ function initGroupFolder() {
     $('.group').draggable({
         revert: "invalid",
         axis: "y",
+        delay: 200,
         start: function (event, ui) {
             flog("draggable start", event, ui);
             drapEventStart = event;
@@ -613,22 +614,42 @@ function initGroupFolder() {
 
     var checkTimer;
     $('.folder').droppable({
-        accept: ".group",
+        accept: '.group',
         greedy: true,
         drop: function (event, ui) {
             var groupName = ui.draggable.attr("id");
-            var folderName = $(this).data("name");
-            $(this).find(".panel-group").append(ui.draggable.css({position: "relative", top: "", left: ""}));
+            var currentFolder = $(this);
+            var folderName = currentFolder.data("name");
+
+            if (currentFolder.is(ui.draggable.closest('.folder'))) {
+                flog('The draged item is already in this element!');
+                ui.draggable.animate({
+                    'top': 0
+                }, 500);
+
+                return;
+            }
+
+            currentFolder.find(".panel-group").append(
+                ui.draggable.css({
+                    position: "relative",
+                    top: "",
+                    left: ""
+                })
+            );
+
             addGroupFolder(groupName, groupName, "addToFolder=addToFolder&folderName=" + folderName, function (name, resp) {
                 Msg.success("Moved " + groupName + " to " + folderName);
             });
-            $(this).find(".group-count").text($(this).find(".group").size());
-            var currentTarget = $(this);
+
+            currentFolder.find(".group-count").text(currentFolder.find(".group").size());
+
             setTimeout(function () {
-                flog(currentTarget.find(".group").size());
-                currentTarget.find(".group-count").text(currentTarget.find(".group").size());
+                flog(currentFolder.find(".group").size());
+                currentFolder.find(".group-count").text(currentFolder.find(".group").size());
             }, 150);
-            flog($(this).find(".group").size());
+
+            flog(currentFolder.find(".group").size());
         },
         over: function (event, ui) {
             flog(event, ui);
@@ -638,7 +659,11 @@ function initGroupFolder() {
     });
 
     $(".container").droppable({
-        accept: ".group",
+        accept: function (draggableElement) {
+            var isInFolder = draggableElement.closest('.folder').length > 0;
+
+            return isInFolder;
+        },
         greedy: true,
         drop: function (event, ui) {
             flog("Dropped In Container");
