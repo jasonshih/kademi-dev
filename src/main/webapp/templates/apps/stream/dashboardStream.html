@@ -18,21 +18,14 @@
                 <li class="text-center">
                     <i class="fa fa-spinner fa-spin" style="font-size: 24px"></i>
                 </li>
-
             </ol>
-        </div>
-        <div class="ps-scrollbar-x-rail" style="width: 438px; display: none; left: 0px; bottom: 3px;">
-            <div class="ps-scrollbar-x" style="left: 0px; width: 0px;"></div>
-        </div>
-        <div class="ps-scrollbar-y-rail" style="top: 0px; height: 460px; display: inherit; right: 3px;">
-            <div class="ps-scrollbar-y" style="top: 0px; height: 338px;"></div>
         </div>
     </div>
 
     <script src="/static/handlebars/3.0.3/handlebars-v3.0.3.js"></script>
     <script src="/theme/apps/stream/jquery.stream.js"></script>
     <div id="entry-template" class="hide">
-        <ol class="discussion" >
+        <ol class="discussion">
             {{#each hits.hits}}
             <li class="other">
                 <div class="avatar">
@@ -44,9 +37,11 @@
                     <p>
                         {{fields.actionDesc}} <a href="{{itemHref}}">{{fields.itemTitle}}</a>
                     </p>
+
                     <p>
                         <span class="label label-{{lowerCase fields.category}}">
-                            <span class="time timeago" title="{{dateFromLong fields.eventDate}}">{{fields.eventDate}}</span>
+                            <span class="time timeago"
+                                  title="{{dateFromLong fields.eventDate}}">{{fields.eventDate}}</span>
                         </span>
                     </p>
                 </div>
@@ -56,9 +51,9 @@
         </ol>
     </div>
     <script>
-$(function () {
-    $("#streamBody").stream();
-    $("#streamBody").stream("load");
-});
+        $(function () {
+            $("#streamBody").stream();
+            $("#streamBody").stream("load");
+        });
     </script>
 </div>

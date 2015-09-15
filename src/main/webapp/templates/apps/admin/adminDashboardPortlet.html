@@ -1,4 +1,3 @@
-
 <div class="grid-item col-lg-4 col-md-4 col-sm-6 col-x2-12">
     <div class="dash-widget-item bgm-teal" id="site-visits">
         <div class="dash-widget-header">
@@ -21,18 +20,18 @@
 
                     <small>Bandwidth</small>
                     <h3 class="m-0 f-400" id="numBytes"></h3>
-                    
+
                     <br/>
-                    
+
                     <small>Total errors</small>
-                    <h3 class="m-0 f-400" id="numErrors"></h3>                    
+                    <h3 class="m-0 f-400" id="numErrors"></h3>
                 </div>
                 <div class="col-md-6" style="padding-left: 0; text-align: center">
-                    <small>Warnings & errors</small>                    
+                    <small>Warnings & errors</small>
                     <div id='' style="">
                         <svg id="resultCodesChart" width="100%" height=""></svg>
                     </div>
-                </div>                
+                </div>
             </div>
         </div>
     </div>
@@ -77,55 +76,55 @@
             var bucket = hitsBuckets[i];
             arr.push(bucket.doc_count);
         }
-        
+
         var totalErrs = 0;
         for (var i = 0; i < resultCodeBuckets.length; i++) {
             var bucket = resultCodeBuckets[i];
             totalErrs += bucket.doc_count;
-        }        
-        
+        }
+
         sparklineLine($('#hitsChart'), arr, '100%', '95px', 'rgba(255,255,255,0.7)', 'rgba(0,0,0,0)', 2, 'rgba(255,255,255,0.4)', 'rgba(255,255,255,0.4)', 'rgba(255,255,255,0.4)', 5, 'rgba(255,255,255,0.4)', '#fff');
         $("#pageViews").text(formatNumeric(resp.hits.total));
         $("#numBytes").text(formatBytes(numBytes.value));
         $("#numErrors").text(formatNumeric(totalErrs));
 
         //sparklineBar($('#hitsChart'), [4,7,6,2,5,3,8,6,6,4,8,6,5,8,2,4,6], '100%', '100%', 3, '#fff', 2);
-        
+
         nv.addGraph(function () {
             var chart = nv.models.pieChart()
-                    .x(function (d) {
-                        if( d.key == "404" ) {
-                            return "Not found";
-                        } else if( d.key == "400" || d.key == "401" || d.key == "403" ) {
-                            return "Permissions";
-                        } else if( d.key == "500" ) {
-                            return "Server error";
-                        }
-                        return d;
-                    })
-                    .y(function (d) {
-                        return d.doc_count;
-                    })
-                    .color(function(d){
-                        var i = parseInt(d.key);
-                        if( i >= 500 ) {
-                            return "red";
-                        } else if( i == 404 ) {
-                            return "#FF9900";
-                        } else if( i == 401 || i == 403 ) {
-                            return "#FF3300";
-                        }
-                        return "green";
-                    })
-                    .valueFormat(d3.format(".0f"))
-                    .margin({"left": 0, "right": 0, "top": 0, "bottom": 0})
-                    .showLabels(false)     //Display pie labels
-                    .showLegend(false)
-                    .labelThreshold(.10)  //Configure the minimum slice size for labels to show up
-                    .labelType("value") //Configure what type of data to show in the label. Can be "key", "value" or "percent"
-                    .donut(true)          //Turn on Donut mode. Makes pie chart look tasty!
+                            .x(function (d) {
+                                if (d.key == "404") {
+                                    return "Not found";
+                                } else if (d.key == "400" || d.key == "401" || d.key == "403") {
+                                    return "Permissions";
+                                } else if (d.key == "500") {
+                                    return "Server error";
+                                }
+                                return d;
+                            })
+                            .y(function (d) {
+                                return d.doc_count;
+                            })
+                            .color(function (d) {
+                                var i = parseInt(d.key);
+                                if (i >= 500) {
+                                    return "red";
+                                } else if (i == 404) {
+                                    return "#FF9900";
+                                } else if (i == 401 || i == 403) {
+                                    return "#FF3300";
+                                }
+                                return "green";
+                            })
+                            .valueFormat(d3.format(".0f"))
+                            .margin({"left": 0, "right": 0, "top": 0, "bottom": 0})
+                            .showLabels(false)     //Display pie labels
+                            .showLegend(false)
+                            .labelThreshold(.10)  //Configure the minimum slice size for labels to show up
+                            .labelType("value") //Configure what type of data to show in the label. Can be "key", "value" or "percent"
+                            .donut(true)          //Turn on Donut mode. Makes pie chart look tasty!
 //                    .title(total + "")
-                    .donutRatio(0.40)     //Configure how big you want the donut hole size to be.
+                            .donutRatio(0.40)     //Configure how big you want the donut hole size to be.
                     ;
             d3.select("#resultCodesChart")
                     .datum(resultCodeBuckets)

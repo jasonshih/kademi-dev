@@ -3329,7 +3329,7 @@ div.timeline_element.purple div.timeline_title {
 .messages-list {
     border-right: 1px solid #ECEAF3;
     float: left;
-    height: 620px;
+    height: 450px;
     list-style: none outside none;
     margin: 0;
     padding: 0;
@@ -4409,6 +4409,7 @@ body.header-default .daterangepicker {
 }
 .wrap-image {
     position: relative;
+    width: 100%;
     width: 100%;
     overflow: hidden;
 
