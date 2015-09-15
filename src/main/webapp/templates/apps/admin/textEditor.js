@@ -4,8 +4,6 @@ function initTextEditor(fileName) {
     var DEFAULT_SHORTCUT = '';
     var DEFAULT_WORD_WRAP = '';
 
-    var storageName = location.pathname + location.search;
-
     var initTheme = $.cookie('text-editor-theme') || DEFAULT_THEME;
     var initFontSize = $.cookie('text-editor-fontsize') || DEFAULT_FONT_SIZE;
     var initShortcut = $.cookie('text-editor-shortcut') || DEFAULT_SHORTCUT;
@@ -36,7 +34,7 @@ function initTextEditor(fileName) {
 
         var btn = $('.btn-word-wrap');
 
-        if (wordWrap) {
+        if (wordWrap === 'free') {
             btn.addClass('active');
             editor.getSession().setUseWrapMode('free');
         } else {
@@ -57,6 +55,7 @@ function initTextEditor(fileName) {
     });
 
     // Word wrap of editor
+    setWordWrap(initWordWrap);
     $('.btn-word-wrap').on('click', function (e) {
         e.preventDefault();
 
@@ -128,13 +127,12 @@ function initTextEditor(fileName) {
         })
     });
 
-    var localCode = localStorage.getItem(storageName);
-    if (localCode && confirm('We found a version of this file in your local. Do you want to restore it?')) {
-        editor.setValue(localCode);
-    }
-
     initFullScreenMode();
     hideLoadingIcon();
+}
+
+function getStorageName() {
+    return location.pathname + location.search;
 }
 
 function initFullScreenMode() {

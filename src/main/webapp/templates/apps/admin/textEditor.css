@@ -17,16 +17,20 @@ h3 {
     top: -4px;
 }
 
+.revision-switcher-wrapper {
+    width: 220px;
+}
+
 .shortcut-switcher-wrapper {
-    width: 180px;
+    width: 185px;
 }
 
 .font-size-switcher-wrapper {
-    width: 150px;
+    width: 140px;
 }
 
 .theme-switcher-wrapper {
-    width: 250px;
+    width: 245px;
 }
 
 .file-type-wrapper {
