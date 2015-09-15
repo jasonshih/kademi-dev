@@ -22,212 +22,285 @@
             .state-RUNNABLE td {
                 background: lightgreen;
             }
-
+            .trace {
+                max-height: 200px;
+                overflow-y: scroll;
+            }
         </style>
     </head>
     <body class="manageApplications appsContainer">
-        <article class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Restore soft-deleted repository</h3>
-            </div>
-            <div class="panel-body">
-                <p>Please enter the admin ID of the organisation owning the deleted repository and the repository name in the form adminID:repoName.</p>
-                <br/>
-                <form method="POST" action="maint" class="restoreRepoForm" >
-                    <input type="text" name="undeleteRepoId" value="" placeholder="acme:wylie" />
-                    <button class="btn-sm btn btn-warning">Restore repository</button>
-                </form>
-            </div>
-        </article>
+        <div class="tabbable">
+            <ul class="nav nav-tabs tab-bricky">
+                <li><a data-toggle="tab" href="#summary">Summary</a></li>
+                <li><a data-toggle="tab" href="#utils">Utils</a></li>
+                <li><a data-toggle="tab" href="#cache">Cache</a></li>
+                <li><a data-toggle="tab" href="#threads">Threads</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="summary" class="tab-pane">
+                    <article class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Memory</h3>
+                        </div>
+                        <div class="panel-body">
+                            <table class="table table-striped">
+                                <tr>
+                                    <th>Mem usage</th>
+                                    <td>$formatter.toPercent( $page.freeMemory, $page.maxMemory )</td>
+                                </tr>
 
-        <article class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Simulate the time</h3>
-            </div>
-            <div class="panel-body">
-                <p>Please enter the new date/time offset in minutes. This will be added to the actual time when used in system calculations.</p>
-                <br/>
-                <form method="POST" action="maint" class="maintForm" >
-                    <input type="text" name="dateOffsetMinutes" value="$!{page.dateOffsetMinutes}" />
-                    <button class="btn-sm btn btn-warning">Submit</button>
-                </form>
+                                <tr>
+                                    <th>Free</th>
+                                    <td>$formatter.formatBytes( $page.freeMemory )</td>
+                                </tr>
+                                <tr>
+                                    <th>Total</th>
+                                    <td>$formatter.formatBytes($page.totalMemory)</td>
+                                </tr>
+                                <tr>
+                                    <th>Max</th>
+                                    <td>$formatter.formatBytes($page.maxMemory)</td>
+                                </tr>
+                                <tr>
+                                    <th>Processors</th>
+                                    <td>$page.numProcessors</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </article>
+                </div>
+                <div id="utils" class="tab-pane">
 
-                <p>Current date/time: <span class="now">$page.currentDateService.now</span> <i>adjusted by offset</i> <small>($page.currentDateService.now.time)</small> </p>
-            </div>
-        </article>
+                    <article class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Restore soft-deleted repository</h3>
+                        </div>
+                        <div class="panel-body">
+                            <p>Please enter the admin ID of the organisation owning the deleted repository and the repository name in the form adminID:repoName.</p>
+                            <br/>
+                            <form method="POST" action="maint" class="restoreRepoForm" >
+                                <input type="text" name="undeleteRepoId" value="" placeholder="acme:wylie" />
+                                <button class="btn-sm btn btn-warning">Restore repository</button>
+                            </form>
+                        </div>
+                    </article>
 
-        <article class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Payment Scheduler</h3>
-            </div>
-            <div class="panel-body">
-                <p>Turn the payment scheduler for recurring payments on or off. (Checked equals ON.)</p>
-                <br/>
-                <form method="POST" action="maint" class="maintForm" >
-                    <input type="hidden" name="checkPaymentScheduler" value="true" />
-                    <input type="checkbox" name="enablePaymentScheduler" value="schedule" $page.paymentSchedulerEnabled />
-                    &nbsp;
-                    <button class="btn-sm btn btn-warning">Submit</button>
-                    <label for="schedule"></label>
-                </form>
-            </div>
-        </article>
+                    <article class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Simulate the time</h3>
+                        </div>
+                        <div class="panel-body">
+                            <p>Please enter the new date/time offset in minutes. This will be added to the actual time when used in system calculations.</p>
+                            <br/>
+                            <form method="POST" action="maint" class="maintForm" >
+                                <input type="text" name="dateOffsetMinutes" value="$!{page.dateOffsetMinutes}" />
+                                <button class="btn-sm btn btn-warning">Submit</button>
+                            </form>
 
-        <article class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Find Resource from URL</h3>
-            </div>
-            <div class="panel-body">
-                <p>Find the resource class of a URL</p>
-                <br/>
-                <form method="POST" action="maint" class="findResourceForm" >
-                    <input type="text" name="findResourceFromURL" value="" />
-                    <button class="btn-sm btn btn-warning">Submit</button>
-                </form>
-                <br/>
-                <p id="findResourceClass"></p>
-            </div>
-        </article>
+                            <p>Current date/time: <span class="now">$page.currentDateService.now</span> <i>adjusted by offset</i> <small>($page.currentDateService.now.time)</small> </p>
+                        </div>
+                    </article>
 
-        <article class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Manually initiate scheduled tasks</h3>
-            </div>
+                    <article class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Payment Scheduler</h3>
+                        </div>
+                        <div class="panel-body">
+                            <p>Turn the payment scheduler for recurring payments on or off. (Checked equals ON.)</p>
+                            <br/>
+                            <form method="POST" action="maint" class="maintForm" >
+                                <input type="hidden" name="checkPaymentScheduler" value="true" />
+                                <input type="checkbox" name="enablePaymentScheduler" value="schedule" $page.paymentSchedulerEnabled />
+                                &nbsp;
+                                <button class="btn-sm btn btn-warning">Submit</button>
+                                <label for="schedule"></label>
+                            </form>
+                        </div>
+                    </article>
 
-            <div class="panel-body">
-                <p>Press this button to execute all schedule tasks. These typically include scanning processes for time based triggers.</p>
-                <br/>
-                <form method="POST" action="maint" class="runTasksForm" >
-                    <input type="hidden" name="runScheduledTasks" value="true"/>
-                    <button class="btn-sm btn btn-danger" type="submit">Run Scheduled Tasks</button>
-                </form>
-                <br/>
-                <h4>Task history</h4>
-                <ul>
-                    #foreach($item in $page.scheduledTaskHistory)
-                    <li>$item</li>
-                    #end
-                </ul>
-            </div>
-        </article>
+                    <article class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Find Resource from URL</h3>
+                        </div>
+                        <div class="panel-body">
+                            <p>Find the resource class of a URL</p>
+                            <br/>
+                            <form method="POST" action="maint" class="findResourceForm" >
+                                <input type="text" name="findResourceFromURL" value="" />
+                                <button class="btn-sm btn btn-warning">Submit</button>
+                            </form>
+                            <br/>
+                            <p id="findResourceClass"></p>
+                        </div>
+                    </article>
 
-        <article class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Locks</h3>
-            </div>
-            <div class="panel-body">
-                <form method="POST" action="maint" class="clearLocksForm" >
-                    <input type="hidden" name="clearLocks" value="true"/>
-                    <button class="btn-sm btn btn-danger" type="submit">Delete all locks</button>
-                </form>
-                <table class="table table-striped">
-                    <thead>
+                    <article class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Manually initiate scheduled tasks</h3>
+                        </div>
+
+                        <div class="panel-body">
+                            <p>Press this button to execute all schedule tasks. These typically include scanning processes for time based triggers.</p>
+                            <br/>
+                            <form method="POST" action="maint" class="runTasksForm" >
+                                <input type="hidden" name="runScheduledTasks" value="true"/>
+                                <button class="btn-sm btn btn-danger" type="submit">Run Scheduled Tasks</button>
+                            </form>
+                            <br/>
+                            <h4>Task history</h4>
+                            <div class="trace">
+                                <ul>
+                                    #foreach($item in $page.scheduledTaskHistory)
+                                    <li>$item</li>
+                                    #end
+                                </ul>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Locks</h3>
+                        </div>
+                        <div class="panel-body">
+                            <form method="POST" action="maint" class="clearLocksForm" >
+                                <input type="hidden" name="clearLocks" value="true"/>
+                                <button class="btn-sm btn btn-danger" type="submit">Delete all locks</button>
+                            </form>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>ResourceID</th>
+                                        <th>Lock info</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    #foreach($entry in $page.locksByUniqueId.entrySet() )
+                                    <tr>
+                                        <td>$entry.key</td>
+                                        <td>
+                                            <pre>$entry.value</pre>
+                                        </td>
+                                    </tr>
+                                    #end
+                                </tbody>
+                            </table>
+                        </div>
+                    </article>
+                </div>
+                <div id="cache" class="tab-pane">
+                    #set( $caches = $page.caches )
+                    #set( $caches = $formatter.sortReverse( $formatter.sortByProperty($caches, "size") ) )
+
+                    <table class="stacktraces table table-striped">
+                        #foreach($cache in $caches )
                         <tr>
-                            <th>ResourceID</th>
-                            <th>Lock info</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        #foreach($entry in $page.locksByUniqueId.entrySet() )
-                        <tr>
-                            <td>$entry.key</td>
-                            <td>
-                                <pre>$entry.value</pre>
-                            </td>
+                            <td><a href="#$group.name">$cache.name</a></td>
+                            <td>$cache.status</td>
+                            <td>$cache.size</td>
+                            <td>$cache.cacheConfiguration.maxEntriesLocalHeap</td>
+                            <td>$cache.cacheConfiguration.maxEntriesLocalDisk</td>
+                            <td>$cache.statistics</td>
                         </tr>
                         #end
-                    </tbody>
-                </table>
-            </div>
-        </article>
+                    </table>
+                </div>
+                <div id="threads" class="tab-pane">
 
-        <article class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Threads</h3>
-            </div>
-            <div class="panel-body">
-                <table class="stacktraces table table-striped">
+                    <table class="stacktraces table table-striped">
+                        #foreach($groupEntry in $page.threadStacks.entrySet())
+                        #set($group = $groupEntry.key)
+                        #set($list = $groupEntry.value)
+                        <tr>
+                            <td><a href="#$group.name">$group.name</a></td>
+                            <td>$list.size() threads</td>
+                        </tr>
+                        #end
+                    </table>
+
+                    <br/>
+                    <br/>
                     #foreach($groupEntry in $page.threadStacks.entrySet())
                     #set($group = $groupEntry.key)
                     #set($list = $groupEntry.value)
-                    <tr>
-                        <td><a href="#$group.name">$group.name</a></td>
-                        <td>$list.size() threads</td>
-                    </tr>
+
+                    <table class="stacktraces">
+                        <thead>
+                            <tr>
+                                <th colspan="3"><a id="$group.name">Thread group: $group.name - $list.size() threads</a></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            #foreach($entry in $list)
+                            #if( $entry.requestData )
+                            <tr class="state-$entry.key.state">
+                                <td>
+                                    $entry.thread.name
+
+                                    <p>
+                                        <br/>
+                                        <b>Request Data</b>
+                                        <br/>
+                                        $entry.requestData.method
+                                        <br/>
+                                        <a href="$entry.requestData.url" parent="_blank">$entry.requestData.url</a>
+                                        <br/>
+                                        <acronym title="$entry.requestData.started">$entry.requestData.durationMillis ms</acronym>
+                                    </p>
+                                </td>
+                                <td>
+                                    $entry.thread.state
+                                    <br/>
+                                    $entry.threadCpuTimeSecs secs cpu
+                                </td>
+                                <td>
+                                    <div class="trace">
+                                        <ul>
+                                            #foreach($item in $entry.trace)
+                                            <li>$item.className :: $item.methodName ( $item.lineNumber )</li>
+                                            #end
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            #end
+                            #end
+
+                            #foreach($entry in $list)
+                            #if( !$entry.requestData )
+                            <tr class="state-$entry.key.state">
+                                <td>
+                                    $entry.thread.name
+
+                                </td>
+                                <td>
+                                    $entry.thread.state
+                                    <br/>
+                                    $entry.threadCpuTimeSecs secs cpu
+                                </td>
+                                <td>
+                                    <div class="trace">
+                                        <ul>
+                                            #foreach($item in $entry.trace)
+                                            <li>$item.className :: $item.methodName ( $item.lineNumber )</li>
+                                            #end
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            #end
+                            #end
+                        </tbody>
+                    </table>
                     #end
-                </table>
-
-                <br/>
-                <br/>
-                #foreach($groupEntry in $page.threadStacks.entrySet())
-                #set($group = $groupEntry.key)
-                #set($list = $groupEntry.value)
-
-                <table class="stacktraces">
-                    <thead>
-                        <tr>
-                            <th colspan="3"><a id="$group.name">Thread group: $group.name - $list.size() threads</a></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        #foreach($entry in $list)
-
-                        <tr class="state-$entry.key.state">
-                            <td>
-                                $entry.thread.name
-
-                                #if( $entry.requestData )
-                                <p>
-                                    <br/>
-                                    <b>Request Data</b>
-                                    <br/>
-                                    $entry.requestData.method
-                                    <br/>
-                                    <a href="$entry.requestData.url" parent="_blank">$entry.requestData.url</a>
-                                    <br/>
-                                    <acronym title="$entry.requestData.started">$entry.requestData.durationMillis ms</acronym>
-                                </p>
-                                #end
-                            </td>
-                            <td>
-                                $entry.thread.state
-                                <br/>
-                                $entry.threadCpuTimeSecs secs cpu
-                            </td>
-                            <td>
-                                <ul>
-                                    #foreach($item in $entry.trace)
-                                    <li>$item.className :: $item.methodName ( $item.lineNumber )</li>
-                                    #end
-                                </ul>
-                            </td>
-                        </tr>
-                        #end
-                    </tbody>
-                </table>
-                #end
+                </div>
             </div>
-        </article>
+        </div>
 
-        <article class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Cache statistics</h3>
-            </div>
-            <div class="panel-body">
-                <table class="stacktraces table table-striped">
-                    #foreach($cache in $page.caches )
-                    <tr>
-                        <td><a href="#$group.name">$cache.name</a></td>
-                        <td>$cache.status</td>
-                        <td>$cache.size</td>
-                        <td>$cache.cacheConfiguration.maxEntriesLocalHeap</td>
-                        <td>$cache.cacheConfiguration.maxEntriesLocalDisk</td>
-                        <td>$cache.statistics</td>
-                    </tr>
-                    #end
-                </table>
-            </div>
-        </article>
+
+
+
+
 
 
         <script type="text/javascript">
