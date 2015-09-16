@@ -1,24 +1,30 @@
-<div class="grid-item col-lg-4 col-md-4 col-sm-6 col-x2-12">
-    <div class="dash-widget-item bgm-teal">
-        <div class="dash-widget-header">
-            <div class="">
-                <div id='' style="height: 250px">
-                    <svg id="signupsChart" width="100%" height=""></svg>
+<div class="ktile-wrapper ktile-flip-v">
+    <div class="ktile ktile-md-s">
+        <div class="ktile-inner">
+            <div class="ktile-body">
+                <div class="ktile-front bgm-teal">
+                    <div class="ktile-name text-center c-white text-uppercase">
+                        New memberships past 7 days
+                    </div>
+                </div>
+                <div class="ktile-back bgm-teal text-center c-white">
+                    <svg id="signupsChart" width="100%" height="100%"></svg>
                 </div>
             </div>
-            <div class="dash-widget-title">New memberships past 7 days</div>
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
-    jQuery(document).ready(function () {
+    $(function () {
         var params = window.location.search;
+
         $.get("/signupStats" + params, function (data) {
             flog("signupStats", data);
             initSignupChart(data);
         }, "json");
     });
+
     function initSignupChart(data) {
         flog("signupStats2", data);
         var total = 0;
@@ -44,6 +50,7 @@
                     .title( total + "" )
                     .donutRatio(0.50)     //Configure how big you want the donut hole size to be.
                     ;
+
             d3.select("#signupsChart")
                     .datum(data)
                     .transition().duration(1500)

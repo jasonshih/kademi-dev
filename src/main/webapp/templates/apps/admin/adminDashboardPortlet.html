@@ -1,35 +1,33 @@
-<div class="grid-item col-lg-4 col-md-4 col-sm-6 col-x2-12">
-    <div class="dash-widget-item bgm-teal" id="site-visits">
-        <div class="dash-widget-header">
-            <div class="">
-                <div id='hitsChart' style="height: 100px">
-
+<div class="ktile-wrapper ktile-flip-h">
+    <div class="ktile ktile-md-s">
+        <div class="ktile-inner">
+            <div class="ktile-body">
+                <div class="ktile-front bgm-green">
+                    <div class="dash-widget-item">
+                        <div class="dash-widget-content" id="total-visits">
+                            <div id="hitsChart"></div>
+                            <div class="row" style="margin: 0">
+                                <div class="col-sm-5">
+                                    <small>Total hits</small>
+                                    <h4 id="pageViews" class="c-white"></h4>
+                                </div>
+                                <div class="col-sm-7">
+                                    <small>Bandwidth</small>
+                                    <h4 id="numBytes" class="c-white"></h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dash-widget-title">Page views past 7 days</div>
+                    </div>
                 </div>
-            </div>
-
-            <div class="dash-widget-title">Page views for the past 7 days</div>
-        </div>
-
-        <div class="row" style="margin-top: 30px">
-            <div class="container">
-                <div class="col-md-6" style="padding-right: 0">
-                    <small>Total hits</small>
-                    <h3 class="m-0 f-400" id="pageViews"></h3>
-
-                    <br/>
-
-                    <small>Bandwidth</small>
-                    <h3 class="m-0 f-400" id="numBytes"></h3>
-
-                    <br/>
-
-                    <small>Total errors</small>
-                    <h3 class="m-0 f-400" id="numErrors"></h3>
-                </div>
-                <div class="col-md-6" style="padding-left: 0; text-align: center">
-                    <small>Warnings & errors</small>
-                    <div id='' style="">
-                        <svg id="resultCodesChart" width="100%" height=""></svg>
+                <div class="ktile-back bgm-green">
+                    <div class="dash-widget-item">
+                        <div class="dash-widget-content">
+                            <div id='' style="">
+                                <svg id="resultCodesChart" width="100%" height=""></svg>
+                            </div>
+                        </div>
+                        <div class="dash-widget-title">Total errors: <span id="numErrors"></span></div>
                     </div>
                 </div>
             </div>
@@ -38,14 +36,12 @@
 </div>
 
 <script type="text/javascript">
-    jQuery(document).ready(function () {
+    $(function () {
         var params = window.location.search;
         $.get("/reporting/hits" + params, function (data) {
             flog("resp", data);
             initHitsChart(data);
         }, "json");
-
-
     });
 
     function initHitsChart(resp) {
@@ -123,7 +119,6 @@
                             .labelThreshold(.10)  //Configure the minimum slice size for labels to show up
                             .labelType("value") //Configure what type of data to show in the label. Can be "key", "value" or "percent"
                             .donut(true)          //Turn on Donut mode. Makes pie chart look tasty!
-//                    .title(total + "")
                             .donutRatio(0.40)     //Configure how big you want the donut hole size to be.
                     ;
             d3.select("#resultCodesChart")

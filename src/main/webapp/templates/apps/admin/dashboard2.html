@@ -6,7 +6,7 @@
         <script type="text/javascript" src="/static/easy-pie-chart/2.1.7/jquery.easypiechart.min.js">//</script>
 
         <link href="/static/nvd3/nv.d3.css" rel="stylesheet" />
-        <link href="dashboard2.css?v=6.3.1" rel="stylesheet" type="text/css" />
+        <link href="dashboard2.css?v=6.3.2" rel="stylesheet" type="text/css" />
     </head>
     <body class="dashboard">
 
@@ -35,7 +35,6 @@
                                     #if ($website.domainName && $website.domainName != "")
                                     $website.domainName<br />
                                     #end
-                                    <br/>
                                     <i>
                                         Branch: $!website.liveBranch
                                     </i>
@@ -109,7 +108,10 @@
                             </div>
                         </div>
                     </div>
-                    #portlets("adminDashboardQuickLinks")
+
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-x2-12">
+                        #portlets("adminDashboardQuickLinks")
+                    </div>
                 </div>
 
                 <div class="row">

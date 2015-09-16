@@ -1,74 +1,122 @@
 #set( $stats = $applications.email.emailStats )
-<div class="grid-item col-lg-4 col-md-4 col-sm-6 col-x2-12  grid-item--width4">
-    <div class="dash-widget-item" id="pie-charts">
-        <div class="bgm-pink">
-            <div class="text-center p-20 m-t-25">
-                <div data-percent="$stats.deliveryRatePerc" class="easy-pie emailsMainPie largePie">
-                    <div class="figure">
-                        #if( $stats.total )
-                        $stats.total
-                        #else
-                        N/A
-                        #end
+<div class="ktile-wrapper">
+    <div class="ktile ktile-lg-h">
+        <div class="ktile-inner">
+            <div class="ktile-body">
+                <div class="ktile-front ktile-shadow">
+                    <div class="row" style="height: 100%; margin: 0">
+                        <div class="col-sm-6 bgm-pink" style="height: 100%">
+                            <div class="text-center ktile-content">
+                                <div data-percent="$stats.deliveryRatePerc" class="easy-pie emailsMainPie largePie center-block">
+                                    <div class="figure">
+                                        #if( $stats.total )
+                                        $stats.total
+                                        #else
+                                        N/A
+                                        #end
+                                    </div>
+                                    <div class="pie-title">Total Emails Sent</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6" style="height: 100%">
+                            <div class="row text-center ktile-content">
+                                <div class="col-sm-6">
+                                    <div data-percent="$!stats.openRatePerc" class="easy-pie emailsSubPie smallPie bluePie">
+                                        <div class="figure">
+                                            #if( $stats.openRatePerc )
+                                            $stats.openRatePerc
+                                            #else
+                                            N/A
+                                            #end
+                                        </div>
+                                        <div class="pie-title">Open rate</div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div data-percent="$!stats.convertedRatePerc" class="easy-pie emailsSubPie smallPie orangePie">
+                                        <div class="figure">
+                                            #if( $stats.convertedRatePerc )
+                                            $stats.convertedRatePerc
+                                            #else
+                                            N/A
+                                            #end
+                                        </div>
+                                        <div class="pie-title">Conversion rate</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="pie-title">Total Emails Sent</div>
                 </div>
-            </div>
-        </div>
-
-        <div class="p-t-20 p-b-20 text-center">
-            <div data-percent="$!stats.openRatePerc" class="easy-pie emailsSubPie smallPie bluePie">
-                <div class="figure">
-                    #if( $stats.openRatePerc )
-                    $stats.openRatePerc
-                    #else
-                    N/A
-                    #end
-                </div>
-                <div class="pie-title">Open rate</div>
-            </div>
-            <div data-percent="$!stats.convertedRatePerc" class="easy-pie emailsSubPie smallPie orangePie">
-                <div class="figure">
-                    #if( $stats.convertedRatePerc )
-                    $stats.convertedRatePerc
-                    #else
-                    N/A
-                    #end
-                </div>
-                <div class="pie-title">Conversion rate</div>
             </div>
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
-    jQuery(document).ready(function () {
-        $('.emailsMainPie').easyPieChart({
-            size: 148,
+    function drawChart(chart, options, padding, isFirstTime) {
+        var wrapper = chart.closest('.col-sm-6');
+        var canvas = chart.find('canvas');
+        var sizeChart = wrapper.width() - padding;
+        var currentSize = +chart.attr('data-size');
+
+        // Hide canvas
+        canvas.hide();
+
+        if (currentSize !== sizeChart || isFirstTime) {
+            flog('Render new chart', sizeChart);
+
+            // Clear data pf easyPieChart
+            if (!isFirstTime) {
+                chart.data('easy-pie-chart', null);
+                chart.data('size', sizeChart);
+            }
+
+            // Remove the chart
+            canvas.remove();
+
+            // Render new chart
+            options.size = sizeChart;
+            chart.easyPieChart(options);
+        } else {
+            flog('Re-show current chart');
+            canvas.show();
+        }
+
+    }
+
+    function initChart(target, options, padding) {
+        drawChart(target, options, padding, true);
+
+        $(window).on('resize', function () {
+            drawChart(target, options, padding);
+        });
+    }
+
+    $(function () {
+        initChart($('.emailsMainPie'), {
             trackColor: 'rgba(255,255,255,0.2)',
             scaleColor: 'rgba(255,255,255,0.5)',
             barColor: 'rgba(255,255,255,0.7)',
             lineWidth: 7,
-            lineCap: 'butt',
-        });
+            lineCap: 'butt'
+        }, 30);
 
-        $('.emailsSubPie.bluePie').easyPieChart({
-            size: 95,
+        initChart($('.emailsSubPie.bluePie'), {
             trackColor: '#eee',
             scaleColor: '#ccc',
             barColor: '#2196F3',
             lineWidth: 7,
-            lineCap: 'butt',
-        });
+            lineCap: 'butt'
+        }, 4);
 
-        $('.emailsSubPie.orangePie').easyPieChart({
-            size: 95,
+        initChart($('.emailsSubPie.orangePie'), {
             trackColor: '#eee',
             scaleColor: '#ccc',
             barColor: '#FFC107',
             lineWidth: 7,
-            lineCap: 'butt',
-        });
-
+            lineCap: 'butt'
+        }, 4);
     });
 </script>
