@@ -32,6 +32,10 @@
     top: 50%;
 }
 
+.ktile-content.ktile-content-relative {
+    position: relative;
+}
+
 .ktile-logo {
     font-size: 5em;
 }

@@ -6,7 +6,7 @@
                 <div class="ktile-front ktile-shadow">
                     <div class="row" style="height: 100%; margin: 0">
                         <div class="col-sm-6 bgm-pink" style="height: 100%">
-                            <div class="text-center ktile-content">
+                            <div class="text-center ktile-content ktile-content-relative">
                                 <div data-percent="$stats.deliveryRatePerc" class="easy-pie emailsMainPie largePie center-block">
                                     <div class="figure">
                                         #if( $stats.total )
@@ -20,7 +20,7 @@
                             </div>
                         </div>
                         <div class="col-sm-6" style="height: 100%">
-                            <div class="row text-center ktile-content">
+                            <div class="row text-center ktile-content ktile-content-relative">
                                 <div class="col-sm-6">
                                     <div data-percent="$!stats.openRatePerc" class="easy-pie emailsSubPie smallPie bluePie">
                                         <div class="figure">
@@ -59,6 +59,9 @@
         var wrapper = chart.closest('.col-sm-6');
         var canvas = chart.find('canvas');
         var sizeChart = wrapper.width() - padding;
+        if (sizeChart < 0) {
+            sizeChart = 100;
+        }
         var currentSize = +chart.attr('data-size');
 
         // Hide canvas
