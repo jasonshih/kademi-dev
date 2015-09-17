@@ -4,6 +4,7 @@
         <script type="text/javascript" src="/static/ace/1.2.0/src-noconflict/ace.js">//</script>
         <script type="text/javascript" src="/static/js/keymap.js">//</script>
         <script type="text/javascript" src="/static/jquery.fullscreen/jquery.fullscreen-0.4.1.min.js">//</script>
+        <script type="text/javascript" src="/theme/assets/plugins/bootstrap-3.3.5/js/bootstrap.min.js">//</script>
         <script type="text/javascript" src="textEditor.js">//</script>
         <link rel="stylesheet" type="text/css" href="textEditor.css" />
         <link rel="template" href="editorBase" />
@@ -18,6 +19,7 @@
                     <i class="fa fa-spinner fa-spin fa-3x fa-fw" id="editor-loading"></i>
                     <div class="btn-group btn-group-sm">
                         <a class="btn btn-default btn-save-file" href="$fname" title="Save file"><i class="fa fa-save"></i></a>
+                        <a class="btn btn-default btn-restore-file hide" href="#" title="We found the different version of this file in your local storage. Please click this button for restore"><i class="fa fa-undo"></i></a>
                         <a class="btn btn-default" href="./#files-tab" title="Back to parent folder"><i class="fa fa-reply"></i></a>
                     </div>
                     <div class="input-group input-group-sm file-type-wrapper">
