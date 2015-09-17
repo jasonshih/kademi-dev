@@ -157,6 +157,7 @@ var Main = function () {
             } else {
                 $('body').removeClass('navigation-small');
             };
+            window.dispatchEvent(new Event('resize'));
         });
     };
     //function to activate the panel tools
