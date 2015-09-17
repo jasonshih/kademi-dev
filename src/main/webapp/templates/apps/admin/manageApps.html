@@ -189,7 +189,9 @@
             <div class="modal-body ModalContent">
                 <form method="POST" action="/$page.name" class="form-horizontal" role="form">
                     <input type="hidden" name="settingsAppId" value="$app.appId"/>
-                    #appSettings($app.appId)
+                    #if($app.enabled)
+                        #appSettings($app.appId)
+                    #end
                 </form>
             </div>
             <div class="modal-footer">
