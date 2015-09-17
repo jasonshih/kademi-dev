@@ -118,6 +118,7 @@ function initTextEditor(fileName) {
                 Msg.success('File is saved!');
                 hideLoadingIcon();
 
+                var storageName = getStorageName();
                 localStorage.setItem(storageName, fileContent);
             },
             error: function (e) {
@@ -127,12 +128,41 @@ function initTextEditor(fileName) {
         })
     });
 
+    initLocalStorage(editor);
     initFullScreenMode();
     hideLoadingIcon();
 }
 
 function getStorageName() {
     return location.pathname + location.search;
+}
+
+function initLocalStorage(editor) {
+    var storageName = getStorageName();
+    var btnRestore = $('.btn-restore-file');
+    var localCode = localStorage.getItem(storageName);
+    var currentCode = editor.getValue();
+
+    if (localCode && localCode !== currentCode) {
+        btnRestore.removeClass('hide');
+        btnRestore.tooltip({
+            placement: 'bottom',
+            trigger: 'manual',
+            container: 'body'
+        }).tooltip('show');
+
+        setTimeout(function () {
+            btnRestore.tooltip('hide');
+        }, 10 * 1000);
+    }
+
+    btnRestore.on('click', function (e) {
+        e.preventDefault();
+
+        if (confirm('Are you sure that you want to restore the latest version of this file in your local storage?')) {
+            editor.setValue(localCode);
+        }
+    });
 }
 
 function initFullScreenMode() {
