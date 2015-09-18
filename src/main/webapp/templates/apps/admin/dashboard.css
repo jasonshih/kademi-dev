@@ -28,7 +28,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    bottom: 38px;
+    bottom: 45px;
     right: 0;
 }
 
@@ -37,6 +37,39 @@
     left: 0;
     right: 0;
     bottom: 5px;
+}
+
+#total-visits #error-chart {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+#total-visits #error-chart svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+#total-visits #error-chart > .small {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    line-height: 20px;
+    z-index: 2;
+}
+
+#total-visits #error-chart > p {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    margin: 0;
 }
 
 /* Wrap image */
@@ -88,6 +121,38 @@
     margin: 0;
 }
 
+.dash-widget-item .dash-widget-header {
+    position: relative;
+    padding-bottom: 38px;
+    background-color: rgba(0, 0, 0, 0.13);
+}
+
+.dash-widget-item .dash-widget-header .actions {
+    display: none;
+    position: absolute;
+    right: 4px;
+    top: 6px;
+    padding: 0;
+    list-style: none;
+}
+
+.dash-widget-item .dash-widget-header .actions > li {
+    display: inline-block;
+    vertical-align: baseline;
+}
+
+.dash-widget-item .dash-widget-header .actions > li > a {
+    color: #fff;
+    font-size: 20px;
+}
+
+.dash-widget-item .dash-widget-footer {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
+
 .dash-widget-item .dash-widget-content {
     position: absolute;
     left: 0px;
@@ -98,7 +163,7 @@
 }
 
 .dash-widget-item .dash-widget-title {
-    padding: 12px 20px;
+    padding: 12px 10px;
     position: absolute;
     width: 100%;
     left: 0;
