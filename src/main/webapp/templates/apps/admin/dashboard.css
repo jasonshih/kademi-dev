@@ -1,3 +1,9 @@
+/* Hide breadcrumb */
+.breadcrumb {
+    display: none;
+}
+
+/* Recent list */
 #recentList ul {
     margin: 0;
     padding: 0;
@@ -9,10 +15,15 @@
     border-bottom: solid lightgrey 1px;
 }
 
+.text-nowrap {
+    white-space: nowrap;
+}
+
 .ktile-wrapper {
     opacity: 0;
 }
 
+/* Total visit tile */
 #total-visits #hitsChart {
     position: absolute;
     top: 0;
@@ -28,6 +39,7 @@
     bottom: 5px;
 }
 
+/* Wrap image */
 .gallery-img {
     height: 150px;
 }
@@ -62,11 +74,7 @@
     color: #000;
 }
 
-.dash-widget-header {
-    padding-bottom: 38px;
-    background-color: rgba(0, 0, 0, 0.13);
-}
-
+/* Dash widget item */
 .dash-widget-item {
     position: relative;
     margin-bottom: 20px;
@@ -78,36 +86,6 @@
 .dash-widget-item h4 {
     padding: 0;
     margin: 0;
-}
-
-.dash-widget-item .dash-widget-header {
-    position: relative;
-}
-
-.dash-widget-item .dash-widget-header .actions {
-    display: none;
-    position: absolute;
-    right: 4px;
-    top: 6px;
-    padding: 0;
-    list-style: none;
-}
-
-.dash-widget-item .dash-widget-header .actions > li {
-    display: inline-block;
-    vertical-align: baseline;
-}
-
-.dash-widget-item .dash-widget-header .actions > li > a {
-    color: #fff;
-    font-size: 20px;
-}
-
-.dash-widget-item .dash-widget-footer {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 100%;
 }
 
 .dash-widget-item .dash-widget-content {
@@ -125,20 +103,14 @@
     width: 100%;
     left: 0;
     font-weight: 300;
-    height: 42px;
     bottom: 0;
     background: rgba(0, 0, 0, 0.15);
     color: rgba(255, 255, 255, 0.9);
 }
 
-.dash-widget-item:hover .dash-widget-header .actions {
-    display: block;
-}
-
 /*
  * Background Colors
  */
-
 .bg-black-trp {
     background-color: rgba(0, 0, 0, 0.1) !important;
 }
@@ -176,7 +148,7 @@
 }
 
 .easy-pie {
-    display: inline-block;
+    /*display: inline-block;*/
     position: relative;
 }
 
@@ -195,7 +167,7 @@
     font-size: 50px;
 }
 
-.easy-pie.largePie .figure:not([class*="c-"]) {
+.easy-pie .figure:not([class*="c-"]) {
     color: rgba(255, 255, 255, 0.7);
 }
 
@@ -203,7 +175,7 @@
     font-size: 30px;
 }
 
-.easy-pie.largePie .pie-title {
+.easy-pie .pie-title {
     color: #fff;
 }
 
@@ -251,7 +223,6 @@
 body .nvd3.nv-pie .nv-pie-title {
     fill: white;
 }
-
 
 /* ==================================================================
    Material Background Colors

@@ -748,6 +748,7 @@ ul.main-navigation-menu li > ul.sub-menu > li {
 
 .recent-post .messages-list {
     width: 100%;
+    border: 0;
 }
 /* Needed to use daterangepicker plugin with jquery modals */
 .daterangepicker{

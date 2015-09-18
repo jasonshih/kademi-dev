@@ -1,6 +1,6 @@
 #set( $start = $formatter.addDays( $formatter.now, -7 ) )
 <div class="ktile-wrapper">
-    <div class="ktile ktile-md-h">
+    <div class="ktile ktile-md" style="height: 115px;">
         <div class="ktile-inner">
             <div class="ktile-body">
                 <div class="ktile-front bgm-blue">
@@ -12,7 +12,7 @@
                                 </div>
                                 <div class="col-xs-9 text-right">
                                     <div class="huge">$rootFolder.find("/manageContacts").dbCount($start)</div>
-                                    <div>contacts in 7 days</div>
+                                    <div class="text-nowrap">contacts in 7 days</div>
                                 </div>
                             </a>
                         </div>

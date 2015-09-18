@@ -66,26 +66,12 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="col-md-4">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="clip-stack-empty"></i>
-                History
-            </div>
-            <div class="panel-body panel-scroll ps-container ps-active-y" id="recentList" style="height: 150px">
-                <ul class="list" style=""></ul>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-12">
         <div class="ktile-container row">
             <div class="ktile-sizer col-md-1 col-lg-1 col-sm-1"></div>
 
             <div class="ktile-wrapper">
-                <div class="ktile ktile-md-h">
+                <div class="ktile ktile-md" style="height: 115px;">
                     <div class="ktile-inner">
                         <div class="ktile-body">
                             <div class="ktile-front bgm-blue">
@@ -109,7 +95,7 @@
             </div>
 
             <div class="ktile-wrapper">
-                <div class="ktile ktile-md-h">
+                <div class="ktile ktile-md" style="height: 115px;">
                     <div class="ktile-inner">
                         <div class="ktile-body">
                             <div class="ktile-front bgm-blue">
@@ -133,7 +119,7 @@
             </div>
 
             <div class="ktile-wrapper">
-                <div class="ktile ktile-md-h">
+                <div class="ktile ktile-md" style="height: 115px;">
                     <div class="ktile-inner">
                         <div class="ktile-body">
                             <div class="ktile-front bgm-blue">
@@ -161,11 +147,24 @@
             #portlets("adminDashboardPrimaryMasonry")
         </div>
     </div>
-    <div class="col-md-7">
+
+    <div class="col-md-4" id="stream-wrapper">
         #portlets("adminDashboardStream")
     </div>
-    <div class="col-md-5">
+
+    <div class="col-md-7">
         #portlets("adminDashboardSecondary")
+    </div>
+    <div class="col-md-5">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="clip-stack-empty"></i>
+                History
+            </div>
+            <div class="panel-body panel-scroll ps-container ps-active-y" id="recentList" style="height: 400px">
+                <ul class="list" style=""></ul>
+            </div>
+        </div>
     </div>
 </div>
 
