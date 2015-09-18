@@ -177,8 +177,10 @@
             stream.css('height', '');
 
             if (win.width() > 768) {
-                var targetHeight = target.height();
-                stream.css('height', targetHeight - 78);
+                setTimeout(function () {
+                    var targetHeight = target.height();
+                    stream.css('height', targetHeight - 78);
+                }, 450);
             }
         }).trigger('resize');
     }
@@ -206,8 +208,8 @@
     }
 
     $(function () {
-        initStreamWrapper();
         initMasonryLayout();
+        initStreamWrapper();
 
         var recent = getRecentItems();
         if (recent !== null) {
