@@ -167,7 +167,7 @@
     font-size: 50px;
 }
 
-.easy-pie .figure:not([class*="c-"]) {
+.easy-pie.largePie .figure:not([class*="c-"]) {
     color: rgba(255, 255, 255, 0.7);
 }
 
@@ -175,7 +175,7 @@
     font-size: 30px;
 }
 
-.easy-pie .pie-title {
+.easy-pie.largePie .pie-title {
     color: #fff;
 }
 
