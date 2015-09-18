@@ -6,9 +6,9 @@ $(function () {
         var isLgH = ktile.hasClass('ktile-lg-h');
 
         if (isLgH) {
-            wrapper.addClass('col-lg-6 col-md-6 col-sm-6');
+            wrapper.addClass('col-xl-4 col-lg-6 col-md-6 col-sm-6');
         } else {
-            wrapper.addClass('col-lg-3 col-md-3 col-sm-3');
+            wrapper.addClass('col-xl-2 col-lg-3 col-md-3 col-sm-3');
         }
     });
 });

@@ -3,6 +3,12 @@
     display: none;
 }
 
+/* Website wrapper */
+#websites-wrapper {
+    height: 150px;
+    margin: 0 0 15px;
+}
+
 /* Recent list */
 #recentList ul {
     margin: 0;

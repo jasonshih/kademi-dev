@@ -16,53 +16,47 @@
     #portlets("adminDashboardPrimaryAnnounce")
 
     <div class="col-md-8">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="clip-stack-empty"></i>
-                Website
-            </div>
-            <div class="panel-body panel-scroll ps-container ps-active-y" style="height: 150px">
-                <div style="overflow: hidden">
-                    <div class="row">
-                        #foreach( $website in $page.organisation.websites())
-                        #if( $website.redirectTo.length() > 0 )
+        <div class="panel-body panel-scroll ps-container ps-active-y" id="websites-wrapper">
+            <div style="overflow: hidden">
+                <div class="row">
+                    #foreach( $website in $page.organisation.websites())
+                    #if( $website.redirectTo.length() > 0 )
+                    #else
+                    <div class="col-md-3 col-sm-4 col-lg-4 gallery-img">
+                        #if( $website.imageHash )
+                        #set( $bgimage = "/_hashes/files/$website.imageHash" )
                         #else
-                        <div class="col-md-3 col-sm-4 col-lg-4 gallery-img">
-                            #if( $website.imageHash )
-                            #set( $bgimage = "/_hashes/files/$website.imageHash" )
-                            #else
-                            #set( $bgimage = "/static/images/website-icon-squared.png" )
-                            #end
-                            <div class="wrap-image">
-                                <a href="/websites/$website.name/$website.liveBranch/?goto=" target="_blank" style="background-image: url($bgimage)" class="dashWebsiteImage">
+                        #set( $bgimage = "/static/images/website-icon-squared.png" )
+                        #end
+                        <div class="wrap-image">
+                            <a href="/websites/$website.name/$website.liveBranch/?goto=" target="_blank" style="background-image: url($bgimage)" class="dashWebsiteImage">
 
+                            </a>
+                            <a title="$!website.title" href="/websites/$website.name/$website.liveBranch/?goto=" class="group1 lead tileText cboxElement" target="_blank">
+                                $website.name
+                                <br/>
+                                <small style="font-size: 12px">
+                                    #if ($website.domainName && $website.domainName != "")
+                                    $website.domainName<br />
+                                    #end
+                                    <i>
+                                        Branch: $!website.liveBranch
+                                    </i>
+                                </small>
+                            </a>
+                            <div class="tools tools-bottom">
+                                <a href="/websites/$website.name/$website.liveBranch/">
+                                    <span class="glyphicon glyphicon-cog"></span>
                                 </a>
-                                <a title="$!website.title" href="/websites/$website.name/$website.liveBranch/?goto=" class="group1 lead tileText cboxElement" target="_blank">
-                                    $website.name
-                                    <br/>
-                                    <small style="font-size: 12px">
-                                        #if ($website.domainName && $website.domainName != "")
-                                        $website.domainName<br />
-                                        #end
-                                        <i>
-                                            Branch: $!website.liveBranch
-                                        </i>
-                                    </small>
+                                <a href="/repositories/$website.name/$website.liveBranch/">
+                                    <span class="glyphicon glyphicon-folder-close"></span>
                                 </a>
-                                <div class="tools tools-bottom">
-                                    <a href="/websites/$website.name/$website.liveBranch/">
-                                        <span class="glyphicon glyphicon-cog"></span>
-                                    </a>
-                                    <a href="/repositories/$website.name/$website.liveBranch/">
-                                        <span class="glyphicon glyphicon-folder-close"></span>
-                                    </a>
 
-                                </div>
                             </div>
                         </div>
-                        #end
-                        #end
                     </div>
+                    #end
+                    #end
                 </div>
             </div>
         </div>
@@ -172,6 +166,12 @@
 <script src="/static/nvd3/nv.d3.js">//</script>
 <script src="/static/sparkleline/2.1.2/jquery.sparkline.min.js">//</script>
 <script type="text/javascript">
+    function initStreamWrapper() {
+        var streamWrapper = $('#stream-wrapper');
+        var target = streamWrapper.prev();
+        var targetHeight = target.height();
+    }
+
     function initMasonryLayout() {
         var container = $('.ktile-container');
 
@@ -195,6 +195,7 @@
     }
 
     $(function () {
+        initStreamWrapper();
         initMasonryLayout();
 
         var recent = getRecentItems();
