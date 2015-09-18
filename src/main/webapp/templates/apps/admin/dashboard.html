@@ -166,10 +166,21 @@
 <script src="/static/nvd3/nv.d3.js">//</script>
 <script src="/static/sparkleline/2.1.2/jquery.sparkline.min.js">//</script>
 <script type="text/javascript">
+    var win = $(window);
+
     function initStreamWrapper() {
         var streamWrapper = $('#stream-wrapper');
+        var stream = streamWrapper.find('.panel-scroll');
         var target = streamWrapper.prev();
-        var targetHeight = target.height();
+
+        win.on('resize', function () {
+            stream.css('height', '');
+
+            if (win.width() > 768) {
+                var targetHeight = target.height();
+                stream.css('height', targetHeight - 78);
+            }
+        }).trigger('resize');
     }
 
     function initMasonryLayout() {

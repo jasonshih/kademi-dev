@@ -25,6 +25,11 @@
     white-space: nowrap;
 }
 
+/* Ktile */
+.ktile-container {
+    padding-bottom: 5px;
+}
+
 .ktile-wrapper {
     opacity: 0;
 }
