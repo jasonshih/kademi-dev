@@ -8,17 +8,23 @@ function initEvents() {
 	$('abbr.timeago').timeago();
 
     wrapper.on('click', '.btn-restore-repo', function (e) {
-		var node = $(e.target);
+        e.preventDefault();
+		var node = $(e.target).closest("a");
 		var hash = node.attr('rel');
+        var revertHref = ".history";
 		confirmRevert(hash, null, {
 			getPageUrl: function () {
 				return '.'
 			},
 			afterRevertFn: function () {
                 Msg.success('Reverted to ' + hash + '!');
-                wrapper.reloadFragment();
+                wrapper.reloadFragment({
+                    whenComplete: function() {
+                        $('abbr.timeago').timeago();
+                    }
+                });
 			}
-		});
+		}, revertHref);
 	});
 
 	var btnSetHash = $('.btn-set-hash');
@@ -55,4 +61,3 @@ function setHash(link, newHash) {
 		}
 	});
 }
-            
