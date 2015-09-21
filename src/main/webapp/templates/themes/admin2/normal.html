@@ -156,7 +156,7 @@
                         </li>
                         <li class="dropdown fuse-header-item">
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                                Logged into: $page.organisation.formattedName
+                                <span class="org_name">Logged into: $page.organisation.formattedName</span>
                                 <i class="clip-chevron-down"></i>
                             </a>
                             <ul class="dropdown-menu">
@@ -222,8 +222,8 @@
                 <!-- start: SIDEBAR -->
                 <div class="main-navigation navbar-collapse collapse">
                     <!--<div class="navigation-toggler">-->
-                        <!--<i class="clip-chevron-left"></i>-->
-                        <!--<i class="clip-chevron-right"></i>-->
+                    <!--<i class="clip-chevron-left"></i>-->
+                    <!--<i class="clip-chevron-right"></i>-->
                     <!--</div>-->
                     <!-- start: MAIN NAVIGATION MENU -->
                     <ul class="main-navigation-menu">
@@ -234,9 +234,9 @@
                             #set($href = $rootItem.href)
                             <a href="$href">
                                 #if($rootItem.cssClass)
-                                    <i class="fuse-icon-fa $rootItem.id $rootItem.cssClass"></i>
+                                <i class="fuse-icon-fa $rootItem.id $rootItem.cssClass"></i>
                                 #else
-                                    <i class="fuse-icon $rootItem.id"></i>
+                                <i class="fuse-icon $rootItem.id"></i>
                                 #end
                                 <span class="title">$rootItem.text</span>
 
@@ -255,7 +255,7 @@
                                 <li class="$formatter.ifTrue( $sectionItem.active, "active open", "" )">
                                     <a href="$sectionItem.href">
                                         #if($sectionItem.cssClass)
-                                            <i class="fuse-icon-fa $sectionItem.id $sectionItem.cssClass"></i>
+                                        <i class="fuse-icon-fa $sectionItem.id $sectionItem.cssClass"></i>
                                         #end
                                         <span class="title">$sectionItem.text</span>
 
