@@ -571,7 +571,7 @@
                             <form method="POST" action="." class="form-horizontal" role="form">
                                 <input type="hidden" name="settingsAppId" value="$app.appId"/>
                                 #if($app.enabled)
-                                    #appSettings($app.appId)
+                                #appSettings($app.appId)
                                 #end
                             </form>
                         </div>
@@ -686,6 +686,15 @@
                             <label class="control-label col-md-4" for="csr_cn">Common Name</label>
                             <div class="col-md-8">
                                 <input type="text" name="csr_cn" id="csr_cn" placeholder="Common Name" class="required form-control" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-4" for="csr_san">Subject Alternative Names
+                                <small>One domain per line.</small>
+                            </label>
+                            <div class="col-md-8">
+                                <textarea name="csr_san" id="csr_san" class="form-control" ></textarea>
                             </div>
                         </div>
 
