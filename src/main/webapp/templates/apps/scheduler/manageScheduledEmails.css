@@ -1,3 +1,16 @@
 .time-details {
-	display: none;
+    display: none;
+}
+
+.status-tools {
+    display: none;
+    width: 120px;
+}
+
+.status-tools.Draft,
+.status-tools.Running,
+.status-tools.Completed,
+.status-tools.Cancelled,
+.status-tools.Preparing {
+    display: inline-block !important;
 }
