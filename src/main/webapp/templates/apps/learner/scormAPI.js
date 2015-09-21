@@ -1,9 +1,28 @@
+/*
+ * 
+ * Cache
+ */
+
+var moduleCache = {};
+
 /* 
  * Kademi's API Adapters
  */
 var KademiAPI = {
     Initialize: function () {
         flog('ScormAPI:Initialize', arguments);
+        var fields = doPropFind([
+            'milton:currentPage',
+            'milton:complete',
+            'milton:percentComplete',
+            'milton:score',
+            'milton:learningTimeMins',
+            'milton:startable',
+            'milton:completable',
+            'milton:level',
+            'milton:order',
+            'milton:currentLevel']);
+        $.extend(true, moduleCache, fields[0]);
         return true;
     },
     Terminate: function () {
@@ -64,9 +83,16 @@ function Kademi_GetValue(dataModel) {
 
     switch (dataModel) {
         case 'cmi.location' :
+            if (moduleCache.hasOwnProperty('currentPage')) {
+                var val = moduleCache['currentPage'];
+                if (val !== null && typeof val !== 'undefined') {
+                    return val;
+                }
+            }
             var resp = doPropFind(['milton:currentPage']);
             var d = resp[0];
             flog('cmi.location', d.currentPage);
+            moduleCache['currentPage'] = d.currentPage;
             return d.currentPage;
         case 'cmi.objectives._count':
             return 8;
@@ -92,6 +118,7 @@ function Kademi_SetValue(dataModel, value) {
         case "cmi.location" :
             var data = {};
             data["statusCurrentPage"] = value;
+            moduleCache['currentPage'] = value;
             doAjaxPost(data, function (resp) {
                 return resp.status;
             });
