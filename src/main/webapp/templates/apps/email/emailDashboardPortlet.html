@@ -1,11 +1,11 @@
 #set( $stats = $applications.email.emailStats )
 <div class="ktile-wrapper">
-    <div class="ktile ktile-lg-h">
+    <div class="ktile ktile-lg-v">
         <div class="ktile-inner">
             <div class="ktile-body">
                 <div class="ktile-front ktile-shadow">
                     <div class="row" style="height: 100%; margin: 0">
-                        <div class="col-sm-6 bgm-pink" style="height: 100%">
+                        <div class="col-sm-12 bgm-pink" style="height: 50%">
                             <div class="text-center ktile-content ktile-content-relative">
                                 <div data-percent="$stats.deliveryRatePerc" class="easy-pie emailsMainPie largePie center-block">
                                     <div class="figure">
@@ -19,7 +19,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-6" style="height: 100%">
+                        <div class="col-sm-12" style="height: 50%">
                             <div class="row text-center ktile-content ktile-content-relative">
                                 <div class="col-sm-6" style="padding: 0 3px">
                                     <div data-percent="$!stats.openRatePerc" class="easy-pie emailsSubPie smallPie bluePie">
