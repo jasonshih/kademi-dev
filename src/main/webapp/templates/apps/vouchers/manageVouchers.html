@@ -1,7 +1,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title>$view.title</title> 
-        <script type="text/javascript" src="/static/easy-pie-chart/2.1.7/jquery.easypiechart.min.js">//</script>
+        <title>$view.title</title>
     </head>
     <body>
         <div class="">
@@ -9,12 +8,6 @@
             <a href="#" class="btn btn-sm btn-success" data-toggle="modal" data-target="#createVoucherTypeModal" ><i class="fa fa-plus"></i> Create new voucher type</a>
 
             <hr/>
-        </div>
-
-        <div data-percent="30" class="easy-pie vouchersPie smallPie bluePie">
-            <div class="figure">
-                30%
-            </div>
         </div>
 
         <div class="table-responsive">
@@ -42,6 +35,8 @@
 
                         <th colspan="2" class="text-center">Redeemed</th>
 
+                        <th colspan="2" class="text-center">Cancelled</th>
+
                         <th class="action"></th>
                     </tr>
                 </thead>
@@ -57,11 +52,13 @@
                         <td class="text-right">$!v.voucherSummary.states.I.cashValue</td>
 
                         <td>$!v.voucherSummary.states.A.number</td>
-                        <td class="text-right">$!v.voucherSummary.states.A.cashValue</td>                                
+                        <td class="text-right">$!v.voucherSummary.states.A.cashValue</td>
 
                         <td>$!v.voucherSummary.states.R.number</td>
                         <td class="text-right">$!v.voucherSummary.states.R.cashValue</td>
 
+                        <td>$!v.voucherSummary.states.C.number</td>
+                        <td class="text-right">$!v.voucherSummary.states.C.cashValue</td>
 
                         <td class="action">
                             <div class="btn-group btn-group-sm">
@@ -99,7 +96,7 @@
                     <div class="form-group">
                         <label for="newTitle" class="col-sm-3 control-label">Description</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control required" required="true" id=newTitle name="newTitle" />	                            
+                            <input type="text" class="form-control required" required="true" id=newTitle name="newTitle" />
                         </div>
                     </div>
                 </form>
@@ -108,7 +105,7 @@
                 <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Create voucher</button>
             </div>
-        </div><!-- /.modal -->        
+        </div><!-- /.modal -->
 
         <div class="modal fade" id="sellVouchersModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-header">
@@ -130,22 +127,22 @@
                     <div class="form-group">
                         <label for="allocatedTo" class="col-sm-3 control-label">Allocate to</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control required" required="true" id="allocatedTo" name="allocatedTo" />	                            
+                            <input type="text" class="form-control required" required="true" id="allocatedTo" name="allocatedTo" />
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="numberToSell" class="col-sm-3 control-label">No. to sell</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control required" required="true" id="numberToSell" name="numberToSell" />	                            
+                            <input type="text" class="form-control required" required="true" id="numberToSell" name="numberToSell" />
                         </div>
-                    </div>                    
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Sell vouchers</button>
             </div>
-        </div><!-- /.modal -->              
+        </div><!-- /.modal -->
 
         <div class="modal fade" id="soldVouchersModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-header">
@@ -160,7 +157,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
             </div>
-        </div><!-- /.modal -->              
+        </div><!-- /.modal -->
 
         <script type="text/javascript">
             $(function () {
@@ -168,20 +165,7 @@
                 initCreateVoucherType();
                 initDeleteVoucherType();
                 initSellVouchers();
-                initPie();
             });
-
-            function initPie() {
-                var pie = $('.vouchersPie');
-                flog("initPie", pie);
-                pie.easyPieChart( {
-                    trackColor: 'rgba(255,255,255,0.2)',
-                    scaleColor: 'rgba(255,255,255,0.5)',
-                    barColor: 'rgba(255,255,255,0.7)',
-                    lineWidth: 7,
-                    lineCap: 'butt'
-                });
-            }
 
             function initSellVouchers() {
                 var modal = $("#sellVouchersModal");
@@ -238,6 +222,6 @@
                     }
                 });
             }
-        </script>        
+        </script>
     </body>
 </html>

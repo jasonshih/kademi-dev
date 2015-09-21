@@ -61,21 +61,21 @@
                             <label class="col-sm-2 control-label" for="redeemingOrg">Redeeming organisation</label>
                             <div class="col-sm-9">
                                 <a href="#" class="btn btn-default change-redeeming-org">
-                                    <span class="org-title">$page.voucherType.redeemingOrg.formattedName</span>                                    
+                                    <span class="org-title">$page.voucherType.redeemingOrg.formattedName</span>
                                     <span class="glyphicon glyphicon-cog"></span>
                                 </a>
                                 <input id="redeemingOrgId" type="hidden" class="form-control" name="redeemingOrg" value="$!page.voucherType.redeemingOrg.orgId"/>
                                 <br/>
                                 <small><i>Users within this organisation will be able to redeem vouchers</i></small>
                             </div>
-                        </div>                        
+                        </div>
 
                         <div class="form-group">
                             <label class="col-sm-2 control-label" for="validForDays">Valid for days</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control" name="validForDays" value="$!page.voucherType.validForDays"/>                                
+                                <input type="text" class="form-control" name="validForDays" value="$!page.voucherType.validForDays"/>
                                 <small><i>If specified, vouchers will only be valid for a certain number of days once issued</i></small>
-                            </div>                            
+                            </div>
                         </div>
 
                         <div class="form-group">
@@ -83,21 +83,21 @@
                             <div class="col-sm-9">
                                 <div class="form-group">
                                     <div class="col-sm-5">
-                                        <div class="input-group">                                            
+                                        <div class="input-group">
                                             <input type="text" name="staticExpiryDate" placeholder="Expiry date" data-format="DD/MM/YYYY" value="$!formatter.formatDate($page.voucherType.staticExpiryDate)" class="form-control DateTime" />
                                             <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>                        
+                        </div>
 
                         <div class="form-group">
                             <label class="col-sm-2 control-label" for="cashValue">Cash value</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control" name="cashValue" value="$!page.voucherType.cashValue"/>                                
+                                <input type="text" class="form-control" name="cashValue" value="$!page.voucherType.cashValue"/>
                                 <small><i>Used to track exposure and liabilities in reporting.</i></small>
-                            </div>                            
+                            </div>
                         </div>
 
                         <div class="form-group">
@@ -158,9 +158,9 @@
                                     </tr>
                                     #end
                                 </tbody>
-                            </table>            
+                            </table>
                         </div>
-                    </div>                      
+                    </div>
                 </div>
 
 
@@ -186,20 +186,29 @@
                                 <col width="33%" />
                                 <col width="33%" />
 
-                            </colgroup>                            
+                            </colgroup>
                             <thead>
                                 <tr>
-                                    <th>Total</th>                                    
+                                    <th>Total</th>
                                     <th>Redeemed</th>
                                     <th>Allocated</th>
-                                </tr>                                
+                                    <th>Cancelled</th>
+                                </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td>$page.voucherSummary.total</td>
                                     <td>$!page.voucherSummary.states.R.number</td>
                                     <td>$!page.voucherSummary.states.A.number</td>
+                                    <td>$!page.voucherSummary.states.C.number</td>
                                 </tr>
+                                <tr>
+                                    <td>Cash value</td>
+                                    <td>$!page.voucherSummary.states.R.cashValue</td>
+                                    <td>$!page.voucherSummary.states.A.cashValue</td>
+                                    <td>$!page.voucherSummary.states.C.cashValue</td>
+                                </tr>
+
                             </tbody>
                         </table>
 
@@ -260,7 +269,7 @@
                                                 #if( $v.changedBy )
                                                 <a href="/manageUsers/$v.changedBy.userId">$v.changedBy.name</a>
                                                 #end
-                                            </td>                                            
+                                            </td>
                                         </tr>
                                         #end
                                         #end
@@ -336,7 +345,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary" data-type="form-submit">Create</button>
-            </div>                            
+            </div>
         </div>
 
         <div class="modal fade" id="selectOrgModal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -358,8 +367,8 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary" data-type="form-submit">Select</button>
-            </div>                            
-        </div>        
+            </div>
+        </div>
 
         <div id="modal-extra-field" class="modal fade" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
             <div class="modal-header">
