@@ -1,6 +1,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>$view.title</title> 
+        <script type="text/javascript" src="/static/easy-pie-chart/2.1.7/jquery.easypiechart.min.js">//</script>
     </head>
     <body>
         <div class="">
@@ -10,74 +11,76 @@
             <hr/>
         </div>
 
-        <div class="panel panel-default">
-            <div class="panel-body">
-
-                <div class="table-responsive">
-                    <table id="voucher-types-table" class="table table-striped table-hover">
-                        <colgroup>
-                            <col width="" />
-                            <col width="" />
-                            <col width="" />
-                            <col width="" />
-                            <col width="" />
-                            <col width="" />
-                            <col width="" />
-                            <col width="180px" />
-
-                        </colgroup>
-                        <thead>
-                            <tr>
-                                <th>Voucher type</th>
-
-                                <th colspan="2">Total</th>
-
-                                <th colspan="2">Idle</th>
-                                
-                                <th colspan="2">Allocated</th>
-
-                                <th colspan="2">Redeemed</th>
-
-                                <th class="action"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            #foreach($v in $page.children)
-                            <tr>
-                                <td>$v.title</td>
-
-                                <td>$!v.voucherSummary.total</td>
-                                <td>$!v.voucherSummary.cashValue</td>
-
-                                <td>$!v.voucherSummary.states.I.number</td>
-                                <td>$!v.voucherSummary.states.I.cashValue</td>
-
-                                <td>$!v.voucherSummary.states.A.number</td>
-                                <td>$!v.voucherSummary.states.A.cashValue</td>                                
-                                
-                                <td>$!v.voucherSummary.states.R.number</td>
-                                <td>$!v.voucherSummary.states.R.cashValue</td>
-
-
-                                <td class="action">
-                                    <div class="btn-group btn-group-sm">
-                                        <a href="$v.name" class="btn btn-sm btn-info"><i class="fa fa-cog"></i> Manage</a>
-                                        <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
-                                            <span class="caret"></span>
-                                            <span class="sr-only">Toggle Dropdown</span>
-                                        </button>
-                                        <ul role="menu" class="dropdown-menu pull-right">
-                                            <li><a href="$v.name" class="delete-voucher-type"><i class="glyphicon glyphicon-remove"></i> Delete</a></li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-                            #end
-                        </tbody>
-                    </table>
-                </div>
+        <div data-percent="30" class="easy-pie vouchersPie smallPie bluePie">
+            <div class="figure">
+                30%
             </div>
         </div>
+
+        <div class="table-responsive">
+            <table id="voucher-types-table" class="table table-striped table-hover table-bordered">
+                <colgroup>
+                    <col width="" />
+                    <col width="" />
+                    <col width="" />
+                    <col width="" />
+                    <col width="" />
+                    <col width="" />
+                    <col width="" />
+                    <col width="180px" />
+
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>Voucher type</th>
+
+                        <th colspan="2" class="text-center">Total</th>
+
+                        <th colspan="2" class="text-center">Idle</th>
+
+                        <th colspan="2" class="text-center">Allocated</th>
+
+                        <th colspan="2" class="text-center">Redeemed</th>
+
+                        <th class="action"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    #foreach($v in $page.children)
+                    <tr>
+                        <td>$v.title</td>
+
+                        <td>$!v.voucherSummary.total</td>
+                        <td class="text-right">$!v.voucherSummary.cashValue</td>
+
+                        <td>$!v.voucherSummary.states.I.number</td>
+                        <td class="text-right">$!v.voucherSummary.states.I.cashValue</td>
+
+                        <td>$!v.voucherSummary.states.A.number</td>
+                        <td class="text-right">$!v.voucherSummary.states.A.cashValue</td>                                
+
+                        <td>$!v.voucherSummary.states.R.number</td>
+                        <td class="text-right">$!v.voucherSummary.states.R.cashValue</td>
+
+
+                        <td class="action">
+                            <div class="btn-group btn-group-sm">
+                                <a href="$v.name" class="btn btn-sm btn-info"><i class="fa fa-cog"></i> Manage</a>
+                                <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <ul role="menu" class="dropdown-menu pull-right">
+                                    <li><a href="$v.name" class="delete-voucher-type"><i class="glyphicon glyphicon-remove"></i> Delete</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    #end
+                </tbody>
+            </table>
+        </div>
+
 
         <div class="modal fade" id="createVoucherTypeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-header">
@@ -165,7 +168,20 @@
                 initCreateVoucherType();
                 initDeleteVoucherType();
                 initSellVouchers();
+                initPie();
             });
+
+            function initPie() {
+                var pie = $('.vouchersPie');
+                flog("initPie", pie);
+                pie.easyPieChart( {
+                    trackColor: 'rgba(255,255,255,0.2)',
+                    scaleColor: 'rgba(255,255,255,0.5)',
+                    barColor: 'rgba(255,255,255,0.7)',
+                    lineWidth: 7,
+                    lineCap: 'butt'
+                });
+            }
 
             function initSellVouchers() {
                 var modal = $("#sellVouchersModal");
@@ -178,18 +194,18 @@
                         form.trigger("reset");
                         modal.modal("hide");
                         Msg.success('Vouchers have been allocated');
-                        $('#voucher-types-table').reloadFragment();                        
+                        $('#voucher-types-table').reloadFragment();
                         var displayVoucherIds = soldVouchersModal.find(".displayVoucherIds");
                         displayVoucherIds.val("");
                         flog("show data", resp.data);
                         var ids = null;
                         resp.data.each(function (n, i) {
                             flog("row", i, n);
-                            if( ids === null ) {
+                            if (ids === null) {
                                 ids = n.voucherId;
                             } else {
                                 ids = ids + "," + n.voucherId;
-                            }                            
+                            }
                         });
                         flog("display", displayVoucherIds, ids);
                         displayVoucherIds.val(ids);
@@ -222,6 +238,6 @@
                     }
                 });
             }
-        </script>            
+        </script>        
     </body>
 </html>
