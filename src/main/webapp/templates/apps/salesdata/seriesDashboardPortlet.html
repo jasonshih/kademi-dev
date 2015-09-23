@@ -9,9 +9,14 @@
                                 <div class="col-xs-3">
                                     <i class="fa fa-database fa-5x"></i>
                                 </div>
+                                #set( $sales = $rootFolder.find("/sales") )
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge">$rootFolder.find("/sales").numSeries</div>
+                                    #if( $sales.size() > 0 )
+                                    <div class="huge">$sales.numSeries</div>
                                     <div>data series</div>
+                                    #else
+                                    <div class="medium">Setup your data</div>
+                                    #end
                                 </div>
                             </a>
                         </div>

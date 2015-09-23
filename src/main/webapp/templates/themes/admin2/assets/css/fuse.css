@@ -1278,6 +1278,9 @@ body.ajax-loading .ajaxLoader {
     background-image: none;
     box-shadow: none;
 }
+.medium {
+    font-size: 22px;
+}
 
 .huge {
     font-size: 32px;

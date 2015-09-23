@@ -4,6 +4,43 @@
         <link href="/static/nvd3/nv.d3.css" rel="stylesheet" />
     </head>
     <body class="manageEmail">
+        #if( $page.dbCount == 0 )
+        #showWelcome()
+        #else
+        #showData()
+        #end
+
+
+
+        #macro( showWelcome )
+        <div class="well">
+            <h2>Learn about contact forms</h2>
+            <p>Contact forms allow visitors to your websites to submit information using forms. These can be used for feedback, simple surveys,
+                requesting appointments, etc</p>
+            <p>When you start collecting information you will see it here</p>
+            #if( $page.find("/websites").children.size() > 0 )
+            <p>
+                There is a default contact form for each website, but you can create your own.
+                <ul>
+                    #foreach($website in $page.find("/websites").children)
+                    <li><a href="${website.live.externalUrl}contactus">Contact us page for $website.title</a></li>
+                    #end
+                </ul>
+            </p>
+            #else
+            <p>You havent created any websites yet, but when you do you'll get a contact form for each</p>
+            #end
+
+            <h3>Learn more</h3>
+            <a class='btn btn-success' href='http://docs.kademi.co/howtos/getting-started/5-create-contact-pages.html'>Create contact pages</a>
+            <a class='btn btn-success' href='http://docs.kademi.co/ref/screens/theme/apps/contactus/customForms.html'>Advanced form handling</a>
+        </div>
+        #end
+
+
+
+
+        #macro( showData )
         <div class="row">
             <div class="col-lg-4 col-md-4 col-sm-6">
                 <div class="input-group date-range">
@@ -72,25 +109,26 @@
                 </tbody>
             </table>
         </div>
+        #end
 
         <script type="text/javascript" src="/static/uri/1.15.1/URI.js">//</script>
         <script src="/static/handlebars/3.0.3/handlebars-v3.0.3.js">//</script>
         <script id="entry-template" class="hide"  type="text/x-handlebars-template">
             {{#each hits.hits}}
             <tr data-href="{{fields.contactRequest}}">
-                <td class="clickable">
-                    <span class="glyphicon glyphicon-envelope"></span>
-                </td>
-                <td class="clickable">
-                    <a href="{{fields.contactRequest}}" class="timeago" title="{{dateFromLong fields.createdDate}}">{{fields.createdDate}}</a>
-                </td>
-                <td class="clickable">{{fields.firstName}} {{fields.surName}}</td>
-                <td class="clickable">{{fields.phone}}</td>
-                <td class="clickable">{{fields.email}}</td>
-                <td class="action">
-                    <a class="acknowledge btn btn-success" href="{{fields.contactRequest}}"><i class="glyphicon glyphicon-ok"></i> Hide</a>
-                </td>
-                <td class="action"><input type="checkbox" data-href="{{fields.contactRequest}}" class="request-check"/></td>
+            <td class="clickable">
+            <span class="glyphicon glyphicon-envelope"></span>
+            </td>
+            <td class="clickable">
+            <a href="{{fields.contactRequest}}" class="timeago" title="{{dateFromLong fields.createdDate}}">{{fields.createdDate}}</a>
+            </td>
+            <td class="clickable">{{fields.firstName}} {{fields.surName}}</td>
+            <td class="clickable">{{fields.phone}}</td>
+            <td class="clickable">{{fields.email}}</td>
+            <td class="action">
+            <a class="acknowledge btn btn-success" href="{{fields.contactRequest}}"><i class="glyphicon glyphicon-ok"></i> Hide</a>
+            </td>
+            <td class="action"><input type="checkbox" data-href="{{fields.contactRequest}}" class="request-check"/></td>
             </tr>
             {{/each}}
         </script>
