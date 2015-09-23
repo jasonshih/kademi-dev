@@ -1,4 +1,4 @@
-#if($applications.size() > 0 )
+#if( $membershipApplications.size() > 0 )
 <div class="">
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -30,7 +30,7 @@
                         <th></th>
                     </tr>
                 </thead>
-                #foreach($app in $applications)
+                #foreach($app in $membershipApplications)
                 <tbody>
                     <tr data-toggle="collapse" data-target=".det-div-$app.id">
                         <td>$app.member.nickName</td>

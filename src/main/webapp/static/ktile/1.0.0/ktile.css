@@ -223,13 +223,8 @@
 .ktile-md-s {
     padding-bottom: 100%;
 }
-
-.ktile-lg-v-150 {
-    padding-bottom: 150%;
-}
-
 .ktile-lg-v {
-    padding-bottom: 200%;
+    padding-bottom: 150%;
 }
 
 .ktile-lg-h {
