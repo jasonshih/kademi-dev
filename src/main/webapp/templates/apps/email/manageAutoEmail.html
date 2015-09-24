@@ -224,7 +224,7 @@
                                         <div class="form-group">
                                             <label class="control-label col-md-4" for="subject">Email subject</label>
                                             <div class="col-md-8">
-                                                <textarea style="height: 70px" name="subject" id="subject" value="" placeholder="Enter the email subject here" class="form-control required-if-shown">$!page.subject</textarea>
+                                                <textarea style="height: 70px" name="subject" id="subject" value="" placeholder="Enter the email subject here" class="form-control required-if-shown">$formatter.htmlEncode( $page.subject )</textarea>
                                             </div>
                                         </div>
                                         <div class="form-group">

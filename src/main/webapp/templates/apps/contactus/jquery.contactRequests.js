@@ -64,10 +64,12 @@
 // TODO: should generalise most of this and move this to a callback
 function initCharts(resp) {
     flog("initCharts", resp);
-    var hitsBuckets = resp.aggregations.byDate.buckets;
-    var formsBuckets = resp.aggregations.form.buckets;
-    initHistogram(hitsBuckets);
-    initFormsDonut(resp.hits.total, formsBuckets);
+    if (resp.aggregations) {
+        var hitsBuckets = resp.aggregations.byDate.buckets;
+        var formsBuckets = resp.aggregations.form.buckets;
+        initHistogram(hitsBuckets);
+        initFormsDonut(resp.hits.total, formsBuckets);
+    }
 
 }
 function initHistogram(hits) {

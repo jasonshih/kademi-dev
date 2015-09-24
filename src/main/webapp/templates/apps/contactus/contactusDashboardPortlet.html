@@ -11,8 +11,13 @@
                                     <i class="fa fa-users fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
+                                    #set( $numContactRequests = $rootFolder.find("/manageContacts").dbCount($start) )
+                                    #if( $numContactRequests > 0 )
                                     <div class="huge">$rootFolder.find("/manageContacts").dbCount($start)</div>
                                     <div class="text-nowrap">contacts in 7 days</div>
+                                    #else
+                                    <div class="medium">Learn about forms</div>
+                                    #end
                                 </div>
                             </a>
                         </div>
