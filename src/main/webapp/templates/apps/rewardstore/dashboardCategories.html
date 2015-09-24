@@ -1,0 +1,22 @@
+#set($stores = $page.find("/rewards").myRewardStores )
+#if( $stores.size() > 0 )
+<link rel="stylesheet" type="text/css" href="/theme/apps/rewardstore/reward-store.css" />
+<div class="row">
+    #foreach($store in $stores)
+    #foreach($cat in $store.children.ofType.category)
+    <div class="col-sm-3">
+        #set($bg = "")
+        #if( $cat.imageHref )
+        #set($bg = "url($cat.imageHref/alt-300-300.png)")
+        #end
+        <a class="product-tile product-tile2" href="$cat.href">
+            <div style="background-image: $bg;" class="bg-img"></div>
+            <div class="product-tile-inner">
+                <span>$cat.title</span>
+            </div>
+        </a>
+    </div>
+    #end
+    #end
+</div>
+#end
