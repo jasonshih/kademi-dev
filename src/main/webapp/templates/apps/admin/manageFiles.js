@@ -446,6 +446,10 @@ function showImportFromUrl() {
 }
 
 function putEmptyFile(name) {
+    if( name.contains("/")) {
+        Msg.error("File names may not contain forward slashes");
+        return;
+    }
     $.ajax({
         type: 'PUT',
         url: name,
