@@ -4,6 +4,24 @@
         <link rel="stylesheet" href="/theme/apps/learner/modulePage.less" type="text/css" media="all" />
         <link rel="stylesheet" media="print" href="/templates/apps/learner/modulePagePrint.css" type="text/css"/>
         <script src="/theme/apps/learner/scormAPI.js" type="text/javascript" charset="utf-8">//</script>
+        <style>
+            #module-iframe {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 100%;
+                width: 100%;
+            }
+
+            #iframe-container {
+                position: relative;
+                min-height: 200px;
+                width: 100%;
+                height: 100%;
+            }
+        </style>
     </head>
     <body class="modulePage" style="margin:0px;padding:0px;overflow:hidden">
         <div class='container'>
@@ -18,59 +36,63 @@
                                 You have completed this module.
                             </div>
                             #elseif ( $folder.percentComplete )
-                            
+
                             #else
-                                #if( $folder.completable )
-                                    #if( $folder.startable )
+                            #if( $folder.completable )
+                            #if( $folder.startable )
 
-                                    #else
-                                    <acronym title="You have not completed prequisites">
-                                        <div class="alert alert-warning">                                
-                                            <span class="glyphicon glyphicon-lock"></span>
-                                            This module is locked because you have not completed the pre-requisites:
-                                            <ul>
-                                                #foreach($module in $folder.unmetPrerequisites)
-                                                <li>
-                                                    <a href="$module.href">$module.title</a> 
-                                                    -
-                                                    #if( $module.inProgress )                                                                                                        
-                                                        #if( $module.percentComplete == 100 )
-                                                        on last page
-                                                        #else
-                                                        $module.percentComplete
-                                                        #end
-                                                    #else
-                                                    not started
-                                                    #end
-                                                </li>
-                                                #end
-                                            </ul>
-                                        </div>
-                                    </acronym>
-                                    #end
-                                #else
-                                <acronym title="You do not have an enrolement for this module">                            
-                                    <div class="alert alert-warning">
-                                        <span class="glyphicon glyphicon-lock"></span>
-                                        This module is view-only. You do not have an enrolement for this module.
-                                    </div>
-                                </acronym>
-                                #end
+                            #else
+                            <acronym title="You have not completed prequisites">
+                                <div class="alert alert-warning">                                
+                                    <span class="glyphicon glyphicon-lock"></span>
+                                    This module is locked because you have not completed the pre-requisites:
+                                    <ul>
+                                        #foreach($module in $folder.unmetPrerequisites)
+                                        <li>
+                                            <a href="$module.href">$module.title</a> 
+                                            -
+                                            #if( $module.inProgress )                                                                                                        
+                                            #if( $module.percentComplete == 100 )
+                                            on last page
+                                            #else
+                                            $module.percentComplete
+                                            #end
+                                            #else
+                                            not started
+                                            #end
+                                        </li>
+                                        #end
+                                    </ul>
+                                </div>
+                            </acronym>
                             #end
-                        </div>                        
+                            #else
+                            <acronym title="You do not have an enrolement for this module">                            
+                                <div class="alert alert-warning">
+                                    <span class="glyphicon glyphicon-lock"></span>
+                                    This module is view-only. You do not have an enrolement for this module.
+                                </div>
+                            </acronym>
+                            #end
+                            #end
+                        </div>
 
-                        <div class="htmleditor" id="body">                    
+                        <div id="iframe-container">
                             #set($scormFile = $folder.find($page.getParam("scormHref")))
-                            <iframe frameborder="0" src="$page.getParam('scormHref')" style="overflow:hidden;overflow-x:hidden;overflow-y:hidden;height:150%;width:150%;position:absolute;top:0px;left:0px;right:0px;bottom:0px" height="150%" width="150%"></iframe>
-                        </div>            
+                            <iframe id="module-iframe" frameborder="1" onload='javascript:resizeIframe(this);' src="$page.getParam('scormHref')"></iframe>
+                        </div>
                     </div>
                     <script type="text/javascript">
                         progressPage = "$!{formatter.percentEncode($page.parent.currentPage)}";
+
+                        function resizeIframe(obj) {
+                            flog('Resizing', obj.contentWindow.document.body.scrollHeight);
+                            //obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+                        }
                     </script>                     
                 </div>                           
                 #set($viewMode = !$rc.child.editMode && !$request.params.print )
             </div>
-
         </div>
 
         #if($viewMode)

@@ -95,23 +95,22 @@ function Kademi_GetValue(dataModel) {
             flog('cmi.location', d.currentPage);
             moduleCache['currentPage'] = d.currentPage;
             return d.currentPage;
-        case 'cmi.suspend_data' :
+        default:
             if (moduleCache.hasOwnProperty('moduleStatusFields')) {
                 var moduleStatusFields = moduleCache['moduleStatusFields'];
-                if (moduleStatusFields.hasOwnProperty('suspend_data')) {
-                    var val = moduleStatusFields['suspend_data'];
+                if (moduleStatusFields.hasOwnProperty(dataModel)) {
+                    var val = moduleStatusFields[dataModel];
                     if (val !== null && typeof val !== 'undefined') {
                         return val;
                     }
                 }
             }
             var resp = doPropFind(['milton:moduleStatusFields']);
-            if (resp.moduleStatusFields !== null && resp.moduleStatusFields.suspend_data !== null) {
-                moduleCache['moduleStatusFields']['suspend_data'] = esp.moduleStatusFields.suspend_data;
-                return resp.moduleStatusFields.suspend_data;
+            if (isNotNull(resp.moduleStatusFields) && isNotNull(resp.moduleStatusFields[dataModel])) {
+                moduleCache['moduleStatusFields'][dataModel] = esp.moduleStatusFields[dataModel];
+                return resp.moduleStatusFields[dataModel];
             }
             return null;
-            break;
     }
 }
 
@@ -139,15 +138,14 @@ function Kademi_SetValue(dataModel, value) {
                 return resp.status;
             });
             break;
-        case 'cmi.suspend_data':
+        default:
             var data = {};
-            data["changedField"] = 'suspend_data';
+            data["changedField"] = dataModel;
             data["changedValue"] = value;
-            moduleCache['moduleStatusFields']['suspend_data'] = value;
+            moduleCache['moduleStatusFields'][dataModel] = value;
             doAjaxPost(data, function (resp) {
                 return resp.status;
             });
-            break;
     }
 }
 
@@ -166,4 +164,12 @@ function doAjaxPost(data, callback) {
             flog('error saving moduleStatus', event, XMLHttpRequest, ajaxOptions, thrownError);
         }
     });
+}
+
+function isNull(s) {
+    return s === null || typeof (s) === 'undefined';
+}
+
+function isNotNull(s) {
+    return s !== null && typeof (s) !== 'undefined';
 }
