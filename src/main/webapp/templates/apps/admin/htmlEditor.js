@@ -1,5 +1,13 @@
 var win = $(window);
 
+function hideLoadingIcon() {
+    $('#editor-loading').addClass('hide');
+}
+
+function showLoadingIcon() {
+    $('#editor-loading').removeClass('hide');
+}
+
 function initHtmlEditorPage(fileName, cssPaths) {
     flog("initHtmlEditorPage");
 
