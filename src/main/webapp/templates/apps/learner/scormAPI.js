@@ -21,7 +21,8 @@ var KademiAPI = {
             'milton:completable',
             'milton:level',
             'milton:order',
-            'milton:currentLevel']);
+            'milton:currentLevel',
+            'milton:moduleStatusFields']);
         $.extend(true, moduleCache, fields[0]);
         return true;
     },
@@ -94,8 +95,23 @@ function Kademi_GetValue(dataModel) {
             flog('cmi.location', d.currentPage);
             moduleCache['currentPage'] = d.currentPage;
             return d.currentPage;
-        case 'cmi.objectives._count':
-            return 8;
+        case 'cmi.suspend_data' :
+            if (moduleCache.hasOwnProperty('moduleStatusFields')) {
+                var moduleStatusFields = moduleCache['moduleStatusFields'];
+                if (moduleStatusFields.hasOwnProperty('suspend_data')) {
+                    var val = moduleStatusFields['suspend_data'];
+                    if (val !== null && typeof val !== 'undefined') {
+                        return val;
+                    }
+                }
+            }
+            var resp = doPropFind(['milton:moduleStatusFields']);
+            if (resp.moduleStatusFields !== null && resp.moduleStatusFields.suspend_data !== null) {
+                moduleCache['moduleStatusFields']['suspend_data'] = esp.moduleStatusFields.suspend_data;
+                return resp.moduleStatusFields.suspend_data;
+            }
+            return null;
+            break;
     }
 }
 
@@ -115,10 +131,19 @@ function doPropFind(fields) {
 function Kademi_SetValue(dataModel, value) {
     dataModel = dataModel.toString().toLowerCase().trim();
     switch (dataModel) {
-        case "cmi.location" :
+        case 'cmi.location' :
             var data = {};
             data["statusCurrentPage"] = value;
             moduleCache['currentPage'] = value;
+            doAjaxPost(data, function (resp) {
+                return resp.status;
+            });
+            break;
+        case 'cmi.suspend_data':
+            var data = {};
+            data["changedField"] = 'suspend_data';
+            data["changedValue"] = value;
+            moduleCache['moduleStatusFields']['suspend_data'] = value;
             doAjaxPost(data, function (resp) {
                 return resp.status;
             });

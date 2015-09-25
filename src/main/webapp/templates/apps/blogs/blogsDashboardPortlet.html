@@ -5,17 +5,17 @@
                 <div class="ktile-front bgm-blue">
                     <div class="ktile-content">
                         <div class="row" style="margin: 0">
-                            <a href="/sales/" class="c-white">
+                            <a href="/blogs/" class="c-white">
                                 <div class="col-xs-3">
-                                    <i class="fa fa-database fa-4x"></i>
+                                    <i class="fa fa-feed fa-4x"></i>
                                 </div>
-                                #set( $sales = $rootFolder.find("/sales") )
                                 <div class="col-xs-9 text-right">
-                                    #if( $sales.size() > 0 )
-                                    <div class="huge">$sales.numSeries</div>
-                                    <div>data series</div>
+                                    #set($blogs = $rootFolder.find("/blogs"))
+                                    #if( $blogs.numArticles > 0 )
+                                    <div class="huge">$blogs.numArticles</div>
+                                    <div>blog articles</div>
                                     #else
-                                    <div class="medium">Setup your data</div>
+                                    <div class="medium">Start blogging</div>
                                     #end
                                 </div>
                             </a>

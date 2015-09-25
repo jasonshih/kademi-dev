@@ -5,21 +5,21 @@
             <div class="ktile-body">
                 <div class="ktile-front ktile-shadow">
                     <div class="row" style="height: 100%; margin: 0">
-                        <div class="col-sm-12 bgm-pink" style="height: 50%">
+                        <div class="col-sm-12 bgm-pink" style="height: 60%;">
                             <div class="text-center ktile-content ktile-content-relative">
                                 <div data-percent="$stats.deliveryRatePerc" class="easy-pie emailsMainPie largePie center-block">
                                     <div class="figure">
                                         #if( $stats.total )
                                         $stats.total
                                         #else
-                                        N/A
+                                        N/A - $stats
                                         #end
                                     </div>
                                     <div class="pie-title">Total Emails Sent</div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-12" style="height: 50%">
+                        <div class="col-sm-12" style="height: 40%">
                             <div class="row text-center ktile-content ktile-content-relative">
                                 <div class="col-sm-6" style="padding: 0 3px">
                                     <div data-percent="$!stats.openRatePerc" class="easy-pie emailsSubPie smallPie bluePie">
@@ -63,6 +63,7 @@
             sizeChart = 100;
         }
         var currentSize = +chart.attr('data-size');
+        flog("got size", sizeChart, chart);
 
         // Hide canvas
         canvas.hide();
@@ -81,6 +82,7 @@
 
             // Render new chart
             options.size = sizeChart;
+            flog("chart size", sizeChart);
             chart.easyPieChart(options);
         } else {
             flog('Re-show current chart');
@@ -104,7 +106,7 @@
             barColor: 'rgba(255,255,255,0.7)',
             lineWidth: 7,
             lineCap: 'butt'
-        }, 30);
+        }, 90);
 
         initChart($('.emailsSubPie.bluePie'), {
             trackColor: '#eee',
@@ -112,7 +114,7 @@
             barColor: '#2196F3',
             lineWidth: 7,
             lineCap: 'butt'
-        }, 4);
+        }, 8);
 
         initChart($('.emailsSubPie.orangePie'), {
             trackColor: '#eee',
@@ -120,6 +122,6 @@
             barColor: '#FFC107',
             lineWidth: 7,
             lineCap: 'butt'
-        }, 4);
+        }, 8);
     });
 </script>
