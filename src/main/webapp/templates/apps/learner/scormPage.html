@@ -5,6 +5,11 @@
         <link rel="stylesheet" media="print" href="/templates/apps/learner/modulePagePrint.css" type="text/css"/>
         <script src="/theme/apps/learner/scormAPI.js" type="text/javascript" charset="utf-8">//</script>
         <style>
+            html,
+            body {
+                min-height: 100%;
+            }
+
             #module-iframe {
                 position: absolute;
                 top: 0;
@@ -16,14 +21,15 @@
             }
 
             #iframe-container {
-                position: relative;
-                min-height: 200px;
-                width: 100%;
-                height: 100%;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
             }
         </style>
     </head>
-    <body class="modulePage" style="margin:0px;padding:0px;overflow:hidden">
+    <body class="modulePage scormpage" style="margin:0px;padding:0px;overflow:hidden">
         <div class='container'>
             <div class="module-container">
                 <div class="contentForm">
@@ -95,6 +101,15 @@
 
         #portlets("modulePageBottom")
         #end
+        
+        <script type="text/javascript">
+            $(function () {
+                $(window).on('resize', function () {
+                    flog('ON resize');
+                    $('#iframe-container').css('top', $('#maincontentContainer').offset().top);
+                }).trigger('resize');
+            });
+        </script
     </body>
 
 </html>
