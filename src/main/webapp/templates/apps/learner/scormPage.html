@@ -79,16 +79,11 @@
 
                         <div id="iframe-container">
                             #set($scormFile = $folder.find($page.getParam("scormHref")))
-                            <iframe id="module-iframe" frameborder="1" onload='javascript:resizeIframe(this);' src="$page.getParam('scormHref')"></iframe>
+                            <iframe id="module-iframe" frameborder="1" src="$page.getParam('scormHref')"></iframe>
                         </div>
                     </div>
                     <script type="text/javascript">
                         progressPage = "$!{formatter.percentEncode($page.parent.currentPage)}";
-
-                        function resizeIframe(obj) {
-                            flog('Resizing', obj.contentWindow.document.body.scrollHeight);
-                            //obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
-                        }
                     </script>                     
                 </div>                           
                 #set($viewMode = !$rc.child.editMode && !$request.params.print )
