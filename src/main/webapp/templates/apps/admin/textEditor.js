@@ -1,3 +1,11 @@
+function hideLoadingIcon() {
+    $('#editor-loading').addClass('hide');
+}
+
+function showLoadingIcon() {
+    $('#editor-loading').removeClass('hide');
+}
+
 function initTextEditor(fileName) {
     var DEFAULT_THEME = 'ace/theme/textmate';
     var DEFAULT_FONT_SIZE = '12px';
