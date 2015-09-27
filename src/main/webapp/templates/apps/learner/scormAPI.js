@@ -21,7 +21,8 @@ var KademiAPI = {
             'milton:completable',
             'milton:level',
             'milton:order',
-            'milton:currentLevel']);
+            'milton:currentLevel',
+            'milton:moduleStatusFields']);
         $.extend(true, moduleCache, fields[0]);
         return true;
     },
@@ -94,8 +95,22 @@ function Kademi_GetValue(dataModel) {
             flog('cmi.location', d.currentPage);
             moduleCache['currentPage'] = d.currentPage;
             return d.currentPage;
-        case 'cmi.objectives._count':
-            return 8;
+        default:
+            if (moduleCache.hasOwnProperty('moduleStatusFields')) {
+                var moduleStatusFields = moduleCache['moduleStatusFields'];
+                if (moduleStatusFields.hasOwnProperty(dataModel)) {
+                    var val = moduleStatusFields[dataModel];
+                    if (val !== null && typeof val !== 'undefined') {
+                        return val;
+                    }
+                }
+            }
+            var resp = doPropFind(['milton:moduleStatusFields']);
+            if (isNotNull(resp.moduleStatusFields) && isNotNull(resp.moduleStatusFields[dataModel])) {
+                moduleCache['moduleStatusFields'][dataModel] = esp.moduleStatusFields[dataModel];
+                return resp.moduleStatusFields[dataModel];
+            }
+            return null;
     }
 }
 
@@ -115,7 +130,7 @@ function doPropFind(fields) {
 function Kademi_SetValue(dataModel, value) {
     dataModel = dataModel.toString().toLowerCase().trim();
     switch (dataModel) {
-        case "cmi.location" :
+        case 'cmi.location' :
             var data = {};
             data["statusCurrentPage"] = value;
             moduleCache['currentPage'] = value;
@@ -123,6 +138,14 @@ function Kademi_SetValue(dataModel, value) {
                 return resp.status;
             });
             break;
+        default:
+            var data = {};
+            data["changedField"] = dataModel;
+            data["changedValue"] = value;
+            moduleCache['moduleStatusFields'][dataModel] = value;
+            doAjaxPost(data, function (resp) {
+                return resp.status;
+            });
     }
 }
 
@@ -141,4 +164,12 @@ function doAjaxPost(data, callback) {
             flog('error saving moduleStatus', event, XMLHttpRequest, ajaxOptions, thrownError);
         }
     });
+}
+
+function isNull(s) {
+    return s === null || typeof (s) === 'undefined';
+}
+
+function isNotNull(s) {
+    return s !== null && typeof (s) !== 'undefined';
 }

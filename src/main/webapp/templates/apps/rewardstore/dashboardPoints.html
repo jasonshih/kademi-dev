@@ -1,0 +1,32 @@
+#set($stores = $page.find("/rewards").myRewardStores )
+#if( $stores.size() == 1 )
+<div class="well text-center">
+    <h3>Your points</h3>
+    <h1><b>$stores.get(0).myBalance</b></h1>
+</div>
+#elseif( $stores.size() > 0 )
+<div class="row">
+    #foreach($store in $stores)
+    <div class="col-md-6">
+        <div class="well text-center">
+            <h3>$store.title</h3>
+            #set($totalPoint = $store.myPointsTotal)
+            #if($totalPoint > 0)
+            #if($totalPoint > 99999999999)
+            <h1 class="fontxxsmall"><b>$totalPoint</b></h1>
+            #elseif($totalPoint > 999999999)
+            <h1 class="fontxsmall"><b>$totalPoint</b></h1>
+            #elseif($totalPoint > 9999999)
+            <h1 class="fontsmall"><b>$totalPoint</b></h1>
+            #elseif($totalPoint > 99999)
+            <h1 class="fontmedium"><b>$totalPoint</b></h1>
+            #end
+            #else
+            <h1><b>0</b></h1>
+            #end
+
+        </div>
+    </div>
+    #end
+</div>
+#end

@@ -748,7 +748,7 @@ function initScormUpload() {
         addRemoveLinks: true,
         parallelUploads: 1,
         uploadMultiple: false,
-        acceptedMimeTypes: 'application/zip'
+        acceptedMimeTypes: 'application/zip,application/x-compressed,application/x-zip-compressed,multipart/x-zip'
     });
     var dz = Dropzone.forElement("#uploadScormFileDropzone");
     flog("dropz", Dropzone, dz, dz.options.url);

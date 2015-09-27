@@ -1,13 +1,29 @@
 .product-tile {
     height: 300px;
+    width:100%;
+    float:left;
+    margin-bottom:10px;
+    overflow:hidden;
 }
 .product-tile {
     position: relative;
     border: solid lightgray 1px;
-    margin-right: 30px;
+    margin-right: 0px;
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: contain;
 }
+
+.product-tile .bg-img {
+    height:250px;
+    width:100%;
+    background-repeat:no-repeat;
+    background-position:center center;
+    background-size:contain;
+    position:absolute;
+    top:0px;
+    left:0px;
+}
+
 .product-tile:before {
     content: "";
     display: block;
@@ -29,10 +45,15 @@
     background: none repeat scroll 0 0 rgba(0, 0, 0, 0.4);
     color: white;
     font-weight: bold;
-}   
+}
 span.label.priceLabel {
     border-radius: 0;
     display: block;
     font-size: 18px;
     width: 100%;
+}
+
+.product-tile2{
+    margin:0px 0px 10px 0px !important;
+
 }

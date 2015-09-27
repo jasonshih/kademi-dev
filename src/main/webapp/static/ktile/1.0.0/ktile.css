@@ -16,6 +16,7 @@
 
 .ktile {
     position: relative;
+    height: 90px;
 }
 
 .ktile-logo,
