@@ -113,7 +113,9 @@
 //                        .alert();
 //                flog("show messages", messages);
 //                messages.show(100);
-                $('body, html').animate({scrollTop: $('.pageMessage.alert').offset().top - 140});
+                if( $('.pageMessage.alert').length > 0 ) {
+                    $('body, html').animate({scrollTop: $('.pageMessage.alert').offset().top - 140});
+                }
                 config.error(thisForm);
             }
             return false;
