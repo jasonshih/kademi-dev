@@ -28,12 +28,6 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-md-3 control-label" for="notes">Notes <small>These notes are for internal purposes only.</small></label>
-                                <div class="col-md-8">
-                                    <textarea cols="100" name="notes" rows="10" placeholder="" class="form-control">$!page.notes</textarea>
-                                </div>
-                            </div>
-                            <div class="form-group">
                                 <label class="col-md-3 control-label" for="subject">Email subject</label>
                                 <div class="col-md-8">
                                     <input type="text" name="subject" value="$!page.subject" placeholder="" required="true" class="required form-control" />
@@ -45,6 +39,18 @@
                                     <input type="text" name="fromAddress" value="$formatter.htmlEncode( $page.fromAddress )" placeholder="" required="true" class="required form-control" />
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="replyToAddress">Reply to address <small>Eg "Joe Bloggs" &lt;joe@bloggs.com&gt;</small></label>
+                                <div class="col-md-8">
+                                    <input type="text" name="replyToAddress" value="$!formatter.htmlEncode( $page.replyToAddress )" placeholder="" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="notes">Notes <small>These notes are for internal purposes only.</small></label>
+                                <div class="col-md-8">
+                                    <textarea cols="100" name="notes" rows="10" placeholder="" class="form-control">$!page.notes</textarea>
+                                </div>
+                            </div>
                         </div>
                         <div id="messages" class="tab-pane in Content Details">
                             <div class="form-group">
@@ -53,11 +59,11 @@
                                     <select name="pipeline" id="pipeline" class="form-control">
                                         <option value="">No Pipeline</option> 
                                         #foreach($entry in $page.outboundPipelines.entrySet())
-                                            #foreach($pipeline in $entry.value)
-                                                #set($pId = $entry.key.id + '_' + $pipeline.id)
-                                                #set($pName = $entry.key.repository.name + ' - ' + $pipeline.id)
-                                                $formatter.option($pId, $pName, $page.job.pipeline)
-                                            #end
+                                        #foreach($pipeline in $entry.value)
+                                        #set($pId = $entry.key.id + '_' + $pipeline.id)
+                                        #set($pName = $entry.key.repository.name + ' - ' + $pipeline.id)
+                                        $formatter.option($pId, $pName, $page.job.pipeline)
+                                        #end
                                         #end
                                     </select>
                                 </div>
