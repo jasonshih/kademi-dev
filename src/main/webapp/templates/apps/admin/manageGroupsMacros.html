@@ -4,7 +4,7 @@
     </head>
     <body>
         #macro(genGroups $group $wrapper $folder)
-        <div id="$group.name" class="panel panel-default group">
+        <div id="$group.name" class="panel panel-default group" data-name="$group.name" data-title="$!group.groupTitle" data-notes="$!group.notes">
             #set( $folderName = "")
             #if($folder)
             #set( $folderName = "-" + $folder.name.replaceAll('[^A-Za-z0-9]','') )
@@ -24,8 +24,13 @@
                 #end
 
                 <span class="group-name clickable">
+                    #set($gName = false)
+                    #set($gName = $group.groupTitle)
+                    #if(!$gName)
+                        #set($gName = $group.name)
+                    #end
                     #if( $group.groupType == "P" )
-                    <b class="text-success">$group.name</b>
+                    <b class="text-success">$gName</b>
                     #else
                     $group.name
                     #end
@@ -35,7 +40,7 @@
                         <span class="caret"></span>
                     </button>
                     <ul role="menu" class="dropdown-menu">
-                        <li><a href="" class="btn-rename-group">Rename this group</a></li>
+                        <li><a href="" class="btn-rename-group">Edit this group</a></li>
                         <li><a href="$group.name/members" class="btn-view-group-member">View members</a></li>
                         <li><a href="" class="btn-copy-member">Copy members from group</a></li>
                         #if($folder)
