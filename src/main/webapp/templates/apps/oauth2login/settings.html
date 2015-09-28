@@ -1,16 +1,27 @@
 <div class="form-group">
     <div class="col-sm-7">
-        <a href="#" class="btn btn-sm btn-success" data-toggle="modal" data-target="#add-oauth-provider"><i class="fa fa-plus"></i> Add a provider</a>
+        <a href="#" class="btn btn-sm btn-success btn-add-provider"><i class="fa fa-plus"></i> Add a provider</a>
     </div>
 </div>
 
-#foreach($p in $providers)
-<div class="form-group">
-    <div class="col-sm-7">
-        $p.providerId
+<div id="oauthproviders">
+    #foreach($p in $providers)
+    <div class="row clearfix" style="padding-top: 10px;" data-json="$formatter.htmlAttEncode($formatter.toJson($p))">
+        <div class="col-sm-9">
+            <div class="input-group input-group-sm">
+                <label class="input-group-addon">Provider</label>
+                <input type="text" class="form-control" value="$p.providerId" disabled="disabled">
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="btn-group btn-group-sm">
+                <a href="#" class="btn btn-sm btn-success btn-edit-provider"><i class="fa fa-edit"></i></a>
+                <a href="#" class="btn btn-sm btn-danger btn-delete-provider" data-id="$p.providerId"><i class="fa fa-times"></i></a>
+            </div>
+        </div>
     </div>
+    #end
 </div>
-#end
 
 <script>
     var oauth2Templates = $formatter.toJson($oauth2Templates);
@@ -23,12 +34,19 @@
         add_provider_modal.find('form').forms({
             callback: function (resp) {
                 if (resp.status) {
+                    $('#oauthproviders').reloadFragment();
                     add_provider_modal.modal('hide');
                     Msg.success(resp.messages.first());
                 } else {
 
                 }
             }
+        });
+
+        $('body').on('click', '.btn-add-provider', function (e) {
+            e.preventDefault();
+
+            showProviderModal(null, 'add', 'Add new OAuth2 Provider');
         });
 
         $('body').on('change', '.sel-template', function (e) {
@@ -40,7 +58,6 @@
             var template = oauth2Templates[val];
 
             if (template === null || typeof template === 'undefined') {
-                add_provider_modal.find('.oauth-fields').hide();
                 add_provider_modal.find('form').trigger('reset');
             } else {
                 add_provider_modal.find('input[name=providerId]').val(template.providerId);
@@ -51,11 +68,72 @@
                 add_provider_modal.find('input[name=profileLocation]').val(template.profileLocation);
                 add_provider_modal.find('input[name=redirectURI]').val(template.redirectURI);
                 add_provider_modal.find('input[name=permissionScopes]').val(template.permissionScopes.join(','));
-
-                add_provider_modal.find('.oauth-fields').show();
             }
         });
+
+        $('body').on('click', '.btn-delete-provider', function (e) {
+            e.preventDefault();
+
+            var btn = $(this);
+            var providerId = btn.data('id');
+            if (confirm("Are you sure you want to delete " + providerId + "?")) {
+                $.ajax({
+                    type: 'POST',
+                    url: window.location.pathname,
+                    data: {
+                        settingsAppId: oauth2_id,
+                        providerAction: 'delete',
+                        providerId: providerId
+                    },
+                    dataType: 'json',
+                    success: function (result) {
+                        Msg.info(result.messages.first());
+                        $('#oauthproviders').reloadFragment();
+                    }
+                });
+            }
+        });
+
+        $('body').on('click', '.btn-edit-provider', function (e) {
+            e.preventDefault();
+
+            var btn = $(this);
+            var selectedProv = btn.closest("div.row");
+            var jsonText = selectedProv.data('json');
+            flog(jsonText);
+
+            showProviderModal(jsonText, 'edit', 'Edit ');
+        });
     });
+
+    function showProviderModal(data, type, title) {
+        var add_provider_modal = $('#add-oauth-provider');
+
+        if (data === null || typeof data === 'undefined') {
+            add_provider_modal.find('form').trigger('reset');
+        } else {
+            add_provider_modal.find('input[name=providerId]').val(data.providerId);
+            add_provider_modal.find('input[name=clientId]').val(data.clientId);
+            add_provider_modal.find('input[name=clientSecret]').val(data.clientSecret);
+            add_provider_modal.find('input[name=authLocation]').val(data.authLocation);
+            add_provider_modal.find('input[name=tokenLocation]').val(data.tokenLocation);
+            add_provider_modal.find('input[name=profileLocation]').val(data.profileLocation);
+            add_provider_modal.find('input[name=redirectURI]').val(data.redirectURI);
+            add_provider_modal.find('input[name=permissionScopes]').val(data.permissionScopes.join(','));
+        }
+
+        add_provider_modal.find('input[name=providerAction]').val(type);
+        add_provider_modal.find('.modal-title').html(title);
+
+        if (type === 'add') {
+            add_provider_modal.find('button[data-type=form-submit]').text('Add Provider');
+        } else if (type === 'edit') {
+            add_provider_modal.find('input[name=origProviderId]').val(data.providerId);
+            add_provider_modal.find('button[data-type=form-submit]').text('Save Provider');
+        }
+
+        add_provider_modal.modal('show');
+    }
 
     function addModal() {
         var m = '<div class="modal fade" id="add-oauth-provider" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">'
@@ -67,6 +145,7 @@
                 + '        <form class="form-horizontal" method="POST" action="/manageApps/" role="form">'
                 + '            <input type="hidden" name="settingsAppId" value="${instanceId}"/>'
                 + '            <input type="hidden" name="providerAction" value="add"/>'
+                + '            <input type="hidden" name="origProviderId" value=""/>'
                 + '            <div class="form-group">'
                 + '                <label class="col-sm-4 control-label">Templates</label>'
                 + '                <div class="col-sm-7">'
@@ -78,49 +157,49 @@
                 + '                    </select>'
                 + '                </div>'
                 + '            </div>'
-                + '            <div class="form-group oauth-fields" style="display: none;">'
+                + '            <div class="form-group oauth-fields">'
                 + '                <label class="col-sm-4 control-label" for="providerId">Provider ID</label>'
                 + '                <div class="col-sm-7">'
                 + '                    <input type="text" class="form-control" name="providerId" id="providerId"/>'
                 + '                </div>'
                 + '            </div>'
-                + '            <div class="form-group oauth-fields" style="display: none;">'
+                + '            <div class="form-group oauth-fields">'
                 + '                <label class="col-sm-4 control-label" for="clientId">Client ID</label>'
                 + '                <div class="col-sm-7">'
                 + '                    <input type="text" class="form-control" name="clientId" id="clientId"/>'
                 + '                </div>'
                 + '            </div>'
-                + '            <div class="form-group oauth-fields" style="display: none;">'
+                + '            <div class="form-group oauth-fields">'
                 + '                <label class="col-sm-4 control-label" for="clientSecret">Client Secret</label>'
                 + '                <div class="col-sm-7">'
                 + '                    <input type="text" class="form-control" name="clientSecret" id="clientSecret"/>'
                 + '                </div>'
                 + '            </div>'
-                + '            <div class="form-group oauth-fields" style="display: none;">'
+                + '            <div class="form-group oauth-fields">'
                 + '                <label class="col-sm-4 control-label" for="authLocation">Authorication URL</label>'
                 + '                <div class="col-sm-7">'
                 + '                    <input type="text" class="form-control" name="authLocation" id="authLocation"/>'
                 + '                </div>'
                 + '            </div>'
-                + '            <div class="form-group oauth-fields" style="display: none;">'
+                + '            <div class="form-group oauth-fields">'
                 + '                <label class="col-sm-4 control-label" for="tokenLocation">Token URL</label>'
                 + '                <div class="col-sm-7">'
                 + '                    <input type="text" class="form-control" name="tokenLocation" id="tokenLocation"/>'
                 + '                </div>'
                 + '            </div>'
-                + '            <div class="form-group oauth-fields" style="display: none;">'
+                + '            <div class="form-group oauth-fields">'
                 + '                <label class="col-sm-4 control-label" for="profileLocation">Profile URL</label>'
                 + '                <div class="col-sm-7">'
                 + '                    <input type="text" class="form-control" name="profileLocation" id="profileLocation"/>'
                 + '                </div>'
                 + '            </div>'
-                + '            <div class="form-group oauth-fields" style="display: none;">'
+                + '            <div class="form-group oauth-fields">'
                 + '                <label class="col-sm-4 control-label" for="redirectURI">Redirect URL</label>'
                 + '                <div class="col-sm-7">'
                 + '                    <input type="text" class="form-control" name="redirectURI" id="redirectURI"/>'
                 + '                </div>'
                 + '            </div>'
-                + '            <div class="form-group oauth-fields" style="display: none;">'
+                + '            <div class="form-group oauth-fields">'
                 + '                <label class="col-sm-4 control-label" for="redirectURI">Scope'
                 + '                    <small>Comma separated list</small></label>'
                 + '                <div class="col-sm-7">'
