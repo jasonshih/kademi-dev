@@ -42,7 +42,8 @@ function initCRUDGroup() {
         e.preventDefault();
 
         var btn = $(this);
-        var name = btn.closest('.btn-group').prev().text().trim();
+        var selectedGroup = btn.closest('div.group');
+        var name = selectedGroup.data('name');
         var href = $.URLEncode(name);
 
         flog('delete', href);
@@ -59,11 +60,15 @@ function initCRUDGroup() {
 
         var btn = $(this);
         var selectGroup = btn.parents('div.group');
-        var groupName = btn.closest('.btn-group').prev().text().trim();
+        var groupName = selectGroup.data('name');
+        var groupTitle = selectGroup.data('title');
+        var groupNotes = selectGroup.data('notes');
         flog("groupName", groupName);
         showGroupModal('Group', 'Rename group', 'Rename', {
             name: groupName,
-            group: selectGroup.attr('data-group')
+            title: groupTitle,
+            notes: groupNotes,
+            group: selectGroup.attr('id')
         });
     });
 }
@@ -141,11 +146,11 @@ function initCRUDRole() {
             }
             //$('#groups-folders').reloadFragment();
             currentGroupDiv.find('.roles-wrapper').append(
-                '<span class="block role">' +
-                '<span>' + roleName + ', on ' + appliesToText + '</span> ' +
-                '<a class="btn btn-xs btn-danger btn-remove-role" href="' + resp.nextHref + '" title="Remove this role"><i class="fa fa-times"></i></a>' +
-                '</span>'
-            );
+                    '<span class="block role">' +
+                    '<span>' + roleName + ', on ' + appliesToText + '</span> ' +
+                    '<a class="btn btn-xs btn-danger btn-remove-role" href="' + resp.nextHref + '" title="Remove this role"><i class="fa fa-times"></i></a>' +
+                    '</span>'
+                    );
         });
     });
 }
@@ -243,28 +248,28 @@ function addOrderProgramList() {
     var tempControl = $('#modalListController').html();
     $('#modalGroup tr[rel=Program] ul.ListItem li').each(function (i) {
         $(this)
-            .attr('data-program', i)
-            .append(tempControl)
-            .find('label', 'input')
-            .each(function () {
-                var _this = $(this);
-                var _randomId = Math.round(Math.random() * 100000);
-                var _for = _this.attr('for') || null;
-                var _name = _this.attr('name') || null;
-                var _id = _this.attr('id') || null;
+                .attr('data-program', i)
+                .append(tempControl)
+                .find('label', 'input')
+                .each(function () {
+                    var _this = $(this);
+                    var _randomId = Math.round(Math.random() * 100000);
+                    var _for = _this.attr('for') || null;
+                    var _name = _this.attr('name') || null;
+                    var _id = _this.attr('id') || null;
 
-                if (_for) {
-                    _this.attr('for', _for + _randomId);
-                }
+                    if (_for) {
+                        _this.attr('for', _for + _randomId);
+                    }
 
-                if (_name) {
-                    _this.attr('name', _name + _randomId);
-                }
+                    if (_name) {
+                        _this.attr('name', _name + _randomId);
+                    }
 
-                if (_id) {
-                    _this.attr('id', _id + _randomId);
-                }
-            });
+                    if (_id) {
+                        _this.attr('id', _id + _randomId);
+                    }
+                });
     });
 }
 
@@ -290,14 +295,24 @@ function showGroupModal(name, title, type, data) {
 
     modal.find('.modal-title').html(title);
     modal.find('.btn-save-group').text(type);
+    modal.find('input[name=groupType]').val(type);
 
     if (data) {
         if (data.name) {
             modal.find('input[name=name]').val(data.name);
         }
 
+        if (data.title) {
+            modal.find('input[name=title]').val(data.title);
+        }
+
+        if (data.notes) {
+            modal.find('textarea[name=notes]').html(data.notes);
+        }
+
         if (data.group) {
             modal.attr('data-group', data.group);
+            modal.find('input[name=group]').val(data.group);
         }
     }
 
@@ -343,63 +358,42 @@ function maxOrderGroup() {
 function initGroupModal() {
     var modal = $('#modal-group');
 
-    // Event for Add/Edit button
-    modal.find('form').submit(function (e) {
-        e.preventDefault();
-
-        var btn = modal.find(".btn-save-group");
-        var type = btn.html();
-        flog('Click add/edit group', btn, type);
-
-        var name = modal.find('input[name=name]').val();
-        if (checkSimpleChars(modal.find('form'))) {
-            if (type === 'Add') {
-                createFolder(name, null, function (name, resp) {
-                    Msg.success(name + ' is created!');
-                    $('#groups-folders').reloadFragment({
-                        onComplete: function () {
-                            var startFolder;
-                            $('.group').draggable({
-                                revert: "invalid",
-                                axis: "y",
-                                handle: '.btn-order',
-                                start: function (event, ui) {
-                                    flog("draggable start", event, ui);
-                                    drapEventStart = event;
-                                    startFolder = $(event.currentTarget.closest(".folder"));
-                                    if (startFolder != null) {
-                                        startFolder.find(".group-count").text(startFolder.find(".group").size());
-                                    }
-                                    clearTimeout(checkTimer);
-                                    checkTimer = null;
-                                },
-                                stop: function (event, ui) {
-                                    flog("draggable stop", event, ui);
-                                    //var folder = $(event.currentTarget.closest(".folder"));
-                                    if (startFolder != null) {
-                                        startFolder.find(".group-count").text(startFolder.find(".group").size());
-                                    }
-                                }
-                            });
-                        }
-                    });
-                });
-
-            } else { // If is editing Group
-                var groupDiv = $('div.group').filter('[data-group=' + modal.attr('data-group') + ']');
-                var groupNameSpan = groupDiv.find('span.group-name');
-                var src = groupNameSpan.text().trim();
-                src = $.URLEncode(src);
-                var dest = name;
-                dest = window.location.pathname + dest;
-                flog("move group", src, dest);
-                move(src, dest, function () {
-                    groupNameSpan.text(name);
-                });
-            }
-
-            modal.modal('hide');
+    modal.find('form').forms({
+        callback: function (resp) {
+            reloadGroupFolders();
+            Msg.success(resp.messages.first());
             resetModalControl();
+            modal.modal('hide');
+        }
+    });
+}
+
+function reloadGroupFolders() {
+    $('#groups-folders').reloadFragment({
+        onComplete: function () {
+            var startFolder;
+            $('.group').draggable({
+                revert: "invalid",
+                axis: "y",
+                handle: '.btn-order',
+                start: function (event, ui) {
+                    flog("draggable start", event, ui);
+                    drapEventStart = event;
+                    startFolder = $(event.currentTarget.closest(".folder"));
+                    if (startFolder != null) {
+                        startFolder.find(".group-count").text(startFolder.find(".group").size());
+                    }
+                    clearTimeout(checkTimer);
+                    checkTimer = null;
+                },
+                stop: function (event, ui) {
+                    flog("draggable stop", event, ui);
+                    //var folder = $(event.currentTarget.closest(".folder"));
+                    if (startFolder != null) {
+                        startFolder.find(".group-count").text(startFolder.find(".group").size());
+                    }
+                }
+            });
         }
     });
 }
@@ -631,12 +625,12 @@ function initGroupFolder() {
             }
 
             currentFolder.find(".panel-group").append(
-                ui.draggable.css({
-                    position: "relative",
-                    top: "",
-                    left: ""
-                })
-            );
+                    ui.draggable.css({
+                        position: "relative",
+                        top: "",
+                        left: ""
+                    })
+                    );
 
             addGroupFolder(groupName, groupName, "addToFolder=addToFolder&folderName=" + folderName, function (name, resp) {
                 Msg.success("Moved " + groupName + " to " + folderName);

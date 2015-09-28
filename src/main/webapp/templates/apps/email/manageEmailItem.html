@@ -7,10 +7,10 @@
     <body>
         <div id="email-item-info">
             <p>
-            <a class="btn btn-primary pull-right" href="$page.href" target="_blank">
-                Open in new window
-                <span class="glyphicon glyphicon-arrow-right"></span>
-            </a>
+                <a class="btn btn-primary pull-right" href="$page.href" target="_blank">
+                    Open in new window
+                    <span class="glyphicon glyphicon-arrow-right"></span>
+                </a>
             </p>
             <table class="table status-$page.sendStatus">
                 <tr>
@@ -47,6 +47,16 @@
                     <td>
                         #if( $page.emailItem.sender )
                         <a href="/manageUsers/$page.emailItem.sender.id">$page.fromAddress</a>
+                        #else
+                        $page.fromAddress
+                        #end
+                    </td>
+                </tr>
+                <tr>
+                    <td>Reply to</td>
+                    <td>
+                        #if( $page.replyToAddress )
+                        $page.replyToAddress
                         #else
                         $page.fromAddress
                         #end
