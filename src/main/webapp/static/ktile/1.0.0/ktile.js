@@ -11,7 +11,7 @@ $(function () {
             wrapper.addClass('col-xl-4 col-lg-6 col-md-6 col-sm-6');
         } else {
             if (isLg || isMd) {
-                wrapper.addClass('col-xl-2 col-lg-4 col-md-4 col-sm-6');
+                wrapper.addClass('col-xl-3 col-lg-4 col-md-4 col-sm-6');
             }
         }
     });
