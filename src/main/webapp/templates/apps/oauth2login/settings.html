@@ -1,6 +1,140 @@
 <div class="form-group">
-    <label class="col-sm-4 control-label" for="fbApiKey">Facebook App ID</label>
     <div class="col-sm-7">
-        <input type="text" name="fbApiKey" class="form-control" value="">
+        <a href="#" class="btn btn-sm btn-success" data-toggle="modal" data-target="#add-oauth-provider"><i class="fa fa-plus"></i> Add a provider</a>
     </div>
 </div>
+
+#foreach($p in $providers)
+<div class="form-group">
+    <div class="col-sm-7">
+        $p.providerId
+    </div>
+</div>
+#end
+
+<script>
+    var oauth2Templates = $formatter.toJson($oauth2Templates);
+    var oauth2_id = '${instanceId}';
+    $(function () {
+        addModal();
+
+        add_provider_modal = $('#add-oauth-provider');
+
+        add_provider_modal.find('form').forms({
+            callback: function (resp) {
+                if (resp.status) {
+                    add_provider_modal.modal('hide');
+                    Msg.success(resp.messages.first());
+                } else {
+
+                }
+            }
+        });
+
+        $('body').on('change', '.sel-template', function (e) {
+            e.preventDefault();
+
+            var btn = $(this);
+            var val = btn.val();
+
+            var template = oauth2Templates[val];
+
+            if (template === null || typeof template === 'undefined') {
+                add_provider_modal.find('.oauth-fields').hide();
+                add_provider_modal.find('form').trigger('reset');
+            } else {
+                add_provider_modal.find('input[name=providerId]').val(template.providerId);
+                add_provider_modal.find('input[name=clientId]').val(template.clientId);
+                add_provider_modal.find('input[name=clientSecret]').val(template.clientSecret);
+                add_provider_modal.find('input[name=authLocation]').val(template.authLocation);
+                add_provider_modal.find('input[name=tokenLocation]').val(template.tokenLocation);
+                add_provider_modal.find('input[name=profileLocation]').val(template.profileLocation);
+                add_provider_modal.find('input[name=redirectURI]').val(template.redirectURI);
+                add_provider_modal.find('input[name=permissionScopes]').val(template.permissionScopes.join(','));
+
+                add_provider_modal.find('.oauth-fields').show();
+            }
+        });
+    });
+
+    function addModal() {
+        var m = '<div class="modal fade" id="add-oauth-provider" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">'
+                + '<div class="modal-header">'
+                + '        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>'
+                + '        <h4 class="modal-title" id="myModalLabel">Add new OAuth2 Provider</h4>'
+                + '    </div>'
+                + '    <div class="modal-body">'
+                + '        <form class="form-horizontal" method="POST" action="/manageApps/" role="form">'
+                + '            <input type="hidden" name="settingsAppId" value="${instanceId}"/>'
+                + '            <input type="hidden" name="providerAction" value="add"/>'
+                + '            <div class="form-group">'
+                + '                <label class="col-sm-4 control-label">Templates</label>'
+                + '                <div class="col-sm-7">'
+                + '                    <select class="form-control sel-template">'
+                + '                        $formatter.option(null, "Select a template", null)'
+                + '                        #foreach($entry in $oauth2Templates.entrySet())'
+                + '                        $formatter.option($entry.key, $entry.key, null)'
+                + '                        #end'
+                + '                    </select>'
+                + '                </div>'
+                + '            </div>'
+                + '            <div class="form-group oauth-fields" style="display: none;">'
+                + '                <label class="col-sm-4 control-label" for="providerId">Provider ID</label>'
+                + '                <div class="col-sm-7">'
+                + '                    <input type="text" class="form-control" name="providerId" id="providerId"/>'
+                + '                </div>'
+                + '            </div>'
+                + '            <div class="form-group oauth-fields" style="display: none;">'
+                + '                <label class="col-sm-4 control-label" for="clientId">Client ID</label>'
+                + '                <div class="col-sm-7">'
+                + '                    <input type="text" class="form-control" name="clientId" id="clientId"/>'
+                + '                </div>'
+                + '            </div>'
+                + '            <div class="form-group oauth-fields" style="display: none;">'
+                + '                <label class="col-sm-4 control-label" for="clientSecret">Client Secret</label>'
+                + '                <div class="col-sm-7">'
+                + '                    <input type="text" class="form-control" name="clientSecret" id="clientSecret"/>'
+                + '                </div>'
+                + '            </div>'
+                + '            <div class="form-group oauth-fields" style="display: none;">'
+                + '                <label class="col-sm-4 control-label" for="authLocation">Authorication URL</label>'
+                + '                <div class="col-sm-7">'
+                + '                    <input type="text" class="form-control" name="authLocation" id="authLocation"/>'
+                + '                </div>'
+                + '            </div>'
+                + '            <div class="form-group oauth-fields" style="display: none;">'
+                + '                <label class="col-sm-4 control-label" for="tokenLocation">Token URL</label>'
+                + '                <div class="col-sm-7">'
+                + '                    <input type="text" class="form-control" name="tokenLocation" id="tokenLocation"/>'
+                + '                </div>'
+                + '            </div>'
+                + '            <div class="form-group oauth-fields" style="display: none;">'
+                + '                <label class="col-sm-4 control-label" for="profileLocation">Profile URL</label>'
+                + '                <div class="col-sm-7">'
+                + '                    <input type="text" class="form-control" name="profileLocation" id="profileLocation"/>'
+                + '                </div>'
+                + '            </div>'
+                + '            <div class="form-group oauth-fields" style="display: none;">'
+                + '                <label class="col-sm-4 control-label" for="redirectURI">Redirect URL</label>'
+                + '                <div class="col-sm-7">'
+                + '                    <input type="text" class="form-control" name="redirectURI" id="redirectURI"/>'
+                + '                </div>'
+                + '            </div>'
+                + '            <div class="form-group oauth-fields" style="display: none;">'
+                + '                <label class="col-sm-4 control-label" for="redirectURI">Scope'
+                + '                    <small>Comma separated list</small></label>'
+                + '                <div class="col-sm-7">'
+                + '                    <input type="text" class="form-control" name="permissionScopes" id="permissionScopes"/>'
+                + '                </div>'
+                + '            </div>'
+                + '        </form>'
+                + '    </div>'
+                + '    <div class="modal-footer">'
+                + '        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>'
+                + '        <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Add Provider</button>'
+                + '    </div>'
+                + '</div>';
+
+        $('body').append(m);
+    }
+</script>
