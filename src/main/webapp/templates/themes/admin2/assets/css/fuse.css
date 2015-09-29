@@ -655,7 +655,7 @@ label small {
    Fuse header
    ============================================================================ */
 .fuse-header {
-    padding-right: 0;
+    /*padding-right: 0;*/
 }
 
 .fuse-header .navbar-tools > ul > li.fuse-header-item {
