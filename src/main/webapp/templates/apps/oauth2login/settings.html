@@ -119,7 +119,7 @@
             add_provider_modal.find('input[name=tokenLocation]').val(data.tokenLocation);
             add_provider_modal.find('input[name=profileLocation]').val(data.profileLocation);
             add_provider_modal.find('input[name=redirectURI]').val(data.redirectURI);
-            add_provider_modal.find('input[name=permissionScopes]').val(data.permissionScopes.join(','));
+            add_provider_modal.find('textarea[name=permissionScopes]').val(data.permissionScopes.join(','));
         }
 
         add_provider_modal.find('input[name=providerAction]').val(type);
@@ -203,7 +203,7 @@
                 + '                <label class="col-sm-4 control-label" for="redirectURI">Scope'
                 + '                    <small>Comma separated list</small></label>'
                 + '                <div class="col-sm-7">'
-                + '                    <input type="text" class="form-control" name="permissionScopes" id="permissionScopes"/>'
+                + '                    <textarea type="text" class="form-control" name="permissionScopes" id="permissionScopes"></textarea>'
                 + '                </div>'
                 + '            </div>'
                 + '        </form>'
