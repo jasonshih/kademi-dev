@@ -1,5 +1,6 @@
 function initManageECommerceStores() {
     initCreateModal();
+    initDeleteStore();
 }
 
 function initCreateModal() {
@@ -11,7 +12,23 @@ function initCreateModal() {
             if (resp.status) {
                 modal.modal('hide');
                 Msg.info(resp.messages.first());
+                $('#stores-table').reloadFragment();
             }
         }
+    });
+}
+
+function initDeleteStore() {
+    $('body').on('click', '.delete-store', function (e) {
+        e.preventDefault();
+
+        var btn = $(this);
+        var row = btn.closest('tr');
+        var href = btn.attr('href');
+        var title = btn.data('title');
+
+        confirmDelete(href, title, function () {
+            row.remove();
+        });
     });
 }

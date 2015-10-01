@@ -42,7 +42,7 @@
                             </span>
                         </p>
                         <div class="" style="float: left">
-                            <div class="toggle btn btn-default off" data-toggle="toggle" style="width: 95px; height: 34px;"><input id="all-products-toggle" data-toggle="toggle" data-on="All" data-off="Included" type="checkbox"><div class="toggle-group"><label class="btn btn-primary toggle-on">All</label><label class="btn btn-default active toggle-off">Included</label><span class="toggle-handle btn btn-default"></span></div></div>
+                            <input id="all-products-toggle" $formatter.ifTrue( $request.params.all, "checked", "" ) data-toggle="toggle" data-on="All" data-off="Included" type="checkbox" />
                         </div>
 
                         <div class="form-group">
@@ -76,7 +76,7 @@
                                     <th>Code</th>
                                     <th>Title</th>
                                     <th>Margin</th>
-                                    <th>Pts Multiplier</th>
+                                    <th>Base cost</th>
                                     <th></th>
                                     <th class="text-center">
                                         <input class="product-all-toggle" type="checkbox">
@@ -85,9 +85,30 @@
                                 </tr>
                             </thead>
                             <tbody id="products-list">
-                                <tr class="odd">
-                                    <td colspan="6" class="first last">No products were found matching the critieria</td>
+                                #set($products = $page.searchProducts($request.params.query, $request.params.showAll, $request.params.orgId))
+                                #if( $products.isEmpty() )
+                                <tr>
+                                    <td colspan="6">No products were found matching the critieria</td>
                                 </tr>
+                                #else
+                                #foreach($p in $products )
+                                <tr class='in-reward-$p.inReward' id='product-$p.productId'>
+                                    <td><a href='/products/$p.productId'>$p.name</a></td>
+                                    <td>$formatter.htmlEncode($p.title)</td>
+                                    <td>$!p.margin</td>
+                                    <td>$!p.baseCost</td>
+                                    <td></td>
+                                    <td class="text-center">
+                                        <input $formatter.ifTrue( $p.inStore, "checked", "" ) data-pid="$p.productId" class="product-toggle" type="checkbox" value="true" />
+                                    </td>
+                                    <td>
+                                        <a href="$p.productId" class="product-instore-details">
+                                            <span class="glyphicon glyphicon-cog"></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                                #end
+                                #end
                             </tbody>
                         </table>
                     </div>
@@ -101,14 +122,14 @@
                                 <div class="form-group">
                                     <label class="control-label col-md-3" for="name">Name</label>
                                     <div class="col-md-9">
-                                        <input type="text" name="name" id="name" value="$page.store.name" placeholder="" class="required form-control" required="true">
+                                        <input type="text" name="name" id="name" value="$page.store.name" placeholder="" class="required form-control" required="required">
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="control-label col-md-3" for="title">Title</label>
                                     <div class="col-md-9">
-                                        <input type="text" name="title" id="title" value="$page.store.title" placeholder="" class="required form-control" required="true">
+                                        <input type="text" name="title" id="title" value="$page.store.title" placeholder="" class="required form-control" required="required">
                                     </div>
                                 </div>
 
