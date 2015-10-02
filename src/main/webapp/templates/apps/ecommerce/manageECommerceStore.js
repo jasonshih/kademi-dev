@@ -5,6 +5,7 @@ function initManageECommerceStore() {
     initLibrarySelect();
     initIncludeProduct();
     initSelectAllProducts();
+    initEditProductSettings();
 }
 
 function initDetailsForm() {
@@ -89,6 +90,13 @@ function initSelectAllProducts() {
         });
 
         updateProductSelected(ids.join(','), isChecked);
+    });
+}
+
+function initEditProductSettings() {
+    $('body').on('click', '.product-instore-details', function (e) {
+        e.preventDefault();
+        
     });
 }
 
