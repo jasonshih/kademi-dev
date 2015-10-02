@@ -1,0 +1,63 @@
+<fieldset>
+    <!-- Name -->
+    <div class="control-group">
+        <label class="control-label"  for="cardname">Card Holder's Name</label>
+        <div class="controls">
+            <input type="text" id="cardname" name="cardname" placeholder="" class="input-xlarge">
+        </div>
+    </div>
+
+    <!-- Card Number -->
+    <div class="control-group">
+        <label class="control-label" for="cardnumber">Card Number</label>
+        <div class="controls">
+            <input type="text" id="cardnumber" name="cardnumber" placeholder="" class="input-xlarge">
+        </div>
+    </div>
+
+    <!-- Expiry-->
+    <div class="control-group">
+        <label class="control-label" for="password">Card Expiry Date</label>
+        <div class="controls">
+            <select class="span3" name="cardmonth" id="expiry_month">
+                <option value="01">Jan (01)</option>
+                <option value="02">Feb (02)</option>
+                <option value="03">Mar (03)</option>
+                <option value="04">Apr (04)</option>
+                <option value="05">May (05)</option>
+                <option value="06">June (06)</option>
+                <option value="07">July (07)</option>
+                <option value="08">Aug (08)</option>
+                <option value="09">Sep (09)</option>
+                <option value="10">Oct (10)</option>
+                <option value="11">Nov (11)</option>
+                <option value="12">Dec (12)</option>
+            </select>
+            <select class="span2" name="cardyear">
+                #set($currentYear = $formatter.getYear($formatter.now))
+                #foreach($i in [0..10])
+                #set($y = $currentYear + $i)
+                <option value="$y">$y</option>
+                #end
+            </select>
+        </div>
+    </div>
+
+    <!-- Currency Code -->
+    <input type="hidden" name="currencyCode" value="NZ"/>
+
+    <!-- CVV -->
+    <div class="control-group">
+        <label class="control-label"  for="cardcvn">Card CVV</label>
+        <div class="controls">
+            <input type="password" id="cardcvn" name="cardcvn" placeholder="" class="span2">
+        </div>
+    </div>
+
+    <!-- Submit -->
+    <div class="control-group">
+        <div class="controls">
+            <button class="btn btn-success">Pay Now</button>
+        </div>
+    </div>
+</fieldset>
