@@ -302,14 +302,21 @@
                                 <td>Created</td>
                                 <td><abbr title="$formatter.formatDateISO8601($page.createdDate)" class="timeago">$page.createdDate</abbr></td>
                                 <td></td>
-                                <td><a href="$page.createdBy.href">$page.createdBy.name</a></td>
+                                <td><a href="/manageUsers/$page.createdBy.userId">$page.createdBy.name</a></td>
                             </tr>
                             #foreach($c in $page.bidHistory)
                             <tr>
                                 <td>Bid</td>
                                 <td><abbr title="$formatter.formatDateISO8601($c.changeDate)" class="timeago">$c.changeDate</abbr></td>
                                 <td>$c.bidValue</td>
-                                <td><a href="$c.changeBy.href">$c.changedBy.name</a></td>
+                                <td>
+                                    <a href="/manageUsers/$c.changedBy.userId">$c.changedBy.name</a>
+                                    #foreach( $m in $c.changedBy.primaryMemberships() )
+                                        #if( $m.org.id != $page.organisation.id )
+                                            $m.org.title
+                                        #end
+                                    #end
+                                </td>
                             </tr>
                             #end
                             #if($page.winningBid)
@@ -317,7 +324,7 @@
                                 <td>Winner</td>
                                 <td><abbr title="$formatter.formatDateISO8601($page.createdDate)" class="timeago">$page.winningBid.changeDate</abbr></td>
                                 <td>$page.winningBid.bidValue</td>
-                                <td><a href="$page.createdBy.href">$page.winningBid.changedBy.name</a></td>
+                                <td><a href="/manageUsers/$page.createdBy.userId">$page.winningBid.changedBy.name</a></td>
                             </tr>
                             #end
                             #if($page.auctionClosed)
@@ -325,7 +332,7 @@
                                 <td>Closed</td>
                                 <td><abbr title="$formatter.formatDateISO8601($page.auction.auctionProcessedDate)" class="timeago">$page.auction.auctionProcessedDate</abbr></td>
                                 <td></td>
-                                <td><a href="$page.createdBy.href">$page.createdBy.name</a></td>
+                                <td><a href="/manageUsers/$page.createdBy.userId">$page.createdBy.name</a></td>
                             </tr>
                             #end
                         </table>
