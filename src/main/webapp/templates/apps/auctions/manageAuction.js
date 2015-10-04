@@ -23,10 +23,10 @@ function initForms() {
     $("#mainForm").forms({
         callback: function (resp) {
             flog("done", resp);
-            Msg.success("Saved ok");
-        },
-        error: function () {
-            Msg.error("Some information is not valid. Please check the auction details");
+            Msg.success(resp.messages.first());
+            if (resp.nextHref && resp.nextHref !== window.location.pathname) {
+                window.location.pathname = resp.nextHref;
+            }
         }
     });
 }

@@ -86,6 +86,16 @@
                                     </td>
                                 </tr>
                                 <tr>
+                                    <td>Auction name</td>
+                                    <td>
+                                        <div class="form-group">
+                                            <div class="col-sm-4">
+                                                <input type="text" id="auctionName" name="name" placeholder="Enter a name here" value="$page.name" class="form-control required reallySimpleChars" />
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <td>Auction Type</td>
                                     <td>
                                         <div class="form-group">
@@ -312,9 +322,9 @@
                                 <td>
                                     <a href="/manageUsers/$c.changedBy.userId">$c.changedBy.name</a>
                                     #foreach( $m in $c.changedBy.primaryMemberships() )
-                                        #if( $m.org.id != $page.organisation.id )
-                                            $m.org.title
-                                        #end
+                                    #if( $m.org.id != $page.organisation.id )
+                                    $m.org.title
+                                    #end
                                     #end
                                 </td>
                             </tr>
@@ -481,23 +491,23 @@
             </div>
         </div>
         #macro(genGroup $group)
-            #set($gc = "")
-            #set($gIcon = "")
-            #if( $group.groupType == "P" || !$group.groupType)
-                #set($gc = "label label-success")
-                #set($gIcon = "clip-users")
-            #elseif( $group.groupType == "S" )
-                #set($gc = "label label-info")
-                #set($gIcon = "fa fa-trophy")
-            #elseif( $group.groupType == "M" )
-                #set($gc = "label label-info")
-                #set($gIcon = "fa fa-envelope")
-            #end
-            <span id="group_$group.name" class="group-list $gc">
-                <i class="$gIcon"></i>
-                <span class="block-name" title="$group.name">$group.name</span>
-                <a href="$group.name" class="btn btn-xs btn-danger btn-delete-group" title="Delete access for group $group.name"><i href="$group.name" class="fa fa-times"></i></a>
-            </span>
+        #set($gc = "")
+        #set($gIcon = "")
+        #if( $group.groupType == "P" || !$group.groupType)
+        #set($gc = "label label-success")
+        #set($gIcon = "clip-users")
+        #elseif( $group.groupType == "S" )
+        #set($gc = "label label-info")
+        #set($gIcon = "fa fa-trophy")
+        #elseif( $group.groupType == "M" )
+        #set($gc = "label label-info")
+        #set($gIcon = "fa fa-envelope")
+        #end
+        <span id="group_$group.name" class="group-list $gc">
+            <i class="$gIcon"></i>
+            <span class="block-name" title="$group.name">$group.name</span>
+            <a href="$group.name" class="btn btn-xs btn-danger btn-delete-group" title="Delete access for group $group.name"><i href="$group.name" class="fa fa-times"></i></a>
+        </span>
         #end
         <script type="text/javascript">
             $(function () {
