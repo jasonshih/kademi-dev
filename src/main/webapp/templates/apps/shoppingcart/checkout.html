@@ -14,7 +14,7 @@
                         <ul class="nav nav-tabs" id="myTabs" role="tablist">
                             <li role="presentation" class="active"><a href="#tab-items" aria-controls="tab-items" role="tab" data-toggle="tab">1. Items</a></li>
                             <li role="presentation" class="disabled"><a href="#tab-shipping" aria-controls="tab-shipping" role="tab" data-toggle="tab">2. Shipping Address</a></li>
-                            <li role="presentation" class="disabled"><a href="#tab-payment" aria-controls="tab-payment" role="tab" data-toggle="tab">3. Payment</a></li>
+                            <li role="presentation" class=""><a href="#tab-payment" aria-controls="tab-payment" role="tab" data-toggle="tab">3. Payment</a></li>
                             <li role="presentation" class="disabled"><a href="#tab-final" aria-controls="tab-final" role="tab" data-toggle="tab">4. Confirm and Order</a></li>
                         </ul>
                         <form role="form" class="form-horizontal" method="post" action="$page.href">
@@ -117,8 +117,31 @@
                                     </div>
                                     <button type="submit" class="btn btn-lg btn-success wizard-btn wizard-btn-2">Next >></button>
                                 </div>
-                                <div role="tabpanel" class="tab-pane active" id="tab-payment">
-                                    $page.paymentProviders
+                                <div role="tabpanel" class="tab-pane" id="tab-payment">
+                                    #set($providers = $page.paymentProviders)
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="tab-content">
+                                                #foreach($pa in $providers)
+                                                <div id="$pa.instanceId" class="tab-pane fade #if($foreach.first) in active #end">
+                                                    $pa.paymentForm
+                                                </div>
+                                                #end
+                                            </div>
+                                        </div>   
+
+                                        <div class="col-sm-6">
+                                            <label class='control-label'></label><!-- spacing -->
+
+                                            <div class="alert alert-info">Please choose your method of payment.
+                                            </div>
+                                            <div class="btn-group-vertical btn-block">
+                                                #foreach($pa in $providers)
+                                                <a class="btn btn-default " style="text-align: left;" data-toggle="tab" href="#$pa.instanceId">$pa.getTitle(null, null)</a>
+                                                #end
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div role="tabpanel" class="tab-pane" id="tab-final">
                                     <div class="row">
@@ -180,7 +203,7 @@
                             if (resp.status) {
                                 Msg.info("Your order has been placed");
                                 $("#checkout-panels").reloadFragment({
-                                    whenComplete : function(){
+                                    whenComplete: function () {
                                         initCheckout();
                                         initCheckoutPanels();
                                     }
@@ -192,7 +215,7 @@
                     });
                 }
 
-                function initCheckoutPanels(){
+                function initCheckoutPanels() {
                     var panels = $("#checkout-panels");
                     var form = $("#checkout-panels form");
                     panels.on("click", ".wizard-btn-1", function (e) {
@@ -278,7 +301,7 @@
                             Msg.error("Please enter a valid quantity");
                         }
                     });
-                    $('#myTabs').on("click",'a',function (e) {
+                    $('#myTabs').on("click", 'a', function (e) {
                         if ($(this.parentNode).hasClass("disabled")) {
                             e.preventDefault();
                             return false;

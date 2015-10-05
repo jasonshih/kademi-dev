@@ -1,39 +1,27 @@
-<div class="form-group">
-    <label for="cardname">
-        Name on card</label>
-    <div class="input-group">
-        <input type="text" class="form-control" id="cardname" name="cardname" placeholder="Name on card"
-               required />
-        <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+<div class='form-row'>
+    <div class='form-group required'>
+        <label class='control-label' for="cardname">Name on Card</label>
+        <input class='form-control' id="cardname" name="cardname" size='4' type='text' tabindex="1">
+    </div>
+
+</div>
+<div class='form-row'>
+    <div class='form-group card required'>
+        <label class='control-label' for="cardnumber">Card Number</label>
+        <input autocomplete='off' id="cardnumber" name="cardnumber" class='form-control' size='20' type='text' tabindex="2">
     </div>
 </div>
-<div class="form-group">
-    <label for="cardnumber">
-        Card number</label>
-    <div class="input-group">
-        <input type="text" class="form-control" id="cardnumber" name="cardnumber" placeholder="Valid Card Number"
-               required />
-        <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+<div class='form-row'>
+    <div class='form-group cvc required'>
+        <label class='control-label' for="cardcvn">CVC</label>
+        <input autocomplete='off' id="cardcvn" name="cardcvn" class='form-control' placeholder='ex. 311' size='4' type='text' tabindex="3">
     </div>
-</div>
-<div class="row">
-    <div class="col-xs-7 col-md-7">
-        <div class="form-group">
-            <label for="cardmonth">
-                EXPIRY DATE</label>
-            <div class="col-xs-6 col-lg-6 pl-ziro">
-                <input type="text" class="form-control" id="cardmonth" name="cardmonth" placeholder="MM" required />
-            </div>
-            <div class="col-xs-6 col-lg-6 pl-ziro">
-                <input type="text" class="form-control" id="cardyear" name="cardyear" placeholder="YY" required />
-            </div>
-        </div>
+    <div class='form-group expiration required'>
+        <label class='control-label' for="cardmonth">Expiration</label>
+        <input class='form-control' id="cardmonth" name="cardmonth" placeholder='MM' size='2' type='text' tabindex="4">
     </div>
-    <div class="col-xs-5 col-md-5 pull-right">
-        <div class="form-group">
-            <label for="cardcvn">
-                CV CODE</label>
-            <input type="password" class="form-control" id="cardcvn" name="cardcvn" placeholder="CV" required />
-        </div>
+    <div class='form-group expiration required'>
+        <label class='control-label' for="cardyear">Year</label>
+        <input class='form-control' id="cardyear" name="cardyear" placeholder='YYYY' size='4' type='text' tabindex="5">
     </div>
 </div>
