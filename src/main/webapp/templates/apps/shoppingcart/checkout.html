@@ -14,7 +14,7 @@
                         <ul class="nav nav-tabs" id="myTabs" role="tablist">
                             <li role="presentation" class="active"><a href="#tab-items" aria-controls="tab-items" role="tab" data-toggle="tab">1. Items</a></li>
                             <li role="presentation" class="disabled"><a href="#tab-shipping" aria-controls="tab-shipping" role="tab" data-toggle="tab">2. Shipping Address</a></li>
-                            <li role="presentation" class=""><a href="#tab-payment" aria-controls="tab-payment" role="tab" data-toggle="tab">3. Payment</a></li>
+                            <li role="presentation" class="disabled"><a href="#tab-payment" aria-controls="tab-payment" role="tab" data-toggle="tab">3. Payment</a></li>
                             <li role="presentation" class="disabled"><a href="#tab-final" aria-controls="tab-final" role="tab" data-toggle="tab">4. Confirm and Order</a></li>
                         </ul>
                         <form role="form" class="form-horizontal" method="post" action="$page.href">
@@ -75,7 +75,7 @@
                                         </tbody>
                                     </table>
                                     #if( !$items.empty )
-                                    <button type="submit" class="btn btn-lg btn-success wizard-btn wizard-btn-1">Next >></button>
+                                    <button type="button" class="btn btn-lg btn-success wizard-btn wizard-btn-1">Next >></button>
                                     #end
                                 </div>
                                 <div role="tabpanel" class="tab-pane" id="tab-shipping">
@@ -115,21 +115,25 @@
 
                                         </div>
                                     </div>
-                                    <button type="submit" class="btn btn-lg btn-success wizard-btn wizard-btn-2">Next >></button>
+                                    <button type="button" class="btn btn-lg btn-success wizard-btn wizard-btn-2">Next >></button>
                                 </div>
                                 <div role="tabpanel" class="tab-pane" id="tab-payment">
                                     #set($providers = $page.paymentProviders)
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="tab-content">
+                                                #set($firstPa = false)
                                                 #foreach($pa in $providers)
                                                 <div id="$pa.instanceId" class="tab-pane fade #if($foreach.first) in active #end">
+                                                    #if($foreach.first)
+                                                    #set($firstPa = $pa)
+                                                    #end
                                                     $pa.paymentForm
                                                 </div>
                                                 #end
                                             </div>
                                         </div>   
-
+                                        <input type="hidden" name="paymentId" value="$!firstPa.instanceId"/>
                                         <div class="col-sm-6">
                                             <label class='control-label'></label><!-- spacing -->
 
@@ -142,6 +146,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <button type="button" class="btn btn-lg btn-success wizard-btn wizard-btn-3">Next >></button>
                                 </div>
                                 <div role="tabpanel" class="tab-pane" id="tab-final">
                                     <div class="row">
@@ -253,25 +258,31 @@
                     });
                     panels.on("click", ".wizard-btn-2", function (e) {
                         e.preventDefault();
-                        if (checkRequiredFields(form)) {
-                            var addr = $(".ship-address");
-                            addr.empty();
-                            var addr1 = $('#tab-shipping input[name="addressLine1"]').val();
-                            var addr2 = $('#tab-shipping input[name="addressLine2"]').val();
-                            var postCode = $('#tab-shipping input[name="postcode"]').val();
-                            var state = $('#tab-shipping input[name="state"]').val();
-                            addr.append(addr1)
-                                    .append('</br>')
-                                    .append(addr2)
-                                    .append('</br>')
-                                    .append(postCode)
-                                    .append('</br>')
-                                    .append(state);
-                            resetValidation(form);
-                            var tabs = $('#checkout-tabs a[href="#tab-final"]');
-                            tabs.parent().removeClass("disabled")
-                            tabs.tab("show");
-                        }
+                        var addr = $(".ship-address");
+                        addr.empty();
+                        var addr1 = $('#tab-shipping input[name="addressLine1"]').val();
+                        var addr2 = $('#tab-shipping input[name="addressLine2"]').val();
+                        var postCode = $('#tab-shipping input[name="postcode"]').val();
+                        var state = $('#tab-shipping input[name="state"]').val();
+                        addr.append(addr1)
+                                .append('<br/>')
+                                .append(addr2)
+                                .append('<br/>')
+                                .append(postCode)
+                                .append('<br/>')
+                                .append(state);
+                        resetValidation(form);
+                        var tabs = $('#checkout-tabs a[href="#tab-payment"]');
+                        tabs.parent().removeClass("disabled")
+                        tabs.tab("show");
+                    });
+
+                    panels.on("click", ".wizard-btn-3", function (e) {
+                        e.preventDefault();
+                        resetValidation(form);
+                        var tabs = $('#checkout-tabs a[href="#tab-final"]');
+                        tabs.parent().removeClass("disabled")
+                        tabs.tab("show");
                     });
 
                     panels.on("click", ".wizard-btn-final", function (e) {
