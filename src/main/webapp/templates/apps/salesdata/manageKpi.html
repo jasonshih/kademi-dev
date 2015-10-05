@@ -359,29 +359,62 @@
                     </div>
 
                     <div id="results" class="tab-pane">
-                        <p>Review the assessed results for participants</p>
-                        <table class="table table-bordered table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Period start</th>
-                                    <th>Achievement Level</th>
-                                    <th>Achievement Amount</th>
-                                    <th>Points Awarded</th>
-                                    <th>Participant</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                #foreach($result in $page.results)
-                                <tr>
-                                    <td>$result.period.startDate</td>
-                                    <td>$!result.level.title</td>
-                                    <td>$!result.amount</td>
-                                    <td>$!result.awardedPoints</td>
-                                    <td>$result.participant.name</td>
-                                </tr>
-                                #end
-                            </tbody>
-                        </table>
+                        #set( $selPeriodId = $formatter.toLong( $request.params.period, true ) )
+                        #if( $selPeriodId )
+                        #set( $selPeriod = $page.kpi.period( $selPeriodId ) )                            
+                        #else
+                        #set( $selPeriod = $page.lastPeriod )                            
+                        #end
+
+                        <div class="row">
+                            <div class="col-md-9">                            
+                                <h3>Assessed results for $formatter.formatDate($selPeriod.startDate) to $formatter.formatDate($selPeriod.endDate)</h3>
+
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Achievement Level</th>
+                                            <th>Achievement Amount</th>
+                                            <th>Points Assessed</th>
+                                            <th>Points Awarded</th>
+                                            <th>Participant</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        #foreach($result in $page.results($selPeriod) )
+                                        <tr>
+                                            <td>$!result.level.title</td>
+                                            <td>$!result.amount</td>
+                                            <td>$!result.awardedPoints</td>
+                                            <td>$!result.actualAwardedPoints.numPoints</td>
+                                            <td>$result.participant.name</td>
+                                        </tr>
+                                        #end
+                                    </tbody>
+                                </table>                                
+                            </div>
+                            <div class="col-md-3">
+                                <h3>Assessment periods</h3>
+                                <ul class="list-group">
+                                    #foreach($period in $page.periods)
+
+                                    #set( $active = "" )
+                                    #if( $period.id == $selPeriod.id )
+                                    #set( $active = "active" )
+                                    #end
+                                    <a class="list-group-item $active"  href="?period=$period.id#results-tab">
+                                        <span class="badge">$period.numResults</span>
+                                        
+                                        #if( $period.rewardsIssuedDate )
+                                        <span class="fa fa-trophy"></span>
+                                        #end
+                                        
+                                        $formatter.formatDate($period.startDate) - $formatter.formatDate($period.endDate)
+                                    </a>                                
+                                    #end
+                                </ul>
+                            </div>                            
+                        </div>                        
                     </div>
                     <div id="query" class="tab-pane">
                         <p>Query for progress results for a participant for a given date period</p>
