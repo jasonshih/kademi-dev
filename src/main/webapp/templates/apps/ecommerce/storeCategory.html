@@ -38,10 +38,11 @@
             #if($params.toRange)
             #set($toRange = $formatter.toInteger($params.toRange))
             #end
-$page.searchProducts( $request.params.q, $fromRange, $toRange, 'title', null ) 
-            #set( $products = $page.searchProducts( $request.params.q, $fromRange, $toRange, 'title', null ) )
+
+            #set( $products = $page.searchProducts( $request.params.q, $fromRange, $toRange, 'title', false ) )
+            $products
             <div id='products-list'>
-                #if( !$products || $products.hits.hits.size() == 0 )
+                #if( $products.hits.hits.size() == 0 )
                 <b class=''>No products were found matching the critieria</b>
                 #else
                 <div class='row'>
