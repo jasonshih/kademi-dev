@@ -14,7 +14,8 @@
                         <ul class="nav nav-tabs" id="myTabs" role="tablist">
                             <li role="presentation" class="active"><a href="#tab-items" aria-controls="tab-items" role="tab" data-toggle="tab">1. Items</a></li>
                             <li role="presentation" class="disabled"><a href="#tab-shipping" aria-controls="tab-shipping" role="tab" data-toggle="tab">2. Shipping Address</a></li>
-                            <li role="presentation" class="disabled"><a href="#tab-final" aria-controls="tab-final" role="tab" data-toggle="tab">3. Confirm and Order</a></li>
+                            <li role="presentation" class="disabled"><a href="#tab-payment" aria-controls="tab-payment" role="tab" data-toggle="tab">3. Payment</a></li>
+                            <li role="presentation" class="disabled"><a href="#tab-final" aria-controls="tab-final" role="tab" data-toggle="tab">4. Confirm and Order</a></li>
                         </ul>
                         <form role="form" class="form-horizontal" method="post" action="$page.href">
                             <!-- Tab panes -->
@@ -115,6 +116,9 @@
                                         </div>
                                     </div>
                                     <button type="submit" class="btn btn-lg btn-success wizard-btn wizard-btn-2">Next >></button>
+                                </div>
+                                <div role="tabpanel" class="tab-pane active" id="tab-payment">
+                                    $page.paymentProviders
                                 </div>
                                 <div role="tabpanel" class="tab-pane" id="tab-final">
                                     <div class="row">
