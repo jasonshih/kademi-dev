@@ -1,0 +1,8 @@
+<div class="col-md-9 col-offset-md-3">
+#foreach($p in $page.oAuth2Providers)
+<a href="$applications.oauth.getOAuth2URL($p, $request.absoluteUrl)" class="btn btn-success"  style="text-transform: capitalize">
+    <i class="fa fa-${p.providerId}"></i>
+    $p.providerId
+</a>
+#end
+</div>
