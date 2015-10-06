@@ -26,10 +26,6 @@
                         <li class="presentation" role="menuitem"><a href="#" data-toggle="modal" data-target="#modal-reprocess"><i class="fa fa-refresh"></i> Reprocess</a></li>
                     </ul>
                 </div>
-                <button class="btn btn-sm btn-danger kpi-rewards" type="button">
-                    <span class="fa fa-dollar"></span>
-                    Allocate rewards
-                </button>
                 <button class="btn btn-sm btn-success" type="submit">
                     <span class="fa fa-save"></span>
                     Save changes
@@ -371,11 +367,11 @@
                                 <h3>Assessed results for $formatter.formatDate($selPeriod.startDate) to $formatter.formatDate($selPeriod.endDate)</h3>
                                 #if( $selPeriod.rewardsIssuedDate )
                                 <div class="alert alert-success">
-                                Rewards allocated $formatter.formatAge( $selPeriod.rewardsIssuedDate )
+                                    Rewards allocated $formatter.formatAge( $selPeriod.rewardsIssuedDate )
                                 </div>
                                 #else
                                 <div class="alert alert-danger">
-                                Rewards have not been allocated yet
+                                    Rewards have not been allocated yet
                                 </div>
                                 #end
                                 <table class="table table-bordered table-striped">
@@ -398,14 +394,14 @@
                                                 #set( $actualPoints = false )
                                                 #set( $actualPoints = $result.actualAwardedPoints.numPoints )
                                                 #if( $actualPoints )
-                                                    $actualPoints
-                                                    #if( $actualPoints > $result.awardedPoints )
-                                                    #set( $diff = $result.awardedPoints - $actualPoints )
-                                                    <span class="label label-danger">$diff</span>
-                                                    #elseif( $actualPoints < $result.awardedPoints )
-                                                    #set( $diff = $result.awardedPoints - $actualPoints )
-                                                    <span class="label label-success">$diff</span>
-                                                    #end
+                                                $actualPoints
+                                                #if( $actualPoints > $result.awardedPoints )
+                                                #set( $diff = $result.awardedPoints - $actualPoints )
+                                                <span class="label label-danger">$diff</span>
+                                                #elseif( $actualPoints < $result.awardedPoints )
+                                                #set( $diff = $result.awardedPoints - $actualPoints )
+                                                <span class="label label-success">$diff</span>
+                                                #end
                                                 #end
                                             </td>
                                             <td>$result.participant.name</td>
@@ -416,6 +412,13 @@
                             </div>
                             <div class="col-md-3">
                                 <h3>Assessment periods</h3>
+                                <button class="btn btn-sm btn-success kpiRewards" type="button" data-periodId="$selPeriod.id">
+                                    <span class="fa fa-dollar"></span>
+                                    Allocate rewards for selected period
+                                </button>
+
+                                <hr/>
+
                                 <ul class="list-group">
                                     #foreach($period in $page.periods)
 
@@ -804,10 +807,11 @@
                                                     submitProcess("processKpis");
                                                 }
                                             });
-                                            $(".kpi-rewards").click(function (e) {
+                                            $(".kpiRewards").click(function (e) {
                                                 e.preventDefault();
+                                                var periodId = $(e.target).data("periodId");
                                                 if (confirm("This will allocate rewards based on KPI achievements for results which have not already had rewards processing. Would you like to continue?")) {
-                                                    submitProcess("processRewards");
+                                                    submitProcess("processRewards", periodId);
                                                 }
                                             });
 
@@ -1028,12 +1032,13 @@
                                             });
                                         }
 
-                                        function submitProcess(processName) {
+                                        function submitProcess(processName, periodId) {
                                             flog("submitProcess", processName);
                                             $.ajax({
                                                 type: 'POST',
                                                 data: {
-                                                    process: processName
+                                                    process: processName,
+                                                    periodId: periodId
                                                 },
                                                 dataType: "json",
                                                 url: window.location.pathname,
