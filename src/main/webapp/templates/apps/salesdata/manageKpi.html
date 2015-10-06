@@ -361,15 +361,23 @@
                     <div id="results" class="tab-pane">
                         #set( $selPeriodId = $formatter.toLong( $request.params.period, true ) )
                         #if( $selPeriodId )
-                        #set( $selPeriod = $page.kpi.period( $selPeriodId ) )                            
+                        #set( $selPeriod = $page.kpi.period( $selPeriodId ) )
                         #else
-                        #set( $selPeriod = $page.lastPeriod )                            
+                        #set( $selPeriod = $page.lastPeriod )
                         #end
 
                         <div class="row">
-                            <div class="col-md-9">                            
+                            <div class="col-md-9">
                                 <h3>Assessed results for $formatter.formatDate($selPeriod.startDate) to $formatter.formatDate($selPeriod.endDate)</h3>
-
+                                #if( $selPeriod.rewardsIssuedDate )
+                                <div class="alert alert-success">
+                                Rewards allocated $formatter.formatAge( $selPeriod.rewardsIssuedDate )
+                                </div>
+                                #else
+                                <div class="alert alert-danger">
+                                Rewards have not been allocated yet
+                                </div>
+                                #end
                                 <table class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
@@ -384,14 +392,27 @@
                                         #foreach($result in $page.results($selPeriod) )
                                         <tr>
                                             <td>$!result.level.title</td>
-                                            <td>$!result.amount</td>
+                                            <td>$formatter.formatCurrency( $result.amount )</td>
                                             <td>$!result.awardedPoints</td>
-                                            <td>$!result.actualAwardedPoints.numPoints</td>
+                                            <td>
+                                                #set( $actualPoints = false )
+                                                #set( $actualPoints = $result.actualAwardedPoints.numPoints )
+                                                #if( $actualPoints )
+                                                    $actualPoints
+                                                    #if( $actualPoints > $result.awardedPoints )
+                                                    #set( $diff = $result.awardedPoints - $actualPoints )
+                                                    <span class="label label-danger">$diff</span>
+                                                    #elseif( $actualPoints < $result.awardedPoints )
+                                                    #set( $diff = $result.awardedPoints - $actualPoints )
+                                                    <span class="label label-success">$diff</span>
+                                                    #end
+                                                #end
+                                            </td>
                                             <td>$result.participant.name</td>
                                         </tr>
                                         #end
                                     </tbody>
-                                </table>                                
+                                </table>
                             </div>
                             <div class="col-md-3">
                                 <h3>Assessment periods</h3>
@@ -404,17 +425,17 @@
                                     #end
                                     <a class="list-group-item $active"  href="?period=$period.id#results-tab">
                                         <span class="badge">$period.numResults</span>
-                                        
+
                                         #if( $period.rewardsIssuedDate )
                                         <span class="fa fa-trophy"></span>
                                         #end
-                                        
+
                                         $formatter.formatDate($period.startDate) - $formatter.formatDate($period.endDate)
-                                    </a>                                
+                                    </a>
                                     #end
                                 </ul>
-                            </div>                            
-                        </div>                        
+                            </div>
+                        </div>
                     </div>
                     <div id="query" class="tab-pane">
                         <p>Query for progress results for a participant for a given date period</p>
@@ -673,12 +694,16 @@
                                                 <h4 class="modal-title">Reprocess period</h4>
                                             </div>
                                             <div class="modal-body">
+                                                <p>
+                                                    This will re-generate KPI assessments and calculated points which should be awarded. This will not by itself
+                                                    create or change points.
+                                                </p>
                                                 <div class="form-group">
                                                     <label class="col-md-3 control-label" for="users">Users
                                                         <small>Username or email address, one per line.</small>
                                                     </label>
                                                     <div class="col-md-8">
-                                                        <textarea name="users" class="form-control required" rows="4"></textarea>
+                                                        <textarea name="users" class="form-control" rows="4"></textarea>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
