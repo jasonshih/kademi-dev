@@ -1229,6 +1229,10 @@ body .form-control::-webkit-input-placeholder {
     color: #CCC;
 }
 
+.form-control.form-code-control {
+    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
 .ajaxLoader {
     display: none;
 }
