@@ -1,0 +1,71 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Checkout</title>
+        <link href="storeCheckout.css" rel="stylesheet" type="text/css"/>
+    </head>
+    <body class="add-container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Order Summary</h3>
+                    </div>
+                    #set( $items = $page.shoppingCartItemBeans )
+                    #foreach($item in $items )
+                    <div class="row item-row">
+                        <div class="col-md-2">
+                            #if( $item.itemPage.productImageHref )
+                            <img src="$item.itemPage.productImageHref" style="max-width: 50px; max-height: 50px;"/>
+                            #end
+                        </div>
+                        <div class="col-md-4">
+                            Item Title
+                        </div>
+                        <div class="col-md-2">
+                            Quantity
+                        </div>
+                        <div class="col-md-2">
+                            Price
+                        </div>
+                        <div class="col-md-2">
+                            <a href="#" class="btn-remove-item"><i class="fa fa-times-circle fa-2x"></i></a>
+                        </div>
+                    </div>
+                    #end
+                    <div class="panel-footer cart-subtotal">
+                        Sub Total
+                    </div>
+                    <div class="panel-footer cart-tax">
+                        Tax
+                    </div>
+                    <div class="panel-footer cart-shipping">
+                        Shipping
+                    </div>
+                    <div class="panel-footer cart-total">
+                        <strong>Total</strong>
+                    </div>
+                </div>
+                <div class="payment-select">
+                    #foreach($pApp in $page.paymentProviders)
+                    #foreach($po in $pApp.paymentOptions)
+                    <a href="#" data-pid="$pApp.instanceId" data-option="$po.id" class="payment-option">
+                        <img src="$po.logo" alt="$po.title" />
+                    </a>
+                    #end
+                    #end
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Billing & Shipping</h3>
+                    </div>
+                    <div class="panel-body">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

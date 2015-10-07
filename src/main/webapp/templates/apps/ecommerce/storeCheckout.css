@@ -1,0 +1,18 @@
+.item-row .btn-remove-item{
+    color: black;
+}
+
+.item-row{
+    border-top: 1px solid #dddddd;
+    width: 100%;
+}
+
+.item-row > div{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.payment-option img{
+    max-height: 50px;
+    max-width: 100px;
+}

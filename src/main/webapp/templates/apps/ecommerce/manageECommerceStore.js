@@ -6,7 +6,6 @@ function initManageECommerceStore() {
     initIncludeProduct();
     initSelectAllProducts();
     initEditProductSettings();
-    initGroupEditing();
 }
 
 function initDetailsForm() {
@@ -95,9 +94,36 @@ function initSelectAllProducts() {
 }
 
 function initEditProductSettings() {
-    $('body').on('click', '.product-instore-details', function (e) {
+    var productInStoreModal = $("#editProductInStoreModal");
+    $("body").on("click", ".product-instore-details", function (e) {
         e.preventDefault();
+        var target = $(e.target).closest("a");
+        loadProductInReward(target.attr("href"), productInStoreModal);
+    });
+    productInStoreModal.find("form").forms({
+        callback: function () {
+            Msg.info("Saved");
+            productInStoreModal.modal("hide");
+        }
+    });
+}
 
+function loadProductInReward(href, productInRewardModal) {
+    $.ajax({
+        type: 'GET',
+        url: href,
+        success: function (data) {
+            flog("success", data);
+            var $fragment = $(data).find("#product-in-reward-fields");
+            flog("frag", $fragment);
+            var form = productInRewardModal.find("form");
+            form.html($fragment);
+            form.attr("action", href);
+            productInRewardModal.modal("show");
+        },
+        error: function (resp) {
+            Msg.error("An error occured doing the user search. Please check your internet connection and try again");
+        }
     });
 }
 
@@ -161,76 +187,4 @@ function updateProductSelected(productIds, included) {
             Msg.error("There was an error changing the product inclusion status");
         }
     });
-}
-
-function initGroupEditing() {
-    $("#modalGroup input[type=checkbox]").click(function () {
-        var $chk = $(this);
-        flog("checkbox click", $chk, $chk.is(":checked"));
-        var isRecip = $chk.is(":checked");
-        var groupType = $chk.closest('label').data("grouptype");
-        setGroupRecipient($chk.attr("name"), groupType, isRecip);
-    });
-
-    $('body').on('click', '.btn-remove-group', function (e) {
-        e.preventDefault();
-        var btn = $(this);
-        var name = btn.attr("href");
-        setGroupRecipient(name, "", false);
-        btn.closest('span').remove();
-        $("#modalGroup input[name=" + name + "]").check(false);
-    });
-}
-
-function setGroupRecipient(name, groupType, isRecip) {
-    flog("setGroupRecipient", name, groupType, isRecip);
-    try {
-        $.ajax({
-            type: 'POST',
-            url: window.location.pathname,
-            data: {
-                group: name,
-                isRecip: isRecip
-            },
-            dataType: "json",
-            success: function (data) {
-                if (data.status) {
-                    flog("saved ok", data);
-                    if (isRecip) {
-                        var groupClass = "";
-                        var groupIcon = "";
-                        if (groupType === "P" || groupType === "") {
-                            groupClass = "alert alert-success";
-                            groupIcon = "clip-users";
-                        } else if (groupType === "S") {
-                            groupClass = "alert alert-info";
-                            groupIcon = "fa fa-trophy";
-                        } else if (groupType === "M") {
-                            groupClass = "alert alert-info";
-                            groupIcon = "fa fa-envelope";
-                        }
-                        var newBtn = $('<span id="group_' + name + '" class="group-list ' + groupClass + '">'
-                                + '<i class="' + groupIcon + '"></i>'
-                                + '<span class="block-name" title="' + name + '"> ' + name + '</span>'
-                                + ' <a href="' + name + '" class="btn btn-xs btn-danger btn-remove-group" title="Delete access for group ' + name + '"><i class="fa fa-times"></i></a>'
-                                + '</span>');
-                        $(".GroupList").append(newBtn);
-                        flog("appended to", $(".GroupList"));
-                    } else {
-                        var toRemove = $("#group_" + name);
-                        toRemove.remove();
-                    }
-                } else {
-                    flog("error", data);
-                    Msg.error("Sorry, couldnt save " + data);
-                }
-            },
-            error: function (resp) {
-                flog("error", resp);
-                Msg.error("Sorry, couldnt save - " + resp);
-            }
-        });
-    } catch (e) {
-        flog("exception in createJob", e);
-    }
 }
