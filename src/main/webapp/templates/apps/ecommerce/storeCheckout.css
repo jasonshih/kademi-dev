@@ -5,7 +5,6 @@
 .item-row {
     margin: 0 !important;
     padding: 5px 0;
-    line-height: 80px;
 }
 
 .item-row + .item-row {
@@ -22,6 +21,19 @@
 .payment-option img{
     max-height: 50px;
     max-width: 100px;
+}
+
+.center-content {
+    height: 80px;
+}
+
+.center-content > div {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    transform: translate(0, -50%);
+    padding: 0 15px;
 }
 
 .btn-login {
