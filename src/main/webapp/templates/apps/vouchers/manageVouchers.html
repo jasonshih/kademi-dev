@@ -46,19 +46,19 @@
                         <td>$v.title</td>
 
                         <td>$!v.voucherSummary.total</td>
-                        <td class="text-right">$!v.voucherSummary.cashValue</td>
+                        <td class="text-right">$formatter.formatCurrency( $!v.voucherSummary.cashValue )</td>
 
                         <td>$!v.voucherSummary.states.I.number</td>
-                        <td class="text-right">$!v.voucherSummary.states.I.cashValue</td>
+                        <td class="text-right">$formatter.formatCurrency( $!v.voucherSummary.states.I.cashValue )</td>
 
                         <td>$!v.voucherSummary.states.A.number</td>
-                        <td class="text-right">$!v.voucherSummary.states.A.cashValue</td>
+                        <td class="text-right">$formatter.formatCurrency( $!v.voucherSummary.states.A.cashValue )</td>
 
                         <td>$!v.voucherSummary.states.R.number</td>
-                        <td class="text-right">$!v.voucherSummary.states.R.cashValue</td>
+                        <td class="text-right">$formatter.formatCurrency( $!v.voucherSummary.states.R.cashValue )</td>
 
                         <td>$!v.voucherSummary.states.C.number</td>
-                        <td class="text-right">$!v.voucherSummary.states.C.cashValue</td>
+                        <td class="text-right">$formatter.formatCurrency( $!v.voucherSummary.states.C.cashValue )</td>
 
                         <td class="action">
                             <div class="btn-group btn-group-sm">

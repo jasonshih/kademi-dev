@@ -1,4 +1,4 @@
-<h2>Or login with a connected account:</h2>
+<h2>Or login with:</h2>
 <hr/>
 #foreach($p in $page.oAuth2Providers)
 <div class="btn-group" role="group">
@@ -6,4 +6,9 @@
     <a href="$link" class="btn btn-success btn-lg"><i class="fa fa-${p.providerId}"></i></a>
     <a href="$link" class="btn btn-success btn-lg" style="text-transform: capitalize">$p.providerId</a>
 </div>
+#end
+
+
+#foreach( $email in $applications.oauth.remoteProfileDetailsFromRequest.google.emails )
+$email,
 #end
