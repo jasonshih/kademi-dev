@@ -26,7 +26,7 @@
                                 #set( $opts = $page.selectedParameterOptions )
                                 #set( $price = $page.getPurchaseAmount($opts) )
                                 #if( $price )
-                                $$price.amount
+                                $$formatter.formatCurrency($price.amount)
                                 #end
                             </span>
                         </div>
@@ -58,7 +58,8 @@
                     #portlets("productDetailsSidebar")
                 </div>
             </div>
-
+            
+            <script src="/theme/apps/ecommerce/productDetails.js" type="text/javascript"></script>
             <script type="text/javascript">
                 $(function () {
                     initProductDetails();

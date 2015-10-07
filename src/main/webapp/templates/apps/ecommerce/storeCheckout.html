@@ -4,206 +4,195 @@
         <link href="storeCheckout.css" rel="stylesheet" type="text/css"/>
     </head>
     <body class="add-container">
-        <div class="row">
-            <div class="col-md-7 col-lg-6" style="margin-bottom: 20px;">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <div class="panel-title"><small>Order Summary</small></div>
-                    </div>
+        <form>
+            <div class="row">
+                <div class="col-md-7 col-lg-6" style="margin-bottom: 20px;">
+                    <div id="itemsTable" class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="panel-title"><small>Order Summary</small></div>
+                        </div>
 
-                    <div class="items-list">
-                    #set($subTotal = 0)
-                    #set($totalTax = 0)
-                    #set($totalShipping = 0)
-                    #set($totalCost = 0)
-                    #set( $items = $page.shoppingCartItemBeans )
-                    #foreach($item in $items )
-                        <div class="row item-row">
-                            <div class="col-sm-3 item-photo">
-                                #set ($photo = "/theme/apps/ecommerce/img/no_photo.png")
-                                #if( $item.itemPage.productImageHref )
-                                #set ($photo = $item.itemPage.productImageHref)
-                                #end
-                                <div style="background-image: url($photo)"></div>
-                            </div>
-                            <div class="col-sm-3 item-title center-content">
-                                <div>
-                                    $item.ItemPage.title
+                        <div class="items-list">
+                            #set($subTotal = 0)
+                            #set($totalTax = 0)
+                            #set($totalShipping = 0)
+                            #set($totalCost = 0)
+                            #set( $items = $page.shoppingCartItemBeans )
+                            #foreach($item in $items )
+                            <div class="row item-row">
+                                <div class="col-sm-3 item-photo">
+                                    #set ($photo = "/theme/apps/ecommerce/img/no_photo.png")
+                                    #if( $item.itemPage.productImageHref )
+                                    #set ($photo = $item.itemPage.productImageHref)
+                                    #end
+                                    <div style="background-image: url($photo)"></div>
                                 </div>
-                            </div>
-                            <div class="col-sm-3 item-quantity center-content">
-                                <div>
+                                <div class="col-sm-3 item-title center-content">
+                                    <div>
+                                        $item.ItemPage.title
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 item-quantity center-content">
                                     <div class="input-group input-group-sm">
                                         <span class="input-group-btn">
-                                             <button class="btn btn-default btn-decrease-quantity" type="button">-</button>
+                                            <button class="btn btn-default btn-decrease-quantity" type="button">-</button>
                                         </span>
-                                        <input type="text" value="$item.quantity" class="form-control txt-quantity" />
+                                        <input type="text" value="$item.quantity" name="quantity.${foreach.count}" class="form-control txt-quantity text-center" />
                                         <span class="input-group-btn">
-                                             <button class="btn btn-default btn-increase-quantity" type="button">+</button>
+                                            <button class="btn btn-default btn-increase-quantity" type="button">+</button>
                                         </span>
+                                    </div>
+                                    <input type="hidden" class="itemHref" name="item.${foreach.count}" value="$item.href" />
+                                </div>
+                                <div class="col-sm-2 item-price center-content">
+                                    <div>
+                                        <span class="lead">$$formatter.formatCurrency($page.calcSubTotal($item.ItemPage.productSubTotalCost, $item.quantity))</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-1 item-action text-right center-content">
+                                    <div>
+                                        <a href="#" class="btn-remove-item"><i class="fa fa-times-circle fa-2x"></i></a>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-2 item-price center-content">
-                                <div>
-                                    <span class="lead">$$formatter.formatCurrency($item.ItemPage.productSubTotalCost)</span>
-                                </div>
-                            </div>
-                            <div class="col-sm-1 item-action text-right center-content">
-                                <div>
-                                    <a href="#" class="btn-remove-item"><i class="fa fa-times-circle fa-2x"></i></a>
-                                </div>
-                            </div>
+                            #set($subTotal = $subTotal + $page.calcSubTotal($item.ItemPage.productSubTotalCost, $item.quantity))
+                            #set($totalTax = $totalTax + $page.calcSubTotal($item.ItemPage.taxCost, $item.quantity))
+                            #set($totalShipping = $totalShipping + $page.calcSubTotal($item.ItemPage.shippingCost, $item.quantity))
+                            #set($totalCost = $totalCost + $page.calcSubTotal($item.ItemPage.productPurchaseCost, $item.quantity))
+                            #end
                         </div>
-                        #set($subTotal = $subTotal + $item.ItemPage.productSubTotalCost)
-                        #set($totalTax = $totalTax + $item.ItemPage.taxCost)
-                        #set($totalShipping = $totalShipping + $item.ItemPage.shippingCost)
-                        #set($totalCost = $totalCost + $item.ItemPage.productPurchaseCost)
-                    #end
-                    </div>
 
-                    <div class="panel-footer cart-subtotal">
-                        <div class="row">
-                            <div class="col-sm-6 col-sm-offset-6">
-                                <span>Sub total</span>
-                                <strong class="pull-right">$$formatter.formatCurrency($subTotal)</strong>
+                        <div class="panel-footer cart-subtotal">
+                            <div class="row">
+                                <div class="col-sm-6 col-sm-offset-6">
+                                    <span>Sub total</span>
+                                    <strong class="pull-right">$$formatter.formatCurrency($subTotal)</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer cart-tax">
+                            <div class="row">
+                                <div class="col-sm-6 col-sm-offset-6">
+                                    <span>Tax</span>
+                                    <strong class="pull-right">$$formatter.formatCurrency($totalTax)</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer cart-shipping">
+                            <div class="row">
+                                <div class="col-sm-6 col-sm-offset-6">
+                                    <span>Shipping</span>
+                                    <strong class="pull-right">$$formatter.formatCurrency($totalShipping)</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer cart-total">
+                            <div class="row">
+                                <div class="col-sm-6 col-sm-offset-6">
+                                    <span><strong>Total</strong></span>
+                                    <strong class="pull-right">$$formatter.formatCurrency($totalCost)</strong>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="panel-footer cart-tax">
-                        <div class="row">
-                            <div class="col-sm-6 col-sm-offset-6">
-                                <span>Tax</span>
-                                <strong class="pull-right">$$formatter.formatCurrency($totalTax)</strong>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="panel-footer cart-shipping">
-                        <div class="row">
-                            <div class="col-sm-6 col-sm-offset-6">
-                                <span>Shipping</span>
-                                <strong class="pull-right">$$formatter.formatCurrency($totalShipping)</strong>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="panel-footer cart-total">
-                        <div class="row">
-                            <div class="col-sm-6 col-sm-offset-6">
-                                <span><strong>Total</strong></span>
-                                <strong class="pull-right">$$formatter.formatCurrency($totalCost)</strong>
-                            </div>
-                        </div>
+                    <div class="payment-select">
+                        #set($paymentAps = $page.paymentProviders)
+                        #foreach($pApp in $paymentAps)
+                        #foreach($po in $pApp.paymentOptions)
+                        <a href="#" data-pid="$pApp.instanceId" data-option="$po.id" class="payment-option">
+                            <img src="$po.logo" alt="$po.title" />
+                        </a>
+                        #end
+                        #end
                     </div>
                 </div>
-                <div class="payment-select">
-                    #foreach($pApp in $page.paymentProviders)
-                    #foreach($po in $pApp.paymentOptions)
-                    <a href="#" data-pid="$pApp.instanceId" data-option="$po.id" class="payment-option">
-                        <img src="$po.logo" alt="$po.title" />
-                    </a>
-                    #end
-                    #end
+
+                <div class="col-md-5 col-lg-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="panel-title"><small>Billing & Shipping</small></div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-horizontal">
+                                #if(!$user)
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <button type="button" class="btn btn-info text-uppercase btn-block btn-login" data-toggle="modal" data-target="#logingRegisterModal">Login for faster checkout <i class="fa fa-lock pull-right"></i></button>
+                                    </div>
+                                </div>
+                                #end
+
+                                #foreach($pApp in $paymentAps)
+                                <div id="pf-${pApp.instanceId}" class="payment-form" #if(!$foreach.first) style="display:none;" #end>
+                                    $pApp.paymentForm
+                                </div>
+                                #end
+
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" value="true" checked="checked"/> Use above information for shipping
+                                            </label>
+                                        </div>
+                                        <!--<div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" value="true" checked="checked" /> Subcribe for latest offers
+                                            </label>
+                                        </div>
+                                        -->
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-block btn-danger">SUBMIT MY ORDER</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </form>
 
-            <div class="col-md-5 col-lg-6">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <div class="panel-title"><small>Billing & Shipping</small></div>
+        <div id="logingRegisterModal" class="modal fade" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Login to your account</h4>
                     </div>
-                    <div class="panel-body">
-                        <div class="form-horizontal">
-                            #if(!$user)
-                            <div class="form-group">
-                                <div class="col-md-12">
-                                    <button class="btn btn-info text-uppercase btn-block btn-login">Login for faster checkout <i class="fa fa-lock pull-right"></i></button>
-                                </div>
-                            </div>
-                            #end
-                            <div class="form-group">
-                                <div class="col-md-12">
-                                    <input type="text" class="form-control" value="" placeholder="Credit Card #" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-sm-4">
-                                    <select class="form-control">
-                                        <option value="">- Month -</option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-4">
-                                    <select class="form-control">
-                                        <option value="">- Year -</option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-4">
-                                    <input type="text" class="form-control" value="" placeholder="CVV" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-sm-6">
-                                    <input type="text" class="form-control" value="" placeholder="First Name" />
-                                </div>
-                                <div class="col-sm-6">
-                                    <input type="text" class="form-control" value="" placeholder="Last Name" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-12">
-                                    <input type="text" class="form-control" value="" placeholder="Address 1" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-12">
-                                    <input type="text" class="form-control" value="" placeholder="Address 2 (Optional)" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-sm-6">
-                                    <input type="text" class="form-control" value="" placeholder="Zip/Postcode" />
-                                </div>
-                                <div class="col-sm-6">
-                                    <input type="text" class="form-control" value="" placeholder="City" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-sm-6">
-                                    <select class="form-control">
-                                        <option value="">- Country -</option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-6">
-                                    <select class="form-control">
-                                        <option value="">- State -</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-12">
-                                    <input type="text" class="form-control" value="" placeholder="Email (Required)" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-12">
-                                    <div class="checkbox">
-                                        <label>
-                                            <input type="checkbox" value="" /> Use above information for shipping
-                                        </label>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6 devider login-form">
+                                <form class="form-horizontal" role="form">
+                                    <div class="form-group email">
+                                        <div class="col-md-12">
+                                            <input type="text" id="inputEmail" name="email" placeholder="Email" required="true" class="form-control">
+                                        </div>
                                     </div>
-                                    <div class="checkbox">
-                                        <label>
-                                            <input type="checkbox" value="" /> Subcribe for latest offers
-                                        </label>
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <input type="password" name="password" id="inputPassword" placeholder="Password" required="true" class="form-control">
+                                        </div>
                                     </div>
-                                </div>
+                                    <div class="form-group">
+                                        <div class="col-md-6">
+                                            <small><a href="/password-reset" title="Forgotten password" class="Forgot">Forgotten password</a></small>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <button type="submit" class="btn btn-default pull-right">Sign in</button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
-                            <button type="submit" class="btn btn-block btn-danger">SUBMIT MY ORDER</button>
+                            <div class="col-md-6 text-center">
+                                <p>or Login with:</p>
+                                #portlets("socialLoginForm")
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
+        <script src="/static/reload-fragment/1.0.1/jquery.reload-fragment-1.0.1.js" >//</script>
         <script type="text/javascript" src="/theme/apps/ecommerce/storeCheckout.js"></script>
         <script type="text/javascript">
             $(function () {
