@@ -12,6 +12,10 @@
                     </div>
 
                     <div class="items-list">
+                    #set($subTotal = 0)
+                    #set($totalTax = 0)
+                    #set($totalShipping = 0)
+                    #set($totalCost = 0)
                     #set( $items = $page.shoppingCartItemBeans )
                     #foreach($item in $items )
                         <div class="row item-row">
@@ -24,7 +28,7 @@
                             </div>
                             <div class="col-sm-3 item-title center-content">
                                 <div>
-                                    Item Title
+                                    $item.ItemPage.title
                                 </div>
                             </div>
                             <div class="col-sm-3 item-quantity center-content">
@@ -33,7 +37,7 @@
                                         <span class="input-group-btn">
                                              <button class="btn btn-default btn-decrease-quantity" type="button">-</button>
                                         </span>
-                                        <input type="text" value="300" class="form-control txt-quantity" />
+                                        <input type="text" value="$item.quantity" class="form-control txt-quantity" />
                                         <span class="input-group-btn">
                                              <button class="btn btn-default btn-increase-quantity" type="button">+</button>
                                         </span>
@@ -42,7 +46,7 @@
                             </div>
                             <div class="col-sm-2 item-price center-content">
                                 <div>
-                                    <span class="lead">Price</span>
+                                    <span class="lead">$$formatter.formatCurrency($item.ItemPage.productSubTotalCost)</span>
                                 </div>
                             </div>
                             <div class="col-sm-1 item-action text-right center-content">
@@ -51,6 +55,10 @@
                                 </div>
                             </div>
                         </div>
+                        #set($subTotal = $subTotal + $item.ItemPage.productSubTotalCost)
+                        #set($totalTax = $totalTax + $item.ItemPage.taxCost)
+                        #set($totalShipping = $totalShipping + $item.ItemPage.shippingCost)
+                        #set($totalCost = $totalCost + $item.ItemPage.productPurchaseCost)
                     #end
                     </div>
 
@@ -58,7 +66,7 @@
                         <div class="row">
                             <div class="col-sm-6 col-sm-offset-6">
                                 <span>Sub total</span>
-                                <strong class="pull-right">$2000</strong>
+                                <strong class="pull-right">$$formatter.formatCurrency($subTotal)</strong>
                             </div>
                         </div>
                     </div>
@@ -66,7 +74,7 @@
                         <div class="row">
                             <div class="col-sm-6 col-sm-offset-6">
                                 <span>Tax</span>
-                                <strong class="pull-right">$2000</strong>
+                                <strong class="pull-right">$$formatter.formatCurrency($totalTax)</strong>
                             </div>
                         </div>
                     </div>
@@ -74,7 +82,7 @@
                         <div class="row">
                             <div class="col-sm-6 col-sm-offset-6">
                                 <span>Shipping</span>
-                                <strong class="pull-right">$2000</strong>
+                                <strong class="pull-right">$$formatter.formatCurrency($totalShipping)</strong>
                             </div>
                         </div>
                     </div>
@@ -82,7 +90,7 @@
                         <div class="row">
                             <div class="col-sm-6 col-sm-offset-6">
                                 <span><strong>Total</strong></span>
-                                <strong class="pull-right">$2000</strong>
+                                <strong class="pull-right">$$formatter.formatCurrency($totalCost)</strong>
                             </div>
                         </div>
                     </div>
@@ -105,11 +113,13 @@
                     </div>
                     <div class="panel-body">
                         <div class="form-horizontal">
+                            #if(!$user)
                             <div class="form-group">
                                 <div class="col-md-12">
                                     <button class="btn btn-info text-uppercase btn-block btn-login">Login for faster checkout <i class="fa fa-lock pull-right"></i></button>
                                 </div>
                             </div>
+                            #end
                             <div class="form-group">
                                 <div class="col-md-12">
                                     <input type="text" class="form-control" value="" placeholder="Credit Card #" />

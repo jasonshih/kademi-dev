@@ -58,80 +58,11 @@
                     #portlets("productDetailsSidebar")
                 </div>
             </div>
-            #if( $page.myOrders.size() gt 0 )
-            <div class="row">
-                <h4>My Past Orders</h4>
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Product</th>
-                                <th>Date</th>
-                                #foreach($col in $page.extraColumns)
-                                <td>$col</td>
-                                #end
-                            </tr>
-                        </thead>
-                        <tbody>
-                            #foreach($order in $page.myOrders)
-                            <tr>
-                                <td>$order.id</td>
-                                <td>$order.product.name</td>
-                                <td><abbr title="$formatter.formatDateISO8601($order.orderedDate)" class="info timeago">$order.orderedDate</abbr></td>
-                                #foreach($col in $page.extraColumns)
-                                <td>$!page.getExtraValue($order, $col)</td>
-                                #end
-                            </tr>
-                            #end
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            #end
 
             <script type="text/javascript">
                 $(function () {
-                    $("abbr.timeago").timeago();
-                    $(".productParameterSelect").change(function(e) {
-                        var optSelect = $(this);
-                        flog("productParameterSelect changed", optSelect);
-                        var uri = URI(window.location);
-                        uri.setSearch( optSelect.attr("name"), optSelect.val());
-                        flog("New uri", uri.toString());
-                        history.pushState(null, null, uri.toString() );
-                        $("#addToCartSection").reloadFragment({
-                            url: uri.toString()
-                        });
-                    });
-                    $(".cart-add").click(function (e) {
-                        e.preventDefault();
-                        var target = $(e.target);
-                        var href = target.closest("a").attr("href");
-                        var params = target.closest(".addToCartContainer").find(".productParameterSelect").serialize();
-                        flog("params", params);
-                        href += "?" + params;
-                        flog("add item", href);
-                        doAddToCart(href);
-                    });
+                    initProductDetails();
                 });
-                function doAddToCart(href) {
-                    $.ajax({
-                        type: 'POST',
-                        url: "/storeCheckout",
-                        data: {
-                            addItemHref: href
-                        },
-                        datatype: "json",
-                        success: function (data) {
-                            Msg.info("Added item to shopping cart");
-                            $("#cart-link").reloadFragment();
-                        },
-                        error: function (resp) {
-                            Msg.error("An error occured adding the product to your shopping cart. Please check your internet connection and try again");
-                        }
-                    });
-                }
             </script>
 
         </div>
