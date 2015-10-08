@@ -74,7 +74,7 @@
                                         </tbody>
                                     </table>
                                     #if( !$items.empty )
-                                    <button type="submit" class="btn btn-lg btn-success wizard-btn wizard-btn-1">Next >></button>
+                                    <button type="button" class="btn btn-lg btn-success wizard-btn wizard-btn-1">Next >></button>
                                     #end
                                 </div>
                                 <div role="tabpanel" class="tab-pane" id="tab-shipping">
@@ -114,8 +114,9 @@
 
                                         </div>
                                     </div>
-                                    <button type="submit" class="btn btn-lg btn-success wizard-btn wizard-btn-2">Next >></button>
+                                    <button type="button" class="btn btn-lg btn-success wizard-btn wizard-btn-2">Next >></button>
                                 </div>
+
                                 <div role="tabpanel" class="tab-pane" id="tab-final">
                                     <div class="row">
                                         <div class="col-md-8">
@@ -176,7 +177,7 @@
                             if (resp.status) {
                                 Msg.info("Your order has been placed");
                                 $("#checkout-panels").reloadFragment({
-                                    whenComplete : function(){
+                                    whenComplete: function () {
                                         initCheckout();
                                         initCheckoutPanels();
                                     }
@@ -188,7 +189,7 @@
                     });
                 }
 
-                function initCheckoutPanels(){
+                function initCheckoutPanels() {
                     var panels = $("#checkout-panels");
                     var form = $("#checkout-panels form");
                     panels.on("click", ".wizard-btn-1", function (e) {
@@ -226,25 +227,23 @@
                     });
                     panels.on("click", ".wizard-btn-2", function (e) {
                         e.preventDefault();
-                        if (checkRequiredFields(form)) {
-                            var addr = $(".ship-address");
-                            addr.empty();
-                            var addr1 = $('#tab-shipping input[name="addressLine1"]').val();
-                            var addr2 = $('#tab-shipping input[name="addressLine2"]').val();
-                            var postCode = $('#tab-shipping input[name="postcode"]').val();
-                            var state = $('#tab-shipping input[name="state"]').val();
-                            addr.append(addr1)
-                                    .append('</br>')
-                                    .append(addr2)
-                                    .append('</br>')
-                                    .append(postCode)
-                                    .append('</br>')
-                                    .append(state);
-                            resetValidation(form);
-                            var tabs = $('#checkout-tabs a[href="#tab-final"]');
-                            tabs.parent().removeClass("disabled")
-                            tabs.tab("show");
-                        }
+                        var addr = $(".ship-address");
+                        addr.empty();
+                        var addr1 = $('#tab-shipping input[name="addressLine1"]').val();
+                        var addr2 = $('#tab-shipping input[name="addressLine2"]').val();
+                        var postCode = $('#tab-shipping input[name="postcode"]').val();
+                        var state = $('#tab-shipping input[name="state"]').val();
+                        addr.append(addr1)
+                                .append('<br/>')
+                                .append(addr2)
+                                .append('<br/>')
+                                .append(postCode)
+                                .append('<br/>')
+                                .append(state);
+                        resetValidation(form);
+                        var tabs = $('#checkout-tabs a[href="#tab-final"]');
+                        tabs.parent().removeClass("disabled")
+                        tabs.tab("show");
                     });
 
                     panels.on("click", ".wizard-btn-final", function (e) {
@@ -274,7 +273,7 @@
                             Msg.error("Please enter a valid quantity");
                         }
                     });
-                    $('#myTabs').on("click",'a',function (e) {
+                    $('#myTabs').on("click", 'a', function (e) {
                         if ($(this.parentNode).hasClass("disabled")) {
                             e.preventDefault();
                             return false;
