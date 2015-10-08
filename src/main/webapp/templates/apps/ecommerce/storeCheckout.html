@@ -62,7 +62,6 @@
                             </div>
                             #set($subTotal = $subTotal + $page.calcSubTotal($item.ItemPage.productSubTotalCost, $item.quantity))
                             #set($totalTax = $totalTax + $page.calcSubTotal($item.ItemPage.taxCost, $item.quantity))
-                            #set($totalShipping = $totalShipping + $page.calcSubTotal($item.ItemPage.shippingCost, $item.quantity))
                             #set($totalCost = $totalCost + $page.calcSubTotal($item.ItemPage.productPurchaseCost, $item.quantity))
                             #end
                         </div>
@@ -80,14 +79,6 @@
                                 <div class="col-sm-6 col-sm-offset-6">
                                     <span>Tax</span>
                                     <strong class="pull-right">$$formatter.formatCurrency($totalTax)</strong>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="panel-footer cart-shipping">
-                            <div class="row">
-                                <div class="col-sm-6 col-sm-offset-6">
-                                    <span>Shipping</span>
-                                    <strong class="pull-right">$$formatter.formatCurrency($totalShipping)</strong>
                                 </div>
                             </div>
                         </div>
@@ -147,12 +138,12 @@
                                 <input type="hidden" name="processCart" value="processCart"/>
                                 <div class="form-group">
                                     <div class="col-md-12">
-                                        <div class="checkbox">
+                                        <!--<div class="checkbox">
                                             <label>
                                                 <input type="checkbox" value="true" checked="checked"/> Use above information for shipping
                                             </label>
                                         </div>
-                                        <!--<div class="checkbox">
+                                        <div class="checkbox">
                                             <label>
                                                 <input type="checkbox" value="true" checked="checked" /> Subcribe for latest offers
                                             </label>

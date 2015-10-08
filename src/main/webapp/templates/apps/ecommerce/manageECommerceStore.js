@@ -114,7 +114,7 @@ function loadProductInReward(href, productInRewardModal) {
         url: href,
         success: function (data) {
             flog("success", data);
-            var $fragment = $(data).find("#product-in-reward-fields");
+            var $fragment = $(data).find("#product-in-store-fields");
             flog("frag", $fragment);
             var form = productInRewardModal.find("form");
             form.html($fragment);
