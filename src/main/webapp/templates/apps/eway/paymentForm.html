@@ -8,7 +8,7 @@
         <select name="cardmonth" class="form-control required-if-shown">
             <option value="">- Month -</option>
             #foreach($i in [1..12])
-            <option value="$i">$formatter.padWith("0", $i, 2)</option>
+            <option value="$formatter.padWith("0", $i, 2)">$formatter.padWith("0", $i, 2)</option>
             #end
         </select>
     </div>
@@ -29,10 +29,10 @@
 </div>
 <div class="form-group">
     <div class="col-sm-6">
-        <input type="text" name="cardfirstname" class="form-control required-if-shown" value="$!user.firstName" placeholder="First Name" />
+        <input type="text" name="firstName" class="form-control required-if-shown" value="$!user.firstName" placeholder="First Name" />
     </div>
     <div class="col-sm-6">
-        <input type="text" name="cardlastname" class="form-control required-if-shown" value="$!user.lastName" placeholder="Last Name" />
+        <input type="text" name="surName" class="form-control required-if-shown" value="$!user.surName" placeholder="Last Name" />
     </div>
 </div>
 <div class="form-group">
@@ -57,7 +57,9 @@
     <div class="col-sm-6">
         <select id="countryCode" name="countryCode" class="form-control required-if-shown">
             <option value="">- Country -</option>
-
+            #foreach($cc in $formatter.countryCodes.list)
+            <option value="$cc.alpha2Code">$cc.englishShortName</option>
+            #end
         </select>
     </div>
     <div class="col-sm-6">

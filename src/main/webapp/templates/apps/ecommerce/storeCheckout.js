@@ -1,9 +1,36 @@
 function initEcommerceCheckout() {
     flog('initEcommerceCheckout');
+    initCartForm();
     initItemQuantity();
     initRemoveItem();
     initPaymentOptionSelect();
     initLoginForm();
+}
+
+function initCartForm() {
+    $('#cart-form').forms({
+        validate: function () {
+            $('#cart-form').find('button[type=submit] i').show();
+            return true;
+        },
+        callback: function (resp) {
+            if (resp.status) {
+                $('#cart-form').reloadFragment({
+                    whenComplete: function () {
+
+                    }
+                });
+                $('#cart-form').hide('fast');
+                $('#successfull-div').show('slow');
+            } else {
+                Msg.warning(resp.messages[0])
+            }
+            $('#cart-form').find('button[type=submit] i').hide();
+        },
+        error: function () {
+            $('#cart-form').find('button[type=submit] i').hide();
+        }
+    });
 }
 
 function initItemQuantity() {
@@ -128,6 +155,10 @@ function initPaymentOptionSelect() {
 
         var btn = $(this);
         var pid = btn.data('pid');
+        var op = btn.data('option');
+
+        $('.payment-option i').removeClass('active');
+        btn.find('i').addClass('active');
 
         var paymentForms = $('.payment-form');
         paymentForms.hide();
@@ -135,12 +166,15 @@ function initPaymentOptionSelect() {
         var selectedForm = $('#pf-' + pid);
         selectedForm.show();
 
+        var cartForm = $('#cart-form');
+        cartForm.find('input[name=paymentProvider]').val(pid);
+        cartForm.find('input[name=paymentOption]').val(op);
+
         checkPaymentRequiredFields();
     });
 }
 
 function checkPaymentRequiredFields() {
-    flog('checkPaymentRequiredFields');
     var paymentForms = $('.payment-form');
     paymentForms.each(function (i, item) {
         var f = $(item);

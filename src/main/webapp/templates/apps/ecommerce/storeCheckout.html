@@ -4,7 +4,12 @@
         <link href="storeCheckout.css" rel="stylesheet" type="text/css"/>
     </head>
     <body class="add-container">
-        <form>
+        <div id="successfull-div" style="display:none;">
+            <div class="well well-lg text-center">
+                <h2><i class="fa fa fa-check-circle"></i>Your order has been successful</h2>
+            </div>
+        </div>
+        <form id="cart-form">
             <div class="row">
                 <div class="col-md-7 col-lg-6" style="margin-bottom: 20px;">
                     <div id="itemsTable" class="panel panel-default">
@@ -96,11 +101,19 @@
                         </div>
                     </div>
                     <div class="payment-select">
+                        #set($firstApp = false)
+                        #set($firstPo = false)
                         #set($paymentAps = $page.paymentProviders)
                         #foreach($pApp in $paymentAps)
+                        #set($f1 = $foreach)
                         #foreach($po in $pApp.paymentOptions)
+                        #if($f1.first && $foreach.first)
+                        #set($firstApp = $pApp)
+                        #set($firstPo = $po)
+                        #end
                         <a href="#" data-pid="$pApp.instanceId" data-option="$po.id" class="payment-option">
-                            <img src="$po.logo" alt="$po.title" />
+                            <i class="fa fa-check fa-3x #if($f1.first && $foreach.first)active#end"></i>
+                            <img src="$po.logo" alt="$po.title"/>
                         </a>
                         #end
                         #end
@@ -123,11 +136,15 @@
                                 #end
 
                                 #foreach($pApp in $paymentAps)
+                                #if($foreach.first)
+                                #end
                                 <div id="pf-${pApp.instanceId}" class="payment-form" #if(!$foreach.first) style="display:none;" #end>
                                     $pApp.paymentForm
                                 </div>
                                 #end
-
+                                <input type="hidden" name="paymentProvider" value="$firstApp.instanceId"/>
+                                <input type="hidden" name="paymentOption" value="$firstPo.id"/>
+                                <input type="hidden" name="processCart" value="processCart"/>
                                 <div class="form-group">
                                     <div class="col-md-12">
                                         <div class="checkbox">
@@ -143,7 +160,7 @@
                                         -->
                                     </div>
                                 </div>
-                                <button type="submit" class="btn btn-block btn-danger">SUBMIT MY ORDER</button>
+                                <button type="submit" class="btn btn-block btn-danger"><i class="fa fa-spinner fa-spin" style="display:none;"></i> SUBMIT MY ORDER</button>
                             </div>
                         </div>
                     </div>
