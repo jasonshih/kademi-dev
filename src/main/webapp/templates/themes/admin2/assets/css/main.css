@@ -4191,10 +4191,17 @@ body.header-default .daterangepicker {
 }
 .discussion .avatar {
     position: relative;
-    width: 70px;
+    width: 50px;
     height: 70px;
     display: inline;
     overflow: hidden;
+}
+.discussion  .avatar-name {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: center;
 }
 .discussion .avatar img {
     width: 50px;
@@ -4221,9 +4228,11 @@ body.header-default .daterangepicker {
     background: #E5E5EA;
     overflow: hidden;
 }
+
 .other .avatar {
     float: left;
 }
+
 .self .messages {
     border-bottom-right-radius: 0;
     margin-right: 62px;

@@ -29,9 +29,13 @@
             {{#each hits.hits}}
             <li class="other">
                 <div class="avatar">
-                    <img class="img img-circle" src="/users/{{fields.userName}}/pic" alt="">
+                    {{#unless fields.fullName}}
+                        <img class="img img-circle" src="/templates/apps/user/profile.png" alt="" />
+                    {{else}}
+                        <img class="img img-circle" src="/users/{{fields.userName}}/pic" alt="" />
+                    {{/unless}}
                     <br/>
-                    <a href="/manageUsers/{{fields.userId}}/">{{fields.fullName}}</a>
+                    <a href="/manageUsers/{{fields.userId}}/" class="avatar-name" title="{{fields.fullName}}">{{fields.fullName}}</a>
                 </div>
                 <div class='messages'>
                     <p>
