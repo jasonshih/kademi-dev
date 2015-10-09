@@ -124,7 +124,7 @@
                             <br/><br/>
                         </p>
 
-                        <div class="form-group">
+                        <!--<div class="form-group">
                             <label for="websiteName" class="col-sm-3 control-label">Website ID</label>
                             <div class="col-sm-2">
                                 <input type="text" name="name" id="websiteName" value="$!page.website.name" class="required simpleChars form-control" required="true" />
@@ -132,8 +132,7 @@
                             <div class="col-sm-4">
                                 <small>This is a code which forms part of the address to your site ie <b>id</b>.olhub.com. It must be unique.</small>
                             </div>
-                        </div>
-
+                        </div>-->
 
                         <div class="form-group">
                             <label for="websiteTitle" class="col-sm-3 control-label">Display name</label>
@@ -933,7 +932,7 @@
                 initCerts();
 
                 $("form.details").forms({
-                    callback: function () {
+                    callback: function (resp) {
                         flog("Saved Ok!");
                         Msg.info("Saved");
                     }

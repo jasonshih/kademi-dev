@@ -17,6 +17,15 @@
                         $('#website-wrapper').reloadFragment();
                     }
                 });
+
+                $('body').on('click', '.btn-rename-website', function (e) {
+                    e.preventDefault();
+                    var btn = $(this);
+                    var href = btn.attr('href');
+                    showRename(window.location.pathname + href, href, function (newUrl, newName) {
+                        flog('change was successful', newUrl, newName);
+                    });
+                });
             });
         </script>        
     </head>
@@ -89,7 +98,8 @@
                                         </button>
                                         <ul role="menu" class="dropdown-menu pull-right">
                                             <li><a href="$w.name"><i class="glyphicon glyphicon-cog"></i> Configure</a></li>
-                                            <li><a href="/repositories/$w.name/$w.liveBranch/"><i class="fa fa-edit"></i> Edit web pages and files</a></li>
+                                            <li><a href="$w.name" class="btn-rename-website"><i class="fa fa-edit"></i> Rename</a></li>
+                                            <li><a href="/repositories/$w.name/$w.liveBranch/"><i class="fa fa-files-o"></i> Edit web pages and files</a></li>
                                             <li><a target="_blank" href="http://${page.websiteAddress($w)}${formatter.portString}/" class="ViewWebsite"><i class="fa fa-eye"></i> View</a></li>
                                         </ul>
                                     </div>
