@@ -320,10 +320,38 @@
                     #set($hasDkim = false)
                     #if($page.dkimPrivateKey && $page.dkimSelector)
                     #set($hasDkim = true)
-                    <p><strong>DNS Host name (TXT record name):</strong></p>
-                    <pre class="prettyprint">${page.dkimSelector}._domainKey</pre>
-                    <p><strong>TXT record value:</strong></p>
-                    <pre class="prettyprint">$page.dKimDnsTxt</pre>
+                    <table class="table table-bordered">
+                        <tr>
+                            <th colspan="2">Current DKIM Settings</th>
+                        </tr>
+                        <tr>
+                            <th>Selector</th>
+                            <td>${page.dkimSelector}</td>
+                        </tr>
+                        <tr>
+                            <th>Private key</th>
+                            <td>$page.dkimPrivateKey</td>
+                        </tr>
+                    </table>
+
+                    <p>Add a TXT record to your DNS server or zone file as follows:</p>
+
+                    <table class="table table-bordered" >
+                        <tr>
+                            <th colspan="2">Create a DNS TXT record</th>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                ${page.dkimSelector}._domainKey
+                            </td>
+                            <td>
+                                <textarea class="form-control" style="width: 100%; height: 120px">$page.dKimDnsTxt</textarea>
+                            </td>
+                        </tr>
+
+                    </table>
+
                     #end
                     <div class='row'>
                         <div class="col-sm-6">
