@@ -88,6 +88,42 @@ function initToggled() {
     });
 }
 
+function doMasonryPanel() {
+    $('.masonry-panel').each(function () {
+        var panel = $(this);
+
+        // Bind event listener
+        panel.on('layoutComplete', function () {
+            var items = panel.find(".masonry-item");
+
+            flog("onlayout", items);
+
+            items.animate({
+                opacity: 1,
+            }, 1000, function () {
+                flog("complete");
+            });
+        });
+
+        panel.masonry({
+            columnWidth: ".masonry-sizer",
+            percentPosition: true
+        });
+    });
+}
+
+function initMasonryPanel() {
+    flog('initMasonryPanel');
+
+    if (typeof window.Masonry === 'function') {
+        doMasonryPanel();
+    } else {
+        $.getScriptOnce('/static/masonry/3.3.2/masonry.pkgd.min.js', function () {
+            doMasonryPanel();
+        });
+    }
+}
+
 function initDatePicker() {
     $('.date-picker').exist(function () {
         var datePicker = this;
@@ -522,6 +558,7 @@ $(function () {
     initClearer();
     initTable();
     initAjaxStatus();
+    initMasonryPanel();
 
     $('.main-navigation-menu').children('li').children('a[href=#]').on('click', function (e) {
         e.preventDefault();
