@@ -142,10 +142,10 @@ function updateProductIncluded(productId, productName, included) {
             if (response.status) {
                 if (included) {
                     Msg.info("Added " + productName);
-                    $("#product-" + productId).addClass("in-reward-true");
+                    $("#product-" + productId).addClass("in-store-true");
                 } else {
                     Msg.info("Removed " + productName);
-                    $("#product-" + productId).removeClass("in-reward-true");
+                    $("#product-" + productId).removeClass("in-store-true");
                 }
             } else {
                 Msg.error("There was an error changing the product inclusion status");

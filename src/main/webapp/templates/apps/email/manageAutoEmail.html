@@ -693,51 +693,74 @@
                                 <label for="showAdvanced">Advanced</label>
                             </div>
                             <div class="panel-body panel-toggled" data-toggled="display" data-actor="#showAdvanced">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <p>You can enter XML rules below, to filter out potential recipients</p>
-                                        <textarea name="filterScriptXml" class="form-control" rows="20">$!page.job.filterScriptXml</textarea>
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a href="#filter-expr" data-toggle="tab">Expression</a></li>
+                                    <li><a href="#filter-xml" data-toggle="tab">XML</a></li>
+                                </ul>
+
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="filter-expr">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-2" for="filterScriptMvel">Advanced</label>
+                                            <div class="col-md-10">
+                                                <p>You can enter a rule expression below using MVEL syntax, participants will only be included if this evaluates to true.</p>
+                                                <textarea name="filterScriptMvel" id="conditionScriptMvel" class="form-control" rows="5">$!page.job.filterScriptMvel</textarea>
+
+                                                <h3>Example filter</h3>
+                                                <pre>event.numAttempts < 3</pre>
+                                            </div>
+                                        </div>
+
                                     </div>
-                                    <div class="col-md-6">
-                                        <h5>Available Rules</h5>
-                                        <div class="rules">
-                                            <ul>
-                                                <li>
-                                                    <h6>Expression types</h6>
+                                    <div class="tab-pane" id="filter-xml">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p>You can enter XML rules below, to filter out potential recipients</p>
+                                                <textarea name="filterScriptXml" class="form-control" rows="20">$!page.job.filterScriptXml</textarea>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h5>Available Rules</h5>
+                                                <div class="rules">
                                                     <ul>
                                                         <li>
-                                                            <b>const</b>: Constants, eg <br/>&lt;const type='Integer'&gt;1&lt;/const&gt;
+                                                            <h6>Expression types</h6>
+                                                            <ul>
+                                                                <li>
+                                                                    <b>const</b>: Constants, eg <br/>&lt;const type='Integer'&gt;1&lt;/const&gt;
+                                                                </li>
+                                                                <li>
+                                                                    <b>comparison</b>:
+                                                                    Compare 2 expressions, Eg
+                                                                    <br/>
+                                                                    &lt;comparison operator='EQUALS'&gt;<br/>
+                                                                    &lt;const type='Integer'&gt;1&lt;/const&gt;<br/>
+                                                                    &lt;const type='Integer'&gt;1&lt;/const&gt;<br/>
+                                                                    &lt;/comparison&gt;<br/>
+                                                                </li>
+                                                                <li>
+                                                                    <b>app-prop</b>: a property from an application. See below for a full list of app-id's and prop-name's. Eg:
+                                                                    <br/>
+                                                                    &lt;app-prop app-id='userApp' prop-name='firstName' /&gt;
+                                                                </li>
+                                                            </ul>
                                                         </li>
+                                                        #foreach( $app in $applicationManager.getPropertyProviderApps($rootFolder) )
                                                         <li>
-                                                            <b>comparison</b>:
-                                                            Compare 2 expressions, Eg
-                                                            <br/>
-                                                            &lt;comparison operator='EQUALS'&gt;<br/>
-                                                            &lt;const type='Integer'&gt;1&lt;/const&gt;<br/>
-                                                            &lt;const type='Integer'&gt;1&lt;/const&gt;<br/>
-                                                            &lt;/comparison&gt;<br/>
-                                                        </li>
-                                                        <li>
-                                                            <b>app-prop</b>: a property from an application. See below for a full list of app-id's and prop-name's. Eg:
-                                                            <br/>
-                                                            &lt;app-prop app-id='userApp' prop-name='firstName' /&gt;
-                                                        </li>
-                                                    </ul>
-                                                </li>
-                                                #foreach( $app in $applicationManager.getPropertyProviderApps($rootFolder) )
-                                                <li>
-                                                    <h6>$app.instanceId</h6>
-                                                    <ul>
-                                                        #foreach( $expr in $app.allProperties )
-                                                        <li>
-                                                            <b>$expr.name</b>:
-                                                            $expr.description
+                                                            <h6>$app.instanceId</h6>
+                                                            <ul>
+                                                                #foreach( $expr in $app.allProperties )
+                                                                <li>
+                                                                    <b>$expr.name</b>:
+                                                                    $expr.description
+                                                                </li>
+                                                                #end
+                                                            </ul>
                                                         </li>
                                                         #end
                                                     </ul>
-                                                </li>
-                                                #end
-                                            </ul>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
