@@ -42,6 +42,38 @@ function initModalAddEmailTrigger() {
 
 function initFormTriggers() {
     $('.form-triggers').forms({
+        validate: function () {
+            var error = 0;
+            var fromAddress = $('#fromAddress');
+            var fromAddressStr = fromAddress.val().trim();
+            var replyToAddress= $('#replyToAddress');
+            var replyToAddressStr = replyToAddress.val().trim();
+
+            if (fromAddressStr) {
+                if (!validateFuseEmail(fromAddressStr)) {
+                    error++;
+                    showErrorField(fromAddress);
+                }
+
+                if (replyToAddressStr && !validateFuseEmail(replyToAddressStr)) {
+                    error++;
+                    showErrorField(replyToAddress);
+                }
+            } else {
+                if (!validateFuseEmail(replyToAddressStr)) {
+                    error++;
+                    showErrorField(replyToAddress);
+                }
+            }
+
+            if (error === 0) {
+                return true;
+            } else {
+                showMessage('Email address is invalid!', form);
+
+                return false;
+            }
+        },
         callback: function () {
             window.location.reload();
         }
