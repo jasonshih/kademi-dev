@@ -208,6 +208,7 @@
                                 <label for="emailEnabled">Send an email</label>
                             </div>
                             <div class="panel-body panel-toggled" data-toggled="display" data-actor="#emailEnabled">
+                                <p class="alert alert-info"><i class="glyphicon glyphicon-info-sign"></i> If <b>"Email from address"</b> is blank, we'll use <b>"Reply to address"</b> instead</p>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
@@ -258,7 +259,6 @@
                                                 </ul>
                                             </div>
                                         </div>
-                                        <div style="clear: both"></div>
                                         <div class="add-attachment btn-upload"></div>
                                         <div class="article-wrapper article-sm showed-action attachments-list">
                                             #foreach($att in $page.job.attachments)
