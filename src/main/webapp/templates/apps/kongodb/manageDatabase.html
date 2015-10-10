@@ -20,6 +20,7 @@
                     <li><a data-toggle="tab" href="#notes">Notes</a></li>
                     <li><a data-toggle="tab" href="#records">Records</a></li>
                     <li><a data-toggle="tab" href="#query">Query</a></li>
+                    <li><a data-toggle="tab" href="#mappings">Mappings</a></li>
                 </ul>
                 <div class="tab-content">
                     <div id="general" class="tab-pane">
@@ -136,7 +137,7 @@
                         #set($items = $page.searchResponse)
 
 
-                        <textarea name="source" id="queryText" style="height: 250px" class="form-control" placeholder="JSON source">$!request.params.source</textarea>
+                        <textarea name="source" id="queryText" style="height: 250px" class="form-control form-code-control" placeholder="JSON source">$!request.params.source</textarea>
                         <br/>
                         <button type="button" id="queryBtn" class="btn btn-info col-md-4">Query</button>
 
@@ -205,6 +206,27 @@
                             #end
                             #end
                         </div>
+                    </div>
+                    <div id="mappings" class="tab-pane">
+                        <p>
+                            <a href="#" class="btn btn-sm btn-success btn-add-mapping"><i class="fa fa-plus"></i> Add new mapping</a>
+                        </p>
+                        <table class="table table-bordered table-striped" id="table-mappings">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Mapping</th>
+                                    <th style="width: 130px">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                #foreach ($mapping in $mappings)
+                                    <tr>
+
+                                    </tr>
+                                #end
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

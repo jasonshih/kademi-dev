@@ -82,13 +82,13 @@
                         <div class="form-group">
                             <label class="control-label col-md-3" for="fromAddress">Email from address <small>Eg "Joe Bloggs" &lt;joe@bloggs.com&gt;</small></label>
                             <div class="col-md-8">
-                                <input type="text" id="fromAddress" name="fromAddress" value="$formatter.htmlEncode( $page.fromAddress )" placeholder="" class="required form-control" />
+                                <input type="email" id="fromAddress" name="fromAddress" value="$formatter.htmlEncode( $page.fromAddress )" placeholder="" class="required form-control email" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-md-3" for="replyToAddress">Reply to address <small>Eg "Joe Bloggs" &lt;joe@bloggs.com&gt;</small></label>
                             <div class="col-md-8">
-                                <input type="text" id="replyToAddress" name="replyToAddress" value="$formatter.htmlEncode( $page.replyToAddress )" placeholder="" class="form-control" />
+                                <input type="email" id="replyToAddress" name="replyToAddress" value="$formatter.htmlEncode( $page.replyToAddress )" placeholder="" class="form-control email requiredIf" />
                             </div>
                         </div>
                         <div class="form-group">
