@@ -168,8 +168,6 @@ function initTabbable() {
             var wrapper = $(this);
             var tabHeader = wrapper.find('.nav-tabs');
             var links = tabHeader.find('a');
-            var contents = wrapper.find('.tab-content').children();
-
             var hash = window.location.hash;
 
             if (hash === '') {
@@ -189,12 +187,10 @@ function initTabbable() {
         $(window).on('hashchange', function () {
             var hash = window.location.hash.replace('-tab', '');
             flog('hashchanged', hash);
+
             var tabbable = $('.tabbable .nav-tabs a[href=' + hash + ']');
             tabbable.trigger('click');
         }).trigger('hashchange');
-
-
-
     });
 }
 
@@ -282,6 +278,17 @@ function initSwitch() {
     }
 }
 
+function validateFuseEmail(emailAddress) {
+    var pattern = new RegExp(/^(("[\w-\s]+")|([\w-'']+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
+
+    if (pattern.test(emailAddress)) {
+        return true;
+    } else {
+        emailAddress = emailAddress.replace(/^.*\<(.*)\>$/, '$1');
+
+        return pattern.test(emailAddress);
+    }
+}
 
 function initFuseModals() {
     flog("initFuseModal");
@@ -529,19 +536,19 @@ function formatDateTime(l) {
 
 function initAjaxStatus() {
     var depth = 0;
-    $( document ).ajaxStart(function() {
+    $(document).ajaxStart(function () {
         depth++;
         flog("ajax start", depth);
-        $( "#mainSpinner" ).show();
+        $("#mainSpinner").show();
     });
-    $( document ).ajaxStop(function() {
+    $(document).ajaxStop(function () {
         depth--;
         flog("ajax stop", depth);
-        if( depth < 0 ) {
+        if (depth < 0) {
             depth = 0;
         }
-        if( depth == 0 ) {
-            $( "#mainSpinner" ).hide();
+        if (depth == 0) {
+            $("#mainSpinner").hide();
         }
     });
 }
@@ -591,8 +598,8 @@ function showLoginAs(profileId) {
                 newList += "<li>The user does not have access to any websites. Check the user's group memberships, and that those groups have been added to the right websites</li>";
             }
             modal.find("ul")
-                    .empty()
-                    .html(newList);
+                .empty()
+                .html(newList);
         },
         error: function (resp) {
             Msg.error("An error occured loading websites. Please try again");
@@ -602,10 +609,10 @@ function showLoginAs(profileId) {
 
 function setRecentItem(title, url) {
     flog("setRecentItem", title, url);
-    if(typeof(Storage) !== "undefined") {
+    if (typeof(Storage) !== "undefined") {
         //localStorage.removeItem("recent");
         var recentList = JSON.parse(localStorage.getItem("recent"));  // an associative array, key is the url
-        if( recentList == null ) {
+        if (recentList == null) {
             recentList = new Array();
         } else {
 
@@ -615,7 +622,7 @@ function setRecentItem(title, url) {
             title: title,
             url: url
         };
-        recentList.push( item );
+        recentList.push(item);
         localStorage.setItem("recent", JSON.stringify(recentList));
         flog("recent2", recentList);
     } else {
@@ -624,7 +631,7 @@ function setRecentItem(title, url) {
 }
 
 function getRecentItems() {
-    if(typeof(Storage) !== "undefined") {
+    if (typeof(Storage) !== "undefined") {
         var recentList = JSON.parse(localStorage.getItem("recent"));  // an associative array, key is the url
         return recentList;
     } else {
