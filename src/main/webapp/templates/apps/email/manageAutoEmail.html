@@ -230,14 +230,14 @@
                                         <div class="form-group">
                                             <label class="control-label col-md-4" for="fromAddress">Email from address</label>
                                             <div class="col-md-8">
-                                                <input type="text" name="fromAddress" id="fromAddress" value="$!formatter.htmlEncode( $page.fromAddress )" placeholder="admin@mybusinessname.com" class="form-control required-if-shown" />
+                                                <input type="email" name="fromAddress" id="fromAddress" value="$!formatter.htmlEncode( $page.fromAddress )" placeholder="admin@mybusinessname.com" class="form-control email required-if-shown" />
                                                 <small>Eg <i>"Joe Bloggs" &lt;joe@bloggs.com&gt;</i></small>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label col-md-4" for="replyToAddress">Reply to address</label>
                                             <div class="col-md-8">
-                                                <input type="text" name="replyToAddress" id="replyToAddress" value="$!formatter.htmlEncode( $page.replyToAddress )" placeholder="admin@mybusinessname.com" class="form-control" />
+                                                <input type="email" name="replyToAddress" id="replyToAddress" value="$!formatter.htmlEncode( $page.replyToAddress )" placeholder="admin@mybusinessname.com" class="form-control email requiredIf" />
                                                 <small>Eg <i>"Joe Bloggs" &lt;joe@bloggs.com&gt;</i></small>
                                             </div>
                                         </div>

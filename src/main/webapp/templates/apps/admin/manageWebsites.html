@@ -2,23 +2,7 @@
     <head>
         <title>$view.title</title>
         <link href="manageWebsite.css" rel="stylesheet" type="text/css" />
-        <script type="text/javascript" src="manageWebsite.js">//</script>
-        <script type="text/javascript">
-            $(function () {
-                flog("initManageWebsites");
-                var modal = $("#addWebsiteModal");
-                var form = modal.find(" form");
-
-                form.forms({
-                    callback: function (resp) {
-                        flog("done", resp);
-                        modal.modal('hide');
-                        Msg.success(form.find('[name=newName]').val() + ' is created!');
-                        $('#website-wrapper').reloadFragment();
-                    }
-                });
-            });
-        </script>        
+        <script type="text/javascript" src="manageWebsite.js">//</script>       
     </head>
     <body>
         <div class="">
@@ -89,7 +73,8 @@
                                         </button>
                                         <ul role="menu" class="dropdown-menu pull-right">
                                             <li><a href="$w.name"><i class="glyphicon glyphicon-cog"></i> Configure</a></li>
-                                            <li><a href="/repositories/$w.name/$w.liveBranch/"><i class="fa fa-edit"></i> Edit web pages and files</a></li>
+                                            <li><a href="$w.name" class="btn-rename-website"><i class="fa fa-edit"></i> Rename</a></li>
+                                            <li><a href="/repositories/$w.name/$w.liveBranch/"><i class="fa fa-files-o"></i> Edit web pages and files</a></li>
                                             <li><a target="_blank" href="http://${page.websiteAddress($w)}${formatter.portString}/" class="ViewWebsite"><i class="fa fa-eye"></i> View</a></li>
                                         </ul>
                                     </div>
@@ -101,5 +86,64 @@
                 </div>
             </div>
         </div>
+        <script type="text/javascript">
+            $(function () {
+                flog("initManageWebsites");
+                var modal = $("#addWebsiteModal");
+                var form = modal.find(" form");
+
+                form.forms({
+                    callback: function (resp) {
+                        flog("done", resp);
+                        modal.modal('hide');
+                        Msg.success(form.find('[name=newName]').val() + ' is created!');
+                        $('#website-wrapper').reloadFragment();
+                    }
+                });
+
+                $('body').on('click', '.btn-rename-website', function (e) {
+                    e.preventDefault();
+                    var btn = $(this);
+                    var href = btn.attr('href');
+                    var newName = prompt("Please enter a new name for " + href);
+                    if (newName) {
+                        if (newName.length > 0 && newName != href) {
+                            doRename(window.location.pathname + href, newName, function () {
+                                $('#website-wrapper').reloadFragment();
+                            });
+                        }
+                    }
+                });
+            });
+
+            function doRename(href, newName, callback) {
+                var newUrl = getParentHref(href) + "/" + newName;
+                var targetUrl = href;
+                if (!targetUrl.endsWith("/")) {
+                    targetUrl += "/";
+                }
+                targetUrl += "_DAV/MOVE";
+                flog("renameFile2", newUrl);
+                $.ajax({
+                    type: 'POST',
+                    url: targetUrl,
+                    dataType: 'text',
+                    data: "destination=" + newUrl,
+                    success: function () {
+                        flog('success');
+                        if (callback) {
+                            log("callback1");
+                            callback();
+                        }
+                        Msg.success('Success');
+                    },
+                    error: function (resp) {
+                        flog("failed", resp);
+                        ajaxLoadingOff();
+                        Msg.error("Failed to rename website, a website with that name might already exist.");
+                    }
+                });
+            }
+        </script> 
     </body>
 </html>

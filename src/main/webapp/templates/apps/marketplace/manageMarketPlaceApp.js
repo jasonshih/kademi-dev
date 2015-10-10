@@ -2,7 +2,21 @@ function initMarketPlaceApp() {
     initInputLimiter();
     initSubmitReview();
     initInstallApp();
+    initMasonryAdapter();
     $('abbr.timeago').timeago();
+}
+
+function initMasonryAdapter() {
+    flog('initMasonryAdapter');
+
+    var screenshotSwitcher = $('a[href=#screenshots]');
+
+    screenshotSwitcher.on('shown.bs.tab', function () {
+        if (!screenshotSwitcher.attr('data-masonry-adapted')) {
+            $('.masonry-panel').masonry('layout');
+            screenshotSwitcher.attr('data-masonry-adapted', 'true');
+        }
+    });
 }
 
 function initInputLimiter() {
