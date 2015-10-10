@@ -1,3 +1,13 @@
+#set( $details = $applications.oauth.remoteProfileJsonFromRequest )
+#if( $details )
+<h3>
+    <i class="fa fa-${request.params.providerId}"></i>
+    Register with ${request.params.providerId} as $applications.oauth.remoteProfileDetailsFromRequest.get(${request.params.providerId}).displayName
+</h3>
+    <input type="hidden" name="remoteProviderId" value="${request.params.providerId}"/>
+    <input type="hidden" name="remoteProfileDetails" value=""/>
+
+#else
 <h2>Or login with:</h2>
 <hr/>
 #foreach($p in $page.oAuth2Providers)
@@ -7,8 +17,24 @@
     <a href="$link" class="btn btn-success btn-lg" style="text-transform: capitalize">$p.providerId</a>
 </div>
 #end
-
-
-#foreach( $email in $applications.oauth.remoteProfileDetailsFromRequest.google.emails )
-$email,
 #end
+
+<script>
+    var oauthDetails = $details;
+    $(function () {
+        if (oauthDetails) {
+            var form = $("#registerForm");
+            flog("Found oauth details, populate registration form", form);
+            var email = oauthDetails.emails[0].value;
+            var name = oauthDetails.name;
+            form.find("input[name=email]").val(email);
+            form.find("input[name=firstName]").val(name.givenName);
+            form.find("input[name=surName]").val(name.familyName);
+            form.find("input[name=nickName]").val(oauthDetails.displayName);
+            form.find("input[name=password],input[name=confirmPassword]").removeClass("required").closest(".form-group").hide();
+
+            form.find("input[name=remoteProfileDetails]").val(JSON.stringify(oauthDetails));
+        }
+
+    });
+</script>
