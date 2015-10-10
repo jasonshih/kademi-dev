@@ -1,14 +1,14 @@
-#if($applications.size() > 0 )
-<div class="container">
+#if( $membershipApplications.size() > 0 )
+<div class="col-sm-12">
     <div class="panel panel-default">
         <div class="panel-heading">
             <i class="clip-home"></i>
             Pending membership applications
         </div>
         <div class="panel-body pendingAccounts">
-            <article class="Note">This portlet shows membership applications which have not been processed. Please review them and 
+            <article class="Note">This portlet shows membership applications which have not been processed. Please review them and
                 accept those which appear legitimate, this will allow those users access to your site
-            </article>    
+            </article>
             <table class="data table table-striped">
                 <colgroup>
                     <col width="" />
@@ -30,7 +30,7 @@
                         <th></th>
                     </tr>
                 </thead>
-                #foreach($app in $applications)
+                #foreach($app in $membershipApplications)
                 <tbody>
                     <tr data-toggle="collapse" data-target=".det-div-$app.id">
                         <td>$app.member.nickName</td>
@@ -54,7 +54,7 @@
                                 <div class="col-md-2">Property Value</div>
                             </div>
                         </td>
-                    </tr> 
+                    </tr>
                     #end
                     #if($app.member.firstName)
                     <tr class="det-$app.id">
@@ -66,7 +66,7 @@
                                 </div>
                             </div>
                         </td>
-                    </tr> 
+                    </tr>
                     #end
                     #if($app.member.surName)
                     <tr class="det-$app.id">
@@ -78,7 +78,7 @@
                                 </div>
                             </div>
                         </td>
-                    </tr> 
+                    </tr>
                     #end
                     #if( $app.renderedAdminFields.nvPairs.size() > 0 )
                     #foreach($field in $app.renderedAdminFields.nvPairs)
@@ -91,7 +91,7 @@
                                 </div>
                             </div>
                         </td>
-                    </tr>                
+                    </tr>
                     #end
                     #end
                 </tbody>

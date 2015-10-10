@@ -8,7 +8,7 @@
         <div class="container">
             <h1>Checkout</h1>
             <div class="contentForm">
-                <div class="" id="checkout-panels"> 
+                <div class="" id="checkout-panels">
                     <span class="pull-right">Balance <span class="badge label-primary">$!page.balance</span></span>
                     <div role="tabpanel" id="checkout-tabs">
                         <ul class="nav nav-tabs" id="myTabs" role="tablist">
@@ -33,7 +33,7 @@
                                                 <th>Sub-total</th>
                                                 <th class="deleteItem"></th>
                                             </tr>
-                                        </thead>                                    
+                                        </thead>
                                         <tbody id="itemsTableBody">
                                             #set( $items = $page.shoppingCartItemBeans )
                                             #if( $items.empty )
@@ -48,10 +48,18 @@
                                                     <img src="$item.itemPage.productImageHref" style="max-width: 200px; max-height: 200px"/>
                                                     #end
                                                 </td>
-                                                <td>$!item.itemPage.productDescription</td>
+                                                <td>
+                                                    <h2>$item.itemPage.productTitle</h2>
+
+                                                    #foreach( $opt in $item.itemPage.selectedOptions( $item.itemPage.selectedParameterOptions ) )
+                                                    <p class="lead">$opt.title</p>
+                                                    #end
+
+                                                    $!item.itemPage.productDescription
+                                                </td>
                                                 <td>
                                                     <input type="text" class="form-control quantity" value="$item.quantity" name="quantity.${foreach.count}" style="width: 50px" />
-                                                    <input type="hidden" class="itemHref" name="item.${foreach.count}" value="$item.itemPage.href" />
+                                                    <input type="hidden" class="itemHref" name="item.${foreach.count}" value="$item.href" />
                                                 </td>
                                                 <td class="cost">$item.itemPage.productPurchaseCost</td>
                                                 <td class="subtotal">$page.calcSubTotal( $item.itemPage.productPurchaseCost, $item.quantity )</td>
@@ -66,7 +74,7 @@
                                         </tbody>
                                     </table>
                                     #if( !$items.empty )
-                                    <button type="submit" class="btn btn-lg btn-success wizard-btn wizard-btn-1">Next >></button>
+                                    <button type="button" class="btn btn-lg btn-success wizard-btn wizard-btn-1">Next >></button>
                                     #end
                                 </div>
                                 <div role="tabpanel" class="tab-pane" id="tab-shipping">
@@ -74,7 +82,10 @@
                                         <div class="col-md-6">
                                             <br/>
                                             <br/>
+                                            #set( $add = false )
+                                            #if( $page.shippingAddresses.size() > 0 )
                                             #set( $add = $page.shippingAddresses.get(0) )
+                                            #end
                                             <div class="form-group">
                                                 <label for="addressLine1" class="col-sm-3 control-label">Address line 1</label>
                                                 <div class="col-sm-9">
@@ -103,8 +114,9 @@
 
                                         </div>
                                     </div>
-                                    <button type="submit" class="btn btn-lg btn-success wizard-btn wizard-btn-2">Next >></button>
+                                    <button type="button" class="btn btn-lg btn-success wizard-btn wizard-btn-2">Next >></button>
                                 </div>
+
                                 <div role="tabpanel" class="tab-pane" id="tab-final">
                                     <div class="row">
                                         <div class="col-md-8">
@@ -121,15 +133,15 @@
                                                 <tbody id="confirmTableBody">
                                                     <tr>
                                                         <td>
-                                                            <img src="/images/cosmo.jpeg" style="max-width: 200px; max-height: 200px"/>
+
                                                         </td>
-                                                        <td>Sophisticated, glamorous and inspirational, Cosmopolitan is a monthly magazine for the young woman who wants it all, good looks, a successful career and great relationships. All the latest fashion and beauty news as well as advice on career, relationships and health issues. Please note that it may take six to eight weeks for your first issue to be delivered.</td>
+                                                        <td>[Description]</td>
                                                         <td>1</td>
                                                         <td>1000</td>
                                                         <td>1000</td>
                                                     </tr>
                                                 </tbody>
-                                            </table>                        
+                                            </table>
                                         </div>
                                         <div class="col-md-4" style="border-left: 1px solid #dddddd">
                                             <div class="">
@@ -148,7 +160,7 @@
                                     <button class="btn btn-lg btn-success wizard-btn wizard-btn-final">Place order</button>
                                 </div>
                             </div>
-                        </form>                        
+                        </form>
                     </div>
                 </div>
             </div>
@@ -165,7 +177,7 @@
                             if (resp.status) {
                                 Msg.info("Your order has been placed");
                                 $("#checkout-panels").reloadFragment({
-                                    whenComplete : function(){
+                                    whenComplete: function () {
                                         initCheckout();
                                         initCheckoutPanels();
                                     }
@@ -176,8 +188,8 @@
                         }
                     });
                 }
-                
-                function initCheckoutPanels(){
+
+                function initCheckoutPanels() {
                     var panels = $("#checkout-panels");
                     var form = $("#checkout-panels form");
                     panels.on("click", ".wizard-btn-1", function (e) {
@@ -215,25 +227,23 @@
                     });
                     panels.on("click", ".wizard-btn-2", function (e) {
                         e.preventDefault();
-                        if (checkRequiredFields(form)) {
-                            var addr = $(".ship-address");
-                            addr.empty();
-                            var addr1 = $('#tab-shipping input[name="addressLine1"]').val();
-                            var addr2 = $('#tab-shipping input[name="addressLine2"]').val();
-                            var postCode = $('#tab-shipping input[name="postcode"]').val();
-                            var state = $('#tab-shipping input[name="state"]').val();
-                            addr.append(addr1)
-                                    .append('</br>')
-                                    .append(addr2)
-                                    .append('</br>')
-                                    .append(postCode)
-                                    .append('</br>')
-                                    .append(state);
-                            resetValidation(form);
-                            var tabs = $('#checkout-tabs a[href="#tab-final"]');
-                            tabs.parent().removeClass("disabled")
-                            tabs.tab("show");
-                        }
+                        var addr = $(".ship-address");
+                        addr.empty();
+                        var addr1 = $('#tab-shipping input[name="addressLine1"]').val();
+                        var addr2 = $('#tab-shipping input[name="addressLine2"]').val();
+                        var postCode = $('#tab-shipping input[name="postcode"]').val();
+                        var state = $('#tab-shipping input[name="state"]').val();
+                        addr.append(addr1)
+                                .append('<br/>')
+                                .append(addr2)
+                                .append('<br/>')
+                                .append(postCode)
+                                .append('<br/>')
+                                .append(state);
+                        resetValidation(form);
+                        var tabs = $('#checkout-tabs a[href="#tab-final"]');
+                        tabs.parent().removeClass("disabled")
+                        tabs.tab("show");
                     });
 
                     panels.on("click", ".wizard-btn-final", function (e) {
@@ -263,7 +273,7 @@
                             Msg.error("Please enter a valid quantity");
                         }
                     });
-                    $('#myTabs').on("click",'a',function (e) {
+                    $('#myTabs').on("click", 'a', function (e) {
                         if ($(this.parentNode).hasClass("disabled")) {
                             e.preventDefault();
                             return false;
@@ -289,7 +299,7 @@
                         }
                     });
                 }
-                
+
                 function doQuantityUpdate(href, quantity) {
                     flog("doQuantityUpdate", href);
                     $.ajax({

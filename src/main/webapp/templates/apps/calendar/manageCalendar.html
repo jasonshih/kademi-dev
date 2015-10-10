@@ -11,8 +11,8 @@
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
         <script type="text/javascript" src="/static/js/stupidtable.js">//</script>
         <script type="text/javascript" src="/static/chosen/1.1.0/chosen.jquery.js">//</script>
-        <link rel="stylesheet" href="/static/chosen/1.1.0/chosen.css"/>        
-    </head>    
+        <link rel="stylesheet" href="/static/chosen/1.1.0/chosen.css"/>
+    </head>
     <body class="directory">
 
         <!--<div class="input pull-right" id='myUploaded' style="width: 200px"></div>-->
@@ -53,8 +53,8 @@
                                     #foreach($event in $items)
                                     <tr>
                                         <td><a href="$event.name">$event.summary</a></td>
-                                        <td>$formatter.formatDateTime($event.startDate)</td>
-                                        <td>$formatter.formatDateTime($event.endDate)</td>
+                                        <td>$formatter.formatDateTime($event.startDate, $page.timezone)</td>
+                                        <td>$formatter.formatDateTime($event.endDate, $page.timezone)</td>
                                         <td class="action">
                                             <div class="btn-group btn-group-sm">
                                                 <a href="$event.name" class="btn btn-sm btn-primary btn-sm">
@@ -68,7 +68,7 @@
                                                     <li class="divider"></li>
                                                     <li><a class="btn-delete" title="Delete" href="$event.name">Delete</a></li>
                                                 </ul>
-                                            </div>                                                                                        
+                                            </div>
                                         </td>
                                     </tr>
                                     #end
@@ -123,7 +123,7 @@
                             </select>
                             <small>Change the default in your <a target="_blank" href="/edit">organisation settings</a></small>
                         </div>
-                    </div>                        
+                    </div>
 
                     <div class="form-group">
                         <label class="control-label col-md-3" for="summary">Short summary</label>
@@ -144,7 +144,7 @@
                 <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
                 <button class="btn btn-sm btn-primary" data-type="form-submit" type="button">Save</button>
             </div>
-        </div>       
+        </div>
 
         <script type="text/javascript">
             $(function () {
@@ -152,7 +152,7 @@
                 $(".chosen-select").chosen({
                     search_contains: true
                 });
-                
+
                 var eventRange = $('#event-range');
                 eventRange.exist(function() {
                     flog("init report range");
@@ -171,6 +171,6 @@
                     );
                 });
             });
-        </script>        
+        </script>
     </body>
 </html>

@@ -427,11 +427,7 @@ function save(callback) {
     var url = modStatusUrl;
     flog("save. url=", url, "currentPage", currentPage);
     var data = {};
-    $("#body textarea, #body input, #body select").each(function(i, n) {
-        var inp = $(n);
-        var qname = getQualifiedFieldName(inp.attr("name"));
-        data[qname] = inp.val();
-    });
+
     data["statusCurrentPage"] = currentPage;
     $.ajax({
         type: "POST",

@@ -240,8 +240,9 @@ function initFolderDragDrop() {
 function initCategoryButtons() {
     $('body').on('click', '.btn-add-category', function (e) {
         var categoryTitle = prompt("Please enter a category title", "");
-        if (categoryTitle != null || categoryTitle != "") {
-            categoryAjax(categoryTitle, "createCategory=createCategory&categoryTitle=" + categoryTitle, null, function (name, resp) {
+        flog(categoryTitle);
+        if (categoryTitle !== null && categoryTitle.trim() !== "") {
+            categoryAjax(categoryTitle, "createCategory=createCategory&categoryTitle=" + categoryTitle.trim(), null, function (name, resp) {
                 window.location.reload();
             });
         }

@@ -1,17 +1,121 @@
+function initManagePoints() {
+    initSelectAll();
+
+    var editModal = $("#modalEditPoints");
+    var modalForm = editModal.find("form");
+    modalForm.forms({
+        callback: function (resp) {
+            if (resp.status) {
+                Msg.success("Points record updated ok");
+                editModal.modal("hide");
+                $("#pointsBody").reloadFragment();
+            } else {
+                Msg.error("Sorry, there was a problem updating the points record");
+            }
+        }
+    });
+    $("#pointsTable").on("click", ".btnEditPoints", function (e) {
+        e.preventDefault();
+        var href = $(e.target).closest("a").attr("href");
+        modalForm.attr("action", href);
+        $.ajax({
+            url: href,
+            dataType: "json",
+            success: function (data) {
+                flog("success", data)
+                if (data.status) {
+                    modalForm.find("input[name=numPoints]").val(data.data.numPoints);
+                    modalForm.find("input[name=reason]").val(data.data.reason);
+                    editModal.modal("show");
+                } else {
+                    Msg.error("There was a problem loading the points record");
+                }
+            },
+            error: function (resp) {
+                Msg.error("There was a problem loading the point record");
+            }
+        });
+    });
+
+    var createDebitModal = $("#modalCreateDebit");
+    var createDebitForm = createDebitModal.find("form");
+    createDebitForm.forms({
+        callback: function (resp) {
+            if (resp.status) {
+                Msg.success("Points debit created ok");
+                createDebitModal.modal("hide");
+                $("#pointsBody").reloadFragment();
+            } else {
+                Msg.error("Sorry, there was a problem creating the debit record");
+            }
+        }
+    });
+    $("#pointsTable").on("click", ".btnAddDebit", function (e) {
+        e.preventDefault();
+        flog("add debit", href);
+        var href = $(e.target).closest("a").attr("href");
+        createDebitForm.attr("action", href);
+        createDebitModal.modal("show");
+    });
+
+    $(".removeUsers").click(function (e) {
+        var node = $(e.target);
+        log("removeUsers", node, node.is(":checked"));
+        var checkBoxes = node.closest(".Content").find("tbody td input[name=toRemoveId]:checked");
+        if (checkBoxes.length == 0) {
+            Msg.error("Please select the points you want to remove by clicking the checkboxs to the right");
+        } else {
+            if (confirm("Are you sure you want to remove " + checkBoxes.length + " points records?")) {
+                doRemovePoints(checkBoxes);
+            }
+        }
+    });
+
+    $("#new-points-form").forms({
+        callback: function (resp) {
+            if (resp.status) {
+                Msg.info("Assigned points OK");
+                $('#modal-new-points').modal('hide');
+                $('#pointsBody').reloadFragment();
+            } else {
+                alert("An error occured and the points may not have been assigned. Please refresh the page and try again");
+            }
+        }}
+    );
+
+    $("#doUploadCsv").mupload({
+        buttonText: "<i class=\"clip-folder\"></i> Upload spreadsheet",
+        url: "points.csv",
+        useJsonPut: false,
+        oncomplete: function (data, name, href) {
+            log("oncomplete:", data.result.data, name, href);
+            $(".results .numUpdated").text(data.result.data.numUpdated);
+            $(".results .numInserted").text(data.result.data.numInserted);
+            $(".results .numUnmatched").text(data.result.data.unmatched.length);
+            showUnmatched(data.result.data.unmatched);
+            $(".results").show();
+            Msg.success("Upload completed. Please review any unmatched members below, or refresh the page to see the updated list of members");
+        }
+    });
+
+    initHistorySearch();
+
+}
+
 function initEditReward(quiz) {
     try {
         initHtmlEditors($(".htmleditor"));
         $("form.manageRewardForm").forms({
-            callback: function(resp) {
+            callback: function (resp) {
                 flog("done", resp);
                 Msg.success("Saved ok");
             },
-            error: function() {
+            error: function () {
                 Msg.error("Some information is not valid. Please check the reward details");
             }
         });
 
-        $("body").on("submitForm", "form", function(e) {
+        $("body").on("submitForm", "form", function (e) {
             var form = $(e.target);
             data = prepareQuizForSave(form);
             form.find("input.answer").remove();
@@ -25,7 +129,7 @@ function initEditReward(quiz) {
                 }
             }
         });
-        $(".Cancel").click(function() {
+        $(".Cancel").click(function () {
             window.location = "../";
         });
 
@@ -42,7 +146,7 @@ function initEditReward(quiz) {
 
 function initRestrictions() {
     var form = $(".addRestrictionForm");
-    form.submit(function(e) {
+    form.submit(function (e) {
         e.preventDefault();
         var type = form.find("select[name=type]").val();
         var typeText = form.find("select[name=type] option:selected").text();
@@ -58,11 +162,11 @@ function initRestrictions() {
         ul.append(li);
         ul.removeClass('hidden');
         flog("Successfully added restriction!");
-        
+
         $("#modalAddRestriction").modal('hide');
     });
 
-    $(".restrictionList").on("click", ".remove", function(e) {
+    $(".restrictionList").on("click", ".remove", function (e) {
         e.preventDefault();
         e.stopPropagation();
         $(e.target).closest("li").remove();
@@ -74,7 +178,7 @@ function initRestrictions() {
 }
 
 function initGroupEditing() {
-    $("#modalGroup input[type=checkbox]").click(function() {
+    $("#modalGroup input[type=checkbox]").click(function () {
         var $chk = $(this);
         flog("checkbox click", $chk, $chk.is(":checked"));
         var isRecip = $chk.is(":checked");
@@ -89,7 +193,7 @@ function initRewardImages() {
         var href = target.attr("href");
         var name = getFileName(href);
         confirmDelete(href, name, function () {
-        	$("#reward-image").reloadFragment();
+            $("#reward-image").reloadFragment();
         });
 //        $("#reward-image").reloadFragment();
     });
@@ -139,14 +243,14 @@ function setGroupRecipient(name, isRecip) {
                 isRecip: isRecip
             },
             dataType: "json",
-            success: function(data) {
+            success: function (data) {
                 if (data.status) {
                     flog("saved ok", data);
                     if (isRecip) {
                         $(".GroupList").append('<button class="btn btn-sm btn-default reset-margin-bottom" type="button" style="margin-right: 5px;">' + name + '</button>');
                         flog("appended to", $(".GroupList"));
                     } else {
-                        var toRemove = $(".GroupList button").filter(function() {
+                        var toRemove = $(".GroupList button").filter(function () {
                             return $(this).text() == name;
                         });
                         toRemove.remove();
@@ -156,7 +260,7 @@ function setGroupRecipient(name, isRecip) {
                     Msg.error("Sorry, couldnt save " + data);
                 }
             },
-            error: function(resp) {
+            error: function (resp) {
                 flog("error", resp);
                 Msg.error("Sorry, couldnt save - " + resp);
             }
@@ -176,11 +280,11 @@ function initManageReward() {
     initSortableButton();
     initList();
     checkCookie();
-    $("#manageReward .Add").click(function() {
+    $("#manageReward .Add").click(function () {
         showAddReward(this);
     });
     $("#manageReward form.addReward").forms({
-        callback: function(resp) {
+        callback: function (resp) {
             flog("done");
             window.location.href = resp.nextHref;
         }
@@ -205,7 +309,7 @@ function checkCookie() {
 }
 
 function initList() {
-    list = $("#manageReward .Content ul li").each(function(i) {
+    list = $("#manageReward .Content ul li").each(function (i) {
         $(this).attr("rel", i);
     }).clone();
 }
@@ -217,12 +321,12 @@ function stripList() {
 
 function initController() {
     //Bind event for Delete reward
-    $("body").on("click", "a.DeleteReward", function(e) {
+    $("body").on("click", "a.DeleteReward", function (e) {
         e.preventDefault();
         var link = $(e.target).closest("a");
         var href = link.attr("href");
 
-        confirmDelete(href, href, function() {
+        confirmDelete(href, href, function () {
             flog("remove it");
             link.closest("tr").remove();
             link.closest("li").remove();
@@ -233,7 +337,7 @@ function initController() {
 
 function sortBy(type, asc) {
     var _list = {};
-    var sortObject = function(obj) {
+    var sortObject = function (obj) {
         var sorted = {},
                 array = [],
                 key,
@@ -285,7 +389,7 @@ function sortBy(type, asc) {
 
 function initSortableButton() {
     // Bind event for Status sort button
-    $("body").on("click", "a.SortByStatus", function(e) {
+    $("body").on("click", "a.SortByStatus", function (e) {
         e.preventDefault();
 
         var _this = $(this);
@@ -303,7 +407,7 @@ function initSortableButton() {
     });
 
     // Bind event for Title sort button
-    $("body").on("click", "a.SortByTitle", function(e) {
+    $("body").on("click", "a.SortByTitle", function (e) {
         e.preventDefault();
 
         var _this = $(this);
@@ -324,7 +428,7 @@ function initSortableButton() {
 function initEntryFormEditing() {
     var chks = $(".entryFormItem input[type=checkbox]");
 
-    chks.click(function(e) {
+    chks.click(function (e) {
         var node = $(e.target);
         if (node.is(":checked")) {
             node.closest("div").find("div.entryFormItemDetails").show(200);
@@ -334,8 +438,135 @@ function initEntryFormEditing() {
     });
     chks = chks.filter(":checked");
     flog("chcks", chks);
-    chks.each(function(i, n) {
+    chks.each(function (i, n) {
         var node = $(n);
         node.parent().find("div.entryFormItemDetails").show();
     })
+}
+
+
+function doRemovePoints(checkBoxes) {
+    $.ajax({
+        type: 'POST',
+        data: checkBoxes,
+        dataType: "json",
+        url: "",
+        success: function (data) {
+            log("success", data)
+            if (data.status) {
+                Msg.success("Removed points records");
+                $('#pointsBody').reloadFragment();
+            } else {
+                Msg.error("There was a problem removing points records. Please try again and contact the administrator if you still have problems");
+            }
+        },
+        error: function (resp) {
+            Msg.error("An error occurred removing points. You might not have permission to do this");
+        }
+    });
+}
+
+function showUnmatched(unmatched) {
+    var unmatchedTable = $(".results table");
+    var tbody = unmatchedTable.find("tbody");
+    tbody.html("");
+    $.each(unmatched, function (i, row) {
+        log("unmatched", row);
+        var tr = $("<tr>");
+        $.each(row, function (ii, field) {
+            tr.append("<td>" + field + "</td>");
+        });
+        tbody.append(tr);
+    });
+    unmatchedTable.show();
+}
+
+
+var startDate = null;
+var endDate = null;
+
+function initHistorySearch() {
+    var reportRange = $('#report-range');
+
+    reportRange.exist(function () {
+        flog("init report range");
+        reportRange.daterangepicker({
+            format: 'DD/MM/YYYY', // YYYY-MM-DD
+            ranges: {
+                'Last 7 Days': [moment().subtract('days', 6), moment()],
+                'Last 30 Days': [moment().subtract('days', 29), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
+                'This Year': [moment().startOf('year'), moment()],
+            },
+        },
+                function (start, end) {
+                    flog('onChange', start, end);
+                    startDate = start;
+                    endDate = end;
+                    doHistorySearch();
+                }
+        );
+    });
+
+
+    $('body').on('keypress', '#data-query', function (e) {
+        var code = e.keyCode || e.which;
+        if (code == 13) {
+            e.preventDefault();
+            $(this).change();
+            return false;
+        }
+    });
+
+    $('body').on('change', '#data-query', function (e) {
+        e.preventDefault();
+        var inp = $(this);
+        searchQ = inp.val();
+        flog(searchQ);
+        doHistorySearch();
+    });
+
+    $('body').on('change', '#searchGroup', function (e) {
+        e.preventDefault();
+        doHistorySearch();
+    });
+
+    $('body').on('change', '#searchReward', function (e) {
+        e.preventDefault();
+        doHistorySearch();
+    });
+}
+
+function doHistorySearch() {
+    flog('doHistorySearch', startDate, endDate, searchQ);
+    Msg.info("Doing search...", 2000);
+
+    var searchQ = $("#data-query").val();
+    var searchGroup = $("#searchGroup").val();
+    var data = {
+        startDate: formatDate(startDate),
+        finishDate: formatDate(endDate),
+        dataQuery: $("#data-query").val(),
+        searchGroup: $("#searchGroup").val(),
+        searchReward: $("#searchReward").val(),
+    };
+    flog("data", data);
+
+    var target = $("#pointsBody");
+    target.load();
+
+    $.ajax({
+        type: "GET",
+        url: window.location.pathname,
+        dataType: 'html',
+        data: data,
+        success: function (content) {
+            flog('response', content);
+            Msg.success("Search complete", 2000);
+            var newBody = $(content).find("#pointsBody");
+            target.replaceWith(newBody);
+            $("abbr.timeago").timeago();
+        }
+    });
 }

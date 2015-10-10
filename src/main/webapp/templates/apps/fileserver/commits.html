@@ -18,16 +18,16 @@
                 If you know the hash of another directory or repository you can set it directly on this
                 to make an exact copy
                 <a href="./" class="btn btn-sm btn-danger btn-set-hash ">Set hash</a>
-            </p>      
+            </p>
         </div>
 
         <div class="panel panel-default">
             <div class="panel-heading">
                 <i class="fa fa-cloud-upload"></i>
                 <b>Commits</b>
-                #if( $page.commits.size() > 0 ) 
+                #if( $page.commits.size() > 0 )
                 - showing $page.commits.size() results
-                    #if( $page.commits.size() >= 1000 ) 
+                    #if( $page.commits.size() >= 1000 )
                      (limited to 1000)
                     #end
                 #end
@@ -37,7 +37,7 @@
                     <div class="input-group date-range col-md-4">
                         <label for="report-range" class="input-group-addon">Time</label>
                         <input type="text" id="report-range" placeholder="Choose a date range" value="" class="form-control" />
-                    </div>   
+                    </div>
                     <div class="clearfix"></div>
                 </div>
                 <div class="table-responsive">
@@ -65,7 +65,9 @@
                                 <td>$!c.commit.itemHash</td>
                                 <td>$!c.commit.editor.name</td>
                                 <td><abbr title="$formatter.formatDateISO8601($!c.commit.createdDate)" class="info timeago">$!c.commit.createdDate</abbr></td>
-                                <td class="action"><button class="btn btn-sm btn-success btn-restore-repo" title="Restore this version" rel="$!c.commit.itemHash"><i class="fa fa-undo"></i></button></td>
+                                <td class="action">
+                                    <a href="$page.parent.href" class="btn btn-sm btn-success btn-restore-repo" title="Restore this version" rel="$!c.commit.itemHash"><i class="fa fa-undo"></i></a>
+                                </td>
                             </tr>
                             #end
                         </tbody>
@@ -115,7 +117,7 @@
                 //target.load();
 
                 var dates = "startDate=" + formatDate(startDate) + "&finishDate=" + formatDate(endDate);
-                var baseHref = window.location.pathname + "?" + dates;                
+                var baseHref = window.location.pathname + "?" + dates;
                 var href = baseHref + "#history-tab";
 
                 $.ajax({
@@ -131,7 +133,7 @@
                     }
                 });
 
-            }            
+            }
         </script>
     </body>
 </html>

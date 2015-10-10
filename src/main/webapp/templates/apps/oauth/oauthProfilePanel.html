@@ -1,0 +1,46 @@
+<div class="well" id="oauthDetails">
+    <form action="." method="POST" class="form-inline optins">
+        <img class='ajax-loader' src='/static/common/loading.gif'/>
+        <h4>Link with Social Media</h4>
+
+        #foreach($p in $page.oAuth2Providers)
+        #set( $connected = $applications.oauth.oAuthDetails.get( $p.providerId ) )
+        #if( $connected )
+
+        <div class="alert alert-info">
+            <i class="fa fa-${p.providerId}"></i> Connected with $p.providerId as $connected.details.displayName
+            <button class="btn btn-danger btn-sm btnDisconnect pull-right" data-provider="$p.providerId" type="button">
+                <i class="fa fa-times"></i>
+            </button>
+
+        </div>
+        <br/>
+        #else
+        <a href="$applications.oauth.getOAuth2URL($p, $request.absoluteUrl)" class="btn btn-success btn-${p.providerId}"><i class="fa fa-${p.providerId}"></i> | Connect with $p.providerId</a>
+        #end
+        #end
+    </form>
+    <script>
+        $(function () {
+            $(".btnDisconnect").click(function (e) {
+                e.preventDefault();
+                var link = $(e.target).closest("button");
+                var provider = link.data("provider");
+                flog("disconnect", link, provider);
+                $.ajax({
+                    url: "/oauth",
+                    type: "POST",
+                    dataType: "json",
+                    data: "provider=" + provider,
+                    success: function (data) {
+                        flog("success");
+                        window.location.reload();
+                    },
+                    error: function (resp, textStatus, errorThrown) {
+                        Msg.error("An error occurred disconnecting the account");
+                    }
+                });
+            });
+        });
+    </script>
+</div>

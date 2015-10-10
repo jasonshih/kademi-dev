@@ -72,14 +72,14 @@ function startsWith(str, prefix) {
 
 Date.prototype.formatMMDDYYYY = function () {
     return (this.getMonth() + 1) +
-        '/' + this.getDate() +
-        '/' + this.getFullYear();
+            '/' + this.getDate() +
+            '/' + this.getFullYear();
 }
 
 Date.prototype.formatDDMMYYYY = function () {
     return this.getDate() +
-        '/' + (this.getMonth() + 1) +
-        '/' + this.getFullYear();
+            '/' + (this.getMonth() + 1) +
+            '/' + this.getFullYear();
 }
 
 /**
@@ -163,7 +163,7 @@ $.fn.classes = function (f) {
  * varargs function to output to console.log if console is available
  */
 function log() {
-    if (typeof(console) != 'undefined') {
+    if (typeof (console) != 'undefined') {
         if (navigator.appName == 'Microsoft Internet Explorer') {
             // BM: Previous used JSON, but that crashed IE sometimes. So this is pretty crap, but at least safer
             if (arguments.length == 1) {
@@ -185,7 +185,7 @@ function log() {
  * varargs function to output to console.log if console is available
  */
 function flog() {
-    if (typeof(console) != 'undefined') {
+    if (typeof (console) != 'undefined') {
         if (navigator.appName == 'Microsoft Internet Explorer') {
             // BM: Previous used JSON, but that crashed IE sometimes. So this is pretty crap, but at least safer
             if (arguments.length == 1) {
@@ -676,6 +676,10 @@ function showCreateFolder(parentHref, title, text, callback, validatorFn) {
 
 function createFolder(name, parentHref, callback) {
     log('createFolder: name=', name, 'parentHref=', parentHref);
+    if (name.contains("/")) {
+        alert("Folder names may not contain forward slashes");
+        return;
+    }
     var encodedName = name; //$.URLEncode(name);
     //    ajaxLoadingOn();
     var url = '_DAV/MKCOL';
@@ -726,6 +730,10 @@ function promptRename(sourceHref, callback) {
     if (newName) {
         newName = newName.trim();
         if (newName.length > 0 && currentName != newName) {
+            if (newName.contains("/")) {
+                alert("File names may not contain forward slashes");
+                return;
+            }
             var currentFolder = getFolderPath(sourceHref);
             log('promptRename: currentFolder', currentFolder);
             var dest = currentFolder;
@@ -871,22 +879,22 @@ function dec_sort(a, b) {
  */
 String.prototype.replaceAll = function (token, newToken, ignoreCase) {
     var str, i = -1,
-        _token;
+            _token;
     if ((str = this.toString()) && typeof token === 'string') {
         _token = ignoreCase === true ? token.toLowerCase() : undefined;
         while ((i = (
-            _token !== undefined ?
-            str.toLowerCase().indexOf(
+                _token !== undefined ?
+                str.toLowerCase().indexOf(
                 _token,
                 i >= 0 ? i + newToken.length : 0
-            ) : str.indexOf(
+                ) : str.indexOf(
                 token,
                 i >= 0 ? i + newToken.length : 0
-            )
-        )) !== -1) {
+                )
+                )) !== -1) {
             str = str.substring(0, i)
-                .concat(newToken)
-                .concat(str.substring(i + token.length));
+                    .concat(newToken)
+                    .concat(str.substring(i + token.length));
         }
     }
     return str;

@@ -517,15 +517,19 @@ ul.dropdown-menu.list li.list-action {
     margin-bottom: 15px;
     border-radius: 5px;
 }
+
 .blocks-wrapper {
     margin-bottom: 15px;
 }
+
 .blocks-wrapper .block span.block-name {
     margin-right: 5px;
 }
+
 table .blocks-wrapper {
     margin-bottom: 0;
 }
+
 table .blocks-wrapper .block {
     margin-bottom: 5px;
 }
@@ -598,7 +602,6 @@ label small {
     width: auto;
 }
 
-
 .milton-image-select-container .milton-image-preview,
 .vidEditor {
     height: 298px !important;
@@ -608,7 +611,6 @@ label small {
     min-height: 400px !important;
     min-width: 400px !important;
 }
-
 
 #myVidPreview .myUploaded,
 #imagePreview #imageUploaded {
@@ -626,7 +628,7 @@ label small {
 
 #imageContainer p {
     white-space: normal !important;
-    font-family: 'Arial',sans-serif !important;
+    font-family: 'Arial', sans-serif !important;
     font-size: 1em !important;
     line-height: 17px !important;
     padding: 0 0 0.7em !important;
@@ -653,7 +655,7 @@ label small {
    Fuse header
    ============================================================================ */
 .fuse-header {
-    padding-right: 0;
+    /*padding-right: 0;*/
 }
 
 .fuse-header .navbar-tools > ul > li.fuse-header-item {
@@ -667,6 +669,7 @@ label small {
     height: 47px;
     line-height: 32px;
 }
+
 .fuse-header .navbar-tools > ul > li.fuse-header-item > a.btn-success {
     color: white;
 }
@@ -734,7 +737,6 @@ ul.main-navigation-menu li > ul.sub-menu > li {
 
 /*******************/
 
-
 .morris-hover {
     position: absolute;
     background: white;
@@ -742,16 +744,19 @@ ul.main-navigation-menu li > ul.sub-menu > li {
     border-radius: 5px;
     border: solid #CCC 1px;
 }
+
 .nav > li > a > img {
     max-width: 30px !important; /* override default which is ''none'' */
 }
 
 .recent-post .messages-list {
     width: 100%;
+    border: 0;
 }
+
 /* Needed to use daterangepicker plugin with jquery modals */
-.daterangepicker{
-    z-index:1151;
+.daterangepicker {
+    z-index: 1151;
 }
 
 /* ============================================================================
@@ -813,6 +818,10 @@ ul.main-navigation-menu li > ul.sub-menu > li {
     content: "";
 }
 
+.fuse-icon.menuECommerce:before {
+    content: "\e044";
+}
+
 /* ============================================================================
    Fallback upload
    ============================================================================ */
@@ -836,8 +845,242 @@ ul.main-navigation-menu li > ul.sub-menu > li {
 }
 
 /* ============================================================================
-   Utilities
+   Masonry panel
    ============================================================================ */
+.masonry-panel {
+
+}
+
+.masonry-item {
+    opacity: 0;
+    margin-bottom: 15px;
+}
+
+.masonry-sizer {
+    height: 0 !important;
+    min-height: 0 !important;
+}
+
+/* ============================================================================
+   Extra large screen grid system
+   ============================================================================ */
+@media (min-width: 1500px) {
+    .col-xl-1, .col-xl-2, .col-xl-3, .col-xl-4, .col-xl-5, .col-xl-6, .col-xl-7, .col-xl-8, .col-xl-9, .col-xl-10, .col-xl-11, .col-xl-12 {
+        position: relative;
+        min-height: 1px;
+        padding-right: 15px;
+        padding-left: 15px;
+        float: left;
+    }
+
+    .col-xl-12 {
+        width: 100%;
+    }
+
+    .col-xl-11 {
+        width: 91.66666667%;
+    }
+
+    .col-xl-10 {
+        width: 83.33333333%;
+    }
+
+    .col-xl-9 {
+        width: 75%;
+    }
+
+    .col-xl-8 {
+        width: 66.66666667%;
+    }
+
+    .col-xl-7 {
+        width: 58.33333333%;
+    }
+
+    .col-xl-6 {
+        width: 50%;
+    }
+
+    .col-xl-5 {
+        width: 41.66666667%;
+    }
+
+    .col-xl-4 {
+        width: 33.33333333%;
+    }
+
+    .col-xl-3 {
+        width: 25%;
+    }
+
+    .col-xl-2 {
+        width: 16.66666667%;
+    }
+
+    .col-xl-1 {
+        width: 8.33333333%;
+    }
+
+    .col-xl-pull-12 {
+        right: 100%;
+    }
+
+    .col-xl-pull-11 {
+        right: 91.66666667%;
+    }
+
+    .col-xl-pull-10 {
+        right: 83.33333333%;
+    }
+
+    .col-xl-pull-9 {
+        right: 75%;
+    }
+
+    .col-xl-pull-8 {
+        right: 66.66666667%;
+    }
+
+    .col-xl-pull-7 {
+        right: 58.33333333%;
+    }
+
+    .col-xl-pull-6 {
+        right: 50%;
+    }
+
+    .col-xl-pull-5 {
+        right: 41.66666667%;
+    }
+
+    .col-xl-pull-4 {
+        right: 33.33333333%;
+    }
+
+    .col-xl-pull-3 {
+        right: 25%;
+    }
+
+    .col-xl-pull-2 {
+        right: 16.66666667%;
+    }
+
+    .col-xl-pull-1 {
+        right: 8.33333333%;
+    }
+
+    .col-xl-pull-0 {
+        right: auto;
+    }
+
+    .col-xl-push-12 {
+        left: 100%;
+    }
+
+    .col-xl-push-11 {
+        left: 91.66666667%;
+    }
+
+    .col-xl-push-10 {
+        left: 83.33333333%;
+    }
+
+    .col-xl-push-9 {
+        left: 75%;
+    }
+
+    .col-xl-push-8 {
+        left: 66.66666667%;
+    }
+
+    .col-xl-push-7 {
+        left: 58.33333333%;
+    }
+
+    .col-xl-push-6 {
+        left: 50%;
+    }
+
+    .col-xl-push-5 {
+        left: 41.66666667%;
+    }
+
+    .col-xl-push-4 {
+        left: 33.33333333%;
+    }
+
+    .col-xl-push-3 {
+        left: 25%;
+    }
+
+    .col-xl-push-2 {
+        left: 16.66666667%;
+    }
+
+    .col-xl-push-1 {
+        left: 8.33333333%;
+    }
+
+    .col-xl-push-0 {
+        left: auto;
+    }
+
+    .col-xl-offset-12 {
+        margin-left: 100%;
+    }
+
+    .col-xl-offset-11 {
+        margin-left: 91.66666667%;
+    }
+
+    .col-xl-offset-10 {
+        margin-left: 83.33333333%;
+    }
+
+    .col-xl-offset-9 {
+        margin-left: 75%;
+    }
+
+    .col-xl-offset-8 {
+        margin-left: 66.66666667%;
+    }
+
+    .col-xl-offset-7 {
+        margin-left: 58.33333333%;
+    }
+
+    .col-xl-offset-6 {
+        margin-left: 50%;
+    }
+
+    .col-xl-offset-5 {
+        margin-left: 41.66666667%;
+    }
+
+    .col-xl-offset-4 {
+        margin-left: 33.33333333%;
+    }
+
+    .col-xl-offset-3 {
+        margin-left: 25%;
+    }
+
+    .col-xl-offset-2 {
+        margin-left: 16.66666667%;
+    }
+
+    .col-xl-offset-1 {
+        margin-left: 8.33333333%;
+    }
+
+    .col-xl-offset-0 {
+        margin-left: 0;
+    }
+}
+
+/* ============================================================================
+Utilities
+============================================================================ */
 .action,
 .center {
     text-align: center;
@@ -908,6 +1151,7 @@ fieldset hr {
     padding-top: 25px;
     height: 0;
 }
+
 .youtube-wrapper iframe {
     position: absolute;
     top: 0;
@@ -915,9 +1159,11 @@ fieldset hr {
     width: 100%;
     height: 100%;
 }
+
 .messages-list {
     overflow-y: auto; /** stop messages going off the end of the list */
 }
+
 .inline-editor {
     border: solid lightgray 1px;
     width: 100%;
@@ -976,14 +1222,17 @@ fieldset hr {
     overflow: hidden;
 
 }
+
 .flush-left {
     border-bottom-left-radius: 0;
     border-left: 0 none;
     border-top-left-radius: 0;
 }
+
 .breadcrumb a {
-     color: #555555;
+    color: #555555;
 }
+
 .alert h3 {
     margin-top: 0;
 }
@@ -992,7 +1241,14 @@ body .form-control::-moz-placeholder {
     color: #ccc;
     opacity: 1;
 }
-body .form-control::-webkit-input-placeholder { color:#CCC; }
+
+body .form-control::-webkit-input-placeholder {
+    color: #CCC;
+}
+
+.form-control.form-code-control {
+    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+}
 
 .ajaxLoader {
     display: none;
@@ -1001,3 +1257,53 @@ body .form-control::-webkit-input-placeholder { color:#CCC; }
 body.ajax-loading .ajaxLoader {
     display: block;
 }
+
+.table-responsive {
+    padding-bottom: 220px;
+}
+
+.summary-panel {
+    height: 200px;
+}
+
+.fluidLabel {
+    height: 30px;
+    float: left;
+    margin-bottom: 10px
+}
+
+.fluidLabel span {
+    line-height: 20px;
+}
+
+.fluidLabel a {
+    color: white;
+}
+
+.membershipsDiv {
+    margin-left: 100px;
+}
+
+.panel-primary > .panel-heading {
+    background-color: #337ab7;
+    border-color: #337ab7;
+    color: #fff;
+}
+
+.statCard .panel-heading {
+    border-bottom: 1px solid transparent;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    padding: 10px 15px;
+    height: auto;
+    background-image: none;
+    box-shadow: none;
+}
+.medium {
+    font-size: 18px;
+}
+
+.huge {
+    font-size: 28px;
+}
+

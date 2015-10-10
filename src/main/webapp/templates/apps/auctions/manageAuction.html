@@ -86,6 +86,16 @@
                                     </td>
                                 </tr>
                                 <tr>
+                                    <td>Auction name</td>
+                                    <td>
+                                        <div class="form-group">
+                                            <div class="col-sm-4">
+                                                <input type="text" id="auctionName" name="name" placeholder="Enter a name here" value="$page.name" class="form-control required reallySimpleChars" />
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <td>Auction Type</td>
                                     <td>
                                         <div class="form-group">
@@ -302,14 +312,21 @@
                                 <td>Created</td>
                                 <td><abbr title="$formatter.formatDateISO8601($page.createdDate)" class="timeago">$page.createdDate</abbr></td>
                                 <td></td>
-                                <td><a href="$page.createdBy.href">$page.createdBy.name</a></td>
+                                <td><a href="/manageUsers/$page.createdBy.userId">$page.createdBy.name</a></td>
                             </tr>
                             #foreach($c in $page.bidHistory)
                             <tr>
                                 <td>Bid</td>
                                 <td><abbr title="$formatter.formatDateISO8601($c.changeDate)" class="timeago">$c.changeDate</abbr></td>
                                 <td>$c.bidValue</td>
-                                <td><a href="$c.changeBy.href">$c.changedBy.name</a></td>
+                                <td>
+                                    <a href="/manageUsers/$c.changedBy.userId">$c.changedBy.name</a>
+                                    #foreach( $m in $c.changedBy.primaryMemberships() )
+                                    #if( $m.org.id != $page.organisation.id )
+                                    $m.org.title
+                                    #end
+                                    #end
+                                </td>
                             </tr>
                             #end
                             #if($page.winningBid)
@@ -317,7 +334,7 @@
                                 <td>Winner</td>
                                 <td><abbr title="$formatter.formatDateISO8601($page.createdDate)" class="timeago">$page.winningBid.changeDate</abbr></td>
                                 <td>$page.winningBid.bidValue</td>
-                                <td><a href="$page.createdBy.href">$page.winningBid.changedBy.name</a></td>
+                                <td><a href="/manageUsers/$page.createdBy.userId">$page.winningBid.changedBy.name</a></td>
                             </tr>
                             #end
                             #if($page.auctionClosed)
@@ -325,7 +342,7 @@
                                 <td>Closed</td>
                                 <td><abbr title="$formatter.formatDateISO8601($page.auction.auctionProcessedDate)" class="timeago">$page.auction.auctionProcessedDate</abbr></td>
                                 <td></td>
-                                <td><a href="$page.createdBy.href">$page.createdBy.name</a></td>
+                                <td><a href="/manageUsers/$page.createdBy.userId">$page.createdBy.name</a></td>
                             </tr>
                             #end
                         </table>
@@ -474,23 +491,23 @@
             </div>
         </div>
         #macro(genGroup $group)
-            #set($gc = "")
-            #set($gIcon = "")
-            #if( $group.groupType == "P" || !$group.groupType)
-                #set($gc = "label label-success")
-                #set($gIcon = "clip-users")
-            #elseif( $group.groupType == "S" )
-                #set($gc = "label label-info")
-                #set($gIcon = "fa fa-trophy")
-            #elseif( $group.groupType == "M" )
-                #set($gc = "label label-info")
-                #set($gIcon = "fa fa-envelope")
-            #end
-            <span id="group_$group.name" class="group-list $gc">
-                <i class="$gIcon"></i>
-                <span class="block-name" title="$group.name">$group.name</span>
-                <a href="$group.name" class="btn btn-xs btn-danger btn-delete-group" title="Delete access for group $group.name"><i href="$group.name" class="fa fa-times"></i></a>
-            </span>
+        #set($gc = "")
+        #set($gIcon = "")
+        #if( $group.groupType == "P" || !$group.groupType)
+        #set($gc = "label label-success")
+        #set($gIcon = "clip-users")
+        #elseif( $group.groupType == "S" )
+        #set($gc = "label label-info")
+        #set($gIcon = "fa fa-trophy")
+        #elseif( $group.groupType == "M" )
+        #set($gc = "label label-info")
+        #set($gIcon = "fa fa-envelope")
+        #end
+        <span id="group_$group.name" class="group-list $gc">
+            <i class="$gIcon"></i>
+            <span class="block-name" title="$group.name">$group.name</span>
+            <a href="$group.name" class="btn btn-xs btn-danger btn-delete-group" title="Delete access for group $group.name"><i href="$group.name" class="fa fa-times"></i></a>
+        </span>
         #end
         <script type="text/javascript">
             $(function () {

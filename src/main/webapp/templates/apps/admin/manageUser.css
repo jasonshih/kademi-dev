@@ -3,7 +3,6 @@
 }
 
 .search-user {
-	width: 300px;
 	margin-right: 10px;
 }
 
@@ -61,3 +60,11 @@
 	width: 100%;
 	line-height: 23px;
 }
+
+.select2-close-mask{
+    z-index: 2099;
+}
+.select2-dropdown{
+    z-index: 3051;
+}
+

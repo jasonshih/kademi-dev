@@ -157,6 +157,7 @@ var Main = function () {
             } else {
                 $('body').removeClass('navigation-small');
             };
+            window.dispatchEvent(new Event('resize'));
         });
     };
     //function to activate the panel tools
@@ -592,6 +593,13 @@ var Main = function () {
                 flog("ajax stop");
                 $("body").removeClass("ajax-loading");
             });
+
+            // Check for login tokens, if so reload the URL without them
+            var s = window.location + "";
+            if( s.indexOf("miltonUserUrl") > 1 ) {
+                flog("Reloading without auth tokens");
+                window.location = window.location.pathname;
+            }
         }
     };
 }();

@@ -1,17 +1,18 @@
-(function($) {
+(function ($) {
     var methods = {
-        init: function(options) {
+        init: function (options) {
             var container = this;
             var config = $.extend({
                 url: "./",
                 useJsonPut: true,
                 useDropzone: false,
                 buttonText: "Add files",
-                oncomplete: function(data) {
+                oncomplete: function (data) {
                     flog("finished upload", data);
                 },
                 isInCkeditor: false,
-                isFullWidth: true
+                isFullWidth: true,
+                fieldName: "file"
             }, options);
 
             flog("init milton uploads", container);
@@ -25,12 +26,12 @@
             config.id = Math.floor(Math.random() * 1000000);
             flog('id', config.id);
 
-            var isSupport = typeof(window.FileReader) !== 'undefined';
+            var isSupport = typeof (window.FileReader) !== 'undefined';
 
             flog('Dropzone is supported');
             if (isSupport) {
                 var formHtml = "<form action='" + actionUrl + "' method='POST' enctype='multipart/form-data' style='position: relative'>"
-                    + "<input type='hidden' name='overwrite' value='true'>";
+                        + "<input type='hidden' name='overwrite' value='true'>";
                 // If not using a dropzone, generate a bootstrap button
                 if (!config.useDropzone) {
                     var buttonClass = config.isInCkeditor ? 'cke_dialog_ui_button cke_dialog_ui_button_ok' : 'btn btn-success';
@@ -61,17 +62,17 @@
 
                 var previewDiv = null;
 
-                $.getScriptOnce(('/templates/themes/admin2/assets/plugins/dropzone/downloads/dropzone.min.js'), function() {
+                $.getScriptOnce(('/templates/themes/admin2/assets/plugins/dropzone/downloads/dropzone.min.js'), function () {
                     flog("Loaded dropzone plugin, now init...");
                     Dropzone.autoDiscover = false;
                     var dzConfig = {
-                        paramName: "file", // The name that will be used to transfer the file
+                        paramName: config.fieldName, // The name that will be used to transfer the file
                         maxFilesize: 500.0, // MB
                         addRemoveLinks: true,
                         parallelUploads: 1,
                         uploadMultiple: false,
-                        init: function() {
-                            this.on("success", function(file, resp) {
+                        init: function () {
+                            this.on("success", function (file, resp) {
                                 flog("success1", resp);
                                 var result = null;
                                 if (typeof resp === "string") {
@@ -79,7 +80,7 @@
                                 } else {
                                     result = resp;
                                 }
-                                if( $.isArray(result)) {
+                                if ($.isArray(result)) {
                                     result = result[0]; // might be a propfind response
                                 }
                                 var data = {
@@ -89,15 +90,15 @@
                                 flog("success2", file, result);
                                 config.oncomplete(data, file.name, result.href);
                             });
-                            this.on("error", function(file, errorMessage) {
+                            this.on("error", function (file, errorMessage) {
                                 alert("An error occured uploading: " + file.name + " because: " + errorMessage);
                             });
-                            this.on("addedfile", function(file, errorMessage) {
+                            this.on("addedfile", function (file, errorMessage) {
                                 if (previewDiv !== null) {
                                     previewDiv.show();
                                 }
                             });
-                            this.on("complete", function(file, errorMessage) {
+                            this.on("complete", function (file, errorMessage) {
                                 if (previewDiv !== null) {
                                     previewDiv.hide();
                                 }
@@ -119,7 +120,7 @@
                     flog("Now invoke dropzone plugin...", dzConfig);
                     var dropzone = form.dropzone(dzConfig);
                     container.data('dropzone', form.data('dropzone'));
-                    flog("Finished dropzone init", Dropzone);
+                    flog("Finished dropzone init", dropzone);
                 });
             } else {
                 flog('init fallback for dropzone');
@@ -149,20 +150,20 @@
                 if (config.useDropzone) {
                     container.addClass('fallback-dropzone');
                     container.append(
-                        '<p class="fallback-message">' +
+                            '<p class="fallback-message">' +
                             'Your browser does not support drag\'n\'drop file uploads.' +
                             'Please use the fallback button below to upload your files like in the olden days.' +
-                        '</p>'
-                    );
+                            '</p>'
+                            );
                 }
 
                 var button = $(
-                    '<span id="' + config.id + '" type="button" class="' + buttonClass + ' fileinput-button fallback-button">' +
+                        '<span id="' + config.id + '" type="button" class="' + buttonClass + ' fileinput-button fallback-button">' +
                         '<span class="' + spanClass + '">' + config.buttonText + '</span>' +
                         '<span class="fallback-progress"></span>' +
                         '<input type="file" name="files[]" data-url="' + actionUrl + '" />' +
-                    '</span>'
-                );
+                        '</span>'
+                        );
 
                 container.append(button);
 
@@ -170,6 +171,7 @@
                 var fileUpload = button.fileupload({
                     url: actionUrl,
                     dataType: 'json',
+                    paramName: config.fieldName,
                     done: function (e, data) {
                         button.find('.fallback-progress').hide();
                         flog(data);
@@ -182,9 +184,9 @@
                         var progress = parseInt(data.loaded / data.total * 100, 10);
 
                         button.find('.fallback-progress').show().css(
-                            'width',
-                            progress + '%'
-                        );
+                                'width',
+                                progress + '%'
+                                );
                     },
                     fail: function (e, data) {
                         alert("An error occured uploading because: " + data.errorThrown);
@@ -194,14 +196,14 @@
                 container.data('fileUpload', fileUpload);
             });
         },
-        setUrl: function(url) {
+        setUrl: function (url) {
             flog("setUrl", this, url);
             var newAction = url + "_DAV/PUT?overwrite=true";
             this.find("form").attr("action", newAction);
         }
     };
 
-    $.fn.mupload = function(method) {
+    $.fn.mupload = function (method) {
         flog("mupload", this);
         if (methods[method]) {
             return methods[ method ].apply(this, Array.prototype.slice.call(arguments, 1));

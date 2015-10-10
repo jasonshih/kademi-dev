@@ -44,6 +44,7 @@
                         <li class=""><a href="#groups" data-toggle="tab">Groups</a></li>
                         <li class=""><a href="#points" data-toggle="tab">Points</a></li>
                         <li class=""><a href="#debits" data-toggle="tab">Debits</a></li>
+                        <li class=""><a href="#leaderboard" data-toggle="tab">Leaderboard</a></li>
                     </ul>
                 </div>
                 <div class="tab-content">
@@ -141,18 +142,38 @@
                                 <span class="glyphicon glyphicon-download"></span>
                                 Save Points CSV
                             </a>
+                            <div class="btn-group">
+                                <button class="btnRemovePoints btn btn-danger btn-sm" type="button"><i class="fa fa-remove"></i> Remove</button>
+                                <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu pull-right" role="menu">
+                                    <li class="presentation" role="menuitem"><a href="#" class="btn-clear-history"><i class="fa fa-trash"></i> Clear All</a></li>
+                                </ul>
+                            </div>
                         </div>
                         <br/>
 
-                        <p>Shows points allocated with this tag</p>
+                        <div class="input-group date-range col-md-4 pull-left">
+                            <label for="report-range" class="input-group-addon">Time</label>
+                            <input type="text" id="report-range" placeholder="Choose a date range" value="" class="form-control" />
+                        </div>
 
-                        <table class="table table-bordered table-striped" id="table-periods">
+                        <div class="input-group col-md-4">
+                            <label for="data-query" class="input-group-addon">Search</label>
+                            <input type="text" id="data-query" placeholder="Search" value="" class="form-control" />
+                        </div>
+
+                        <div class="clearfix"></div>
+                        <hr/>
+
+                        <table class="table table-bordered table-striped" id="tablePoints">
                             <colgroup>
                                 <col />
                                 <col />
                                 <col />
                                 <col />
-                                <col />
+                                <col width="25px;"/>
                             </colgroup>
                             <thead>
                                 <tr>
@@ -160,15 +181,17 @@
                                     <th>Issued Date</th>
                                     <th>Issued To</th>
                                     <th>Reason</th>
+                                    <th><input   type="checkbox" name="toRemoveId" class="chk-all" value="" /></th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                #foreach($points in $page.awardedPoints)
+                            <tbody id="tablePointsBody">
+                                #foreach($points in $page.history)
                                 <tr>
                                     <td>$points.numPoints</td>
                                     <td>$formatter.formatDateTime($points.issuedDate)</td>
                                     <td>$points.issuedTo.formattedName</td>
                                     <td>$!points.reason</td>
+                                    <td><input type="checkbox" name="toRemoveId" value="$points.id" /></td>
                                 </tr>
                                 #end
                             </tbody>
@@ -177,21 +200,31 @@
 
                     <div class="tab-pane" id="debits">
                         <div class="pull-right">
-                            <a class="btn btn-sm btn-default periods-delete" href="debits.csv" download="debits.csv">
+                            <a class="btn btn-sm btn-default" href="debits.csv">
                                 <span class="glyphicon glyphicon-download"></span>
                                 Save Debits CSV
                             </a>
+                            <div class="btn-group">
+                                <button class="btnRemoveDebits btn btn-danger btn-sm" type="button"><i class="fa fa-remove"></i> Remove</button>
+                                <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu pull-right" role="menu">
+                                    <li class="presentation" role="menuitem"><a href="#" class="btn-clear-debits"><i class="fa fa-trash"></i> Remove All</a></li>
+                                </ul>
+                            </div>
                         </div>
                         <br/>
 
                         <p>Shows debits allocated with this tag</p>
 
-                        <table class="table table-bordered table-striped" id="table-periods">
+                        <table class="table table-bordered table-striped" id="table-debits">
                             <colgroup>
                                 <col />
                                 <col />
                                 <col />
                                 <col />
+                                <col width="25px;"/>
                             </colgroup>
                             <thead>
                                 <tr>
@@ -199,6 +232,7 @@
                                     <th>Issued Date</th>
                                     <th>Rewarded To</th>
                                     <th>Reason</th>
+                                    <th><input type="checkbox" name="removeDebitsId" class="chk-all" value="" /></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -208,10 +242,60 @@
                                     <td>$formatter.formatDateTime($debit.issuedDate)</td>
                                     <td>$debit.points.issuedTo.formattedName</td>
                                     <td>$!debit.reason</td>
+                                    <td><input type="checkbox" name="removeDebitsId" value="$debit.id" /></td>
                                 </tr>
                                 #end
                             </tbody>
                         </table>
+                    </div>
+
+                    <div class="tab-pane" id="leaderboard">
+                        <div class="clearfix form-horizontal">
+                            <div class="input-group date-range col-md-3 pull-left" style="margin-right: 5px">
+                                <label for="leaderboard-range" class="input-group-addon">Time</label>
+                                <input type="text" id="leaderboard-range" placeholder="Choose a date range" value="" class="form-control" />
+                            </div>
+                            <div class="input-group col-md-2" style="margin-right: 5px;">
+                                <label for="leaderboard-limit" class="input-group-addon">Limit</label>
+                                <input type="number" min="0" id="leaderboard-limit" placeholder="Limit" value="" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped" id="table-leaderboard">
+                                <colgroup>
+                                    <col width="10%;"/>
+                                    <col />
+                                    <col />
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th>Rank</th>
+                                        <th>Rewarded To</th>
+                                        <th>Points</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    #set( $lbStartDate = $formatter.toDate( $request.params.lbStartDate ) )
+                                    #set( $lbFinishDate = $formatter.toDate( $request.params.lbFinishDate ) )
+                                    #if(!$lbFinishDate)
+                                        #set( $lbFinishDate = $formatter.now )
+                                    #end
+                                    #set( $lbLimit = $formatter.toInteger($request.params.lbLimit, true) )
+                                    #if(!$lbLimit)
+                                        #set( $lbLimit = 20 )
+                                    #end
+                                    #set($myPointsInfo = $page.myPointsInfo($lbLimit, $lbStartDate, $lbFinishDate))
+                                    $myPointsInfo.setExtendedProfiles(true)
+                                    #foreach($point in $myPointsInfo.allMemberPoints)
+                                    <tr>
+                                        <td>$foreach.count</td>
+                                        <td>$point.member.formattedName()</td>
+                                        <td>$point.numPoints</td>
+                                    </tr>
+                                    #end
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
                 </div>
@@ -255,9 +339,16 @@
             <a href="$group.name" class="btn btn-xs btn-danger btn-remove-group" title="Delete access for group $group.name"><i href="$group.name" class="fa fa-times"></i></a>
         </span>
         #end
+
+
+
+
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
         <script type="text/javascript">
-            var quiz = $formatter.toJson($page.quiz);
+            var startDate = null;
+            var endDate = null;
+            var searchQ = null;
+
             $(function () {
                 $("select.pointsType").click(function () {
                     showHidePointsOrgType();
@@ -284,6 +375,31 @@
                     btn.closest('span').remove();
                     $("#modalGroup input[name=" + name + "]").check(false);
                 });
+                initRemovePoints();
+                initClearAllPoints();
+
+                initDeleteDebits();
+                initClearAllDebits();
+
+                initHistorySearch();
+                initLeaderboardSearch();
+
+                $('body').on('keypress', '#data-query', function (e) {
+                    var code = e.keyCode || e.which;
+                    if (code == 13) {
+                        e.preventDefault();
+                        $(this).change();
+                        return false;
+                    }
+                });
+
+                $('body').on('change', '#data-query', function (e) {
+                    e.preventDefault();
+                    var inp = $(this);
+                    searchQ = inp.val();
+                    flog(searchQ);
+                    doHistorySearch();
+                });
             });
 
             function showHidePointsOrgType() {
@@ -293,6 +409,273 @@
                     $(".pointsOrgType").hide();
                 }
             }
+
+
+            function initRemovePoints() {
+                $(".btnRemovePoints").click(function (e) {
+                    e.preventDefault();
+                    var node = $(e.target);
+                    flog("initRemoveSalesData", node, node.is(":checked"));
+                    var checkBoxes = $('#tablePoints').find('tbody input[name=toRemoveId]:checked');
+                    if (checkBoxes.length === 0) {
+                        Msg.error("Please select the points you want to remove by clicking the checkboxs to the right");
+                    } else {
+                        if (confirm("Are you sure you want to remove " + checkBoxes.length + " points?")) {
+                            doRemovePoints(checkBoxes);
+                        }
+                    }
+                });
+            }
+
+            function initClearAllPoints() {
+                // btn-clear-history
+                $('body').on('click', '.btn-clear-history', function (e) {
+                    e.preventDefault();
+                    if (confirm("Are you sure you want to clear all records? This can not be undone!")) {
+                        $.ajax({
+                            type: 'POST',
+                            data: {
+                                clearHistory: true
+                            },
+                            dataType: "json",
+                            url: "",
+                            success: function (data) {
+                                flog("success", data);
+                                if (data.status) {
+                                    $('#tablePoints tbody').empty();
+                                    Msg.success("Removed points ok");
+                                } else {
+                                    Msg.error("There was a problem removing points. Please try again and contact the administrator if you still have problems");
+                                }
+                            },
+                            error: function (resp) {
+                                Msg.error("An error occurred removing points. You might not have permission to do this");
+                            }
+                        });
+                    }
+                });
+            }
+
+            function doRemovePoints(checkBoxes) {
+                Msg.info("Deleting...", 2000);
+                $.ajax({
+                    type: 'POST',
+                    data: checkBoxes,
+                    dataType: "json",
+                    url: "",
+                    success: function (data) {
+                        flog("success", data);
+                        if (data.status) {
+                            Msg.success("Removed points ok");
+                            $("#tablePointsBody").reloadFragment();
+                        } else {
+                            Msg.error("There was a problem removing points. Please try again and contact the administrator if you still have problems");
+                        }
+                    },
+                    error: function (resp) {
+                        Msg.error("An error occurred removing points. You might not have permission to do this");
+                    }
+                });
+            }
+
+            function initHistorySearch() {
+                var reportRange = $('#report-range');
+
+                reportRange.exist(function () {
+                    flog("init report range");
+                    reportRange.daterangepicker({
+                        format: 'DD/MM/YYYY', // YYYY-MM-DD
+                        ranges: {
+                            'Last 7 Days': [moment().subtract('days', 6), moment()],
+                            'Last 30 Days': [moment().subtract('days', 29), moment()],
+                            'This Month': [moment().startOf('month'), moment().endOf('month')],
+                            'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
+                            'This Year': [moment().startOf('year'), moment()],
+                        },
+                    },
+                            function (start, end) {
+                                flog('onChange', start, end);
+                                startDate = start;
+                                endDate = end;
+                                doHistorySearch();
+                            }
+                    );
+                });
+            }
+
+            function doHistorySearch() {
+                flog('doHistorySearch', startDate, endDate, searchQ);
+                Msg.info("Doing search...", 2000);
+
+                var data = {
+                    startDate: formatDate(startDate),
+                    finishDate: formatDate(endDate),
+                    dataQuery: searchQ
+                };
+                flog("data", data);
+
+                var target = $("#tablePointsBody");
+                target.load();
+
+                $.ajax({
+                    type: "GET",
+                    url: window.location.pathname,
+                    dataType: 'html',
+                    data: data,
+                    success: function (content) {
+                        flog('response', content);
+                        Msg.success("Search complete", 2000);
+                        var newBody = $(content).find("#tablePointsBody");
+                        target.replaceWith(newBody);
+                        $("abbr.timeago").timeago();
+                        flog("done insert and timeago", $("abbr.timeago"));
+                    }
+                });
+            }
+
+            function initDeleteDebits() {
+                $("body").on('click', '.btnRemoveDebits', function (e) {
+                    e.preventDefault();
+                    var checkBoxes = $('#table-debits').find('tbody input[name=removeDebitsId]:checked');
+                    if (checkBoxes.length === 0) {
+                        Msg.error("Please select the debits you want to remove by clicking the checkboxs to the right");
+                    } else {
+                        if (confirm("Are you sure you want to remove " + checkBoxes.length + " debits?")) {
+                            doRemoveDebits(checkBoxes);
+                        }
+                    }
+                });
+            }
+
+            function doRemoveDebits(checkBoxes) {
+                Msg.info("Deleting...", 2000);
+                $.ajax({
+                    type: 'POST',
+                    data: checkBoxes,
+                    dataType: "json",
+                    success: function (data) {
+                        flog("success", data);
+                        if (data.status) {
+                            Msg.success("Removed debits ok");
+                            $("#table-debits").reloadFragment();
+                        } else {
+                            Msg.error("There was a problem removing debits. Please try again and contact the administrator if you still have problems");
+                        }
+                    },
+                    error: function (resp) {
+                        Msg.error("An error occurred removing debits. You might not have permission to do this");
+                    }
+                });
+            }
+
+            function initClearAllDebits() {
+                // btn-clear-history
+                $('body').on('click', '.btn-clear-debits', function (e) {
+                    e.preventDefault();
+                    if (confirm("Are you sure you want to clear all records? This can not be undone!")) {
+                        $.ajax({
+                            type: 'POST',
+                            data: {
+                                clearDebits: true
+                            },
+                            dataType: "json",
+                            url: "",
+                            success: function (data) {
+                                flog("success", data);
+                                if (data.status) {
+                                    $('#table-debits tbody').empty();
+                                    Msg.success("Removed points ok");
+                                } else {
+                                    Msg.error("There was a problem removing debits. Please try again and contact the administrator if you still have problems");
+                                }
+                            },
+                            error: function (resp) {
+                                Msg.error("An error occurred removing debits. You might not have permission to do this");
+                            }
+                        });
+                    }
+                });
+            }
+
+            var leaderboardStartDate = null;
+            var leaderboardEndDate = null;
+            var leaderboardLimit = 20;
+
+            function initLeaderboardSearch() {
+                var reportRange = $('#leaderboard-range');
+
+                reportRange.exist(function () {
+                    flog("init report range");
+                    reportRange.daterangepicker({
+                        format: 'DD/MM/YYYY', // YYYY-MM-DD
+                        ranges: {
+                            'Last 7 Days': [moment().subtract('days', 6), moment()],
+                            'Last 30 Days': [moment().subtract('days', 29), moment()],
+                            'This Month': [moment().startOf('month'), moment().endOf('month')],
+                            'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
+                            'This Year': [moment().startOf('year'), moment()],
+                        },
+                    },
+                            function (start, end) {
+                                flog('onChange', start, end);
+                                leaderboardStartDate = start;
+                                leaderboardEndDate = end;
+                                doLeaderboardSearch();
+                            }
+                    );
+                });
+
+                $('body').on('keypress', '#leaderboard-limit', function (e) {
+                    var code = e.keyCode || e.which;
+                    if (code === 13) {
+                        e.preventDefault();
+                        $(this).change();
+                        return false;
+                    }
+                });
+
+                $('body').on('change', '#leaderboard-limit', function (e) {
+                    e.preventDefault();
+                    var inp = $(this);
+                    leaderboardLimit = parseInt(inp.val(), 10);
+                    if (Number.isNaN(leaderboardLimit)) {
+                        leaderboardLimit = 20;
+                    }
+                    flog(leaderboardLimit);
+                    doLeaderboardSearch();
+                });
+            }
+
+            function doLeaderboardSearch() {
+                flog('doHistorySearch', startDate, endDate, searchQ);
+                Msg.info("Doing search...", 2000);
+
+                var data = {
+                    lbStartDate: formatDate(leaderboardStartDate),
+                    lbFinishDate: formatDate(leaderboardEndDate),
+                    lbLimit: leaderboardLimit
+                };
+                flog("data", data);
+
+                var target = $("#table-leaderboard");
+                target.load();
+
+                $.ajax({
+                    type: "GET",
+                    url: window.location.pathname,
+                    dataType: 'html',
+                    data: data,
+                    success: function (content) {
+                        flog('response', content);
+                        Msg.success("Search complete", 2000);
+                        var newBody = $(content).find("#table-leaderboard");
+                        target.replaceWith(newBody);
+                        $("abbr.timeago").timeago();
+                        flog("done insert and timeago", $("abbr.timeago"));
+                    }
+                });
+            }
+
         </script>
     </body>
 </html>

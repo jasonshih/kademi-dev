@@ -249,13 +249,13 @@ CKEDITOR.plugins.add('fuse-image',
                                     oncomplete: function (data, name, href) {
                                         hash = "";
                                         url = "";
-                                        AddFileToTree(name, href)
+                                        AddFileToTree(name, href);
                                         //$("#imageTree.tree").mtree("refreshSelected");
                                         url = href;
                                     }
                                 });
 
-                                initLoadingOverlay();
+                                //initLoadingOverlay();
 
                                 $('.milton-tree-toolbar').append(
                                         '<a class="btn-import-image cke_dialog_ui_button cke_dialog_ui_button_ok" title="Import image from web">' +

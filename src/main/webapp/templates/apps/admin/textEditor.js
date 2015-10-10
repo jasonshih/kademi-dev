@@ -1,23 +1,100 @@
+function hideLoadingIcon() {
+    $('#editor-loading').addClass('hide');
+}
+
+function showLoadingIcon() {
+    $('#editor-loading').removeClass('hide');
+}
+
 function initTextEditor(fileName) {
-    initLoadingOverlay();
+    var DEFAULT_THEME = 'ace/theme/textmate';
+    var DEFAULT_FONT_SIZE = '12px';
+    var DEFAULT_SHORTCUT = '';
+    var DEFAULT_WORD_WRAP = '';
+
+    var initTheme = $.cookie('text-editor-theme') || DEFAULT_THEME;
+    var initFontSize = $.cookie('text-editor-fontsize') || DEFAULT_FONT_SIZE;
+    var initShortcut = $.cookie('text-editor-shortcut') || DEFAULT_SHORTCUT;
+    var initWordWrap = $.cookie('text-editor-wordwrap') || DEFAULT_WORD_WRAP;
 
     var editor = ace.edit('editor');
+    var storeSetting = function (key, value) {
+        $.cookie(key, value, {
+            path: '/',
+            expires: 999
+        });
+    };
+    var setTheme = function (theme) {
+        storeSetting('text-editor-theme', theme);
+        editor.setTheme(theme);
+    };
+    var setFontSize = function (fontSize) {
+        storeSetting('text-editor-fontsize', fontSize);
+        editor.container.style.fontSize = fontSize;
+        editor.updateFontSize();
+    };
+    var setShortcut = function (shortcut) {
+        storeSetting('text-editor-shortcut', shortcut);
+        editor.setKeyboardHandler(shortcut);
+    };
+    var setWordWrap = function (wordWrap) {
+        storeSetting('text-editor-wordwrap', wordWrap);
+
+        var btn = $('.btn-word-wrap');
+
+        if (wordWrap === 'free') {
+            btn.addClass('active');
+            editor.getSession().setUseWrapMode('free');
+        } else {
+            btn.removeClass('active');
+            editor.getSession().setUseWrapMode('');
+        }
+    };
+
+    // Format of editor
     var extension = fileName.substr(fileName.lastIndexOf('.') + 1, fileName.length) || 'txt';
-    var editorMode = '';
+    $('#file-type').val("ace/mode/" + (extension === 'js' ? 'javascript' : extension)).on('change', function () {
+        editor.getSession().setMode(this.value);
+    }).trigger('change');
 
-    switch (extension) {
-        case 'js':
-            editorMode = 'javascript';
-            break;
-        default :
-            editorMode = extension;
-    }
+    // Theme of editor
+    $('#theme-switcher').val(initTheme).on('change', function () {
+        setTheme(this.value);
+    });
 
-//    editor.setTheme("ace/theme/github");
-    editor.getSession().setMode("ace/mode/" + editorMode);
+    // Word wrap of editor
+    setWordWrap(initWordWrap);
+    $('.btn-word-wrap').on('click', function (e) {
+        e.preventDefault();
+
+        var btn = $(this);
+
+        if (btn.hasClass('active')) {
+            setWordWrap('');
+        } else {
+            setWordWrap('free');
+        }
+    });
+
+    // Font size of editor
+    $('#font-size-switcher').val(initFontSize).on('change', function () {
+        setFontSize(this.value);
+    });
+
+    // Shortcut of editor
+    setShortcut(initShortcut);
+    $('#shortcut-switcher').val(initShortcut).on('change', function () {
+        setShortcut(this.value);
+    });
+
+    // Remove Shortcut for showing setting panel
+    editor.commands.removeCommands(["showSettingsMenu"]);
+
     editor.setOptions({
         minLines: editor.getSession().$rowLengthCache.length,
-        maxLines: Infinity
+        theme: initTheme,
+        wrap: initWordWrap,
+        fontSize: initFontSize
     });
 
     $('#editor').removeClass('hide');
@@ -39,7 +116,7 @@ function initTextEditor(fileName) {
         var href = btn.prop('href');
         var fileContent = editor.getValue();
 
-        showLoadingOverlay();
+        showLoadingIcon();
 
         $.ajax({
             url: href,
@@ -47,59 +124,86 @@ function initTextEditor(fileName) {
             data: fileContent,
             success: function () {
                 Msg.success('File is saved!');
-                hideLoadingOverlay();
+                hideLoadingIcon();
+
+                var storageName = getStorageName();
+                localStorage.setItem(storageName, fileContent);
             },
             error: function (e) {
                 Msg.error(e.status + ': ' + e.statusText);
-                hideLoadingOverlay();
+                hideLoadingIcon();
             }
         })
     });
 
+    initLocalStorage(editor);
+    initFullScreenMode();
+    hideLoadingIcon();
+}
+
+function getStorageName() {
+    return location.pathname + location.search;
+}
+
+function initLocalStorage(editor) {
+    var storageName = getStorageName();
+    var btnRestore = $('.btn-restore-file');
+    var localCode = localStorage.getItem(storageName);
+    var currentCode = editor.getValue();
+
+    if (localCode && localCode !== currentCode) {
+        btnRestore.removeClass('hide');
+        btnRestore.tooltip({
+            placement: 'bottom',
+            trigger: 'manual',
+            container: 'body'
+        }).tooltip('show');
+
+        setTimeout(function () {
+            btnRestore.tooltip('hide');
+        }, 10 * 1000);
+    }
+
+    btnRestore.on('click', function (e) {
+        e.preventDefault();
+
+        if (confirm('Are you sure that you want to restore the latest version of this file in your local storage?')) {
+            editor.setValue(localCode);
+        }
+    });
+}
+
+function initFullScreenMode() {
     var editorWrapper = $('#editor-wrapper');
     var btnFullscreen = $('.btn-fullscreen');
 
     btnFullscreen.on('click', function (e) {
         e.preventDefault();
 
-        fullscreenEditor(!btnFullscreen.hasClass('active'));
+        makeFullscreenEditor(!btnFullscreen.hasClass('active'));
     });
-
-    function fullscreenEditor(isFullscreen) {
-        var icon = btnFullscreen.find('i');
-
-        if (isFullscreen) {
-            btnFullscreen.addClass('active');
-            btnFullscreen.attr('title', 'Exit fullscreen mode');
-            icon.attr('class', 'clip-fullscreen-exit');
-            editorWrapper.fullscreen();
-            editorWrapper.addClass('fullscreen-mode');
-            editor.setOptions({
-                maxLines: null
-            });
-        } else {
-            btnFullscreen.removeClass('active');
-            btnFullscreen.attr('title', 'Enter fullscreen mode');
-            icon.attr('class', 'clip-fullscreen');
-            $.fullscreen.exit();
-            editorWrapper.removeClass('fullscreen-mode');
-            editor.setOptions({
-                maxLines: Infinity
-            });
-        }
-    }
 
     editorWrapper.on('fscreenclose', function () {
-        fullscreenEditor(false);
+        makeFullscreenEditor(false);
     });
 }
 
-function initLoadingOverlay() {
-    if (!findLoadingOverlay()[0]) {
-        $('.main-content').children('.container').prepend('<div class="loading-overlay hide"></div>');
-    }
-}
+function makeFullscreenEditor(isFullscreen) {
+    var editorWrapper = $('#editor-wrapper');
+    var btnFullscreen = $('.btn-fullscreen');
+    var icon = btnFullscreen.find('i');
 
-function findLoadingOverlay() {
-    return $('.main-content').children('.container').find('.loading-overlay');
+    if (isFullscreen) {
+        btnFullscreen.addClass('active');
+        btnFullscreen.attr('title', 'Exit fullscreen mode');
+        icon.attr('class', 'clip-fullscreen-exit');
+        editorWrapper.fullscreen();
+        editorWrapper.addClass('fullscreen-mode');
+    } else {
+        btnFullscreen.removeClass('active');
+        btnFullscreen.attr('title', 'Enter fullscreen mode');
+        icon.attr('class', 'clip-fullscreen');
+        $.fullscreen.exit();
+        editorWrapper.removeClass('fullscreen-mode');
+    }
 }

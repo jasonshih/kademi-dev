@@ -1,0 +1,66 @@
+<div class="ktile-wrapper col-xl-3 col-lg-4 col-md-4 col-sm-6">
+    <div class="ktile ktile-md-s">
+        <div class="ktile-inner">
+            <div class="ktile-body">
+                <div class="ktile-front bgm-teal">
+                    <div class="dash-widget-item">
+                        <a href="/signupSearch">
+                            <div class="dash-widget-content">
+                                <svg id="signupsChart" width="100%" height="100%"></svg>
+                            </div>
+                            <div class="dash-widget-title text-center">New memberships past 7 days</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        var params = window.location.search;
+
+        $.get("/signupStats" + params, function (data) {
+            flog("signupStats", data);
+            initSignupChart(data);
+        }, "json");
+    });
+
+    function initSignupChart(data) {
+        flog("signupStats2", data);
+        var total = 0;
+        for (var i = 0; i < data.length; i++) {
+            total += data[i].count;
+        }
+
+        nv.addGraph(function () {
+            var chart = nv.models.pieChart()
+                .x(function (d) {
+                    return d.key
+                })
+                .y(function (d) {
+                    return d.count;
+                })
+                .valueFormat(d3.format(".0f"))
+                .margin({"left": 0, "right": 0, "top": 0, "bottom": 0})
+                .showLabels(true)     //Display pie labels
+                .showLegend(false)
+                .labelThreshold(.05)  //Configure the minimum slice size for labels to show up
+                .labelType("value") //Configure what type of data to show in the label. Can be "key", "value" or "percent"
+                .donut(true)          //Turn on Donut mode. Makes pie chart look tasty!
+                .title(total + "")
+                .donutRatio(0.50)     //Configure how big you want the donut hole size to be.
+                .color(['#7cb5ec', '#434348', '#90ed7d', '#f7a35c', '#8085e9', '#c87589', '#e4d354', '#2b908f', '#dfb2b2', '#91e8e1'])
+            ;
+
+            d3.select("#signupsChart")
+                .datum(data)
+                .transition().duration(1500)
+                .call(chart);
+
+            return chart;
+        });
+
+    }
+</script>

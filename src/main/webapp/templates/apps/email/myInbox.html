@@ -39,7 +39,7 @@
                     </div>
                     <div class="email-content">
                         #if( $page.html )
-                        $!page.html
+                        <iframe style="border: none; width: 100%; min-height: 400px" srcdoc="$formatter.htmlAttEncode($page.html)"></iframe>
                         #else
                         $!page.text
                         #end

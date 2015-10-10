@@ -7,10 +7,10 @@
     <body>
         <div id="email-item-info">
             <p>
-            <a class="btn btn-primary pull-right" href="$page.href" target="_blank">
-                Open in new window
-                <span class="glyphicon glyphicon-arrow-right"></span>
-            </a>
+                <a class="btn btn-primary pull-right" href="$page.href" target="_blank">
+                    Open in new window
+                    <span class="glyphicon glyphicon-arrow-right"></span>
+                </a>
             </p>
             <table class="table status-$page.sendStatus">
                 <tr>
@@ -44,11 +44,33 @@
                 </tr>
                 <tr>
                     <td>From</td>
-                    <td>$page.fromAddress</td>
+                    <td>
+                        #if( $page.emailItem.sender )
+                        <a href="/manageUsers/$page.emailItem.sender.id">$page.fromAddress</a>
+                        #else
+                        $page.fromAddress
+                        #end
+                    </td>
+                </tr>
+                <tr>
+                    <td>Reply to</td>
+                    <td>
+                        #if( $page.replyToAddress )
+                        $page.replyToAddress
+                        #else
+                        $page.fromAddress
+                        #end
+                    </td>
                 </tr>
                 <tr>
                     <td>To</td>
-                    <td>$page.recipientAddress</td>
+                    <td>
+                        #if( $page.emailItem.recipient )
+                        <a href="/manageUsers/$page.emailItem.recipient.id">$page.recipientAddress</a> ($page.emailItem.recipient.name)
+                        #else
+                        $page.recipientAddress
+                        #end
+                    </td>
                 </tr>
                 <tr>
                     <td>Subject</td>
@@ -60,7 +82,7 @@
                     <td>
                         <ul>
                             #foreach($attachment in $page.attachments)
-                            <li><a href="/_hashes/files/$attachment.fileHash">$attachment.fileName</a></li>
+                            <li><a href="/_hashes/files/$attachment.fileHash" download="$attachment.fileName">$attachment.fileName</a></li>
                             #end
                         </ul>
                     </td>
@@ -70,7 +92,7 @@
                     <td>
                         <ul>
                             #foreach($attempt in $page.sendAttempts)
-                            <li>$attempt.status, at $attempt.statusDate</li>
+                            <li>$!attempt.status, at $attempt.statusDate</li>
                             #end
                         </ul>
                     </td>
@@ -79,7 +101,7 @@
         </div>
         <h4>Message content</h4>
         <hr/>
-        <iframe style="border: none; width: 100%; min-height: 400px" srcdoc="$formatter.htmlEncode( $page.emailHtml )"></iframe>
+        <iframe style="border: none; width: 100%; min-height: 400px" src="/viewEmail?emailId=$page.emailItem.id"></iframe>
         <br/>
         <hr/>
         <br/>

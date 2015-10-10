@@ -59,21 +59,17 @@
                     <!-- Start content of General tab -->
                     <div id="general" class="tab-pane">
                         <div class="form-group">
-                            <label class="control-label col-md-3 col-lg-2" for="title">Trigger name</label>
-                            <div class="col-md-8 col-lg-4">
-                                <input type="text" name="title" id="title" value="$!page.job.title" placeholder="" class="required form-control" />
+                            <label class="control-label col-md-3 col-lg-2" for="title">Name</label>
+                            <div class="col-md-8">
+                                <input type="text" name="title" id="title" value="$!page.job.title" placeholder="Enter a title for the automation" class="required form-control input-lg" />
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-md-3 col-lg-2" for="enabled">Enabled</label>
-                            <div class="col-md-8 col-lg-4">
-                                $formatter.checkbox("enabled", "enabled", $page.enabled)<br />
-                                <small>This auto email will only be sent if enabled</small>
+                            <div class="col-md-2 enabledSwitchContainer">
+                                $formatter.bsswitch("enabled", "enabled", $page.enabled, "true")
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-md-3 col-lg-2" for="notes">Notes<small>These notes are for internal purposes only.</small></label>
-                            <div class="col-md-8 col-lg-4">
+                            <div class="col-md-9 col-lg-10">
                                 <textarea cols="100" name="notes" id="notes" rows="10" placeholder="" class="form-control">$!page.notes</textarea>
                             </div>
                         </div>
@@ -132,8 +128,13 @@
                                             </div>
                                             <br/>
                                             <div class="clearfix">
+                                                <label class="col-md-4">Specify Timer Time  $formatter.checkbox("useTimerTime","useTimerTime", $page.useTimerTime)</label>
+                                            </div>
+                                            <br/>
+                                            #set( $hideTimerStyle = $formatter.ifTrue( $page.useTimerTime , "", "none" ) )
+                                            <div class="clearfix" id="fireAtTime" style="display: ${hideTimerStyle};">
                                                 <div class="input-group pull-left">
-                                                    <span class="input-group-addon">Fire the next event at:</span>
+                                                    <span class="input-group-addon">Fire the next event at: </span>
                                                     <div class="input-group input-append bootstrap-timepicker">
                                                         <input type="text" data-minute-step="1" name="timerTime" data-default-time="$!page.job.timerTime" class="form-control time-picker" />
                                                         <span class="input-group-addon add-on">
@@ -159,11 +160,13 @@
                                 <div class="tab-content">
                                     <div class="tab-pane active" id="condition-expr">
                                         <div class="form-group">
-                                            <label class="control-label col-md-4" for="conditionScriptMvel">Advanced</label>
-                                            <div class="col-md-8">
-                                                <p>You can enter a rule expression below using MVEL syntax, the trigger will only fire if this evaluates to true. Eg</p>
-                                                <pre>event.numAttempts < 3</pre>
+                                            <label class="control-label col-md-2" for="conditionScriptMvel">Advanced</label>
+                                            <div class="col-md-10">
+                                                <p>You can enter a rule expression below using MVEL syntax, the trigger will only fire if this evaluates to true.</p>
                                                 <textarea name="conditionScriptMvel" id="conditionScriptMvel" class="form-control" rows="5">$!page.job.conditionScriptMvel</textarea>
+
+                                                <h3>Example rule</h3>
+                                                <pre>event.numAttempts < 3</pre>
                                             </div>
                                         </div>
 
@@ -221,13 +224,20 @@
                                         <div class="form-group">
                                             <label class="control-label col-md-4" for="subject">Email subject</label>
                                             <div class="col-md-8">
-                                                <textarea style="height: 70px" name="subject" id="subject" value="" placeholder="Enter the email subject here" class="form-control required-if-shown">$!page.subject</textarea>
+                                                <textarea style="height: 70px" name="subject" id="subject" value="" placeholder="Enter the email subject here" class="form-control required-if-shown">$formatter.htmlEncode( $page.subject )</textarea>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label col-md-4" for="fromAddress">Email from address</label>
                                             <div class="col-md-8">
-                                                <input type="text" name="fromAddress" id="fromAddress" value="$formatter.htmlEncode( $page.fromAddress )" placeholder="admin@mybusinessname.com" class="form-control required-if-shown" />
+                                                <input type="text" name="fromAddress" id="fromAddress" value="$!formatter.htmlEncode( $page.fromAddress )" placeholder="admin@mybusinessname.com" class="form-control required-if-shown" />
+                                                <small>Eg <i>"Joe Bloggs" &lt;joe@bloggs.com&gt;</i></small>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-4" for="replyToAddress">Reply to address</label>
+                                            <div class="col-md-8">
+                                                <input type="text" name="replyToAddress" id="replyToAddress" value="$!formatter.htmlEncode( $page.replyToAddress )" placeholder="admin@mybusinessname.com" class="form-control" />
                                                 <small>Eg <i>"Joe Bloggs" &lt;joe@bloggs.com&gt;</i></small>
                                             </div>
                                         </div>
@@ -554,12 +564,27 @@
                                     |
                                     <a href='#' class='refresh-dataseries text-success'>Refresh Data series</a>
                                 </p>
+                                <div class="alert alert-info">
+                                    Expressions are evaluated using the MVEL language. The event is the source object, so properties of the event can be referenced directly.
+                                    <br/>
+                                    Please see the <a href="http://docs.kademi.co/ref/templating/TriggerEvent.html">TriggerEvent documentation</a> for available trigger event types and their properties
+                                </div>
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <label class="control-label col-md-2" for="dataSeriesAmountMvel">Enter an expression (MVEL)</label>
+                                            <label class="control-label col-md-2" for="dataSeriesAmountMvel">Amount expression</label>
                                             <div class="col-md-8">
                                                 <textarea type="text" class="form-control required-if-shown" name="dataSeriesAmountMvel" id="dataSeriesAmountMvel">$!page.job.dataSeriesAmountMvel</textarea>
+                                            </div>
+                                        </div>
+                                    </div> <!-- end row -->
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label class="control-label col-md-2" for="dataSeriesDateMvel">Date expression</label>
+                                            <div class="col-md-8">
+                                                <textarea type="text" class="form-control required-if-shown" name="dataSeriesDateMvel" id="dataSeriesDateMvel">$!page.job.dataSeriesDateMvel</textarea>
                                             </div>
                                         </div>
                                     </div> <!-- end row -->
@@ -668,51 +693,74 @@
                                 <label for="showAdvanced">Advanced</label>
                             </div>
                             <div class="panel-body panel-toggled" data-toggled="display" data-actor="#showAdvanced">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <p>You can enter XML rules below, to filter out potential recipients</p>
-                                        <textarea name="filterScriptXml" class="form-control" rows="20">$!page.job.filterScriptXml</textarea>
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a href="#filter-expr" data-toggle="tab">Expression</a></li>
+                                    <li><a href="#filter-xml" data-toggle="tab">XML</a></li>
+                                </ul>
+
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="filter-expr">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-2" for="filterScriptMvel">Advanced</label>
+                                            <div class="col-md-10">
+                                                <p>You can enter a rule expression below using MVEL syntax, participants will only be included if this evaluates to true.</p>
+                                                <textarea name="filterScriptMvel" id="conditionScriptMvel" class="form-control" rows="5">$!page.job.filterScriptMvel</textarea>
+
+                                                <h3>Example filter</h3>
+                                                <pre>event.numAttempts < 3</pre>
+                                            </div>
+                                        </div>
+
                                     </div>
-                                    <div class="col-md-6">
-                                        <h5>Available Rules</h5>
-                                        <div class="rules">
-                                            <ul>
-                                                <li>
-                                                    <h6>Expression types</h6>
+                                    <div class="tab-pane" id="filter-xml">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p>You can enter XML rules below, to filter out potential recipients</p>
+                                                <textarea name="filterScriptXml" class="form-control" rows="20">$!page.job.filterScriptXml</textarea>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h5>Available Rules</h5>
+                                                <div class="rules">
                                                     <ul>
                                                         <li>
-                                                            <b>const</b>: Constants, eg <br/>&lt;const type='Integer'&gt;1&lt;/const&gt;
+                                                            <h6>Expression types</h6>
+                                                            <ul>
+                                                                <li>
+                                                                    <b>const</b>: Constants, eg <br/>&lt;const type='Integer'&gt;1&lt;/const&gt;
+                                                                </li>
+                                                                <li>
+                                                                    <b>comparison</b>:
+                                                                    Compare 2 expressions, Eg
+                                                                    <br/>
+                                                                    &lt;comparison operator='EQUALS'&gt;<br/>
+                                                                    &lt;const type='Integer'&gt;1&lt;/const&gt;<br/>
+                                                                    &lt;const type='Integer'&gt;1&lt;/const&gt;<br/>
+                                                                    &lt;/comparison&gt;<br/>
+                                                                </li>
+                                                                <li>
+                                                                    <b>app-prop</b>: a property from an application. See below for a full list of app-id's and prop-name's. Eg:
+                                                                    <br/>
+                                                                    &lt;app-prop app-id='userApp' prop-name='firstName' /&gt;
+                                                                </li>
+                                                            </ul>
                                                         </li>
+                                                        #foreach( $app in $applicationManager.getPropertyProviderApps($rootFolder) )
                                                         <li>
-                                                            <b>comparison</b>:
-                                                            Compare 2 expressions, Eg
-                                                            <br/>
-                                                            &lt;comparison operator='EQUALS'&gt;<br/>
-                                                            &lt;const type='Integer'&gt;1&lt;/const&gt;<br/>
-                                                            &lt;const type='Integer'&gt;1&lt;/const&gt;<br/>
-                                                            &lt;/comparison&gt;<br/>
-                                                        </li>
-                                                        <li>
-                                                            <b>app-prop</b>: a property from an application. See below for a full list of app-id's and prop-name's. Eg:
-                                                            <br/>
-                                                            &lt;app-prop app-id='userApp' prop-name='firstName' /&gt;
-                                                        </li>
-                                                    </ul>
-                                                </li>
-                                                #foreach( $app in $applicationManager.getPropertyProviderApps($rootFolder) )
-                                                <li>
-                                                    <h6>$app.instanceId</h6>
-                                                    <ul>
-                                                        #foreach( $expr in $app.allProperties )
-                                                        <li>
-                                                            <b>$expr.name</b>:
-                                                            $expr.description
+                                                            <h6>$app.instanceId</h6>
+                                                            <ul>
+                                                                #foreach( $expr in $app.allProperties )
+                                                                <li>
+                                                                    <b>$expr.name</b>:
+                                                                    $expr.description
+                                                                </li>
+                                                                #end
+                                                            </ul>
                                                         </li>
                                                         #end
                                                     </ul>
-                                                </li>
-                                                #end
-                                            </ul>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -943,6 +991,20 @@
             var emailEnabled = $formatter.format($page.emailEnabled);
             var smsEnabled = $formatter.format($page.smsEnabled);
             $(function () {
+                $(".enabledSwitchContainer input").on("switchChange.bootstrapSwitch", function (e, state) {
+                    flog("enabled", state.value);
+                    var v = state.value;
+                    flog("enabled", v);
+                    $.ajax({
+                        type: "POST",
+                        url: window.location.pathname,
+                        data: "enabled=" + v,
+                        dataType: 'json',
+                        success: function (content) {
+                            flog('response', content);
+                        }
+                    });
+                });
                 setRecentItem(document.title, window.location.pathname);
                 initManageAutoEmail();
                 $(".refresh-history").click(function (e) {
@@ -962,7 +1024,7 @@
                 $(".timer-units li").click(function (e) {
                     e.preventDefault();
                     var unit = $(e.target).text();
-                    $(".timer-unit").text(unit).val(unit);
+                    $(".timer-unit").text(unit).val(unit).change();
                 });
                 jQuery("abbr.timeago").timeago();
                 initHistorySearch();
@@ -1029,6 +1091,17 @@
                     }
                 });
                 $('.time-picker').timepicker();
+                $('body').on('change', '#useTimerTime', function (e) {
+                    var btn = $(this);
+                    var isChecked = btn.is(":checked");
+                    flog(isChecked);
+                    if (isChecked) {
+                        $('#fireAtTime').show();
+                    } else {
+                        $('#fireAtTime').hide();
+                        $("input[name=timerTime]").val("");
+                    }
+                });
             });
 
             function initHistorySearch() {

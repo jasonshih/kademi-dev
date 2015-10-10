@@ -1,9 +1,9 @@
 /**
  *
  *  jquery.forms.js
- *  
+ *
  *  Depends on common.js
- *  
+ *
  *  Takes a config object with the following properties:
  *  - callback(resp, form): called after successful processing with the response object and the form
  *  - validate(form) - return true if the form is valid
@@ -258,7 +258,7 @@ function checkRegex(form) {
         var message = input.attr('data-message');
 
         if (regex.test(value)) {
-            isOk = true;
+            
         } else {
             isOk = false;
 
@@ -289,10 +289,10 @@ function checkRequiredRadios(form) {
     var isOk = true;
     var radioNames = [];
     $("input.required:radio", form).each(function(index, node) {
-        node = $(node);        
+        node = $(node);
         radioNames[node.attr("name")] = node;
     });
-    for( name in radioNames) {            
+    for( name in radioNames) {
         var radios = form.find("input[name=" + name + "]");
         flog("radio name1", name, radios);
         var checked = radios.filter(":checked");

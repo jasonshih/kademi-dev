@@ -110,16 +110,22 @@ function doSearch() {
     var groupName = $("#search-group").val();
     flog("doSearch", query, groupName);
     var uri = URI(window.location);
-	uri.setSearch("q", query);
-	uri.setSearch("g", groupName);
-	flog("doSearch", uri.toString());
+    uri.setSearch("q", query);
+    uri.setSearch("g", groupName);
+    flog("doSearch", uri.toString());
+    var newHref = uri.toString();
+    window.history.pushState("", newHref, newHref);
+    Msg.info("Searching...", 50000);
     $.ajax({
         type: 'GET',
-        url: uri.toString(),
+        url: newHref,
         success: function (data) {
+            Msg.info("Search complete", 5000);
             flog("success", data);
-            var $fragment = $(data).find("#table-users-body");
+            var newDom = $(data);
+            var $fragment = newDom.find("#table-users-body");
             $("#table-users-body").replaceWith($fragment);
+            $("#searchStats").replaceWith(newDom.find("#searchStats"));
         },
         error: function (resp) {
             Msg.error("An error occured doing the user search. Please check your internet connection and try again");
@@ -324,6 +330,7 @@ function doOrgSearch() {
 
 function initRemoveUsers() {
     $(".btn-remove-users").click(function (e) {
+        e.preventDefault();
         var node = $(e.target);
         flog("removeUsers", node, node.is(":checked"));
         var checkBoxes = $('#table-users').find('tbody input[name=toRemoveId]:checked');
@@ -412,34 +419,53 @@ function initLoginAs() {
 }
 
 function initAggregations() {
-	$("body").on("change", ".agg-filter", function(e) {
-		e.preventDefault();
-		var input = $(e.target);
-		flog(input);
-		var tbody = input.closest("tbody");
-		var name = input.attr("name");
-		var value = input.val();
-		var uri = URI(window.location);
-		uri.setSearch("filter-".concat(name), value);
+    var body = $("body");
+    body.on('click', '.aggClearer', function (e) {
+        e.preventDefault();
 
-		history.pushState(null, null, uri.toString());
+        var input = $($(this).data('target'));
+        flog("aggs clearer click", input);
+        input.val('');
+        var name = input.attr("name");
+        // We want to remove the parameter from the query string entirely
+        var uri = URI(window.location);
+        uri.removeSearch("filter-".concat(name));
+        history.pushState(null, null, uri.toString());
 
-		$("#aggregationsContainer").reloadFragment({
-			url : window.location
-		});
+        $("#aggregationsContainer").reloadFragment({
+            url: window.location
+        });
 
-		$("#table-users-body").reloadFragment({
-			url : window.location,
-			whenComplete : function() {
-				doSearch();
-			}
-		});
-	});
+    });
+    body.on('change', '.agg-filter', function (e) {
+        var input = $(e.target);
+        aggSearch(input);
+    });
+    body.on('keyup', '.agg-filter', function (e) {
+        var input = $(e.target);
+        typewatch(function () {
+            aggSearch(input);
+        }, 500);
+    });
+}
+
+function aggSearch(input) {
+    var name = input.attr("name");
+    var value = input.val();
+    flog("initAggregations: do agg search", "name=", name, "value=", value);
+    var uri = URI(window.location);
+    uri.setSearch("filter-".concat(name), value);
+
+    history.pushState(null, null, uri.toString());
+
+    $("#aggregationsContainer").reloadFragment({
+        url: window.location
+    });
 }
 
 function initSort() {
-	flog('initSort()');
-	$('.sort-field').on('click', function (e) {
+    flog('initSort()');
+    $('.sort-field').on('click', function (e) {
         e.preventDefault();
         var a = $(e.target);
         var uri = URI(window.location);
@@ -447,8 +473,8 @@ function initSort() {
 
         var dir = 'asc';
         if (field == getSearchValue(window.location.search, 'sortfield')
-        		&& 'asc' == getSearchValue(window.location.search, 'sortdir')) {
-        	dir = 'desc';
+                && 'asc' == getSearchValue(window.location.search, 'sortdir')) {
+            dir = 'desc';
         }
         uri.setSearch('sortfield', field);
         uri.setSearch('sortdir', dir);
@@ -472,17 +498,17 @@ function initSort() {
 }
 
 function getSearchValue(search, key) {
-	if (search.charAt(0) == '?') {
-		search = search.substr(1);
-	}
-	parts = search.split('&');
-	if (parts) {
-		for (var i = 0; i < parts.length; i++) {
-			entry = parts[i].split('=');
-			if (entry && key == entry[0]) {
-				return entry[1];
-			}
-		}
-	}
-	return '';
+    if (search.charAt(0) == '?') {
+        search = search.substr(1);
+    }
+    parts = search.split('&');
+    if (parts) {
+        for (var i = 0; i < parts.length; i++) {
+            entry = parts[i].split('=');
+            if (entry && key == entry[0]) {
+                return entry[1];
+            }
+        }
+    }
+    return '';
 }

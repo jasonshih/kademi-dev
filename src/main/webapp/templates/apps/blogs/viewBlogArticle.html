@@ -79,7 +79,7 @@
 
                                             <textarea id="postQuestion" class="form-control col-md-12" rows="1" placeholder="Ask a question, or offer an answer"></textarea>
                                             <div class="commentControls">
-                                                <button class="btn requiresUser btn-primary" type="submit">Post</button>
+                                                <button class="btn #if(!$page.allowAnonComments)requiresUser#end btn-primary" type="submit">Post</button>
                                             </div>
                                         </div>                            
                                     </form>

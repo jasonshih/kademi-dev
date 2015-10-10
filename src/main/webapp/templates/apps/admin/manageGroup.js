@@ -42,7 +42,8 @@ function initCRUDGroup() {
         e.preventDefault();
 
         var btn = $(this);
-        var name = btn.closest('.btn-group').prev().text().trim();
+        var selectedGroup = btn.closest('div.group');
+        var name = selectedGroup.data('name');
         var href = $.URLEncode(name);
 
         flog('delete', href);
@@ -59,11 +60,15 @@ function initCRUDGroup() {
 
         var btn = $(this);
         var selectGroup = btn.parents('div.group');
-        var groupName = btn.closest('.btn-group').prev().text().trim();
+        var groupName = selectGroup.data('name');
+        var groupTitle = selectGroup.data('title');
+        var groupNotes = selectGroup.data('notes');
         flog("groupName", groupName);
         showGroupModal('Group', 'Rename group', 'Rename', {
             name: groupName,
-            group: selectGroup.attr('data-group')
+            title: groupTitle,
+            notes: groupNotes,
+            group: selectGroup.attr('id')
         });
     });
 }
@@ -233,7 +238,6 @@ function setGroupRole(groupName, roleName, isRecip, permissionList) {
 }
 
 
-
 function addOrderGroup() {
     $('div.group').each(function (i) {
         $(this).attr('data-group', i);
@@ -291,14 +295,24 @@ function showGroupModal(name, title, type, data) {
 
     modal.find('.modal-title').html(title);
     modal.find('.btn-save-group').text(type);
+    modal.find('input[name=groupType]').val(type);
 
     if (data) {
         if (data.name) {
             modal.find('input[name=name]').val(data.name);
         }
 
+        if (data.title) {
+            modal.find('input[name=title]').val(data.title);
+        }
+
+        if (data.notes) {
+            modal.find('textarea[name=notes]').html(data.notes);
+        }
+
         if (data.group) {
             modal.attr('data-group', data.group);
+            modal.find('input[name=group]').val(data.group);
         }
     }
 
@@ -344,62 +358,42 @@ function maxOrderGroup() {
 function initGroupModal() {
     var modal = $('#modal-group');
 
-    // Event for Add/Edit button
-    modal.find('form').submit(function (e) {
-        e.preventDefault();
-
-        var btn = modal.find(".btn-save-group");
-        var type = btn.html();
-        flog('Click add/edit group', btn, type);
-
-        var name = modal.find('input[name=name]').val();
-        if (checkSimpleChars(modal.find('form'))) {
-            if (type === 'Add') {
-                createFolder(name, null, function (name, resp) {
-                    Msg.success(name + ' is created!');
-                    $('#groups-folders').reloadFragment({
-                        onComplete: function () {
-                            var startFolder;
-                            $('.group').draggable({
-                                revert: "invalid",
-                                axis: "y",
-                                start: function (event, ui) {
-                                    flog("draggable start", event, ui);
-                                    drapEventStart = event;
-                                    startFolder = $(event.currentTarget.closest(".folder"));
-                                    if (startFolder != null) {
-                                        startFolder.find(".group-count").text(startFolder.find(".group").size());
-                                    }
-                                    clearTimeout(checkTimer);
-                                    checkTimer = null;
-                                },
-                                stop: function (event, ui) {
-                                    flog("draggable stop", event, ui);
-                                    //var folder = $(event.currentTarget.closest(".folder"));
-                                    if (startFolder != null) {
-                                        startFolder.find(".group-count").text(startFolder.find(".group").size());
-                                    }
-                                }
-                            });
-                        }
-                    });
-                });
-
-            } else { // If is editing Group
-                var groupDiv = $('div.group').filter('[data-group=' + modal.attr('data-group') + ']');
-                var groupNameSpan = groupDiv.find('span.group-name');
-                var src = groupNameSpan.text().trim();
-                src = $.URLEncode(src);
-                var dest = name;
-                dest = window.location.pathname + dest;
-                flog("move group", src, dest);
-                move(src, dest, function () {
-                    groupNameSpan.text(name);
-                });
-            }
-
-            modal.modal('hide');
+    modal.find('form').forms({
+        callback: function (resp) {
+            reloadGroupFolders();
+            Msg.success(resp.messages.first());
             resetModalControl();
+            modal.modal('hide');
+        }
+    });
+}
+
+function reloadGroupFolders() {
+    $('#groups-folders').reloadFragment({
+        onComplete: function () {
+            var startFolder;
+            $('.group').draggable({
+                revert: "invalid",
+                axis: "y",
+                handle: '.btn-order',
+                start: function (event, ui) {
+                    flog("draggable start", event, ui);
+                    drapEventStart = event;
+                    startFolder = $(event.currentTarget.closest(".folder"));
+                    if (startFolder != null) {
+                        startFolder.find(".group-count").text(startFolder.find(".group").size());
+                    }
+                    clearTimeout(checkTimer);
+                    checkTimer = null;
+                },
+                stop: function (event, ui) {
+                    flog("draggable stop", event, ui);
+                    //var folder = $(event.currentTarget.closest(".folder"));
+                    if (startFolder != null) {
+                        startFolder.find(".group-count").text(startFolder.find(".group").size());
+                    }
+                }
+            });
         }
     });
 }
@@ -592,6 +586,7 @@ function initGroupFolder() {
     $('.group').draggable({
         revert: "invalid",
         axis: "y",
+        delay: 200,
         start: function (event, ui) {
             flog("draggable start", event, ui);
             drapEventStart = event;
@@ -613,22 +608,42 @@ function initGroupFolder() {
 
     var checkTimer;
     $('.folder').droppable({
-        accept: ".group",
+        accept: '.group',
         greedy: true,
         drop: function (event, ui) {
             var groupName = ui.draggable.attr("id");
-            var folderName = $(this).data("name");
-            $(this).find(".panel-group").append(ui.draggable.css({position: "relative", top: "", left: ""}));
+            var currentFolder = $(this);
+            var folderName = currentFolder.data("name");
+
+            if (currentFolder.is(ui.draggable.closest('.folder'))) {
+                flog('The draged item is already in this element!');
+                ui.draggable.animate({
+                    'top': 0
+                }, 500);
+
+                return;
+            }
+
+            currentFolder.find(".panel-group").append(
+                    ui.draggable.css({
+                        position: "relative",
+                        top: "",
+                        left: ""
+                    })
+                    );
+
             addGroupFolder(groupName, groupName, "addToFolder=addToFolder&folderName=" + folderName, function (name, resp) {
                 Msg.success("Moved " + groupName + " to " + folderName);
             });
-            $(this).find(".group-count").text($(this).find(".group").size());
-            var currentTarget = $(this);
+
+            currentFolder.find(".group-count").text(currentFolder.find(".group").size());
+
             setTimeout(function () {
-                flog(currentTarget.find(".group").size());
-                currentTarget.find(".group-count").text(currentTarget.find(".group").size());
+                flog(currentFolder.find(".group").size());
+                currentFolder.find(".group-count").text(currentFolder.find(".group").size());
             }, 150);
-            flog($(this).find(".group").size());
+
+            flog(currentFolder.find(".group").size());
         },
         over: function (event, ui) {
             flog(event, ui);
@@ -638,7 +653,11 @@ function initGroupFolder() {
     });
 
     $(".container").droppable({
-        accept: ".group",
+        accept: function (draggableElement) {
+            var isInFolder = draggableElement.closest('.folder').length > 0;
+
+            return isInFolder;
+        },
         greedy: true,
         drop: function (event, ui) {
             flog("Dropped In Container");

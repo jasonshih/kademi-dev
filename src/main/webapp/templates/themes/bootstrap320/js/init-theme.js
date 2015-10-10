@@ -14,14 +14,12 @@ CKEDITOR_BASEPATH = "/static/ckeditor440/";
 var themeCssFiles = new Array();
 
 
-
 function initTheme() {
     flog("initTheme-bootstrap320: init-theme.js");
 
     // the login box in header is normally for logging in from a public page. So
     // in this case we want to navigate to the user's dashboard
-    $(".header .Login").user({
-    });
+    $(".header .Login").user({});
     // the login form appears in content when the requested page requires a login
     // so in this case we do not give a post-login url, we will just refresh the current page
     $("#content .Login").user();
@@ -34,7 +32,7 @@ function initTheme() {
     initVideos();
 
     flog("initTheme: run page init functions", pageInitFunctions.length);
-    $.each(pageInitFunctions, function(i, f) {
+    $.each(pageInitFunctions, function (i, f) {
         log("run function" + i);
         pageInitFunctions[i]();
         log("done run function", i);
@@ -46,7 +44,7 @@ function initTheme() {
 
 
 function initHelp() {
-    $(".helpIcon").click(function(e) {
+    $(".helpIcon").click(function (e) {
 
         e.preventDefault();
 
@@ -56,8 +54,6 @@ function initHelp() {
         window.open(href);
     });
 }
-
-
 
 
 /**
@@ -85,7 +81,7 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
     flog("removePlugins", removePlugins);
     log("prepare html editors", elements);
 
-    elements.each(function(i, n) {
+    elements.each(function (i, n) {
         var inp = $(n);
 
         var inputClasses = inp.attr("class");
@@ -154,16 +150,16 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
 
 
 function initRotation() {
-    $(function() {
+    $(function () {
         flog("initRotation");
         var rotaters = $(".rotate");
-        if( rotaters.length === 0 ) {
+        if (rotaters.length === 0) {
             return;
         }
         try {
             var rotateDegrees = 0;
 
-            setInterval(function() {
+            setInterval(function () {
                 if (rotateDegrees === 360) {
                     rotateDegrees = 0;
                 } else {
@@ -184,12 +180,11 @@ function initRotation() {
 function initPrintLink() {
     var links = $("a.print2");
     flog("initPrintLink", links);
-    links.click(function(e) {
+    links.click(function (e) {
         e.preventDefault();
         window.print();
     });
 }
-
 
 
 /**
@@ -204,13 +199,13 @@ function initPrintLink() {
  */
 function initComments(pageUrl) {
     log("initComments", pageUrl);
-    $(".hideBtn").click(function() {
+    $(".hideBtn").click(function () {
         var oldCommentsHidden = $("#comments:visible").length == 0;
         log("store new comments hidden", oldCommentsHidden);
         jQuery.cookie("commentsHidden", !oldCommentsHidden, {
             path: "/"
         });
-        $("#comments").toggle(100, function() {
+        $("#comments").toggle(100, function () {
             if (!oldCommentsHidden) {
                 $(".hideBtn a").text("Show comments");
                 $(".hideBtn a").addClass("ishidden");
@@ -231,7 +226,7 @@ function initComments(pageUrl) {
         $(".hideBtn a").addClass("ishidden");
     }
 
-    $("body").on("click focus", ".commentContainer textarea", function(e) {
+    $("body").on("click focus", ".commentContainer textarea", function (e) {
         $(e.target).closest("div").find(".commentControls").show();
     });
     $('.commentContainer textarea').css('overflow', 'hidden').autogrow()
@@ -243,13 +238,13 @@ function initComments(pageUrl) {
     };
 
     // This is for deferred logins, ie someone logs in after going to a page with comments
-    $('body').on('userLoggedIn', function(event, userUrl, userName) {
+    $('body').on('userLoggedIn', function (event, userUrl, userName) {
         currentUser.name = userName;
         currentUser.href = userUrl;
     });
 
     var comments = $("#comments");
-    if( comments.length > 0 ) {
+    if (comments.length > 0) {
         comments.comments({
             currentUser: currentUser,
             pageUrl: pageUrl
@@ -259,7 +254,7 @@ function initComments(pageUrl) {
 
 
 function initSelectAll() {
-    $("body").on("click", ".selectAll", function(e) {
+    $("body").on("click", ".selectAll", function (e) {
         var node = $(e.target);
         log("selectall", node, node.is(":checked"));
         var chkName = node.attr("name");
@@ -282,7 +277,7 @@ function initSelectAll() {
 function initVideos() {
     flog("initVideos");
     doInitVideos();
-    $(document).on("pjaxComplete", function() {
+    $(document).on("pjaxComplete", function () {
         doInitVideos();
     });
 }
@@ -292,17 +287,18 @@ function doInitVideos() {
     if (images.length === 0) {
         return;
     }
-    $.getScript("/static/jwplayer/6.10/jwplayer.js", function() {
+    $.getScript("/static/jwplayer/6.10/jwplayer.js", function () {
         jwplayer.key = "cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=";
         replaceImagesWithJWPlayer(images);
     });
 }
 
 function replaceImagesWithJWPlayer(images) {
-    images.each(function(i, n) {
+    images.each(function (i, n) {
         var img = $(n);
         var src = img.attr("data-video-src");
         var posterUrl = img.attr("src");
+
         if (src == null) {
             flog("replaceImagesWithJWPlayer: derive video base path from src", posterUrl);
             src = getFolderPath(posterUrl);
@@ -339,23 +335,24 @@ function buildJWPlayer(itemToReplace, count, src, posterHref) {
 //        height: h,
 //        image: posterHref,
         flashplayer: "/static/jwplayer/6.10/jwplayer.flash.swf",
+        html5player: "/static/jwplayer/6.10/jwplayer.html5.js",
         width: "100%",
         aspectratio: w + ":" + h,
         androidhls: true, //enable hls on android 4.1+
         playlist: [{
-                image: posterHref,
-                sources: [{
-                        file: src
-                    }
-                    , {
-                        file: src + "/../alt-640-360.webm"
-                    }, {
-                        file: src + "/../alt-640-360.m4v"
-                    }]
-            }]
-        ,primary: "flash"
+            image: posterHref,
+            sources: [{
+                file: src
+            }
+                , {
+                    file: src + "/../alt-640-360.webm"
+                }, {
+                    file: src + "/../alt-640-360.m4v"
+                }]
+        }]
+        , primary: "flash"
     });
-    jwplayer(innerId).onReady(function() {
+    jwplayer(innerId).onReady(function () {
         var wrapperId = innerId + "_wrapper";
         var wrapper = $("#" + wrapperId);
         wrapper.addClass("jwplayer-wrapper");

@@ -14,8 +14,8 @@
         <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
         <!-- end: META -->
         <!-- start: MAIN CSS -->
-        <link rel="stylesheet" href="/theme/assets/plugins/bootstrap/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="/theme/assets/plugins/font-awesome-4.3.0/css/font-awesome.min.css"/>
+        <link rel="stylesheet" href="/theme/assets/plugins/bootstrap-3.3.5/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="/static/font-awesome/4.4.0/css/font-awesome.min.css"/>
         <link rel="stylesheet" href="/theme/assets/fonts/style.css"/>
         <link rel="stylesheet" href="/theme/assets/css/main.css"/>
         <link rel="stylesheet" href="/theme/assets/css/main-responsive.css"/>
@@ -26,8 +26,10 @@
         <link rel="stylesheet" href="/theme/assets/plugins/bootstrap-modal/css/bootstrap-modal-bs3patch.css"/>
         <link rel="stylesheet" href="/theme/assets/plugins/bootstrap-modal/css/bootstrap-modal.css"/>
         <link rel="stylesheet" href="/theme/assets/plugins/perfect-scrollbar/src/perfect-scrollbar.css"/>
-        <link rel="stylesheet" href="/theme/assets/plugins/select2/select2.css" />
+        <link rel="stylesheet" href="/theme/assets/plugins/select2/css/select2.css" />
+        <!--
         <link rel="stylesheet" href="/theme/assets/plugins/DataTables/media/css/DT_bootstrap.css" />
+        -->
         <link rel="stylesheet" href="/theme/assets/plugins/jquery-ui/jquery-ui-1.10.3.full.css" />
         <link rel="stylesheet" href="/theme/assets/plugins/bootstrap-fileupload/bootstrap-fileupload.min.css" />
         <link rel="stylesheet" href="/static/bootstrap-switch/3.0/bootstrap3/bootstrap-switch.min.css" />
@@ -42,7 +44,7 @@
         <!--[if IE 7]>
         <link rel="stylesheet" href="/theme/assets/plugins/font-awesome/css/font-awesome-ie7.min.css">
         <![endif]-->
-        <link rel="stylesheet" href="/theme/assets/css/fuse.css" id="fuse-skin1"/>
+        <link rel="stylesheet" href="/theme/assets/css/fuse.css?v=6.2.8" id="fuse-skin1"/>
         <link rel="stylesheet" href="/theme/assets/fonts/roboto.css" id="fuse-skin2"/>
         <!-- end: MAIN CSS -->
         <!-- start: CSS REQUIRED FOR THIS PAGE ONLY -->
@@ -71,7 +73,7 @@
 
         <!-- Fuse specific scripts. We might be able to remove some of these after admin2 integration -->
         <script type="text/javascript" src="/static/js/common.js">//</script>
-        <script type="text/javascript" src="/static/jquery.forms/1.0.8/jquery.forms-1.0.8.js">//</script>
+        <script type="text/javascript" src="/static/jquery.forms/1.0.9/jquery.forms-1.0.9.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.user.js">//</script>
         <script type="text/javascript" src="/static/js/file.js" bottom="true">//</script>
         <script type="text/javascript" src="/static/js/toolbars.js" bottom="true">//</script>
@@ -92,7 +94,7 @@
         <!-- End Fuse specific scripts -->
 
         <script src="/theme/assets/plugins/jquery-ui/jquery-ui-1.10.3.full.min.js">//</script>
-        <script src="/theme/assets/plugins/bootstrap/js/bootstrap.min.js">//</script>
+        <script src="/theme/assets/plugins/bootstrap-3.3.5/js/bootstrap.min.js">//</script>
         <script src="/theme/assets/plugins/bootstrap-modal/js/bootstrap-modal.js">//</script>
         <script src="/theme/assets/plugins/bootstrap-modal/js/bootstrap-modalmanager.js">//</script>
         <script src="/theme/assets/plugins/blockUI/jquery.blockUI.js">//</script>
@@ -105,9 +107,11 @@
         <script src="/theme/assets/plugins/jquery-cookie/jquery.cookie.js">//</script>
         <script src="/theme/assets/plugins/bootstrap-colorpalette/js/bootstrap-colorpalette.js">//</script>
         <script src="/theme/assets/js/main.js">//</script>
-        <script src="/theme/assets/plugins/select2/select2.full.min.js">//</script>
+        <script src="/theme/assets/plugins/select2/js/select2.full.min.js">//</script>
+        <!--
         <script src="/theme/assets/plugins/DataTables/media/js/jquery.dataTables.min.js">//</script>
         <script src="/theme/assets/plugins/DataTables/media/js/DT_bootstrap.js">//</script>
+        -->
         <script src="/theme/assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js" bottom="true">//</script>
         <script src="/theme/assets/plugins/bootstrap-v3-datetimepicker/js/bootstrap-datetimepicker.min.js" bottom="true">//</script>
         <script src="/theme/assets/plugins/bootstrap-fileupload/bootstrap-fileupload.min.js">//</script>
@@ -142,7 +146,7 @@
                         <span class="clip-list-2"></span>
                     </button>
                     <a class="navbar-brand" href="/">
-                        <img src="/static/images/login_logo_admin.png" width="" height="" alt="FuseLMS" />
+                        <img src="/static/images/login_logo_admin.png" width="" height="" alt="Kademi" />
                     </a>
                 </div>
                 <div class="navbar-tools">
@@ -150,13 +154,13 @@
                     <!-- start: TOP NAVIGATION MENU -->
                     <ul class="nav navbar-right">
                         <li class="">
-                            <div style="padding: 5px 10px; display: none" class="ajaxLoader">
-                                <img src="/static/common/ajax-loader.gif" class="image" />
+                            <div style="padding: 5px; display: none" id="mainSpinner">
+                                <i class="fa fa-spinner fa-spin" style="font-size: 32px"></i>
                             </div>
                         </li>
                         <li class="dropdown fuse-header-item">
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                                Logged into: $page.organisation.formattedName
+                                <span class="org_name">Logged into: $page.organisation.formattedName</span>
                                 <i class="clip-chevron-down"></i>
                             </a>
                             <ul class="dropdown-menu">
@@ -234,9 +238,9 @@
                             #set($href = $rootItem.href)
                             <a href="$href">
                                 #if($rootItem.cssClass)
-                                    <i class="fuse-icon-fa $rootItem.id $rootItem.cssClass"></i>
+                                <i class="fuse-icon-fa $rootItem.id $rootItem.cssClass"></i>
                                 #else
-                                    <i class="fuse-icon $rootItem.id"></i>
+                                <i class="fuse-icon $rootItem.id"></i>
                                 #end
                                 <span class="title">$rootItem.text</span>
 
@@ -255,7 +259,7 @@
                                 <li class="$formatter.ifTrue( $sectionItem.active, "active open", "" )">
                                     <a href="$sectionItem.href">
                                         #if($sectionItem.cssClass)
-                                            <i class="fuse-icon-fa $sectionItem.id $sectionItem.cssClass"></i>
+                                        <i class="fuse-icon-fa $sectionItem.id $sectionItem.cssClass"></i>
                                         #end
                                         <span class="title">$sectionItem.text</span>
 

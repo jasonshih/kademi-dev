@@ -3,6 +3,7 @@
         <title>Product Details</title>
         <link rel="stylesheet" type="text/css" href="reward-store.css" />
         <script src="/static/reload-fragment/1.0.1/jquery.reload-fragment-1.0.1.js" >//</script>
+        <script type="text/javascript" src="/static/uri/1.15.1/URI.js">//</script>
     </head>
     <body class="">
         <div class="container">
@@ -10,25 +11,49 @@
                 <div class="col-md-8">
                     <h2>
                         $page.title
-                        <a href="$page.href" class="pull-right btn-sm btn btn-primary cart-add">
-                            <span class="glyphicon glyphicon-shopping-cart"></span>
-                            Add to cart
-                        </a>
                     </h2>
                     <div class="productNotes">$!page.description</div>
                 </div>
                 <div class="col-md-4">
-                    <div style="margin-left:15px;" class="well">
-                        #if( $page.primaryImageHref )
-                        <a onclick="" href="#">
-                            <img style="width:100%" src="$page.primaryImageHref" />
-                        </a>
-                        #end
-                        <span class="label label-success priceLabel">
-                            #if( $page.productPurchaseCost )
-                            $page.productPurchaseCost Points
+                    <div style="margin-left:15px;" class="well addToCartContainer">
+                        <div id="addToCartSection">
+                            #if( $page.primaryImageHref )
+                            <a onclick="" href="#">
+                                <img style="width:100%" src="$page.primaryImageHref/alt-400-600.png" />
+                            </a>
                             #end
-                        </span>
+                            <span class="label label-success priceLabel">
+                                #set( $opts = $page.selectedParameterOptions )
+                                #set( $price = $page.getPurchaseAmount($opts) )
+                                #if( $price )
+                                $price.amount Points
+                                #end
+                            </span>
+                        </div>
+                        <br/>
+
+                        #foreach( $param in $page.parameters)
+                        #if( $param.options.size() > 0 )
+                        <div class='form-group'>
+                            <label for="param-$param.name" class='col-sm-4 control-label'>$param.title</label>
+                            <div class="col-sm-8">
+                                <select name="param-$param.name" class='form-control productParameterSelect'>
+                                    #foreach( $opt in $param.options)
+                                    <option value="$opt.name">$opt.title</option>
+                                    #end
+                                </select>
+                            </div>
+                        </div>
+                        #end
+                        #end
+                        <br style='clear: both'/>
+                        <div class='form-group' style="margin-top: 20px">
+                            <a href="$page.href" class="pull-right btn-lg btn btn-primary cart-add">
+                                <span class="glyphicon glyphicon-shopping-cart"></span>
+                                Add to cart
+                            </a>
+                        </div>
+                        <br style='clear: both'/>
                     </div>
                     #portlets("productDetailsSidebar")
                 </div>
@@ -68,15 +93,24 @@
             <script type="text/javascript">
                 $(function () {
                     $("abbr.timeago").timeago();
-                    $("form.orderForm").forms({
-                        callback: function () {
-                            $('#orderModal').modal('hide');
-                            window.location.reload();
-                        }
+                    $(".productParameterSelect").change(function(e) {
+                        var optSelect = $(this);
+                        flog("productParameterSelect changed", optSelect);
+                        var uri = URI(window.location);
+                        uri.setSearch( optSelect.attr("name"), optSelect.val());
+                        flog("New uri", uri.toString());
+                        history.pushState(null, null, uri.toString() );
+                        $("#addToCartSection").reloadFragment({
+                            url: uri.toString()
+                        });
                     });
                     $(".cart-add").click(function (e) {
                         e.preventDefault();
-                        var href = $(e.target).closest("a").attr("href");
+                        var target = $(e.target);
+                        var href = target.closest("a").attr("href");
+                        var params = target.closest(".addToCartContainer").find(".productParameterSelect").serialize();
+                        flog("params", params);
+                        href += "?" + params;
                         flog("add item", href);
                         doAddToCart(href);
                     });

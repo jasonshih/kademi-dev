@@ -4,7 +4,7 @@
     <groupId>co.kademi</groupId>
     <artifactId>kademi-dev</artifactId>
     <packaging>war</packaging>
-    <version>5.7.1</version>
+    <version>6.4.7</version>
 
     <build>
         <plugins>
@@ -43,6 +43,10 @@
                                 <property>
                                     <key>kademi.secure.port</key>
                                     <value>443</value>
+                                </property>
+                                <property>
+                                    <key>kademi.ftpPort</key>
+                                    <value>21</value>
                                 </property>
                             </systemProperties>
                             <additionalClasspathElements>

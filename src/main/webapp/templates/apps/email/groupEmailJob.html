@@ -2,6 +2,8 @@
     <head>
         <title>$view.title</title>
         <link href="manageGroupEmail.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="/static/js/jquery.fileupload.js">//</script>
+        <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
         <script type="text/javascript" src="manageGroupEmail.js">//</script>
         <script type="text/javascript" src="manageEmail.js">//</script>
     </head>
@@ -72,21 +74,27 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-md-3" for="notes">Notes <small>These notes are for internal purposes only.</small></label>
-                            <div class="col-md-8">
-                                <textarea cols="100" id="notes" name="notes" rows="10" placeholder="" class="form-control">$!page.notes</textarea>
-                            </div>
-                        </div>
-                        <div class="form-group">
                             <label class="control-label col-md-3" for="subject">Email subject</label>
                             <div class="col-md-8">
-                                <input type="text" id="subject" name="subject" value="$!page.subject" placeholder="" class="required form-control" />
+                                <input type="text" id="subject" name="subject" value="$!formatter.htmlAttEncode( $page.subject )" placeholder="" class="required form-control" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-md-3" for="fromAddress">Email from address <small>Eg "Joe Bloggs" &lt;joe@bloggs.com&gt;</small></label>
                             <div class="col-md-8">
                                 <input type="text" id="fromAddress" name="fromAddress" value="$formatter.htmlEncode( $page.fromAddress )" placeholder="" class="required form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="replyToAddress">Reply to address <small>Eg "Joe Bloggs" &lt;joe@bloggs.com&gt;</small></label>
+                            <div class="col-md-8">
+                                <input type="text" id="replyToAddress" name="replyToAddress" value="$formatter.htmlEncode( $page.replyToAddress )" placeholder="" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="notes">Notes <small>These notes are for internal purposes only.</small></label>
+                            <div class="col-md-8">
+                                <textarea cols="100" id="notes" name="notes" rows="10" placeholder="" class="form-control">$!page.notes</textarea>
                             </div>
                         </div>
                     </div>
@@ -223,7 +231,23 @@
                         </div>
 
                         <div class="form-group">
-                            <div class="col-md-10">
+                            <div class="col-md-6">
+                                <div class="add-attachment btn-upload"></div>
+                                <div class="article-wrapper article-sm showed-action attachments-list">
+                                    #foreach($att in $page.attachments)
+                                    <article>
+                                        <span class="article-name">
+                                            <a target="_blank" href="/_hashes/files/$att.attachmentHash">$att.attachmentFilename</a>
+                                        </span>
+                                        <aside class="article-action">
+                                            <a class="btn btn-sm btn-xs btn-danger btn-delete-attachment" href="$att.attachmentFilename" title="Remove"><i class="clip-minus-circle"></i></a>
+                                        </aside>
+                                    </article>
+                                    #end
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
                                 <div class="well">
                                     $formatter.checkbox("passwordReset", "passwordReset", $page.job.passwordReset, "true")
                                     <label for="passwordReset" style="float: none">Password reset. Only send to users without a password</label>

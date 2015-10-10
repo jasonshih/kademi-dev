@@ -1,101 +1,46 @@
-<MultiStep>
-    <nextSteps>
-        <DatabaseSourceStep providerId="survey">
-            <next class="co.kademi.server.integration.impl.MapStep">
-                <keyColumn column="0">
-                    <expr>value.profile.userId</expr>
-                </keyColumn>
-                <valueColumn column="0"/>
-                <keyAttribute>r1</keyAttribute>
-            </next>
-            <column field="rewardNames">
-                <value class="string">rego-survey</value>
-            </column>
-        </DatabaseSourceStep>
-        <DatabaseSourceStep providerId="survey">
-            <next class="ExcelOutputStep">
-                <firstSheetTitle>My first sheet</firstSheetTitle>
-                <headers>
-                    <string>Email</string>
-                    <string>First Name</string>
-                    <string>Last Name</string>
-                    <string>Rate Knowledge - Rego survey</string>
-                    <string>Rate Knowledge - Final survey</string>
-                    <string>Flea treatment Brand - Rego survey</string>
-                    <string>Flea treatment Brand - Final survey</string>
-                    <string>Flea prevention Brand - Rego survey</string>
-                    <string>Flea prevention Brand - Final survey</string>
-                    <string>Heartworm prevention Brand - Rego survey</string>
-                    <string>Heartworm prevention Brand - Final survey</string>
-                    <string>Intestinal worm treatment Brand - Rego survey</string>
-                    <string>Intestinal treatment Brand - Final survey</string>
-                    <string>Tick control Brand - Rego survey</string>
-                    <string>Tick control Brand - Final survey</string>
-                    <string>Combination (all-in-one) Brand - Rego survey</string>
-                    <string>Combination (all-in-one) Brand - Final survey</string>
-                </headers>
-                <column field="email" column="0">
-                    <expr>value.profile.email</expr>
-                </column>
-                <column field="firstName" column="0">
-                    <expr>value.profile.firstName</expr>
-                </column>
-                <column field="surName" column="0">
-                    <expr>value.profile.surName</expr>
-                </column>
-                <column field="ReccomendBasedOnRego" column="0">
-                    <expr>value.answers.?answer1RateKnowledge</expr>
-                </column>
-                <column field="ReccomendBasedOnC4" column="0">
-                    <expr>value.answers.?answer1RateKnowledge</expr>
-                </column>
-                <column field="FleaTreatmentRego" column="0">
-                    <expr>value.answers.?answer3FleaTreatmentBrand</expr>
-                </column>
-                <column field="FleaTreatmentC4" column="0">
-                    <expr>value.answers.?answer3FleaTreatmentBrand</expr>
-                </column>
-                <column field="FleaPreventionRego" column="0">
-                    <expr>value.answers.?answer4FleaPreventionBrand</expr>
-                </column>
-                <column field="FleaPreventionC4" column="0">
-                    <expr>value.answers.?answer4FleaPreventionBrand</expr>
-                </column>
-                <column field="HeartwormPreventionRego" column="0">
-                    <expr>value.answers.?answer5HeartwormPreventionBrand</expr>
-                </column>
-                <column field="HeartwormPreventionC4" column="0">
-                    <expr>value.answers.?answer5HeartwormPreventionBrand</expr>
-                </column>
-                <column field="IntestinalWormTreatmentRego" column="0">
-                    <expr>value.answers.?answer6intestinalWormTreatmentBrand</expr>
-                </column>
-                <column field="IntestinalWormTreatmentC4" column="0">
-                    <expr>value.answers.?answer6intestinalWormTreatmentBrand</expr>
-                </column>
-                <column field="TickControlRego" column="0">
-                    <expr>value.answers.?answer7TickControlBrand</expr>
-                </column>
-                <column field="TickControlC4" column="0">
-                    <expr>value.answers.?answer7TickControlBrand</expr>
-                </column>
-                <column field="CombinationBrandRego" column="0">
-                    <expr>value.answers.?answer8TickControlBrand</expr>
-                </column>
-                <column field="CombinationBrandC4" column="0">
-                    <expr>value.answers.?answer8TickControlBrand</expr>
-                </column>
+<RecordExecutionStep>
+    <preventDuplicates>false</preventDuplicates>
+    <execIdTemplate>StarClass-Dealer-Targets_2015</execIdTemplate>
+    <next class="TransactionStep" alwaysRollback="false">
+        <next class="ExcelInputStep">
+            <useXml>true</useXml>
+            <processRows>true</processRows>
+            <nextSheetSteps>
+                <NextSheetStep sheetNum="0" startRow="2">
+                    <next class="JsRowStep">
+                        <!-- Execute the next step for each month, setting the month number into attribute monthNum -->
+                        <jsPath>/integration/integration.js</jsPath>
+                        <execFn>foreachMonth</execFn>
+                        <next class="SalesDataInserter" mode="updateOrInsert" logInserts="true" logUpdates="true">
+                            <seriesName>star-class-partspurchase-data</seriesName>
+                            <column field="attributedTo" columnName="D">
+                                <expr>
+                                    org = pipeline.thisOrg.findChildOrgByField("StoreCode", value);
+                                    if(org != null){
+                                    return org.orgId;
+                                    }
+                                    return null;
+                                </expr>
+                            </column>
+                            <column field="amount" >
+                                <!-- column G + 10*month -->
+                                <expr><![CDATA[
+                                                    col = 2 + formatter.toInteger(pipeline.attributes.monthNum);
+                                                    if (0 >= row[col]) { return 1; } else { return row[col]; }
+                                                ]]></expr>
+                            </column>
 
-            </next>
-            <column field="rewardNames" >
-                <value class="string">c4-survey</value>
-            </column>
-        </DatabaseSourceStep>
-    </nextSteps>
-</MultiStep>
+                            <column field="fromDate">
+                                <expr>formatter.monthStart(formatter.now, pipeline.attributes.monthNum)</expr>
+                            </column>
+                            <column field="toDate">
+                                <expr>formatter.monthEnd(formatter.now, pipeline.attributes.monthNum)</expr>
+                            </column>
+                        </next>
 
-
-
-
-
-
+                    </next>
+                </NextSheetStep>
+            </nextSheetSteps>
+        </next>
+    </next>
+</RecordExecutionStep>
