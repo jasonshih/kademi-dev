@@ -9,6 +9,7 @@ function initManageGroupEmail() {
     initStatusPolling();
     initSendTest();
     initAttachment();
+
     $(".btn-cancel").click(function (e) {
         e.preventDefault();
         if (confirm("Are you sure you want to permanently cancel this job?")) {

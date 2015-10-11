@@ -49,7 +49,12 @@
                     } else {
                         showMessage("Sorry, we couldnt process your request", form);
                     }
-                    messagesContainer.show(100);
+
+                    messagesContainer.animate({
+                        height: 'show',
+                        'padding-top': 'show',
+                        'padding-bottom': 'show'
+                    }, 100);
                 } catch (e) {
                     flog("ex", e);
                 }
@@ -105,16 +110,10 @@
                     postForm(thisForm, config.valiationMessageSelector, config.networkErrorMessage, config.callback, config.confirmMessage, config.postUrl, config.error, config.errorHandler);
                 }
             } else {
-                //showValidation(null, config.validationFailedMessage, thisForm);
-                //var messages = $(config.valiationMessageSelector, thisForm);
-//                messages.append("<div class='alert alert-danger'>Some inputs are not valid. Please correct any highlighted fields.</div>");
-//                messages.find(".alert")
-//                        .prepend("<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>")
-//                        .alert();
-//                flog("show messages", messages);
-//                messages.show(100);
-                if( $('.pageMessage.alert').length > 0 ) {
-                    $('body, html').animate({scrollTop: $('.pageMessage.alert').offset().top - 140});
+                if ($('.pageMessage.alert').length > 0) {
+                    $('body, html').animate({
+                        scrollTop: $('.pageMessage.alert').offset().top - 140
+                    });
                 }
                 config.error(thisForm);
             }
@@ -143,7 +142,7 @@
     };
 
     // Version for jquery.forms
-    $.fn.forms.version = '1.0.7';
+    $.fn.forms.version = '1.0.9';
 
 })(jQuery);
 
@@ -200,7 +199,11 @@ function postForm(form, valiationMessageSelector, networkErrorMessage, callback,
                 }
                 if (networkErrorMessage) {
                     $(valiationMessageSelector, form).text(networkErrorMessage + " - " + textStatus);
-                    $(valiationMessageSelector, form).show(100);
+                    $(valiationMessageSelector, form).animate({
+                        height: 'show',
+                        'padding-top': 'show',
+                        'padding-bottom': 'show'
+                    }, 100);
                 }
 
             }
@@ -240,9 +243,10 @@ function postForm(form, valiationMessageSelector, networkErrorMessage, callback,
 }
 
 function showConfirmMessage(form, confirmMessage) {
-    form.prepend("<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>&times;</button>" + confirmMessage + "</div>");
+    form.prepend("<div class='pageMessage alert alert-success'><button type='button' class='close' data-dismiss='alert'>&times;</button>" + confirmMessage + "</div>");
+
     window.setTimeout(function () {
-        form.find(".alert").remove();
+        form.find(".pageMessage.alert").remove();
     }, 5000);
 }
 
@@ -260,11 +264,13 @@ function resetValidation(form) {
     $(".control-group", form).removeClass("error");
     $(".form-group", form).removeClass("has-error");
     $(".validationError", form).remove();
-    $(".pageMessage", form).hide(300);
-    $(".pageMessage", form).html("");
+    $(".pageMessage.alert", form).animate({
+        height: 'hide',
+        'padding-top': 'hide',
+        'padding-bottom': 'hide'
+    }, 300).html("<a class='close' data-dismiss='alert' href='#'>&times;</a>");
     $(".error > *", form).unwrap();
     $(".errorField", form).removeClass("errorField");
-    $(".alert", form).remove();
 }
 
 function checkRequiredFields(form, config) {
@@ -320,7 +326,7 @@ function checkRequiredFields(form, config) {
             isOk = false;
         }
     } else {
-        if( config ) {
+        if (config) {
             showMessage(config.requiredErrorMessage, form);
         } else {
             showMessage("Please check required fields", form);
@@ -617,7 +623,6 @@ function checkExactLength(target, length) {
 }
 
 
-
 // Passes if one of the targets has a non-empty value
 function checkOneOf(target1, target2, message) {
     target1 = ensureObject(target1);
@@ -676,14 +681,18 @@ function showValidation(target, text, form) {
 }
 
 function showMessage(text, form) {
-    var messages = $(".pageMessage, .alert", form);
+    var messages = $(".pageMessage.alert", form);
     if (messages.length === 0) {
         messages = $("<div class='pageMessage alert alert-error alert-danger'><a class='close' data-dismiss='alert' href='#'>&times;</a></div>");
         form.prepend(messages);
     }
     flog("showMessage", messages);
     messages.append("<p class='validationError'>" + text + "</p>");
-    messages.show(500);
+    messages.animate({
+        height: 'show',
+        'padding-top': 'show',
+        'padding-bottom': 'show'
+    }, 500);
 }
 
 function showErrorField(target) {
@@ -735,13 +744,13 @@ function validatePassword(pw, options) {
     }
 
     var re = {
-        lower: /[a-z]/g,
-        upper: /[A-Z]/g,
-        alpha: /[A-Z]/gi,
-        numeric: /[0-9]/g,
-        special: /[\W_]/g
-    },
-    rule, i;
+            lower: /[a-z]/g,
+            upper: /[A-Z]/g,
+            alpha: /[A-Z]/gi,
+            numeric: /[0-9]/g,
+            special: /[\W_]/g
+        },
+        rule, i;
 
     // enforce min/max length
     if (pw.length < o.length[0] || pw.length > o.length[1])
@@ -766,19 +775,19 @@ function validatePassword(pw, options) {
     // enforce alphanumeric/qwerty sequence ban rules
     if (o.badSequenceLength) {
         var lower = "abcdefghijklmnopqrstuvwxyz",
-                upper = lower.toUpperCase(),
-                numbers = "0123456789",
-                qwerty = "qwertyuiopasdfghjklzxcvbnm",
-                start = o.badSequenceLength - 1,
-                seq = "_" + pw.slice(0, start);
+            upper = lower.toUpperCase(),
+            numbers = "0123456789",
+            qwerty = "qwertyuiopasdfghjklzxcvbnm",
+            start = o.badSequenceLength - 1,
+            seq = "_" + pw.slice(0, start);
         for (i = start; i < pw.length; i++) {
             seq = seq.slice(1) + pw.charAt(i);
             if (
-                    lower.indexOf(seq) > -1 ||
-                    upper.indexOf(seq) > -1 ||
-                    numbers.indexOf(seq) > -1 ||
-                    (o.noQwertySequences && qwerty.indexOf(seq) > -1)
-                    ) {
+                lower.indexOf(seq) > -1 ||
+                upper.indexOf(seq) > -1 ||
+                numbers.indexOf(seq) > -1 ||
+                (o.noQwertySequences && qwerty.indexOf(seq) > -1)
+            ) {
                 return false;
             }
         }
@@ -813,6 +822,7 @@ function validatePassword(pw, options) {
         this.boundary = "--------FormData" + Math.random();
         this._fields = [];
     }
+
     FormData.prototype.append = function (key, value) {
         this._fields.push([key, value]);
     }
