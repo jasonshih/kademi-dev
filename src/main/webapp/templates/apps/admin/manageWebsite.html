@@ -330,7 +330,9 @@
                         </tr>
                         <tr>
                             <th>Private key</th>
-                            <td>$page.dkimPrivateKey</td>
+                            <td>
+                                $formatter.truncate($page.dkimPrivateKey, 40)
+                            </td>
                         </tr>
                     </table>
 
