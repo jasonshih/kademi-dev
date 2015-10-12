@@ -362,8 +362,19 @@
                             #else
                             #set($btnText = "Generate DKIM key")
                             #end
-                            <a href="#" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-gen-dkim">$btnText</a>
-                            <a href="#" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-send-test">Send Test Email</a>
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-sm btn-success newCategory" data-toggle="modal" data-target="#modal-gen-dkim"><i class="fa fa-plus"></i> $btnText</button>
+                                <button type="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu pull-right" role="menu">
+                                    <li><a href="#" title="Upload categories CSV" data-toggle="modal" data-target="#modalUploadPrivateKey"><i class="glyphicon glyphicon-upload"></i> Upload Private Key</a></li>
+                                </ul>
+                            </div>
+                            #if($hasDkim)
+                            <a href="#" class="btn btn-sm btn-danger btn-delete-dkim"><i class="fa fa-times"></i> Delete DKIM Key</a>
+                            #end
+                            <a href="#" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-send-test"><i class="fa fa-envelope"></i> Send Test Email</a>
                         </div>
                     </div>
                 </div>
@@ -912,6 +923,35 @@
             </div>
         </div>
 
+        <div id="modalUploadPrivateKey" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                <h4 class="modal-title">Upload a DKIM Private Key</h4>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="." class="form-horizontal">
+                    <input type="hidden" name="uploadDkimKey" value="true"/>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="dkimsel">DKIM Selector</label>
+                        <div class="col-md-8">
+                            <input type="text" name="dkimsel" value="" placeholder="DomainKey Selector (e.g. key1)" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="dkimpk">DKIM Private Key</label>
+                        <div class="col-md-8">
+                            <textarea type="text" name="dkimpk" value="" placeholder="PEM Encoded private key" class="form-control" ></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                <button class="btn btn-sm btn-success" data-type="form-submit" type="button"><i class="fa fa-plus"></i> Upload</button>
+            </div>
+        </div>
+
+
         <div id="modal-send-test" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
             <div class="modal-header">
                 <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
@@ -1011,6 +1051,18 @@
                     callback: function (resp) {
                         flog("done", resp);
                         genDkimModal.modal('hide');
+                        Msg.success(resp.messages, 6000);
+                        $('#panel_mailserver').reloadFragment();
+                    }
+                });
+
+                var uploadDkimKeyModal = $('#modalUploadPrivateKey');
+                var uploadDkimKeyForm = uploadDkimKeyModal.find('form');
+
+                uploadDkimKeyForm.forms({
+                    callback: function (resp) {
+                        flog("done", resp);
+                        uploadDkimKeyModal.modal('hide');
                         Msg.success(resp.messages, 6000);
                         $('#panel_mailserver').reloadFragment();
                     }
@@ -1120,6 +1172,28 @@
                         }
 
                     });
+                });
+
+                $('body').on('click', '.btn-delete-dkim', function (e) {
+                    e.preventDefault();
+
+                    if (confirm('Are you sure you want to clear the DKIM Key?')) {
+                        $.ajax({
+                            type: 'POST',
+                            dataType: 'json',
+                            url: window.location.pathname,
+                            data: {
+                                clearDKIM: true
+                            },
+                            success: function (resp) {
+                                flog("success", resp);
+                                $('#panel_mailserver').reloadFragment();
+                            },
+                            error: function (resp) {
+                                Msg.error("An error occured viewing the certificate");
+                            }
+                        });
+                    }
                 });
             });
 
