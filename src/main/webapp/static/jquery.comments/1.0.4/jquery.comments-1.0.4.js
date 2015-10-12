@@ -20,7 +20,7 @@
     var DEFAULT_COMMENTS_OPTIONS = {
         pageUrl: window.location,
         streamSelector: '.comments-stream',
-        renderCommentFn: function (user, date, comment, commentId) {
+        renderCommentFn: function (user, date, comment, commentId, config, container) {
             flog('renderCommentFn-104-standard', user, 'container=', container, 'commentId=', commentId);
 
             var outerDiv = $('#' + commentId);
@@ -120,7 +120,7 @@
 
             jQuery('abbr.auxText, .comment-time', outerDiv).timeago();
         },
-        clearContainerFn: function () {
+        clearContainerFn: function (config, container) {
             container.find(config.streamSelector).html('');
         },
         ajaxLoadingFn: function (isLoading) {
@@ -203,18 +203,18 @@
             e.stopPropagation();
 
             try {
-                sendNewForumComment(config.pageUrl, container.find('textarea'), config.renderCommentFn, config.currentUser);
+                sendNewForumComment(config.pageUrl, container.find('textarea#postQuestion'), config.renderCommentFn, config.currentUser, config, container);
             } catch (e) {
                 flog('Exception sending forum comment', e);
             }
             return false;
         });
-        initWebsockets(config);
+        initWebsockets(config, container);
 
         loadComments(config, container);
     };
 
-    function initWebsockets(config) {
+    function initWebsockets(config, container) {
         var path = getFolderPath(window.location.pathname);
         flog('initWebsockets', window.location.host, path);
         var b64ContentId = Base64.encode(path);
@@ -225,7 +225,7 @@
                 flog('onMessage', c);
 
                 var dt = new Date(c.date);
-                config.renderCommentFn(c.user, dt, c.comment, c.id, c);
+                config.renderCommentFn(c.user, dt, c.comment, c.id, c, config, container);
             };
 
             flog('Done initWebsockets');
@@ -237,8 +237,8 @@
 
 })(jQuery);
 
-function sendNewForumComment(pageUrl, commentInput, renderComment, currentUser) {
-    flog('sendNewForumComment', pageUrl, commentInput, renderComment, currentUser);
+function sendNewForumComment(pageUrl, commentInput, renderComment, currentUser, config, container) {
+    flog('sendNewForumComment', pageUrl, commentInput, renderComment, currentUser, config, container);
 
     var comment = commentInput.val();
     commentInput.removeClass('errorField');
@@ -272,7 +272,7 @@ function sendNewForumComment(pageUrl, commentInput, renderComment, currentUser) 
                 var c = resp.data;
                 currentDate = new Date();
 
-                invokeRenderFn(c, renderComment);
+                invokeRenderFn(c, renderComment, config, container);
             } else {
                 alert('Sorry, there was a problem posting your comment. Please try again');
             }
@@ -297,12 +297,12 @@ function loadComments(config, container) {
     url += '_comments';
 
     $.getJSON(url, function (response) {
-        flog('got comments response', response);
-        clearContainerFn();
+        flog('Got comments response', response);
+        clearContainerFn(config, container);
         processComments(response, config, container);
     }).fail(function () {
         flog('Failed to load comments', container);
-        clearContainerFn();
+        clearContainerFn(config, container);
 
         if (container) {
             container.hide();
@@ -315,14 +315,14 @@ function processComments(comments, config, container) {
         comments.sort(dateOrd);
 
         $.each(comments, function (i, comment) {
-            invokeRenderFn(comment, config.renderCommentFn);
+            invokeRenderFn(comment, config.renderCommentFn, config, container);
         });
 
         config.paginateFn(comments, config, container);
     }
 }
 
-function invokeRenderFn(comment, renderCommentFn) {
+function invokeRenderFn(comment, renderCommentFn, config, container) {
     var dt = new Date(comment.date);
-    renderCommentFn(comment.user, dt, comment.comment, comment.id);
+    renderCommentFn(comment.user, dt, comment.comment, comment.id, config, container);
 }
