@@ -56,7 +56,7 @@
                                 </select>
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label class="control-label col-md-3" for="allowAccess">Allow Access</label>
                             <div class="col-md-8">
@@ -220,10 +220,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                #foreach ($mapping in $mappings)
-                                    <tr>
-
-                                    </tr>
+                                #foreach ($mappingEntry in $page.mappings.entrySet())
+                                <tr>
+                                    <td>$mappingEntry.key</td>
+                                </tr>
                                 #end
                             </tbody>
                         </table>
@@ -265,21 +265,21 @@
             </div>
         </div>
 
-		<div id="csvModal" class="modal fade level-modal" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
+        <div id="csvModal" class="modal fade level-modal" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title">Import records from CSV</h4>
             </div>
             <div class="modal-body">
-                    <p>Instructions for uploading JSON records from CSV data</p>
-                    <ol>
-                        <li>The first column must have the header, &quot;name&quot;.</li>
-                        <li>The second column must have the header, &quot;docType&quot;.</li>
-                        <li>All data are treated as strings.</li>
-                        <li>Escape double quotes ( &quot; ) with a second double quote ( &quot;&quot; )</li>
-                        <li>The backslash or reverse solidus is ignored.</li>
-                        <li>Records with the same name will be updated with the most recent entry.</li>
-                    </ol>
+                <p>Instructions for uploading JSON records from CSV data</p>
+                <ol>
+                    <li>The first column must have the header, &quot;name&quot;.</li>
+                    <li>The second column must have the header, &quot;docType&quot;.</li>
+                    <li>All data are treated as strings.</li>
+                    <li>Escape double quotes ( &quot; ) with a second double quote ( &quot;&quot; )</li>
+                    <li>The backslash or reverse solidus is ignored.</li>
+                    <li>Records with the same name will be updated with the most recent entry.</li>
+                </ol>
                 <div class="upload">
                     <div class="btn-upload" id='do-upload-csv'></div>
                 </div>
@@ -303,7 +303,7 @@
             <div class="modal-footer">
                 <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
             </div>
-		</div>
+        </div>
 
 
         <script type="text/javascript">
