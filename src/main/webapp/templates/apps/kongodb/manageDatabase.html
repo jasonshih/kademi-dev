@@ -209,24 +209,36 @@
                     </div>
                     <div id="mappings" class="tab-pane">
                         <p>
-                            <a href="#" class="btn btn-sm btn-success btn-add-mapping"><i class="fa fa-plus"></i> Add new mapping</a>
+                            <a href="#" class="btn btn-sm btn-success btn-add-mapping" data-toggle="modal" data-target="#addMappingModal">
+                                <i class="fa fa-plus"></i>
+                                Add new mapping
+                            </a>
                         </p>
-                        <table class="table table-bordered table-striped" id="table-mappings">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Mapping</th>
-                                    <th style="width: 130px">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                #foreach ($mappingEntry in $page.mappings.entrySet())
-                                <tr>
-                                    <td>$mappingEntry.key</td>
-                                </tr>
-                                #end
-                            </tbody>
-                        </table>
+
+                        <ul class="nav nav-pills">
+                            #foreach ($mappingEntry in $page.mappings.entrySet())
+                            <li><a href="#mapping${mappingEntry.key}">$mappingEntry.key</a></li>
+                            #end
+                        </ul>
+
+                        <hr/>
+
+                        #foreach ($mappingEntry in $page.mappings.entrySet())
+                        <div class="mappingContainer">
+                            <button class="btn btn-info btnEditMapping pull-right" type="button">
+                                <i class="fa fa-pencil">Edit</i>
+                            </button>
+                            <button class="btn btn-success btnSaveMapping pull-right" type="button" style="display: none">
+                                <i class="fa fa-pencil">Save</i>
+                            </button>
+
+                            <h3 id="mapping${mappingEntry.key}">$mappingEntry.key</h3>
+                            <div class="prettyPrintJson">
+                                <pre>$mappingEntry.value.source()</pre>
+                            </div>
+                        </div>
+                        <hr/>
+                        #end
                     </div>
                 </div>
             </div>
@@ -305,6 +317,31 @@
             </div>
         </div>
 
+        <div id="addMappingModal" class="modal modal-lg fade level-modal" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Add Mapping</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" method="POST" action="." id="addMappingForm">
+                    <div class="form-group">
+                        <label for="newName" class="col-sm-3 control-label">Mapping type </label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control regex required" required="true" id="newName" name="mappingName" data-regex="^[a-zA-Z0-9-]+$" />
+                            <span class="help-block"><small>Simple characters only, no punctuation, dots, etc, all lower case</small></span>
+                        </div>
+                    </div>
+
+                    <span class="help-block"><small>Please enter mappings as JSON below</small></span>
+                    <textarea name="json" class="form-control" rows="20"></textarea>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-sm btn-success" data-type="form-submit">Create mapping</button>
+            </div>
+        </div>
+
 
         <script type="text/javascript">
             $(function () {
@@ -340,6 +377,45 @@
                         $("#records-body").reloadFragment();
                     }
                 });
+
+
+                $("#mappings").on("click", ".btnEditMapping", function (e) {
+                    e.preventDefault();
+                    var btn = $(e.target).closest("button");
+                    btn.hide();
+                    var cont = btn.closest(".mappingContainer");
+                    cont.find(".btnSaveMapping").show();
+                    var pre = cont.find("pre");
+                    var height = pre.css("height");
+                    var source = pre.text();
+                    var newDiv = $("<textarea class='form-control'>");
+                    newDiv.text(source);
+                    pre.replaceWith(newDiv);
+                    newDiv.css("height", height);
+                });
+
+                $("#mappings").on("click", ".btnSaveMapping", function (e) {
+                    e.preventDefault();
+                    var btn = $(e.target).closest("button");
+                    var cont = btn.closest(".mappingContainer");
+                    var name = cont.find("h3").text();
+                    var textarea = cont.find("textarea");
+                    var source = textarea.text();
+                    saveMapping(name, source);
+                });
+
+
+                $("#addMappingForm").forms({
+                    callback: function () {
+                        Msg.info("Done");
+                        $("#mappings").reloadFragment({
+                            whenComplete: function () {
+                                prettyPrintJson();
+                            }
+                        });
+                    }
+                });
+
                 $("#queryBtn").click(function (e) {
                     e.preventDefault();
                     var q = $("#queryText").val();
@@ -357,6 +433,20 @@
                         }
                     });
                 });
+
+                prettyPrintJson();
+
+                function prettyPrintJson() {
+                    $(".prettyPrintJson pre").each(function (i, n) {
+                        var target = $(n);
+                        var json = target.text();
+                        var obj = JSON.parse(json);
+                        var str = JSON.stringify(obj, null, 2);
+                        target.text(str);
+                        flog("set json", target, str);
+                    });
+                }
+
                 function doRemoveDocs(checkBoxes) {
                     $.ajax({
                         type: 'POST',
@@ -374,6 +464,34 @@
                         },
                         error: function (resp) {
                             Msg.error("An error occurred removing records. You might not have permission to do this");
+                        }
+                    });
+                }
+
+                function saveMapping(name, source) {
+                    $.ajax({
+                        type: 'POST',
+                        data: {
+                            mappingName: name,
+                            json : source
+                        },
+                        dataType: "json",
+                        url: "",
+                        success: function (data) {
+                            flog("success", data);
+                            if (data.status) {
+                                $("#mapping").reloadFragment({
+                                    whenComplete: function () {
+                                        prettyPrintJson();
+                                    }
+                                });
+                                Msg.success("Saved mapping");
+                            } else {
+                                Msg.error("There was a problem saving the mapping");
+                            }
+                        },
+                        error: function (resp) {
+                            Msg.error("There was a problem saving the mapping");
                         }
                     });
                 }
