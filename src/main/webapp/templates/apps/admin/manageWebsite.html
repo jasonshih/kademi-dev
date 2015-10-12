@@ -362,8 +362,11 @@
                             #else
                             #set($btnText = "Generate DKIM key")
                             #end
-                            <a href="#" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-gen-dkim">$btnText</a>
-                            <a href="#" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-send-test">Send Test Email</a>
+                            <a href="#" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-gen-dkim"><i class="fa fa-plus"></i> $btnText</a>
+                            #if($hasDkim)
+                            <a href="#" class="btn btn-sm btn-danger btn-delete-dkim"><i class="fa fa-times"></i> Delete DKIM Key</a>
+                            #end
+                            <a href="#" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-send-test"><i class="fa fa-envelope"></i> Send Test Email</a>
                         </div>
                     </div>
                 </div>
@@ -1120,6 +1123,28 @@
                         }
 
                     });
+                });
+
+                $('body').on('click', '.btn-delete-dkim', function (e) {
+                    e.preventDefault();
+
+                    if (confirm('Are you sure you want to clear the DKIM Key?')) {
+                        $.ajax({
+                            type: 'POST',
+                            dataType: 'json',
+                            url: window.location.pathname,
+                            data: {
+                                clearDKIM: true
+                            },
+                            success: function (resp) {
+                                flog("success", resp);
+                                $('#panel_mailserver').reloadFragment();
+                            },
+                            error: function (resp) {
+                                Msg.error("An error occured viewing the certificate");
+                            }
+                        });
+                    }
                 });
             });
 
