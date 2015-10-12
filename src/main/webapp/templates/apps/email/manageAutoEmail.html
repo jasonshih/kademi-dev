@@ -208,8 +208,6 @@
                                 <label for="emailEnabled">Send an email</label>
                             </div>
                             <div class="panel-body panel-toggled" data-toggled="display" data-actor="#emailEnabled">
-                                <p class="alert alert-info"><i class="glyphicon glyphicon-info-sign"></i> If <b>"Email from address"</b> is blank, we'll use <b>"Reply to address"</b> instead</p>
-                                <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="control-label col-md-4" for="themeSiteId">Website</label>
@@ -232,34 +230,36 @@
                                             <label class="control-label col-md-4" for="fromAddress">Email from address</label>
                                             <div class="col-md-8">
                                                 <input type="text" name="fromAddress" id="fromAddress" value="$!formatter.htmlEncode( $page.fromAddress )" placeholder="admin@mybusinessname.com" class="form-control required-if-shown" />
-                                                <small>Eg <i>"Joe Bloggs" &lt;joe@bloggs.com&gt;</i></small>
+                                                <small class="text-muted help-block">Eg <i>"Joe Bloggs" &lt;joe@bloggs.com&gt;</i>. You can leave this field blank but <b>Reply to address</b> will be required!</small>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label col-md-4" for="replyToAddress">Reply to address</label>
                                             <div class="col-md-8">
                                                 <input type="text" name="replyToAddress" id="replyToAddress" value="$!formatter.htmlEncode( $page.replyToAddress )" placeholder="admin@mybusinessname.com" class="form-control" />
-                                                <small>Eg <i>"Joe Bloggs" &lt;joe@bloggs.com&gt;</i></small>
+                                                <small class="text-muted help-block">Eg <i>"Joe Bloggs" &lt;joe@bloggs.com&gt;</i>.</small>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="pull-right">
-                                            <div class="btn-group">
-                                                <button class="btn btn-success btn-sent-test" type="button">
-                                                    <span class="glyphicon glyphicon-send"></span>
-                                                    Send test
-                                                </button>
-                                                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" type="button">
-                                                    <span class="caret"></span>
-                                                    <span class="sr-only">Toggle Dropdown</span>
-                                                </button>
-                                                <ul class="dropdown-menu pull-right" role="menu">
-                                                    <li><a href="#" class="btn-sent-test-choose">Enter recipient address</a></li>
-                                                </ul>
+                                        <div class="clearfix" style="margin-bottom: 10px">
+                                            <div class="pull-right">
+                                                <div class="btn-group">
+                                                    <button class="btn btn-success btn-sent-test" type="button">
+                                                        <span class="glyphicon glyphicon-send"></span>
+                                                        Send test
+                                                    </button>
+                                                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" type="button">
+                                                        <span class="caret"></span>
+                                                        <span class="sr-only">Toggle Dropdown</span>
+                                                    </button>
+                                                    <ul class="dropdown-menu pull-right" role="menu">
+                                                        <li><a href="#" class="btn-sent-test-choose">Enter recipient address</a></li>
+                                                    </ul>
+                                                </div>
                                             </div>
+                                            <div class="add-attachment btn-upload pull-left"></div>
                                         </div>
-                                        <div class="add-attachment btn-upload"></div>
                                         <div class="article-wrapper article-sm showed-action attachments-list">
                                             #foreach($att in $page.job.attachments)
                                             <article>
