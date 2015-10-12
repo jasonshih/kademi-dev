@@ -14,6 +14,8 @@
 @hero1: @brand-primary;
 @hero2: @brand-success;
 
+@content-margin-top: 60px;
+
 // Mixin for form field states
 .formFieldState(@textColor: #555, @borderColor: #ccc, @backgroundColor: #f5f5f5) {
     // Set the text color
@@ -135,37 +137,48 @@ table.list-view {
     }
 }
 
-.forumReply {
-    position: relative;
+.comment {
+    .clearfix;
     border-bottom: solid @input-border 1px;
     margin-bottom: 10px;
-    .profilePic {
+    padding-bottom: 10px;
+
+    .comment-user {
         float: left;
         margin-right: 8px;
-        height: 52px;
         width: 52px;
+    }
+
+    .comment-user-pic {
         img {
-            height: 100%;
-            width: 100%;
+            display: block;
+            height: 52px;
         }
     }
-    .user {
+
+    .comment-user-name {
+        text-align: center;
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-align: center;
     }
-    p {
-        padding: 0;
-        margin-left: 60px;
+
+    .comment-detail {
+        margin: 0 0 0 60px;
+    }
+
+    .comment-content {
+        margin: 0 0 10px;
+    }
+
+    .comment-reply {
+        margin-right: 5px;
+    }
+
+    .comment-replies-wrapper {
         margin-top: 10px;
     }
-    abbr {
-        position: absolute;
-        top: 0;
-        right: 0;
-        font-size: 85%;
-    }
-}
-
-body .navbar .nav .dropdown-toggle .caret {
-    margin-top: 6px; // need to override default of 8px for alignment
 }
 
 .stream-items {
