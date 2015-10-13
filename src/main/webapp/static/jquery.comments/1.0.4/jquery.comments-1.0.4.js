@@ -10,7 +10,8 @@
      * @version 1.0.4
      * @property {String} [pageUrl=window.location] The url of the resource to add comments to. Must end with a slash
      * @property {String} [streamSelector=.comments-stream] The selector of stream wrapper which wraps all comments
-     * @property {Function} renderCommentFn The callback function to render the markup for a comment. Takes the following arguments user, comment, commentDate, where user is an object containing name, href, photoHref
+     * @property {String} [commentTextSelector=#postQuestion] The selector of textbox which contain the comment content
+     * @property {Function} renderCommentFn The callback function to render the markup for a comment. Takes the following arguments commentData, config, container
      * @property {Function} clearContainerFn The callback function to clear the comments container. Takes no arguments
      * @property {Function} ajaxLoadingFn The callback function to show ajax loading. Takes one argument isLoading (true/false)
      * @property {Number} [commentsPerPage=10] The number of comments will be showed per page
@@ -20,14 +21,20 @@
     var DEFAULT_COMMENTS_OPTIONS = {
         pageUrl: window.location,
         streamSelector: '.comments-stream',
-        renderCommentFn: function (user, date, comment, commentId, config, container, c) {
-            flog('renderCommentFn-104-standard', user, 'container=', container, 'commentId=', commentId, 'parent=', c.parentId);
-
+        commentTextSelector: '#postQuestion',
+        renderCommentFn: function (commentData, config, container) {
+            flog('renderCommentFn-104-standard', 'commentData=', commentData, 'container=', container);
+            
+            var user = commentData.user;
+            var date = new Date(commentData.date);
+            var commentText = commentData.comment;
+            var commentId = commentData.id;
+            var parentId = commentData.parentId;
             var outerDiv = $('#' + commentId);
 
             if (outerDiv.length === 0) {
                 var commentStream = container.find(config.streamSelector);
-                var parentComment = $('#' + c.parentId);
+                var parentComment = $('#' + parentId);
                 var isReply = false;
                 if(parentComment.length > 0){
                     commentStream = parentComment;
@@ -55,7 +62,7 @@
                 var commentDetailString = '';
 
                 // Comment text
-                commentDetailString += '<p class="comment-content cmt">' + comment + '</p>';
+                commentDetailString += '<p class="comment-content cmt">' + commentText + '</p>';
 
                 // Comment reply button
                 if(!isReply){
@@ -92,7 +99,7 @@
                 // Append comment block to comment stream
                 var commentClass = 'forumReply comment';
                 if(isReply){
-                    commentClass = 'comment col-md-offset-1';
+                    commentClass = 'comment comment-sub col-md-offset-1';
                 }
                 commentStream.append(
                     '<div class="' + commentClass + '" id="' + commentId + '">' + commentString + '</div>'
@@ -132,7 +139,7 @@
                 flog('Update existing comment');
 
                 // Just update
-                outerDiv.find('.cmt, .comment-content').html(comment);
+                outerDiv.find('.cmt, .comment-content').html(commentText);
             }
 
             jQuery('abbr.auxText, .comment-time', outerDiv).timeago();
@@ -161,7 +168,7 @@
                     '</div>'
                 );
 
-                var commentWrappers = container.find('.forumReply');
+                var commentWrappers = container.find('.comment').not('.comment-sub');
 
                 // Show 10 last comments
                 commentWrappers.filter(':lt(' + (totalComments - itemsPerPage) + ')').hide().addClass('hidden-comment');
@@ -220,7 +227,7 @@
             e.stopPropagation();
 
             try {
-                sendNewForumComment(config.pageUrl, container.find('textarea#postQuestion'), config.renderCommentFn, config.currentUser, config, container);
+                sendNewForumComment(config.pageUrl, container.find(config.commentTextSelector), config.renderCommentFn, config.currentUser, config, container);
             } catch (e) {
                 flog('Exception sending forum comment', e);
             }
@@ -234,15 +241,15 @@
     function initWebsockets(config, container) {
         var path = getFolderPath(window.location.pathname);
         flog('initWebsockets', window.location.host, path);
+        
         var b64ContentId = Base64.encode(path);
         try {
             wsocket = new WebSocket('ws://' + window.location.host + '/comments/' + window.location.host + '/content/' + b64ContentId);
             wsocket.onmessage = function (evt) {
-                var c = $.parseJSON(evt.data);
-                flog('onMessage', c);
+                var comment = $.parseJSON(evt.data);
+                flog('onMessage', comment);
 
-                var dt = new Date(c.date);
-                config.renderCommentFn(c.user, dt, c.comment, c.id, c, config, container);
+                config.renderCommentFn(comment, config, container);
             };
 
             flog('Done initWebsockets');
@@ -251,7 +258,6 @@
             flog('Websocket initialisation failed. Live comment stream is not available');
         }
     }
-
 })(jQuery);
 
 function sendNewForumComment(pageUrl, commentInput, renderComment, currentUser, config, container) {
@@ -287,7 +293,6 @@ function sendNewForumComment(pageUrl, commentInput, renderComment, currentUser, 
             flog('resp', resp.status, resp);
             if (resp.status) {
                 var c = resp.data;
-                currentDate = new Date();
 
                 invokeRenderFn(c, renderComment, config, container);
             } else {
@@ -340,8 +345,7 @@ function processComments(comments, config, container) {
 }
 
 function invokeRenderFn(comment, renderCommentFn, config, container) {
-    var dt = new Date(comment.date);
-    renderCommentFn(comment.user, dt, comment.comment, comment.id, config, container, comment);
+    renderCommentFn(comment, config, container);
 }
 
 function sendCommentReply(pageUrl, commentInput, parentId, renderComment, currentUser, config, container) {
@@ -380,7 +384,7 @@ function sendCommentReply(pageUrl, commentInput, parentId, renderComment, curren
             flog('resp', resp.status, resp);
             if (resp.status) {
                 var c = resp.data;
-                currentDate = new Date();
+                c.parentId = parentId;
 
                 invokeRenderFn(c, renderComment, config, container);
             } else {
