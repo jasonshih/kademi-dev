@@ -20,13 +20,19 @@
     var DEFAULT_COMMENTS_OPTIONS = {
         pageUrl: window.location,
         streamSelector: '.comments-stream',
-        renderCommentFn: function (user, date, comment, commentId, config, container) {
-            flog('renderCommentFn-104-standard', user, 'container=', container, 'commentId=', commentId);
+        renderCommentFn: function (user, date, comment, commentId, config, container, c) {
+            flog('renderCommentFn-104-standard', user, 'container=', container, 'commentId=', commentId, 'parent=', c.parentId);
 
             var outerDiv = $('#' + commentId);
 
             if (outerDiv.length === 0) {
                 var commentStream = container.find(config.streamSelector);
+                var parentComment = $('#' + c.parentId);
+                var isReply = false;
+                if(parentComment.length > 0){
+                    commentStream = parentComment;
+                    isReply = true;
+                }
                 flog('Append new comment block to: ', commentStream, "Selector: ", config.streamSelector);
 
                 var commentString = '';
@@ -52,7 +58,9 @@
                 commentDetailString += '<p class="comment-content cmt">' + comment + '</p>';
 
                 // Comment reply button
-                commentDetailString += '<a class="comment-reply small" href="#">Reply</a>';
+                if(!isReply){
+                    commentDetailString += '<a class="comment-reply small" href="#">Reply</a>';
+                }
 
                 // Comment datetime
                 flog('Comment datetime: ', date);
@@ -66,13 +74,15 @@
                 commentDetailString += '<abbr title="' + date.toISOString() + '" class="comment-time auxText small text-muted">' + toDisplayDateNoTime(dt) + '</abbr>';
 
                 // Reply for comment
-                commentDetailString += '<div class="comment-replies-wrapper" style="display: none;">';
-                commentDetailString += '    <div class="comment-replies"></div>';
-                commentDetailString += '    <textarea class="form-control input-sm comment-reply-text" rows="1" placeholder="Write a reply..."></textarea>';
-                commentDetailString += '    <div class="text-right">';
-                commentDetailString += '        <button type="button" class="btn btn-xs btn-info comment-reply-send">Send</button>';
-                commentDetailString += '    </div>';
-                commentDetailString += '</div>';
+                if(!isReply){
+                    commentDetailString += '<div class="comment-replies-wrapper" style="display: none;">';
+                    commentDetailString += '    <div class="comment-replies"></div>';
+                    commentDetailString += '    <textarea class="form-control input-sm comment-reply-text" rows="1" data-parentid="' + commentId + '" placeholder="Write a reply..."></textarea>';
+                    commentDetailString += '    <div class="text-right">';
+                    commentDetailString += '        <button type="button" class="btn btn-xs btn-info comment-reply-send">Send</button>';
+                    commentDetailString += '    </div>';
+                    commentDetailString += '</div>';
+                }
 
                 // Comment comment detail block
                 commentString += '<div class="comment-detail">';
@@ -80,8 +90,12 @@
                 commentString += '</div>';
 
                 // Append comment block to comment stream
+                var commentClass = 'forumReply comment';
+                if(isReply){
+                    commentClass = 'comment col-md-offset-1';
+                }
                 commentStream.append(
-                    '<div class="forumReply comment" id="' + commentId + '">' + commentString + '</div>'
+                    '<div class="' + commentClass + '" id="' + commentId + '">' + commentString + '</div>'
                 );
                 outerDiv = $('#' + commentId);
 
@@ -109,6 +123,9 @@
 
                     if (replyText) {
                         flog('Submit reply text:', replyText);
+                        var replyInput = outerDiv.find('textarea.comment-reply-text');
+                        sendCommentReply(config.pageUrl, replyInput, replyInput.data('parentid'), config.renderCommentFn, config.currentUser, config, container);
+                        replyWrapper.hide();
                     }
                 });
             } else {
@@ -324,5 +341,55 @@ function processComments(comments, config, container) {
 
 function invokeRenderFn(comment, renderCommentFn, config, container) {
     var dt = new Date(comment.date);
-    renderCommentFn(comment.user, dt, comment.comment, comment.id, config, container);
+    renderCommentFn(comment.user, dt, comment.comment, comment.id, config, container, comment);
+}
+
+function sendCommentReply(pageUrl, commentInput, parentId, renderComment, currentUser, config, container) {
+    flog('sendCommentReply', pageUrl, commentInput, parentId, renderComment, currentUser, config, container);
+
+    var comment = commentInput.val();
+    commentInput.removeClass('errorField');
+
+    if (comment.trim().length < 1) {
+        commentInput.addClass('errorField');
+        return;
+    }
+
+    var url = pageUrl;
+    if (!url.endsWith('/')) {
+        url += '/';
+    }
+    url += '_comments';
+
+    ajaxLoadingOn();
+
+    $.ajax({
+        type: 'POST',
+        url: url,
+        data: {
+            newComment: comment,
+            parentComment: parentId
+        },
+        dataType: 'json',
+        success: function (resp) {
+            ajaxLoadingOff();
+
+            commentInput.val('');
+            commentInput.keyup();
+
+            flog('resp', resp.status, resp);
+            if (resp.status) {
+                var c = resp.data;
+                currentDate = new Date();
+
+                invokeRenderFn(c, renderComment, config, container);
+            } else {
+                alert('Sorry, there was a problem posting your comment. Please try again');
+            }
+        },
+        error: function () {
+            ajaxLoadingOff();
+            alert('Sorry, we could not process your comment. Please try again later');
+        }
+    });
 }
