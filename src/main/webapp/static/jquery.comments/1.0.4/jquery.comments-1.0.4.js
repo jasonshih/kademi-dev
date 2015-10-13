@@ -187,7 +187,13 @@
                 });
             }
         },
-        aggregated: false  // if true will list all comments under the given page
+        aggregated: false,  // if true will list all comments under the given page,
+        afterCommentFn: function (commentData, config, container) {
+            flog('afterCommentFn-104-standard', commentData, config, container);
+        },
+        afterReplyFn: function (commentData, config, container) {
+            flog('afterReplyFn-104-standard', commentData, config, container);
+        }
     };
 
     /**
@@ -295,6 +301,7 @@ function sendNewForumComment(pageUrl, commentInput, renderComment, currentUser, 
                 var c = resp.data;
 
                 invokeRenderFn(c, renderComment, config, container);
+                config.afterCommentFn(c, config, container);
             } else {
                 alert('Sorry, there was a problem posting your comment. Please try again');
             }
@@ -387,6 +394,7 @@ function sendCommentReply(pageUrl, commentInput, parentId, renderComment, curren
                 c.parentId = parentId;
 
                 invokeRenderFn(c, renderComment, config, container);
+                config.afterReplyFn(c, config, container);
             } else {
                 alert('Sorry, there was a problem posting your comment. Please try again');
             }
