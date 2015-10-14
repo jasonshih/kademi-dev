@@ -118,6 +118,7 @@
             add_provider_modal.find('input[name=authLocation]').val(data.authLocation);
             add_provider_modal.find('input[name=tokenLocation]').val(data.tokenLocation);
             add_provider_modal.find('input[name=profileLocation]').val(data.profileLocation);
+            add_provider_modal.find('input[name=displayNamePath]').val(data.displayNamePath);
             add_provider_modal.find('input[name=redirectURI]').val(data.redirectURI);
             add_provider_modal.find('textarea[name=permissionScopes]').val(data.permissionScopes.join(','));
         }
@@ -191,6 +192,12 @@
                 + '                <label class="col-sm-4 control-label" for="profileLocation">Profile URL</label>'
                 + '                <div class="col-sm-7">'
                 + '                    <input type="text" class="form-control" name="profileLocation" id="profileLocation"/>'
+                + '                </div>'
+                + '            </div>'
+                + '            <div class="form-group oauth-fields">'
+                + '                <label class="col-sm-4 control-label" for="displayNamePath">Display Name Path</label>'
+                + '                <div class="col-sm-7">'
+                + '                    <input type="text" class="form-control" name="displayNamePath" id="displayNamePath"/>'
                 + '                </div>'
                 + '            </div>'
                 + '            <div class="form-group oauth-fields">'
