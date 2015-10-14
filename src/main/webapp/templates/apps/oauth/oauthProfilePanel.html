@@ -1,9 +1,11 @@
+#set($providers = $page.oAuth2Providers)
+#if($providers && !$providers.isEmpty())
 <div class="well" id="oauthDetails">
     <form action="." method="POST" class="form-inline optins">
         <img class='ajax-loader' src='/static/common/loading.gif'/>
         <h4>Link with Social Media</h4>
 
-        #foreach($p in $page.oAuth2Providers)
+        #foreach($p in $providers)
         #set( $connected = $applications.oauth.oAuthDetails.get( $p.providerId ) )
         #if( $connected )
 
@@ -44,3 +46,4 @@
         });
     </script>
 </div>
+#end
