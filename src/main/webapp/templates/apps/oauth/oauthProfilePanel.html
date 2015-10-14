@@ -6,6 +6,7 @@
         <h4>Link with Social Media</h4>
 
         #foreach($p in $providers)
+        #set( $connected = false)
         #set( $connected = $applications.oauth.oAuthDetails.get( $p.providerId ) )
         #if( $connected )
 
