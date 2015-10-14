@@ -60,21 +60,19 @@
                         <div class="panel-heading">
 
                             <div class="pull-right">
-                                <div class="col-md-5">
+                                <div class="col-md-6">
                                     #set($commentsUrl = $page.href + '/_comments')
                                     #set($commentR = $page.find($commentsUrl))
-                                    
-                                    #if($commentR.following)
-                                    <a href="#" class="btn btn-info btn-unfollow-post">
+                                    #set($isFollowing = $commentR.following)
+
+                                    <a href="#" class="btn btn-info btn-unfollow-post" #if(!$isFollowing)style="display:none;" #end>
                                         <span class="glyphicon glyphicon-minus"></span>
                                         UnFollow
                                     </a>
-                                    #elseif($user)
-                                    <a href="#" class="btn btn-info btn-follow-post">
+                                    <a href="#" class="btn btn-info btn-follow-post" #if($isFollowing)style="display:none;" #end>
                                         <span class="glyphicon glyphicon-plus"></span>
                                         Follow
                                     </a>
-                                    #end
                                 </div>
                                 <div class="col-sm-2">
                                     <a href="#postQuestion" class="btn btn-success post-question">
@@ -116,7 +114,7 @@
         <script type="text/javascript">
             jQuery(document).ready(function () {
                 $(".timeago").timeago();
-                initComments(window.location.pathname);
+                initComments(window.location.pathname, '.btn-follow-post', '.btn-unfollow-post');
             });
         </script>            
     </body>

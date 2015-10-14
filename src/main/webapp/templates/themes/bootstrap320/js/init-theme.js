@@ -199,9 +199,48 @@ function initPrintLink() {
  */
 function initComments(pageUrl, followBtn, unFollowBtn) {
     log("initComments", pageUrl);
-    
+
     var fBtn = $(followBtn);
-    
+    var unfBtn = $(unFollowBtn);
+
+    fBtn.on('click', function (e) {
+        e.preventDefault();
+
+        var url = pageUrl;
+        if (!url.endsWith('/')) {
+            url += '/';
+        }
+        url += '_comments';
+
+        $.post(url, {follow: true}, function (resp) {
+            if (resp.status) {
+                fBtn.hide();
+                unfBtn.show();
+            } else {
+                Msg.info(resp.messages);
+            }
+        }, 'json');
+    });
+
+    unfBtn.on('click', function (e) {
+        e.preventDefault();
+
+        var url = pageUrl;
+        if (!url.endsWith('/')) {
+            url += '/';
+        }
+        url += '_comments';
+
+        $.post(url, {unfollow: true}, function (resp) {
+            if (resp.status) {
+                fBtn.show();
+                unfBtn.hide();
+            } else {
+                Msg.info(resp.messages);
+            }
+        }, 'json');
+    });
+
     $(".hideBtn").click(function () {
         var oldCommentsHidden = $("#comments:visible").length == 0;
         log("store new comments hidden", oldCommentsHidden);
