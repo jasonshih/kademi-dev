@@ -197,8 +197,11 @@ function initPrintLink() {
  *
  *  Eg initComments(window.location.pathname);
  */
-function initComments(pageUrl) {
+function initComments(pageUrl, followBtn, unFollowBtn) {
     log("initComments", pageUrl);
+    
+    var fBtn = $(followBtn);
+    
     $(".hideBtn").click(function () {
         var oldCommentsHidden = $("#comments:visible").length == 0;
         log("store new comments hidden", oldCommentsHidden);
@@ -340,16 +343,16 @@ function buildJWPlayer(itemToReplace, count, src, posterHref) {
         aspectratio: w + ":" + h,
         androidhls: true, //enable hls on android 4.1+
         playlist: [{
-            image: posterHref,
-            sources: [{
-                file: src
-            }
-                , {
-                    file: src + "/../alt-640-360.webm"
-                }, {
-                    file: src + "/../alt-640-360.m4v"
-                }]
-        }]
+                image: posterHref,
+                sources: [{
+                        file: src
+                    }
+                    , {
+                        file: src + "/../alt-640-360.webm"
+                    }, {
+                        file: src + "/../alt-640-360.m4v"
+                    }]
+            }]
         , primary: "flash"
     });
     jwplayer(innerId).onReady(function () {
