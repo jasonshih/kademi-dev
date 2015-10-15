@@ -389,7 +389,7 @@
                     var height = pre.css("height");
                     var source = pre.text();
                     var newDiv = $("<textarea class='form-control'>");
-                    newDiv.text(source);
+                    newDiv.val(source);
                     pre.replaceWith(newDiv);
                     newDiv.css("height", height);
                 });
@@ -400,7 +400,7 @@
                     var cont = btn.closest(".mappingContainer");
                     var name = cont.find("h3").text();
                     var textarea = cont.find("textarea");
-                    var source = textarea.text();
+                    var source = textarea.val();
                     saveMapping(name, source);
                 });
 

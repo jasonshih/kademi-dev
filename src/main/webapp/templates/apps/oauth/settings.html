@@ -23,19 +23,112 @@
     #end
 </div>
 
+<div class="modal modal-lg fade" id="add-oauth-provider" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Add new OAuth2 Provider</h4>
+    </div>
+    <div class="modal-body">
+        <div class="form-horizontal">
+            <input type="hidden" name="settingsAppId" value="${instanceId}"/>
+            <input type="hidden" name="providerAction" value="add"/>
+            <input type="hidden" name="origProviderId" value=""/>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Templates</label>
+                <div class="col-sm-7">
+                    <select class="form-control sel-template">
+                        $formatter.option(null, "Select a template", null)
+                        #foreach($entry in $oauth2Templates.entrySet())
+                        $formatter.option($entry.key, $entry.key, null)
+                        #end
+                    </select>
+                </div>
+            </div>
+            <div class="form-group oauth-fields">
+                <label class="col-sm-4 control-label" for="providerId">Provider ID</label>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control" name="providerId" id="providerId"/>
+                </div>
+            </div>
+            <div class="form-group oauth-fields">
+                <label class="col-sm-4 control-label" for="providerId">Provider type</label>
+                <div class="col-sm-7">
+                    <select name="providerTypeId" class="form-control">
+                        <option value="oauth2">OAuth2</option>
+                        <option value="twitter">Twitter</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group oauth-fields">
+                <label class="col-sm-4 control-label" for="clientId">Client ID</label>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control" name="clientId" id="clientId"/>
+                </div>
+            </div>
+            <div class="form-group oauth-fields">
+                <label class="col-sm-4 control-label" for="clientSecret">Client Secret</label>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control" name="clientSecret" id="clientSecret"/>
+                </div>
+            </div>
+            <div class="form-group oauth-fields">
+                <label class="col-sm-4 control-label" for="authLocation">Authorication URL</label>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control" name="authLocation" id="authLocation"/>
+                </div>
+            </div>
+            <div class="form-group oauth-fields">
+                <label class="col-sm-4 control-label" for="tokenLocation">Token URL</label>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control" name="tokenLocation" id="tokenLocation"/>
+                </div>
+            </div>
+            <div class="form-group oauth-fields">
+                <label class="col-sm-4 control-label" for="profileLocation">Profile URL</label>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control" name="profileLocation" id="profileLocation"/>
+                </div>
+            </div>
+            <div class="form-group oauth-fields">
+                <label class="col-sm-4 control-label" for="redirectURI">Redirect URL</label>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control" name="redirectURI" id="redirectURI"/>
+                </div>
+            </div>
+            <div class="form-group oauth-fields">
+                <label class="col-sm-4 control-label" for="redirectURI">Scope
+                    <small>Comma separated list</small>
+                </label>
+                <div class="col-sm-7">
+                    <textarea type="text" class="form-control" name="permissionScopes" id="permissionScopes"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Add Provider</button>
+    </div>
+</div>
+
 <script>
     var oauth2Templates = $formatter.toJson($oauth2Templates);
     var oauth2_id = '${instanceId}';
     $(function () {
-        addModal();
 
-        add_provider_modal = $('#add-oauth-provider');
+        addProviderModal = $('#add-oauth-provider');
+        addProviderModal.detach();
+        $("body").append(addProviderModal);
+        var div = addProviderModal.find(".modal-body > div")
+        div.wrap("<form method='POST'></form>");
+        flog("wrapped", div);
 
-        add_provider_modal.find('form').forms({
+        addProviderModal.find('form').forms({
             callback: function (resp) {
                 if (resp.status) {
                     $('#oauthproviders').reloadFragment();
-                    add_provider_modal.modal('hide');
+                    addProviderModal.modal('hide');
                     Msg.success(resp.messages.first());
                 } else {
 
@@ -58,16 +151,17 @@
             var template = oauth2Templates[val];
 
             if (template === null || typeof template === 'undefined') {
-                add_provider_modal.find('form').trigger('reset');
+                addProviderModal.find('form').trigger('reset');
             } else {
-                add_provider_modal.find('input[name=providerId]').val(template.providerId);
-                add_provider_modal.find('input[name=clientId]').val(template.clientId);
-                add_provider_modal.find('input[name=clientSecret]').val(template.clientSecret);
-                add_provider_modal.find('input[name=authLocation]').val(template.authLocation);
-                add_provider_modal.find('input[name=tokenLocation]').val(template.tokenLocation);
-                add_provider_modal.find('input[name=profileLocation]').val(template.profileLocation);
-                add_provider_modal.find('input[name=redirectURI]').val(template.redirectURI);
-                add_provider_modal.find('input[name=permissionScopes]').val(template.permissionScopes.join(','));
+                addProviderModal.find('input[name=providerId]').val(template.providerId);
+                addProviderModal.find('input[name=providerTypeId]').val(template.providerTypeId);
+                addProviderModal.find('input[name=clientId]').val(template.clientId);
+                addProviderModal.find('input[name=clientSecret]').val(template.clientSecret);
+                addProviderModal.find('input[name=authLocation]').val(template.authLocation);
+                addProviderModal.find('input[name=tokenLocation]').val(template.tokenLocation);
+                addProviderModal.find('input[name=profileLocation]').val(template.profileLocation);
+                addProviderModal.find('input[name=redirectURI]').val(template.redirectURI);
+                addProviderModal.find('input[name=permissionScopes]').val(template.permissionScopes.join(','));
             }
         });
 
@@ -133,87 +227,5 @@
         }
 
         add_provider_modal.modal('show');
-    }
-
-    function addModal() {
-        var m = '<div class="modal modal-lg fade" id="add-oauth-provider" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">'
-                + '<div class="modal-header">'
-                + '        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>'
-                + '        <h4 class="modal-title" id="myModalLabel">Add new OAuth2 Provider</h4>'
-                + '    </div>'
-                + '    <div class="modal-body">'
-                + '        <form class="form-horizontal" method="POST" action="" role="form">'
-                + '            <input type="hidden" name="settingsAppId" value="${instanceId}"/>'
-                + '            <input type="hidden" name="providerAction" value="add"/>'
-                + '            <input type="hidden" name="origProviderId" value=""/>'
-                + '            <div class="form-group">'
-                + '                <label class="col-sm-4 control-label">Templates</label>'
-                + '                <div class="col-sm-7">'
-                + '                    <select class="form-control sel-template">'
-                + '                        $formatter.option(null, "Select a template", null)'
-                + '                        #foreach($entry in $oauth2Templates.entrySet())'
-                + '                        $formatter.option($entry.key, $entry.key, null)'
-                + '                        #end'
-                + '                    </select>'
-                + '                </div>'
-                + '            </div>'
-                + '            <div class="form-group oauth-fields">'
-                + '                <label class="col-sm-4 control-label" for="providerId">Provider ID</label>'
-                + '                <div class="col-sm-7">'
-                + '                    <input type="text" class="form-control" name="providerId" id="providerId"/>'
-                + '                </div>'
-                + '            </div>'
-                + '            <div class="form-group oauth-fields">'
-                + '                <label class="col-sm-4 control-label" for="clientId">Client ID</label>'
-                + '                <div class="col-sm-7">'
-                + '                    <input type="text" class="form-control" name="clientId" id="clientId"/>'
-                + '                </div>'
-                + '            </div>'
-                + '            <div class="form-group oauth-fields">'
-                + '                <label class="col-sm-4 control-label" for="clientSecret">Client Secret</label>'
-                + '                <div class="col-sm-7">'
-                + '                    <input type="text" class="form-control" name="clientSecret" id="clientSecret"/>'
-                + '                </div>'
-                + '            </div>'
-                + '            <div class="form-group oauth-fields">'
-                + '                <label class="col-sm-4 control-label" for="authLocation">Authorication URL</label>'
-                + '                <div class="col-sm-7">'
-                + '                    <input type="text" class="form-control" name="authLocation" id="authLocation"/>'
-                + '                </div>'
-                + '            </div>'
-                + '            <div class="form-group oauth-fields">'
-                + '                <label class="col-sm-4 control-label" for="tokenLocation">Token URL</label>'
-                + '                <div class="col-sm-7">'
-                + '                    <input type="text" class="form-control" name="tokenLocation" id="tokenLocation"/>'
-                + '                </div>'
-                + '            </div>'
-                + '            <div class="form-group oauth-fields">'
-                + '                <label class="col-sm-4 control-label" for="profileLocation">Profile URL</label>'
-                + '                <div class="col-sm-7">'
-                + '                    <input type="text" class="form-control" name="profileLocation" id="profileLocation"/>'
-                + '                </div>'
-                + '            </div>'
-                + '            <div class="form-group oauth-fields">'
-                + '                <label class="col-sm-4 control-label" for="redirectURI">Redirect URL</label>'
-                + '                <div class="col-sm-7">'
-                + '                    <input type="text" class="form-control" name="redirectURI" id="redirectURI"/>'
-                + '                </div>'
-                + '            </div>'
-                + '            <div class="form-group oauth-fields">'
-                + '                <label class="col-sm-4 control-label" for="redirectURI">Scope'
-                + '                    <small>Comma separated list</small></label>'
-                + '                <div class="col-sm-7">'
-                + '                    <textarea type="text" class="form-control" name="permissionScopes" id="permissionScopes"></textarea>'
-                + '                </div>'
-                + '            </div>'
-                + '        </form>'
-                + '    </div>'
-                + '    <div class="modal-footer">'
-                + '        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>'
-                + '        <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Add Provider</button>'
-                + '    </div>'
-                + '</div>';
-
-        $('body').append(m);
     }
 </script>
