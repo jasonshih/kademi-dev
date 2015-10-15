@@ -1,4 +1,4 @@
-#set($providers = $page.oAuth2Providers)
+#set($providers = $applications.oauth.loginProviders)
 #if($providers && !$providers.isEmpty())
 <div class="well" id="oauthDetails">
     <form action="." method="POST" class="form-inline optins">
