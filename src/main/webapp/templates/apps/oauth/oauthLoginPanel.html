@@ -10,7 +10,8 @@
 #else
 <h2>Or login with:</h2>
 <hr/>
-#foreach($p in $page.oAuth2Providers)
+#set($providers = $applications.oauth.loginProviders)
+#foreach($p in $providers)
 <div class="btn-group" role="group">
     #set( $link = $applications.oauth.getAuthoriseHref($p) )
     <a href="$link" class="btn btn-success btn-lg"><i class="fa fa-${p.providerId}"></i></a>

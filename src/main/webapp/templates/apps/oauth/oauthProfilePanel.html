@@ -19,7 +19,7 @@
         </div>
         <br/>
         #else
-        <a href="$applications.oauth.getOAuth2URL($p, $request.absoluteUrl)" class="btn btn-success btn-${p.providerId}"><i class="fa fa-${p.providerId}"></i> | Connect with $p.providerId</a>
+        <a href="$applications.oauth.getAuthoriseHref($p)" class="btn btn-success btn-${p.providerId}"><i class="fa fa-${p.providerId}"></i> | Connect with $p.providerId</a>
         #end
         #end
     </form>
