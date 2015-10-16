@@ -51,9 +51,9 @@
                 </div>
             </div>
             <div class="form-group oauth-fields">
-                <label class="col-sm-4 control-label" for="providerTypeId">Provider type</label>
+                <label class="col-sm-4 control-label" for="providerType">Provider type</label>
                 <div class="col-sm-7">
-                    <select name="providerTypeId" class="form-control">
+                    <select name="providerType" class="form-control">
                         <option value="oauth2">OAuth2</option>
                         <option value="twitter">Twitter</option>
                     </select>
@@ -163,14 +163,16 @@
                 addProviderModal.find('form').trigger('reset');
             } else {
                 addProviderModal.find('input[name=providerId]').val(template.providerId);
-                addProviderModal.find('input[name=providerTypeId]').val(template.providerTypeId);
+                addProviderModal.find('select[name=providerType]').val(template.providerTypeId);
                 addProviderModal.find('input[name=clientId]').val(template.clientId);
                 addProviderModal.find('input[name=clientSecret]').val(template.clientSecret);
                 addProviderModal.find('input[name=authLocation]').val(template.authLocation);
                 addProviderModal.find('input[name=tokenLocation]').val(template.tokenLocation);
                 addProviderModal.find('input[name=profileLocation]').val(template.profileLocation);
                 addProviderModal.find('input[name=redirectURI]').val(template.redirectURI);
-                addProviderModal.find('input[name=permissionScopes]').val(template.permissionScopes.join(','));
+                if( template.permissionScopes ) {
+                    addProviderModal.find('input[name=permissionScopes]').val(template.permissionScopes.join(','));
+                }
                 addProviderModal.find('input[name=displayNamePath]').val(template.displayNamePath);
 
             }
@@ -218,6 +220,8 @@
             add_provider_modal.find('form').trigger('reset');
         } else {
             add_provider_modal.find('input[name=providerId]').val(data.providerId);
+            add_provider_modal.find('select[name=providerType]').val(data.providerTypeId);
+            flog("provide type", data, data.providerTypeId, add_provider_modal.find('input[name=providerType]'));
             add_provider_modal.find('input[name=clientId]').val(data.clientId);
             add_provider_modal.find('input[name=clientSecret]').val(data.clientSecret);
             add_provider_modal.find('input[name=authLocation]').val(data.authLocation);
@@ -225,7 +229,9 @@
             add_provider_modal.find('input[name=profileLocation]').val(data.profileLocation);
             add_provider_modal.find('input[name=displayNamePath]').val(data.displayNamePath);
             add_provider_modal.find('input[name=redirectURI]').val(data.redirectURI);
-            add_provider_modal.find('textarea[name=permissionScopes]').val(data.permissionScopes.join(','));
+            if( data.permissionScopes ) {
+                add_provider_modal.find('textarea[name=permissionScopes]').val(data.permissionScopes.join(','));
+            }
         }
 
         add_provider_modal.find('input[name=providerAction]').val(type);
