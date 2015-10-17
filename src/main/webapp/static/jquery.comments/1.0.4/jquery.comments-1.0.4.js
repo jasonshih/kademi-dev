@@ -14,9 +14,11 @@
      * @property {Function} renderCommentFn The callback function to render the markup for a comment. Takes the following arguments commentData, config, container
      * @property {Function} clearContainerFn The callback function to clear the comments container. Takes no arguments
      * @property {Function} ajaxLoadingFn The callback function to show ajax loading. Takes one argument isLoading (true/false)
-     * @property {Number} [commentsPerPage=10] The number of comments will be showed per page
-     * @property {Function} paginateFn The callback function to render the markeup for pagination
+     * @property {Number} [itemsPerPage=10] The number of comments will be showed per page
+     * @property {Function} paginateFn The callback function to render the markup for pagination
      * @property {Boolean} [aggregated=false] If true will list all comments under the given page
+     * @property {Function} afterCommentFn The callback will be called after user write a comment
+     * @property {Function} afterReplyFn The callback will be called after user reply a comment
      */
     var DEFAULT_COMMENTS_OPTIONS = {
         pageUrl: window.location,
@@ -158,7 +160,14 @@
         paginateFn: function (comments, config, container) {
             flog('paginateFn-104-standard', comments, config, container);
 
-            var totalComments = comments.length;
+            var totalComments = 0;
+            for (var i = 0; i < comments.length; i++) {
+                var comment = comments[i];
+
+                if (!comment.parentId) {
+                    totalComments++;
+                }
+            }
             var itemsPerPage = config.itemsPerPage;
 
             if (totalComments > itemsPerPage) {
@@ -283,12 +292,16 @@ function sendNewForumComment(pageUrl, commentInput, renderComment, currentUser, 
     }
     url += '_comments';
 
+    var data = {
+        newComment: comment
+    };
+
     ajaxLoadingOn();
 
     $.ajax({
         type: 'POST',
         url: url,
-        data: {newComment: comment},
+        data: data,
         dataType: 'json',
         success: function (resp) {
             ajaxLoadingOff();
@@ -372,15 +385,17 @@ function sendCommentReply(pageUrl, commentInput, parentId, renderComment, curren
     }
     url += '_comments';
 
+    var data = {
+        newComment: comment,
+        parentComment: parentId
+    };
+
     ajaxLoadingOn();
 
     $.ajax({
         type: 'POST',
         url: url,
-        data: {
-            newComment: comment,
-            parentComment: parentId
-        },
+        data: data,
         dataType: 'json',
         success: function (resp) {
             ajaxLoadingOff();
