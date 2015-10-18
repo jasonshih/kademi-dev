@@ -171,7 +171,7 @@
                 addProviderModal.find('input[name=profileLocation]').val(template.profileLocation);
                 addProviderModal.find('input[name=redirectURI]').val(template.redirectURI);
                 if( template.permissionScopes ) {
-                    addProviderModal.find('input[name=permissionScopes]').val(template.permissionScopes.join(','));
+                    addProviderModal.find('textarea[name=permissionScopes]').val(template.permissionScopes.join(','));
                 }
                 addProviderModal.find('input[name=displayNamePath]').val(template.displayNamePath);
 
