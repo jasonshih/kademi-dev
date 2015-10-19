@@ -17,6 +17,15 @@ h3 {
     top: -4px;
 }
 
+#editor-menu {
+    float: right;
+}
+
+.btn-toolbar-toggle {
+    position: relative;
+    top: -8px;
+}
+
 .revision-switcher-wrapper {
     width: 220px;
 }
@@ -26,7 +35,7 @@ h3 {
 }
 
 .font-size-switcher-wrapper {
-    width: 140px;
+    width: 145px;
 }
 
 .theme-switcher-wrapper {
@@ -53,4 +62,41 @@ h3 {
     top: 60px;
     height: auto !important;
     z-index: 1;
+}
+
+@media (min-width: 992px) {
+    #editor-menu {
+        display: block !important;
+    }
+}
+
+@media (max-width: 991px) {
+    #editor-menu {
+        position: absolute;
+        top: 59px;
+        left: 0;
+        right: 0;
+        background: #fff;
+        padding: 10px 5px;
+        border-top: 1px solid #f0f0f0;
+        border-bottom: 1px solid #ccc;
+        margin-left: 0 !important;
+    }
+
+    .shortcut-switcher-wrapper,
+    .font-size-switcher-wrapper,
+    .theme-switcher-wrapper,
+    .file-type-wrapper {
+        width: auto;
+        margin-top: 10px;
+        margin-left: 0 !important;;
+    }
+
+    .shortcut-switcher-wrapper .input-group-addon,
+    .font-size-switcher-wrapper .input-group-addon,
+    .theme-switcher-wrapper .input-group-addon,
+    .file-type-wrapper .input-group-addon {
+        min-width: 100px;
+        text-align: left;
+    }
 }

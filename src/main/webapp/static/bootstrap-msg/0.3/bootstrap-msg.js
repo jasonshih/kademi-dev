@@ -42,7 +42,7 @@
 				msg = $(
 					'<div id="msg">' +
 						'<a href="#" data-dismiss="msg" class="close">&times;</a>' +
-						'<i></i> ' +
+						'<i id="msg-icon"></i> ' +
 						'<span></span>' +
 					'</div>'
 				);
@@ -79,7 +79,7 @@
 			timer = null;
 
 			msg.find('span').html(message);
-			msg.find('i').attr('class', iconClass);
+			msg.find('i#msg-icon').attr('class', iconClass);
 			if (dontHaveMsg) {
 				setTimeout(function () {
 					msg.attr('class', 'alert alert-' + type + ' showed');

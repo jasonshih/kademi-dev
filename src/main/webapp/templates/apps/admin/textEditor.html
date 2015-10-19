@@ -15,13 +15,39 @@
 
         <div id="editor-wrapper">
             <div class="clearfix editor-toolbar">
-                <div class="btn-toolbar pull-right" role="toolbar">
+                <a class="btn btn-lg btn-default visible-sm visible-xs pull-right btn-toolbar-toggle" data-toggle="collapse" href="#editor-menu"><i class="fa fa-bars"></i></a>
+                <div class="btn-toolbar collapse" role="toolbar" id="editor-menu">
                     <i class="fa fa-spinner fa-spin fa-3x fa-fw" id="editor-loading"></i>
-                    <div class="btn-group btn-group-sm">
+                    <div class="btn-group btn-group-sm hidden-sm hidden-xs">
                         <a class="btn btn-default btn-save-file" href="$fname" title="Save file"><i class="fa fa-save"></i></a>
-                        <a class="btn btn-default btn-restore-file hide" href="#" title="We found the different version of this file in your local storage. Please click this button for restore"><i class="fa fa-undo"></i></a>
+                        <a class="btn btn-default btn-restore-file hide" href="#" title="We found the different version of this file in your local storage. Please click this button for restoring"><i class="fa fa-undo"></i></a>
                         <a class="btn btn-default" href="./#files-tab" title="Back to parent folder"><i class="fa fa-reply"></i></a>
                     </div>
+                    <div class="btn-group btn-group-sm hidden-sm hidden-xs">
+                        <a class="btn btn-default btn-word-wrap" title="Word wrap"><i class="fa fa-align-justify"></i></a>
+                        <a class="btn btn-default btn-fullscreen" href="#" title="Enter fullscreen mode"><i class="clip-fullscreen"></i></a>
+                    </div>
+
+                    <div class="visible-sm visible-xs">
+                        <div class="btn-group btn-group-justified">
+                            <div class="btn-group">
+                                <a class="btn btn-default btn-save-file" href="$fname" title="Save file"><i class="fa fa-save"></i></a>
+                            </div>
+                            <div class="btn-group btn-restore-file-wrapper hide">
+                                <a class="btn btn-default btn-restore-file" href="#"><i class="fa fa-undo"></i></a>
+                            </div>
+                            <div class="btn-group">
+                                <a class="btn btn-default" href="./#files-tab" title="Back to parent folder"><i class="fa fa-reply"></i></a>
+                            </div>
+                            <div class="btn-group">
+                                <a class="btn btn-default btn-word-wrap" title="Word wrap"><i class="fa fa-align-justify"></i></a>
+                            </div>
+                            <div class="btn-group">
+                                <a class="btn btn-default btn-fullscreen" href="#" title="Enter fullscreen mode"><i class="clip-fullscreen"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="input-group input-group-sm file-type-wrapper">
                         <span class="input-group-addon">File type</span>
                         <select class="form-control" id="file-type">
@@ -151,11 +177,6 @@
                             <option value="ace/mode/django">django</option>
                         </select>
                     </div>
-                    <!--<div class="input-group input-group-sm revision-switcher-wrapper">-->
-                        <!--<span class="input-group-addon">Revision</span>-->
-                        <!--<select class="form-control" id="revision-switcher">-->
-                        <!--</select>-->
-                    <!--</div>-->
                     <div class="input-group input-group-sm theme-switcher-wrapper">
                         <span class="input-group-addon">Theme</span>
                         <select class="form-control" id="theme-switcher">
@@ -222,10 +243,6 @@
                             <option value="20px">20px</option>
                             <option value="24px">24px</option>
                         </select>
-                    </div>
-                    <div class="btn-group btn-group-sm">
-                        <a class="btn btn-default btn-word-wrap" title="Word wrap"><i class="fa fa-align-justify"></i></a>
-                        <a class="btn btn-default btn-fullscreen" href="#" title="Enter fullscreen mode"><i class="clip-fullscreen"></i></a>
                     </div>
                 </div>
                 <h3 class="pull-left">$fname</h3>

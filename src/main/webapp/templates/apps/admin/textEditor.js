@@ -39,7 +39,11 @@ function initTextEditor(fileName) {
     var setFontSize = function (fontSize) {
         storeSetting('text-editor-fontsize', fontSize);
         editor.container.style.fontSize = fontSize;
-        editor.updateFontSize();
+        try {
+            editor.updateFontSize();
+        } catch (e) {
+            flog('Error when setting font-size', e);
+        }
     };
     var setShortcut = function (shortcut) {
         storeSetting('text-editor-shortcut', shortcut);
@@ -162,20 +166,27 @@ function getStorageName() {
 function initLocalStorage(editor) {
     var storageName = getStorageName();
     var btnRestore = $('.btn-restore-file');
+    var btnRestoreWrapper = $('.btn-restore-file-wrapper');
     var localCode = localStorage.getItem(storageName);
     var currentCode = editor.getValue();
 
     if (localCode && localCode !== currentCode) {
         btnRestore.removeClass('hide');
-        btnRestore.tooltip({
-            placement: 'bottom',
-            trigger: 'manual',
-            container: 'body'
-        }).tooltip('show');
+        btnRestoreWrapper.removeClass('hide');
 
-        setTimeout(function () {
-            btnRestore.tooltip('hide');
-        }, 10 * 1000);
+        if ($(window).width() >= 992) {
+            btnRestore.filter('.desktop').tooltip({
+                placement: 'bottom',
+                trigger: 'manual',
+                container: 'body'
+            }).tooltip('show');
+
+            setTimeout(function () {
+                btnRestore.tooltip('hide');
+            }, 10 * 1000);
+        } else {
+            Msg.info('We found the different version of this file in your local storage. Please click restore button (<i class="fa fa-undo"></i>) for restoring', 5 * 1000);
+        }
     }
 
     btnRestore.on('click', function (e) {
