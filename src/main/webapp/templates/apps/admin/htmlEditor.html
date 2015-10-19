@@ -36,20 +36,8 @@
         <script type="text/javascript">
             var useHash = "$!useHash";
             $(function () {
-                themeCssFiles.push('/static/editor/editor.css'); // just to format the editor itself a little
-                themeCssFiles.push('/static/prettify/prettify.css');
-
-                $("link[rel=editor-stylesheet]").each(function (i, n) {
-                    var cssPath = $(n).attr("href");
-                    themeCssFiles.push(cssPath);
-                    $(n).remove();
-                });
                 initHtmlEditorPage('$fname');
             });
-
-            window.onbeforeunload = function (e) {
-                e.returnValue = "Are you sure you would like to leave the editor? You will lose any unsaved changes";
-            }
         </script>
     </body>
 </html>

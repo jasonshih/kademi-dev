@@ -17,7 +17,15 @@ function initTextEditor(fileName) {
     var initShortcut = $.cookie('text-editor-shortcut') || DEFAULT_SHORTCUT;
     var initWordWrap = $.cookie('text-editor-wordwrap') || DEFAULT_WORD_WRAP;
 
+    var body = $(document.body);
+
     var editor = ace.edit('editor');
+    editor.on('input', function () {
+        if (!body.hasClass('content-changed')) {
+            body.addClass('content-changed')
+        }
+    });
+
     var storeSetting = function (key, value) {
         $.cookie(key, value, {
             path: '/',
@@ -139,6 +147,12 @@ function initTextEditor(fileName) {
     initLocalStorage(editor);
     initFullScreenMode();
     hideLoadingIcon();
+
+    window.onbeforeunload = function (e) {
+        if (body.hasClass('content-changed')) {
+            e.returnValue = "Are you sure you would like to leave the editor? You will lose any unsaved changes";
+        }
+    }
 }
 
 function getStorageName() {

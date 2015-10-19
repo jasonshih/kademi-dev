@@ -223,7 +223,8 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
                 attributes: {
                     'class': 'lessSpace'
                 }
-            }
+            },
+            minimumChangeMilliseconds: 100
         };
 
         if (height) {
