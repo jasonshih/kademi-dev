@@ -1,0 +1,89 @@
+.col-row {
+    position: relative;
+}
+
+.col-row > div {
+    float: left;
+    padding: 5px 10px;;
+    border-top: 1px solid #ddd;
+}
+
+.col-row:before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 65px;
+    bottom: 0;
+    width: 1px;
+    background: #ddd;
+}
+
+.col-row:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.col-row.row-header > div {
+    color: #707070;
+    direction: ltr;
+    font-family: 'Open+Sans', sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    height: 100%;
+    border-top: 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.col-row .col-lvl {
+    width: 65px;
+    padding: 5px;
+}
+
+.col-row .col-user {
+    width: 100px;
+}
+
+.col-row .col-msg {
+    width: calc(100% - 65px - 100px - 160px);
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    word-break: break-all;
+}
+
+.col-row .col-date {
+    width: 160px;
+}
+
+.col-row .causes {
+    width: 100%;
+}
+
+#logsBody {
+    overflow-y: scroll;
+    min-height: 300px;
+}
+
+#logsBody.info-only .col-row,
+#logsBody.danger-only .col-row,
+#logsBody.warning-only .col-row,
+#logsBody.default-only .col-row {
+    display: none;
+}
+
+
+#logsBody.info-only .col-row.info {
+    display: block;
+}
+
+#logsBody.danger-only .col-row.danger {
+    display: block;
+}
+
+#logsBody.warning-only .col-row.warning {
+    display: block;
+}
+
+#logsBody.default-only .col-row.default {
+    display: block;
+}
+

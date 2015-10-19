@@ -1,289 +1,93 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>$view.title</title>
-        <style>
-            .filter-msg, .filter-user {
-                display:none;
-            }
-
-            .col-row > div{
-                border-top: 1px solid #ddd;
-                border-right: 1px solid #ddd;
-                position: relative;
-                min-height: 1px;
-                float: left;
-                padding: 5px;
-                border-collapse: collapse;
-                border-spacing: 0;
-                box-sizing: border-box;
-            }
-            .col-row:nth-child(even){
-                background-color: #f9f9f9;
-            }
-            .row-header > div{
-                color: #707070;
-                border: 1px solid #ddd;
-                direction: ltr;
-                font-family: 'Open+Sans', sans-serif;
-                font-size: 13px;
-                font-weight: bold;
-            }
-            .col-row .col-lvl{
-                width:5%;
-            }
-            .col-row .col-user{
-                width:5%;
-            }
-            .col-row .col-msg{
-                width:75%;
-            }
-            .col-row .col-date{
-                width:15%;
-            }
-
-            .col-row .causes{
-                width:100%;
-            }
-        </style>
+        <link type="text/css" rel="stylesheet" href="viewLogs.css" />
     </head>
     <body class="manageApplications appsContainer">
         <article class="panel panel-default">
             <div class="panel-heading">
+                <i class="clip-file-2"></i>
                 <h3 class="panel-title">Logs</h3>
             </div>
             <div class="panel-body">
-                <div class="clearfix form-horizontal">                   
-                    <div class="input-group search-user input-group-sm col-md-5 col-sm-6">
-                        <input type="text" id="user-query" class="form-control user-query" placeholder="Filter by User" value="" /> 
-                        <span class="input-group-btn">
-                            <button class="btn btn-sm btn-default" type="button" data-type="clearer" data-target="#user-query">
-                                <i class="fa fa-times"></i>
-                            </button>
-                        </span>
-
-                        <input type="text" id="message-query" class="form-control message-query" placeholder="Filter message" value="" /> 
-                        <span class="input-group-btn">
-                            <button class="btn btn-sm btn-default" type="button" data-type="clearer" data-target="#message-query">
-                                <i class="fa fa-times"></i>
-                            </button>
-                        </span>
+                <div class="row">
+                    <div class="col-md-3 col-lg-2 col-xl-2">
+                        <div class="input-group search-user input-group-sm">
+                            <span class="input-group-addon">Level:</span>
+                            <select class="form-control" id="level-filter">
+                                <option value="">All levels</option>
+                                <option value="info-only">Info</option>
+                                <option value="danger-only">Error</option>
+                                <option value="warning-only">Warn</option>
+                                <option value="default-only">Trace</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3 col-xl-3">
+                        <div class="input-group search-user input-group-sm">
+                            <input type="text" id="user-query" class="form-control user-query" placeholder="Filter by User" value="" />
+                            <span class="input-group-btn">
+                                <button class="btn btn-sm btn-default" type="button" data-type="clearer" data-target="#user-query">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3 col-xl-3">
+                        <div class="input-group search-user input-group-sm">
+                            <input type="text" id="message-query" class="form-control message-query" placeholder="Filter message" value="" />
+                            <span class="input-group-btn">
+                                <button class="btn btn-sm btn-default" type="button" data-type="clearer" data-target="#message-query">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </span>
+                        </div>
                     </div>
                 </div>
-                <br/>
-                <div class="panel panel-default">
-                    <!-- Default panel contents -->
-                    <div class="container-fluid">
-                        <div class="row col-row row-header">
-                            <div class="col-lvl">Level</div>
-                            <div class="col-user">User</div>
-                            <div class="col-msg">Message</div>
-                            <div class="col-date">Date</div>
-                        </div>
-                        <div id="logsBody">
-                            #foreach($event in $page.recent)
+                <br />
+                <div class="panel panel-default" style="margin: 0">
+                    <div class="col-row row-header clearfix" style="overflow-y: scroll;">
+                        <div class="col-lvl">Level</div>
+                        <div class="col-user">User</div>
+                        <div class="col-msg">Message</div>
+                        <div class="col-date">Date</div>
+                    </div>
+                    <div id="logsBody">
+                        #foreach($event in $page.recent)
                             #set($labelType = $event.level.toLowerCase())
                             #if($labelType == "error")
-                            #set($labelType = "danger")
+                                #set($labelType = "danger")
                             #elseif($labelType == "warn")
-                            #set($labelType = "warning")
+                                #set($labelType = "warning")
                             #elseif($labelType == "trace")
-                            #set($labelType = "default")
+                                #set($labelType = "default")
                             #end
-                            <div class="info row col-row">
+                            <div class="$labelType col-row clearfix">
                                 <div class="col-lvl"><span class="label label-$labelType" >$event.level</span></div>
                                 <div class="col-user"><a target="_blank" class="userName" href="$!event.userHref">$!event.userName</a></div>
                                 <div class="col-msg">$event.message</div>
                                 <div class="col-date"><abbr title="$formatter.formatDateISO8601($event.date)" class="timeago">$event.date</abbr></div>
                             </div>
-                            #end
-                            <div class="info row col-row">
-                                <div style="width:100%;">Beginning listening...</div>
-                            </div>
+                        #end
+                        <div class="info col-row clearfix">
+                            <div style="width:100%;">Beginning listening...</div>
                         </div>
                     </div>
                     <div class="panel-footer">
                         <button class="btn btn-info logs-clear">Clear</button>
-                        <label>
-                            <input type="checkbox" class="logs-follow"/>
-                            Follow
-                        </label>
                     </div>
                 </div>
             </div>
         </article>
 
+        <script type="text/javascript" src="/theme/apps/admin/viewLogs.js"></script>
         <script type="text/javascript">
-            var orgId = "$page.organisation.id";
-            var following = false;
-            var itemsToAppend = [];
-            var appendTimer = null;
-            var maxLimit = 5000;
             $(function () {
-                $('abbr.timeago').timeago();
-                initWebsockets();
-                $(".logs-clear").click(function () {
-                    $('#logsBody').html("");
+                initViewLogs({
+                    orgId: '$page.organisation.id',
+                    maxLimit: 3000
                 });
-                $(".logs-follow").click(function () {
-                    followToggle();
-                });
-                followToggle();
-
-                $("body").on('change', '.message-query', function (e) {
-                    var val = $(this).val();
-                    flog('message-query change', val);
-                    filterTableByMsg(val);
-                });
-
-                $("body").on('change', '.user-query', function (e) {
-                    var val = $(this).val();
-                    flog('user-query change', val);
-                    filterTableByUser(val);
-                });
-
             });
-
-            function followToggle() {
-                following = $(".logs-follow").prop("checked");
-                flog("Following", following);
-            }
-
-            function initWebsockets() {
-                flog("initWebsockets", orgId);
-                var b64ContentId = Base64.encode(orgId);
-                try {
-                    var proto = "ws://";
-                    if (window.location.protocol === "https:") {
-                        proto = "wss://";
-                    }
-                    var url = window.location.host + "/comments/" + window.location.host + "/logging/" + b64ContentId;
-                    wsocket = new WebSocket(proto + url);
-                    wsocket.onmessage = function (evt) {
-                        flog('Received Logs');
-                        var c = $.parseJSON(evt.data);
-                        var filterMsg = $("#message-query").val().toLowerCase();
-                        var filterUser = $("#user-query").val().toLowerCase();
-                        for (var i = 0; i < c.length; i++) {
-                            processReceivedLog(c[i], filterMsg, filterUser);
-                        }
-                        //$("#logsBody").append(itemsBuffer);
-
-                        if (appendTimer != null) {
-                            clearTimeout(appendTimer);
-                            appendTimer = null;
-                        }
-                        appendTimer = setTimeout(appendItems, 250);
-                    };
-                    flog("done initWebsockets");
-                } catch (e) {
-                    // TODO: setup polling to load comments every minute or so
-                    flog("Websocket initialisation failed");
-                }
-            }
-
-            function appendItems() {
-                appendTimer = null;
-
-                flog("Appending with " + itemsToAppend.length + " logs");
-                $("#logsBody").append(itemsToAppend);
-                $('abbr.timeago').timeago();
-                trimTable(maxLimit);
-                if (following) {
-                    $("html, body").animate({scrollTop: $("#logsBody").height()}, 500);
-                }
-
-                while (itemsToAppend.length > 0) {
-                    itemsToAppend.pop();
-                }
-            }
-
-            function processReceivedLog(c, filterMsg, filterUser) {
-                var dt = moment(c.data);
-                var labelType = c.level.toLowerCase();
-                if ((filterMsg === "" || c.message.toLowerCase().contains(filterMsg)) && (filterUser == "" || c.userName.toLowerCase().contains(filterUser))) {
-                    if (labelType == "error") {
-                        labelType = "danger";
-                    } else if (labelType == "warn") {
-                        labelType = "warning";
-                    }
-                    else if (labelType == "trace") {
-                        labelType = "default";
-                    }
-                    var row = $('<div class="' + labelType + ' row col-row">' +
-                            '<div class="col-lvl"><span class="label label-' + labelType + '" >' + c.level + '</span></div>' +
-                            '<div class="col-user"><a target="_blank" class="userName" href="' + c.userHref + '">' + c.userName + '</a></div>' +
-                            '<div class="col-msg"> </div>' +
-                            '<div class="col-date"><abbr title="' + dt.format(moment.ISO_8601) + '" class="timeago">' + dt.format() + '</abbr></div>' +
-                            '</div>');
-                    row.find(".col-msg").text(c.message);
-
-                    itemsToAppend.push(row);
-                    if (c.callstack !== null && c.callstack.length > 0) {
-                        row = $('<div class="row col-row">' +
-                                "<div class='causes'></div>" +
-                                "</div>");
-                        var ul = $("<ul>");
-                        $.each(c.callstack, function (i, n) {
-                            var li = $("<li>");
-                            li.text(n);
-                            ul.append(li);
-
-                        });
-                        row.find(".causes").append(ul);
-                        itemsToAppend.push(row);
-                    }
-                }
-            }
-
-            function filterTableByMsg(val) {
-                var logBody = $("#logsBody");
-                if (val !== "") {
-                    logBody.find(".col-row").each(function (e) {
-                        if (!$(this).hasClass("filter-user") && $(this).find(".col-msg").length > 0) {
-                            var msg = $(this).find(".col-msg").text();
-                            msg = msg.toLowerCase();
-                            if (msg.contains(val.toLowerCase())) {
-                                $(this).removeClass("filter-msg");
-                            } else {
-                                $(this).addClass("filter-msg");
-                            }
-                        }
-                    });
-                } else {
-                    logBody.find("tr").removeClass("filter-msg");
-                }
-            }
-
-            function filterTableByUser(val) {
-                var logBody = $("#logsBody");
-                if (val !== "") {
-                    logBody.find(".col-row").each(function (e) {
-                        if (!$(this).hasClass("filter-msg") && $(this).find(".userName")) {
-                            var msg = $(this).find(".userName").text().toLowerCase();
-                            flog("User Name Found", msg);
-                            if (msg !== "" && msg.contains(val.toLowerCase())) {
-                                $(this).removeClass("filter-user")
-                            } else {
-                                $(this).addClass("filter-user");
-                            }
-                        }
-                    });
-                } else {
-                    logBody.find("tr").removeClass("filter-user");
-                }
-            }
-
-            function trimTable(limit) {
-                if (limit == null) {
-                    limit = 50;
-                }
-                var logBody = $("#logsBody");
-                var logTable = logBody.find(".col-row");
-                flog("Table Size", logTable.length, "Limit", limit)
-                if (logTable.length > limit) {
-                    logBody.find(".col-row:lt(" + (logTable.length - limit) + ")").remove()
-                }
-            }
         </script>
     </body>
 </html>
