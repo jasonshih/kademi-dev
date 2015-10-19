@@ -254,7 +254,7 @@
     };
 
     function initWebsockets(config, container) {
-        var path = getFolderPath(window.location.pathname);
+        var path = window.location.pathname;
         flog('initWebsockets', window.location.host, path);
         
         var b64ContentId = Base64.encode(path);
