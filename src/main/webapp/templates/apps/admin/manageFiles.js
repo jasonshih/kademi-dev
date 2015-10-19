@@ -10,6 +10,26 @@ function initManageFiles() {
     initUploadZip();
 }
 
+function initManagePages() {
+    initPublishingMenu('');
+    initFiles();
+    initCRUDPages();
+    initAddPageModal();
+    initCopyCutPaste();
+
+    var container = $("#filesContainer");
+
+    container.on('click', '.btn-create-folder', function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        flog("initManageFiles: add folder");
+        var parentHref = window.location.pathname;
+        showCreateFolder(parentHref, 'New folder', 'Please enter a name for the new folder', function () {
+            $("#subFoldersList").reloadFragment();
+        });
+    });
+}
+
 function initUpload() {
     Dropzone.autoDiscover = false;
     $("#modal-upload .dropzone").dropzone({
@@ -127,14 +147,14 @@ function initCRUDFiles() {
 
         $('#modal-upload').modal('show');
     });
-    
+
     container.on('click', '.btn-upload-zip', function (e) {
         e.stopPropagation();
         e.preventDefault();
 
         $('#modal-upload-zip').modal('show');
     });
-    
+
     container.on('click', '.btn-new-text-file', function (e) {
         e.stopPropagation();
         e.preventDefault();
@@ -275,6 +295,7 @@ function initAddPageModal() {
             doSavePage(form, null, false);
         });
         openFuseModal(modal);
+        flog('initAddPageModal: click done');
     });
 }
 

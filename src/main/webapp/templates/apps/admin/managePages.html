@@ -1,0 +1,299 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Manage modules</title>
+        <link href="manageFiles.css" rel="stylesheet" type="text/css" />
+        <link href="/static/history/jquery.history.css" rel="stylesheet" type="text/css" />
+        <link href="/static/js/milton-image-select.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="/theme/assets/plugins/dropzone/downloads/css/dropzone.css"/>
+        <script type="text/javascript" src="/static/history/jquery.history.js">//</script>
+        <script type="text/javascript" src="/static/js/jquery.milton-image-select.js">//</script>
+        <script type="text/javascript" src="/static/js/jquery.milton-tree.js">//</script>
+        <script type="text/javascript" src="/static/js/managePublishing.js">//</script>
+        <script type="text/javascript" src="/templates/themes/admin/prompt.js">//</script>
+        <script type="text/javascript" src="/templates/apps/admin/manageFiles.js">//</script>
+        <script type="text/javascript" src="/static/js/types.js">// </script>
+        <script type="text/javascript" src="/static/js/jquery.timeago.js">//</script>
+        <script type="text/javascript" src="/static/jquery.cutcopy/1.0.0/jquery.cutcopy-1.0.0.js">//</script>
+    </head>
+    <body class="manage-files">
+        <div class="clearfix">
+            #set($currentBranch = $page.closest("branch"))
+            <div class="btn-group publishing pull-right">
+                <a href="${currentBranch.href}commits" class="publish btn btn-sm btn-info">
+                    <i class="fa fa-clock-o"></i>
+                    History
+                </a>
+
+                #if( $currentBranch.live )
+                <a href="/repositories/$page.closest("repository").name/manageBranches" class="islive btn btn-sm btn-danger">
+                   <i class="fa fa-gear"></i>
+                    LIVE
+                </a>
+                #else
+                <a href="${currentBranch.href}publish" class="publish btn btn-sm btn-success">
+                    <i class="glyphicon glyphicon-ok-sign"></i>
+                    PUBLISH
+                </a>
+                <a href="/repositories/$page.closest("repository").name/manageBranches" class="btn btn-sm btn-primary">
+                   <i class="fa fa-gear"></i>
+                    Manage versions
+                </a>
+                #end
+
+                <a class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+                    <b>Editing version:</b>
+                    $currentBranch.name
+                    <span class="caret"></span>
+                </a>
+                <ul role="menu" class="dropdown-menu list branches">
+                    #foreach($b in $page.closest("branch").parent.children.ofType.branch)
+                    <li role="presentation" class="list-item">
+                        <aside class="list-item-controller">
+                            <a href="#" class="copy btn btn-xs btn-primary pull-right" title="Copy this to a new version"><i class="fa fa-copy"></i></a>
+                            #if( $b.live )
+
+                            #else
+                            <a href="${b.href}" class="hide-branch pull-right btn-xs btn btn-warning" title="Hide this version. Can be restored from the manage versions screen"><i class="clip-eye"></i></a>
+                            #end
+                        </aside>
+                        <a href="${b.href}" class="branch noclear">
+                            $b.name
+                        </a>
+                    </li>
+                    #end
+                </ul>
+            </div>
+
+            #if($page.closest("repository").name)
+            <div class="dropdown pull-left">
+                <a class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+                    <b>Change repository</b> $page.closest("repository").name <span class="caret"></span>
+                </a>
+                <ul role="menu" class="dropdown-menu list">
+                    #foreach($w in $page.closest("repository").parent.children)
+                    <li class="list-item"><a href="${w.href}">$w.name</a></li>
+                    #end
+                </ul>
+            </div>
+            #end
+        </div>
+
+        <hr class="clearfix"/>
+
+        <div class="tabbable" id="filesContainer">
+            <ul class="nav nav-tabs tab-bricky">
+                <li><a data-toggle="tab" href="#pages">Edit Pages</a></li>
+            </ul>
+            <div class="tab-content">
+                <!-- Start content of Pages tab -->
+                <div id="pages" class="tab-pane">
+                    <div class="btn-group pull-right">
+                        <a class="btn btn-sm btn-green btn-add-page" title="Add page"><i class="fa fa-pencil"></i> New Page</a>
+                        <a class="btn btn-sm btn-green btn-create-folder" title="Add page"><i class="fa fa-folder"></i> New Folder</a>
+                    </div>
+
+
+                    <div class="btn-group">
+                        #if( $page.is("branch") )
+                        #else
+                        <a class="btn btn-info" href="../" type="button">
+                            <i class="fa fa-folder"></i>
+                            Up to $page.parent.name
+                        </a>
+                        #end
+
+                        <div class="btn-group">
+                            <button class="btn btn-info dropdown-toggle" data-toggle="dropdown">
+                                #if( $page.is("branch") )
+                                <i class="fa fa-globe"></i>
+                                $page.name
+                                #else
+                                <i class="fa fa-folder-open"></i>
+                                $page.name
+                                #end
+                                <span class="caret"></span>
+                            </button>
+                            #if( !$folder.subFolders.isEmpty() )
+                            <ul role="menu" class="dropdown-menu" id="">
+                                #foreach($subFolder in $folder.subFolders)
+                                <li>
+                                    <a href="$subFolder.href">
+                                        <i class="fa fa-folder"></i>
+                                        $subFolder.name
+                                    </a>
+                                </li>
+                                #end
+                            </ul>
+                            #end
+                        </div>
+
+                        <div class="btn-group">
+                            <button class="btn btn-info dropdown-toggle" data-toggle="dropdown">
+                                Subfolders
+                                <span class="caret"></span>
+                            </button>
+                            <ul role="menu" class="dropdown-menu" id="subFoldersList">
+                                #foreach($subFolder in $page.subFolders)
+                                <li>
+                                    <a href="$subFolder.name">
+                                        <i class="fa fa-folder"></i>
+                                        $subFolder.name
+                                    </a>
+                                </li>
+                                #end
+                            </ul>
+                        </div>
+                    </div>
+
+                    <p class="clearfix"></p>
+
+                    <form method="POST" action="" class="">
+                        <div class="article-wrapper" id="page-list">
+
+                            #set($order = 0)
+                            #set( $pages = $page.children.ofType.html )
+                            #if( $pages.isEmpty() )
+                            <article class="page">
+                                <p>I dont have any web pages yet :(  Click the green plus button over there to create one --></p>
+                            </article>
+                            #else
+                            #foreach($page in $pages)
+                            <article class="page">
+                                <i class="clip-file-2"></i>
+                                <span class="article-name">$page.title</span>
+                                <aside class="article-action">
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="?htmleditor=${page.name}" target="_blank" class="btn btn-sm btn-info" title="Edit page"><i class="fa fa-edit"></i> Edit</a>
+                                        <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown"> <span class="caret"></span></button>
+                                        <ul class="dropdown-menu pull-right" role="menu">
+                                            <li><a href="${page.name}" class="btn-edit-page" title="Edit page"><i class="fa fa-edit"></i> Quick Edit</a></li>
+                                            <li><a href="${page.name}?goto" target="_blank" title="View page"><i class="clip-eye"></i> View</a></li>
+                                            <li class="divider"></li>
+                                            <li><a href="${page.path}" class="btn-delete-page" title="Delete page"><i class="fa fa-times"></i> Delete</a></li>
+                                        </ul>
+                                    </div>
+                                </aside>
+                            </article>
+                            #end
+                            #end
+                        </div>
+                    </form>
+                </div>
+                <!-- End content of Pages tab -->
+            </div>
+        </div>
+
+        <div id="modal-add-page" class="modal modal-lg fade modal-fuse-editor" aria-hidden="true" tabindex="-1">
+            <form method="POST" action="$page.href" class="form-horizontal">
+                <div class="modal-header">
+                    <button aria-hidden="true" data-type="modal-dismiss" class="close" type="button">&times;</button>
+                    <div style="margin-left: 15px; margin-right: 15px">
+                        <div class="form-group">
+                            <input type="text" name="title" id="title" class="form-control required" style="width: 80%" value="" placeholder="A title for the new page" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="pageName" value="" />
+                    <div class="tabbable">
+                        <ul class="nav nav-tabs nav-fileeditor nav-suppress-href">
+                            <li><a data-toggle="tab" href="#editor-content">Content</a></li>
+                            <li><a data-toggle="tab" href="#editor-info">Info</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div id="editor-content" class="tab-pane">
+                                <textarea name="body" id="body" class="htmleditor toolbar-Full"></textarea>
+                            </div>
+                            <div id="editor-info" class="tab-pane">
+                                <div class="form-group">
+                                    <label for="template" class="control-label col-md-3">Page template</label>
+                                    <div class="col-md-4">
+                                        <select name="template" id="template" class="form-control">
+                                            <option value="">None</option>
+                                            #foreach($templateEntry in $page.closest("branch").getTemplates($page).entrySet() )
+                                            <option value="$templateEntry.key">$templateEntry.value</option>
+                                            #end
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="itemType" class="control-label col-md-3">Item type</label>
+                                    <div class="col-md-4">
+                                        <input type="text" name="itemType" id="itemType" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="category" class="control-label col-md-3">Category</label>
+                                    <div class="col-md-4">
+                                        <input type="text" name="category" id="category" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="tags" class="control-label col-md-3">Tags</label>
+                                    <div class="col-md-4">
+                                        <input type="text" name="tags" id="tags" />
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-default" data-type="modal-dismiss" type="button">Close</button>
+                    <button class="btn btn-sm btn-primary btn-img btn-history-page hidden" type="button">History <img class='ajax-loader' src='/static/common/loading.gif' /></button>
+                    <button class="btn btn-sm btn-success btn-img" data-type="form-submit" type="button">Save & Close <img class='ajax-loader' src='/static/common/loading.gif' /></button>
+                </div>
+            </form>
+        </div>
+
+
+
+
+
+        <script type="text/javascript" >
+            var themePath = "${page.themePath}";
+            $(function () {
+                setRecentItem(window.location.pathname, window.location.pathname);
+                initManagePages();
+                initPjax();
+            });
+            function initPjax() {
+                var container = $("#filesContainer");
+                var files = $("#files");
+                flog("initPjax", container);
+                container.on("click", "a.pjax", function (e) {
+                    flog("click pjax");
+                    e.preventDefault();
+                    var href = $(e.target).closest("a").attr("href");
+                    var name = $(e.target).closest("a").text();
+                    flog($(e.target).closest("a"));
+                    files.reloadFragment({
+                        url: href,
+                        whenComplete: function (response, status, xhr) {
+                            flog("done", response, status, xhr);
+                            document.title = name;
+                            window.history.pushState("", href, href);
+                            var formAction = window.location.pathname + "_DAV/PUT?overwrite=true";
+                            var zipFormAction = window.location.pathname;
+                            $("#modal-upload form").attr("action", formAction);
+                            var dz = Dropzone.forElement("#uploadFileDropzone");
+                            dz.options.url = formAction;
+                            $("#modal-upload-zip form").attr("action", zipFormAction);
+                            var dz2 = Dropzone.forElement("#uploadZipDropzone");
+                            dz2.options.url = zipFormAction;
+                            setRecentItem(window.location.pathname, window.location.pathname);
+                            var dom = $(response);
+                            var pages = $("#pages");
+                            flog("update pages", pages);
+                            pages.html(dom.find("#pages > *"));
+                            initFilesLayout();
+                            initCopyCutPaste();
+                        }
+                    });
+                });
+            }
+        </script>
+    </body>
+</html>
