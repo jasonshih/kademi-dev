@@ -11,7 +11,7 @@
     </head>
     <body class="">
         #set($fname = $params.fileName)
-        #set($file = $folder.child($fname))
+        #set($file = $page.editFile )
 
         <div id="editor-wrapper">
             <div class="clearfix editor-toolbar">
@@ -245,14 +245,15 @@
                         </select>
                     </div>
                 </div>
-                <h3 class="pull-left">$fname</h3>
+                <h3 class="pull-left">$page.editFile.name</h3>
             </div>
             #set($text = "")
-            #if($file.textContent)
-                #set($text = $formatter.htmlEncode($file.textContent))
-            #else
-                #set($text = $formatter.htmlEncode($request.params.content))
+            #set($text = $page.textContent)
+            #if( $request.params.content )
+                #set($text = $request.params.content)
             #end
+            #set($text = $formatter.htmlEncode($text) )
+
             <div id="editor" class="hide">$text</div>
         </div>
 

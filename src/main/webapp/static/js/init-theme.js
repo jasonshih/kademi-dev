@@ -157,7 +157,7 @@ function getSavedFontSize() {
  * See /static/js/toolbars.js
  */
 function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
-    flog("initHtmlEditors: elements=", elements, "editorSkin", editorSkin);
+    flog("static: initHtmlEditors: elements=", elements, "editorSkin", editorSkin);
 //    if (!$('.htmleditor').ckeditor) {
 //        log("ckeditor jquery adapter is not loaded");
 //        return;
@@ -171,7 +171,7 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
     if (!removePlugins) {
         removePlugins = standardRemovePlugins;
     }
-    
+
     flog("prepare html editors", elements, "using templates:", templatesPath); // see toolbars.js for templatesPath
     elements.each(function (i, n) {
         var inp = $(n);

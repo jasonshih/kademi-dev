@@ -117,7 +117,10 @@ function initTextEditor(fileName) {
     $(document.body).on('keydown', function (e) {
         if (e.ctrlKey && e.keyCode === keymap.S) {
             e.preventDefault();
-            btnSave.trigger('click');
+            flog("Control-S");
+            //btnSave.trigger('click');
+            var href = btnSave.prop('href');
+            doSave(href, editor);
         }
     });
 
@@ -126,9 +129,24 @@ function initTextEditor(fileName) {
 
         var btn = $(this);
         var href = btn.prop('href');
-        var fileContent = editor.getValue();
+        doSave(href, editor);
+    });
 
+    initLocalStorage(editor);
+    initFullScreenMode();
+    hideLoadingIcon();
+
+    window.onbeforeunload = function (e) {
+        if (body.hasClass('content-changed')) {
+            e.returnValue = "Are you sure you would like to leave the editor? You will lose any unsaved changes";
+        }
+    }
+}
+
+function doSave(href, editor) {
         showLoadingIcon();
+
+        var fileContent = editor.getValue();
 
         $.ajax({
             url: href,
@@ -146,17 +164,6 @@ function initTextEditor(fileName) {
                 hideLoadingIcon();
             }
         })
-    });
-
-    initLocalStorage(editor);
-    initFullScreenMode();
-    hideLoadingIcon();
-
-    window.onbeforeunload = function (e) {
-        if (body.hasClass('content-changed')) {
-            e.returnValue = "Are you sure you would like to leave the editor? You will lose any unsaved changes";
-        }
-    }
 }
 
 function getStorageName() {

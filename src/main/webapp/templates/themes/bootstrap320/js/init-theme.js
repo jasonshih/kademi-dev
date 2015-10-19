@@ -62,8 +62,8 @@ function initHelp() {
  * See /static/js/toolbars.js
  */
 function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
-    flog("initHtmlEditors: height=", height, "removePlugins", removePlugins);
-    flog("initHtmlEditors: elements=", elements, "editorSkin", editorSkin);
+    flog("initHtmlEditors: bs320 height=", height, "removePlugins", removePlugins);
+    //flog("initHtmlEditors: elements=", elements, "editorSkin", editorSkin);
 //    if (!$('.htmleditor').ckeditor) {
 //        log("ckeditor jquery adapter is not loaded");
 //        return;/

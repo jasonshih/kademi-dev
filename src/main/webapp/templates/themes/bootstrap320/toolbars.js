@@ -7,6 +7,8 @@ var standardRemovePlugins = "resize,image,save,newpage,preview,tliyoutube,image2
 var templatesPath =  '/theme/editor-templates.js';
 var stylesPath = "/theme/styles.js";
 
+flog("toolbars.js using ", templatesPath, stylesPath);
+
 toolbarSets["Full"] = [
 	{ name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
 	{ name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
