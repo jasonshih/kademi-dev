@@ -24,9 +24,26 @@
             if (link.hasClass("loaded")) {
                 return;
             }
-
-
             loadNotifications($("#notificationsContainer"));
+        });
+        flog("a clicks", $(".notifications"));
+        $("#notificationsContainer").on("click", "a", function (e) {
+            flog("click");
+            e.preventDefault();
+            var link = $(e.target).closest("a");
+            var href = link.attr("href");
+            var id = link.data("notifId");
+            $.ajax({
+                type: "GET",
+                url: "/notifs?ack=" + id,
+                dataType: 'json',
+                success: function (data) {
+                    window.location = href;
+                },
+                error: function (resp) {
+                    flog('loadNotifications error', resp);
+                }
+            });
         });
     }
 
@@ -40,10 +57,13 @@
                 flog('loadNotifications response', data);
                 for (var i = 0; i < data.hits.hits.length; i++) {
                     var hit = data.hits.hits[i];
-                    flog("hit", i, hit);
-                    if (hit.fields.contentTitle && hit.fields.contentHref) {
-                        var names = hit.fields["posts.user.nickName"];
-                        var what = hit.fields.contentTitle[0];
+                    var id = hit._id;
+                    var names = hit.fields["posts.user.nickName"];
+                    var what;
+                    if (hit.fields.contentTitle) {
+                        what = hit.fields.contentTitle[0];
+                    } else {
+                        what = "no title";
                         var who;
                         if (names.length > 1) {
                             who = names[0] + " and " + (names.length - 1) + " others";
@@ -53,14 +73,15 @@
                         var message = who + " commented on " + what;
                         var li = $("<li class='notif'>");
                         var link = $("<a>");
+                        link.data("notifId", id);
                         li.append(link);
-                        link.attr("href", hit.fields.contentHref[0]);
+                        if (hit.fields.contentHref) {
+                            link.attr("href", hit.fields.contentHref[0]);
+                        }
                         link.text(message);
                         cont.append(li);
                     }
-
                 }
-
             },
             error: function (resp) {
                 flog('loadNotifications error', resp);
