@@ -1,22 +1,15 @@
-
+#set( $num = $page.find("/notifs").numNotifications )
 <a class="notifications dropdown-toggle" data-close-others="true" data-hover="dropdown" data-toggle="dropdown" href="#">
     <i class="fa fa-comment"></i>
-    <span class="badge">$page.find("/notifs").numNotifications</span>
+    <span class="badge">$num</span>
 </a>
 <ul class="dropdown-menu posts" style="width: 300px" id="notificationsContainer">
     <li>
-        <span class="dropdown-menu-title"> You have 9 messages</span>
+        <p> You have <span class="numNotifs">$num</span> messages</p>
+        <hr/>
     </li>
-    <li class="forumReply">
-        <div class="profilePic" href="/users/admin/public">
-            <img src="/_hashes/files/76d7403a63737712e3886df62a7fceb567dd7c85" alt="">
-        </div>
-        <div class="user" href="/users/admin/public">admin</div>
-        <p class="cmt">asdasd</p>
-        <abbr title="20/10/2015 8:43" class="auxText">about 5 hours ago</abbr>
-        <div>
-
-        </div>
+    <li class="notif">
+        <a href="/aa">sad ad asd asd asd asd ad ads</a>
     </li>
 </ul>
 
@@ -33,17 +26,40 @@
             }
 
 
-            loadNotifications();
+            loadNotifications($("#notificationsContainer"));
         });
     }
 
     function loadNotifications(cont) {
+        cont.find(".notif").remove();
         $.ajax({
             type: "GET",
             url: "/notifs",
             dataType: 'json',
             success: function (data) {
                 flog('loadNotifications response', data);
+                for (var i = 0; i < data.hits.hits.length; i++) {
+                    var hit = data.hits.hits[i];
+                    flog("hit", i, hit);
+                    if (hit.fields.contentTitle && hit.fields.contentHref) {
+                        var names = hit.fields["posts.user.nickName"];
+                        var what = hit.fields.contentTitle[0];
+                        var who;
+                        if (names.length > 1) {
+                            who = names[0] + " and " + (names.length - 1) + " others";
+                        } else {
+                            who = names[0];
+                        }
+                        var message = who + " commented on " + what;
+                        var li = $("<li class='notif'>");
+                        var link = $("<a>");
+                        li.append(link);
+                        link.attr("href", hit.fields.contentHref[0]);
+                        link.text(message);
+                        cont.append(li);
+                    }
+
+                }
 
             },
             error: function (resp) {
