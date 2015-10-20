@@ -52,7 +52,6 @@ $(function () {
     initPrintLink();
     initVideos();
     initContentFeatures();
-    initWsNotifications();
 });
 
 
@@ -85,11 +84,6 @@ function initContentFeatures() {
         var n = $(e.target);
         n.closest(".panel").find(".panel-collapse").collapse("toggle");
     });
-}
-
-function initWsNotifications() {
-    log('initNotifications');
-    $('.notifications').notifications();
 }
 
 /**

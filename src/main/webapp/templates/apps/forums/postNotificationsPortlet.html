@@ -16,6 +16,7 @@
 <script>
     pageInitFunctions.push(function () {
         initNotifications();
+        initWsNotifications();
     });
 
     function initNotifications() {
@@ -45,6 +46,11 @@
                 }
             });
         });
+    }
+
+    function initWsNotifications() {
+        log('initNotifications');
+        $('.notifications').notifications();
     }
 
     function loadNotifications(cont) {
