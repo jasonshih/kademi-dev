@@ -3,12 +3,12 @@
  */
 
 
-$(function() {
+$(function () {
     flog("init: bootstrap320/js/theme.js")
     // just a nice little function to get classes
-    $.fn.classes = function(f) {
+    $.fn.classes = function (f) {
         var c = [];
-        $.each(this, function(i, v) {
+        $.each(this, function (i, v) {
             var _ = v.className.split(/\s+/);
             for (var j in _)
                 '' === _[j] || c.push(_[j]);
@@ -21,7 +21,7 @@ $(function() {
     };
 
     // Stop the login form from disappearing
-    $('.banner .dropdown-menu input, .banner .dropdown-menu label, .banner .login button').click(function(e) {
+    $('.banner .dropdown-menu input, .banner .dropdown-menu label, .banner .login button').click(function (e) {
         e.stopPropagation();
     });
     // init the login form
@@ -33,13 +33,13 @@ $(function() {
     jQuery('textarea.autoresize').autogrow();
 
     flog("initTheme: run page init functions", pageInitFunctions.length);
-    $.each(pageInitFunctions, function(i, f) {
+    $.each(pageInitFunctions, function (i, f) {
         log("run function" + i);
         pageInitFunctions[i]();
         log("done run function", i);
 
     });
-    $("table.table-tappy tbody td").click(function(e) {
+    $("table.table-tappy tbody td").click(function (e) {
         var target = $(e.target);
         if (target.is("a")) {
             return;
@@ -52,38 +52,44 @@ $(function() {
     initPrintLink();
     initVideos();
     initContentFeatures();
+    initWsNotifications();
 });
 
 
 function initContentFeatures() {
     flog("initContentFeatures");
     // Add or remove collapsed class to panels, so we can use that to switch the glyphicon symbol
-    $(document).on("shown.bs.collapse", function(e) {
-        var n = $(e.target);                
-        n.closest(".panel.dropdown-btn")
-            .removeClass("collapsed")
-            .find(".glyphicon").removeClass("glyphicon-chevron-right").addClass("glyphicon-chevron-down");
-    });
-    $(document).on("hidden.bs.collapse", function(e) {
+    $(document).on("shown.bs.collapse", function (e) {
         var n = $(e.target);
-        
         n.closest(".panel.dropdown-btn")
-            .addClass("collapsed")
-            .find(".glyphicon").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-right");
+                .removeClass("collapsed")
+                .find(".glyphicon").removeClass("glyphicon-chevron-right").addClass("glyphicon-chevron-down");
+    });
+    $(document).on("hidden.bs.collapse", function (e) {
+        var n = $(e.target);
+
+        n.closest(".panel.dropdown-btn")
+                .addClass("collapsed")
+                .find(".glyphicon").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-right");
 
     });
-    
+
     // Find any dropdown-btn and add appropriate classes and markup to allow dynamic dropdowns
     var dropdowns = $(".dropdown-btn");
     dropdowns.addClass("collapsed")
-            .find(".panel-body").wrap("<div class='panel-collapse collapse'></div>");    
+            .find(".panel-body").wrap("<div class='panel-collapse collapse'></div>");
     dropdowns.find(".panel-title").append("<span class='glyphicon glyphicon-chevron-right'></span>");
-    
+
     // dropdown-btn needs explicit collapse, because we dont want to use ID's, required for attributes usage    
-    $(document).on("click", ".dropdown-btn .panel-heading", function(e) {
+    $(document).on("click", ".dropdown-btn .panel-heading", function (e) {
         var n = $(e.target);
         n.closest(".panel").find(".panel-collapse").collapse("toggle");
     });
+}
+
+function initWsNotifications() {
+    log('initNotifications');
+    $('.notifications').notifications();
 }
 
 /**
@@ -172,7 +178,7 @@ function myPrompt(id, url, title, instructions, caption, buttonName, buttonText,
     row1.find("label").attr("for", inputId).text(caption);
     form.find(".btn-primary").text(buttonText);
 
-    form.submit(function(e) {
+    form.submit(function (e) {
         log("submit");
         e.preventDefault();
         resetValidation(form);
@@ -185,7 +191,7 @@ function myPrompt(id, url, title, instructions, caption, buttonName, buttonText,
         }
     });
 
-    modal.find("a.btn").click(function() {
+    modal.find("a.btn").click(function () {
         closeModals();
     });
 
