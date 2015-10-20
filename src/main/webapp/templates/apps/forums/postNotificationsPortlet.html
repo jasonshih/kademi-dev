@@ -26,9 +26,9 @@
     });
 
     function initNotifications() {
-        $(".notifications").click(function(e) {
+        $(".notifications").click(function (e) {
             var link = $(e.target).closest("a");
-            if(link.hasClass("loaded")) {
+            if (link.hasClass("loaded")) {
                 return;
             }
 
@@ -38,6 +38,17 @@
     }
 
     function loadNotifications(cont) {
+        $.ajax({
+            type: "GET",
+            url: "/notifs",
+            dataType: 'json',
+            success: function (data) {
+                flog('loadNotifications response', data);
 
+            },
+            error: function (resp) {
+                flog('loadNotifications error', resp);
+            }
+        });
     }
 </script>
