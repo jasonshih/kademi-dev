@@ -1,3 +1,4 @@
+#if($user)
 #set( $num = $page.find("/notifs").numNotifications )
 <a class="notifications dropdown-toggle" data-close-others="true" data-hover="dropdown" data-toggle="dropdown" href="#">
     <i class="fa fa-comment"></i>
@@ -95,3 +96,4 @@
         });
     }
 </script>
+#end
