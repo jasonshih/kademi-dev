@@ -24,11 +24,11 @@ function initProductVariants() {
     var modal = $("#modal-product-option");
     modal.find("form").forms({
         callback: function(resp, form) {
-            flog("done", resp, form);            
+            flog("done", resp, form);
             if( resp.status ) {
                 Msg.info("Saved");
                 modal.modal("hide");
-                $("#product-variants-body").reloadFragment();
+                $("#variantsList").reloadFragment();
             } else {
                 Msg.error("An error occured saving the option");
             }
@@ -43,7 +43,8 @@ function initProductVariants() {
         modal.find("input[name=name]").val("");
         modal.find("input[name=title]").val("");
         modal.find("input[name=cost]").val("");
-        
+        flog("add variant for", ppId, modal.find("input[name=productParameterId]"));
+
         modal.modal("show");
     });
     $("#variants").on("click", ".btn-edit-variant", function(e) {
@@ -58,7 +59,7 @@ function initProductVariants() {
         modal.find("input[name=title]").val( tr.find(".variant-title").text() );
         modal.find("input[name=cost]").val( tr.find(".variant-cost").text() );
         modal.modal("show");
-    });    
+    });
 }
 
 function initProductImages() {
