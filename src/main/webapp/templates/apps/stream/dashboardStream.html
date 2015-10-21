@@ -24,7 +24,7 @@
 
     <script src="/static/handlebars/3.0.3/handlebars-v3.0.3.js"></script>
     <script src="/theme/apps/stream/jquery.stream.js"></script>
-    <div id="entry-template" class="hide">
+    <script id="entry-template" type="text/html">
         <ol class="discussion">
             {{#each hits.hits}}
             <li class="other">
@@ -44,8 +44,7 @@
 
                     <p>
                         <span class="label label-{{lowerCase fields.category}}">
-                            <span class="time timeago"
-                                  title="{{dateFromLong fields.eventDate}}">{{fields.eventDate}}</span>
+                            <span class="time timeago" title="{{dateFromLong fields.eventDate}}">{{fields.eventDate}}</span>
                         </span>
                     </p>
                 </div>
@@ -53,7 +52,7 @@
 
             {{/each}}
         </ol>
-    </div>
+    </script>
     <script>
         $(function () {
             $("#streamBody").stream();
