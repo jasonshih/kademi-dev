@@ -553,9 +553,162 @@ function initAjaxStatus() {
     });
 }
 
+function initTopNavSearch() {
+    flog('initTopNavSearch');
+
+    var txt = $('#fuse-search-input');
+    var suggestionsWrapper = $('#fuse-search-suggestions');
+    var backdrop = $('<div />', {
+        id: 'fuse-search-backdrop',
+        class: 'hide'
+    }).on('click', function () {
+        backdrop.addClass('hide');
+        suggestionsWrapper.addClass('hide');
+    }).appendTo(document.body);
+
+    txt.on({
+        input: function () {
+            typewatch(function () {
+                var text = txt.val().trim();
+
+                if (text.length > 0) {
+                    doTopNavSearch(text, suggestionsWrapper, backdrop);
+                } else {
+                    suggestionsWrapper.addClass('hide');
+                    backdrop.addClass('hide');
+                }
+            }, 500);
+        },
+        keydown: function (e) {
+            switch (e.keyCode) {
+                case keymap.ESC:
+                    flog('Pressed ESC button');
+
+                    suggestionsWrapper.addClass('hide');
+                    backdrop.addClass('hide');
+
+                    e.preventDefault();
+                    break;
+
+                case keymap.UP:
+                    flog('Pressed UP button');
+
+                    var suggestions = suggestionsWrapper.find('.suggestion');
+                    if (suggestions.length > 0) {
+                        var actived = suggestions.filter('.active');
+                        var prev = actived.prev();
+
+                        actived.removeClass('active');
+                        if (prev.length > 0) {
+                            prev.addClass('active');
+                        } else {
+                            suggestions.last().addClass('active');
+                        }
+                    }
+
+                    e.preventDefault();
+                    break;
+
+                case keymap.DOWN:
+                    flog('Pressed DOWN button');
+
+                    var suggestions = suggestionsWrapper.find('.suggestion');
+                    if (suggestions.length > 0) {
+                        var actived = suggestions.filter('.active');
+                        var next = actived.next();
+
+                        actived.removeClass('active');
+                        if (next.length > 0) {
+                            next.addClass('active');
+                        } else {
+                            suggestions.first().addClass('active');
+                        }
+                    }
+
+                    e.preventDefault();
+                    break;
+
+                case keymap.ENTER:
+                    flog('Pressed DOWN button');
+
+                    var actived = suggestionsWrapper.find('.suggestion').filter('.active');
+                    if (actived.length > 0) {
+                        var link = actived.find('a').attr('href');
+
+                        window.location.href = link;
+                    }
+
+                    e.preventDefault();
+                    break;
+
+                default:
+                    // Nothing
+            }
+        }
+    });
+
+    suggestionsWrapper.on({
+        mouseenter: function () {
+            suggestionsWrapper.find('.suggestion').removeClass('active');
+            $(this).addClass('active');
+        },
+        mouseleave: function () {
+            $(this).removeClass('active');
+        }
+    }, '.suggestion');
+}
+
+function doTopNavSearch(query, suggestionsWrapper, backdrop) {
+    flog('doTopNavSearch', query, suggestionsWrapper, backdrop);
+
+    $.ajax({
+        url: '/manageUsers',
+        type: 'POST',
+        data: {
+            q: query
+        },
+        dataType: 'JSON',
+        success: function (resp) {
+            flog('Got search response from server', resp);
+
+            var suggestionStr = '';
+
+            if (resp && resp.hits && resp.hits.total > 0) {
+                for (var i = 0; i < resp.hits.hits.length; i++) {
+                    var suggestion = resp.hits.hits[i];
+                    var userId = suggestion.fields.userId[0];
+                    var userName = suggestion.fields.userName[0];
+                    var email = suggestion.fields.email[0];
+                    var firstName = suggestion.fields.firstName ? suggestion.fields.firstName[0] : '';
+                    var surName = suggestion.fields.surName ? suggestion.fields.surName[0] : '';
+
+                    suggestionStr += '<li class="suggestion">';
+                    suggestionStr += '    <a href="/manageUsers/' + userId + '">';
+                    suggestionStr += '        <span>' + userName + '</span> &ndash; <span class="email">' + email + '</span>';
+                    if (firstName || surName) {
+                        suggestionStr += '    <br /><small class="text-muted">' + firstName + ' ' + surName + '</small>';
+                    }
+                    suggestionStr += '    </a>';
+                    suggestionStr += '</li>';
+                }
+            } else {
+                suggestionStr = '<li>No result.</li>';
+            }
+
+            suggestionsWrapper.html(suggestionStr).removeClass('hide');
+            backdrop.removeClass('hide');
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            flog('Error when doTopNavSearch with query: ' + query, jqXHR, textStatus, errorThrown);
+        }
+    });
+}
+
 $(function () {
     flog("Fuse init");
+
     initLoadingOverlay();
+    initTopNavSearch();
     initSwitch();
     initToggled();
     initDatePicker();

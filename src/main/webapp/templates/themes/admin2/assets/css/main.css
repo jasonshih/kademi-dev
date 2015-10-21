@@ -1226,7 +1226,7 @@ li.dropdown.current-user .dropdown-menu li a {
 /*	Main Container and main content elements
 /* ---------------------------------------------------------------------- */
 .main-container {
-    margin-top: 48px;
+    margin-top: 50px;
 }
 .header-default .main-container {
     margin-top: 0 !important;

@@ -90,6 +90,7 @@
         <script type="text/javascript" src="/static/bootstrap-msg/0.3/bootstrap-msg.min.js">//</script>
         <script type="text/javascript" src="/static/js/morris.js" bottom="true">//</script>
         <script type="text/javascript" src="/static/js/sugar-1.4.1.min.js" bottom="true">//</script>
+        <script type="text/javascript" src="/static/js/keymap.js" bottom="true">//</script>
         <script type="text/javascript" src="/static/js/init-theme.js" bottom="true">//</script>
         <!-- End Fuse specific scripts -->
 
@@ -154,9 +155,20 @@
                     <!-- start: TOP NAVIGATION MENU -->
                     <ul class="nav navbar-right">
                         <li class="">
-                            <div style="padding: 5px; display: none" id="mainSpinner">
+                            <div style="padding: 9px; display: none" id="mainSpinner">
                                 <i class="fa fa-spinner fa-spin" style="font-size: 32px"></i>
                             </div>
+                        </li>
+                        <li class="fuse-header-item fuse-search">
+                            <form class="navbar-form" role="search">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                                    <div class="fuse-search-wrapper">
+                                        <input type="text" class="form-control" placeholder="Search for..." id="fuse-search-input" />
+                                        <ul id="fuse-search-suggestions" class="hide"></ul>
+                                    </div>
+                                </div>
+                            </form>
                         </li>
                         <li class="dropdown fuse-header-item">
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
