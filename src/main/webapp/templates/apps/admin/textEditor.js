@@ -114,11 +114,12 @@ function initTextEditor(fileName) {
 
     var btnSave = $('.btn-save-file');
 
-    $(document.body).on('keydown', function (e) {
+    body.on('keydown', function (e) {
         if (e.ctrlKey && e.keyCode === keymap.S) {
             e.preventDefault();
-            flog("Control-S");
-            //btnSave.trigger('click');
+
+            flog('Ctrl+S');
+
             var href = btnSave.prop('href');
             doSave(href, editor);
         }
@@ -144,26 +145,28 @@ function initTextEditor(fileName) {
 }
 
 function doSave(href, editor) {
-        showLoadingIcon();
+    showLoadingIcon();
 
-        var fileContent = editor.getValue();
+    var fileContent = editor.getValue();
 
-        $.ajax({
-            url: href,
-            type: 'PUT',
-            data: fileContent,
-            success: function () {
-                Msg.success('File is saved!');
-                hideLoadingIcon();
+    $.ajax({
+        url: href,
+        type: 'PUT',
+        data: fileContent,
+        success: function () {
+            Msg.success('File is saved!');
+            hideLoadingIcon();
 
-                var storageName = getStorageName();
-                localStorage.setItem(storageName, fileContent);
-            },
-            error: function (e) {
-                Msg.error(e.status + ': ' + e.statusText);
-                hideLoadingIcon();
-            }
-        })
+            $(document.body).removeClass('content-changed');
+
+            var storageName = getStorageName();
+            localStorage.setItem(storageName, fileContent);
+        },
+        error: function (e) {
+            Msg.error(e.status + ': ' + e.statusText);
+            hideLoadingIcon();
+        }
+    });
 }
 
 function getStorageName() {
