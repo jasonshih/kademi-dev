@@ -76,12 +76,10 @@
                     <div id="general" class="tab-pane">
                         <div class="form-group">
                             <label class="control-label col-md-3 col-lg-2" for="title">Name</label>
-                            <div class="col-md-8">
+                            <div class="col-md-6">
                                 <input type="text" name="title" id="title" value="$!page.job.title" placeholder="Enter a title for the automation" class="required form-control input-lg" />
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-offset-2 col-md-2 enabledSwitchContainer">
+                            <div class="enabledSwitchContainer">
                                 $formatter.bsswitch("enabled", "enabled", $page.enabled, "true")
                             </div>
                         </div>
@@ -147,52 +145,30 @@
                                     </div>
                                 </div>
                             </div>
+                            #set($smsStats = $page.smsStats)
                             <div class="ktile-wrapper col-xl-2 col-lg-2 col-md-2">
                                 <div class="ktile ktile-lg-v">
                                     <div class="ktile-inner">
                                         <div class="ktile-body">
                                             <div class="ktile-front ktile-shadow">
                                                 <div class="row" style="height: 100%; margin: 0">
-                                                    <div class="col-xl-12 col-sm-12 bgm-pink" style="height: 60%;">
+                                                    <div class="col-xl-12 col-sm-12 bgm-blue" style="height: 60%;">
                                                         <div class="text-center ktile-content ktile-content-relative">
-                                                            <div data-percent="$stats.deliveryRatePerc" class="easy-pie emailsMainPie largePie center-block">
+                                                            <div data-percent="$smsStats.deliveryRatePerc" class="easy-pie emailsMainPie largePie center-block">
                                                                 <div class="figure">
-                                                                    #if( $stats.total )
-                                                                    $stats.total
+                                                                    #if( $smsStats.total )
+                                                                    $smsStats.total
                                                                     #else
-                                                                    N/A - $stats
+                                                                    N/A
                                                                     #end
                                                                 </div>
-                                                                <div class="pie-title">Total Emails Sent</div>
+                                                                <div class="pie-title">Total SMS's Sent</div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-sm-12" style="height: 38%">
                                                         <div class="row text-center ktile-content ktile-content-relative">
-                                                            <div class="col-sm-6" style="padding: 0 3px">
-                                                                <div data-percent="$!stats.openRatePerc" class="easy-pie emailsSubPie smallPie bluePie">
-                                                                    <div class="figure">
-                                                                        #if( $stats.openRatePerc )
-                                                                        $stats.openRatePerc
-                                                                        #else
-                                                                        N/A
-                                                                        #end
-                                                                    </div>
-                                                                    <div class="pie-title">Open rate</div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-sm-6" style="padding: 0 3px">
-                                                                <div data-percent="$!stats.convertedRatePerc" class="easy-pie emailsSubPie smallPie orangePie">
-                                                                    <div class="figure">
-                                                                        #if( $stats.convertedRatePerc )
-                                                                        $stats.convertedRatePerc
-                                                                        #else
-                                                                        N/A
-                                                                        #end
-                                                                    </div>
-                                                                    <div class="pie-title">Conversion rate</div>
-                                                                </div>
-                                                            </div>
+                                                            <h4>Total Cost: $!smsStatus.currency$smsStats.totalCost</h4>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1181,6 +1157,7 @@
 
                 initSmsField();
                 loadData();
+                initEmailStats();
 
                 $("body").on('click', '.email-item', function (e) {
                     e.preventDefault();
@@ -1382,10 +1359,54 @@
             }
 
             function loadData() {
-                initHistogram();
+                var href = "?triggerHistory";
+                $.ajax({
+                    type: "GET",
+                    url: href,
+                    dataType: 'html',
+                    success: function (resp) {
+                        var json = JSON.parse(resp);
+
+                        flog('response', json);
+                        handleData(json);
+
+                    }
+                });
             }
 
-            function initHistogram() {
+            function handleData(resp) {
+                var dateHistogram = resp.aggregations.firedAt.buckets;
+
+                initHistogram(dateHistogram);
+            }
+
+            function initEmailStats() {
+                initChart($('.emailsMainPie'), {
+                    trackColor: 'rgba(255,255,255,0.2)',
+                    scaleColor: 'rgba(255,255,255,0.5)',
+                    barColor: 'rgba(255,255,255,0.7)',
+                    lineWidth: 7,
+                    lineCap: 'butt'
+                }, 90);
+
+                initChart($('.emailsSubPie.bluePie'), {
+                    trackColor: '#eee',
+                    scaleColor: '#ccc',
+                    barColor: '#2196F3',
+                    lineWidth: 7,
+                    lineCap: 'butt'
+                }, 8);
+
+                initChart($('.emailsSubPie.orangePie'), {
+                    trackColor: '#eee',
+                    scaleColor: '#ccc',
+                    barColor: '#FFC107',
+                    lineWidth: 7,
+                    lineCap: 'butt'
+                }, 8);
+            }
+
+            function initHistogram(hits) {
                 $('#chart_histogram svg').empty();
                 nv.addGraph(function () {
                     var chart = nv.models.multiBarChart()
@@ -1402,14 +1423,31 @@
                     chart.xAxis
                             .axisLabel("Date")
                             .rotateLabels(-45)
-                            .tickFormat(d3.format(',f'));
+                            .tickFormat(function (d) {
+                                return moment(d).format("DD MMM");
+                            });
 
                     chart.yAxis
                             .axisLabel("Triggered")
                             .tickFormat(d3.format(',.1f'));
 
+                    var myData = [];
+                    var series = {
+                        values: [],
+                        key: "Triggers",
+                        color: "#7777ff",
+                        area: true
+                    };
+
+                    myData.push(series);
+                    for (var i = 0; i < hits.length; i++) {
+                        var bucket = hits[i];
+                        series.values.push(
+                                {x: bucket.key, y: bucket.doc_count});
+                    }
+
                     d3.select('#chart_histogram svg')
-                            .datum(data())
+                            .datum(myData)
                             .transition().duration(500)
                             .call(chart);
 
@@ -1461,78 +1499,6 @@
                 $(window).on('resize', function () {
                     drawChart(target, options, padding);
                 });
-            }
-
-            $(function () {
-                initChart($('.emailsMainPie'), {
-                    trackColor: 'rgba(255,255,255,0.2)',
-                    scaleColor: 'rgba(255,255,255,0.5)',
-                    barColor: 'rgba(255,255,255,0.7)',
-                    lineWidth: 7,
-                    lineCap: 'butt'
-                }, 90);
-
-                initChart($('.emailsSubPie.bluePie'), {
-                    trackColor: '#eee',
-                    scaleColor: '#ccc',
-                    barColor: '#2196F3',
-                    lineWidth: 7,
-                    lineCap: 'butt'
-                }, 8);
-
-                initChart($('.emailsSubPie.orangePie'), {
-                    trackColor: '#eee',
-                    scaleColor: '#ccc',
-                    barColor: '#FFC107',
-                    lineWidth: 7,
-                    lineCap: 'butt'
-                }, 8);
-            });
-
-            function data() {
-                return stream_layers(3, 10 + Math.random() * 100, .1).map(function (data, i) {
-                    return {
-                        key: 'Stream' + i,
-                        values: data
-                    };
-                });
-            }
-
-            /* Inspired by Lee Byron's test data generator. */
-            function stream_layers(n, m, o) {
-                if (arguments.length < 3)
-                    o = 0;
-                function bump(a) {
-                    var x = 1 / (.1 + Math.random()),
-                            y = 2 * Math.random() - .5,
-                            z = 10 / (.1 + Math.random());
-                    for (var i = 0; i < m; i++) {
-                        var w = (i / m - y) * z;
-                        a[i] += x * Math.exp(-w * w);
-                    }
-                }
-                return d3.range(n).map(function () {
-                    var a = [], i;
-                    for (i = 0; i < m; i++)
-                        a[i] = o + o * Math.random();
-                    for (i = 0; i < 5; i++)
-                        bump(a);
-                    return a.map(stream_index);
-                });
-            }
-
-            /* Another layer generator using gamma distributions. */
-            function stream_waves(n, m) {
-                return d3.range(n).map(function (i) {
-                    return d3.range(m).map(function (j) {
-                        var x = 20 * j / m - i / 3;
-                        return 2 * x * Math.exp(-.5 * x);
-                    }).map(stream_index);
-                });
-            }
-
-            function stream_index(d, i) {
-                return {x: i, y: Math.max(0, d)};
             }
         </script>
     </body>
