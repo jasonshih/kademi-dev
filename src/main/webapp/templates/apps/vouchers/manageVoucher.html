@@ -39,7 +39,7 @@
                         #foreach($customField in $page.customFields)
                         <tr>
                             <th>$customField.text</th>
-                            <td>$page.customFieldValue($customField.name)</td>
+                            <td>$!page.customFieldValue($customField.name)</td>
                         </tr>
                         #end
                     </tbody>
