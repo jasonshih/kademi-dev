@@ -151,21 +151,20 @@ var Main = function () {
     };
     //function to reduce the size of the Main Menu
     var runNavigationToggler = function () {
-        if ($.cookie('admin-sidebar') === 'collapsed') {
-            $('body').addClass('navigation-small');
-        }
+        var kademiContainer = $('#kademi-container');
 
         $('.navigation-toggler').on('click', function () {
-            if (!$('body').hasClass('navigation-small')) {
-                $('body').addClass('navigation-small');
+            if (!kademiContainer.hasClass('navigation-small')) {
+                kademiContainer.addClass('navigation-small');
                 $.cookie('admin-sidebar', 'collapsed', {
                     path: '/',
                     expires: 999
                 });
             } else {
-                $('body').removeClass('navigation-small');
+                kademiContainer.removeClass('navigation-small');
                 $.removeCookie('admin-sidebar');
             }
+
             window.dispatchEvent(new Event('resize'));
         });
     };

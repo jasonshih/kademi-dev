@@ -139,226 +139,230 @@
         </script>
     </head>
     <body>
-        <div class="navbar navbar-inverse navbar-fixed-top">
-            <!-- start: TOP NAVIGATION CONTAINER -->
-            <div class="container fuse-header">
-                <div class="navbar-header">
-                    <button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle" type="button">
-                        <span class="clip-list-2"></span>
-                    </button>
-                    <a class="navbar-brand" href="/">
-                        <img src="/static/images/login_logo_admin.png" width="" height="" alt="Kademi" />
-                    </a>
-                </div>
-                <div class="navbar-tools">
-
-                    <!-- start: TOP NAVIGATION MENU -->
-                    <ul class="nav navbar-right">
-                        <li class="">
-                            <div style="padding: 9px; display: none" id="mainSpinner">
-                                <i class="fa fa-spinner fa-spin" style="font-size: 32px"></i>
-                            </div>
-                        </li>
-                        <li class="fuse-header-item fuse-search">
-                            <form class="navbar-form" role="search">
-                                <div class="input-group">
-                                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                                    <div class="fuse-search-wrapper">
-                                        <input type="text" class="form-control" placeholder="Search for..." id="fuse-search-input" />
-                                        <ul id="fuse-search-suggestions" class="hide"></ul>
-                                    </div>
-                                </div>
-                            </form>
-                        </li>
-                        <li class="dropdown fuse-header-item">
-                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                                <span class="org_name">Logged into: $page.organisation.formattedName</span>
-                                <i class="clip-chevron-down"></i>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a href="/edit">
-                                        <i class="clip-pencil"></i>
-                                        &nbsp; Organisation details</a>
-                                </li>
-                                #foreach($org in $page.organisations)
-                                <li>
-                                    <a href="$org.href">
-                                        <i class="clip-home-2"></i>
-                                        &nbsp; $org.title</a>
-                                </li>
-                                #end
-                            </ul>
-                        </li>
-                        <!-- start: USER DROPDOWN -->
-                        <li class="dropdown current-user fuse-header-item">
-                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                                #if( $profile.photoHash )
-                                <img src="/_hashes/files/$profile.photoHash" class="circle-img" alt="">
-                                #end
-                                <span class="username">$user.thisProfile.nickName</span>
-                                <i class="clip-chevron-down"></i>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a href="/manageUsers/$profile.userId">
-                                        <i class="clip-user-2"></i>
-                                        &nbsp;My Profile
-                                    </a>
-                                </li>
-
-                                <li class="divider"></li>
-
-                                <li>
-                                    <a href="#" class="logout">
-                                        <i class="clip-exit"></i>
-                                        &nbsp;Log Out
-                                    </a>
-                                </li>
-
-                            </ul>
-                        </li>
-                        <li class="fuse-header-item">
-                            <a target="_blank" href="http://docs.kademi.co/ref/screens${templateName}" class="btn-success" style="color: white">
-                                <span class="glyphicon glyphicon-question-sign"></span>
-                                Help
-                            </a>
-                        </li>
-                        <!-- end: USER DROPDOWN -->
-                    </ul>
-                    <!-- end: TOP NAVIGATION MENU -->
-                </div>
-            </div>
-            <!-- end: TOP NAVIGATION CONTAINER -->
-        </div>
-        <!-- end: HEADER -->
-        <!-- start: MAIN CONTAINER -->
-        <div class="main-container">
-            <div class="navbar-content">
-                <!-- start: SIDEBAR -->
-                <div class="main-navigation navbar-collapse collapse">
-                    <div class="navigation-toggler">
-                        <i class="clip-chevron-left"></i>
-                        <i class="clip-chevron-right"></i>
+        <div id="kademi-container" #if ($request.getCookie("admin-sidebar").value == "collapsed") class="navigation-small" #end >
+            <div class="navbar navbar-inverse navbar-fixed-top">
+                <!-- start: TOP NAVIGATION CONTAINER -->
+                <div class="container fuse-header">
+                    <div class="navbar-header">
+                        <button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle" type="button">
+                            <span class="clip-list-2"></span>
+                        </button>
+                        <a class="navbar-brand" href="/">
+                            <img src="/static/images/login_logo_admin.png" width="" height="" alt="Kademi" />
+                        </a>
                     </div>
-                    <!-- start: MAIN NAVIGATION MENU -->
-                    <ul class="main-navigation-menu">
-                        #foreach($rootItem in $menu.items)
+                    <div class="navbar-tools">
 
-                        <li class="$formatter.ifTrue( $rootItem.active, "active open", "" )">
-                            #set($href = "#")
-                            #set($href = $rootItem.href)
-                            <a href="$href">
-                                #if($rootItem.cssClass)
-                                <i class="fuse-icon-fa $rootItem.id $rootItem.cssClass"></i>
-                                #else
-                                <i class="fuse-icon $rootItem.id"></i>
-                                #end
-                                <span class="title">$rootItem.text</span>
+                        <!-- start: TOP NAVIGATION MENU -->
+                        <ul class="nav navbar-right">
+                            <li class="">
+                                <div style="padding: 9px; display: none" id="mainSpinner">
+                                    <i class="fa fa-spinner fa-spin" style="font-size: 32px"></i>
+                                </div>
+                            </li>
+                            <li class="fuse-header-item fuse-search">
+                                <form class="navbar-form" role="search">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                                        <div class="fuse-search-wrapper">
+                                            <input type="text" class="form-control" placeholder="Search for..." id="fuse-search-input" />
+                                            <ul id="fuse-search-suggestions" class="hide"></ul>
+                                        </div>
+                                    </div>
+                                </form>
+                            </li>
+                            <li class="dropdown fuse-header-item">
+                                <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                    <span class="org_name">Logged into: $page.organisation.formattedName</span>
+                                    <i class="clip-chevron-down"></i>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="/edit">
+                                            <i class="clip-pencil"></i>
+                                            &nbsp; Organisation details</a>
+                                    </li>
+                                    #foreach($org in $page.organisations)
+                                    <li>
+                                        <a href="$org.href">
+                                            <i class="clip-home-2"></i>
+                                            &nbsp; $org.title</a>
+                                    </li>
+                                    #end
+                                </ul>
+                            </li>
+                            <!-- start: USER DROPDOWN -->
+                            <li class="dropdown current-user fuse-header-item">
+                                <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                    #if( $profile.photoHash )
+                                    <img src="/_hashes/files/$profile.photoHash" class="circle-img" alt="">
+                                    #end
+                                    <span class="username">$user.thisProfile.nickName</span>
+                                    <i class="clip-chevron-down"></i>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="/manageUsers/$profile.userId">
+                                            <i class="clip-user-2"></i>
+                                            &nbsp;My Profile
+                                        </a>
+                                    </li>
 
-                                #if( !$rootItem.items.isEmpty() )
-                                <i class="icon-arrow"></i>
-                                #end
+                                    <li class="divider"></li>
 
-                                #if( $rootItem.active )
-                                <span class="selected"></span>
-                                #end
-                            </a>
+                                    <li>
+                                        <a href="#" class="logout">
+                                            <i class="clip-exit"></i>
+                                            &nbsp;Log Out
+                                        </a>
+                                    </li>
 
-                            #set($subItems = $rootItem.items)
-                            <ul class="sub-menu">
-                                #foreach($sectionItem in $subItems)
-                                <li class="$formatter.ifTrue( $sectionItem.active, "active open", "" )">
-                                    <a href="$sectionItem.href">
-                                        #if($sectionItem.cssClass)
-                                        <i class="fuse-icon-fa $sectionItem.id $sectionItem.cssClass"></i>
-                                        #end
-                                        <span class="title">$sectionItem.text</span>
-
-                                        #if( $sectionItem.active )
-                                        <span class="selected"></span>
-                                        #end
-                                    </a>
-                                </li>
-                                #end
-                            </ul>
-                            #end
-                        </li>
-                    </ul>
-                    <!-- end: MAIN NAVIGATION MENU -->
+                                </ul>
+                            </li>
+                            <li class="fuse-header-item">
+                                <a target="_blank" href="http://docs.kademi.co/ref/screens${templateName}" class="btn-success" style="color: white">
+                                    <span class="glyphicon glyphicon-question-sign"></span>
+                                    Help
+                                </a>
+                            </li>
+                            <!-- end: USER DROPDOWN -->
+                        </ul>
+                        <!-- end: TOP NAVIGATION MENU -->
+                    </div>
                 </div>
-                <!-- end: SIDEBAR -->
+                <!-- end: TOP NAVIGATION CONTAINER -->
             </div>
-            <!-- start: PAGE -->
-            <div class="main-content">
-                <div class="container">
-                    <!-- start: PAGE HEADER -->
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <ol class="breadcrumb">
-                                #if( $page.parent.title )
-                                <li>
-                                    <a href="$page.parent.href">
-                                        $page.parent.title
-                                    </a>
-                                </li>
+            <!-- end: HEADER -->
+            <!-- start: MAIN CONTAINER -->
+            <div class="main-container">
+                <div class="navbar-content">
+                    <!-- start: SIDEBAR -->
+                    <div class="main-navigation navbar-collapse collapse">
+                        <div class="navigation-toggler">
+                            <i class="clip-chevron-left"></i>
+                            <i class="clip-chevron-right"></i>
+                        </div>
+                        <!-- start: MAIN NAVIGATION MENU -->
+                        <ul class="main-navigation-menu">
+                            #foreach($rootItem in $menu.items)
+
+                            <li class="$formatter.ifTrue( $rootItem.active, "active open", "" )">
+                                #set($href = "#")
+                                #set($href = $rootItem.href)
+                                <a href="$href">
+                                    #if($rootItem.cssClass)
+                                    <i class="fuse-icon-fa $rootItem.id $rootItem.cssClass"></i>
+                                    #else
+                                    <i class="fuse-icon $rootItem.id"></i>
+                                    #end
+                                    <span class="title">$rootItem.text</span>
+
+                                    #if( !$rootItem.items.isEmpty() )
+                                    <i class="icon-arrow"></i>
+                                    #end
+
+                                    #if( $rootItem.active )
+                                    <span class="selected"></span>
+                                    #end
+                                </a>
+
+                                #set($subItems = $rootItem.items)
+                                <ul class="sub-menu">
+                                    #foreach($sectionItem in $subItems)
+                                    <li class="$formatter.ifTrue( $sectionItem.active, "active open", "" )">
+                                        <a href="$sectionItem.href">
+                                            #if($sectionItem.cssClass)
+                                            <i class="fuse-icon-fa $sectionItem.id $sectionItem.cssClass"></i>
+                                            #end
+                                            <span class="title">$sectionItem.text</span>
+
+                                            #if( $sectionItem.active )
+                                            <span class="selected"></span>
+                                            #end
+                                        </a>
+                                    </li>
+                                    #end
+                                </ul>
                                 #end
-                                <li class="active">
-                                    <a href="$page.href">$formatter.htmlEncode($page.title)</a>
-                                </li>
-                            </ol>
+                            </li>
+                        </ul>
+                        <!-- end: MAIN NAVIGATION MENU -->
+                    </div>
+                    <!-- end: SIDEBAR -->
+                </div>
+                <!-- start: PAGE -->
+                <div class="main-content">
+                    <div class="container">
+                        <!-- start: PAGE HEADER -->
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <ol class="breadcrumb">
+                                    #if( $page.parent.title )
+                                    <li>
+                                        <a href="$page.parent.href">
+                                            $page.parent.title
+                                        </a>
+                                    </li>
+                                    #end
+                                    <li class="active">
+                                        <a href="$page.href">$formatter.htmlEncode($page.title)</a>
+                                    </li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div style="padding-top: 15px">
+                            #content
                         </div>
                     </div>
-
-                    <div style="padding-top: 15px">
-                        #content
-                    </div>
+                </div>
+            </div>
+            <div class="footer clearfix">
+                <div class="footer-items-right">
+                    <span class="go-top"><i class="clip-chevron-up"></i></span>
+                </div>
+                <div class="footer-items-left">
+                    #if( $request.hostHeader.contains(":") )
+                        <span class="btn btn-sm btn-info btn-squared"><i class="fa fa-wrench"></i> Dev mode</span>
+                    #else
+                    <!--Start of Zopim Live Chat Script-->
+                    <script type="text/javascript">
+                        var ua = navigator.userAgent.toLowerCase();
+                        var platform = navigator.platform.toLowerCase();
+                        var platformName = ua.match(/ip(?:ad|od|hone)/) ? 'ios' : (ua.match(/(?:webos|android)/) || platform.match(/mac|win|linux/) || ['other'])[0];
+                        var isMobile = /ios|android|webos/.test(platformName);
+                        if (!isMobile) {
+                            window.$zopim || (function (d, s) {
+                                var z = $zopim = function (c) {
+                                        z._.push(c)
+                                    },
+                                    $ = z.s =
+                                        d.createElement(s),
+                                    e = d.getElementsByTagName(s)[0];
+                                z.set = function (o) {
+                                    z.set.
+                                        _.push(o)
+                                };
+                                z._ = [];
+                                z.set._ = [];
+                                $.async = !0;
+                                $.setAttribute('charset', 'utf-8');
+                                $.src = '//v2.zopim.com/?2nKbRpXKUmYJXwm07KHHlZLNXFdpF9PE';
+                                z.t = +new Date;
+                                $.
+                                    type = 'text/javascript';
+                                e.parentNode.insertBefore($, e)
+                            })(document, 'script');
+                        }
+                    </script>
+                    <!--End of Zopim Live Chat Script-->
+                    #end
+                </div>
+                <div class="footer-inner">
+                    2015 &copy; Kademi Ltd
                 </div>
             </div>
         </div>
-        <div class="footer clearfix">
-            <div class="footer-inner">
-                2014 &copy; Kademi Ltd
-            </div>
-            <div class="footer-items">
-                <span class="go-top"><i class="clip-chevron-up"></i></span>
-            </div>
-        </div>
-
-
-        #if( $request.hostHeader.contains(":") )
-        <i>Dev mode</i>
-        #else
-        <!--Start of Zopim Live Chat Script-->
-        <script type="text/javascript">
-            var ua = navigator.userAgent.toLowerCase(),
-                    platform = navigator.platform.toLowerCase();
-            platformName = ua.match(/ip(?:ad|od|hone)/) ? 'ios' : (ua.match(/(?:webos|android)/) || platform.match(/mac|win|linux/) || ['other'])[0],
-                    isMobile = /ios|android|webos/.test(platformName);
-            if (!isMobile) {
-                window.$zopim || (function (d, s) {
-                    var z = $zopim = function (c) {
-                        z._.push(c)
-                    }, $ = z.s =
-                            d.createElement(s), e = d.getElementsByTagName(s)[0];
-                    z.set = function (o) {
-                        z.set.
-                                _.push(o)
-                    };
-                    z._ = [];
-                    z.set._ = [];
-                    $.async = !0;
-                    $.setAttribute('charset', 'utf-8');
-                    $.src = '//v2.zopim.com/?2nKbRpXKUmYJXwm07KHHlZLNXFdpF9PE';
-                    z.t = +new Date;
-                    $.
-                            type = 'text/javascript';
-                    e.parentNode.insertBefore($, e)
-                })(document, 'script');
-            }
-        </script>
-        <!--End of Zopim Live Chat Script-->
-        #end
     </body>
     <!-- end: BODY -->
 </html>
