@@ -1,3 +1,4 @@
+#set($editMode = false)
 #set($editMode = $formatter.ifTrue($params.editMode,true, $!page.newPage))
 
 
@@ -23,7 +24,7 @@
 </script>
 <div class="clr"></div>
 
-<div id="alreadyCompleted" class="modal fade"> 
+<div id="alreadyCompleted" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -37,22 +38,22 @@
                     Next module
                     <span class="glyphicon glyphicon-play"></span>
                 </a>
-                
+
                 <p>Would you like to continue to the next module in this course?</p>
-                #end                                
+                #end
             </div>
-            <div class="modal-footer">                
+            <div class="modal-footer">
                 <a href="../" class="btn btn-primary">View all modules in this module</a>
                 <a href="/dashboard" class="btn btn-primary">Return to your dashboard</a>
                 #foreach($cert in $page.parent.certificateFiles)
                 <a href="$cert.href" class="btn btn-success">View your certificate</a>
                 #end
-            </div>     
+            </div>
         </div>
     </div>
 </div>
 
-<div id="cannotComplete" class="modal fade"> 
+<div id="cannotComplete" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -67,18 +68,18 @@
                     Next module
                     <span class="glyphicon glyphicon-play"></span>
                 </a>
-                
+
                 <p>Would you like to continue to the next module in this course?</p>
-                #end                                
+                #end
 
             </div>
-            <div class="modal-footer">                
+            <div class="modal-footer">
                 <a href="../" class="btn btn-primary">View modules in this course</a>
                 <a href="/dashboard" class="btn btn-primary">Return to your dashboard</a>
-            </div>     
+            </div>
         </div>
     </div>
 </div>
 
 <script type="text/javascript" src="/theme/apps/learner/moduleSearch.js" >//</script>
-<script type="text/javascript" src="/theme/apps/learner/module.js">//</script>      
+<script type="text/javascript" src="/theme/apps/learner/module.js">//</script>
