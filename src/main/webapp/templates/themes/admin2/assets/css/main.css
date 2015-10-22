@@ -1373,10 +1373,17 @@ ul.main-navigation-menu > li > ul.sub-menu > li > ul.sub-menu > li > ul.sub-menu
     padding: 8px 20px 5px;
     position: relative;
 }
-.footer-inner {
+
+.footer-items-left {
     float: left;
 }
-.footer-items {
+
+.footer-inner {
+    text-align: center;
+    padding-top: 5px;
+}
+
+.footer-items-right {
     float: right;
 }
 .footer-fixed .footer {
@@ -2862,6 +2869,7 @@ body.login .copyright {
     margin: 0 auto;
     padding: 10px 10px 0;
     text-align: center;
+    text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
 }
 body.login .form-actions:before, body.login .form-actions:after {
     content: "";
