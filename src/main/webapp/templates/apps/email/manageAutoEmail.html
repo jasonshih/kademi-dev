@@ -29,13 +29,28 @@
             .email-item{
                 cursor:pointer;
             }
+
+            #chart_histogram svg {
+                height: 400px;
+            }
+
+            .ktile-inner{
+                max-height: 400px;
+            }
         </style>
         <script type="text/javascript" src="/static/js/jquery.fileupload.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
         <script type="text/javascript" src="manageAutoEmail.js">//</script>
         <script type="text/javascript" src="manageEmail.js">//</script>
+        <script src="/static/d3/d3.v3.js" type="text/javascript">//</script>
+        <link href="/static/nvd3/nv.d3.css" rel="stylesheet" type="text/css"/>
+        <script src="/static/nvd3/nv.d3.js" type="text/javascript">//</script>
+        <script type="text/javascript" src="/static/easy-pie-chart/2.1.7/jquery.easypiechart.min.js">//</script>
+        <script type="text/javascript" src="/static/ktile/1.0.0/ktile.js">//</script>
+        <link href="/static/ktile/1.0.0/ktile.css?v=6.3.1" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" href="/theme/assets/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" />
         <script src="/theme/assets/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js">//</script>
+        <link href="/templates/apps/admin/dashboard.css" rel="stylesheet" type="text/css"/>
     </head>
     <body class="manageAutoEmail">
         <form name="frmDetails" action="." method="post" class="form-horizontal">
@@ -64,20 +79,129 @@
                             <div class="col-md-8">
                                 <input type="text" name="title" id="title" value="$!page.job.title" placeholder="Enter a title for the automation" class="required form-control input-lg" />
                             </div>
-                            <div class="col-md-2 enabledSwitchContainer">
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-2 enabledSwitchContainer">
                                 $formatter.bsswitch("enabled", "enabled", $page.enabled, "true")
                             </div>
                         </div>
                         <hr/>
-                        <!--<div class="form-group">
-                            <div class="col-md-12">Histogram goes here</div>
-                        </div>
-                        <hr/>
                         <div class="form-group">
-                            <div class="col-md-2 col-md-offset-4">Data does here</div>
-                            <div class="col-md-2">Data does here</div>
+                            <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12">
+                                <div id="chart_histogram">
+                                    <svg></svg>
+                                </div>
+                            </div>
+                            #set($stats = $page.emailStats)
+                            <div class="ktile-wrapper col-xl-2 col-lg-2 col-md-4 col-sm-6">
+                                <div class="ktile ktile-lg-v">
+                                    <div class="ktile-inner">
+                                        <div class="ktile-body">
+                                            <div class="ktile-front ktile-shadow">
+                                                <div class="row" style="height: 100%; margin: 0">
+                                                    <div class="col-sm-12 bgm-pink" style="height: 60%;">
+                                                        <div class="text-center ktile-content ktile-content-relative">
+                                                            <div data-percent="$stats.deliveryRatePerc" class="easy-pie emailsMainPie largePie center-block">
+                                                                <div class="figure">
+                                                                    #if( $stats.total )
+                                                                    $stats.total
+                                                                    #else
+                                                                    N/A - $stats
+                                                                    #end
+                                                                </div>
+                                                                <div class="pie-title">Total Emails Sent</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-12" style="height: 38%">
+                                                        <div class="row text-center ktile-content ktile-content-relative">
+                                                            <div class="col-sm-6" style="padding: 0 3px">
+                                                                <div data-percent="$!stats.openRatePerc" class="easy-pie emailsSubPie smallPie bluePie">
+                                                                    <div class="figure">
+                                                                        #if( $stats.openRatePerc )
+                                                                        $stats.openRatePerc
+                                                                        #else
+                                                                        N/A
+                                                                        #end
+                                                                    </div>
+                                                                    <div class="pie-title">Open rate</div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6" style="padding: 0 3px">
+                                                                <div data-percent="$!stats.convertedRatePerc" class="easy-pie emailsSubPie smallPie orangePie">
+                                                                    <div class="figure">
+                                                                        #if( $stats.convertedRatePerc )
+                                                                        $stats.convertedRatePerc
+                                                                        #else
+                                                                        N/A
+                                                                        #end
+                                                                    </div>
+                                                                    <div class="pie-title">Conversion rate</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ktile-wrapper col-xl-2 col-lg-2 col-md-2">
+                                <div class="ktile ktile-lg-v">
+                                    <div class="ktile-inner">
+                                        <div class="ktile-body">
+                                            <div class="ktile-front ktile-shadow">
+                                                <div class="row" style="height: 100%; margin: 0">
+                                                    <div class="col-xl-12 col-sm-12 bgm-pink" style="height: 60%;">
+                                                        <div class="text-center ktile-content ktile-content-relative">
+                                                            <div data-percent="$stats.deliveryRatePerc" class="easy-pie emailsMainPie largePie center-block">
+                                                                <div class="figure">
+                                                                    #if( $stats.total )
+                                                                    $stats.total
+                                                                    #else
+                                                                    N/A - $stats
+                                                                    #end
+                                                                </div>
+                                                                <div class="pie-title">Total Emails Sent</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-12" style="height: 38%">
+                                                        <div class="row text-center ktile-content ktile-content-relative">
+                                                            <div class="col-sm-6" style="padding: 0 3px">
+                                                                <div data-percent="$!stats.openRatePerc" class="easy-pie emailsSubPie smallPie bluePie">
+                                                                    <div class="figure">
+                                                                        #if( $stats.openRatePerc )
+                                                                        $stats.openRatePerc
+                                                                        #else
+                                                                        N/A
+                                                                        #end
+                                                                    </div>
+                                                                    <div class="pie-title">Open rate</div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6" style="padding: 0 3px">
+                                                                <div data-percent="$!stats.convertedRatePerc" class="easy-pie emailsSubPie smallPie orangePie">
+                                                                    <div class="figure">
+                                                                        #if( $stats.convertedRatePerc )
+                                                                        $stats.convertedRatePerc
+                                                                        #else
+                                                                        N/A
+                                                                        #end
+                                                                    </div>
+                                                                    <div class="pie-title">Conversion rate</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        -->
                     </div>
                     <!-- End content of General tab -->
 
@@ -1056,6 +1180,7 @@
                 });
 
                 initSmsField();
+                loadData();
 
                 $("body").on('click', '.email-item', function (e) {
                     e.preventDefault();
@@ -1254,6 +1379,160 @@
                         $("#sms-char-remaining").css('color', '');
                     }
                 });
+            }
+
+            function loadData() {
+                initHistogram();
+            }
+
+            function initHistogram() {
+                $('#chart_histogram svg').empty();
+                nv.addGraph(function () {
+                    var chart = nv.models.multiBarChart()
+                            .options({
+                                showLegend: true,
+                                showControls: false,
+                                noData: "No Data available for histogram",
+                                margin: {
+                                    left: 40,
+                                    bottom: 60
+                                }
+                            });
+
+                    chart.xAxis
+                            .axisLabel("Date")
+                            .rotateLabels(-45)
+                            .tickFormat(d3.format(',f'));
+
+                    chart.yAxis
+                            .axisLabel("Triggered")
+                            .tickFormat(d3.format(',.1f'));
+
+                    d3.select('#chart_histogram svg')
+                            .datum(data())
+                            .transition().duration(500)
+                            .call(chart);
+
+                    nv.utils.windowResize(chart.update);
+
+                    return chart;
+                });
+            }
+
+            function drawChart(chart, options, padding, isFirstTime) {
+                var wrapper = chart.closest('.col-sm-6');
+                var canvas = chart.find('canvas');
+                var sizeChart = wrapper.width() - padding;
+                if (sizeChart < 0) {
+                    sizeChart = 100;
+                }
+                var currentSize = +chart.attr('data-size');
+                flog("got size", sizeChart, chart);
+
+                // Hide canvas
+                canvas.hide();
+
+                if (currentSize !== sizeChart || isFirstTime) {
+                    flog('Render new chart', sizeChart);
+
+                    // Clear data pf easyPieChart
+                    if (!isFirstTime) {
+                        chart.data('easy-pie-chart', null);
+                        chart.data('size', sizeChart);
+                    }
+
+                    // Remove the chart
+                    canvas.remove();
+
+                    // Render new chart
+                    options.size = sizeChart;
+                    flog("chart size", sizeChart);
+                    chart.easyPieChart(options);
+                } else {
+                    flog('Re-show current chart');
+                    canvas.show();
+                }
+
+            }
+
+            function initChart(target, options, padding) {
+                drawChart(target, options, padding, true);
+
+                $(window).on('resize', function () {
+                    drawChart(target, options, padding);
+                });
+            }
+
+            $(function () {
+                initChart($('.emailsMainPie'), {
+                    trackColor: 'rgba(255,255,255,0.2)',
+                    scaleColor: 'rgba(255,255,255,0.5)',
+                    barColor: 'rgba(255,255,255,0.7)',
+                    lineWidth: 7,
+                    lineCap: 'butt'
+                }, 90);
+
+                initChart($('.emailsSubPie.bluePie'), {
+                    trackColor: '#eee',
+                    scaleColor: '#ccc',
+                    barColor: '#2196F3',
+                    lineWidth: 7,
+                    lineCap: 'butt'
+                }, 8);
+
+                initChart($('.emailsSubPie.orangePie'), {
+                    trackColor: '#eee',
+                    scaleColor: '#ccc',
+                    barColor: '#FFC107',
+                    lineWidth: 7,
+                    lineCap: 'butt'
+                }, 8);
+            });
+
+            function data() {
+                return stream_layers(3, 10 + Math.random() * 100, .1).map(function (data, i) {
+                    return {
+                        key: 'Stream' + i,
+                        values: data
+                    };
+                });
+            }
+
+            /* Inspired by Lee Byron's test data generator. */
+            function stream_layers(n, m, o) {
+                if (arguments.length < 3)
+                    o = 0;
+                function bump(a) {
+                    var x = 1 / (.1 + Math.random()),
+                            y = 2 * Math.random() - .5,
+                            z = 10 / (.1 + Math.random());
+                    for (var i = 0; i < m; i++) {
+                        var w = (i / m - y) * z;
+                        a[i] += x * Math.exp(-w * w);
+                    }
+                }
+                return d3.range(n).map(function () {
+                    var a = [], i;
+                    for (i = 0; i < m; i++)
+                        a[i] = o + o * Math.random();
+                    for (i = 0; i < 5; i++)
+                        bump(a);
+                    return a.map(stream_index);
+                });
+            }
+
+            /* Another layer generator using gamma distributions. */
+            function stream_waves(n, m) {
+                return d3.range(n).map(function (i) {
+                    return d3.range(m).map(function (j) {
+                        var x = 20 * j / m - i / 3;
+                        return 2 * x * Math.exp(-.5 * x);
+                    }).map(stream_index);
+                });
+            }
+
+            function stream_index(d, i) {
+                return {x: i, y: Math.max(0, d)};
             }
         </script>
     </body>
