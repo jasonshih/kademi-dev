@@ -105,9 +105,9 @@
                         #if( $attempt.ignoredBy )
                         <span class="label label-info" title="Attempt ID $attempt.id, ${attempt.scorePerc}%">Ignored by $!attempt.ignoredBy.name</</span>
                         #elseif( $attempt.passed )
-                        <span class="label label-success" title="Attempt ID $attempt.id">Passed $attempt.scorePerc %</span>
+                        <a href="quizAttempt-${attempt.id}" class="label label-success" title="Attempt ID $attempt.id">Passed $!attempt.scorePerc %</a>
                         #else
-                        <span class="label label-warning" title="Attempt ID $attempt.id">Failed $attempt.scorePerc %</span>
+                        <a href="quizAttempt-${attempt.id}" class="label label-warning" title="Attempt ID $attempt.id">Failed $!attempt.scorePerc %</a>
                         #end
                     </td>
                 </tr>

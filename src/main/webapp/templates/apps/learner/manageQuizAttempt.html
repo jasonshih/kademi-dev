@@ -1,0 +1,45 @@
+<html>
+    <head>
+        <title>Manage Quiz Attempt</title>
+    </head>
+    <body>
+        <p class="lead">Quiz <b>$page.attempt.quizName</b> attempt by $folder.profile.formattedName</b> in module <b>$page.attempt.moduleStatus.programCode/$page.attempt.moduleStatus.courseCode/$page.attempt.moduleStatus.moduleCode</b></p>
+        <table class="table table-bordered">
+            <tr>
+                <th>Date</th>
+                <td>$page.attempt.createdDate</td>
+            </tr>
+            <tr>
+                <th>Passed?</th>
+                <td>$page.attempt.passed</td>
+            </tr>
+            <tr>
+                <th>Score</th>
+                <td>$!page.attempt.ignoredDate %</td>
+            </tr>
+        </table>
+
+        <h3>Answers</h3>
+        <table class="table table-striped table-bordered">
+            <tr>
+                <th>Question</th>
+                <th>Given answer</th>
+                <th>Actual answer</th>
+            </tr>
+            #foreach($answer in $page.attempt.quizAnswers)
+            <tr>
+                <th>
+                    $page.quizInfo.getQuestionText( $answer.answerKey )
+                </th>
+                <td>
+                    $page.quizInfo.getAnswerText($answer.answerKey, $answer.givenAnswer)
+                </td>
+                <td>
+                    $page.quizInfo.getAnswerText($answer.answerKey, $answer.actualAnswer)
+                </td>
+            </tr>
+            #end
+        </table>
+
+    </body>
+</html>
