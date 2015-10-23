@@ -45,14 +45,20 @@
         <script src="/static/d3/d3.v3.js" type="text/javascript">//</script>
         <link href="/static/nvd3/nv.d3.css" rel="stylesheet" type="text/css"/>
         <script src="/static/nvd3/nv.d3.js" type="text/javascript">//</script>
+        <script src="/theme/assets/plugins/x-editable/js/bootstrap-editable.min.js">//</script>
         <script type="text/javascript" src="/static/easy-pie-chart/2.1.7/jquery.easypiechart.min.js">//</script>
         <script type="text/javascript" src="/static/ktile/1.0.0/ktile.js">//</script>
         <link href="/static/ktile/1.0.0/ktile.css?v=6.3.1" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" href="/theme/assets/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" />
+        <link rel="stylesheet" href="/theme/assets/plugins/x-editable/css/bootstrap-editable.css" />
         <script src="/theme/assets/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js">//</script>
         <link href="/templates/apps/admin/dashboard.css" rel="stylesheet" type="text/css"/>
     </head>
     <body class="manageAutoEmail">
+        <h5>
+            <label class="control-label" for="title">Title:</label>
+            <a href="#" id="emailTitle" data-type="text" data-pk="1" data-placement="right" data-placeholder="Title" data-original-title="Enter a title">$!page.job.title</a>
+        </h5>
         <form name="frmDetails" action="." method="post" class="form-horizontal">
             <div class="pull-right page-action">
                 <div class="row">
@@ -83,15 +89,11 @@
                 <div class="tab-content">
                     <!-- Start content of General tab -->
                     <div id="general" class="tab-pane">
-                        <div class="form-group">
-                            <label class="control-label col-md-3 col-lg-2" for="title">Name</label>
-                            <div class="col-md-6">
-                                <input type="text" name="title" id="title" value="$!page.job.title" placeholder="Enter a title for the automation" class="required form-control" />
-                            </div>
+                        <div id="descriptionDiv">
+                            <p class="lead text-center">
+                                $page.description
+                            </p>
                         </div>
-                        <p class="lead text-center">
-                            $page.description
-                        </p>
                         <hr/>
                         <div class="form-group">
                             <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12">
@@ -1178,6 +1180,7 @@
                 loadData();
                 initEmailStats();
                 initControls();
+                initTitleEditor();
 
                 $("body").on('click', '.email-item', function (e) {
                     e.preventDefault();
@@ -1603,6 +1606,27 @@
                                 moment().toISOString()],
                         },
                     }, cb);
+                });
+            }
+
+            function initTitleEditor() {
+                $('#emailTitle').editable({
+                    url: window.location.pathname,
+                    name: 'title',
+                    validate: function (value) {
+                        if ($.trim(value) == '')
+                            return 'This field is required';
+                    },
+                    success: function (response, newValue) {
+                        flog(response, newValue);
+                        if (response.status) {
+                            Msg.info('Successfully saved title');
+                        }
+                    },
+                    params: function (params) {
+                        params.title = params.value;
+                        return params;
+                    }
                 });
             }
         </script>
