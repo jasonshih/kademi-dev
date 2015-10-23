@@ -63,19 +63,20 @@
         #set($website = $page.closest("website"))
 
         <div class="navbar navbar-fixed-top navbar-default" id="nav-top" role="navigation">
-            <div class="navbar-header">
-                <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-main-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="brand navbar-brand logo" href="/">
-                    $!website.themeAttributes.logo
-                </a>
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-main-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="brand navbar-brand logo" href="/">
+                        $!website.themeAttributes.logo
+                    </a>
 
-            </div>
+                </div>
 
-            <div class="navbar-collapse collapse navbar-main-collapse">
+                <div class="navbar-collapse collapse navbar-main-collapse">
                 #portlets("shoppingCart")
                 <ul class="nav navbar-nav navbar-right">
                     #foreach($item in $menu.items)
@@ -138,7 +139,7 @@
                     #end
                 </ul>
             </div><!--/.nav-collapse -->
-
+            </div>
         </div>
 
 

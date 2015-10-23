@@ -1,8 +1,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    #parse("/theme/masterTemplate.html")
     <head>
-        <title>$view.title</title>
+        #@themeHeader( "Registration" )
+        #end
     </head>
     <body class="regoPage">
+        #@themeBody()
         <div class="container">
             <div class="container">
             <h1>Registration</h1>
@@ -122,6 +125,7 @@
                 initRegister("/dashboard");
             });
         </script>
+        #end
     </body>
 </html>
 
