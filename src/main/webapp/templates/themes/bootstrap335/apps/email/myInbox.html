@@ -1,0 +1,67 @@
+<html>
+    #parse("/theme/masterTemplate.html")
+    <head>
+        #@themeHeader( "Notifications" )
+            <link href="/theme/apps/email/myInbox.less" rel="stylesheet" type="text/css" media="all" />
+            <script type="text/javascript" src="/theme/apps/email/myInbox.js">//</script>
+        #end
+    </head>
+    <body class="myInbox add-container">
+        #@themeBody()
+        <div class="row-fluid row">            
+            <div class="">
+                <div class="col-md-4 tabs-left">
+                    <ul class="nav nav-tabs nav-stacked span4 messages">
+
+
+                        #set($messages = $page.inbox.children)
+
+                        #if($messages.isEmpty())
+                        <li>You have no notifications</li>                
+                        #else                    
+                        <li class=""><h4>Messages</h4></li>
+                        #foreach($msg in $messages)
+                        #set($activeClass = $formatter.ifEqual("active","",$msg.name,$page.name))
+                        <li class="$activeClass message">                    
+                            <a href="$msg.href">
+                                <abbr class="pull-right timeago" title="$formatter.formatDateISO8601($msg.date)">$msg.date</abbr>
+                                <strong class="from">$msg.fromStr</strong>
+                                <p>$msg.subject</p>
+                            </a>                    
+                        </li>
+                        #end
+                        #end
+                    </ul>
+                </div>
+                <div class="tab-content col-md-8">
+                    #if($page.is("message"))
+                    <div class="well">
+                        <h4>$page.subject</h4>
+                        <abbr class="pull-right timeago" title="$formatter.formatDateISO8601($page.date)">$formatter.formatDateLong($page.date)</abbr>
+                        <small>From:  $page.fromStr</small>
+                    </div>
+                    <div class="email-content">
+                        #if( $page.html )
+                        <iframe style="border: none; width: 100%; min-height: 400px" srcdoc="$formatter.htmlAttEncode($page.html)"></iframe>
+                        #else
+                        $!page.text
+                        #end
+                    </div>
+                    #end                
+                </div>                
+            </div>
+
+        </div>
+
+        #set($markRead = $page.is("message") and !$page.read)
+        <script type="text/javascript">
+            jQuery(document).ready(function() {
+                jQuery("abbr.timeago").timeago();
+                initMessage($markRead, "");
+            });
+        </script>
+        #end
+    </body>
+</html>
+
+

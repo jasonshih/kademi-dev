@@ -1,0 +1,141 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    #parse("/theme/masterTemplate.html")
+    <head>
+        #@themeHeader( "Reward store" )
+        <link rel="stylesheet" type="text/css" href="/theme/apps/ecommerce/ecommerce-store.css" />
+        <style>
+            #inifiniteLoader{
+                vertical-align: middle;
+                text-align: center;
+                padding: 15px;
+                display: none;
+            }
+        </style>
+        #end
+    </head>
+    <body>
+        #@themeBody()
+        <div class='container'>
+            <div style='position: relative'>
+                <div class='col-md-4 cat-search pull-right'>
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button">
+                                <span class='glyphicon glyphicon-search'></span>
+                            </button>
+                        </span>
+                        <input type="text" class="form-control" id="product-query" placeholder="Search in this category"/>
+                    </div>
+                </div>
+
+                <h1>$page.title</h1>
+            </div>
+
+            <hr/>
+            #set($fromRange = 0)
+            #if($params.fromRange)
+            #set($fromRange = $formatter.toInteger($params.fromRange))
+            #end
+
+            #set($toRange = 100)
+            #if($params.toRange)
+            #set($toRange = $formatter.toInteger($params.toRange))
+            #end
+
+            #set( $products = $page.searchProducts( $request.params.q, $fromRange, $toRange, 'title', false ) )
+            <div id='products-list'>
+                #if( $products.hits.hits.size() == 0 )
+                <b class=''>No products were found matching the critieria</b>
+                #else
+                <div class='row'>
+                    #foreach($p in $products.hits.hits )
+                    #set($bg = "")
+                    #if( $p.fields.primaryImageId.value )
+                    #set($bg = "url($p.fields.product.value/$p.fields.primaryImageId.value/alt-300-300.png)")
+                    #end
+
+                    <div class="col-md-2 product-item">
+                        <a class="product-tile" href="$p.fields.product.value">
+                            <div style="background-image: $bg;" class="bg-img"></div>
+                            <div class="product-tile-inner">
+                                <span>$p.fields.title.value</span>
+                            </div>
+                            <span class="label priceLabel">$p.fields.finalPoints.value points</span>
+                        </a>
+                    </div>
+                    #end
+                </div>
+                #end
+            </div>
+        </div>
+        <div id="inifiniteLoader">
+            <span class="alert alert-success">
+                <img src="/templates/ajax-loader.gif" />
+            </span>
+        </div>
+
+        <script type="text/javascript">
+            var startFrom = 100;
+            $(function () {
+                initSearchProduct();
+                $(window).scroll(function () {
+                    if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+                        doPaginate();
+                    }
+                });
+            });
+
+            function initSearchProduct() {
+                $("#product-query").keyup(function () {
+                    typewatch(function () {
+                        flog("do search");
+                        doProductSearch();
+                    }, 500);
+                });
+            }
+
+            function doProductSearch() {
+                var query = $("#product-query").val();
+                flog("doSearch", query);
+                var newUrl = window.location.pathname + "?q=" + query;
+                window.history.replaceState("", "", newUrl);
+                $.ajax({
+                    type: 'GET',
+                    url: newUrl,
+                    success: function (data) {
+                        flog("success", data);
+                        var fragment = $(data).find("#products-list");
+                        $("#products-list").replaceWith(fragment);
+                    },
+                    error: function (resp) {
+                        Msg.error("An error occured doing the product search. Please check your internet connection and try again");
+                    }
+                });
+            }
+
+            function doPaginate() {
+                var query = $("#product-query").val();
+                flog("doSearch", query);
+                var newUrl = window.location.pathname + "?q=" + query + "&fromRange=" + startFrom;
+                $('#inifiniteLoader').show();
+                $.ajax({
+                    type: 'GET',
+                    url: newUrl,
+                    success: function (data) {
+                        flog("success", data);
+                        var fragment = $(data).find("#products-list");
+                        var products = fragment.find('.product-item');
+                        $("#products-list .row").append(products);
+                        startFrom = startFrom + 100;
+                        $('#inifiniteLoader').hide();
+                    },
+                    error: function (resp) {
+                        Msg.error("An error occured doing the product search. Please check your internet connection and try again");
+                        $('#inifiniteLoader').hide();
+                    }
+                });
+            }
+        </script>
+        #end
+    </body>
+</html>

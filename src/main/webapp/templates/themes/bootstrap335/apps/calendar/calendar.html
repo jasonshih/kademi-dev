@@ -146,18 +146,19 @@
                 var eventRange = $('#event-range');
                 eventRange.exist(function () {
                     flog('init report range');
-                    eventRange.daterangepicker({
-                        format: 'DD/MM/YYYY HH:mm',
-                        timePicker: true,
-                        timePickerIncrement: 15,
-                        timePicker12Hour: false
+                    eventRange.daterangepicker(
+                        {
+                            format: 'DD/MM/YYYY HH:mm',
+                            timePicker: true,
+                            timePickerIncrement: 15,
+                            timePicker12Hour: false
 
-                    },
-                    function (start, end) {
-                        flog('onChange', start, end);
-                        $('#startDate').val(formatDateTime(start));
-                        $('#endDate').val(formatDateTime(end));
-                    }
+                        },
+                        function (start, end) {
+                            flog('onChange', start, end);
+                            $('#startDate').val(formatDateTime(start));
+                            $('#endDate').val(formatDateTime(end));
+                        }
                     );
                 });
             });

@@ -1,14 +1,17 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
+    #parse("/theme/masterTemplate.html")
     <head>
-        <title>Contact us</title>
-        <script type='text/javascript' src='/theme/apps/contactus/contactus.js'>//</script>
-        <style>
-            .contactus .thankyou {
-                display: none;
-            }
-        </style>
+        #@themeHeader( "Contact us" )
+            <script type='text/javascript' src='/theme/apps/contactus/contactus.js'>//</script>
+            <style>
+                .contactus .thankyou {
+                    display: none;
+                }
+            </style>
+        #end
     </head>
     <body class="contactus">
+        #@themeBody()
         <div id="content" class="container">
             <div class="SubContent">
                 #set($content = $folder.find("/content/contact.html"))
@@ -67,6 +70,7 @@
                                 </div>
                             </div>
                             #end
+
                             #if( $page.captchaApp )
                             <div class="form-group">
                                 <div class="col-sm-offset-3 col-sm-9">
@@ -74,7 +78,6 @@
                                 </div>
                             </div>
                             #end
-
 
                             <div class="form-group">
                                 <div class="col-sm-offset-3 col-sm-9">
@@ -107,5 +110,6 @@
                 initContactUs();
             });
         </script>
+        #end
     </body>
 </html>
