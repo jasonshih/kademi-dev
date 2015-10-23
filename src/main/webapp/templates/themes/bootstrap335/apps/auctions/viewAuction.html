@@ -1,0 +1,71 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    #parse("/theme/masterTemplate.html")
+    <head>
+        #@themeHeader( $page.title )
+        <script src="/static/reload-fragment/1.0.1/jquery.reload-fragment-1.0.1.js" type="text/javascript" >//</script>
+        <script src="/theme/apps/auctions/viewAuction.js" type="text/javascript">//</script>
+        #end
+    </head>
+    <body>
+        #@themeBody()
+        <div class="container">
+            <h3></h3>
+
+            <div class="row row-fluid">
+                <div class="span6 col-md-8 well">                    
+                    <div class="details">
+                        <h4>$page.title</h4>
+                        <legend style="font-size: 0.8em">Created By <a href="$page.createdBy.href">$page.createdBy.name</a></legend>
+                        <div class="clearfix">
+                            $!page.body
+                        </div>
+                    </div>
+                </div>
+                <div id="BidInfo" class="span6 col-md-4"> 
+                    #if(!$page.auctionClosed)
+                    <div id="bidFromDiv" class="details well">
+                        <h4>Current Bid</h4>
+                        <form id="bidForm" method="POST" action=".">
+                            <input class="regex required" type="text" size="5" name="auctionBidValue" value="$!page.currentBidValue"data-regex="^[0-9-.]+$"/>
+                            <button data-type="form-submit" class="btn btn-md btn-primary">
+                                Place Bid
+                            </button>
+                        </form>
+                        <div>
+                            #if($page.currentBidValue)
+                            Current Bid: $<span id="bidCurrentValue">$page.currentBidValue</span>
+                            #else
+                            Current Bid: $<span id="bidCurrentValue">$page.auctionStartValue</span>
+                            #end
+                            <br/>
+                            Bid Count: <span id="bidCount">$page.auctionBidCount</span>
+                            <br/>
+                            End Date: <span>$formatter.formatDateTime($page.auctionEndDate)</span>
+                        </div>
+                    </div>
+                    #end
+                    <div class="details well">
+                        <h4>Bid History</h4>
+                        <table id="bidHistory" class="table">
+                            <tbody>
+                                #foreach($c in $page.bidHistory)
+                                <tr>
+                                    <td>$c.bidValue</td>
+                                    <td><abbr title="$formatter.formatDateISO8601($c.changeDate)" class="timeago">$c.changeDate</abbr></td>
+                                    <td><a href="$c.changeBy.href">$c.changedBy.name</a></td>
+                                </tr>
+                                #end
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            $(function () {
+                initViewAuction("$page.wSUri");
+            });
+        </script>
+        #end
+    </body>
+</html>
