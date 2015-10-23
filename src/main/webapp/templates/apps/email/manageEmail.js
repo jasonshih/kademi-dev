@@ -264,6 +264,7 @@ function initFormDetailEmail() {
         callback: function () {
             $('body').removeClass('dirty');
             Msg.success('Saved');
+            $('#descriptionDiv').reloadFragment();
         }
     });
 }
