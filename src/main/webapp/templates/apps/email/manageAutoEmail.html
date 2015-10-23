@@ -1375,9 +1375,9 @@
             }
 
             function handleData(resp) {
-                var dateHistogram = resp.aggregations.firedAt.buckets;
+                var aggr = resp.aggregations;
 
-                initHistogram(dateHistogram);
+                initHistogram(aggr);
             }
 
             function initEmailStats() {
@@ -1406,12 +1406,12 @@
                 }, 8);
             }
 
-            function initHistogram(hits) {
+            function initHistogram(aggr) {
                 $('#chart_histogram svg').empty();
                 nv.addGraph(function () {
                     var chart = nv.models.multiBarChart()
                             .options({
-                                showLegend: false,
+                                showLegend: true,
                                 showControls: false,
                                 noData: "No Data available for histogram",
                                 margin: {
@@ -1432,17 +1432,50 @@
                             .tickFormat(d3.format(',.1f'));
 
                     var myData = [];
-                    var series = {
+                    var conditionsTrue = {
                         values: [],
-                        key: "Triggers",
+                        key: "Trigger",
                         color: "#7777ff",
                         area: true
                     };
 
-                    myData.push(series);
-                    for (var i = 0; i < hits.length; i++) {
-                        var bucket = hits[i];
-                        series.values.push(
+                    var conditionsFalse = {
+                        values: [],
+                        key: "Failed Trigger",
+                        color: "#d9534f",
+                        area: true
+                    };
+
+                    var delayedTriggers = {
+                        values: [],
+                        key: "Delayed Trigger",
+                        color: "#5bc0de",
+                        area: true
+                    };
+
+                    myData.push(conditionsTrue);
+                    myData.push(conditionsFalse);
+                    myData.push(delayedTriggers);
+
+                    var trueHits = aggr.triggerTrue.firedAt.buckets;
+                    var falseHits = aggr.triggerFalse.firedAt.buckets;
+                    var delayedHits = aggr.delayedTriggers.createdAt.buckets;
+
+                    for (var i = 0; i < trueHits.length; i++) {
+                        var bucket = trueHits[i];
+                        conditionsTrue.values.push(
+                                {x: bucket.key, y: bucket.doc_count});
+                    }
+
+                    for (var i = 0; i < falseHits.length; i++) {
+                        var bucket = falseHits[i];
+                        conditionsFalse.values.push(
+                                {x: bucket.key, y: bucket.doc_count});
+                    }
+                    
+                    for (var i = 0; i < delayedHits.length; i++) {
+                        var bucket = delayedHits[i];
+                        delayedTriggers.values.push(
                                 {x: bucket.key, y: bucket.doc_count});
                     }
 
