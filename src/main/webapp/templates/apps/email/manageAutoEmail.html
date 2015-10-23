@@ -31,7 +31,7 @@
             }
 
             #chart_histogram svg {
-                height: 400px;
+                height: 490px;
             }
 
             .ktile-inner{
@@ -55,10 +55,19 @@
     <body class="manageAutoEmail">
         <form name="frmDetails" action="." method="post" class="form-horizontal">
             <div class="pull-right page-action">
-                <button class="btn btn-sm btn-primary" type="submit">
-                    <span class="glyphicon glyphicon-floppy-disk"></span>
-                    Save changes
-                </button>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="enabledSwitchContainer">
+                            $formatter.bsswitch("enabled", "enabled", $page.enabled, "true")
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <button class="btn btn-sm btn-primary" type="submit">
+                            <span class="glyphicon glyphicon-floppy-disk"></span>
+                            Save changes
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <div class="tabbable">
@@ -77,12 +86,12 @@
                         <div class="form-group">
                             <label class="control-label col-md-3 col-lg-2" for="title">Name</label>
                             <div class="col-md-6">
-                                <input type="text" name="title" id="title" value="$!page.job.title" placeholder="Enter a title for the automation" class="required form-control input-lg" />
-                            </div>
-                            <div class="enabledSwitchContainer">
-                                $formatter.bsswitch("enabled", "enabled", $page.enabled, "true")
+                                <input type="text" name="title" id="title" value="$!page.job.title" placeholder="Enter a title for the automation" class="required form-control" />
                             </div>
                         </div>
+                        <p class="lead text-center">
+                            $page.description
+                        </p>
                         <hr/>
                         <div class="form-group">
                             <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12">
@@ -91,50 +100,60 @@
                                 </div>
                             </div>
                             #set($stats = $page.emailStats)
-                            <div class="ktile-wrapper col-xl-2 col-lg-2 col-md-4 col-sm-6">
-                                <div class="ktile ktile-lg-v">
-                                    <div class="ktile-inner">
-                                        <div class="ktile-body">
-                                            <div class="ktile-front ktile-shadow">
-                                                <div class="row" style="height: 100%; margin: 0">
-                                                    <div class="col-sm-12 bgm-pink" style="height: 60%;">
-                                                        <div class="text-center ktile-content ktile-content-relative">
-                                                            <div data-percent="$stats.deliveryRatePerc" class="easy-pie emailsMainPie largePie center-block">
-                                                                <div class="figure">
-                                                                    #if( $stats.total )
-                                                                    $stats.total
-                                                                    #else
-                                                                    N/A - $stats
-                                                                    #end
+                            <div class="col-xl-4">
+                                <div class="row p-b-20">
+                                    <div class="col-md-12">
+                                        <div class="input-group date-range">
+                                            <label for="analytics-range" class="input-group-addon">Date</label>
+                                            <input type="text" id="analytics-range" placeholder="Choose a date range" value="" class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ktile-wrapper col-xl-6 col-lg-6 col-md-6 col-sm-6">
+                                    <div class="ktile ktile-lg-v">
+                                        <div class="ktile-inner">
+                                            <div class="ktile-body">
+                                                <div class="ktile-front ktile-shadow">
+                                                    <div class="row" style="height: 100%; margin: 0">
+                                                        <div class="col-sm-12 bgm-pink" style="height: 60%;">
+                                                            <div class="text-center ktile-content ktile-content-relative">
+                                                                <div data-percent="$stats.deliveryRatePerc" class="easy-pie emailsMainPie largePie center-block">
+                                                                    <div class="figure">
+                                                                        #if( $stats.total )
+                                                                        $stats.total
+                                                                        #else
+                                                                        N/A - $stats
+                                                                        #end
+                                                                    </div>
+                                                                    <div class="pie-title">Total Emails Sent</div>
                                                                 </div>
-                                                                <div class="pie-title">Total Emails Sent</div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-sm-12" style="height: 38%">
-                                                        <div class="row text-center ktile-content ktile-content-relative">
-                                                            <div class="col-sm-6" style="padding: 0 3px">
-                                                                <div data-percent="$!stats.openRatePerc" class="easy-pie emailsSubPie smallPie bluePie">
-                                                                    <div class="figure">
-                                                                        #if( $stats.openRatePerc )
-                                                                        $stats.openRatePerc
-                                                                        #else
-                                                                        N/A
-                                                                        #end
+                                                        <div class="col-sm-12" style="height: 38%">
+                                                            <div class="row text-center ktile-content ktile-content-relative">
+                                                                <div class="col-sm-6" style="padding: 0 3px">
+                                                                    <div data-percent="$!stats.openRatePerc" class="easy-pie emailsSubPie smallPie bluePie">
+                                                                        <div class="figure">
+                                                                            #if( $stats.openRatePerc )
+                                                                            $stats.openRatePerc
+                                                                            #else
+                                                                            N/A
+                                                                            #end
+                                                                        </div>
+                                                                        <div class="pie-title">Open rate</div>
                                                                     </div>
-                                                                    <div class="pie-title">Open rate</div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="col-sm-6" style="padding: 0 3px">
-                                                                <div data-percent="$!stats.convertedRatePerc" class="easy-pie emailsSubPie smallPie orangePie">
-                                                                    <div class="figure">
-                                                                        #if( $stats.convertedRatePerc )
-                                                                        $stats.convertedRatePerc
-                                                                        #else
-                                                                        N/A
-                                                                        #end
+                                                                <div class="col-sm-6" style="padding: 0 3px">
+                                                                    <div data-percent="$!stats.convertedRatePerc" class="easy-pie emailsSubPie smallPie orangePie">
+                                                                        <div class="figure">
+                                                                            #if( $stats.convertedRatePerc )
+                                                                            $stats.convertedRatePerc
+                                                                            #else
+                                                                            N/A
+                                                                            #end
+                                                                        </div>
+                                                                        <div class="pie-title">Conversion rate</div>
                                                                     </div>
-                                                                    <div class="pie-title">Conversion rate</div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -144,31 +163,31 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            #set($smsStats = $page.smsStats)
-                            <div class="ktile-wrapper col-xl-2 col-lg-2 col-md-2">
-                                <div class="ktile ktile-lg-v">
-                                    <div class="ktile-inner">
-                                        <div class="ktile-body">
-                                            <div class="ktile-front ktile-shadow">
-                                                <div class="row" style="height: 100%; margin: 0">
-                                                    <div class="col-xl-12 col-sm-12 bgm-blue" style="height: 60%;">
-                                                        <div class="text-center ktile-content ktile-content-relative">
-                                                            <div data-percent="$smsStats.deliveryRatePerc" class="easy-pie emailsMainPie largePie center-block">
-                                                                <div class="figure">
-                                                                    #if( $smsStats.total )
-                                                                    $smsStats.total
-                                                                    #else
-                                                                    N/A
-                                                                    #end
+                                #set($smsStats = $page.smsStats)
+                                <div class="ktile-wrapper col-xl-6 col-lg-6 col-md-6">
+                                    <div class="ktile ktile-lg-v">
+                                        <div class="ktile-inner">
+                                            <div class="ktile-body">
+                                                <div class="ktile-front ktile-shadow">
+                                                    <div class="row" style="height: 100%; margin: 0">
+                                                        <div class="col-xl-12 col-sm-12 bgm-blue" style="height: 60%;">
+                                                            <div class="text-center ktile-content ktile-content-relative">
+                                                                <div data-percent="$smsStats.deliveryRatePerc" class="easy-pie emailsMainPie largePie center-block">
+                                                                    <div class="figure">
+                                                                        #if( $smsStats.total )
+                                                                        $smsStats.total
+                                                                        #else
+                                                                        N/A
+                                                                        #end
+                                                                    </div>
+                                                                    <div class="pie-title">Total SMS's Sent</div>
                                                                 </div>
-                                                                <div class="pie-title">Total SMS's Sent</div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-sm-12" style="height: 38%">
-                                                        <div class="row text-center ktile-content ktile-content-relative">
-                                                            <h4>Total Cost: $!smsStatus.currency$smsStats.totalCost</h4>
+                                                        <div class="col-sm-12" style="height: 38%">
+                                                            <div class="row text-center ktile-content ktile-content-relative">
+                                                                <h4>Total Cost: $!smsStatus.currency$smsStats.totalCost</h4>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1158,6 +1177,7 @@
                 initSmsField();
                 loadData();
                 initEmailStats();
+                initControls();
 
                 $("body").on('click', '.email-item', function (e) {
                     e.preventDefault();
@@ -1358,8 +1378,14 @@
                 });
             }
 
+            var options = {
+                startDate: null,
+                endDate: null,
+                interval: "day"
+            };
+
             function loadData() {
-                var href = "?triggerHistory";
+                var href = "?triggerHistory&" + $.param(options);
                 $.ajax({
                     type: "GET",
                     url: href,
@@ -1535,6 +1561,48 @@
 
                 $(window).on('resize', function () {
                     drawChart(target, options, padding);
+                });
+            }
+
+            function initControls() {
+                flog("initControls");
+                var reportRange = $('#analytics-range');
+
+                function cb(start, end) {
+                    options.startDate = start.format('DD/MM/YYYY');
+                    options.endDate = end.format('DD/MM/YYYY');
+                    loadData();
+                }
+
+                reportRange.exist(function () {
+                    flog("init analytics range");
+                    reportRange.daterangepicker({
+                        format: 'DD/MM/YYYY',
+                        startDate: moment().subtract('days', 6),
+                        endDate: moment(),
+                        ranges: {
+                            'Today': [
+                                moment().toISOString(),
+                                moment().toISOString()
+                            ],
+                            'Last 7 Days': [
+                                moment().subtract('days', 6).toISOString(),
+                                moment().toISOString()
+                            ],
+                            'Last 30 Days': [
+                                moment().subtract('days', 29).toISOString(),
+                                moment().toISOString()],
+                            'This Month': [
+                                moment().startOf('month').toISOString(),
+                                moment().endOf('month').toISOString()],
+                            'Last Month': [
+                                moment().subtract('month', 1).startOf('month').toISOString(),
+                                moment().subtract('month', 1).endOf('month').toISOString()],
+                            'This Year': [
+                                moment().startOf('year').toISOString(),
+                                moment().toISOString()],
+                        },
+                    }, cb);
                 });
             }
         </script>
