@@ -1365,7 +1365,11 @@
                     url: href,
                     dataType: 'html',
                     success: function (resp) {
-                        var json = JSON.parse(resp);
+                        var json = null;
+
+                        if (resp !== null && resp.length > 0) {
+                            json = JSON.parse(resp);
+                        }
 
                         flog('response', json);
                         handleData(json);
@@ -1375,7 +1379,7 @@
             }
 
             function handleData(resp) {
-                var aggr = resp.aggregations;
+                var aggr = (resp !== null ? resp.aggregations : null);
 
                 initHistogram(aggr);
             }
@@ -1429,7 +1433,7 @@
 
                     chart.yAxis
                             .axisLabel("Triggered")
-                            .tickFormat(d3.format(',.1f'));
+                            .tickFormat(d3.format('d'));
 
                     var myData = [];
                     var conditionsTrue = {
@@ -1457,9 +1461,9 @@
                     myData.push(conditionsFalse);
                     myData.push(delayedTriggers);
 
-                    var trueHits = aggr.triggerTrue.firedAt.buckets;
-                    var falseHits = aggr.triggerFalse.firedAt.buckets;
-                    var delayedHits = aggr.delayedTriggers.createdAt.buckets;
+                    var trueHits = (aggr !== null ? aggr.triggerTrue.firedAt.buckets : []);
+                    var falseHits = (aggr !== null ? aggr.triggerFalse.firedAt.buckets : []);
+                    var delayedHits = (aggr !== null ? aggr.delayedTriggers.createdAt.buckets : []);
 
                     for (var i = 0; i < trueHits.length; i++) {
                         var bucket = trueHits[i];
@@ -1472,7 +1476,7 @@
                         conditionsFalse.values.push(
                                 {x: bucket.key, y: bucket.doc_count});
                     }
-                    
+
                     for (var i = 0; i < delayedHits.length; i++) {
                         var bucket = delayedHits[i];
                         delayedTriggers.values.push(
