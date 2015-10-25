@@ -1,18 +1,21 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
+    #parse("/theme/masterTemplate.html")
     <head>
-        <title>title</title>
+        #@themeHeader( $page.title )
+        #end
     </head>
     <body>
+        #@themeBody()
         <div id="content" class="container">
             <div class="SubContent">
                 <h1>$page.title</h1>
                 <div class="contentForm">
-                    <div class="htmleditor" id="body"> 
+                    <div class="htmleditor" id="body">
                         $!{page.body}
                     </div>
                     <br class="Clear" />
                 </div>
-                <div class="commentArea edifyViewMode">            
+                <div class="commentArea edifyViewMode">
                         <div class="hideBtn"><a href="#" class="">Hide comments</a></div>
                     <div id="comments">
                         <div class="fBox">
@@ -28,20 +31,21 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>                            
+                                    </div>
                                 </fieldset>
                             </form>
                         </div>
                     </div>
                     <br/><br/>
-                </div>                
+                </div>
             </div>
-        </div>        
+        </div>
         <script>
             var privs = $formatter.toJson($request.attributes.privs);
             pageInitFunctions.push(function() {
                 initComments(window.location.pathname);
             });
         </script>
+        #end
     </body>
 </html>
