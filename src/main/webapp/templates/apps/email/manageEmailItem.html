@@ -101,7 +101,7 @@
         </div>
         <h4>Message content</h4>
         <hr/>
-        <iframe style="border: none; width: 100%; min-height: 400px" src="/viewEmail?emailId=$page.emailItem.id"></iframe>
+        <iframe style="border: none; width: 100%; min-height: 400px" srcdoc="$formatter.htmlEncode($page.emailHtml).replace('ack?', '')"></iframe>
         <br/>
         <hr/>
         <br/>
