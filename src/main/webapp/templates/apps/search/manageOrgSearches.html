@@ -63,6 +63,7 @@
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>
+                                            <th></th>
                                             <th>ID</th>
                                             <th>Index name</th>
                                             <th>Type</th>
@@ -73,6 +74,17 @@
                                     <tbody>
                                         #foreach($index in $page.appIndexers)
                                         <tr>
+                                            <td>
+                                                #if( $page.isTypeMappingExists($index) )
+                                                <span class="label label-success">
+                                                    <span class="fa fa-check"></span>
+                                                </span>                                                
+                                                #else
+                                                <span class="label label-danger">
+                                                    <span class="fa fa-times"></span>
+                                                </span>
+                                                #end
+                                            </td>                                            
                                             <td>
                                                 $index.id
                                             </td>
@@ -93,14 +105,15 @@
                         </div>
                     </div>
                     <div role="tabpanel" class="tab-pane" id="profile">
-                        <h2>Elastic Indexes</h2>
+                        <h2>Physical Indexes</h2>
                         <div class="manage-search">
                             <form method="post" action="$page.href" class="form-horizontal reindexForm" role="form">
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
+                                            <th></th>                                            
                                             <th>Index name</th>
+                                            <th>Types</th>
                                             <th>No. items</th>
                                         </tr>
                                     </thead>
@@ -108,8 +121,19 @@
                                         #foreach($entry in $page.mapOfIndexers.entrySet())
                                         <tr>
                                             <td>
-                                                <a href="$entry.key">$entry.key</a>
+                                                #if( $page.indexExists($entry.key) )
+                                                <span class="label label-success">
+                                                    <span class="fa fa-check"></span>
+                                                </span>                                                
+                                                #else
+                                                <span class="label label-danger">
+                                                    <span class="fa fa-times"></span>
+                                                </span>
+                                                #end
                                             </td>
+                                            <td>
+                                                <a href="$entry.key">$entry.key</a>
+                                            </td>                                            
                                             <td>
                                                 #foreach($i in $entry.value)
                                                 $i.id ,
