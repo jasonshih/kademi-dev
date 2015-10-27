@@ -78,13 +78,21 @@
                     #end
                 </td>
                 <td>
-                    #foreach($file in $certs.files)
-                    #if( $file.name.startsWith($ms.moduleCode)  )
+                    ## /programs/p1/c1/m1/
+                    ## /websites/test/version1/programs/p1/c1/m1/
+                    #set($pUrl = '/websites/' + $ms.website.name + '/' + $ms.website.liveBranch().name  + '/programs/' +  $ms.programCode + '/' + $ms.courseCode + '/' + $ms.moduleCode)
+                    #foreach($link in $page.find($pUrl).certificateHrefs($page.userResource))
+                        #set($fr = $page.find($link))
+                        #set($fileTitle = "Generate Certificate")
+                        #if($fr.is('file'))
+                            #set($fileTitle = "Download '$fr.name'")
+                        #end
                     <div class="delete-download-container">
-                        <a class="btn btn-sx btn-default" href="$file.href" target="_blank" title="Download '$file.name'"><i class="fa fa-cloud-download"></i></a>
-                        <a class="btn btn-sx btn-default btn-delete-download" href="$file.href"><i class="clip-close-2"></i></a>
+                        <a class="btn btn-sx btn-default" href="$link" target="_blank" title="$fileTitle"><i class="fa fa-cloud-download"></i></a>
+                        #if($fr.is('file'))
+                        <a class="btn btn-sx btn-default btn-delete-download" href="$link"><i class="clip-close-2"></i></a>
+                        #end
                     </div>
-                    #end
                     #end
                 </td>
                 <td>$!ms.scorePerc</td>
