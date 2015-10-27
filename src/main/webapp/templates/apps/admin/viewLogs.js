@@ -80,7 +80,7 @@ function processReceivedLog(c, filterMsg, filterUser) {
 
         if (c.callstack !== null && c.callstack.length > 0) {
             row = $(
-                '<div class="col-row">' +
+                '<div class="col-row clearfix no-bordered">' +
                 '   <div class="causes"></div>' +
                 '</div>'
             );
