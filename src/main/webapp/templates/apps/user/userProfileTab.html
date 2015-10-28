@@ -1,23 +1,19 @@
-
 #foreach($website in $page.find("/websites").children.ofType.website)
-    #set($to = $formatter.now())
-    #set($from = $formatter.addDays($to, -30))
-    <h3>$website.name</h3>
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Count</th>
-            </tr>
-        </thead>
-        <tbody>
-    #foreach($visit in $page.userResource.dailyVisits( $from, $to, $website.website))
-    <tr>
-        <td>$visit.date</td>
-        <td>$visit.count</td>
-    </tr>
-    #end       
+<h3>$website.name</h3>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Count</th>
+        </tr>
+    </thead>
+    <tbody>
+        #foreach($visit in $page.userResource.dailyVisits(null,null, $website.website))
+        <tr>
+            <td>$formatter.formatDate($visit.date)</td>
+            <td>$visit.count</td>
+        </tr>
+        #end
     </tbody>
-    </table>
-
+</table>
 #end
