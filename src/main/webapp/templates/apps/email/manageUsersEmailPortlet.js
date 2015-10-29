@@ -32,4 +32,40 @@ function initManagerUserEmailPortlet() {
 
         form.trigger('reset');
     });
+
+    var receivedCheckbox = $('input[type="checkbox"].icheck.received');
+    receivedCheckbox.iCheck({
+        checkboxClass: 'icheckbox_flat-red',
+        radioClass: 'iradio_flat-red',
+        increaseArea: '10%' // optional
+    });
+
+    receivedCheckbox.on('ifToggled', function (e) {
+        var btn = $(this);
+        var checked = btn.is(':checked');
+        
+        if (checked) {
+            $('tr.email-received').show();
+        } else {
+            $('tr.email-received').hide();
+        }
+    });
+
+    var sentCheckbox = $('input[type="checkbox"].icheck.sent');
+
+    sentCheckbox.iCheck({
+        checkboxClass: 'icheckbox_flat-green',
+        radioClass: 'iradio_flat-green',
+        increaseArea: '10%'
+    });
+
+    sentCheckbox.on('ifToggled', function (e) {
+        var btn = $(this);
+        var checked = btn.is(':checked');
+        if (checked) {
+            $('tr.email-sent').show();
+        } else {
+            $('tr.email-sent').hide();
+        }
+    });
 }
