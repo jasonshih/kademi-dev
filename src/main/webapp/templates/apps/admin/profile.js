@@ -3,7 +3,7 @@ function initProfile() {
     initProfileLoginAs();
     initOrgSearch();
     initNewMembershipForm();
-    $("form").not("#modal-membership form").not('#modal-compose-email form').forms({
+    $("form").not("#modal-membership form").not('#modal-compose-email form').not('form.exclude').forms({
         callback: function (resp, form) {
             Msg.info("Done");
         }

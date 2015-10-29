@@ -37,13 +37,13 @@ function initSearch() {
 }
 
 function initShowAll() {
-    $("#all-products-toggle").change(function () {
+    $('body').on('change', '.filterType', function (e) {
         var btn = $(this);
-        var checked = btn.prop("checked");
+        var val = btn.val();
 
-        searchParams.showAll = checked;
-
+        searchParams.showAll = val;
         doSearch();
+
     });
 }
 

@@ -5,15 +5,6 @@
             .search, .search-group {
                 float: left;
             }
-
-            .search {
-                width: 300px;
-                margin-right: 10px;
-            }
-
-            .search-group {
-                width: 200px;
-            }
             .in-store-false .product-instore-details{
                 display:none;
             }
@@ -39,27 +30,41 @@
                             View
                         </a>
 
-                        <p class="input-group search input-group-sm">
-                            <input type="text" id="product-query" class="form-control" placeholder="Search for products here" value="">
-                            <span class="input-group-btn">
-                                <button class="btn btn-sm btn-default" type="button" data-type="clearer" data-target="#product-query">
-                                    <i class="fa fa-times"></i>
-                                </button>
-                            </span>
-                        </p>
-                        <div class="" style="float: left">
-                            <input id="all-products-toggle" $formatter.ifTrue( $request.params.all, "checked", "" ) data-toggle="toggle" data-on="All" data-off="Included" type="checkbox" />
-                        </div>
-
-                        <div class="form-group">
-                            <label for="search-group" class="col-sm-1 control-label">Library:</label>
+                        <div class="row">
                             <div class="col-sm-3">
-                                <select name="searchOrg" id="search-library" class="form-control input-sm">
-                                    <option value="">My library</option>
-                                    #foreach($org in $page.parentOrgsWithProducts)
-                                    <option value="$org.id">$org.formattedName</option>
-                                    #end
-                                </select>
+                                <p class="input-group search input-group-sm col-sm-12">
+                                    <input type="text" id="product-query" class="form-control" placeholder="Search for products here" value="" />
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-sm btn-default" type="button" data-type="clearer" data-target="#product-query">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </span>
+                                </p>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="search-group" class="col-sm-2 control-label">Products:</label>
+                                    <div class="col-sm-10">
+                                        <select name="filterType" class="filterType form-control input-sm">
+                                            <option value="false">Included</option>
+                                            <option value="true">All</option>
+                                            <option value="notInStore">Not In Store</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="search-group" class="col-sm-2 control-label">Library:</label>
+                                    <div class="col-sm-10">
+                                        <select name="searchOrg" id="search-library" class="form-control input-sm">
+                                            <option value="">My library</option>
+                                            #foreach($org in $page.parentOrgsWithProducts)
+                                            <option value="$org.id">$org.title</option>
+                                            #end
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
