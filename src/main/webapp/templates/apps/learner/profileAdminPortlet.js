@@ -58,4 +58,14 @@ function initAdminProfile() {
             $('#moduleprogress-body').reloadFragment();
         });
     });
+
+    var modal = $('#modal-complete-module');
+    var modalForm = modal.find('form');
+
+    modalForm.forms({
+        callback: function (resp, form) {
+            Msg.info("Done");
+            modal.modal('hide');
+        }
+    });
 }
