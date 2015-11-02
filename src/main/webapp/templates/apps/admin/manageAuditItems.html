@@ -1,0 +1,39 @@
+<html>
+    <head>
+        <title>Audit Records</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Date</th>
+                        <th>User</th>
+                        <th>Entity</th>
+                        <th>State</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    #foreach($audit in $page.search())
+                    <tr>
+                        #set($labelType = "label-green")
+                        #if($audit.changeType == "UPDATE")
+                            #set($labelType = "label-warning")
+                        #elseif($audit.changeType == "DELETE")
+                            #set($labelType = "label-danger")
+                        #end
+                        <td><label class="label $labelType">$audit.changeType</label></td>
+                        <td>$formatter.formatDateTime($audit.actionDate)</td>
+                        <td>$audit.actionUser.formattedName</td>
+                        <td>$page.getClassDisplayName($audit.entityClassName)</td>
+                        <td>$formatter.htmlEncode($audit.recordState)</td>
+                    </tr>
+                    #end
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>
