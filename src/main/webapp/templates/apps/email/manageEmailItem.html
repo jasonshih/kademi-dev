@@ -16,13 +16,24 @@
                 <tr>
                     <td>Status</td>
                     <td>
-                        #if( $page.sendStatus == 'r' )
+                        #if( $page.edmConverted )
+                        <p class="label label-success">
+                            <span class="glyphicon glyphicon-ok"></span>
+                            Converted
+                        </p>
+                        #elseif( $page.emailItem.readStatus )
+                        <p class="label label-primary">
+                            <span class="glyphicon glyphicon-ok"></span>
+                            Opened
+                        </p>
+
+                        #elseif( $page.sendStatus == 'r' )
                         <p class="label label-warning">
                             <span class="glyphicon glyphicon-repeat"></span>
-                            $page.statusText - $page.numAttempts
+                            $page.statusText - $!page.numAttempts
                         </p>
                         #elseif( $page.sendStatus == 'c' )
-                        <p class="label label-success">
+                        <p class="label label-default">
                             <span class="glyphicon glyphicon-ok"></span>
                             $page.statusText
                         </p>
@@ -36,7 +47,6 @@
                             <span class="glyphicon glyphicon-remove"></span>
                             $page.statusText
                         </p>
-
                         #else
                         <span class="glyphicon glyphicon-time"></span> Preparing..
                         #end
