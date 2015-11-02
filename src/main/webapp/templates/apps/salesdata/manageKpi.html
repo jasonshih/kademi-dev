@@ -666,488 +666,512 @@
                                 </tbody>
                             </table>
                             #else
-                            <p>Press the query button above to generate the leaderboard<p>
-                                    #end
-                                    </div>
-                                    </div>
-                                    </div>
-                                    </div>
-                                    </form>
+                            <p>Press the query button above to generate the leaderboard</p>
+                            #end
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
 
-                                    <div id="editLevelModal" class="modal modal-lg fade level-modal" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                            <h4 class="modal-title">KPI Level</h4>
-                                        </div>
-                                        <div class="modal-body">
-
-
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                                            <button type="button" class="btn btn-sm btn-success" data-type="form-submit">Save level</button>
-                                        </div>
-                                    </div>
-
-                                    <div id="modal-reprocess" class="modal fade" aria-hidden="true" tabindex="-1">
-                                        <form action="." method="POST" class="form-horizontal">
-                                            <input type="hidden" name="reprocess" value="reprocess"/>
-                                            <div class="modal-header">
-                                                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                                                <h4 class="modal-title">Reprocess period</h4>
-                                            </div>
-                                            <div class="modal-body">
-                                                <p>
-                                                    This will re-generate KPI assessments and calculated points which should be awarded. This will not by itself
-                                                    create or change points.
-                                                </p>
-                                                <div class="form-group">
-                                                    <label class="col-md-3 control-label" for="users">Users
-                                                        <small>Username or email address, one per line.</small>
-                                                    </label>
-                                                    <div class="col-md-8">
-                                                        <textarea name="users" class="form-control" rows="4"></textarea>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="col-md-3 control-label" for="period">Period</label>
-                                                    <div class="col-md-8">
-                                                        <select name="period" class="form-control required">
-                                                            $formatter.option("", "Please select a period", null)
-                                                            #foreach($period in $page.periods)
-                                                            #set($pName = $formatter.formatDate($period.startDate) + ' - ' + $formatter.formatDate($period.endDate))
-                                                            $formatter.option($period.id, $pName, null)
-                                                            #end
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                                                <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Process</button>
-                                            </div>
-                                        </form>
-                                    </div>
+        <div id="editLevelModal" class="modal modal-lg fade level-modal" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">KPI Level</h4>
+            </div>
+            <div class="modal-body">
 
 
-                                    <div id="modal-upload-csv" class="modal modal-lg fade" aria-hidden="true" tabindex="-1">
-                                        <div class="modal-header">
-                                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                                            <h4 class="modal-title">Upload KPI Level CSV</h4>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="upload">
-                                                <div class="btn-upload" id='do-upload-csv'></div>
-                                                <br />
-                                                <!--
-                                                <div class="allow-inserts">
-                                                    <input type="checkbox" id="allow-inserts" /> <label for="allow-inserts">Allow inserts</label>
-                                                </div>
-                                                -->
-                                            </div>
-                                            <br />
-                                            <div class="upload-results">
-                                                <p>
-                                                    <strong>No. inserted:</strong>
-                                                    <span class="badge badge-success num-inserted">-</span>
-                                                    <strong>No. updated:</strong>
-                                                    <span class="badge badge-success num-updated">-</span>
-                                                    <strong>Unmatched rows:</strong>
-                                                    <span class="badge badge-danger num-unmatched">-</span>
-                                                </p>
-                                                <div class="table-responsive">
-                                                    <table class="table table-striped table-hover table-condensed">
-                                                        <tbody>
-                                                            <tr>
-                                                                <td></td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                                        </div>
-                                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-sm btn-success" data-type="form-submit">Save level</button>
+            </div>
+        </div>
 
-                                    <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
-                                    <script type="text/javascript">
-                                        var startDate = null;
-                                        var endDate = null;
-                                        var searchQ = null;
+        <div id="modal-reprocess" class="modal fade" aria-hidden="true" tabindex="-1">
+            <form action="." method="POST" class="form-horizontal">
+                <input type="hidden" name="reprocess" value="reprocess"/>
+                <div class="modal-header">
+                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                    <h4 class="modal-title">Reprocess period</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        This will re-generate KPI assessments and calculated points which should be awarded. This will not by itself
+                        create or change points.
+                    </p>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="users">Users
+                            <small>Username or email address, one per line.</small>
+                        </label>
+                        <div class="col-md-8">
+                            <textarea name="users" class="form-control" rows="4"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="period">Period</label>
+                        <div class="col-md-8">
+                            <select name="period" class="form-control required">
+                                $formatter.option("", "Please select a period", null)
+                                #foreach($period in $page.periods)
+                                #set($pName = $formatter.formatDate($period.startDate) + ' - ' + $formatter.formatDate($period.endDate))
+                                $formatter.option($period.id, $pName, null)
+                                #end
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                    <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Process</button>
+                </div>
+            </form>
+        </div>
 
-                                        $(function () {
-                                            var pageName = getFileName(window.location.pathname);
-                                            setRecentItem(document.title + " (" + pageName + ")", window.location.pathname);
-                                            var kpiName = "$page.kpi.name";
-                                            $(".timeago").timeago();
-                                            $(".timer-units li").click(function (e) {
-                                                e.preventDefault();
-                                                var unit = $(e.target).text();
-                                                $(".timer-unit").text(unit).val(unit);
-                                            });
-                                            var kpiForm = $("form.kpi-form");
-                                            kpiForm.forms({
-                                                callback: function (resp) {
-                                                    if (resp.status) {
-                                                        Msg.info("Saved ok");
-                                                        if (kpiForm.find("#name").val() != kpiName) {
-                                                            window.location.href = "../" + kpiForm.find("#name").val();
-                                                        }
-                                                    } else {
-                                                        Msg.error("An error occured saving: " + resp);
-                                                    }
-                                                }
-                                            });
 
-                                            $(".kpi-process").click(function (e) {
-                                                e.preventDefault();
-                                                if (confirm("This will generate assessed levels for each un-processed period. Are you sure you want to continue?")) {
-                                                    submitProcess("processKpis");
-                                                }
-                                            });
-                                            $(".kpiRewards").click(function (e) {
-                                                e.preventDefault();
-                                                var periodId = $(e.target).data("periodId");
-                                                if (confirm("This will allocate rewards based on KPI achievements for results which have not already had rewards processing. Would you like to continue?")) {
-                                                    submitProcess("processRewards", periodId);
-                                                }
-                                            });
+        <div id="modal-upload-csv" class="modal modal-lg fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                <h4 class="modal-title">Upload KPI Level CSV</h4>
+            </div>
+            <div class="modal-body">
+                <div class="upload">
+                    <div class="btn-upload" id='do-upload-csv'></div>
+                    <br />
+                    <!--
+                    <div class="allow-inserts">
+                        <input type="checkbox" id="allow-inserts" /> <label for="allow-inserts">Allow inserts</label>
+                    </div>
+                    -->
+                </div>
+                <br />
+                <div class="upload-results">
+                    <p>
+                        <strong>No. inserted:</strong>
+                        <span class="badge badge-success num-inserted">-</span>
+                        <strong>No. updated:</strong>
+                        <span class="badge badge-success num-updated">-</span>
+                        <strong>Unmatched rows:</strong>
+                        <span class="badge badge-danger num-unmatched">-</span>
+                    </p>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover table-condensed">
+                            <tbody>
+                                <tr>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+            </div>
+        </div>
 
-                                            var editLevelModal = $("#editLevelModal");
+        <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
+        <script type="text/javascript">
+            var startDate = null;
+            var endDate = null;
+            var searchQ = null;
 
-                                            $(".btn-add-level").click(function (e) {
-                                                e.preventDefault();
-                                                var newName = prompt("Please enter a name for the new level, you can then edit the details");
-                                                if (newName != null) {
-                                                    createLevel(newName);
-                                                }
-                                            });
+            $(function () {
+                var pageName = getFileName(window.location.pathname);
+                setRecentItem(document.title + " (" + pageName + ")", window.location.pathname);
+                var kpiName = "$page.kpi.name";
+                $(".timeago").timeago();
+                $(".timer-units li").click(function (e) {
+                    e.preventDefault();
+                    var unit = $(e.target).text();
+                    $(".timer-unit").text(unit).val(unit);
+                });
+                var kpiForm = $("form.kpi-form");
+                kpiForm.forms({
+                    validate: function (form) {
+                        var extraCriteria = form.find('textarea[name=extraCriteria]');
+                        var eVal = extraCriteria.val();
 
-                                            $(document).on('loaded.bs.modal', ".level-modal", function (e) {
-                                                flog("loaded");
-                                                editLevelModal.find("form").forms({
-                                                    callback: function (resp) {
-                                                        if (resp.status) {
-                                                            Msg.info("Saved level");
-                                                            $("#levels-table-body").reloadFragment();
-                                                            editLevelModal.modal("hide");
-                                                        } else {
-                                                            Msg.error("An error occured saving: " + resp);
-                                                        }
-                                                    }
-                                                });
-                                                editLevelModal.find(".selectVal").on('click', function (e) {
-                                                    var type = $(this).val();
-                                                    var fixed = $(".fixed-value");
-                                                    var series = $(".series-value");
-                                                    if (type === "fixed") {
-                                                        fixed.show();
-                                                        fixed.find("input").prop('disabled', false);
-                                                        series.hide();
-                                                        series.find("input").prop('disabled', true);
-                                                        series.find("select").prop('disabled', true);
-                                                        series.find("select").removeClass("required");
-                                                    } else if (type === "series") {
-                                                        series.show();
-                                                        series.find("input").prop('disabled', false);
-                                                        series.find("select").prop('disabled', false);
-                                                        series.find("select").addClass("required");
-                                                        fixed.hide();
-                                                        fixed.find("input").prop('disabled', true);
-                                                    }
-                                                });
-                                            })
+                        var eDom = $(eVal);
 
-                                            flog("levels", $("#levels-table-body .btn-remove-level"));
-                                            $("#levels-table-body").on("click", ".btn-remove-level", function (e) {
-                                                e.preventDefault();
-                                                var id = $(e.target).closest("a").attr("href");
-                                                doDeleteLevel(id);
-                                            });
+                        var newVal = xml2string(eDom[0]);
 
-                                            $('#modal-reprocess').find('form').forms({
-                                                callback: function (resp) {
-                                                    Msg.info(resp.messages.first());
-                                                    $('#modal-reprocess').modal('hide');
-                                                }
-                                            });
+                        flog('extraCriteria value', newVal);
 
-                                            initRemovePeriods();
-                                            initKpiLevelCsv();
-                                            initQuery();
-                                            initLeaderboard();
-                                        });
+                        extraCriteria.val(newVal)
 
-                                        function initLeaderboard() {
-                                            var leaderboardRange = $('#leaderboardDateRange');
-                                            flog("initLeaderboard", leaderboardRange);
-                                            leaderboardRange.daterangepicker(
-                                                    {
-                                                        format: 'DD/MM/YYYY', // YYYY-MM-DD
-                                                        ranges: {
-                                                            'Last 7 Days': [moment().subtract('days', 6), moment()],
-                                                            'Last 30 Days': [moment().subtract('days', 29), moment()],
-                                                            'This Month': [moment().startOf('month'), moment().endOf('month')],
-                                                            'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
-                                                            'This Year': [moment().startOf('year'), moment()],
-                                                        },
-                                                    },
-                                                    function (start, end) {
-                                                        flog('onChange', start, end);
-                                                        startDate = start;
-                                                        endDate = end;
-                                                    }
-                                            );
+                        return true;
+                    },
+                    callback: function (resp) {
+                        if (resp.status) {
+                            Msg.info("Saved ok");
+                            if (kpiForm.find("#name").val() != kpiName) {
+                                window.location.href = "../" + kpiForm.find("#name").val();
+                            }
+                        } else {
+                            Msg.error("An error occured saving: " + resp);
+                        }
+                    }
+                });
 
-                                            var drp = leaderboardRange.data('daterangepicker');
-                                            flog("drp", drp);
-                                            $("#runLeaderboard").click(function (e) {
-                                                e.preventDefault();
-                                                var startDate = drp.startDate;
-                                                var endDate = drp.endDate;
-                                                flog("drp", drp);
-                                                var val = leaderboardRange.val();
-                                                var url;
-                                                if (val != "") {
-                                                    url = window.location.pathname + "?startDate=" + formatDate(startDate) + "&endDate=" + formatDate(endDate) + "&leaderboard=true";
-                                                } else {
-                                                    url = window.location.pathname + "?leaderboard=true";
-                                                }
-                                                $("#leaderboardResults").reloadFragment({
-                                                    url: url,
-                                                    whenComplete: function () {
-                                                        Msg.info("Loaded leaderboard");
-                                                    }
-                                                });
+                $(".kpi-process").click(function (e) {
+                    e.preventDefault();
+                    if (confirm("This will generate assessed levels for each un-processed period. Are you sure you want to continue?")) {
+                        submitProcess("processKpis");
+                    }
+                });
+                $(".kpiRewards").click(function (e) {
+                    e.preventDefault();
+                    var periodId = $(e.target).data("periodId");
+                    if (confirm("This will allocate rewards based on KPI achievements for results which have not already had rewards processing. Would you like to continue?")) {
+                        submitProcess("processRewards", periodId);
+                    }
+                });
 
-                                            });
-                                        }
+                var editLevelModal = $("#editLevelModal");
 
-                                        function initQuery() {
-                                            $('body').on('keypress', '#data-query', function (e) {
-                                                var code = e.keyCode || e.which;
-                                                if (code == 13) {
-                                                    e.preventDefault();
-                                                    $(this).change();
-                                                    return false;
-                                                }
-                                            });
+                $(".btn-add-level").click(function (e) {
+                    e.preventDefault();
+                    var newName = prompt("Please enter a name for the new level, you can then edit the details");
+                    if (newName != null) {
+                        createLevel(newName);
+                    }
+                });
 
-                                            $('body').on('change', '#data-query', function (e) {
-                                                e.preventDefault();
-                                                var inp = $(this);
-                                                searchQ = inp.val();
-                                                flog(searchQ);
-                                                doQuery();
-                                            });
+                $(document).on('loaded.bs.modal', ".level-modal", function (e) {
+                    flog("loaded");
+                    editLevelModal.find("form").forms({
+                        callback: function (resp) {
+                            if (resp.status) {
+                                Msg.info("Saved level");
+                                $("#levels-table-body").reloadFragment();
+                                editLevelModal.modal("hide");
+                            } else {
+                                Msg.error("An error occured saving: " + resp);
+                            }
+                        }
+                    });
+                    editLevelModal.find(".selectVal").on('click', function (e) {
+                        var type = $(this).val();
+                        var fixed = $(".fixed-value");
+                        var series = $(".series-value");
+                        if (type === "fixed") {
+                            fixed.show();
+                            fixed.find("input").prop('disabled', false);
+                            series.hide();
+                            series.find("input").prop('disabled', true);
+                            series.find("select").prop('disabled', true);
+                            series.find("select").removeClass("required");
+                        } else if (type === "series") {
+                            series.show();
+                            series.find("input").prop('disabled', false);
+                            series.find("select").prop('disabled', false);
+                            series.find("select").addClass("required");
+                            fixed.hide();
+                            fixed.find("input").prop('disabled', true);
+                        }
+                    });
+                })
 
-                                            var reportRange = $('#report-range');
+                flog("levels", $("#levels-table-body .btn-remove-level"));
+                $("#levels-table-body").on("click", ".btn-remove-level", function (e) {
+                    e.preventDefault();
+                    var id = $(e.target).closest("a").attr("href");
+                    doDeleteLevel(id);
+                });
 
-                                            reportRange.exist(function () {
-                                                flog("init report range");
-                                                reportRange.daterangepicker({
-                                                    format: 'DD/MM/YYYY', // YYYY-MM-DD
-                                                    ranges: {
-                                                        'Last 7 Days': [moment().subtract('days', 6), moment()],
-                                                        'Last 30 Days': [moment().subtract('days', 29), moment()],
-                                                        'This Month': [moment().startOf('month'), moment().endOf('month')],
-                                                        'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
-                                                        'This Year': [moment().startOf('year'), moment()],
-                                                    },
-                                                },
-                                                        function (start, end) {
-                                                            flog('onChange', start, end);
-                                                            startDate = start;
-                                                            endDate = end;
-                                                            doQuery();
-                                                        }
-                                                );
-                                            });
-                                        }
+                $('#modal-reprocess').find('form').forms({
+                    callback: function (resp) {
+                        Msg.info(resp.messages.first());
+                        $('#modal-reprocess').modal('hide');
+                    }
+                });
 
-                                        function doQuery() {
-                                            flog('doHistorySearch', startDate, endDate, searchQ);
-                                            Msg.info("Doing search...", 2000);
+                initRemovePeriods();
+                initKpiLevelCsv();
+                initQuery();
+                initLeaderboard();
+            });
 
-                                            var data = {
-                                                startDate: formatDate(startDate),
-                                                finishDate: formatDate(endDate),
-                                                dataQuery: searchQ
-                                            };
-                                            flog("data", data);
+            function initLeaderboard() {
+                var leaderboardRange = $('#leaderboardDateRange');
+                flog("initLeaderboard", leaderboardRange);
+                leaderboardRange.daterangepicker(
+                        {
+                            format: 'DD/MM/YYYY', // YYYY-MM-DD
+                            ranges: {
+                                'Last 7 Days': [moment().subtract('days', 6), moment()],
+                                'Last 30 Days': [moment().subtract('days', 29), moment()],
+                                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                                'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
+                                'This Year': [moment().startOf('year'), moment()],
+                            },
+                        },
+                        function (start, end) {
+                            flog('onChange', start, end);
+                            startDate = start;
+                            endDate = end;
+                        }
+                );
 
-                                            var target = $("#queryResults");
-                                            //                target.load();
+                var drp = leaderboardRange.data('daterangepicker');
+                flog("drp", drp);
+                $("#runLeaderboard").click(function (e) {
+                    e.preventDefault();
+                    var startDate = drp.startDate;
+                    var endDate = drp.endDate;
+                    flog("drp", drp);
+                    var val = leaderboardRange.val();
+                    var url;
+                    if (val != "") {
+                        url = window.location.pathname + "?startDate=" + formatDate(startDate) + "&endDate=" + formatDate(endDate) + "&leaderboard=true";
+                    } else {
+                        url = window.location.pathname + "?leaderboard=true";
+                    }
+                    $("#leaderboardResults").reloadFragment({
+                        url: url,
+                        whenComplete: function () {
+                            Msg.info("Loaded leaderboard");
+                        }
+                    });
 
-                                            $.ajax({
-                                                type: "GET",
-                                                url: window.location.pathname,
-                                                dataType: 'html',
-                                                data: data,
-                                                success: function (content) {
-                                                    flog('response', content);
-                                                    Msg.success("Search complete", 2000);
-                                                    var newBody = $(content).find("#queryResults");
-                                                    flog("replacing ", target);
-                                                    target.replaceWith(newBody);
+                });
+            }
 
-                                                    $("abbr.timeago").timeago();
+            function initQuery() {
+                $('body').on('keypress', '#data-query', function (e) {
+                    var code = e.keyCode || e.which;
+                    if (code == 13) {
+                        e.preventDefault();
+                        $(this).change();
+                        return false;
+                    }
+                });
 
-                                                }
-                                            });
-                                        }
+                $('body').on('change', '#data-query', function (e) {
+                    e.preventDefault();
+                    var inp = $(this);
+                    searchQ = inp.val();
+                    flog(searchQ);
+                    doQuery();
+                });
 
-                                        function createLevel(name) {
-                                            flog("createLevel", name);
-                                            $.ajax({
-                                                type: 'POST',
-                                                data: {
-                                                    newLevelTitle: name
-                                                },
-                                                dataType: "json",
-                                                url: window.location.pathname,
-                                                success: function (data) {
-                                                    if (data.status) {
-                                                        Msg.success("Created new level ok");
-                                                        $("#levels-table-body").reloadFragment();
-                                                    } else {
-                                                        Msg.error("There was a problem creating the level. Please try again and contact the administrator if you still have problems");
-                                                    }
-                                                },
-                                                error: function (resp) {
-                                                    Msg.error("There was a problem removing the level. Please try again and contact the administrator if you still have problems");
-                                                }
-                                            });
-                                        }
+                var reportRange = $('#report-range');
 
-                                        function doDeleteLevel(id) {
-                                            flog("delete", id);
-                                            var level = $("#level-" + id);
-                                            confirmDelete(id, "this level", function () {
-                                                flog('deleted', level);
-                                                level.remove();
-                                                Msg.success('Deleted level');
-                                            });
-                                        }
+                reportRange.exist(function () {
+                    flog("init report range");
+                    reportRange.daterangepicker({
+                        format: 'DD/MM/YYYY', // YYYY-MM-DD
+                        ranges: {
+                            'Last 7 Days': [moment().subtract('days', 6), moment()],
+                            'Last 30 Days': [moment().subtract('days', 29), moment()],
+                            'This Month': [moment().startOf('month'), moment().endOf('month')],
+                            'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
+                            'This Year': [moment().startOf('year'), moment()],
+                        },
+                    },
+                            function (start, end) {
+                                flog('onChange', start, end);
+                                startDate = start;
+                                endDate = end;
+                                doQuery();
+                            }
+                    );
+                });
+            }
 
-                                        function submitProcess(processName, periodId) {
-                                            flog("submitProcess", processName);
-                                            $.ajax({
-                                                type: 'POST',
-                                                data: {
-                                                    process: processName,
-                                                    periodId: periodId
-                                                },
-                                                dataType: "json",
-                                                url: window.location.pathname,
-                                                success: function (data) {
-                                                    if (data.status) {
-                                                        Msg.success("Submitted for processing");
-                                                    } else {
-                                                        Msg.error("Could not start processing: " + data.messages);
-                                                    }
-                                                },
-                                                error: function (resp) {
-                                                    Msg.error("There was a problem submitting the process. Please try again and contact the administrator if you still have problems");
-                                                }
-                                            });
-                                        }
+            function doQuery() {
+                flog('doHistorySearch', startDate, endDate, searchQ);
+                Msg.info("Doing search...", 2000);
 
-                                        function initRemovePeriods() {
-                                            $(".periods-delete").click(function (e) {
-                                                var node = $(e.target);
-                                                flog("initRemovePeriods", $("#periods-table"));
-                                                var checkBoxes = $("#table-periods").find('tbody input.deletePeriodId:checked');
-                                                if (checkBoxes.length === 0) {
-                                                    Msg.error("Please select the periods you want to remove by clicking the checkboxs to the right");
-                                                } else {
-                                                    if (confirm("Are you sure you want to remove " + checkBoxes.length + " periods?")) {
-                                                        doRemovePeriods(checkBoxes);
-                                                    }
-                                                }
-                                            });
-                                        }
+                var data = {
+                    startDate: formatDate(startDate),
+                    finishDate: formatDate(endDate),
+                    dataQuery: searchQ
+                };
+                flog("data", data);
 
-                                        function doRemovePeriods(checkBoxes) {
-                                            var vals = "";
-                                            checkBoxes.each(function (i, n) {
-                                                vals += $(n).val() + ",";
-                                            });
-                                            var data = {
-                                                deletePeriodId: vals
-                                            };
-                                            flog("periodis", data);
-                                            $.ajax({
-                                                type: 'POST',
-                                                data: data,
-                                                dataType: "json",
-                                                url: window.location.pathname,
-                                                success: function (data) {
-                                                    flog("success", data);
-                                                    if (data.status) {
-                                                        $("#table-periods").reloadFragment();
-                                                        Msg.success("Removed periods ok");
-                                                    } else {
-                                                        Msg.error("There was a problem removing periods. Please try again and contact the administrator if you still have problems");
-                                                    }
-                                                },
-                                                error: function (resp) {
-                                                    Msg.error("An error occurred removing periods. You might not have permission to do this");
-                                                }
-                                            });
-                                        }
+                var target = $("#queryResults");
+                //                target.load();
 
-                                        function initKpiLevelCsv() {
-                                            var modalUploadCsv = $("#modal-upload-csv");
-                                            $("#uploadKpiCsv").click(function (e) {
-                                                e.preventDefault();
+                $.ajax({
+                    type: "GET",
+                    url: window.location.pathname,
+                    dataType: 'html',
+                    data: data,
+                    success: function (content) {
+                        flog('response', content);
+                        Msg.success("Search complete", 2000);
+                        var newBody = $(content).find("#queryResults");
+                        flog("replacing ", target);
+                        target.replaceWith(newBody);
 
-                                                modalUploadCsv.modal('show');
-                                            });
+                        $("abbr.timeago").timeago();
 
-                                            var resultUploadCsv = modalUploadCsv.find('.upload-results');
-                                            $("#do-upload-csv").mupload({
-                                                buttonText: "<i class=\"clip-folder\"></i> Upload spreadsheet",
-                                                url: "kpiLevels.csv",
-                                                useJsonPut: false,
-                                                oncomplete: function (data, name, href) {
-                                                    flog("oncomplete:", data.result.data, name, href);
-                                                    resultUploadCsv.find('.num-updated').text(data.result.data.numUpdated);
-                                                    resultUploadCsv.find('.num-inserted').text(data.result.data.numInserted);
-                                                    resultUploadCsv.find('.num-unmatched').text(data.result.data.unmatched.length);
-                                                    showUnmatched(resultUploadCsv, data.result.data.unmatched);
-                                                    resultUploadCsv.show();
-                                                    Msg.success("Upload completed. Please review any unmatched members below, or refresh the page to see the updated list of members");
-                                                    $("#levels-table-body").reloadFragment({
-                                                        onComplete: function () {
-                                                            $("#levels-table-body").on("click", ".btn-remove-level", function (e) {
-                                                                e.preventDefault();
-                                                                if (confirm("Are you sure you want to delete this level?")) {
-                                                                    var id = $(e.target).closest("a").attr("href");
-                                                                    doDeleteLevel(id);
-                                                                }
-                                                            });
-                                                        }
-                                                    });
-                                                }
-                                            });
-                                        }
+                    }
+                });
+            }
 
-                                        function showUnmatched(resultUploadCsv, unmatched) {
-                                            var unmatchedTable = resultUploadCsv.find("table");
-                                            var tbody = unmatchedTable.find("tbody");
-                                            tbody.html("");
-                                            $.each(unmatched, function (i, row) {
-                                                flog("unmatched", row);
-                                                var tr = $("<tr>");
-                                                $.each(row, function (ii, field) {
-                                                    tr.append("<td>" + field + "</td>");
-                                                });
-                                                tbody.append(tr);
-                                            });
-                                        }
-                                    </script>
-                                    </body>
-                                    </html>
+            function createLevel(name) {
+                flog("createLevel", name);
+                $.ajax({
+                    type: 'POST',
+                    data: {
+                        newLevelTitle: name
+                    },
+                    dataType: "json",
+                    url: window.location.pathname,
+                    success: function (data) {
+                        if (data.status) {
+                            Msg.success("Created new level ok");
+                            $("#levels-table-body").reloadFragment();
+                        } else {
+                            Msg.error("There was a problem creating the level. Please try again and contact the administrator if you still have problems");
+                        }
+                    },
+                    error: function (resp) {
+                        Msg.error("There was a problem removing the level. Please try again and contact the administrator if you still have problems");
+                    }
+                });
+            }
+
+            function doDeleteLevel(id) {
+                flog("delete", id);
+                var level = $("#level-" + id);
+                confirmDelete(id, "this level", function () {
+                    flog('deleted', level);
+                    level.remove();
+                    Msg.success('Deleted level');
+                });
+            }
+
+            function submitProcess(processName, periodId) {
+                flog("submitProcess", processName);
+                $.ajax({
+                    type: 'POST',
+                    data: {
+                        process: processName,
+                        periodId: periodId
+                    },
+                    dataType: "json",
+                    url: window.location.pathname,
+                    success: function (data) {
+                        if (data.status) {
+                            Msg.success("Submitted for processing");
+                        } else {
+                            Msg.error("Could not start processing: " + data.messages);
+                        }
+                    },
+                    error: function (resp) {
+                        Msg.error("There was a problem submitting the process. Please try again and contact the administrator if you still have problems");
+                    }
+                });
+            }
+
+            function initRemovePeriods() {
+                $(".periods-delete").click(function (e) {
+                    var node = $(e.target);
+                    flog("initRemovePeriods", $("#periods-table"));
+                    var checkBoxes = $("#table-periods").find('tbody input.deletePeriodId:checked');
+                    if (checkBoxes.length === 0) {
+                        Msg.error("Please select the periods you want to remove by clicking the checkboxs to the right");
+                    } else {
+                        if (confirm("Are you sure you want to remove " + checkBoxes.length + " periods?")) {
+                            doRemovePeriods(checkBoxes);
+                        }
+                    }
+                });
+            }
+
+            function doRemovePeriods(checkBoxes) {
+                var vals = "";
+                checkBoxes.each(function (i, n) {
+                    vals += $(n).val() + ",";
+                });
+                var data = {
+                    deletePeriodId: vals
+                };
+                flog("periodis", data);
+                $.ajax({
+                    type: 'POST',
+                    data: data,
+                    dataType: "json",
+                    url: window.location.pathname,
+                    success: function (data) {
+                        flog("success", data);
+                        if (data.status) {
+                            $("#table-periods").reloadFragment();
+                            Msg.success("Removed periods ok");
+                        } else {
+                            Msg.error("There was a problem removing periods. Please try again and contact the administrator if you still have problems");
+                        }
+                    },
+                    error: function (resp) {
+                        Msg.error("An error occurred removing periods. You might not have permission to do this");
+                    }
+                });
+            }
+
+            function initKpiLevelCsv() {
+                var modalUploadCsv = $("#modal-upload-csv");
+                $("#uploadKpiCsv").click(function (e) {
+                    e.preventDefault();
+
+                    modalUploadCsv.modal('show');
+                });
+
+                var resultUploadCsv = modalUploadCsv.find('.upload-results');
+                $("#do-upload-csv").mupload({
+                    buttonText: "<i class=\"clip-folder\"></i> Upload spreadsheet",
+                    url: "kpiLevels.csv",
+                    useJsonPut: false,
+                    oncomplete: function (data, name, href) {
+                        flog("oncomplete:", data.result.data, name, href);
+                        resultUploadCsv.find('.num-updated').text(data.result.data.numUpdated);
+                        resultUploadCsv.find('.num-inserted').text(data.result.data.numInserted);
+                        resultUploadCsv.find('.num-unmatched').text(data.result.data.unmatched.length);
+                        showUnmatched(resultUploadCsv, data.result.data.unmatched);
+                        resultUploadCsv.show();
+                        Msg.success("Upload completed. Please review any unmatched members below, or refresh the page to see the updated list of members");
+                        $("#levels-table-body").reloadFragment({
+                            onComplete: function () {
+                                $("#levels-table-body").on("click", ".btn-remove-level", function (e) {
+                                    e.preventDefault();
+                                    if (confirm("Are you sure you want to delete this level?")) {
+                                        var id = $(e.target).closest("a").attr("href");
+                                        doDeleteLevel(id);
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+
+            function showUnmatched(resultUploadCsv, unmatched) {
+                var unmatchedTable = resultUploadCsv.find("table");
+                var tbody = unmatchedTable.find("tbody");
+                tbody.html("");
+                $.each(unmatched, function (i, row) {
+                    flog("unmatched", row);
+                    var tr = $("<tr>");
+                    $.each(row, function (ii, field) {
+                        tr.append("<td>" + field + "</td>");
+                    });
+                    tbody.append(tr);
+                });
+            }
+
+            function xml2string(node) {
+                if (typeof (XMLSerializer) !== 'undefined') {
+                    var serializer = new XMLSerializer();
+                    return serializer.serializeToString(node);
+                } else if (node.xml) {
+                    return node.xml;
+                }
+            }
+
+        </script>
+    </body>
+</html>
