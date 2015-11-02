@@ -29,7 +29,7 @@
                         <td>$formatter.formatDateTime($audit.actionDate)</td>
                         <td>$audit.actionUser.formattedName</td>
                         <td>$page.getClassDisplayName($audit.entityClassName)</td>
-                        <td>$formatter.htmlEncode($audit.recordState)</td>
+                        <td>$!audit.description</td>
                     </tr>
                     #end
                 </tbody>
