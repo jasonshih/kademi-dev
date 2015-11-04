@@ -696,6 +696,7 @@ label small {
    ============================================================================ */
 .fuse-search-wrapper {
     position: relative;
+    z-index: 1;
 }
 
 #fuse-search-suggestions {
@@ -707,6 +708,7 @@ label small {
     padding: 0;
     min-width: 100%;
     list-style: none;
+    white-space: nowrap;
 }
 
 #fuse-search-input {

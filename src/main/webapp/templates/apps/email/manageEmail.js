@@ -235,21 +235,27 @@ function initFormDetailEmail() {
             var fromAddressStr = fromAddress.val().trim();
             var replyToAddress= $('#replyToAddress');
             var replyToAddressStr = replyToAddress.val().trim();
+            var emailEnabled = $('#emailEnabled');
+            var isEmailEnabled = emailEnabled.length > 0 ? emailEnabled.is(':checked') : true;
 
-            if (fromAddressStr) {
-                if (!validateFuseEmail(fromAddressStr)) {
-                    error++;
-                    showErrorField(fromAddress);
-                }
+            flog('isEmailEnabled: ' + isEmailEnabled);
 
-                if (replyToAddressStr && !validateFuseEmail(replyToAddressStr)) {
-                    error++;
-                    showErrorField(replyToAddress);
-                }
-            } else {
-                if (!validateFuseEmail(replyToAddressStr)) {
-                    error++;
-                    showErrorField(replyToAddress);
+            if (isEmailEnabled) {
+                if (fromAddressStr) {
+                    if (!validateFuseEmail(fromAddressStr)) {
+                        error++;
+                        showErrorField(fromAddress);
+                    }
+
+                    if (replyToAddressStr && !validateFuseEmail(replyToAddressStr)) {
+                        error++;
+                        showErrorField(replyToAddress);
+                    }
+                } else {
+                    if (!validateFuseEmail(replyToAddressStr)) {
+                        error++;
+                        showErrorField(replyToAddress);
+                    }
                 }
             }
 
