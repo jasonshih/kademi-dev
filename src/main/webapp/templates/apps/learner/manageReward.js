@@ -98,6 +98,24 @@ function initManagePoints() {
         }
     });
 
+    var debitModal = $('#modal-debit-points');
+    var debitModalForm = debitModal.find('form');
+
+    debitModalForm.forms({
+        callback: function (resp) {
+            if (resp.status) {
+                debitModal.modal('hide');
+                Msg.success(resp.messages);
+            } else {
+                Msg.warning(resp.messages);
+            }
+        }
+    });
+
+    debitModal.on('hidden', function () {
+        debitModalForm.trigger('reset');
+    });
+
     initHistorySearch();
 
 }
