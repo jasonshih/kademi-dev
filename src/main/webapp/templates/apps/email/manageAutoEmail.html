@@ -101,7 +101,7 @@
                                 </div>
                             </div>
                             #set($stats = $page.emailStats)
-                            <div class="col-xl-4">
+                            <div class="col-md-4">
                                 <div class="row p-b-20">
                                     <div class="col-md-12">
                                         <div class="input-group date-range">
@@ -110,13 +110,13 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="ktile-wrapper col-xl-6 col-lg-6 col-md-6 col-sm-6">
+                                <div class="ktile-wrapper col-sm-4 col-md-6">
                                     <div class="ktile ktile-lg-v">
                                         <div class="ktile-inner">
                                             <div class="ktile-body">
                                                 <div class="ktile-front ktile-shadow">
                                                     <div class="row" style="height: 100%; margin: 0">
-                                                        <div class="col-sm-12 bgm-pink" style="height: 60%;">
+                                                        <div class="bgm-pink" style="height: 60%;">
                                                             <div class="text-center ktile-content ktile-content-relative">
                                                                 <div data-percent="$stats.deliveryRatePerc" class="easy-pie emailsMainPie largePie center-block">
                                                                     <div class="figure">
@@ -130,7 +130,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="col-sm-12" style="height: 38%">
+                                                        <div style="height: 38%">
                                                             <div class="row text-center ktile-content ktile-content-relative">
                                                                 <div class="col-sm-6" style="padding: 0 3px">
                                                                     <div data-percent="$!stats.openRatePerc" class="easy-pie emailsSubPie smallPie bluePie">
@@ -165,13 +165,13 @@
                                     </div>
                                 </div>
                                 #set($smsStats = $page.smsStats)
-                                <div class="ktile-wrapper col-xl-6 col-lg-6 col-md-6">
+                                <div class="ktile-wrapper col-sm-4 col-md-6">
                                     <div class="ktile ktile-lg-v">
                                         <div class="ktile-inner">
                                             <div class="ktile-body">
                                                 <div class="ktile-front ktile-shadow">
                                                     <div class="row" style="height: 100%; margin: 0">
-                                                        <div class="col-xl-12 col-sm-12 bgm-blue" style="height: 60%;">
+                                                        <div class="bgm-blue" style="height: 60%;">
                                                             <div class="text-center ktile-content ktile-content-relative">
                                                                 <div data-percent="$smsStats.deliveryRatePerc" class="easy-pie emailsMainPie largePie center-block">
                                                                     <div class="figure">
@@ -185,7 +185,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="col-sm-12" style="height: 38%">
+                                                        <div style="height: 38%">
                                                             <div class="row text-center ktile-content ktile-content-relative">
                                                                 <h4>Total Cost: $!smsStatus.currency$smsStats.totalCost</h4>
                                                             </div>
