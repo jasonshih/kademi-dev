@@ -193,12 +193,12 @@
             <form method="post" action="$page.href" class="form-horizontal" id="new-points-form">
                 <div class="modal-body">
                     <p class="alert alert-danger">Please note that any applicable allocation rules will also be processed.</p>
-                    <p>Please specify a users email to assign points to.</p>
+                    <p>Please specify a users email or userId to assign points to.</p>
 
                     <div class="form-group">
-                        <label class="control-label col-md-3" for="newUserEmail">Email</label>
+                        <label class="control-label col-md-3" for="newUserEmail">Email or UserID</label>
                         <div class="col-md-9">
-                            <input type="text" name="awardToEmail" required="true" id="awardToEmail" class="email required form-control" />
+                            <input type="text" name="awardToEmail" required="true" id="awardToEmail" class="required form-control" />
                         </div>
                     </div>
 
@@ -255,10 +255,10 @@
             <form method="post" action="$page.href" class="form-horizontal" id="new-points-form">
                 <input type="hidden" name="debitPoints" value="debitPoints"/>
                 <div class="modal-body">
-                    <p>Please specify a users email to assign points to.</p>
+                    <p>Please specify a users email or userId to assign points to.</p>
 
                     <div class="form-group">
-                        <label class="control-label col-md-3" for="email">Email</label>
+                        <label class="control-label col-md-3" for="email">Email or UserID</label>
                         <div class="col-md-9">
                             <input type="text" name="email" required="true" class="email required form-control" />
                         </div>
