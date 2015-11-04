@@ -168,15 +168,6 @@
 /*	Extra Small Devices Only
  /* ---------------------------------------------------------------------- */
 @media (max-width: 767px) {
-    .fuse-header .navbar-tools > ul > li.fuse-header-item > a > .org_name {
-        max-width: 140px;
-        display: inline-block;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        vertical-align: top;
-    }
-
     .fuse-header .navbar-tools > ul > li.fuse-header-item.fuse-search {
         position: absolute;
         left: 50px;
@@ -484,6 +475,20 @@
 
     .main-navigation {
         z-index: 1000;
+    }
+
+
+    .fuse-header .navbar-tools > ul > li.fuse-header-item.fuse-search #fuse-search-input {
+        width: 160px;
+    }
+
+    .fuse-header .navbar-tools > ul > li.fuse-header-item > a > .org_name {
+        max-width: 140px;
+        display: inline-block;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        vertical-align: top;
     }
 
     /***

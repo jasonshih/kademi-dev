@@ -715,12 +715,6 @@ label small {
     width: 300px;
 }
 
-@media (min-width: 768px) and (max-width: 991px) {
-    #fuse-search-input {
-        width: 160px;
-    }
-}
-
 #fuse-search-suggestions li + li {
     border-top: 1px solid #d5d5d5;
 }
