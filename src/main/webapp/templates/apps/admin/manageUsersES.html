@@ -100,7 +100,7 @@
                                         <th><a class="sort-field" id="firstName" href="#">Name</a></th>
                                         <th><a class="sort-field" id="email" href="#">Email</a></th>
                                         <th><a class="sort-field" id="phone" href="#">Contact</a></th>
-                                        <th><a class="sort-field" id="memberships.group" href="#">Primary group</a></th>
+                                        <th><a class="sort-field" id="memberships.group" href="#">Primary groups</a></th>
                                         <th colspan="2" style="text-align: right">
                                             <div class="btn-group">
                                                 <button type="button" class="btn btn-sm btn-default btn-add-to-group">Add to Group</button>
@@ -124,7 +124,6 @@
                                     </tr>
                                     #else
                                     #foreach($p in $page.searchResults)
-                                    #set( $groupName = $page.groupName( $p.fields.get("memberships.group").value ) )
                                     <tr>
                                         <td class="text">
                                             <span title="$formatter.htmlEncode($p.fields.firstName.value) $formatter.htmlEncode($p.fields.surName.value)">
@@ -135,8 +134,17 @@
                                         <td class="text"><a href="mailto:$p.fields.email.value">$p.fields.email.value</a></td>
                                         <td class="text">$!p.fields.phone.value</td>
                                         <td class="text">
-                                            #if( $groupName )
-                                            <a title="$groupName" href="/manageGroups/$groupName/">$groupName</a>
+                                            #set( $groups = $page.primaryGroups( $p.fields.get("memberships.group").values ) )
+                                            #foreach( $group in $groups )
+                                            <div class="label label-info" style="margin-right: 5px;">
+                                            <a title="$group.name" href="/groups/$group.name/" style="color: white">
+                                                #if( $group.title)
+                                                $group.title
+                                                #else
+                                                $group.name
+                                                #end
+                                            </a>
+                                            </div>
                                             #end
                                         </td>
                                         <td class="action">
