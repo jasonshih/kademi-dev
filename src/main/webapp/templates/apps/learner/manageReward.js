@@ -510,7 +510,9 @@ function initHistorySearch() {
         flog("init report range");
         reportRange.daterangepicker({
             format: 'DD/MM/YYYY', // YYYY-MM-DD
+            startDate: moment().startOf('year').format("DD/MM/YYYY"),
             ranges: {
+                'Today': [moment(), moment()],
                 'Last 7 Days': [moment().subtract('days', 6), moment()],
                 'Last 30 Days': [moment().subtract('days', 29), moment()],
                 'This Month': [moment().startOf('month'), moment().endOf('month')],
@@ -570,6 +572,8 @@ function doHistorySearch() {
         searchReward: $("#searchReward").val(),
     };
     flog("data", data);
+
+    $('.btn-export-points').attr('href', 'points.csv?' + $.param(data));
 
     var target = $("#pointsBody");
     target.load();
