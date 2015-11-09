@@ -701,7 +701,11 @@ function initGroupPasswordPolicy() {
                 modals.modal('hide');
                 modalForms.trigger('reset');
                 Msg.info('Added Policy');
-                $('#policy-list-' + resp.data).reloadFragment();
+                $('#policy-list-' + resp.data).reloadFragment({
+                    whenComplete: function () {
+                        initPPTemplates();
+                    }
+                });
             } else {
                 Msg.warning(resp.messages);
             }
@@ -753,11 +757,102 @@ function initGroupPasswordPolicy() {
             },
             success: function (resp) {
                 Msg.info('Removed Policy');
-                $('#policy-list-' + groupName).reloadFragment();
+                $('#policy-list-' + groupName).reloadFragment({
+                    whenComplete: function () {
+                        initPPTemplates();
+                    }
+                });
             }
         });
     });
+    initPPTemplates();
+
+    $('body').on('change', '.add-policy-modal .preset-select', function (e) {
+        var select = $(this);
+        var val = select.val();
+
+        var temp = null;
+        for (var i = 0; i < ppTemplates.length; i++) {
+            if (ppTemplates[i].name === val) {
+                temp = ppTemplates[i];
+                break;
+            }
+        }
+
+        var m = select.closest('.add-policy-modal');
+
+        if (temp !== null) {
+            m.find('input[name=minLength]').val(temp.minLength);
+            m.find('input[name=minUpperCase]').val(temp.minUpperCase);
+            m.find('input[name=minLowerCase]').val(temp.minLowerCase);
+            m.find('input[name=minAlpha]').val(temp.minAlpha);
+            m.find('input[name=minNumeric]').val(temp.minNumeric);
+            m.find('input[name=maxRepeat]').val(temp.maxRepeat);
+            m.find('input[name=badWords]').val(temp.badWords);
+            m.find('input[name=customRegex]').val(temp.customRegex);
+        } else {
+            m.find('input[name=minLength]').val('');
+            m.find('input[name=minUpperCase]').val('');
+            m.find('input[name=minLowerCase]').val('');
+            m.find('input[name=minAlpha]').val('');
+            m.find('input[name=minNumeric]').val('');
+            m.find('input[name=maxRepeat]').val('');
+            m.find('input[name=badWords]').val('');
+            m.find('input[name=customRegex]').val('');
+        }
+    });
 }
+
+function initPPTemplates() {
+    var modals = $('.add-policy-modal');
+
+    var presetSelect = modals.find('.preset-select');
+    presetSelect.empty();
+
+    presetSelect.append('<option value=""></option>');
+    for (var i = 0; i < ppTemplates.length; i++) {
+        presetSelect.append('<option value="' + ppTemplates[i].name + '">' + ppTemplates[i].title + '</option>');
+    }
+}
+
+var ppTemplates = [
+    {
+        "name": "min8chars",
+        "title": "Minimum 8 Characters",
+        "minLength": 8,
+        "minUpperCase": null,
+        "minLowerCase": null,
+        "minAlpha": 1,
+        "minNumeric": 1,
+        "maxRepeat": null,
+        "badWords": null,
+        "customRegex": null
+    },
+    {
+        "name": "min8chars_mixed",
+        "title": "Minimum 8 Characters, Mixed case & 1 number",
+        "minLength": 8,
+        "minUpperCase": 1,
+        "minLowerCase": 1,
+        "minAlpha": 2,
+        "minNumeric": 1,
+        "maxRepeat": null,
+        "badWords": null,
+        "customRegex": null
+    },
+    {
+        "name": "min8chars_strict",
+        "title": "Minimum 8 Characters, Mixed case & 2 number & max 3 repeats",
+        "minLength": 8,
+        "minUpperCase": 1,
+        "minLowerCase": 1,
+        "minAlpha": 2,
+        "minNumeric": 2,
+        "maxRepeat": 3,
+        "badWords": null,
+        "customRegex": null
+    }
+];
 
 function initOptInGroups() {
     $('.optins input[type=checkbox]').click(function (e) {
