@@ -14,6 +14,7 @@ function initManageGroup() {
     //initAddToFolder();
     //initRemoveFromFolder();
     initGroupFolder();
+    initGroupPasswordPolicy();
 }
 
 function initPanelHeader() {
@@ -673,6 +674,49 @@ function initGroupFolder() {
         over: function (event, ui) {
             flog(event, ui);
         }
+    });
+}
+
+function initGroupPasswordPolicy() {
+    var modals = $('.add-policy-modal');
+    var modalForms = modals.find('form');
+
+    modalForms.forms({
+        callback: function (resp) {
+            if (resp.status) {
+                modals.modal('hide');
+                modalForms.trigger('reset');
+                Msg.info('Added Policy');
+                $('#policy-list-' + resp.data).reloadFragment();
+            } else {
+                Msg.warning(resp.messages);
+            }
+        }
+    });
+
+    $('body').on('click', '.btn-edit-policy', function (e) {
+        e.preventDefault();
+    });
+
+    $('body').on('click', '.btn-del-policy', function (e) {
+        e.preventDefault();
+
+        var btn = $(this);
+        var article = btn.closest('article');
+        var ppid = article.data('ppid');
+        var groupName = article.data('groupname');
+
+        $.ajax({
+            type: 'POST',
+            url: window.location.pathname,
+            data: {
+                deletePolicy: ppid
+            },
+            success: function (resp) {
+                Msg.info('Removed Policy');
+                $('#policy-list-' + groupName).reloadFragment();
+            }
+        });
     });
 }
 

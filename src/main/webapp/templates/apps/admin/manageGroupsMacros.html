@@ -27,7 +27,7 @@
                     #set($gName = false)
                     #set($gName = $group.groupTitle)
                     #if(!$gName)
-                        #set($gName = $group.name)
+                    #set($gName = $group.name)
                     #end
                     #if( $group.groupType == "P" )
                     <b class="text-success">$gName</b>
@@ -70,54 +70,145 @@
             </div>
             #if($folder)
             <div id="group-$folder.name.replaceAll('[^A-Za-z0-9]','')-${foreach.count}" class="collapse">
-            #else
-            <div id="group-${foreach.count}" class="collapse">
-            #end
-                <div class="panel-body">
-                    #portlets("groupDetails")
+                #else
+                <div id="group-${foreach.count}" class="collapse">
+                    #end
+                    <div class="panel-body">
+                        #portlets("groupDetails")
 
-                    <h4>Roles</h4>
-                    <hr class="hr-sm" />
-                    <p class="role-action">
-                        <a href="#modal-edit-roles" data-toggle="modal" data-group="$group.name" class="btn btn-sm btn-success btn-add-role-group pull-right"><i class="fa fa-plus"></i> Add roles</a>
-                    </p>
-                    <div class="blocks-wrapper roles-wrapper">
-                        #foreach($role in $group.children.ofType.role)
-                        <span class="block role">
-                            <span class="block-name">$role.title</span>
-                            <a class="btn btn-xs btn-danger btn-remove-role" href="$role.href" title="Remove this role"><i class="fa fa-times"></i></a>
-                        </span>
-                        #end
-                    </div>
-
-                    <h4>Website access</h4>
-                    <hr class="hr-sm" />
-                    <div class="article-wrapper showed-action websites-list">
-                        #set($signups = $group.signupPages)
-                        #if( $signups.isEmpty() )
-                        <p>This user group does not have access to any websites</p>
-                        #else
-                        #foreach($p in $signups.keySet())
-                        <article>
-                            <span class="article-name">
-                                <a target="_blank" href="http://${p}${formatter.portString}"><b>$p</b></a>
+                        <h4>Roles</h4>
+                        <hr class="hr-sm" />
+                        <p class="role-action">
+                            <a href="#modal-edit-roles" data-toggle="modal" data-group="$group.name" class="btn btn-sm btn-success btn-add-role-group pull-right"><i class="fa fa-plus"></i> Add roles</a>
+                        </p>
+                        <div class="blocks-wrapper roles-wrapper">
+                            #foreach($role in $group.children.ofType.role)
+                            <span class="block role">
+                                <span class="block-name">$role.title</span>
+                                <a class="btn btn-xs btn-danger btn-remove-role" href="$role.href" title="Remove this role"><i class="fa fa-times"></i></a>
                             </span>
-                            #if( $group.publicSignup )
-                            <aside class="article-action">
-                                <a target="_blank" href="$signups.get($p)" class="btn btn-sm btn-primary">Signup page</a>
-                            </aside>
-                            #else
-                            <aside class="article-more-infor">
-                                No signup page
-                            </aside>
                             #end
-                        </article>
-                        #end
-                        #end
+                        </div>
+
+                        <h4>Website access</h4>
+                        <hr class="hr-sm" />
+                        <div class="article-wrapper showed-action websites-list">
+                            #set($signups = $group.signupPages)
+                            #if( $signups.isEmpty() )
+                            <p>This user group does not have access to any websites</p>
+                            #else
+                            #foreach($p in $signups.keySet())
+                            <article>
+                                <span class="article-name">
+                                    <a target="_blank" href="http://${p}${formatter.portString}"><b>$p</b></a>
+                                </span>
+                                #if( $group.publicSignup )
+                                <aside class="article-action">
+                                    <a target="_blank" href="$signups.get($p)" class="btn btn-sm btn-primary">Signup page</a>
+                                </aside>
+                                #else
+                                <aside class="article-more-infor">
+                                    No signup page
+                                </aside>
+                                #end
+                            </article>
+                            #end
+                            #end
+                        </div>
+
+                        <div id="policy-list-$group.name" data-role="group-programs">
+                            <h4>Password Policies</h4>
+                            <hr class="hr-sm" />
+                            <div class="article-wrapper showed-action policy-list">
+                                #set($policies = false)
+                                #set($policies = $page.getPasswordPolicies($group.group))
+                                #if($policies.empty)
+                                <p>This group does not have any password policies</p>
+                                #else
+                                #foreach($pp in $policies)
+                                <article data-ppid="$pp.id" data-groupname="$group.name">
+                                    <span class="article-name">
+                                        $page.getPasswordPolicyDescription($pp)
+                                    </span>
+                                    <aside class="article-action">
+                                        <a href="#" class="btn btn-sm btn-info btn-edit-policy"><i class="fa fa-edit"></i></a>
+                                        <a href="#" class="btn btn-sm btn-danger btn-del-policy"><i class="fa fa-trash"></i></a>
+                                    </aside>
+                                </article>
+                                #end
+                                #end
+                            </div>
+                            <p class="clearfix article-wrapper-action">
+                                <a class="btn btn-sm btn-success pull-right" data-toggle="modal" href="#modal-add-policy-$group.name"><i class="fa fa-plus"></i> Add new policy</a>
+                            </p>
+
+                            <div id="modal-add-policy-$group.name" class="modal modal-md fade add-policy-modal" aria-hidden="true" tabindex="-1" data-group-name="$group.name">
+                                <form action="." method="POST" class="form-horizontal">
+                                    <div class="modal-header">
+                                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                                        <h4 class="modal-title">Add new password policy for $group.name</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <input type='hidden' name="addPasswordPolicy" value="$group.name"/>
+                                        <div class="form-group">
+                                            <label class="col-md-4 control-label" for="minLength">Minimum Length</label>
+                                            <div class="col-md-8">
+                                                <input class="form-control numeric" type="number" id="minLength" name="minLength" placeholder="0" min="0" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-4 control-label" for="minUpperCase">Minimum Uppercase Characters</label>
+                                            <div class="col-md-8">
+                                                <input class="form-control numeric" type="number" id="minUpperCase" name="minUpperCase" placeholder="0" min="0" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-4 control-label" for="minLowerCase">Minimum Lowercase Characters</label>
+                                            <div class="col-md-8">
+                                                <input class="form-control numeric" type="number" id="minLowerCase" name="minLowerCase" placeholder="0" min="0" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-4 control-label" for="minAlpha">Minimum Alpha Characters</label>
+                                            <div class="col-md-8">
+                                                <input class="form-control numeric" type="number" id="minAlpha" name="minAlpha" placeholder="0" min="0" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-4 control-label" for="minNumeric">Minimum Numeric Characters</label>
+                                            <div class="col-md-8">
+                                                <input class="form-control numeric" type="number" id="minNumeric" name="minNumeric" placeholder="0" min="0" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-4 control-label" for="maxRepeat">Maximum repeats</label>
+                                            <div class="col-md-8">
+                                                <input class="form-control numeric" type="number" id="maxRepeat" name="maxRepeat" placeholder="0" min="0" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-4 control-label" for="badWords">Bad Words<small>a CSV list of words that aren't allowed.</small></label>
+                                            <div class="col-md-8">
+                                                <input class="form-control" type="text" id="badWords" name="badWords" placeholder="e.g. password,admin" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-4 control-label" for="customRegex">Custom Regex</label>
+                                            <div class="col-md-8">
+                                                <input class="form-control" type="text" id="customRegex" name="customRegex" placeholder="e.g. [a-zA-Z]{10}" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                                        <button class="btn btn-sm btn-success" type="submit">Save</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        #end
+            #end
     </body>
 </html>
