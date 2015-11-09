@@ -681,6 +681,20 @@ function initGroupPasswordPolicy() {
     var modals = $('.add-policy-modal');
     var modalForms = modals.find('form');
 
+
+    modals.on('hidden', function (e) {
+        var m = $(this);
+        var groupName = m.data('groupname');
+
+        m.find('form').trigger('reset');
+
+        var a = m.find('input[name=updatePasswordPolicy]');
+        a.attr('name', 'addPasswordPolicy');
+        a.val(groupName);
+
+        m.find('.modal-title').text('Add new password policy for ' + groupName);
+    });
+
     modalForms.forms({
         callback: function (resp) {
             if (resp.status) {
@@ -696,6 +710,31 @@ function initGroupPasswordPolicy() {
 
     $('body').on('click', '.btn-edit-policy', function (e) {
         e.preventDefault();
+        var btn = $(this);
+
+        var article = btn.closest('article');
+        var ppid = article.data('ppid');
+        var current = article.data('current');
+        var groupName = article.data('groupname');
+
+        var m = $('#modal-add-policy-' + groupName);
+
+        m.find('input[name=addPasswordPolicy]').attr('name', 'updatePasswordPolicy');
+        m.find('input[name=updatePasswordPolicy]').val(current.id);
+
+        m.find('.modal-title').text('Edit password policy for ' + groupName);
+        m.find('input[name=minLength]').val(current.minLength);
+        m.find('input[name=minUpperCase]').val(current.minUpperCase);
+        m.find('input[name=minLowerCase]').val(current.minLowerCase);
+        m.find('input[name=minAlpha]').val(current.minAlpha);
+        m.find('input[name=minNumeric]').val(current.minNumeric);
+        m.find('input[name=maxRepeat]').val(current.maxRepeat);
+        m.find('input[name=badWords]').val(current.badWords);
+        m.find('input[name=customRegex]').val(current.customRegex);
+
+        flog(current)
+
+        m.modal('show');
     });
 
     $('body').on('click', '.btn-del-policy', function (e) {

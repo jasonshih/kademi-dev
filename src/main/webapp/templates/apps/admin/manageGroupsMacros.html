@@ -126,7 +126,7 @@
                                 <p>This group does not have any password policies</p>
                                 #else
                                 #foreach($pp in $policies)
-                                <article data-ppid="$pp.id" data-groupname="$group.name">
+                                <article data-ppid="$pp.id" data-groupname="$group.name" data-current="$formatter.htmlEncode($formatter.toJson($pp))">
                                     <span class="article-name">
                                         $page.getPasswordPolicyDescription($pp)
                                     </span>
@@ -142,7 +142,7 @@
                                 <a class="btn btn-sm btn-success pull-right" data-toggle="modal" href="#modal-add-policy-$group.name"><i class="fa fa-plus"></i> Add new policy</a>
                             </p>
 
-                            <div id="modal-add-policy-$group.name" class="modal modal-md fade add-policy-modal" aria-hidden="true" tabindex="-1" data-group-name="$group.name">
+                            <div id="modal-add-policy-$group.name" class="modal modal-md fade add-policy-modal" aria-hidden="true" tabindex="-1" data-groupname="$group.name">
                                 <form action="." method="POST" class="form-horizontal">
                                     <div class="modal-header">
                                         <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
