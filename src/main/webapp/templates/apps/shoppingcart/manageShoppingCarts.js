@@ -126,9 +126,9 @@ function doHistorySearch(startDate, endDate, searchFulfillment) {
 }
 
 function doSearch() {
-    var href = "";
+    var href = "?";
     if (searchFulfillment !== null && searchFulfillment !== "") {
-        href = href + "?fulfillment=" + searchFulfillment;
+        href = href + "fulfillment=" + searchFulfillment;
     }
     if (startDate !== null && startDate !== "") {
         href = href + "&startDate=" + formatDate(startDate);
