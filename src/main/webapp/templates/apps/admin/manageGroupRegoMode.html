@@ -114,25 +114,25 @@
                 </div>
                 <div class="panel-body optins">
                     <div class="row">
-                    #foreach($group in $page.groups)
-                    #if( $group == $page.group )
+                        #foreach($group in $page.groups)
+                        #if( $group == $page.group )
 
-                    #else
-                    <div class="optins form-group col-sm-12 col-md-6 col-lg-4">
-                        <div class="clearfix">
-                            #set($groupId = "optin" + $group.name)
-                            <label for="$groupId" class="checkbox-inline control-label">
+                        #else
+                        <div class="optins form-group col-sm-12 col-md-6 col-lg-4">
+                            <div class="clearfix">
+                                #set($groupId = "optin" + $group.name)
+                                <label for="$groupId" class="checkbox-inline control-label">
 
-                                #set($optin = "")
-                                #set($optin = $page.optin($group))
-                                $formatter.checkbox($groupId, "optinGroup", $formatter.isNotNull($optin), $group.name)
-                                $group.name
-                                <input type="text" name="${groupId}_Desc" class="form-control" placeholder="Invitation message to users" value="$!optin.message" />
-                            </label>
+                                    #set($optin = "")
+                                    #set($optin = $page.optin($group))
+                                    $formatter.checkbox($groupId, "optinGroup", $formatter.isNotNull($optin), $group.name)
+                                    $group.name
+                                    <input type="text" name="${groupId}_Desc" class="form-control" placeholder="Invitation message to users" value="$!optin.message" />
+                                </label>
+                            </div>
                         </div>
-                    </div>
-                    #end
-                    #end
+                        #end
+                        #end
                     </div>
                 </div>
             </div>
@@ -180,6 +180,36 @@
                         #end
                     </tbody>
                 </table>
+            </div>
+        </div>
+
+        <div class="panel panel-default panel-fields">
+            <div class="panel-heading">
+                <i class="clip-question"></i> What password policies should apply to users?
+            </div>
+            <div class="panel-body">
+                <p>
+                    <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-add-policy"><i class="fa fa-plus"></i> Add new policy</button>
+                </p>
+                <div id="policy-list" class="article-wrapper showed-action policy-list" data-group="$page.group.name">
+                    #set($policies = false)
+                    #set($policies = $page.passwordPolicies)
+                    #if(!$policies || $policies.empty)
+                    <p>This group does not have any password policies</p>
+                    #else
+                    #foreach($pp in $policies)
+                    <article data-ppid="$pp.id" data-current="$formatter.htmlEncode($formatter.toJson($pp))">
+                        <span class="article-name">
+                            $page.getPasswordPolicyDescription($pp)
+                        </span>
+                        <aside class="article-action">
+                            <a href="#" class="btn btn-sm btn-info btn-edit-policy"><i class="fa fa-edit"></i></a>
+                            <a href="#" class="btn btn-sm btn-danger btn-del-policy"><i class="fa fa-trash"></i></a>
+                        </aside>
+                    </article>
+                    #end
+                    #end
+                </div>
             </div>
         </div>
 
@@ -236,13 +266,85 @@
             </div>
         </div>
 
+        <div id="modal-add-policy" class="modal modal-md fade add-policy-modal" aria-hidden="true" tabindex="-1" data-groupname="$group.name">
+            <form action="." method="POST" class="form-horizontal">
+                <div class="modal-header">
+                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                    <h4 class="modal-title">Add new password policy for $page.group.name</h4>
+                </div>
+                <div class="modal-body">
+                    <input type='hidden' name="addPasswordPolicy" value="$page.group.name"/>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="preset">Preset</label>
+                        <div class="col-md-8">
+                            <select class="form-control preset-select">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="minLength">Minimum Length</label>
+                        <div class="col-md-8">
+                            <input class="form-control numeric" type="number" id="minLength" name="minLength" placeholder="0" min="0" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="minUpperCase">Minimum Uppercase Characters</label>
+                        <div class="col-md-8">
+                            <input class="form-control numeric" type="number" id="minUpperCase" name="minUpperCase" placeholder="0" min="0" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="minLowerCase">Minimum Lowercase Characters</label>
+                        <div class="col-md-8">
+                            <input class="form-control numeric" type="number" id="minLowerCase" name="minLowerCase" placeholder="0" min="0" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="minAlpha">Minimum Alpha Characters</label>
+                        <div class="col-md-8">
+                            <input class="form-control numeric" type="number" id="minAlpha" name="minAlpha" placeholder="0" min="0" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="minNumeric">Minimum Numeric Characters</label>
+                        <div class="col-md-8">
+                            <input class="form-control numeric" type="number" id="minNumeric" name="minNumeric" placeholder="0" min="0" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="maxRepeat">Maximum repeats</label>
+                        <div class="col-md-8">
+                            <input class="form-control numeric" type="number" id="maxRepeat" name="maxRepeat" placeholder="0" min="0" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="badWords">Bad Words<small>a CSV list of words that aren't allowed.</small></label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" id="badWords" name="badWords" placeholder="e.g. password,admin" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="customRegex">Custom Regex</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" id="customRegex" name="customRegex" placeholder="e.g. [a-zA-Z]{10}" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                    <button class="btn btn-sm btn-success" type="submit">Save</button>
+                </div>
+            </form>
+        </div>
+
         <script type="text/javascript" >
             $(function () {
                 initManageGroup();
                 initManageExtraField();
                 showHidePanels();
 
-                $("input:radio[name=groupType]").click(function() {
+                $("input:radio[name=groupType]").click(function () {
                     showHidePanels();
                 });
             });

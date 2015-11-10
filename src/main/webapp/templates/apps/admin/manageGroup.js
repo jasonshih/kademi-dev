@@ -678,11 +678,10 @@ function initGroupFolder() {
 }
 
 function initGroupPasswordPolicy() {
-    var modals = $('.add-policy-modal');
-    var modalForms = modals.find('form');
+    var modal = $('#modal-add-policy');
+    var modalForm = modal.find('form');
 
-
-    modals.on('hidden', function (e) {
+    modal.on('hidden', function (e) {
         var m = $(this);
         var groupName = m.data('groupname');
 
@@ -695,13 +694,13 @@ function initGroupPasswordPolicy() {
         m.find('.modal-title').text('Add new password policy for ' + groupName);
     });
 
-    modalForms.forms({
+    modalForm.forms({
         callback: function (resp) {
             if (resp.status) {
-                modals.modal('hide');
-                modalForms.trigger('reset');
+                modal.modal('hide');
+                modalForm.trigger('reset');
                 Msg.info('Added Policy');
-                $('#policy-list-' + resp.data).reloadFragment({
+                $('#policy-list').reloadFragment({
                     whenComplete: function () {
                         initPPTemplates();
                     }
@@ -719,12 +718,12 @@ function initGroupPasswordPolicy() {
         var article = btn.closest('article');
         var ppid = article.data('ppid');
         var current = article.data('current');
-        var groupName = article.data('groupname');
+        var groupName = btn.closest('.policy-list').data('group');
 
-        var m = $('#modal-add-policy-' + groupName);
+        var m = $('#modal-add-policy');
 
         m.find('input[name=addPasswordPolicy]').attr('name', 'updatePasswordPolicy');
-        m.find('input[name=updatePasswordPolicy]').val(current.id);
+        m.find('input[name=updatePasswordPolicy]').val(ppid);
 
         m.find('.modal-title').text('Edit password policy for ' + groupName);
         m.find('input[name=minLength]').val(current.minLength);
@@ -735,8 +734,6 @@ function initGroupPasswordPolicy() {
         m.find('input[name=maxRepeat]').val(current.maxRepeat);
         m.find('input[name=badWords]').val(current.badWords);
         m.find('input[name=customRegex]').val(current.customRegex);
-
-        flog(current)
 
         m.modal('show');
     });
@@ -757,7 +754,7 @@ function initGroupPasswordPolicy() {
             },
             success: function (resp) {
                 Msg.info('Removed Policy');
-                $('#policy-list-' + groupName).reloadFragment({
+                $('#policy-list').reloadFragment({
                     whenComplete: function () {
                         initPPTemplates();
                     }
