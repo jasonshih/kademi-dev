@@ -795,12 +795,13 @@
 
                         var eDom = $(eVal);
 
-                        var newVal = xml2string(eDom[0]);
+                        if (eDom.length > 0) {
+                            var newVal = xml2string(eDom[0]);
 
-                        flog('extraCriteria value', newVal);
+                            flog('extraCriteria value', newVal);
 
-                        extraCriteria.val(newVal)
-
+                            extraCriteria.val(newVal)
+                        }
                         return true;
                     },
                     callback: function (resp) {
