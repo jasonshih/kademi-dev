@@ -8,6 +8,7 @@ function initManageCertificateDetails(certId) {
     flog('initManageCertificate: ', certId);
     themeCssFiles.push('/templates/apps/learner/certificate.dyn.css?imageHash=' + certId);
     
+    CKEDITOR.config.protectedSource.push(/@(?:if|else|code|foreach|end|)\{[\S\s]*?\}/gi)
     edify($('.manage-certificate-details'),
         function(resp) {
             flog('done', resp);
