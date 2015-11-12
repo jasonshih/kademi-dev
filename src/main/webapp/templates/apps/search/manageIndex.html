@@ -11,6 +11,7 @@
             <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="active"><a href="#records" aria-controls="records" role="tab" data-toggle="tab">Records</a></li>
                 <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Mappings</a></li>
+                <li role="presentation"><a href="#query" aria-controls="query" role="tab" data-toggle="tab">Query</a></li>
             </ul>
 
             <!-- Tab panes -->
@@ -45,6 +46,37 @@
                     <pre class="prettyprint">$mappings.get($typeName)</pre>
                     #end
                 </div>
+                <div role="tabpanel" class="tab-pane" id="query">
+                    <textarea id="queryText" style="width: 100%; height: 200px" name="query">
+{
+"fields": ["title", "category","tags"],
+  "query" : {
+    "term" : { "content" : "farm" }
+},
+"aggregations": {
+        "category": {
+            "terms": { "field": "category" },
+"aggregations": {
+        "tags": {
+            "terms": { "field": "tags" }
+        }
+}
+        }
+    }
+}
+                    </textarea>
+                    <button class="btn btn-success runQuery">Run query</button>
+                    <hr/>
+                    <div id="queryResults">
+                        aa
+                    #if( $params.query )
+                    bb
+                        #set( $resp = $page.query($params.query) )
+                        $resp
+                        cc
+                    #end
+                    </div>
+                </div>
             </div>
 
         </div>
@@ -55,7 +87,13 @@
 
         <script type="text/javascript">
             $(document).ready(function () {
-
+                $(".runQuery").click(function(e){
+                    var json = $("#queryText").val();
+                    flog("query", json);
+                    $("#queryResults").reloadFragment({
+                        url: window.location.pathname + "?query=" + json
+                    });
+                });
             });
         </script>
     </body>
