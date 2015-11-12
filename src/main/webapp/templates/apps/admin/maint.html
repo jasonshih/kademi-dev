@@ -40,6 +40,31 @@
                 <div id="summary" class="tab-pane">
                     <article class="panel panel-default">
                         <div class="panel-heading">
+                            <h3 class="panel-title">System</h3>
+                        </div>
+                        <div class="panel-body">
+                            <table class="table table-striped">
+                                <tr>
+                                    <th>Host name</th>
+                                    <td>$page.hostname</td>
+                                </tr>
+                                <tr>
+                                    <th>Architecture</th>
+                                    <td>$page.osArch</td>
+                                </tr>
+                                <tr>
+                                    <th>Processors</th>
+                                    <td>$page.numProcessors</td>
+                                </tr>
+                                <tr>
+                                    <th>Load Average</th>
+                                    <td>$page.avgSystemLoad</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </article>
+                    <article class="panel panel-default">
+                        <div class="panel-heading">
                             <h3 class="panel-title">Memory</h3>
                         </div>
                         <div class="panel-body">
@@ -60,10 +85,6 @@
                                 <tr>
                                     <th>Max</th>
                                     <td>$formatter.formatBytes($page.maxMemory)</td>
-                                </tr>
-                                <tr>
-                                    <th>Processors</th>
-                                    <td>$page.numProcessors</td>
                                 </tr>
                             </table>
                         </div>
