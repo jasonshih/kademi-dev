@@ -785,18 +785,18 @@
 
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <i class="clip-users"></i>
-                                Recipients
+                                <i class="fa fa-user-plus"></i>
+                                Recipients groups
                             </div>
                             <div class="panel-body">
-
                                 <div class="alert alert-warning">
                                     Warning: ALL members of selected groups will be emailed each time this trigger is fired. <br/>
                                     <b>If you only want a single recipient from an event use the originating user checkbox above</b>
                                 </div>
-                                <button class="btn btn-sm btn-success btn-add-group" data-toggle="modal" data-target="#modal-choose-group"><i class="fa fa-plus"></i> Add recipient groups</button>
 
+                                <button class="btn btn-sm btn-success btn-add-group" data-toggle="modal" data-target="#modal-choose-group"><i class="fa fa-plus"></i> Add recipient groups</button>
                                 <hr class="hr-sm" />
+
                                 <div class="blocks-wrapper recipient">
                                     #foreach($g in $page.groupRecipients)
                                     <span class="block $g.name">
@@ -807,9 +807,18 @@
                                     </span>
                                     #end
                                 </div>
-                                <p>&nbsp;</p>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <i class="fa fa-user-times"></i>
+                                Excluded groups
+                            </div>
+                            <div class="panel-body">
                                 <button class="btn btn-sm btn-success btn-add-group" data-toggle="modal" data-target="#modal-choose-group"><i class="fa fa-plus"></i> Add excluded groups</button>
                                 <hr class="hr-sm" />
+
                                 <div class="blocks-wrapper excluded">
                                     #foreach($g in $page.excludedGroups)
                                     <span class="block $g.name">
