@@ -49,9 +49,9 @@
                 <div role="tabpanel" class="tab-pane" id="query">
                     <textarea id="queryText" style="width: 100%; height: 200px" name="query">
 {
-"fields": ["title", "category","tags"],
+"fields": ["title", "category","tags", "firstName"],
   "query" : {
-    "term" : { "content" : "farm" }
+    "match_all" : {}
 },
 "aggregations": {
         "category": {
@@ -67,15 +67,12 @@
                     </textarea>
                     <button class="btn btn-success runQuery">Run query</button>
                     <hr/>
-                    <div id="queryResults">
-                        aa
-                    #if( $params.query )
-                    bb
+                    <pre id="queryResults">                       
+                        #if( $params.query )
                         #set( $resp = $page.query($params.query) )
                         $resp
-                        cc
-                    #end
-                    </div>
+                        #end
+                    </pre>
                 </div>
             </div>
 
@@ -87,11 +84,25 @@
 
         <script type="text/javascript">
             $(document).ready(function () {
-                $(".runQuery").click(function(e){
+                $(".runQuery").click(function (e) {
                     var json = $("#queryText").val();
                     flog("query", json);
-                    $("#queryResults").reloadFragment({
-                        url: window.location.pathname + "?query=" + json
+
+                    $.ajax({
+                        type: 'POST',
+                        data: {
+                            query: json
+                        },
+                        dataType: "json",
+                        url: "",
+                        success: function (data) {
+                            flog("success", data);
+                            var json = JSON.stringify(data, null, 4);
+                            $("#queryResults").text(json);
+                        },
+                        error: function (resp) {
+                            Msg.error("err");
+                        }
                     });
                 });
             });
