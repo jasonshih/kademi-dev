@@ -37,7 +37,16 @@
             .ktile-inner{
                 max-height: 400px;
             }
+
+            #javascriptEditor {
+                height: 250px;
+                border: 1px solid #DDD;
+                border-radius: 4px;
+                border-bottom-right-radius: 0px;
+            }
+
         </style>
+        <script type="text/javascript" src="/static/ace/1.2.0/src-noconflict/ace.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.fileupload.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
         <script type="text/javascript" src="manageAutoEmail.js">//</script>
@@ -769,6 +778,33 @@
                                 </div>
                             </div>
                         </div> <!-- End actviate alert -->
+
+                        <!-- Start JavaScript -->
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <i class="clip-chk">$formatter.checkbox("javascriptEnabled", "javascriptEnabled", $page.job.javascriptEnabled)</i>
+                                <label for="javascriptEnabled">Execute JavaScript</label>
+                            </div>
+                            <div class="panel-body panel-toggled" data-toggled="display" data-actor="#javascriptEnabled">
+                                <p>
+                                    Execute JavaScript
+                                </p>
+                                <div class="alert alert-info">
+                                    Please see the <a href="http://docs.kademi.co/ref/templating/TriggerEvent.html">TriggerEvent documentation</a> for available trigger event types and their properties
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label class="control-label col-md-2" for="javascript">Script</label>
+                                            <div class="col-md-8">
+                                                <textarea class="hide required-if-shown" name="javascript"></textarea>
+                                                <div id="javascriptEditor" style="display:none;">$formatter.htmlEncode($page.job.javascript)</div>
+                                            </div>
+                                        </div>
+                                    </div> <!-- end row -->
+                                </div>
+                            </div>
+                        </div> <!-- End execute JavaScript -->
                     </div> <!-- End content of Actions tab -->
 
 
@@ -1250,6 +1286,18 @@
                         $('#fireAtTime').hide();
                         $("input[name=timerTime]").val("");
                     }
+                });
+
+                var javascriptEditor = ace.edit('javascriptEditor');
+                javascriptEditor.getSession().setMode("ace/mode/javascript");
+                javascriptEditor.setOptions({
+                    minLines: javascriptEditor.getSession().$rowLengthCache.length
+                });
+                $('#javascriptEditor').show();
+
+                javascriptEditor.on('input', function () {
+                    var javascriptVal = javascriptEditor.getValue();
+                    $('textarea[name=javascript]').val(javascriptVal);
                 });
             });
 
