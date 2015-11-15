@@ -98,6 +98,31 @@
                                     </td>
                                 </tr>
                                 <tr>
+                                    <td>Valid for days</td>
+                                    <td>
+                                        <div class="form-group">
+                                            <div class="col-sm-4">
+                                                <input type="text" name="validForDays" placeholder="" value="$!page.reward.validForDays" class="form-control" />
+                                                <i>if specified, points awarded will expire in a set number of days</i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>Choose an expiry date</td>
+                                    <td>
+                                        <div class="form-group">
+                                            <div class="col-sm-5">
+                                                <div class="input-group">
+                                                    <input type="text" name="expiryDate" placeholder="Expiry date" data-format="DD/MM/YYYY" value="$!page.expiryDate" class="form-control DateTime" />
+                                                    <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <td>Template</td>
                                     <td>
                                         <div class="form-group">
@@ -282,11 +307,11 @@
                                     #set( $lbStartDate = $formatter.toDate( $request.params.lbStartDate ) )
                                     #set( $lbFinishDate = $formatter.toDate( $request.params.lbFinishDate ) )
                                     #if(!$lbFinishDate)
-                                        #set( $lbFinishDate = $formatter.now )
+                                    #set( $lbFinishDate = $formatter.now )
                                     #end
                                     #set( $lbLimit = $formatter.toInteger($request.params.lbLimit, true) )
                                     #if(!$lbLimit)
-                                        #set( $lbLimit = 20 )
+                                    #set( $lbLimit = 20 )
                                     #end
                                     #set($myPointsInfo = $page.myPointsInfo($lbLimit, $lbStartDate, $lbFinishDate))
                                     $myPointsInfo.setExtendedProfiles(true)
