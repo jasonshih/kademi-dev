@@ -695,6 +695,23 @@ function initGroupPasswordPolicy() {
     });
 
     modalForm.forms({
+        validate: function (form) {
+            var m = $(form);
+
+            if ((m.find('input[name=minLength]').val().length === 0 || m.find('input[name=minLength]').val() < 1)
+                    & (m.find('input[name=minUpperCase]').val().length === 0 || m.find('input[name=minUpperCase]').val() < 1)
+                    & (m.find('input[name=minLowerCase]').val().length === 0 || m.find('input[name=minLowerCase]').val() < 1)
+                    & (m.find('input[name=minAlpha]').val().length === 0 || m.find('input[name=minAlpha]').val() < 1)
+                    & (m.find('input[name=minNumeric]').val().length === 0 || m.find('input[name=minNumeric]').val() < 1)
+                    & (m.find('input[name=maxRepeat]').val().length === 0 || m.find('input[name=maxRepeat]').val() < 1)
+                    & m.find('input[name=badWords]').val().length === 0
+                    & m.find('input[name=customRegex]').val().length === 0) {
+                showValidation(null, "At least one field needs to be filled & greater than 1", form);
+                return false;
+            }
+
+            return true;
+        },
         callback: function (resp) {
             if (resp.status) {
                 modal.modal('hide');
