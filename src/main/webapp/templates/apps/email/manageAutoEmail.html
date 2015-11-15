@@ -795,7 +795,22 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <label class="control-label col-md-2" for="javascript">Script</label>
+                                            <label class="control-label col-md-2" for="jsWebsiteId">Website</label>
+                                            <div class="col-md-8">
+                                                <select name="jsWebsiteId" id="jsWebsiteId" class="form-control required-if-shown">
+                                                    $formatter.option("", "[Please select]", $!page.job.jsWebsite.id)
+                                                    #foreach($website in $rootFolder.websites)
+                                                    $formatter.option($website.id, $website.name, $!page.job.jsWebsite.id)
+                                                    #end
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label class="control-label col-md-2" for="javascript">JavaScript</label>
                                             <div class="col-md-8">
                                                 <textarea class="hide required-if-shown" name="javascript"></textarea>
                                                 <div id="javascriptEditor" style="display:none;">$formatter.htmlEncode($page.job.javascript)</div>
