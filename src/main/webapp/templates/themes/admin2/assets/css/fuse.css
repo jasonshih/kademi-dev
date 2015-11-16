@@ -1319,7 +1319,7 @@ body.ajax-loading .ajaxLoader {
 }
 
 .table-responsive {
-    padding-bottom: 220px;
+    min-height: 220px;
 }
 
 .summary-panel {

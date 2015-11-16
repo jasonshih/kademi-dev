@@ -1,0 +1,50 @@
+.customField-wrapper {
+    padding-top: 10px;
+}
+
+.customField-wrapper .customField {
+    margin-top: 5px;
+}
+
+.customField-wrapper .customField:first-child {
+    margin-top: 0;
+}
+
+.customField-wrapper .customField > * {
+    float: left;
+    margin-right: 10px;
+}
+
+.customField-wrapper .customField > .input-group{
+    width: 220px;
+}
+
+.customField-wrapper .customField > .input-group + select {
+    width: 200px;
+}
+.email-item{
+    cursor:pointer;
+}
+
+#chart_histogram svg {
+    height: 490px;
+}
+
+.ktile-inner{
+    max-height: 400px;
+}
+
+#javascriptEditor {
+    height: 250px;
+    border: 1px solid #DDD;
+    border-radius: 4px;
+    border-bottom-right-radius: 0px;
+}
+
+#modal-choose-group.recipient-group #table-groups .excluded {
+    display: none;
+}
+
+#modal-choose-group.excluded-group #table-groups .recipient {
+    display: none;
+}
