@@ -471,7 +471,7 @@ function checkPasswordsMatch(form) {
  * We assume the field to validate has an id of "email"
  */
 function checkValidEmailAddress(form, config) {
-    var target = $("#email, input.email, input[name=email]", form); // either with id of email, or with class email
+    var target = $("#email, input.email", form); // either with id of email, or with class email
     var emailAddress = target.val();
 
     if (emailAddress) {

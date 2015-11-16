@@ -204,30 +204,28 @@
                             <input type="text" name="nickName" id="newUserNickName" class="required form-control" />
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-3" for="newUserFirstName">First name</label>
-                        <div class="col-md-9">
-                            <input type="text" name="firstName" id="newUserFirstName" class="form-control" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-3" for="newUserSurName">Surname</label>
-                        <div class="col-md-9">
-                            <input type="text" name="surName" id="newUserSurName" class="form-control" />
-                        </div>
-                    </div>
+                    <!--<div class="form-group">-->
+                        <!--<label class="control-label col-md-3" for="newUserFirstName">First name</label>-->
+                        <!--<div class="col-md-9">-->
+                            <!--<input type="text" name="firstName" id="newUserFirstName" class="form-control" />-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="form-group">-->
+                        <!--<label class="control-label col-md-3" for="newUserSurName">Surname</label>-->
+                        <!--<div class="col-md-9">-->
+                            <!--<input type="text" name="surName" id="newUserSurName" class="form-control" />-->
+                        <!--</div>-->
+                    <!--</div>-->
                     <div class="form-group">
                         <label class="control-label col-md-3" for="newUserEmail">Email</label>
                         <div class="col-md-9">
-                            <input type="text" name="email" id="newUserEmail" class="email required form-control" />
+                            <input type="text" name="email" id="newUserEmail" class="required form-control" />
+                            <em class="help-block small text-muted">Eg. Joe Blogs &lt;joebloggs@somewhere.com&gt;</em>
                         </div>
                     </div>
                     <hr />
                     <h4>Group membership</h4>
-                    <p>
-                        <i>Please select a group and an organisation to make this user
-                            a member of</i>
-                    </p>
+                    <p><i>Please select a group and an organisation to make this user a member of</i></p>
                     <div class="groups">
                         <div class="form-group">
                             <label class="control-label col-md-2" for="groups">Group</label>
@@ -472,21 +470,23 @@
         <script type="text/javascript">
             $(function () {
                 initManageUsers();
-                $("#aggregationsContainer").on("click", ".term-select", function (e) {
-                    e.preventDefault();
-                    $(e.target).closest("tr").toggleClass("success");
-                    var newHref = $(e.target).closest("a").attr("href");
-                    window.history.pushState("", newHref, newHref);
 
-                    $("#table-users-body").reloadFragment({
+                $('#aggregationsContainer').on('click', '.term-select', function (e) {
+                    e.preventDefault();
+
+                    $(e.target).closest('tr').toggleClass('success');
+                    var newHref = $(e.target).closest('a').attr('href');
+                    window.history.pushState('', newHref, newHref);
+
+                    $('#table-users-body').reloadFragment({
                         url: newHref,
                         whenComplete: function (response) {
-                            flog("complete", response);
-                            Msg.info("Refreshed", 1500)
+                            flog('complete', response);
+                            Msg.info('Refreshed', 1500)
                             var newDom = $(response);
-                            $("#searchStats").replaceWith(newDom.find("#searchStats"));
-                            var inner = $(response).find("#aggregationsContainer > *");
-                            $("#aggregationsContainer").html(inner);
+                            $('#searchStats').replaceWith(newDom.find('#searchStats'));
+                            var inner = $(response).find('#aggregationsContainer > *');
+                            $('#aggregationsContainer').html(inner);
                         }
                     });
                 });

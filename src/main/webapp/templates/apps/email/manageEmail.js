@@ -176,11 +176,11 @@ function setGroupRecipient(name, groupType) {
 
                 flog("add to list");
                 blockWrapper.filter('.' + groupType).append(
-                        '<span class="block ' + name + '">' +
-                        '<span class="block-name">' + name + '</span>' +
-                        '<a class="btn btn-xs btn-danger btn-remove-role" href="' + name + '" title="Remove this role"><i class="clip-minus-circle "></i></a>' +
-                        '</span>'
-                        );
+                    '<span class="block ' + name + '">' +
+                    '    <span class="block-name">' + name + '</span>' +
+                    '    <a class="btn btn-xs btn-danger btn-remove-role" href="' + name + '" title="Remove this role"><i class="clip-minus-circle "></i></a>' +
+                    '</span>'
+                );
             },
             error: function (resp) {
                 flog("error", resp);

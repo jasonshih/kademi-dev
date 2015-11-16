@@ -296,6 +296,24 @@ function initNewUserForm() {
     });
 
     form.forms({
+        validate: function () {
+            var newUserEmail = $('#newUserEmail');
+            var newUserEmailStr = newUserEmail.val();
+            var error = 0;
+
+            if (!validateFuseEmail(newUserEmailStr)) {
+                error++;
+                showErrorField(newUserEmail);
+            }
+
+            if (error === 0) {
+                return true;
+            } else {
+                showMessage('Email address is invalid!', form);
+
+                return false;
+            }
+        },
         callback: function (resp) {
             flog('done new user', resp);
 
