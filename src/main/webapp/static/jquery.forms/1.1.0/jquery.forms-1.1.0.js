@@ -7,12 +7,15 @@
  */
 
 (function ($) {
-    flog('[jquery.forms] DEPRECATED options of 1.1.0 :');
+    flog('[jquery.forms] DEPRECATED options of 1.1.0 which will be removed 1.2.0:');
     flog('********************************************');
     flog('- "doPostForm" is DEPRECATED. Use "allowPostForm" instead');
     flog('- "error" is DEPRECATED. Use "onInvalid" instead');
     flog('- "callback" is DEPRECATED. Use "onSuccess" instead');
     flog('- "errorHandler" is DEPRECATED. Use "onError" instead');
+    flog('********************************************');
+    flog('- "showMessage" is removed. Use "showFormMessage" instead');
+    flog('- "showValidation" is removed. Use "showFieldMessages" instead');
     flog('********************************************');
 
     /**
@@ -38,7 +41,7 @@
      * @param {String} numericErrorMessage The error message when numeric fields are invalid
      * @param {String} urlErrorMessage The error message when url fields are invalid
      * @param {Numeric} [animationDuration=300] The speed of all animations in jquery.forms
-     * @param {Function} renderMessage The render method for all messages in jquery.forms. Arguments are 'type' and 'message'. 'type' can be 'danger', 'success', 'info' and 'warning'. 'message' is message content
+     * @param {Function} renderMessage The render method for all messages in jquery.forms. Arguments are 'message' and 'type'. 'message' is message content. 'type' can be 'danger', 'success', 'info' and 'warning'.
      */
     var DEFAULTS = {
         postUrl: null, // means to use the form action as url
@@ -89,9 +92,9 @@
         simpleCharsErrorMessage: 'Please use only letters, numbers and underscores',
         numericErrorMessage: 'Please enter digits',
         urlErrorMessage: 'Please enter valid website address',
-        animationDuration: 300,
-        renderMessage: function (type, message) {
-            return '<div class="form-message alert alert-' + type + '"><a class="close" data-dismiss="alert">&times;</a>' + message + '</div>';
+        animationDuration: 150,
+        renderMessage: function (message, type) {
+            return '<div class="form-message fade alert alert-' + type + '" style="display: none"><a class="close" data-dismiss="alert">&times;</a>' + message + '</div>';
         }
     };
 
@@ -100,6 +103,18 @@
             var form = $(this);
             var config = $.extend({}, DEFAULTS, options);
             flog('[jquery.forms] Configuration:', config);
+
+            if (config.callback) {
+                config.onSuccess = config.callback;
+            }
+
+            if (config.error) {
+                config.onInvalid = config.error;
+            }
+
+            if (config.errorHandler) {
+                config.onError = config.errorHandler;
+            }
 
             if (form.data('formOptions')) {
                 flog('[jquery.forms] Is ready initialized');
@@ -187,7 +202,7 @@
                 'height': 'show'
             }, options);
 
-            element.animate(options, config.animationDuration, callback);
+            element.stop().animate(options, config.animationDuration, callback);
         },
         hideElement: function (element, options, callback) {
             var form = $(this);
@@ -197,13 +212,11 @@
                 'height': 'hide'
             }, options);
 
-            element.animate(options, config.animationDuration, callback);
+            element.stop().animate(options, config.animationDuration, callback);
         }
     };
 
     $.fn.forms = function (method) {
-        flog('[jquery.forms]', this);
-
         if (methods[method]) {
             return methods[ method ].apply(this, Array.prototype.slice.call(arguments, 1));
         } else if (typeof method === 'object' || !method) {
@@ -356,8 +369,10 @@ function showFormMessage(form, config, messages, type, callback) {
         for (var i = 0; i < messages.length; i++) {
             messageStr += '<li>' + messages[i] + '</li>';
         }
+
+        messageStr = '<ul>' + messageStr + '</ul>';
     }
-    messageStr = config.renderMessage('<ul>' + messageStr + '</ul>', type);
+    messageStr = config.renderMessage(messageStr, type);
 
     var alertMsg = getValidationMessage(form, config);
     var newMsg = $(messageStr);
@@ -367,7 +382,9 @@ function showFormMessage(form, config, messages, type, callback) {
         alertMsg.replaceWith(newMsg);
     }
 
-    form.forms('showElement', newMsg);
+    if (newMsg.is(':hidden')) {
+        form.forms('showElement', newMsg);
+    }
 
     if (typeof callback === 'function') {
         callback.call(this, form, config, messages, type);
@@ -458,21 +475,21 @@ function validateFormFields(form, config) {
         var resultEmails = checkValidEmailAddress(form, config);
         if (resultEmails.error > 0) {
             error += resultEmails.error;
-            errorFields.concat(resultEmails.errorFields);
+            errorFields = errorFields.concat(resultEmails.errorFields);
             errorMessages.push(config.emailErrorMessage);
         }
 
         var resultDates = checkDates(form, config);
         if (resultDates.error > 0) {
             error += resultDates.error;
-            errorFields.concat(resultDates.errorFields);
+            errorFields = errorFields.concat(resultDates.errorFields);
             errorMessages.push(config.dateErrorMessage);
         }
 
         var resultPasswords = checkValidPasswords(form, config);
         if (!resultPasswords.password || !resultPasswords.confirmPassword) {
             error ++;
-            errorFields.concat(resultPasswords.errorFields);
+            errorFields = errorFields.concat(resultPasswords.errorFields);
 
             if (!resultPasswords.password) {
                 errorMessages.push(config.passwordErrorMessage);
@@ -484,28 +501,28 @@ function validateFormFields(form, config) {
         var resultSimpleChars = checkSimpleChars(form, config);
         if (resultSimpleChars.error > 0) {
             error += resultSimpleChars.error;
-            errorFields.concat(resultSimpleChars.errorFields);
+            errorFields = errorFields.concat(resultSimpleChars.errorFields);
             errorMessages.push(config.simpleCharsErrorMessage);
         }
 
         var resultUrls = checkUrls(form, config);
         if (resultUrls.error > 0) {
             error += resultUrls.error;
-            errorFields.concat(resultUrls.errorFields);
+            errorFields = errorFields.concat(resultUrls.errorFields);
             errorMessages.push(config.urlErrorMessage);
         }
 
         var resultNumerics = checkNumerics(form, config);
         if (resultNumerics.error > 0) {
             error += resultNumerics.error;
-            errorFields.concat(resultNumerics.errorFields);
+            errorFields = errorFields.concat(resultNumerics.errorFields);
             errorMessages.push(config.numericErrorMessage);
         }
 
         var resultRegexes = checkRegexes(form, config);
         if (resultRegexes.error > 0) {
             error += resultRegexes.error;
-            errorFields.concat(resultRegexes.errorFields);
+            errorFields = errorFields.concat(resultRegexes.errorFields);
             errorMessages.concat(resultRegexes.errorMessages);
         }
 
@@ -600,14 +617,14 @@ function checkRequiredFields(form, config) {
     var resultRadios = checkRequiredRadios(form);
     if (resultRadios.error > 0) {
         flog('[jquery.forms] checkRequiredRadios is false');
-        errorFields.concat(resultRadios.errorFields);
+        errorFields = errorFields.concat(resultRadios.errorFields);
         error++;
     }
 
     var resultCheckboxes = checkRequiredCheckboxes(form);
     if (resultCheckboxes.error > 0) {
         flog('[jquery.forms] checkRequiredCheckboxes is false');
-        errorFields.concat(resultCheckboxes.errorFields);
+        errorFields = errorFields.concat(resultCheckboxes.errorFields);
         error++;
     }
 
@@ -625,7 +642,8 @@ function checkRequiredFields(form, config) {
         // note that the watermark can make the value == title
         if (val.length === 0 || val === placeholder) {
             flog('[jquery.forms] Field is required', input);
-            errorFields.push(error);
+
+            errorFields.push(input);
             error++;
             input.attr('error-message', config.requiredErrorMessage);
         }
@@ -746,21 +764,35 @@ function checkDates(form, config) {
  */
 function checkValidPasswords(form, config) {
     var input = form.find('input#password, input.password');
-    var value = input.val();
 
-    if (value.length > 0) {
-        var passed = true;
-        if (!input.hasClass('allow-dodgy-password')) {
-            passed = validatePassword(value, {
-                length: [6, Infinity],
-                alpha: 1,
-                numeric: 1,
-                badWords: [],
-                badSequenceLength: 6
-            });
-        }
+    if (input.length > 0) {
+        var value = input.val();
 
-        if (!passed) {
+        if (value.length > 0) {
+            var passed = true;
+            if (!input.hasClass('allow-dodgy-password')) {
+                passed = validatePassword(value, {
+                    length: [6, Infinity],
+                    alpha: 1,
+                    numeric: 1,
+                    badWords: [],
+                    badSequenceLength: 6
+                });
+            }
+
+            if (!passed) {
+                flog('[jquery.forms] Password field is invalid');
+                input.attr('error-message', config.passwordErrorMessage);
+
+                return {
+                    password: false,
+                    confirmPassword: false,
+                    errorFields: [input]
+                };
+            } else {
+                return checkPasswordsMatch(form, config, input);
+            }
+        } else {
             flog('[jquery.forms] Password field is invalid');
             input.attr('error-message', config.passwordErrorMessage);
 
@@ -769,18 +801,13 @@ function checkValidPasswords(form, config) {
                 confirmPassword: false,
                 errorFields: [input]
             };
-        } else {
-            return checkPasswordsMatch(form, config, input);
         }
     } else {
-        flog('[jquery.forms] Password field is invalid');
-        input.attr('error-message', config.passwordErrorMessage);
-
         return {
-            password: false,
-            confirmPassword: false,
-            errorFields: [input]
-        };
+            password: true,
+            confirmPassword: true,
+            errorFields: []
+        }
     }
 }
 
