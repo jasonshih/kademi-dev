@@ -91,7 +91,7 @@
         confirmPasswordErrorMessage: 'Please confirm your password',
         simpleCharsErrorMessage: 'Please use only letters, numbers and underscores',
         numericErrorMessage: 'Please enter digits',
-        urlErrorMessage: 'Please enter valid website address',
+        hrefErrorMessage: 'Please enter valid website address',
         animationDuration: 150,
         renderMessage: function (message, type) {
             return '<div class="form-message fade alert alert-' + type + '" style="display: none"><a class="close" data-dismiss="alert">&times;</a>' + message + '</div>';
@@ -505,11 +505,11 @@ function validateFormFields(form, config) {
             errorMessages.push(config.simpleCharsErrorMessage);
         }
 
-        var resultUrls = checkUrls(form, config);
-        if (resultUrls.error > 0) {
-            error += resultUrls.error;
-            errorFields = errorFields.concat(resultUrls.errorFields);
-            errorMessages.push(config.urlErrorMessage);
+        var resultHrefs = checkHrefs(form, config);
+        if (resultHrefs.error > 0) {
+            error += resultHrefs.error;
+            errorFields = errorFields.concat(resultHrefs.errorFields);
+            errorMessages.push(config.hrefErrorMessage);
         }
 
         var resultNumerics = checkNumerics(form, config);
@@ -523,7 +523,7 @@ function validateFormFields(form, config) {
         if (resultRegexes.error > 0) {
             error += resultRegexes.error;
             errorFields = errorFields.concat(resultRegexes.errorFields);
-            errorMessages.concat(resultRegexes.errorMessages);
+            errorMessages = errorMessages.concat(resultRegexes.errorMessages);
         }
 
         if (error > 0) {
@@ -543,9 +543,10 @@ function validateFormFields(form, config) {
 /**
  * Check required checkboxes
  * @param {jQuery} form
+ * @param {Object} config
  * @returns {{error: Number, errorFields: Array}}
  */
-function checkRequiredCheckboxes(form) {
+function checkRequiredCheckboxes(form, config) {
     var error = 0;
     var errorFields = [];
 
@@ -567,9 +568,10 @@ function checkRequiredCheckboxes(form) {
 /**
  * Check required radio buttons
  * @param {jQuery} form
+ * @param {Object} config
  * @returns {{error: Number, errorFields: Array}}
  */
-function checkRequiredRadios(form) {
+function checkRequiredRadios(form, config) {
     var error = 0;
     var errorFields = [];
     var radioNames = {};
@@ -607,6 +609,7 @@ function checkRequiredRadios(form) {
 /**
  * Check required fields
  * @param {jQuery} form
+ * @param {Object} config
  * @returns {{error: Number, errorFields: Array}}
  */
 function checkRequiredFields(form, config) {
@@ -614,14 +617,14 @@ function checkRequiredFields(form, config) {
     var error = 0;
     var errorFields = [];
 
-    var resultRadios = checkRequiredRadios(form);
+    var resultRadios = checkRequiredRadios(form, config);
     if (resultRadios.error > 0) {
         flog('[jquery.forms] checkRequiredRadios is false');
         errorFields = errorFields.concat(resultRadios.errorFields);
         error++;
     }
 
-    var resultCheckboxes = checkRequiredCheckboxes(form);
+    var resultCheckboxes = checkRequiredCheckboxes(form, config);
     if (resultCheckboxes.error > 0) {
         flog('[jquery.forms] checkRequiredCheckboxes is false');
         errorFields = errorFields.concat(resultCheckboxes.errorFields);
@@ -680,7 +683,9 @@ function checkRegexes(form, config) {
                 flog('[jquery.forms] Regex field is invalid: ' + regexStr, input);
 
                 errorFields.push(input);
-                errorMessages.push(message);
+                if ($.inArray(message, errorMessages) === -1) {
+                    errorMessages.push(message);
+                }
                 error++;
                 input.attr('error-message', message);
             }
@@ -842,7 +847,6 @@ function checkPasswordsMatch(form, config, passwordInputs) {
             password: true,
             confirmPassword: false,
             errorFields: [
-                passwordInputs,
                 confirmPasswordInputs
             ]
         };
@@ -958,17 +962,17 @@ function checkNumerics(form, config) {
 }
 
 /**
- * Check numeric fields
+ * Check hrefs fields
  * @param {jQuery} form
  * @param {Object} config
  * @returns {{error: Number, errorFields: Array}}
  */
-function checkUrls(form, config) {
+function checkHrefs(form, config) {
     var error = 0;
     var errorFields = [];
     var pattern = new RegExp('^[a-zA-Z0-9_/%:/./-]+$');
 
-    form.find('input.href, input.url').each(function () {
+    form.find('input.href').each(function () {
         var input = $(this);
         var shouldCheck = shouldCheckValue(input);
 
@@ -976,11 +980,11 @@ function checkUrls(form, config) {
             var val = input.val();
 
             if (val.length === 0 || !pattern.test(val)) {
-                flog('[jquery.forms] Url and Href field is invalid', input);
+                flog('[jquery.forms] Href field is invalid', input);
 
                 errorFields.push(input);
                 error++;
-                input.attr('error-message', config.urlErrorMessage);
+                input.attr('error-message', config.hrefErrorMessage);
             }
         }
     });
