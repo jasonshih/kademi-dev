@@ -60,4 +60,5 @@
             $.error('[Reload fragment] Method ' + method + ' does not exist on jQuery.subscribe');
         }
     };
+
 })(jQuery);

@@ -4,236 +4,324 @@
  *  version: 1.1.0
  *
  *  Depends on common.js, moment.js
- *
- *  Takes a config object with the following properties:
- *  - callback(resp, form): called after successful processing with the response object and the form
- *  - validate(form) - return true if the form is valid
- *  - errorHandler(resp, form, valiationMessageSelector, errorCallback) - default displays messages and also calls errorCallback if provided
- *  - errorCallback() - a simpler error callback, is called after form UI is updated
- *  - doPostForm - defaults to true. If false, the form will not be submitted, although callbacks will still be called
- *  - confirmMessage - defaults to null, which suppresses confirmation display
- *  - valiationMessageSelector - defaults to ".pageMessage"
- *  - validationFailedMessage - defaults to "Some inputs are not valid."
  */
 
 (function ($) {
-    flog('[jquery.forms] Change logs');
+    flog('[jquery.forms] DEPRECATED options of 1.1.0 :');
     flog('********************************************');
     flog('- "doPostForm" is DEPRECATED. Use "allowPostForm" instead');
     flog('- "error" is DEPRECATED. Use "onInvalid" instead');
+    flog('- "callback" is DEPRECATED. Use "onSuccess" instead');
+    flog('- "errorHandler" is DEPRECATED. Use "onError" instead');
     flog('********************************************');
 
+    /**
+     * Configuration of jquery.forms
+     * @param {String} [postUrl=null] Url which will post form data to. If null, will use 'action' attribute of form
+     * @param {Function} validate Custom validation method. Arguments are 'form' and 'config'. 'form' is jQuery object form and 'config' is configuration of current form
+     * @param {Function} onValid Callback will be called when all fields are valid. Arguments are 'form' and 'config'. 'form' is jQuery object form and 'config' is configuration of current form
+     * @param {Function} onInvalid Callback will be called when all fields are invalid. Arguments are 'form' and 'config'. 'form' is jQuery object form and 'config' is configuration of current form
+     * @param {Boolean} [allowPostForm=true] Allow post form data via AJAX automatically or not
+     * @param {Function} beforePostForm Callback will be called before posting form data to server. Arguments are 'form', 'config', 'data'. 'form' is jQuery object form, 'config' is configuration of current form and 'data' is form data
+     * @param {Function} onSuccess Callback will be called when post data form to server successfully. Arguments are 'resp', 'form' and 'config'. 'resp' is response data from server, 'form' is jQuery object form and 'config' is configuration of current form
+     * @param {Function} onError Callback will be called when post data form to server failed. Arguments are 'resp', 'form' and 'config'. 'resp' is response data from server, 'form' is jQuery object form and 'config' is configuration of current form
+     * @param {String} [confirmMessage=null] The confirmation message after posting data fom to server successfully
+     * @param {Numeric} [confirmMessageDuration=5000] The displaying time of confirm message before it's hidden
+     * @param {String|Function} validationMessageSelector Selector of validation message. It's can be function which will return jQuery object of validation message
+     * @param {String} networkErrorMessage The error network message
+     * @param {String} emailErrorMessage The error message when email fields are invalid
+     * @param {String} requiredErrorMessage The error message when required fields are invalid
+     * @param {String} dateErrorMessage The error message when date fields are invalid
+     * @param {String} passwordErrorMessage The error message when password fields are invalid
+     * @param {String} confirmPasswordErrorMessage The error message when confirmPassword fields are invalid
+     * @param {String} simpleCharsErrorMessage The error message when simpleChars fields are invalid
+     * @param {String} numericErrorMessage The error message when numeric fields are invalid
+     * @param {String} urlErrorMessage The error message when url fields are invalid
+     * @param {Numeric} [animationDuration=300] The speed of all animations in jquery.forms
+     * @param {Function} renderMessage The render method for all messages in jquery.forms. Arguments are 'type' and 'message'. 'type' can be 'danger', 'success', 'info' and 'warning'. 'message' is message content
+     */
     var DEFAULTS = {
         postUrl: null, // means to use the form action as url
-        validate: function (form) {
+        validate: function (form, config) {
+            return true;
+        },
+        onValid: function (form, config) {
 
         },
-        onValid: function (form) {
+        onInvalid: function (form, config) {
 
         },
-        onInvalid: function (form) {
-
-        },
-        doPostForm: true,
         allowPostForm: true,
-        callback: function () {
+        beforePostForm: function (form, config, data) {
 
         },
-        errorHandler: function (resp, form, validationMessageSelector, errorCallback) {
+        onSuccess: function (resp, form, config) {
+
+        },
+        onError: function (resp, form, config) {
             try {
-                var messagesContainer = $(valiationMessageSelector, form);
-                flog("status indicates failure", resp);
+                flog('status indicates failure', resp);
+
                 if (resp) {
                     if (resp.messages && resp.messages.length > 0) {
-                        for (i = 0; i < resp.messages.length; i++) {
-                            var msg = resp.messages[i];
-                            showMessage(msg, form);
-                        }
+                        showFormMessage(form, config, resp.messages, 'danger');
                     } else {
-                        showMessage("Sorry, we couldnt process your request", form);
+                        showFormMessage(form, config, 'Sorry, we couldnt process your request', 'danger');
                     }
-                    showFieldMessages(resp.fieldMessages, form)
-                } else {
-                    showMessage("Sorry, we couldnt process your request", form);
-                }
 
-                messagesContainer.animate({
-                    height: 'show',
-                    'padding-top': 'show',
-                    'padding-bottom': 'show'
-                }, 100);
+                    showFieldMessages(resp.fieldMessages, form, config);
+                } else {
+                    showFormMessage(form, config, 'Sorry, we couldnt process your request', 'danger');
+                }
             } catch (e) {
-                flog("ex", e);
-            }
-            if (errorCallback) {
-                errorCallback();
+                flog('[jquery.forms] Error!', e);
             }
         },
         confirmMessage: null,
-        validationMessageSelector: ".pageMessage",
-        validationFailedMessage: "Some inputs are not valid.",
-        networkErrorMessage: "Sorry, there appears to be a problem with the network or server. Please check your internet connection. If you're connected ok this might be a glitch in the system.",
-        emailErrorMessage: "Please check the format of your email address, it should read like ben@somewhere.com",
-        requiredErrorMessage: "Please enter all required fields"
-    };
-
-    $.fn.forms = function (options) {
-
-        $.getScriptOnce("/static/js/moment-with-langs.min.js");
-
-        var form = $(this);
-        if (form.data('formOptions')) {
-            return;
+        confirmMessageDuration: 5000,
+        validationMessageSelector: '.form-message',
+        networkErrorMessage: 'Sorry, there appears to be a problem with the network or server. Please check your internet connection. If you\'re connected ok this might be a glitch in the system.',
+        emailErrorMessage: 'Please check the format of your email address, it should read like ben@somewhere.com',
+        requiredErrorMessage: 'Please enter all required fields',
+        dateErrorMessage: 'Please enter valid date',
+        passwordErrorMessage: 'Your password must be at least 6 characters and it must contain numbers and letters',
+        confirmPasswordErrorMessage: 'Please confirm your password',
+        simpleCharsErrorMessage: 'Please use only letters, numbers and underscores',
+        numericErrorMessage: 'Please enter digits',
+        urlErrorMessage: 'Please enter valid website address',
+        animationDuration: 300,
+        renderMessage: function (type, message) {
+            return '<div class="form-message alert alert-' + type + '"><a class="close" data-dismiss="alert">&times;</a>' + message + '</div>';
         }
-
-        flog("init forms plugin", this);
-
-        var config = $.extend({}, DEFAULTS, options);
-
-        flog("msgs", config.valiationMessageSelector, form, $(config.valiationMessageSelector, form));
-        form.on('submit', function (e) {
-            flog("submit");
-            e.preventDefault();
-            e.stopPropagation();
-            var thisForm = $(this);
-
-            resetValidation(thisForm);
-
-            form.find("input[type=text]").each(function (i, n) {
-                var inp = $(n);
-                var val = inp.val();
-                val = val.trim();
-                inp.val(val);
-            });
-
-            if (!config.validate(thisForm)) {
-                flog("validate method returned false");
-                return false;
-            }
-            thisForm.trigger("submitForm");
-            flog("form submit", thisForm);
-            if (checkRequiredFields(thisForm, config)) {
-                if (typeof config.onValid === 'function') {
-                    config.onValid(thisForm);
-                }
-                if (config.doPostForm) {
-                    postForm(thisForm, config.valiationMessageSelector, config.networkErrorMessage, config.callback, config.confirmMessage, config.postUrl, config.error, config.errorHandler);
-                }
-            } else {
-                if ($('.pageMessage.alert').length > 0) {
-                    $('body, html').animate({
-                        scrollTop: $('.pageMessage.alert').offset().top - 140
-                    });
-                }
-                config.error(thisForm);
-            }
-            return false;
-        });
-
-        form.data('formOptions', config);
     };
 
-    // http://stackoverflow.com/questions/5392344/sending-multipart-formdata-with-jquery-ajax
-    $.fn.serializeWithFiles = function () {
-        var form = $(this);
-        flog("serializeWithFiles", form);
-        /* ADD FILE TO PARAM AJAX */
-        var formData = new FormData();
-        $.each($(form).find("input[type='file']"), function (i, tag) {
-            $.each($(tag)[0].files, function (i, file) {
-                formData.append(tag.name, file);
+    var methods = {
+        init: function (options) {
+            var form = $(this);
+            var config = $.extend({}, DEFAULTS, options);
+            flog('[jquery.forms] Configuration:', config);
+
+            if (form.data('formOptions')) {
+                flog('[jquery.forms] Is ready initialized');
+                return;
+            } else {
+                // Add config to 'formOptions' data
+                form.data('formOptions', config);
+            }
+
+            $.getScriptOnce('/static/js/moment-with-langs.min.js');
+            flog('[jquery.forms] Initializing forms plugin...', form);
+
+            form.on('submit', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                flog('[jquery.forms] On form submit', form, e);
+
+                var form = $(this);
+
+                resetValidation(form, config);
+
+                form.find('input[type=text]').each(function () {
+                    var input = $(this);
+                    var val = input.val().trim();
+
+                    input.val(val);
+                });
+
+                if (typeof config.validate === 'function') {
+                    var isValid = config.validate.call(this, form, config);
+
+                    flog('[jquery.forms] Validate method return: ' + isValid);
+                    if (!isValid) {
+                        return false;
+                    }
+                }
+
+                if (validateFormFields(form, config)) {
+                    if (typeof config.onValid === 'function') {
+                        config.onValid.call(this, form, config);
+                    }
+
+                    if (config.allowPostForm) {
+                        doPostForm(form, config);
+                    }
+                } else {
+                    var alertMsg = getValidationMessage(form, config);
+                    if (alertMsg.length > 0) {
+                        $('body, html').animate({
+                            scrollTop: alertMsg.offset().top - 140
+                        }, config.animationDuration);
+                    }
+
+                    if (typeof config.onInvalid === 'function') {
+                        config.onInvalid.call(this, form, config);
+                    }
+                }
             });
-        });
-        var params = $(form).serializeArray();
-        $.each(params, function (i, val) {
-            formData.append(val.name, val.value);
-        });
-        return formData;
+        },
+        getOptions: function () {
+            return $(this).data('formOptions');
+        },
+        disable: function (callback) {
+            var form = $(this);
+            form.find('input, button, select, textarea').prop('disabled', true);
+
+            if (typeof callback === 'function') {
+                callback.call(this, form);
+            }
+        },
+        enable: function (callback) {
+            var form = $(this);
+            form.find('input, button, select, textarea').prop('disabled', false);
+
+            if (typeof callback === 'function') {
+                callback.call(this, form);
+            }
+        },
+        showElement: function (element, options, callback) {
+            var form = $(this);
+            var config = form.forms('getOptions');
+            options = $.extend({}, {
+                'opacity': 1,
+                'height': 'show'
+            }, options);
+
+            element.animate(options, config.animationDuration, callback);
+        },
+        hideElement: function (element, options, callback) {
+            var form = $(this);
+            var config = form.forms('getOptions');
+            options = $.extend({}, {
+                'opacity': 0,
+                'height': 'hide'
+            }, options);
+
+            element.animate(options, config.animationDuration, callback);
+        }
+    };
+
+    $.fn.forms = function (method) {
+        flog('[jquery.forms]', this);
+
+        if (methods[method]) {
+            return methods[ method ].apply(this, Array.prototype.slice.call(arguments, 1));
+        } else if (typeof method === 'object' || !method) {
+            return methods.init.apply(this, arguments);
+        } else {
+            $.error('[jquery.forms] Method ' + method + ' does not exist on jquery.forms');
+        }
     };
 
     // Version for jquery.forms
-    $.fn.forms.version = '1.0.9';
+    $.fn.forms.version = '1.1.0';
 
 })(jQuery);
 
-function postForm(form, valiationMessageSelector, networkErrorMessage, callback, confirmMessage, postUrl, errorCallback, errorHandler) {
+/**
+ * Get validation message
+ * @param {jQuery} form
+ * @param {Object} config
+ * @returns {jQuery}
+ */
+function getValidationMessage(form, config) {
+    if (typeof config.validationMessageSelector === 'string') {
+        return form.find(config.validationMessageSelector);
+    } else if (typeof config.validationMessageSelector === 'object' && config.validationMessageSelector.jquery) {
+        return config.validationMessageSelector;
+    } else {
+        return $('');
+    }
+}
+
+/**
+ * Post all form data to Kademi server
+ * @param {jQuery} form
+ * @param {Object} config
+ */
+function doPostForm(form, config) {
     // Trim all inputs
-    var enc = form.attr("enctype");
-    flog("postForm", "enc", enc, "form", form);
+    var enc = form.attr('enctype');
+    flog('[jquery.forms] doPostForm', 'enctype: ' + enc, form);
+
     var data;
-    if (enc == "multipart/form-data") {
+    if (enc == 'multipart/form-data') {
         data = form.serializeWithFiles();
     } else {
         data = form.serialize();
     }
-    flog("data", data);
+    flog('[jquery.forms] data:', data);
 
-    form.trigger("preSubmitForm", data);
-    var url = form.attr("action");
-    if (postUrl) {
-        flog("use supplied postUrl instead of form action", postUrl);
-        url = postUrl;
+    if (typeof config.beforePostForm === 'function') {
+        config.beforePostForm.call(this, form, config, data);
     }
-    flog("postForm", form, data, url);
+
+    var url = form.attr('action');
+    if (config.postUrl) {
+        flog('[jquery.forms] Use supplied postUrl instead of form action', config.postUrl);
+        url = config.postUrl;
+    }
+    flog('[jquery.forms] doPostForm', form, data, url);
+
     try {
-        form.find("button").attr("disabled", "true");
-        form.addClass("ajax-processing");
+        form.forms('disable');
+        form.addClass('ajax-processing');
+
         var ajaxOpts = {
             type: 'POST',
             url: url,
             data: data,
-            dataType: "json",
+            dataType: 'JSON',
             success: function (resp) {
-                form.find("button").removeAttr("disabled");
-                ajaxLoadingOff();
-                form.removeClass("ajax-processing");
+                form.forms('enable');
+                form.removeClass('ajax-processing');
+
                 if (resp && resp.status) {
-                    flog("save success", resp)
-                    if (confirmMessage) {
-                        showConfirmMessage(form, confirmMessage, valiationMessageSelector);
+                    flog('[jquery.forms] Post form successfully', resp)
+
+                    if (config.confirmMessage) {
+                        showConfirmMessage(form, config);
                     }
-                    callback(resp, form)
+
+                    if (typeof config.onSuccess === 'function') {
+                        config.onSuccess.call(this, resp, form, config);
+                    }
                 } else {
-                    if (errorHandler) {
-                        errorHandler(resp, form, valiationMessageSelector, errorCallback);
+                    if (typeof config.onError === 'function') {
+                        config.onError.call(this, resp, form, config);
                     }
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                ajaxLoadingOff();
-                form.removeClass("ajax-processing");
-                form.find("button").removeAttr("disabled");
-                flog("error posting form", form, jqXHR, textStatus, errorThrown);
-                if (errorHandler) {
-                    errorHandler(null, form, valiationMessageSelector, errorCallback);
+                form.forms('enable');
+                form.removeClass('ajax-processing');
+
+                flog('[jquery.forms] Error on posting form', form, jqXHR, textStatus, errorThrown);
+
+                if (typeof config.onError === 'function') {
+                    config.onError.call(this, resp, form, config);
                 }
-                if (networkErrorMessage) {
-                    $(valiationMessageSelector, form).text(networkErrorMessage + " - " + textStatus);
-                    $(valiationMessageSelector, form).animate({
-                        height: 'show',
-                        'padding-top': 'show',
-                        'padding-bottom': 'show'
-                    }, 100);
+
+                if (config.networkErrorMessage) {
+                    showFormMessage(form, config, config.networkErrorMessage + ' - ' + textStatus, 'danger');
                 }
 
             }
         };
 
-        if (enc == "multipart/form-data") {
+        if (enc == 'multipart/form-data') {
             ajaxOpts.processData = false;
             ajaxOpts.contentType = false;
         }
         ajaxOpts.beforeSend = function (xhr, options) { // et toc !
             options.data = data;
-//            xhr.upload.onprogress = function (event) {
-//                _options.progress(event.position, event.total);
-//            }
+
             /**
              * You can use https://github.com/francois2metz/html5-formdata for a fake FormData object
              * Only work with Firefox 3.6
              */
             if (data.fake) {
-                xhr.setRequestHeader("Content-Type", "multipart/form-data; boundary=" + data.boundary);
+                xhr.setRequestHeader('Content-Type', 'multipart/form-data; boundary=' + data.boundary);
                 // with fake FormData object, we must use sendAsBinary
                 xhr.send = function (data) {
                     xhr.sendAsBinary(data.toString());
@@ -246,206 +334,424 @@ function postForm(form, valiationMessageSelector, networkErrorMessage, callback,
         if (errorHandler) {
             errorHandler(null, form, valiationMessageSelector, errorCallback);
         } else {
-            flog("exception submitting form", e);
-            alert("Sorry, an error occured attempting to submit the form. Please contact the site administrator");
+            flog('exception submitting form', e);
+            alert('Sorry, an error occured attempting to submit the form. Please contact the site administrator');
         }
     }
 }
 
-function showConfirmMessage(form, confirmMessage) {
-    form.prepend("<div class='pageMessage alert alert-success'><button type='button' class='close' data-dismiss='alert'>&times;</button>" + confirmMessage + "</div>");
+/**
+ * Show form message with specified type
+ * @param {jQuery} form
+ * @param {Object} config
+ * @param {String} messages
+ * @param {'danger'|'success'|'info'|'warning'} type
+ * @param {Function} callback
+ */
+function showFormMessage(form, config, messages, type, callback) {
+    var messageStr = '';
+    if (typeof messages === 'string') {
+        messageStr = messages;
+    } else if ($.isArray(messages)) {
+        for (var i = 0; i < messages.length; i++) {
+            messageStr += '<li>' + messages[i] + '</li>';
+        }
+    }
+    messageStr = config.renderMessage('<ul>' + messageStr + '</ul>', type);
 
-    window.setTimeout(function () {
-        form.find(".pageMessage.alert").remove();
-    }, 5000);
+    var alertMsg = getValidationMessage(form, config);
+    var newMsg = $(messageStr);
+    if (alertMsg.length === 0) {
+        form.prepend(newMsg);
+    } else {
+        alertMsg.replaceWith(newMsg);
+    }
+
+    form.forms('showElement', newMsg);
+
+    if (typeof callback === 'function') {
+        callback.call(this, form, config, messages, type);
+    }
 }
 
-function showFieldMessages(fieldMessages, form) {
-    if (fieldMessages) {
-        $.each(fieldMessages, function (i, n) {
-            flog("field message", n);
-            var target = $("#" + n.field);
-            showValidation(target, n.message, form);
+/**
+ * Show confirmation message after post form successfully
+ * @param {jQuery} form
+ * @param {Object} config
+ */
+function showConfirmMessage(form, config) {
+    showFormMessage(form, config, config.confirmMessage, 'success', function () {
+        window.setTimeout(function () {
+            var alertMsg = getValidationMessage(form, config);
+            form.forms('hideElement', alertMsg)
+        }, config.confirmMessageDuration);
+    });
+}
+
+/**
+ * Show error fields with messages
+ * @param {Array} fieldMessages
+ * @param {jQuery} form
+ * @param {Object} config
+ */
+function showFieldMessages(fieldMessages, form, config) {
+    if (fieldMessages && fieldMessages.length > 0 && fieldMessages[0].length > 0) {
+        $.each(fieldMessages, function (i, message) {
+            flog('[jquery.forms] Show field message', message);
+
+            var target = $('#' + message.field);
+            var parent = target.parent();
+
+            var errorMessage = parent.find('.help-block.error-message');
+            if (errorMessage.length > 0) {
+                errorMessage.html(message.message);
+            } else {
+                parent.append(
+                    '<p class="help-block error-message">' + message.message + '</p>'
+                );
+            }
+
+            showErrorField(target);
         });
     }
 }
 
-function resetValidation(form) {
-    $(".control-group", form).removeClass("error");
-    $(".form-group", form).removeClass("has-error");
-    $(".validationError", form).remove();
-    $(".pageMessage.alert", form).animate({
-        height: 'hide',
-        'padding-top': 'hide',
-        'padding-bottom': 'hide'
-    }, 300).html("<a class='close' data-dismiss='alert' href='#'>&times;</a>");
-    $(".error > *", form).unwrap();
-    $(".errorField", form).removeClass("errorField");
-}
+/**
+ * Clear all error messages and remove all error classes
+ * @param {jQuery} form
+ * @param {Object} config
+ */
+function resetValidation(form, config) {
+    form.find('.form-group').removeClass('has-error');
+    form.find('.error-field').removeClass('error-field').removeAttr('error-message');
 
-function checkRequiredFields(form, config) {
-    flog('checkRequiredFields', form);
-    var isOk = true;
-
-    // Check mandatory
-    if (!checkRequiredRadios(form)) {
-        flog("missing radios");
-        isOk = false;
+    var alertMsg = getValidationMessage(form, config);
+    if (alertMsg.length > 0) {
+        form.forms('hideElement', alertMsg, {}, function () {
+            alertMsg.html('');
+        });
     }
-
-    $(".required", form).not(".tt-hint").each(function (index, node) { // exclude tt-hint, thats a field created by the typeahead plugin which copies the required class
-        var val = $(node).val();
-        if (val !== null) {
-            val = $.trim(val);
-        } else {
-            val = "";
-        }
-
-        var title = $(node).attr("placeholder");
-        if (val.length === 0 || (val === title)) { // note that the watermark can make the value == title
-            flog('error field', node);
-            showErrorField($(node));
-            isOk = false;
-        }
-    });
-
-    if (!checkRequiredChecks(form)) {
-        flog('missing required checkboxs');
-        isOk = false;
-    }
-
-    if (isOk) {
-        isOk = checkValidEmailAddress(form, config);
-
-        if (!checkDates(form)) {
-            isOk = false;
-        }
-        if (!checkValidPasswords(form)) {
-            isOk = false;
-        }
-        if (!checkSimpleChars(form)) {
-            isOk = false;
-        }
-        if (!checkHrefs(form)) {
-            isOk = false;
-        }
-        if (!checkNumbers(form)) {
-            isOk = false;
-        }
-        if (!checkRegex(form)) {
-            isOk = false;
-        }
-    } else {
-        if (config) {
-            showMessage(config.requiredErrorMessage, form);
-        } else {
-            showMessage("Please check required fields", form);
-        }
-    }
-    return isOk;
 }
 
-function checkRegex(form) {
-    var isOk = true;
-    $('input.regex', form).each(function () {
-        var input = $(this);
-        var value = input.val();
-        var regex = new RegExp(input.attr('data-regex'));
-        var message = input.attr('data-message');
-
-        if (regex.test(value)) {
-            // all ok
-        } else {
-            isOk = false;
-
-            if (message) {
-                showValidation(input, message, form);
-            } else {
-                showErrorField(input);
-            }
+/**
+ * Validate all form fields
+ * @param {jQuery} form
+ * @param {Object} config
+ * @returns {Boolean}
+ */
+function validateFormFields(form, config) {
+    var resultRequired = checkRequiredFields(form, config);
+    if (resultRequired.error > 0) {
+        for (var i = 0; i < resultRequired.errorFields.length; i++) {
+            var errorField = resultRequired.errorFields[i];
+            showErrorField(errorField);
         }
 
-    });
+        showFormMessage(form, config, config.requiredErrorMessage, 'danger');
 
-    return isOk;
-}
-
-function checkRequiredChecks(form) {
-    var isOk = true;
-    $("input.required:checkbox", form).not(":checked").each(function (index, node) {
-        node = $(node);
-        node = $("label[for=" + node.attr("id") + "]");
-        showErrorField($(node));
-        isOk = false;
-    });
-    return isOk;
-}
-function checkRequiredRadios(form) {
-    flog("checkRequiredRadios", form);
-    var isOk = true;
-    var radioNames = [];
-    $("input.required:radio", form).each(function (index, node) {
-        node = $(node);
-        radioNames[node.attr("name")] = node;
-    });
-    for (name in radioNames) {
-        var radios = form.find("input[name=" + name + "]");
-        flog("radio name1", name, radios);
-        var checked = radios.filter(":checked");
-        flog("radio name2", name, checked);
-        if (checked.length === 0) {
-            showErrorField(radioNames[name]);
-            isOk = false;
-        }
-    }
-    return isOk;
-}
-
-
-function checkRadio(radioName, form) {
-    flog('checkRadio', radioName, form);
-    if ($("input:radio[name=" + radioName + "]:checked", form).length === 0) {
-        var node = $("input:radio[name=" + radioName + "]", form)[0];
-        node = $(node);
-        node = $("label[for=" + node.attr("id") + "]");
-        flog('apply error to label', node);
-        showValidation(node, "Please select a value for " + radioName, form);
         return false;
     } else {
-        return true;
+        var error = 0;
+        var errorFields = [];
+        var errorMessages = [];
+
+        var resultEmails = checkValidEmailAddress(form, config);
+        if (resultEmails.error > 0) {
+            error += resultEmails.error;
+            errorFields.concat(resultEmails.errorFields);
+            errorMessages.push(config.emailErrorMessage);
+        }
+
+        var resultDates = checkDates(form, config);
+        if (resultDates.error > 0) {
+            error += resultDates.error;
+            errorFields.concat(resultDates.errorFields);
+            errorMessages.push(config.dateErrorMessage);
+        }
+
+        var resultPasswords = checkValidPasswords(form, config);
+        if (!resultPasswords.password || !resultPasswords.confirmPassword) {
+            error ++;
+            errorFields.concat(resultPasswords.errorFields);
+
+            if (!resultPasswords.password) {
+                errorMessages.push(config.passwordErrorMessage);
+            } else if (!resultPasswords.confirmPassword) {
+                errorMessages.push(config.confirmPasswordErrorMessage);
+            }
+        }
+
+        var resultSimpleChars = checkSimpleChars(form, config);
+        if (resultSimpleChars.error > 0) {
+            error += resultSimpleChars.error;
+            errorFields.concat(resultSimpleChars.errorFields);
+            errorMessages.push(config.simpleCharsErrorMessage);
+        }
+
+        var resultUrls = checkUrls(form, config);
+        if (resultUrls.error > 0) {
+            error += resultUrls.error;
+            errorFields.concat(resultUrls.errorFields);
+            errorMessages.push(config.urlErrorMessage);
+        }
+
+        var resultNumerics = checkNumerics(form, config);
+        if (resultNumerics.error > 0) {
+            error += resultNumerics.error;
+            errorFields.concat(resultNumerics.errorFields);
+            errorMessages.push(config.numericErrorMessage);
+        }
+
+        var resultRegexes = checkRegexes(form, config);
+        if (resultRegexes.error > 0) {
+            error += resultRegexes.error;
+            errorFields.concat(resultRegexes.errorFields);
+            errorMessages.concat(resultRegexes.errorMessages);
+        }
+
+        if (error > 0) {
+            showFormMessage(form, config, errorMessages, 'danger');
+            for (var i = 0; i < errorFields.length; i++) {
+                var errorField = errorFields[i];
+                showErrorField(errorField);
+            }
+
+            return false;
+        } else {
+            return true;
+        }
     }
 }
 
-// depends on common.js
-function checkDates(form) {
-    isOk = true;
-    $("input", form).each(function (index, node) {
-        var id = $(node).attr("id");
-        if (id && id.contains("Date")) {
-            var val = $(node).val();
-            if (val && val.length > 0) {
-                var valid = moment(val, ["DD-MM-YYYY", "DD-MM-YYYY HH:mm"], true);
-                if (!valid) {
-                    flog("checkDates: not a valid date: ", val);
-                    showValidation($(node), "Please enter a valid date", form);
-                    isOk = false;
-                }
+/**
+ * Check required checkboxes
+ * @param {jQuery} form
+ * @returns {{error: Number, errorFields: Array}}
+ */
+function checkRequiredCheckboxes(form) {
+    var error = 0;
+    var errorFields = [];
+
+    form.find('input.required:checkbox').not(':checked').each(function () {
+        var input = $(this);
+        flog('[jquery.forms] Field is required', input);
+
+        errorFields.push(input);
+        error++;
+        input.attr('error-message', config.requiredErrorMessage);
+    });
+
+    return {
+        error: error,
+        errorFields: errorFields
+    };
+}
+
+/**
+ * Check required radio buttons
+ * @param {jQuery} form
+ * @returns {{error: Number, errorFields: Array}}
+ */
+function checkRequiredRadios(form) {
+    var error = 0;
+    var errorFields = [];
+    var radioNames = {};
+
+    form.find('input.required:radio').each(function () {
+        var input = $(this);
+        var name = input.attr('name');
+
+        if (!radioNames[name]) {
+            radioNames[name] = input;
+        }
+    });
+
+    for (var name in radioNames) {
+        var radios = form.find('input[name=' + name + ']');
+        flog('[jquery.forms] Radio name: ' + name, radios);
+
+        var checked = radios.filter(':checked');
+        flog('[jquery.forms] Radio checked:', checked);
+
+        if (checked.length === 0) {
+            flog('[jquery.forms] Fields are required', radios);
+            errorFields.push(radios);
+            error++;
+            radios.attr('error-message', config.requiredErrorMessage);
+        }
+    }
+
+    return {
+        error: error,
+        errorFields: errorFields
+    };
+}
+
+/**
+ * Check required fields
+ * @param {jQuery} form
+ * @returns {{error: Number, errorFields: Array}}
+ */
+function checkRequiredFields(form, config) {
+    flog('[jquery.forms] checkRequiredFields', form);
+    var error = 0;
+    var errorFields = [];
+
+    var resultRadios = checkRequiredRadios(form);
+    if (resultRadios.error > 0) {
+        flog('[jquery.forms] checkRequiredRadios is false');
+        errorFields.concat(resultRadios.errorFields);
+        error++;
+    }
+
+    var resultCheckboxes = checkRequiredCheckboxes(form);
+    if (resultCheckboxes.error > 0) {
+        flog('[jquery.forms] checkRequiredCheckboxes is false');
+        errorFields.concat(resultCheckboxes.errorFields);
+        error++;
+    }
+
+    // Exclude tt-hint, that is a field created by the typeahead plugin which copies the required class
+    form.find('.required').not('.tt-hint').each(function () {
+        var input = $(this);
+        var val = input.val();
+        if (val !== null) {
+            val = val.trim();
+        } else {
+            val = '';
+        }
+
+        var placeholder = input.attr('placeholder');
+        // note that the watermark can make the value == title
+        if (val.length === 0 || val === placeholder) {
+            flog('[jquery.forms] Field is required', input);
+            errorFields.push(error);
+            error++;
+            input.attr('error-message', config.requiredErrorMessage);
+        }
+    });
+
+    return {
+        error: error,
+        errorFields: errorFields
+    };
+}
+
+/**
+ * Check regex fields
+ * @param {jQuery} form
+ * @param {Object} config
+ * @returns {{error: Number, errorFields: Array, errorMessages: Array}}
+ */
+function checkRegexes(form, config) {
+    var error = 0;
+    var errorFields = [];
+    var errorMessages = [];
+
+    form.find('input.regex').each(function () {
+        var input = $(this);
+        var shouldCheck = shouldCheckValue(input);
+
+        if (shouldCheck) {
+            var val = input.val();
+            var regexStr = input.attr('data-regex');
+            var regex = new RegExp(regexStr);
+            var message = input.attr('data-message');
+
+            if (!regex.test(val)) {
+                flog('[jquery.forms] Regex field is invalid: ' + regexStr, input);
+
+                errorFields.push(input);
+                errorMessages.push(message);
+                error++;
+                input.attr('error-message', message);
             }
         }
     });
-    return isOk;
+
+    return {
+        error: error,
+        errorFields: errorFields,
+        errorMessages: errorMessages
+    };
 }
+
 /**
- *  If password is present, checks for validity
+ * Input should be check value or not?
+ * @param {jQuery} input
+ * @returns {Boolean}
  */
-function checkValidPasswords(form) {
-    flog("checkValidPasswords");
-    var target = $("#password, input.password", form);
-    var p1 = target.val();
-    if (p1) {
+function shouldCheckValue(input) {
+    var shouldCheck = false;
+    var isRequiredIf = input.hasClass('required-if');
+    var isRequiredIfShown = input.hasClass('required-if-shown');
+
+    if (isRequiredIf) {
+        var val = input.val().trim();
+        if (val.length > 0) {
+            shouldCheck = true;
+        }
+    } else if (isRequiredIfShown) {
+        var isShown = input.is(':visible');
+        if (isShown) {
+            shouldCheck = true;
+        }
+    } else {
+        shouldCheck = true;
+    }
+
+    return shouldCheck;
+}
+
+/**
+ * Check date input
+ * @depends: common.js, moment.js
+ * @param {jQuery} form
+ * @param {Object} config
+ * @returns {{error: Number, errorFields: Array}}
+ */
+function checkDates(form, config) {
+    var error = 0;
+    var errorFields = [];
+
+    form.find('input.date, input.datetime').each(function () {
+        var input = $(this);
+        var shouldCheck = shouldCheckValue(input);
+
+        if (shouldCheck) {
+            var val = input.val().trim();
+            var valid = moment(val, ['DD-MM-YYYY', 'DD-MM-YYYY HH:mm'], true);
+
+            if (val.length === 0 || !valid) {
+                flog('[jquery.forms] Date field is invalid', input);
+
+                errorFields.push(input);
+                error++;
+                input.attr('error-message', config.dateErrorMessage);
+            }
+        }
+    });
+
+    return {
+        error: error,
+        errorFields: errorFields
+    };
+}
+
+/**
+ * Check password fields
+ * @param {jQuery} form
+ * @param {Object} config
+ * @returns {{password: Boolean, confirmPassword: Boolean, errorFields: Array}}
+ */
+function checkValidPasswords(form, config) {
+    var input = form.find('input#password, input.password');
+    var value = input.val();
+
+    if (value.length > 0) {
         var passed = true;
-        if (!target.hasClass("allow-dodgy-password")) {
-            passed = validatePassword(p1, {
+        if (!input.hasClass('allow-dodgy-password')) {
+            passed = validatePassword(value, {
                 length: [6, Infinity],
                 alpha: 1,
                 numeric: 1,
@@ -453,275 +759,234 @@ function checkValidPasswords(form) {
                 badSequenceLength: 6
             });
         }
-        if (!passed) {
-            showValidation(target, "Your password must be at least 6 characters and it must contain numbers and letters", form);
-            return false;
-        } else {
-            return checkPasswordsMatch(form);
-        }
-    }
-    return true;
-}
 
-function checkPasswordsMatch(form) {
-    flog("checkPasswordsMatch");
-    if ($("#confirmPassword").length == 0) {
-        return true; // there is no confirmation field
+        if (!passed) {
+            flog('[jquery.forms] Password field is invalid');
+            input.attr('error-message', config.passwordErrorMessage);
+
+            return {
+                password: false,
+                confirmPassword: false,
+                errorFields: [input]
+            };
+        } else {
+            return checkPasswordsMatch(form, config, input);
+        }
+    } else {
+        flog('[jquery.forms] Password field is invalid');
+        input.attr('error-message', config.passwordErrorMessage);
+
+        return {
+            password: false,
+            confirmPassword: false,
+            errorFields: [input]
+        };
     }
-    var p1 = $("#password", form).val();
-    var p2 = $("#confirmPassword", form).val();
-    if (p1 != p2) {
-        showValidation("password", "Your password's don't match. Please try again", form);
-        return false;
-    }
-    return true;
 }
 
 /**
- * We assume the field to validate has an id of "email"
+ * Check confirm password
+ * @param {jQuery} form
+ * @param {Object} config
+ * @param {jQuery} passwordInputs
+ * @returns {{password: Boolean, confirmPassword: Boolean, errorFields: Array}}
+ */
+function checkPasswordsMatch(form, config, passwordInputs) {
+    var confirmPasswordInputs = form.find('input#confirmPassword, input.confirm-password');
+
+    if (confirmPasswordInputs.length === 0) {
+        flog('[jquery.forms] There is no confirmation password field');
+
+        return {
+            password: true,
+            confirmPassword: true,
+            errorFields: []
+        };
+    }
+
+    var password = passwordInputs.val();
+    var confirmPassword = confirmPasswordInputs.val();
+
+    if (password !== confirmPassword) {
+        flog('[jquery.forms] Confirm password is not matched');
+        confirmPasswordInputs.attr('error-message', config.confirmPasswordErrorMessage);
+
+        return {
+            password: true,
+            confirmPassword: false,
+            errorFields: [
+                passwordInputs,
+                confirmPasswordInputs
+            ]
+        };
+    }
+
+    return {
+        password: true,
+        confirmPassword: true,
+        errorFields: []
+    };
+}
+
+/**
+ * Check email inputs which has id or class is 'email'
+ * @depends: common.js, moment.js
+ * @param {jQuery} form
+ * @param {Object} config
+ * @returns {{error: Number, errorFields: Array}}
  */
 function checkValidEmailAddress(form, config) {
-    var target = $("#email, input.email", form); // either with id of email, or with class email
-    var emailAddress = target.val();
+    var error = 0;
+    var errorFields = [];
+    var pattern = new RegExp(/^(("[\w-\s]+")|([\w-'']+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
 
-    if (emailAddress) {
-        var pattern = new RegExp(/^(("[\w-\s]+")|([\w-'']+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,63}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
-        if (!pattern.test(emailAddress)) {
+    form.find('#email, input.email').each(function () {
+        var input = $(this);
+        var shouldCheck = shouldCheckValue(input);
 
-            showValidation(target, config.emailErrorMessage, form);
-            return false;
-        }
-    }
-    return true;
-}
+        if (shouldCheck) {
+            var val = input.val();
 
-function checkSimpleChars(form) {
-    flog("checkSimpleChars");
-    var isOk = checkChars(form, ".simpleChars,.reallySimpleChars", "^[a-zA-Z0-9_\.\ -]+$");
-    if (isOk) {
-        var targets = $(".reallySimpleChars", form);
-        targets.each(function (i, n) {
-            var node = $(n);
-            var val = node.val();
-            if (val.length > 0) {
-                if (val.contains(" ")) {
-                    showValidation(node, "Spaces are not allowed", form);
-                    isOk = false;
-                }
-                if (val.contains("+")) {
-                    showValidation(node, "Plus signs are not allowed", form);
-                    isOk = false;
-                }
-                if (val.contains(".")) {
-                    showValidation(node, "Full stops are not allowed", form);
-                    isOk = false;
-                }
-            }
-        });
-    }
-    return isOk;
-}
+            if (val.length === 0 || !pattern.test(val)) {
+                flog('[jquery.forms] Email field is invalid', input);
 
-function checkChars(form, inpClass, reg) {
-    flog("checkChars");
-    var target = $(inpClass, form);
-    flog("checkChars2", target, inpClass, form);
-    var isOk = true;
-    var pattern = new RegExp(reg);
-    target.each(function (i, n) {
-        var node = $(n);
-        var val = node.val();
-        flog("val", val);
-        if (val.length > 0) {
-            if (!pattern.test(val)) {
-                flog("not valid");
-                showValidation(node, "Please use only letters, numbers and underscores", form);
-                isOk = false;
-            } else {
-                flog("is valid");
+                errorFields.push(input);
+                error++;
+                input.attr('error-message', config.emailErrorMessage);
             }
         }
     });
-    return isOk;
-}
 
-function checkReallySimple(val) {
-    if (val.length > 0) {
-        if (val.contains(" ")) {
-            return false;
-        }
-        if (!pattern.test(val)) {
-            return false;
-        }
-    }
-    return true;
-}
-
-function checkNumbers(form) {
-    var target = $(".numeric", form); // either with id of email, or with class email
-    flog("checkNumbers", target);
-    var isOk = true;
-    target.each(function (i, n) {
-        var node = $(n);
-        var val = node.val();
-        flog("checkNumeric", val);
-        if (val.length > 0) {
-            if (!isNumber(val)) {
-                showValidation(node, "Please enter a number", form);
-                isOk = false;
-            } else {
-                flog("  isok");
-            }
-        }
-    });
-    return isOk;
-}
-
-function checkHrefs(form) {
-    var target = $(".href", form);
-    var isOk = true;
-    var pattern = new RegExp("^[a-zA-Z0-9_/%:/./-]+$");
-    target.each(function (i, n) {
-        var node = $(n);
-        var val = node.val();
-        if (val.length > 0) {
-            if (!pattern.test(val)) {
-                showValidation(node, "Not a valid web address", form);
-                isOk = false;
-            }
-        }
-    });
-    return isOk;
-
-}
-
-function checkValueLength(target, minLength, maxLength, lbl, form) {
-    //flog('checkValueLength', target, minLength, maxLength, lbl);
-    target = ensureObject(target);
-    if (target.length === 0) {
-        return true;
-    }
-    var value = target.val();
-    flog('length', value.length);
-    if (minLength) {
-        if (value.length < minLength) {
-            showValidation(target, lbl + " must be at least " + minLength + " characters", form);
-            return false;
-        }
-    }
-    if (maxLength) {
-        flog('check max length: ' + (value.length > maxLength));
-        if (value.length > maxLength) {
-            showValidation(target, lbl + " must be no more then " + maxLength + " characters", form);
-            return false;
-        } else {
-            flog('check max length ok: ' + (value.length > maxLength));
-        }
-
-    }
-    return true;
-}
-
-function checkExactLength(target, length) {
-    target = ensureObject(target);
-    var value = target.val();
-    if (value.length != length) {
-        showValidation(target, "Must be at " + length + " characters");
-        return false;
-    }
-    return true;
-}
-
-
-// Passes if one of the targets has a non-empty value
-function checkOneOf(target1, target2, message) {
-    target1 = ensureObject(target1);
-    target2 = ensureObject(target2);
-    if (target1.val() || target2.val()) {
-        return true;
-    } else {
-        showValidation(target1, message);
-        return false
-    }
-}
-
-
-// Passes if target's value is either empty or a number. Spaces etc are not allowed
-function checkNumeric(target, form) {
-    if (typeof target == "string") {
-        target = $("#" + target);
-    }
-    var n = target.val();
-    if (n) {
-        if (!isNumber(n)) {
-            showValidation(target, "Please enter only numeric digits", form);
-            return false;
-        } else {
-            return true;
-        }
-    } else {
-        return true;
-    }
-}
-
-
-function checkTrue(target, message, form) {
-    var n = $("#" + target + ":checked").val();
-    if (n) {
-        return true;
-    } else {
-        showValidation($("label[for='" + target + "']"), message, form);
-        return false;
-    }
+    return {
+        error: error,
+        errorFields: errorFields
+    };
 }
 
 /**
- * target can be id or a jquery object
- * text is the text to display
+ * Check simple characters fields
+ * @param {jQuery} form
+ * @param {Object} config
+ * @returns {{error: Number, errorFields: Array}}
  */
-function showValidation(target, text, form) {
-    if (text) {
-        flog("showValidation", target, text, form);
-        showMessage(text, form);
-        if (target) {
-            var t = ensureObject(target);
-            showErrorField(t);
-        }
-    }
-}
+function checkSimpleChars(form, config) {
+    var error = 0;
+    var errorFields = [];
+    var simpleCharsPattern = /^[a-zA-Z0-9_]+$/;
 
-function showMessage(text, form) {
-    var messages = $(".pageMessage.alert", form);
-    if (messages.length === 0) {
-        messages = $("<div class='pageMessage alert alert-error alert-danger'><a class='close' data-dismiss='alert' href='#'>&times;</a></div>");
-        form.prepend(messages);
-    }
-    flog("showMessage", messages);
-    messages.append("<p class='validationError'>" + text + "</p>");
-    messages.animate({
-        height: 'show',
-        'padding-top': 'show',
-        'padding-bottom': 'show'
-    }, 500);
-}
+    form.find('.simpleChars, .simple-chars, .reallySimpleChars, .really-simple-chars').each(function () {
+        var input = $(this);
+        var shouldCheck = shouldCheckValue(input);
 
-function showErrorField(target) {
-    flog("showErrorField", target);
-    target.addClass("errorField");
-    target.closest(".form-group").addClass("has-error"); // for bootstrap3
-    target.closest(".control-group").addClass("error"); // for bootstrap2
-    if (typeof CKEDITOR != 'undefined') {
-        if (CKEDITOR) {
-            flog("check for editor1", target);
-            var name = target.attr("name");
-            if (!name) {
-                name = target.attr("id");
+        if (shouldCheck) {
+            var val = input.val();
+
+            if (val.length === 0 || !simpleCharsPattern.test(val)) {
+                flog('[jquery.forms] Simple chars field is invalid', input);
+
+                errorFields.push(input);
+                error++;
+                input.attr('error-message', config.simpleCharsErrorMessage);
             }
+        }
+    });
+
+    return {
+        error: error,
+        errorFields: errorFields
+    };
+}
+
+/**
+ * Check numeric fields
+ * @param {jQuery} form
+ * @param {Object} config
+ * @returns {{error: Number, errorFields: Array}}
+ */
+function checkNumerics(form, config) {
+    var error = 0;
+    var errorFields = [];
+
+    form.find('input.numeric').each(function () {
+        var input = $(this);
+        var shouldCheck = shouldCheckValue(input);
+
+        if (shouldCheck) {
+            var val = input.val();
+
+            if (val.length === 0 || !isNumber(val)) {
+                flog('[jquery.forms] Numeric field is invalid', input);
+
+                errorFields.push(input);
+                error++;
+                input.attr('error-message', config.numericErrorMessage);
+            }
+        }
+    });
+
+    return {
+        error: error,
+        errorFields: errorFields
+    };
+}
+
+/**
+ * Check numeric fields
+ * @param {jQuery} form
+ * @param {Object} config
+ * @returns {{error: Number, errorFields: Array}}
+ */
+function checkUrls(form, config) {
+    var error = 0;
+    var errorFields = [];
+    var pattern = new RegExp('^[a-zA-Z0-9_/%:/./-]+$');
+
+    form.find('input.href, input.url').each(function () {
+        var input = $(this);
+        var shouldCheck = shouldCheckValue(input);
+
+        if (shouldCheck) {
+            var val = input.val();
+
+            if (val.length === 0 || !pattern.test(val)) {
+                flog('[jquery.forms] Url and Href field is invalid', input);
+
+                errorFields.push(input);
+                error++;
+                input.attr('error-message', config.urlErrorMessage);
+            }
+        }
+    });
+
+    return {
+        error: error,
+        errorFields: errorFields
+    };
+}
+
+/**
+ * Show error field
+ * @param {jQuery} target
+ */
+function showErrorField(target) {
+    flog('[jquery.forms] showErrorField', target);
+
+    target.addClass('error-field');
+    target.closest('.form-group').addClass('has-error');
+
+    if (typeof CKEDITOR !== 'undefined') {
+        if (CKEDITOR) {
+            var name = target.attr('name');
+            if (!name) {
+                name = target.attr('id');
+            }
+
             editor = CKEDITOR.instances[name];
-            flog("check for editor", name, editor);
+            flog('[jquery.forms] Check for CKEditor', name, editor);
+
             if (editor) {
-                flog("add class", editor.form);
-                editor.form.addClass("errorField");
+                flog('[jquery.forms] Add "error-field" class', editor.form);
+                editor.form.addClass('error-field');
             }
         }
     }
@@ -754,42 +1019,48 @@ function validatePassword(pw, options) {
     }
 
     var re = {
-            lower: /[a-z]/g,
-            upper: /[A-Z]/g,
-            alpha: /[A-Z]/gi,
-            numeric: /[0-9]/g,
-            special: /[\W_]/g
-        },
-        rule, i;
+        lower: /[a-z]/g,
+        upper: /[A-Z]/g,
+        alpha: /[A-Z]/gi,
+        numeric: /[0-9]/g,
+        special: /[\W_]/g
+    };
+    var rule;
+    var i;
 
     // enforce min/max length
-    if (pw.length < o.length[0] || pw.length > o.length[1])
+    if (pw.length < o.length[0] || pw.length > o.length[1]) {
         return false;
+    }
 
     // enforce lower/upper/alpha/numeric/special rules
     for (rule in re) {
-        if ((pw.match(re[rule]) || []).length < o[rule])
+        if ((pw.match(re[rule]) || []).length < o[rule]) {
             return false;
+        }
     }
 
     // enforce word ban (case insensitive)
     for (i = 0; i < o.badWords.length; i++) {
-        if (pw.toLowerCase().indexOf(o.badWords[i].toLowerCase()) > -1)
+        if (pw.toLowerCase().indexOf(o.badWords[i].toLowerCase()) > -1) {
             return false;
+        }
     }
 
     // enforce the no sequential, identical characters rule
-    if (o.noSequential && /([\S\s])\1/.test(pw))
+    if (o.noSequential && /([\S\s])\1/.test(pw)) {
         return false;
+    }
 
     // enforce alphanumeric/qwerty sequence ban rules
     if (o.badSequenceLength) {
-        var lower = "abcdefghijklmnopqrstuvwxyz",
-            upper = lower.toUpperCase(),
-            numbers = "0123456789",
-            qwerty = "qwertyuiopasdfghjklzxcvbnm",
-            start = o.badSequenceLength - 1,
-            seq = "_" + pw.slice(0, start);
+        var lower = 'abcdefghijklmnopqrstuvwxyz';
+        var upper = lower.toUpperCase();
+        var numbers = '0123456789';
+        var qwerty = 'qwertyuiopasdfghjklzxcvbnm';
+        var start = o.badSequenceLength - 1;
+        var seq = '_' + pw.slice(0, start);
+
         for (i = start; i < pw.length; i++) {
             seq = seq.slice(1) + pw.charAt(i);
             if (
@@ -807,17 +1078,44 @@ function validatePassword(pw, options) {
     for (i = 0; i < o.custom.length; i++) {
         rule = o.custom[i];
         if (rule instanceof RegExp) {
-            if (!rule.test(pw))
+            if (!rule.test(pw)) {
                 return false;
+            }
         } else if (rule instanceof Function) {
-            if (!rule(pw))
+            if (!rule(pw)) {
                 return false;
+            }
         }
     }
 
     // great success!
     return true;
 }
+
+// http://stackoverflow.com/questions/5392344/sending-multipart-formdata-with-jquery-ajax
+(function ($) {
+    $.fn.serializeWithFiles = function () {
+        var form = $(this);
+
+        flog('[jquery.forms] Initializing serializeWithFiles...', form);
+
+        // ADD FILE TO PARAM AJAX
+        var formData = new FormData()
+        form.find('input[type=file]').each(function (index, input) {
+            $.each(input.files, function (i, file) {
+                formData.append(input.name, file);
+            });
+        });
+
+        var params = form.serializeArray();
+        $.each(params, function (i, val) {
+            formData.append(val.name, val.value);
+        });
+
+        return formData;
+    };
+
+})(jQuery);
 
 /**
  * Emulate FormData for some browsers
@@ -831,7 +1129,7 @@ function validatePassword(pw, options) {
 
     function FormData() {
         this.fake = true;
-        this.boundary = "--------FormData" + Math.random();
+        this.boundary = '--------FormData' + Math.random();
         this._fields = [];
     }
 
@@ -841,21 +1139,21 @@ function validatePassword(pw, options) {
 
     FormData.prototype.toString = function () {
         var boundary = this.boundary;
-        var body = "";
+        var body = '';
         this._fields.forEach(function (field) {
-            body += "--" + boundary + "\r\n";
+            body += '--' + boundary + '\r\n';
             // file upload
             if (field[1].name) {
                 var file = field[1];
-                body += "Content-Disposition: form-data; name=\"" + field[0] + "\"; filename=\"" + file.name + "\"\r\n";
-                body += "Content-Type: " + file.type + "\r\n\r\n";
-                body += file.getAsBinary() + "\r\n";
+                body += 'Content-Disposition: form-data; name=\'' + field[0] + '\'; filename=\'' + file.name + '\'\r\n';
+                body += 'Content-Type: ' + file.type + '\r\n\r\n';
+                body += file.getAsBinary() + '\r\n';
             } else {
-                body += "Content-Disposition: form-data; name=\"" + field[0] + "\";\r\n\r\n";
-                body += field[1] + "\r\n";
+                body += 'Content-Disposition: form-data; name=\'' + field[0] + '\';\r\n\r\n';
+                body += field[1] + '\r\n';
             }
         });
-        body += "--" + boundary + "--";
+        body += '--' + boundary + '--';
         return body;
     };
 
