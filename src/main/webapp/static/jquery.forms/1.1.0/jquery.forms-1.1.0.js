@@ -9,7 +9,7 @@
 (function ($) {
     flog('[jquery.forms] DEPRECATED options of 1.1.0 which will be removed 1.2.0:');
     flog('********************************************');
-    flog('- "doPostForm" is DEPRECATED. Use "allowPostForm" instead');
+    flog('- "doPostForm" is DEPRECATED and removed. Use "allowPostForm" instead');
     flog('- "error" is DEPRECATED. Use "onInvalid" instead');
     flog('- "callback" is DEPRECATED. Use "onSuccess" instead');
     flog('- "errorHandler" is DEPRECATED. Use "onError" instead');
