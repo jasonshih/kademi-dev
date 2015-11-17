@@ -1,8 +1,9 @@
 /**
  *
  *  jquery.forms.js
+ *  version: 1.1.0
  *
- *  Depends on common.js
+ *  Depends on common.js, moment.js
  *
  *  Takes a config object with the following properties:
  *  - callback(resp, form): called after successful processing with the response object and the form
@@ -16,69 +17,78 @@
  */
 
 (function ($) {
+    flog('[jquery.forms] Change logs');
+    flog('********************************************');
+    flog('- "doPostForm" is DEPRECATED. Use "allowPostForm" instead');
+    flog('- "error" is DEPRECATED. Use "onInvalid" instead');
+    flog('********************************************');
+
+    var DEFAULTS = {
+        postUrl: null, // means to use the form action as url
+        validate: function (form) {
+
+        },
+        onValid: function (form) {
+
+        },
+        onInvalid: function (form) {
+
+        },
+        doPostForm: true,
+        allowPostForm: true,
+        callback: function () {
+
+        },
+        errorHandler: function (resp, form, validationMessageSelector, errorCallback) {
+            try {
+                var messagesContainer = $(valiationMessageSelector, form);
+                flog("status indicates failure", resp);
+                if (resp) {
+                    if (resp.messages && resp.messages.length > 0) {
+                        for (i = 0; i < resp.messages.length; i++) {
+                            var msg = resp.messages[i];
+                            showMessage(msg, form);
+                        }
+                    } else {
+                        showMessage("Sorry, we couldnt process your request", form);
+                    }
+                    showFieldMessages(resp.fieldMessages, form)
+                } else {
+                    showMessage("Sorry, we couldnt process your request", form);
+                }
+
+                messagesContainer.animate({
+                    height: 'show',
+                    'padding-top': 'show',
+                    'padding-bottom': 'show'
+                }, 100);
+            } catch (e) {
+                flog("ex", e);
+            }
+            if (errorCallback) {
+                errorCallback();
+            }
+        },
+        confirmMessage: null,
+        validationMessageSelector: ".pageMessage",
+        validationFailedMessage: "Some inputs are not valid.",
+        networkErrorMessage: "Sorry, there appears to be a problem with the network or server. Please check your internet connection. If you're connected ok this might be a glitch in the system.",
+        emailErrorMessage: "Please check the format of your email address, it should read like ben@somewhere.com",
+        requiredErrorMessage: "Please enter all required fields"
+    };
+
     $.fn.forms = function (options) {
 
         $.getScriptOnce("/static/js/moment-with-langs.min.js");
 
         var form = $(this);
-        if (form.data('formOPtions')) {
+        if (form.data('formOptions')) {
             return;
         }
 
         flog("init forms plugin", this);
 
-        var config = $.extend({
-            postUrl: null, // means to use the form action as url
-            callback: function () {
-
-            },
-            errorHandler: function (resp, form, valiationMessageSelector, errorCallback) {
-                try {
-                    var messagesContainer = $(valiationMessageSelector, form);
-                    flog("status indicates failure", resp);
-                    if (resp) {
-                        if (resp.messages && resp.messages.length > 0) {
-                            for (i = 0; i < resp.messages.length; i++) {
-                                var msg = resp.messages[i];
-                                showMessage(msg, form);
-                            }
-                        } else {
-                            showMessage("Sorry, we couldnt process your request", form);
-                        }
-                        showFieldMessages(resp.fieldMessages, form)
-                    } else {
-                        showMessage("Sorry, we couldnt process your request", form);
-                    }
-
-                    messagesContainer.animate({
-                        height: 'show',
-                        'padding-top': 'show',
-                        'padding-bottom': 'show'
-                    }, 100);
-                } catch (e) {
-                    flog("ex", e);
-                }
-                if (errorCallback) {
-                    errorCallback();
-                }
-            },
-            error: function () {
-
-            },
-            validate: function (form) {
-                return true;
-            },
-            onValid: function (form) {
-
-            },
-            doPostForm: true,
-            confirmMessage: null,
-            valiationMessageSelector: ".pageMessage",
-            validationFailedMessage: "Some inputs are not valid.",
-            networkErrorMessage: "Sorry, there appears to be a problem with the network or server. Please check your internet connection. If you're connected ok this might be a glitch in the system.",
-            emailErrorMessage: "Please check the format of your email address, it should read like ben@somewhere.com",
-            requiredErrorMessage: "Please enter all required fields"
-        }, options);
+        var config = $.extend({}, DEFAULTS, options);
 
         flog("msgs", config.valiationMessageSelector, form, $(config.valiationMessageSelector, form));
         form.on('submit', function (e) {
@@ -815,8 +825,10 @@ function validatePassword(pw, options) {
  * (c) 2010 François de Metz
  */
 (function (w) {
-    if (w.FormData)
+    if (w.FormData) {
         return;
+    }
+
     function FormData() {
         this.fake = true;
         this.boundary = "--------FormData" + Math.random();
@@ -825,7 +837,8 @@ function validatePassword(pw, options) {
 
     FormData.prototype.append = function (key, value) {
         this._fields.push([key, value]);
-    }
+    };
+
     FormData.prototype.toString = function () {
         var boundary = this.boundary;
         var body = "";
@@ -844,6 +857,8 @@ function validatePassword(pw, options) {
         });
         body += "--" + boundary + "--";
         return body;
-    }
+    };
+
     w.FormData = FormData;
+
 })(window);
