@@ -476,9 +476,39 @@ function initEdify() {
     });
 }
 
-function resetForm($form) {
-    $form.each(function () {
+function resetForm(form) {
+    form.each(function () {
         this.reset();
+    });
+}
+
+function clearForm(form) {
+    form.each(function () {
+        var currentForm = $(this);
+        var inputs = currentForm.find('input');
+        var selects = currentForm.find('select');
+        var textareas = currentForm.find('textarea');
+
+        inputs.each(function () {
+            var input = $(this);
+
+            if (input.is(':checkbox') || input.is(':radio')) {
+                input.prop('checked', false);
+            } else if (input.is(':reset') || input.is(':button') || input.is(':submit') || input.is(':image')) {
+                // Do nothing
+            } else {
+                input.val('');
+            }
+        });
+
+        selects.each(function () {
+            var select = $(this);
+            select.val('');
+        });
+        textareas.each(function () {
+            var textarea = $(this);
+            textarea.val('');
+        });
     });
 }
 

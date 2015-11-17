@@ -240,7 +240,7 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
         flog("create editor", inp, config);
         var editor = inp.ckeditor(config).editor;
 
-        editor.on('instanceReady', function(evt) {
+        editor.on('instanceReady', function (evt) {
             if (!ADDED_EXTRA_CSS) {
                 var cssCkeditorExtra = '/static/ckeditor440/skins/bootstrapck/editor_extra.css';
                 flog("loading ckeditor extra css");
@@ -250,6 +250,8 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
             }
         });
     });
+
+    CKEDITOR.dtd.$removeEmpty['i'] = false;
 
 }
 
@@ -306,11 +308,11 @@ if (!Date.prototype.toISOString) {
         }
 
         return this.getUTCFullYear() + '-'
-            + pad(this.getUTCMonth() + 1) + '-'
-            + pad(this.getUTCDate()) + 'T'
-            + pad(this.getUTCHours()) + ':'
-            + pad(this.getUTCMinutes()) + ':'
-            + pad(this.getUTCSeconds()) + 'Z';
+                + pad(this.getUTCMonth() + 1) + '-'
+                + pad(this.getUTCDate()) + 'T'
+                + pad(this.getUTCHours()) + ':'
+                + pad(this.getUTCMinutes()) + ':'
+                + pad(this.getUTCSeconds()) + 'Z';
     };
 }
 
@@ -592,7 +594,7 @@ function buildJWPlayer(itemToReplace, count, src, posterHref) {
                     }]
             }
         ]
-        //,primary: "flash"
+                //,primary: "flash"
     });
     jwplayer(innerId).onReady(function () {
         var wrapperId = innerId + "_wrapper";

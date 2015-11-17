@@ -107,7 +107,7 @@
                                                 <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
                                                     <span class="caret"></span>
                                                 </button>
-                                                <ul class="dropdown-menu" role="menu">
+                                                <ul class="dropdown-menu dropdown-menu-right" role="menu">
                                                     <li><a href="#" class="btn-add-to-group">Add to Group</a></li>
                                                     <li class="divider"></li>
                                                     <li><a href="#" class="btn-remove-users">Remove</a></li>
@@ -204,30 +204,28 @@
                             <input type="text" name="nickName" id="newUserNickName" class="required form-control" />
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-3" for="newUserFirstName">First name</label>
-                        <div class="col-md-9">
-                            <input type="text" name="firstName" id="newUserFirstName" class="form-control" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-3" for="newUserSurName">Surname</label>
-                        <div class="col-md-9">
-                            <input type="text" name="surName" id="newUserSurName" class="form-control" />
-                        </div>
-                    </div>
+                    <!--<div class="form-group">-->
+                        <!--<label class="control-label col-md-3" for="newUserFirstName">First name</label>-->
+                        <!--<div class="col-md-9">-->
+                            <!--<input type="text" name="firstName" id="newUserFirstName" class="form-control" />-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="form-group">-->
+                        <!--<label class="control-label col-md-3" for="newUserSurName">Surname</label>-->
+                        <!--<div class="col-md-9">-->
+                            <!--<input type="text" name="surName" id="newUserSurName" class="form-control" />-->
+                        <!--</div>-->
+                    <!--</div>-->
                     <div class="form-group">
                         <label class="control-label col-md-3" for="newUserEmail">Email</label>
                         <div class="col-md-9">
-                            <input type="text" name="email" id="newUserEmail" class="email required form-control" />
+                            <input type="text" name="email" id="newUserEmail" class="required form-control" />
+                            <em class="help-block small text-muted">Eg. Joe Blogs &lt;joebloggs@somewhere.com&gt;</em>
                         </div>
                     </div>
                     <hr />
                     <h4>Group membership</h4>
-                    <p>
-                        <i>Please select a group and an organisation to make this user
-                            a member of</i>
-                    </p>
+                    <p><i>Please select a group and an organisation to make this user a member of</i></p>
                     <div class="groups">
                         <div class="form-group">
                             <label class="control-label col-md-2" for="groups">Group</label>
@@ -249,7 +247,6 @@
                         </div>
                         <div class="form-group">
                             <div id="org-search">
-                                $page.class
                                 <div class="table-responsive">
                                     <table class="table table-striped table-hover table-condensed">
                                         #if( $page.orgSearchResults.isEmpty() )
@@ -284,7 +281,17 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                <button class="btn btn-sm btn-primary" data-type="form-submit" type="button">Save</button>
+                <div class="btn-group btn-group-sm dropup"">
+                    <button class="btn btn-primary btn-add-and-view" data-type="form-submit" type="button">Create and view</button>
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-right">
+                        <li><a href="#" data-type="form-submit" class="small btn-add-and-add">Create and add another</a></li>
+                        <li><a href="#" data-type="form-submit" class="small btn-add-and-close">Create and close</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
 
@@ -310,11 +317,6 @@
                 <div class="upload">
                     <div class="btn-upload" id='do-upload-csv'></div>
                     <br />
-                    <!--
-                                        <div class="allow-inserts">
-                                                <input type="checkbox" id="allow-inserts" /> <label for="allow-inserts">Allow inserts</label>
-                                        </div>
-                    -->
                 </div>
                 <br />
                 <div class="upload-results">
@@ -420,69 +422,71 @@
 
 
         #macro( showAggregation $agg )
-        #if( $agg.buckets.size() > 0 || $params.get("filter-$agg.name") )
-        <tbody id="agg-$agg.name">
-            <tr>
-                <td colspan="2">
-                    $agg.title&nbsp;
-                    #if (! $agg.noFilter && ($agg.buckets.size() > 4 || $!params.get("filter-$agg.name")))
-                    <span style="float: right; width: 50%" >
-                        #if ( $agg.name != "action" )
-                        <span class="input-group input-group-sm">
-                            <input id="$agg.name" class="agg-filter form-control" type="text" name="$agg.name" placeholder="Search / Filter" value="$agg.filter" />
-                            <span class="input-group-btn">
-                                <button class="btn btn-sm btn-default aggClearer" type="button" data-target="#$agg.name"><i class="fa fa-times"></i></button>
-                            </span>
-                        </span>
-                        #end
-                    </span>
+            #if( $agg.buckets.size() > 0 || $params.get("filter-$agg.name") )
+                <tbody id="agg-$agg.name">
+                    <tr>
+                        <td colspan="2">
+                            $agg.title&nbsp;
+                            #if (! $agg.noFilter && ($agg.buckets.size() > 4 || $!params.get("filter-$agg.name")))
+                                <span style="float: right; width: 50%" >
+                                    #if ( $agg.name != "action" )
+                                        <span class="input-group input-group-sm">
+                                            <input id="$agg.name" class="agg-filter form-control" type="text" name="$agg.name" placeholder="Search / Filter" value="$agg.filter" />
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-sm btn-default aggClearer" type="button" data-target="#$agg.name"><i class="fa fa-times"></i></button>
+                                            </span>
+                                        </span>
+                                    #end
+                                </span>
+                            #end
+                        </td>
+                    </tr>
+                    #foreach($b in $agg.buckets )
+                        #showFacetBucket($b, 0)
                     #end
-                </td>
-            </tr>
-            #foreach($b in $agg.buckets )
-            #showFacetBucket($b, 0)
+                </tbody>
             #end
-        </tbody>
-        #end
         #end
 
         #macro( showFacetBucket $b $indent )
-        #set($termParamName = "term-" + $b.aggName)
-        #if( $b.count > 0 )
-        <tr class="agg-row $formatter.paramSelected($termParamName, $b.termName, 'success')">
-            <td>
-                <div class="col-md-offset-$indent">
-                    <a href="$page.href?$formatter.toggleParamVal( $termParamName, $b.termName )" class="dated term-select">$b.termTitle</a>
-                </div>
-            </td>
-            <td align="right">$b.count</td>
-        </tr>
-        #end
+            #set($termParamName = "term-" + $b.aggName)
+            #if( $b.count > 0 )
+                <tr class="agg-row $formatter.paramSelected($termParamName, $b.termName, 'success')">
+                    <td>
+                        <div class="col-md-offset-$indent">
+                            <a href="$page.href?$formatter.toggleParamVal( $termParamName, $b.termName )" class="dated term-select">$b.termTitle</a>
+                        </div>
+                    </td>
+                    <td align="right">$b.count</td>
+                </tr>
+            #end
 
-        #foreach($sub in $b.buckets)
-        #showFacetBucket($sub, $formatter.addNum($indent, 1) )
-        #end
+            #foreach($sub in $b.buckets)
+                #showFacetBucket($sub, $formatter.addNum($indent, 1) )
+            #end
         #end
 
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
         <script type="text/javascript">
             $(function () {
                 initManageUsers();
-                $("#aggregationsContainer").on("click", ".term-select", function (e) {
-                    e.preventDefault();
-                    $(e.target).closest("tr").toggleClass("success");
-                    var newHref = $(e.target).closest("a").attr("href");
-                    window.history.pushState("", newHref, newHref);
 
-                    $("#table-users-body").reloadFragment({
+                $('#aggregationsContainer').on('click', '.term-select', function (e) {
+                    e.preventDefault();
+
+                    $(e.target).closest('tr').toggleClass('success');
+                    var newHref = $(e.target).closest('a').attr('href');
+                    window.history.pushState('', newHref, newHref);
+
+                    $('#table-users-body').reloadFragment({
                         url: newHref,
                         whenComplete: function (response) {
-                            flog("complete", response);
-                            Msg.info("Refreshed", 1500)
+                            flog('complete', response);
+                            Msg.info('Refreshed', 1500)
                             var newDom = $(response);
-                            $("#searchStats").replaceWith(newDom.find("#searchStats"));
-                            var inner = $(response).find("#aggregationsContainer > *");
-                            $("#aggregationsContainer").html(inner);
+                            $('#searchStats').replaceWith(newDom.find('#searchStats'));
+                            var inner = $(response).find('#aggregationsContainer > *');
+                            $('#aggregationsContainer').html(inner);
                         }
                     });
                 });

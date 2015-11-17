@@ -81,6 +81,18 @@ function initThumbnail() {
             thumbSel.val(selectedUrl);
         }
     });
+
+    var inpGroup = thumbSel.closest('.input-group');
+
+    inpGroup.find('.input-group-btn').append('<button type="button" class="btn btn-danger btn-clear-thumb">Clear</button>');
+
+    $('body').on('click', '.btn-clear-thumb', function (e) {
+        e.preventDefault();
+
+        if (confirm('Are you sure you want to clear the thumbnail?')) {
+            $('input.thumbnail-image').val('');
+        }
+    });
 }
 
 function getSelectedProgram() {

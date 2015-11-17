@@ -1,43 +1,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>$view.title</title>
-        <style>
-            .customField-wrapper {
-                padding-top: 10px;
-            }
-
-            .customField-wrapper .customField {
-                margin-top: 5px;
-            }
-
-            .customField-wrapper .customField:first-child {
-                margin-top: 0;
-            }
-
-            .customField-wrapper .customField > * {
-                float: left;
-                margin-right: 10px;
-            }
-
-            .customField-wrapper .customField > .input-group{
-                width: 220px;
-            }
-
-            .customField-wrapper .customField > .input-group + select {
-                width: 200px;
-            }
-            .email-item{
-                cursor:pointer;
-            }
-
-            #chart_histogram svg {
-                height: 490px;
-            }
-
-            .ktile-inner{
-                max-height: 400px;
-            }
-        </style>
+        <script type="text/javascript" src="/static/ace/1.2.0/src-noconflict/ace.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.fileupload.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
         <script type="text/javascript" src="manageAutoEmail.js">//</script>
@@ -53,6 +17,7 @@
         <link rel="stylesheet" href="/theme/assets/plugins/x-editable/css/bootstrap-editable.css" />
         <script src="/theme/assets/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js">//</script>
         <link href="/templates/apps/admin/dashboard.css" rel="stylesheet" type="text/css"/>
+        <link href="/templates/apps/email/manageAutoEmail.css" rel="stylesheet" type="text/css"/>
     </head>
     <body class="manageAutoEmail">
         <h2 class="p-b-20">
@@ -769,6 +734,48 @@
                                 </div>
                             </div>
                         </div> <!-- End actviate alert -->
+
+                        <!-- Start JavaScript -->
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <i class="clip-chk">$formatter.checkbox("javascriptEnabled", "javascriptEnabled", $page.job.javascriptEnabled)</i>
+                                <label for="javascriptEnabled">Execute JavaScript</label>
+                            </div>
+                            <div class="panel-body panel-toggled" data-toggled="display" data-actor="#javascriptEnabled">
+                                <p>
+                                    Execute JavaScript
+                                </p>
+                                <div class="alert alert-info">
+                                    Please see the <a href="http://docs.kademi.co/ref/templating/TriggerEvent.html">TriggerEvent documentation</a> for available trigger event types and their properties
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label class="control-label col-md-2" for="jsWebsiteId">Website</label>
+                                            <div class="col-md-8">
+                                                <select name="jsWebsiteId" id="jsWebsiteId" class="form-control required-if-shown">
+                                                    $formatter.option("", "[Please select]", $!page.job.jsWebsite.id)
+                                                    #foreach($website in $rootFolder.websites)
+                                                    $formatter.option($website.id, $website.name, $!page.job.jsWebsite.id)
+                                                    #end
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label class="control-label col-md-2" for="javascript">JavaScript</label>
+                                            <div class="col-md-8">
+                                                <textarea class="hide required-if-shown" name="javascript"></textarea>
+                                                <div id="javascriptEditor" style="display:none;">$formatter.htmlEncode($page.job.javascript)</div>
+                                            </div>
+                                        </div>
+                                    </div> <!-- end row -->
+                                </div>
+                            </div>
+                        </div> <!-- End execute JavaScript -->
                     </div> <!-- End content of Actions tab -->
 
 
@@ -794,7 +801,7 @@
                                     <b>If you only want a single recipient from an event use the originating user checkbox above</b>
                                 </div>
 
-                                <button class="btn btn-sm btn-success btn-add-group" data-toggle="modal" data-target="#modal-choose-group"><i class="fa fa-plus"></i> Add recipient groups</button>
+                                <button class="btn btn-sm btn-success btn-add-recipient-group" data-toggle="modal" data-target="#modal-choose-group"><i class="fa fa-plus"></i> Add recipient groups</button>
                                 <hr class="hr-sm" />
 
                                 <div class="blocks-wrapper recipient">
@@ -816,7 +823,7 @@
                                 Excluded groups
                             </div>
                             <div class="panel-body">
-                                <button class="btn btn-sm btn-success btn-add-group" data-toggle="modal" data-target="#modal-choose-group"><i class="fa fa-plus"></i> Add excluded groups</button>
+                                <button class="btn btn-sm btn-success btn-add-excluded-group" data-toggle="modal" data-target="#modal-choose-group"><i class="fa fa-plus"></i> Add excluded groups</button>
                                 <hr class="hr-sm" />
 
                                 <div class="blocks-wrapper excluded">
@@ -1057,7 +1064,9 @@
                         <thead>
                             <tr>
                                 <th>Group</th>
-                                <th colspan='3'></th>
+                                <th class="recipient"></th>
+                                <th class="excluded"></th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1066,12 +1075,12 @@
                                 <td>$g.name</td>
 
                                 #set($name = $g.name)
-                                <td>
+                                <td class="recipient">
                                     #set($id = $name + "-recip")
                                     $formatter.radio($id, $name, $page.isSelected($g), "recipient" )
                                     <label for="$id">Recipient</label>
                                 </td>
-                                <td>
+                                <td class="excluded">
                                     #set($id = $name + "-excluded")
                                     $formatter.radio($id, $name, $page.isExcluded($g), "excluded" )
                                     <label for="$id">Excluded</label>
@@ -1135,508 +1144,10 @@
         <script type="text/javascript">
             var emailEnabled = $formatter.format($page.emailEnabled);
             var smsEnabled = $formatter.format($page.smsEnabled);
+
             $(function () {
-                $(".enabledSwitchContainer input").on("switchChange.bootstrapSwitch", function (e, state) {
-                    flog("enabled", state.value);
-                    var v = state.value;
-                    flog("enabled", v);
-                    $.ajax({
-                        type: "POST",
-                        url: window.location.pathname,
-                        data: "enabled=" + v,
-                        dataType: 'json',
-                        success: function (content) {
-                            flog('response', content);
-                        }
-                    });
-                });
-                setRecentItem(document.title, window.location.pathname);
-                initManageAutoEmail();
-                $(".refresh-history").click(function (e) {
-                    e.preventDefault();
-                    $("#history-table").reloadFragment();
-                });
-
-                $(".refresh-sms-history").click(function (e) {
-                    e.preventDefault();
-                    $("#sms-history-table").reloadFragment({
-                        whenComplete: function () {
-                            $('#sms-history-table').find("abbr.timeago").timeago();
-                        }
-                    });
-                });
-
-                $(".timer-units li").click(function (e) {
-                    e.preventDefault();
-                    var unit = $(e.target).text();
-                    $(".timer-unit").text(unit).val(unit).change();
-                });
-                jQuery("abbr.timeago").timeago();
-                initHistorySearch();
-                initSmsHistorySearch();
-                $(".refresh-alerts").click(function () {
-                    $("#alerts-list").reloadFragment();
-                });
-                $(".refresh-rewards").click(function () {
-                    $("#rewards-container").reloadFragment();
-                });
-                $(".refresh-dataseries").click(function () {
-                    $("#dataseries-list").reloadFragment();
-                });
-
-                initSmsField();
-                loadData();
-                initEmailStats();
-                initControls();
-                initTitleEditor();
-
-                $("body").on('click', '.email-item', function (e) {
-                    e.preventDefault();
-                    var item = $(this);
-                    var href = item.attr("href")
-                    var win = window.open(href, '_blank');
-                    if (win) {
-                        //Browser has allowed it to be opened
-                        win.focus();
-                    } else {
-                        //Broswer has blocked it
-                        alert('Please allow popups for this site');
-                    }
-                });
-
-                $("body").on('click', '.sms-item', function (e) {
-                    e.preventDefault();
-                    var item = $(this);
-                    var href = item.attr("href")
-                    var win = window.open(href, '_blank');
-                    if (win) {
-                        //Browser has allowed it to be opened
-                        win.focus();
-                    } else {
-                        //Broswer has blocked it
-                        alert('Please allow popups for this site');
-                    }
-                });
-
-                $('body').on('change', '#smsEnabled', function (e) {
-                    e.preventDefault();
-                    var chk = $(this);
-                    smsEnabled = chk.is(":checked");
-                    if (emailEnabled && smsEnabled) {
-                        $('#send-preference').show();
-                    } else {
-                        $('#send-preference').hide();
-                    }
-                });
-
-                $('body').on('change', '#emailEnabled', function (e) {
-                    e.preventDefault();
-                    var chk = $(this);
-                    emailEnabled = chk.is(":checked");
-                    if (emailEnabled && smsEnabled) {
-                        $('#send-preference').show();
-                    } else {
-                        $('#send-preference').hide();
-                    }
-                });
-                $('.time-picker').timepicker();
-                $('body').on('change', '#useTimerTime', function (e) {
-                    var btn = $(this);
-                    var isChecked = btn.is(":checked");
-                    flog(isChecked);
-                    if (isChecked) {
-                        $('#fireAtTime').show();
-                    } else {
-                        $('#fireAtTime').hide();
-                        $("input[name=timerTime]").val("");
-                    }
-                });
+                initManageAutoEmail(emailEnabled, smsEnabled);
             });
-
-            function initHistorySearch() {
-                var reportRange = $('#report-range');
-
-                reportRange.exist(function () {
-                    flog("init report range");
-                    reportRange.daterangepicker({
-                        format: 'DD/MM/YYYY', // YYYY-MM-DD
-                        ranges: {
-                            'Last 7 Days': [moment().subtract('days', 6), moment()],
-                            'Last 30 Days': [moment().subtract('days', 29), moment()],
-                            'This Month': [moment().startOf('month'), moment().endOf('month')],
-                            'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
-                            'This Year': [moment().startOf('year'), moment()],
-                        },
-                    },
-                            function (start, end) {
-                                flog('onChange', start, end);
-                                doHistorySearch(start, end);
-                            });
-                });
-            }
-
-            function doHistorySearch(startDate, endDate) {
-                flog('doHistorySearch', startDate, endDate);
-
-                var data = {
-                    startDate: formatDate(startDate),
-                    finishDate: formatDate(endDate)
-                };
-                flog("data", data);
-
-                var target = $("#history-table-body");
-                //target.load();
-
-                var dates = "startDate=" + formatDate(startDate) + "&finishDate=" + formatDate(endDate);
-                var baseHref = window.location.pathname + "?" + dates;
-                var href = baseHref + "#history-tab";
-                $("a.history-csv").attr("href", "email-history.csv?" + dates);
-
-                $.ajax({
-                    type: "GET",
-                    url: href,
-                    dataType: 'html',
-                    success: function (content) {
-                        flog('response', content);
-                        var newBody = $(content).find("#history-table-body");
-                        flog("newBody", newBody);
-                        target.replaceWith(newBody);
-                        jQuery("abbr.timeago").timeago();
-                        window.history.pushState(null, "Email History", href);
-                    }
-                });
-
-            }
-
-            function initSmsHistorySearch() {
-                var smsReportRange = $('#sms-report-range');
-
-                smsReportRange.exist(function () {
-                    flog("init sms report range");
-                    smsReportRange.daterangepicker({
-                        format: 'DD/MM/YYYY', // YYYY-MM-DD
-                        ranges: {
-                            'Last 7 Days': [moment().subtract('days', 6), moment()],
-                            'Last 30 Days': [moment().subtract('days', 29), moment()],
-                            'This Month': [moment().startOf('month'), moment().endOf('month')],
-                            'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
-                            'This Year': [moment().startOf('year'), moment()],
-                        },
-                    },
-                            function (start, end) {
-                                flog('onChange', start, end);
-                                doSMSHistorySearch(start, end);
-                            });
-                });
-            }
-
-            function doSMSHistorySearch(startDate, endDate) {
-                flog('doSMSHistorySearch', startDate, endDate);
-
-                var data = {
-                    startDate: formatDate(startDate),
-                    finishDate: formatDate(endDate)
-                };
-                flog("data", data);
-
-                var target = $("#sms-history-table-body");
-
-                var dates = "smsStartDate=" + formatDate(startDate) + "&smsFinishDate=" + formatDate(endDate);
-                var baseHref = window.location.pathname + "?" + dates;
-                var href = baseHref + "#history-tab";
-                $("a.sms-history-csv").attr("href", "sms-history.csv?" + dates);
-
-                $.ajax({
-                    type: "GET",
-                    url: href,
-                    dataType: 'html',
-                    success: function (content) {
-                        flog('response', content);
-                        var newBody = $(content).find("#sms-history-table-body");
-                        target.replaceWith(newBody);
-                        $('#sms-history-table').find("abbr.timeago").timeago();
-                        window.history.pushState(null, "SMS History", href);
-                    }
-                });
-
-            }
-
-            function initSmsField() {
-                var sms_txt_max = 160;
-                $(".refresh-sms").click(function (e) {
-                    e.preventDefault();
-                    $("#smsprovider-list").reloadFragment();
-                });
-
-                var ln = sms_txt_max - $("#smsMessage").val().length;
-                if (ln < 0) {
-                    $("#sms-char-remaining").text(Math.abs(ln) + " characters over");
-                    $("#sms-char-remaining").css('color', 'red');
-                } else {
-                    $("#sms-char-remaining").text(ln + " characters remaining");
-                    $("#sms-char-remaining").css('color', '');
-                }
-
-                $("#smsMessage").keyup(function () {
-                    var ln = sms_txt_max - $("#smsMessage").val().length;
-                    if (ln < 0) {
-                        $("#sms-char-remaining").text(Math.abs(ln) + " characters over");
-                        $("#sms-char-remaining").css('color', 'red');
-                    } else {
-                        $("#sms-char-remaining").text(ln + " characters remaining");
-                        $("#sms-char-remaining").css('color', '');
-                    }
-                });
-            }
-
-            var options = {
-                startDate: null,
-                endDate: null,
-                interval: "day"
-            };
-
-            function loadData() {
-                var href = "?triggerHistory&" + $.param(options);
-                $.ajax({
-                    type: "GET",
-                    url: href,
-                    dataType: 'html',
-                    success: function (resp) {
-                        var json = null;
-
-                        if (resp !== null && resp.length > 0) {
-                            json = JSON.parse(resp);
-                        }
-
-                        flog('response', json);
-                        handleData(json);
-
-                    }
-                });
-            }
-
-            function handleData(resp) {
-                var aggr = (resp !== null ? resp.aggregations : null);
-
-                initHistogram(aggr);
-            }
-
-            function initEmailStats() {
-                initChart($('.emailsMainPie'), {
-                    trackColor: 'rgba(255,255,255,0.2)',
-                    scaleColor: 'rgba(255,255,255,0.5)',
-                    barColor: 'rgba(255,255,255,0.7)',
-                    lineWidth: 7,
-                    lineCap: 'butt'
-                }, 90);
-
-                initChart($('.emailsSubPie.bluePie'), {
-                    trackColor: '#eee',
-                    scaleColor: '#ccc',
-                    barColor: '#2196F3',
-                    lineWidth: 7,
-                    lineCap: 'butt'
-                }, 8);
-
-                initChart($('.emailsSubPie.orangePie'), {
-                    trackColor: '#eee',
-                    scaleColor: '#ccc',
-                    barColor: '#FFC107',
-                    lineWidth: 7,
-                    lineCap: 'butt'
-                }, 8);
-            }
-
-            function initHistogram(aggr) {
-                $('#chart_histogram svg').empty();
-                nv.addGraph(function () {
-                    var chart = nv.models.multiBarChart()
-                            .options({
-                                showLegend: true,
-                                showControls: false,
-                                noData: "No Data available for histogram",
-                                margin: {
-                                    left: 40,
-                                    bottom: 60
-                                }
-                            });
-
-                    chart.xAxis
-                            .axisLabel("Date")
-                            .rotateLabels(-45)
-                            .tickFormat(function (d) {
-                                return moment(d).format("DD MMM");
-                            });
-
-                    chart.yAxis
-                            .axisLabel("Triggered")
-                            .tickFormat(d3.format('d'));
-
-                    var myData = [];
-                    var conditionsTrue = {
-                        values: [],
-                        key: "Trigger",
-                        color: "#7777ff",
-                        area: true
-                    };
-
-                    var conditionsFalse = {
-                        values: [],
-                        key: "Failed Trigger",
-                        color: "#d9534f",
-                        area: true
-                    };
-
-                    var delayedTriggers = {
-                        values: [],
-                        key: "Delayed Trigger",
-                        color: "#5bc0de",
-                        area: true
-                    };
-
-                    myData.push(conditionsTrue);
-                    myData.push(conditionsFalse);
-                    myData.push(delayedTriggers);
-
-                    var trueHits = (aggr !== null ? aggr.triggerTrue.firedAt.buckets : []);
-                    var falseHits = (aggr !== null ? aggr.triggerFalse.firedAt.buckets : []);
-                    var delayedHits = (aggr !== null ? aggr.delayedTriggers.createdAt.buckets : []);
-
-                    for (var i = 0; i < trueHits.length; i++) {
-                        var bucket = trueHits[i];
-                        conditionsTrue.values.push(
-                                {x: bucket.key, y: bucket.doc_count});
-                    }
-
-                    for (var i = 0; i < falseHits.length; i++) {
-                        var bucket = falseHits[i];
-                        conditionsFalse.values.push(
-                                {x: bucket.key, y: bucket.doc_count});
-                    }
-
-                    for (var i = 0; i < delayedHits.length; i++) {
-                        var bucket = delayedHits[i];
-                        delayedTriggers.values.push(
-                                {x: bucket.key, y: bucket.doc_count});
-                    }
-
-                    d3.select('#chart_histogram svg')
-                            .datum(myData)
-                            .transition().duration(500)
-                            .call(chart);
-
-                    nv.utils.windowResize(chart.update);
-
-                    return chart;
-                });
-            }
-
-            function drawChart(chart, options, padding, isFirstTime) {
-                var wrapper = chart.closest('.col-sm-6');
-                var canvas = chart.find('canvas');
-                var sizeChart = wrapper.width() - padding;
-                if (sizeChart < 0) {
-                    sizeChart = 100;
-                }
-                var currentSize = +chart.attr('data-size');
-                flog("got size", sizeChart, chart);
-
-                // Hide canvas
-                canvas.hide();
-
-                if (currentSize !== sizeChart || isFirstTime) {
-                    flog('Render new chart', sizeChart);
-
-                    // Clear data pf easyPieChart
-                    if (!isFirstTime) {
-                        chart.data('easy-pie-chart', null);
-                        chart.data('size', sizeChart);
-                    }
-
-                    // Remove the chart
-                    canvas.remove();
-
-                    // Render new chart
-                    options.size = sizeChart;
-                    flog("chart size", sizeChart);
-                    chart.easyPieChart(options);
-                } else {
-                    flog('Re-show current chart');
-                    canvas.show();
-                }
-
-            }
-
-            function initChart(target, options, padding) {
-                drawChart(target, options, padding, true);
-
-                $(window).on('resize', function () {
-                    drawChart(target, options, padding);
-                });
-            }
-
-            function initControls() {
-                flog("initControls");
-                var reportRange = $('#analytics-range');
-
-                function cb(start, end) {
-                    options.startDate = start.format('DD/MM/YYYY');
-                    options.endDate = end.format('DD/MM/YYYY');
-                    loadData();
-                }
-
-                reportRange.exist(function () {
-                    flog("init analytics range");
-                    reportRange.daterangepicker({
-                        format: 'DD/MM/YYYY',
-                        startDate: moment().subtract('days', 6),
-                        endDate: moment(),
-                        ranges: {
-                            'Today': [
-                                moment().toISOString(),
-                                moment().toISOString()
-                            ],
-                            'Last 7 Days': [
-                                moment().subtract('days', 6).toISOString(),
-                                moment().toISOString()
-                            ],
-                            'Last 30 Days': [
-                                moment().subtract('days', 29).toISOString(),
-                                moment().toISOString()],
-                            'This Month': [
-                                moment().startOf('month').toISOString(),
-                                moment().endOf('month').toISOString()],
-                            'Last Month': [
-                                moment().subtract('month', 1).startOf('month').toISOString(),
-                                moment().subtract('month', 1).endOf('month').toISOString()],
-                            'This Year': [
-                                moment().startOf('year').toISOString(),
-                                moment().toISOString()],
-                        },
-                    }, cb);
-                });
-            }
-
-            function initTitleEditor() {
-                $('#emailTitle').editable({
-                    url: window.location.pathname,
-                    name: 'title',
-                    validate: function (value) {
-                        if ($.trim(value) == '')
-                            return 'This field is required';
-                    },
-                    success: function (response, newValue) {
-                        flog(response, newValue);
-                        if (response.status) {
-                            Msg.info('Successfully saved title');
-                        }
-                    },
-                    params: function (params) {
-                        params.title = params.value;
-                        return params;
-                    }
-                });
-            }
         </script>
     </body>
 </html>
