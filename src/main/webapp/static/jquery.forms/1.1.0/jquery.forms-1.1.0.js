@@ -132,9 +132,6 @@
                 e.stopPropagation();
 
                 flog('[jquery.forms] On form submit', form, e);
-
-                var form = $(this);
-
                 resetValidation(form, config);
 
                 form.find('input[type=text]').each(function () {
