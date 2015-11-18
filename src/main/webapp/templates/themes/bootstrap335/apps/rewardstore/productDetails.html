@@ -20,7 +20,11 @@
                 <div class="col-md-4">
                     <div style="margin-left:15px;" class="well addToCartContainer">
                         <div id="addToCartSection">
-                            #if( $page.primaryImageHref )
+                            #if($page.variantImageHref)
+                            <a onclick="" href="#">
+                                <img style="width:100%" src="$page.variantImageHref/alt-400-600.png" />
+                            </a>
+                            #elseif( $page.primaryImageHref )
                             <a onclick="" href="#">
                                 <img style="width:100%" src="$page.primaryImageHref/alt-400-600.png" />
                             </a>
@@ -41,6 +45,7 @@
                             <label for="param-$param.name" class='col-sm-4 control-label'>$param.title</label>
                             <div class="col-sm-8">
                                 <select name="param-$param.name" class='form-control productParameterSelect'>
+                                    <option value="">[ $param.title ]</option>
                                     #foreach( $opt in $param.options)
                                     <option value="$opt.name">$opt.title</option>
                                     #end
@@ -96,13 +101,13 @@
             <script type="text/javascript">
                 $(function () {
                     $("abbr.timeago").timeago();
-                    $(".productParameterSelect").change(function(e) {
+                    $(".productParameterSelect").change(function (e) {
                         var optSelect = $(this);
                         flog("productParameterSelect changed", optSelect);
                         var uri = URI(window.location);
-                        uri.setSearch( optSelect.attr("name"), optSelect.val());
+                        uri.setSearch(optSelect.attr("name"), optSelect.val());
                         flog("New uri", uri.toString());
-                        history.pushState(null, null, uri.toString() );
+                        history.pushState(null, null, uri.toString());
                         $("#addToCartSection").reloadFragment({
                             url: uri.toString()
                         });
