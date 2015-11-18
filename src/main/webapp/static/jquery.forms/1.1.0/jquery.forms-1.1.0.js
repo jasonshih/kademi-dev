@@ -100,116 +100,126 @@
 
     var methods = {
         init: function (options) {
-            var form = $(this);
-            var config = $.extend({}, DEFAULTS, options);
-            flog('[jquery.forms] Configuration:', config);
+            return $(this).each(function () {
+                var form = $(this);
+                var config = $.extend({}, DEFAULTS, options);
+                flog('[jquery.forms] Configuration:', config);
 
-            if (config.callback) {
-                config.onSuccess = config.callback;
-            }
-
-            if (config.error) {
-                config.onInvalid = config.error;
-            }
-
-            if (config.errorHandler) {
-                config.onError = config.errorHandler;
-            }
-
-            if (form.data('formOptions')) {
-                flog('[jquery.forms] Is ready initialized');
-                return;
-            } else {
-                // Add config to 'formOptions' data
-                form.data('formOptions', config);
-            }
-
-            $.getScriptOnce('/static/js/moment-with-langs.min.js');
-            flog('[jquery.forms] Initializing forms plugin...', form);
-
-            form.on('submit', function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-
-                flog('[jquery.forms] On form submit', form, e);
-                resetValidation(form, config);
-
-                form.find('input[type=text]').each(function () {
-                    var input = $(this);
-                    var val = input.val().trim();
-
-                    input.val(val);
-                });
-
-                if (typeof config.validate === 'function') {
-                    var isValid = config.validate.call(this, form, config);
-
-                    flog('[jquery.forms] Validate method return: ' + isValid);
-                    if (!isValid) {
-                        return false;
-                    }
+                if (config.callback) {
+                    config.onSuccess = config.callback;
                 }
 
-                if (validateFormFields(form, config)) {
-                    if (typeof config.onValid === 'function') {
-                        config.onValid.call(this, form, config);
-                    }
+                if (config.error) {
+                    config.onInvalid = config.error;
+                }
 
-                    if (config.allowPostForm) {
-                        doPostForm(form, config);
-                    }
+                if (config.errorHandler) {
+                    config.onError = config.errorHandler;
+                }
+
+                if (form.data('formOptions')) {
+                    flog('[jquery.forms] Is ready initialized');
+                    return;
                 } else {
-                    var alertMsg = getValidationMessage(form, config);
-                    if (alertMsg.length > 0) {
-                        $('body, html').animate({
-                            scrollTop: alertMsg.offset().top - 140
-                        }, config.animationDuration);
+                    // Add config to 'formOptions' data
+                    form.data('formOptions', config);
+                }
+
+                $.getScriptOnce('/static/js/moment-with-langs.min.js');
+                flog('[jquery.forms] Initializing forms plugin...', form);
+
+                form.on('submit', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    flog('[jquery.forms] On form submit', form, e);
+                    resetValidation(form, config);
+
+                    form.find('input[type=text]').each(function () {
+                        var input = $(this);
+                        var val = input.val().trim();
+
+                        input.val(val);
+                    });
+
+                    if (typeof config.validate === 'function') {
+                        var isValid = config.validate.call(this, form, config);
+
+                        flog('[jquery.forms] Validate method return: ' + isValid);
+                        if (!isValid) {
+                            return false;
+                        }
                     }
 
-                    if (typeof config.onInvalid === 'function') {
-                        config.onInvalid.call(this, form, config);
+                    if (validateFormFields(form, config)) {
+                        if (typeof config.onValid === 'function') {
+                            config.onValid.call(this, form, config);
+                        }
+
+                        if (config.allowPostForm) {
+                            doPostForm(form, config);
+                        }
+                    } else {
+                        var alertMsg = getValidationMessage(form, config);
+                        if (alertMsg.length > 0) {
+                            $('body, html').animate({
+                                scrollTop: alertMsg.offset().top - 140
+                            }, config.animationDuration);
+                        }
+
+                        if (typeof config.onInvalid === 'function') {
+                            config.onInvalid.call(this, form, config);
+                        }
                     }
-                }
+                });
             });
         },
         getOptions: function () {
             return $(this).data('formOptions');
         },
         disable: function (callback) {
-            var form = $(this);
-            form.find('input, button, select, textarea').prop('disabled', true);
+            return $(this).each(function () {
+                var form = $(this);
+                form.find('input, button, select, textarea').prop('disabled', true);
 
-            if (typeof callback === 'function') {
-                callback.call(this, form);
-            }
+                if (typeof callback === 'function') {
+                    callback.call(this, form);
+                }
+            });
         },
         enable: function (callback) {
-            var form = $(this);
-            form.find('input, button, select, textarea').prop('disabled', false);
+            return $(this).each(function () {
+                var form = $(this);
+                form.find('input, button, select, textarea').prop('disabled', false);
 
-            if (typeof callback === 'function') {
-                callback.call(this, form);
-            }
+                if (typeof callback === 'function') {
+                    callback.call(this, form);
+                }
+            });
         },
         showElement: function (element, options, callback) {
-            var form = $(this);
-            var config = form.forms('getOptions');
-            options = $.extend({}, {
-                'opacity': 1,
-                'height': 'show'
-            }, options);
+            return $(this).each(function () {
+                var form = $(this);
+                var config = form.forms('getOptions');
+                options = $.extend({}, {
+                    'opacity': 1,
+                    'height': 'show'
+                }, options);
 
-            element.stop().animate(options, config.animationDuration, callback);
+                element.stop().animate(options, config.animationDuration, callback);
+            });
         },
         hideElement: function (element, options, callback) {
-            var form = $(this);
-            var config = form.forms('getOptions');
-            options = $.extend({}, {
-                'opacity': 0,
-                'height': 'hide'
-            }, options);
+            return $(this).each(function () {
+                var form = $(this);
+                var config = form.forms('getOptions');
+                options = $.extend({}, {
+                    'opacity': 0,
+                    'height': 'hide'
+                }, options);
 
-            element.stop().animate(options, config.animationDuration, callback);
+                element.stop().animate(options, config.animationDuration, callback);
+            });
         }
     };
 
@@ -309,7 +319,7 @@ function doPostForm(form, config) {
                 flog('[jquery.forms] Error on posting form', form, jqXHR, textStatus, errorThrown);
 
                 if (typeof config.onError === 'function') {
-                    config.onError.call(this, resp, form, config);
+                    config.onError.call(this, jqXHR, form, config);
                 }
 
                 if (config.networkErrorMessage) {
