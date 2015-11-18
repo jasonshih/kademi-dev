@@ -42,6 +42,7 @@
                             <label for="param-$param.name" class='col-sm-4 control-label'>$param.title</label>
                             <div class="col-sm-8">
                                 <select name="param-$param.name" class='form-control productParameterSelect'>
+                                    <option value="">[ $param.title ]</option>
                                     #foreach( $opt in $param.options)
                                     <option value="$opt.name">$opt.title</option>
                                     #end
