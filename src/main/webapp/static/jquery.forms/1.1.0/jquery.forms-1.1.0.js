@@ -245,10 +245,14 @@
  * @returns {jQuery}
  */
 function getValidationMessage(form, config) {
-    if (typeof config.validationMessageSelector === 'string') {
-        return form.find(config.validationMessageSelector);
-    } else if (typeof config.validationMessageSelector === 'object' && config.validationMessageSelector.jquery) {
-        return config.validationMessageSelector;
+    if (config && config.validationMessageSelector) {
+        if (typeof config.validationMessageSelector === 'string') {
+            return form.find(config.validationMessageSelector);
+        } else if (typeof config.validationMessageSelector === 'object' && config.validationMessageSelector.jquery) {
+            return config.validationMessageSelector;
+        } else {
+            return $('');
+        }
     } else {
         return $('');
     }
