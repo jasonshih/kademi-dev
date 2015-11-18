@@ -57,7 +57,7 @@
             flog("click", e);
         });
         $("form", this).submit(function(e) {
-            flog("jquery.user.js(bootstrap320): login", window.location.pathname);
+            flog("jquery.user.js(bootstrap335): login", window.location.pathname);
             e.stopPropagation();
             e.preventDefault();
 
@@ -302,7 +302,7 @@ function showRegisterOrLoginModal(callbackOnLoggedIn) {
             closeModals();
         });
     }
-    flog("showRegisterOrLoginModal - bootstrap320");
+    flog("showRegisterOrLoginModal - bootstrap335");
     $.getScript("/theme/apps/signup/register.js", function() {
         $.ajax({
             type: 'GET',

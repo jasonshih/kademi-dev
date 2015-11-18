@@ -1,4 +1,4 @@
-/** Start bootstrap320 init-theme.js */
+/** Start bootstrap335 init-theme.js */
 
 /**
  *  Editor support: Note that this relies on a global variable called toolbarSets
@@ -16,7 +16,7 @@ var themeCssFiles = new Array();
 
 
 function initTheme() {
-    flog("initTheme-bootstrap320: init-theme.js");
+    flog("initTheme-bootstrap335: init-theme.js");
 
     // the login box in header is normally for logging in from a public page. So
     // in this case we want to navigate to the user's dashboard

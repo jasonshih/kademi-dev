@@ -252,7 +252,7 @@ function suffixSlash(href) {
 }
 
 function showCreateFolder(parentHref, title, text, callback, validatorFn) {
-    log("showCreateFolder: bootstrap320");
+    log("showCreateFolder: bootstrap335");
     var s = text;
     if (!s) {
         s = "Please enter a name for the new folder";

@@ -4,7 +4,7 @@
 
 
 $(function() {
-    flog("init: bootstrap320/js/theme.js")
+    flog("init: bootstrap335/js/theme.js")
     // just a nice little function to get classes
     $.fn.classes = function(f) {
         var c = [];
@@ -131,7 +131,7 @@ function closeMyPrompt() {
 }
 
 function myPrompt(id, url, title, instructions, caption, buttonName, buttonText, inputClass, inputPlaceholder, callback) {
-    flog("myPrompt: bootstrap320", id, url);
+    flog("myPrompt: bootstrap335", id, url);
     var body = $("body")
     var modal = body.find("div.myprompt");
     if (modal.length === 0) {
