@@ -60,11 +60,11 @@ function initCRUDExtraField() {
                     data: {
                         removeFieldName: fieldName
                     },
-                    success: function(data) {
+                    success: function (data) {
                         flog('saved ok', data);
                         fieldWrapper.remove();
                     },
-                    error: function(resp) {
+                    error: function (resp) {
                         flog('error', resp);
                         Msg.error('There was an error removing the field. Please check your internet connection');
                     }
@@ -87,15 +87,18 @@ function openExtraFieldModal(key, value) {
         var txtText = $('#extra-field-text');
         var optionWrapper = $('#options-wrapper');
         var orgSel = $('#org-sel');
+        var profId = modal.find('#prof-id');
 
         txtName.val(key);
 
         var values = getValue(value, key);
 
         chkRequire.prop('checked', values.require);
-        flog("indexed", chkIndexed, values.indexed);
+        flog("indexed", chkIndexed, values);
         chkIndexed.prop('checked', values.indexed);
-    	orgSel.prop('checked', values.orgSel);
+        orgSel.prop('checked', values.orgSel);
+        profId.prop('checked', values.profId);
+
         txtText.val(values.text);
 
         var optionString = '';
@@ -122,17 +125,17 @@ function openExtraFieldModal(key, value) {
 
 function renderOption(optionText) {
     return (
-        '<div class="form-group">' +
+            '<div class="form-group">' +
             '<div class="col-md-offset-4 col-md-8">' +
-                '<div class="option input-group input-group-sm">' +
-                    '<input type="text" class="form-control required" value="' + (optionText || '') + '" />' +
-                    '<span class="input-group-btn">' +
-                        '<button class="btn btn-danger btn-delete-option" type="button"><i class="fa fa-times"></i></button>' +
-                    '</span>' +
-                '</div>' +
+            '<div class="option input-group input-group-sm">' +
+            '<input type="text" class="form-control required" value="' + (optionText || '') + '" />' +
+            '<span class="input-group-btn">' +
+            '<button class="btn btn-danger btn-delete-option" type="button"><i class="fa fa-times"></i></button>' +
+            '</span>' +
             '</div>' +
-        '</div>'
-    );
+            '</div>' +
+            '</div>'
+            );
 }
 
 function initExtraFieldModal() {
@@ -143,24 +146,37 @@ function initExtraFieldModal() {
     var optionWrapper = $('#options-wrapper');
     var btnAddOption = modal.find('.btn-add-option');
     var orgSel = $('#org-sel');
+    var profId = modal.find('#prof-id');
 
     // Add options
     btnAddOption.on('click', function (e) {
         e.preventDefault();
         if (!orgSel.prop('checked')) {
-        	optionWrapper.append(
-        		renderOption()
-        	);
+            optionWrapper.append(
+                    renderOption()
+                    );
         }
     });
 
     // Add group selector
     orgSel.on('click', function (e) {
         if (orgSel.prop('checked')) {
-        	optionWrapper.html('');
-        	btnAddOption.addClass('disabled');
+            optionWrapper.html('');
+            btnAddOption.addClass('disabled');
         } else {
-        	btnAddOption.removeClass('disabled');
+            btnAddOption.removeClass('disabled');
+        }
+    });
+
+    profId.on('click', function (e) {
+        if (profId.is(':checked')) {
+            optionWrapper.html('');
+            btnAddOption.addClass('disabled');
+            orgSel.check(false);
+            orgSel.disable(true);
+        } else {
+            btnAddOption.removeClass('disabled');
+            orgSel.disable(false);
         }
     });
 
@@ -189,24 +205,26 @@ function initExtraFieldModal() {
                 valueString += 'required;';
             }
 
-            if( chkIndex.is(":checked")) {
+            if (chkIndex.is(":checked")) {
                 valueString += 'indexed;';
             }
 
             // Options
             if (orgSel.prop('checked')) {
-            	valueString += 'orgs();';
+                valueString += 'orgs();';
+            } else if (profId.is(':checked')) {
+                valueString += 'profid();';
             } else {
-            	valueString += 'options(';
-            	var options = [];
-            	optionWrapper.find('input:text').each(function () {
-            		var input = $(this);
-            		var optionText = input.val().trim();
+                valueString += 'options(';
+                var options = [];
+                optionWrapper.find('input:text').each(function () {
+                    var input = $(this);
+                    var optionText = input.val().trim();
 
-            		options.push(optionText);
-            	});
-            	valueString += options.join(',');
-            	valueString += ');';
+                    options.push(optionText);
+                });
+                valueString += options.join(',');
+                valueString += ');';
             }
 
             // Text
@@ -214,7 +232,7 @@ function initExtraFieldModal() {
 
             txtValue.val(valueString);
         },
-        callback: function(resp) {
+        callback: function (resp) {
             if (resp.status) {
                 var isEdit = modal.hasClass('edit');
                 var key = txtName.val();
@@ -240,12 +258,13 @@ function getValue(value, key) {
     var isRequired = false;
     var isOrgSel = false;
     var isIndexed = false;
+    var isProfId = false;
 
     var text = key;
     var options = "";
-    for( i=0; i<values.length; i++) {
+    for (i = 0; i < values.length; i++) {
         var s = values[i];
-        if( s.startsWith("text=")) {
+        if (s.startsWith("text=")) {
             text = s.substring(5);
         } else if (s.startsWith("options")) {
             options = s;
@@ -255,7 +274,9 @@ function getValue(value, key) {
         } else if (s === "indexed") {
             isIndexed = true;
         } else if (s.startsWith("orgs(")) {
-        	isOrgSel = true;
+            isOrgSel = true;
+        } else if (s.startsWith('profid(')) {
+            isProfId = true;
         }
     }
 
@@ -264,7 +285,8 @@ function getValue(value, key) {
         text: text,
         options: options,
         orgSel: isOrgSel,
-        indexed: isIndexed
+        indexed: isIndexed,
+        profId: isProfId
     };
 }
 
@@ -295,19 +317,19 @@ function buildExtraField(key, value) {
 
     // Action
     string +=
-        '<td class="action">' +
+            '<td class="action">' +
             '<div class="btn-group btn-group-sm">' +
-                '<a href="" class="btn btn-sm btn-info btn-edit-extra-field">' +
-                    '<i class="fa fa-edit"></i> Edit' +
-                '</a>' +
-                '<button class="btn btn-sm btn-info btn-sm dropdown-toggle" data-toggle="dropdown">' +
-                    '<span class="caret"></span>' +
-                '</button>' +
-                '<ul class="dropdown-menu pull-right" role="menu">' +
-                    '<li><a href="' + key + '" class="btn-delete-extra-field"><i class="fa fa-times"></i> Delete</a></li>' +
-                '</ul>' +
+            '<a href="" class="btn btn-sm btn-info btn-edit-extra-field">' +
+            '<i class="fa fa-edit"></i> Edit' +
+            '</a>' +
+            '<button class="btn btn-sm btn-info btn-sm dropdown-toggle" data-toggle="dropdown">' +
+            '<span class="caret"></span>' +
+            '</button>' +
+            '<ul class="dropdown-menu pull-right" role="menu">' +
+            '<li><a href="' + key + '" class="btn-delete-extra-field"><i class="fa fa-times"></i> Delete</a></li>' +
+            '</ul>' +
             '</div>' +
-        '</td>';
+            '</td>';
 
     return string;
 }
