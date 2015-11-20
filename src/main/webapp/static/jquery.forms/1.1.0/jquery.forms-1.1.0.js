@@ -13,6 +13,7 @@
     flog('- "error" is DEPRECATED. Use "onInvalid" instead');
     flog('- "callback" is DEPRECATED. Use "onSuccess" instead');
     flog('- "errorHandler" is DEPRECATED. Use "onError" instead');
+    flog('- "valiationMessageSelector" is DEPRECATED. Use "validationMessageSelector" instead');
     flog('********************************************');
     flog('- "showMessage" is removed. Use "showFormMessage" instead');
     flog('- "showValidation" is removed. Use "showFieldMessages" instead');
@@ -21,7 +22,7 @@
     /**
      * Configuration of jquery.forms
      * @param {String} [postUrl=null] Url which will post form data to. If null, will use 'action' attribute of form
-     * @param {Function} validate Custom validation method. Arguments are 'form' and 'config'. 'form' is jQuery object form and 'config' is configuration of current form
+     * @param {Function} validate Custom validation method. Arguments are 'form' and 'config'. 'form' is jQuery object form and 'config' is configuration of current form. Can return 'boolean' for result of validation or return object contains total error, list of error fields and list of error messages with format '{{error: Number, errorFields: Array, errorMessages: Array}}'
      * @param {Function} onValid Callback will be called when all fields are valid. Arguments are 'form' and 'config'. 'form' is jQuery object form and 'config' is configuration of current form
      * @param {Function} onInvalid Callback will be called when all fields are invalid. Arguments are 'form' and 'config'. 'form' is jQuery object form and 'config' is configuration of current form
      * @param {Boolean} [allowPostForm=true] Allow post form data via AJAX automatically or not
@@ -41,25 +42,32 @@
      * @param {String} numericErrorMessage The error message when numeric fields are invalid
      * @param {String} urlErrorMessage The error message when url fields are invalid
      * @param {Numeric} [animationDuration=300] The speed of all animations in jquery.forms
-     * @param {Function} renderMessage The render method for all messages in jquery.forms. Arguments are 'message' and 'type'. 'message' is message content. 'type' can be 'danger', 'success', 'info' and 'warning'.
+     * @param {Function} renderMessageWrapper The render method for message wrapper in jquery.forms. Arguments are 'messageContent' and 'type'. 'messageContent' is message content. 'type' can be 'danger', 'success', 'info' and 'warning'.
+     * @param {Function} renderErrorMessage The render method for error messages in jquery.forms. Arguments are 'message'. 'message' is message content, can be string or array.
      */
     var DEFAULTS = {
         postUrl: null, // means to use the form action as url
         validate: function (form, config) {
-            return true;
+            flog('[jquery.forms] Default validate of v1.1.0', form, config);
+
+            return {
+                error: 0,
+                errorFields: [],
+                errorMessages: []
+            }
         },
         onValid: function (form, config) {
-
+            flog('[jquery.forms] Default onValid of v1.1.0', form, config);
         },
         onInvalid: function (form, config) {
-
+            flog('[jquery.forms] Default onInvalid of v1.1.0', form, config);
         },
         allowPostForm: true,
         beforePostForm: function (form, config, data) {
-
+            flog('[jquery.forms] Default beforePostForm of v1.1.0', form, config, data);
         },
         onSuccess: function (resp, form, config) {
-
+            flog('[jquery.forms] Default onSuccess of v1.1.0', resp, form, config);
         },
         onError: function (resp, form, config) {
             try {
@@ -67,14 +75,14 @@
 
                 if (resp) {
                     if (resp.messages && resp.messages.length > 0) {
-                        showFormMessage(form, config, resp.messages, 'danger');
+                        showErrorMessage(form, config, resp.messages);
                     } else {
-                        showFormMessage(form, config, 'Sorry, we couldnt process your request', 'danger');
+                        showErrorMessage(form, config, 'Sorry, we could not process your request');
                     }
 
                     showFieldMessages(resp.fieldMessages, form, config);
                 } else {
-                    showFormMessage(form, config, 'Sorry, we couldnt process your request', 'danger');
+                    showErrorMessage(form, config, 'Sorry, we could not process your request');
                 }
             } catch (e) {
                 flog('[jquery.forms] Error!', e);
@@ -93,8 +101,20 @@
         numericErrorMessage: 'Please enter digits',
         hrefErrorMessage: 'Please enter valid website address',
         animationDuration: 150,
-        renderMessage: function (message, type) {
-            return '<div class="form-message fade alert alert-' + type + '" style="display: none"><a class="close" data-dismiss="alert">&times;</a>' + message + '</div>';
+        renderMessageWrapper: function (messageContent, type) {
+            return '<div class="form-message alert alert-' + type + '" style="display: none"><a class="close" data-dismiss="alert">&times;</a>' + messageContent + '</div>';
+        },
+        renderErrorMessage: function (message) {
+            if (typeof message === 'string') {
+                message = [message];
+            }
+
+            var htmlMessages = '';
+            for (var i = 0; i < message.length; i++) {
+                htmlMessages += '<li>' + message[i] + '</li>';
+            }
+
+            return '<ul class="error-message">' + htmlMessages + '</ul>';
         }
     };
 
@@ -105,17 +125,27 @@
                 var config = $.extend({}, DEFAULTS, options);
                 flog('[jquery.forms] Configuration:', config);
 
-                if (config.callback) {
+                // ==============================================================================
+                // Start of DEPRECATED migration
+                // ==============================================================================
+                if (typeof config.callback === 'function') {
                     config.onSuccess = config.callback;
                 }
 
-                if (config.error) {
+                if (typeof config.error === 'function') {
                     config.onInvalid = config.error;
                 }
 
-                if (config.errorHandler) {
+                if (typeof config.errorHandler === 'function') {
                     config.onError = config.errorHandler;
                 }
+
+                if (typeof config.valiationMessageSelector === 'string') {
+                    config.validationMessageSelector = config.valiationMessageSelector;
+                }
+                // ==============================================================================
+                // End of DEPRECATED migration
+                // ==============================================================================
 
                 if (form.data('formOptions')) {
                     flog('[jquery.forms] Is ready initialized');
@@ -141,15 +171,6 @@
 
                         input.val(val);
                     });
-
-                    if (typeof config.validate === 'function') {
-                        var isValid = config.validate.call(this, form, config);
-
-                        flog('[jquery.forms] Validate method return: ' + isValid);
-                        if (!isValid) {
-                            return false;
-                        }
-                    }
 
                     if (validateFormFields(form, config)) {
                         if (typeof config.onValid === 'function') {
@@ -327,7 +348,7 @@ function doPostForm(form, config) {
                 }
 
                 if (config.networkErrorMessage) {
-                    showFormMessage(form, config, config.networkErrorMessage + ' - ' + textStatus, 'danger');
+                    showErrorMessage(form, config, config.networkErrorMessage + ' - ' + textStatus);
                 }
 
             }
@@ -368,38 +389,48 @@ function doPostForm(form, config) {
  * Show form message with specified type
  * @param {jQuery} form
  * @param {Object} config
- * @param {String} messages
- * @param {'danger'|'success'|'info'|'warning'} type
+ * @param {String} message
+ * @param {String} title
+ * @param {String} type
  * @param {Function} callback
  */
-function showFormMessage(form, config, messages, type, callback) {
-    var messageStr = '';
-    if (typeof messages === 'string') {
-        messageStr = messages;
-    } else if ($.isArray(messages)) {
-        for (var i = 0; i < messages.length; i++) {
-            messageStr += '<li>' + messages[i] + '</li>';
-        }
-
-        messageStr = '<ul>' + messageStr + '</ul>';
-    }
-    messageStr = config.renderMessage(messageStr, type);
-
+function showFormMessage(form, config, message, title, type, callback) {
     var alertMsg = getValidationMessage(form, config);
-    var newMsg = $(messageStr);
     if (alertMsg.length === 0) {
-        form.prepend(newMsg);
+        alertMsg = $(config.renderMessageWrapper(message, type));
+        form.prepend(alertMsg);
     } else {
-        alertMsg.replaceWith(newMsg);
+        alertMsg.append(message);
+        alertMsg.attr('class', 'form-message alert alert-' + type);
     }
 
-    if (newMsg.is(':hidden')) {
-        form.forms('showElement', newMsg);
+    if (title) {
+        var messageTitle = alertMsg.find('.form-message-title');
+        if (messageTitle.length === 0) {
+            alertMsg.prepend('<p class="form-message-title"><b>' + title + '</b></p>');
+        } else {
+            messageTitle.html(title);
+        }
+    }
+
+    if (alertMsg.is(':hidden')) {
+        form.forms('showElement', alertMsg);
     }
 
     if (typeof callback === 'function') {
-        callback.call(this, form, config, messages, type);
+        callback.call(this, form, config, message, type);
     }
+}
+/**
+ * Show error message
+ * @param {jQuery} form
+ * @param {Object} config
+ * @param {String} message
+ */
+function showErrorMessage(form, config, message) {
+    var messageHtml = config.renderErrorMessage(message);
+
+    showFormMessage(form, config, messageHtml, 'Errors', 'danger', null);
 }
 
 /**
@@ -408,7 +439,7 @@ function showFormMessage(form, config, messages, type, callback) {
  * @param {Object} config
  */
 function showConfirmMessage(form, config) {
-    showFormMessage(form, config, config.confirmMessage, 'success', function () {
+    showFormMessage(form, config, config.confirmMessage, null, 'success', function () {
         window.setTimeout(function () {
             var alertMsg = getValidationMessage(form, config);
             form.forms('hideElement', alertMsg)
@@ -452,6 +483,8 @@ function showFieldMessages(fieldMessages, form, config) {
 function resetValidation(form, config) {
     form.find('.form-group').removeClass('has-error');
     form.find('.error-field').removeClass('error-field').removeAttr('error-message');
+    form.find('.error-message').remove();
+    form.find('.form-message-title').remove();
 
     var alertMsg = getValidationMessage(form, config);
     if (alertMsg.length > 0) {
@@ -475,7 +508,7 @@ function validateFormFields(form, config) {
             showErrorField(errorField);
         }
 
-        showFormMessage(form, config, config.requiredErrorMessage, 'danger');
+        showErrorMessage(form, config, config.requiredErrorMessage);
 
         return false;
     } else {
@@ -537,8 +570,33 @@ function validateFormFields(form, config) {
             errorMessages = errorMessages.concat(resultRegexes.errorMessages);
         }
 
+        if (typeof config.validate === 'function') {
+            var resultCustomValidate = config.validate.call(this, form, config);
+            flog('[jquery.forms] Validate method return: ' + resultCustomValidate);
+
+            if (typeof resultCustomValidate === 'boolean') {
+                if (!resultCustomValidate) {
+                    error++;
+                }
+            } else {
+                if (resultCustomValidate && resultCustomValidate.error) {
+                    if (resultCustomValidate.error > 0) {
+                        error += resultCustomValidate;
+
+                        if ($.isArray(resultCustomValidate.errorFields)) {
+                            errorFields = errorFields.concat(resultCustomValidate.errorFields);
+                        }
+
+                        if ($.isArray(resultCustomValidate.errorMessages)) {
+                            errorMessages = errorMessages.concat(resultCustomValidate.errorMessages);
+                        }
+                    }
+                }
+            }
+        }
+
         if (error > 0) {
-            showFormMessage(form, config, errorMessages, 'danger');
+            showErrorMessage(form, config, errorMessages);
             for (var i = 0; i < errorFields.length; i++) {
                 var errorField = errorFields[i];
                 showErrorField(errorField);
