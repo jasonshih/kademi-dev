@@ -3,6 +3,7 @@
         <title>$view.title</title>
         <link rel="stylesheet" type="text/css" href="manageUser.css" />
         <script type="text/javascript" src="/static/uri/1.15.1/URI.js">//</script>
+        <script src="/theme/assets/plugins/jQuery-Smart-Wizard/js/jquery.smartWizard.js">//</script>
         <script type="text/javascript" src="manageUser.js">//</script>
         <style>
             #table-users {
@@ -137,13 +138,13 @@
                                             #set( $groups = $page.primaryGroups( $p.fields.get("memberships.group").values ) )
                                             #foreach( $group in $groups )
                                             <div class="label label-info" style="margin-right: 5px;">
-                                            <a title="$group.name" href="/groups/$group.name/" style="color: white">
-                                                #if( $group.title)
-                                                $group.title
-                                                #else
-                                                $group.name
-                                                #end
-                                            </a>
+                                                <a title="$group.name" href="/groups/$group.name/" style="color: white">
+                                                    #if( $group.title)
+                                                    $group.title
+                                                    #else
+                                                    $group.name
+                                                    #end
+                                                </a>
                                             </div>
                                             #end
                                         </td>
@@ -295,6 +296,105 @@
             </div>
         </div>
 
+        <div id="modal-upload-userFile" class="modal modal-lg fade" aria-hidden="true">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                <h4 class="modal-title">Upload Users CSV</h4>
+            </div>
+            <div class="modal-body">
+                <form action="#" role="form" class="smart-wizard form-horizontal" id="form">
+                    <div id="wizard" class="swMain">
+                        <ul>
+                            <li>
+                                <a href="#step-1">
+                                    <div class="stepNumber">
+                                        1
+                                    </div>
+                                    <span class="stepDesc"> Step 1
+                                        <br />
+                                        <small>Upload File</small> </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#step-2">
+                                    <div class="stepNumber">
+                                        2
+                                    </div>
+                                    <span class="stepDesc"> Step 2
+                                        <br />
+                                        <small>Assign Columns</small> </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#step-3">
+                                    <div class="stepNumber">
+                                        3
+                                    </div>
+                                    <span class="stepDesc"> Step 3
+                                        <br />
+                                        <small>Add Users</small> </span>
+                                </a>
+                            </li>
+                        </ul>
+                        <div id="step-1">
+                            <h2 class="StepTitle">Upload File</h2>
+
+                            <div class="upload">
+                                <div class="btn-upload" id='do-upload-file'></div>
+                                <br />
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-sm-2 col-sm-offset-10">
+                                    <button class="btn btn-blue next-step btn-block">
+                                        Next <i class="fa fa-arrow-circle-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="step-2">
+                            <h2 class="StepTitle">Step 2 Content</h2>
+                            <div class="column-selector">
+
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-sm-2 col-sm-offset-3">
+                                    <button class="btn btn-light-grey back-step btn-block">
+                                        <i class="fa fa-circle-arrow-left"></i> Back
+                                    </button>
+                                </div>
+                                <div class="col-sm-2 col-sm-offset-3">
+                                    <button class="btn btn-blue next-step btn-block">
+                                        Next <i class="fa fa-arrow-circle-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="step-3">
+                            <h2 class="StepTitle">Step 3 Title</h2>
+
+                            <div class="form-group">
+                                <div class="col-sm-2 col-sm-offset-3">
+                                    <button class="btn btn-light-grey back-step btn-block">
+                                        <i class="fa fa-circle-arrow-left"></i> Back
+                                    </button>
+                                </div>
+                                <div class="col-sm-2 col-sm-offset-3">
+                                    <button class="btn btn-blue next-step btn-block">
+                                        Next <i class="fa fa-arrow-circle-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+            </div>
+        </div>
+
         <div id="modal-upload-csv" class="modal modal-lg fade" aria-hidden="true" tabindex="-1">
             <div class="modal-header">
                 <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
@@ -422,52 +522,71 @@
 
 
         #macro( showAggregation $agg )
-            #if( $agg.buckets.size() > 0 || $params.get("filter-$agg.name") )
-                <tbody id="agg-$agg.name">
-                    <tr>
-                        <td colspan="2">
-                            $agg.title&nbsp;
-                            #if (! $agg.noFilter && ($agg.buckets.size() > 4 || $!params.get("filter-$agg.name")))
-                                <span style="float: right; width: 50%" >
-                                    #if ( $agg.name != "action" )
-                                        <span class="input-group input-group-sm">
-                                            <input id="$agg.name" class="agg-filter form-control" type="text" name="$agg.name" placeholder="Search / Filter" value="$agg.filter" />
-                                            <span class="input-group-btn">
-                                                <button class="btn btn-sm btn-default aggClearer" type="button" data-target="#$agg.name"><i class="fa fa-times"></i></button>
-                                            </span>
-                                        </span>
-                                    #end
-                                </span>
-                            #end
-                        </td>
-                    </tr>
-                    #foreach($b in $agg.buckets )
-                        #showFacetBucket($b, 0)
+        #if( $agg.buckets.size() > 0 || $params.get("filter-$agg.name") )
+        <tbody id="agg-$agg.name">
+            <tr>
+                <td colspan="2">
+                    $agg.title&nbsp;
+                    #if (! $agg.noFilter && ($agg.buckets.size() > 4 || $!params.get("filter-$agg.name")))
+                    <span style="float: right; width: 50%" >
+                        #if ( $agg.name != "action" )
+                        <span class="input-group input-group-sm">
+                            <input id="$agg.name" class="agg-filter form-control" type="text" name="$agg.name" placeholder="Search / Filter" value="$agg.filter" />
+                            <span class="input-group-btn">
+                                <button class="btn btn-sm btn-default aggClearer" type="button" data-target="#$agg.name"><i class="fa fa-times"></i></button>
+                            </span>
+                        </span>
+                        #end
+                    </span>
                     #end
-                </tbody>
+                </td>
+            </tr>
+            #foreach($b in $agg.buckets )
+            #showFacetBucket($b, 0)
             #end
+        </tbody>
+        #end
         #end
 
         #macro( showFacetBucket $b $indent )
-            #set($termParamName = "term-" + $b.aggName)
-            #if( $b.count > 0 )
-                <tr class="agg-row $formatter.paramSelected($termParamName, $b.termName, 'success')">
-                    <td>
-                        <div class="col-md-offset-$indent">
-                            <a href="$page.href?$formatter.toggleParamVal( $termParamName, $b.termName )" class="dated term-select">$b.termTitle</a>
-                        </div>
-                    </td>
-                    <td align="right">$b.count</td>
-                </tr>
-            #end
-
-            #foreach($sub in $b.buckets)
-                #showFacetBucket($sub, $formatter.addNum($indent, 1) )
-            #end
+        #set($termParamName = "term-" + $b.aggName)
+        #if( $b.count > 0 )
+        <tr class="agg-row $formatter.paramSelected($termParamName, $b.termName, 'success')">
+            <td>
+                <div class="col-md-offset-$indent">
+                    <a href="$page.href?$formatter.toggleParamVal( $termParamName, $b.termName )" class="dated term-select">$b.termTitle</a>
+                </div>
+            </td>
+            <td align="right">$b.count</td>
+        </tr>
         #end
 
+        #foreach($sub in $b.buckets)
+        #showFacetBucket($sub, $formatter.addNum($indent, 1) )
+        #end
+        #end
+
+        <script id="column-sel-template"  type="text/html">
+            {{#each fields as |value|}}
+            <div class="form-group">
+                <label class="col-sm-3 control-label">
+                    {{.}} <span class="symbol required"></span>
+                </label>
+                <div class="col-sm-7">
+                    <select class="form-control" name="column_{{.}}">
+                        <option value="">[ None ]</option>
+                        {{#each ../columns as |childValue|}}
+                        <option {{#startsWith @value @childValue }} selected="true" {{/startsWith}} value="column_{{@index}}">{{childValue}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+            </div>
+            {{/each}}
+        </script>
+        <script src="/static/handlebars/3.0.3/handlebars-v3.0.3.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
         <script type="text/javascript">
+            var availableProfileFields = $formatter.toJson($page.availableFields);
             $(function () {
                 initManageUsers();
 
