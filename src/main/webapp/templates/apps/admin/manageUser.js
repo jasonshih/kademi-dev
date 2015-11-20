@@ -11,6 +11,8 @@ function initManageUsers() {
     initLoginAs();
     initAggregations();
     initSort();
+
+    //initUploadUsersFile();
 }
 
 function initChangeUserId() {
@@ -51,7 +53,7 @@ function initUploadUsers() {
     });
 
     var resultUploadCsv = modalUploadCsv.find('.upload-results');
-    $('#do-upload-csv').mupload({
+    modalUploadCsv.find('#do-upload-csv').mupload({
         buttonText: '<i class=\'clip-folder\'></i> Upload spreadsheet',
         url: 'users.csv?insertMode=true',
         useJsonPut: false,
@@ -77,6 +79,82 @@ function initUploadUsers() {
             flog('do not allow insert:', formUploadCsv, formUploadCsv.attr('action'));
         }
     });
+}
+
+function initUploadUsersFile() {
+    var fileData = null;
+    var userFileModal = $('#modal-upload-userFile');
+    $('.btn-upload-users-csv').click(function (e) {
+        e.preventDefault();
+
+        userFileModal.modal('show');
+    });
+
+    var wizardContent = $('#wizard');
+    wizardContent.smartWizard({
+        selected: 0,
+        keyNavigation: false
+    });
+
+    wizardContent.find(".next-step").on('click', function (e) {
+        e.preventDefault();
+        wizardContent.smartWizard("goForward");
+    });
+
+    wizardContent.find(".back-step").on('click', function (e) {
+        e.preventDefault();
+        wizardContent.smartWizard("goBackward");
+    });
+
+    userFileModal.find('#do-upload-file').mupload({
+        buttonText: '<i class=\'clip-folder\'></i> Upload spreadsheet',
+        url: 'userFile',
+        useJsonPut: false,
+        oncomplete: function (data, name, href) {
+            flog('oncomplete:', data.result.data, name, href);
+            fileData = data.result.data;
+            populateFileColumns(userFileModal, fileData);
+            wizardContent.smartWizard("goForward");
+        }
+    });
+
+    Handlebars.registerHelper('equal', function (lvalue, rvalue, options) {
+        if (arguments.length < 3)
+            throw new Error("Handlebars Helper equal needs 2 parameters");
+        if (lvalue != rvalue) {
+            return options.inverse(this);
+        } else {
+            return options.fn(this);
+        }
+    });
+
+    Handlebars.registerHelper('startsWith', function (lvalue, rvalue, options) {
+        if (arguments.length < 3)
+            throw new Error("Handlebars Helper equal needs 2 parameters");
+        if (!lvalue.toString().startsWith(rvalue)) {
+            return options.inverse(this);
+        } else {
+            return options.fn(this);
+        }
+    });
+}
+
+function populateFileColumns(modal, data) {
+    var columnSel = modal.find('.column-selector');
+
+    var d = {
+        fields: availableProfileFields,
+        columns: data.fileLines[0]
+    }
+
+    var streamItemTemplateSource = $("#column-sel-template").html();
+    var streamItemTemplate = Handlebars.compile(streamItemTemplateSource);
+
+    var html = streamItemTemplate(d);
+
+    flog('new HTML', html);
+
+    columnSel.html(html);
 }
 
 function showUnmatched(resultUploadCsv, unmatched) {
