@@ -1,0 +1,78 @@
+<div class="table-responsive">
+    <table class="table table-stripe table-hover eCommerce-table">
+        <colgroup>
+            <col width="10px" />
+            <col width="10%" />
+            <col width="20%" />
+            <col width="50%"/>
+            <col width="" />
+            <col width="" />
+        </colgroup>
+        <thead>
+            <tr>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Cart ID</th>
+                <th>Description</th>
+                <th>Items</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            #foreach($c in $eComCarts)
+            <tr class="clickable" data-href="/shopping-carts/$c.id/">
+                #genStatus($c)
+                <td><abbr class="timeago" title="$formatter.formatDateISO8601($c.orderedDate)">$c.orderedDate</abbr></td>
+                <td>$c.cartId</td>
+                <td>$applications.shoppingCart.getDescription($c)</td>
+                #getCountCost($c)
+            </tr>
+            #end
+        </tbody>
+    </table>
+</div>
+
+#macro(genStatus $cart)
+#set($statusMsg = $cart.fulfilmentState)
+#set($statusClass = false)
+#if($statusMsg == "N")
+#set($statusMsg = "Not fulfilled")
+#set($statusClass = "fa fa-2x fa-exclamation text-info")
+#elseif($statusMsg == "C")
+#set($statusMsg = "Fulfilled")
+#set($statusClass = "fa fa-2x fa-check-circle text-success")
+#end
+<td class="text-center" title="$statusMsg">
+    #if($statusClass)
+    <i class="$statusClass"></i>
+    #end
+</td>
+#end
+
+#macro(getCountCost $cart)
+    #set($totalPoCount = 0)
+    #set($totalPoCost = 0)
+    #foreach($po in $cart.productOrders)
+        #set($totalPoCount = $totalPoCount + $po.quantity)
+        #set($totalPoCost = $po.quantity * $po.unitCost)
+    #end
+    
+    <td>$formatter.toDecimal($totalPoCount, 0)</td>
+    <td>$formatter.formatCurrency($totalPoCost)</td>
+#end
+<script>
+    pageInitFunctions.push(function () {
+        initECommerceTab();
+    });
+
+    function initECommerceTab() {
+        $('body').on('click', '.eCommerce-table .clickable', function (e) {
+            e.preventDefault();
+
+            var row = $(this);
+            var href = row.data('href');
+
+            window.location.href = href;
+        });
+    }
+</script>
