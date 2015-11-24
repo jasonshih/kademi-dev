@@ -72,6 +72,12 @@ function initKChatSendBtn(kchatSocket) {
         chatContainer.find('.chat').append($(html));
 
     });
+
+    chatContainer.on('keypress', '.kchat-msg-input', function (e) {
+        if (e.which == 13) {//Enter key pressed
+            chatContainer.find('.btn-chat').click();
+        }
+    });
 }
 
 pageInitFunctions.push(function () {

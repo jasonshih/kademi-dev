@@ -733,6 +733,12 @@ var Main = function () {
             var html = streamItemTemplate(c);
             $('#page-sidebar .user-chat').find('#chat-' + visitorId).prepend(html);
         });
+
+        $('#page-sidebar').on('keypress', '.kchat-msg-input', function (e) {
+            if (e.which == 13) {//Enter key pressed
+                $('#page-sidebar').find('.btn-send-msg').click();
+            }
+        });
     };
 
     //function to adapt the Main Content height to the Main Navigation height
