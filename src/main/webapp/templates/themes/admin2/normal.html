@@ -122,21 +122,11 @@
         <script src="/theme/assets/plugins/colorbox/jquery.colorbox-min.js">//</script>
         <script type="text/javascript" src="/static/bootstrap-tagsinput/1.0.0/bootstrap-tagsinput.js">//</script>
         <script src="/theme/assets/js/fuse.js">//</script>
+        <script src="/static/handlebars/3.0.3/handlebars-v3.0.3.js">//</script>
 
         <!-- end: MAIN JAVASCRIPTS -->
         <!-- start: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
         <!-- end: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
-        <script>
-            jQuery(document).ready(function () {
-                Main.init();
-                initTheme(); // init the fuse extensions
-                try {
-                    CKEDITOR.timestamp = null;
-                } catch (e) {
-                    flog("exception");
-                }
-            });
-        </script>
     </head>
     <body>
         <div id="kademi-container" #if ($request.getCookie("admin-sidebar").value == "collapsed") class="navigation-small" #end >
@@ -387,9 +377,9 @@
                                 </div>
                                 <div class="user-chat-form sidebar-content">
                                     <div class="input-group">
-                                        <input type="text" placeholder="Type a message here..." class="form-control">
+                                        <input type="text" placeholder="Type a message here..." class="form-control kchat-msg-input">
                                         <div class="input-group-btn">
-                                            <button class="btn btn-success" type="button">
+                                            <button data-visitorid="" class="btn btn-success btn-send-msg" type="button">
                                                 <i class="fa fa-chevron-right"></i>
                                             </button>
                                         </div>
@@ -404,9 +394,9 @@
 
             <script id="kchat-user-template" type="text/html">
                 <li id="user-{{visitorId}}" class="media">
-                    <a href="chat-{{visitorId}}">
+                    <a href="{{visitorId}}">
                         <i class="fa fa-circle status-online"></i>
-                        <img alt="{{profile.name}}" src="/users/{{profile.userId}}/pic" class="media-object">
+                        <img alt="{{profile.name}}" src="/manageUsers/{{profile.userId}}/pic" class="media-object">
                         <div class="media-body">
                             <h4 class="media-heading">{{profile.name}}</h4>
                         </div>
@@ -417,15 +407,37 @@
             <script id="kchat-msg-template" type="text/html">
                 <li class="other">
                     <div class="avatar">
-                        <img src="/users/{{profile.userId}}/pic" alt="{{profile.name}}">
+                        <img src="{{profilePic}}" alt="{{profile.name}}">
                     </div>
                     <div class="messages">
                         <p>{{msg}}</p>
-                        <span class="time"> {{timestamp}} </span>
+                        <span class="time"> {{time}} </span>
+                    </div>
+                </li>
+            </script>
+            <script id="kchatadmin-msg-template" type="text/html">
+                <li class="self">
+                    <div class="avatar">
+                        <img src="/manageUsers/$user.thisProfile.id/pic" alt="$user.thisProfile.formattedName">
+                    </div>
+                    <div class="messages">
+                        <p>{{msg}}</p>
+                        <span class="time"> {{time}} </span>
                     </div>
                 </li>
             </script>
         </div>
+        <script>
+            jQuery(document).ready(function () {
+                Main.init('$page.organisation.id');
+                initTheme(); // init the fuse extensions
+                try {
+                    CKEDITOR.timestamp = null;
+                } catch (e) {
+                    flog("exception");
+                }
+            });
+        </script>
     </body>
     <!-- end: BODY -->
 </html>

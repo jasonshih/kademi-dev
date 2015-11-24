@@ -591,7 +591,7 @@ var Main = function () {
 
             e.preventDefault();
         });
-        $("#page-sidebar .media a").on("click", function (e) {
+        $("#page-sidebar .media-list").on("click", '.media a', function (e) {
             e.preventDefault();
 
             var btn = $(this);
@@ -600,12 +600,16 @@ var Main = function () {
             var discussion = btn.closest('.tab-pane').find('.user-chat .discussion');
             discussion.hide();
 
-            btn.closest('.tab-pane').find('#' + href).show();
+            btn.closest('.tab-pane').find('#chat-' + href).show();
 
+            $('#page-sidebar .btn-send-msg').data('visitorid', href);
+
+            //user-chat-form
             btn.closest(".tab-pane").css({
                 right: $("#page-sidebar").outerWidth()
             });
         });
+
         $("#page-sidebar .sidebar-back").on("click", function (e) {
             $(this).closest(".tab-pane").css({
                 right: 0
@@ -619,6 +623,103 @@ var Main = function () {
         });
         $('#sidebar-tab a').on('shown.bs.tab', function (e) {
             $("#page-sidebar .sidebar-wrapper").perfectScrollbar('update');
+        });
+    };
+
+    var initKChatWebsocket = function (orgId) {
+        flog('initKChatWebsocket', orgId);
+
+        var b64ContentId = Base64.encode(orgId);
+
+        var proto = 'ws://';
+        if (window.location.protocol === 'https:') {
+            proto = 'wss://';
+        }
+        var url = window.location.host + '/ws/' + window.location.host + '/kchatAdmin/' + b64ContentId;
+        flog(url);
+        var kchatSocket = new WebSocket(proto + url);
+
+        kchatSocket.onmessage = function (evt) {
+            flog('Received data', evt);
+
+            var c = $.parseJSON(evt.data);
+
+            if (c.action === "connected") {
+                var templ = $('#kchat-user-template').html();
+
+                var streamItemTemplate = Handlebars.compile(templ);
+
+                var time = new moment(c.timestamp);
+
+                c.time = time.format('hh:mm A');
+
+                var html = streamItemTemplate(c);
+
+                $('#page-sidebar .media-list').append(html);
+
+                $('#page-sidebar .user-chat').append('<ol id="chat-' + c.visitorId + '" class="discussion sidebar-content"></ol>');
+            } else if (c.action === "disconnected") {
+                $('#page-sidebar .media-list').find('#user-' + c.visitorId).remove();
+                $('#page-sidebar .user-chat').find('#chat-' + c.visitorId).remove();
+            } else if (c.action === "msg") {
+                var templ = $('#kchat-msg-template').html();
+
+                var streamItemTemplate = Handlebars.compile(templ);
+
+                var time = new moment(c.timestamp);
+
+                c.time = time.format('hh:mm A');
+
+                c.profilePic = "/theme/apps/user/profile.png";
+
+                var html = streamItemTemplate(c);
+
+                $('#page-sidebar .user-chat').find('#chat-' + c.visitorId).prepend(html);
+
+            } else if (c.action === 'clients') {
+                $('#page-sidebar .media-list').empty();
+
+                for (var i = 0; i < c.clients.length; i++) {
+                    var templ = $('#kchat-user-template').html();
+
+                    var streamItemTemplate = Handlebars.compile(templ);
+
+                    var html = streamItemTemplate(c.clients[i]);
+
+                    $('#page-sidebar .media-list').append(html);
+
+                    $('#page-sidebar .user-chat').append('<ol id="chat-' + c.clients[i].visitorId + '" class="discussion sidebar-content"></ol>');
+                }
+            }
+        };
+
+        $('#page-sidebar').on('click', '.btn-send-msg', function (e) {
+            e.preventDefault();
+
+            var btn = $(this);
+            var inp = $('#page-sidebar .kchat-msg-input');
+            var msg = inp.val();
+            var visitorId = btn.data('visitorid');
+
+            var d = {
+                action: "msg",
+                visitorId: visitorId,
+                msg: msg
+            };
+
+            kchatSocket.send(JSON.stringify(d));
+
+            inp.val('');
+
+            var templ = $('#kchatadmin-msg-template').html();
+            var streamItemTemplate = Handlebars.compile(templ);
+            var time = new moment();
+            var c = {
+                time: time.format('hh:mm A'),
+                msg: msg
+            };
+            var html = streamItemTemplate(c);
+            $('#page-sidebar .user-chat').find('#chat-' + visitorId).prepend(html);
         });
     };
 
@@ -643,7 +744,7 @@ var Main = function () {
 
     return {
         //main function to initiate template pages
-        init: function () {
+        init: function (orgId) {
             runNavigationToggler();
             runWIndowResize();
             runInit();
@@ -666,6 +767,7 @@ var Main = function () {
             runClearSetting();
             runQuickSideBar();
             runContainerHeight();
+            initKChatWebsocket(orgId);
 
             $(document).ajaxStart(function () {
                 flog("ajax start");
