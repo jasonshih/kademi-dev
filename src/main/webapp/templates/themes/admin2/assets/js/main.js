@@ -592,10 +592,19 @@ var Main = function () {
             e.preventDefault();
         });
         $("#page-sidebar .media a").on("click", function (e) {
-            $(this).closest(".tab-pane").css({
+            e.preventDefault();
+
+            var btn = $(this);
+            var href = btn.attr('href');
+
+            var discussion = btn.closest('.tab-pane').find('.user-chat .discussion');
+            discussion.hide();
+
+            btn.closest('.tab-pane').find('#' + href).show();
+
+            btn.closest(".tab-pane").css({
                 right: $("#page-sidebar").outerWidth()
             });
-            e.preventDefault();
         });
         $("#page-sidebar .sidebar-back").on("click", function (e) {
             $(this).closest(".tab-pane").css({
