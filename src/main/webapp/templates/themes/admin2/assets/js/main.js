@@ -653,6 +653,12 @@ var Main = function () {
 
                 c.time = time.format('hh:mm A');
 
+                if (c.profile.userId > 0) {
+                    c.profilePic = '/manageUsers/' + c.profile.userId + '/pic'
+                } else {
+                    c.profilePic = "/theme/apps/user/profile.png";
+                }
+
                 var html = streamItemTemplate(c);
 
                 $('#page-sidebar .media-list').append(html);
@@ -683,6 +689,12 @@ var Main = function () {
                     var templ = $('#kchat-user-template').html();
 
                     var streamItemTemplate = Handlebars.compile(templ);
+
+                    if (c.clients[i].profile.userId > 0) {
+                        c.clients[i].profilePic = '/manageUsers/' + c.clients[i].profile.userId + '/pic'
+                    } else {
+                        c.clients[i].profilePic = "/theme/apps/user/profile.png";
+                    }
 
                     var html = streamItemTemplate(c.clients[i]);
 
