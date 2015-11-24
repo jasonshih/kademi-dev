@@ -12,13 +12,14 @@ var $pageArea;
         var timeout;
         return function debounced() {
             var obj = this,
-                args = arguments;
+                    args = arguments;
 
             function delayed() {
                 if (!execAsap)
                     func.apply(obj, args);
                 timeout = null;
-            };
+            }
+            ;
 
             if (timeout)
                 clearTimeout(timeout);
@@ -281,7 +282,7 @@ var Main = function () {
     var getParameterByName = function (name) {
         name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
         var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-            results = regex.exec(location.search);
+                results = regex.exec(location.search);
         return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
     };
 
@@ -570,6 +571,67 @@ var Main = function () {
         $('.color-text').val('#555555').next('.dropdown').find('i').css('background-color', '#555555');
         $('.color-badge').val('#007AFF').next('.dropdown').find('i').css('background-color', '#007AFF');
     };
+
+    //function to open quick sidebar
+    var runQuickSideBar = function () {
+        $(".sb-toggle").on("click", function (e) {
+            if ($(this).hasClass("open")) {
+                $(this).not(".sidebar-toggler ").find(".fa-indent").removeClass("fa-indent").addClass("fa-outdent");
+                $(".sb-toggle").removeClass("open")
+                $("#page-sidebar").css({
+                    right: -$("#page-sidebar").outerWidth()
+                });
+            } else {
+                $(this).not(".sidebar-toggler ").find(".fa-outdent").removeClass("fa-outdent").addClass("fa-indent");
+                $(".sb-toggle").addClass("open")
+                $("#page-sidebar").css({
+                    right: 0
+                });
+            }
+
+            e.preventDefault();
+        });
+        $("#page-sidebar .media a").on("click", function (e) {
+            $(this).closest(".tab-pane").css({
+                right: $("#page-sidebar").outerWidth()
+            });
+            e.preventDefault();
+        });
+        $("#page-sidebar .sidebar-back").on("click", function (e) {
+            $(this).closest(".tab-pane").css({
+                right: 0
+            });
+            e.preventDefault();
+        });
+        $('#page-sidebar .sidebar-wrapper').perfectScrollbar({
+            wheelSpeed: 50,
+            minScrollbarLength: 20,
+            suppressScrollX: true
+        });
+        $('#sidebar-tab a').on('shown.bs.tab', function (e) {
+            $("#page-sidebar .sidebar-wrapper").perfectScrollbar('update');
+        });
+    };
+
+    //function to adapt the Main Content height to the Main Navigation height
+    var runContainerHeight = function () {
+        mainContainer = $('.main-content > .container');
+        mainNavigation = $('.main-navigation');
+        if ($pageArea < 760) {
+            $pageArea = 760;
+        }
+        if (mainContainer.outerHeight() < mainNavigation.outerHeight() && mainNavigation.outerHeight() > $pageArea) {
+            mainContainer.css('min-height', mainNavigation.outerHeight());
+        } else {
+            mainContainer.css('min-height', $pageArea);
+        }
+        ;
+        if ($windowWidth < 768) {
+            mainNavigation.css('min-height', $windowHeight - $('body > .navbar').outerHeight());
+        }
+        $("#page-sidebar .sidebar-wrapper").css('height', $windowHeight - $('body > .navbar').outerHeight()).scrollTop(0).perfectScrollbar('update');
+    };
+
     return {
         //main function to initiate template pages
         init: function () {
@@ -593,6 +655,8 @@ var Main = function () {
             runSaveSetting();
             runCustomSetting();
             runClearSetting();
+            runQuickSideBar();
+            runContainerHeight();
 
             $(document).ajaxStart(function () {
                 flog("ajax start");

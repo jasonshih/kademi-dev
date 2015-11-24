@@ -213,6 +213,17 @@
         padding: 0px !important;
     }
 
+    #page-sidebar {
+        top: 100px;
+    }
+    #page-sidebar .nav-tabs.nav-justified > li {
+        display: table-cell;
+        width: 1%;
+    }
+    #page-sidebar .sidebar-toggler {
+        right: 5px;
+    }
+
     /***
      Dropdown and dropdown elements.
      ***/

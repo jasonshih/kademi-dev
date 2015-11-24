@@ -25,7 +25,6 @@
         <link rel="stylesheet" href="/theme/assets/plugins/bootstrap-colorpalette/css/bootstrap-colorpalette.css"/>
         <link rel="stylesheet" href="/theme/assets/plugins/bootstrap-modal/css/bootstrap-modal-bs3patch.css"/>
         <link rel="stylesheet" href="/theme/assets/plugins/bootstrap-modal/css/bootstrap-modal.css"/>
-        <link rel="stylesheet" href="/theme/assets/plugins/perfect-scrollbar/src/perfect-scrollbar.css"/>
         <link rel="stylesheet" href="/theme/assets/plugins/select2/css/select2.css" />
         <!--
         <link rel="stylesheet" href="/theme/assets/plugins/DataTables/media/css/DT_bootstrap.css" />
@@ -41,6 +40,7 @@
         <link rel="stylesheet" href="/static/bootstrap-msg/0.3/bootstrap-msg.min.css" type="text/css" />
         <link rel="stylesheet" href="/theme/assets/plugins/colorbox/example2/colorbox.css" type="text/css" />
         <link rel="stylesheet" href="/static/bootstrap-tagsinput/1.0.0/bootstrap-tagsinput.css">
+        <link rel="stylesheet" href="/theme/assets/plugins/perfect-scrollbar/src/perfect-scrollbar.css">
         <!--[if IE 7]>
         <link rel="stylesheet" href="/theme/assets/plugins/font-awesome/css/font-awesome-ie7.min.css">
         <![endif]-->
@@ -226,6 +226,11 @@
                                 </a>
                             </li>
                             <!-- end: USER DROPDOWN -->
+                            <!-- start: PAGE SIDEBAR TOGGLE -->
+                            <li>
+                                <a class="sb-toggle" href="#"><i class="fa fa-outdent"></i></a>
+                            </li>
+                            <!-- end: PAGE SIDEBAR TOGGLE -->
                         </ul>
                         <!-- end: TOP NAVIGATION MENU -->
                     </div>
@@ -323,7 +328,7 @@
                 </div>
                 <div class="footer-items-left">
                     #if( $request.hostHeader.contains(":") )
-                        <span class="btn btn-sm btn-info btn-squared"><i class="fa fa-wrench"></i> Dev mode</span>
+                    <span class="btn btn-sm btn-info btn-squared"><i class="fa fa-wrench"></i> Dev mode</span>
                     #else
                     <!--Start of Zopim Live Chat Script-->
                     <script type="text/javascript">
@@ -334,14 +339,14 @@
                         if (!isMobile) {
                             window.$zopim || (function (d, s) {
                                 var z = $zopim = function (c) {
-                                        z._.push(c)
-                                    },
-                                    $ = z.s =
+                                    z._.push(c)
+                                },
+                                        $ = z.s =
                                         d.createElement(s),
-                                    e = d.getElementsByTagName(s)[0];
+                                        e = d.getElementsByTagName(s)[0];
                                 z.set = function (o) {
                                     z.set.
-                                        _.push(o)
+                                            _.push(o)
                                 };
                                 z._ = [];
                                 z.set._ = [];
@@ -350,7 +355,7 @@
                                 $.src = '//v2.zopim.com/?2nKbRpXKUmYJXwm07KHHlZLNXFdpF9PE';
                                 z.t = +new Date;
                                 $.
-                                    type = 'text/javascript';
+                                        type = 'text/javascript';
                                 e.parentNode.insertBefore($, e)
                             })(document, 'script');
                         }
@@ -362,6 +367,178 @@
                     2015 &copy; Kademi Ltd
                 </div>
             </div>
+            <div id="page-sidebar">
+                <a class="sidebar-toggler sb-toggle" href="#"><i class="fa fa-indent"></i></a>
+                <div class="sidebar-wrapper">
+                    <ul class="nav nav-tabs nav-justified" id="sidebar-tab">
+                        <li class="active">
+                            <a href="#users" role="tab" data-toggle="tab"><i class="fa fa-users"></i></a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="users">
+                            <div class="users-list">
+                                <h5 class="sidebar-title">On-line</h5>
+                                <ul class="media-list">
+                                    <li class="media">
+                                        <a href="#">
+                                            <i class="fa fa-circle status-online"></i>
+                                            <img alt="..." src="http://placehold.it/50x50" class="media-object">
+                                            <div class="media-body">
+                                                <h4 class="media-heading">Nicole Bell</h4>
+                                                <span> Content Designer </span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class="media">
+                                        <a href="#">
+                                            <div class="user-label">
+                                                <span class="label label-success">3</span>
+                                            </div>
+                                            <i class="fa fa-circle status-online"></i>
+                                            <img alt="..." src="http://placehold.it/50x50" class="media-object">
+                                            <div class="media-body">
+                                                <h4 class="media-heading">Steven Thompson</h4>
+                                                <span> Visual Designer </span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class="media">
+                                        <a href="#">
+                                            <i class="fa fa-circle status-online"></i>
+                                            <img alt="..." src="http://placehold.it/50x50" class="media-object">
+                                            <div class="media-body">
+                                                <h4 class="media-heading">Ella Patterson</h4>
+                                                <span> Web Editor </span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class="media">
+                                        <a href="#">
+                                            <i class="fa fa-circle status-online"></i>
+                                            <img alt="..." src="http://placehold.it/50x50" class="media-object">
+                                            <div class="media-body">
+                                                <h4 class="media-heading">Kenneth Ross</h4>
+                                                <span> Senior Designer </span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <h5 class="sidebar-title">Off-line</h5>
+                                <ul class="media-list">
+                                    <li class="media">
+                                        <a href="#">
+                                            <img alt="..." src="http://placehold.it/50x50" class="media-object">
+                                            <div class="media-body">
+                                                <h4 class="media-heading">Nicole Bell</h4>
+                                                <span> Content Designer </span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class="media">
+                                        <a href="#">
+                                            <div class="user-label">
+                                                <span class="label label-success">3</span>
+                                            </div>
+                                            <img alt="..." src="http://placehold.it/50x50" class="media-object">
+                                            <div class="media-body">
+                                                <h4 class="media-heading">Steven Thompson</h4>
+                                                <span> Visual Designer </span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class="media">
+                                        <a href="#">
+                                            <img alt="..." src="http://placehold.it/50x50" class="media-object">
+                                            <div class="media-body">
+                                                <h4 class="media-heading">Ella Patterson</h4>
+                                                <span> Web Editor </span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class="media">
+                                        <a href="#">
+                                            <img alt="..." src="http://placehold.it/50x50" class="media-object">
+                                            <div class="media-body">
+                                                <h4 class="media-heading">Kenneth Ross</h4>
+                                                <span> Senior Designer </span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class="media">
+                                        <a href="#">
+                                            <img alt="..." src="http://placehold.it/50x50" class="media-object">
+                                            <div class="media-body">
+                                                <h4 class="media-heading">Ella Patterson</h4>
+                                                <span> Web Editor </span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class="media">
+                                        <a href="#">
+                                            <img alt="..." src="http://placehold.it/50x50" class="media-object">
+                                            <div class="media-body">
+                                                <h4 class="media-heading">Kenneth Ross</h4>
+                                                <span> Senior Designer </span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="user-chat">
+                                <div class="sidebar-content">
+                                    <a class="sidebar-back" href="#"><i class="fa fa-chevron-circle-left"></i> Back</a>
+                                </div>
+                                <div class="user-chat-form sidebar-content">
+                                    <div class="input-group">
+                                        <input type="text" placeholder="Type a message here..." class="form-control">
+                                        <div class="input-group-btn">
+                                            <button class="btn btn-success" type="button">
+                                                <i class="fa fa-chevron-right"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <ol class="discussion sidebar-content">
+                                    <li class="other">
+                                        <div class="avatar">
+                                            <img src="http://placehold.it/50x50" alt="">
+                                        </div>
+                                        <div class="messages">
+                                            <p>
+                                                Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+                                            </p>
+                                            <span class="time"> 51 min </span>
+                                        </div>
+                                    </li>
+                                    <li class="self">
+                                        <div class="avatar">
+                                            <img src="http://placehold.it/50x50" alt="">
+                                        </div>
+                                        <div class="messages">
+                                            <p>
+                                                Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+                                            </p>
+                                            <span class="time"> 37 mins </span>
+                                        </div>
+                                    </li>
+                                    <li class="other">
+                                        <div class="avatar">
+                                            <img src="http://placehold.it/50x50" alt="">
+                                        </div>
+                                        <div class="messages">
+                                            <p>
+                                                Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+                                            </p>
+                                        </div>
+                                    </li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end: RIGHT SIDEBAR -->
         </div>
     </body>
     <!-- end: BODY -->
