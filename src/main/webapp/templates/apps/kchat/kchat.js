@@ -32,6 +32,9 @@ function initKChatWS() {
             $(html).find('.timeago').timeago();
 
             chatContainer.find('.chat').append($(html));
+
+            var panel = chatContainer.find('.panel-body');
+            panel.scrollTop(panel.find('ul').height());
         }
     };
 
@@ -70,6 +73,8 @@ function initKChatSendBtn(kchatSocket) {
         $(html).find('.timeago').timeago();
 
         chatContainer.find('.chat').append($(html));
+        var panel = chatContainer.find('.panel-body');
+        panel.scrollTop(panel.find('ul').height());
 
     });
 

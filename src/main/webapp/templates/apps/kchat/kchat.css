@@ -1,5 +1,5 @@
 .chat-container{
-    position: absolute;
+    position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
@@ -20,23 +20,10 @@
     border-bottom: 1px dotted #B3A9A9;
 }
 
-/*
-.chat li.left .chat-body
-{
-    margin-left: 60px;
-}
-
-.chat li.right .chat-body
-{
-    margin-right: 60px;
-}
-*/
-
-
 .chat li .chat-body p
 {
     margin: 0;
-    /*color: #777777;*/
+    color: #777777;
 }
 
 .chat-container .col-md-3{
