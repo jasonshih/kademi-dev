@@ -1,0 +1,44 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Manage Funnels</title>
+    </head>
+    <body>
+        <div class="jumbotron">
+            <h1>Leads = $page.leads.size()</h1>
+            <xmp>$page.funnelXml</xmp>
+        </div>
+
+        <table class="table table-responsive">
+            <thead>
+                <tr>
+                    <th>TrackingID</th>
+                    <th>Email</th>
+                    <th>Last attained</th>
+                    <th>Awaiting goal</th>
+                    <th>Created date</th>
+                    <th>Last attained date</th>
+                </tr>
+            </thead>
+            <tbody>
+                #foreach( $lead in $page.leads )
+                <tr>
+                    <td>$!lead.trackingId</td>
+                    <td>$!lead.profile.email</td>
+                    <td>$!lead.lastAttainedGoal</td>
+                    <td>$lead.currentGoal</td>
+                    <td>$lead.createDate</td>
+                    <td>$lead.lastAttainedDate</td>
+                </tr>
+                #end
+            </tbody>
+        </table>
+
+        <script type="text/javascript">
+            $(function () {
+
+            });
+
+
+        </script>
+    </body>
+</html>
