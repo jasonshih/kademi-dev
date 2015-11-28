@@ -8,18 +8,110 @@
     <body class='add-container'>
         #@themeBody()
 
-        <h1>Lead: $page.title</h1>
+        <div class="pull-right">
+            #if( $page.completed)
+            #if( $page.completed)
+            <div class="alert alert-success">
+                <p class="lead">
+                    <span class="fa fa-check"></span>
+                    Lead closed <abbr title="$formatter.formatDateISO8601($page.closedDate)" class="timeago">$page.closedDate</abbr>
+                </p>
+            </div>
+            #else
+            <div class="alert alert-warning">
+                <p class="lead">
+                    <span class="fa fa-remove"></span>
+                    Lead cancelled <abbr title="$formatter.formatDateISO8601($page.closedDate)" class="timeago">$page.closedDate</abbr>
+                </p>
+            </div>
+            #end
+            #else
 
-        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#newTaskModal">
-            Create task
-        </button>
+            <button class="btn btn-lg btn-warning" data-toggle="modal" data-target="#closeDealModal">
+                <span class="fa fa-remove"></span>
+                Cancel
+            </button>
 
-        <h2>Tasks - $page.children.size()</h2>
+            <button class="btn btn-lg btn-success" data-toggle="modal" data-target="#cancelDealModal">
+                <span class="fa fa-dollar"></span>
+                Made the sale
+            </button>
+            #end
+        </div>
+
+        <h1>$page.title</h1>
+
+        <form method="post" action="$page.href" class="form-horizontal" id="leadDetails">
+            <div class="modal-body">
+                #set( $p = $page.leadProfile )
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="nickName">Customer</label>
+                    <div class="col-md-3">
+                        <input type="text" name="nickName" id="nickName" class="form-control" placeholder="nickName" value="$!p.nickName" />
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" name="firstName" id="firstName" class="form-control" placeholder="First name" value="$!p.firstName" />
+                    </div>
+                    <div class="col-md-4">
+                        <input type="text" name="surName" id="surName" class="form-control" placeholder="Surname" value="$!p.surName" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="newUserEmail">Contact</label>
+                    <div class="col-md-5">
+                        <input type="text" name="email" id="email" class="form-control" placeholder="Email" value="$!p.email" />
+                    </div>
+                    <div class="col-md-5">
+                        <input type="text" name="phone" id="phone" class="form-control" placeholder="Phone" value="$!p.phone" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="notes">Notes</label>
+                    <div class="col-md-10">
+                        <textarea name="notes" class="form-control" style="height: 100px">$!page.description</textarea>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="notes">Deal amount</label>
+                    <div class="col-md-5">
+                        <input name="dealAmount" class="form-control" value="$!page.dealAmount"/>
+                        <i>Enter the estimated value of this deal</i>
+                    </div>
+                </div>
+
+                #if( $page.completed)
+                #else
+                <div class="form-group">
+                    <div class="col-md-10 col-md-offset-10">
+                        <button class="btn btn-sm btn-default" type="reset">Reset</button>
+
+                        <button class="btn btn-primary" type="submit">Save details</button>
+
+                    </div>
+                </div>
+                #end
+            </div>
+        </form>
+
+        <hr/>
+
+        <div class="pull-right">
+            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#newTaskModal">
+                Create task
+            </button>
+        </div>
+
+        <h3>Tasks</h3>
         <table class="table table-responsive table-striped">
             <thead>
                 <tr>
                     <th>Description</th>
+                    <th>Assigned to</th>
                     <th>Due date</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody id="tasksTableBody">
@@ -28,7 +120,29 @@
                     <td>
                         <a href="$task.href">$task.taskDescription</a>
                     </td>
-                    <td>$task.dueDate</td>
+                    <td>
+                        #if( $task.assignedTo )
+                        <a class="" href="/users/$task.assignedTo.name">
+                            $task.assignedTo.formattedName()
+                        </a>
+                        #end
+                    </td>
+                    <td><abbr title="$formatter.formatDateISO8601($task.dueDate)" class="timeago">$task.dueDate</abbr></td>
+                    <td>
+                        <div class="btn-group">
+                            <button class="btn btn-danger btn-lg" title="Cancel task">
+                                <span class="fa fa-remove"></span>
+                            </button>
+                            #if( $task.reminders.size() > 0 )
+                            <div>
+                                <span class="fa fa-bell"></span>
+                            </div>
+                            #end
+                            <button class="btn btn-success btn-lg" title="Mark task as completed">
+                                <span class="fa fa-check"></span>
+                            </button>
+                        </div>
+                    </td>
                 </tr>
                 #end
             </tbody>
@@ -56,6 +170,19 @@
                                     <input type="text" name="taskDescription" id="taskDescription" class="required form-control" placeholder="taskDescription" />
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="taskDescription">Reminder</label>
+                                <div class="col-md-9">
+                                    <select name="reminderDays">
+                                        <option value="">No reminder</option>
+                                        <option value="0">On the due date</option>
+                                        <option value="-1">Day earlier</option>
+                                        <option value="-7">Week earlier</option>
+                                        <option value="1">Day after</option>
+                                        <option value="7">Week after</option>
+                                    </select>
+                                </div>
+                            </div>
 
                         </div>
                         <div class="modal-footer">
@@ -68,15 +195,75 @@
             </div><!-- /.modal-dialog -->
         </div>
 
+        <div class="modal fade" id="closeDealModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="">Deal closed successfully</h4>
+                    </div>
+                    <form method="post" action="$page.href" class="form-horizontal">
+                        <input type="hidden" name="closeDeal"/>
+                        <div class="modal-body">
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="closedDate">Closed Date</label>
+                                <div class="col-md-9">
+                                    <input type="text" name="closedDate" id="closedDate" class="required form-control" placeholder="closedDate" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="dealAmount">Sale amount</label>
+                                <div class="col-md-9">
+                                    <input type="text" name="dealAmount" id="dealAmount" class="required form-control" placeholder="dealAmount" />
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-default" data-dismiss="modal" type="button">Exit</button>
+
+                            <button class="btn btn-success" type="submit">Mark deal as closed</button>
+                        </div>
+                    </form>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>
+
+        <div class="modal fade" id="cancelDealModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="">Deal closed successfully</h4>
+                    </div>
+                    <form method="post" action="$page.href" class="form-horizontal">
+                        <input type="hidden" name="closeDeal"/>
+                        <div class="modal-body">
+                            <p>Cancel this lead if you are sure it will not go ahead. The lead will be marked as closed without a sale.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-default" data-dismiss="modal" type="button">Exit</button>
+
+                            <button class="btn btn-primary" type="submit">Cancel this lead</button>
+                        </div>
+                    </form>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>
+
         <script type="text/javascript">
             $(function () {
-                var modal = $('#newTaskModal');
-                var form = modal.find('form');
-
+                var form = $("#leadDetails");
+                $('abbr.timeago').timeago();
                 form.forms({
                     callback: function (resp) {
                         Msg.info('Saved');
-                        $("#tasksTableBody").reloadFragment();
+                        $("#tasksTableBody").reloadFragment({
+                            whenComplete: function () {
+                                $('abbr.timeago').timeago();
+                            }
+                        });
                     }
                 });
 

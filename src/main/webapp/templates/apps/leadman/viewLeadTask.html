@@ -8,7 +8,15 @@
     <body class='add-container'>
         #@themeBody()
 
-        <h1>Lead: $page.title</h1>
+        <h1>Task: $page.taskDescription</h1>
+        #if( $page.assignedTo )
+        <p class="lead">Assigned to: $!page.assignedTo.formattedName()</p>
+        #else
+        <p class="lead">Not assigned</p>
+        #end
+        <p class="lead">Lead: <a href="../">$page.leadProfile.formattedName()</a></p>
+        <hr/>
+
 
         <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#newReminderModal">
             Create reminder

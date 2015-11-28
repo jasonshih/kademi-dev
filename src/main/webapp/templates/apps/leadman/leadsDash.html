@@ -1,4 +1,4 @@
-<div class="container">
+<div class="">
     <p class='lead'>Leads</p>
     #set( $leadsPage = $page.find("/leads") )
 
@@ -23,11 +23,38 @@
         </div>
     </div>
 
+    #set( $tasks = $leadsPage.tasks )
+    #set( $tasks = $leadsPage.allTasks )
+    tasks - $tasks.size()
+    #if( $tasks.size() > 0 )
+    <div class="table-responsive">
+        <table id="" class="table table-striped table-hover" style="width: 100%">
+            <colgroup>
+                <col width="" />
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>Task</th>
+                </tr>
+            </thead>
+            <tbody id="leadsBody">
+                #foreach($task in $tasks)
+                <tr>
+                    <td><a href='/leads/$task.relatedLead.id/$task.id/'>$task.taskDescription</a></td>
+                </tr>
+                #end
+            </tbody>
+        </table>
+    </div>
+    #end
+
+
+
     #set( $leads = $leadsPage.search($params.q) )
 
     #if( $leads.size() > 0 )
     <div class="table-responsive">
-        <table id="vouchers-table" class="table table-striped table-hover" style="width: 100%">
+        <table id="" class="table table-striped table-hover" style="width: 100%">
             <colgroup>
                 <col width="" />
                 <col width="" />
@@ -60,69 +87,9 @@
         </table>
     </div>
     #end
-
-
 </div>
 
-
-<div class="modal fade" id="newLeadModal" tabindex="-1" role="dialog" aria-labelledby="redeemVoucherModal" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="">Enter a new lead</h4>
-            </div>
-            <form method="post" action="/leads/" class="form-horizontal">
-                <div class="modal-body">
-
-                    <div class="form-group">
-                        <label class="control-label col-md-3" for="newUserNickName">Nick name</label>
-                        <div class="col-md-9">
-                            <input type="text" name="nickName" id="newUserNickName" class="required form-control" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-3" for="newUserFirstName">Name</label>
-                        <div class="col-md-4">
-                            <input type="text" name="firstName" id="newUserFirstName" class="form-control" placeholder="First name" />
-                        </div>
-                        <div class="col-md-5">
-                            <input type="text" name="surName" id="newUserSurName" class="form-control" placeholder="Surname" />
-                        </div>
-
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-3" for="newUserEmail">Contact</label>
-                        <div class="col-md-4">
-                            <input type="text" name="email" id="newUserEmail" class="required form-control" placeholder="Email" />
-                        </div>
-                        <div class="col-md-5">
-                            <input type="text" name="phone" id="newUserEmail" class="required form-control" placeholder="Phone" />
-                        </div>
-
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-3" for="newUserNickName">Lead type</label>
-                        <div class="col-md-9">
-                            <select name="funnel" class="form-control">
-                                #foreach($funnel in $leadsPage.funnels)
-                                <option value="$funnel.name">$funnel.name - $!funnel.title</option>
-                                #end
-                            </select>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-
-                    <button class="btn btn-primary" type="submit">Create and view</button>
-                </div>
-            </form>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div>
-
+#parse("/theme/apps/leadman/newLeadModal.html")
 
 <script type="text/javascript">
     $(function () {
@@ -145,30 +112,6 @@
                 }
             });
         }
-
-        function initNewUserForm() {
-            var modal = $('#newLeadModal');
-            var form = modal.find('form');
-
-            $(".createLead").click(function (e) {
-                flog("click");
-                e.preventDefault();
-                var funnelName = $(e.target).closest("a").attr("href");
-                form.find("select").val(funnelName);
-                modal.modal("show");
-            });
-
-            form.forms({
-                callback: function (resp) {
-                    flog('done new user', resp);
-                    if (resp.nextHref) {
-                        window.location.href = resp.nextHref;
-                    }
-                    Msg.info('Saved');
-                }
-            });
-        }
-
     });
 </script>
 

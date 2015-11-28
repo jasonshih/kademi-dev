@@ -1,0 +1,30 @@
+<div class="container" style="min-height: 400px">
+    <p class='lead'>Leads</p>
+    #set( $leadsPage = $page.find("/leads") )
+
+
+    #set( $tasks = $leadsPage.myTasks )
+
+    tasks - $tasks.size() - $leadsPage
+    #if( $tasks.size() > 0 )
+    <div class="table-responsive">
+        <table id="" class="table table-striped table-hover" style="width: 100%">
+            <colgroup>
+                <col width="" />
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>Task</th>
+                </tr>
+            </thead>
+            <tbody id="leadsBody">
+                #foreach($task in $tasks)
+                <tr>
+                    <td><a href='/leads/$task.relatedLead.id/$task.id/'>$task.taskDescription</a></td>
+                </tr>
+                #end
+            </tbody>
+        </table>
+    </div>
+    #end
+</div>
