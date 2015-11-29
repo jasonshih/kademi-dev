@@ -23,12 +23,12 @@
                 There is a default contact form for each website, but you can create your own.
                 <ul>
                     #foreach($website in $page.find("/websites").children)
-                    <li><a href="${website.live.externalUrl}contactus">Contact us page for $website.title</a></li>
+                    <li><a href="${website.live.externalUrl}contactus" target="_blank">Contact us page for $website.title</a></li>
                     #end
                 </ul>
             </p>
             #else
-            <p>You havent created any websites yet, but when you do you'll get a contact form for each</p>
+            <p>You have not created any websites yet, but when you do you'll get a contact form for each</p>
             #end
 
             <h3>Learn more</h3>
@@ -44,7 +44,7 @@
         <div class="row">
             <div class="col-lg-4 col-md-4 col-sm-6">
                 <div class="input-group date-range">
-                    <label for="report-range" class="input-group-addon">Time</label>
+                    <label for="dateRange" class="input-group-addon">Time</label>
                     <input type="text" id="dateRange" placeholder="Choose a date range" value="" class="form-control" />
                 </div>
             </div><!-- /.col-lg-6 -->
