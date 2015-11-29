@@ -12,7 +12,14 @@
                 <h2><i class="fa fa fa-check-circle"></i>Your order has been successful</h2>
             </div>
         </div>
+
+        <!-- Form for encrypting -->
+        <form data-eway-encrypt-key="$!page.find('/eway').encryptionKey" style="display: none;"></form>
+
         <form id="cart-form">
+            <!-- TODO: Currency should be configurable -->
+            <input type="hidden" name="currencyCode" value="AUD" />
+
             <div class="row">
                 <div class="col-md-7 col-lg-6" style="margin-bottom: 20px;">
                     <div id="itemsTable" class="panel panel-default">
@@ -203,6 +210,7 @@
             </div>
         </div>
 
+        <script src="https://secure.ewaypayments.com/scripts/eCrypt.js">//</script>
         <script src="/static/reload-fragment/1.0.1/jquery.reload-fragment-1.0.1.js" >//</script>
         <script type="text/javascript" src="/theme/apps/ecommerce/storeCheckout.js"></script>
         <script type="text/javascript">

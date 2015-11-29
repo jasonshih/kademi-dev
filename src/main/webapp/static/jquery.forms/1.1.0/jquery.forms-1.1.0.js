@@ -26,7 +26,7 @@
      * @param {Function} onValid Callback will be called when all fields are valid. Arguments are 'form' and 'config'. 'form' is jQuery object form and 'config' is configuration of current form
      * @param {Function} onInvalid Callback will be called when all fields are invalid. Arguments are 'form' and 'config'. 'form' is jQuery object form and 'config' is configuration of current form
      * @param {Boolean} [allowPostForm=true] Allow post form data via AJAX automatically or not
-     * @param {Function} beforePostForm Callback will be called before posting form data to server. Arguments are 'form', 'config', 'data'. 'form' is jQuery object form, 'config' is configuration of current form and 'data' is form data
+     * @param {Function} beforePostForm Callback will be called before posting form data to server. Arguments are 'form', 'config', 'data'. 'form' is jQuery object form, 'config' is configuration of current form and 'data' is form data. This callback MUST return the data for posting to server
      * @param {Function} onSuccess Callback will be called when post data form to server successfully. Arguments are 'resp', 'form' and 'config'. 'resp' is response data from server, 'form' is jQuery object form and 'config' is configuration of current form
      * @param {Function} onError Callback will be called when post data form to server failed. Arguments are 'resp', 'form' and 'config'. 'resp' is response data from server, 'form' is jQuery object form and 'config' is configuration of current form
      * @param {String} [confirmMessage=null] The confirmation message after posting data fom to server successfully
@@ -65,13 +65,15 @@
         allowPostForm: true,
         beforePostForm: function (form, config, data) {
             flog('[jquery.forms] Default beforePostForm of v1.1.0', form, config, data);
+
+            return data;
         },
         onSuccess: function (resp, form, config) {
             flog('[jquery.forms] Default onSuccess of v1.1.0', resp, form, config);
         },
         onError: function (resp, form, config) {
             try {
-                flog('status indicates failure', resp);
+                flog('[jquery.forms] Status indicates failure', resp);
 
                 if (resp) {
                     if (resp.messages && resp.messages.length > 0) {
@@ -158,9 +160,8 @@
                 $.getScriptOnce('/static/js/moment-with-langs.min.js');
                 flog('[jquery.forms] Initializing forms plugin...', form);
 
-                form.on('submit', function (e) {
+                form.off('submit').on('submit', function (e) {
                     e.preventDefault();
-                    e.stopPropagation();
 
                     flog('[jquery.forms] On form submit', form, e);
                     resetValidation(form, config);
@@ -172,12 +173,15 @@
                         input.val(val);
                     });
 
-                    if (validateFormFields(form, config)) {
+                    var isValid = validateFormFields(form, config);
+                    flog('[jquery.forms] Form is valid: ' + isValid);
+
+                    if (isValid) {
                         if (typeof config.onValid === 'function') {
                             config.onValid.call(this, form, config);
                         }
 
-                        if (config.allowPostForm) {
+                        if (config.allowPostForm === true) {
                             doPostForm(form, config);
                         }
                     } else {
@@ -197,6 +201,9 @@
         },
         getOptions: function () {
             return $(this).data('formOptions');
+        },
+        getDefaultOptions: function () {
+            return $.extend({}, DEFAULTS);
         },
         disable: function (callback) {
             return $(this).each(function () {
@@ -246,7 +253,7 @@
 
     $.fn.forms = function (method) {
         if (methods[method]) {
-            return methods[ method ].apply(this, Array.prototype.slice.call(arguments, 1));
+            return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
         } else if (typeof method === 'object' || !method) {
             return methods.init.apply(this, arguments);
         } else {
@@ -287,7 +294,7 @@ function getValidationMessage(form, config) {
 function doPostForm(form, config) {
     // Trim all inputs
     var enc = form.attr('enctype');
-    flog('[jquery.forms] doPostForm', 'enctype: ' + enc, form);
+    flog('[jquery.forms] Preparing doPostForm...', 'enctype: ' + enc, form);
 
     var data;
     if (enc == 'multipart/form-data') {
@@ -295,16 +302,20 @@ function doPostForm(form, config) {
     } else {
         data = form.serialize();
     }
-    flog('[jquery.forms] data:', data);
+    flog('[jquery.forms] Data:', data);
 
     if (typeof config.beforePostForm === 'function') {
-        config.beforePostForm.call(this, form, config, data);
+        data = config.beforePostForm.call(this, form, config, data);
     }
 
     var url = form.attr('action');
     if (config.postUrl) {
         flog('[jquery.forms] Use supplied postUrl instead of form action', config.postUrl);
         url = config.postUrl;
+    }
+    if (!url) {
+        flog('[jquery.forms] Url is empty. Will use "window.location.pathname" for posting');
+        url = window.location.pathname;
     }
     flog('[jquery.forms] doPostForm', form, data, url);
 
@@ -332,6 +343,8 @@ function doPostForm(form, config) {
                         config.onSuccess.call(this, resp, form, config);
                     }
                 } else {
+                    flog('[jquery.forms] Posting form failed', resp)
+
                     if (typeof config.onError === 'function') {
                         config.onError.call(this, resp, form, config);
                     }
@@ -350,10 +363,8 @@ function doPostForm(form, config) {
                 if (config.networkErrorMessage) {
                     showErrorMessage(form, config, config.networkErrorMessage + ' - ' + textStatus);
                 }
-
             }
         };
-
         if (enc == 'multipart/form-data') {
             ajaxOpts.processData = false;
             ajaxOpts.contentType = false;
@@ -376,8 +387,8 @@ function doPostForm(form, config) {
 
         $.ajax(ajaxOpts);
     } catch (e) {
-        if (errorHandler) {
-            errorHandler(null, form, valiationMessageSelector, errorCallback);
+        if (typeof config.onError === 'function') {
+            config.onError.call(this, null, form, config);
         } else {
             flog('exception submitting form', e);
             alert('Sorry, an error occured attempting to submit the form. Please contact the site administrator');
@@ -532,7 +543,7 @@ function validateFormFields(form, config) {
 
         var resultPasswords = checkValidPasswords(form, config);
         if (!resultPasswords.password || !resultPasswords.confirmPassword) {
-            error ++;
+            error++;
             errorFields = errorFields.concat(resultPasswords.errorFields);
 
             if (!resultPasswords.password) {
