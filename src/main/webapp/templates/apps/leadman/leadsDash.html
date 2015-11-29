@@ -84,30 +84,9 @@
     </div>
 </div>
 
-    <hr/>
 
 <div class="">
     #set( $leadsPage = $page.find("/leads") )
-
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="btn-group pull-right">
-                <button type="button" class="btn btn-success" >
-                    <i class="fa fa-user-plus"></i> Create a contact
-                    <span class="caret"></span>
-                </button>
-                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
-                    <i class="fa fa-user-plus"></i> Create a lead
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" role="menu">
-                    #foreach($entry in $leadsPage.funnels.entrySet())
-                    <li class="presentation" role="menuitem"><a href="$entry.key" class="createLead">$entry.value.title</a></li>
-                    #end
-                </ul>
-            </div>
-        </div>
-    </div>
 
     <br/>
 
@@ -115,7 +94,7 @@
         #set( $leads = $leadsPage.search($params.q) )
 
         #if( $leads.size() > 0 )
-        <ul class="list-group">
+        <ul class="list-group leadsList" id="dashLeadsList">
             #foreach($lead in $leads)
             <li class="list-group-item">
                 <div class="media">
@@ -134,8 +113,11 @@
                             No contact information
                             #end
                             </a>
-                            <small class="pull-right">Last contact: 2 hours ago</small>
+                            <small class="pull-right">
+                                <abbr title="$formatter.formatDateISO8601($lead.createDate)" class="timeago">Created $lead.createDate</abbr>
+                            </small>
                         </h3>
+                        #if( $lead.profile )
                         <p>
                             <i aria-hidden="true" class="fa fa-map-marker"></i>
                             Street 1391 Depaul Dr
@@ -148,6 +130,7 @@
                             , $lead.profile.phone
                             #end
                         </p>
+                        #end
 
                         <p class="lead">$!lead.description</p>
 
@@ -171,14 +154,14 @@
                         <div class="leadActions">
                             <ul class="list-inline" style="right: 0">
                                 <li>
-                                    <button class="btn btn-success" title="Sold, close the deal">
+                                    <a href="/leads/$lead.id" class="btn btn-success closeLead" title="Sold, close the deal">
                                         <span class="fa fa-check"></span>
-                                    </button>
+                                    </a>
                                 </li>
                                 <li>
-                                    <button class="btn btn-danger" title="Deal cancelled">
+                                    <a href="/leads/$lead.id" class="btn btn-danger cancelLead" title="Deal cancelled">
                                         <span class="fa fa-remove"></span>
-                                    </button>
+                                    </a>
                                 </li>
                                 <li>
                                     <a href="/leads/$lead.id/" class="btn btn-primary createNote" title="Add note or contact">

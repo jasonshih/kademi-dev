@@ -1,3 +1,5 @@
+<script src="/static/reload-fragment/1.0.1/jquery.reload-fragment-1.0.1.js" type="text/javascript" >//</script>
+<script src="/theme/apps/leadman/leadman.js" type="text/javascript" >//</script>
 
 #macro( createModals )
 <div class="modal fade" id="newLeadModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
@@ -72,8 +74,9 @@
                 <h4 class="modal-title" id="">Enter a new lead</h4>
             </div>
             <form method="post" action="/leads/" class="form-horizontal">
+                <input type="hidden" name="orgId" value="$currentOrg.orgId"/>
                 <div class="modal-body">
-
+                    <p>Create contact in $currentOrg.title</p>
                     <div class="form-group">
                         <label class="control-label col-md-3" for="newUserNickName">Nick name</label>
                         <div class="col-md-9">
@@ -122,26 +125,29 @@
                     <div class="form-group">
                         <div class="col-md-12">
                             <label>
-                                <input type="radio" name="actionType" value="callTo" />
+                                <input type="radio" name="action" value="phone-false" />
                                 Call to customer
                             </label>
                             <br/>
                             <label>
-                                <input type="radio" name="actionType" value="callFrom" />
+                                <input type="radio" name="action" value="phone-true" />
                                 Call from customer
                             </label>
                             <br/>
                             <label>
-                                <input type="radio" name="actionType" value="callTo" />
+                                <input type="radio" name="action" value="email-false" />
                                 Email to customer
                             </label>
                             <br/>
                             <label>
-                                <input type="radio" name="actionType" value="callFrom" />
+                                <input type="radio" name="action" value="email-true" />
                                 Email from customer
                             </label>
                             <br/>
-
+                            <label>
+                                <input type="radio" name="action" value="note-false" />
+                                General note
+                            </label>
                         </div>
                     </div>
 
@@ -172,80 +178,4 @@
     </div><!-- /.modal-dialog -->
 </div>
 
-
-<script type="text/javascript">
-    $(function () {
-        initNewLeadForm();
-        initNewContactForm();
-        initNewNoteForm();
-    });
-
-
-    function initNewLeadForm() {
-        var modal = $('#newLeadModal');
-        var form = modal.find('form');
-
-        $(".createLead").click(function (e) {
-            flog("click");
-            e.preventDefault();
-            var funnelName = $(e.target).closest("a").attr("href");
-            form.find("select").val(funnelName);
-            modal.modal("show");
-        });
-
-        form.forms({
-            callback: function (resp) {
-                flog('done new user', resp);
-                if (resp.nextHref) {
-                    window.location.href = resp.nextHref;
-                }
-                Msg.info('Saved');
-                modal.modal("hide");
-            }
-        });
-    }
-
-    function initNewContactForm() {
-        var modal = $('#newLeadModal');
-        var form = modal.find('form');
-
-        $(".createContact").click(function (e) {
-            flog("click");
-            e.preventDefault();
-            modal.modal("show");
-        });
-
-        form.forms({
-            callback: function (resp) {
-                if (resp.nextHref) {
-                    window.location.href = resp.nextHref;
-                }
-                Msg.info('Created contact');
-                modal.modal("hide");
-            }
-        });
-    }
-
-    function initNewNoteForm() {
-        var modal = $('#newNoteModal');
-        var form = modal.find('form');
-
-        $(".createNote").click(function (e) {
-            e.preventDefault();
-            var href = $(e.target).closest("a").attr("href");
-            form.attr("action", href);
-            modal.modal("show");
-        });
-
-        form.forms({
-            callback: function (resp) {
-                if (resp.nextHref) {
-                    window.location.href = resp.nextHref;
-                }
-                Msg.info('Created note');
-                modal.modal("hide");
-            }
-        });
-    }
-</script>
 #end

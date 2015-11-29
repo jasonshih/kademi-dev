@@ -1,13 +1,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     #parse("/theme/masterTemplate.html")
     <head>
-        #@themeHeader( "View lead" )
+        #@themeHeader( "View profile $page.profile.formattedName" )
         <script src="/static/reload-fragment/1.0.1/jquery.reload-fragment-1.0.1.js" type="text/javascript" >//</script>
         <link rel="stylesheet" href="/static/timeline/timeline.css">
-        #end
+            #end
     </head>
     <body class='add-container'>
         #@themeBody()
+
+        #parse("/theme/apps/leadman/includes.html")
+        #parse("/theme/apps/leadman/leadManIncludes.html")
 
         <div class="">
             <div style="background:url(/images/profile.jpg) center center; background-size:cover;" class="unwrap">
@@ -15,7 +18,7 @@
                     <div class="pull-right">
 
                         <div class="btn-group">
-                            <button class="btn btn-primary btn-lg" data-target="#newLeadModal" data-toggle="modal">Create a new lead</button>
+                            <a class="btn btn-primary btn-lg createProfileLead">Create a new lead</a>
                         </div>
                     </div>
                     <div class="media mt-lg">
@@ -35,78 +38,57 @@
                     <div class="col-lg-3">
                         <div class="panel">
                             <div class="panel-body">
-                                <h3>John Doe</h3>
-                                <p>Designer</p>
-                                <p>It is a long established fact that a reader will be distracted.</p>
-                            </div>
-                        </div>
-                        <div class="panel">
-                            <div class="panel-body">
                                 <h6><span><em class="fa fa-twitter mr"></em>@jdoe</span></h6>
                                 <h6><span class="mr"><em class="fa fa-clock-o mr"></em>10:05 PM</span><span class="mr"><em class="fa fa-calendar mr"></em>10/11/15</span><span class="mr"><em class="fa fa-map-marker mr"></em>BA</span></h6>
                                 <h6><span><em class="fa fa-eye mr"></em>10 feb at 10:00 AM</span></h6>
                             </div>
                         </div>
                         <div class="panel">
-                            <div class="panel-heading no-shadow">Recent contacts</div>
+                            <div class="panel-heading no-shadow">
+                                <a class="btn btn-success createNote pull-right" href="$page.href">
+                                    <span class="fa fa-plus"></span>
+                                </a>
+                                Recent contacts
+                            </div>
                             <div class="panel-body">
+                                #set( $notes = $page.notes )
+                                #if( $notes.size() > 0 )
                                 <ul class="list-block">
+                                    #foreach($note in $page.notes)
                                     <li class="media">
                                         <div class="pull-left">
-                                            <!-- Contact avatar-->
                                             <div class="point-pin"><a href=""><img src="/images/user/05.jpg" alt="Image" class="media-object img-circle thumb32"></a>
                                                 <div class="point point-success point-lg"></div>
                                             </div>
                                         </div>
-                                        <!-- Contact info-->
                                         <div class="media-body">
-                                            <div class="media-heading"><a href="">Juan Sims</a><br><small class="text-muted">Designeer</small></div>
-                                        </div>
-                                    </li>
-                                    <!-- END User status-->
-                                    <!-- START User status-->
-                                    <li class="media">
-                                        <div class="pull-left">
-                                            <!-- Contact avatar-->
-                                            <div class="point-pin"><a href=""><img src="/images/user/06.jpg" alt="Image" class="media-object img-circle thumb32"></a>
-                                                <div class="point point-success point-lg"></div>
+                                            <div class="media-heading">
+                                                <p>
+                                                    <a href="/users/$note.createdBy.name">$note.createdBy.formattedName</a>
+
+                                                    #if( $note.inbound )
+                                                    <small class="text-muted fa fa-arrow-left"></small>
+                                                    <small class="text-muted fa fa-${note.icon}"></small>
+                                                    #else
+                                                    <small class="text-muted fa fa-${note.icon}"></small>
+                                                    <small class="text-muted fa fa-arrow-right"></small>
+                                                    #end
+
+                                                </p>
+
+                                                <p>
+                                                    $note.notes
+                                                </p>
                                             </div>
                                         </div>
-                                        <!-- Contact info-->
-                                        <div class="media-body">
-                                            <div class="media-heading"><a href="">Maureen Jenkins</a><br><small class="text-muted">Designeer</small></div>
-                                        </div>
                                     </li>
-                                    <!-- END User status-->
-                                    <!-- START User status-->
-                                    <li class="media">
-                                        <div class="pull-left">
-                                            <!-- Contact avatar-->
-                                            <div class="point-pin"><a href=""><img src="images/user/07.jpg" alt="Image" class="media-object img-circle thumb32"></a>
-                                                <div class="point point-danger point-lg"></div>
-                                            </div>
-                                        </div>
-                                        <!-- Contact info-->
-                                        <div class="media-body">
-                                            <div class="media-heading"><a href="">Billie Dunn</a><br><small class="text-muted">Designeer</small></div>
-                                        </div>
-                                    </li>
-                                    <!-- END User status-->
-                                    <!-- START User status-->
-                                    <li class="media">
-                                        <div class="pull-left">
-                                            <!-- Contact avatar-->
-                                            <div class="point-pin"><a href=""><img src="images/user/08.jpg" alt="Image" class="media-object img-circle thumb32"></a>
-                                                <div class="point point-warning point-lg"></div>
-                                            </div>
-                                        </div>
-                                        <!-- Contact info-->
-                                        <div class="media-body">
-                                            <div class="media-heading"><a href="">Tomothy Roberts</a><br><small class="text-muted">Designer</small></div>
-                                        </div>
-                                    </li>
-                                    <!-- END User status-->
+                                    #end
                                 </ul>
+                                #else
+                                <p>
+                                    <span class="label label-warning">No contact with the lead yet</span>
+                                </p>
+                                #end
                             </div>
                         </div>
                     </div>
@@ -116,48 +98,13 @@
                                 <ul role="tablist" class="nav nav-tabs">
                                     <li role="presentation" class="active"><a href="#activity" aria-controls="activity" role="tab" data-toggle="tab">Activity</a></li>
                                     <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a></li>
-                                    <li role="presentation"><a href="#tasks" aria-controls="tasks" role="tab" data-toggle="tab">Tasks</a></li>
+                                    <li role="presentation"><a href="#leads" aria-controls="leads" role="tab" data-toggle="tab">Leads</a></li>
                                 </ul>
                                 <div class="tab-content">
                                     <div id="activity" role="tabpanel" class="tab-pane fade in active">
                                         <div class="row">
-                                            <div class="container">
-                                                <div class="page-header">
-                                                    <h1 id="timeline">Timeline</h1>
-                                                </div>
-                                                <ul class="timeline">
-                                                    #set( $month = "" )
-                                                    #set( $lastMonth = "" )
-                                                    #foreach( $action in $page.timelineItems )
-                                                    #set( $month = $formatter.getMonthName($action.actionDate) )
-                                                    #if( $month != $lastMonth )
-                                                    <li class="tldateLi"><div class="tldate"><span>$month $formatter.getYear($action.actionDate)</span></div></li>
-                                                    #end
-                                                    #set( $lastMonth = $month )
-                                                    <li class="$formatter.ifTrue($action.inbound, '', 'timeline-inverted')">
-                                                        <div class="timeline-badge $action.category"><i class="fa $action.itemType"></i></div>
-                                                        <div class="timeline-panel">
-                                                            <div class="timeline-heading">
-                                                                #if( $action.actionDate)
-                                                                <small class="text-muted pull-right"><i class="glyphicon glyphicon-time"></i> <abbr title="$formatter.formatDateISO8601($action.actionDate)" class="info timeago">$action.actionDate</abbr></small>
-                                                                #end
-                                                                <h4 class="timeline-title">$action.itemTitle</h4>
-                                                            </div>
-                                                            <div class="timeline-body">
-                                                                <p>$action.actionDesc</p>
-                                                                #if($action.path)
-                                                                <p>
-                                                                    <a href="$action.path" class="btn btn-sm btn-info pull-right">
-                                                                        View <i class="fa fa-arrow-circle-right"></i>
-                                                                    </a>
-                                                                </p>
-                                                                #end
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                    #end
-
-                                                </ul>
+                                            <div class="">
+                                                #showTimeline($page.timelineItems)
                                             </div>
                                         </div>
                                     </div>
@@ -198,75 +145,61 @@
                                                     </div>
 
                                                     <div class="form-group">
-                                                        <label class="control-label col-md-2" for="notes">Deal amount</label>
-                                                        <div class="col-md-5">
-                                                            <input name="dealAmount" class="form-control" value="$!page.dealAmount"/>
-                                                            <i>Enter the estimated value of this deal</i>
-                                                        </div>
-
-                                                    </div>
-
-                                                    #if( $page.completed)
-                                                    #else
-                                                    <div class="form-group">
-                                                        <div class="col-md-10 col-md-offset-10">
+                                                        <div class="col-md-10 col-md-offset-2">
                                                             <button class="btn btn-sm btn-default" type="reset">Reset</button>
 
                                                             <button class="btn btn-primary" type="submit">Save details</button>
 
                                                         </div>
                                                     </div>
-                                                    #end
                                                 </div>
                                             </form>
                                         </div>
                                     </div>
-                                    <div id="tasks" role="tabpanel" class="tab-pane fade">
-                                        <div class="task-item-list">
-                                            <div id="accordion" role="tablist" aria-multiselectable="true" class="panel-group">
-                                                <div class="panel panel-default">
-                                                    #foreach($task in $page.children)
-                                                    <div id="headingOne" role="tab" class="panel-heading">
-                                                        <h4 class="panel-title clearfix task-item">
-                                                            <div class="pull-left"><span class="inline checkbox c-checkbox">
-                                                                    <label>
-                                                                        <input type="checkbox"><span class="fa fa-check"></span>
-                                                                    </label></span></div>
-                                                            <div class="pull-left">
-                                                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                                                    <span class="task-title">$task.title</span>
-                                                                </a>
-                                                            </div>
-                                                            <div class="pull-left"><span class="task-edit fa fa-pencil"></span></div>
-                                                            <div class="pull-right"><span class="close"><em class="fa fa-times"></em></span></div>
-                                                        </h4>
-                                                    </div>
-                                                    <div id="collapseOne" role="tabpanel" aria-labelledby="headingOne" class="panel-collapse collapse in">
-                                                        <div class="panel-body">
-                                                            #if( $task.is("open") )
-                                                            <div class="btn-group pull-right">
-                                                                <button class="btn btn-danger btn-lg" title="Cancel task">
-                                                                    <span class="fa fa-remove"></span>
-                                                                </button>
-                                                                #if( $task.reminders.size() > 0 )
-                                                                <div>
-                                                                    <span class="fa fa-bell"></span>
-                                                                </div>
-                                                                #end
-                                                                <button class="btn btn-success btn-lg" title="Mark task as completed">
-                                                                    <span class="fa fa-check"></span>
-                                                                </button>
-                                                            </div>
-                                                            #end
-                                                            Due in <abbr title="$formatter.formatDateISO8601($task.dueDate)" class="timeago">$task.dueDate</abbr>
-                                                            -
-                                                            $task.taskDescription
-                                                        </div>
-                                                    </div>
-                                                    #end
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <div id="leads" role="tabpanel" class="tab-pane fade">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <th>Lead</th>
+                                                <th>Status</th>
+                                                <th>Created</th>
+                                                <th>Amount</th>
+                                                <th>Assigned to</th>
+                                            </thead>
+                                            <tbody>
+                                                #foreach($lead in $page.leads)
+                                                <tr>
+                                                    <td>
+                                                        <a href="/leads/$lead.id/">
+                                                            $lead.description
+                                                        </a>
+                                                    </td>
+                                                    <td>
+                                                        #if( $lead.cancelled )
+                                                        <span class="fa fa-remove text-danger"></span>
+                                                        Cancelled <abbr title="$formatter.formatDateISO8601($lead.closedDate)" class="timeago">$lead.closedDate</abbr>
+                                                        #elseif( $lead.closedDate )
+                                                        <span class="fa fa-check text-success"></span>
+                                                        Sale completed <abbr title="$formatter.formatDateISO8601($lead.closedDate)" class="timeago">$lead.closedDate</abbr>
+                                                        #else
+                                                        <span class="fa fa-clock-o text-muted"></span>
+                                                        In progress
+                                                        #end
+                                                    </td>
+                                                    <td>
+                                                        <abbr title="$formatter.formatDateISO8601($lead.createDate)" class="timeago">$lead.createDate</abbr>
+                                                    </td>
+                                                    <td>$lead.dealAmount</td>
+                                                    <td>
+                                                        #if( $lead.assignedTo )
+                                                        $lead.assignedTo.formattedName
+                                                        #else
+                                                        Not assigned
+                                                        #end
+                                                    </td>
+                                                </tr>
+                                                #end
+                                            </tbody>
+                                        </table>
                                     </div>
 
                                 </div>
@@ -393,6 +326,45 @@
             </div><!-- /.modal-dialog -->
         </div>
 
+        <div class="modal fade" id="newLeadProfileModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="">Enter a new lead</h4>
+                    </div>
+                    <form method="post" action="$page.href" class="form-horizontal">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="funnel">Lead type</label>
+                                <div class="col-md-9">
+                                    <select name="funnel" class="form-control">
+                                        #foreach($entry in $page.find("/leads").funnels.entrySet())
+                                        <option value="$entry.key">$entry.value.title</option>
+                                        #end
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="notes">Notes</label>
+                                <div class="col-md-9">
+                                    <textarea name="notes" class="form-control" style="height: 200px"></textarea>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+
+                            <button class="btn btn-primary" type="submit">Create and view</button>
+                        </div>
+                    </form>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>
+
+        #createModals()
+
         <script type="text/javascript">
             $(function () {
                 var form = $("#leadDetails");
@@ -422,6 +394,7 @@
                     var name = $(e.target).attr("href");
                     assignTo(name);
                 });
+                initNewProfileLeadForm();
             });
             function reloadTable() {
                 $("#tasksTableBody").reloadFragment({
@@ -450,6 +423,30 @@
                     error: function (resp) {
                         flog('error', resp);
                         Msg.error('Sorry couldnt set the visibility ' + resp);
+                    }
+                });
+            }
+
+            function initNewProfileLeadForm() {
+                var modal = $('#newLeadProfileModal');
+                var form = modal.find('form');
+
+                $(".createProfileLead").click(function (e) {
+                    flog("click");
+                    e.preventDefault();
+                    var funnelName = $(e.target).closest("a").attr("href");
+                    form.find("select").val(funnelName);
+                    modal.modal("show");
+                });
+
+                form.forms({
+                    callback: function (resp) {
+                        flog('done new user', resp);
+                        if (resp.nextHref) {
+                            window.location.href = resp.nextHref;
+                        }
+                        Msg.info('Saved');
+                        modal.modal("hide");
                     }
                 });
             }

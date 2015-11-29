@@ -1,3 +1,9 @@
+
+#set( $memberships = $user.primaryMemberships )
+#set( $currentOrgId = $request.cookies.org )
+#set( $curMembership = $memberships.filterByOrg($currentOrgId).first )
+#set( $currentOrg = $curMembership.org  )
+
 #macro( themeHeader, $title )
 <title>$title</title>
 <meta charset="utf-8">
@@ -15,6 +21,7 @@
 <script src="/scripts/main.js"></script>
 <script src="/templates/themes/bootstrap335/js/common.js">//</script>
 <script src="/templates/themes/bootstrap335/js/jqExtras.js">//</script>
+<script type="text/javascript" src="/static/js/jquery.cookie.js">//</script>
 <script type="text/javascript" src="/static/jquery.forms/1.0.9/jquery.forms-1.0.9.js">//</script>
 <script type="text/javascript" src="/theme/js/jquery.user.js">//</script>
 <script type="text/javascript" src="/static/jquery.comments/1.0.4/jquery.comments-1.0.4.js" >//</script>
@@ -31,79 +38,56 @@ $!bodyContent
 
 
 #macro( themeBody )
-<!-- Main container-->
 <div class="aside-offscreen">
     <div class="app-container aside-offscreen">
-        <!-- top navbar-->
         <header class="bg-primary">
-            <!-- START Top Navbar-->
             <nav role="navigation" class="navbar topnavbar">
-                <!-- START button offset-->
-                <div class="btn-offset">
-                    <button type="button" data-btn-layer-morph="" data-target="#layer-search" data-ripple="" class="btn btn-info btn-circle btn-lg shadow-z1"><em class="fa fa-search"></em></button>
+                <div class="navbar-header">
+                    <a href="/dashboard" class="navbar-brand">Infiniti</a>
                 </div>
-                <!-- START button offset-->
-                <!-- START navbar header-->
-                <div class="navbar-header"><a href="/dashboard" class="navbar-brand"> <img src="/images/logo.png" alt="App Logo" class="brand-logo"></a>
-                    <!-- Mobile buttons-->
-                    <div class="mobile-toggles">
-                        <!-- Button to show/hide the sidebar on mobile. Visible on mobile only.--><a href="" class="sidebar-toggle"><em class="fa fa-navicon"></em></a>
-                        <!-- Button to show/hide the header menu on mobile. Visible on mobile only.--><a href="#nav-collapse" data-toggle="collapse" class="menu-toggle hidden-material"><em class="fa fa-ellipsis-v fa-fw"></em></a>
-                    </div>
-                </div>
-                <!-- END navbar header-->
-                <!-- START Nav wrapper-->
                 <div id="nav-collapse" class="nav-wrapper collapse navbar-collapse">
-                    <!-- START Left navbar-->
                     <ul class="nav navbar-nav hidden-material">
-                        <!-- START Apps menu-->
-                        <li class="dropdown">
-                            <a href="" data-toggle="dropdown" data-ripple="" class="dropdown-toggle"><em class="fa fa-th fa-fw"></em><span class="visible-xs-inline ml">Applications</span></a>
-                            <!-- START Dropdown menu-->
-                            <ul id="bg-white" class="dropdown-menu p wd-lg">
-                                <li class="row ml0 mr0 mt mb text-center">
-                                    <div class="col-xs-4">
-                                        <div class="pv"><a href="/profile"><span class="block mb"><em class="icon-head fa-2x text-warning"></em></span><small class="text-muted">Profile</small></a></div>
-                                    </div>
-                                    <div class="col-xs-4">
-                                        <div class="pv"><a href="mailbox.html"><span class="block mb"><em class="icon-mail fa-2x text-primary"></em></span><small class="text-muted">Mailbox</small></a></div>
-                                    </div>
-                                    <div class="col-xs-4">
-                                        <div class="pv"><a href="extras.calendar.html"><span class="block mb"><em class="fa fa-calendar fa-2x text-danger"></em></span><small class="text-muted">Calendar</small></a></div>
-                                    </div>
-                                    <div class="col-xs-4">
-                                        <div class="pv"><a href="maps.vector.html"><span class="block mb"><em class="icon-map fa-2x text-success"></em></span><small class="text-muted">Map</small></a></div>
-                                    </div>
-                                    <div class="col-xs-4">
-                                        <div class="pv"><a href="/dashboard"><span class="block mb"><em class="icon-bar-graph-2 fa-2x text-info"></em></span><small class="text-muted">Dashboard</small></a></div>
-                                    </div>
-                                    <div class="col-xs-4">
-                                        <div class="pv"><a href="extras.gallery.html"><span class="block mb"><em class="icon-image fa-2x text-muted"></em></span><small class="text-muted">Gallery</small></a></div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </li>
                         <li>
-                            <a href="/dashboard" title="My profile" data-ripple="">
-                                <em class="icon-bar-graph-2 fa-2x text-info"></em>
+                            <a href="/dashboard" title="Dashboard" data-ripple="">
+                                <em class="icon-bar-graph-2 fa-2x text-default"></em>
                                 <span class="visible-xs-inline ml">Dashboard</span>
                             </a>
                         </li>
 
                         <li>
-                            <a href="/profile" title="My profile" data-ripple="">
-                                <em class="fa fa-user"></em>
-                                <span class="visible-xs-inline ml">Lock Screen </span>
+                            <a href="/custs/" title="Contacts" data-ripple="">
+                                <em class="fa fa-users fa-2x text-info"></em>
+                                <span class="visible-xs-inline ml">Contacts</span>
                             </a>
                         </li>
+
+                        <li>
+                            <a href="/leads/" title="Leads" data-ripple="">
+                                <em class="fa fa-bullseye fa-2x text-success"></em>
+                                <span class="visible-xs-inline ml">Leads</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="/profile" title="My profile" data-ripple="">
+                                <em class="icon-head fa-2x text-warning"></em>
+                                <span class="visible-xs-inline ml">My profile </span>
+                            </a>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                Logged in to: $currentOrg.title
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                #foreach( $m in $memberships)
+                                <li><a href="#">m.org.title</a></li>
+                                #end
+                            </ul>
+                        </li>
                     </ul>
-                    <!-- END Left navbar-->
                 </div>
-                <!-- END Nav wrapper-->
-
-
             </nav>
-            <!-- END Top Navbar-->
         </header>
 
 
