@@ -1,0 +1,251 @@
+
+#macro( createModals )
+<div class="modal fade" id="newLeadModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="">Enter a new lead</h4>
+            </div>
+            <form method="post" action="/leads/" class="form-horizontal">
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="newUserNickName">Nick name</label>
+                        <div class="col-md-9">
+                            <input type="text" name="nickName" id="newUserNickName" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="newUserFirstName">Name</label>
+                        <div class="col-md-4">
+                            <input type="text" name="firstName" id="newUserFirstName" class="form-control" placeholder="First name" />
+                        </div>
+                        <div class="col-md-5">
+                            <input type="text" name="surName" id="newUserSurName" class="form-control" placeholder="Surname" />
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="newUserEmail">Contact</label>
+                        <div class="col-md-4">
+                            <input type="text" name="email" id="newUserEmail" class="form-control" placeholder="Email" />
+                        </div>
+                        <div class="col-md-5">
+                            <input type="text" name="phone" id="newUserEmail" class="form-control" placeholder="Phone" />
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="newUserNickName">Lead type</label>
+                        <div class="col-md-9">
+                            <select name="funnel" class="form-control">
+                                #foreach($entry in $leadsPage.funnels.entrySet())
+                                <option value="$entry.key">$entry.value.title</option>
+                                #end
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="newUserNickName">Notes</label>
+                        <div class="col-md-9">
+                            <textarea name="notes" class="form-control" style="height: 200px"></textarea>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+
+                    <button class="btn btn-primary" type="submit">Create and view</button>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" id="newContactModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="">Enter a new lead</h4>
+            </div>
+            <form method="post" action="/leads/" class="form-horizontal">
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="newUserNickName">Nick name</label>
+                        <div class="col-md-9">
+                            <input type="text" name="nickName" id="newUserNickName" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="newUserFirstName">Name</label>
+                        <div class="col-md-4">
+                            <input type="text" name="firstName" id="newUserFirstName" class="form-control" placeholder="First name" />
+                        </div>
+                        <div class="col-md-5">
+                            <input type="text" name="surName" id="newUserSurName" class="form-control" placeholder="Surname" />
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="newUserEmail">Contact</label>
+                        <div class="col-md-4">
+                            <input type="text" name="email" id="newUserEmail" class="form-control" placeholder="Email" />
+                        </div>
+                        <div class="col-md-5">
+                            <input type="text" name="phone" id="newUserEmail" class="form-control" placeholder="Phone" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+
+                    <button class="btn btn-primary" type="submit">Create and view</button>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" id="newNoteModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="">Enter a note on a lead</h4>
+            </div>
+            <form method="post" action="" class="form-horizontal">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <label>
+                                <input type="radio" name="actionType" value="callTo" />
+                                Call to customer
+                            </label>
+                            <br/>
+                            <label>
+                                <input type="radio" name="actionType" value="callFrom" />
+                                Call from customer
+                            </label>
+                            <br/>
+                            <label>
+                                <input type="radio" name="actionType" value="callTo" />
+                                Email to customer
+                            </label>
+                            <br/>
+                            <label>
+                                <input type="radio" name="actionType" value="callFrom" />
+                                Email from customer
+                            </label>
+                            <br/>
+
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <textarea name="newNote" class="form-control" style="height: 120px"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-2">
+                            <label>Follow up</label>
+                        </div>
+                        <div class="col-md-10">
+                            <div id="datetimepicker1" class="input-group date">
+                                <input type="text" name="followUp" class="form-control"><span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+
+                    <button class="btn btn-primary" type="submit">Save note</button>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+
+<script type="text/javascript">
+    $(function () {
+        initNewLeadForm();
+        initNewContactForm();
+        initNewNoteForm();
+    });
+
+
+    function initNewLeadForm() {
+        var modal = $('#newLeadModal');
+        var form = modal.find('form');
+
+        $(".createLead").click(function (e) {
+            flog("click");
+            e.preventDefault();
+            var funnelName = $(e.target).closest("a").attr("href");
+            form.find("select").val(funnelName);
+            modal.modal("show");
+        });
+
+        form.forms({
+            callback: function (resp) {
+                flog('done new user', resp);
+                if (resp.nextHref) {
+                    window.location.href = resp.nextHref;
+                }
+                Msg.info('Saved');
+                modal.modal("hide");
+            }
+        });
+    }
+
+    function initNewContactForm() {
+        var modal = $('#newLeadModal');
+        var form = modal.find('form');
+
+        $(".createContact").click(function (e) {
+            flog("click");
+            e.preventDefault();
+            modal.modal("show");
+        });
+
+        form.forms({
+            callback: function (resp) {
+                if (resp.nextHref) {
+                    window.location.href = resp.nextHref;
+                }
+                Msg.info('Created contact');
+                modal.modal("hide");
+            }
+        });
+    }
+
+    function initNewNoteForm() {
+        var modal = $('#newNoteModal');
+        var form = modal.find('form');
+
+        $(".createNote").click(function (e) {
+            e.preventDefault();
+            var href = $(e.target).closest("a").attr("href");
+            form.attr("action", href);
+            modal.modal("show");
+        });
+
+        form.forms({
+            callback: function (resp) {
+                if (resp.nextHref) {
+                    window.location.href = resp.nextHref;
+                }
+                Msg.info('Created note');
+                modal.modal("hide");
+            }
+        });
+    }
+</script>
+#end

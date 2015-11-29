@@ -3,10 +3,14 @@
         <title>Manage Funnels</title>
     </head>
     <body>
-        <div class="jumbotron">
-            <h1>Leads = $page.leads.size()</h1>
+        <h1>$page.title</h1>
+        <p class="lead">Leads = $page.leads.size()</p class="lead">
+
+        <div class="well">
             <xmp>$page.funnelXml</xmp>
         </div>
+
+        <a href="/repositories/$page.name/" class="btn btn-primary">Edit funnel.xml</a>
 
         <table class="table table-responsive">
             <thead>

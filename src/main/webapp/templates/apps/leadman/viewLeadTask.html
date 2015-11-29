@@ -8,7 +8,30 @@
     <body class='add-container'>
         #@themeBody()
 
-        <h1>Task: $page.taskDescription</h1>
+        <div class="app-view-header">
+            <div class="btn-group mb-sm mr dropdown pull-right">
+                <button id="assignedBlock" class="btn btn-lg dropdown-toggle btn-info" data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false" >
+                    <span>
+                        #if( $page.assignedTo )
+                        Assigned to: $page.assignedTo.name
+                        #else
+                        Not assigned
+                        #end
+                    </span>
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" id="assignToMenu" role="menu">
+                    <li><a href="$user.name">Assign to me</a></li>
+                    <li><a href="">Clear</a></li>
+                    <li role="separator" class="divider"></li>
+                    #foreach($user in $page.parent.teamMembers)
+                    <li><a href="$user.name">$user.name</a></li>
+                    #end
+                </ul>
+            </div>
+            Task: $page.taskDescription
+        </div>
+
         #if( $page.assignedTo )
         <p class="lead">Assigned to: $!page.assignedTo.formattedName()</p>
         #else
@@ -79,7 +102,36 @@
                     }
                 });
 
+
+               $("#assignToMenu").on("click", "a", function (e) {
+                    e.preventDefault();
+                    var name = $(e.target).attr("href");
+                    assignTo(name);
+                });
+
             });
+            function assignTo(name) {
+                $.ajax({
+                    type: 'POST',
+                    url: window.location.pathname,
+                    data: {
+                        assignToName: name
+                    },
+                    dataType: 'json',
+                    success: function (resp) {
+                        if (resp && resp.status) {
+                            Msg.info("Assigned");
+                            $("#assignedBlock").reloadFragment();
+                        } else {
+                            Msg.error("Sorry, we couldnt change the assignment");
+                        }
+                    },
+                    error: function (resp) {
+                        flog('error', resp);
+                        Msg.error('Sorry couldnt set the visibility ' + resp);
+                    }
+                });
+            }
         </script>
         #end
     </body>
