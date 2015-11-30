@@ -33,7 +33,7 @@
                 </div>
             </div>
 
-            #set( $leads = $page.search($params.q) )
+            #set( $leads = $page.search($currentOrg) )
 
             #if( $leads.size() > 0 )
             <div class="table-responsive">

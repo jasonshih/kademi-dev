@@ -37,7 +37,7 @@
                             <button id="assignedBlock" class="btn btn-lg dropdown-toggle btn-info" data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false" >
                                 <span>
                                     #if( $page.assignedTo )
-                                    Assigned to: $page.assignedTo.name
+                                    Assigned to: $!page.assignedTo.firstName $!page.assignedTo.surName
                                     #else
                                     Not assigned
                                     #end
@@ -296,7 +296,7 @@
                                 <div class="col-md-9">
                                     <input type="text" name="taskDescription" id="taskDescription" class="required form-control" placeholder="taskDescription" />
                                 </div>
-                            </div>                            
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
