@@ -1,6 +1,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>$view.title</title>
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/r/bs/dt-1.10.9,r-1.0.7/datatables.min.css"/>
+        <script type="text/javascript" src="https://cdn.datatables.net/r/bs/dt-1.10.9,r-1.0.7/datatables.min.js">//</script>
         <script type="text/javascript" src="manageAutoEmails.js">//</script>
         <script type="text/javascript" src="manageEmail.js">//</script>
         <style>
@@ -49,35 +51,33 @@
                     </div>
                     <div id="cat_${cat.id}" class="collapse">
                         <div id="productsTableContainer" class="panel-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-hover">
-                                    <colgroup>
-                                        <col />
-                                        <col />
-                                        <col />
-                                        <col />
-                                        <col />
-                                        <col />
-                                        <col style="width: 150px" />
-                                    </colgroup>
-                                    <thead>
-                                        <tr>
-                                            <th>Status</th>
-                                            <th>Name</th>
-                                            <th>Description</th>
-                                            <th>Sent</th>
-                                            <th><acronym title='Percentage of emails opened, as determined by image loading. Actual rate will be higher.'></acronym>Opened %</th>
-                                            <th><acronym title='Percentage of emails which resulted in a click-through to the website'></acronym>Conversion %</th>
-                                            <th class="action"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        #foreach($email in $emailsInFolder)
-                                        #genRows($email)
-                                        #end
-                                    </tbody>
-                                </table>
-                            </div>
+                            <table class="table table-striped table-hover autotriggertable" width="100%">
+                                <colgroup>
+                                    <col />
+                                    <col />
+                                    <col />
+                                    <col />
+                                    <col />
+                                    <col />
+                                    <col style="width: 150px" />
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th>Status</th>
+                                        <th>Name</th>
+                                        <th>Description</th>
+                                        <th>Sent</th>
+                                        <th><acronym title='Percentage of emails opened, as determined by image loading. Actual rate will be higher.'></acronym>Opened %</th>
+                                        <th><acronym title='Percentage of emails which resulted in a click-through to the website'></acronym>Conversion %</th>
+                                        <th class="action"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    #foreach($email in $emailsInFolder)
+                                    #genRows($email)
+                                    #end
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -91,37 +91,35 @@
                 Auto email triggers
             </div>
             <div class="panel-body">
-                <div class="table-responsive">
-                    <table id="email-trigger-wrapper" class="table table-striped table-hover">
-                        <colgroup>
-                            <col />
-                            <col />
-                            <col />
-                            <col />
-                            <col />
-                            <col />
-                            <col style="width: 150px" />
-                        </colgroup>
-                        <thead>
-                            <tr>
-                                <th>Status</th>
-                                <th>Name</th>
-                                <th>Description</th>
-                                <th>Sent</th>
-                                <th><acronym title='Percentage of emails opened, as determined by image loading. Actual rate will be higher.'></acronym>Opened %</th>
-                                <th><acronym title='Percentage of emails which resulted in a click-through to the website'></acronym>Conversion %</th>
-                                <th class="action"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            #foreach($email in $page.children.sortByName)
-                            #if(!$email.category)
-                            #genRows($email)
-                            #end
-                            #end
-                        </tbody>
-                    </table>
-                </div>
+                <table id="email-trigger-wrapper" class="table table-striped table-hover" cellspacing="0" width="100%">
+                    <colgroup>
+                        <col />
+                        <col />
+                        <col />
+                        <col />
+                        <col />
+                        <col />
+                        <col style="width: 150px" />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Sent</th>
+                            <th><acronym title='Percentage of emails opened, as determined by image loading. Actual rate will be higher.'></acronym>Opened %</th>
+                            <th><acronym title='Percentage of emails which resulted in a click-through to the website'></acronym>Conversion %</th>
+                            <th class="action"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        #foreach($email in $page.children.sortByName)
+                        #if(!$email.category)
+                        #genRows($email)
+                        #end
+                        #end
+                    </tbody>
+                </table>
             </div>
         </div>
 

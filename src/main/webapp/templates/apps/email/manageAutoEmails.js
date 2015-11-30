@@ -4,13 +4,46 @@ function initManageAutoEmails() {
     initDefaultDragDrop();
     initCategoryButtons();
     initDeleteEmail();
+    initAutoEmailTable();
 
     flog('init dup', $('#email-trigger-wrapper'));
-    
+
     $('body').on('click', '.btn-dup-email', function (e) {
         e.preventDefault();
         var name = $(e.target).attr('href');
         duplicate(name);
+    });
+}
+
+function initAutoEmailTable() {
+    $('table.autotriggertable').DataTable({
+        searching: false,
+        paging: false,
+        "order": [[1, 'asc']],
+        "columns": [
+            {"orderable": false},
+            null,
+            null,
+            null,
+            null,
+            null,
+            {"orderable": false}
+        ]
+    });
+
+    $('#email-trigger-wrapper').DataTable({
+        searching: false,
+        paging: false,
+        "order": [[1, 'asc']],
+        "columns": [
+            {"orderable": false},
+            null,
+            null,
+            null,
+            null,
+            null,
+            {"orderable": false}
+        ]
     });
 }
 
