@@ -1,59 +1,60 @@
-<hr />
-<div class="col-md-7">
-    <form action="manageRego" method="POST" enctype="multipart/form-data" class="softwareRego well">
-        <div class="form-group">
-            <div class="col-sm-12">
-                <h4>Software Registration Options</h4>
-                <div class="errorHandler alert alert-danger no-display pageMessage">.</div>
+<div class="row">
+    <div class="col-md-7">
+        <form action="manageRego" method="POST" enctype="multipart/form-data" class="softwareRego well">
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <h4>Software Registration Options</h4>
+                    <div class="errorHandler alert alert-danger no-display pageMessage">.</div>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label" for="description">Registration Description</label>
-            <div class="col-sm-8">
-                <input type="text" id="description" class="form-control" name="description" value="$!softwareProduct.description" placeholder="A short description to appear on the product page" />
-                <span class="help-block">
-                    <i>This description is shown in the register panel on the product page</i>
-                </span>
+            <div class="form-group">
+                <label class="col-sm-3 control-label" for="description">Registration Description</label>
+                <div class="col-sm-8">
+                    <input type="text" id="description" class="form-control" name="description" value="$!softwareProduct.description" placeholder="A short description to appear on the product page" />
+                    <span class="help-block">
+                        <i>This description is shown in the register panel on the product page</i>
+                    </span>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label" for="orgTitle">Validity (Days)</label>
-            <div class="col-sm-8">
-                <input type="text" class="numeric form-control" id="validityDays" name="validityDays" value="$!softwareProduct.validityDays" placeholder="Number of days a registration is valid, or leave blank for no time limit" />
-                <span class="help-block">
-                    <i>This will add an Expiry property to the registration file</i>
-                </span>
+            <div class="form-group">
+                <label class="col-sm-3 control-label" for="orgTitle">Validity (Days)</label>
+                <div class="col-sm-8">
+                    <input type="text" class="numeric form-control" id="validityDays" name="validityDays" value="$!softwareProduct.validityDays" placeholder="Number of days a registration is valid, or leave blank for no time limit" />
+                    <span class="help-block">
+                        <i>This will add an Expiry property to the registration file</i>
+                    </span>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label" for="orgPostcode">Required Properties</label>
-            <div class="col-sm-8">
-                <input type="text" class="form-control" id="requiredProperties" name="requiredProperties" value="$!softwareProduct.requiredProperties" placeholder="Comma seperated list of names of properties" />
-                <span class="help-block">
-                    <i>Comma seperated list of properties required for registration</i>
-                </span>
+            <div class="form-group">
+                <label class="col-sm-3 control-label" for="orgPostcode">Required Properties</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="requiredProperties" name="requiredProperties" value="$!softwareProduct.requiredProperties" placeholder="Comma seperated list of names of properties" />
+                    <span class="help-block">
+                        <i>Comma seperated list of properties required for registration</i>
+                    </span>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label" for="fixedProperties">Fixed properties</label>
-            <div class="col-sm-8">
-                <textarea class="form-control" style="height: 100px" name="fixedProperties" id="fixedProperties" placeholder="ProductCode=XYZ">$!softwareProduct.fixedProperties</textarea>
-                <span class="help-block">
-                    <i>Use property file format, where each line is like Name=Value</i>
-                </span>
+            <div class="form-group">
+                <label class="col-sm-3 control-label" for="fixedProperties">Fixed properties</label>
+                <div class="col-sm-8">
+                    <textarea class="form-control" style="height: 100px" name="fixedProperties" id="fixedProperties" placeholder="ProductCode=XYZ">$!softwareProduct.fixedProperties</textarea>
+                    <span class="help-block">
+                        <i>Use property file format, where each line is like Name=Value</i>
+                    </span>
+                </div>
             </div>
-        </div>
-        <div class="form-group clearfix">
-            <div class="col-sm-12">
-                <button type="submit" class="btn btn-sm btn-primary">Save</button>
+            <div class="form-group clearfix">
+                <div class="col-sm-12">
+                    <button type="submit" class="btn btn-sm btn-primary">Save</button>
+                </div>
             </div>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
 <script type="text/javascript">
     $(function () {
         jQuery("form.softwareRego").forms({
-            callback: function() {
+            callback: function () {
                 Msg.success("Saved ok");
             }
         });
