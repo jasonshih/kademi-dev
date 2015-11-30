@@ -15,15 +15,11 @@
                     <col />
                     <col />
                     <col />
-                    <col />
-                    <col />
                     <col width="150px" />
                 </colgroup>
                 <thead>
                     <tr>
                         <th>Title</th>
-                        <th>Currency</th>
-                        <th>Groups</th>
                         <th>Website</th>
                         <th>No. products</th>
                         <th class="action"></th>
@@ -33,12 +29,6 @@
                     #foreach($s in $page.children)
                     <tr>
                         <td><a href="$s.name">$s.title</a></td>
-                        <td></td>
-                        <td>
-                            #foreach($g in $s.groups)
-                                #genGroup($g)
-                            #end
-                        </td>
                         <td>$s.storeWebsite.name</td>
                         <td>$s.productCount</td>
                         <td class="action">
