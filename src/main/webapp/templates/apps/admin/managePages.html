@@ -135,10 +135,17 @@
                             <ul role="menu" class="dropdown-menu" id="subFoldersList">
                                 #foreach($subFolder in $page.subFolders)
                                 <li>
-                                    <a href="$subFolder.name">
-                                        <i class="fa fa-folder"></i>
-                                        $subFolder.name
-                                    </a>
+                                    <div class="row">
+                                        <div class="col-md-9">
+                                            <a href="$subFolder.name">
+                                                <i class="fa fa-folder"></i>
+                                                $subFolder.name
+                                            </a>
+                                        </div>
+                                        <a class="btn btn-xs btn-danger btn-delete-folder" href="$subFolder.href">
+                                            <i class="fa fa-times"></i>
+                                        </a>
+                                    </div>
                                 </li>
                                 #end
                             </ul>
@@ -258,7 +265,22 @@
                 setRecentItem(window.location.pathname, window.location.pathname);
                 initManagePages();
                 initPjax();
+                initDeleteFolders();
             });
+
+            function initDeleteFolders() {
+                $('body').on('click', '.btn-delete-folder', function (e) {
+                    e.preventDefault();
+
+                    var btn = $(this);
+                    var href = btn.attr('href');
+
+                    confirmDelete(href, href, function () {
+                        $('#subFoldersList').reloadFragment();
+                    });
+                });
+            }
+
             function initPjax() {
                 var container = $("#filesContainer");
                 var files = $("#files");
