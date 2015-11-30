@@ -84,34 +84,57 @@
 
                 </div> <!-- End primary section -->
 
+                #set ($currentCate = $!params.cat)
+                #set ($currentTag = $!params.tag)
                 <div class="col-lg-3 col-md-3">
-                    <div class="panel">
-                        <div class="panel-body">
-                            <ul class="nav nav-pills nav-stacked">
-                                #foreach($categoryCount in $page.categoryCounts)
-                                <li class="active">
-                                    <a href="$page.href?cat=$formatter.percentEncode( $categoryCount.item )">
-                                        <span class="badge pull-right">$categoryCount.count</span>
-                                        $categoryCount.item
-                                    </a>
-                                </li>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="panel-title">Categories</div>
+                        </div>
+                        <div class="list-group list-unstyled">
+                            #foreach($categoryCount in $page.categoryCounts)
+                                #set ($cls = "")
+                                #set ($href = "cat=" + $formatter.percentEncode( $categoryCount.item ) )
+                                #if($currentTag)
+                                    #set ($href = $href + "&tag=" + $currentTag)
                                 #end
-                                #foreach($tagCount in $page.tagCounts)
-                                <li class="active">
-                                    <a href="$page.href?tag=$formatter.percentEncode( $tagCount.item )">
-                                        <span class="badge pull-right">$tagCount.count</span>
-                                        $tagCount.item
-                                    </a>
-                                </li>
+                                #if ($currentCate == $categoryCount.item)
+                                    #set ($cls = "active")
+                                    #set ($href = $formatter.toggleParamVal("cat", $categoryCount.item))
                                 #end
-
-                            </ul>
+                                <a class="list-group-item $cls" href="$page.href?$href">
+                                    <span class="badge">$categoryCount.count</span>
+                                    $categoryCount.item
+                                </a>
+                            #end
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="panel-title">Tags</div>
+                        </div>
+                        <div class="list-group">
+                            #foreach($tagCount in $page.tagCounts)
+                                #set ($cls = "")
+                                #set ($href = "tag=" + $formatter.percentEncode( $tagCount.item ) )
+                                #if($currentCate)
+                                    #set ($href = $href + "&cat=" + $currentCate)
+                                #end
+                                #if ($currentTag == $tagCount.item)
+                                    #set ($cls = "active")
+                                    #set ($href = $formatter.toggleParamVal("tag", $tagCount.item))
+                                #end
+                                <a class="list-group-item $cls" href="$page.href?$href">
+                                    <span class="badge pull-right">$tagCount.count</span>
+                                    $tagCount.item
+                                </a>
+                            #end
                         </div>
                     </div>
                 </div> <!-- End side column -->
             </div>
             <script type="text/javascript">
-                jQuery(document).ready(function() {
+                $(function() {
                     $(".timeago").timeago();
                 });
             </script>
