@@ -397,19 +397,15 @@
         <div class="modal modal-md fade" id="modalOrganisations" tabindex="-1" aria-hidden="true">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Group membership</h4>
+                <h4 class="modal-title">Organisation</h4>
             </div>
             <div class="modal-body">
                 #set($organisations = $page.organisations)
                 #if($organisations.isEmpty())
-                <p class="alert alert-error">
-                    <a class="close" data-dismiss="alert" role="button">&times;</a>
-                    You must create at least one group in this or a parent organisation before you can add users.
-                </p>
                 #else
                 <form method="POST" action="." class="form-horizontal">
                     <div class="groups">
-                        <p>Please select a group and an organisation to make this user a member of</p>
+                        <p>Select an organisation that is allowed to access this auction.</p>
                         <div class="form-group">
                             <div class="col-md-12">
                                 <input type="text" class="form-control required" autocomplete="off" name="orgTitle" id="orgTitle" value="$page.organisation.formattedName" />
