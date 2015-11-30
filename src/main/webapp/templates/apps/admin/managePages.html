@@ -113,7 +113,18 @@
                                 #end
                                 <span class="caret"></span>
                             </button>
-                            #if( !$folder.subFolders.isEmpty() )
+                            #if( $page.is("branch") )
+                            <ul role="menu" class="dropdown-menu" id="">
+                                #foreach($b in $page.branch.repository.branches)
+                                <li>
+                                    <a href="$page.parent.href$b.name">
+                                        <i class="fa fa-folder"></i>
+                                        $b.name
+                                    </a>
+                                </li>
+                                #end
+                            </ul>
+                            #elseif( !$folder.subFolders.isEmpty() )
                             <ul role="menu" class="dropdown-menu" id="">
                                 #foreach($subFolder in $folder.subFolders)
                                 <li>
