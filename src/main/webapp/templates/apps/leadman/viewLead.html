@@ -239,11 +239,6 @@
                                                                 <button class="btn btn-danger btn-lg" title="Cancel task">
                                                                     <span class="fa fa-remove"></span>
                                                                 </button>
-                                                                #if( $task.reminders.size() > 0 )
-                                                                <div>
-                                                                    <span class="fa fa-bell"></span>
-                                                                </div>
-                                                                #end
                                                                 <button class="btn btn-success btn-lg" title="Mark task as completed">
                                                                     <span class="fa fa-check"></span>
                                                                 </button>
@@ -301,21 +296,7 @@
                                 <div class="col-md-9">
                                     <input type="text" name="taskDescription" id="taskDescription" class="required form-control" placeholder="taskDescription" />
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-3" for="taskDescription">Reminder</label>
-                                <div class="col-md-9">
-                                    <select name="reminderDays">
-                                        <option value="">No reminder</option>
-                                        <option value="0">On the due date</option>
-                                        <option value="-1">Day earlier</option>
-                                        <option value="-7">Week earlier</option>
-                                        <option value="1">Day after</option>
-                                        <option value="7">Week after</option>
-                                    </select>
-                                </div>
-                            </div>
-
+                            </div>                            
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>

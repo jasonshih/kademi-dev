@@ -91,7 +91,7 @@
     <br/>
 
     <div role="tabpanel" id="all_contacts" class="tab-pane animation-fade active">
-        #set( $leads = $leadsPage.search($params.q) )
+        #set( $leads = $leadsPage.search($currentOrg) )
 
         #if( $leads.size() > 0 )
         <ul class="list-group leadsList" id="dashLeadsList">

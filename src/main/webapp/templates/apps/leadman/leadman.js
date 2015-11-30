@@ -1,10 +1,23 @@
 $(function () {
+    flog("leadman.js - init");
     initNewLeadForm();
     initNewContactForm();
     initNewNoteForm();
     initTakeTasks();
     initLeadActions();
+    initOrgSelector();
 });
+
+function initOrgSelector() {
+    flog("initOrgSelector", $(".selectOrg a") );
+    $(".selectOrg").on("click", "a", function(e) {
+        e.preventDefault();
+        var orgId = $(e.target).closest("a").attr("href");
+        flog("click", orgId);
+        $.cookie("org", orgId);
+        window.location.reload();
+    });
+}
 
 function initLeadActions() {
     $("body").on("click", ".closeLead", function (e) {
