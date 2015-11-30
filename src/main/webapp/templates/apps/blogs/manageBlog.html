@@ -185,35 +185,39 @@
                         </div>
                     </div>
 
-
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <i class="fa fa-tags"></i>
                             Templates
                         </div>
                         <div class="panel-body">
-                            <p>Override the default templates for this blog if you want to customise the appearance
-                                of the blog home or article pages for this blog only.</p>
-                            <p><b>Warning: this change is immediate and applies to all versions</b></p>
-                            <form action="" method="POST" class="form-horizontal templates" role="form">
-                                <div class="form-group">
-                                    <label class="control-label col-md-5" for="title">Home template</label>
-                                    <div class="col-md-7">
-                                        <input type="text" id="homeTemplate" name="homeTemplate" value="$!page.homeTemplate" placeholder="" class="required form-control" />
+                            <div class="form-horizontal">
+                                <form class="templates" action="" method="POST">
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <p>Override the default templates for this blog if you want to customise the appearance of the blog home or article pages for this blog only.</p>
+                                            <p><b>Warning: this change is immediate and applies to all versions</b></p>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label col-md-5" for="title">Article template</label>
-                                    <div class="col-md-7">
-                                        <input type="text" id="articleTemplate" name="articleTemplate" value="$!page.articleTemplate" placeholder="" class="required form-control" />
+                                    <div class="form-group">
+                                        <label class="control-label col-md-5" for="homeTemplate">Home template</label>
+                                        <div class="col-md-7">
+                                            <input type="text" id="homeTemplate" name="homeTemplate" value="$!page.homeTemplate" placeholder="" class="required form-control" />
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="control-group form-group">
-                                    <div class="controls col-md-offset-5 col-md-7">
-                                        <button class="btn btn-success" type="submit">Save</button>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-5" for="articleTemplate">Article template</label>
+                                        <div class="col-md-7">
+                                            <input type="text" id="articleTemplate" name="articleTemplate" value="$!page.articleTemplate" placeholder="" class="required form-control" />
+                                        </div>
                                     </div>
-                                </div>
-                            </form>
+                                    <div class="form-group">
+                                        <div class="col-md-offset-5 col-md-7">
+                                            <button class="btn btn-success" type="submit">Save</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div> <!-- end manage things -->
@@ -306,11 +310,13 @@
         <script type="text/javascript">
             $(function () {
                 initManageBlog();
+
                 $(".templates").forms({
                     callback: function () {
                         Msg.info("Saved templates");
                     }
                 });
+
                 $(".item-type-form").forms({
                     callback: function () {
                         Msg.info("Saved OK");
