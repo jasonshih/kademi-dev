@@ -217,12 +217,10 @@
                             'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
                             'This Year': [moment().startOf('year'), moment()],
                         },
-                    },
-                            function (start, end) {
-                                flog('onChange', start, end);
-                                doSearch();
-                            }
-                    );
+                    }, function (start, end) {
+                        flog('onChange', start, end);
+                        doSearch();
+                    });
                 });
 
                 $("#searchQuery").keyup(function () {
