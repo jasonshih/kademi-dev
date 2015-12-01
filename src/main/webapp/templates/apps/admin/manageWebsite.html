@@ -608,9 +608,9 @@
                         </div>
                         <div class="modal-body ModalContent">
                             <form method="POST" action="." class="form-horizontal" role="form">
-                                <input type="hidden" name="settingsAppId" value="$app.appId"/>
+                                <input type="hidden" name="settingsAppId" value="$app.appId" />
                                 #if($app.enabled)
-                                #appSettings($app.appId)
+                                    #appSettings($app.appId)
                                 #end
                             </form>
                         </div>
