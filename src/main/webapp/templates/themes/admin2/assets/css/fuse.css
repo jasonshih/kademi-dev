@@ -61,7 +61,8 @@ h6 {
 .btn-primary:active:focus,
 .btn-primary.active,
 .btn-primary.active:focus,
-.open .dropdown-toggle.btn-primary {
+.open > .dropdown-toggle.btn-primary,
+.open > .dropdown-toggle.btn-primary:focus {
     color: #ffffff;
     background-color: #424242;
     border-color: #424242;
@@ -107,7 +108,8 @@ fieldset[disabled] .btn-primary.active {
 .btn-warning:active:focus,
 .btn-warning.active,
 .btn-warning.active:focus,
-.open .dropdown-toggle.btn-warning {
+.open .dropdown-toggle.btn-warning,
+.open .dropdown-toggle.btn-warning:focus {
     color: #ffffff;
     background-color: #b778a0;
     border-color: #b778a0;
@@ -153,7 +155,8 @@ fieldset[disabled] .btn-warning.active {
 .btn-danger:active:focus,
 .btn-danger.active,
 .btn-danger.active:focus,
-.open .dropdown-toggle.btn-danger {
+.open .dropdown-toggle.btn-danger,
+.open .dropdown-toggle.btn-danger:focus {
     color: #ffffff;
     background-color: #ca2f51;
     border-color: #ca2f51;
@@ -199,7 +202,8 @@ fieldset[disabled] .btn-danger.active {
 .btn-success:active:focus,
 .btn-success.active,
 .btn-success.active:focus,
-.open .dropdown-toggle.btn-success {
+.open .dropdown-toggle.btn-success,
+.open .dropdown-toggle.btn-success:focus {
     color: #ffffff;
     background-color: #4eaa96;
     border-color: #4eaa96;
@@ -245,7 +249,8 @@ fieldset[disabled] .btn-success.active {
 .btn-info:active:focus,
 .btn-info.active,
 .btn-info.active:focus,
-.open .dropdown-toggle.btn-info {
+.open .dropdown-toggle.btn-info,
+.open .dropdown-toggle.btn-info:focus {
     color: #ffffff;
     background-color: #78a1b7;
     border-color: #78a1b7;
