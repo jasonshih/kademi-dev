@@ -92,7 +92,6 @@
                         <a class="btn btn-sm btn-green btn-create-folder" title="Add page"><i class="fa fa-folder"></i> New Folder</a>
                     </div>
 
-
                     <div class="btn-group">
                         #if( $page.is("branch") )
                         #else
@@ -105,11 +104,11 @@
                         <div class="btn-group">
                             <button class="btn btn-info dropdown-toggle" data-toggle="dropdown">
                                 #if( $page.is("branch") )
-                                <i class="fa fa-globe"></i>
-                                $page.name
+                                    <i class="fa fa-globe"></i>
+                                    $page.name
                                 #else
-                                <i class="fa fa-folder-open"></i>
-                                $page.name
+                                    <i class="fa fa-folder-open"></i>
+                                    $page.name
                                 #end
                                 <span class="caret"></span>
                             </button>
@@ -181,7 +180,7 @@
                                 <span class="article-name">$page.title</span>
                                 <aside class="article-action">
                                     <div class="btn-group btn-group-sm">
-                                        <a href="?htmleditor=${page.name}" target="_blank" class="btn btn-sm btn-info" title="Edit page"><i class="fa fa-edit"></i> Edit</a>
+                                        <a href="htmleditor?fileName=${page.name}" target="_blank" class="btn btn-sm btn-info" title="Edit page"><i class="fa fa-edit"></i> Edit</a>
                                         <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown"> <span class="caret"></span></button>
                                         <ul class="dropdown-menu pull-right" role="menu">
                                             <li><a href="${page.name}" class="btn-edit-page" title="Edit page"><i class="fa fa-edit"></i> Quick Edit</a></li>
