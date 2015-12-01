@@ -6,64 +6,97 @@
     </head>
     <body>
         <div class="row">
-            <div class="col-md-4">
-                <div class="input-group date-range">
-                    <label for="report-range" class="input-group-addon">Date</label>
-                    <input type="text" id="report-range" placeholder="Choose a date range" value="" class="form-control" />
+            <div class="col-md-8">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="input-group date-range">
+                                    <label for="report-range" class="input-group-addon">Date</label>
+                                    <input type="text" id="report-range" placeholder="Choose a date range" value="" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <button class="btn btn-info btn-undo"><i class="fa fa-history"></i> Undo</button>
+                            </div>
+                        </div>
+                    </div>
+                    <table id="audit-items-table" class="table table-hover">
+                        <colgroup>
+                            <col/>
+                            <col/>
+                            <col/>
+                            <col/>
+                            <col/>
+                            <col width="10px"/>
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Date</th>
+                                <th>User</th>
+                                <th>Entity</th>
+                                <th>State</th>
+                                <th class="action"></th>
+                            </tr>
+                        </thead>
+                        #set($startDate = $formatter.toDate($request.params.startDate))
+                        #set($endDate = $formatter.toDate($request.params.endDate))
+                        #set($searchResult = $page.search($startDate, $endDate, null, 1000))
+                        #set($canUndoCount = 0)
+                        <tbody>
+                            #foreach($audit in $searchResult)
+                            <tr>
+                                #set($labelType = "label-green")
+                                #if($audit.changeType == "UPDATE")
+                                #set($labelType = "label-warning")
+                                #elseif($audit.changeType == "DELETE")
+                                #set($labelType = "label-danger")
+                                #end
+                                <td><label class="label $labelType">$audit.changeType</label></td>
+                                <td>$formatter.formatDateTime($audit.actionDate)</td>
+                                <td>$audit.actionUser.formattedName</td>
+                                <td>$page.getClassDisplayName($audit.entityClassName)</td>
+                                <td>$!audit.description</td>
+                                <td class="action">
+                                    #if(!$audit.revertUser)
+                                    <button data-title="$page.getClassDisplayName($audit.entityClassName)" data-aid="$audit.id" class="btn btn-success btn-restore-audit"><i class="fa fa-history"></i></button>
+                                    #set($canUndoCount = $canUndoCount + 1)
+                                    #end
+                                </td>
+                            </tr>
+                            #end
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            <div class="col-md-2">
-                <button class="btn btn-success btn-undo"><i class="fa fa-history"></i> Undo</button>
-            </div>
-        </div>
-        <div class="table-responsive">
-            <table id="audit-items-table" class="table">
-                <colgroup>
-                    <col/>
-                    <col/>
-                    <col/>
-                    <col/>
-                    <col/>
-                    <col width="10px"/>
-                </colgroup>
-                <thead>
-                    <tr>
-                        <th>Type</th>
-                        <th>Date</th>
-                        <th>User</th>
-                        <th>Entity</th>
-                        <th>State</th>
-                        <th class="action"></th>
-                    </tr>
-                </thead>
-                #set($startDate = $formatter.toDate($request.params.startDate))
-                #set($endDate = $formatter.toDate($request.params.endDate))
-                #set($searchResult = $page.search($startDate, $endDate, null))
-                #set($canUndoCount = 0)
-                <tbody>
-                    #foreach($audit in $searchResult)
-                    <tr>
-                        #set($labelType = "label-green")
-                        #if($audit.changeType == "UPDATE")
-                        #set($labelType = "label-warning")
-                        #elseif($audit.changeType == "DELETE")
-                        #set($labelType = "label-danger")
-                        #end
-                        <td><label class="label $labelType">$audit.changeType</label></td>
-                        <td>$formatter.formatDateTime($audit.actionDate)</td>
-                        <td>$audit.actionUser.formattedName</td>
-                        <td>$page.getClassDisplayName($audit.entityClassName)</td>
-                        <td>$!audit.description</td>
-                        <td class="action">
-                            #if(!$audit.revertUser)
-                            <button data-title="$page.getClassDisplayName($audit.entityClassName)" data-aid="$audit.id" class="btn btn-success btn-restore-audit"><i class="fa fa-history"></i></button>
-                            #set($canUndoCount = $canUndoCount + 1)
+            <div class="col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <button class="btn btn-success btn-crt-rstp"><i class="fa fa-plus"></i> Create restore point</button>
+                    </div>
+                    <table class="table table-hover" id="restore-points-table">
+                        <thead>
+                            <tr>
+                                <th>Created By</th>
+                                <th>Created On</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            #foreach($rs in $page.restorePoints)
+                            <tr>
+                                <td>$rs.createdBy.formattedName</td>
+                                <td>$formatter.formatDateTime($rs.createdDate, $page.organisation.timezone)</td>
+                                <td class="action">
+                                    <button data-rpid="$rs.id" data-rpd="$formatter.formatDateTime($rs.createdDate, $page.organisation.timezone)" class="btn btn-success btn-revert-rstp" title="Revert to this point"><i class="fa fa-history"></i></button>
+                                </td>
+                            </tr>
                             #end
-                        </td>
-                    </tr>
-                    #end
-                </tbody>
-            </table>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
         <script src="/theme/apps/admin/manageAuditItems.js" type="text/javascript">//</script>
         <script>
