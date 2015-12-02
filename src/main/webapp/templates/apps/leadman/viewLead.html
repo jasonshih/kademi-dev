@@ -8,9 +8,6 @@
     <body class='add-container'>
         #@themeBody()
 
-        #parse("/theme/apps/leadman/includes.html")
-        #parse("/theme/apps/leadman/leadManIncludes.html")
-
         <div class="">
             <div style="background:url(/images/infiniti-bg.jpg) center center; background-size:cover; height: 160px" class="unwrap">
                 <div class="container container-lg p-lg">
@@ -90,16 +87,6 @@
                 <div class="row">
                     <div class="col-lg-3">
                         <div class="panel">
-                            <div class="panel-body">
-                                <h4>Estimated deal value</h4>
-                                <input type="text" value="$!page.dealAmount" class="dealValue" />
-                                <hr/>
-                                <h4>Lead details</h4>
-                                $page.description
-
-                            </div>
-                        </div>
-                        <div class="panel">
                             <div class="panel-heading no-shadow">
                                 <a class="btn btn-success createNote pull-right" href="$page.href">
                                     <span class="fa fa-plus"></span>
@@ -152,12 +139,18 @@
                         <div class="panel">
                             <div class="panel-body">
                                 <ul role="tablist" class="nav nav-tabs">
-                                    <li role="presentation" class="active"><a href="#activity" aria-controls="activity" role="tab" data-toggle="tab">Activity</a></li>
+                                    <li role="presentation" class="active"><a href="#details" aria-controls="details" role="tab" data-toggle="tab">Details</a></li>
+                                    <li role="presentation"><a href="#activity" aria-controls="activity" role="tab" data-toggle="tab">Activity</a></li>
                                     <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a></li>
                                     <li role="presentation"><a href="#tasks" aria-controls="tasks" role="tab" data-toggle="tab">Tasks</a></li>
                                 </ul>
                                 <div class="tab-content">
-                                    <div id="activity" role="tabpanel" class="tab-pane fade in active">
+                                    <div id="details" role="tabpanel" class="tab-pane fade active in">
+
+                                        <textarea id="description" class="form-control" name="description" style="height: 400px">$!page.description</textarea>
+                                    </div>
+
+                                    <div id="activity" role="tabpanel" class="tab-pane fade">
                                         #showTimeline($page.timelineItems)
                                     </div>
                                     <div id="profile" role="tabpanel" class="tab-pane fade">
@@ -286,13 +279,13 @@
                         <div class="modal-body">
 
                             <div class="form-group">
-                                <label class="control-label col-md-3" for="dueDate">dueDate</label>
+                                <label class="control-label col-md-3" for="dueDate">Task Due</label>
                                 <div class="col-md-9">
                                     <input type="text" name="dueDate" id="dueDate" class="required form-control" placeholder="dueDate" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-md-3" for="taskDescription">taskDescription</label>
+                                <label class="control-label col-md-3" for="taskDescription">Todo</label>
                                 <div class="col-md-9">
                                     <input type="text" name="taskDescription" id="taskDescription" class="required form-control" placeholder="taskDescription" />
                                 </div>
@@ -400,6 +393,11 @@
                     var val = $(e.target).val();
                     setDealAmount(val);
                 });
+                $("body").on("change", "#description", function (e) {
+                    var val = $(e.target).val();
+                    setLeadDescription(val);
+                });
+
             });
             function reloadTable() {
                 $("#tasksTableBody").reloadFragment({
@@ -453,6 +451,29 @@
                     }
                 });
             }
+
+            function setLeadDescription(val) {
+                $.ajax({
+                    type: 'POST',
+                    url: window.location.pathname,
+                    data: {
+                        description : val
+                    },
+                    dataType: 'json',
+                    success: function (resp) {
+                        if (resp && resp.status) {
+                            Msg.info("Updated");
+                        } else {
+                            Msg.error("Sorry, we couldnt change the description");
+                        }
+                    },
+                    error: function (resp) {
+                        flog('error', resp);
+                        Msg.error('Sorry couldnt set the visibility ' + resp);
+                    }
+                });
+            }
+
         </script>
         #end
     </body>

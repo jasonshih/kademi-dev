@@ -13,34 +13,12 @@
                 <div class="modal-body">
 
                     <div class="form-group">
-                        <label class="control-label col-md-3" for="newUserNickName">Nick name</label>
-                        <div class="col-md-9">
-                            <input type="text" name="nickName" id="newUserNickName" class="form-control" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-3" for="newUserFirstName">Name</label>
+                        <label class="control-label col-md-2" for="newUserFirstName">Source</label>
                         <div class="col-md-4">
-                            <input type="text" name="firstName" id="newUserFirstName" class="form-control" placeholder="First name" />
+                            <input type="text" name="source" id="source" class="form-control" placeholder="Referring source" />
                         </div>
-                        <div class="col-md-5">
-                            <input type="text" name="surName" id="newUserSurName" class="form-control" placeholder="Surname" />
-                        </div>
-
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-3" for="newUserEmail">Contact</label>
+                        <label class="control-label col-md-2" for="newUserNickName">Lead type</label>
                         <div class="col-md-4">
-                            <input type="text" name="email" id="newUserEmail" class="form-control" placeholder="Email" />
-                        </div>
-                        <div class="col-md-5">
-                            <input type="text" name="phone" id="newUserEmail" class="form-control" placeholder="Phone" />
-                        </div>
-
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-3" for="newUserNickName">Lead type</label>
-                        <div class="col-md-9">
                             <select name="funnel" class="form-control">
                                 #foreach($entry in $leadsPage.funnels.entrySet())
                                 <option value="$entry.key">$entry.value.title</option>
@@ -49,9 +27,33 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-md-3" for="newUserNickName">Notes</label>
-                        <div class="col-md-9">
-                            <textarea name="notes" class="form-control" style="height: 200px"></textarea>
+                        <label class="control-label col-md-2" for="newUserFirstName">Name</label>
+                        <div class="col-md-3">
+                            <input type="text" name="nickName" id="newUserNickName" class="form-control" placeholder="Preferred" />
+                        </div>
+
+                        <div class="col-md-3">
+                            <input type="text" name="firstName" id="newUserFirstName" class="form-control" placeholder="First name" />
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" name="surName" id="newUserSurName" class="form-control" placeholder="Surname" />
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2" for="newUserEmail">Contact</label>
+                        <div class="col-md-5">
+                            <input type="text" name="email" id="newUserEmail" class="form-control" placeholder="Email" />
+                        </div>
+                        <div class="col-md-5">
+                            <input type="text" name="phone" id="phone" class="form-control" placeholder="Phone" />
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2" for="newUserNickName">Notes</label>
+                        <div class="col-md-10">
+                            <textarea name="notes" class="form-control" style="height: 100px"></textarea>
                         </div>
                     </div>
 
@@ -71,7 +73,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="">Enter a new lead</h4>
+                <h4 class="modal-title" id="">Enter a new contact</h4>
             </div>
             <form method="post" action="/leads/" class="form-horizontal">
                 <input type="hidden" name="orgId" value="$currentOrg.orgId"/>

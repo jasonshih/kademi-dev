@@ -13,7 +13,7 @@ function initOrgSelector() {
     $(".selectOrg").on("click", "a", function(e) {
         e.preventDefault();
         var orgId = $(e.target).closest("a").attr("href");
-        flog("click", orgId);
+        flog("initOrgSelector - click", orgId);
         $.cookie("org", orgId);
         window.location.reload();
     });
@@ -51,11 +51,12 @@ function initNewLeadForm() {
     var form = modal.find('form');
 
     $(".createLead").click(function (e) {
-        flog("click");
+        flog("initNewLeadForm - click");
         e.preventDefault();
         var funnelName = $(e.target).closest("a").attr("href");
         form.find("select").val(funnelName);
         modal.modal("show");
+
     });
 
     form.forms({
