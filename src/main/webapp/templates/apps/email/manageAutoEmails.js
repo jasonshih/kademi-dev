@@ -5,6 +5,9 @@ function initManageAutoEmails() {
     initCategoryButtons();
     initDeleteEmail();
     initAutoEmailTable();
+    initReportDateRange();
+
+    loadAnalytics();
 
     flog('init dup', $('#email-trigger-wrapper'));
 
@@ -44,6 +47,145 @@ function initAutoEmailTable() {
             null,
             {"orderable": false}
         ]
+    });
+}
+
+var searchData = {
+    startDate: null,
+    endDate: null
+}
+
+function initReportDateRange() {
+    var reportRange = $('#report-range');
+    reportRange.exist(function () {
+        flog("init report range");
+        reportRange.daterangepicker({
+            format: 'DD/MM/YYYY', // YYYY-MM-DD
+            ranges: {
+                'Last 7 Days': [moment().subtract('days', 6), moment()],
+                'Last 30 Days': [moment().subtract('days', 29), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
+                'This Year': [moment().startOf('year'), moment()],
+            },
+        },
+                function (start, end) {
+                    flog('onChange', start, end);
+                    searchData.startDate = start.format('DD/MM/YYYY');
+                    searchData.endDate = end.format('DD/MM/YYYY');
+                    loadAnalytics();
+                }
+        );
+    });
+}
+
+function loadAnalytics() {
+    $('#summaryCsv').attr('href', 'summary.csv?' + $.param(searchData));
+    var href = "?triggerHistory&" + $.param(searchData);
+    $.ajax({
+        type: "GET",
+        url: href,
+        dataType: 'html',
+        success: function (resp) {
+            var json = null;
+
+            if (resp !== null && resp.length > 0) {
+                json = JSON.parse(resp);
+            }
+
+            flog('response', json);
+            handleData(json);
+        }
+    });
+}
+
+function handleData(resp) {
+    var aggr = (resp !== null ? resp.aggregations : null);
+
+    initHistogram(aggr);
+}
+
+function initHistogram(aggr) {
+    $('#chart_histogram svg').empty();
+    nv.addGraph(function () {
+        var chart = nv.models.multiBarChart()
+                .options({
+                    showLegend: true,
+                    showControls: false,
+                    noData: "No Data available for histogram",
+                    margin: {
+                        left: 40,
+                        bottom: 60
+                    }
+                });
+
+        chart.xAxis
+                .axisLabel("Date")
+                .rotateLabels(-45)
+                .tickFormat(function (d) {
+                    return moment(d).format("DD MMM");
+                });
+
+        chart.yAxis
+                .axisLabel("Triggered")
+                .tickFormat(d3.format('d'));
+
+        var myData = [];
+        var conditionsTrue = {
+            values: [],
+            key: "Trigger",
+            color: "#7777ff",
+            area: true
+        };
+
+        var conditionsFalse = {
+            values: [],
+            key: "Failed Trigger",
+            color: "#d9534f",
+            area: true
+        };
+
+        var delayedTriggers = {
+            values: [],
+            key: "Delayed Trigger",
+            color: "#5bc0de",
+            area: true
+        };
+
+        myData.push(conditionsTrue);
+        myData.push(conditionsFalse);
+        myData.push(delayedTriggers);
+
+        var trueHits = (aggr !== null ? aggr.triggerTrue.firedAt.buckets : []);
+        var falseHits = (aggr !== null ? aggr.triggerFalse.firedAt.buckets : []);
+        var delayedHits = (aggr !== null ? aggr.delayedTriggers.createdAt.buckets : []);
+
+        for (var i = 0; i < trueHits.length; i++) {
+            var bucket = trueHits[i];
+            conditionsTrue.values.push(
+                    {x: bucket.key, y: bucket.doc_count});
+        }
+
+        for (var i = 0; i < falseHits.length; i++) {
+            var bucket = falseHits[i];
+            conditionsFalse.values.push(
+                    {x: bucket.key, y: bucket.doc_count});
+        }
+
+        for (var i = 0; i < delayedHits.length; i++) {
+            var bucket = delayedHits[i];
+            delayedTriggers.values.push(
+                    {x: bucket.key, y: bucket.doc_count});
+        }
+
+        d3.select('#chart_histogram svg')
+                .datum(myData)
+                .transition().duration(500)
+                .call(chart);
+
+        nv.utils.windowResize(chart.update);
+
+        return chart;
     });
 }
 

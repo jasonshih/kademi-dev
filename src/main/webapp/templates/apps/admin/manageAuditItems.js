@@ -2,6 +2,7 @@ function initAuditItems(canUndoCount) {
     initRestoreAudit();
     initDateRangeSelector();
     initUndo(canUndoCount);
+    initRestorePoint();
 }
 
 function initRestoreAudit() {
@@ -122,6 +123,57 @@ function initUndo(canUndoCount) {
                     }
                 });
             }
+        }
+    });
+}
+
+function initRestorePoint() {
+    $('body').on('click', '.btn-crt-rstp', function (e) {
+        e.preventDefault();
+
+        $.ajax({
+            type: "POST",
+            data: {
+                createRestorePoint: true
+            },
+            url: window.location.pathname,
+            dataType: "json",
+            success: function (result) {
+                if (result.status) {
+                    Msg.success(result.messages);
+                    $('#restore-points-table').reloadFragment();
+                } else {
+                    Msg.warning(result.messages);
+                }
+            }
+        });
+    });
+
+    $('body').on('click', '.btn-revert-rstp', function (e) {
+        e.preventDefault();
+
+        var btn = $(this);
+        var date = btn.data('rpd');
+        var rpid = btn.data('rpid');
+
+        if (confirm('Are you sure you want to revert all changes after ' + date + '?')) {
+            $.ajax({
+                type: "POST",
+                data: {
+                    restorePoint: rpid
+                },
+                url: window.location.pathname,
+                dataType: "json",
+                success: function (result) {
+                    if (result.status) {
+                        Msg.success(result.messages);
+                        $('#restore-points-table').reloadFragment();
+                        doSearch();
+                    } else {
+                        Msg.warning(result.messages);
+                    }
+                }
+            });
         }
     });
 }

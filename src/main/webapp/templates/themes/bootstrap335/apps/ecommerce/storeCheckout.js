@@ -34,7 +34,7 @@ function initCartForm() {
         },
         onSuccess: function (resp) {
             if (resp.status) {
-                $('#cart-form').reloadFragment();
+                $('#cart-form, #cart-link').reloadFragment();
                 $('#cart-form').hide('fast');
                 $('#successfull-div').show('slow');
             } else {
