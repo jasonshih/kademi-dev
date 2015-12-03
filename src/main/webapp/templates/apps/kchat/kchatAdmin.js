@@ -40,6 +40,11 @@ var initKChatWebsocket = function () {
 
             var streamItemTemplate = Handlebars.compile(templ);
 
+            if ($('#user-' + c.visitorId).length > 0) {
+                flog('user ' + c.visitorId + ' is already connected');
+                return;
+            }
+
             var time = new moment(c.timestamp);
 
             c.time = time.format('hh:mm A');
@@ -77,21 +82,25 @@ var initKChatWebsocket = function () {
             $('#page-sidebar .media-list').empty();
 
             for (var i = 0; i < c.clients.length; i++) {
-                var templ = $('#kchat-user-template').html();
-
-                var streamItemTemplate = Handlebars.compile(templ);
-
-                if (c.clients[i].profile.userId > 0) {
-                    c.clients[i].profilePic = '/manageUsers/' + c.clients[i].profile.userId + '/pic'
+                if ($('#user-' + c.clients[i].visitorId).length > 0) {
+                    flog('user ' + c.clients[i].visitorId + ' is already connected');
                 } else {
-                    c.clients[i].profilePic = "/theme/apps/user/profile.png";
+                    var templ = $('#kchat-user-template').html();
+
+                    var streamItemTemplate = Handlebars.compile(templ);
+
+                    if (c.clients[i].profile.userId > 0) {
+                        c.clients[i].profilePic = '/manageUsers/' + c.clients[i].profile.userId + '/pic'
+                    } else {
+                        c.clients[i].profilePic = "/theme/apps/user/profile.png";
+                    }
+
+                    var html = streamItemTemplate(c.clients[i]);
+
+                    $('#page-sidebar .media-list').append(html);
+
+                    $('#page-sidebar .user-chat').append('<ol id="chat-' + c.clients[i].visitorId + '" class="discussion sidebar-content"></ol>');
                 }
-
-                var html = streamItemTemplate(c.clients[i]);
-
-                $('#page-sidebar .media-list').append(html);
-
-                $('#page-sidebar .user-chat').append('<ol id="chat-' + c.clients[i].visitorId + '" class="discussion sidebar-content"></ol>');
             }
         }
     };
