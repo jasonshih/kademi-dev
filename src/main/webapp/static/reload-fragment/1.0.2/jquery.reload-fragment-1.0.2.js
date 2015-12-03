@@ -21,6 +21,7 @@
             var config = $.extend({
                 ids: []
             }, DEFAULT, options);
+
             var targets = $(this);
             targets.each(function () {
                 var target = $(this);
@@ -33,27 +34,11 @@
                 }
             });
 
-            if (targets.data('reloadFragmentOptions')) {
-                flog('[jquery.reloadFragment] Is ready initialized');
-            } else {
-                flog('[jquery.reloadFragment] Initializing...');
-                flog('[jquery.reloadFragment] IDs: ' + config.ids.join(','));
-
-                // Add config to 'reloadFragmentOptions' data
-                targets.data('reloadFragmentOptions', config);
-            }
-
-            targets.reloadFragment('reload');
-
-            return targets;
-        },
-        reload: function () {
-            var targets = $(this);
+            flog('[jquery.reloadFragment] IDs: ' + config.ids.join(','));
 
             if (!targets.hasClass('reloading-fragment')) {
                 flog('[jquery.reloadFragment] Reloading...');
 
-                var config = targets.data('reloadFragmentOptions');
                 var ids = config.ids;
                 var url = window.location.pathname;
                 if (config.url) {
@@ -85,6 +70,8 @@
 
                 flog('[jquery.reloadFragment] Reloaded!');
             }
+
+            return targets;
         }
     };
 
