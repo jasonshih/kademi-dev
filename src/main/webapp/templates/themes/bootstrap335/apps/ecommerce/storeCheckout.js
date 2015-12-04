@@ -34,9 +34,12 @@ function initCartForm() {
         },
         onSuccess: function (resp) {
             if (resp.status) {
-                $('#cart-form, #cart-link').reloadFragment();
-                $('#cart-form').hide('fast');
-                $('#successfull-div').show('slow');
+                $('#cart-form, #cart-link').reloadFragment({
+                    whenComplete: function () {
+                        $('#cart-form').hide('fast');
+                        $('#successfull-div').show('slow');
+                    }
+                });
             } else {
                 Msg.warning(resp.messages[0])
             }
