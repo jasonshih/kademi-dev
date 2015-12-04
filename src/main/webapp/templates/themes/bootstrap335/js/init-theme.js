@@ -29,7 +29,7 @@ function initTheme() {
     initEdify();
     initActiveNav(".initActive");
     initHelp();
-    initRotation();
+    //initRotation();
     initPrintLink();
     initVideos();
 
