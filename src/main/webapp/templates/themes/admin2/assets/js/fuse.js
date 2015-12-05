@@ -797,7 +797,7 @@ function initBackgroundJobStatus() {
     // job status and then apply data to the handlebars template in the div
     flog("initBackgroundJobStatus");
 
-    Handlebars.registerHelper('dateFromLong', function (millis) {
+    Handlebars.registerHelper('formatISODate', function (millis) {
         if (millis) {
             var m = millis;
             var date = new Date(m);
@@ -808,9 +808,18 @@ function initBackgroundJobStatus() {
         }
     });
 
+    Handlebars.registerHelper('formatDate', function (millis) {
+        if (millis) {
+            return moment(millis).format('DD/MM/YYYY');
+        } else {
+            return "";
+        }
+    });
+
     Handlebars.registerHelper('notRunning', function (data, options) {
         var b = (data == null || data.statusInfo.complete);
         var out = options.fn(data);
+
         return out;
     });
 
@@ -838,6 +847,7 @@ function checkBackgroundJobStatus(href, div, template) {
                 var htmlStr = template(resp);
                 div.html(htmlStr);
                 div.show(400);
+                div.find('.timeago').timeago();
 
                 flog('Background task status HTML:', htmlStr);
 
@@ -865,6 +875,7 @@ function checkBackgroundJobStatus(href, div, template) {
             var htmlStr = template(null);
             div.html(htmlStr);
             div.show(400);
+            div.find('.timeago').timeago();
 
             flog("set html", htmlStr);
         }
