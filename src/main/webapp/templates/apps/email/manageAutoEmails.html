@@ -92,13 +92,13 @@
                                     <div id="productsTableContainer" class="panel-body">
                                         <table class="table table-striped table-hover autotriggertable" width="100%">
                                             <colgroup>
-                                                <col style="width: 150px" />
-                                                <col style="width: 300px" />
+                                                <col style="width: 70px" />
+                                                <col style="width: 200px" />
                                                 <col />
                                                 <col />
                                                 <col />
                                                 <col />
-                                                <col style="width: 150px" />
+                                                <col style="width: 100px" />
                                             </colgroup>
                                             <thead>
                                                 <tr>
@@ -131,13 +131,13 @@
                         <div class="panel-body">
                             <table id="email-trigger-wrapper" class="table table-striped table-hover" cellspacing="0" width="100%">
                                 <colgroup>
+                                    <col style="width: 70px" />
+                                    <col style="width: 200px" />
                                     <col />
                                     <col />
                                     <col />
                                     <col />
-                                    <col />
-                                    <col />
-                                    <col style="width: 150px" />
+                                    <col style="width: 100px" />
                                 </colgroup>
                                 <thead>
                                     <tr>
@@ -218,7 +218,9 @@
                 #end
             </td>
 
-            <td>$!email.job.title</td>
+            <td>
+                <a href="$email.name/">$!email.job.title</a>
+            </td>
             <td>$email.description</td>
             <td>$email.numItems</td>
             <td>$email.openRate</td>
@@ -226,7 +228,7 @@
             <td class="action">
                 <div class="btn-group btn-group-sm">
                     <a href="$email.name" class="btn btn-sm btn-info btn-sm">
-                        <i class="fa fa-edit"></i> Edit
+                        <i class="fa fa-edit"></i>
                     </a>
                     <button class="btn btn-sm btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
                         <span class="caret"></span>
