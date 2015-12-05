@@ -4,10 +4,14 @@
     </head>
     <body class="manageApplications appsContainer">
 
-
         <article class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Currently running tasks</h3>
+                <i class="fa fa-wrapper">
+                    <i class="fa fa-spin fa-gear"></i>
+                </i>
+                <h3 class="panel-title">
+                    Currently running tasks
+                </h3>
             </div>
 
             <div class="panel-body">
@@ -31,10 +35,6 @@
             </div>
         </article>
 
-        
-
-
-
         <script type="text/javascript">
             $(function () {
                 $("form.maintForm").forms({
@@ -44,6 +44,7 @@
                         Msg.success("Done");
                     }
                 });
+
                 $("form.runTasksForm").forms({
                     callback: function (resp) {
                         flog("resp", resp);
@@ -51,6 +52,7 @@
                         window.location.reload();
                     }
                 });
+
                 $("form.clearLocksForm").forms({
                     callback: function (resp) {
                         flog("resp", resp);
@@ -58,6 +60,7 @@
                         window.location.reload();
                     }
                 });
+
                 $("form.restoreRepoForm").forms({
                     callback: function (resp) {
                         flog("resp", resp);

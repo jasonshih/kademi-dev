@@ -642,7 +642,7 @@ function initTopNavSearch() {
                     break;
 
                 default:
-                    // Nothing
+                // Nothing
             }
         }
     });
@@ -801,6 +801,7 @@ function initBackgroundJobStatus() {
         if (millis) {
             var m = millis;
             var date = new Date(m);
+
             return date.toISOString();
         } else {
             return "";
@@ -813,50 +814,59 @@ function initBackgroundJobStatus() {
         return out;
     });
 
-    $(".backgroundTask").each(function(i,n) {
-        var div = $(n);
+    $(".backgroundTask").each(function () {
+        var div = $(this);
         var href = div.data("task-href");
-        var templateHtml = div.html();
+        var templateHtml = div.siblings('.backgroundTaskTemplate').html();
         var template = Handlebars.compile(templateHtml);
+
         checkBackgroundJobStatus(href, div, template);
     });
 }
 
 function checkBackgroundJobStatus(href, div, template) {
+    flog('checkBackgroundJobStatus', href, div, template);
+
     $.ajax({
         url: href,
         method: "GET",
         dataType: 'json',
         success: function (resp) {
-            if( resp.status ) {
-                var data = resp.data;
-                var s = template(resp);
-                div.html(s);
-                flog(resp, s);
+            flog('Success in checking background task', resp);
+
+            if (resp.status) {
+                var htmlStr = template(resp);
+                div.html(htmlStr);
                 div.show(400);
-                if( data.statusInfo.complete )  {
+
+                flog('Background task status HTML:', htmlStr);
+
+                if (resp.data.statusInfo.complete) {
                     // no need to scan
                 } else {
                     // Not complete, so update again
-                    flog("rescan", data.statusInfo.complete);
-                    window.setTimeout(function() {
+                    flog("Background task is not completed! Re-check status in next 3 seconds");
+                    window.setTimeout(function () {
                         checkBackgroundJobStatus(href, div, template);
                     }, 3000);
                 }
             } else {
-                var s = template(null);
-                div.html(s);
+                var htmlStr = template(null);
+                div.html(htmlStr);
                 div.show(400);
+
+                flog('Background task status HTML:', htmlStr);
             }
         },
-        error : function () {
+        error: function () {
             // probably a 404, which is fine, show the template with no data so it can render a run form
             flog("No task resource, thats cool, means not running and hasnt been run");
-            var s = template(null);
-            div.html(s);
-            div.show(400);
-            flog("set html", s);
 
+            var htmlStr = template(null);
+            div.html(htmlStr);
+            div.show(400);
+
+            flog("set html", htmlStr);
         }
     });
 }

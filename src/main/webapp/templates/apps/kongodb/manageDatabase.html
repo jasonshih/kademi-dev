@@ -245,29 +245,30 @@
                     <!-- Reindexing -->
                     #[[
                     <div id="reindex" class="tab-pane">
-                        <div class="backgroundTask" id="" style="display: none" data-task-href="/tasks/reindex-jsondb">
+                        <div class="backgroundTask" id="" style="display: none" data-task-href="/tasks/reindex-jsondb"></div>
+                        <script type="text/html" class="backgroundTaskTemplate">
                             {{#if data}}
-                            {{#if data.statusInfo.complete}}
-                            <div class="alert alert-info">
-                                <h3>Re-index of {{data.state}} completed at {{dateFromLong data.statusInfo.completedDate}}</h3>
-                                <p>Started at {{dateFromLong dateFromLong data.statusInfo.createdDate}}</p>
-                            </div>
-                            {{else}}
-                            <div class="alert alert-warning">
-                                <h3>Re-indexing {{data.state}} - {{data.status}}</h3>
-                                <p>Started at {{dateFromLong data.statusInfo.createdDate}}</p>
-                            </div>
-                            {{/if}}
+                                {{#if data.statusInfo.complete}}
+                                    <div class="alert alert-info">
+                                        <h3>Re-index of {{data.state}} completed at {{dateFromLong data.statusInfo.completedDate}}</h3>
+                                        <p>Started at {{dateFromLong data.statusInfo.createdDate}}</p>
+                                    </div>
+                                {{else}}
+                                    <div class="alert alert-warning">
+                                        <h3>Re-indexing: {{data.state}} - {{data.status}}</h3>
+                                        <p>Started at {{dateFromLong data.statusInfo.createdDate}}</p>
+                                    </div>
+                                {{/if}}
                             {{/if}}
 
                             {{#notRunning data}}
-                            <div>
-                                <p>Re-index the database. This will completely remove the search index and then recreate it and
-                                re-insert all documents</p>
-                                <button class="btn btn-warning reindexBtn">Re-index Database</button>
-                            </div>
+                                <div>
+                                    <p>Re-index the database. This will completely remove the search index and then recreate it and
+                                        re-insert all documents</p>
+                                    <button class="btn btn-warning reindexBtn">Re-index Database</button>
+                                </div>
                             {{/notRunning}}
-                        </div>
+                        </script>
                     </div>
                     ]]#
                 </div>
@@ -376,6 +377,7 @@
         <script type="text/javascript">
             $(function () {
                 initBackgroundJobStatus();
+
                 $("body").on("click", ".reindexBtn", function(e){
                     e.preventDefault();
                     $.ajax({
@@ -390,8 +392,6 @@
                         }
                     });
                 });
-
-
 
                 $(".database-form").forms({
                     callback: function (resp) {
@@ -408,6 +408,7 @@
 
                     }
                 });
+
                 $("body").on("click", ".deleteDocsBtn", function (e) {
                     e.preventDefault();
                     var checkBoxes = $('.deleteDoc:checked');
@@ -419,13 +420,13 @@
                         }
                     }
                 });
+
                 $("#addRecordForm").forms({
                     callback: function () {
                         Msg.info("Done");
                         $("#records-body").reloadFragment();
                     }
                 });
-
 
                 $("#mappings").on("click", ".btnEditMapping", function (e) {
                     e.preventDefault();
@@ -436,7 +437,7 @@
                     var pre = cont.find("pre");
                     var height = pre.css("height");
                     var source = pre.text();
-                    var newDiv = $("<textarea class='form-control'>");
+                    var newDiv = $("<textarea class='form-control form-code-control'>");
                     newDiv.val(source);
                     pre.replaceWith(newDiv);
                     newDiv.css("height", height);
@@ -451,7 +452,6 @@
                     var source = textarea.val();
                     saveMapping(name, source);
                 });
-
 
                 $("#addMappingForm").forms({
                     callback: function () {
