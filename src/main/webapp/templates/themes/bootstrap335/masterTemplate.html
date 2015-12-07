@@ -36,7 +36,7 @@
         $templater.pushLess("/theme/theme-params.less", "all")
 
         #foreach( $lessSource in $templater.lessSources.entrySet())
-        <link href="$templater.getCombinedPath($lessSource.value)" rel="stylesheet" type="text/css" media="$lessSource.key" />
+        <link href="/$templater.getCombinedPath($lessSource.value)" rel="stylesheet" type="text/css" media="$lessSource.key" />
         #end
 
         <script type="text/javascript" src="/static/history/jquery.history.js">//</script>
