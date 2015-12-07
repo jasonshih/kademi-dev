@@ -1321,7 +1321,7 @@ body .form-control::-webkit-input-placeholder {
     color: #CCC;
 }
 
-.form-control.form-code-control {
+.form-control.form-control-code {
     font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 

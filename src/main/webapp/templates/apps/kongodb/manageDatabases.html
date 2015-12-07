@@ -88,14 +88,15 @@
 
 
         <script type="text/javascript">
-            $(function () {
-                flog("initManageDbs");
-                var modal = $("#addDatabaseModal");
-                var form = modal.find(" form");
+            function initManageDbs() {
+                flog('initManageDbs');
+
+                var modal = $('#addDatabaseModal');
+                var form = modal.find(' form');
 
                 form.forms({
                     callback: function (resp) {
-                        flog("done", resp);
+                        flog('done', resp);
                         modal.modal('hide');
                         Msg.success(form.find('[name=newName]').val() + ' is created!');
                         $('#databases-body').reloadFragment();
@@ -108,11 +109,16 @@
                     var tr = btn.closest('tr');
                     var href = btn.attr('href');
                     var title = btn.data('title');
+
                     confirmDelete(href, title, function () {
-                        Msg.success("Successfully deleted " + title);
+                        Msg.success('Successfully deleted ' + title);
                         tr.remove();
                     });
                 });
+            }
+            
+            $(function () {
+                initManageDbs();
             });
         </script>
     </body>
