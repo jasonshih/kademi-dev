@@ -186,7 +186,7 @@ function initDateTimePickers() {
     date.setDate(date.getDate() - 1);
 
     $('.date-time').datetimepicker({
-        format: "DD/MM/YYYY HH:mm",
-        startDate: date
+        format: "DD/MM/YYYY HH:mm"
+        //,startDate: date
     });
 }
