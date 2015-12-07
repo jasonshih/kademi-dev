@@ -1196,11 +1196,11 @@ controllerMappings.executeJs(function () {
             // A cross-domain request is in order when we have a protocol:host:port mismatch
             if (s.crossDomain == null) {
                 parts = rurl.exec(s.url.toLowerCase());
-                s.crossDomain = !!(parts &&
+                /*s.crossDomain = !!(parts &&
                         (parts[ 1 ] !== ajaxLocParts[ 1 ] || parts[ 2 ] !== ajaxLocParts[ 2 ] ||
                                 (parts[ 3 ] || (parts[ 1 ] === "http:" ? "80" : "443")) !==
                                 (ajaxLocParts[ 3 ] || (ajaxLocParts[ 1 ] === "http:" ? "80" : "443")))
-                        );
+                        );*/
             }
 
             // Convert data if not already a string
@@ -1886,7 +1886,3 @@ controllerMappings.executeJs(function () {
 
     global.Kademi = global.$k = Kademi;
 });
-
-/*
- * KJax - Kademi Ajax
- */
