@@ -22,6 +22,9 @@
     .lead {
         margin-bottom: 40px;
     }
+    .leadInner {
+        max-height: 200px;
+    }
 </style>
 <div class="fw-boxed">
     <div class="panel panel-default">
@@ -132,7 +135,12 @@
                         </p>
                         #end
 
-                        <p class="lead">$!lead.description</p>
+                        <div class="lead">
+                            <div class="leadInner">
+
+                            $formatter.textToHtml($lead.description)
+                            </div>
+                        </div>
 
                         #if( $lead.profile )
                         <div class="text-muted leadContactMethods">
@@ -199,8 +207,14 @@
 
 #createModals()
 
+<script src="/static/dotdotdot/1.7.4/jquery.dotdotdot.min.js" type="text/javascript">//</script>
 <script type="text/javascript">
     $(function () {
+        flog("dotdotdot", $(".leadInner"));
+        $(".leadInner").dotdotdot({
+            //	configuration goes here
+        });
+
         $('abbr.timeago').timeago();
         $('#leadQuery').keyup(function () {
             typewatch(function () {
