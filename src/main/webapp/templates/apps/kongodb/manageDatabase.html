@@ -84,10 +84,8 @@
 
                     <div id="notes" class="tab-pane">  <!-- notes -->
                         <small>For internal use.</small>
-                        <textarea cols="100" name="notes" id="notes" rows="20" placeholder="" class="form-control">$!page.notes</textarea>
+                        <textarea cols="100" name="notes" rows="20" placeholder="" class="form-control">$!page.notes</textarea>
                     </div> <!-- end notes -->
-
-
 
                     <div id="records" class="tab-pane">
                         <p class="text-right">
@@ -134,6 +132,7 @@
                             </tbody>
                         </table>
                     </div>
+
                     <div id="query" class="tab-pane">
                         #set($items = $page.searchResponse)
 
@@ -218,28 +217,44 @@
 
                         <ul class="nav nav-pills">
                             #foreach ($mappingEntry in $page.mappings.entrySet())
-                            <li><a href="#mapping${mappingEntry.key}">$mappingEntry.key</a></li>
+                            <li><a href="#mapping-${mappingEntry.key}">$mappingEntry.key</a></li>
                             #end
                         </ul>
 
                         <hr/>
 
-                        #foreach ($mappingEntry in $page.mappings.entrySet())
-                        <div class="mappingContainer">
-                            <button class="btn btn-info btnEditMapping pull-right" type="button">
-                                <i class="fa fa-pencil">Edit</i>
-                            </button>
-                            <button class="btn btn-success btnSaveMapping pull-right" type="button" style="display: none">
-                                <i class="fa fa-pencil">Save</i>
-                            </button>
-
-                            <h3 id="mapping${mappingEntry.key}">$mappingEntry.key</h3>
-                            <div class="prettyPrintJson">
-                                <pre>$mappingEntry.value.source()</pre>
-                            </div>
+                        <div id="mappings-wrapper" class="panel-group">
+                            #foreach ($mappingEntry in $page.mappings.entrySet())
+                                <div class="panel panel-default mapping" id="mapping-${mappingEntry.key}">
+                                    <div class="panel-heading" role="tab" id="mapping-heading-${foreach.count}">
+                                        <i class="fa fa-file-o"></i>
+                                        <a role="button" data-toggle="collapse" href="#mapping-${foreach.count}" data-parent="#mappings-wrapper">
+                                            $mappingEntry.key
+                                        </a>
+                                        <div class="panel-tools">
+                                            <div class="btn-group btn-group-xs">
+                                                <button class="btn btn-info btn-edit-mapping" type="button">
+                                                    <i class="fa fa-pencil"></i> Edit
+                                                </button>
+                                                <button class="btn btn-success btn-save-mapping" type="button" style="display: none">
+                                                    <i class="fa fa-pencil"></i> Save
+                                                </button>
+                                                <button class="btn btn-danger btn-delete-mapping" type="button" style="display: none">
+                                                    <i class="fa fa-remove"></i> Delete
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="mapping-${foreach.count}" class="panel-collapse collapse">
+                                        <div class="panel-body">
+                                            <div class="prettyPrintJson">
+                                                <pre style="margin-bottom: 0">$mappingEntry.value.source()</pre>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            #end
                         </div>
-                        <hr/>
-                        #end
                     </div>
 
                     <!-- Reindexing -->
@@ -394,7 +409,7 @@
                     </div>
 
                     <span class="help-block"><small>Please enter mappings as JSON below</small></span>
-                    <textarea name="json" class="form-control" rows="20"></textarea>
+                    <textarea name="json" class="form-control form-control-code" rows="20"></textarea>
                 </form>
             </div>
             <div class="modal-footer">
