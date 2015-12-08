@@ -19,6 +19,7 @@ function initReindexTab(body) {
 
     body.on("click", ".reindexBtn", function(e){
         e.preventDefault();
+
         $.ajax({
             url: window.location.pathname,
             method: "POST",
@@ -28,6 +29,7 @@ function initReindexTab(body) {
             success: function (resp) {
                 Msg.info("Job submitted");
                 initBackgroundJobStatus();
+                $('#mappings').reloadFragment();
             }
         });
     });
@@ -80,14 +82,14 @@ function initMappingsTab() {
     
     var mappingsWrapper = $('#mappings');
 
-    mappingsWrapper.on('click', '.btnEditMapping', function (e) {
+    mappingsWrapper.on('click', '.btn-edit-mapping', function (e) {
         e.preventDefault();
         
         var btn = $(e.target).closest('button');
         btn.hide();
         
-        var cont = btn.closest('.mappingContainer');
-        cont.find('.btnSaveMapping').show();
+        var cont = btn.closest('.mapping');
+        cont.find('.btn-save-mapping').show();
         
         var pre = cont.find('pre');
         var height = pre.css('height');
@@ -99,11 +101,11 @@ function initMappingsTab() {
         newDiv.css('height', height);
     });
 
-    mappingsWrapper.on('click', '.btnSaveMapping', function (e) {
+    mappingsWrapper.on('click', '.btn-save-mapping', function (e) {
         e.preventDefault();
         
         var btn = $(e.target).closest('button');
-        var cont = btn.closest('.mappingContainer');
+        var cont = btn.closest('.mapping');
         var name = cont.find('h3').text();
         var textarea = cont.find('textarea');
         var source = textarea.val();
