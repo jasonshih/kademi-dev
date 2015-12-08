@@ -4,60 +4,22 @@
         <script type="text/javascript" src="/static/typeahead/0.10.2/typeahead.bundle.js">//</script>
         <script type="text/javascript" src="/static/bootstrap-upcrop-image/1.0/bootstrap-upcrop-image.js">//</script>
         <script type="text/javascript" src="manageBlogArticle.js">//</script>
+        <script src="/static/d3/d3.v3.js" type="text/javascript">//</script>
+        <link href="/static/nvd3/nv.d3.css" rel="stylesheet" type="text/css"/>
+        <script src="/static/nvd3/nv.d3.js" type="text/javascript">//</script>
+        <link rel="stylesheet" href="/theme/assets/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" />
+        <script src="/theme/assets/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js">//</script>
+
         <style>
             #images-container .thumbnail {
                 min-height: 240px;
             }
+            #chart_histogram {
+                height: 300px;
+            }
         </style>
     </head>
     <body>
-
-
-        #if( $page.publishedDate or $page.submittedDate )
-        <div class="panel panel-info col-md-8 pull-right">
-            <div class="panel-body">
-                #if( $page.publishedDate )
-                <p class="lead text-right">
-                    Published by $!page.publishedBy.name for release
-                    <abbr title="$formatter.formatDateISO8601($page.publishedDate)" class="timeago">$!page.publishedDate</abbr>
-                </p>
-                <p class="text-right">
-                    Submitted by $!page.submittedBy.name
-                    <abbr title="$formatter.formatDateISO8601($page.submittedDate)" class="timeago">$!page.submittedDate</abbr>
-                </p>
-                #if( $page.canPublish )
-                <button class="btn btn-sm btn-warning article-reject" type="button">Unpublish</button>
-                #end
-                #else
-                <p class="lead text-right">
-                    Submitted by $!page.submittedBy.name
-                    <abbr title="$formatter.formatDateISO8601($page.submittedDate)" class="timeago">$!page.submittedDate</abbr>
-                </p>
-                #if( $page.canPublish )
-                <button class="btn btn-sm btn-warning article-reject" type="button">Reject with reason</button>
-
-                <button class="btn btn-sm btn-success article-publish" type="button">Publish</button>
-                #end
-                #end
-            </div>
-        </div>
-        <div class="clearfix"></div>
-        #end
-
-        #if( $page.rejectedAt )
-        <div class="panel panel-info col-md-8 pull-right">
-            <div class="panel-body">
-                <p class="lead text-right">
-                    Rejected by $!page.rejectedBy.name
-                    <abbr title="$formatter.formatDateISO8601($page.rejectedAt)" class="timeago">$!page.rejectedAt</abbr>
-                </p>
-
-                <p class="text-right">$!page.rejectedReason</p>
-            </div>
-        </div>
-        <div class="clearfix"></div>
-        #end
-
         <form action="" method="POST" class="form-horizontal article-form" role="form">
             <div id="manageReward" class="MainContent tabbable">
                 <div class="clearfix">
@@ -83,6 +45,7 @@
                         </div>
                     </div>
                     <ul class="TabNav nav nav-tabs tab-bricky pull-left">
+                        <li class=""><a href="#activity" data-toggle="tab">Activity</a></li>
                         <li class=""><a href="#details" data-toggle="tab">Details</a></li>
                         <li class=""><a href="#bodyCopy" data-toggle="tab">Content</a></li>
                         <li class=""><a href="#groups" data-toggle="tab">Groups</a></li>
@@ -91,6 +54,80 @@
                     </ul>
                 </div>
                 <div class="tab-content">
+                    <div class="tab-pane" id="activity">
+                        <div id="descriptionDiv">
+                            <p class="lead p-20">
+                                &ldquo;$page.title&rdquo;
+                                in
+                                <a href="/websites/$page.article.blog.website.name">$page.article.blog.website.name</a>/<a href="../">$page.article.blog.title</a>
+                            </p>
+                        </div>
+
+                        #if( $page.publishedDate or $page.submittedDate )
+                        <div class="panel panel-info col-md-8 pull-right">
+                            <div class="panel-body">
+                                #if( $page.publishedDate )
+                                <p class="lead text-right">
+                                    Published by $!page.publishedBy.name for release
+                                    <abbr title="$formatter.formatDateISO8601($page.publishedDate)" class="timeago">$!page.publishedDate</abbr>
+                                </p>
+                                <p class="text-right">
+                                    Submitted by $!page.submittedBy.name
+                                    <abbr title="$formatter.formatDateISO8601($page.submittedDate)" class="timeago">$!page.submittedDate</abbr>
+                                </p>
+                                #if( $page.canPublish )
+                                <button class="btn btn-sm btn-warning article-reject" type="button">Unpublish</button>
+                                #end
+                                #else
+                                <p class="lead text-right">
+                                    Submitted by $!page.submittedBy.name
+                                    <abbr title="$formatter.formatDateISO8601($page.submittedDate)" class="timeago">$!page.submittedDate</abbr>
+                                </p>
+                                #if( $page.canPublish )
+                                <button class="btn btn-sm btn-warning article-reject" type="button">Reject with reason</button>
+
+                                <button class="btn btn-sm btn-success article-publish" type="button">Publish</button>
+                                #end
+                                #end
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        #end
+
+                        #if( $page.rejectedAt )
+                        <div class="panel panel-info col-md-8 pull-right">
+                            <div class="panel-body">
+                                <p class="lead text-right">
+                                    Rejected by $!page.rejectedBy.name
+                                    <abbr title="$formatter.formatDateISO8601($page.rejectedAt)" class="timeago">$!page.rejectedAt</abbr>
+                                </p>
+
+                                <p class="text-right">$!page.rejectedReason</p>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        #end
+
+                        <div class="form-group">
+                            <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12">
+                                <div id="chart_histogram">
+                                    <svg></svg>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="row p-b-20">
+                                    <div class="col-md-12">
+                                        <div class="input-group date-range">
+                                            <label for="analytics-range" class="input-group-addon">Date</label>
+                                            <input type="text" id="analytics-range" placeholder="Choose a date range" value="" class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
                     <div class="tab-pane" id="details">
                         <div class="form-group">
                             <label class="control-label col-md-3" for="title">Title</label>
@@ -398,9 +435,154 @@
         </div>
 
         <script type="text/javascript">
-            $(function() {
+            var options = {
+                startDate: null,
+                endDate: null,
+                interval: "day"
+            };
+
+            $(function () {
                 initManageBlogArticle();
+                initGraphControls();
+                loadGraphData();
             });
+
+            function loadGraphData() {
+                var href = "?activity&" + $.param(options);
+                $.ajax({
+                    type: "GET",
+                    url: href,
+                    dataType: 'html',
+                    success: function (resp) {
+                        var json = null;
+
+                        if (resp !== null && resp.length > 0) {
+                            json = JSON.parse(resp);
+                        }
+
+                        flog('response', json);
+                        handleData(json);
+                    }
+                });
+            }
+
+            function handleData(resp) {
+                var aggr = (resp !== null ? resp.aggregations : null);
+
+                initHistogram(aggr);
+            }
+
+
+            function initGraphControls() {
+                flog("initGraphControls");
+                var reportRange = $('#analytics-range');
+
+                function cb(start, end) {
+                    options.startDate = start.format('DD/MM/YYYY');
+                    options.endDate = end.format('DD/MM/YYYY');
+                    loadGraphData();
+                }
+
+                reportRange.exist(function () {
+                    flog("init analytics range");
+                    reportRange.daterangepicker({
+                        format: 'DD/MM/YYYY',
+                        startDate: moment().subtract('days', 6),
+                        endDate: moment(),
+                        ranges: {
+                            'Today': [
+                                moment().toISOString(),
+                                moment().toISOString()
+                            ],
+                            'Last 7 Days': [
+                                moment().subtract('days', 6).toISOString(),
+                                moment().toISOString()
+                            ],
+                            'Last 30 Days': [
+                                moment().subtract('days', 29).toISOString(),
+                                moment().toISOString()],
+                            'This Month': [
+                                moment().startOf('month').toISOString(),
+                                moment().endOf('month').toISOString()],
+                            'Last Month': [
+                                moment().subtract('month', 1).startOf('month').toISOString(),
+                                moment().subtract('month', 1).endOf('month').toISOString()],
+                            'This Year': [
+                                moment().startOf('year').toISOString(),
+                                moment().toISOString()],
+                        },
+                    }, cb);
+                });
+            }
+
+            function initHistogram(aggr) {
+                flog("initHistogram", aggr);
+
+                $('#chart_histogram svg').empty();
+                nv.addGraph(function () {
+
+                    var myData = [];
+                    var allSeries = [];
+                    $.each(aggr.type.buckets, function(b, typeBucket) {
+                        var series = {
+                            key: typeBucket.key,
+                            values: []
+                        };
+                        myData.push( series );
+                    });
+
+                    $.each(aggr.reqDate.buckets, function(i, dateBucket) {
+                        var typeBuckets = dateBucket.type.buckets;
+                        var map = {};
+                        $.each(typeBuckets, function(ss, typeBucket) {
+                            //flog("add to map",dateBucket.key, typeBucket.doc_count);
+                            map[typeBucket.key] = typeBucket.doc_count;
+                        });
+
+                        $.each(myData, function(s, series) {
+                            var docCount = map[series.key];
+                            //flog("point", docCount, series.key, map);
+                            if( docCount ) {
+                                series.values.push({x: dateBucket.key, y : docCount});
+                            } else {
+                                series.values.push({x: dateBucket.key, y : 0});
+                            }
+                        });
+
+                    });
+
+                    flog( myData);
+
+                    var chart = nv.models.stackedAreaChart()
+                            .margin({right: 100})
+                            .x(function (d) {
+                                return d.x;
+                            })   //We can modify the data accessor functions...
+                            .y(function (d) {
+                                return d.y;
+                            })   //...in case your data is formatted differently.
+                            .useInteractiveGuideline(true)    //Tooltips which show all data points. Very nice!
+                            .rightAlignYAxis(true)      //Let's move the y-axis to the right side.
+                            .showControls(true)       //Allow user to choose 'Stacked', 'Stream', 'Expanded' mode.
+                            .clipEdge(true);
+
+                    chart.xAxis
+                            .tickFormat(function (d) {
+                                return d3.time.format('%x')(new Date(d))
+                            });
+
+                    chart.yAxis
+                            .tickFormat(d3.format(',.2f'));
+
+                    d3.select('#chart_histogram svg')
+                            .datum(myData)
+                            .call(chart);
+
+                    nv.utils.windowResize(chart.update);
+
+                    return chart;
+                });
+            }
         </script>
     </body>
 </html>

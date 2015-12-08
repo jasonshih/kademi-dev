@@ -106,13 +106,23 @@
             </div>
 
             <div class="form-group oauth-fields">
-                <label class="col-sm-4 control-label" for="redirectURI">Scope
+                <label class="col-sm-4 control-label" for="permissionScopes">Scope
                     <small>Comma separated list</small>
                 </label>
                 <div class="col-sm-7">
                     <textarea type="text" class="form-control" name="permissionScopes" id="permissionScopes"></textarea>
                 </div>
             </div>
+
+            <div class="form-group oauth-fields">
+                <label class="col-sm-4 control-label" for="accountId">Account
+                    <small>For importing activity</small>
+                </label>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control" name="accountId" id="accountId"/>
+                </div>
+            </div>
+
         </div>
     </div>
     <div class="modal-footer">
@@ -170,6 +180,7 @@
                 addProviderModal.find('input[name=tokenLocation]').val(template.tokenLocation);
                 addProviderModal.find('input[name=profileLocation]').val(template.profileLocation);
                 addProviderModal.find('input[name=redirectURI]').val(template.redirectURI);
+                addProviderModal.find('input[name=accountId]').val(template.accountId);
                 if( template.permissionScopes ) {
                     addProviderModal.find('textarea[name=permissionScopes]').val(template.permissionScopes.join(','));
                 }
@@ -229,6 +240,7 @@
             add_provider_modal.find('input[name=profileLocation]').val(data.profileLocation);
             add_provider_modal.find('input[name=displayNamePath]').val(data.displayNamePath);
             add_provider_modal.find('input[name=redirectURI]').val(data.redirectURI);
+            add_provider_modal.find('input[name=accountId]').val(data.accountId);
             if( data.permissionScopes ) {
                 add_provider_modal.find('textarea[name=permissionScopes]').val(data.permissionScopes.join(','));
             }
