@@ -104,14 +104,26 @@ function initShowRecipients() {
 }
 
 function initSendTest() {
-    $('body').on('click', '.btn-sent-test', function(e){
+    $('body').on('click', '.btn-sent-test', function (e) {
         e.preventDefault();
         doSendTest();
     });
+    var testModal = $('#modal-send-test');
+    var testForm = testModal.find('form');
+
+    testForm.forms({
+        callback: function (resp) {
+            if (resp.status) {
+                Msg.success('Saved');
+            } else {
+                Msg.warning(resp.messages);
+            }
+        }
+    });
 }
 
-function initSend(){
-    $('body').on('click', '.btn-send-sms', function(e){
+function initSend() {
+    $('body').on('click', '.btn-send-sms', function (e) {
         e.preventDefault();
         doSendSms();
     });
@@ -127,7 +139,11 @@ function doSendTest() {
             sendTest: true
         },
         success: function (resp) {
-            Msg.success('A test has been sent to your phone number');
+            if (resp.status) {
+                Msg.success('A test has been sent to your phone number');
+            } else {
+                Msg.warning(resp.messages);
+            }
             //onTestResponse(resp);
         },
         error: function (resp) {
