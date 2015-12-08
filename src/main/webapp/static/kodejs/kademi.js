@@ -5,7 +5,7 @@
 /*
  * Kademi Core
  */
-controllerMappings.executeJs(function () {
+(function (exports) {
     var arr = [];
 
     var slice = arr.slice;
@@ -160,6 +160,19 @@ controllerMappings.executeJs(function () {
             return typeof obj === "object" || typeof obj === "function" ?
                     class2type[ toString.call(obj) ] || "object" :
                     typeof obj;
+        },
+        typeOf: function (o) {
+            var undef;
+
+            if (o === undef) {
+                return 'undefined';
+            } else if (o === null) {
+                return 'null';
+            } else if (o.nodeType) {
+                return 'node';
+            }
+
+            return ({}).toString.call(o).match(/\s([a-z|A-Z]+)/)[1].toLowerCase();
         },
         // Convert dashed to camelCase; data modules
         camelCase: function (string) {
@@ -1197,10 +1210,10 @@ controllerMappings.executeJs(function () {
             if (s.crossDomain == null) {
                 parts = rurl.exec(s.url.toLowerCase());
                 /*s.crossDomain = !!(parts &&
-                        (parts[ 1 ] !== ajaxLocParts[ 1 ] || parts[ 2 ] !== ajaxLocParts[ 2 ] ||
-                                (parts[ 3 ] || (parts[ 1 ] === "http:" ? "80" : "443")) !==
-                                (ajaxLocParts[ 3 ] || (ajaxLocParts[ 1 ] === "http:" ? "80" : "443")))
-                        );*/
+                 (parts[ 1 ] !== ajaxLocParts[ 1 ] || parts[ 2 ] !== ajaxLocParts[ 2 ] ||
+                 (parts[ 3 ] || (parts[ 1 ] === "http:" ? "80" : "443")) !==
+                 (ajaxLocParts[ 3 ] || (ajaxLocParts[ 1 ] === "http:" ? "80" : "443")))
+                 );*/
             }
 
             // Convert data if not already a string
@@ -1878,11 +1891,5 @@ controllerMappings.executeJs(function () {
         };
     });
 
-    var
-            // Map over jQuery in case of overwrite
-            _Kademi = global.Kademi,
-            // Map over the $ in case of overwrite
-            _$ = global.$k;
-
-    global.Kademi = global.$k = Kademi;
-});
+    exports.Kademi = exports.$k = Kademi;
+})(this);
