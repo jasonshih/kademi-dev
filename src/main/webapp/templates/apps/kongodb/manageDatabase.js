@@ -208,8 +208,9 @@ function saveMapping(name, source) {
         url: '',
         success: function (data) {
             flog('success', data);
+
             if (data.status) {
-                $('#mapping').reloadFragment({
+                $('#mappings').reloadFragment({
                     whenComplete: function () {
                         prettyPrintJson();
                     }
