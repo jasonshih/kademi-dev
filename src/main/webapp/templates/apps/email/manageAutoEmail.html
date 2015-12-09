@@ -932,6 +932,10 @@
                                 Refresh
                                 <span class="glyphicon glyphicon-refresh"></span>
                             </button>
+                            <button type="button" class="btn-mark-ignored btn btn-warning">
+                                Mark Ignored
+                                <span class="fa fa-ban"></span>
+                            </button>
                         </div>
 
                         <div class="input-group date-range col-md-4">
@@ -949,17 +953,23 @@
                                         <th>Subject</th>
                                         <th colspan="3">Recipient</th>
                                         <th style="text-align: right">Status Date</th>
+                                        <th class="text-center"><input type="checkbox" class="selectAll" name="markIgnored"/></th>
                                     </tr>
                                 </thead>
                                 <tbody id="history-table-body">
                                     #foreach($item in $page.history)
-                                    <tr href="/emails/$item.id" class="email-item clickable">
-                                        <td class="icon" title="$!email.status">
-                                            #if($item.sendStatus == "c" )
-                                            <i class="fa fa-check-circle text-success"></i>
-                                            #else
-                                            <i class="fa fa-exclamation-circle text-muted"></i>
-                                            #end
+                                    <tr href="/emails/$item.id">
+                                        <td class="icon email-item clickable" title="$!email.status">
+                                            <span class="fa-stack fa-lg">
+                                                #if($item.sendStatus == "c" )
+                                                <i class="fa fa-check-circle fa-stack-1x text-success"></i>
+                                                #else
+                                                <i class="fa fa-exclamation-circle fa-stack-1x text-muted"></i>
+                                                #end
+                                                #if($item.ignored)
+                                                <i class="fa fa-ban fa-stack-2x text-danger"></i>
+                                                #end
+                                            </span>
 
                                             <abbr title="EmailItemID: $item.id">
                                                 #if( $item.edmConverted )
@@ -979,13 +989,14 @@
                                             #end
                                         </td>
 
-                                        <td>$item.subject</td>
-                                        <td>$item.recipientAddress</td>
-                                        <td>$!item.recipient.firstName</td>
-                                        <td>$!item.recipient.surName</td>
-                                        <td>
+                                        <td class="email-item clickable">$item.subject</td>
+                                        <td class="email-item clickable">$item.recipientAddress</td>
+                                        <td class="email-item clickable">$!item.recipient.firstName</td>
+                                        <td class="email-item clickable">$!item.recipient.surName</td>
+                                        <td class="email-item clickable">
                                             <abbr class="pull-right timeago" title="$formatter.formatDateISO8601($item.sendStatusDate)">$item.sendStatusDate</abbr>
                                         </td>
+                                        <td class="text-center"><input data-edmid="$item.id" type="checkbox" name="markIgnored"/></td>
                                     </tr>
                                     #end
                                 </tbody>
