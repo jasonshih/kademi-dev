@@ -2,6 +2,7 @@
     <head>
         <title>Manage Database</title>
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
+        <script type="text/javascript" src="/static/js/jquery.autogrow-textarea-1.0.0.js" >//</script>
         <script type="text/javascript" src="manageDatabase.js" bottom="true">//</script>
     </head>
     <body class="">
@@ -228,19 +229,19 @@
                                 <div class="panel panel-default mapping" id="mapping-${mappingEntry.key}">
                                     <div class="panel-heading" role="tab" id="mapping-heading-${foreach.count}">
                                         <i class="fa fa-file-o"></i>
-                                        <a role="button" data-toggle="collapse" href="#mapping-${foreach.count}" data-parent="#mappings-wrapper">
+                                        <a role="button" data-toggle="collapse" href="#mapping-${foreach.count}" class="mapping-name" data-parent="#mappings-wrapper">
                                             $mappingEntry.key
                                         </a>
                                         <div class="panel-tools">
-                                            <div class="btn-group btn-group-xs">
-                                                <button class="btn btn-info btn-edit-mapping" type="button">
-                                                    <i class="fa fa-pencil"></i> Edit
-                                                </button>
-                                                <button class="btn btn-success btn-save-mapping" type="button" style="display: none">
+                                            <button class="btn btn-info btn-edit-mapping btn-xs" type="button">
+                                                <i class="fa fa-pencil"></i> Edit
+                                            </button>
+                                            <div class="btn-group save-wrapper" style="display: none">
+                                                <button class="btn btn-success btn-save-mapping btn-xs" type="button">
                                                     <i class="fa fa-pencil"></i> Save
                                                 </button>
-                                                <button class="btn btn-danger btn-delete-mapping" type="button" style="display: none">
-                                                    <i class="fa fa-remove"></i> Delete
+                                                <button class="btn btn-default btn-cancel-mapping btn-xs" type="button">
+                                                    <i class="fa fa-ban"></i> Cancel
                                                 </button>
                                             </div>
                                         </div>
