@@ -12,10 +12,17 @@ function initManageDatabase() {
     initMappingsTab();
 }
 
+var backgroundJobStatusOptions = {
+    onComplete: function () {
+        $('#mappings').reloadFragment();
+        prettyPrintJson;
+    }
+};
+
 function initReindexTab(body) {
     flog('initReindexTab');
 
-    initBackgroundJobStatus();
+    initBackgroundJobStatus(backgroundJobStatusOptions);
 
     body.on("click", ".reindexBtn", function(e){
         e.preventDefault();
@@ -28,8 +35,7 @@ function initReindexTab(body) {
             },
             success: function (resp) {
                 Msg.info("Job submitted");
-                initBackgroundJobStatus();
-                $('#mappings').reloadFragment();
+                initBackgroundJobStatus(backgroundJobStatusOptions);
             }
         });
     });

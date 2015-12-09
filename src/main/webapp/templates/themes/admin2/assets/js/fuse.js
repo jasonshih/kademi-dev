@@ -792,10 +792,12 @@ function getRecentItems() {
     }
 }
 
-function initBackgroundJobStatus() {
+function initBackgroundJobStatus(options) {
     // Find divs which need to reload to get job status. For each div get the current
     // job status and then apply data to the handlebars template in the div
-    flog("initBackgroundJobStatus");
+    flog("initBackgroundJobStatus", options);
+
+    options = $.extend({}, options);
 
     Handlebars.registerHelper('formatISODate', function (millis) {
         if (millis) {
@@ -829,12 +831,12 @@ function initBackgroundJobStatus() {
         var templateHtml = div.siblings('.backgroundTaskTemplate').html();
         var template = Handlebars.compile(templateHtml);
 
-        checkBackgroundJobStatus(href, div, template);
+        checkBackgroundJobStatus(href, div, template, options);
     });
 }
 
-function checkBackgroundJobStatus(href, div, template) {
-    flog('checkBackgroundJobStatus', href, div, template);
+function checkBackgroundJobStatus(href, div, template, options) {
+    flog('checkBackgroundJobStatus', href, div, template, options);
 
     $.ajax({
         url: href,
@@ -845,39 +847,54 @@ function checkBackgroundJobStatus(href, div, template) {
 
             if (resp.status) {
                 var htmlStr = template(resp);
-                div.html(htmlStr);
-                div.show(400);
-                div.find('.timeago').timeago();
-
                 flog('Background task status HTML:', htmlStr);
 
+                div.html(htmlStr);
+                div.show(400);
+
                 if (resp.data.statusInfo.complete) {
-                    // no need to scan
+                    if (typeof options.onComplete === 'function') {
+                        options.onComplete.call(this, resp);
+                    }
                 } else {
                     // Not complete, so update again
                     flog("Background task is not completed! Re-check status in next 3 seconds");
                     window.setTimeout(function () {
-                        checkBackgroundJobStatus(href, div, template);
+                        checkBackgroundJobStatus(href, div, template, options);
                     }, 3000);
+
+                    if (typeof options.onRunning === 'function') {
+                        options.onRunning.call(this, resp);
+                    }
                 }
             } else {
                 var htmlStr = template(null);
+                flog('Background task status HTML:', htmlStr);
+
                 div.html(htmlStr);
                 div.show(400);
 
-                flog('Background task status HTML:', htmlStr);
+                if (typeof options.onError === 'function') {
+                    options.onError.call(this, resp);
+                }
             }
+
+            div.find('.timeago').timeago();
         },
-        error: function () {
+        error: function (jqXHR) {
             // probably a 404, which is fine, show the template with no data so it can render a run form
             flog("No task resource, thats cool, means not running and hasnt been run");
 
             var htmlStr = template(null);
+            flog('Background task status HTML:', htmlStr);
+
             div.html(htmlStr);
             div.show(400);
             div.find('.timeago').timeago();
 
-            flog("set html", htmlStr);
+            if (typeof options.onError === 'function') {
+                options.onError.call(this, jqXHR);
+            }
         }
     });
 }
