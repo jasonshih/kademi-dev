@@ -153,8 +153,9 @@ var Main = function () {
     //function to reduce the size of the Main Menu
     var runNavigationToggler = function () {
         var kademiContainer = $('#kademi-container');
+        $('.navigation-toggler').on('click', function (e) {
+            e.preventDefault();
 
-        $('.navigation-toggler').on('click', function () {
             if (!kademiContainer.hasClass('navigation-small')) {
                 kademiContainer.addClass('navigation-small');
                 $.cookie('admin-sidebar', 'collapsed', {
@@ -163,7 +164,10 @@ var Main = function () {
                 });
             } else {
                 kademiContainer.removeClass('navigation-small');
-                $.removeCookie('admin-sidebar');
+                $.cookie('admin-sidebar', 'expanded', {
+                    path: '/',
+                    expires: 999
+                });
             }
 
             window.dispatchEvent(new Event('resize'));

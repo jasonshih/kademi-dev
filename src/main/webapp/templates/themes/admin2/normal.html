@@ -174,15 +174,11 @@
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a href="/edit">
-                                            <i class="clip-pencil"></i>
-                                            &nbsp; Organisation details</a>
+                                        <a href="/edit"><i class="clip-pencil"></i> &nbsp; Organisation details</a>
                                     </li>
                                     #foreach($org in $page.organisations)
                                     <li>
-                                        <a href="$org.href">
-                                            <i class="clip-home-2"></i>
-                                            &nbsp; $org.title</a>
+                                        <a href="$org.href"><i class="clip-home-2"></i> &nbsp; $org.title</a>
                                     </li>
                                     #end
                                 </ul>
@@ -191,7 +187,7 @@
                             <li class="dropdown current-user fuse-header-item">
                                 <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                     #if( $profile.photoHash )
-                                    <img src="/_hashes/files/$profile.photoHash" class="circle-img" alt="">
+                                        <img src="/_hashes/files/$profile.photoHash" class="circle-img" alt="">
                                     #end
                                     <span class="username">$user.thisProfile.nickName</span>
                                     <i class="clip-chevron-down"></i>
@@ -199,26 +195,20 @@
                                 <ul class="dropdown-menu">
                                     <li>
                                         <a href="/manageUsers/$profile.userId">
-                                            <i class="clip-user-2"></i>
-                                            &nbsp;My Profile
+                                            <i class="clip-user-2"></i> &nbsp;My Profile
                                         </a>
                                     </li>
-
                                     <li class="divider"></li>
-
                                     <li>
                                         <a href="#" class="logout">
-                                            <i class="clip-exit"></i>
-                                            &nbsp;Log Out
+                                            <i class="clip-exit"></i> &nbsp;Log Out
                                         </a>
                                     </li>
-
                                 </ul>
                             </li>
                             <li class="fuse-header-item">
-                                <a target="_blank" href="http://docs.kademi.co/ref/screens${templateName}" class="btn-success" style="color: white">
-                                    <span class="glyphicon glyphicon-question-sign"></span>
-                                    Help
+                                <a target="_blank" href="http://docs.kademi.co/ref/screens${templateName}" class="btn-success">
+                                    <span class="glyphicon glyphicon-question-sign"></span> Help
                                 </a>
                             </li>
                             <!-- end: USER DROPDOWN -->
@@ -242,45 +232,46 @@
                         <ul class="main-navigation-menu">
                             #foreach($rootItem in $menu.items)
 
-                            <li class="$formatter.ifTrue( $rootItem.active, "active open", "" )">
-                                #set($href = "#")
-                                #set($href = $rootItem.href)
-                                <a href="$href">
-                                    #if($rootItem.cssClass)
-                                    <i class="fuse-icon-fa $rootItem.id $rootItem.cssClass"></i>
-                                    #else
-                                    <i class="fuse-icon $rootItem.id"></i>
-                                    #end
-                                    <span class="title">$rootItem.text</span>
+                                <li class="$formatter.ifTrue( $rootItem.active, "active open", "" )">
+                                    #set($href = "#")
+                                    #set($href = $rootItem.href)
+                                    <a href="$href">
+                                        #if($rootItem.cssClass)
+                                            <i class="fuse-icon-fa $rootItem.id $rootItem.cssClass"></i>
+                                        #else
+                                            <i class="fuse-icon $rootItem.id"></i>
+                                        #end
+                                        <span class="title">$rootItem.text</span>
 
-                                    #if( !$rootItem.items.isEmpty() )
-                                    <i class="icon-arrow"></i>
-                                    #end
+                                        #if( !$rootItem.items.isEmpty() )
+                                            <i class="icon-arrow"></i>
+                                        #end
 
-                                    #if( $rootItem.active )
-                                    <span class="selected"></span>
-                                    #end
-                                </a>
-
-                                #set($subItems = $rootItem.items)
-                                <ul class="sub-menu">
-                                    #foreach($sectionItem in $subItems)
-                                    <li class="$formatter.ifTrue( $sectionItem.active, "active open", "" )">
-                                        <a href="$sectionItem.href">
-                                            #if($sectionItem.cssClass)
-                                            <i class="fuse-icon-fa $sectionItem.id $sectionItem.cssClass"></i>
-                                            #end
-                                            <span class="title">$sectionItem.text</span>
-
-                                            #if( $sectionItem.active )
+                                        #if( $rootItem.active )
                                             <span class="selected"></span>
+                                        #end
+                                    </a>
+
+                                    #set($subItems = $rootItem.items)
+                                    #if ($subItems && $subItems.size() > 0)
+                                        <ul class="sub-menu">
+                                            #foreach($sectionItem in $subItems)
+                                                <li class="$formatter.ifTrue( $sectionItem.active, "active open", "" )">
+                                                    <a href="$sectionItem.href">
+                                                        #if($sectionItem.cssClass)
+                                                            <i class="fuse-icon-fa $sectionItem.id $sectionItem.cssClass"></i>
+                                                        #end
+                                                        <span class="title">$sectionItem.text</span>
+                                                        #if( $sectionItem.active )
+                                                            <span class="selected"></span>
+                                                        #end
+                                                    </a>
+                                                </li>
                                             #end
-                                        </a>
-                                    </li>
+                                        </ul>
                                     #end
-                                </ul>
-                                #end
-                            </li>
+                                </li>
+                            #end
                         </ul>
                         <!-- end: MAIN NAVIGATION MENU -->
                     </div>
@@ -290,22 +281,18 @@
                 <div class="main-content">
                     <div class="container">
                         <!-- start: PAGE HEADER -->
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <ol class="breadcrumb">
-                                    #if( $page.parent.title )
-                                    <li>
-                                        <a href="$page.parent.href">
-                                            $page.parent.title
-                                        </a>
-                                    </li>
-                                    #end
-                                    <li class="active">
-                                        <a href="$page.href">$formatter.htmlEncode($page.title)</a>
-                                    </li>
-                                </ol>
-                            </div>
-                        </div>
+                        <ol class="breadcrumb">
+                            #if( $page.parent.title )
+                            <li>
+                                <a href="$page.parent.href">
+                                    $page.parent.title
+                                </a>
+                            </li>
+                            #end
+                            <li class="active">
+                                <a href="$page.href">$formatter.htmlEncode($page.title)</a>
+                            </li>
+                        </ol>
 
                         <div style="padding-top: 15px">
                             #content
