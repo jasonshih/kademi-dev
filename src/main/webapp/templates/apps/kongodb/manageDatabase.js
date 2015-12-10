@@ -12,10 +12,17 @@ function initManageDatabase() {
     initMappingsTab();
 }
 
+var backgroundJobStatusOptions = {
+    onComplete: function () {
+        $('#mappings').reloadFragment();
+        prettyPrintJson;
+    }
+};
+
 function initReindexTab(body) {
     flog('initReindexTab');
 
-    initBackgroundJobStatus();
+    initBackgroundJobStatus(backgroundJobStatusOptions);
 
     body.on("click", ".reindexBtn", function(e){
         e.preventDefault();
@@ -28,8 +35,7 @@ function initReindexTab(body) {
             },
             success: function (resp) {
                 Msg.info("Job submitted");
-                initBackgroundJobStatus();
-                $('#mappings').reloadFragment();
+                initBackgroundJobStatus(backgroundJobStatusOptions);
             }
         });
     });
@@ -85,29 +91,46 @@ function initMappingsTab() {
     mappingsWrapper.on('click', '.btn-edit-mapping', function (e) {
         e.preventDefault();
         
-        var btn = $(e.target).closest('button');
-        btn.hide();
-        
-        var cont = btn.closest('.mapping');
-        cont.find('.btn-save-mapping').show();
-        
-        var pre = cont.find('pre');
-        var height = pre.css('height');
+        var btn = $(this);
+        var mapping = btn.closest('.mapping');
+        var pre = mapping.find('pre');
         var source = pre.text();
-        var newDiv = $('<textarea class="form-control form-control-code">');
-        
-        newDiv.val(source);
-        pre.replaceWith(newDiv);
-        newDiv.css('height', height);
+        var textarea = mapping.find('textarea');
+
+        if (textarea.length === 0) {
+            textarea = $('<textarea class="form-control form-control-code">');
+            textarea.val(source);
+            mapping.find('.prettyPrintJson').append(textarea);
+            textarea.autogrow();
+        }
+
+        btn.hide();
+        mapping.find('.save-wrapper').show();
+        pre.hide();
+        textarea.show();
     });
 
-    mappingsWrapper.on('click', '.btn-save-mapping', function (e) {
+    mappingsWrapper.on('click', '.btn-cancel-mapping ', function (e) {
         e.preventDefault();
-        
-        var btn = $(e.target).closest('button');
-        var cont = btn.closest('.mapping');
-        var name = cont.find('h3').text();
-        var textarea = cont.find('textarea');
+
+        var btn = $(this);
+        var mapping = btn.closest('.mapping');
+        var pre = mapping.find('pre');
+        var textarea = mapping.find('textarea');
+
+        mapping.find('.save-wrapper').hide();
+        mapping.find('.btn-edit-mapping').show();
+        pre.show();
+        textarea.hide();
+    });
+
+    mappingsWrapper.on('click', '.btn-save-mapping ', function (e) {
+        e.preventDefault();
+
+        var btn = $(this);
+        var mapping = btn.closest('.mapping');
+        var name = mapping.find('.mapping-name').text().trim();
+        var textarea = mapping.find('textarea');
         var source = textarea.val();
         
         saveMapping(name, source);
@@ -173,6 +196,8 @@ function doRemoveDocs(checkBoxes) {
 }
 
 function saveMapping(name, source) {
+    flog('saveMapping', name, source);
+
     $.ajax({
         type: 'POST',
         data: {
@@ -183,8 +208,9 @@ function saveMapping(name, source) {
         url: '',
         success: function (data) {
             flog('success', data);
+
             if (data.status) {
-                $('#mapping').reloadFragment({
+                $('#mappings').reloadFragment({
                     whenComplete: function () {
                         prettyPrintJson();
                     }

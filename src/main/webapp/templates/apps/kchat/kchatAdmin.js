@@ -5,13 +5,11 @@ function initKChatAdmin() {
 }
 
 function initSidebarToggle() {
-    var t = '<!-- start: PAGE SIDEBAR TOGGLE -->'
-            + '<li>'
-            + '    <a class="sb-toggle" href="#"><i class="fa fa-outdent"></i></a>'
-            + '</li>'
-            + '<!-- end: PAGE SIDEBAR TOGGLE -->';
-
-    $('.navbar-tools .navbar-right').append(t);
+    $('.navbar-tools .navbar-right').append(
+        '<li class="fuse-header-item">' +
+        '    <a class="sb-toggle" href="#"><i class="fa fa-outdent"></i></a>' +
+        '</li>'
+    );
 }
 
 var initKChatWebsocket = function () {

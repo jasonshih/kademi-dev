@@ -58,19 +58,19 @@ function initHistorySearch() {
     reportRange.exist(function () {
         flog("init report range");
         reportRange.daterangepicker({
-                format: 'DD/MM/YYYY', // YYYY-MM-DD
-                ranges: {
-                    'Last 7 Days': [moment().subtract('days', 6), moment()],
-                    'Last 30 Days': [moment().subtract('days', 29), moment()],
-                    'This Month': [moment().startOf('month'), moment().endOf('month')],
-                    'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
-                    'This Year': [moment().startOf('year'), moment()],
-                },
+            format: 'DD/MM/YYYY', // YYYY-MM-DD
+            ranges: {
+                'Last 7 Days': [moment().subtract('days', 6), moment()],
+                'Last 30 Days': [moment().subtract('days', 29), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
+                'This Year': [moment().startOf('year'), moment()],
             },
-            function (start, end) {
-                flog('onChange', start, end);
-                doHistorySearch(start, end);
-            });
+        },
+                function (start, end) {
+                    flog('onChange', start, end);
+                    doHistorySearch(start, end);
+                });
     });
 }
 
@@ -113,19 +113,19 @@ function initSmsHistorySearch() {
     smsReportRange.exist(function () {
         flog("init sms report range");
         smsReportRange.daterangepicker({
-                format: 'DD/MM/YYYY', // YYYY-MM-DD
-                ranges: {
-                    'Last 7 Days': [moment().subtract('days', 6), moment()],
-                    'Last 30 Days': [moment().subtract('days', 29), moment()],
-                    'This Month': [moment().startOf('month'), moment().endOf('month')],
-                    'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
-                    'This Year': [moment().startOf('year'), moment()],
-                },
+            format: 'DD/MM/YYYY', // YYYY-MM-DD
+            ranges: {
+                'Last 7 Days': [moment().subtract('days', 6), moment()],
+                'Last 30 Days': [moment().subtract('days', 29), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
+                'This Year': [moment().startOf('year'), moment()],
             },
-            function (start, end) {
-                flog('onChange', start, end);
-                doSMSHistorySearch(start, end);
-            });
+        },
+                function (start, end) {
+                    flog('onChange', start, end);
+                    doSMSHistorySearch(start, end);
+                });
     });
 }
 
@@ -246,26 +246,26 @@ function initHistogram(aggr) {
     $('#chart_histogram svg').empty();
     nv.addGraph(function () {
         var chart = nv.models.multiBarChart()
-            .options({
-                showLegend: true,
-                showControls: false,
-                noData: "No Data available for histogram",
-                margin: {
-                    left: 40,
-                    bottom: 60
-                }
-            });
+                .options({
+                    showLegend: true,
+                    showControls: false,
+                    noData: "No Data available for histogram",
+                    margin: {
+                        left: 40,
+                        bottom: 60
+                    }
+                });
 
         chart.xAxis
-            .axisLabel("Date")
-            .rotateLabels(-45)
-            .tickFormat(function (d) {
-                return moment(d).format("DD MMM");
-            });
+                .axisLabel("Date")
+                .rotateLabels(-45)
+                .tickFormat(function (d) {
+                    return moment(d).format("DD MMM");
+                });
 
         chart.yAxis
-            .axisLabel("Triggered")
-            .tickFormat(d3.format('d'));
+                .axisLabel("Triggered")
+                .tickFormat(d3.format('d'));
 
         var myData = [];
         var conditionsTrue = {
@@ -300,25 +300,25 @@ function initHistogram(aggr) {
         for (var i = 0; i < trueHits.length; i++) {
             var bucket = trueHits[i];
             conditionsTrue.values.push(
-                {x: bucket.key, y: bucket.doc_count});
+                    {x: bucket.key, y: bucket.doc_count});
         }
 
         for (var i = 0; i < falseHits.length; i++) {
             var bucket = falseHits[i];
             conditionsFalse.values.push(
-                {x: bucket.key, y: bucket.doc_count});
+                    {x: bucket.key, y: bucket.doc_count});
         }
 
         for (var i = 0; i < delayedHits.length; i++) {
             var bucket = delayedHits[i];
             delayedTriggers.values.push(
-                {x: bucket.key, y: bucket.doc_count});
+                    {x: bucket.key, y: bucket.doc_count});
         }
 
         d3.select('#chart_histogram svg')
-            .datum(myData)
-            .transition().duration(500)
-            .call(chart);
+                .datum(myData)
+                .transition().duration(500)
+                .call(chart);
 
         nv.utils.windowResize(chart.update);
 
@@ -472,6 +472,45 @@ function initAddGroup() {
     });
 }
 
+function initMarkIgnored() {
+    flog('initMarkIgnored');
+
+    $('body').on('click', '.btn-mark-ignored', function (e) {
+        e.preventDefault();
+
+        var checkBoxes = $('#history-table-body td input[name=markIgnored]:checked');
+
+        var edmids = [];
+
+        checkBoxes.each(function (i, item) {
+            var a = $(item);
+            edmids.push(a.data('edmid'));
+        });
+
+        if (edmids.length > 0 && confirm('Are you sure you want to mark ' + edmids.length + ' email' + (edmids.length > 1 ? 's' : '') + ' as ignored?')) {
+            $.ajax({
+                type: 'POST',
+                url: window.location.href,
+                data: {
+                    markIgnored: edmids.join(',')
+                },
+                success: function (resp) {
+                    if (resp.status) {
+                        $('#history-table-body').reloadFragment();
+                        Msg.success(resp.messages);
+                    } else {
+                        Msg.warning(resp.messages);
+                    }
+                },
+                error: function (resp) {
+                    flog('error', resp);
+                    Msg.error('err');
+                }
+            });
+        }
+    });
+}
+
 var p;
 function initManageAutoEmail(emailEnabled, smsEnabled) {
     flog('initManageAutoEmail', emailEnabled, smsEnabled);
@@ -495,6 +534,8 @@ function initManageAutoEmail(emailEnabled, smsEnabled) {
     loadData();
     initJavascriptEditor();
     initAddGroup();
+    initSelectAll();
+    initMarkIgnored();
 
     $('#action .toggler').on({
         'checked.toggled': function (e, panel) {
@@ -528,7 +569,8 @@ function initManageAutoEmail(emailEnabled, smsEnabled) {
         e.preventDefault();
 
         var item = $(this);
-        var href = item.attr('href')
+        var row = item.closest('tr');
+        var href = row.attr('href')
         var win = window.open(href, '_blank');
 
         if (win) {
@@ -668,15 +710,15 @@ function showAttachment(data, attachmentsList) {
     var hash = data.result.nextHref;
 
     attachmentsList.append(
-        '<article>' +
-        '   <span class="article-name">' +
-        '       <a target="_blank" href="/_hashes/files/' + hash + '">' + name + '</a>' +
-        '   </span>' +
-        '   <aside class="article-action">' +
-        '       <a class="btn btn-xs btn-danger btn-delete-attachment" href="' + name + '" title="Remove"><i class="clip-minus-circle"></i></a>' +
-        '   </aside>' +
-        '</article>'
-    );
+            '<article>' +
+            '   <span class="article-name">' +
+            '       <a target="_blank" href="/_hashes/files/' + hash + '">' + name + '</a>' +
+            '   </span>' +
+            '   <aside class="article-action">' +
+            '       <a class="btn btn-xs btn-danger btn-delete-attachment" href="' + name + '" title="Remove"><i class="clip-minus-circle"></i></a>' +
+            '   </aside>' +
+            '</article>'
+            );
 }
 
 function doRemoveAttachment(name, callback) {
