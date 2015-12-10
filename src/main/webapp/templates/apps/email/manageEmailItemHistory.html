@@ -10,20 +10,34 @@
                 <i class="fa fa-envelope"></i> Email history
             </div>
             <div class="panel-body">
-                <div class="clearfix form-horizontal">
-                    <div class="input-group date-range pull-right col-md-4 col-sm-6">
-                        <label for="report-range" class="input-group-addon">Time</label>
-                        <input type="text" id="report-range" placeholder="Choose a date range" value="" class="form-control" />
+                <div class="row">
+                    <div class="col-md-6 col-sm-6">
+                        <div class="input-group search-user input-group-sm">
+                            <input type="text" id="email-query" class="form-control" placeholder="Search by recipient or subject" value="" />
+                            <span class="input-group-btn">
+                                <button class="btn btn-sm btn-default" type="button" data-type="clearer" data-target="#email-query">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </span>
+                        </div>
                     </div>
-                    <div class="input-group search-user input-group-sm col-md-6 col-sm-6">
-                        <input type="text" id="email-query" class="form-control" placeholder="Search by recipient or subject" value="" />
-                        <span class="input-group-btn">
-                            <button class="btn btn-sm btn-default" type="button" data-type="clearer" data-target="#email-query">
-                                <i class="fa fa-times"></i>
+                    <div class="col-md-4 col-sm-4">
+                        <div class="input-group date-range">
+                            <label for="report-range" class="input-group-addon">Time</label>
+                            <input type="text" id="report-range" placeholder="Choose a date range" value="" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn btn-warning btn-mark-ignored"><i class="fa fa-ban"></i> Mark as Ignored</button>
+                            <button class="btn btn-sm btn-warning btn-sm dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
                             </button>
-                        </span>
+                            <ul class="dropdown-menu pull-right" role="menu">
+                                <li><a href="#" class="btn-mark-included" title="Mark as included"><i class="fa fa-check"></i> Mark as included</a></li>
+                            </ul>
+                        </div>
                     </div>
-
                 </div>
 
                 <div class="table-responsive">
@@ -33,6 +47,7 @@
                             <col width="" />
                             <col width="120px" />
                             <col data-sort="false" width="60px" />
+                            <col width="10px"/>
                         </colgroup>
                         <thead>
                             <tr>
@@ -40,51 +55,50 @@
                                 <th>Subject</th>
                                 <th style="text-align: right">Date</th>
                                 <th>Status</th>
+                                <th><input type="checkbox" class="selectAll" name="markIgnored"/></th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="history-table-body">
                             #foreach($e in $page.searchResults)
                             <tr>
                                 <td><a href='$e.id'>$e.recipientAddress</a></td>
                                 <td>$e.subject</td>
                                 <td><abbr title="$formatter.formatDateISO8601($e.createdDate)" class="timeago">$!e.createdDate</abbr></td>
                                 <td>
+                                    #set($statusLabel = "default")
+                                    #set($statusText = $e.statusText)
+                                    #set($statusIcon = "fa-check")
+
                                     #if( $e.edmConverted )
-                                    <p class="label label-success">
-                                        <span class="glyphicon glyphicon-ok"></span>
-                                        Converted
-                                    </p>
+                                    #set($statusText = "Converted")
                                     #elseif( $e.readStatus )
-                                    <p class="label label-primary">
-                                        <span class="glyphicon glyphicon-ok"></span>
-                                        Opened
-                                    </p>
-
+                                    #set($statusLabel = "primary")
                                     #elseif( $e.sendStatus == 'r' )
-                                    <p class="label label-warning">
-                                        <span class="glyphicon glyphicon-repeat"></span>
-                                        $e.statusText - $!e.numAttempts
-                                    </p>
+                                    #set($statusLabel = "warning")
+                                    #set($statusText = $e.statusText - $!e.numAttempts)
+                                    #set($statusIcon = "fa-refresh")
                                     #elseif( $e.sendStatus == 'c' )
-                                    <p class="label label-default">
-                                        <span class="glyphicon glyphicon-ok"></span>
-                                        $e.statusText
-                                    </p>
                                     #elseif( $e.sendStatus == 'p' )
-                                    <p class="label label-warning">
-                                        <span class="glyphicon glyphicon-time"></span>
-                                        $e.statusText
-                                    </p>
+                                    #set($statusLabel = "warning")
+                                    #set($statusIcon = "fa-clock-o")
                                     #elseif( $e.sendStatus == 'f' )
-                                    <p class="label label-danger">
-                                        <span class="glyphicon glyphicon-remove"></span>
-                                        $e.statusText
-                                    </p>
-
+                                    #set($statusLabel = "danger")
+                                    #set($statusIcon = "fa-times")
                                     #else
-                                    <span class="glyphicon glyphicon-time"></span> Preparing..
+                                    #set($statusIcon = "fa-clock-o")
+                                    #set($statusText = "Preparing..")
                                     #end
+                                    <p class="label label-$statusLabel">
+                                        <span class="fa-stack">
+                                            <i class="fa fa-stack-1x $statusIcon"></i>
+                                            #if($e.ignored)
+                                            <i class="fa fa-ban fa-stack-2x text-danger"></i>
+                                            #end
+                                        </span>
+                                        $statusText
+                                    </p>
                                 </td>
+                                <td><input data-edmid="$e.id" type="checkbox" name="markIgnored"/></td>
                             </tr>
                             #end
                         </tbody>
@@ -97,11 +111,11 @@
         </div>
 
         <script type="text/javascript">
-            $(function() {
+            $(function () {
                 $('abbr.timeago').timeago();
                 flog("Init email history");
-                $("#email-query").keyup(function() {
-                    typewatch(function() {
+                $("#email-query").keyup(function () {
+                    typewatch(function () {
                         flog("do search");
                         doSearch();
                     }, 500);
@@ -109,7 +123,7 @@
 
                 var reportRange = $('#report-range');
 
-                reportRange.exist(function() {
+                reportRange.exist(function () {
                     flog("init report range");
                     reportRange.daterangepicker({
                         format: 'DD/MM/YYYY', // YYYY-MM-DD
@@ -121,13 +135,15 @@
                             'This Year': [moment().startOf('year'), moment()],
                         },
                     },
-                            function(start, end) {
+                            function (start, end) {
                                 flog('onChange', start, end);
                                 doSearch(start, end);
                             }
                     );
                 });
 
+                initSelectAll();
+                initMarkIgnored();
             });
 
             function doSearch(startDate, endDate) {
@@ -142,22 +158,97 @@
                     type: 'GET',
                     url: window.location.pathname,
                     data: data,
-                    success: function(data) {
+                    success: function (data) {
                         flog("success", data);
                         var $fragment = $(data).find("#table-users");
                         $("#table-users").replaceWith($fragment);
                         $('abbr.timeago').timeago();
                     },
-                    error: function(resp) {
+                    error: function (resp) {
                         Msg.error("An error occured doing the user search. Please check your internet connection and try again");
                     }
                 });
             }
 
+            function initMarkIgnored() {
+                flog('initMarkIgnored');
+
+                $('body').on('click', '.btn-mark-ignored', function (e) {
+                    e.preventDefault();
+
+                    var checkBoxes = $('#history-table-body td input[name=markIgnored]:checked');
+
+                    var edmids = [];
+
+                    checkBoxes.each(function (i, item) {
+                        var a = $(item);
+                        edmids.push(a.data('edmid'));
+                    });
+
+                    if (edmids.length > 0 && confirm('Are you sure you want to mark ' + edmids.length + ' email' + (edmids.length > 1 ? 's' : '') + ' as ignored?')) {
+                        $.ajax({
+                            type: 'POST',
+                            url: window.location.href,
+                            dataType: "json",
+                            data: {
+                                markIgnored: edmids.join(',')
+                            },
+                            success: function (resp) {
+                                $('.selectAll').prop('checked', false);
+                                if (resp.status) {
+                                    $('#history-table-body').reloadFragment();
+                                    Msg.success(resp.messages);
+                                } else {
+                                    Msg.warning(resp.messages);
+                                }
+                            },
+                            error: function (resp) {
+                                flog('error', resp);
+                                Msg.error('err');
+                            }
+                        });
+                    }
+                });
+
+                $('body').on('click', '.btn-mark-included', function (e) {
+                    e.preventDefault();
+
+                    var checkBoxes = $('#history-table-body td input[name=markIgnored]:checked');
+
+                    var edmids = [];
+
+                    checkBoxes.each(function (i, item) {
+                        var a = $(item);
+                        edmids.push(a.data('edmid'));
+                    });
+
+                    if (edmids.length > 0 && confirm('Are you sure you want to mark ' + edmids.length + ' email' + (edmids.length > 1 ? 's' : '') + ' as included?')) {
+                        $.ajax({
+                            type: 'POST',
+                            url: window.location.href,
+                            dataType: "json",
+                            data: {
+                                markIncluded: edmids.join(',')
+                            },
+                            success: function (resp) {
+                                $('.selectAll').prop('checked', false);
+                                if (resp.status) {
+                                    $('#history-table-body').reloadFragment();
+                                    Msg.success(resp.messages);
+                                } else {
+                                    Msg.warning(resp.messages);
+                                }
+                            },
+                            error: function (resp) {
+                                flog('error', resp);
+                                Msg.error('err');
+                            }
+                        });
+                    }
+                });
+            }
+
         </script>
-
-
-
     </body>
 </html>
 
