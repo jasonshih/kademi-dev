@@ -182,7 +182,7 @@
                         }
 
                         if (config.allowPostForm === true) {
-                            doPostForm(form, config);
+                            doPostForm(form, config, e);
                         }
                     } else {
                         var alertMsg = getValidationMessage(form, config);
@@ -290,8 +290,9 @@ function getValidationMessage(form, config) {
  * Post all form data to Kademi server
  * @param {jQuery} form
  * @param {Object} config
+ * @param {Object} event - optional, the event which caused the submit
  */
-function doPostForm(form, config) {
+function doPostForm(form, config, event) {
     // Trim all inputs
     var enc = form.attr('enctype');
     flog('[jquery.forms] Preparing doPostForm...', 'enctype: ' + enc, form);
@@ -340,7 +341,7 @@ function doPostForm(form, config) {
                     }
 
                     if (typeof config.onSuccess === 'function') {
-                        config.onSuccess.call(this, resp, form, config);
+                        config.onSuccess.call(this, resp, form, config, event);
                     }
                 } else {
                     flog('[jquery.forms] Posting form failed', resp)

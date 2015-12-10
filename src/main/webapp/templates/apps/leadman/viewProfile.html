@@ -13,7 +13,7 @@
         #parse("/theme/apps/leadman/leadManIncludes.html")
 
         <div class="">
-            <div style="background:url(/images/profile.jpg) center center; background-size:cover;" class="unwrap">
+            <div style="background:url(/theme/images/profile.jpg) center center; background-size:cover;" class="unwrap">
                 <div class="container container-lg p-lg">
                     <div class="pull-right">
 
@@ -22,7 +22,7 @@
                         </div>
                     </div>
                     <div class="media mt-lg">
-                        <div class="media-left media-middle"><a href=""><img src="/images/user/02.jpg" class="media-object thumb96 img-circle"></a></div>
+                        <div class="media-left media-middle"><a href=""><img src="/theme/images/user/02.jpg" class="media-object thumb96 img-circle"></a></div>
                         <div class="media-body text-white">
                             <h2 class="mv-lg media-heading">$page.title</h2>
                         </div>
@@ -57,7 +57,7 @@
                                     #foreach($note in $page.notes)
                                     <li class="media">
                                         <div class="pull-left">
-                                            <div class="point-pin"><a href=""><img src="/images/user/05.jpg" alt="Image" class="media-object img-circle thumb32"></a>
+                                            <div class="point-pin"><a href=""><img src="/theme/images/user/05.jpg" alt="Image" class="media-object img-circle thumb32"></a>
                                                 <div class="point point-success point-lg"></div>
                                             </div>
                                         </div>
@@ -354,7 +354,6 @@
         <script type="text/javascript">
             $(function () {
                 var form = $("#leadDetails");
-                $('abbr.timeago').timeago();
                 form.forms({
                     callback: function (resp) {
                         Msg.info('Saved');

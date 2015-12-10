@@ -1,79 +1,132 @@
-<html xmlns="http://www.w3.org/1999/xhtml">
-    #parse("/theme/masterTemplate.html")
-    <head>
-        #@themeHeader( "View lead" )
-        <script src="/static/reload-fragment/1.0.1/jquery.reload-fragment-1.0.1.js" type="text/javascript" >//</script>
-        #end
-    </head>
-    <body class='add-container'>
-        #@themeBody()
+#parse("/theme/apps/leadman/leadManIncludes.html")
 
-        <div class="app-view-header">
-            <div class="btn-group mb-sm mr dropdown pull-right">
-                <button id="assignedBlock" class="btn btn-lg dropdown-toggle btn-info" data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false" >
-                    <span>
-                        #if( $page.assignedTo )
-                        Assigned to: $page.assignedTo.name
-                        #else
-                        Not assigned
-                        #end
-                    </span>
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" id="assignToMenu" role="menu">
-                    <li><a href="$user.name">Assign to me</a></li>
-                    <li><a href="">Clear</a></li>
-                    <li role="separator" class="divider"></li>
-                    #foreach($user in $page.parent.teamMembers)
-                    <li><a href="$user.name">$user.name</a></li>
-                    #end
-                </ul>
-            </div>
-            Task: $page.taskDescription
-        </div>
+<div class="modal-body">
 
-        #if( $page.assignedTo )
-        <p class="lead">Assigned to: $!page.assignedTo.formattedName()</p>
-        #else
-        <p class="lead">Not assigned</p>
-        #end
-        <p class="lead">Lead: <a href="../">$page.leadProfile.formattedName()</a></p>
+    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+
+    <div class="hideOnComplete">
+        <input type="text" value="$page.title" name="title" class="form-control immediateUpdate input-lg" data-href="$page.href" />
+
         <hr/>
 
 
+        <textarea name="taskDescription" class="form-control immediateUpdate" data-href="$page.href" style="height: 100px">$!page.taskDescription</textarea>
 
-        <script type="text/javascript">
-            $(function () {
-               $("#assignToMenu").on("click", "a", function (e) {
-                    e.preventDefault();
-                    var name = $(e.target).attr("href");
-                    assignTo(name);
-                });
+        <hr/>
 
-            });
-            function assignTo(name) {
-                $.ajax({
-                    type: 'POST',
-                    url: window.location.pathname,
-                    data: {
-                        assignToName: name
-                    },
-                    dataType: 'json',
-                    success: function (resp) {
-                        if (resp && resp.status) {
-                            Msg.info("Assigned");
-                            $("#assignedBlock").reloadFragment();
-                        } else {
-                            Msg.error("Sorry, we couldnt change the assignment");
-                        }
-                    },
-                    error: function (resp) {
-                        flog('error', resp);
-                        Msg.error('Sorry couldnt set the visibility ' + resp);
-                    }
-                });
-            }
-        </script>
-        #end
-    </body>
-</html>
+        <div class="row">
+            <div class="col-md-6">
+                <label class="control-label col-md-4" for="datetimepickerFollowup">Task due</label>
+
+                <div class="input-group">
+                    <input type="text" name="dueDate" class="form-control date-time immediateUpdate" data-href="$page.href" data-original-value="$formatter.formatDateTime($page.dueDate)" value="$formatter.formatDateTime($page.dueDate)">
+                    <span class="input-group-addon">
+                        <span class="fa fa-calendar"></span>
+                    </span>
+
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="btn-group pull-right" role="group">
+                    <button class="btn btn-success btnTaskDone" type="button" aria-expanded="false" data-toggle="#completeTaskDiv" title="Mark as complete" >
+                        <span class="fa fa-check"></span>
+                    </button>
+
+                    <div class="btn-group mb-sm mr dropdown">
+                        <button id="assignedBlock" class="btn dropdown-toggle btn-info" data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false" title="Assign this task to someone" >
+                            <span class="fa fa-user">
+                                #if( $page.assignedTo )
+                                $page.assignedTo.name
+                                #else
+                                Not assigned
+                                #end
+                            </span>
+                        </button>
+                        <ul class="dropdown-menu" id="assignToMenu" role="menu">
+                            <li><a href="$user.name">Assign to me</a></li>
+                            <li><a href="">Assign to nobody</a></li>
+                            <li role="separator" class="divider"></li>
+                            #foreach($user in $page.find("/leads").teamMembers)
+                            <li><a href="$user.name">$user.name</a></li>
+                            #end
+                        </ul>
+                    </div>
+
+                    <a class="btn btn-danger btnTaskDelete" type="button" aria-expanded="false" title="Delete this task" href="$page.href">
+                        <span class="fa fa-remove"></span>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <hr/>
+
+    #if( $page.lead )
+    #showLead( $page.lead, true )
+    #end
+
+
+    <div class="completeTaskDiv" style="display: none">
+        <hr/>
+
+        <form method="post" action="$page.href" class="form-horizontal completeTaskForm">
+            <input type="hidden" name="completedTask" />
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="control-label" for="action">What happened?</label>
+                    <br/>
+                    <select name="action" class="form-control">
+                        <option value="phone-false">Call to customer</option>
+                        <option value="phone-true">Call from customer</option>
+                        <option value="email-false">Email to customer</option>
+                        <option value="email-true">Email from customer</option>
+                    </select>
+
+                </div>
+                <div class="col-md-8">
+                    <textarea name="newNote" class="form-control required" style="height: 100px" placeholder="Describe the result of the task"></textarea>
+                </div>
+            </div>
+
+            <hr/>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="title" placeholder="Next follow-up task" />
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="fa fa-pencil"></span>
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right autoFillText">
+                                <li><a href="#">Call customer</a></li>
+                                <li><a href="#">Email customer</a></li>
+                                <li><a href="#">Send documents</a></li>
+                                <li><a href="#">Arrange a meeting</a></li>
+                            </ul>
+                        </div><!-- /btn-group -->
+                    </div>
+                    <br/>
+                    <div class="input-group">
+                        <input type="text" name="dueDate" class="form-control date-time" value="$formatter.formatDateTime($formatter.addDays($page.dueDate, 7))">
+                        <span class="input-group-addon">
+                            <span class="fa fa-calendar"></span>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="col-md-8">
+                    <textarea name="taskDescription" class="form-control required" style="height: 100px" placeholder="Describe the next follow-up task"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+
+                <button class="btn btn-success" type="submit">Done</button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,827 @@
+<!DOCTYPE html><!--[if IE 9 ]>    <html class="ie9" lang="en"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!-->
+<html lang="en" class="no-js"><!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>Naut - Bootstrap Admin Template</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory-->
+    <link rel="stylesheet" href="/theme/main.css">
+    <link rel="stylesheet" href="/theme/vendor.css">
+    <script src="/theme/scripts/vendor/modernizr.js"></script>
+    <!-- GMaps api-->
+    <script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=true"></script>
+  </head>
+  <body>
+    <!-- Main container-->
+    <div class="app-container">
+      <!-- top navbar-->
+      <header class="bg-primary">
+        <!-- START Top Navbar-->
+        <nav role="navigation" class="navbar topnavbar">
+          <!-- START button offset-->
+          <div class="btn-offset">
+            <button type="button" data-btn-layer-morph="" data-target="#layer-search" data-ripple="" class="btn btn-info btn-circle btn-lg shadow-z1"><em class="fa fa-search"></em></button>
+          </div>
+          <!-- START button offset-->
+          <!-- START navbar header-->
+          <div class="navbar-header"><a href="dashboard.html" class="navbar-brand"> <img src="/theme/images/logo.png" alt="App Logo" class="brand-logo"></a>
+            <!-- Mobile buttons-->
+            <div class="mobile-toggles">
+              <!-- Button to show/hide the sidebar on mobile. Visible on mobile only.--><a href="" class="sidebar-toggle"><em class="fa fa-navicon"></em></a>
+              <!-- Button to show/hide the header menu on mobile. Visible on mobile only.--><a href="#nav-collapse" data-toggle="collapse" class="menu-toggle hidden-material"><em class="fa fa-ellipsis-v fa-fw"></em></a>
+            </div>
+          </div>
+          <!-- END navbar header-->
+          <!-- START Nav wrapper-->
+          <div id="nav-collapse" class="nav-wrapper collapse navbar-collapse">
+            <!-- START Left navbar-->
+            <ul class="nav navbar-nav hidden-material">
+              <li>
+                <!-- Button used to collapse the left sidebar. Only visible on tablet and desktops--><a href="" class="hidden-xs sidebar-toggle-off"><em class="fa fa-navicon"></em></a>
+              </li>
+              <!-- START Apps menu-->
+              <li class="dropdown"><a href="" data-toggle="dropdown" data-ripple="" class="dropdown-toggle"><em class="fa fa-th fa-fw"></em><span class="visible-xs-inline ml">Applications</span></a>
+                <!-- START Dropdown menu-->
+                <ul id="bg-white" class="dropdown-menu p wd-lg">
+                  <li class="row ml0 mr0 mt mb text-center">
+                    <div class="col-xs-4">
+                      <div class="pv"><a href="extras.profile.html"><span class="block mb"><em class="icon-head fa-2x text-warning"></em></span><small class="text-muted">Profile</small></a></div>
+                    </div>
+                    <div class="col-xs-4">
+                      <div class="pv"><a href="mailbox.html"><span class="block mb"><em class="icon-mail fa-2x text-primary"></em></span><small class="text-muted">Mailbox</small></a></div>
+                    </div>
+                    <div class="col-xs-4">
+                      <div class="pv"><a href="extras.calendar.html"><span class="block mb"><em class="fa fa-calendar fa-2x text-danger"></em></span><small class="text-muted">Calendar</small></a></div>
+                    </div>
+                    <div class="col-xs-4">
+                      <div class="pv"><a href="maps.vector.html"><span class="block mb"><em class="icon-map fa-2x text-success"></em></span><small class="text-muted">Map</small></a></div>
+                    </div>
+                    <div class="col-xs-4">
+                      <div class="pv"><a href="dashboard.html"><span class="block mb"><em class="icon-bar-graph-2 fa-2x text-info"></em></span><small class="text-muted">Dashboard</small></a></div>
+                    </div>
+                    <div class="col-xs-4">
+                      <div class="pv"><a href="extras.gallery.html"><span class="block mb"><em class="icon-image fa-2x text-muted"></em></span><small class="text-muted">Gallery</small></a></div>
+                    </div>
+                  </li>
+                </ul>
+              </li>
+              <!-- END Apps menu-->
+              <!-- START lock screen-->
+              <li><a href="page.lock.html" title="Lock screen" data-ripple=""><em class="icon-lock fa-fw"></em><span class="visible-xs-inline ml">Lock Screen </span></a></li>
+              <!-- END lock screen-->
+            </ul>
+            <!-- END Left navbar-->
+          </div>
+          <!-- END Nav wrapper-->
+          
+          
+        </nav>
+        <!-- END Top Navbar-->
+      </header>
+      <!-- Sidebar-->
+      <aside class="bg-white">
+        <!-- START Sidebar-->
+        <div class="sidebar-wrapper">
+          <div data-ui-sidebar="" class="sidebar">
+            <div class="sidebar-nav">
+              <ul class="nav">
+                <!-- Iterates over all sidebar items-->
+                <li class="nav-heading"><span class="text-muted">Main Navigation</span></li>
+                <li><a href="dashboard.html" title="Dashboard" data-ripple="">
+                    <div class="label pull-right label-success">4</div><em class="sidebar-item-icon icon-pie-graph"></em><span>Dashboard</span></a></li>
+                <li><a href="cards.html" title="Cards" data-ripple=""><em class="sidebar-item-icon icon-stack"></em><span>Cards</span></a></li>
+                <li><a href="mailbox.html" title="Mailbox" data-ripple="">
+                    <div class="label pull-right label-success">12</div><em class="sidebar-item-icon icon-mail"></em><span>Mailbox</span></a></li>
+                <li><a href="" title="Layouts" data-ripple=""><em class="sidebar-item-caret fa pull-right fa-angle-right"></em><em class="sidebar-item-icon icon-layout"></em><span>Layouts</span></a>
+                  <ul class="nav sidebar-subnav">
+                    <li class="sidebar-subnav-header"><a><em class="sidebar-item-icon fa fa-angle-right"></em>Layouts</a></li>
+                    <li><a href="dashboard.docked.html" title="Docked" data-ripple=""><em class="sidebar-item-icon"></em><span>Docked</span></a></li>
+                    <li><a href="layout.columns.html" title="Full Height" data-ripple=""><em class="sidebar-item-icon"></em><span>Full Height</span></a></li>
+                  </ul>
+                </li>
+                <li>
+                  <hr>
+                </li>
+                <li><a href="" title="Components" data-ripple=""><em class="sidebar-item-caret fa pull-right fa-angle-right"></em><em class="sidebar-item-icon icon-box"></em><span>Components</span></a>
+                  <ul class="nav sidebar-subnav">
+                    <li class="sidebar-subnav-header"><a><em class="sidebar-item-icon fa fa-angle-right"></em>Components</a></li>
+                    <li><a href="ui.buttons.html" title="Buttons" data-ripple=""><em class="sidebar-item-icon"></em><span>Buttons</span></a></li>
+                    <li><a href="ui.notifications.html" title="Notifications" data-ripple=""><em class="sidebar-item-icon"></em><span>Notifications</span></a></li>
+                    <li><a href="ui.panels.html" title="Panels" data-ripple=""><em class="sidebar-item-icon"></em><span>Panels</span></a></li>
+                    <li>
+                      <hr>
+                    </li>
+                    <li><a href="ui.nestable.html" title="Nestable" data-ripple=""><em class="sidebar-item-icon"></em><span>Nestable</span></a></li>
+                    <li><a href="ui.sortable.html" title="Sortable" data-ripple=""><em class="sidebar-item-icon"></em><span>Sortable</span></a></li>
+                    <li><a href="ui.grid.html" title="Grid" data-ripple=""><em class="sidebar-item-icon"></em><span>Grid</span></a></li>
+                    <li><a href="ui.grid-masonry.html" title="Grid Masonry" data-ripple=""><em class="sidebar-item-icon"></em><span>Grid Masonry</span></a></li>
+                    <li><a href="ui.typo.html" title="Typography" data-ripple=""><em class="sidebar-item-icon"></em><span>Typography</span></a></li>
+                    <li><a href="ui.palette.html" title="Palette" data-ripple=""><em class="sidebar-item-icon"></em><span>Palette</span></a></li>
+                  </ul>
+                </li>
+                <li><a href="" title="Forms" data-ripple=""><em class="sidebar-item-caret fa pull-right fa-angle-right"></em><em class="sidebar-item-icon icon-book"></em><span>Forms</span></a>
+                  <ul class="nav sidebar-subnav">
+                    <li class="sidebar-subnav-header"><a><em class="sidebar-item-icon fa fa-angle-right"></em>Forms</a></li>
+                    <li><a href="form.inputs.html" title="Inputs" data-ripple=""><em class="sidebar-item-icon"></em><span>Inputs</span></a></li>
+                    <li><a href="form.validation.html" title="Validation" data-ripple=""><em class="sidebar-item-icon"></em><span>Validation</span></a></li>
+                    <li><a href="form.wizard.html" title="Wizard" data-ripple=""><em class="sidebar-item-icon"></em><span>Wizard</span></a></li>
+                    <li><a href="form.upload.html" title="Upload" data-ripple=""><em class="sidebar-item-icon"></em><span>Upload</span></a></li>
+                    <li><a href="form.xeditable.html" title="xEditable" data-ripple=""><em class="sidebar-item-icon"></em><span>xEditable</span></a></li>
+                    <li><a href="form.imagecrop.html" title="Image Crop" data-ripple=""><em class="sidebar-item-icon"></em><span>Image Crop</span></a></li>
+                  </ul>
+                </li>
+                <li><a href="" title="Tables" data-ripple=""><em class="sidebar-item-caret fa pull-right fa-angle-right"></em><em class="sidebar-item-icon icon-grid"></em><span>Tables</span></a>
+                  <ul class="nav sidebar-subnav">
+                    <li class="sidebar-subnav-header"><a><em class="sidebar-item-icon fa fa-angle-right"></em>Tables</a></li>
+                    <li><a href="table.responsive.html" title="Responsive" data-ripple=""><em class="sidebar-item-icon"></em><span>Responsive</span></a></li>
+                    <li><a href="table.datatables.html" title="Datables" data-ripple=""><em class="sidebar-item-icon"></em><span>Datables</span></a></li>
+                  </ul>
+                </li>
+                <li><a href="" title="Flot" data-ripple=""><em class="sidebar-item-caret fa pull-right fa-angle-right"></em><em class="sidebar-item-icon icon-bar-graph"></em><span>Charts</span></a>
+                  <ul class="nav sidebar-subnav">
+                    <li class="sidebar-subnav-header"><a><em class="sidebar-item-icon fa fa-angle-right"></em>Charts</a></li>
+                    <li><a href="charts.flot.html" title="Flot" data-ripple=""><em class="sidebar-item-icon"></em><span>Flot</span></a></li>
+                    <li><a href="charts.pie.html" title="Pie Charts" data-ripple=""><em class="sidebar-item-icon"></em><span>Pie</span></a></li>
+                  </ul>
+                </li>
+                <li><a href="" title="Maps" data-ripple=""><em class="sidebar-item-caret fa pull-right fa-angle-right"></em><em class="sidebar-item-icon icon-map"></em><span>Maps</span></a>
+                  <ul class="nav sidebar-subnav">
+                    <li class="sidebar-subnav-header"><a><em class="sidebar-item-icon fa fa-angle-right"></em>Maps</a></li>
+                    <li><a href="maps.google.html" title="Google Maps" data-ripple=""><em class="sidebar-item-icon"></em><span>Google Maps</span></a></li>
+                    <li><a href="maps.vector.html" title="Vector Maps" data-ripple=""><em class="sidebar-item-icon"></em><span>Vector Maps</span></a></li>
+                  </ul>
+                </li>
+                <li><a href="" title="Icons" data-ripple=""><em class="sidebar-item-caret fa pull-right fa-angle-right"></em><em class="sidebar-item-icon icon-play"></em><span>Icons</span></a>
+                  <ul class="nav sidebar-subnav">
+                    <li class="sidebar-subnav-header"><a><em class="sidebar-item-icon fa fa-angle-right"></em>Icons</a></li>
+                    <li><a href="icons.feather.html" title="Feather Icons" data-ripple=""><em class="sidebar-item-icon"></em><span>Feather Icons</span></a></li>
+                    <li><a href="icons.fa.html" title="Font Awesome" data-ripple=""><em class="sidebar-item-icon"></em><span>Font Awesome</span></a></li>
+                    <li><a href="icons.climacon.html" title="Climacons" data-ripple=""><em class="sidebar-item-icon"></em><span>Climacons</span></a></li>
+                    <li><a href="icons.weather.html" title="Weather Icons" data-ripple=""><em class="sidebar-item-icon"></em><span>Weather Icons</span></a></li>
+                  </ul>
+                </li>
+                <li>
+                  <hr>
+                </li>
+                <li class="nav-heading"><span class="text-muted">Extras</span></li>
+                <li><a href="" title="Extras" data-ripple=""><em class="sidebar-item-caret fa pull-right fa-angle-right"></em><em class="sidebar-item-icon icon-ribbon"></em><span>Extras</span></a>
+                  <ul class="nav sidebar-subnav">
+                    <li class="sidebar-subnav-header"><a><em class="sidebar-item-icon fa fa-angle-right"></em>Extras</a></li>
+                    <li><a href="extras.calendar.html" title="Calendar" data-ripple=""><em class="sidebar-item-icon"></em><span>Calendar</span></a></li>
+                    <li><a href="extras.tasks.html" title="Tasks List" data-ripple=""><em class="sidebar-item-icon"></em><span>Tasks List</span></a></li>
+                    <li><a href="extras.chat.html" title="Chat" data-ripple=""><em class="sidebar-item-icon"></em><span>Chat</span></a></li>
+                    <li>
+                      <hr>
+                    </li>
+                    <li><a href="extras.invoice.html" title="Invoice" data-ripple=""><em class="sidebar-item-icon"></em><span>Invoice</span></a></li>
+                    <li><a href="extras.price-table.html" title="Price" data-ripple=""><em class="sidebar-item-icon"></em><span>Price</span></a></li>
+                    <li><a href="extras.search.html" title="Search" data-ripple=""><em class="sidebar-item-icon"></em><span>Search</span></a></li>
+                    <li><a href="extras.timeline.html" title="Timeline" data-ripple=""><em class="sidebar-item-icon"></em><span>Timeline</span></a></li>
+                    <li><a href="extras.projects.html" title="Projects" data-ripple=""><em class="sidebar-item-icon"></em><span>Projects</span></a></li>
+                    <li><a href="extras.gallery.html" title="Gallery" data-ripple=""><em class="sidebar-item-icon"></em><span>Gallery</span></a></li>
+                    <li><a href="extras.profile.html" title="Profile" data-ripple=""><em class="sidebar-item-icon"></em><span>Profile</span></a></li>
+                    <li><a href="extras.template.html" title="Template" data-ripple=""><em class="sidebar-item-icon"></em><span>Template</span></a></li>
+                  </ul>
+                </li>
+                <li><a href="" title="Pages" data-ripple=""><em class="sidebar-item-caret fa pull-right fa-angle-right"></em><em class="sidebar-item-icon icon-stack"></em><span>Pages</span></a>
+                  <ul class="nav sidebar-subnav">
+                    <li class="sidebar-subnav-header"><a><em class="sidebar-item-icon fa fa-angle-right"></em>Pages</a></li>
+                    <li><a href="page.login.html" title="Login" data-ripple=""><em class="sidebar-item-icon"></em><span>Login</span></a></li>
+                    <li><a href="page.register.html" title="Sign up" data-ripple=""><em class="sidebar-item-icon"></em><span>Sign up</span></a></li>
+                    <li><a href="page.recover.html" title="Recover Password" data-ripple=""><em class="sidebar-item-icon"></em><span>Recover Password</span></a></li>
+                    <li><a href="page.lock.html" title="Lock" data-ripple=""><em class="sidebar-item-icon"></em><span>Lock</span></a></li>
+                  </ul>
+                </li>
+                <li><a href="../../angularjs" title="Static" ripple="" class="bg-danger"><em class="text-white sidebar-item-icon fa fa-shield"></em><span class="text-white">AngularJS Version</span></a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- END Sidebar-->
+      </aside>
+      <!-- Main-->
+      <section>
+        <!-- Content-->
+        <div class="app">
+          <div style="background:url(images/profile.jpg) center center; background-size:cover;" class="unwrap">
+            <div class="container container-lg p-lg">
+              <div class="pull-right">
+                <button type="button" class="btn btn-amber">Follow</button>
+              </div>
+              <div class="media mt-lg">
+                <div class="media-left media-middle"><a href=""><img src="/theme/images/user/02.jpg" class="media-object thumb96 img-circle"></a></div>
+                <div class="media-body text-white">
+                  <h2 class="mv-lg media-heading">John Doe</h2>
+                  <button type="button" class="btn btn-info btn-xs mr-sm"> <em class="fa fa-twitter fa-fw"></em></button>
+                  <button type="button" class="btn btn-primary btn-xs mr-sm"> <em class="fa fa-facebook fa-fw"></em></button>
+                  <button type="button" class="btn btn-danger btn-xs"> <em class="fa fa-google-plus fa-fw"></em></button>
+                </div>
+              </div>
+              <div class="text-right text-white pb-lg">
+                <p class="m0"><strong>2k followers</strong></p>
+                <p class="m0"><strong>1.3k following</strong></p>
+              </div>
+            </div>
+          </div>
+          <div class="container container-lg">
+            <div class="row">
+              <div class="col-lg-3">
+                <div class="panel">
+                  <div class="panel-body">
+                    <h3>John Doe</h3>
+                    <p>Designer</p>
+                    <p>It is a long established fact that a reader will be distracted.</p>
+                  </div>
+                </div>
+                <div class="panel">
+                  <div class="panel-body">
+                    <h6><span><em class="fa fa-twitter mr"></em>@jdoe</span></h6>
+                    <h6><span class="mr"><em class="fa fa-clock-o mr"></em>10:05 PM</span><span class="mr"><em class="fa fa-calendar mr"></em>10/11/15</span><span class="mr"><em class="fa fa-map-marker mr"></em>BA</span></h6>
+                    <h6><span><em class="fa fa-eye mr"></em>10 feb at 10:00 AM</span></h6>
+                  </div>
+                </div>
+                <div class="panel">
+                  <div class="panel-heading no-shadow">Recent contacts</div>
+                  <div class="panel-body">
+                    <ul class="list-block">
+                      <li class="media">
+                        <div class="pull-left">
+                          <!-- Contact avatar-->
+                          <div class="point-pin"><a href=""><img src="/theme/images/user/05.jpg" alt="Image" class="media-object img-circle thumb32"></a>
+                            <div class="point point-success point-lg"></div>
+                          </div>
+                        </div>
+                        <!-- Contact info-->
+                        <div class="media-body">
+                          <div class="media-heading"><a href="">Juan Sims</a><br><small class="text-muted">Designeer</small></div>
+                        </div>
+                      </li>
+                      <!-- END User status-->
+                      <!-- START User status-->
+                      <li class="media">
+                        <div class="pull-left">
+                          <!-- Contact avatar-->
+                          <div class="point-pin"><a href=""><img src="/theme/images/user/06.jpg" alt="Image" class="media-object img-circle thumb32"></a>
+                            <div class="point point-success point-lg"></div>
+                          </div>
+                        </div>
+                        <!-- Contact info-->
+                        <div class="media-body">
+                          <div class="media-heading"><a href="">Maureen Jenkins</a><br><small class="text-muted">Designeer</small></div>
+                        </div>
+                      </li>
+                      <!-- END User status-->
+                      <!-- START User status-->
+                      <li class="media">
+                        <div class="pull-left">
+                          <!-- Contact avatar-->
+                          <div class="point-pin"><a href=""><img src="/theme/images/user/07.jpg" alt="Image" class="media-object img-circle thumb32"></a>
+                            <div class="point point-danger point-lg"></div>
+                          </div>
+                        </div>
+                        <!-- Contact info-->
+                        <div class="media-body">
+                          <div class="media-heading"><a href="">Billie Dunn</a><br><small class="text-muted">Designeer</small></div>
+                        </div>
+                      </li>
+                      <!-- END User status-->
+                      <!-- START User status-->
+                      <li class="media">
+                        <div class="pull-left">
+                          <!-- Contact avatar-->
+                          <div class="point-pin"><a href=""><img src="/theme/images/user/08.jpg" alt="Image" class="media-object img-circle thumb32"></a>
+                            <div class="point point-warning point-lg"></div>
+                          </div>
+                        </div>
+                        <!-- Contact info-->
+                        <div class="media-body">
+                          <div class="media-heading"><a href="">Tomothy Roberts</a><br><small class="text-muted">Designer</small></div>
+                        </div>
+                      </li>
+                      <!-- END User status-->
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-9">
+                <div class="panel">
+                  <div class="panel-body">
+                    <ul role="tablist" class="nav nav-tabs">
+                      <li role="presentation" class="active"><a href="#activity" aria-controls="activity" role="tab" data-toggle="tab">Activity</a></li>
+                      <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a></li>
+                      <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Messages</a></li>
+                      <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li>
+                    </ul>
+                    <div class="tab-content">
+                      <div id="activity" role="tabpanel" class="tab-pane fade in active">
+                        <!-- START timeline-->
+                        <ul class="timeline-alt">
+                          <li data-datetime="14 Oct" class="timeline-separator"></li>
+                          <!-- START timeline item-->
+                          <li>
+                            <div class="timeline-badge timeline-badge-sm thumb-32 bg-purple"><em class="fa fa-users"></em></div>
+                            <div class="timeline-date">
+                              <time datetime="10m"></time>
+                            </div>
+                            <div class="timeline-panel"><strong>Client Meeting</strong>
+                              <div class="text-muted">Green Offfice - Av 123 St Floor 2</div>
+                              <div id="map_canvas" class="gmap"></div>
+                            </div>
+                          </li>
+                          <!-- END timeline item-->
+                          <!-- START timeline item-->
+                          <li>
+                            <div class="timeline-badge timeline-badge-sm bg-amber"><em class="fa fa-phone"></em></div>
+                            <div class="timeline-date">
+                              <time datetime="1h"></time>
+                            </div>
+                            <div class="timeline-panel"><strong>Call</strong>
+                              <div class="text-muted">From: <a href="tel:+011231987">Michael</a>. <em> No message left.</em></div>
+                            </div>
+                          </li>
+                          <!-- END timeline item-->
+                          <!-- START timeline item-->
+                          <li>
+                            <div class="timeline-badge timeline-badge-sm bg-info"><em class="fa fa-envelope"></em></div>
+                            <div class="timeline-date">
+                              <time datetime="3h"></time>
+                            </div>
+                            <div class="timeline-panel"><strong>New invitation</strong>
+                              <div class="text-muted">From: <strong>UX Design Team</strong></div><a href=""><img src="/theme/images/bg1.jpg" alt="Img" class="img-responsive"></a>
+                              <p class="text-muted mv">3 Comments</p>
+                              <div class="media bb p"><small class="pull-right text-muted">12m ago</small>
+                                <div class="pull-left"><img src="/theme/images/user/05.jpg" alt="Image" class="media-object img-circle thumb32"></div>
+                                <div class="media-body"><span class="media-heading">
+                                    <p class="m0"><a href=""><strong>Aiden Curtis </strong></a></p>
+                                    <p class="m0 text-muted">Hey looks amazing!</p></span></div>
+                              </div>
+                              <div class="media bb p"><small class="pull-right text-muted">30m ago</small>
+                                <div class="pull-left"><img src="/theme/images/user/08.jpg" alt="Image" class="media-object img-circle thumb32"></div>
+                                <div class="media-body"><span class="media-heading">
+                                    <p class="m0"><a href=""><strong>Lucas Byrd</strong></a></p>
+                                    <p class="m0 text-muted">I'm In!</p></span></div>
+                              </div>
+                              <div class="media bb p"><small class="pull-right text-muted">30m ago</small>
+                                <div class="pull-left"><img src="/theme/images/user/04.jpg" alt="Image" class="media-object img-circle thumb32"></div>
+                                <div class="media-body"><span class="media-heading">
+                                    <p class="m0"><a href=""><strong>Jennifer Garcia</strong></a></p>
+                                    <p class="m0 text-muted">See you there guys :)</p></span></div>
+                              </div>
+                              <form method="post" action="" class="mt">
+                                <textarea placeholder="Comment..." rows="1" class="form-control no-resize"></textarea>
+                              </form>
+                            </div>
+                          </li>
+                          <!-- END timeline item-->
+                          <li data-datetime="13 Oct" class="timeline-separator"></li>
+                          <!-- START timeline item-->
+                          <li>
+                            <div class="timeline-badge timeline-badge-sm bg-warning"><em class="fa fa-upload"></em></div>
+                            <div class="timeline-date">
+                              <time datetime="9am"></time>
+                            </div>
+                            <div class="timeline-panel"><strong>File upload</strong><a href=""> 
+                                <div class="text-bold">angular+bs.zip</div></a></div>
+                          </li>
+                          <!-- END timeline item-->
+                        </ul>
+                        <!-- END timeline-->
+                      </div>
+                      <div id="profile" role="tabpanel" class="tab-pane fade">
+                        <div class="alert alert-info">
+                          <div class="row">
+                            <div class="col-sm-8 col-sm-offset-2 text-center">
+                              <div class="lead m0 p-lg">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</div>
+                            </div>
+                          </div>
+                        </div>
+                        <h4 class="page-header">Basic information</h4>
+                        <div class="row">
+                          <div class="col-xs-6">
+                            <p><span>Name </span>: John</p>
+                          </div>
+                          <div class="col-xs-6">
+                            <p><span>Last Name </span>: Doe</p>
+                          </div>
+                          <div class="col-xs-6">
+                            <p><span>Birthday</span>: 21 Feb 1983</p>
+                          </div>
+                          <div class="col-xs-6">
+                            <p><span>Location </span>: Paris, France</p>
+                          </div>
+                          <div class="col-xs-6">
+                            <p><span>Occupation </span>: UX Developer</p>
+                          </div>
+                          <div class="col-xs-6">
+                            <p><span>Email </span>: john@doemail.com</p>
+                          </div>
+                          <div class="col-xs-6">
+                            <p><span>Mobile Phone</span>: (123) 456 789</p>
+                          </div>
+                          <div class="col-xs-6">
+                            <p><span>Home Phone </span>:  (+123) 654 987</p>
+                          </div>
+                        </div>
+                        <h4 class="page-header">Company information</h4>
+                        <div class="row">
+                          <div class="col-xs-6">
+                            <p><span>Name </span>: Company Name</p>
+                          </div>
+                          <div class="col-xs-6">
+                            <p><span>Branch </span>: Dublin</p>
+                          </div>
+                          <div class="col-xs-6">
+                            <p><span>Address </span>: Some st, 456</p>
+                          </div>
+                          <div class="col-xs-6">
+                            <p><span>Email </span>: company@doemail.com</p>
+                          </div>
+                          <div class="col-xs-6">
+                            <p><span>Phone</span>: (+123) 456 789</p>
+                          </div>
+                          <div class="col-xs-6">
+                            <p><span>Fax</span>:  (+123) 654 987</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div id="messages" role="tabpanel" class="tab-pane fade">
+                        <ul class="list-group">
+                          <li class="list-group-item">
+                            <p>
+                              <button type="button" class="mr btn btn-amber btn-sm btn-circle">M</button><em>Mauris a velit id neque dignissim congue. Curabitur imperdiet consequat hendrerit. </em>
+                            </p>
+                          </li>
+                        </ul>
+                        <ul class="list-group">
+                          <li class="list-group-item">
+                            <p>
+                              <button type="button" class="mr btn btn-success btn-sm btn-circle">J</button><em>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin vulputate neque non turpis pellentesque mattis. </em>
+                            </p>
+                          </li>
+                        </ul>
+                        <ul class="list-group">
+                          <li class="list-group-item">
+                            <p><a href="" class="btn btn-image btn-circle btn-sm mr"><img src="/theme/images/user/01.jpg" class="img-responsive img-circle"></a><em>Nullam quis lorem a est auctor venenatis vel vitae ipsum. Fusce pellentesque congue justo in rutrum. Etiam adipiscing, purus ultricies ornare vulputate, quam felis commodo nisl, ut posuere massa turpis ut erat. </em></p>
+                          </li>
+                        </ul>
+                        <ul class="list-group">
+                          <li class="list-group-item">
+                            <p>
+                              <button type="button" class="mr btn btn-pink btn-sm btn-circle">K</button><em>In cursus cursus lacus, ut faucibus leo pellentesque et. Proin eget quam ante. Etiam odio ante, placerat eu accumsan ut, consectetur vel mi. </em>
+                            </p>
+                          </li>
+                        </ul>
+                        <ul class="list-group">
+                          <li class="list-group-item">
+                            <p>
+                              <button type="button" class="mr btn btn-purple btn-sm btn-circle">M</button><em>Mauris eleifend, libero nec cursus lacinia, tellus est pharetra orci, et pretium urna felis eget neque. </em>
+                            </p>
+                          </li>
+                        </ul>
+                        <ul class="list-group">
+                          <li class="list-group-item">
+                            <p>
+                              <button type="button" class="mr btn btn-warning btn-sm btn-circle">L</button><em>Nullam ultricies, urna ac aliquet fringilla, eros velit vehicula elit, at faucibus velit erat eu ante. Praesent congue nisi in metus malesuada nec dictum nunc egestas. Donec nec magna a diam eleifend facilisis non in urna. </em>
+                            </p>
+                          </li>
+                        </ul>
+                      </div>
+                      <div id="settings" role="tabpanel" class="tab-pane fade">
+                        <form role="form" class="form-horizontal">
+                          <div class="form-group">
+                            <label class="col-lg-2 control-label">First Name</label>
+                            <div class="col-lg-6">
+                              <input id="f-name" type="text" placeholder=" " class="form-control">
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label class="col-lg-2 control-label">Last Name</label>
+                            <div class="col-lg-6">
+                              <input id="l-name" type="text" placeholder=" " class="form-control">
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label class="col-lg-2 control-label">About Me</label>
+                            <div class="col-lg-10">
+                              <textarea name="" id="" cols="30" rows="5" class="form-control"></textarea>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label class="col-lg-2 control-label">Country</label>
+                            <div class="col-lg-6">
+                              <input id="c-name" type="text" placeholder=" " class="form-control">
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label class="col-lg-2 control-label">Birthday</label>
+                            <div class="col-lg-6">
+                              <input id="b-day" type="text" placeholder=" " class="form-control">
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label class="col-lg-2 control-label">Occupation</label>
+                            <div class="col-lg-6">
+                              <input id="occupation" type="text" placeholder=" " class="form-control">
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label class="col-lg-2 control-label">Email</label>
+                            <div class="col-lg-6">
+                              <input id="email" type="text" placeholder=" " class="form-control">
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label class="col-lg-2 control-label">Mobile</label>
+                            <div class="col-lg-6">
+                              <input id="mobile" type="text" placeholder=" " class="form-control">
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label class="col-lg-2 control-label">Website URL</label>
+                            <div class="col-lg-6">
+                              <input id="url" type="text" placeholder="http://example.com " class="form-control">
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <div class="col-lg-offset-2 col-lg-10">
+                              <button type="submit" class="btn btn-primary">Save</button>
+                              <button type="button" class="btn btn-purple">Cancel</button>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Page footer-->
+      <footer><span>&copy; 2015 - Application Name</span></footer>
+    </div>
+    <!-- Settings-->
+    <div class="settings-wrapper">
+      <div class="settings-inner">
+        <div class="settings-button"><em class="icon-cog"></em></div>
+        <div class="settings">
+          <div class="settings-inner">
+            <div class="settings-content">
+              <div class="pt ph">
+                <p class="text-muted">THEMES</p>
+                <div class="clearfix mb">
+                  <div class="pull-left wd-tiny mb">
+                    <div class="setting-color">
+                      <label>
+                        <input type="radio" name="setting-theme" value="0"><span class="icon-check"></span><span class="list-table"><span class="bg-white"></span><span class="bg-primary"></span><span class="bg-primary"></span></span>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="pull-left wd-tiny mb">
+                    <div class="setting-color">
+                      <label>
+                        <input type="radio" name="setting-theme" value="1"><span class="icon-check"></span><span class="list-table"><span class="bg-white"></span><span class="bg-purple"></span><span class="bg-purple"></span></span>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="pull-left wd-tiny mb">
+                    <div class="setting-color">
+                      <label>
+                        <input type="radio" name="setting-theme" value="2"><span class="icon-check"></span><span class="list-table"><span class="bg-white"></span><span class="bg-success"></span><span class="bg-success"></span></span>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="pull-left wd-tiny mb">
+                    <div class="setting-color">
+                      <label>
+                        <input type="radio" name="setting-theme" value="3"><span class="icon-check"></span><span class="list-table"><span class="bg-white"></span><span class="bg-warning"></span><span class="bg-warning"></span></span>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="pull-left wd-tiny mb">
+                    <div class="setting-color">
+                      <label>
+                        <input type="radio" name="setting-theme" value="4"><span class="icon-check"></span><span class="list-table"><span class="bg-white"></span><span class="bg-info"></span><span class="bg-info"></span></span>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="pull-left wd-tiny mb">
+                    <div class="setting-color">
+                      <label>
+                        <input type="radio" name="setting-theme" value="5"><span class="icon-check"></span><span class="list-table"><span class="bg-white"></span><span class="bg-danger"></span><span class="bg-danger"></span></span>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="pull-left wd-tiny mb">
+                    <div class="setting-color">
+                      <label>
+                        <input type="radio" name="setting-theme" value="6"><span class="icon-check"></span><span class="list-table"><span class="bg-white"></span><span class="bg-pink"></span><span class="bg-pink"></span></span>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="pull-left wd-tiny mb">
+                    <div class="setting-color">
+                      <label>
+                        <input type="radio" name="setting-theme" value="7"><span class="icon-check"></span><span class="list-table"><span class="bg-white"></span><span class="bg-amber"></span><span class="bg-amber"></span></span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <hr>
+              <div class="p">
+                <p class="text-muted">LAYOUT</p>
+                <div class="clearfix">
+                  <p class="pull-left">Fixed</p>
+                  <div class="pull-right">
+                    <label class="switch switch-info">
+                      <input id="layoutisfixed" type="checkbox"><span></span>
+                    </label>
+                  </div>
+                </div>
+                <div class="clearfix">
+                  <p class="pull-left">Boxed</p>
+                  <div class="pull-right">
+                    <label class="switch switch-info">
+                      <input id="layoutisboxed" type="checkbox"><span></span>
+                    </label>
+                  </div>
+                </div>
+                <div class="clearfix">
+                  <p class="pull-left">Material</p>
+                  <div class="pull-right">
+                    <label class="switch switch-info">
+                      <input id="layoutismaterial" type="checkbox"><span></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="p">
+                <p class="text-muted">SIDEBAR</p>
+                <div class="clearfix">
+                  <p class="pull-left">Mini</p>
+                  <div class="pull-right">
+                    <label class="switch switch-info">
+                      <input id="sidebarismini" type="checkbox"><span></span>
+                    </label>
+                  </div>
+                </div>
+                <div class="clearfix">
+                  <p class="pull-left">Right</p>
+                  <div class="pull-right">
+                    <label class="switch switch-info">
+                      <input id="sidebarisright" type="checkbox"><span></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="p">
+                <p class="text-muted">FOOTER</p>
+                <div class="clearfix">
+                  <p class="pull-left">Hidden</p>
+                  <div class="pull-right">
+                    <label class="switch switch-info">
+                      <input id="footerhidden" type="checkbox"><span></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Settings-->
+    <!-- Layer Morph-->
+    <div class="layer-morph-overlay">
+      <div class="layer-morph-inner bg-info"></div>
+    </div>
+    <div class="layer-morph-close"><em class="icon-cross"></em></div>
+    <div class="layer-morph-container bg-info">
+      <div class="layer-morph-wrapper">
+        <div id="layer-search" class="layer-morph">
+          <form action="#">
+            <p class="help-block">Type and hit enter to search</p>
+            <input type="text" placeholder="I'm looking for..." class="form-control input-huge">
+            <button type="submit" class="hidden">Search</button>
+          </form>
+          <div class="row">
+            <div class="col-md-4 col-sm-6 pv">
+              <h4 class="text-bold pv-lg">People (4)</h4><br>
+              <ul class="list-unstyled">
+                <!-- START User-->
+                <li class="media">
+                  <div class="media-left media-middle">
+                    <!-- Contact avatar-->
+                    <div class="point-pin"><a href=""><img src="/theme/images/user/05.jpg" alt="Image" class="media-object img-circle thumb40"></a>
+                      <div class="point point-success point-lg"></div>
+                    </div>
+                  </div>
+                  <!-- Contact info-->
+                  <div class="media-body">
+                    <div class="media-heading"><a href="" class="text-md">Marc Fuller</a></div>
+                  </div>
+                </li>
+                <!-- END User-->
+                <!-- START User-->
+                <li>
+                  <hr>
+                </li>
+                <li class="media">
+                  <div class="media-left media-middle">
+                    <!-- Contact avatar-->
+                    <div class="point-pin"><a href=""><img src="/theme/images/user/06.jpg" alt="Image" class="media-object img-circle thumb40"></a>
+                      <div class="point point-success point-lg"></div>
+                    </div>
+                  </div>
+                  <!-- Contact info-->
+                  <div class="media-body">
+                    <div class="media-heading"><a href="" class="text-md">Wade Wade</a></div>
+                  </div>
+                </li>
+                <!-- END User-->
+                <!-- START User-->
+                <li>
+                  <hr>
+                </li>
+                <li class="media">
+                  <div class="media-left media-middle">
+                    <!-- Contact avatar-->
+                    <div class="point-pin"><a href=""><img src="/theme/images/user/07.jpg" alt="Image" class="media-object img-circle thumb40"></a>
+                      <div class="point point-danger point-lg"></div>
+                    </div>
+                  </div>
+                  <!-- Contact info-->
+                  <div class="media-body">
+                    <div class="media-heading"><a href="" class="text-md">Alan Boyd</a></div>
+                  </div>
+                </li>
+                <!-- END User-->
+                <!-- START User-->
+                <li>
+                  <hr>
+                </li>
+                <li class="media">
+                  <div class="media-left media-middle">
+                    <!-- Contact avatar-->
+                    <div class="point-pin"><a href=""><img src="/theme/images/user/01.jpg" alt="Image" class="media-object img-circle thumb40"></a>
+                      <div class="point point-danger point-lg"></div>
+                    </div>
+                  </div>
+                  <!-- Contact info-->
+                  <div class="media-body">
+                    <div class="media-heading"><a href="" class="text-md">Ryan Carr</a></div>
+                  </div>
+                </li>
+                <!-- END User-->
+              </ul>
+            </div>
+            <div class="col-md-4 col-sm-6 pv">
+              <h4 class="text-bold pv-lg">Pages (3)</h4><br>
+              <ul class="list-unstyled">
+                <li class="media">
+                  <div class="media-left media-middle">
+                    <div class="thumb40 bg-success circle text-center text-bold">D</div>
+                  </div>
+                  <div class="media-body">
+                    <div class="media-heading clearfix"><a href="dashboard.html" data-layer-morph-close="" class="pull-left text-md">Dashboard</a><small class="text-muted pull-right mt">3 matches</small></div>
+                  </div>
+                </li>
+                <li>
+                  <hr>
+                </li>
+                <li class="media">
+                  <div class="media-left media-middle">
+                    <div class="thumb40 bg-purple circle text-center text-bold">P</div>
+                  </div>
+                  <div class="media-body">
+                    <div class="media-heading clearfix"><a href="extras.profile.html" data-layer-morph-close="" class="pull-left text-md">Profile</a><small class="text-muted pull-right mt">3 matches</small></div>
+                  </div>
+                </li>
+                <li>
+                  <hr>
+                </li>
+                <li class="media">
+                  <div class="media-left media-middle">
+                    <div class="thumb40 bg-danger circle text-center text-bold">P</div>
+                  </div>
+                  <div class="media-body">
+                    <div class="media-heading clearfix"><a href="extras.projects.html" data-layer-morph-close="" class="pull-left text-md">Projects</a><small class="text-muted pull-right mt">2 match(es)</small></div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="layer-morph-footer">Naut</div>
+      </div>
+    </div>
+    <!-- End Layer Morph-->
+    <script src="/theme/scripts/vendor.js"></script>
+    <script src="/theme/scripts/plugins.js"></script>
+    <script src="/theme/scripts/main.js"></script>
+  </body>
+</html>

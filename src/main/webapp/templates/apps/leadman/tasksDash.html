@@ -22,20 +22,22 @@
     #end
     #end
 
-    <h3>My tasks</h3>
-    #set( $tasks = $leadsPage.myTasks )
+    #set( $tasks = $leadsPage.myDueTasks )
     #if( $tasks.size() > 0)
     #foreach($task in $tasks)
     <ul class="list-group ng-scope">
-        <li class="list-group-item">
+        <li class="list-group-item task">
             <p>
                 #set( $colour = $leadsPage.statusColour($task, 3) )
-                <a href="/tasks/$task.id/" class="mr btn btn-${colour} btn-sm btn-circle">T</a>
+                <a href="/tasks/$task.id/" class="mr btn btn-${colour} btn-sm btn-circle" data-target="#modalEditTask" data-toggle="modal">T</a>
                 <em>$!task.title</em>
-                $!task.taskDescription
+                #if( $task.dueDate )
                 <small class="pull-right">
                     Due <abbr title="$formatter.formatDateISO8601($task.dueDate)" class="timeago">$task.dueDate</abbr>
                 </small>
+                #else
+                <small class="pull-right">No due date</small>
+                #end
 
             </p>
             <hr/>

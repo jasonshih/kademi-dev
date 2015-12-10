@@ -100,99 +100,7 @@
         <ul class="list-group leadsList" id="dashLeadsList">
             #foreach($lead in $leads)
             <li class="list-group-item">
-                <div class="media">
-                    <div class="media-left">
-                        <div class="avatar avatar-away">
-                            <img alt="..." src="/images/user/02.jpg" class="img img-circle" style="width: 100px" />
-                            <i class="avatar avatar-busy"></i>
-                        </div>
-                    </div>
-                    <div class="media-body" style="padding-left: 20px; position: relative">
-                        <h3 class="media-heading">
-                            <a href="/leads/$lead.id/">
-                            #if( $lead.profile )
-                            $lead.profile.formattedName
-                            #else
-                            No contact information
-                            #end
-                            </a>
-                            <small class="pull-right">
-                                <abbr title="$formatter.formatDateISO8601($lead.createDate)" class="timeago">Created $lead.createDate</abbr>
-                            </small>
-                        </h3>
-                        #if( $lead.profile )
-                        <p>
-                            <i aria-hidden="true" class="fa fa-map-marker"></i>
-                            Street 1391 Depaul Dr
-
-                            #if( $lead.profile.email )
-                            , $lead.profile.email
-                            #end
-
-                            #if( $lead.profile.phone )
-                            , $lead.profile.phone
-                            #end
-                        </p>
-                        #end
-
-                        <div class="lead">
-                            <div class="leadInner">
-
-                            $formatter.textToHtml($lead.description)
-                            </div>
-                        </div>
-
-                        #if( $lead.profile )
-                        <div class="text-muted leadContactMethods">
-                            <a href="mailto:$lead.profile.email" class="text-muted">
-                                <em aria-hidden="true" class="fa fa-envelope"></em>
-                            </a>
-                            <a href="$lead.profile.phone" class="text-muted">
-                                <em aria-hidden="true" class="fa fa-mobile"></em>
-                            </a>
-                            <a href="javascript:void(0)" class="text-muted">
-                                <i aria-hidden="true" class="fa fa-twitter"></i>
-                            </a>
-                            <a href="javascript:void(0)" class="text-muted">
-                                <i aria-hidden="true" class="fa fa-facebook"></i>
-                            </a>
-                        </div>
-                        #end
-
-                        <div class="leadActions">
-                            <ul class="list-inline" style="right: 0">
-                                <li>
-                                    <a href="/leads/$lead.id" class="btn btn-success closeLead" title="Sold, close the deal">
-                                        <span class="fa fa-check"></span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="/leads/$lead.id" class="btn btn-danger cancelLead" title="Deal cancelled">
-                                        <span class="fa fa-remove"></span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="/leads/$lead.id/" class="btn btn-primary createNote" title="Add note or contact">
-                                        <span class="fa fa-lightbulb-o"></span>
-                                    </a>
-                                </li>
-
-                            </ul>
-                        </div>
-                        <!--
-                        <ul class="list-inline" style="bottom: 0; position: absolute">
-                            <li><a class="link-black text-sm" href="#"><i class="fa fa-share margin-r-5"></i> Share</a></li>
-                            <li><a class="link-black text-sm" href="#"><i class="fa fa-thumbs-o-up margin-r-5"></i> Like</a>
-                            </li>
-                            <li class="pull-right">
-                                <a class="link-black text-sm" href="#"><i class="fa fa-comments-o margin-r-5"></i> Comments
-                                    (5)
-                                </a>
-                            </li>
-                        </ul>
-                        -->
-                    </div>
-                </div>
+                #showLead($lead)
             </li>
             #end
         </ul>
@@ -215,7 +123,6 @@
             //	configuration goes here
         });
 
-        $('abbr.timeago').timeago();
         $('#leadQuery').keyup(function () {
             typewatch(function () {
                 flog('do search');

@@ -1,5 +1,8 @@
 $(function () {
     flog("leadman.js - init");
+
+    jQuery.timeago.settings.allowFuture = true;
+
     initNewLeadForm();
     initNewContactForm();
     initNewNoteForm();
@@ -7,11 +10,93 @@ $(function () {
     initLeadActions();
     initOrgSelector();
     initDateTimePickers();
+    initTasks();
+    initImmediateUpdate();
+    // Clear down modals when closed
+    $('body').on('hidden.bs.modal', '.modal', function () {
+        $(this).removeData('bs.modal');
+    });
+    $('body').on('shown.bs.modal', function (e) {
+        flog("modal show");
+        var modal = $(this);
+        jQuery.timeago.settings.allowFuture = true;
+        modal.find('abbr.timeago').timeago();
+        modal.find('.date-time').datetimepicker({
+            format: "DD/MM/YYYY HH:mm"
+                    //,startDate: date
+        });
+        var form = modal.find(".completeTaskForm");
+        flog("complete task form", form);
+        if (form.length > 0) {
+            form.forms({
+                onSuccess: function (resp) {
+                    flog("onSuccess", resp, modal);
+                    form.closest(".modal").modal("hide");
+                    flog("done");
+                    reloadTasks();
+                }
+            });
+        }
+    })
+    $("body").on("click", ".autoFillText", function (e) {
+        e.preventDefault();
+        var target = $(e.target).closest("a");
+        var text = target.text();
+        var inp = target.closest(".input-group").find("input[type=text]");
+        flog("autofill", text, inp);
+        inp.val(text);
+    });
+    $('abbr.timeago').timeago();
 });
 
+function initImmediateUpdate() {
+    var onchange = function (e) {
+        flog("field changed", e);
+        var target = $(e.target);
+        var href = target.data("href");
+        var name = target.attr("name");
+        var value = target.val();
+        var oldValue = target.data("original-value");
+        if (value != oldValue) {
+            updateField(href, name, value);
+        }
+    };
+    $("body").on("change", ".immediateUpdate", function (e) {
+        onchange(e);
+    });
+    $("body").on("dp.change", ".immediateUpdate", function (e) {
+        onchange(e);
+    });
+}
+
+function initTasks() {
+    $("body").on("click", "#assignToMenu a", function (e) {
+        e.preventDefault();
+        var name = $(e.target).attr("href");
+        assignTo(name);
+    });
+    $("body").on("click", ".btnTaskDelete", function (e) {
+        e.preventDefault();
+        var link = $(e.target).closest("a");
+        var href = link.attr("href");
+        var name = getFileName(href);
+        confirmDelete(href, name, function () {
+            var modal = link.closest(".modal");
+            modal.modal("hide");
+            $("a[href='" + href + "']").closest(".task").remove();
+        });
+    });
+    $("body").on("click", ".btnTaskDone", function (e) {
+        flog("click");
+        e.preventDefault();
+        $(".completeTaskDiv").show(300);
+        $(".hideOnComplete").hide(300);
+    });
+}
+
 function initOrgSelector() {
-    flog("initOrgSelector", $(".selectOrg a") );
-    $(".selectOrg").on("click", "a", function(e) {
+    flog("initOrgSelector", $(".selectOrg a"));
+    $(".selectOrg").on("click", "a", function (e) {
         e.preventDefault();
         var orgId = $(e.target).closest("a").attr("href");
         flog("initOrgSelector - click", orgId);
@@ -21,14 +106,15 @@ function initOrgSelector() {
 }
 
 function initLeadActions() {
+    flog("initLeadActions");
     $("body").on("click", ".closeLead", function (e) {
-        flog("click");
+        flog("initLeadActions click - close");
         e.preventDefault();
         var href = $(e.target).closest("a").attr("href");
         closeLead(href);
     });
     $("body").on("click", ".cancelLead", function (e) {
-        flog("click");
+        flog("initLeadActions click - cancel");
         e.preventDefault();
         var href = $(e.target).closest("a").attr("href");
         cancelLead(href);
@@ -48,6 +134,7 @@ function initTakeTasks() {
 
 
 function initNewLeadForm() {
+    flog("initNewLeadForm");
     var modal = $('#newLeadModal');
     var form = modal.find('form');
 
@@ -61,14 +148,26 @@ function initNewLeadForm() {
     });
 
     form.forms({
-        callback: function (resp) {
-            flog('done new user', resp);
-            if (resp.nextHref) {
-                window.location.href = resp.nextHref;
+        onSuccess: function (resp, form, config, event) {
+            flog('done new lead', resp, event);
+            var btn = form.find(".clicked");
+            //flog("btn", btn, btn.hasClass("btnCreateAndClose"));
+
+            if (btn.hasClass("btnCreateAndClose")) {
+                Msg.info('Saved new lead');
+                modal.modal("hide");
+            } else {
+                Msg.info('Saved, going to the new lead');
+                if (resp.nextHref) {
+                    window.location.href = resp.nextHref;
+                }
+                modal.modal("hide");
             }
-            Msg.info('Saved');
-            modal.modal("hide");
         }
+    });
+    form.find("button").click(function (e) {
+        form.find(".clicked").removeClass("clicked");
+        $(e.target).closest("a, button").addClass("clicked");
     });
 }
 
@@ -115,6 +214,15 @@ function initNewNoteForm() {
     });
 }
 
+
+function reloadTasks() {
+    $("#tasksList").reloadFragment({
+        whenComplete: function () {
+            $('abbr.timeago').timeago();
+        }
+    });
+}
+
 function takeTask(href) {
     $.ajax({
         type: 'POST',
@@ -126,11 +234,7 @@ function takeTask(href) {
         success: function (resp) {
             if (resp && resp.status) {
                 Msg.info("Assigned task");
-                $("#tasksList").reloadFragment({
-                            whenComplete : function() {
-                                $('abbr.timeago').timeago();
-                            }
-                        });
+                reloadTasks();
             } else {
                 Msg.error("Sorry, we couldnt assign the task");
             }
@@ -163,7 +267,7 @@ function setLead(href, status, actionDescription) {
                     Msg.info(actionDescription + " ok");
                     $(".leadsList").each(function (i, n) {
                         $(n).reloadFragment({
-                            whenComplete : function() {
+                            whenComplete: function () {
                                 $('abbr.timeago').timeago();
                             }
                         });
@@ -187,6 +291,49 @@ function initDateTimePickers() {
 
     $('.date-time').datetimepicker({
         format: "DD/MM/YYYY HH:mm"
-        //,startDate: date
+                //,startDate: date
+    });
+}
+
+
+function assignTo(name) {
+    $.ajax({
+        type: 'POST',
+        url: window.location.pathname,
+        data: {
+            assignToName: name
+        },
+        dataType: 'json',
+        success: function (resp) {
+            if (resp && resp.status) {
+                Msg.info("Assigned");
+                $("#assignedBlock").reloadFragment();
+            } else {
+                Msg.error("Sorry, we couldnt change the assignment");
+            }
+        },
+        error: function (resp) {
+            flog('error', resp);
+            Msg.error('Sorry couldnt set the visibility ' + resp);
+        }
+    });
+}
+
+function updateField(href, fieldName, fieldValue) {
+    var data = {};
+    data[fieldName] = fieldValue;
+    flog("updateField", href, data, fieldName, fieldValue);
+    $.ajax({
+        type: 'POST',
+        url: href,
+        data: data,
+        dataType: 'json',
+        success: function (resp) {
+            Msg.info("Saved " + fieldName);
+        },
+        error: function (resp) {
+            flog('error', resp);
+            Msg.error('Sorry couldnt save field ' + fieldName);
+        }
     });
 }
