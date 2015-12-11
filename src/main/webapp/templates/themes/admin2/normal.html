@@ -221,62 +221,60 @@
             <!-- end: HEADER -->
             <!-- start: MAIN CONTAINER -->
             <div class="main-container">
-                <div class="navbar-content">
-                    <!-- start: SIDEBAR -->
-                    <div class="main-navigation navbar-collapse collapse">
-                        <div class="navigation-toggler">
-                            <i class="clip-chevron-left"></i>
-                            <i class="clip-chevron-right"></i>
-                        </div>
-                        <!-- start: MAIN NAVIGATION MENU -->
-                        <ul class="main-navigation-menu">
-                            #foreach($rootItem in $menu.items)
-
-                                <li class="$formatter.ifTrue( $rootItem.active, "active open", "" )">
-                                    #set($href = "#")
-                                    #set($href = $rootItem.href)
-                                    <a href="$href">
-                                        #if($rootItem.cssClass)
-                                            <i class="fuse-icon-fa $rootItem.id $rootItem.cssClass"></i>
-                                        #else
-                                            <i class="fuse-icon $rootItem.id"></i>
-                                        #end
-                                        <span class="title">$rootItem.text</span>
-
-                                        #if( !$rootItem.items.isEmpty() )
-                                            <i class="icon-arrow"></i>
-                                        #end
-
-                                        #if( $rootItem.active )
-                                            <span class="selected"></span>
-                                        #end
-                                    </a>
-
-                                    #set($subItems = $rootItem.items)
-                                    #if ($subItems && $subItems.size() > 0)
-                                        <ul class="sub-menu">
-                                            #foreach($sectionItem in $subItems)
-                                                <li class="$formatter.ifTrue( $sectionItem.active, "active open", "" )">
-                                                    <a href="$sectionItem.href">
-                                                        #if($sectionItem.cssClass)
-                                                            <i class="fuse-icon-fa $sectionItem.id $sectionItem.cssClass"></i>
-                                                        #end
-                                                        <span class="title">$sectionItem.text</span>
-                                                        #if( $sectionItem.active )
-                                                            <span class="selected"></span>
-                                                        #end
-                                                    </a>
-                                                </li>
-                                            #end
-                                        </ul>
-                                    #end
-                                </li>
-                            #end
-                        </ul>
-                        <!-- end: MAIN NAVIGATION MENU -->
+                <!-- start: SIDEBAR -->
+                <div class="main-navigation navbar-collapse collapse">
+                    <div class="navigation-toggler">
+                        <i class="clip-chevron-left"></i>
+                        <i class="clip-chevron-right"></i>
                     </div>
-                    <!-- end: SIDEBAR -->
+                    <!-- start: MAIN NAVIGATION MENU -->
+                    <ul class="main-navigation-menu">
+                        #foreach($rootItem in $menu.items)
+
+                            <li class="$formatter.ifTrue( $rootItem.active, "active open", "" )">
+                                #set($href = "#")
+                                #set($href = $rootItem.href)
+                                <a href="$href">
+                                    #if($rootItem.cssClass)
+                                        <i class="fuse-icon-fa $rootItem.id $rootItem.cssClass"></i>
+                                    #else
+                                        <i class="fuse-icon $rootItem.id"></i>
+                                    #end
+                                    <span class="title">$rootItem.text</span>
+
+                                    #if( !$rootItem.items.isEmpty() )
+                                        <i class="icon-arrow"></i>
+                                    #end
+
+                                    #if( $rootItem.active )
+                                        <span class="selected"></span>
+                                    #end
+                                </a>
+
+                                #set($subItems = $rootItem.items)
+                                #if ($subItems && $subItems.size() > 0)
+                                    <ul class="sub-menu">
+                                        #foreach($sectionItem in $subItems)
+                                            <li class="$formatter.ifTrue( $sectionItem.active, "active open", "" )">
+                                                <a href="$sectionItem.href">
+                                                    #if($sectionItem.cssClass)
+                                                        <i class="fuse-icon-fa $sectionItem.id $sectionItem.cssClass"></i>
+                                                    #end
+                                                    <span class="title">$sectionItem.text</span>
+                                                    #if( $sectionItem.active )
+                                                        <span class="selected"></span>
+                                                    #end
+                                                </a>
+                                            </li>
+                                        #end
+                                    </ul>
+                                #end
+                            </li>
+                        #end
+                    </ul>
+                    <!-- end: MAIN NAVIGATION MENU -->
                 </div>
+                <!-- end: SIDEBAR -->
                 <!-- start: PAGE -->
                 <div class="main-content">
                     <div class="container">
