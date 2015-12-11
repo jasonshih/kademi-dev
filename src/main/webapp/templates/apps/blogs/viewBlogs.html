@@ -25,7 +25,7 @@
                             <abbr class="pull-left timeago" title="$formatter.formatDateISO8601($article.articleDate)">$article.articleDate</abbr>
                             <div class="pull-right">
                                 #if( $article.category )
-                                <span class="label label-primary">$tag</span>
+                                <span class="label label-primary">$article.category</span>
                                 #end
                                 #foreach($tag in $article.tags)
                                 #if( $article.isSelectedTag( $tag ) )
@@ -62,7 +62,7 @@
                             <abbr class="pull-left timeago" title="$formatter.formatDateISO8601($article.articleDate)">$article.articleDate</abbr>
                             <div class="pull-right">
                                 #if( $article.category )
-                                <span class="label label-primary">$tag</span>
+                                <span class="label label-primary">$article.category</span>
                                 #end
                                 #foreach($tag in $article.tags)
                                 #if( $article.isSelectedTag( $tag ) )
