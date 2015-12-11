@@ -247,17 +247,16 @@ var Main = function () {
 
             if (li.children('ul').hasClass('sub-menu') && !$('body').hasClass('navigation-small')) {
                 var activeItem = mainMenu.find('> li.active');
-                var openedItem = ul.children('li.open');
 
                 if (li.hasClass('open')) {
                     if (li.hasClass('active')) {
-                        openedItem.removeClass('open').children('ul').slideUp(200);
+                        ul.children('li.open').removeClass('open').children('ul').slideUp(200);
                     } else {
-                        openedItem.not(activeItem).removeClass('open').children('ul').slideUp(200);
+                        ul.children('li.open').not(activeItem).removeClass('open').children('ul').slideUp(200);
                     }
                 } else {
                     li.addClass('open');
-                    openedItem.not(li).not(activeItem).removeClass('open').children('ul').slideUp(200);
+                    ul.children('li.open').not(li).not(activeItem).removeClass('open').children('ul').slideUp(200);
                     li.children('ul').slideDown(200);
                 }
             }
@@ -269,7 +268,7 @@ var Main = function () {
             clearTimeout(timer);
             timer = setTimeout(function () {
                 var subMenus = mainMenu.find('.sub-menu');
-                subMenus.css('height', '');
+                subMenus.css('max-height', '');
                 var mainMenuHeight = mainMenu.height();
                 var totalMenuItemsHeight = 0;
                 mainMenu.find('> li > a').each(function () {
@@ -278,7 +277,7 @@ var Main = function () {
 
                     totalMenuItemsHeight += height;
                 });
-                subMenus.css('height', mainMenuHeight - totalMenuItemsHeight);
+                subMenus.css('max-height', mainMenuHeight - totalMenuItemsHeight);
             }, 150);
         }).trigger('resize');
     };

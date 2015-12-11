@@ -818,8 +818,15 @@ ul.main-navigation-menu li > ul.sub-menu > li {
     margin-top: 0 !important;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 979px) {
     .navigation-small ul.main-navigation-menu li > ul.sub-menu {
+        max-height: 240px !important;
+        overflow: auto !important;
+    }
+}
+
+@media (max-width: 979px) {
+    ul.main-navigation-menu li > ul.sub-menu {
         max-height: 240px !important;
         overflow: auto !important;
     }
