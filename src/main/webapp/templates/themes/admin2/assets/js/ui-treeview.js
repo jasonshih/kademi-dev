@@ -36,7 +36,7 @@ var UITreeview = function () {
             //              },
             // .. but here we use a local file instead:
             initAjax: {
-                url: "assets/plugins/dynatree/tests/sample-data1.json"
+                url: "/static/ContentBuilder/assets/plugins/dynatree/tests/sample-data1.json"
             },
             onActivate: function (node) {
                 $("#echoActive").text(node.data.title);
@@ -168,7 +168,7 @@ var UITreeview = function () {
         // Drag-and-drop 
         $("#tree6").dynatree({
             initAjax: {
-                url: "assets/plugins/dynatree/tests/sample-data1.json"
+                url: "/static/ContentBuilder/assets/plugins/dynatree/tests/sample-data1.json"
             },
             onLazyRead: function (node) {
                 // Mockup a slow reqeuest ...

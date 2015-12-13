@@ -24,7 +24,7 @@ var Error404 = function () {
             }
         };
         image.crossOrigin = "anonymous";
-        image.src = "assets/images/back-error-page.jpg";
+        image.src = "/static/ContentBuilder/assets/images/back-error-page.jpg";
     };
     return {
         //main function to initiate template pages

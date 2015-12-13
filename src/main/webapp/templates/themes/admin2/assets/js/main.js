@@ -211,7 +211,7 @@ var Main = function () {
                 overlayCSS: {
                     backgroundColor: '#fff'
                 },
-                message: '<img src="assets/images/loading.gif" /> Just a moment...',
+                message: '<img src="/static/ContentBuilder/assets/images/loading.gif" /> Just a moment...',
                 css: {
                     border: 'none',
                     color: '#333',
@@ -332,7 +332,7 @@ var Main = function () {
     var runActivateLess = function () {
         $('		.icons-color img').removeClass('active');
         if ($('#skin_color').attr("rel") == "stylesheet") {
-            $('#skin_color').attr("rel", "stylesheet/less").attr("href", "assets/less/styles.less");
+            $('#skin_color').attr("rel", "stylesheet/less").attr("href", "/static/ContentBuilder/assets/less/styles.less");
             less.sheets.push($('link#skin_color')[0]);
             less.refresh();
         }
