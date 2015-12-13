@@ -14,6 +14,12 @@
 
         <link href="/static/ContentBuilder/scripts/contentbuilder.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="contentEditor.js">//</script>
+        <style>
+            #contentarea {
+                max-width: 1200px;
+                margin: 30px;
+            }
+        </style>
     </head>
     <body>
         <div id="panelCms" style="width:220px;margin:0 0 0 -110px;left:50%;height:38px;background:rgba(255,255,255,0.8);position:fixed;top:0;padding:10px;text-align:center;white-space:nowrap;">
@@ -46,11 +52,6 @@
                     });
 
                 });
-
-                function view() {
-                    var sHTML = $('#contentarea').data('contentbuilder').viewHtml();
-                    //alert(sHTML);
-                }
         </script>
 
         <script type="text/javascript">

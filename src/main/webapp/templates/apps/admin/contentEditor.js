@@ -5,15 +5,14 @@ function initContentEditorPage(fileName) {
     flog('initContentEditorPage', fileName);
     var body = $(document.body);
 
-    initRichTextEditor(body);
+    //initRichTextEditor(body);
 
     var btnSave = $('.btn-save-file');
     btnSave.on('click', function (e) {
         e.preventDefault();
 
-        var editor = CKEDITOR.instances['editor'];
-        var fileContent = editor.getData();
-
+        var fileContent = $('#contentarea').data('contentbuilder').html();
+        flog("save", fileContent);
         showLoadingIcon();
 
         $.ajax({
