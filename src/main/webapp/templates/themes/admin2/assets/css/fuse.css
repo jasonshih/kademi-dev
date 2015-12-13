@@ -774,18 +774,6 @@ label small {
    ============================================================================ */
 .main-navigation {
     position: fixed;
-    bottom: 43px;
-    top: 50px;
-    left: 0;
-    z-index: 1000;
-}
-
-ul.main-navigation-menu {
-    position: absolute;
-    top: 50px;
-    left: 0;
-    right: 0;
-    bottom: 0;
 }
 
 ul.main-navigation-menu > li > a {
@@ -811,25 +799,10 @@ ul.main-navigation-menu > li a > i {
 
 ul.main-navigation-menu li > ul.sub-menu {
     margin: 0;
-    overflow: auto;
 }
 
 ul.main-navigation-menu li > ul.sub-menu > li {
     margin-top: 0 !important;
-}
-
-@media (min-width: 979px) {
-    .navigation-small ul.main-navigation-menu li > ul.sub-menu {
-        max-height: 240px !important;
-        overflow: auto !important;
-    }
-}
-
-@media (max-width: 979px) {
-    ul.main-navigation-menu li > ul.sub-menu {
-        max-height: 240px !important;
-        overflow: auto !important;
-    }
 }
 
 /* ============================================================================

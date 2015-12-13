@@ -261,25 +261,6 @@ var Main = function () {
                 }
             }
         });
-
-        var timer = null;
-        var win = $(window);
-        win.on('resize', function () {
-            clearTimeout(timer);
-            timer = setTimeout(function () {
-                var subMenus = mainMenu.find('.sub-menu');
-                subMenus.css('max-height', '');
-                var mainMenuHeight = mainMenu.height();
-                var totalMenuItemsHeight = 0;
-                mainMenu.find('> li > a').each(function () {
-                    var link = $(this);
-                    var height = link.innerHeight();
-
-                    totalMenuItemsHeight += height;
-                });
-                subMenus.css('max-height', mainMenuHeight - totalMenuItemsHeight);
-            }, 150);
-        }).trigger('resize');
     };
 
     // function to activate the Go-Top button
