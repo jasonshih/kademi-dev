@@ -245,6 +245,16 @@
                                                 </div>
                                             </div>
                                             <br/>
+                                            <div class="clearfix">
+                                                <div class="form-group">
+                                                    <label class="control-label col-md-2" for="timerExpressionEditor">MVEL Expression</label>
+                                                    <div class="col-md-10">
+                                                        <textarea class="hide" id="timerExpression" name="timerExpression"></textarea>
+                                                        <div id="timerExpressionEditor" style="display:none;">$formatter.htmlEncode($page.job.timerExpression)</div>
+                                                    </div>
+                                                </div>
+                                            </div>                                            
+                                            <br/>
                                             <a class="btn btn-info" href="timerTriggers.html">View Queued triggers</a>
                                         </div>
                                     </div>

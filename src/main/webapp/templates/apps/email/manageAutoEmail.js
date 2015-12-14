@@ -511,6 +511,15 @@ function initMarkIgnored() {
     });
 }
 
+function initTimerExpressionEditor() {
+    var editor = ace.edit('timerExpressionEditor');
+    editor.getSession().setMode("ace/mode/javascript");
+    editor.setOptions({
+        minLines: editor.getSession().$rowLengthCache.length
+    });
+    $('#timerExpressionEditor').show();
+}
+
 var p;
 function initManageAutoEmail(emailEnabled, smsEnabled) {
     flog('initManageAutoEmail', emailEnabled, smsEnabled);
@@ -536,6 +545,7 @@ function initManageAutoEmail(emailEnabled, smsEnabled) {
     initAddGroup();
     initSelectAll();
     initMarkIgnored();
+    initTimerExpressionEditor();
 
     $('#action .toggler').on({
         'checked.toggled': function (e, panel) {

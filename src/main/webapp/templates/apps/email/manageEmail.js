@@ -176,11 +176,11 @@ function setGroupRecipient(name, groupType) {
 
                 flog("add to list");
                 blockWrapper.filter('.' + groupType).append(
-                    '<span class="block ' + name + '">' +
-                    '    <span class="block-name">' + name + '</span>' +
-                    '    <a class="btn btn-xs btn-danger btn-remove-role" href="' + name + '" title="Remove this role"><i class="clip-minus-circle "></i></a>' +
-                    '</span>'
-                );
+                        '<span class="block ' + name + '">' +
+                        '    <span class="block-name">' + name + '</span>' +
+                        '    <a class="btn btn-xs btn-danger btn-remove-role" href="' + name + '" title="Remove this role"><i class="clip-minus-circle "></i></a>' +
+                        '</span>'
+                        );
             },
             error: function (resp) {
                 flog("error", resp);
@@ -233,7 +233,7 @@ function initFormDetailEmail() {
             var error = 0;
             var fromAddress = $('#fromAddress');
             var fromAddressStr = fromAddress.val().trim();
-            var replyToAddress= $('#replyToAddress');
+            var replyToAddress = $('#replyToAddress');
             var replyToAddressStr = replyToAddress.val().trim();
             var emailEnabled = $('#emailEnabled');
             var isEmailEnabled = emailEnabled.length > 0 ? emailEnabled.is(':checked') : true;
@@ -257,6 +257,11 @@ function initFormDetailEmail() {
                         showErrorField(replyToAddress);
                     }
                 }
+            }
+
+            if ($('#timerExpressionEditor').length > 0) {
+                var editorVal = ace.edit('timerExpressionEditor').getValue();
+                $('#timerExpression').val(editorVal);
             }
 
             if (error === 0) {

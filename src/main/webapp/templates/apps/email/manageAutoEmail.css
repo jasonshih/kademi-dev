@@ -48,3 +48,10 @@
 #modal-choose-group.excluded-group #table-groups .recipient {
     display: none;
 }
+
+#timerExpressionEditor {
+    height: 250px;
+    border: 1px solid #DDD;
+    border-radius: 4px;
+    border-bottom-right-radius: 0px;
+}
