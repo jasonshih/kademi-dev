@@ -168,8 +168,10 @@
                     #foreach($app in $apps )
                     <tr>
                         <td class="CheckBoxWrapper">
+                            #if( !$app.core )
                             $formatter.bsswitch("chk_${app.appId}", $app.appId, $app.enabled, $app.appId)
                             <label for="chk_${app.appId}"></label>
+                            #end
                         </td>
                         <td>
                             <h4>$page.getTitle($app.appId)</h4>
