@@ -58,7 +58,10 @@
                         <tbody>
                             #foreach($w in $page.websites)
                             <tr>
-                                <td>$w.name</td>
+                                <td>
+                                    <a href="http://${page.websiteAddress($w)}${formatter.portString}/" target="_blank" class="btn btn-sm btn-info"><i class="fa fa-eye"></i> $w.name</a>
+                                    
+                                </td>
                                 <td>$!w.domainName</td>
                                 <td>$!w.redirectTo</td>
                                 <td>$!w.aliasTo.name</td>
@@ -66,15 +69,16 @@
                                 <td>$!w.liveBranch().publicTheme</td>
                                 <td class="action">
                                     <div class="btn-group btn-group-sm">
-                                        <a href="http://${page.websiteAddress($w)}${formatter.portString}/" target="_blank" class="btn btn-sm btn-info"><i class="fa fa-eye"></i> View</a>
+                                        <a href="$w.name" class="btn btn-sm btn-info"><i class="glyphicon glyphicon-cog"></i> Configure</a>
                                         <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
                                             <span class="caret"></span>
                                             <span class="sr-only">Toggle Dropdown</span>
                                         </button>
                                         <ul role="menu" class="dropdown-menu pull-right">
-                                            <li><a href="$w.name"><i class="glyphicon glyphicon-cog"></i> Configure</a></li>
+                                            <li></li>
                                             <li><a href="$w.name" class="btn-rename-website"><i class="fa fa-edit"></i> Rename</a></li>
-                                            <li><a href="/repositories/$w.name/$w.liveBranch/"><i class="fa fa-files-o"></i> Edit web pages and files</a></li>
+                                            <li><a href="/pages/$w.name/$w.liveBranch/"><i class="fa fa-pencil"></i> Pages</a></li>
+                                            <li><a href="/repositories/$w.name/$w.liveBranch/"><i class="fa fa-files-o"></i> Files</a></li>
                                             <li><a target="_blank" href="http://${page.websiteAddress($w)}${formatter.portString}/" class="ViewWebsite"><i class="fa fa-eye"></i> View</a></li>
                                         </ul>
                                     </div>

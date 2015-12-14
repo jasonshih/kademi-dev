@@ -234,7 +234,7 @@
                             <li class="$formatter.ifTrue( $rootItem.active, "active open", "" )">
                                 #set($href = "#")
                                 #set($href = $rootItem.href)
-                                <a href="$href">
+                                <a href="$href" data-ordering="$rootItem.ordering">
                                     #if($rootItem.cssClass)
                                         <i class="fuse-icon-fa $rootItem.id $rootItem.cssClass"></i>
                                     #else
@@ -255,7 +255,7 @@
                                 #if ($subItems && $subItems.size() > 0)
                                     <ul class="sub-menu">
                                         #foreach($sectionItem in $subItems)
-                                            <li class="$formatter.ifTrue( $sectionItem.active, "active open", "" )">
+                                            <li class="$formatter.ifTrue( $sectionItem.active, "active open", "" )" data-ordering="$sectionItem.ordering">
                                                 <a href="$sectionItem.href">
                                                     #if($sectionItem.cssClass)
                                                         <i class="fuse-icon-fa $sectionItem.id $sectionItem.cssClass"></i>
