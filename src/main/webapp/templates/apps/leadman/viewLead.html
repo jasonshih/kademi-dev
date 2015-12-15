@@ -45,7 +45,7 @@
                                 <li><a href="$user.name">Assign to me</a></li>
                                 <li><a href="">Clear</a></li>
                                 <li role="separator" class="divider"></li>
-                                #foreach($user in $page.teamMembers)
+                                #foreach($user in $page.find("/leads").teamMembers)
                                 <li><a href="$user.name">$user.name</a></li>
                                 #end
                             </ul>
