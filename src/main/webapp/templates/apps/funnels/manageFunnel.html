@@ -21,6 +21,8 @@
                     <th>Awaiting goal</th>
                     <th>Created date</th>
                     <th>Last attained date</th>
+                    <th>Stage</th>
+                    <th>Source</th>
                 </tr>
             </thead>
             <tbody>
@@ -32,6 +34,8 @@
                     <td>$lead.currentGoal</td>
                     <td>$lead.createDate</td>
                     <td>$lead.lastAttainedDate</td>
+                    <td>$!lead.stageName</td>
+                    <td>$!lead.source</td>
                 </tr>
                 #end
             </tbody>
