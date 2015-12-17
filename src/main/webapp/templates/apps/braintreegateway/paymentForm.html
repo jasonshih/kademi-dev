@@ -54,7 +54,6 @@
 <script src="https://js.braintreegateway.com/v2/braintree.js"></script>
 <script>
     pageInitFunctions.push(function () {
-        var integration = null;
         var dummyForm = $('<form id="bt-dummy-form" method="POST" action="/storeCheckout"></form>');
         dummyForm.on('submit', function (e) {
             e.preventDefault();
@@ -64,14 +63,16 @@
         var result = null;
 
         $('#cart-form button[type=submit]').on('click', function (e) {
-            var event = new Event('submit');
-            dummyForm[0].dispatchEvent(event);
+            if ($('#pf-$INSTANCE_ID').is(':visible')) {
+                var event = new Event('submit');
+                dummyForm[0].dispatchEvent(event);
 
-            e.preventDefault();
+                e.preventDefault();
+            }
         });
 
         paymentForm.beforePostForm(function (data) {
-            if (data.paymentProvider === 'paypal') {
+            if (data.paymentProvider === '$INSTANCE_ID') {
                 flog('Got result', result);
                 data.nonce = result.nonce;
             }
