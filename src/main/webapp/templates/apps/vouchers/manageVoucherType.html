@@ -177,26 +177,26 @@
 
                                 </colgroup>
                                 <thead>
-                                <tr>
-                                    <th>Total</th>
-                                    <th>Redeemed</th>
-                                    <th>Allocated</th>
-                                    <th>Cancelled</th>
-                                </tr>
+                                    <tr>
+                                        <th>Total</th>
+                                        <th>Redeemed</th>
+                                        <th>Allocated</th>
+                                        <th>Cancelled</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td>$page.voucherSummary.total</td>
-                                    <td>$!page.voucherSummary.states.R.number</td>
-                                    <td>$!page.voucherSummary.states.A.number</td>
-                                    <td>$!page.voucherSummary.states.C.number</td>
-                                </tr>
-                                <tr>
-                                    <td>Cash value</td>
-                                    <td>$formatter.formatCurrency( $!page.voucherSummary.states.R.cashValue )</td>
-                                    <td>$formatter.formatCurrency( $!page.voucherSummary.states.A.cashValue )</td>
-                                    <td>$formatter.formatCurrency( $!page.voucherSummary.states.C.cashValue )</td>
-                                </tr>
+                                    <tr>
+                                        <td>$page.voucherSummary.total</td>
+                                        <td>$!page.voucherSummary.states.R.number</td>
+                                        <td>$!page.voucherSummary.states.A.number</td>
+                                        <td>$!page.voucherSummary.states.C.number</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cash value</td>
+                                        <td>$formatter.formatCurrency( $!page.voucherSummary.states.R.cashValue )</td>
+                                        <td>$formatter.formatCurrency( $!page.voucherSummary.states.A.cashValue )</td>
+                                        <td>$formatter.formatCurrency( $!page.voucherSummary.states.C.cashValue )</td>
+                                    </tr>
 
                                 </tbody>
                             </table>
@@ -241,6 +241,9 @@
                                         </span>
                                     </div>
                                 </div>
+                                <div class="col-lg-offset-4 col-lg-2">
+                                    <button type="button" class="btn btn-danger btn-remove-vouchers pull-right"><i class="fa fa-trash"></i> Delete Vouchers</button>
+                                </div>
                             </div>
 
                             <div class="table-responsive">
@@ -251,6 +254,7 @@
                                         <col width="" />
                                         <col width="" />
                                         <col width="280px" />
+                                        <col width="10px" />
                                     </colgroup>
                                     <thead>
                                         <tr>
@@ -259,6 +263,7 @@
                                             <th>Status</th>
                                             <th>Date</th>
                                             <th>By</th>
+                                            <th><input class="selectAll" name="voucherSelect" type="checkbox"/></th>
                                         </tr>
                                     </thead>
                                     <tbody id="vouchers-table-body">
@@ -278,6 +283,7 @@
                                                 <a href="/manageUsers/$v.changedBy.userId">$v.changedBy.name</a>
                                                 #end
                                             </td>
+                                            <td><input data-vid="$v.id" name="voucherSelect" type="checkbox"/></td>
                                         </tr>
                                         #end
                                         #end
@@ -426,6 +432,8 @@
                 initSearchVoucher();
 
                 initManageExtraField();
+                initSelectAll();
+                initDeleteVouchers();
 
                 $('abbr.timeago').timeago();
 
@@ -533,6 +541,41 @@
                     tbody.append(tr);
                 });
                 unmatchedTable.show();
+            }
+
+            function initDeleteVouchers() {
+                $('body').on('click', '.btn-remove-vouchers', function (e) {
+                    e.preventDefault();
+                    var vouchers = $('#vouchers-table-body input[type=checkbox]:checked');
+                    var voucherIds = [];
+
+                    vouchers.each(function (i, item) {
+                        var v = $(item);
+                        voucherIds.push(v.data('vid'));
+                    });
+
+                    if (voucherIds.length > 0 && confirm('Are you sure you want to delete ' + voucherIds.length + ' vouchers?')) {
+                        $.ajax({
+                            url: window.location.pathname,
+                            type: 'POST',
+                            dataType: 'json',
+                            data: {
+                                deleteVouchers: voucherIds.join(',')
+                            },
+                            success: function (data, textStatus, jqXHR) {
+                                if (data.status) {
+                                    Msg.success(data.messages);
+                                    reloadVouchers();
+                                } else {
+                                    Msg.warning(data.messages);
+                                }
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+
+                            }
+                        });
+                    }
+                });
             }
 
         </script>
