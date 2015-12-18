@@ -237,7 +237,7 @@
         showElement: function (element, options, callback) {
             return $(this).each(function () {
                 var form = $(this);
-                var config = form.forms('getOptions');
+                var config = getFormConfig(form.forms('getOptions'));
                 options = $.extend({}, {
                     'opacity': 1,
                     'height': 'show'
@@ -249,7 +249,7 @@
         hideElement: function (element, options, callback) {
             return $(this).each(function () {
                 var form = $(this);
-                var config = form.forms('getOptions');
+                var config = getFormConfig(form.forms('getOptions'));
                 options = $.extend({}, {
                     'opacity': 0,
                     'height': 'hide'
@@ -272,7 +272,7 @@ function getFormConfig(config) {
         config = {};
     }
 
-    return $.extend({}, $.fn.forms.DEFAULTS, config);
+    return $.extend({}, $.fn.forms.DEFAULT, config);
 }
 
 /**

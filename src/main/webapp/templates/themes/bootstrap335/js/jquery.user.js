@@ -84,7 +84,6 @@
                 doLogout();
             });
 
-            flog('[jquery.user] Init user');
             initUser();
 
             // Use a body class to ensure is only initialized once
@@ -108,6 +107,14 @@
 
             return $(this).each(function () {
                 var container = $(this);
+
+                if (container.data('userOptions')) {
+                    flog('[jquery.user] Already initialized');
+                    return;
+                } else {
+                    container.data('userOptions', config);
+                }
+
                 var form = container.find('form');
 
                 flog('[jquery.user] Init form', form);
@@ -125,11 +132,11 @@
                         var password = txtPassword.val();
 
                         if (userName && password) {
-                            doLogin(userName, password, config, container);
+                            doLogin(userName, password, config, form);
                         } else {
                             showErrorField(userName);
                             showErrorField(password);
-                            showErrorMessage(config, config, config.requiredFieldsMessage);
+                            showErrorMessage(form, config, config.requiredFieldsMessage);
                         }
                     } catch (e) {
                         flog('[jquery.user] Exception logging in', e);
@@ -141,8 +148,8 @@
 
 })(jQuery);
 
-function doLogin(userName, password, config, container) {
-    flog('[jquery.user] doLogin', userName, config, container);
+function doLogin(userName, password, config, form) {
+    flog('[jquery.user] doLogin', userName, config, form);
 
     var data = {};
     var userNameProperty;
@@ -161,7 +168,7 @@ function doLogin(userName, password, config, container) {
     }
     data[passwordProperty] = password;
 
-    var chk = container.find('input[name=keepLoggedIn]');
+    var chk = form.find('input[name=keepLoggedIn]');
     if (chk) {
         var keepLoggedIn = chk.prop('checked');
         data['keepLoggedIn'] = keepLoggedIn;
@@ -208,12 +215,12 @@ function doLogin(userName, password, config, container) {
                 }
             } else {
                 flog('null userUrl, so failed. Set validation message message');
-                showErrorMessage(container, config, config.loginFailedMessage);
+                showErrorMessage(form, config, config.loginFailedMessage);
             }
         },
         error: function (resp) {
             flog('[jquery.user] Error response from server', resp);
-            showErrorMessage(container, config, config.loginFailedMessage);
+            showErrorMessage(form, config, config.loginFailedMessage);
         }
     });
 }
