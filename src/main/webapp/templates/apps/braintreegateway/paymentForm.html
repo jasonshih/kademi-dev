@@ -1,31 +1,5 @@
 <div class="form-group">
-    <div class="col-md-12">
-        <input type="text" name="cardnumber" class="form-control required-if-shown" value="" placeholder="Credit Card #" />
-    </div>
-</div>
-<div class="form-group">
-    <div class="col-sm-4">
-        <select name="cardmonth" class="form-control required-if-shown">
-            <option value="">- Month -</option>
-            #foreach($i in [1..12])
-            <option value="$formatter.padWith("0", $i, 2)">$formatter.padWith("0", $i, 2)</option>
-            #end
-        </select>
-    </div>
-    <div class="col-sm-4">
-        <select name="cardyear" class="form-control required-if-shown">
-            <option value="">- Year -</option>
-            #set($now = $formatter.now)
-            #set($year = $formatter.getYear($now))
-            #foreach($i in [0..10])
-            #set($y = $year + $i)
-            <option value="$y">$y</option>
-            #end
-        </select>
-    </div>
-    <div class="col-sm-4">
-        <input type="text" name="cardcvn" class="form-control required-if-shown" value="" placeholder="CVV" />
-    </div>
+    <div id="payment-form" class="col-md-12"></div>
 </div>
 <div class="form-group">
     <div class="col-sm-6">
@@ -77,13 +51,40 @@
     </div>
 </div>
 
-<script src="https://secure.ewaypayments.com/scripts/eCrypt.js">//</script>
+<script src="https://js.braintreegateway.com/v2/braintree.js"></script>
 <script>
-    $(function () {
+    pageInitFunctions.push(function () {
+        var dummyForm = $('<form id="bt-dummy-form" method="POST" action="/storeCheckout"></form>');
+        dummyForm.on('submit', function (e) {
+            e.preventDefault();
+        });
+        $('body').append(dummyForm);
+
+        var result = null;
+
+        $('#cart-form button[type=submit]').on('click', function (e) {
+            if ($('#pf-$INSTANCE_ID').is(':visible')) {
+                var event = new Event('submit');
+                dummyForm[0].dispatchEvent(event);
+
+                e.preventDefault();
+            }
+        });
+
         paymentForm.beforePostForm(function (data) {
-            if (data.paymentProvider === 'eWayPaymentApp') {
-                data.cardnumber = eCrypt.encryptValue(data.cardnumber);
-                data.cardcvn = eCrypt.encryptValue(data.cardcvn);
+            if (data.paymentProvider === '$INSTANCE_ID') {
+                flog('Got result', result);
+                data.nonce = result.nonce;
+            }
+        });
+
+        flog('initBraintree');
+        braintree.setup("$clientToken", "dropin", {
+            container: "payment-form",
+            form: 'bt-dummy-form',
+            onPaymentMethodReceived: function (obj) {
+                result = obj;
+                $('#cart-form').trigger('submit');
             }
         });
     });

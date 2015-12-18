@@ -877,7 +877,7 @@ ul.main-navigation-menu li > ul.sub-menu > li {
 }
 
 .fuse-icon.menuGroupsUsers:before {
-    content: "îª";
+    content: "î?ª";
 }
 
 .fuse-icon.menuTalk:before {
@@ -1342,6 +1342,7 @@ body.ajax-loading .ajaxLoader {
 
 .table-responsive {
     min-height: 220px;
+    overflow-x: visible;
 }
 
 .summary-panel {
