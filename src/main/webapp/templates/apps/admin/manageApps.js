@@ -33,11 +33,12 @@ function initApps() {
     $(document.body).on('hidden.bs.modal', '.modal', function () {
         var modal = $(this);
         var form = modal.find('form');
-        resetForm(form);
+        //resetForm(form);
     });
 }
 
 function initSettingsForms() {
+    $("tr[data-isCore=true]").closest("tr").addClass("enabled");
     $("td.CheckBoxWrapper input:checked").closest("tr").addClass("enabled");
     $(".settings form").forms({
         callback: function(resp) {
