@@ -1,9 +1,33 @@
 /**
  *
- *  jquery.forms.js
- *  version: 1.1.0
+ * jquery.forms.js
+ * @version: 1.1.0
+ * @depends: common.js, moment.js
  *
- *  Depends on common.js, moment.js
+ * Configuration:
+ * @param {String} [postUrl=null] Url which will post form data to. If null, will use 'action' attribute of form
+ * @param {Function} validate Custom validation method. Arguments are 'form' and 'config'. 'form' is jQuery object form and 'config' is configuration of current form. Can return 'boolean' for result of validation or return object contains total error, list of error fields and list of error messages with format '{{error: Number, errorFields: Array, errorMessages: Array}}'
+ * @param {Function} onValid Callback will be called when all fields are valid. Arguments are 'form' and 'config'. 'form' is jQuery object form and 'config' is configuration of current form
+ * @param {Function} onInvalid Callback will be called when all fields are invalid. Arguments are 'form' and 'config'. 'form' is jQuery object form and 'config' is configuration of current form
+ * @param {Boolean} [allowPostForm=true] Allow post form data via AJAX automatically or not
+ * @param {Function} beforePostForm Callback will be called before posting form data to server. Arguments are 'form', 'config', 'data'. 'form' is jQuery object form, 'config' is configuration of current form and 'data' is form data. This callback MUST return the data for posting to server
+ * @param {Function} onSuccess Callback will be called when post data form to server successfully. Arguments are 'resp', 'form' and 'config'. 'resp' is response data from server, 'form' is jQuery object form and 'config' is configuration of current form
+ * @param {Function} onError Callback will be called when post data form to server failed. Arguments are 'resp', 'form' and 'config'. 'resp' is response data from server, 'form' is jQuery object form and 'config' is configuration of current form
+ * @param {String} [confirmMessage=null] The confirmation message after posting data fom to server successfully
+ * @param {Number} [confirmMessageDuration=5000] The displaying time of confirm message before it's hidden
+ * @param {String|Function} validationMessageSelector Selector of validation message. It's can be function which will return jQuery object of validation message
+ * @param {String} networkErrorMessage The error network message
+ * @param {String} emailErrorMessage The error message when email fields are invalid
+ * @param {String} requiredErrorMessage The error message when required fields are invalid
+ * @param {String} dateErrorMessage The error message when date fields are invalid
+ * @param {String} passwordErrorMessage The error message when password fields are invalid
+ * @param {String} confirmPasswordErrorMessage The error message when confirmPassword fields are invalid
+ * @param {String} simpleCharsErrorMessage The error message when simpleChars fields are invalid
+ * @param {String} numericErrorMessage The error message when numeric fields are invalid
+ * @param {String} urlErrorMessage The error message when url fields are invalid
+ * @param {Number} [animationDuration=300] The speed of all animations in jquery.forms
+ * @param {Function} renderMessageWrapper The render method for message wrapper in jquery.forms. Arguments are 'messageContent' and 'type'. 'messageContent' is message content. 'type' can be 'danger', 'success', 'info' and 'warning'.
+ * @param {Function} renderErrorMessage The render method for error messages in jquery.forms. Arguments are 'message'. 'message' is message content, can be string or array.
  */
 
 (function ($) {
@@ -19,33 +43,21 @@
     flog('- "showValidation" is removed. Use "showFieldMessages" instead');
     flog('********************************************');
 
-    /**
-     * Configuration of jquery.forms
-     * @param {String} [postUrl=null] Url which will post form data to. If null, will use 'action' attribute of form
-     * @param {Function} validate Custom validation method. Arguments are 'form' and 'config'. 'form' is jQuery object form and 'config' is configuration of current form. Can return 'boolean' for result of validation or return object contains total error, list of error fields and list of error messages with format '{{error: Number, errorFields: Array, errorMessages: Array}}'
-     * @param {Function} onValid Callback will be called when all fields are valid. Arguments are 'form' and 'config'. 'form' is jQuery object form and 'config' is configuration of current form
-     * @param {Function} onInvalid Callback will be called when all fields are invalid. Arguments are 'form' and 'config'. 'form' is jQuery object form and 'config' is configuration of current form
-     * @param {Boolean} [allowPostForm=true] Allow post form data via AJAX automatically or not
-     * @param {Function} beforePostForm Callback will be called before posting form data to server. Arguments are 'form', 'config', 'data'. 'form' is jQuery object form, 'config' is configuration of current form and 'data' is form data. This callback MUST return the data for posting to server
-     * @param {Function} onSuccess Callback will be called when post data form to server successfully. Arguments are 'resp', 'form' and 'config'. 'resp' is response data from server, 'form' is jQuery object form and 'config' is configuration of current form
-     * @param {Function} onError Callback will be called when post data form to server failed. Arguments are 'resp', 'form' and 'config'. 'resp' is response data from server, 'form' is jQuery object form and 'config' is configuration of current form
-     * @param {String} [confirmMessage=null] The confirmation message after posting data fom to server successfully
-     * @param {Numeric} [confirmMessageDuration=5000] The displaying time of confirm message before it's hidden
-     * @param {String|Function} validationMessageSelector Selector of validation message. It's can be function which will return jQuery object of validation message
-     * @param {String} networkErrorMessage The error network message
-     * @param {String} emailErrorMessage The error message when email fields are invalid
-     * @param {String} requiredErrorMessage The error message when required fields are invalid
-     * @param {String} dateErrorMessage The error message when date fields are invalid
-     * @param {String} passwordErrorMessage The error message when password fields are invalid
-     * @param {String} confirmPasswordErrorMessage The error message when confirmPassword fields are invalid
-     * @param {String} simpleCharsErrorMessage The error message when simpleChars fields are invalid
-     * @param {String} numericErrorMessage The error message when numeric fields are invalid
-     * @param {String} urlErrorMessage The error message when url fields are invalid
-     * @param {Numeric} [animationDuration=300] The speed of all animations in jquery.forms
-     * @param {Function} renderMessageWrapper The render method for message wrapper in jquery.forms. Arguments are 'messageContent' and 'type'. 'messageContent' is message content. 'type' can be 'danger', 'success', 'info' and 'warning'.
-     * @param {Function} renderErrorMessage The render method for error messages in jquery.forms. Arguments are 'message'. 'message' is message content, can be string or array.
-     */
-    var DEFAULTS = {
+    $.fn.forms = function (method) {
+        if (methods[method]) {
+            return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
+        } else if (typeof method === 'object' || !method) {
+            return methods.init.apply(this, arguments);
+        } else {
+            $.error('[jquery.forms] Method ' + method + ' does not exist on jquery.forms');
+        }
+    };
+
+    // Version for jquery.forms
+    $.fn.forms.version = '1.1.0';
+
+    // Default configuration
+    $.fn.forms.DEFAULT = {
         postUrl: null, // means to use the form action as url
         validate: function (form, config) {
             flog('[jquery.forms] Default validate of v1.1.0', form, config);
@@ -124,7 +136,7 @@
         init: function (options) {
             return $(this).each(function () {
                 var form = $(this);
-                var config = $.extend({}, DEFAULTS, options);
+                var config = $.extend({}, $.fn.forms.DEFAULT, options);
                 flog('[jquery.forms] Configuration:', config);
 
                 // ==============================================================================
@@ -202,9 +214,6 @@
         getOptions: function () {
             return $(this).data('formOptions');
         },
-        getDefaultOptions: function () {
-            return $.extend({}, DEFAULTS);
-        },
         disable: function (callback) {
             return $(this).each(function () {
                 var form = $(this);
@@ -228,7 +237,7 @@
         showElement: function (element, options, callback) {
             return $(this).each(function () {
                 var form = $(this);
-                var config = form.forms('getOptions');
+                var config = getFormConfig(form.forms('getOptions'));
                 options = $.extend({}, {
                     'opacity': 1,
                     'height': 'show'
@@ -240,7 +249,7 @@
         hideElement: function (element, options, callback) {
             return $(this).each(function () {
                 var form = $(this);
-                var config = form.forms('getOptions');
+                var config = getFormConfig(form.forms('getOptions'));
                 options = $.extend({}, {
                     'opacity': 0,
                     'height': 'hide'
@@ -251,20 +260,20 @@
         }
     };
 
-    $.fn.forms = function (method) {
-        if (methods[method]) {
-            return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
-        } else if (typeof method === 'object' || !method) {
-            return methods.init.apply(this, arguments);
-        } else {
-            $.error('[jquery.forms] Method ' + method + ' does not exist on jquery.forms');
-        }
-    };
-
-    // Version for jquery.forms
-    $.fn.forms.version = '1.1.0';
-
 })(jQuery);
+
+/**
+ * Get configuration of form. The input configuration will be merged with default configuration of jquery.forms
+ * @param {Object} config
+ * @returns {Object}
+ */
+function getFormConfig(config) {
+    if (!config) {
+        config = {};
+    }
+
+    return $.extend({}, $.fn.forms.DEFAULT, config);
+}
 
 /**
  * Get validation message
@@ -273,6 +282,8 @@
  * @returns {jQuery}
  */
 function getValidationMessage(form, config) {
+    config = getFormConfig(config);
+
     if (config && config.validationMessageSelector) {
         if (typeof config.validationMessageSelector === 'string') {
             return form.find(config.validationMessageSelector);
@@ -293,6 +304,8 @@ function getValidationMessage(form, config) {
  * @param {Object} event - optional, the event which caused the submit
  */
 function doPostForm(form, config, event) {
+    config = getFormConfig(config);
+
     // Trim all inputs
     var enc = form.attr('enctype');
     flog('[jquery.forms] Preparing doPostForm...', 'enctype: ' + enc, form);
@@ -334,7 +347,7 @@ function doPostForm(form, config, event) {
                 form.removeClass('ajax-processing');
 
                 if (resp && resp.status) {
-                    flog('[jquery.forms] Post form successfully', resp)
+                    flog('[jquery.forms] Post form successfully', resp);
 
                     if (config.confirmMessage) {
                         showConfirmMessage(form, config);
@@ -344,7 +357,7 @@ function doPostForm(form, config, event) {
                         config.onSuccess.call(this, resp, form, config, event);
                     }
                 } else {
-                    flog('[jquery.forms] Posting form failed', resp)
+                    flog('[jquery.forms] Posting form failed', resp);
 
                     if (typeof config.onError === 'function') {
                         config.onError.call(this, resp, form, config);
@@ -384,7 +397,7 @@ function doPostForm(form, config, event) {
                     xhr.sendAsBinary(data.toString());
                 }
             }
-        }
+        };
 
         $.ajax(ajaxOpts);
     } catch (e) {
@@ -392,7 +405,7 @@ function doPostForm(form, config, event) {
             config.onError.call(this, null, form, config);
         } else {
             flog('exception submitting form', e);
-            alert('Sorry, an error occured attempting to submit the form. Please contact the site administrator');
+            alert('Sorry, an error occurred attempting to submit the form. Please contact the site administrator');
         }
     }
 }
@@ -407,6 +420,8 @@ function doPostForm(form, config, event) {
  * @param {Function} callback
  */
 function showFormMessage(form, config, message, title, type, callback) {
+    config = getFormConfig(config);
+
     var alertMsg = getValidationMessage(form, config);
     if (alertMsg.length === 0) {
         alertMsg = $(config.renderMessageWrapper(message, type));
@@ -440,6 +455,8 @@ function showFormMessage(form, config, message, title, type, callback) {
  * @param {String} message
  */
 function showErrorMessage(form, config, message) {
+    config = getFormConfig(config);
+
     var messageHtml = config.renderErrorMessage(message);
 
     showFormMessage(form, config, messageHtml, 'Errors', 'danger', null);
@@ -451,6 +468,8 @@ function showErrorMessage(form, config, message) {
  * @param {Object} config
  */
 function showConfirmMessage(form, config) {
+    config = getFormConfig(config);
+
     showFormMessage(form, config, config.confirmMessage, null, 'success', function () {
         window.setTimeout(function () {
             var alertMsg = getValidationMessage(form, config);
@@ -463,14 +482,13 @@ function showConfirmMessage(form, config) {
  * Show error fields with messages
  * @param {Array} fieldMessages
  * @param {jQuery} form
- * @param {Object} config
  */
-function showFieldMessages(fieldMessages, form, config) {
+function showFieldMessages(fieldMessages, form) {
     if (fieldMessages && fieldMessages.length > 0 && fieldMessages[0].length > 0) {
         $.each(fieldMessages, function (i, message) {
             flog('[jquery.forms] Show field message', message);
 
-            var target = $('#' + message.field);
+            var target = form.find('#' + message.field);
             var parent = target.parent();
 
             var errorMessage = parent.find('.help-block.error-message');
@@ -493,6 +511,10 @@ function showFieldMessages(fieldMessages, form, config) {
  * @param {Object} config
  */
 function resetValidation(form, config) {
+    flog('[jquery.forms] resetValidation', form, config);
+
+    config = getFormConfig(config);
+
     form.find('.form-group').removeClass('has-error');
     form.find('.error-field').removeClass('error-field').removeAttr('error-message');
     form.find('.error-message').remove();
@@ -513,11 +535,14 @@ function resetValidation(form, config) {
  * @returns {Boolean}
  */
 function validateFormFields(form, config) {
+    flog('[jquery.forms] validateFormFields', form, config);
+
+    config = getFormConfig(config);
+
     var resultRequired = checkRequiredFields(form, config);
     if (resultRequired.error > 0) {
         for (var i = 0; i < resultRequired.errorFields.length; i++) {
-            var errorField = resultRequired.errorFields[i];
-            showErrorField(errorField);
+            showErrorField(resultRequired.errorFields[i]);
         }
 
         showErrorMessage(form, config, config.requiredErrorMessage);
@@ -610,8 +635,7 @@ function validateFormFields(form, config) {
         if (error > 0) {
             showErrorMessage(form, config, errorMessages);
             for (var i = 0; i < errorFields.length; i++) {
-                var errorField = errorFields[i];
-                showErrorField(errorField);
+                showErrorField(errorFields[i]);
             }
 
             return false;
@@ -628,6 +652,10 @@ function validateFormFields(form, config) {
  * @returns {{error: Number, errorFields: Array}}
  */
 function checkRequiredCheckboxes(form, config) {
+    flog('[jquery.forms] checkRequiredCheckboxes', form, config);
+
+    config = getFormConfig(config);
+
     var error = 0;
     var errorFields = [];
 
@@ -653,6 +681,10 @@ function checkRequiredCheckboxes(form, config) {
  * @returns {{error: Number, errorFields: Array}}
  */
 function checkRequiredRadios(form, config) {
+    flog('[jquery.forms] checkRequiredRadios', form, config);
+
+    config = getFormConfig(config);
+
     var error = 0;
     var errorFields = [];
     var radioNames = {};
@@ -694,7 +726,10 @@ function checkRequiredRadios(form, config) {
  * @returns {{error: Number, errorFields: Array}}
  */
 function checkRequiredFields(form, config) {
-    flog('[jquery.forms] checkRequiredFields', form);
+    flog('[jquery.forms] checkRequiredFields', form, config);
+
+    config = getFormConfig(config);
+
     var error = 0;
     var errorFields = [];
 
@@ -742,10 +777,11 @@ function checkRequiredFields(form, config) {
 /**
  * Check regex fields
  * @param {jQuery} form
- * @param {Object} config
  * @returns {{error: Number, errorFields: Array, errorMessages: Array}}
  */
-function checkRegexes(form, config) {
+function checkRegexes(form) {
+    flog('[jquery.forms] checkRegexes', form);
+
     var error = 0;
     var errorFields = [];
     var errorMessages = [];
@@ -815,6 +851,10 @@ function shouldCheckValue(input) {
  * @returns {{error: Number, errorFields: Array}}
  */
 function checkDates(form, config) {
+    flog('[jquery.forms] checkDates', form, config);
+
+    config = getFormConfig(config);
+
     var error = 0;
     var errorFields = [];
 
@@ -849,6 +889,10 @@ function checkDates(form, config) {
  * @returns {{password: Boolean, confirmPassword: Boolean, errorFields: Array}}
  */
 function checkValidPasswords(form, config) {
+    flog('[jquery.forms] checkValidPasswords', form, config);
+
+    config = getFormConfig(config);
+
     var input = form.find('input#password, input.password');
 
     if (input.length > 0) {
@@ -905,6 +949,10 @@ function checkValidPasswords(form, config) {
  * @returns {{password: Boolean, confirmPassword: Boolean, errorFields: Array}}
  */
 function checkPasswordsMatch(form, config, passwordInputs) {
+    flog('[jquery.forms] checkPasswordsMatch', form, config, passwordInputs);
+
+    config = getFormConfig(config);
+
     var confirmPasswordInputs = form.find('input#confirmPassword, input.confirm-password');
 
     if (confirmPasswordInputs.length === 0) {
@@ -948,6 +996,10 @@ function checkPasswordsMatch(form, config, passwordInputs) {
  * @returns {{error: Number, errorFields: Array}}
  */
 function checkValidEmailAddress(form, config) {
+    flog('[jquery.forms] checkValidEmailAddress', form, config);
+
+    config = getFormConfig(config);
+
     var error = 0;
     var errorFields = [];
     var pattern = new RegExp(/^(("[\w-\s]+")|([\w-'']+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
@@ -982,6 +1034,10 @@ function checkValidEmailAddress(form, config) {
  * @returns {{error: Number, errorFields: Array}}
  */
 function checkSimpleChars(form, config) {
+    flog('[jquery.forms] checkSimpleChars', form, config);
+
+    config = getFormConfig(config);
+
     var error = 0;
     var errorFields = [];
     var simpleCharsPattern = /^[a-zA-Z0-9_]+$/;
@@ -1016,6 +1072,10 @@ function checkSimpleChars(form, config) {
  * @returns {{error: Number, errorFields: Array}}
  */
 function checkNumerics(form, config) {
+    flog('[jquery.forms] checkNumerics', form, config);
+
+    config = getFormConfig(config);
+
     var error = 0;
     var errorFields = [];
 
@@ -1049,6 +1109,10 @@ function checkNumerics(form, config) {
  * @returns {{error: Number, errorFields: Array}}
  */
 function checkHrefs(form, config) {
+    flog('[jquery.forms] checkHrefs', form, config);
+
+    config = getFormConfig(config);
+
     var error = 0;
     var errorFields = [];
     var pattern = new RegExp('^[a-zA-Z0-9_/%:/./-]+$');
