@@ -117,29 +117,29 @@ function initItemQuantity() {
 }
 
 function doQuantityUpdate(href, quantity) {
-    flog("doQuantityUpdate", href);
+    flog('doQuantityUpdate', href);
 
     var actors = $('.btn-decrease-quantity, .btn-increase-quantity, .txt-quantity, .btn-remove-item');
     actors.prop('disabled', true);
 
     $.ajax({
         type: 'POST',
-        url: "/checkout",
+        url: '/checkout',
         data: {
             changeItemHrefQuantity: href,
             quantity: quantity
         },
-        datatype: "json",
+        datatype: 'json',
         success: function (data) {
-            $("#itemsTable, #cart-link").reloadFragment({
+            $('#itemsTable, #cart-link').reloadFragment({
                 whenComplete: function (resp) {
-                    Msg.info("Updated item in your shopping cart");
+                    Msg.info('Updated item in your shopping cart');
                     actors.prop('disabled', false);
                 }
             });
         },
         error: function (resp) {
-            Msg.error("An error occured adding the product to your shopping cart. Please check your internet connection and try again");
+            Msg.error('An error occured adding the product to your shopping cart. Please check your internet connection and try again');
         }
     });
 }
@@ -163,17 +163,20 @@ function doRemoveFromCart(href) {
     flog('doRemoveFromCart', href);
     $.ajax({
         type: 'POST',
-        url: "/checkout",
+        url: '/checkout',
         data: {
             removeItemHref: href
         },
-        datatype: "json",
+        datatype: 'json',
         success: function (data) {
-            Msg.info("Removed item from your shopping cart");
-            $("#itemsTable, #cart-link").reloadFragment();
+            $('#itemsTable, #cart-link').reloadFragment({
+                whenComplete: function () {
+                    Msg.info('Removed item from your shopping cart');
+                }
+            });
         },
         error: function (resp) {
-            Msg.error("An error occurred removing the product to your shopping cart. Please check your internet connection and try again");
+            Msg.error('An error occurred removing the product to your shopping cart. Please check your internet connection and try again');
         }
     });
 }
