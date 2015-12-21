@@ -142,21 +142,18 @@
                                 Subfolders
                                 <span class="caret"></span>
                             </button>
-                            <ul role="menu" class="dropdown-menu" id="subFoldersList">
+                            <ul role="menu" class="dropdown-menu list" id="subFoldersList">
                                 #foreach($subFolder in $page.subFolders)
-                                <li>
-                                    <div class="row">
-                                        <div class="col-md-9">
-                                            <a href="$subFolder.name">
-                                                <i class="fa fa-folder"></i>
-                                                $subFolder.name
+                                    <li class="clearfix list-item">
+                                        <aside class="list-item-controller">
+                                            <a class="btn btn-xs btn-danger btn-delete-folder" href="$subFolder.href">
+                                                <i class="fa fa-times"></i>
                                             </a>
-                                        </div>
-                                        <a class="btn btn-xs btn-danger btn-delete-folder" href="$subFolder.href">
-                                            <i class="fa fa-times"></i>
+                                        </aside>
+                                        <a href="$subFolder.name">
+                                            <i class="fa fa-folder"></i> $subFolder.name
                                         </a>
-                                    </div>
-                                </li>
+                                    </li>
                                 #end
                             </ul>
                         </div>
@@ -185,6 +182,7 @@
                                         <a href="htmleditor?fileName=${page.name}" target="_blank" class="btn btn-sm btn-info" title="Edit page"><i class="fa fa-edit"></i> Edit</a>
                                         <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown"> <span class="caret"></span></button>
                                         <ul class="dropdown-menu pull-right" role="menu">
+                                            <li><a href="contenteditor?fileName=${page.name}" target="_blank" title="Edit page"><i class="fa fa-edit"></i> Edit with new editor <i class="clip-new" style="color: red;"></i></a></li>
                                             <li><a href="${page.name}" class="btn-edit-page" title="Edit page"><i class="fa fa-edit"></i> Quick Edit</a></li>
                                             <li><a href="${page.name}?goto" target="_blank" title="View page"><i class="clip-eye"></i> View</a></li>
                                             <li class="divider"></li>
