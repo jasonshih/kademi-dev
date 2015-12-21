@@ -20,12 +20,50 @@ function initEcommerceCheckout() {
     initRemoveItem();
     initPaymentOptionSelect();
     initLoginForm();
+
+    $('.btn-decrease-quantity, .btn-increase-quantity, .txt-quantity, .btn-remove-item').prop('disabled', false);
 }
 
 function initCartForm() {
     $('#cart-form').forms({
         validate: function (form) {
-            $('#cart-form').find('button[type=submit] i').show();
+            var icon = form.find('button[type=submit] i');
+
+            icon.show();
+
+            var cvv = form.find('[name=cardcvn]');
+            if(cvv.val() && isNaN(cvv.val())){
+                icon.hide();
+                return {
+                    error: 1,
+                    errorFields: [cvv],
+                    errorMessages: ['CVV must be a number']
+                };
+            }
+
+            if(cvv.val() && cvv.val().length<3){
+                icon.hide();
+                return {
+                    error: 1,
+                    errorFields: [cvv],
+                    errorMessages: ['CVV must have 3 digital characters']
+                };
+            }
+
+            var phone = form.find('[name=phone]');
+            var phoneValue = phone.val();
+            if(phoneValue){
+                var regex = /-|\+|\s|\(|\)|x|ext|,|\.|\//ig;
+                var phoneValue = phoneValue.replace(regex, '');
+                if(isNaN(phoneValue)){
+                    icon.hide();
+                    return {
+                        error: 1,
+                        errorFields: [phone],
+                        errorMessages: ['Please enter a valid phone number']
+                    };
+                }
+            }
 
             return true;
         },
@@ -128,20 +166,31 @@ function initItemQuantity() {
         changeQuantity(btn, true);
     });
 
+    var quantityUpdateTimer = null;
     body.on('change', '.txt-quantity', function (e) {
         e.preventDefault();
-        var inpt = $(this);
-        var val = inpt.val();
-        var row = inpt.closest('.item-row');
-        var itemHref = row.find('.itemHref');
-        var href = itemHref.val();
 
-        doQuantityUpdate(href, val);
+        var inpt = $(this);
+
+        clearTimeout(quantityUpdateTimer);
+        quantityUpdateTimer = setTimeout(function () {
+
+            var val = inpt.val();
+            var row = inpt.closest('.item-row');
+            var itemHref = row.find('.itemHref');
+            var href = itemHref.val();
+
+            doQuantityUpdate(href, val);
+        }, 500);
     });
 }
 
 function doQuantityUpdate(href, quantity) {
     flog("doQuantityUpdate", href);
+
+    var actors = $('.btn-decrease-quantity, .btn-increase-quantity, .txt-quantity, .btn-remove-item');
+    actors.prop('disabled', true);
+
     $.ajax({
         type: 'POST',
         url: "/storeCheckout",
@@ -151,8 +200,12 @@ function doQuantityUpdate(href, quantity) {
         },
         datatype: "json",
         success: function (data) {
-            Msg.info("Updated item in your shopping cart");
-            $("#itemsTable").reloadFragment();
+            $("#itemsTable, #cart-link").reloadFragment({
+                whenComplete: function (resp) {
+                    Msg.info("Updated item in your shopping cart");
+                    actors.prop('disabled', false);
+                }
+            });
         },
         error: function (resp) {
             Msg.error("An error occured adding the product to your shopping cart. Please check your internet connection and try again");
@@ -185,8 +238,11 @@ function doRemoveFromCart(href) {
         },
         datatype: "json",
         success: function (data) {
-            Msg.info("Removed item from your shopping cart");
-            $("#itemsTable").reloadFragment();
+            $("#itemsTable, #cart-link").reloadFragment({
+                whenComplete: function () {
+                    Msg.info("Removed item from your shopping cart");
+                }
+            });
         },
         error: function (resp) {
             Msg.error("An error occured adding the product to your shopping cart. Please check your internet connection and try again");

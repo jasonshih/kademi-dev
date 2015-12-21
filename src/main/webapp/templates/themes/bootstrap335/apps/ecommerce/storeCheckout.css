@@ -123,6 +123,6 @@
     font-size: 20px;
 }
 
-#logingRegisterModal .row .devider:not(:last-child) {
+#loginRegisterModal .row .devider:not(:last-child) {
     border-right: 1px solid #ccc;
 }
