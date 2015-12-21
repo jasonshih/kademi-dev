@@ -236,9 +236,7 @@
                                 #set($href = $rootItem.href)
                                 <a href="$href" data-ordering="$rootItem.ordering">
                                     #if($rootItem.cssClass)
-                                        <i class="fuse-icon-fa $rootItem.id $rootItem.cssClass"></i>
-                                    #else
-                                        <i class="fuse-icon $rootItem.id"></i>
+                                        <i class="menu-item-$rootItem.id $rootItem.cssClass"></i>
                                     #end
                                     <span class="title">$rootItem.text</span>
 
@@ -258,7 +256,7 @@
                                             <li class="$formatter.ifTrue( $sectionItem.active, "active open", "" )" data-ordering="$sectionItem.ordering">
                                                 <a href="$sectionItem.href">
                                                     #if($sectionItem.cssClass)
-                                                        <i class="fuse-icon-fa $sectionItem.id $sectionItem.cssClass"></i>
+                                                        <i class="menu-item-$sectionItem.id $sectionItem.cssClass"></i>
                                                     #end
                                                     <span class="title">$sectionItem.text</span>
                                                     #if( $sectionItem.active )

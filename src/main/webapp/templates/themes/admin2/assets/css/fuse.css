@@ -842,69 +842,6 @@ ul.main-navigation-menu li > ul.sub-menu > li {
 }
 
 /* ============================================================================
-   Fuse icons
-   ============================================================================ */
-.fuse-icon {
-    font-family: 'clip-font';
-    font-style: normal;
-    font-variant: normal;
-    font-weight: normal;
-    line-height: 1;
-    text-transform: none;
-    color: #555;
-}
-
-.fuse-icon-fa {
-    font-style: normal;
-    font-variant: normal;
-    font-weight: normal;
-    line-height: 1;
-    text-transform: none;
-    color: #555;
-}
-
-.fuse-icon.menuWebsiteManager,
-.fuse-icon.menuReporting {
-    font-family: FontAwesome;
-}
-
-.fuse-icon.menuDashboard:before {
-    content: "";
-}
-
-.fuse-icon.menuContent:before {
-    content: "";
-}
-
-.fuse-icon.menuGroupsUsers:before {
-    content: "�?�";
-}
-
-.fuse-icon.menuTalk:before {
-    content: "";
-}
-
-.fuse-icon.menuWebsiteManager:before {
-    content: "";
-}
-
-.fuse-icon.menuData:before {
-    content: "";
-}
-
-.fuse-icon.menuManageRepos:before {
-    content: "";
-}
-
-.fuse-icon.menuReporting:before {
-    content: "";
-}
-
-.fuse-icon.menuECommerce:before {
-    content: "\e044";
-}
-
-/* ============================================================================
    Fallback upload
    ============================================================================ */
 .fallback-button {
