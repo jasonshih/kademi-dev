@@ -434,7 +434,13 @@ function showFormMessage(form, config, message, title, type, callback) {
     if (title) {
         var messageTitle = alertMsg.find('.form-message-title');
         if (messageTitle.length === 0) {
-            alertMsg.prepend('<p class="form-message-title"><b>' + title + '</b></p>');
+            var btnClose = alertMsg.find('.close');
+            var titleHtml = '<p class="form-message-title"><b>' + title + '</b></p>';
+            if (btnClose.length === 0) {
+                alertMsg.prepend(titleHtml);
+            } else {
+                btnClose.after(titleHtml);
+            }
         } else {
             messageTitle.html(title);
         }
@@ -452,7 +458,7 @@ function showFormMessage(form, config, message, title, type, callback) {
  * Show error message
  * @param {jQuery} form
  * @param {Object} config
- * @param {String} message
+ * @param {String|Array} message
  */
 function showErrorMessage(form, config, message) {
     config = getFormConfig(config);
@@ -522,9 +528,7 @@ function resetValidation(form, config) {
 
     var alertMsg = getValidationMessage(form, config);
     if (alertMsg.length > 0) {
-        form.forms('hideElement', alertMsg, {}, function () {
-            alertMsg.html('');
-        });
+        alertMsg.css('hide', 'none').html('');
     }
 }
 
@@ -609,7 +613,7 @@ function validateFormFields(form, config) {
 
         if (typeof config.validate === 'function') {
             var resultCustomValidate = config.validate.call(this, form, config);
-            flog('[jquery.forms] Validate method return: ' + resultCustomValidate);
+            flog('[jquery.forms] Validate method return', resultCustomValidate);
 
             if (typeof resultCustomValidate === 'boolean') {
                 if (!resultCustomValidate) {
