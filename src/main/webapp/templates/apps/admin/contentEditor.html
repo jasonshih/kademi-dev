@@ -4,55 +4,33 @@
         <meta charset="utf-8">
         <title>Default Example</title>
         <link rel="template" href="editorBase" />        
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="description" content="">  
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="description" content="" />
+        <link rel="stylesheet" href="/theme/assets/css/fuse.css"/>
+        <!--<link href="/static/ContentBuilder/assets/default/content.css" rel="stylesheet" type="text/css" />-->
+        <link href="/static/ContentBuilder/scripts/contentbuilder.css" rel="stylesheet" type="text/css" />
+        <link href="contentEditor.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="/static/js/init-theme.js" bottom="true">//</script>
         <script type="text/javascript" src="/static/js/file.js" bottom="true">//</script>
-
-        <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,600,800' rel='stylesheet' type='text/css'>
-        <link href="/static/ContentBuilder/assets/default/content.css" rel="stylesheet" type="text/css" />
-
-        <link href="/static/ContentBuilder/scripts/contentbuilder.css" rel="stylesheet" type="text/css" />
+        <script src="/static/ContentBuilder/scripts/jquery-ui.min.js" type="text/javascript">//</script>
+        <script src="/static/ContentBuilder/scripts/contentbuilder.js" type="text/javascript">//</script>
+        <script src="/static/nicescroll/3.6.6/jquery.nicescroll.min.js" type="text/javascript">//</script>
         <script type="text/javascript" src="contentEditor.js">//</script>
-        <style>
-            #contentarea {
-                max-width: 1200px;
-                margin: 30px;
-            }
-        </style>
     </head>
     <body>
-        <div id="panelCms" style="width:220px;margin:0 0 0 -110px;left:50%;height:38px;background:rgba(255,255,255,0.8);position:fixed;top:0;padding:10px;text-align:center;white-space:nowrap;">
-            <button class="btn btn-primary btn-save-file" style="padding: 12px 20px;font-size: 1em;line-height: 1;"> Save </button> &nbsp;
-            <button onclick="view()" class="btn btn-default" style="padding: 12px 20px;font-size: 1em;line-height: 1;"> View HTML </button>
+        <div id="tool-bar">
+            <button class="btn btn-primary btn-save-file"> Save </button>
+            <button class="btn btn-default btn-view-html"> View HTML </button>
         </div>
-        <br />
-        <br />
-        <br />
+
         #set($fname = $params.fileName)
         #set($file = $folder.child($fname))
         #set($useHash = $params.useHash)
-
-        <div id="contentarea" class="container">$!file.body
+        <div id="content-area" class="container">$!file.body</div>
+        <div id="snippet-container">
+            <a id="snippet-toggler"><i class="glyphicon glyphicon-chevron-right"></i></a>
+            <div id="snippet-wrapper" class="clearfix"></div>
         </div>
-
-        <script src="/static/ContentBuilder/scripts/jquery-1.11.1.min.js" type="text/javascript"></script>
-        <script src="/static/ContentBuilder/scripts/jquery-ui.min.js" type="text/javascript"></script>
-        <script src="/static/ContentBuilder/scripts/contentbuilder.js" type="text/javascript"></script>
-
-        <script type="text/javascript">
-                jQuery(document).ready(function ($) {
-
-                    $("#contentarea").contentbuilder({
-                        zoom: 0.1, // eg 0.85
-                        snippetOpen: true,
-                        imageselect: '/static/ContentBuilder/images.html',
-                        fileselect: '/static/ContentBuilder/images.html',
-                        snippetFile: '/static/ContentBuilder/assets/default/snippets.html'
-                    });
-
-                });
-        </script>
 
         <script type="text/javascript">
             var useHash = "$!useHash";
