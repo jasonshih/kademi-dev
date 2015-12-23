@@ -33,8 +33,9 @@
     </head>
     <body>
         <div id="tool-bar">
-            <button class="btn btn-primary btn-save-file"> Save </button>
-            <button class="btn btn-default btn-view-html"> View HTML </button>
+            <button class="btn btn-primary btn-save-file" title="Save" type="button"><i class="fa fa-save"></i></button>
+            <button class="btn btn-success btn-view-html" title="View HTML" type="button"><i class="fa fa-code"></i></button>
+            <a class="btn btn-default" title="Back to parent folder" href="./"><i class="fa fa-reply"></i></a>
         </div>
 
         #set($fname = $params.fileName)
