@@ -40,15 +40,15 @@
                 var spanClass = config.isInCkeditor ? 'cke_dialog_ui_button' : '';
 
                 container.prepend(
-                        '<div class="milton-tree-toolbar">' +
-                        '<a class="btn-delete-tree ' + buttonClass + '" title="Delete">' +
-                        '<span class="' + spanClass + '"><i class="fa fa-times"></i></span>' +
-                        '</a> ' +
-                        '<a class="btn-add-folder ' + buttonPrimaryClass + '" title="Add Folder">' +
-                        '<span class="' + spanClass + '"><i class="fa fa-plus"></i></span>' +
-                        '</a> ' +
-                        '</div>'
-                        );
+                    '<div class="milton-tree-toolbar">' +
+                    '   <a class="btn-delete-tree ' + buttonClass + '" title="Delete">' +
+                    '       <span class="' + spanClass + '"><i class="fa fa-times"></i></span>' +
+                    '   </a>' +
+                    '   <a class="btn-add-folder ' + buttonPrimaryClass + '" title="Add Folder">' +
+                    '       <span class="' + spanClass + '"><i class="fa fa-plus"></i></span>' +
+                    '   </a>' +
+                    '</div>'
+                );
                 container.find('.btn-delete-tree').on('click', function (e) {
                     e.preventDefault();
 

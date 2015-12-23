@@ -18,12 +18,6 @@ function initContentEditorPage(fileName) {
 
         resize: function () {
             $('#cke_1_contents').css('height', (win.height() - 157) + 'px');
-        },
-
-        beforeunload: function (e) {
-            if (body.hasClass('content-changed')) {
-                e.returnValue = 'Are you sure you would like to leave the editor? You will lose any unsaved changes';
-            }
         }
     });
 
@@ -84,12 +78,14 @@ function showLoadingIcon() {
 function initContentEditor() {
     flog('initContentEditor');
 
+    var url =  window.location.pathname.replace('contenteditor', '');
+
     $('#content-area').contentbuilder({
         enableZoom: false,
-        imageselect: '/static/ContentBuilder/images.html',
-        fileselect: '/static/ContentBuilder/images.html',
-        snippetFile: '/static/ContentBuilder/assets/default/snippets.html',
-        snippetList: '#snippet-wrapper',
+        imageselect: '/static/ContentBuilder/assets/kademi/images.html?url=' + url,
+        fileselect: '/static/ContentBuilder/assets/kademi/images.html?url=' + url,
+        snippetFile: '/static/ContentBuilder/assets/kademi/snippets.html',
+        snippetList: '#snippet-wrapper'
     });
 }
 

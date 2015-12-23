@@ -1,7 +1,6 @@
-(function($) {
-
+(function ($) {
     var methods = {
-        init: function(options) {
+        init: function (options) {
             var input = this;
 
             var config = $.extend({
@@ -12,10 +11,10 @@
                 excludedEndPaths: ['.mil/'],
                 basePath: '/',
                 pagePath: window.location.pathname,
-                showModal: function(div) {
+                showModal: function (div) {
                     div.modal('show');
                 },
-                onSelectFile: function(selectedUrl) {
+                onSelectFile: function (selectedUrl) {
                 }
             }, options);
 
@@ -28,7 +27,7 @@
 
             wrapper.append('<span class="input-group-btn"></span>');
 
-            btn.click(function(e) {
+            btn.click(function (e) {
                 e.preventDefault();
                 e.stopPropagation();
                 flog("image-select clicked");
@@ -39,7 +38,7 @@
             wrapper.find('span.input-group-btn').append(btn);
             flog("finished init milton-image-select");
         },
-        setUrl: function(url) {
+        setUrl: function (url) {
         }
     };
 
@@ -47,27 +46,27 @@
         var modal = $('#modal-milton-file-select');
         if (modal.length === 0) {
             $('body').append(
-                    '<div id="modal-milton-file-select" class="modal modal-md fade" aria-hidden="true" tabindex="-1">' +
-                    '<div class="modal-header">' +
-                    '<button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>' +
-                    '<h4 class="modal-title">' + config.modalTitle + '</h4>' +
-                    '</div>' +
-                    '<div class="modal-body">' +
-                    '<div class="milton-image-select-container">' +
-                    '<div class="row">' +
-                    '<div class="col-md-4"><div class="milton-tree-wrapper"></div></div>' +
-                    '<div class="col-md-8">' +
-                    '<div id="milton-btn-upload-img" class="btn-upload"></div>' +
-                    '<div class="milton-image-preview"><img /></div>' +
-                    '</div>' +
-                    '</div>' +
-                    '</div>' +
-                    '</div>' +
-                    '<div class="modal-footer">' +
-                    '<button class="' + config.btnOkClass + ' btn-ok" type="button"> OK </button>' +
-                    '</div>' +
-                    '</div>'
-                    );
+                '<div id="modal-milton-file-select" class="modal modal-md fade" aria-hidden="true" tabindex="-1">' +
+                '   <div class="modal-header">' +
+                '       <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>' +
+                '       <h4 class="modal-title">' + config.modalTitle + '</h4>' +
+                '   </div>' +
+                '   <div class="modal-body">' +
+                '       <div class="milton-image-select-container">' +
+                '           <div class="row">' +
+                '               <div class="col-md-4"><div class="milton-tree-wrapper"></div></div>' +
+                '               <div class="col-md-8">' +
+                '                   <div id="milton-btn-upload-img" class="btn-upload"></div>' +
+                '                   <div class="milton-image-preview"><img /></div>' +
+                '               </div>' +
+                '           </div>' +
+                '       </div>' +
+                '   </div>' +
+                '   <div class="modal-footer">' +
+                '<button class="' + config.btnOkClass + ' btn-ok" type="button"> OK </button>' +
+                '   </div>' +
+                '</div>'
+            );
             modal = $('#modal-milton-file-select');
 
             var tree = modal.find('div.milton-tree-wrapper');
@@ -78,23 +77,23 @@
                 pagePath: config.pagePath,
                 excludedEndPaths: config.excludedEndPaths,
                 includeContentTypes: config.contentTypes,
-                onselectFolder: function(n) {
+                onselectFolder: function (n) {
                 },
-                onselectFile: function(n, selectedUrl) {
+                onselectFile: function (n, selectedUrl) {
                     previewImg.attr('src', selectedUrl);
                 }
             });
 
             $('#milton-btn-upload-img').mupload({
                 buttonText: '<i class="fa fa-folder-open-o"></i> Upload image',
-                oncomplete: function(data, name, href) {
+                oncomplete: function (data, name, href) {
                     flog('oncomplete', data);
                     tree.mtree('addFile', name, href);
                     url = href;
                 }
             });
 
-            modal.find('.btn-ok').click(function() {
+            modal.find('.btn-ok').click(function () {
                 var url = previewImg.attr('src');
                 var relUrl = url.substring(config.basePath.length, url.length);
                 flog('selected', url, relUrl);
@@ -106,14 +105,15 @@
         return modal;
     }
 
-    $.fn.mselect = function(method) {
+    $.fn.mselect = function (method) {
         flog('mselect', this);
         if (methods[method]) {
-            return methods[ method ].apply(this, Array.prototype.slice.call(arguments, 1));
+            return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
         } else if (typeof method === "object" || !method) {
             return methods.init.apply(this, arguments);
         } else {
-            $.error("Method " + method + " does not exist on jQuery.tooltip");
+            $.error("Method " + method + " does not exist on jQuery.mselect");
         }
     };
+
 })(jQuery);
