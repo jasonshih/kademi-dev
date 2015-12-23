@@ -5,6 +5,8 @@
 #content-area {
 	margin: 30px;
     min-height: 300px !important;
+	width: auto;
+    max-width: 1200px;
 }
 
 #divTool {
