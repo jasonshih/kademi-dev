@@ -354,7 +354,7 @@
             </div>
         </div>
 
-        <div id="csvModal" class="modal fade level-modal" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
+        <div id="csvModal" class="modal modal-lg fade level-modal" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title">Import records from CSV</h4>
@@ -365,10 +365,13 @@
                     <li>The first column must have the header, &quot;name&quot;.</li>
                     <li>The second column must have the header, &quot;docType&quot;.</li>
                     <li>All data are treated as strings.</li>
-                    <li>Escape double quotes ( &quot; ) with a second double quote ( &quot;&quot; )</li>
+                    <li>Escape double quotes ( &quot; ) with a three double quotes ( &quot;&quot;&quot; )</li>
                     <li>The backslash or reverse solidus is ignored.</li>
                     <li>Records with the same name will be updated with the most recent entry.</li>
                 </ol>
+                <h3>Example</h3>
+                <pre>name,docType,body
+"DOC001","text","He said: """Hello world""" and closed the door."</pre>
                 <div class="upload">
                     <div class="btn-upload" id='do-upload-csv'></div>
                 </div>
