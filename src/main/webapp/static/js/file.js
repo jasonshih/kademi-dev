@@ -1,9 +1,7 @@
-
-
 // Turns a href like /files/Pictures/abc/ into Pictures/abc
 function toDisplayFolder(href) {
     var s = href;
-    s = s.substring(0,s.length-1); // lose trailing slash
+    s = s.substring(0, s.length - 1); // lose trailing slash
     return s;
 }
 
@@ -12,10 +10,10 @@ function toDisplayFolder(href) {
  */
 function showRename(href, oldName, callback) {
     var newName = prompt("Please enter a new name for " + oldName);
-    if( newName ) {
-        if( newName.length > 0 && newName != oldName ) {
-            renameFile(href, newName, function(newUrl, newName) {
-                if( callback ) {
+    if (newName) {
+        if (newName.length > 0 && newName != oldName) {
+            renameFile(href, newName, function (newUrl, newName) {
+                if (callback) {
                     log("callback2")
                     callback(newUrl, newName);
                 }
@@ -23,15 +21,16 @@ function showRename(href, oldName, callback) {
         }
     }
 }
+
 /**
  * Will callback to function(newUrl, newName)
  */
-function renameFile(href, newName, callback) {    
+function renameFile(href, newName, callback) {
     ajaxLoadingOn();
     var newUrl = getParentHref(href) + "/" + newName;
     var targetUrl = href;
-    if( !targetUrl.endsWith("/")) {
-        targetUrl += "/";		
+    if (!targetUrl.endsWith("/")) {
+        targetUrl += "/";
     }
     targetUrl += "_DAV/MOVE";
     log("renameFile2", newUrl);
@@ -40,25 +39,23 @@ function renameFile(href, newName, callback) {
         url: targetUrl,
         data: "destination=" + newUrl,
         dataType: "json",
-        success: function() {
+        success: function () {
             log('success');
             ajaxLoadingOff();
             log('success - show confirmation');
             showThankyou("Rename", "The file has been renamed to " + newName);
-            if( callback ) {
+            if (callback) {
                 log("callback1");
                 callback(newUrl, newName);
             }
         },
-        error: function(resp) {            
+        error: function (resp) {
             log("failed", resp);
             ajaxLoadingOff();
             showThankyou("Error", "Sorry, the file could not be renamed.");
         }
     });
 }
-
-
 
 function ajaxLoadingOn(sel) {
     log('ajax ON', sel);
@@ -77,17 +74,17 @@ function ajaxLoadingOff(sel) {
 function initFolderUpload() {
     var button = $('#filemanUpload');
     log('initFolderUpload', button);
-    if( button.length > 0 ) {
-        new AjaxUpload(button,{
+    if (button.length > 0) {
+        new AjaxUpload(button, {
             action: currentFolderUrl + '_DAV/PUT?_autoname=true',
             name: 'upload',
             autoSubmit: true,
             responseType: 'json',
-            onSubmit : function(file, ext){
+            onSubmit: function (file, ext) {
                 ajaxLoadingOn();
                 this.disable();
             },
-            onComplete: function(file, response){
+            onComplete: function (file, response) {
                 ajaxLoadingOff();
                 this.enable();
                 refreshCurrentFolder();
@@ -98,13 +95,13 @@ function initFolderUpload() {
 
 /**
  * Returns the path of the parent item, without a trailing slash
- * 
+ *
  * Eg getParentHref("a/b/c") == "a/b"
  */
 function getParentHref(href) {
     log('getParentHref', href);
-    while( href.endsWith("/")) {
-        href = href.substring(0, href.length-1);
+    while (href.endsWith("/")) {
+        href = href.substring(0, href.length - 1);
         log(' - stripped to: ', href);
     }
     var pos = href.lastIndexOf("/");
@@ -115,10 +112,10 @@ function getParentHref(href) {
 
 function isExcluded(href) {
     log("isExcluded", href, excludedPaths);
-    for(i=0; i<excludedPaths.length; i++) {
+    for (i = 0; i < excludedPaths.length; i++) {
         var p = accountRootPathNoSlash() + excludedPaths[i];
         log("starts with", href, p);
-        if( href.startsWith(p)) {
+        if (href.startsWith(p)) {
             log("yep");
             return true;
         }
@@ -126,10 +123,11 @@ function isExcluded(href) {
     }
     return false;
 }
+
 function isDisplayable(href) {
-    if( isExcluded(href)) {
+    if (isExcluded(href)) {
         return false;
-    } else if( !isDisplayableFileHref(href)) {
+    } else if (!isDisplayableFileHref(href)) {
         return false;
     }
     return true;

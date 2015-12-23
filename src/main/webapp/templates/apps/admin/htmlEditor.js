@@ -89,7 +89,7 @@ function initHtmlEditorPage(fileName) {
         if (body.hasClass('content-changed')) {
             e.returnValue = 'Are you sure you would like to leave the editor? You will lose any unsaved changes';
         }
-    }
+    };
 
     hideLoadingIcon();
 }

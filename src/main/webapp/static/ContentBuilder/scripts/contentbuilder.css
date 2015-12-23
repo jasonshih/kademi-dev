@@ -16,10 +16,10 @@
     outline: rgba(0, 0, 0, 0.43) dashed 1px; 
     z-index:1}  */
 .ui-dragbox-outlined > div:first-child {
-    outline: rgba(228, 156, 90, 0.5) solid 1px; 
+    outline: rgba(228, 156, 90, 0.5) solid 1px;
     z-index:1
 }
-.ui-dragbox-outlined.firefox > div:first-child { 
+.ui-dragbox-outlined.firefox > div:first-child {
     outline: 1px dotted rgba(113, 54, 0, 0.5); /* For Firefox: uses dotted to prevent rendering issue on zoom */
     z-index:1
 }
@@ -79,11 +79,11 @@
 #divSnippetList::-webkit-scrollbar-track {
     background:rgba(255, 255, 255, 0.49);
     border-radius: 10px;
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
 }
 #divSnippetList::-webkit-scrollbar-thumb {
     border-radius: 10px;
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
 }
 
 :focus {outline: none;}
@@ -318,7 +318,7 @@ padding-right:4px;
 	opacity: 1;
 	top: 0;
 	left: 0;
-	z-index: 10001;	
+	z-index: 10001;
 	/*background: rgba(255, 255, 255, 0.8);*/
 	background: rgba(0, 0, 0, 0.15);
 	-webkit-transition: all 0.3s;
@@ -361,15 +361,15 @@ padding-right:4px;
     background-color: #ffffff;
     background-image: none;
     padding: 20px;
-    -moz-box-sizing: border-box; 
-    -webkit-box-sizing: border-box; 
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
     box-sizing: border-box;
     /*border: 1px solid #b3b3b3;*/
     border:none;
     /*border-radius: 5px;*/
     border-bottom:#eaeaea 1px solid;
     border-collapse:collapse;
-    
+
 }
 .md-body select {
     padding: 5px;
@@ -393,7 +393,7 @@ padding-right:4px;
     height: 63px;
     padding: 20px;
     box-sizing: border-box;
-    
+
 }
 .md-footer button {
     padding: 19px;
@@ -415,7 +415,7 @@ padding-right:4px;
     cursor:pointer;
     transition: all 0.2s ease-in-out;
 }
-    
+
 .md-footer button:hover {
     background-color: #d9d9d9;
 }
@@ -465,7 +465,7 @@ padding-right:4px;
     padding: 0 30px;
     line-height: 35px;
     height: 35px;
-    font-size: 13px;  
+    font-size: 13px;
     font-size: 11px;
     letter-spacing: 1px;
     text-transform: uppercase;

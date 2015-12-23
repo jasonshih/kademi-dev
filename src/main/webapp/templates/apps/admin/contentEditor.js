@@ -1,18 +1,51 @@
 var win = $(window);
 
-
 function initContentEditorPage(fileName) {
     flog('initContentEditorPage', fileName);
     var body = $(document.body);
 
-    //initRichTextEditor(body);
+    initContentEditor();
+    initBtns(body, fileName);
+    initSnippet();
 
-    var btnSave = $('.btn-save-file');
-    btnSave.on('click', function (e) {
+    win.on({
+        keydown: function (e) {
+            if (e.ctrlKey && e.keyCode === keymap.S) {
+                e.preventDefault();
+                $('.btn-save-file').trigger('click');
+            }
+        },
+
+        resize: function () {
+            $('#cke_1_contents').css('height', (win.height() - 157) + 'px');
+        },
+
+        beforeunload: function (e) {
+            if (body.hasClass('content-changed')) {
+                e.returnValue = 'Are you sure you would like to leave the editor? You will lose any unsaved changes';
+            }
+        }
+    });
+
+    window.onbeforeunload = function (e) {
+        if (body.hasClass('content-changed')) {
+            e.returnValue = 'Are you sure you would like to leave the editor? You will lose any unsaved changes';
+        }
+    };
+
+    hideLoadingIcon();
+}
+
+function initBtns(body, fileName) {
+    flog('initBtns', fileName);
+
+    var contentArea = $('#content-area')
+
+    $('.btn-save-file').on('click', function (e) {
         e.preventDefault();
 
-        var fileContent = $('#contentarea').data('contentbuilder').html();
-        flog("save", fileContent);
+        var fileContent = contentArea.data('contentbuilder').html();
+        flog('save', fileContent);
         showLoadingIcon();
 
         $.ajax({
@@ -33,28 +66,12 @@ function initContentEditorPage(fileName) {
         })
     });
 
-    win.on({
-        keydown:  function (e) {
-            if (e.ctrlKey && e.keyCode === keymap.S) {
-                e.preventDefault();
-                btnSave.trigger('click');
-            }
-        },
+    $('.btn-view-html').on('click', function (e) {
+        e.preventDefault();
 
-        resize: function () {
-            $('#cke_1_contents').css('height', (win.height() - 157) + 'px');
-        }
+        contentArea.data('contentbuilder').viewHtml();
     });
-
-    window.onbeforeunload = function (e) {
-        if (body.hasClass('content-changed')) {
-            e.returnValue = 'Are you sure you would like to leave the editor? You will lose any unsaved changes';
-        }
-    }
-
-    hideLoadingIcon();
 }
-
 
 function hideLoadingIcon() {
     $('#editor-loading').addClass('hide');
@@ -64,33 +81,44 @@ function showLoadingIcon() {
     $('#editor-loading').removeClass('hide');
 }
 
-function initRichTextEditor(body) {
-    flog('initRichTextEditor', body);
+function initContentEditor() {
+    flog('initContentEditor');
 
-    themeCssFiles.push('/static/editor/editor.css'); // just to format the editor itself a little
-    themeCssFiles.push('/static/prettify/prettify.css');
+    $('#content-area').contentbuilder({
+        enableZoom: false,
+        imageselect: '/static/ContentBuilder/images.html',
+        fileselect: '/static/ContentBuilder/images.html',
+        snippetFile: '/static/ContentBuilder/assets/default/snippets.html',
+        snippetList: '#snippet-wrapper',
+    });
+}
 
-    $('link[rel=editor-stylesheet]').each(function (i, n) {
-        var cssPath = $(n).attr('href');
-        themeCssFiles.push(cssPath);
-        $(n).remove();
+function initSnippet() {
+    flog('initSnippet');
+
+    $('#snippet-wrapper').niceScroll({
+        cursorcolor: '#999',
+        cursorwidth: 6,
+        railpadding: {
+            top: 0,
+            right: 3,
+            left: 0,
+            bottom: 0
+        },
+        cursorborder: ''
     });
 
-    var h = win.height() - 157;
-    initHtmlEditors($('#editor'), h, null, '', standardRemovePlugins + ',autogrow');
+    var container = $('#snippet-container');
+    $('#snippet-toggler').on('click', function (e) {
+        e.preventDefault();
 
-    var editor = CKEDITOR.instances['editor'];
-    editor.on('instanceReady', function () {
-        flog('Editor is ready!');
-
-        setTimeout(function () {
-            editor.on('change', function() {
-                flog('Editor content is changed!');
-
-                if (!body.hasClass('content-changed')) {
-                    body.addClass('content-changed');
-                }
-            });
-        }, 1000);
+        var icon = $(this).find('i');
+        if (container.hasClass('opened')) {
+            container.removeClass('opened');
+            icon.attr('class', 'glyphicon glyphicon-chevron-right')
+        } else {
+            container.addClass('opened');
+            icon.attr('class', 'glyphicon glyphicon-chevron-left')
+        }
     });
 }
