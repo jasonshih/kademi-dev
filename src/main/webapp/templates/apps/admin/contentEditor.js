@@ -86,11 +86,10 @@ function initContentEditor() {
 
     $('#content-area').contentbuilder({
         enableZoom: false,
-        snippetOpen: true,
         imageselect: '/static/ContentBuilder/images.html',
         fileselect: '/static/ContentBuilder/images.html',
         snippetFile: '/static/ContentBuilder/assets/default/snippets.html',
-        snippetList: '#snippet-wrapper'
+        snippetList: '#snippet-wrapper',
     });
 }
 
@@ -121,7 +120,5 @@ function initSnippet() {
             container.addClass('opened');
             icon.attr('class', 'glyphicon glyphicon-chevron-left')
         }
-
-        contentArea[contentArea.hasClass('opened') ? 'removeClass' : 'addClass']('opened');
     });
 }
