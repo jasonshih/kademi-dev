@@ -154,16 +154,17 @@
                                             Edit
                                         </a>
 
-                                            <button type="button" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown">
-                                                <span class="caret"></span>
-                                            </button>
-                                            <ul class="dropdown-menu pull-right">
-                                                <li><a href="${modulePage.name}" class="btn-edit-page"><i class="clip-popout"></i> Edit in modal</a>
-                                                    <li><a href="texteditor?fileName=${modulePage.name}" target="_blank" title="Edit as HTML"><i class="clip-code"></i> Edit as HTML</a></li>
-                                                    <li><a href="${modulePage.name}?goto" target="_blank" title="View page"><i class="fa fa-eye"></i> View</a></li>
-                                                    <li class="divider"></li>
-                                                    <li><a href="${modulePage.path}" class="btn-delete-page" title="Delete page"><i class="fa fa-times"></i> Delete</a></li>
-                                            </ul>
+                                        <button type="button" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown">
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu pull-right">
+                                            <li><a href="?contenteditor=${modulePage.name}" target="_blank"><i class="fa fa-edit"></i> Edit in Content Editor <i class="clip-new" style="color: red;"></i></a>
+                                            <li><a href="${modulePage.name}" class="btn-edit-page"><i class="clip-popout"></i> Edit in modal</a>
+                                            <li><a href="texteditor?fileName=${modulePage.name}" target="_blank" title="Edit as HTML"><i class="clip-code"></i> Edit as HTML</a></li>
+                                            <li><a href="${modulePage.name}?goto" target="_blank" title="View page"><i class="fa fa-eye"></i> View</a></li>
+                                            <li class="divider"></li>
+                                            <li><a href="${modulePage.path}" class="btn-delete-page" title="Delete page"><i class="fa fa-times"></i> Delete</a></li>
+                                        </ul>
                                     </div>
                                 </aside>
                             </article>
