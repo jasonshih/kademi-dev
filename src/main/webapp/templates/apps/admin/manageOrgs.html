@@ -18,7 +18,6 @@
             .search-user-group {
                 width: 200px;
             }
-
         </style>
     </head>
     <body class="manage-business-unit">
@@ -63,7 +62,7 @@
                             </span>
                         </p>
                         <div class="form-group">
-                            <label for="search-group" class="col-sm-1 control-label">Type</label>
+                            <label for="searchOrgType" class="col-sm-1 control-label">Type</label>
                             <div class="col-sm-2">
                                 <select name="searchOrgType" id="searchOrgType" class="form-control input-sm">
                                     <option value="">&nbsp;</option>
@@ -247,13 +246,14 @@
                 <div class="modal-body">
                     <form method="post" action="" class="form-horizontal">
                         <div class="form-group">
-                            <label for="orgTitle" class="control-label col-md-3">ID</label>
+                            <label for="orgId2" class="control-label col-md-3">ID</label>
                             <div class="col-md-8">
-                                <input type="text" class="form-control" name="orgId" id="orgId" placeholder="A unique id. To enabled updating from spreadsheet" />
+                                <input type="text" class="form-control required reallySimpleChars" name="orgId" id="orgId2" placeholder="A unique id. To enabled updating from spreadsheet" />
+                                <span class="help-block"><small>Simple characters only, no punctuation, dots, etc, all lower case</small></span>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="orgTitle" class="control-label col-md-3">Admin ID</label>
+                            <label for="adminDomain" class="control-label col-md-3">Admin ID</label>
                             <div class="col-md-8">
                                 <input type="text" class="form-control" name="adminDomain" id="adminDomain" placeholder="Unique in all of fuse. Used to identify the admin console" />
                             </div>
