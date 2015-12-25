@@ -33,7 +33,7 @@ function initContentEditorPage(fileName) {
 function initBtns(body, fileName) {
     flog('initBtns', fileName);
 
-    var contentArea = $('#content-area')
+    var contentArea = $('#content-area');
 
     $('.btn-save-file').on('click', function (e) {
         e.preventDefault();
@@ -85,8 +85,9 @@ function initContentEditor() {
         imageselect: '/static/ContentBuilder/assets/kademi/images.html?url=' + url,
         fileselect: '/static/ContentBuilder/assets/kademi/images.html?url=' + url,
         snippetFile: '/static/ContentBuilder/assets/kademi/snippets.html',
-        snippetList: '#snippet-wrapper'
-    });
+        snippetList: '#snippet-wrapper',
+        imageEmbed: false
+    }).data('contentbuilder').zoom(1);
 }
 
 function initSnippet() {

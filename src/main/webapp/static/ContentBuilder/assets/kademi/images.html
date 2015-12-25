@@ -20,8 +20,9 @@
         <script type="text/javascript" src="/static/bootstrap-msg/0.3/bootstrap-msg.min.js">//</script>
         <!-- End Fuse specific scripts -->
 
+        <script type="text/javascript" src="/theme/js/init-theme.js">//</script>
         <script src="/static/bootstrap/3.3.5/js/bootstrap.min.js">//</script>
-        <script src="/static/jquery-cookie/1.4.0/jquery.cookie.min-1.4.0.js">//</script>
+        <script src="/static/jquery.cookie/1.4.0/jquery.cookie.min-1.4.0.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-tree.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.jstree.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
@@ -38,13 +39,25 @@
             var url = window.location.search.replace('?url=', '');
             $('#files').mselect({
                 useModal: false,
-                onSelectFile: function (selectedUrl) {
-                    selectAsset(selectedUrl);
+                onSelectFile: function (url, relUrl, fileType) {
+                    if (isJWplayer()) {
+                        if (fileType === 'video') {
+                            selectAsset(url + '/alt-640-360.png');
+                        } else {
+                            alert('Your selected file is not video!');
+                        }
+                    } else {
+                        selectAsset(url);
+                    }
                 },
                 pagePath: "",
                 basePath: url
             });
         });
+
+        function isJWplayer() {
+            return parent.top.$('#lnkImageSettings').data('image').hasClass('video-jw');
+        }
 
         /**
          * USE THIS FUNCTION TO SELECT CUSTOM ASSET WITH CUSTOM VALUE TO RETURN

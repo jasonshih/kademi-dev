@@ -1,49 +1,38 @@
-.milton-image-select-container {
+/* ============================================================================
+   Milton select container
+   ============================================================================ */
+.milton-file-select-container {
     height: 480px;
 }
 
-.milton-image-select-container > .row,
-.milton-image-select-container > .row > div {
+.milton-file-select-container > .row,
+.milton-file-select-container > .row > div {
     height: 100%;
 }
 
-#imageFloat {
-    padding: 4px 3px 5px;
-    border: 1px solid #ddd;
-    width: 140px;
-    margin-bottom: 10px;
-    float: right;
-}
-
-#image-size {
-    float: right;
-}
-
-#image-width,
-#image-height {
-    width: 120px;
-}
-
-#image-width {
-    margin-right: 5px;
-}
-
-.cke_dialog{
+.milton-file-select-container .milton-preview {
+    border: 1px solid #ddd !important;
+    overflow: auto !important;
+    padding: 0;
     position: absolute;
-    max-height: 420px;
-    overflow:scroll;
+    top: 45px;
+    left: 15px;
+    right: 15px;
+    bottom: 0;
+    height: auto !important;
 }
 
-#imageTree {
-    margin-right: 20px;
+#milton-btn-upload-file {
+    float: left;
 }
 
-#imageFloat {
-    padding: 4px 3px 5px;
-    border: 1px solid #ddd;
-    width: 140px;
+#milton-btn-upload-file + .btn-ok {
+    float: right;
 }
 
+.dropzone-previews {
+    display: none !important;
+}
 
 /* ============================================================================
    Milton tree
@@ -82,86 +71,4 @@
 
 .milton-tree.jstree-default a ins.jstree-icon.file:before {
     content: "\f016" !important;
-}
-
-.dropzone-previews {
-    display: none !important;
-}
-
-/* ============================================================================
-   Milton tree
-   ============================================================================ */
-.milton-image-select-container .milton-image-preview,
-.vidEditor,
-.imageEditor {
-    border: 1px solid #ddd !important;
-    overflow: auto !important;
-    padding: 0;
-    position: absolute;
-    top: 45px;
-    left: 15px;
-    right: 15px;
-    bottom: 0;
-    height: auto !important;
-}
-
-#milton-btn-upload-img {
-    float: left;
-}
-
-#milton-btn-upload-img + .btn-ok {
-    float: right;
-}
-
-.dropzone {
-    border: 0 !important;
-    width: 665px;
-    min-height: 200px !important;
-    background: none !important;
-}
-
-.dropzone-fullwidth {
-    width: auto;
-}
-
-#myVidPreview .myUploaded,
-#imagePreview #imageUploaded {
-    height: 220px;
-    overflow-x: scroll;
-    overflow-y: hidden;
-    border: 1px solid #ddd !important;
-    background: #f0f0f0;
-    padding-top: 20px !important;
-}
-
-#imagePreview {
-    position: absolute;
-    top: 30px;
-    width: 100%;
-}
-
-#imageContainer {
-    padding: 3px;
-}
-
-#imageContainer p {
-    white-space: normal !important;
-    font-family: 'Arial',sans-serif !important;
-    font-size: 1em !important;
-    line-height: 17px !important;
-    padding: 0 0 0.7em !important;
-}
-
-.modal .milton-image-select-container .milton-image-preview {
-    margin-top: 10px !important;
-    height: 400px !important;
-}
-
-.modal .milton-tree {
-    height: 400px !important;
-}
-
-#preview {
-    padding-top: 15px;
-    position: relative;
 }

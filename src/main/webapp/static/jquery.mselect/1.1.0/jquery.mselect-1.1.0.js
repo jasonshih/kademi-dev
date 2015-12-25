@@ -13,7 +13,7 @@
         btnClass: 'btn btn-success',
         btnOkClass: 'btn btn-sm btn-primary',
         modalTitle: 'Select file',
-        contentTypes: ['image'],
+        contentTypes: ['image', 'video'],
         excludedEndPaths: ['.mil/'],
         basePath: '/',
         pagePath: window.location.pathname,
@@ -51,11 +51,42 @@
         }
     };
 
+    function getExtension(filename) {
+        var parts = filename.split('.');
+        return parts[parts.length - 1];
+    }
+
+    function isImage(filename) {
+        var ext = getExtension(filename);
+        switch (ext.toLowerCase()) {
+            case 'jpg':
+            case 'gif':
+            case 'bmp':
+            case 'png':
+                //etc
+                return true;
+        }
+        return false;
+    }
+
+    function isVideo(filename) {
+        var ext = getExtension(filename);
+        switch (ext.toLowerCase()) {
+            case 'm4v':
+            case 'avi':
+            case 'mpg':
+            case 'mp4':
+                // etc
+                return true;
+        }
+        return false;
+    }
+
     function initSelectContainer(container, config, onOk) {
         flog('[jquery.mselect] initSelectContainer', container, config);
 
         var tree = container.find('div.milton-tree-wrapper');
-        var previewImg = container.find('.milton-image-preview img');
+        var previewContainer = container.find('.milton-preview');
 
         tree.mtree({
             basePath: config.basePath,
@@ -65,11 +96,23 @@
             onselectFolder: function (n) {
             },
             onselectFile: function (n, selectedUrl) {
-                previewImg.attr('src', selectedUrl);
+                if (isVideo(selectedUrl)) {
+                    previewContainer.html('<div class="jp-video"></div>');
+                    $.getScript('/static/jwplayer/6.10/jwplayer.js', function () {
+                        jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
+                        buildJWPlayer(previewContainer.find('div.jp-video'), 100, selectedUrl, selectedUrl + '/alt-640-360.png');
+                    });
+                } else if (isImage(selectedUrl)) {
+                    previewContainer.html('<img src="' + selectedUrl + '" />');
+                } else {
+                    previewContainer.html('<p class="alert alert-warning">Unsupported preview file</p>')
+                }
+
+                previewContainer.attr('data-url', selectedUrl);
             }
         });
 
-        $('#milton-btn-upload-img').mupload({
+        $('#milton-btn-upload-file').mupload({
             url: config.basePath,
             buttonText: '<i class="fa fa-upload"></i>',
             oncomplete: function (data, name, href) {
@@ -80,17 +123,27 @@
         });
 
         container.find('.btn-ok').click(function () {
-            var url = previewImg.attr('src');
-            var relUrl = url.substring(config.basePath.length, url.length);
+            var url = previewContainer.attr('data-url');
 
-            flog('[jquery.mselect] Selected', url, relUrl);
+            if (url) {
+                var relUrl = url.substring(config.basePath.length, url.length);
+                flog('[jquery.mselect] Selected', url, relUrl);
 
-            if (typeof config.onSelectFile === 'function') {
-                config.onSelectFile.call(this, url, relUrl);
-            }
+                if (typeof config.onSelectFile === 'function') {
+                    var fileType = 'other';
+                    if (isVideo(url)) {
+                        fileType = 'video';
+                    } else if (isImage(url)) {
+                        fileType = 'image';
+                    }
+                    config.onSelectFile.call(this, url, relUrl, fileType);
+                }
 
-            if (typeof onOk === 'function') {
-                onOK.call(this);
+                if (typeof onOk === 'function') {
+                    onOK.call(this);
+                }
+            } else {
+                flog('[jquery.mselect] No selected file!');
             }
         });
     }
@@ -103,12 +156,12 @@
         }
 
         return (
-            '<div class="milton-image-select-container">' +
+            '<div class="milton-file-select-container">' +
             '    <div class="row">' +
             '        <div class="col-xs-4"><div class="milton-tree-wrapper"></div></div>' +
             '        <div class="col-xs-8">' +
-            '            <div id="milton-btn-upload-img" class="btn-upload"></div>' + extraElement +
-            '            <div class="milton-image-preview"><img /></div>' +
+            '            <div id="milton-btn-upload-file"></div>' + extraElement +
+            '            <div class="milton-preview"></div>' +
             '        </div>' +
             '    </div>' +
             '</div>'
