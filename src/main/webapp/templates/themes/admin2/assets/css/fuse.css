@@ -774,6 +774,29 @@ label small {
    ============================================================================ */
 .main-navigation {
     position: fixed;
+    top: 50px;
+    bottom: 43px;
+    left: 0;
+}
+
+ul.main-navigation-menu {
+    height: calc(100% - 50px);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.navigation-small ul.main-navigation-menu {
+    overflow: visible !important;
+}
+
+@media screen and (max-width: 979px) {
+    ul.main-navigation-menu {
+        overflow: visible !important;
+    }
+}
+
+ul.main-navigation-menu > li.active > a .selected:before {
+    display: none !important;
 }
 
 ul.main-navigation-menu > li > a {
