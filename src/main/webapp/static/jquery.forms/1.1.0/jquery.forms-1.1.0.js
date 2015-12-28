@@ -687,6 +687,20 @@ function checkRequiredRadios(form, config) {
     };
 }
 
+function checkRadio(radioName, form) {
+    flog('checkRadio', radioName, form);
+    if ($("input:radio[name=" + radioName + "]:checked", form).length === 0) {
+        var node = $("input:radio[name=" + radioName + "]", form)[0];
+        node = $(node);
+        node = $("label[for=" + node.attr("id") + "]");
+        flog('apply error to label', node);
+        showValidation(node, "Please select a value for " + radioName, form);
+        return false;
+    } else {
+        return true;
+    }
+}
+
 /**
  * Check required fields
  * @param {jQuery} form
