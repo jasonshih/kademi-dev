@@ -53,6 +53,15 @@ function initBtns(body, fileName) {
                 hideLoadingIcon();
                 body.removeClass('content-changed');
                 flog("opener", window.opener);
+                var opener = window.opener;
+                var doc = opener.document;
+                var iframe = doc.getElementById("rawBody");
+                flog("iframe", iframe);
+                var w = iframe.contentWindow;
+                flog("window", w);
+                var doc2 = w.document;
+                flog("doc2", doc2);
+                doc2.location.reload();
             },
             error: function (e) {
                 Msg.error(e.status + ': ' + e.statusText);
