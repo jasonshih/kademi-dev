@@ -52,6 +52,7 @@ function initBtns(body, fileName) {
                 Msg.success('File is saved!');
                 hideLoadingIcon();
                 body.removeClass('content-changed');
+                flog("opener", window.opener);
             },
             error: function (e) {
                 Msg.error(e.status + ': ' + e.statusText);

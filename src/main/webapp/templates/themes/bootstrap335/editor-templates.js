@@ -4,7 +4,7 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 */
 
 CKEDITOR.addTemplates('default',{
-    imagesPath: "/templates/themes/bootstrap335/editor-icons/",
+    imagesPath: "/templates/themes/bootstrap320/editor-icons/",
     templates:[
     
     

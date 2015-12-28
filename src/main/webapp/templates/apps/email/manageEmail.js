@@ -247,7 +247,7 @@ function initFormDetailEmail() {
                         showErrorField(fromAddress);
                     }
 
-                    if (replyToAddressStr && (!/@{.*}/.test(replyToAddressStr) && !validateFuseEmail(replyToAddressStr))) {
+                    if (replyToAddressStr && !validateFuseEmail(replyToAddressStr)) {
                         error++;
                         showErrorField(replyToAddress);
                     }
