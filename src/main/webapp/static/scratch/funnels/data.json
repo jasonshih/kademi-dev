@@ -2,34 +2,48 @@
     "stages" : [
         {
             "name" : "acquisition",
-            "source" : "google",
-            "count" : 8
-        },
-        {
-            "name" : "acquisition",
-            "source" : "facebook",
-            "count" : 7
+            "sources" : [
+                {
+                    "name" : "google",
+                    "count" : 10
+                },
+                {
+                    "name" : "facebook",
+                    "count" : 9
+                },
+                {
+                    "name" : "linkedin",
+                    "count" : 1
+                }
+            ]
         },
         {
             "name" : "engagement",
-            "source" : "google",
-            "count" : 5
-        },
-        {
-            "name" : "engagement",
-            "source" : "facebook",
-            "count" : 6
+            "sources" : [
+                {
+                    "name" : "google",
+                    "count" : 8
+                },
+                {
+                    "name" : "facebook",
+                    "count" : 7
+                }
+            ]
         },
         {
             "name" : "conversion",
-            "source" : "google",
-            "count" : 3
-        },
-        {
-            "name" : "conversion",
-            "source" : "facebook",
-            "count" : 4
+            "sources" : [
+                {
+                    "name" : "google",
+                    "count" : 4
+                },
+                {
+                    "name" : "facebook",
+                    "count" : 2
+                }
+            ]
         }
+
     ]
 
 }
