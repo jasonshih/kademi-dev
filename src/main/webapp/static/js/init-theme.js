@@ -158,10 +158,7 @@ function getSavedFontSize() {
  */
 function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
     flog("static: initHtmlEditors: elements=", elements, "editorSkin", editorSkin);
-//    if (!$('.htmleditor').ckeditor) {
-//        log("ckeditor jquery adapter is not loaded");
-//        return;
-//    }
+
     if (!elements) {
         elements = $(".htmleditor");
     }
@@ -228,7 +225,9 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
         };
 
         if (height) {
-            config.height = height;
+            if (height !== 'auto') {
+                config.height = height;
+            }
         } else {
             config.height = "300";
         }
