@@ -1,0 +1,35 @@
+{
+    "stages" : [
+        {
+            "name" : "acquisition",
+            "source" : "google",
+            "count" : 8
+        },
+        {
+            "name" : "acquisition",
+            "source" : "facebook",
+            "count" : 7
+        },
+        {
+            "name" : "engagement",
+            "source" : "google",
+            "count" : 5
+        },
+        {
+            "name" : "engagement",
+            "source" : "facebook",
+            "count" : 6
+        },
+        {
+            "name" : "conversion",
+            "source" : "google",
+            "count" : 3
+        },
+        {
+            "name" : "conversion",
+            "source" : "facebook",
+            "count" : 4
+        }
+    ]
+
+}
