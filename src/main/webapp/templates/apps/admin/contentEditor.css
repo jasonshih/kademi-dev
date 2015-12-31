@@ -1,31 +1,35 @@
-﻿body,
-html {
+﻿html {
     height: 100%;
 }
 
 body {
-    padding: 80px 10px 10px !important;
+    min-height: 100%;
+}
+
+body {
+    padding: 80px 30px 30px !important;
 }
 
 /* ==================================================================================
    CKEditor
    ================================================================================== */
-#cke_editor {
-    padding: 0;
-}
-
-.cke_float .cke_top {
-    padding: 3px 3px 0;
-}
-
-#editor {
+#content-area {
     min-height: 100% !important;
     width: auto;
     margin: 0;
+    padding: 0;
 }
 
-#editor,
-#cke_editor {
+div.cke_float[id*="cke_editor"] {
+    padding: 0;
+}
+
+div.cke_float[id*="cke_editor"] .cke_top {
+    padding: 3px 3px 0;
+}
+
+#content-area,
+div.cke_float[id*="cke_editor"] {
     max-width: 1200px;
 }
 
@@ -46,12 +50,12 @@ body {
 /* ==================================================================================
    Opened Snippet
    ================================================================================== */
-.opened-snippet #editor {
+.opened-snippet #content-area {
     margin-right: 260px;
 }
 
-.opened-snippet #cke_editor {
-    margin-right: 270px;
+.opened-snippet div.cke_float[id*="cke_editor"] {
+    margin-right: 290px;
 }
 
 .opened-snippet #snippet-container {
@@ -149,4 +153,5 @@ body {
     background: #eee !important;
     visibility: visible !important;
     height: 10px !important;
+    margin: 5px 0;
 }
