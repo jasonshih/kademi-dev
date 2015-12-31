@@ -17,11 +17,11 @@ function initContentEditorPage(fileName) {
         }
     });
 
-    //window.onbeforeunload = function (e) {
-    //    if (body.hasClass('content-changed')) {
-    //        e.returnValue = 'Are you sure you would like to leave the editor? You will lose any unsaved changes';
-    //    }
-    //};
+    window.onbeforeunload = function (e) {
+        if (body.hasClass('content-changed')) {
+            e.returnValue = 'Are you sure you would like to leave the editor? You will lose any unsaved changes';
+        }
+    };
 
     hideLoadingIcon();
 }
@@ -38,7 +38,7 @@ function initRichTextEditor(body) {
         $(n).remove();
     });
 
-    initHtmlEditors($('#editor'), null, null, '', standardRemovePlugins + ',autogrow');
+    initHtmlEditors($('#editor'), null, null, 'embed_video,fuse-image,sourcedialog,onchange', standardRemovePlugins);
 
     var editor = CKEDITOR.instances['editor'];
     editor.on('instanceReady', function () {
