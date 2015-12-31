@@ -7,6 +7,9 @@ body {
     padding: 80px 10px 10px !important;
 }
 
+/* ==================================================================================
+   CKEditor
+   ================================================================================== */
 #cke_editor {
     padding: 0;
 }
@@ -26,11 +29,43 @@ body {
     max-width: 1200px;
 }
 
+/* ==================================================================================
+   Toolbar
+   ================================================================================== */
+#tool-bar {
+    position: fixed;
+    z-index: 999;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 10px;
+    text-align: center;
+    background: rgba(255, 255, 255, .4);
+}
+
+/* ==================================================================================
+   Opened Snippet
+   ================================================================================== */
+.opened-snippet #editor {
+    margin-right: 260px;
+}
+
+.opened-snippet #cke_editor {
+    margin-right: 270px;
+}
+
+.opened-snippet #snippet-container {
+    right: 0;
+}
+
+/* ==================================================================================
+   Snippet
+   ================================================================================== */
 #snippet-container {
     position: fixed;
     z-index: 1000;
     top: 0;
-    right: 0;
+    right: -250px;
     bottom: 0;
     background: #f0f0f0;
     opacity: .9;
@@ -39,10 +74,6 @@ body {
     box-shadow: -1px 0 5px rgba(0, 0, 0, .15);
     padding: 10px;
     transition: all 0.3s;
-}
-
-#snippet-container.opened {
-    right: -250px;
 }
 
 #snippet-container:hover {
@@ -72,7 +103,7 @@ body {
     overflow-x: hidden;
 }
 
-#snippet-wrapper .snippet {
+.snippet {
     padding: 5px;
     background: #fff;
     border: 1px solid #f0f0f0;
@@ -81,26 +112,23 @@ body {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    transition: all 0.3s;
 }
 
-.snippet.ui-draggable-dragging {
-    transition: none !important;
-    width: 229px;
-}
-
-#snippet-wrapper .snippet + .snippet {
+.snippet + .snippet {
     margin-top: 10px;
 }
 
-#snippet-wrapper .snippet .snippet-content {
+.snippet .snippet-content {
     zoom: 0.7;
+    overflow: hidden;
 }
 
-#snippet-wrapper .snippet .snippet-content :first-child {
+.snippet .snippet-content :first-child {
     margin-top: 0;
 }
 
-#snippet-wrapper .snippet .snippet-content :last-child {
+.snippet .snippet-content :last-child {
     margin-bottom: 0;
 }
 
@@ -109,13 +137,16 @@ body {
     border-color: #ccc;
 }
 
-#tool-bar {
-    position: fixed;
-    z-index: 999;
-    top: 0;
-    left: 0;
-    right: 0;
-    padding: 10px;
-    text-align: center;
-    background: rgba(255, 255, 255, .4);
+/* ==================================================================================
+   Drag n Drop helper
+   ================================================================================== */
+.snippet.ui-draggable-dragging {
+    transition: none !important;
+    width: 229px !important;
+}
+
+.snippet.ui-sortable-placeholder {
+    background: #eee !important;
+    visibility: visible !important;
+    height: 10px !important;
 }

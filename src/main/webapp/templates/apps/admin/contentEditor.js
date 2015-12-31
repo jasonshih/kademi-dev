@@ -38,7 +38,7 @@ function initRichTextEditor(body) {
         $(n).remove();
     });
 
-    initHtmlEditors($('#editor'), null, null, '', standardRemovePlugins + ',autogrow,fuse-image');
+    initHtmlEditors($('#editor'), null, null, '', standardRemovePlugins + ',autogrow');
 
     var editor = CKEDITOR.instances['editor'];
     editor.on('instanceReady', function () {
@@ -91,17 +91,18 @@ function initSnippet() {
 
     var container = $('#snippet-container');
     var wrapper = $('#snippet-wrapper');
+    var body = $(document.body);
 
     $('#snippet-toggler').on('click', function (e) {
         e.preventDefault();
 
         var icon = $(this).find('i');
-        if (container.hasClass('opened')) {
-            container.removeClass('opened');
-            icon.attr('class', 'glyphicon glyphicon-chevron-right')
-        } else {
-            container.addClass('opened');
+        if (body.hasClass('opened-snippet')) {
+            body.removeClass('opened-snippet');
             icon.attr('class', 'glyphicon glyphicon-chevron-left')
+        } else {
+            body.addClass('opened-snippet');
+            icon.attr('class', 'glyphicon glyphicon-chevron-right')
         }
     });
 
@@ -119,25 +120,27 @@ function initSnippet() {
 
     wrapper.find('.snippet').draggable({
         helper: 'clone',
-        revert: 'invalid'
+        revert: 'invalid',
+        connectToSortable: '#editor'
     });
 
     $('#editor').droppable({
         accept: '.snippet',
+        tolerance: 'pointer',
+        greedy: true,
         drop: function (event, ui) {
-            var item = ui.draggable.clone().find('.snippet-content');
-            $(this).append(item);
+            var data = ui.draggable.find('.snippet-content').html();
+            return ui.draggable.html(data).removeAttr('class');
         }
-    });/*.sortable({
+    }).sortable({
         handle: '.grab',
-        items: '> *',
+        items: '> *, > * > *',
         axis: 'y',
         delay: 300,
-        revert: true,
         sort: function() {
             $( this ).removeClass( 'ui-state-default' );
         }
-    });*/
+    });
 }
 
 function hideLoadingIcon() {
