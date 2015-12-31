@@ -35,14 +35,14 @@ body {
     background: #f0f0f0;
     opacity: .9;
     border-left: 1px solid #ddd;
-    width: 225px;
+    width: 250px;
     box-shadow: -1px 0 5px rgba(0, 0, 0, .15);
     padding: 10px;
     transition: all 0.3s;
 }
 
 #snippet-container.opened {
-    right: -225px;
+    right: -250px;
 }
 
 #snippet-container:hover {
@@ -72,22 +72,41 @@ body {
     overflow-x: hidden;
 }
 
-#snippet-wrapper .ui-draggable {
-    float: left;
-    margin: 0 6px 11px;
+#snippet-wrapper .snippet {
+    padding: 5px;
+    background: #fff;
     border: 1px solid #f0f0f0;
     cursor: move;
-    transition: all 0.3s;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
-#snippet-wrapper .ui-draggable:hover {
+.snippet.ui-draggable-dragging {
+    transition: none !important;
+    width: 229px;
+}
+
+#snippet-wrapper .snippet + .snippet {
+    margin-top: 10px;
+}
+
+#snippet-wrapper .snippet .snippet-content {
+    zoom: 0.7;
+}
+
+#snippet-wrapper .snippet .snippet-content :first-child {
+    margin-top: 0;
+}
+
+#snippet-wrapper .snippet .snippet-content :last-child {
+    margin-bottom: 0;
+}
+
+#snippet-wrapper .snippet:hover {
     opacity: .6;
     border-color: #ccc;
-}
-
-#snippet-wrapper .ui-draggable img {
-    max-width: 194px;
-    height: auto;
 }
 
 #tool-bar {

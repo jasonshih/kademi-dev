@@ -5,6 +5,7 @@ function initContentEditorPage(fileName) {
     var body = $(document.body);
 
     initBtns(body, fileName);
+    initSnippet();
     initRichTextEditor(body);
 
     win.on({
@@ -83,6 +84,60 @@ function initBtns(body, fileName) {
             }
         })
     });
+}
+
+function initSnippet() {
+    flog('initSnippet');
+
+    var container = $('#snippet-container');
+    var wrapper = $('#snippet-wrapper');
+
+    $('#snippet-toggler').on('click', function (e) {
+        e.preventDefault();
+
+        var icon = $(this).find('i');
+        if (container.hasClass('opened')) {
+            container.removeClass('opened');
+            icon.attr('class', 'glyphicon glyphicon-chevron-right')
+        } else {
+            container.addClass('opened');
+            icon.attr('class', 'glyphicon glyphicon-chevron-left')
+        }
+    });
+
+    wrapper.niceScroll({
+        cursorcolor: '#999',
+        cursorwidth: 6,
+        railpadding: {
+            top: 0,
+            right: 0,
+            left: 0,
+            bottom: 0
+        },
+        cursorborder: ''
+    });
+
+    wrapper.find('.snippet').draggable({
+        helper: 'clone',
+        revert: 'invalid'
+    });
+
+    $('#editor').droppable({
+        accept: '.snippet',
+        drop: function (event, ui) {
+            var item = ui.draggable.clone().find('.snippet-content');
+            $(this).append(item);
+        }
+    });/*.sortable({
+        handle: '.grab',
+        items: '> *',
+        axis: 'y',
+        delay: 300,
+        revert: true,
+        sort: function() {
+            $( this ).removeClass( 'ui-state-default' );
+        }
+    });*/
 }
 
 function hideLoadingIcon() {
