@@ -55,7 +55,7 @@ CKEDITOR.plugins.add('embed_video', {
         //        editor.element.getDocument().appendStyleSheet("/static/common/bootstrap-image-gallery.min.css");
 
         $.getScriptOnce(('/static/js/jquery.jstree.js'));
-        $.getScriptOnce(('/static/js/jquery.hotkeys.js'));
+        //$.getScriptOnce(('/static/js/jquery.hotkeys.js'));
         $.getScriptOnce(('/static/js/jquery.cookie.js'));
 
         $.getScriptOnce("/static/js/jquery-fileupload-9.5.2/js/jquery.iframe-transport.js");
