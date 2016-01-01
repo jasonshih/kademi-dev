@@ -4,9 +4,10 @@ function initContentEditorPage(fileName) {
     flog('initContentEditorPage', fileName);
     var body = $(document.body);
 
-    initContentEditor();
+    initCKEditorBase();
     initBtns(body, fileName);
     initSnippet();
+    initContentArea();
 
     win.on({
         keydown: function (e) {
@@ -14,10 +15,6 @@ function initContentEditorPage(fileName) {
                 e.preventDefault();
                 $('.btn-save-file').trigger('click');
             }
-        },
-
-        resize: function () {
-            $('#cke_1_contents').css('height', (win.height() - 157) + 'px');
         }
     });
 
@@ -30,16 +27,109 @@ function initContentEditorPage(fileName) {
     hideLoadingIcon();
 }
 
+function initContentArea() {
+    var contentArea = $('#content-area');
+
+    contentArea.droppable({
+        accept: '.snippet',
+        tolerance: 'pointer',
+        greedy: true,
+        drop: function (event, ui) {
+            flog('drop', event, ui);
+
+            var data = ui.draggable.find('.snippet-content').html();
+            var section = $('<section contenteditable="true"></section>').html(data);
+
+            setTimeout(function () {
+                ui.draggable.replaceWith(section);
+            }, 100);
+
+            return ui.draggable.html(data).removeAttr('class');
+        }
+    }).sortable({
+        handle: '.grab',
+        items: '> section',
+        axis: 'y',
+        sort: function () {
+            $(this).removeClass('ui-state-default');
+        }
+    });
+
+    contentArea.find('> section').each(function () {
+        var section = $(this);
+
+        initCKEditorInline(section.prop('contenteditable', true));
+    });
+
+    contentArea.on({
+        click: function () {
+            var section = $(this);
+
+            if (!section.hasClass('cke_editable')) {
+                initCKEditorInline(section);
+            }
+        }
+    }, '> section');
+}
+
+function initCKEditorBase() {
+    themeCssFiles.push('/static/editor/editor.css'); // just to format the editor itself a little
+    themeCssFiles.push('/static/prettify/prettify.css');
+
+    $('link[rel=editor-stylesheet]').each(function (i, n) {
+        var cssPath = $(n).attr('href');
+        themeCssFiles.push(cssPath);
+        $(n).remove();
+    });
+}
+
+function initCKEditorInline(target) {
+    flog('init CKEditor inline', target);
+
+    var body = $(document.body);
+    initHtmlEditors(target, null, null, 'embed_video,fuse-image,sourcedialog,onchange', standardRemovePlugins, function (editor) {
+        flog('Editor is ready!');
+
+        setTimeout(function () {
+            editor.on('change', function () {
+                flog('Editor content is changed!');
+
+                if (!body.hasClass('content-changed')) {
+                    body.addClass('content-changed');
+                }
+            });
+        }, 1000);
+    });
+}
+
+function getData() {
+    var contentArea = $('#content-area');
+    contentArea.find('> section').each(function () {
+        var section = $(this);
+        var id = section.attr('id');
+
+        CKEDITOR.instances[id].destroy();
+    });
+
+    var contentAreaClone = contentArea.clone();
+    contentAreaClone.find('> section').each(function () {
+        var section = $(this);
+        section.replaceWith(
+            $('<section />').html(section.html())
+        );
+    });
+
+    return contentAreaClone.html();
+}
+
 function initBtns(body, fileName) {
     flog('initBtns', fileName);
-
-    var contentArea = $('#content-area');
 
     $('.btn-save-file').on('click', function (e) {
         e.preventDefault();
 
-        var fileContent = contentArea.data('contentbuilder').html();
-        flog('save', fileContent);
+        var fileContent = getData();
+
         showLoadingIcon();
 
         $.ajax({
@@ -52,16 +142,6 @@ function initBtns(body, fileName) {
                 Msg.success('File is saved!');
                 hideLoadingIcon();
                 body.removeClass('content-changed');
-                flog("opener", window.opener);
-                var opener = window.opener;
-                var doc = opener.document;
-                var iframe = doc.getElementById("rawBody");
-                flog("iframe", iframe);
-                var w = iframe.contentWindow;
-                flog("window", w);
-                var doc2 = w.document;
-                flog("doc2", doc2);
-                doc2.location.reload();
             },
             error: function (e) {
                 Msg.error(e.status + ': ' + e.statusText);
@@ -69,11 +149,48 @@ function initBtns(body, fileName) {
             }
         })
     });
+}
 
-    $('.btn-view-html').on('click', function (e) {
+function initSnippet() {
+    flog('initSnippet');
+
+    var container = $('#snippet-container');
+    var wrapper = $('#snippet-wrapper');
+    var body = $(document.body);
+
+    $('#snippet-toggler').on('click', function (e) {
         e.preventDefault();
 
-        contentArea.data('contentbuilder').viewHtml();
+        var icon = $(this).find('i');
+        if (body.hasClass('opened-snippet')) {
+            body.removeClass('opened-snippet');
+            icon.attr('class', 'glyphicon glyphicon-chevron-left')
+        } else {
+            body.addClass('opened-snippet');
+            icon.attr('class', 'glyphicon glyphicon-chevron-right')
+        }
+    });
+
+    wrapper.niceScroll({
+        cursorcolor: '#999',
+        cursorwidth: 6,
+        railpadding: {
+            top: 0,
+            right: 0,
+            left: 0,
+            bottom: 0
+        },
+        cursorborder: ''
+    });
+
+    wrapper.find('.snippet').draggable({
+        helper: 'clone',
+        revert: 'invalid',
+        connectToSortable: '#content-area',
+        cursorAt: {
+            top: 0,
+            left: 0
+        }
     });
 }
 
@@ -83,49 +200,4 @@ function hideLoadingIcon() {
 
 function showLoadingIcon() {
     $('#editor-loading').removeClass('hide');
-}
-
-function initContentEditor() {
-    flog('initContentEditor');
-
-    var url =  window.location.pathname.replace('contenteditor', '');
-
-    $('#content-area').contentbuilder({
-        enableZoom: false,
-        imageselect: '/static/ContentBuilder/assets/kademi/images.html?url=' + url,
-        fileselect: '/static/ContentBuilder/assets/kademi/images.html?url=' + url,
-        snippetFile: '/static/ContentBuilder/assets/kademi/snippets.html',
-        snippetList: '#snippet-wrapper',
-        imageEmbed: false
-    }).data('contentbuilder').zoom(1);
-}
-
-function initSnippet() {
-    flog('initSnippet');
-
-    $('#snippet-wrapper').niceScroll({
-        cursorcolor: '#999',
-        cursorwidth: 6,
-        railpadding: {
-            top: 0,
-            right: 3,
-            left: 0,
-            bottom: 0
-        },
-        cursorborder: ''
-    });
-
-    var container = $('#snippet-container');
-    $('#snippet-toggler').on('click', function (e) {
-        e.preventDefault();
-
-        var icon = $(this).find('i');
-        if (container.hasClass('opened')) {
-            container.removeClass('opened');
-            icon.attr('class', 'glyphicon glyphicon-chevron-right')
-        } else {
-            container.addClass('opened');
-            icon.attr('class', 'glyphicon glyphicon-chevron-left')
-        }
-    });
 }

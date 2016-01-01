@@ -156,12 +156,9 @@ function getSavedFontSize() {
  *
  * See /static/js/toolbars.js
  */
-function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
+function initHtmlEditors(elements, height, width, extraPlugins, removePlugins, callback) {
     flog("static: initHtmlEditors: elements=", elements, "editorSkin", editorSkin);
-//    if (!$('.htmleditor').ckeditor) {
-//        log("ckeditor jquery adapter is not loaded");
-//        return;
-//    }
+
     if (!elements) {
         elements = $(".htmleditor");
     }
@@ -228,7 +225,9 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
         };
 
         if (height) {
-            config.height = height;
+            if (height !== 'auto') {
+                config.height = height;
+            }
         } else {
             config.height = "300";
         }
@@ -248,11 +247,14 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
 
                 ADDED_EXTRA_CSS = true;
             }
+
+            if (typeof callback === 'function') {
+                callback.call(this, editor);
+            }
         });
     });
 
     CKEDITOR.dtd.$removeEmpty['i'] = false;
-
 }
 
 // Event for tab panel
