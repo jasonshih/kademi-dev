@@ -212,32 +212,38 @@
                                                     #foreach($task in $page.children)
                                                     <div id="headingOne" role="tab" class="panel-heading">
                                                         <h4 class="panel-title clearfix task-item">
-                                                            <div class="pull-left"><span class="inline checkbox c-checkbox">
+                                                            <div class="pull-left">
+                                                                <span class="inline checkbox c-checkbox">
                                                                     <label>
                                                                         <input type="checkbox"><span class="fa fa-check"></span>
-                                                                    </label></span></div>
+                                                                    </label>
+
+                                                                </span>
+                                                            </div>
                                                             <div class="pull-left">
                                                                 <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                                                                     <span class="task-title">$task.title</span>
                                                                 </a>
                                                             </div>
                                                             <div class="pull-left"><span class="task-edit fa fa-pencil"></span></div>
-                                                            <div class="pull-right"><span class="close"><em class="fa fa-times"></em></span></div>
                                                         </h4>
                                                     </div>
                                                     <div id="collapseOne" role="tabpanel" aria-labelledby="headingOne" class="panel-collapse collapse in">
                                                         <div class="panel-body">
                                                             #if( $task.is("open") )
                                                             <div class="btn-group pull-right">
-                                                                <button class="btn btn-danger btn-lg" title="Cancel task">
+                                                                <a class="btn btn-danger btn-lg btnCancelTask" title="Cancel task" href="$task.href">
                                                                     <span class="fa fa-remove"></span>
-                                                                </button>
-                                                                <button class="btn btn-success btn-lg" title="Mark task as completed">
+                                                                </a>
+                                                                <a href="$task.href" class="mr btn btn-success btn-lg" data-target="#modalEditTask" data-toggle="modal">
                                                                     <span class="fa fa-check"></span>
-                                                                </button>
+                                                                </a>
                                                             </div>
-                                                            #end
                                                             Due in <abbr title="$formatter.formatDateISO8601($task.dueDate)" class="timeago">$task.dueDate</abbr>
+                                                            #else
+                                                            Completed <abbr title="$formatter.formatDateISO8601($task.completedDate)" class="timeago">$task.completedDate</abbr>
+                                                            #end
+
                                                             -
                                                             $task.taskDescription
                                                         </div>
@@ -301,62 +307,6 @@
             </div><!-- /.modal-dialog -->
         </div>
 
-        <div class="modal fade" id="closeDealModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                        <h4 class="modal-title" id="">Deal closed successfully</h4>
-                    </div>
-                    <form method="post" action="$page.href" class="form-horizontal">
-                        <input type="hidden" name="closeDeal"/>
-                        <div class="modal-body">
-
-                            <div class="form-group">
-                                <label class="control-label col-md-3" for="closedDate">Closed Date</label>
-                                <div class="col-md-9">
-                                    <input type="text" name="closedDate" id="closedDate" class="required form-control" placeholder="closedDate" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-3" for="dealAmount">Sale amount</label>
-                                <div class="col-md-9">
-                                    <input type="text" name="dealAmount" id="dealAmount" class="required form-control" placeholder="dealAmount" />
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-default" data-dismiss="modal" type="button">Exit</button>
-
-                            <button class="btn btn-success" type="submit">Mark deal as closed</button>
-                        </div>
-                    </form>
-                </div><!-- /.modal-content -->
-            </div><!-- /.modal-dialog -->
-        </div>
-
-        <div class="modal fade" id="cancelDealModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                        <h4 class="modal-title" id="">Deal closed successfully</h4>
-                    </div>
-                    <form method="post" action="$page.href" class="form-horizontal">
-                        <input type="hidden" name="closeDeal"/>
-                        <div class="modal-body">
-                            <p>Cancel this lead if you are sure it will not go ahead. The lead will be marked as closed without a sale.</p>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-default" data-dismiss="modal" type="button">Exit</button>
-
-                            <button class="btn btn-primary" type="submit">Cancel this lead</button>
-                        </div>
-                    </form>
-                </div><!-- /.modal-content -->
-            </div><!-- /.modal-dialog -->
-        </div>
 
         #createModals()
 
@@ -369,20 +319,7 @@
                         reloadTable();
                     }
                 });
-                var closeDealModal = $("#closeDealModal");
-                closeDealModal.find("form").forms({
-                    callback: function (resp) {
-                        Msg.info('Deal marked as closed');
-                        //window.location.reload();
-                    }
-                });
-                var cancelDealModal = $("#cancelDealModal");
-                cancelDealModal.find("form").forms({
-                    callback: function (resp) {
-                        Msg.info('Lead cancelled');
-                        //window.location.reload();
-                    }
-                });
+
                 $("#assignToMenu").on("click", "a", function (e) {
                     e.preventDefault();
                     var name = $(e.target).attr("href");
