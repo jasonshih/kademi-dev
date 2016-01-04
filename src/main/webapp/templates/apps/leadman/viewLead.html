@@ -193,7 +193,7 @@
                                                     #if( $page.completed)
                                                     #else
                                                     <div class="form-group">
-                                                        <div class="col-md-10 col-md-offset-10">
+                                                        <div class="col-md-10 col-md-offset-2">
                                                             <button class="btn btn-sm btn-default" type="reset">Reset</button>
 
                                                             <button class="btn btn-primary" type="submit">Save details</button>
@@ -207,25 +207,19 @@
                                     </div>
                                     <div id="tasks" role="tabpanel" class="tab-pane fade">
                                         <div class="task-item-list">
-                                            <div id="accordion" role="tablist" aria-multiselectable="true" class="panel-group">
+                                            <div id="tasksList" role="tablist" aria-multiselectable="true" class="panel-group">
                                                 <div class="panel panel-default">
                                                     #foreach($task in $page.children)
                                                     <div id="headingOne" role="tab" class="panel-heading">
                                                         <h4 class="panel-title clearfix task-item">
                                                             <div class="pull-left">
-                                                                <span class="inline checkbox c-checkbox">
-                                                                    <label>
-                                                                        <input type="checkbox"><span class="fa fa-check"></span>
-                                                                    </label>
-
-                                                                </span>
-                                                            </div>
-                                                            <div class="pull-left">
                                                                 <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                                                                     <span class="task-title">$task.title</span>
                                                                 </a>
                                                             </div>
-                                                            <div class="pull-left"><span class="task-edit fa fa-pencil"></span></div>
+                                                            <a href="$task.href" class="pull-left" data-target="#modalEditTask" data-toggle="modal">
+                                                                <span class="task-edit fa fa-pencil"></span>
+                                                            </a>
                                                         </h4>
                                                     </div>
                                                     <div id="collapseOne" role="tabpanel" aria-labelledby="headingOne" class="panel-collapse collapse in">

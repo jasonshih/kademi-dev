@@ -5,15 +5,19 @@
             "sources" : [
                 {
                     "name" : "google",
-                    "count" : 10
+                    "count" : 100
+                },
+                {
+                    "name" : "organic",
+                    "count" : 100
                 },
                 {
                     "name" : "facebook",
-                    "count" : 9
+                    "count" : 90
                 },
                 {
                     "name" : "linkedin",
-                    "count" : 1
+                    "count" : 50
                 }
             ]
         },
