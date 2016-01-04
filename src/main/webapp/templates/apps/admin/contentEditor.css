@@ -14,7 +14,7 @@ body {
    CKEditor
    ================================================================================== */
 #content-area {
-    min-height: 100% !important;
+    min-height: 100px !important;
     width: auto;
     margin: 0;
     padding: 0;

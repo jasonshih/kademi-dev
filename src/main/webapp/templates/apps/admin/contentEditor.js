@@ -37,14 +37,8 @@ function initContentArea() {
         drop: function (event, ui) {
             flog('drop', event, ui);
 
-            var data = ui.draggable.find('.snippet-content').html();
-            var section = $('<section contenteditable="true"></section>').html(data);
-
-            setTimeout(function () {
-                ui.draggable.replaceWith(section);
-            }, 100);
-
-            return ui.draggable.html(data).removeAttr('class');
+            ui.draggable.attr('class', 'keditor-section');
+            ui.draggable.find('.snippet-content').attr('class', 'keditor-section-inner');
         }
     }).sortable({
         handle: '.grab',
