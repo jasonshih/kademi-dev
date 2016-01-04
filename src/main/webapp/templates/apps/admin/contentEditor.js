@@ -38,11 +38,10 @@ function initContentArea() {
         drop: function (event, ui) {
             flog('drop', event, ui);
 
-            ui.draggable.attr('class', 'keditor-section');
-            ui.draggable.find('.snippet-content').attr('class', 'keditor-section-inner');
-            initKEditorToolbar(ui.draggable);
-
             setTimeout(function () {
+                ui.draggable.attr('class', 'keditor-section');
+                ui.draggable.find('.snippet-content').attr('class', 'keditor-section-inner');
+                initKEditorToolbar(ui.draggable);
                 initKEditorInline(ui.draggable);
             }, 50);
 
@@ -50,7 +49,7 @@ function initContentArea() {
         }
     }).sortable({
         handle: '.btn-reposition',
-        items: 'section.keditor-section',
+        items: '> section',
         connectWith: '#content-area',
         axis: 'y',
         sort: function () {
@@ -58,10 +57,14 @@ function initContentArea() {
         }
     });
 
-    contentArea.find('> section.keditor-section').each(function () {
+    contentArea.find('> section').each(function () {
         var section = $(this);
-        initKEditorInline(section);
-        initKEditorToolbar(section);
+        section.addClass('keditor-section-inner');
+        section.wrap('<section class="keditor-section"></section>')
+
+        var wrapper = section.parent();
+        initKEditorInline(wrapper);
+        initKEditorToolbar(wrapper);
     });
 
     body.on('click', function (e) {
@@ -156,7 +159,7 @@ function getData() {
         var section = $(this);
         var id = section.find('.keditor-section-inner').attr('id');
 
-        html += CKEDITOR.instances[id].getData();
+        html += '<section>' + CKEDITOR.instances[id].getData() + '</section>';
     });
 
     return html;
