@@ -72,14 +72,18 @@ div.cke_float[id*="cke_editor"] .cke_top {
     background: #f0f0f0;
     opacity: .9;
     border-left: 1px solid #ddd;
-    width: 250px;
+    width: 233px;
     box-shadow: -1px 0 5px rgba(0, 0, 0, .15);
-    padding: 10px;
+    padding: 10px 5px;
     transition: all 0.3s;
 }
 
 #snippet-container:hover {
     opacity: 1;
+}
+
+#snippet-toolbar {
+    margin: 0 5px 10px;
 }
 
 #snippet-toggler {
@@ -99,7 +103,6 @@ div.cke_float[id*="cke_editor"] .cke_top {
 }
 
 #snippet-wrapper {
-    margin-top: 10px;
     height: calc(100% - 40px);
     overflow-y: auto;
     overflow-x: hidden;
@@ -115,23 +118,12 @@ div.cke_float[id*="cke_editor"] .cke_top {
     -ms-user-select: none;
     user-select: none;
     transition: all 0.3s;
+    margin: 0 5px;
+    float: left;
 }
 
 .snippet + .snippet {
     margin-top: 10px;
-}
-
-.snippet .snippet-content {
-    zoom: 0.7;
-    overflow: hidden;
-}
-
-.snippet .snippet-content :first-child {
-    margin-top: 0;
-}
-
-.snippet .snippet-content :last-child {
-    margin-bottom: 0;
 }
 
 #snippet-wrapper .snippet:hover {
@@ -183,4 +175,5 @@ div.cke_float[id*="cke_editor"] .cke_top {
     visibility: visible !important;
     height: 10px !important;
     margin: 5px 0;
+    width: 100%;
 }

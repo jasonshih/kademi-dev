@@ -1,12 +1,12 @@
 var win = $(window);
 
-function initContentEditorPage(fileName) {
+function initContentEditorPage(fileName, snippetsUrl) {
     flog('initContentEditorPage', fileName);
     var body = $(document.body);
 
     initCKEditorBase();
     initBtns(body, fileName);
-    initSnippet();
+    initSnippet(snippetsUrl);
     initContentArea();
 
     win.on({
@@ -38,9 +38,12 @@ function initContentArea() {
         drop: function (event, ui) {
             flog('drop', event, ui);
 
+            ui.draggable.attr('class', 'keditor-section');
+            ui.draggable.find('.snippet-content').attr('class', 'keditor-section-inner').html(
+                $(ui.draggable.attr('data-snippet')).html()
+            );
+
             setTimeout(function () {
-                ui.draggable.attr('class', 'keditor-section');
-                ui.draggable.find('.snippet-content').attr('class', 'keditor-section-inner');
                 initKEditorToolbar(ui.draggable);
                 initKEditorInline(ui.draggable);
             }, 50);
@@ -194,12 +197,54 @@ function initBtns(body, fileName) {
     });
 }
 
-function initSnippet() {
-    flog('initSnippet');
+function initSnippet(snippetsUrl) {
+    flog('initSnippet', snippetsUrl);
 
     var container = $('#snippet-container');
     var wrapper = $('#snippet-wrapper');
     var body = $(document.body);
+
+    $.get(snippetsUrl, function (resp) {
+        var snippets = $('<div />').html(resp);
+        var snippetsHtml = '';
+        var snippetsContentHtml = '';
+
+        snippets.find('> div').each(function (i) {
+            var div = $(this);
+            var content = div.html().trim();
+            var preview = '<img src="' + div.attr('data-preview') + '" />';
+
+            snippetsHtml += '<section class="snippet" data-snippet="#keditor-snippet-' + i + '">';
+            snippetsHtml += '   <section class="snippet-content">' + preview + '</section>';
+            snippetsHtml += '</section>';
+
+            snippetsContentHtml += '<div id="keditor-snippet-' + i + '" style="display: none;">' + content + '</div>';
+        });
+
+        $('#snippet-content').html(snippetsContentHtml);
+
+        wrapper.html(snippetsHtml).niceScroll({
+            cursorcolor: '#999',
+            cursorwidth: 6,
+            railpadding: {
+                top: 0,
+                right: 0,
+                left: 0,
+                bottom: 0
+            },
+            cursorborder: ''
+        });
+
+        wrapper.find('.snippet').draggable({
+            helper: 'clone',
+            revert: 'invalid',
+            connectToSortable: '#content-area',
+            cursorAt: {
+                top: 0,
+                left: 0
+            }
+        });
+    });
 
     $('#snippet-toggler').on('click', function (e) {
         e.preventDefault();
@@ -211,28 +256,6 @@ function initSnippet() {
         } else {
             body.addClass('opened-snippet');
             icon.attr('class', 'glyphicon glyphicon-chevron-right')
-        }
-    });
-
-    wrapper.niceScroll({
-        cursorcolor: '#999',
-        cursorwidth: 6,
-        railpadding: {
-            top: 0,
-            right: 0,
-            left: 0,
-            bottom: 0
-        },
-        cursorborder: ''
-    });
-
-    wrapper.find('.snippet').draggable({
-        helper: 'clone',
-        revert: 'invalid',
-        connectToSortable: '#content-area',
-        cursorAt: {
-            top: 0,
-            left: 0
         }
     });
 }
