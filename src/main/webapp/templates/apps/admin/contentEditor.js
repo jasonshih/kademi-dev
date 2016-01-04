@@ -38,17 +38,19 @@ function initContentArea() {
         drop: function (event, ui) {
             flog('drop', event, ui);
 
-            ui.draggable.attr('class', 'keditor-section');
-            ui.draggable.find('.snippet-content').attr('class', 'keditor-section-inner').html(
-                $(ui.draggable.attr('data-snippet')).html()
-            );
+            if (ui.draggable.closest('#content-area').length > 0) {
+                ui.draggable.attr('class', 'keditor-section');
+                ui.draggable.find('.snippet-content').attr('class', 'keditor-section-inner').html(
+                    $(ui.draggable.attr('data-snippet')).html()
+                );
 
-            setTimeout(function () {
-                initKEditorToolbar(ui.draggable);
-                initKEditorInline(ui.draggable);
-            }, 50);
+                setTimeout(function () {
+                    initKEditorToolbar(ui.draggable);
+                    initKEditorInline(ui.draggable);
+                }, 50);
 
-            return ui.draggable;
+                return ui.draggable;
+            }
         }
     }).sortable({
         handle: '.btn-reposition',

@@ -138,18 +138,18 @@ div.cke_float[id*="cke_editor"] .cke_top {
     position: relative;
 }
 
-.keditor-section-inner:focus {
-    outline: 1px dashed #ddd;
-    outline-offset: 2px;
-    margin: 10px 0;
-}
-
 .keditor-toolbar {
     position: absolute;
     top: 0;
     width: 20px;
     left: -27px;
     display: none;
+}
+
+.keditor-section.showed-keditor-toolbar .keditor-section-inner {
+    outline: 1px dashed #ddd !important;
+    outline-offset: 2px;
+    margin: 10px 0;
 }
 
 .keditor-section.showed-keditor-toolbar .keditor-toolbar {
