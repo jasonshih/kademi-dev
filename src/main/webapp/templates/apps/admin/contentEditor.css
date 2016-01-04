@@ -22,14 +22,16 @@ body {
 
 div.cke_float[id*="cke_editor"] {
     padding: 0;
+    margin-top: -2px;
+    margin-left: -3px;
+    max-width: 1206px;
 }
 
 div.cke_float[id*="cke_editor"] .cke_top {
     padding: 3px 3px 0;
 }
 
-#content-area,
-div.cke_float[id*="cke_editor"] {
+#content-area {
     max-width: 1200px;
 }
 
@@ -55,7 +57,7 @@ div.cke_float[id*="cke_editor"] {
 }
 
 .opened-snippet div.cke_float[id*="cke_editor"] {
-    margin-right: 290px;
+    margin-right: 287px;
 }
 
 .opened-snippet #snippet-container {
@@ -139,6 +141,37 @@ div.cke_float[id*="cke_editor"] {
 #snippet-wrapper .snippet:hover {
     opacity: .6;
     border-color: #ccc;
+}
+
+/* ==================================================================================
+   KEditor
+   ================================================================================== */
+.keditor-section {
+    position: relative;
+}
+
+.keditor-section-inner:focus {
+    outline: 1px dashed #ddd;
+    outline-offset: 2px;
+    margin: 10px 0;
+}
+
+.keditor-toolbar {
+    position: absolute;
+    top: 0;
+    width: 20px;
+    left: -27px;
+    display: none;
+}
+
+.keditor-section.showed-keditor-toolbar .keditor-toolbar {
+    display: block;
+}
+
+.keditor-toolbar .btn {
+    padding: 1px 3px;
+    font-size: 10px;
+    line-height: 1.5;
 }
 
 /* ==================================================================================

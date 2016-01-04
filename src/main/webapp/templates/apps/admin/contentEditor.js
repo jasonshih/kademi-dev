@@ -29,6 +29,7 @@ function initContentEditorPage(fileName) {
 
 function initContentArea() {
     var contentArea = $('#content-area');
+    var body = $(document.body);
 
     contentArea.droppable({
         accept: '.snippet',
@@ -39,31 +40,60 @@ function initContentArea() {
 
             ui.draggable.attr('class', 'keditor-section');
             ui.draggable.find('.snippet-content').attr('class', 'keditor-section-inner');
+            initKEditorToolbar(ui.draggable);
+
+            setTimeout(function () {
+                initKEditorInline(ui.draggable);
+            }, 50);
+
+            return ui.draggable;
         }
     }).sortable({
-        handle: '.grab',
-        items: '> section',
+        handle: '.btn-reposition',
+        items: 'section.keditor-section',
+        connectWith: '#content-area',
         axis: 'y',
         sort: function () {
             $(this).removeClass('ui-state-default');
         }
     });
 
-    contentArea.find('> section').each(function () {
+    contentArea.find('> section.keditor-section').each(function () {
         var section = $(this);
-
-        initCKEditorInline(section.prop('contenteditable', true));
+        initKEditorInline(section);
+        initKEditorToolbar(section);
     });
 
-    contentArea.on({
-        click: function () {
-            var section = $(this);
+    body.on('click', function (e) {
+        contentArea.find('.keditor-section').removeClass('showed-keditor-toolbar');
 
-            if (!section.hasClass('cke_editable')) {
-                initCKEditorInline(section);
-            }
+        var section = getClickElement(e, 'section.keditor-section');
+        if (section) {
+            section.addClass('showed-keditor-toolbar');
         }
-    }, '> section');
+
+        var btnRemove = getClickElement(e, '.btn-delete');
+        if (btnRemove && confirm('Are you sure that you want to delete this section? This action can not be undo!')) {
+            var section = btnRemove.closest('section.keditor-section');
+            var id = section.find('.keditor-section-inner').attr('id');
+
+            CKEDITOR.instances[id].destroy();
+            section.remove();
+        }
+    });
+}
+
+function getClickElement(e, selector) {
+    var target = $(e.target);
+    var closest = target.closest(selector);
+
+    if (target.is(selector)) {
+        return target;
+    } else if (closest.length > 0) {
+        return closest;
+    } else {
+        return null;
+    }
 }
 
 function initCKEditorBase() {
@@ -77,43 +107,59 @@ function initCKEditorBase() {
     });
 }
 
-function initCKEditorInline(target) {
-    flog('init CKEditor inline', target);
+function initKEditorToolbar(target) {
+    target.append(
+        '<div class="keditor-toolbar">' +
+        '   <div class="btn-group-vertical">' +
+        '       <a href="#" class="btn btn-xs btn-info btn-reposition"><i class="glyphicon glyphicon-sort"></i></a>' +
+        '       <a href="#" class="btn btn-xs btn-danger btn-delete"><i class="glyphicon glyphicon-remove"></i></a>' +
+        '   </div>' +
+        '</div>'
+    );
+}
 
-    var body = $(document.body);
-    initHtmlEditors(target, null, null, 'embed_video,fuse-image,sourcedialog,onchange', standardRemovePlugins, function (editor) {
-        flog('Editor is ready!');
+function initKEditorInline(target) {
+    if (!target.hasClass('keditor-editable') || !target.hasClass('keditor-initing')) {
+        flog('init CKEditor inline', target);
 
-        setTimeout(function () {
-            editor.on('change', function () {
-                flog('Editor content is changed!');
+        target.addClass('keditor-initing');
 
-                if (!body.hasClass('content-changed')) {
-                    body.addClass('content-changed');
-                }
-            });
-        }, 1000);
-    });
+        var inner = target.find('.keditor-section-inner');
+        inner.prop('contenteditable', true);
+
+        // Init CKEditor inline
+        initHtmlEditors(inner, null, null, 'embed_video,fuse-image,sourcedialog,onchange', standardRemovePlugins, function (editor) {
+            flog('Editor is ready!');
+
+            setTimeout(function () {
+                editor.on('change', function () {
+                    flog('Editor content is changed!');
+
+                    var body = $(document.body);
+                    if (!body.hasClass('content-changed')) {
+                        body.addClass('content-changed');
+                    }
+                });
+            }, 1000);
+        });
+
+        target.addClass('keditor-editable');
+        target.removeClass('keditor-initing');
+    }
 }
 
 function getData() {
     var contentArea = $('#content-area');
+    var html = '';
+
     contentArea.find('> section').each(function () {
         var section = $(this);
-        var id = section.attr('id');
+        var id = section.find('.keditor-section-inner').attr('id');
 
-        CKEDITOR.instances[id].destroy();
+        html += CKEDITOR.instances[id].getData();
     });
 
-    var contentAreaClone = contentArea.clone();
-    contentAreaClone.find('> section').each(function () {
-        var section = $(this);
-        section.replaceWith(
-            $('<section />').html(section.html())
-        );
-    });
-
-    return contentAreaClone.html();
+    return html;
 }
 
 function initBtns(body, fileName) {
