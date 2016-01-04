@@ -167,13 +167,12 @@ div.cke_float[id*="cke_editor"] .cke_top {
    ================================================================================== */
 .snippet.ui-draggable-dragging {
     transition: none !important;
-    width: 229px !important;
 }
 
 .snippet.ui-sortable-placeholder {
     background: #eee !important;
     visibility: visible !important;
     height: 10px !important;
-    margin: 5px 0;
-    width: 100%;
+    margin: 5px 0 !important;
+    float: none !important;
 }
