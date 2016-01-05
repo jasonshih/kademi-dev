@@ -207,49 +207,54 @@ function initSnippet(snippetsUrl) {
     var wrapper = $('#snippet-wrapper');
     var body = $(document.body);
 
-    $.get(snippetsUrl, function (resp) {
-        var snippets = $('<div />').html(resp);
-        var snippetsHtml = '';
-        var snippetsContentHtml = '';
+    $.ajax({
+        type: 'get',
+        dataType: 'html',
+        url: snippetsUrl,
+        success: function (resp) {
+            var snippets = $('<div />').html(resp);
+            var snippetsHtml = '';
+            var snippetsContentHtml = '';
 
-        snippets.find('> div').each(function (i) {
-            var div = $(this);
-            var content = div.html().trim();
-            var preview = '<img src="' + div.attr('data-preview') + '" />';
+            snippets.find('> div').each(function (i) {
+                var div = $(this);
+                var content = div.html().trim();
+                var preview = '<img src="' + div.attr('data-preview') + '" />';
 
-            snippetsHtml += '<section class="snippet" data-snippet="#keditor-snippet-' + i + '">';
-            snippetsHtml += '   <section class="snippet-content">' + preview + '</section>';
-            snippetsHtml += '</section>';
+                snippetsHtml += '<section class="snippet" data-snippet="#keditor-snippet-' + i + '">';
+                snippetsHtml += '   <section class="snippet-content">' + preview + '</section>';
+                snippetsHtml += '</section>';
 
-            snippetsContentHtml += '<div id="keditor-snippet-' + i + '" style="display: none;">' + content + '</div>';
-        });
+                snippetsContentHtml += '<div id="keditor-snippet-' + i + '" style="display: none;">' + content + '</div>';
+            });
 
-        $('#snippet-content').html(snippetsContentHtml);
+            $('#snippet-content').html(snippetsContentHtml);
 
-        wrapper.html(snippetsHtml).niceScroll({
-            cursorcolor: '#999',
-            cursorwidth: 6,
-            railpadding: {
-                top: 0,
-                right: 0,
-                left: 0,
-                bottom: 0
-            },
-            cursorborder: ''
-        });
+            wrapper.html(snippetsHtml).niceScroll({
+                cursorcolor: '#999',
+                cursorwidth: 6,
+                railpadding: {
+                    top: 0,
+                    right: 0,
+                    left: 0,
+                    bottom: 0
+                },
+                cursorborder: ''
+            });
 
-        wrapper.find('.snippet').draggable({
-            helper: 'clone',
-            revert: 'invalid',
-            connectToSortable: '#content-area',
-            cursorAt: {
-                top: 0,
-                left: 0
-            },
-            start: function () {
-                $('.keditor-section-inner').blur();
-            }
-        });
+            wrapper.find('.snippet').draggable({
+                helper: 'clone',
+                revert: 'invalid',
+                connectToSortable: '#content-area',
+                cursorAt: {
+                    top: 0,
+                    left: 0
+                },
+                start: function () {
+                    $('.keditor-section-inner').blur();
+                }
+            });
+        }
     });
 
     $('#snippet-toggler').on('click', function (e) {
