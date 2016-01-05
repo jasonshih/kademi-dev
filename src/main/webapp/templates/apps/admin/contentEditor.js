@@ -4,6 +4,7 @@ function initContentEditorPage(fileName, snippetsUrl) {
     flog('initContentEditorPage', fileName);
     var body = $(document.body);
 
+    CKEDITOR.disableAutoInline = true;
     initCKEditorBase();
     initBtns(body, fileName);
     initSnippet(snippetsUrl);
@@ -244,6 +245,9 @@ function initSnippet(snippetsUrl) {
             cursorAt: {
                 top: 0,
                 left: 0
+            },
+            start: function () {
+                $('.keditor-section-inner').blur();
             }
         });
     });

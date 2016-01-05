@@ -113,10 +113,6 @@ div.cke_float[id*="cke_editor"] .cke_top {
     background: #fff;
     border: 1px solid #f0f0f0;
     cursor: move;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
     transition: all 0.3s;
     margin: 0 5px;
     float: left;
