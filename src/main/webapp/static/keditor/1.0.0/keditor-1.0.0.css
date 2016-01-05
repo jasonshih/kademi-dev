@@ -9,13 +9,6 @@ body {
 /* ==================================================================================
    CKEditor
    ================================================================================== */
-#content-area {
-    min-height: 100px !important;
-    width: auto;
-    margin: 0;
-    padding: 80px 30px 30px !important;
-}
-
 div.cke_float[id*="cke_editor"] {
     padding: 0;
     margin-top: -2px;
@@ -27,43 +20,25 @@ div.cke_float[id*="cke_editor"] .cke_top {
     padding: 3px 3px 0;
 }
 
-#content-area {
-    max-width: 1200px;
-}
-
 /* ==================================================================================
-   Toolbar
+   Opened keditor-snippet
    ================================================================================== */
-#tool-bar {
-    position: fixed;
-    z-index: 999;
-    top: 0;
-    left: 0;
-    right: 0;
-    padding: 10px;
-    text-align: center;
-    background: rgba(255, 255, 255, .4);
-}
-
-/* ==================================================================================
-   Opened Snippet
-   ================================================================================== */
-.opened-snippet #content-area {
+body.opened-keditor-snippet #content-area {
     margin-right: 260px;
 }
 
-.opened-snippet div.cke_float[id*="cke_editor"] {
+body.opened-keditor-snippet div.cke_float[id*="cke_editor"] {
     margin-right: 287px;
 }
 
-.opened-snippet #snippet-container {
+body.opened-keditor-snippet #keditor-snippet-container {
     right: 0;
 }
 
 /* ==================================================================================
-   Snippet
+   keditor-snippet
    ================================================================================== */
-#snippet-container {
+#keditor-snippet-container {
     position: fixed;
     z-index: 1000;
     top: 0;
@@ -78,15 +53,15 @@ div.cke_float[id*="cke_editor"] .cke_top {
     transition: all 0.3s;
 }
 
-#snippet-container:hover {
+#keditor-snippet-container:hover {
     opacity: 1;
 }
 
-#snippet-toolbar {
+#keditor-snippet-toolbar {
     margin: 0 5px 10px;
 }
 
-#snippet-toggler {
+#keditor-snippet-toggler {
     position: absolute;
     top: 100px;
     width: 25px;
@@ -102,13 +77,13 @@ div.cke_float[id*="cke_editor"] .cke_top {
     color: #666;
 }
 
-#snippet-wrapper {
+#keditor-snippet-wrapper {
     height: calc(100% - 40px);
     overflow-y: auto;
     overflow-x: hidden;
 }
 
-.snippet {
+.keditor-snippet {
     padding: 5px;
     background: #fff;
     border: 1px solid #f0f0f0;
@@ -118,11 +93,11 @@ div.cke_float[id*="cke_editor"] .cke_top {
     float: left;
 }
 
-.snippet + .snippet {
+.keditor-snippet + .keditor-snippet {
     margin-top: 10px;
 }
 
-#snippet-wrapper .snippet:hover {
+#keditor-snippet-wrapper .keditor-snippet:hover {
     opacity: .6;
     border-color: #ccc;
 }
@@ -142,7 +117,7 @@ div.cke_float[id*="cke_editor"] .cke_top {
     display: none;
 }
 
-.keditor-section.showed-keditor-toolbar .keditor-section-inner {
+.keditor-section.showed-keditor-toolbar .keditor-section-content {
     outline: 1px dashed #ddd !important;
     outline-offset: 2px;
     margin: 10px 0;
@@ -161,11 +136,11 @@ div.cke_float[id*="cke_editor"] .cke_top {
 /* ==================================================================================
    Drag n Drop helper
    ================================================================================== */
-.snippet.ui-draggable-dragging {
+.keditor-snippet.ui-draggable-dragging {
     transition: none !important;
 }
 
-.snippet.ui-sortable-placeholder {
+.keditor-snippet.ui-sortable-placeholder {
     background: #eee !important;
     visibility: visible !important;
     height: 10px !important;
