@@ -384,6 +384,7 @@ function updateField(href, fieldName, fieldValue) {
         dataType: 'json',
         success: function (resp) {
             Msg.info("Saved " + fieldName);
+            reloadTasks();
         },
         error: function (resp) {
             flog('error', resp);
