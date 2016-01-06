@@ -68,7 +68,7 @@
                     </div>
                     <div class="media mt-lg">
                         <div class="media-left media-middle"><a href=""><img src="/theme/images/user/02.jpg" class="media-object thumb96 img-circle"></a></div>
-                        <div class="media-body text-white">
+                        <div class="media-body">
                             <h2 class="mv-lg media-heading">
                                 #if( $page.profile )
                                 <a href="/custs/$page.profile.name" style="color: white">$page.customerDescription</a>
@@ -76,9 +76,19 @@
                                 No contact profile
                                 #end
                             </h2>
-                            <button type="button" class="btn btn-info btn-xs mr-sm"> <em class="fa fa-twitter fa-fw"></em></button>
-                            <button type="button" class="btn btn-primary btn-xs mr-sm"> <em class="fa fa-facebook fa-fw"></em></button>
-                            <button type="button" class="btn btn-danger btn-xs"> <em class="fa fa-google-plus fa-fw"></em></button>
+                            <div style='background-color: rgba(255, 255, 255, 0.7); padding: 5px; border-radius: 5px; width: 290px'>
+                                Capture -
+                                <a href="mailto:from-lead-$page.leadId@${page.find('/').domainName}"> <em class="fa fa-envelope fa-fw"></em> From</a>
+                                |
+                                <a href="mailto:to-lead-$page.leadId@${page.find('/').domainName}"> <em class="fa fa-envelope fa-fw"></em> To</a>
+                                |
+                                <a href="mailto:forward-to-$page.leadId@${page.find('/').domainName}"> <em class="fa fa-envelope fa-fw"></em> Forward</a>
+                                <!--
+                                <button type="button" class="btn btn-info btn-xs mr-sm"> <em class="fa fa-twitter fa-fw"></em></button>
+                                <button type="button" class="btn btn-primary btn-xs mr-sm"> <em class="fa fa-facebook fa-fw"></em></button>
+                                <button type="button" class="btn btn-danger btn-xs"> <em class="fa fa-google-plus fa-fw"></em></button>
+                                -->
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -150,9 +160,9 @@
                                             <div class="form-group">
                                                 <label class="control-label col-md-3">Estimated deal value:</label>
                                                 <div class="col-md-3">
-                                                    <input type="number" value="$!page.dealAmount" name="dealAmount" class="form-control immediateUpdate"/>    
+                                                    <input type="number" value="$!page.dealAmount" name="dealAmount" class="form-control immediateUpdate"/>
                                                 </div>
-                                            </div>                                            
+                                            </div>
                                         </div>
 
                                         <hr/>
@@ -248,11 +258,11 @@
                                                             <span class="label label-warning">
                                                                 Canceled
                                                             </span>
-                                                            - 
+                                                            -
                                                             <abbr title="$formatter.formatDateISO8601($task.completedDate)" class="timeago">$task.completedDate</abbr>
                                                             #else
                                                             <span class="label label-success">
-                                                                Completed 
+                                                                Completed
                                                             </span>
                                                             <abbr title="$formatter.formatDateISO8601($task.completedDate)" class="timeago">$task.completedDate</abbr>
                                                             #end
@@ -324,7 +334,7 @@
                                             <span class="input-group-addon">
                                                 <span class="fa fa-calendar"></span>
                                             </span>
-                                    </div>                                      
+                                    </div>
                                 </div>
                             </div>
 
