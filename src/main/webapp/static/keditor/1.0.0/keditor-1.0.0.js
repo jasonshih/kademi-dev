@@ -210,7 +210,6 @@
                     flog('drop', event, ui);
 
                     if (ui.draggable.closest('#' + contentAreaId).length > 0) {
-                        flog('===========', ui.draggable);
                         var snippetContent = $(ui.draggable.attr('data-snippet')).html();
 
                         ui.draggable.attr('class', 'keditor-section').html(
