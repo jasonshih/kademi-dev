@@ -128,7 +128,7 @@
 </div>
 
 <div class="modal fade" id="newNoteModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg ">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
@@ -138,30 +138,14 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <div class="col-md-12">
-                            <label>
-                                <input type="radio" name="action" value="phone-false" />
-                                Call to customer
-                            </label>
-                            <br/>
-                            <label>
-                                <input type="radio" name="action" value="phone-true" />
-                                Call from customer
-                            </label>
-                            <br/>
-                            <label>
-                                <input type="radio" name="action" value="email-false" />
-                                Email to customer
-                            </label>
-                            <br/>
-                            <label>
-                                <input type="radio" name="action" value="email-true" />
-                                Email from customer
-                            </label>
-                            <br/>
-                            <label>
-                                <input type="radio" name="action" value="note-false" />
-                                General note
-                            </label>
+                            <select name="action" class="form-control">
+                                <option value="">[Select what the note is for]</option>
+                                <option value="phone-false">Call to customer</option>
+                                <option value="phone-true">Call from customer</option>
+                                <option value="email-false">Email to customer</option>
+                                <option value="email-true">Email from customer</option>
+                                <option value="note-false">General note</option>
+                            </select>
                         </div>
                     </div>
 
@@ -170,17 +154,34 @@
                             <textarea name="newNote" class="form-control" style="height: 120px"></textarea>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="col-md-2">
-                            <label>Follow up</label>
-                        </div>
-                        <div class="col-md-10">
-                            <div id="datetimepicker1" class="input-group">
-                                <input type="text" name="followUp" class="form-control date-time">
-                                <span class="input-group-addon"><span class="fa fa-calendar"></span>
-
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="title" placeholder="Next follow-up task" />
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span class="fa fa-pencil"></span>
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-right autoFillText">
+                                        <li><a href="#">Call customer</a></li>
+                                        <li><a href="#">Email customer</a></li>
+                                        <li><a href="#">Send documents</a></li>
+                                        <li><a href="#">Arrange a meeting</a></li>
+                                    </ul>
+                                </div><!-- /btn-group -->
+                            </div>
+                            <br/>
+                            <div class="input-group">
+                                <input type="text" name="dueDate" class="form-control date-time" value="$formatter.formatDateTime($formatter.addDays($page.dueDate, 7))">
+                                <span class="input-group-addon">
+                                    <span class="fa fa-calendar"></span>
                                 </span>
                             </div>
+                        </div>
+
+                        <div class="col-md-8">
+                            <textarea name="taskDescription" class="form-control required" style="height: 100px" placeholder="Describe the next follow-up task"></textarea>
                         </div>
                     </div>
 
@@ -210,6 +211,86 @@
                     <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
 
                     <button class="btn btn-primary" type="submit">Save</button>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" id="closeDealModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="">Deal closed successfully</h4>
+            </div>
+            <form method="post" action="$page.href" class="form-horizontal">
+                <input type="hidden" name="closeDeal"/>
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="closedDate">Closed Date</label>
+                        <div class="col-md-9">
+                            <input type="text" name="closedDate" id="closedDate" class="required form-control" placeholder="closedDate" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="dealAmount">Sale amount</label>
+                        <div class="col-md-9">
+                            <input type="text" name="dealAmount" id="dealAmount" class="required form-control" placeholder="dealAmount" />
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" data-dismiss="modal" type="button">Exit</button>
+
+                    <button class="btn btn-success" type="submit">Mark deal as closed</button>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+
+<div class="modal fade" id="cancelDealModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="">Deal canceled</h4>
+            </div>
+            <form method="post" action="$page.href" class="form-horizontal">
+                <input type="hidden" name="closeDeal"/>
+                <div class="modal-body">
+                    <p>Cancel this lead if you are sure it will not go ahead. The lead will be marked as closed without a sale.</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" data-dismiss="modal" type="button">Exit</button>
+
+                    <button class="btn btn-primary" type="submit">Cancel this lead</button>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" id="cancelTaskModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="">Cancel Task</h4>
+            </div>
+            <form method="post" action="" class="form-horizontal">
+                <input type="hidden" name="cancelTask"/>
+                <div class="modal-body">
+                    <p>Cancel this task if it is no longer required to be done.</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" data-dismiss="modal" type="button">Exit</button>
+
+                    <button class="btn btn-primary" type="submit">Cancel this task</button>
                 </div>
             </form>
         </div><!-- /.modal-content -->

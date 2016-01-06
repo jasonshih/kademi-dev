@@ -12,6 +12,11 @@ $(function () {
     initDateTimePickers();
     initTasks();
     initImmediateUpdate();
+    initCloseDealModal();
+    initCancelLeadModal();
+    initCancelTaskModal();
+
+
     // Clear down modals when closed
     $('body').on('hidden.bs.modal', '.modal', function () {
         $(this).removeData('bs.modal');
@@ -48,6 +53,55 @@ $(function () {
     });
     $('abbr.timeago').timeago();
 });
+
+function initCloseDealModal() {
+    var closeDealModal = $("#closeDealModal");
+    closeDealModal.find("form").forms({
+        callback: function (resp) {
+            Msg.info('Deal marked as closed');
+            //window.location.reload();
+        }
+    });
+}
+
+function initCancelLeadModal() {
+    var cancelDealModal = $("#cancelDealModal");
+    cancelDealModal.find("form").forms({
+        callback: function (resp) {
+            Msg.info('Lead cancelled');
+            reloadTasks();
+            cancelDealModal.modal("hide");
+        }
+    });
+
+    $("body").on("click", ".btnLeadCancelLead", function(e) {
+        e.preventDefault();
+        var href = $(e.target).attr("href");
+        cancelDealModal.find("form").attr("action", href);
+        cancelDealModal.modal("show");
+    });
+}
+
+function initCancelTaskModal() {
+    var cancelDealModal = $("#cancelTaskModal");
+    cancelDealModal.find("form").forms({
+        callback: function (resp) {
+            Msg.info('Task cancelled');
+            reloadTasks();
+            cancelDealModal.modal("hide");
+        }
+    });
+
+    $("body").on("click", ".btnCancelTask", function(e) {
+        e.preventDefault();
+        var href = $(e.target).closest("a").attr("href");
+        flog("set href",href);
+        cancelDealModal.find("form").attr("action", href);
+        cancelDealModal.modal("show");
+    });
+}
+
+
 
 function initImmediateUpdate() {
     var onchange = function (e) {
@@ -330,6 +384,7 @@ function updateField(href, fieldName, fieldValue) {
         dataType: 'json',
         success: function (resp) {
             Msg.info("Saved " + fieldName);
+            reloadTasks();
         },
         error: function (resp) {
             flog('error', resp);

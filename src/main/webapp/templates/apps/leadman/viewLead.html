@@ -68,7 +68,7 @@
                     </div>
                     <div class="media mt-lg">
                         <div class="media-left media-middle"><a href=""><img src="/theme/images/user/02.jpg" class="media-object thumb96 img-circle"></a></div>
-                        <div class="media-body text-white">
+                        <div class="media-body">
                             <h2 class="mv-lg media-heading">
                                 #if( $page.profile )
                                 <a href="/custs/$page.profile.name" style="color: white">$page.customerDescription</a>
@@ -76,9 +76,19 @@
                                 No contact profile
                                 #end
                             </h2>
-                            <button type="button" class="btn btn-info btn-xs mr-sm"> <em class="fa fa-twitter fa-fw"></em></button>
-                            <button type="button" class="btn btn-primary btn-xs mr-sm"> <em class="fa fa-facebook fa-fw"></em></button>
-                            <button type="button" class="btn btn-danger btn-xs"> <em class="fa fa-google-plus fa-fw"></em></button>
+                            <div style='background-color: rgba(255, 255, 255, 0.7); padding: 5px; border-radius: 5px; width: 290px'>
+                                Capture -
+                                <a href="mailto:from-lead-$page.leadId@${page.find('/').domainName}"> <em class="fa fa-envelope fa-fw"></em> From</a>
+                                |
+                                <a href="mailto:to-lead-$page.leadId@${page.find('/').domainName}"> <em class="fa fa-envelope fa-fw"></em> To</a>
+                                |
+                                <a href="mailto:forward-to-$page.leadId@${page.find('/').domainName}"> <em class="fa fa-envelope fa-fw"></em> Forward</a>
+                                <!--
+                                <button type="button" class="btn btn-info btn-xs mr-sm"> <em class="fa fa-twitter fa-fw"></em></button>
+                                <button type="button" class="btn btn-primary btn-xs mr-sm"> <em class="fa fa-facebook fa-fw"></em></button>
+                                <button type="button" class="btn btn-danger btn-xs"> <em class="fa fa-google-plus fa-fw"></em></button>
+                                -->
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -146,6 +156,16 @@
                                 </ul>
                                 <div class="tab-content">
                                     <div id="details" role="tabpanel" class="tab-pane fade active in">
+                                        <div class="form-horizontal">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3">Estimated deal value:</label>
+                                                <div class="col-md-3">
+                                                    <input type="number" value="$!page.dealAmount" name="dealAmount" class="form-control immediateUpdate"/>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <hr/>
 
                                         <textarea id="description" class="form-control" name="description" style="height: 400px">$!page.description</textarea>
                                     </div>
@@ -193,7 +213,7 @@
                                                     #if( $page.completed)
                                                     #else
                                                     <div class="form-group">
-                                                        <div class="col-md-10 col-md-offset-10">
+                                                        <div class="col-md-10 col-md-offset-2">
                                                             <button class="btn btn-sm btn-default" type="reset">Reset</button>
 
                                                             <button class="btn btn-primary" type="submit">Save details</button>
@@ -207,37 +227,46 @@
                                     </div>
                                     <div id="tasks" role="tabpanel" class="tab-pane fade">
                                         <div class="task-item-list">
-                                            <div id="accordion" role="tablist" aria-multiselectable="true" class="panel-group">
+                                            <div id="tasksList" role="tablist" aria-multiselectable="true" class="panel-group">
                                                 <div class="panel panel-default">
                                                     #foreach($task in $page.children)
                                                     <div id="headingOne" role="tab" class="panel-heading">
                                                         <h4 class="panel-title clearfix task-item">
-                                                            <div class="pull-left"><span class="inline checkbox c-checkbox">
-                                                                    <label>
-                                                                        <input type="checkbox"><span class="fa fa-check"></span>
-                                                                    </label></span></div>
                                                             <div class="pull-left">
                                                                 <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                                                                     <span class="task-title">$task.title</span>
                                                                 </a>
                                                             </div>
-                                                            <div class="pull-left"><span class="task-edit fa fa-pencil"></span></div>
-                                                            <div class="pull-right"><span class="close"><em class="fa fa-times"></em></span></div>
+                                                            <a href="$task.href" class="pull-left" data-target="#modalEditTask" data-toggle="modal">
+                                                                <span class="task-edit fa fa-pencil"></span>
+                                                            </a>
                                                         </h4>
                                                     </div>
                                                     <div id="collapseOne" role="tabpanel" aria-labelledby="headingOne" class="panel-collapse collapse in">
                                                         <div class="panel-body">
                                                             #if( $task.is("open") )
                                                             <div class="btn-group pull-right">
-                                                                <button class="btn btn-danger btn-lg" title="Cancel task">
+                                                                <a class="btn btn-danger btn-lg btnCancelTask" title="Cancel task" href="$task.href">
                                                                     <span class="fa fa-remove"></span>
-                                                                </button>
-                                                                <button class="btn btn-success btn-lg" title="Mark task as completed">
+                                                                </a>
+                                                                <a href="$task.href" class="mr btn btn-success btn-lg" data-target="#modalEditTask" data-toggle="modal">
                                                                     <span class="fa fa-check"></span>
-                                                                </button>
+                                                                </a>
                                                             </div>
-                                                            #end
                                                             Due in <abbr title="$formatter.formatDateISO8601($task.dueDate)" class="timeago">$task.dueDate</abbr>
+                                                            #elseif( $task.is("canceled") )
+                                                            <span class="label label-warning">
+                                                                Canceled
+                                                            </span>
+                                                            -
+                                                            <abbr title="$formatter.formatDateISO8601($task.completedDate)" class="timeago">$task.completedDate</abbr>
+                                                            #else
+                                                            <span class="label label-success">
+                                                                Completed
+                                                            </span>
+                                                            <abbr title="$formatter.formatDateISO8601($task.completedDate)" class="timeago">$task.completedDate</abbr>
+                                                            #end
+
                                                             -
                                                             $task.taskDescription
                                                         </div>
@@ -277,17 +306,42 @@
                     </div>
                     <form method="post" action="$page.href" class="form-horizontal">
                         <div class="modal-body">
-
                             <div class="form-group">
-                                <label class="control-label col-md-3" for="dueDate">Task Due</label>
+                                <label class="control-label col-md-3" for="newTaskTitle">Description</label>
                                 <div class="col-md-9">
-                                    <input type="text" name="dueDate" id="dueDate" class="required form-control" placeholder="dueDate" />
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="title" placeholder="Next follow-up task" />
+                                        <div class="input-group-btn">
+                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <span class="fa fa-pencil"></span>
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-right autoFillText">
+                                                <li><a href="#">Call customer</a></li>
+                                                <li><a href="#">Email customer</a></li>
+                                                <li><a href="#">Send documents</a></li>
+                                                <li><a href="#">Arrange a meeting</a></li>
+                                            </ul>
+                                        </div><!-- /btn-group -->
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-md-3" for="taskDescription">Todo</label>
+                                <label class="control-label col-md-3" for="dueDate">Task Due</label>
                                 <div class="col-md-9">
-                                    <input type="text" name="taskDescription" id="taskDescription" class="required form-control" placeholder="taskDescription" />
+                                    <div class="input-group">
+                                        <input type="text" name="dueDate" class="form-control date-time" value="$formatter.formatDateTime($formatter.addDays($formatter.now, 7))">
+                                            <span class="input-group-addon">
+                                                <span class="fa fa-calendar"></span>
+                                            </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="taskDescription">Description</label>
+                                <div class="col-md-9">
+                                    <textarea name="taskDescription" id="taskDescription" class="form-control" placeholder="Enter task details here"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -301,62 +355,6 @@
             </div><!-- /.modal-dialog -->
         </div>
 
-        <div class="modal fade" id="closeDealModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                        <h4 class="modal-title" id="">Deal closed successfully</h4>
-                    </div>
-                    <form method="post" action="$page.href" class="form-horizontal">
-                        <input type="hidden" name="closeDeal"/>
-                        <div class="modal-body">
-
-                            <div class="form-group">
-                                <label class="control-label col-md-3" for="closedDate">Closed Date</label>
-                                <div class="col-md-9">
-                                    <input type="text" name="closedDate" id="closedDate" class="required form-control" placeholder="closedDate" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-3" for="dealAmount">Sale amount</label>
-                                <div class="col-md-9">
-                                    <input type="text" name="dealAmount" id="dealAmount" class="required form-control" placeholder="dealAmount" />
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-default" data-dismiss="modal" type="button">Exit</button>
-
-                            <button class="btn btn-success" type="submit">Mark deal as closed</button>
-                        </div>
-                    </form>
-                </div><!-- /.modal-content -->
-            </div><!-- /.modal-dialog -->
-        </div>
-
-        <div class="modal fade" id="cancelDealModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                        <h4 class="modal-title" id="">Deal closed successfully</h4>
-                    </div>
-                    <form method="post" action="$page.href" class="form-horizontal">
-                        <input type="hidden" name="closeDeal"/>
-                        <div class="modal-body">
-                            <p>Cancel this lead if you are sure it will not go ahead. The lead will be marked as closed without a sale.</p>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-default" data-dismiss="modal" type="button">Exit</button>
-
-                            <button class="btn btn-primary" type="submit">Cancel this lead</button>
-                        </div>
-                    </form>
-                </div><!-- /.modal-content -->
-            </div><!-- /.modal-dialog -->
-        </div>
 
         #createModals()
 
@@ -369,20 +367,9 @@
                         reloadTable();
                     }
                 });
-                var closeDealModal = $("#closeDealModal");
-                closeDealModal.find("form").forms({
-                    callback: function (resp) {
-                        Msg.info('Deal marked as closed');
-                        //window.location.reload();
-                    }
-                });
-                var cancelDealModal = $("#cancelDealModal");
-                cancelDealModal.find("form").forms({
-                    callback: function (resp) {
-                        Msg.info('Lead cancelled');
-                        //window.location.reload();
-                    }
-                });
+
+                initNewTaskModal();
+
                 $("#assignToMenu").on("click", "a", function (e) {
                     e.preventDefault();
                     var name = $(e.target).attr("href");
@@ -402,6 +389,18 @@
                 $("#tasksTableBody").reloadFragment({
                     whenComplete: function () {
                         $('abbr.timeago').timeago();
+                    }
+                });
+            }
+
+            function initNewTaskModal() {
+                var modal = $("#newTaskModal");
+                var form = modal.find("form");
+                form.forms({
+                    callback: function (resp) {
+                        Msg.info('Created new task');
+                        reloadTasks();
+                        modal.modal("hide");
                     }
                 });
             }
@@ -434,7 +433,7 @@
                     type: 'POST',
                     url: window.location.pathname,
                     data: {
-                        dealAmount : val
+                        dealAmount: val
                     },
                     dataType: 'json',
                     success: function (resp) {
@@ -456,7 +455,7 @@
                     type: 'POST',
                     url: window.location.pathname,
                     data: {
-                        description : val
+                        description: val
                     },
                     dataType: 'json',
                     success: function (resp) {
