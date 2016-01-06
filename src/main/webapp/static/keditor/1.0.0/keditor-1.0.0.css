@@ -134,6 +134,10 @@ body.opened-keditor-snippets #keditor-snippets-container {
     margin: 10px 0;
 }
 
+.keditor-section.showed-keditor-toolbar .keditor-section-content:first-child {
+    margin-top: 0;
+}
+
 .keditor-section.showed-keditor-toolbar .keditor-toolbar {
     display: block;
 }

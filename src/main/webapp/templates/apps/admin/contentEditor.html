@@ -33,7 +33,7 @@
 
         <script type="text/javascript" src="/theme/apps/admin/contentEditor.js">//</script>
     </head>
-    <body class="opened-keditor-snippets">
+    <body>
         #set($fname = $params.fileName)
         #set($file = $folder.child($fname))
         #set($useHash = $params.useHash)
@@ -56,7 +56,7 @@
         <script type="text/javascript">
             var useHash = "$!useHash";
             $(function () {
-                initContentEditorPage('$fname', '/theme/keditor/snippets.html');
+                initContentEditorPage('$fname', '/static/keditor/1.0.0/snippets.html');
             });
         </script>
 

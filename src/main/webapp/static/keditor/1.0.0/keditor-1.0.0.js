@@ -61,8 +61,22 @@
     $.fn.keditor.version = '1.0.0';
 
     var DEFAULTS = $.fn.keditor.DEFAULTS = {
-        ckeditor: {},
-        snippetsUrl: '',
+        ckeditor: {
+            allowedContent: true, // DISABLES Advanced Content Filter. This is so templates with classes are allowed through
+            bodyId: 'editor',
+            templates_replaceContent: false,
+            enterMode: 'P',
+            forceEnterMode: true,
+            format_tags: 'p;h1;h2;h3;h4;h5;h6', // removed p2
+            format_p2: {
+                element: 'p',
+                attributes: {
+                    'class': 'lessSpace'
+                }
+            },
+            minimumChangeMilliseconds: 100
+        },
+        snippetsUrl: 'snippets.html',
         snippetsListId: 'keditor-snippets-list',
         onContentChange: function () {
         }
@@ -73,6 +87,7 @@
             flog('initSnippetToggler', contentArea, options);
 
             var body = $(document.body);
+            body.addClass('opened-keditor-snippets');
             contentArea.addClass('keditor-content-area');
 
             if (options.snippetsListId === DEFAULTS.snippetsListId) {
@@ -119,7 +134,7 @@
 
             var body = $(document.body);
 
-            $('#keditor-snippet-toggler').on('click', function (e) {
+            $('#keditor-snippets-toggler').on('click', function (e) {
                 e.preventDefault();
 
                 var icon = $(this).find('i');
@@ -205,24 +220,7 @@
             contentArea.droppable({
                 accept: '.keditor-snippet',
                 tolerance: 'pointer',
-                greedy: true,
-                drop: function (event, ui) {
-                    flog('drop', event, ui);
-
-                    if (ui.draggable.closest('#' + contentAreaId).length > 0) {
-                        var snippetContent = $(ui.draggable.attr('data-snippet')).html();
-
-                        ui.draggable.attr('class', 'keditor-section').html(
-                            '<section class="keditor-section-content">' + snippetContent + '</section>'
-                        );
-
-                        setTimeout(function () {
-                            KEditor.initContentEditable(ui.draggable, options);
-                        }, 50);
-
-                        return ui.draggable;
-                    }
-                }
+                greedy: true
             });
 
             flog('Initialize $.fn.sortable for content area');
@@ -233,6 +231,22 @@
                 axis: 'y',
                 sort: function () {
                     $(this).removeClass('ui-state-default');
+                },
+                receive: function (event, ui) {
+                    flog('On received snippet', event, ui);
+
+                    var helper = ui.helper;
+                    var item = ui.item;
+                    var snippetContent = $(item.attr('data-snippet')).html();
+                    flog('Snippet content', snippetContent);
+                    var section = $(
+                        '<section class="keditor-section">' +
+                        '   <section class="keditor-section-content">' + snippetContent + '</section>' +
+                        '</section>'
+                    );
+
+                    helper.replaceWith(section);
+                    KEditor.initContentEditable(section, options);
                 }
             });
 

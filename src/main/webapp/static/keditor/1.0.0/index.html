@@ -1,17 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>KEditor - Kademi Content Editor</title>
-</head>
-<body>
-    <div id="content-area"></div>
-    <script type="text/javascript">
-        $(function () {
-             $('#content-area').keditor({
+    <head>
+        <meta charset="UTF-8" />
+        <title>KEditor - Kademi Content Editor</title>
+        <link rel="stylesheet" type="text/css" href="plugins/bootstrap-3.3.6/css/bootstrap.css" />
+        <link rel="stylesheet" type="text/css" href="keditor-1.0.0.css" />
+    </head>
 
-             });
-        });
-    </script>
-</body>
+    <body>
+        <div id="content-area" class="container"></div>
+        <script src="plugins/jquery-1.11.3/jquery-1.11.3.min.js"></script>
+        <script src="plugins/jquery-ui-1.11.4/jquery-ui.min.js"></script>
+        <script src="plugins/jquery.nicescroll-3.6.6/jquery.nicescroll.min.js"></script>
+        <script src="plugins/ckeditor-4.5.6/ckeditor.js"></script>
+        <script src="plugins/ckeditor-4.5.6/adapters/jquery.js"></script>
+        <script src="keditor-1.0.0.js"></script>
+        <script type="text/javascript">
+            $(function() {
+                $('#content-area').keditor();
+            });
+        </script>
+    </body>
 </html>
