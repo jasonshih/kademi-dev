@@ -137,7 +137,7 @@
                                 #else
                                 #foreach($tt in $timers)
                                 <tr >
-                                    <td><a href="/autoEmails/$tt.emailTrigger.name">$tt.emailTrigger.title</a></td>
+                                    <td><a href="/autoEmails/$tt.emailTrigger.id">$tt.emailTrigger.title</a></td>
                                     <td><a href="/manageUsers/$tt.fireForProfile.id/">$tt.fireForProfile.email</a></td>
                                     <td>
                                         #if( $page.statusCode($tt) == "c" )
