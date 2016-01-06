@@ -61,27 +61,10 @@
     $.fn.keditor.version = '1.0.0';
 
     var DEFAULTS = $.fn.keditor.DEFAULTS = {
-        ckeditor: {
-            allowedContent: true, // DISABLES Advanced Content Filter. This is so templates with classes are allowed through
-            bodyId: "editor",
-            templates_replaceContent: false,
-            enterMode: "P",
-            forceEnterMode: true,
-            filebrowserBrowseUrl: '/static/fckfilemanager/browser/default/browser.html?Type=Image&Connector=/fck_connector.html',
-            filebrowserUploadUrl: '/uploader/upload',
-            format_tags: 'p;h1;h2;h3;h4;h5;h6', // removed p2
-            format_p2: {
-                element: 'p',
-                attributes: {
-                    'class': 'lessSpace'
-                }
-            },
-            minimumChangeMilliseconds: 100
-        },
+        ckeditor: {},
         snippetsUrl: '',
         snippetsListId: 'keditor-snippets-list',
         onContentChange: function () {
-
         }
     };
 
@@ -90,6 +73,7 @@
             flog('initSnippetToggler', contentArea, options);
 
             var body = $(document.body);
+            contentArea.addClass('keditor-content-area');
 
             if (options.snippetsListId === DEFAULTS.snippetsListId) {
                 flog('Render default KEditor snippet container');
@@ -139,11 +123,11 @@
                 e.preventDefault();
 
                 var icon = $(this).find('i');
-                if (body.hasClass('opened-snippet')) {
-                    body.removeClass('opened-snippet');
+                if (body.hasClass('opened-keditor-snippets')) {
+                    body.removeClass('opened-keditor-snippets');
                     icon.attr('class', 'glyphicon glyphicon-chevron-left')
                 } else {
-                    body.addClass('opened-snippet');
+                    body.addClass('opened-keditor-snippets');
                     icon.attr('class', 'glyphicon glyphicon-chevron-right')
                 }
             });
@@ -163,14 +147,14 @@
                 flog('Snippet #' + i, previewUrl, content);
 
                 snippetsHtml += '<section class="keditor-snippet" data-snippet="#keditor-snippet-' + i + '">';
-                snippetsHtml += '   <img class="keditor-snippet-preview" src="' + previewUrl + '" />';;
+                snippetsHtml += '   <img class="keditor-snippet-preview" src="' + previewUrl + '" />';
                 snippetsHtml += '</section>';
 
                 snippetsContentHtml += '<div id="keditor-snippet-' + i + '" style="display: none;">' + content + '</div>';
             });
 
             $('#' + options.snippetsListId).html(snippetsHtml);
-            $('#snippet-content').html(snippetsContentHtml);
+            $('#keditor-snippets-content').html(snippetsContentHtml);
         },
 
         initSnippetsActions: function (contentArea, options) {
@@ -179,7 +163,7 @@
             var snippetsList = $('#' + options.snippetsListId);
 
             if ($.fn.niceScroll) {
-                flog('Initializing $.fn.niceScroll for snippets list...');
+                flog('Initialize $.fn.niceScroll for snippets list');
                 snippetsList.niceScroll({
                     cursorcolor: '#999',
                     cursorwidth: 6,
@@ -195,11 +179,12 @@
                 flog('$.fn.niceScroll does not exist. Use default sidebar.');
             }
 
-            flog('Initializing $.fn.draggable for snippets list...');
+            var contentAreaId = contentArea.attr('id');
+            flog('Initialize $.fn.draggable for snippets list which connect to #' + contentAreaId);
             snippetsList.find('.keditor-snippet').draggable({
                 helper: 'clone',
                 revert: 'invalid',
-                connectToSortable: contentArea.attr('id'),
+                connectToSortable: '#' + contentAreaId,
                 cursorAt: {
                     top: 0,
                     left: 0
@@ -216,7 +201,7 @@
             var body = $(document.body);
             var contentAreaId = contentArea.attr('id');
 
-            flog('Initializing $.fn.droppable for content area...');
+            flog('Initialize $.fn.droppable for content area');
             contentArea.droppable({
                 accept: '.keditor-snippet',
                 tolerance: 'pointer',
@@ -224,7 +209,8 @@
                 drop: function (event, ui) {
                     flog('drop', event, ui);
 
-                    if (ui.draggable.closest(contentAreaId).length > 0) {
+                    if (ui.draggable.closest('#' + contentAreaId).length > 0) {
+                        flog('===========', ui.draggable);
                         var snippetContent = $(ui.draggable.attr('data-snippet')).html();
 
                         ui.draggable.attr('class', 'keditor-section').html(
@@ -240,33 +226,30 @@
                 }
             });
 
-            flog('Initializing $.fn.sortable for content area...');
+            flog('Initialize $.fn.sortable for content area');
             contentArea.sortable({
                 handle: '.btn-section-reposition',
                 items: '> section',
-                connectWith: contentAreaId,
+                connectWith: '#' + contentAreaId,
                 axis: 'y',
                 sort: function () {
                     $(this).removeClass('ui-state-default');
                 }
             });
 
-            flog('Initializing sections in content area...')
+            flog('Initialize sections in content area');
             contentArea.find('> section').each(function () {
                 var section = $(this);
                 section.addClass('keditor-section-content');
-                section.wrap('<section class="keditor-section"></section>')
+                section.wrap('<section class="keditor-section"></section>');
 
                 var keditorSection = section.parent();
                 KEditor.initContentEditable(keditorSection, options);
             });
 
             body.on('click', function (e) {
-                flog('Body on click', e);
-                
-                contentArea.find('.keditor-section.showed-keditor-toolbar').removeClass('showed-keditor-toolbar');
-
                 var section = KEditor.getClickElement(e, 'section.keditor-section');
+                contentArea.find('.keditor-section.showed-keditor-toolbar').removeClass('showed-keditor-toolbar');
                 if (section) {
                     flog('Click on .keditor-section');
                     section.addClass('showed-keditor-toolbar');
@@ -277,18 +260,18 @@
                     flog('Click on .btn-section-delete', btnRemove);
 
                     if (confirm('Are you sure that you want to delete this section? This action can not be undo!')) {
-                        var section = btnRemove.closest('section.keditor-section');
-                        var id = section.find('.keditor-section-content').attr('id');
+                        var selectedSection = btnRemove.closest('section.keditor-section');
+                        var id = selectedSection.find('.keditor-section-content').attr('id');
 
                         CKEDITOR.instances[id].destroy();
-                        section.remove();
+                        selectedSection.remove();
 
                         flog('Section is deleted');
                     }
                 }
             });
         },
-        
+
         getClickElement: function (event, selector) {
             var target = $(event.target);
             var closest = target.closest(selector);
@@ -305,10 +288,10 @@
         initContentEditable: function (section, options) {
             flog('initContentEditable', section, options);
 
-            if (!section.hasClass('keditor-editable') || !section.hasClass('keditor-initing')) {
-                section.addClass('keditor-initing');
+            if (!section.hasClass('keditor-editable') || !section.hasClass('keditor-initializing')) {
+                section.addClass('keditor-initializing');
 
-                flog('Rendering KEditor toolbar for section', section);
+                flog('Render KEditor toolbar for section', section);
                 section.append(
                     '<div class="keditor-toolbar">' +
                     '   <div class="btn-group-vertical">' +
@@ -318,8 +301,10 @@
                     '</div>'
                 );
 
-                flog('Initializing CKEditor for section', section);
+                flog('Initialize CKEditor for section', section);
                 var sectionContent = section.find('.keditor-section-content');
+                sectionContent.prop('contenteditable', true);
+
                 var id = 'keditor-section-' + (new Date()).getTime();
                 flog('Id for section content is: ' + id);
                 sectionContent.attr('id', id);
@@ -335,8 +320,8 @@
                     });
                 });
 
-                target.addClass('keditor-editable');
-                target.removeClass('keditor-initing');
+                section.addClass('keditor-editable');
+                section.removeClass('keditor-initializing');
             } else {
                 if (section.hasClass('keditor-editable')) {
                     flog('Section is already initialized!');
@@ -355,7 +340,7 @@
                     flog('KEditor is already initialized!');
                 } else {
                     if (contentArea.attr('id').length === 0) {
-                        flog('Content area does not contain Id. Rendering id for content area...');
+                        flog('Content area does not contain Id. Generating id for content area...');
 
                         var id = 'keditor-content-area-' + (new Date()).getTime();
                         contentArea.attr('id', id);
@@ -376,7 +361,7 @@
 
             contentArea.find('> section').each(function () {
                 var section = $(this);
-                var id = section.find('.keditor-section-inner').attr('id');
+                var id = section.find('.keditor-section-content').attr('id');
 
                 html += '<section>' + CKEDITOR.instances[id].getData() + '</section>';
             });

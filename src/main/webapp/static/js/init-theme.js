@@ -7,7 +7,7 @@
  *  application to get the toolbars you want
  */
 
-CKEDITOR_BASEPATH = "/static/ckeditor440/";
+CKEDITOR_BASEPATH = "/static/ckeditor456/";
 var ADDED_EXTRA_CSS = false;
 
 // Templates should push theme css files into this array, so they will be included in the editor
@@ -241,7 +241,7 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins, c
 
         editor.on('instanceReady', function (evt) {
             if (!ADDED_EXTRA_CSS) {
-                var cssCkeditorExtra = '/static/ckeditor440/skins/bootstrapck/editor_extra.css';
+                var cssCkeditorExtra = '/static/ckeditor456/skins/bootstrapck/editor_extra.css';
                 flog("loading ckeditor extra css");
                 $('<link href="' + cssCkeditorExtra + '" rel="stylesheet">').appendTo("head");
 

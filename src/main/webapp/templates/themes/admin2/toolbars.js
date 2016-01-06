@@ -4,23 +4,23 @@ var toolbarSets = {};
 
 var standardExtraPlugins = "autogrow,embed_video,fuse-image,modal,bspanel,forms,bslayout2col,bslayout3col,onchange";
 var standardRemovePlugins = "resize,image,save,newpage,preview,tliyoutube,image2,pbckcode,googledocs,language"
-var templatesPath =  '/static/editor/templates.js';
+var templatesPath = '/static/editor/templates.js';
 var stylesPath = "/templates/themes/fuse/styles.js";
 
 toolbarSets["Full"] = [
-	{ name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
-	{ name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
-	{ name: 'editing', groups: [ 'find', 'selection', 'spellchecker' ] },
-	{ name: 'forms' },
-	{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
-	{ name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ] },
-	{ name: 'links' },
-	{ name: 'insert' },
-	{ name: 'styles' },
-	{ name: 'colors' },
-	{ name: 'tools' },
-	{ name: 'layouts' },
-	{ name: 'about' }
+    {name: 'document', groups: ['mode', 'document', 'doctools']},
+    {name: 'clipboard', groups: ['clipboard', 'undo']},
+    {name: 'editing', groups: ['find', 'selection', 'spellchecker']},
+    {name: 'forms'},
+    {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
+    {name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align', 'bidi']},
+    {name: 'links'},
+    {name: 'insert'},
+    {name: 'styles'},
+    {name: 'colors'},
+    {name: 'tools'},
+    {name: 'layouts'},
+    {name: 'about'}
 
 //    {name: 'clipboard', groups: ['clipboard', 'undo']},
 //    {name: 'editing', groups: ['find', 'selection', 'spellchecker']},
@@ -48,7 +48,7 @@ toolbarSets["Balanced"] = [
     {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
     {name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align']},
     {name: 'styles'},
-    { name: 'layouts' }
+    {name: 'layouts'}
 ];
 
 //toolbarSets["Balanced"] = [
@@ -74,7 +74,7 @@ toolbarSets["Default"] = [
     {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
     {name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align']},
     {name: 'styles'},
-    { name: 'layouts' },
+    {name: 'layouts'},
 ];
 
 //toolbarSets["Default"] = [
@@ -139,7 +139,6 @@ toolbarSets["Image"] = [
     {name: 'styles'},
     {name: 'colors'}
 ];
-
 
 //toolbarSets["Image"] = [
 //    ['Bold', 'Italic', '-', 'Link', 'Unlink', '-', 'Image', 'Flash']
