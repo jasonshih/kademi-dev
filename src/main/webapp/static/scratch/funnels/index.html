@@ -25,13 +25,30 @@
 
     //var gg = svg.getBoundingClientRect();
 
-    // var data_url = "https://raw.githubusercontent.com/Kademi/kademi-dev/master/src/main/webapp/static/scratch/funnels/data.json";
     var data_url = "data.json";
     d3.json(data_url, function(json) {
 
         var size = json.stages.length;
         var totalHeight = size * levelHeight;
-        var trapBox = new Trapezoidal([[200, 0], [500, 0], [400, totalHeight], [300, totalHeight]]);
+
+        var adjustTopWidth = 0;
+        for (var i = 0; i < json.stages[0].sources.length; i++)
+        {
+            var rad = Math.min(Math.sqrt(json.stages[0].sources[i].count) * ratio, levelHeight / 2 - 2);
+            adjustTopWidth += 2 * rad;
+        }
+        adjustTopWidth = Math.max(1.5 * adjustTopWidth, 500);
+
+
+        var adjustButtonWidth = 0;
+        for (var i = 0; i < json.stages[size - 1].sources.length; i++)
+        {
+            var rad = Math.min(Math.sqrt(json.stages[size - 1].sources[i].count) * ratio, levelHeight / 2 - 2);
+            adjustButtonWidth += 2 * rad;
+        }
+        adjustButtonWidth = Math.max(1.5 * adjustButtonWidth, 300);
+
+        var trapBox = new Trapezoidal([[200, 0], [200 + adjustTopWidth, 0], [200 + (adjustTopWidth + adjustButtonWidth) / 2, totalHeight], [200 + (adjustTopWidth - adjustButtonWidth) / 2, totalHeight]]);
         var data_set = [];
         var name_set = new Set();
 
@@ -62,11 +79,11 @@
         name_set.forEach(function(value){
             svg.append("text")
                     .style("fill", "black")
-                    .attr("x", 700)
+                    .attr("x", adjustTopWidth + 200)
                     .attr("y", (counter + 1) * 50)
                     .text(value);
             svg.append("ellipse")
-                    .attr("cx", 800)
+                    .attr("cx", adjustTopWidth + 300)
                     .attr("cy", (counter + 1) * 50)
                     .attr("rx", 10)
                     .attr("ry", 10)
@@ -97,38 +114,47 @@
         }
 
         var force = d3.layout.force()
-                .gravity(-0.006)
-                .size(trapBox.center());
+                //.gravity(-0.006)
+                //.size(trapBox.center());
+                .size([width, height]);
 
         var node = svg.selectAll("circle")
                 .data(data_set)
                 .enter().append("svg:circle")
-                .attr("r", function(d) { return d.count * ratio; })
+                .attr("r", function(d) {
+                    var rad = Math.min(Math.sqrt(d.count) * ratio, levelHeight / 2 - 2);
+                    return rad;
+                })
                 .style("fill", function(d) { return stringToColorCode(d.name); })
                 .style("stroke", function(d) { return d3.rgb(stringToColorCode(d.name)).darker(); })
                 .call(force.drag);
         force
                 .nodes(data_set)
+                .charge(-200)
+                .gravity(0.002)
                 .on("tick", function() {
                     node
                             .attr("cy", function(d) {
                                 var idx = d.level;
+                                var rad = Math.min(Math.sqrt(d.count) * ratio, levelHeight / 2 - 2);
                                 var trap = new Trapezoidal([[trapBox.left(idx * totalHeight / size), idx * totalHeight / size],
                                     [trapBox.right(idx * totalHeight / size), idx * totalHeight / size],
                                     [trapBox.right((idx + 1) * totalHeight / size), (idx + 1) * totalHeight / size],
                                     [trapBox.left((idx + 1) * totalHeight / size), (idx + 1) * totalHeight / size]]);
-                                return d.y = Math.max(trap.top() + d.count * ratio, Math.min(trap.button() - d.count * ratio, d.y));
+                                return d.y = Math.max(trap.top() + rad, Math.min(trap.button() - rad, d.y));
                             })
                             .attr("cx", function(d) {
                                 var idx = d.level;
+                                var rad = Math.min(Math.sqrt(d.count) * ratio, levelHeight / 2 - 2);
                                 var trap = new Trapezoidal([[trapBox.left(idx * totalHeight / size), idx * totalHeight / size],
                                     [trapBox.right(idx * totalHeight / size), idx * totalHeight / size],
                                     [trapBox.right((idx + 1) * totalHeight / size), (idx + 1) * totalHeight / size],
                                     [trapBox.left((idx + 1) * totalHeight / size), (idx + 1) * totalHeight / size]]);
-                                return d.x = Math.max(trap.left(d.y) + d.count * ratio, Math.min(trap.right(d.y) - d.count * ratio, d.x));
+                                return d.x = Math.max(trap.left(d.y) + rad + 3, Math.min(trap.right(d.y) - rad - 3, d.x));
                             });
                 })
                 .start();
+
     });
 
 
