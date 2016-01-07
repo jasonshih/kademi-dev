@@ -58,9 +58,7 @@ function initKEditor(body, snippetsUrl) {
         },
         snippetsUrl: snippetsUrl,
         snippetsListId: 'snippets-list',
-        onContentChange: function (editor, event) {
-            flog('=================', editor, event);
-
+        onContentChange: function (event) {
             if (!body.hasClass('content-changed')) {
                 body.addClass('content-changed');
             }
