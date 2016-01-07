@@ -2,32 +2,10 @@ function initManageFiles() {
     initPublishingMenu('');
     initFiles();
     initImport();
-    initCRUDPages();
-    initAddPageModal();
     initCRUDFiles();
     initCopyCutPaste();
     initUpload();
     initUploadZip();
-}
-
-function initManagePages() {
-    initPublishingMenu('');
-    initFiles();
-    initCRUDPages();
-    initAddPageModal();
-    initCopyCutPaste();
-
-    var container = $("#filesContainer");
-
-    container.on('click', '.btn-create-folder', function (e) {
-        e.stopPropagation();
-        e.preventDefault();
-        flog("initManageFiles: add folder");
-        var parentHref = window.location.pathname;
-        showCreateFolder(parentHref, 'New folder', 'Please enter a name for the new folder', function () {
-            $("#subFoldersList").reloadFragment();
-        });
-    });
 }
 
 function initUpload() {
@@ -72,7 +50,6 @@ function initUploadZip() {
 }
 
 function initCopyCutPaste() {
-    var cont = $("body");
     $("#table-files").cutcopy();
 }
 
@@ -97,34 +74,6 @@ function initImport() {
 
         $.getJSON(window.location.pathname + '?importStatus', function (data) {
             $('#import-status-result').val(data.messages).show(300);
-        });
-    });
-}
-
-function initCRUDPages() {
-    var container = $("#filesContainer");
-
-    container.on('click', '.btn-edit-page', function (e) {
-        e.preventDefault();
-        flog('click edit page', e, this);
-        var a = $(this);
-        var name = a.attr('href');
-        var article = a.closest('article');
-        showEditModal(name, article);
-    });
-
-    container.on('click', '.btn-delete-page', function (e) {
-        e.stopPropagation();
-        e.preventDefault();
-        var target = $(this);
-        var href = target.attr('href');
-        flog('click delete. href', href);
-        var name = getFileName(href);
-        var article = target.closest('article');
-        confirmDelete(href, name, function () {
-            flog('deleted', article);
-            article.remove();
-            Msg.success('Deleted ' + name);
         });
     });
 }
@@ -262,40 +211,6 @@ function initFiles() {
         loadHistory(modal.find("tbody"), config, link);
         modal.modal("show");
         link.removeClass("loading");
-    });
-}
-
-
-function initAddPageModal() {
-    flog('initAddPageModal', $('.btn-add-page'));
-
-    var modal = $('#modal-add-page');
-
-    initFuseModal(modal, function () {
-        modal.find('.modal-body').css('height', getStandardModalEditorHeight());
-        initHtmlEditors(modal.find('.htmleditor'), getStandardEditorHeight(), null, null, standardRemovePlugins + ',autogrow'); // disable autogrow
-    });
-
-    modal.on('hidden.modal.fuse', function () {
-        modal.find('.btn-history-page').addClass('hidden');
-    });
-
-    var form = modal.find('form');
-
-    $('.btn-add-page').click(function (e) {
-        e.preventDefault();
-        flog('initAddPageModal: click');
-
-        form.find('input[type=text], textarea,input[name=pageName]').val('');
-        form.unbind();
-        form.submit(function (e) {
-            flog('submit clicked', this);
-            e.preventDefault();
-            //createPage(modal.find('form'));
-            doSavePage(form, null, false);
-        });
-        openFuseModal(modal);
-        flog('initAddPageModal: click done');
     });
 }
 
