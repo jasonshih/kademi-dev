@@ -1,10 +1,10 @@
 var win = $(window);
 
-function initContentEditorPage(fileName, snippetsUrl) {
+function initContentEditorPage(fileName) {
     flog('initContentEditorPage', fileName);
     var body = $(document.body);
 
-    initKEditor(body, snippetsUrl);
+    initKEditor(body);
     initBtns(body, fileName);
     initSnippetsToggler(body);
 
@@ -26,7 +26,7 @@ function initContentEditorPage(fileName, snippetsUrl) {
     hideLoadingIcon();
 }
 
-function initKEditor(body, snippetsUrl) {
+function initKEditor(body) {
     var themeCssFiles = [];
     themeCssFiles.push('/theme/assets/plugins/bootstrap/css/bootstrap.min.css');
     themeCssFiles.push('/theme/assets/plugins/bootstrap/css/bootstrap-ckeditor.css');
@@ -56,9 +56,9 @@ function initKEditor(body, snippetsUrl) {
             minimumChangeMilliseconds: 100,
             stylesSet: 'myStyles:' + stylesPath
         },
-        snippetsUrl: snippetsUrl,
+        snippetsUrl: '/static/keditor/1.0.0/snippets/snippets.html',
         snippetsListId: 'snippets-list',
-        onContentChange: function () {
+        onContentChange: function (event) {
             if (!body.hasClass('content-changed')) {
                 body.addClass('content-changed');
             }
