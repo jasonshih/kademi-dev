@@ -3,7 +3,6 @@ function initManagePages() {
     initCRUDPages();
     initAddPageModal();
     initCopyCutPaste();
-
     setRecentItem(window.location.pathname, window.location.pathname);
     initPjax();
     initDeleteFolders();
@@ -25,6 +24,7 @@ function initCRUDPages() {
     container.on('click', '.btn-edit-page', function (e) {
         e.preventDefault();
         flog('click edit page', e, this);
+
         var a = $(this);
         var name = a.attr('href');
         var article = a.closest('article');
@@ -48,35 +48,140 @@ function initCRUDPages() {
 }
 
 function initAddPageModal() {
-    flog('initAddPageModal', $('.btn-add-page'));
+    flog('initAddPageModal');
 
-    var modal = $('#modal-add-page');
-
-    initFuseModal(modal, function () {
-        modal.find('.modal-body').css('height', getStandardModalEditorHeight());
-        initHtmlEditors(modal.find('.htmleditor'), getStandardEditorHeight(), null, null, standardRemovePlugins + ',autogrow'); // disable autogrow
-    });
-
-    modal.on('hidden.modal.fuse', function () {
-        modal.find('.btn-history-page').addClass('hidden');
-    });
-
+    var modal = $('#modal-save-page');
     var form = modal.find('form');
 
-    $('.btn-add-page').click(function (e) {
-        e.preventDefault();
-        flog('initAddPageModal: click');
+    modal.on('hidden.bs.modal', function () {
+        flog('a');
 
-        form.find('input[type=text], textarea,input[name=pageName]').val('');
-        form.unbind();
-        form.submit(function (e) {
-            flog('submit clicked', this);
-            e.preventDefault();
-            //createPage(modal.find('form'));
-            doSavePage(form, null, false);
-        });
-        openFuseModal(modal);
-        flog('initAddPageModal: click done');
+        modal.find('.btn-history-page').addClass('hidden');
+        clearForm(form);
+        $('.meta-wrapper').html('');
+        $('.data-param-wrapper').html('');
+    });
+
+    form.forms({
+        beforePostForm: function (form, config, data) {
+            var pageName = form.find('[name=pageName]').val();
+            if (pageName.length === 0) {
+                form.attr('action', 'autoname.new');
+            } else {
+                form.attr('action', pageName);
+            }
+
+            return data;
+        },
+        onSuccess: function (resp) {
+            if (resp.status) {
+                $('#page-list').reloadFragment({
+                    whenComplete: function () {
+                        Msg.success('Page is saved!');
+                        modal.modal('hide');
+                    }
+                });
+            } else {
+                Msg.error('There was an error saving the page: ' + resp.messages);
+            }
+        },
+        onError: function (resp) {
+            flog('error', resp);
+            Msg.error('Sorry, an error occured saving your changes. If you have entered editor content that you dont want to lose, please switch the editor to source view, then copy the content. Then refresh the page and re-open the editor and paste the content back in.');
+        }
+    });
+
+    $('.btn-add-meta').on('click', function (e) {
+        e.preventDefault();
+
+        addMetaTag('', '');
+    });
+
+    $('.btn-add-data-param').on('click', function (e) {
+        e.preventDefault();
+
+        addDataParam('', '');
+    });
+}
+
+function addMetaTag(name, content) {
+    var metaWrapper = $('.meta-wrapper');
+    var id = (new Date()).getTime();
+
+    metaWrapper.append(
+        '<div class="input-group meta">' +
+        '    <input type="text" class="form-control input-sm required" required="required" name="metaName.' + id + '" placeholder="Meta name" />' +
+        '    <input type="text" class="form-control input-sm required" required="required" name="metaContent.' + id + '" placeholder="Meta content" />' +
+        '    <span class="input-group-btn">' +
+        '        <button class="btn btn-sm btn-danger btn-remove-meta" type="button"><i class="fa fa-remove"></i></button>' +
+        '    </span>' +
+        '</div>'
+    );
+}
+
+function addDataParam(title, value) {
+    var metaWrapper = $('.data-param-wrapper');
+    var id = (new Date()).getTime();
+
+    metaWrapper.append(
+        '<div class="input-group data-param">' +
+        '    <input type="text" class="form-control input-sm required" required="required" name="dataParamTitle.' + id + '" placeholder="Data/parameter title" />' +
+        '    <input type="text" class="form-control input-sm required" required="required" name="dataParamValue.' + id + '" placeholder="Data/parameter value" />' +
+        '    <span class="input-group-btn">' +
+        '        <button class="btn btn-sm btn-danger btn-remove-data-param" type="button"><i class="fa fa-remove"></i></button>' +
+        '    </span>' +
+        '</div>'
+    );
+}
+
+function showEditModal(name, pageArticle) {
+    flog('showEditModal', name, pageArticle);
+
+    var modal = $('#modal-save-page');
+    var form = modal.find('form');
+
+    var btnHistoryPage = modal.find('.btn-history-page');
+    btnHistoryPage.unbind().removeClass('hidden');
+    btnHistoryPage.history({
+        pageUrl: name,
+        showPreview: false,
+        modal: $('#modal-history')
+    });
+
+    $.ajax({
+        type: 'GET',
+        url: name + '?type=json',
+        dataType: 'json',
+        success: function (resp) {
+            flog('Loaded page data', resp);
+
+            var data = resp.data;
+
+            var template = data.template;
+            if (!template.endsWith('.html')) {
+                template += '.html';
+            }
+            modal.find('select option').each(function (i, n) {
+                var opt = $(n);
+                if (template.startsWith(opt.attr('value'))) {
+                    opt.prop('selected', true);
+                } else {
+                    opt.prop('selected', false);
+                }
+            });
+
+            modal.find('input[name=pageName]').val(name);
+            modal.find('input[name=title]').val(data.title);
+            modal.find('input[name=itemType]').val(data.itemType);
+            modal.find('input[name=category]').val(data.category);
+            modal.find('input[name=tags]').val(data.tags);
+
+            modal.modal('show');
+        },
+        error: function (resp) {
+            flog('Could not load page data', resp);
+            Msg.error('Could not load page data');
+        }
     });
 }
 
