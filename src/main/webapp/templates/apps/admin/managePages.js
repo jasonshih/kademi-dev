@@ -59,7 +59,7 @@ function initAddPageModal() {
         modal.find('.btn-history-page').addClass('hidden');
         clearForm(form);
         $('.meta-wrapper').html('');
-        $('.data-param-wrapper').html('');
+        $('.param-wrapper').html('');
     });
 
     form.forms({
@@ -97,10 +97,10 @@ function initAddPageModal() {
         addMetaTag('', '');
     });
 
-    $('.btn-add-data-param').on('click', function (e) {
+    $('.btn-add-param').on('click', function (e) {
         e.preventDefault();
 
-        addDataParam('', '');
+        addParam('', '');
     });
 }
 
@@ -110,8 +110,8 @@ function addMetaTag(name, content) {
 
     metaWrapper.append(
         '<div class="input-group meta">' +
-        '    <input type="text" class="form-control input-sm required" required="required" name="metaName.' + id + '" placeholder="Meta name" />' +
-        '    <input type="text" class="form-control input-sm required" required="required" name="metaContent.' + id + '" placeholder="Meta content" />' +
+        '    <input type="text" class="form-control input-sm required" required="required" name="metaName.' + id + '" placeholder="Meta name" value="' + name + '" />' +
+        '    <input type="text" class="form-control input-sm required" required="required" name="metaContent.' + id + '" placeholder="Meta content" value="' + content + '" />' +
         '    <span class="input-group-btn">' +
         '        <button class="btn btn-sm btn-danger btn-remove-meta" type="button"><i class="fa fa-remove"></i></button>' +
         '    </span>' +
@@ -119,16 +119,16 @@ function addMetaTag(name, content) {
     );
 }
 
-function addDataParam(title, value) {
-    var metaWrapper = $('.data-param-wrapper');
+function addParam(title, value) {
+    var metaWrapper = $('.param-wrapper');
     var id = (new Date()).getTime();
 
     metaWrapper.append(
-        '<div class="input-group data-param">' +
-        '    <input type="text" class="form-control input-sm required" required="required" name="dataParamTitle.' + id + '" placeholder="Data/parameter title" />' +
-        '    <input type="text" class="form-control input-sm required" required="required" name="dataParamValue.' + id + '" placeholder="Data/parameter value" />' +
+        '<div class="input-group param">' +
+        '    <input type="text" class="form-control input-sm required" required="required" name="paramTitle.' + id + '" placeholder="Data/parameter title" value="' + title + '" />' +
+        '    <input type="text" class="form-control input-sm required" required="required" name="paramValue.' + id + '" placeholder="Data/parameter value" value="' + value + '" />' +
         '    <span class="input-group-btn">' +
-        '        <button class="btn btn-sm btn-danger btn-remove-data-param" type="button"><i class="fa fa-remove"></i></button>' +
+        '        <button class="btn btn-sm btn-danger btn-remove-param" type="button"><i class="fa fa-remove"></i></button>' +
         '    </span>' +
         '</div>'
     );
@@ -175,6 +175,16 @@ function showEditModal(name, pageArticle) {
             modal.find('input[name=itemType]').val(data.itemType);
             modal.find('input[name=category]').val(data.category);
             modal.find('input[name=tags]').val(data.tags);
+
+            flog(data.metas, data.params);
+
+            for (var i = 0; i < data.metas.length; i++) {
+                addMetaTag(data.metas[i].name, data.metas[i].content);
+            }
+
+            for (var i = 0; i < data.params.length; i++) {
+                addParam(data.params[i].title, data.params[i].value);
+            }
 
             modal.modal('show');
         },
