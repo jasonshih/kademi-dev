@@ -15,6 +15,7 @@ $(function () {
     initCloseDealModal();
     initCancelLeadModal();
     initCancelTaskModal();
+    initTopNavSearch();
 
 
     // Clear down modals when closed
@@ -74,7 +75,7 @@ function initCancelLeadModal() {
         }
     });
 
-    $("body").on("click", ".btnLeadCancelLead", function(e) {
+    $("body").on("click", ".btnLeadCancelLead", function (e) {
         e.preventDefault();
         var href = $(e.target).attr("href");
         cancelDealModal.find("form").attr("action", href);
@@ -92,10 +93,10 @@ function initCancelTaskModal() {
         }
     });
 
-    $("body").on("click", ".btnCancelTask", function(e) {
+    $("body").on("click", ".btnCancelTask", function (e) {
         e.preventDefault();
         var href = $(e.target).closest("a").attr("href");
-        flog("set href",href);
+        flog("set href", href);
         cancelDealModal.find("form").attr("action", href);
         cancelDealModal.modal("show");
     });
@@ -389,6 +390,156 @@ function updateField(href, fieldName, fieldValue) {
         error: function (resp) {
             flog('error', resp);
             Msg.error('Sorry couldnt save field ' + fieldName);
+        }
+    });
+}
+
+function initTopNavSearch() {
+    flog('initTopNavSearch');
+
+    var txt = $('#lead-search-input');
+    var suggestionsWrapper = $('#lead-search-suggestions');
+    var backdrop = $('<div />', {
+        id: 'lead-search-backdrop',
+        class: 'hide'
+    }).on('click', function () {
+        backdrop.addClass('hide');
+        suggestionsWrapper.addClass('hide');
+    }).appendTo(document.body);
+
+    txt.on({
+        input: function () {
+            typewatch(function () {
+                var text = txt.val().trim();
+
+                if (text.length > 0) {
+                    doTopNavSearch(text, suggestionsWrapper, backdrop);
+                } else {
+                    suggestionsWrapper.addClass('hide');
+                    backdrop.addClass('hide');
+                }
+            }, 500);
+        },
+        keydown: function (e) {
+            switch (e.keyCode) {
+                case keymap.ESC:
+                    flog('Pressed ESC button');
+
+                    suggestionsWrapper.addClass('hide');
+                    backdrop.addClass('hide');
+
+                    e.preventDefault();
+                    break;
+
+                case keymap.UP:
+                    flog('Pressed UP button');
+
+                    var suggestions = suggestionsWrapper.find('.suggestion');
+                    if (suggestions.length > 0) {
+                        var actived = suggestions.filter('.active');
+                        var prev = actived.prev();
+
+                        actived.removeClass('active');
+                        if (prev.length > 0) {
+                            prev.addClass('active');
+                        } else {
+                            suggestions.last().addClass('active');
+                        }
+                    }
+
+                    e.preventDefault();
+                    break;
+
+                case keymap.DOWN:
+                    flog('Pressed DOWN button');
+
+                    var suggestions = suggestionsWrapper.find('.suggestion');
+                    if (suggestions.length > 0) {
+                        var actived = suggestions.filter('.active');
+                        var next = actived.next();
+
+                        actived.removeClass('active');
+                        if (next.length > 0) {
+                            next.addClass('active');
+                        } else {
+                            suggestions.first().addClass('active');
+                        }
+                    }
+
+                    e.preventDefault();
+                    break;
+
+                case keymap.ENTER:
+                    flog('Pressed DOWN button');
+
+                    var actived = suggestionsWrapper.find('.suggestion').filter('.active');
+                    if (actived.length > 0) {
+                        var link = actived.find('a').attr('href');
+
+                        window.location.href = link;
+                    }
+
+                    e.preventDefault();
+                    break;
+
+                default:
+                    // Nothing
+            }
+        }
+    });
+
+    suggestionsWrapper.on({
+        mouseenter: function () {
+            suggestionsWrapper.find('.suggestion').removeClass('active');
+            $(this).addClass('active');
+        },
+        mouseleave: function () {
+            $(this).removeClass('active');
+        }
+    }, '.suggestion');
+}
+
+function doTopNavSearch(query, suggestionsWrapper, backdrop) {
+    flog('doTopNavSearch', query, suggestionsWrapper, backdrop);
+
+    $.ajax({
+        url: '/leads',
+        type: 'GET',
+        data: {
+            q: query
+        },
+        dataType: 'JSON',
+        success: function (resp) {
+            flog('Got search response from server', resp);
+
+            var suggestionStr = '';
+
+            if (resp && resp.hits && resp.hits.total > 0) {
+                for (var i = 0; i < resp.hits.hits.length; i++) {
+                    var suggestion = resp.hits.hits[i];
+                    var leadId = suggestion.fields.leadId[0];
+                    var email = suggestion.fields.email[0];
+                    var firstName = suggestion.fields.firstName ? suggestion.fields.firstName[0] : '';
+                    var surName = suggestion.fields.surName ? suggestion.fields.surName[0] : '';
+
+                    suggestionStr += '<li class="suggestion">';
+                    suggestionStr += '    <a href="/leads/' + leadId + '">';
+                    suggestionStr += '        <span class="email">' + email + '</span>';
+                    if (firstName || surName) {
+                        suggestionStr += '    <br /><small class="text-muted">' + firstName + ' ' + surName + '</small>';
+                    }
+                    suggestionStr += '    </a>';
+                    suggestionStr += '</li>';
+                }
+            } else {
+                suggestionStr = '<li>No result.</li>';
+            }
+
+            suggestionsWrapper.html(suggestionStr).removeClass('hide');
+            //backdrop.removeClass('hide');
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            flog('Error when doTopNavSearch with query: ' + query, jqXHR, textStatus, errorThrown);
         }
     });
 }

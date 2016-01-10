@@ -1,3 +1,57 @@
 html body .fa {
     line-height: inherit;
 }
+
+/* ============================================================================
+   TopNav search
+   ============================================================================ */
+.lead-search-wrapper {
+    position: relative;
+    z-index: 1;
+}
+
+#lead-search-suggestions {
+    position: absolute;
+    top: 33px;
+    left: 0;
+    background: #fff;
+    border: 1px solid #d5d5d5;
+    padding: 0;
+    min-width: 100%;
+    list-style: none;
+    white-space: nowrap;
+}
+
+#lead-search-input {
+    width: 300px;
+}
+
+#lead-search-suggestions li + li {
+    border-top: 1px solid #d5d5d5;
+}
+
+#lead-search-suggestions li a {
+    display: block;
+    padding: 5px;
+    color: #000;
+    text-decoration: none !important;
+}
+
+#lead-search-suggestions li a .email {
+    color: #337ab7;
+}
+
+#lead-search-suggestions li.active a,
+#lead-search-suggestions li.active a:hover {
+    background: #d9d9d9;
+}
+
+#lead-search-backdrop {
+    position: fixed;
+    z-index: 1020;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: transparent;
+}

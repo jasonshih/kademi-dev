@@ -14,13 +14,16 @@
 <script src="/theme/scripts/vendor.js"></script>
 <script src="/theme/scripts/plugins.js"></script>
 <script src="/theme/scripts/main.js"></script>
+<script>
+    var pageInitFunctions = [];
+</script>
 <script src="/templates/themes/bootstrap335/js/common.js">//</script>
 <script src="/templates/themes/bootstrap335/js/jqExtras.js">//</script>
 <script type="text/javascript" src="/static/js/jquery.cookie.js">//</script>
 <script type="text/javascript" src="/static/jquery.forms/1.1.0/jquery.forms-1.1.0.js">//</script>
 <script type="text/javascript" src="/theme/js/jquery.user.js">//</script>
 <script type="text/javascript" src="/static/jquery.comments/1.0.4/jquery.comments-1.0.4.js" >//</script>
-
+<script type="text/javascript" src="/static/js/keymap.js" bottom="true">//</script>
 <script type="text/javascript" src="/static/js/jquery.timeago.js" >//</script>
 <script type="text/javascript" src="/static/bootstrap-msg/0.3/bootstrap-msg.min.js">//</script>
 <link rel="stylesheet" href="/static/bootstrap-msg/0.3/bootstrap-msg.min.css" type="text/css" />
@@ -102,6 +105,18 @@ $!bodyContent
                                 <li class="presentation" role="menuitem"><a href="$entry.key" class="createLead">$entry.value.title</a></li>
                                 #end
                             </ul>
+                        </li>
+
+                        <li>
+                            <form class="navbar-form" role="search">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                                    <div class="lead-search-wrapper">
+                                        <input type="text" class="form-control" placeholder="Search for..." id="lead-search-input" />
+                                        <ul id="lead-search-suggestions" class="hide"></ul>
+                                    </div>
+                                </div>
+                            </form>
                         </li>
 
                         <li class="dropdown">
