@@ -70,7 +70,9 @@
                         <div class="media-left media-middle"><a href=""><img src="/theme/images/user/02.jpg" class="media-object thumb96 img-circle"></a></div>
                         <div class="media-body">
                             <h2 class="mv-lg media-heading">
-                                #if( $page.profile )
+                                #if($page.leadOrg)
+                                <span style="color: white">$page.leadOrg.formattedName</span>
+                                #elseif( $page.profile )
                                 <a href="/custs/$page.profile.name" style="color: white">$page.customerDescription</a>
                                 #else
                                 No contact profile
@@ -151,6 +153,7 @@
                                 <ul role="tablist" class="nav nav-tabs">
                                     <li role="presentation" class="active"><a href="#details" aria-controls="details" role="tab" data-toggle="tab">Details</a></li>
                                     <li role="presentation"><a href="#activity" aria-controls="activity" role="tab" data-toggle="tab">Activity</a></li>
+                                    <li role="presentation"><a href="#company" aria-controls="company" role="tab" data-toggle="tab">Company</a></li>
                                     <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a></li>
                                     <li role="presentation"><a href="#tasks" aria-controls="tasks" role="tab" data-toggle="tab">Tasks</a></li>
                                 </ul>
@@ -174,7 +177,7 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            
+
                                         </div>
 
                                         <hr/>
@@ -228,6 +231,70 @@
                                                         <div class="col-md-10 col-md-offset-2">
                                                             <button class="btn btn-sm btn-default" type="reset">Reset</button>
 
+                                                            <button class="btn btn-primary" type="submit">Save details</button>
+
+                                                        </div>
+                                                    </div>
+                                                    #end
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div id="company" role="tabpanel" class="tab-pane fade">
+                                        <h4 class="page-header">Contact information</h4>
+                                        <div class="row">
+                                            <form method="post" action="$page.href" class="form-horizontal" id="leadOrgDetails">
+                                                <input type="hidden" name="leadOrgDetails" value="leadOrgDetails"/>
+                                                <div class="modal-body">
+                                                    #set( $leadOrg = $page.leadOrg )
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-2" for="title">Company</label>
+                                                        <div class="col-md-3">
+                                                            <input type="text" name="title" class="form-control" placeholder="Title" value="$!leadOrg.title" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-2" for="newUserEmail">Contact</label>
+                                                        <div class="col-md-5">
+                                                            <input type="text" name="email" id="email" class="form-control" placeholder="Email" value="$!leadOrg.email" />
+                                                        </div>
+                                                        <div class="col-md-5">
+                                                            <input type="text" name="phone" id="phone" class="form-control" placeholder="Phone" value="$!leadOrg.phone" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-2" for="newUserEmail">Address</label>
+                                                        <div class="col-md-5">
+                                                            <input type="text" name="address" class="form-control" placeholder="Address" value="$!leadOrg.address" />
+                                                        </div>
+                                                        <div class="col-md-5">
+                                                            <input type="text" name="addressLine2" class="form-control" placeholder="Address 2" value="$!leadOrg.addressLine2" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <div class="col-md-offset-2 col-md-5">
+                                                            <input type="text" name="addressState" class="form-control" placeholder="State" value="$!leadOrg.addressState" />
+                                                        </div>
+                                                        <div class="col-md-5">
+                                                            <input type="text" name="postcode" class="form-control" placeholder="Postcode" value="$!leadOrg.postcode" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-2" for="notes">Notes</label>
+                                                        <div class="col-md-10">
+                                                            <textarea name="notes" class="form-control" style="height: 100px">$!page.description</textarea>
+                                                        </div>
+                                                    </div>
+
+
+                                                    #if( $page.completed)
+                                                    #else
+                                                    <div class="form-group">
+                                                        <div class="col-md-10 col-md-offset-2">
                                                             <button class="btn btn-primary" type="submit">Save details</button>
 
                                                         </div>
@@ -394,6 +461,13 @@
                 $("body").on("change", "#description", function (e) {
                     var val = $(e.target).val();
                     setLeadDescription(val);
+                });
+
+                $('#leadOrgDetails').forms({
+                    callback: function (resp) {
+                        Msg.info('Saved');
+                        reloadTable();
+                    }
                 });
 
             });

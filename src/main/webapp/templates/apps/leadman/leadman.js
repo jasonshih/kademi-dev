@@ -16,8 +16,8 @@ $(function () {
     initCancelLeadModal();
     initCancelTaskModal();
     initTopNavSearch();
-    initNewLeadOptionSelect();
     initOrgSearch();
+    initProfileSearch();
 
 
     // Clear down modals when closed
@@ -194,6 +194,19 @@ function initNewLeadForm() {
     flog("initNewLeadForm");
     var modal = $('#newLeadModal');
     var form = modal.find('form');
+
+    modal.on('hidden.bs.modal', function () {
+        form.trigger('reset');
+        $('input[name=newOrgId]', form).val('');
+    });
+
+    $('#newOrgTitle', form).on('change', function () {
+        var inp = $(this);
+
+        if (inp.val().length < 1) {
+            $('input[name=newOrgId]', form).val('');
+        }
+    });
 
     $(".createLead").click(function (e) {
         flog("initNewLeadForm - click");
@@ -546,19 +559,6 @@ function doTopNavSearch(query, suggestionsWrapper, backdrop) {
     });
 }
 
-function initNewLeadOptionSelect() {
-    $('input[name=newLeadOption]').on('change', function (e) {
-        var btn = $(this);
-        var form = btn.closest('form');
-        var id = btn.attr('id');
-        if (id === 'profileLead') {
-            $('.org-field', form).hide().find('input').prop('disabled', true);
-        } else if (id === 'orgLead') {
-            $('.org-field', form).show().find('input').prop('disabled', false);
-        }
-    });
-}
-
 function initOrgSearch() {
     var orgSearch = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
@@ -597,5 +597,49 @@ function initOrgSearch() {
         var form = inp.closest('form');
 
         form.find('input[name=newOrgId]').val(sug.orgId);
+    });
+}
+
+function initProfileSearch() {
+    var profileSearch = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        remote: {
+            url: '/leads?profileSearch=%QUERY',
+            wildcard: '%QUERY'
+        }
+    });
+
+    $('#newUserFirstName').typeahead({
+        highlight: true
+    }, {
+        display: 'firstName',
+        limit: 10,
+        source: profileSearch,
+        templates: {
+            empty: [
+                '<div class="empty-message">',
+                'No existing contacts were found.',
+                '</div>'
+            ].join('\n'),
+            suggestion: Handlebars.compile(
+                    '<div>'
+                    + '<strong>{{name}}</strong>'
+                    + '</br>'
+                    + '<span>{{phone}}</span>'
+                    + '</br>'
+                    + '<span>{{email}}</span>'
+                    + '</div>')
+        }
+    });
+
+    $('#newUserFirstName').bind('typeahead:select', function (ev, sug) {
+        var inp = $(this);
+        var form = inp.closest('form');
+
+        form.find('input[name=firstName]').val(sug.firstName);
+        form.find('input[name=surName]').val(sug.surName);
+        form.find('input[name=email]').val(sug.email);
+        form.find('input[name=phone]').val(sug.phone);
     });
 }

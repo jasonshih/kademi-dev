@@ -9,19 +9,6 @@
             <form method="post" action="/leads/" class="form-horizontal">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label class="control-label col-md-2" for="newLeadOption">Type</label>
-                        <div class="col-md-4">
-                            <div class="btn-group" data-toggle="buttons">
-                                <label class="btn btn-info active">
-                                    <input type="radio" title="Profile" name="newLeadOption" id="profileLead" autocomplete="off" checked><i class="fa fa-user"></i>
-                                </label>
-                                <label class="btn btn-info">
-                                    <input type="radio" title="Organisation" name="newLeadOption" id="orgLead" autocomplete="off"><i class="fa fa-briefcase"></i>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
                         <label class="control-label col-md-2" for="newUserFirstName">Source</label>
                         <div class="col-md-4">
                             <input type="text" name="source" id="source" class="form-control" placeholder="Referring source" />
@@ -35,17 +22,21 @@
                             </select>
                         </div>
                     </div>
-                    <div class="form-group org-field" style="display: none;">
+                    <div class="form-group org-field">
                         <label class="control-label col-md-2" for="newOrgTitle">Company</label>
                         <div class="col-md-5">
-                            <input type="hidden" name="newOrgId" disabled="disabled"/>
-                            <input type="text" name="title" id="newOrgTitle" class="form-control" placeholder="Title" disabled="disabled"/>
+                            <input type="hidden" name="newOrgId"/>
+                            <input type="text" name="newOrgTitle" id="newOrgTitle" class="form-control" placeholder="Title"/>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-2" for="newUserFirstName">Name</label>
                         <div class="col-md-5">
-                            <input type="text" name="firstName" id="newUserFirstName" class="form-control" placeholder="First name" />
+                            <div class="input-group">
+                                <input type="text" name="firstName" id="newUserFirstName" class="form-control" placeholder="First name" />
+                                <span class="input-group-addon"><i class="fa fa-search"></i></span>
+
+                            </div>
                         </div>
                         <div class="col-md-5">
                             <input type="text" name="surName" id="newUserSurName" class="form-control" placeholder="Surname" />
@@ -329,7 +320,9 @@
     <div class="media-body" style="padding-left: 20px; position: relative">
         <h3 class="media-heading">
             <a href="/leads/$lead.id/">
-                #if( $lead.profile )
+                #if($lead.organisation)
+                $lead.organisation.formattedName
+                #elseif( $lead.profile )
                 $lead.profile.formattedName
                 #else
                 No contact information
@@ -339,24 +332,41 @@
                 Lead created: <abbr title="$formatter.formatDateISO8601($lead.createDate)" class="timeago">$lead.createDate</abbr>
             </small>
         </h3>
-        #if( $lead.profile )
+        #if($lead.organisation)
         <p>
             <i aria-hidden="true" class="fa fa-map-marker"></i>
-            Street 1391 Depaul Dr
-
-            #if( $lead.profile.email )
-            , $lead.profile.email
+            #if($lead.organisation.address)
+            $lead.organisation.address
             #end
 
-            #if( $lead.profile.phone )
-            , $lead.profile.phone
+            #if($lead.organisation.addressLine2)
+            , $lead.organisation.addressLine2
+            #end
+            #if($lead.organisation.AddressState)
+            , $lead.organisation.AddressState
+            #end
+            #if($lead.organisation.postcode)
+            , $lead.organisation.postcode
             #end
         </p>
+        #end
+        #if( $lead.profile )
+            #if( $lead.profile.email )
+                <p>
+                    <i aria-hidden="true" class="fa fa-envelope"></i>
+                    $lead.profile.email
+                </p>
+            #end
+            #if( $lead.profile.phone )
+            <p>
+                <i aria-hidden="true" class="fa fa-mobile"></i>
+                $lead.profile.phone
+            </p>
+            #end
         #end
 
         <div class="lead">
             <div class="leadInner">
-
                 $formatter.textToHtml($lead.description)
             </div>
         </div>
