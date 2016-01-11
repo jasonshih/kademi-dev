@@ -8,7 +8,19 @@
             </div>
             <form method="post" action="/leads/" class="form-horizontal">
                 <div class="modal-body">
-
+                    <div class="form-group">
+                        <label class="control-label col-md-2" for="newLeadOption">Type</label>
+                        <div class="col-md-4">
+                            <div class="btn-group" data-toggle="buttons">
+                                <label class="btn btn-info active">
+                                    <input type="radio" title="Profile" name="newLeadOption" id="profileLead" autocomplete="off" checked><i class="fa fa-user"></i>
+                                </label>
+                                <label class="btn btn-info">
+                                    <input type="radio" title="Organisation" name="newLeadOption" id="orgLead" autocomplete="off"><i class="fa fa-briefcase"></i>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label class="control-label col-md-2" for="newUserFirstName">Source</label>
                         <div class="col-md-4">
@@ -23,6 +35,13 @@
                             </select>
                         </div>
                     </div>
+                    <div class="form-group org-field" style="display: none;">
+                        <label class="control-label col-md-2" for="newOrgTitle">Company</label>
+                        <div class="col-md-5">
+                            <input type="hidden" name="newOrgId" disabled="disabled"/>
+                            <input type="text" name="title" id="newOrgTitle" class="form-control" placeholder="Title" disabled="disabled"/>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label class="control-label col-md-2" for="newUserFirstName">Name</label>
                         <div class="col-md-5">
@@ -31,7 +50,6 @@
                         <div class="col-md-5">
                             <input type="text" name="surName" id="newUserSurName" class="form-control" placeholder="Surname" />
                         </div>
-
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-2" for="newUserEmail">Contact</label>

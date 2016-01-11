@@ -4,7 +4,7 @@
         <select name="salesGroup" id="salesGroup" class="form-control">
             <option value="">[Please select]</option>
             #foreach($group in $rootFolder.organisation.groups )
-            <option value="$group.name" $formatter.ifEquals($salesGroup, $group.name, "selected", "")>
+            <option value="$group.name" $formatter.ifEqual("selected", "", $salesGroup, $group.name)>
                 #if( $group.title )
                 $group.title
                 #else
@@ -13,6 +13,24 @@
             </option>
             #end
         </select>
-            
+
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-sm-4 control-label" for="salesOrgType">Sales OrgType</label>
+    <div class="col-sm-7">
+        <select name="salesOrgType" id="salesOrgType" class="form-control">
+            <option value="">[Please select]</option>
+            #foreach($orgType in $rootFolder.organisation.orgTypes )
+            <option value="$orgType.id" $formatter.ifEqual("selected", "", $salesOrgType, $orgType.id)>
+                #if( $orgType.displayName )
+                $orgType.displayName
+                #else
+                $orgType.name
+                #end
+            </option>
+            #end
+        </select>
+
     </div>
 </div>

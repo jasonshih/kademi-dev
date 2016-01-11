@@ -16,6 +16,8 @@ $(function () {
     initCancelLeadModal();
     initCancelTaskModal();
     initTopNavSearch();
+    initNewLeadOptionSelect();
+    initOrgSearch();
 
 
     // Clear down modals when closed
@@ -518,9 +520,9 @@ function doTopNavSearch(query, suggestionsWrapper, backdrop) {
                 for (var i = 0; i < resp.hits.hits.length; i++) {
                     var suggestion = resp.hits.hits[i];
                     var leadId = suggestion.fields.leadId[0];
-                    var email = suggestion.fields.email[0];
-                    var firstName = suggestion.fields.firstName ? suggestion.fields.firstName[0] : '';
-                    var surName = suggestion.fields.surName ? suggestion.fields.surName[0] : '';
+                    var email = suggestion.fields['profile.email'][0];
+                    var firstName = suggestion.fields['profile.firstName'] ? suggestion.fields['profile.firstName'][0] : '';
+                    var surName = suggestion.fields['profile.surName'] ? suggestion.fields['profile.surName'][0] : '';
 
                     suggestionStr += '<li class="suggestion">';
                     suggestionStr += '    <a href="/leads/' + leadId + '">';
@@ -541,5 +543,59 @@ function doTopNavSearch(query, suggestionsWrapper, backdrop) {
         error: function (jqXHR, textStatus, errorThrown) {
             flog('Error when doTopNavSearch with query: ' + query, jqXHR, textStatus, errorThrown);
         }
+    });
+}
+
+function initNewLeadOptionSelect() {
+    $('input[name=newLeadOption]').on('change', function (e) {
+        var btn = $(this);
+        var form = btn.closest('form');
+        var id = btn.attr('id');
+        if (id === 'profileLead') {
+            $('.org-field', form).hide().find('input').prop('disabled', true);
+        } else if (id === 'orgLead') {
+            $('.org-field', form).show().find('input').prop('disabled', false);
+        }
+    });
+}
+
+function initOrgSearch() {
+    var orgSearch = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        remote: {
+            url: '/leads?orgSearch=%QUERY',
+            wildcard: '%QUERY'
+        }
+    });
+
+    $('#newOrgTitle').typeahead({
+        highlight: true
+    }, {
+        display: 'title',
+        limit: 10,
+        source: orgSearch,
+        templates: {
+            empty: [
+                '<div class="empty-message">',
+                'No existing companies were found.',
+                '</div>'
+            ].join('\n'),
+            suggestion: Handlebars.compile(
+                    '<div>'
+                    + '<strong>{{title}}</strong>'
+                    + '</br>'
+                    + '<span>{{phone}}</span>'
+                    + '</br>'
+                    + '<span>{{address}}, {{addressLine2}}, {{addressState}}, {{postcode}}</span>'
+                    + '</div>')
+        }
+    });
+
+    $('#newOrgTitle').bind('typeahead:select', function (ev, sug) {
+        var inp = $(this);
+        var form = inp.closest('form');
+
+        form.find('input[name=newOrgId]').val(sug.orgId);
     });
 }
