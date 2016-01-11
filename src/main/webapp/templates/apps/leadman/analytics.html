@@ -1,0 +1,38 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    #parse("/theme/masterTemplate.html")
+    <head>
+        #@themeHeader( "Analytics" )
+        
+        #end
+    </head>
+    <body class='add-container'>
+        #@themeBody()
+
+        <div class="">
+            <div style="" class="unwrap">
+                <div class="container container-lg p-lg">
+                    <h1>Analytics</h1>
+                    <svg id="funnel"></svg>
+                </div>
+            </div>
+            
+        </div>
+
+
+
+
+        
+
+
+        #createModals()
+
+        <script src="//d3js.org/d3.v3.min.js"></script>
+        <script src="/theme/apps/leadman/analytics.js"></script>
+        <script type="text/javascript">
+            $(function () {
+                initLeadManAnalytics();
+            });
+        </script>
+        #end
+    </body>
+</html>
