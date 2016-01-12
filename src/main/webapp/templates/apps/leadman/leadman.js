@@ -21,6 +21,7 @@ $(function () {
     initProfileSearch();
     initGpsTracking();
     initAudioPlayer();
+    initDeleteFile();
 
 
     // Clear down modals when closed
@@ -326,11 +327,18 @@ function initNewQuickLeadForm() {
         $.ajax({
             type: 'POST',
             url: '/leads/',
+            dataType: 'json',
             data: formData,
             processData: false,
             contentType: false,
             success: function (data, textStatus) {
                 flog('Success', data, textStatus);
+                if (data.status) {
+                    Msg.info('Saved new lead');
+                    modal.modal("hide");
+                } else {
+
+                }
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 flog('Error', textStatus, errorThrown);
@@ -818,4 +826,17 @@ function formatSecondsAsTime(secs, format) {
     }
 
     return min + ':' + sec;
+}
+
+function initDeleteFile() {
+    $('#files').on('click', '.btn-delete-file', function (e) {
+        e.preventDefault();
+
+        var btn = $(this);
+        var tr = btn.closest('tr');
+        var fname = btn.data('fname');
+        confirmDelete(fname, fname, function () {
+            tr.remove();
+        });
+    });
 }
