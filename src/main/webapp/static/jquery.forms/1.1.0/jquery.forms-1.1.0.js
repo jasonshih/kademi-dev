@@ -215,7 +215,7 @@
         disable: function (callback) {
             return $(this).each(function () {
                 var form = $(this);
-                form.find('input, button, select, textarea').prop('disabled', true);
+                form.find('input, button, select, textarea').prop('readonly', true);
 
                 if (typeof callback === 'function') {
                     callback.call(this, form);
@@ -225,7 +225,7 @@
         enable: function (callback) {
             return $(this).each(function () {
                 var form = $(this);
-                form.find('input, button, select, textarea').prop('disabled', false);
+                form.find('input, button, select, textarea').prop('readonly', false);
 
                 if (typeof callback === 'function') {
                     callback.call(this, form);
@@ -1286,22 +1286,22 @@ function checkValueLength(target, minLength, maxLength, lbl, form, config) {
         if (value.length < minLength) {
             showErrorMessage(form, config, lbl + ' must be at least ' + minLength + ' characters');
             showErrorField(target);
-            
+
             return false;
         }
     }
 
     if (maxLength && isNumber(maxLength)) {
         flog('[jquery.forms] Check max length: ' + maxLength);
-        
+
         if (value.length > maxLength) {
             showErrorMessage(form, config, lbl + ' must be no more then ' + minLength + ' characters');
             showErrorField(target);
-            
+
             return false;
         }
     }
-    
+
     return true;
 }
 
@@ -1348,19 +1348,19 @@ function checkExactLength(target, length, lbl, form, config) {
  */
 function checkOneOf(target1, target2, message, form, config) {
     flog('[jquery.forms] checkOneOf', target1, target2, message, form, config);
-    
+
     target1 = ensure$Object(target1);
     target2 = ensure$Object(target2);
     if (!form) {
         form = target.closest('form');
     }
-    
+
     if (target1.val() || target2.val()) {
         return true;
     } else {
         showErrorField(target1);
         showErrorMessage(form, config, message);
-        
+
         return false
     }
 }
@@ -1374,18 +1374,18 @@ function checkOneOf(target1, target2, message, form, config) {
  */
 function checkNumeric(target, form, config) {
     flog('[jquery.forms] checkNumeric', target, form, config)
-    
+
     target = ensure$Object(target);
     if (!form) {
         form = target.closest('form');
     }
-    
+
     var value = target.val();
     if (value) {
         if (!isNumber(value)) {
             showErrorField(target);
             showErrorMessage(form, config, 'Please enter only numeric digits');
-            
+
             return false;
         } else {
             return true;
@@ -1434,7 +1434,7 @@ function checkRadio(radioName, form, config) {
 
     var radios = form.find('input:radio[name=' + radioName + ']');
     var checkedRadio = radios.filter(':checked');
-    
+
     if (checkedRadio.length === 0) {
         showErrorField(radios);
         showErrorMessage(form, config, 'Please select a value for ' + radioName);
