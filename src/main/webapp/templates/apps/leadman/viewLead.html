@@ -156,6 +156,7 @@
                                     <li role="presentation"><a href="#company" aria-controls="company" role="tab" data-toggle="tab">Company</a></li>
                                     <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a></li>
                                     <li role="presentation"><a href="#tasks" aria-controls="tasks" role="tab" data-toggle="tab">Tasks</a></li>
+                                    <li role="presentation"><a href="#files" aria-controls="files" role="tab" data-toggle="tab">Files</a></li>
                                 </ul>
                                 <div class="tab-content">
                                     <div id="details" role="tabpanel" class="tab-pane fade active in">
@@ -356,6 +357,40 @@
                                         </div>
                                     </div>
 
+                                    <div id="files" role="tabpanel" class="tab-pane fade">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center">Type</th>
+                                                    <th>Name</th>
+                                                    <th></th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                #foreach($file in $page.children.ofType.leadFile)
+                                                <tr>
+                                                    <td class="text-center">
+                                                        #if($file.is('audio'))
+                                                        <i class="fa fa-2x fa-file-audio-o"></i>
+                                                        #end
+                                                    </td>
+                                                    <td>$file.name</td>
+                                                    <td>
+                                                        #if($file.is('audio'))
+                                                        <audio class="lead-audio-file" id="audio_$file.hash" src="$file.name"></audio>
+                                                        <span class="lead-audio-duration"></span>
+                                                        <button type="button" data-id="audio_$file.hash" class="btn btn-success play-audio"><i class="fa fa-play"></i></button>
+                                                        #end
+                                                    </td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                                                    </td>
+                                                </tr>
+                                                #end
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
