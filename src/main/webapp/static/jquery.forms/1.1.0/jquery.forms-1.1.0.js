@@ -1057,7 +1057,7 @@ function checkSimpleChars(form, config) {
         if (shouldCheck) {
             var val = input.val();
 
-            if (val.length === 0 || !checkSimpleValue(val)) {
+            if (val.length > 0 && !checkSimpleValue(val)) {
                 flog('[jquery.forms] Simple chars field is invalid', input);
 
                 errorFields.push(input);
@@ -1094,7 +1094,7 @@ function checkReallySimpleChars(form, config) {
         if (shouldCheck) {
             var val = input.val();
 
-            if (val.length === 0 || !checkReallySimpleValue(val)) {
+            if (val.length > 0 && !checkReallySimpleValue(val)) {
                 flog('[jquery.forms] Really simple chars field is invalid', input);
 
                 errorFields.push(input);
@@ -1151,7 +1151,7 @@ function checkNumbers(form, config) {
         if (shouldCheck) {
             var val = input.val();
 
-            if (val.length === 0 || !isNumber(val)) {
+            if (val.length > 0 && !isNumber(val)) {
                 flog('[jquery.forms] Numeric field is invalid', input);
 
                 errorFields.push(input);
@@ -1189,7 +1189,7 @@ function checkHrefs(form, config) {
         if (shouldCheck) {
             var val = input.val();
 
-            if (val.length === 0 || !pattern.test(val)) {
+            if (val.length > 0 && !pattern.test(val)) {
                 flog('[jquery.forms] Href field is invalid', input);
 
                 errorFields.push(input);
