@@ -1,4 +1,4 @@
-<div class="col-md-9 col-offset-md-3">
+<div class="col-md-9 col-md-offset-3">
 #set($providers = $applications.oauth.loginProviders)
 #foreach($p in $providers)
 <a href="$applications.oauth.getAuthoriseHref($p.providerId)" class="btn btn-success"  style="text-transform: capitalize">
