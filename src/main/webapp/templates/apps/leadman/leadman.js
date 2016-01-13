@@ -270,37 +270,52 @@ function initNewQuickLeadForm() {
         var input = audio_context.createMediaStreamSource(stream);
         recorder = new Recorder(input);
         flog('Recording init complete');
+        recorder = null;
+        audio_context.close();
 
-        modal.on('click', '#recordMemo', function (e) {
-            e.preventDefault();
+    }, function (e) {
+        flog('No live audio input: ' + e, e);
+        $('.voiceMemo', form).remove();
+    });
 
-            var btn = $(this);
-            if (btn.hasClass('btn-success')) { // Not Recording
+    modal.on('click', '#recordMemo', function (e) {
+        e.preventDefault();
+
+        var btn = $(this);
+        if (btn.hasClass('btn-success')) { // Not Recording
+            audio_context = new AudioContext();
+            navigator.getUserMedia({audio: true}, function (stream) {
+                var input = audio_context.createMediaStreamSource(stream);
+                recorder = new Recorder(input);
+
                 recorder && recorder.record();
                 btn.removeClass('btn-success').addClass('btn-danger');
                 formData = null;
                 $('.audio-rec', form).empty();
                 $('.audio-rec', form).hide();
                 $('.recording', modal).show();
-            } else { // Recording
-                recorder && recorder.stop();
-                recorder && recorder.exportWAV(function (blob) {
-                    var url = URL.createObjectURL(blob);
+            }, function (e) {
+                flog('No live audio input: ' + e, e);
+                $('.voiceMemo', form).remove();
+            });
+        } else { // Recording
+            recorder && recorder.stop();
+            recorder && recorder.exportWAV(function (blob) {
+                var url = URL.createObjectURL(blob);
 
-                    $('.audio-rec', form).html('<audio controls="true" src="' + url + '"></audio>');
-                    $('.audio-rec', form).show();
-                    flog('Audio URL', url);
-                    recorder.clear();
-                    formData = new FormData();
-                    formData && formData.append('recording', blob, 'recording_' + (new Date()).getTime() + '.wav');
-                });
-                btn.removeClass('btn-danger').addClass('btn-success');
-                $('.recording', modal).hide();
-            }
-        });
-    }, function (e) {
-        flog('No live audio input: ' + e, e);
-        $('.voiceMemo', form).remove();
+                $('.audio-rec', form).html('<audio controls="true" src="' + url + '"></audio>');
+                $('.audio-rec', form).show();
+                flog('Audio URL', url);
+                recorder.clear();
+                formData = new FormData();
+                formData && formData.append('recording', blob, 'recording_' + (new Date()).getTime() + '.wav');
+
+                recorder = null;
+                audio_context.close();
+            });
+            btn.removeClass('btn-danger').addClass('btn-success');
+            $('.recording', modal).hide();
+        }
     });
 
     modal.on('hidden.bs.modal', function (e) {
