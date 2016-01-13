@@ -100,11 +100,15 @@
                 <tr>
                     <td style='vertical-align: top'>Send attempts</td>
                     <td>
+                        #if( $page.sendAttempts.size() > 0 )
                         <ul>
                             #foreach($attempt in $page.sendAttempts)
                             <li>$!attempt.status, at $attempt.statusDate</li>
                             #end
                         </ul>
+                        #else
+                        No send attempts
+                        #end
                     </td>
                 </tr>
             </table>
