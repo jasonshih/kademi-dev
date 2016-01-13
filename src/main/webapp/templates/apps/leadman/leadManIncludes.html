@@ -114,7 +114,6 @@
                         <div class="col-md-5">
                             <input type="text" name="surName" id="newUserSurName" class="form-control" placeholder="Surname" />
                         </div>
-
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-3" for="newUserEmail">Contact</label>
@@ -306,6 +305,49 @@
     </div><!-- /.modal-dialog -->
 </div>
 
+<div class="modal fade" id="newQuickLeadModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="">Enter a new lead</h4>
+            </div>
+            <form method="post" action="" class="form-horizontal" enctype="multipart/form-data">
+                <input type="hidden" name="quickLead"/>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="newUserNickName">Image</label>
+                        <div class="col-md-9">
+                            <input type="file" name="image" class="form-control" accept="image/*" capture="camera"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group voiceMemo">
+                        <label class="control-label col-md-3" for="newUserNickName">Voice Memo</label>
+                        <div class="col-md-9">
+                            <button id="recordMemo" type="button" class="btn btn-sm btn-success"><i class="fa fa-2x fa-microphone"></i></button>
+                            <span class="recording" style="display: none;">Recording...</span>
+                            <span class="audio-rec" style="display: none;"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="notes">Notes</label>
+                        <div class="col-md-9">
+                            <textarea name="notes" class="form-control" style="height: 100px" placeholder="Notes"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" data-dismiss="modal" type="button">Cancel</button>
+
+                    <button class="btn btn-primary" type="submit">Upload</button>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
 #end
 
 
@@ -351,18 +393,18 @@
         </p>
         #end
         #if( $lead.profile )
-            #if( $lead.profile.email )
-                <p>
-                    <i aria-hidden="true" class="fa fa-envelope"></i>
-                    $lead.profile.email
-                </p>
-            #end
-            #if( $lead.profile.phone )
-            <p>
-                <i aria-hidden="true" class="fa fa-mobile"></i>
-                $lead.profile.phone
-            </p>
-            #end
+        #if( $lead.profile.email )
+        <p>
+            <i aria-hidden="true" class="fa fa-envelope"></i>
+            $lead.profile.email
+        </p>
+        #end
+        #if( $lead.profile.phone )
+        <p>
+            <i aria-hidden="true" class="fa fa-mobile"></i>
+            $lead.profile.phone
+        </p>
+        #end
         #end
 
         <div class="lead">

@@ -4,6 +4,7 @@ $(function () {
     jQuery.timeago.settings.allowFuture = true;
 
     initNewLeadForm();
+    initNewQuickLeadForm();
     initNewContactForm();
     initNewNoteForm();
     initTakeTasks();
@@ -18,6 +19,9 @@ $(function () {
     initTopNavSearch();
     initOrgSearch();
     initProfileSearch();
+    initGpsTracking();
+    initAudioPlayer();
+    initDeleteFile();
 
 
     // Clear down modals when closed
@@ -238,6 +242,123 @@ function initNewLeadForm() {
     form.find("button").click(function (e) {
         form.find(".clicked").removeClass("clicked");
         $(e.target).closest("a, button").addClass("clicked");
+    });
+}
+
+function initNewQuickLeadForm() {
+    var modal = $('#newQuickLeadModal');
+    var form = modal.find('form');
+    var formData = null;
+
+    $('body').on('click', '.createQuickLead', function (e) {
+        e.preventDefault();
+        var funnelName = $(this).attr("href");
+
+        modal.find('input[name=quickLead]').val(funnelName);
+        formData = new FormData();
+
+        modal.modal('show');
+    });
+
+    window.AudioContext = window.AudioContext || window.webkitAudioContext;
+    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
+    window.URL = window.URL || window.webkitURL;
+    var audio_context = new AudioContext();
+    var recorder = null;
+
+    navigator.getUserMedia({audio: true}, function (stream) {
+        var input = audio_context.createMediaStreamSource(stream);
+        recorder = new Recorder(input);
+        flog('Recording init complete');
+        recorder = null;
+        audio_context.close();
+
+    }, function (e) {
+        flog('No live audio input: ' + e, e);
+        $('.voiceMemo', form).remove();
+    });
+
+    modal.on('click', '#recordMemo', function (e) {
+        e.preventDefault();
+
+        var btn = $(this);
+        if (btn.hasClass('btn-success')) { // Not Recording
+            audio_context = new AudioContext();
+            navigator.getUserMedia({audio: true}, function (stream) {
+                var input = audio_context.createMediaStreamSource(stream);
+                recorder = new Recorder(input);
+
+                recorder && recorder.record();
+                btn.removeClass('btn-success').addClass('btn-danger');
+                formData = null;
+                $('.audio-rec', form).empty();
+                $('.audio-rec', form).hide();
+                $('.recording', modal).show();
+            }, function (e) {
+                flog('No live audio input: ' + e, e);
+                $('.voiceMemo', form).remove();
+            });
+        } else { // Recording
+            recorder && recorder.stop();
+            recorder && recorder.exportWAV(function (blob) {
+                var url = URL.createObjectURL(blob);
+
+                $('.audio-rec', form).html('<audio controls="true" src="' + url + '"></audio>');
+                $('.audio-rec', form).show();
+                flog('Audio URL', url);
+                recorder.clear();
+                formData = new FormData();
+                formData && formData.append('recording', blob, 'recording_' + (new Date()).getTime() + '.wav');
+
+                recorder = null;
+                audio_context.close();
+            });
+            btn.removeClass('btn-danger').addClass('btn-success');
+            $('.recording', modal).hide();
+        }
+    });
+
+    modal.on('hidden.bs.modal', function (e) {
+        form.trigger('reset');
+        $('.audio-rec', form).empty();
+        $('.audio-rec', form).hide();
+    });
+
+    form.on('submit', function (e) {
+        e.preventDefault();
+
+        if (formData == null) {
+            formData = new FormData();
+        }
+
+        var images = $('input[name=image]', form)[0];
+        $.each(images.files, function (i, file) {
+            formData.append(images.name, file);
+        });
+
+        formData.append('notes', $('[name=notes]', form).val());
+        formData.append('quickLead', $('[name=quickLead]', form).val());
+
+        $.ajax({
+            type: 'POST',
+            url: '/leads/',
+            dataType: 'json',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (data, textStatus) {
+                flog('Success', data, textStatus);
+                if (data.status) {
+                    Msg.info('Saved new lead');
+                    modal.modal("hide");
+                } else {
+
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                flog('Error', textStatus, errorThrown);
+            }
+        });
     });
 }
 
@@ -641,5 +762,96 @@ function initProfileSearch() {
         form.find('input[name=surName]').val(sug.surName);
         form.find('input[name=email]').val(sug.email);
         form.find('input[name=phone]').val(sug.phone);
+    });
+}
+
+function initGpsTracking() {
+    if (navigator.geolocation) {
+        navigator.geolocation.watchPosition(function (position) {
+            flog(position.coords.latitude, position.coords.longitude);
+        }, function () {
+
+        });
+    } else {
+        flog('GeoLocation not supported');
+    }
+}
+
+function initAudioPlayer() {
+    $('#files').on('click', '.play-audio', function (e) {
+        e.preventDefault();
+
+        var btn = $(this);
+        var pId = btn.data('id');
+
+        var player = $('#' + pId);
+        var playerDom = player[0];
+
+        if (playerDom.paused) {
+            $('.lead-audio-file').trigger('pause');
+            playerDom.play();
+        } else {
+            playerDom.pause();
+        }
+    });
+
+    $('.lead-audio-file').on('playing', function (e) {
+        var player = $(this);
+        var td = player.closest('td');
+        var btn = td.find('.play-audio');
+
+        btn.find('i').removeClass('fa-play').addClass('fa-pause');
+    });
+
+    $('.lead-audio-file').on('pause', function (e) {
+        var player = $(this);
+        var td = player.closest('td');
+        var btn = td.find('.play-audio');
+
+        btn.find('i').removeClass('fa-pause').addClass('fa-play');
+    });
+
+    $('.lead-audio-file').on('timeupdate', function (e) {
+        var player = $(this);
+        var td = player.closest('td');
+        var span = td.find('.lead-audio-duration');
+        span.html(formatSecondsAsTime(this.currentTime) + '/' + formatSecondsAsTime(this.duration));
+    });
+
+    /* Populate all players with their time */
+    var audioFiles = $('.lead-audio-file');
+    audioFiles.on('loadedmetadata', function () {
+        var player = $(this);
+        var td = player.closest('td');
+        var span = td.find('.lead-audio-duration');
+        span.html(formatSecondsAsTime(this.currentTime) + '/' + formatSecondsAsTime(this.duration));
+    });
+}
+
+function formatSecondsAsTime(secs, format) {
+    var hr = Math.floor(secs / 3600);
+    var min = Math.floor((secs - (hr * 3600)) / 60);
+    var sec = Math.floor(secs - (hr * 3600) - (min * 60));
+
+    if (min < 10) {
+        min = "0" + min;
+    }
+    if (sec < 10) {
+        sec = "0" + sec;
+    }
+
+    return min + ':' + sec;
+}
+
+function initDeleteFile() {
+    $('#files').on('click', '.btn-delete-file', function (e) {
+        e.preventDefault();
+
+        var btn = $(this);
+        var tr = btn.closest('tr');
+        var fname = btn.data('fname');
+        confirmDelete(fname, fname, function () {
+            tr.remove();
+        });
     });
 }
