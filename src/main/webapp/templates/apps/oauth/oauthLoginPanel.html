@@ -2,7 +2,8 @@
 #if( $details )
 <h3>
     <i class="fa fa-${request.params.providerId}"></i>
-    Register with ${request.params.providerId} as $applications.oauth.remoteProfileDetailsFromRequest.get(${request.params.providerId}).displayName
+    #set( $displayNamePath = $applications.oauth.loginProviders.get(${request.params.providerId}).displayNamePath )
+    Register with ${request.params.providerId} as $applications.oauth.remoteProfileDetailsFromRequest.get(${request.params.providerId}).get($displayNamePath)
 </h3>
     <input type="hidden" name="remoteProviderId" value="${request.params.providerId}"/>
     <input type="hidden" name="remoteProfileDetails" value=""/>
@@ -25,13 +26,37 @@
     $(function () {
         if (oauthDetails) {
             var form = $("#registerForm");
-            flog("Found oauth details, populate registration form", form);
-            var email = oauthDetails.emails[0].value;
-            var name = oauthDetails.name;
+            flog("Found oauth detailsXX, populate registration form", oauthDetails);
+            var email = "";
+            var nickName = "";
+            var firstName = "";
+            var surName = "";
+            if( oauthDetails.emails ) {
+                email = oauthDetails.emails[0].value;
+            } else if( oauthDetails.email ) {
+                email = oauthDetails.email;
+            }
+            if( oauthDetails.first_name ) {
+                firstName = oauthDetails.first_name;
+                surName = oauthDetails.last_name;
+                nickName = firstName;
+            } else if( oauthDetails.name ) {
+                if( oauthDetails.name.givenName ) {
+                    firstName = oauthDetails.name.givenName;
+                    surName = oauthDetails.name.familyName;
+                    nickName = firstName;
+                } else {
+                    nickName = oauthDetails.name;
+                }
+            }
+            if( oauthDetails.displayName ) {
+                nickName = oauthDetails.displayName;
+            }
+            flog("Found oauth values", email, firstName, surName, nickName);
             form.find("input[name=email]").val(email);
-            form.find("input[name=firstName]").val(name.givenName);
-            form.find("input[name=surName]").val(name.familyName);
-            form.find("input[name=nickName]").val(oauthDetails.displayName);
+            form.find("input[name=firstName]").val(firstName);
+            form.find("input[name=surName]").val(surName);
+            form.find("input[name=nickName]").val(nickName);
             form.find("input[name=password],input[name=confirmPassword]").removeClass("required").closest(".form-group").hide();
 
             form.find("input[name=remoteProfileDetails]").val(JSON.stringify(oauthDetails));
