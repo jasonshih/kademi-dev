@@ -52,12 +52,13 @@
             if( oauthDetails.displayName ) {
                 nickName = oauthDetails.displayName;
             }
+
             flog("Found oauth values", email, firstName, surName, nickName);
             form.find("input[name=email]").val(email);
             form.find("input[name=firstName]").val(firstName);
             form.find("input[name=surName]").val(surName);
             form.find("input[name=nickName]").val(nickName);
-            form.find("input[name=password],input[name=confirmPassword]").removeClass("required").closest(".form-group").hide();
+            form.find("input[name=password],input[name=confirmPassword]").removeClass("required").addClass('required-if-visible').prop('disabled', true).closest(".form-group").hide();
 
             form.find("input[name=remoteProfileDetails]").val(JSON.stringify(oauthDetails));
         }

@@ -1,5 +1,5 @@
 function initRegister(afterRegisterHref) {
-    log('init labels')
+    log('init labels');
     var form = $('#registerForm');
     var lastTabIndex = 0;
     $('#registerForm label.collapse').each(function (i, n) {
