@@ -581,7 +581,7 @@
                                 #foreach($app in $apps )
                                 <tr data-isCore="$app.core">
                                     <td class="CheckBoxWrapper">
-                                        #if( !$app.core )
+                                        #if( !$app.core || !$app.enabled)
                                         $formatter.bsswitch("chk_${app.appId}", $app.appId, $app.enabled, $app.appId)
                                         <label for="chk_${app.appId}"></label>
                                         #end
