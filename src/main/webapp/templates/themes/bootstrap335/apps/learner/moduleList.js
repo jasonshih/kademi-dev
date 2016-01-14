@@ -1,4 +1,4 @@
-// loaded from /templates/themes/bootstrap320/apps/learner/moduleList.js
+// loaded from /templates/themes/bootstrap335/apps/learner/moduleList.js
 
 function initMyLearning() {
     flog("initMyLearning");
@@ -88,8 +88,8 @@ function initDropdownMix() {
     });
 }
 
-function propfindHref(href) {    
-    return href + '_DAV/PROPFIND?fields=href,name,milton:title,milton:available&where=milton:available';    
+function propfindHref(href) {
+    return href + '_DAV/PROPFIND?fields=href,name,milton:title,milton:available&where=milton:available';
     //return href + '_DAV/PROPFIND?fields=href,name,milton:title,iscollection&where=iscollection';
 }
 
