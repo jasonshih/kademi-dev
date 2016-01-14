@@ -932,14 +932,11 @@ function checkValidPasswords(form, config) {
                 return checkPasswordsMatch(form, config, input);
             }
         } else {
-            flog('[jquery.forms] Password field is invalid');
-            input.attr('error-message', config.passwordErrorMessage);
-
             return {
-                password: false,
-                confirmPassword: false,
-                errorFields: [input]
-            };
+                password: true,
+                confirmPassword: true,
+                errorFields: []
+            }
         }
     } else {
         return {
