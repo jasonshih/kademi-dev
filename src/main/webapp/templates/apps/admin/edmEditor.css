@@ -1,0 +1,5 @@
+﻿#snippets-list {
+    height: calc(100% - 40px);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
