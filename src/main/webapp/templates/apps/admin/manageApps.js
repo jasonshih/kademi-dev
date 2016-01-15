@@ -68,7 +68,8 @@ function setEnabled(appId, isEnabled, success, chk) {
             chk.prop('disabled', false);
             flog("response", data);
             if (!data.status) {
-                Msg.error("Failed to set status: " + data.mssages);
+                Msg.error("Failed to set status: " + data.messages);
+                chk.bootstrapSwitch('state', !isEnabled);
                 return;
             }
             success(data);
