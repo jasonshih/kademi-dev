@@ -20,6 +20,14 @@ function initRegisterForms(afterRegisterHref, callback) {
     var registerForm = $('#registerForm');
     log('initRegisterForms - bootstrap335', registerForm);
 
+    var params = {};
+    for (var a in window.location.search.substr(1).split("&")) {
+        var t = window.location.search.substr(1).split("&")[a].split("=");
+        params[t[0]] = t[1] || null;
+    }
+
+    var isOauth = params.hasOwnProperty('oauth');
+
     registerForm.forms({
         validationFailedMessage: 'Please enter your details below.',
         callback: function (resp, form) {
@@ -27,14 +35,18 @@ function initRegisterForms(afterRegisterHref, callback) {
                 showPendingMessage();
             } else {
                 log('created account ok, logging in...', resp, form);
-                var userName = form.find('input[name=email]').val();
-                userName = userName.toLowerCase();
-                var password = form.find('input[name=password]').val();
-                doLogin(userName, password, {
-                    afterLoginUrl: afterRegisterHref,
-                    urlSuffix: '/.dologin',
-                    loginCallback: callback
-                }, registerForm);
+                if (isOauth) {
+                    window.location.href = afterRegisterHref;
+                } else {
+                    var userName = form.find('input[name=email]').val();
+                    userName = userName.toLowerCase();
+                    var password = form.find('input[name=password]').val();
+                    doLogin(userName, password, {
+                        afterLoginUrl: afterRegisterHref,
+                        urlSuffix: '/.dologin',
+                        loginCallback: callback
+                    }, registerForm);
+                }
             }
         }
     });
