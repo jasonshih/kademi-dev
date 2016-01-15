@@ -27,21 +27,16 @@ function initContentEditorPage(fileName) {
 }
 
 function initKEditor(body) {
-    var themeCssFiles = [];
-    themeCssFiles.push('/theme/assets/plugins/bootstrap/css/bootstrap.min.css');
-    themeCssFiles.push('/theme/assets/plugins/bootstrap/css/bootstrap-ckeditor.css');
-
     $('#content-area').keditor({
         ckeditor: {
             skin: editorSkin,
             allowedContent: true, // DISABLES Advanced Content Filter. This is so templates with classes are allowed through
-            contentsCss: themeCssFiles, // mainCssFile,
             bodyId: 'editor',
             templates_files: [templatesPath],
             templates_replaceContent: false,
             toolbarGroups: toolbarSets['Default'],
-            extraPlugins: 'embed_video,fuse-image,sourcedialog,onchange',
-            removePlugins: standardRemovePlugins + ',autogrow',
+            extraPlugins: 'embed_video,fuse-image,sourcedialog',
+            removePlugins: standardRemovePlugins + ',autogrow,magicline',
             enterMode: 'P',
             forceEnterMode: true,
             filebrowserBrowseUrl: '/static/fckfilemanager/browser/default/browser.html?Type=Image&Connector=/fck_connector.html',
@@ -56,9 +51,9 @@ function initKEditor(body) {
             minimumChangeMilliseconds: 100,
             stylesSet: 'myStyles:' + stylesPath
         },
-        snippetsUrl: '/static/keditor/1.0.0/snippets/snippets.html',
+        snippetsUrl: '/static/keditor/1.0.1/snippets/default/snippets.html',
         snippetsListId: 'snippets-list',
-        onContentChange: function (event) {
+        onContentChanged: function () {
             if (!body.hasClass('content-changed')) {
                 body.addClass('content-changed');
             }
