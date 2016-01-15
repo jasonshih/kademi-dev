@@ -29,7 +29,7 @@ function initWebsockets(orgId, txtQueryUser, txtQueryMessage) {
                 clearTimeout(appendTimer);
                 appendTimer = null;
             }
-            if (itemsToAppend.length > 200) {
+            if (itemsToAppend.length > 50) {
                 appendItems();
             } else {
                 appendTimer = setTimeout(appendItems, 250);
