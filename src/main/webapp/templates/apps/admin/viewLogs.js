@@ -29,7 +29,11 @@ function initWebsockets(orgId, txtQueryUser, txtQueryMessage) {
                 clearTimeout(appendTimer);
                 appendTimer = null;
             }
-            appendTimer = setTimeout(appendItems, 250);
+            if (itemsToAppend.length > 200) {
+                appendItems();
+            } else {
+                appendTimer = setTimeout(appendItems, 250);
+            }
         };
 
         flog('done initWebsockets');
@@ -57,7 +61,7 @@ function processReceivedLog(c, filterMsg, filterUser) {
     var labelType = c.level.toLowerCase();
 
     if ((filterMsg === '' || c.message.toLowerCase().contains(filterMsg))
-    && (filterUser == '' || c.userName.toLowerCase().contains(filterUser))) {
+            && (filterUser == '' || c.userName.toLowerCase().contains(filterUser))) {
         if (labelType == 'error') {
             labelType = 'danger';
         } else if (labelType == 'warn') {
@@ -67,23 +71,23 @@ function processReceivedLog(c, filterMsg, filterUser) {
         }
 
         var row = $(
-            '<div class="' + labelType + ' col-row clearfix">' +
-            '    <div class="col-lvl"><span class="label label-' + labelType + '" >' + c.level + '</span></div>' +
-            '    <div class="col-user"><a target="_blank" class="userName" href="' + c.userHref + '">' + c.userName + '</a></div>' +
-            '    <div class="col-msg"></div>' +
-            '    <div class="col-date"><abbr title="' + dt.format(moment.ISO_8601) + '" class="timeago">' + dt.format() + '</abbr></div>' +
-            '</div>'
-        );
+                '<div class="' + labelType + ' col-row clearfix">' +
+                '    <div class="col-lvl"><span class="label label-' + labelType + '" >' + c.level + '</span></div>' +
+                '    <div class="col-user"><a target="_blank" class="userName" href="' + c.userHref + '">' + c.userName + '</a></div>' +
+                '    <div class="col-msg"></div>' +
+                '    <div class="col-date"><abbr title="' + dt.format(moment.ISO_8601) + '" class="timeago">' + dt.format() + '</abbr></div>' +
+                '</div>'
+                );
         row.find('.col-msg').text(c.message);
 
         itemsToAppend.push(row);
 
         if (c.callstack !== null && c.callstack.length > 0) {
             row = $(
-                '<div class="col-row clearfix no-bordered">' +
-                '   <div class="causes"></div>' +
-                '</div>'
-            );
+                    '<div class="col-row clearfix no-bordered">' +
+                    '   <div class="causes"></div>' +
+                    '</div>'
+                    );
 
             var ul = $('<ul />');
             $.each(c.callstack, function (i, n) {
