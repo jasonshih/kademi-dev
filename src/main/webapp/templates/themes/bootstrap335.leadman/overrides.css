@@ -67,3 +67,11 @@ html body .fa {
 .tt-suggestion.tt-cursor {
     background-color: #ccc;
 }
+
+.navbar .navbar-toggle {
+    border-color: #c5cae9;
+}
+
+.navbar-toggle .icon-bar {
+    background-color: #c5cae9;
+}
