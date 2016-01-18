@@ -806,3 +806,7 @@ body.opened-keditor-snippets #keditor-snippets-container {
   margin: 5px 0 !important;
   float: none !important;
 }
+.keditor-section.ui-sortable-helper {
+  background: #fff !important;
+  opacity: 0.5;
+}
