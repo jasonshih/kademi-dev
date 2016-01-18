@@ -35,24 +35,25 @@ function processFileBody() {
     var edmStyle = $('#edm-style');
     var defaultStyle = edmStyle.html();
     var savedStyle  = edmHtml.find('style').html();
-    var tdWrapper = edmHtml.find('td#edm-wrapper-td');
-    var tdBody = edmHtml.find('td#edm-body-td');
 
     if (savedStyle && savedStyle.length > 0 && savedStyle !== defaultStyle) {
         edmStyle.html(savedStyle);
     }
-    edmBody.html(edmHtml.find('td#edm-body-td').html())
+    edmBody.html(edmHtml.find('td#edm-body-td').html());
 
-    $('#edm-background').val(tdWrapper.css('background-color') || '');
-    $('#edm-padding-top').val(tdWrapper.css('padding-top') || '');
-    $('#edm-padding-bottom').val(tdWrapper.css('padding-bottom') || '');
-    $('#edm-padding-left').val(tdWrapper.css('padding-left') || '');
-    $('#edm-padding-right').val(tdWrapper.css('padding-right') || '');
-    $('#edm-body-background').val(tdBody.css('background-color') || '');
-    $('#edm-body-padding-top').val(tdBody.css('padding-top') || '');
-    $('#edm-body-padding-bottom').val(tdBody.css('padding-bottom') || '');
-    $('#edm-body-padding-left').val(tdBody.css('padding-left') || '');
-    $('#edm-body-padding-right').val(tdBody.css('padding-right') || '');
+    var tdWrapper = edmHtml.find('td#edm-wrapper-td');
+    $('#edm-background').val(tdWrapper.css('background-color') || '#fafafa');
+    $('#edm-padding-top').val(tdWrapper.css('padding-top') || '20px');
+    $('#edm-padding-bottom').val(tdWrapper.css('padding-bottom') || '20px');
+    $('#edm-padding-left').val(tdWrapper.css('padding-left') || '20px');
+    $('#edm-padding-right').val(tdWrapper.css('padding-right') || '20px');
+
+    var tdBody = edmHtml.find('td#edm-body-td');
+    $('#edm-body-background').val(tdBody.css('background-color') || '#ffffff');
+    $('#edm-body-padding-top').val(tdBody.css('padding-top') || '10px');
+    $('#edm-body-padding-bottom').val(tdBody.css('padding-bottom') || '10px');
+    $('#edm-body-padding-left').val(tdBody.css('padding-left') || '10px');
+    $('#edm-body-padding-right').val(tdBody.css('padding-right') || '10px');
 }
 
 function initKEditor(body) {
