@@ -4,7 +4,9 @@ function initEdmEditorPage(fileName) {
     flog('initEdmEditorPage', fileName);
     var body = $(document.body);
 
+    processFileBody();
     initKEditor(body);
+    initSettingPanel();
     initBtns(body, fileName);
     initSnippetsToggler(body);
     Msg.iconMode = 'fa';
@@ -27,17 +29,58 @@ function initEdmEditorPage(fileName) {
     hideLoadingIcon();
 }
 
+function processFileBody() {
+    var edmBody = $('#edm-body');
+    var edmHtml = $('<div />').html($('#edm-html').html());
+    var edmStyle = $('#edm-style');
+    var defaultStyle = edmStyle.html();
+    var savedStyle  = edmHtml.find('style').html();
+    var tdWrapper = edmHtml.find('td#edm-wrapper-td');
+    var tdBody = edmHtml.find('td#edm-body-td');
+
+    if (savedStyle && savedStyle.length > 0 && savedStyle !== defaultStyle) {
+        edmStyle.html(savedStyle);
+    }
+    edmBody.html(edmHtml.find('td#edm-body-td').html())
+
+    $('#edm-background').val(tdWrapper.css('background-color') || '');
+    $('#edm-padding-top').val(tdWrapper.css('padding-top') || '');
+    $('#edm-padding-bottom').val(tdWrapper.css('padding-bottom') || '');
+    $('#edm-padding-left').val(tdWrapper.css('padding-left') || '');
+    $('#edm-padding-right').val(tdWrapper.css('padding-right') || '');
+    $('#edm-body-background').val(tdBody.css('background-color') || '');
+    $('#edm-body-padding-top').val(tdBody.css('padding-top') || '');
+    $('#edm-body-padding-bottom').val(tdBody.css('padding-bottom') || '');
+    $('#edm-body-padding-left').val(tdBody.css('padding-left') || '');
+    $('#edm-body-padding-right').val(tdBody.css('padding-right') || '');
+}
+
 function initKEditor(body) {
-    $('#content-area').keditor({
+    $('#edm-body').keditor({
         ckeditor: {
             skin: editorSkin,
             allowedContent: true, // DISABLES Advanced Content Filter. This is so templates with classes are allowed through
             bodyId: 'editor',
             templates_files: [templatesPath],
             templates_replaceContent: false,
-            toolbarGroups: toolbarSets['Default'],
-            extraPlugins: 'embed_video,fuse-image,sourcedialog,onchange',
-            removePlugins: standardRemovePlugins + ',autogrow',
+            toolbarGroups: [
+                { name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
+                { name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
+                { name: 'editing', groups: [ 'find', 'selection', 'spellchecker', 'editing' ] },
+                { name: 'forms', groups: [ 'forms' ] },
+                { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+                { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
+                { name: 'links', groups: [ 'links' ] },
+                { name: 'insert', groups: [ 'insert' ] },
+                { name: 'styles', groups: [ 'styles' ] },
+                { name: 'colors', groups: [ 'colors' ] },
+                { name: 'tools', groups: [ 'tools' ] },
+                { name: 'others', groups: [ 'others' ] },
+                { name: 'about', groups: [ 'about' ] }
+            ],
+            extraPlugins: 'embed_video,fuse-image,sourcedialog',
+            removePlugins: 'table,magicline,tabletools',
+            removeButtons: 'Save,NewPage,Preview,Print,Templates,PasteText,PasteFromWord,Find,Replace,SelectAll,Scayt,Form,HiddenField,ImageButton,Button,Select,Textarea,TextField,Radio,Checkbox,Outdent,Indent,Blockquote,CreateDiv,Language,Table,HorizontalRule,Smiley,SpecialChar,PageBreak,Iframe,Styles,BGColor,Maximize,About,ShowBlocks,BidiLtr,BidiRtl,Flash,Image',
             enterMode: 'P',
             forceEnterMode: true,
             filebrowserBrowseUrl: '/static/fckfilemanager/browser/default/browser.html?Type=Image&Connector=/fck_connector.html',
@@ -54,6 +97,9 @@ function initKEditor(body) {
         },
         snippetsUrl: '/static/keditor/1.0.1/snippets/edm/snippets.html',
         snippetsListId: 'snippets-list',
+        onInitContent: function (contentArea) {
+            return contentArea.find('> table');
+        },
         onContentChanged: function () {
             if (!body.hasClass('content-changed')) {
                 body.addClass('content-changed');
@@ -62,12 +108,159 @@ function initKEditor(body) {
     });
 }
 
+function initSettingPanel() {
+    flog('initSettingPanel');
+
+    var settingPanel = $('#edm-setting');
+    settingPanel.niceScroll({
+        cursorcolor: '#999',
+        cursorwidth: 6,
+        railpadding: {
+            top: 0,
+            right: 0,
+            left: 0,
+            bottom: 0
+        },
+        cursorborder: '',
+        zindex: 9999
+    });
+
+    settingPanel.getNiceScroll().hide();
+
+    settingPanel.find('input').on('change', function () {
+        applySetting();
+    });
+
+    applySetting();
+}
+
+function applySetting() {
+    var edmBackground = $('#edm-background').val();
+    var edmPaddingTop = $('#edm-padding-top').val();
+    var edmPaddingBottom = $('#edm-padding-bottom').val();
+    var edmPaddingLeft = $('#edm-padding-left').val();
+    var edmPaddingRight = $('#edm-padding-right').val();
+
+    $('html').css('background-color', edmBackground);
+    $('#edm-area').css({
+        'padding-top': edmPaddingTop,
+        'padding-bottom': edmPaddingBottom,
+        'padding-left': edmPaddingLeft,
+        'padding-right': edmPaddingRight
+    });
+
+    var edmBodyBackground = $('#edm-body-background').val();
+    var edmBodyPaddingTop = $('#edm-body-padding-top').val();
+    var edmBodyPaddingBottom = $('#edm-body-padding-bottom').val();
+    var edmBodyPaddingLeft = $('#edm-body-padding-left').val();
+    var edmBodyPaddingRight = $('#edm-body-padding-right').val();
+
+    $('#edm-body').css({
+        'background-color': edmBodyBackground,
+        'padding-top': edmBodyPaddingTop,
+        'padding-bottom': edmBodyPaddingBottom,
+        'padding-left': edmBodyPaddingLeft,
+        'padding-right': edmBodyPaddingRight
+    })
+}
+
+function getEdmBody() {
+    var edmBody = $('#edm-body').keditor('getContent', false);
+
+    var edmBackground = $('#edm-background').val();
+    var edmPaddingTop = $('#edm-padding-top').val();
+    var edmPaddingBottom = $('#edm-padding-bottom').val();
+    var edmPaddingLeft = $('#edm-padding-left').val();
+    var edmPaddingRight = $('#edm-padding-right').val();
+    var styleTDWrapper = '';
+    var attributeTableWrapper = '';
+    if (edmBackground) {
+        styleTDWrapper += 'background-color: ' + edmBackground + ';';
+        attributeTableWrapper += ' bgcolor="' + edmBackground + '" ';
+    }
+    if (edmPaddingTop) {
+        styleTDWrapper += 'padding-top: ' + edmPaddingTop + ';';
+    }
+    if (edmPaddingBottom) {
+        styleTDWrapper += 'padding-bottom: ' + edmPaddingBottom + ';';
+    }
+    if (edmPaddingLeft) {
+        styleTDWrapper += 'padding-left: ' + edmPaddingLeft + ';';
+    }
+    if (edmPaddingRight) {
+        styleTDWrapper += 'padding-right: ' + edmPaddingRight + ';';
+    }
+
+    var edmBodyBackground = $('#edm-body-background').val();
+    var edmBodyPaddingTop = $('#edm-body-padding-top').val();
+    var edmBodyPaddingBottom = $('#edm-body-padding-bottom').val();
+    var edmBodyPaddingLeft = $('#edm-body-padding-left').val();
+    var edmBodyPaddingRight = $('#edm-body-padding-right').val();
+    var styleTDBody = '';
+    var attributeTableBody = '';
+    if (edmBodyBackground) {
+        styleTDBody += 'background-color: ' + edmBodyBackground + ';';
+        attributeTableBody += ' bgcolor="' + edmBodyBackground + '" ';
+    }
+    if (edmBodyPaddingTop) {
+        styleTDBody += 'padding-top: ' + edmBodyPaddingTop + ';';
+    }
+    if (edmBodyPaddingBottom) {
+        styleTDBody += 'padding-bottom: ' + edmBodyPaddingBottom + ';';
+    }
+    if (edmBodyPaddingLeft) {
+        styleTDBody += 'padding-left: ' + edmBodyPaddingLeft + ';';
+    }
+    if (edmBodyPaddingRight) {
+        styleTDBody += 'padding-right: ' + edmBodyPaddingRight + ';';
+    }
+
+    return (
+        '<table cellpadding="0" cellspacing="0" border="0" width="100%" id="edm-wrapper" ' + attributeTableWrapper +'>\n' +
+        '    <tbody>\n' +
+        '        <tr>\n' +
+        '            <td id="edm-wrapper-td" style="' + styleTDWrapper + '" align="center">\n' +
+        '                <table cellpadding="0" cellspacing="0" border="0" width="100%" id="edm-body" ' + attributeTableBody +' align="center">\n' +
+        '                    <tbody>\n' +
+        '                        <tr>\n' +
+        '                            <td id="edm-body-td" style="' + styleTDBody + '">\n' + edmBody + '</td>\n' +
+        '                        </tr>\n' +
+        '                    </tbody>\n' +
+        '                </table>\n' +
+        '            </td>\n' +
+        '        </tr>\n' +
+        '    </tbody>\n' +
+        '</table>\n'
+    );
+}
+
 function getEdmContent() {
-    var bodyContent = $('#content-area').keditor('getContent');
+    var edmContent =
+        '<!DOCTYPE HTML>\n' +
+        '<html>\n' +
+        '    <head>\n' +
+        '        <title>Kademi EDM Title</title>\n' +
+        '        <style type="text/css">\n' +
+        '            {{styleContent}}\n' +
+        '        </style>\n' +
+        '    </head>\n' +
+        '    <body>\n' +
+        '        <center>\n' +
+        '{{bodyContent}}\n' +
+        '        </center>\n' +
+        '    </body>\n' +
+        '</html>';
+    var edmContentData = {
+        styleContent: $('#edm-style').html().trim(),
+        bodyContent: getEdmBody()
+    };
 
+    for (var key in edmContentData) {
+        var regex = new RegExp('{{' + key + '}}', 'gi');
+        edmContent = edmContent.replace(regex, edmContentData[key]);
+    }
 
-
-    return bodyContent;
+    return edmContent;
 }
 
 function initBtns(body, fileName) {
@@ -94,6 +287,30 @@ function initBtns(body, fileName) {
                 hideLoadingIcon();
             }
         })
+    });
+
+    var settingPanel = $('#edm-setting');
+    var snippetsList = $('#snippets-list');
+
+    $('.btn-setting').on('click', function (e) {
+        e.preventDefault();
+
+        var btn = $(this);
+
+        if (btn.hasClass('active')) {
+            settingPanel.getNiceScroll().hide();
+            snippetsList.getNiceScroll().show();
+            settingPanel.removeClass('showed');
+            btn.removeClass('active');
+        } else {
+            settingPanel.getNiceScroll().show();
+            setTimeout(function () {
+                settingPanel.getNiceScroll().resize();
+            }, 300);
+            snippetsList.getNiceScroll().hide();
+            settingPanel.addClass('showed');
+            btn.addClass('active');
+        }
     });
 }
 
