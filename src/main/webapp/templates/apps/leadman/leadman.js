@@ -65,7 +65,7 @@ function initCloseDealModal() {
     closeDealModal.find("form").forms({
         callback: function (resp) {
             Msg.info('Deal marked as closed');
-            //window.location.reload();
+            closeDealModal.modal('hide');
         }
     });
 }
