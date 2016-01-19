@@ -82,18 +82,11 @@ function initKEditor(body) {
             extraPlugins: 'embed_video,fuse-image,sourcedialog',
             removePlugins: 'table,magicline,tabletools',
             removeButtons: 'Save,NewPage,Preview,Print,Templates,PasteText,PasteFromWord,Find,Replace,SelectAll,Scayt,Form,HiddenField,ImageButton,Button,Select,Textarea,TextField,Radio,Checkbox,Outdent,Indent,Blockquote,CreateDiv,Language,Table,HorizontalRule,Smiley,SpecialChar,PageBreak,Iframe,Styles,BGColor,Maximize,About,ShowBlocks,BidiLtr,BidiRtl,Flash,Image',
-            enterMode: 'P',
+            enterMode: CKEDITOR.ENTER_DIV,
             forceEnterMode: true,
             filebrowserBrowseUrl: '/static/fckfilemanager/browser/default/browser.html?Type=Image&Connector=/fck_connector.html',
             filebrowserUploadUrl: '/uploader/upload',
-            format_tags: 'p;h1;h2;h3;h4;h5;h6', // removed p2
-            format_p2: {
-                element: 'p',
-                attributes: {
-                    'class': 'lessSpace'
-                }
-            },
-            minimumChangeMilliseconds: 100,
+            format_tags: 'p;h1;h2;h3;h4;h5;h6',
             stylesSet: 'myStyles:' + stylesPath
         },
         snippetsUrl: '/static/keditor/1.0.1/snippets/edm/snippets.html',
@@ -249,6 +242,7 @@ function getEdmContent() {
         '        <center>\n' +
         '{{bodyContent}}\n' +
         '        </center>\n' +
+        '        <img src="http://$page.closest(\'website\').domainName${formatter.portString}/ack?i=$page.emailItem.id" height="1" width="1" alt="" />' +
         '    </body>\n' +
         '</html>';
     var edmContentData = {
