@@ -85,12 +85,6 @@ body.opened-keditor-snippets div.cke_float[id*="cke_keditor-section-"] {
 }
 
 #snippets-list {
-    z-index: 2;
-    background: #fff;
-    position: relative;
-}
-
-#snippets-list {
     height: calc(100% - 40px);
     overflow-y: auto;
     overflow-x: hidden;

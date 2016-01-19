@@ -240,7 +240,6 @@ function initFormDetailEmail() {
             flog('isEmailEnabled: ' + isEmailEnabled);
 
             if (isEmailEnabled) {
-                flog('=============', fromAddressStr)
                 if (fromAddressStr) {
                     if (!validateFuseEmail(fromAddressStr)) {
                         error++;
