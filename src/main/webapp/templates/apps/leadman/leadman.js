@@ -261,7 +261,10 @@ function initNewQuickLeadForm() {
     });
 
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
-    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
+    navigator.getUserMedia = (navigator.getUserMedia ||
+            navigator.webkitGetUserMedia ||
+            navigator.mozGetUserMedia ||
+            navigator.msGetUserMedia);
     window.URL = window.URL || window.webkitURL;
     var audio_context = new AudioContext();
     var recorder = null;
