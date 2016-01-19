@@ -9,7 +9,7 @@
  * @option {Object} ckeditor Configuration for CKEditor. See at http://docs.ckeditor.com/#!/api/CKEDITOR.options
  * @option {String} snippetsUrl Url to snippets file
  * @option {String} [snippetsListId="keditor-snippets-list"] Id of element which contains snippets. As default, value is "keditor-snippets-list" and KEditor will render snippets sidebar automatically. If you specific other id, only snippets will rendered and put into your element
- * @option {Function} onInitContent Method will be called when initializing content area. It must return array of jQuery objects which will be initialized as editable section in content area. By default, all first level sections under content area will be initialized.
+ * @option {Function} onInitContent Method will be called when initializing content area. It can return array of jQuery objects which will be initialized as editable section in content area. By default, all first level sections under content area will be initialized.
  * @option {Function} onInitSection Method will be called when initializing section after dropped snippet into content are. Arguments: section
  * @option {Function} onContentChanged Callback will be called when content is changed. Arguments: event
  * @option {Function} onSnippetDropped Callback will be called when snippet is dropped into content area. Arguments: event, newSection, droppedSnippet
@@ -302,14 +302,15 @@
 
             if (typeof options.onInitContent === 'function') {
                 var contentData = options.onInitContent(contentArea);
+                if (contentData && contentData.length > 0) {
+                    $.each(contentData, function () {
+                        var content = $(this);
+                        content.wrap('<section class="keditor-section"><section class="keditor-section-content"></section></section>');
 
-                $.each(contentData, function () {
-                    var content = $(this);
-                    content.wrap('<section class="keditor-section"><section class="keditor-section-content"></section></section>');
-
-                    var keditorSection = content.parent().parent();
-                    KEditor.initContentEditable(keditorSection, options);
-                });
+                        var keditorSection = content.parent().parent();
+                        KEditor.initContentEditable(keditorSection, options);
+                    });
+                }
             }
 
             body.on('click', function (e) {
