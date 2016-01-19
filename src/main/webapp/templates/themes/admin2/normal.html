@@ -351,6 +351,7 @@
                 initTheme(); // init the fuse extensions
                 try {
                     CKEDITOR.timestamp = null;
+                    // CKEDITOR.timestamp = new Date().getTime().toString(); // Force ckeditor reload all plugins (dev only)
                 } catch (e) {
                     flog("exception");
                 }

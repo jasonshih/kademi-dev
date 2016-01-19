@@ -2,7 +2,7 @@ var editorSkin = "bootstrapck";
 
 var toolbarSets = {};
 
-var standardExtraPlugins = "autogrow,embed_video,fuse-image,modal,bspanel,forms,bslayout2col,bslayout3col,onchange";
+var standardExtraPlugins = "autogrow,embed_video,embed_audio,fuse-image,modal,bspanel,forms,bslayout2col,bslayout3col,onchange";
 var standardRemovePlugins = "resize,image,save,newpage,preview,tliyoutube,image2,pbckcode,googledocs,language"
 var templatesPath =  '/static/editor/templates.js';
 var stylesPath = "/templates/themes/fuse/styles.js";
