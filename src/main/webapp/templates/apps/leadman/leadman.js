@@ -19,7 +19,6 @@ $(function () {
     initTopNavSearch();
     initOrgSearch();
     initProfileSearch();
-    initGpsTracking();
     initAudioPlayer();
     initDeleteFile();
 
@@ -258,6 +257,18 @@ function initNewQuickLeadForm() {
         formData = new FormData();
 
         modal.modal('show');
+
+        if (navigator.geolocation) {
+            navigator.geolocation.watchPosition(function (position) {
+                var geoTag = position.coords.latitude + ":" + position.coords.longitude;
+                flog('Got location', geoTag);
+                form.find('input[name=geoLocation]').val(geoTag);
+            }, function (err) {
+                flog('ERROR: ', err.code, err.message);
+            });
+        } else {
+            flog('GeoLocation not supported');
+        }
     });
 
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -269,17 +280,9 @@ function initNewQuickLeadForm() {
     var audio_context = new AudioContext();
     var recorder = null;
 
-    navigator.getUserMedia({audio: true}, function (stream) {
-        var input = audio_context.createMediaStreamSource(stream);
-        recorder = new Recorder(input);
-        flog('Recording init complete');
-        recorder = null;
-        audio_context.close();
-
-    }, function (e) {
-        flog('No live audio input: ' + e, e);
+    if (!navigator.getUserMedia) {
         $('.voiceMemo', form).remove();
-    });
+    }
 
     modal.on('click', '#recordMemo', function (e) {
         e.preventDefault();
@@ -341,6 +344,7 @@ function initNewQuickLeadForm() {
 
         formData.append('notes', $('[name=notes]', form).val());
         formData.append('quickLead', $('[name=quickLead]', form).val());
+        formData.append('geoLocation', $('[name=geoLocation]', form).val());
 
         $.ajax({
             type: 'POST',
@@ -786,18 +790,6 @@ function initProfileSearch() {
         form.find('input[name=email]').val(sug.email);
         form.find('input[name=phone]').val(sug.phone);
     });
-}
-
-function initGpsTracking() {
-    if (navigator.geolocation) {
-        navigator.geolocation.watchPosition(function (position) {
-            flog(position.coords.latitude, position.coords.longitude);
-        }, function () {
-
-        });
-    } else {
-        flog('GeoLocation not supported');
-    }
 }
 
 function initAudioPlayer() {
