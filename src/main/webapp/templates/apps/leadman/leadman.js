@@ -389,6 +389,7 @@ function initNewContactForm() {
 function initNewNoteForm() {
     var modal = $('#newNoteModal');
     var form = modal.find('form');
+    form.find('.newLeadForm').hide();
 
     $(".createNote").click(function (e) {
         e.preventDefault();
@@ -404,6 +405,19 @@ function initNewNoteForm() {
             }
             Msg.info('Created note');
             modal.modal("hide");
+        }
+    });
+
+    form.find('#note_newTask').on('change', function (e) {
+        var btn = $(this);
+        var checked = btn.is(':checked');
+
+        if (checked) {
+            form.find('.newLeadForm').show();
+            form.find('.required-if-shown').addClass('required');
+        } else {
+            form.find('.newLeadForm').hide();
+            form.find('.required-if-shown').removeClass('required');
         }
     });
 }

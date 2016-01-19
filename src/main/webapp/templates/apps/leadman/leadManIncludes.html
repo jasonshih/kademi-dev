@@ -162,7 +162,13 @@
                             <textarea name="newNote" class="form-control" style="height: 120px"></textarea>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="checkbox">
+                        <label for="note_newTask">
+                            <input type="checkbox" name="newTask" value="true" id="note_newTask" /> Create a new task
+                            <input type="hidden" value="false" name="newTask_checkbox" />
+                        </label>
+                    </div>
+                    <div class="row newLeadForm">
                         <div class="col-md-4">
                             <div class="input-group">
                                 <input type="text" class="form-control" name="title" placeholder="Next follow-up task" />
@@ -189,7 +195,7 @@
                         </div>
 
                         <div class="col-md-8">
-                            <textarea name="taskDescription" class="form-control required" style="height: 100px" placeholder="Describe the next follow-up task"></textarea>
+                            <textarea name="taskDescription" class="form-control required-if-shown" style="height: 100px" placeholder="Describe the next follow-up task"></textarea>
                         </div>
                     </div>
 
