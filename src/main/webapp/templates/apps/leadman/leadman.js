@@ -654,15 +654,21 @@ function doTopNavSearch(query, suggestionsWrapper, backdrop) {
                 for (var i = 0; i < resp.hits.hits.length; i++) {
                     var suggestion = resp.hits.hits[i];
                     var leadId = suggestion.fields.leadId[0];
-                    var email = suggestion.fields['profile.email'][0];
+                    var email = suggestion.fields['profile.email'] ? suggestion.fields['profile.email'][0] : (suggestion.fields['organisation.email'] ? suggestion.fields['organisation.email'][0] : '');
+                    var companyTitle = suggestion.fields['organisation.title'] ? suggestion.fields['organisation.title'][0] : '';
                     var firstName = suggestion.fields['profile.firstName'] ? suggestion.fields['profile.firstName'][0] : '';
                     var surName = suggestion.fields['profile.surName'] ? suggestion.fields['profile.surName'][0] : '';
+
+                    var a = firstName + ' ' + surName;
+                    if (a.trim().length < 1) {
+                        a = companyTitle;
+                    }
 
                     suggestionStr += '<li class="suggestion">';
                     suggestionStr += '    <a href="/leads/' + leadId + '">';
                     suggestionStr += '        <span class="email">' + email + '</span>';
-                    if (firstName || surName) {
-                        suggestionStr += '    <br /><small class="text-muted">' + firstName + ' ' + surName + '</small>';
+                    if (a) {
+                        suggestionStr += '    <br /><small class="text-muted">' + a + '</small>';
                     }
                     suggestionStr += '    </a>';
                     suggestionStr += '</li>';
