@@ -228,7 +228,6 @@ function initFormDetailEmail() {
     var form = $('form[name=frmDetails]');
 
     form.forms({
-        valiationMessageSelector: ".page-validation",
         validate: function () {
             var error = 0;
             var fromAddress = $('#fromAddress');
@@ -241,18 +240,19 @@ function initFormDetailEmail() {
             flog('isEmailEnabled: ' + isEmailEnabled);
 
             if (isEmailEnabled) {
+                flog('=============', fromAddressStr)
                 if (fromAddressStr) {
                     if (!validateFuseEmail(fromAddressStr)) {
                         error++;
                         showErrorField(fromAddress);
                     }
 
-                    if (replyToAddressStr && !validateFuseEmail(replyToAddressStr)) {
+                    if (replyToAddressStr && (!/@{.*}/.test(replyToAddressStr) && !validateFuseEmail(replyToAddressStr))) {
                         error++;
                         showErrorField(replyToAddress);
                     }
                 } else {
-                    if (!validateFuseEmail(replyToAddressStr)) {
+                    if (!/@{.*}/.test(replyToAddressStr) && !validateFuseEmail(replyToAddressStr)) {
                         error++;
                         showErrorField(replyToAddress);
                     }
