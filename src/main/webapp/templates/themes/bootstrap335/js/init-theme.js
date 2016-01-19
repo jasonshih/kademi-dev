@@ -32,7 +32,7 @@ function initTheme() {
     //initRotation();
     initPrintLink();
     initVideos();
-
+    initAudios();
     flog("initTheme: run page init functions", pageInitFunctions.length);
     $.each(pageInitFunctions, function (i, f) {
         log("run function" + i);
@@ -371,4 +371,33 @@ function buildJWPlayerContainer(count) {
     return $(c);
 }
 
+function doInitAudio(){
+    var images = $('img[data-kaudio]');
+    if (images.length === 0) {
+        return;
+    }
+    replaceImagesWithAudio(images);
+}
+
+function initAudios() {
+    log("initAudios");
+    doInitAudio();
+    $(document).on("pjaxComplete", function () {
+        doInitAudio();
+    });
+}
+function replaceImagesWithAudio(images) {
+    images.each(function (i, n) {
+        var img = $(n);
+        var src = img.attr("data-kaudio");
+        if (src) {
+            log("replaceImagesWithAudio: Using data-kaudio", src);
+            var audio = $('<audio controls><source src="'+src+'"></audio>');
+            audio.insertAfter(img);
+            img.hide();
+        } else {
+            log("replaceImagesWithAudio: audio not found", src);
+        }
+    });
+}
 /** End init-theme.js */
