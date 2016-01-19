@@ -97,69 +97,22 @@
             </div>
             <div class="container container-lg">
                 <div class="row">
-                    <div class="col-lg-3">
-                        <div class="panel">
-                            <div class="panel-heading no-shadow">
-                                <a class="btn btn-success createNote pull-right" href="$page.href">
-                                    <span class="fa fa-plus"></span>
-                                </a>
-                                Recent contacts
-                            </div>
-                            <div class="panel-body">
-                                #set( $notes = $page.notes )
-                                #if( $notes.size() > 0 )
-                                <ul class="list-block">
-                                    #foreach($note in $page.notes)
-                                    <li class="media">
-                                        <div class="pull-left">
-                                            <div class="point-pin"><a href=""><img src="/theme/images/user/05.jpg" alt="Image" class="media-object img-circle thumb32"></a>
-                                                <div class="point point-success point-lg"></div>
-                                            </div>
-                                        </div>
-                                        <div class="media-body">
-                                            <div class="media-heading">
-                                                <p>
-                                                    <a href="/users/$note.createdBy.name">$note.createdBy.formattedName</a>
-
-                                                    #if( $note.inbound )
-                                                    <small class="text-muted fa fa-arrow-left"></small>
-                                                    <small class="text-muted fa fa-${note.icon}"></small>
-                                                    #else
-                                                    <small class="text-muted fa fa-${note.icon}"></small>
-                                                    <small class="text-muted fa fa-arrow-right"></small>
-                                                    #end
-
-                                                </p>
-
-                                                <p>
-                                                    $note.notes
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    #end
-                                </ul>
-                                #else
-                                <p>
-                                    <span class="label label-warning">No contact with the lead yet</span>
-                                </p>
-                                #end
-                            </div>
-                        </div>
-                    </div>
                     <div class="col-lg-9">
                         <div class="panel">
                             <div class="panel-body">
                                 <ul role="tablist" class="nav nav-tabs">
-                                    <li role="presentation" class="active"><a href="#details" aria-controls="details" role="tab" data-toggle="tab">Details</a></li>
-                                    <li role="presentation"><a href="#activity" aria-controls="activity" role="tab" data-toggle="tab">Activity</a></li>
+                                    <li role="presentation" class="active"><a href="#activity" aria-controls="activity" role="tab" data-toggle="tab">Activity</a></li>
+                                    <li role="presentation"><a href="#details" aria-controls="details" role="tab" data-toggle="tab">Details</a></li>
                                     <li role="presentation"><a href="#company" aria-controls="company" role="tab" data-toggle="tab">Company</a></li>
                                     <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a></li>
-                                    <li role="presentation"><a href="#tasks" aria-controls="tasks" role="tab" data-toggle="tab">Tasks</a></li>
+                                    <li role="presentation"><a href="#notes" aria-controls="tasks" role="tab" data-toggle="tab">Notes</a></li>
                                     <li role="presentation"><a href="#files" aria-controls="files" role="tab" data-toggle="tab">Files</a></li>
                                 </ul>
                                 <div class="tab-content">
-                                    <div id="details" role="tabpanel" class="tab-pane fade active in">
+                                    <div id="activity" role="tabpanel" class="tab-pane fade active in">
+                                        #showTimeline($page.timelineItems)
+                                    </div>
+                                    <div id="details" role="tabpanel" class="tab-pane fade">
                                         <div class="form-horizontal">
                                             <div class="form-group">
                                                 <label class="control-label col-md-3">Estimated deal value:</label>
@@ -184,10 +137,6 @@
                                         <hr/>
 
                                         <textarea id="description" class="form-control" name="description" style="height: 400px">$!page.description</textarea>
-                                    </div>
-
-                                    <div id="activity" role="tabpanel" class="tab-pane fade">
-                                        #showTimeline($page.timelineItems)
                                     </div>
                                     <div id="profile" role="tabpanel" class="tab-pane fade">
                                         <h4 class="page-header">Contact information</h4>
@@ -305,58 +254,54 @@
                                             </form>
                                         </div>
                                     </div>
-                                    <div id="tasks" role="tabpanel" class="tab-pane fade">
-                                        <div class="task-item-list">
-                                            <div id="tasksList" role="tablist" aria-multiselectable="true" class="panel-group">
-                                                <div class="panel panel-default">
-                                                    #foreach($task in $page.children)
-                                                    <div id="headingOne" role="tab" class="panel-heading">
-                                                        <h4 class="panel-title clearfix task-item">
-                                                            <div class="pull-left">
-                                                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                                                    <span class="task-title">$task.title</span>
-                                                                </a>
-                                                            </div>
-                                                            <a href="$task.href" class="pull-left" data-target="#modalEditTask" data-toggle="modal">
-                                                                <span class="task-edit fa fa-pencil"></span>
-                                                            </a>
-                                                        </h4>
-                                                    </div>
-                                                    <div id="collapseOne" role="tabpanel" aria-labelledby="headingOne" class="panel-collapse collapse in">
-                                                        <div class="panel-body">
-                                                            #if( $task.is("open") )
-                                                            <div class="btn-group pull-right">
-                                                                <a class="btn btn-danger btn-lg btnCancelTask" title="Cancel task" href="$task.href">
-                                                                    <span class="fa fa-remove"></span>
-                                                                </a>
-                                                                <a href="$task.href" class="mr btn btn-success btn-lg" data-target="#modalEditTask" data-toggle="modal">
-                                                                    <span class="fa fa-check"></span>
-                                                                </a>
-                                                            </div>
-                                                            Due in <abbr title="$formatter.formatDateISO8601($task.dueDate)" class="timeago">$task.dueDate</abbr>
-                                                            #elseif( $task.is("canceled") )
-                                                            <span class="label label-warning">
-                                                                Canceled
-                                                            </span>
-                                                            -
-                                                            <abbr title="$formatter.formatDateISO8601($task.completedDate)" class="timeago">$task.completedDate</abbr>
-                                                            #else
-                                                            <span class="label label-success">
-                                                                Completed
-                                                            </span>
-                                                            <abbr title="$formatter.formatDateISO8601($task.completedDate)" class="timeago">$task.completedDate</abbr>
-                                                            #end
-
-                                                            -
-                                                            $task.taskDescription
+                                    <div id="notes" role="tabpanel" class="tab-pane fade">
+                                        <div class="panel-heading no-shadow">
+                                            <a class="btn btn-success createNote pull-right" href="$page.href">
+                                                <span class="fa fa-plus"></span>
+                                            </a>
+                                            Recent contacts
+                                        </div>
+                                        <div class="panel-body">
+                                            #set( $notes = $page.notes )
+                                            #if( $notes.size() > 0 )
+                                            <ul class="list-block">
+                                                #foreach($note in $page.notes)
+                                                <li class="media">
+                                                    <div class="pull-left">
+                                                        <div class="point-pin"><a href=""><img src="/theme/images/user/05.jpg" alt="Image" class="media-object img-circle thumb32"></a>
+                                                            <div class="point point-success point-lg"></div>
                                                         </div>
                                                     </div>
-                                                    #end
-                                                </div>
-                                            </div>
+                                                    <div class="media-body">
+                                                        <div class="media-heading">
+                                                            <p>
+                                                                <a href="/users/$note.createdBy.name">$note.createdBy.formattedName</a>
+
+                                                                #if( $note.inbound )
+                                                                <small class="text-muted fa fa-arrow-left"></small>
+                                                                <small class="text-muted fa fa-${note.icon}"></small>
+                                                                #else
+                                                                <small class="text-muted fa fa-${note.icon}"></small>
+                                                                <small class="text-muted fa fa-arrow-right"></small>
+                                                                #end
+
+                                                            </p>
+
+                                                            <p>
+                                                                $note.notes
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                #end
+                                            </ul>
+                                            #else
+                                            <p>
+                                                <span class="label label-warning">No contact with the lead yet</span>
+                                            </p>
+                                            #end
                                         </div>
                                     </div>
-
                                     <div id="files" role="tabpanel" class="tab-pane fade">
                                         <table class="table table-hover">
                                             <thead>
@@ -406,6 +351,57 @@
                                             </tbody>
                                         </table>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="task-item-list">
+                            <div id="tasksList" role="tablist" aria-multiselectable="true" class="panel-group">
+                                <div class="panel panel-default">
+                                    #foreach($task in $page.children)
+                                    <div id="headingOne" role="tab" class="panel-heading">
+                                        <h4 class="panel-title clearfix task-item">
+                                            <div class="pull-left">
+                                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                                    <span class="task-title">$task.title</span>
+                                                </a>
+                                            </div>
+                                            <a href="$task.href" class="pull-left" data-target="#modalEditTask" data-toggle="modal">
+                                                <span class="task-edit fa fa-pencil"></span>
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="collapseOne" role="tabpanel" aria-labelledby="headingOne" class="panel-collapse collapse in">
+                                        <div class="panel-body">
+                                            #if( $task.is("open") )
+                                            <div class="btn-group pull-right">
+                                                <a class="btn btn-danger btn-lg btnCancelTask" title="Cancel task" href="$task.href">
+                                                    <span class="fa fa-remove"></span>
+                                                </a>
+                                                <a href="$task.href" class="mr btn btn-success btn-lg" data-target="#modalEditTask" data-toggle="modal">
+                                                    <span class="fa fa-check"></span>
+                                                </a>
+                                            </div>
+                                            Due in <abbr title="$formatter.formatDateISO8601($task.dueDate)" class="timeago">$task.dueDate</abbr>
+                                            #elseif( $task.is("canceled") )
+                                            <span class="label label-warning">
+                                                Canceled
+                                            </span>
+                                            -
+                                            <abbr title="$formatter.formatDateISO8601($task.completedDate)" class="timeago">$task.completedDate</abbr>
+                                            #else
+                                            <span class="label label-success">
+                                                Completed
+                                            </span>
+                                            <abbr title="$formatter.formatDateISO8601($task.completedDate)" class="timeago">$task.completedDate</abbr>
+                                            #end
+
+                                            -
+                                            $task.taskDescription
+                                        </div>
+                                    </div>
+                                    #end
                                 </div>
                             </div>
                         </div>
