@@ -210,6 +210,45 @@
     </div><!-- /.modal-dialog -->
 </div>
 
+<div class="modal fade" id="editNoteModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog modal-lg ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="">Edit a note on a lead</h4>
+            </div>
+            <form method="post" action="" class="form-horizontal">
+                <input type="hidden" name="editNote"/>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <select name="action" class="form-control">
+                                <option value="">[Select what the note is for]</option>
+                                <option value="phone-false">Call to customer</option>
+                                <option value="phone-true">Call from customer</option>
+                                <option value="email-false">Email to customer</option>
+                                <option value="email-true">Email from customer</option>
+                                <option value="note-false">General note</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <textarea name="note" class="form-control" style="height: 120px"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+
+                    <button class="btn btn-primary" type="submit">Save note</button>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
 <div class="modal fade" id="modalEditTask" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">

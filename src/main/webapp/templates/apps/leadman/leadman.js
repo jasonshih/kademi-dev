@@ -424,6 +424,35 @@ function initNewNoteForm() {
             form.find('.required-if-shown').removeClass('required');
         }
     });
+
+    var editModal = $('#editNoteModal');
+    var editForm = editModal.find('form');
+
+    $('body').on('click', '.note-edit', function (e) {
+        e.preventDefault();
+
+        var btn = $(this);
+        var noteId = btn.attr('href');
+        var type = btn.data('type');
+        var notes = btn.data('notes');
+
+        editModal.find('[name=action]').val(type);
+        editModal.find('[name=note]').val(notes);
+        editModal.find('[name=editNote]').val(noteId);
+
+        editModal.modal('show');
+    });
+
+    editForm.forms({
+        callback: function (resp) {
+            if (resp.nextHref) {
+                window.location.href = resp.nextHref;
+            }
+            Msg.info('Updated Note');
+            editModal.modal("hide");
+            $('#notes').reloadFragment();
+        }
+    });
 }
 
 
