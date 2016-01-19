@@ -235,7 +235,7 @@
         showElement: function (element, options, callback) {
             return $(this).each(function () {
                 var form = $(this);
-                var config = getFormConfig(form.forms('getOptions'));
+                var config = getFormConfig(form, form.forms('getOptions'));
                 options = $.extend({}, {
                     'opacity': 1,
                     'height': 'show'
@@ -247,7 +247,7 @@
         hideElement: function (element, options, callback) {
             return $(this).each(function () {
                 var form = $(this);
-                var config = getFormConfig(form.forms('getOptions'));
+                var config = getFormConfig(form, form.forms('getOptions'));
                 options = $.extend({}, {
                     'opacity': 0,
                     'height': 'hide'
@@ -262,15 +262,21 @@
 
 /**
  * Get configuration of form. The input configuration will be merged with default configuration of jquery.forms
+ * @param {jQuery} form
  * @param {Object} config
  * @returns {Object}
  */
-function getFormConfig(config) {
+function getFormConfig(form, config) {
+    var currentConfig = {};
+    if (form && form.jquery && form.length > 0) {
+        currentConfig = form.data('formOptions') || {};
+    }
+
     if (!config) {
         config = {};
     }
 
-    return $.extend({}, $.fn.forms.DEFAULT, config);
+    return $.extend({}, $.fn.forms.DEFAULT, currentConfig, config);
 }
 
 /**
@@ -280,7 +286,7 @@ function getFormConfig(config) {
  * @returns {jQuery}
  */
 function getValidationMessage(form, config) {
-    config = getFormConfig(config);
+    config = getFormConfig(form, config);
 
     if (config && config.validationMessageSelector) {
         if (typeof config.validationMessageSelector === 'string') {
@@ -302,7 +308,7 @@ function getValidationMessage(form, config) {
  * @param {Object} event - optional, the event which caused the submit
  */
 function doPostForm(form, config, event) {
-    config = getFormConfig(config);
+    config = getFormConfig(form, config);
 
     // Trim all inputs
     var enc = form.attr('enctype');
@@ -418,7 +424,7 @@ function doPostForm(form, config, event) {
  * @param {Function} callback
  */
 function showFormMessage(form, config, message, title, type, callback) {
-    config = getFormConfig(config);
+    config = getFormConfig(form, config);
 
     var alertMsg = getValidationMessage(form, config);
     if (alertMsg.length === 0) {
@@ -429,7 +435,7 @@ function showFormMessage(form, config, message, title, type, callback) {
         alertMsg.attr('class', 'form-message alert alert-' + type);
     }
 
-    if (title) {
+    if (title && title.length > 0) {
         var messageTitle = alertMsg.find('.form-message-title');
         if (messageTitle.length === 0) {
             var btnClose = alertMsg.find('.close');
@@ -440,7 +446,7 @@ function showFormMessage(form, config, message, title, type, callback) {
                 btnClose.after(titleHtml);
             }
         } else {
-            messageTitle.html(title);
+            messageTitle.html('<b>' + title + '</b');
         }
     }
 
@@ -459,7 +465,7 @@ function showFormMessage(form, config, message, title, type, callback) {
  * @param {String|Array} message
  */
 function showErrorMessage(form, config, message) {
-    config = getFormConfig(config);
+    config = getFormConfig(form, config);
 
     var messageHtml = config.renderErrorMessage(message);
 
@@ -472,7 +478,7 @@ function showErrorMessage(form, config, message) {
  * @param {Object} config
  */
 function showConfirmMessage(form, config) {
-    config = getFormConfig(config);
+    config = getFormConfig(form, config);
 
     showFormMessage(form, config, config.confirmMessage, null, 'success', function () {
         window.setTimeout(function () {
@@ -517,7 +523,7 @@ function showFieldMessages(fieldMessages, form) {
 function resetValidation(form, config) {
     flog('[jquery.forms] resetValidation', form, config);
 
-    config = getFormConfig(config);
+    config = getFormConfig(form, config);
 
     form.find('.form-group').removeClass('has-error');
     form.find('.error-field').removeClass('error-field').removeAttr('error-message');
@@ -526,7 +532,7 @@ function resetValidation(form, config) {
 
     var alertMsg = getValidationMessage(form, config);
     if (alertMsg.length > 0) {
-        alertMsg.css('hide', 'none').html('');
+        alertMsg.css('hide', 'none').html('<a class="close" data-dismiss="alert">&times;</a>');
     }
 }
 
@@ -539,7 +545,7 @@ function resetValidation(form, config) {
 function validateFormFields(form, config) {
     flog('[jquery.forms] validateFormFields', form, config);
 
-    config = getFormConfig(config);
+    config = getFormConfig(form, config);
 
     var resultRequired = checkRequiredFields(form, config);
     if (resultRequired.error > 0) {
@@ -663,7 +669,7 @@ function validateFormFields(form, config) {
 function checkRequiredCheckboxes(form, config) {
     flog('[jquery.forms] checkRequiredCheckboxes', form, config);
 
-    config = getFormConfig(config);
+    config = getFormConfig(form, config);
 
     var error = 0;
     var errorFields = [];
@@ -692,7 +698,7 @@ function checkRequiredCheckboxes(form, config) {
 function checkRequiredRadios(form, config) {
     flog('[jquery.forms] checkRequiredRadios', form, config);
 
-    config = getFormConfig(config);
+    config = getFormConfig(form, config);
 
     var error = 0;
     var errorFields = [];
@@ -737,7 +743,7 @@ function checkRequiredRadios(form, config) {
 function checkRequiredFields(form, config) {
     flog('[jquery.forms] checkRequiredFields', form, config);
 
-    config = getFormConfig(config);
+    config = getFormConfig(form, config);
 
     var error = 0;
     var errorFields = [];
@@ -862,7 +868,7 @@ function shouldCheckValue(input) {
 function checkDates(form, config) {
     flog('[jquery.forms] checkDates', form, config);
 
-    config = getFormConfig(config);
+    config = getFormConfig(form, config);
 
     var error = 0;
     var errorFields = [];
@@ -900,7 +906,7 @@ function checkDates(form, config) {
 function checkValidPasswords(form, config) {
     flog('[jquery.forms] checkValidPasswords', form, config);
 
-    config = getFormConfig(config);
+    config = getFormConfig(form, config);
 
     var input = form.find('input#password, input.password');
 
@@ -957,7 +963,7 @@ function checkValidPasswords(form, config) {
 function checkPasswordsMatch(form, config, passwordInputs) {
     flog('[jquery.forms] checkPasswordsMatch', form, config, passwordInputs);
 
-    config = getFormConfig(config);
+    config = getFormConfig(form, config);
 
     var confirmPasswordInputs = form.find('input#confirmPassword, input.confirm-password');
 
@@ -1004,7 +1010,7 @@ function checkPasswordsMatch(form, config, passwordInputs) {
 function checkValidEmailAddress(form, config) {
     flog('[jquery.forms] checkValidEmailAddress', form, config);
 
-    config = getFormConfig(config);
+    config = getFormConfig(form, config);
 
     var error = 0;
     var errorFields = [];
@@ -1042,7 +1048,7 @@ function checkValidEmailAddress(form, config) {
 function checkSimpleChars(form, config) {
     flog('[jquery.forms] checkSimpleChars', form, config);
 
-    config = getFormConfig(config);
+    config = getFormConfig(form, config);
 
     var error = 0;
     var errorFields = [];
@@ -1079,7 +1085,7 @@ function checkSimpleChars(form, config) {
 function checkReallySimpleChars(form, config) {
     flog('[jquery.forms] checkReallySimpleChars', form, config);
 
-    config = getFormConfig(config);
+    config = getFormConfig(form, config);
 
     var error = 0;
     var errorFields = [];
@@ -1136,7 +1142,7 @@ function checkReallySimpleValue(val) {
 function checkNumbers(form, config) {
     flog('[jquery.forms] checkNumbers', form, config);
 
-    config = getFormConfig(config);
+    config = getFormConfig(form, config);
 
     var error = 0;
     var errorFields = [];
@@ -1173,7 +1179,7 @@ function checkNumbers(form, config) {
 function checkHrefs(form, config) {
     flog('[jquery.forms] checkHrefs', form, config);
 
-    config = getFormConfig(config);
+    config = getFormConfig(form, config);
 
     var error = 0;
     var errorFields = [];
@@ -1697,5 +1703,7 @@ function showMessage(text, form) {
     flog('=======================================================================');
     flog('showMessage is DEPRECATED. Please use "showFormMessage" instead of. "showMessage" will be removed in version 1.2.0');
     flog('=======================================================================');
+    var config = getFormConfig(form, {});
+    text = config.renderErrorMessage(text);
     showFormMessage(form, {}, text, 'Errors', 'danger', null);
 }

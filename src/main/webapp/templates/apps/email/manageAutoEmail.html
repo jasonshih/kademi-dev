@@ -341,7 +341,7 @@
                                         <div class="form-group">
                                             <label class="control-label col-md-4" for="fromAddress">Email from address</label>
                                             <div class="col-md-8">
-                                                <input type="text" name="fromAddress" id="fromAddress" value="$!formatter.htmlEncode( $page.fromAddress )" placeholder="admin@mybusinessname.com" class="form-control required-if-shown" />
+                                                <input type="text" name="fromAddress" id="fromAddress" value="$!formatter.htmlEncode( $page.fromAddress )" placeholder="admin@mybusinessname.com" class="form-control" />
                                                 <small class="text-muted help-block">Eg <i>"Joe Bloggs" &lt;joe@bloggs.com&gt;</i>. You can leave this field blank but <b>Reply to address</b> will be required!</small>
                                             </div>
                                         </div>
@@ -391,8 +391,8 @@
                                         <a href="htmleditor?fileName=index.html&useHash=true" target="_blank" class="btn btn-primary" >
                                             <span class="fa fa-globe"></span> Rich text editor
                                         </a>
-                                        <a href="contenteditor?fileName=index.html&useHash=true" target="_blank" class="btn btn-primary" >
-                                            <span class="fa fa-globe"></span> Content editor
+                                        <a href="edmeditor?fileName=index.html&useHash=true" target="_blank" class="btn btn-primary" >
+                                            <span class="fa fa-globe"></span> EDM editor
                                             <i class="clip-new" style="color: red"></i>
                                         </a>
                                         <a href="texteditor?fileName=index.html" target="_blank" class="btn btn-primary" >

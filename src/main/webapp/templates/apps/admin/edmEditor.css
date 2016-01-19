@@ -1,4 +1,96 @@
-﻿#snippets-list {
+﻿html {
+    min-height: 100%;
+}
+
+#edm-area {
+    min-width: 680px;
+}
+
+body.opened-keditor-snippets #edm-area {
+    margin-right: 260px;
+}
+
+#edm-body {
+    margin: 0 auto;
+    max-width: 650px;
+    box-sizing: border-box;
+}
+
+#edm-setting {
+    position: absolute;
+    top: 50px;
+    left: 5px;
+    right: 5px;
+    bottom: 10px;
+    background: #fff;
+    transition: all 0.3s;
+    font-size: 12px;
+    padding: 0 5px;
+    z-index: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    transform: translate(105%, 0);
+}
+
+#edm-setting.showed {
+    z-index: 3;
+    transform: translate(0, 0);
+}
+
+#edm-setting input {
+    border: 1px solid #ccc;
+    width: 100%;
+    height: 30px;
+    padding: 6px 12px;
+    font-size: 12px;
+    line-height: 1.42857143;
+    margin-bottom: 10px;
+}
+
+/* ====================================================================================
+   Hide border of tables when CKEditor is enabled
+/* ==================================================================================== */
+.cke_show_borders table.cke_show_border,
+.cke_show_borders table.cke_show_border th,
+.cke_show_borders table.cke_show_border td {
+    border: 0 !important;
+}
+
+div.cke_float[id*="cke_keditor-section-"] {
+    max-width: none !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: auto !important;
+}
+
+body.opened-keditor-snippets div.cke_float[id*="cke_keditor-section-"] {
+    margin-right: 232px;
+    margin-top: 0;
+    margin-left: 0;
+}
+
+/* ====================================================================================
+   Customize KEditor
+/* ==================================================================================== */
+#keditor-snippets-container {
+    opacity: 1;
+    background: #fff;
+    z-index: 10000;
+}
+
+#keditor-snippets-toggler {
+    background: #fff;
+}
+
+#snippets-list {
+    z-index: 2;
+    background: #fff;
+    position: relative;
+}
+
+#snippets-list {
     height: calc(100% - 40px);
     overflow-y: auto;
     overflow-x: hidden;
