@@ -377,6 +377,14 @@
                         <div class="errorHandler alert alert-danger no-display pageMessage">.</div>
                     </div>
                     <div class="form-group">
+                        <label class="col-sm-3 control-label" for="newTagName">Publish to social media</label>
+                        <div class="checkbox">
+                            <label>
+                                <input name="publishTo_facebook" value="true" type="checkbox"/> Facebook
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label class="col-sm-3 control-label" for="newTagName">Embargo Date</label>
                         <div class="col-sm-8">
                             <div class="input-group">
@@ -523,35 +531,35 @@
 
                     var myData = [];
                     var allSeries = [];
-                    $.each(aggr.type.buckets, function(b, typeBucket) {
+                    $.each(aggr.type.buckets, function (b, typeBucket) {
                         var series = {
                             key: typeBucket.key,
                             values: []
                         };
-                        myData.push( series );
+                        myData.push(series);
                     });
 
-                    $.each(aggr.reqDate.buckets, function(i, dateBucket) {
+                    $.each(aggr.reqDate.buckets, function (i, dateBucket) {
                         var typeBuckets = dateBucket.type.buckets;
                         var map = {};
-                        $.each(typeBuckets, function(ss, typeBucket) {
+                        $.each(typeBuckets, function (ss, typeBucket) {
                             //flog("add to map",dateBucket.key, typeBucket.doc_count);
                             map[typeBucket.key] = typeBucket.doc_count;
                         });
 
-                        $.each(myData, function(s, series) {
+                        $.each(myData, function (s, series) {
                             var docCount = map[series.key];
                             //flog("point", docCount, series.key, map);
-                            if( docCount ) {
-                                series.values.push({x: dateBucket.key, y : docCount});
+                            if (docCount) {
+                                series.values.push({x: dateBucket.key, y: docCount});
                             } else {
-                                series.values.push({x: dateBucket.key, y : 0});
+                                series.values.push({x: dateBucket.key, y: 0});
                             }
                         });
 
                     });
 
-                    flog( myData);
+                    flog(myData);
 
                     var chart = nv.models.stackedAreaChart()
                             .margin({right: 100})
