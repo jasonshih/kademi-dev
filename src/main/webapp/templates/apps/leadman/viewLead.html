@@ -185,7 +185,7 @@
                                             <div class="form-group">
                                                 <label class="control-label col-md-3">$field.title:</label>
                                                 <div class="col-md-3">
-                                                    <input type="text" value="$!field.value" name="extraField_$field.name" class="form-control immediateUpdate"/>
+                                                    <input type="text" value="$!field.value" name="extraField_$field.name" class="form-control immediateUpdate $formatter.ifTrue($field.required, 'required', '')"/>
                                                 </div>
                                             </div>
                                             #end
