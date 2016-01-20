@@ -19,7 +19,6 @@ $(function () {
     initTopNavSearch();
     initOrgSearch();
     initProfileSearch();
-    initGpsTracking();
     initAudioPlayer();
     initDeleteFile();
 
@@ -66,7 +65,7 @@ function initCloseDealModal() {
     closeDealModal.find("form").forms({
         callback: function (resp) {
             Msg.info('Deal marked as closed');
-            //window.location.reload();
+            closeDealModal.modal('hide');
         }
     });
 }
@@ -258,25 +257,32 @@ function initNewQuickLeadForm() {
         formData = new FormData();
 
         modal.modal('show');
+
+        if (navigator.geolocation) {
+            navigator.geolocation.watchPosition(function (position) {
+                var geoTag = position.coords.latitude + ":" + position.coords.longitude;
+                flog('Got location', geoTag);
+                form.find('input[name=geoLocation]').val(geoTag);
+            }, function (err) {
+                flog('ERROR: ', err.code, err.message);
+            });
+        } else {
+            flog('GeoLocation not supported');
+        }
     });
 
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
-    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
+    navigator.getUserMedia = (navigator.getUserMedia ||
+            navigator.webkitGetUserMedia ||
+            navigator.mozGetUserMedia ||
+            navigator.msGetUserMedia);
     window.URL = window.URL || window.webkitURL;
     var audio_context = new AudioContext();
     var recorder = null;
 
-    navigator.getUserMedia({audio: true}, function (stream) {
-        var input = audio_context.createMediaStreamSource(stream);
-        recorder = new Recorder(input);
-        flog('Recording init complete');
-        recorder = null;
-        audio_context.close();
-
-    }, function (e) {
-        flog('No live audio input: ' + e, e);
+    if (!navigator.getUserMedia) {
         $('.voiceMemo', form).remove();
-    });
+    }
 
     modal.on('click', '#recordMemo', function (e) {
         e.preventDefault();
@@ -338,6 +344,7 @@ function initNewQuickLeadForm() {
 
         formData.append('notes', $('[name=notes]', form).val());
         formData.append('quickLead', $('[name=quickLead]', form).val());
+        formData.append('geoLocation', $('[name=geoLocation]', form).val());
 
         $.ajax({
             type: 'POST',
@@ -386,6 +393,7 @@ function initNewContactForm() {
 function initNewNoteForm() {
     var modal = $('#newNoteModal');
     var form = modal.find('form');
+    form.find('.newLeadForm').hide();
 
     $(".createNote").click(function (e) {
         e.preventDefault();
@@ -401,6 +409,48 @@ function initNewNoteForm() {
             }
             Msg.info('Created note');
             modal.modal("hide");
+        }
+    });
+
+    form.find('#note_newTask').on('change', function (e) {
+        var btn = $(this);
+        var checked = btn.is(':checked');
+
+        if (checked) {
+            form.find('.newLeadForm').show();
+            form.find('.required-if-shown').addClass('required');
+        } else {
+            form.find('.newLeadForm').hide();
+            form.find('.required-if-shown').removeClass('required');
+        }
+    });
+
+    var editModal = $('#editNoteModal');
+    var editForm = editModal.find('form');
+
+    $('body').on('click', '.note-edit', function (e) {
+        e.preventDefault();
+
+        var btn = $(this);
+        var noteId = btn.attr('href');
+        var type = btn.data('type');
+        var notes = btn.data('notes');
+
+        editModal.find('[name=action]').val(type);
+        editModal.find('[name=note]').val(notes);
+        editModal.find('[name=editNote]').val(noteId);
+
+        editModal.modal('show');
+    });
+
+    editForm.forms({
+        callback: function (resp) {
+            if (resp.nextHref) {
+                window.location.href = resp.nextHref;
+            }
+            Msg.info('Updated Note');
+            editModal.modal("hide");
+            $('#notes').reloadFragment();
         }
     });
 }
@@ -654,15 +704,21 @@ function doTopNavSearch(query, suggestionsWrapper, backdrop) {
                 for (var i = 0; i < resp.hits.hits.length; i++) {
                     var suggestion = resp.hits.hits[i];
                     var leadId = suggestion.fields.leadId[0];
-                    var email = suggestion.fields['profile.email'][0];
+                    var email = suggestion.fields['profile.email'] ? suggestion.fields['profile.email'][0] : (suggestion.fields['organisation.email'] ? suggestion.fields['organisation.email'][0] : '');
+                    var companyTitle = suggestion.fields['organisation.title'] ? suggestion.fields['organisation.title'][0] : '';
                     var firstName = suggestion.fields['profile.firstName'] ? suggestion.fields['profile.firstName'][0] : '';
                     var surName = suggestion.fields['profile.surName'] ? suggestion.fields['profile.surName'][0] : '';
+
+                    var a = firstName + ' ' + surName;
+                    if (a.trim().length < 1) {
+                        a = companyTitle;
+                    }
 
                     suggestionStr += '<li class="suggestion">';
                     suggestionStr += '    <a href="/leads/' + leadId + '">';
                     suggestionStr += '        <span class="email">' + email + '</span>';
-                    if (firstName || surName) {
-                        suggestionStr += '    <br /><small class="text-muted">' + firstName + ' ' + surName + '</small>';
+                    if (a) {
+                        suggestionStr += '    <br /><small class="text-muted">' + a + '</small>';
                     }
                     suggestionStr += '    </a>';
                     suggestionStr += '</li>';
@@ -763,18 +819,6 @@ function initProfileSearch() {
         form.find('input[name=email]').val(sug.email);
         form.find('input[name=phone]').val(sug.phone);
     });
-}
-
-function initGpsTracking() {
-    if (navigator.geolocation) {
-        navigator.geolocation.watchPosition(function (position) {
-            flog(position.coords.latitude, position.coords.longitude);
-        }, function () {
-
-        });
-    } else {
-        flog('GeoLocation not supported');
-    }
 }
 
 function initAudioPlayer() {

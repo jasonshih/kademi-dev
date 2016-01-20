@@ -162,7 +162,13 @@
                             <textarea name="newNote" class="form-control" style="height: 120px"></textarea>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="checkbox">
+                        <label for="note_newTask">
+                            <input type="checkbox" name="newTask" value="true" id="note_newTask" /> Create a new task
+                            <input type="hidden" value="false" name="newTask_checkbox" />
+                        </label>
+                    </div>
+                    <div class="row newLeadForm">
                         <div class="col-md-4">
                             <div class="input-group">
                                 <input type="text" class="form-control" name="title" placeholder="Next follow-up task" />
@@ -189,10 +195,49 @@
                         </div>
 
                         <div class="col-md-8">
-                            <textarea name="taskDescription" class="form-control required" style="height: 100px" placeholder="Describe the next follow-up task"></textarea>
+                            <textarea name="taskDescription" class="form-control required-if-shown" style="height: 100px" placeholder="Describe the next follow-up task"></textarea>
                         </div>
                     </div>
 
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+
+                    <button class="btn btn-primary" type="submit">Save note</button>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" id="editNoteModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog modal-lg ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="">Edit a note on a lead</h4>
+            </div>
+            <form method="post" action="" class="form-horizontal">
+                <input type="hidden" name="editNote"/>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <select name="action" class="form-control">
+                                <option value="">[Select what the note is for]</option>
+                                <option value="phone-false">Call to customer</option>
+                                <option value="phone-true">Call from customer</option>
+                                <option value="email-false">Email to customer</option>
+                                <option value="email-true">Email from customer</option>
+                                <option value="note-false">General note</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <textarea name="note" class="form-control" style="height: 120px"></textarea>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
@@ -230,22 +275,26 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="">Deal closed successfully</h4>
+                <h4 class="modal-title" id="">Mark deal as closed</h4>
             </div>
             <form method="post" action="$page.href" class="form-horizontal">
                 <input type="hidden" name="closeDeal"/>
                 <div class="modal-body">
-
+                    <div class="form-group">
+                        <div class="col-md-12 text-center">
+                            <span class="alert alert-info">Closing the lead will mark it as sold and close any related tasks.</span>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label class="control-label col-md-3" for="closedDate">Closed Date</label>
                         <div class="col-md-9">
-                            <input type="text" name="closedDate" id="closedDate" class="required form-control" placeholder="closedDate" />
+                            <input type="text" name="closedDate" id="closedDate" class="required form-control date-time" placeholder="Closed date/time" />
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-3" for="dealAmount">Sale amount</label>
                         <div class="col-md-9">
-                            <input type="text" name="dealAmount" id="dealAmount" class="required form-control" placeholder="dealAmount" />
+                            <input type="text" name="dealAmount" id="dealAmount" class="required form-control" placeholder="Deal Amount" />
                         </div>
                     </div>
 
@@ -314,6 +363,7 @@
             </div>
             <form method="post" action="" class="form-horizontal" enctype="multipart/form-data">
                 <input type="hidden" name="quickLead"/>
+                <input type="hidden" name="geoLocation"/>
                 <div class="modal-body">
                     <div class="form-group">
                         <label class="control-label col-md-3" for="newUserNickName">Image</label>
