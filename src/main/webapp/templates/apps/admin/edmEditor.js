@@ -29,12 +29,23 @@ function initEdmEditorPage(fileName) {
     hideLoadingIcon();
 }
 
+function applyInlineCssForTextWrapper(target) {
+    target.css({
+        '-ms-text-size-adjust': '100%',
+        '-webkit-text-size-adjust': '100%',
+        'font-family': $('#edm-font-family').val(),
+        'font-size': $('#edm-font-size').val(),
+        'line-height': $('#edm-line-height').val(),
+        'color': $('#edm-text-color').val()
+    });
+}
+
 function processFileBody() {
     var edmBody = $('#edm-body');
     var edmHtml = $('<div />').html($('#edm-html').html());
     var edmStyle = $('#edm-style');
     var defaultStyle = edmStyle.html();
-    var savedStyle  = edmHtml.find('style').html();
+    var savedStyle = edmHtml.find('style').html();
 
     if (savedStyle && savedStyle.length > 0 && savedStyle !== defaultStyle) {
         edmStyle.html(savedStyle);
@@ -54,6 +65,10 @@ function processFileBody() {
     $('#edm-body-padding-bottom').val(tdBody.css('padding-bottom') || '10px');
     $('#edm-body-padding-left').val(tdBody.css('padding-left') || '10px');
     $('#edm-body-padding-right').val(tdBody.css('padding-right') || '10px');
+    $('#edm-font-family').val(tdBody.attr('data-font-family') || 'Arial, Helvetica, sans-serif');
+    $('#edm-font-size').val(tdBody.attr('data-font-size') || '14px');
+    $('#edm-line-height').val(tdBody.attr('data-line-height') || '1.42857143');
+    $('#edm-text-color').val(tdBody.attr('data-text-color') || '#000000');
 }
 
 function initKEditor(body) {
@@ -65,19 +80,19 @@ function initKEditor(body) {
             templates_files: [templatesPath],
             templates_replaceContent: false,
             toolbarGroups: [
-                { name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
-                { name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
-                { name: 'editing', groups: [ 'find', 'selection', 'spellchecker', 'editing' ] },
-                { name: 'forms', groups: [ 'forms' ] },
-                { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
-                { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
-                { name: 'links', groups: [ 'links' ] },
-                { name: 'insert', groups: [ 'insert' ] },
-                { name: 'styles', groups: [ 'styles' ] },
-                { name: 'colors', groups: [ 'colors' ] },
-                { name: 'tools', groups: [ 'tools' ] },
-                { name: 'others', groups: [ 'others' ] },
-                { name: 'about', groups: [ 'about' ] }
+                {name: 'document', groups: ['mode', 'document', 'doctools']},
+                {name: 'clipboard', groups: ['clipboard', 'undo']},
+                {name: 'editing', groups: ['find', 'selection', 'spellchecker', 'editing']},
+                {name: 'forms', groups: ['forms']},
+                {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
+                {name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align', 'bidi', 'paragraph']},
+                {name: 'links', groups: ['links']},
+                {name: 'insert', groups: ['insert']},
+                {name: 'styles', groups: ['styles']},
+                {name: 'colors', groups: ['colors']},
+                {name: 'tools', groups: ['tools']},
+                {name: 'others', groups: ['others']},
+                {name: 'about', groups: ['about']}
             ],
             extraPlugins: 'embed_video,fuse-image,sourcedialog',
             removePlugins: 'table,magicline,tabletools',
@@ -93,6 +108,9 @@ function initKEditor(body) {
         snippetsListId: 'snippets-list',
         onInitContent: function (contentArea) {
             return contentArea.find('> table');
+        },
+        onInitSection: function (section) {
+            applyInlineCssForTextWrapper(section.find('td.text-wrapper'));
         },
         onContentChanged: function () {
             if (!body.hasClass('content-changed')) {
@@ -134,7 +152,6 @@ function applySetting() {
     var edmPaddingBottom = $('#edm-padding-bottom').val();
     var edmPaddingLeft = $('#edm-padding-left').val();
     var edmPaddingRight = $('#edm-padding-right').val();
-
     $('html').css('background-color', edmBackground);
     $('#edm-area').css({
         'padding-top': edmPaddingTop,
@@ -148,14 +165,16 @@ function applySetting() {
     var edmBodyPaddingBottom = $('#edm-body-padding-bottom').val();
     var edmBodyPaddingLeft = $('#edm-body-padding-left').val();
     var edmBodyPaddingRight = $('#edm-body-padding-right').val();
-
-    $('#edm-body').css({
+    var edmBody = $('#edm-body');
+    edmBody.css({
         'background-color': edmBodyBackground,
         'padding-top': edmBodyPaddingTop,
         'padding-bottom': edmBodyPaddingBottom,
         'padding-left': edmBodyPaddingLeft,
         'padding-right': edmBodyPaddingRight
-    })
+    });
+
+    applyInlineCssForTextWrapper(edmBody);
 }
 
 function getEdmBody() {
@@ -190,8 +209,13 @@ function getEdmBody() {
     var edmBodyPaddingBottom = $('#edm-body-padding-bottom').val();
     var edmBodyPaddingLeft = $('#edm-body-padding-left').val();
     var edmBodyPaddingRight = $('#edm-body-padding-right').val();
+    var edmFontFamily = $('#edm-font-family').val();
+    var edmFontSize = $('#edm-font-size').val();
+    var edmLineHeight = $('#edm-line-height').val();
+    var edmTextColor = $('#edm-text-color').val();
     var styleTDBody = '';
     var attributeTableBody = '';
+    var attributeTDBody = '';
     if (edmBodyBackground) {
         styleTDBody += 'background-color: ' + edmBodyBackground + ';';
         attributeTableBody += ' bgcolor="' + edmBodyBackground + '" ';
@@ -208,16 +232,28 @@ function getEdmBody() {
     if (edmBodyPaddingRight) {
         styleTDBody += 'padding-right: ' + edmBodyPaddingRight + ';';
     }
+    if (edmFontFamily) {
+        attributeTDBody += ' data-font-family="' + edmFontFamily + '" ';
+    }
+    if (edmFontSize) {
+        attributeTDBody += ' data-font-size="' + edmFontSize + '" ';
+    }
+    if (edmLineHeight) {
+        attributeTDBody += ' data-line-height="' + edmLineHeight + '" ';
+    }
+    if (edmTextColor) {
+        attributeTDBody += ' data-text-color="' + edmTextColor + '" ';
+    }
 
     return (
-        '<table cellpadding="0" cellspacing="0" border="0" width="100%" id="edm-wrapper" ' + attributeTableWrapper +'>\n' +
+        '<table cellpadding="0" cellspacing="0" border="0" width="100%" id="edm-wrapper" ' + attributeTableWrapper + '>\n' +
         '    <tbody>\n' +
         '        <tr>\n' +
         '            <td id="edm-wrapper-td" style="' + styleTDWrapper + '" align="center">\n' +
-        '                <table cellpadding="0" cellspacing="0" border="0" width="100%" id="edm-body" ' + attributeTableBody +' align="center">\n' +
+        '                <table cellpadding="0" cellspacing="0" border="0" width="100%" id="edm-body" ' + attributeTableBody + ' align="center">\n' +
         '                    <tbody>\n' +
         '                        <tr>\n' +
-        '                            <td id="edm-body-td" style="' + styleTDBody + '">\n' + edmBody + '</td>\n' +
+        '                            <td id="edm-body-td" style="' + styleTDBody + '" + ' + attributeTDBody + '>\n' + edmBody + '</td>\n' +
         '                        </tr>\n' +
         '                    </tbody>\n' +
         '                </table>\n' +
