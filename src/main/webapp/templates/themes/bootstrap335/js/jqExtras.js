@@ -290,6 +290,7 @@ function createFolder(name, parentHref, callback) {
     $.ajax({
         type: 'POST',
         url: url,
+        dataType: 'text',
         data: {
             name: encodedName
         },
