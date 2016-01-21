@@ -94,7 +94,7 @@ function initKEditor(body) {
                 {name: 'others', groups: ['others']},
                 {name: 'about', groups: ['about']}
             ],
-            extraPlugins: 'embed_video,fuse-image,sourcedialog',
+            extraPlugins: 'embed_video,fuse-image,sourcedialog,lineheight',
             removePlugins: 'table,magicline,tabletools',
             removeButtons: 'Save,NewPage,Preview,Print,Templates,PasteText,PasteFromWord,Find,Replace,SelectAll,Scayt,Form,HiddenField,ImageButton,Button,Select,Textarea,TextField,Radio,Checkbox,Outdent,Indent,Blockquote,CreateDiv,Language,Table,HorizontalRule,Smiley,SpecialChar,PageBreak,Iframe,Styles,BGColor,Maximize,About,ShowBlocks,BidiLtr,BidiRtl,Flash,Image',
             enterMode: CKEDITOR.ENTER_DIV,
@@ -174,7 +174,7 @@ function applySetting() {
         'padding-right': edmBodyPaddingRight
     });
 
-    applyInlineCssForTextWrapper(edmBody);
+    applyInlineCssForTextWrapper(edmBody.find('td.text-wrapper'));
 }
 
 function getEdmBody() {
@@ -253,7 +253,7 @@ function getEdmBody() {
         '                <table cellpadding="0" cellspacing="0" border="0" width="100%" id="edm-body" ' + attributeTableBody + ' align="center">\n' +
         '                    <tbody>\n' +
         '                        <tr>\n' +
-        '                            <td id="edm-body-td" style="' + styleTDBody + '" + ' + attributeTDBody + '>\n' + edmBody + '</td>\n' +
+        '                            <td id="edm-body-td" style="' + styleTDBody + '" ' + attributeTDBody + '>\n' + edmBody + '</td>\n' +
         '                        </tr>\n' +
         '                    </tbody>\n' +
         '                </table>\n' +
