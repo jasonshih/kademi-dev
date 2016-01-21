@@ -25,10 +25,55 @@
         $.getJSON('/hoover/?' + $.param(options), function (data) {
             var aggrs = data.aggregations;
             var sources = aggrs.source.buckets;
+            var websites = aggrs.websites.buckets;
 
+            handleUrlTable(websites);
+            handleTable(data.hits.hits);
             handleHistogram(sources);
         });
     };
+
+    function handleUrlTable(websites) {
+        var table = $('#urlTable');
+        table.empty();
+
+        if (websites.length < 1) {
+            table.append('<tr><td colspan="4">No Data available</td></tr>');
+        } else {
+            for (var i in websites) {
+                var website = websites[i];
+                var urls = website.urls.buckets;
+                for (var a in urls) {
+                    var url = urls[a];
+                    var t = '<tr>'
+                            + '    <td>' + website.key + '</td>'
+                            + '    <td>' + url.key + '</td>'
+                            + '    <td>' + url.doc_count + '</td>'
+                            + '</tr>';
+                    table.append(t);
+                }
+            }
+        }
+    }
+
+    function handleTable(hits) {
+        var table = $('#hitsTable');
+        table.empty();
+        if (hits.length < 1) {
+            table.append('<tr><td colspan="4">No Data available</td></tr>');
+        } else {
+            for (var i in hits) {
+                var hit = hits[i]._source;
+                var t = '<tr>'
+                        + '    <td>' + hit.source + '</td>'
+                        + '    <td>' + hit.type + '</td>'
+                        + '    <td>' + (hit.commentText != null ? hit.commentText : '') + '</td>'
+                        + '    <td>' + (new moment(hit.reqDate)).format('DD/MM/YYYY hh:mm') + '</td>'
+                        + '</tr>';
+                table.append(t);
+            }
+        }
+    }
 
     function handleHistogram(aggr) {
         $('#chart_histogram svg').empty();
