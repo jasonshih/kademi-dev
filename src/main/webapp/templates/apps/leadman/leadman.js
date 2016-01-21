@@ -133,7 +133,8 @@ function initTasks() {
     $("body").on("click", "#assignToMenu a", function (e) {
         e.preventDefault();
         var name = $(e.target).attr("href");
-        assignTo(name);
+        var href = $(this).closest('ul').data('href');
+        assignTo(name, href);
     });
     $("body").on("click", ".btnTaskDelete", function (e) {
         e.preventDefault();
@@ -537,10 +538,10 @@ function initDateTimePickers() {
 }
 
 
-function assignTo(name) {
+function assignTo(name, href) {
     $.ajax({
         type: 'POST',
-        url: window.location.pathname,
+        url: href || window.location.pathname,
         data: {
             assignToName: name
         },
@@ -548,7 +549,9 @@ function assignTo(name) {
         success: function (resp) {
             if (resp && resp.status) {
                 Msg.info("Assigned");
-                $("#assignedBlock").reloadFragment();
+                $("#assignedBlock").reloadFragment({
+                    url: href || window.location.pathname
+                });
             } else {
                 Msg.error("Sorry, we couldnt change the assignment");
             }

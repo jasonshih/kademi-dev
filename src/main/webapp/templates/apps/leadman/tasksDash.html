@@ -12,7 +12,7 @@
         <li class="list-group-item" style="padding-bottom: 45px">
             <p>
                 #set( $colour = $leadsPage.statusColour($task, 3) )
-                <span class="mr btn btn-${colour} btn-sm btn-circle">T</span>
+                <a href="/tasks/$task.id/" class="mr btn btn-${colour} btn-sm btn-circle" data-target="#modalEditTask" data-toggle="modal">T</a>
                 <em>$!task.title</em>
                 $task.taskDescription
             </p>
