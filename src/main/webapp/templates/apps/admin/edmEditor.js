@@ -102,7 +102,8 @@ function initKEditor(body) {
             filebrowserBrowseUrl: '/static/fckfilemanager/browser/default/browser.html?Type=Image&Connector=/fck_connector.html',
             filebrowserUploadUrl: '/uploader/upload',
             format_tags: 'p;h1;h2;h3;h4;h5;h6',
-            stylesSet: 'myStyles:' + stylesPath
+            stylesSet: 'myStyles:' + stylesPath,
+            line_height: '1;1.2;1.5;2;2.2;2.5'
         },
         snippetsUrl: '/static/keditor/1.0.1/snippets/edm/snippets.html',
         snippetsListId: 'snippets-list',
