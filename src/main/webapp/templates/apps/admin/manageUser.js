@@ -37,6 +37,36 @@ function initRemoveCreds() {
     });
 }
 
+function initRemoveOAuthCred() {
+    $('body').on('click', '.btnDisconnect', function (e) {
+        e.preventDefault();
+        var btn = $(this);
+        var provider = btn.data('provider');
+        if (confirm('Are you sure you want to disconnect this user from ' + provider + '?')) {
+            $.ajax({
+                type: 'POST',
+                url: window.location.pathname,
+                dataType: 'json',
+                data: {
+                    removeProvider: provider
+                },
+                success: function (data) {
+                    flog('success', data)
+                    if (data.status) {
+                        $('#oauthLogins').reloadFragment();
+                    } else {
+                        Msg.error('Oh No! Something went wrong! ' + data.messages);
+                    }
+
+                },
+                error: function (resp) {
+                    Msg.error('An error occured attempting to remove the oauth signature. Please check your internet connection');
+                }
+            });
+        }
+    });
+}
+
 function initUploadUsers() {
     var modalUploadCsv = $('#modal-upload-csv');
     $('.btn-upload-users-csv').click(function (e) {
