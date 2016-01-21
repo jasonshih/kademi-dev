@@ -1,19 +1,11 @@
 #parse("/theme/apps/leadman/leadManIncludes.html")
-
 <div class="modal-body">
-
     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-
     <div class="hideOnComplete">
         <input type="text" value="$page.title" name="title" class="form-control immediateUpdate input-lg" data-href="$page.href" />
-
         <hr/>
-
-
         <textarea name="taskDescription" class="form-control immediateUpdate" data-href="$page.href" style="height: 100px">$!page.taskDescription</textarea>
-
         <hr/>
-
         <div class="row">
             <div class="col-md-6">
                 <label class="control-label col-md-4" for="datetimepickerFollowup">Task due</label>
@@ -42,12 +34,15 @@
                                 #end
                             </span>
                         </button>
-                        <ul class="dropdown-menu" id="assignToMenu" role="menu">
+                        <ul class="dropdown-menu" data-href="$page.href" id="assignToMenu" role="menu">
                             <li><a href="$user.name">Assign to me</a></li>
                             <li><a href="">Assign to nobody</a></li>
+                            #set($teamMembers = $page.find("/leads").teamMembers)
+                            #if($teamMembers && $teamMembers.size() > 0)
                             <li role="separator" class="divider"></li>
-                            #foreach($user in $page.find("/leads").teamMembers)
+                            #foreach($user in $teamMembers)
                             <li><a href="$user.name">$user.name</a></li>
+                            #end
                             #end
                         </ul>
                     </div>
@@ -66,7 +61,6 @@
     #if( $page.lead )
     #showLead( $page.lead, true )
     #end
-
 
     <div class="completeTaskDiv" style="display: none">
         <hr/>
