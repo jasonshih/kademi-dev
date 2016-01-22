@@ -16,7 +16,9 @@
         <div class="container container-fluid">
             <h2>My Files</h2>
             <div class="row">
-            #foreach($folder in $user.children.dirs )
+            #set($url = '/users/'+$user.name)
+            #set ($userFolder = $page.find($url))
+            #foreach($folder in $userFolder.children.dirs )
             <div class="span3 col-md-3">
                 <div class="well">
                     <h3><a href="$folder.href">$folder.name</a></h3>
