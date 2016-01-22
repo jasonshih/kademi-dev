@@ -30,13 +30,15 @@ function initEdmEditorPage(fileName) {
 }
 
 function applyInlineCssForTextWrapper(target) {
-    target.css({
-        '-ms-text-size-adjust': '100%',
-        '-webkit-text-size-adjust': '100%',
-        'font-family': $('#edm-font-family').val(),
-        'font-size': $('#edm-font-size').val(),
-        'line-height': $('#edm-line-height').val(),
-        'color': $('#edm-text-color').val()
+    target.each(function () {
+        $(this).css({
+            '-ms-text-size-adjust': '100%',
+            '-webkit-text-size-adjust': '100%',
+            'font-family': $('#edm-font-family').val(),
+            'font-size': $('#edm-font-size').val(),
+            'line-height': $('#edm-line-height').val(),
+            'color': $('#edm-text-color').val()
+        });
     });
 }
 
@@ -105,12 +107,12 @@ function initKEditor(body) {
             stylesSet: 'myStyles:' + stylesPath,
             line_height: '1;1.2;1.5;2;2.2;2.5'
         },
-        snippetsUrl: '/static/keditor/1.0.1/snippets/edm/snippets.html',
+        snippetsUrl: '/static/keditor/snippets/edm/snippets.html',
         snippetsListId: 'snippets-list',
         onInitContent: function (contentArea) {
             return contentArea.find('> table');
         },
-        onInitSection: function (section) {
+        onSectionReady: function (section) {
             applyInlineCssForTextWrapper(section.find('td.text-wrapper'));
         },
         onContentChanged: function () {

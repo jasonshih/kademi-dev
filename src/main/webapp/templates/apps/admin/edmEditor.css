@@ -10,7 +10,9 @@ body.opened-keditor-snippets #edm-area {
     margin-right: 260px;
 }
 
-#edm-body {
+#edm-header,
+#edm-body,
+#edm-footer {
     margin: 0 auto;
     max-width: 650px;
     box-sizing: border-box;

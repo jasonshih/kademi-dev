@@ -51,7 +51,7 @@ function initKEditor(body) {
             minimumChangeMilliseconds: 100,
             stylesSet: 'myStyles:' + stylesPath
         },
-        snippetsUrl: '/static/keditor/1.0.1/snippets/default/snippets.html',
+        snippetsUrl: '/static/keditor/snippets/default/snippets.html',
         snippetsListId: 'snippets-list',
         onContentChanged: function () {
             if (!body.hasClass('content-changed')) {
