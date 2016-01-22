@@ -44,6 +44,12 @@
                         </div>
                         <div class="panel-body">
                             <table class="table table-striped">
+                                #if($page.kademiVersion)
+                                <tr>
+                                    <th>Version</th>
+                                    <td>$page.kademiVersion</td>
+                                </tr>
+                                #end
                                 <tr>
                                     <th>Mem usage</th>
                                     <td>$formatter.toPercent( $page.freeMemory, $page.maxMemory )</td>

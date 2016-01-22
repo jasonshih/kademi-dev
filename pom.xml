@@ -48,6 +48,10 @@
                                     <key>kademi.ftpPort</key>
                                     <value>21</value>
                                 </property>
+                                <property>
+                                    <key>kademi.version</key>
+                                    <value>${project.version}</value>
+                                </property>
                             </systemProperties>
                             <additionalClasspathElements>
                                 <additionalClasspathElement>/var/lib/kademi/conf</additionalClasspathElement>
