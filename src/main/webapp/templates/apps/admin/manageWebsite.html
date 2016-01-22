@@ -150,6 +150,8 @@
                             </div>
                         </div>
 
+                        #portlets('websiteDomainStatus')
+
                         <div class="form-group">
                             <label for="aliasTo" class="col-sm-3 control-label">Alias for</label>
                             <div class="col-sm-6">
@@ -612,7 +614,7 @@
                             <form method="POST" action="." class="form-horizontal" role="form">
                                 <input type="hidden" name="settingsAppId" value="$app.appId" />
                                 #if($app.enabled)
-                                    #appSettings($app.appId)
+                                #appSettings($app.appId)
                                 #end
                             </form>
                         </div>
