@@ -230,7 +230,11 @@ function initNewLeadForm() {
             if (btn.hasClass("btnCreateAndClose")) {
                 Msg.info('Saved new lead');
                 modal.modal("hide");
-                $('#all_contacts').reloadFragment();
+                $('#all_contacts').reloadFragment({
+                    whenComplete: function () {
+                        $('abbr.timeago').timeago();
+                    }
+                });
             } else {
                 Msg.info('Saved, going to the new lead');
                 if (resp.nextHref) {
@@ -360,7 +364,11 @@ function initNewQuickLeadForm() {
                 if (data.status) {
                     Msg.info('Saved new lead');
                     modal.modal("hide");
-                    $('#all_contacts').reloadFragment();
+                    $('#all_contacts').reloadFragment({
+                        whenComplete: function () {
+                            $('abbr.timeago').timeago();
+                        }
+                    });
                 } else {
 
                 }
@@ -454,7 +462,11 @@ function initNewNoteForm() {
             }
             Msg.info('Updated Note');
             editModal.modal("hide");
-            $('#notes').reloadFragment();
+            $('#notes').reloadFragment({
+                whenComplete: function () {
+                    $('abbr.timeago').timeago();
+                }
+            });
         }
     });
 }
