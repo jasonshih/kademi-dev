@@ -140,16 +140,9 @@ $!bodyContent
                             </form>
                         </li>
 
-                        <li>
-                            <a href="/profile" title="My profile" data-ripple="">
-                                <em class="icon-head fa-2x text-warning"></em>
-                                <span class="visible-xs-inline ml">My profile </span>
-                            </a>
-                        </li>
-
                     </ul>
+                    #if($user)
                     <ul class="nav navbar-nav navbar-right">
-                        #if($user)
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                 Logged in to: $currentOrg.title
@@ -161,7 +154,6 @@ $!bodyContent
                                 #end
                             </ul>
                         </li>
-                        #end
                         <li class="dropdown current-user user">
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                 #if( $profile.photoHash )
@@ -185,6 +177,7 @@ $!bodyContent
                             </ul>
                         </li>
                     </ul>
+                    #end
                 </div>
             </nav>
         </header>
