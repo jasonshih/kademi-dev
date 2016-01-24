@@ -1,4 +1,8 @@
 var win = $(window);
+var DEFAULT_FONT_FAMILY = 'Arial, Helvetica, san-serif';
+var DEFAULT_FONT_SIZE = '14px';
+var DEFAULT_LINE_HEIGHT = '1.42857143';
+var DEFAULT_TEXT_COLOR = '#333333';
 
 function initEdmEditorPage(fileName) {
     flog('initEdmEditorPage', fileName);
@@ -67,10 +71,10 @@ function processFileBody() {
     $('#edm-body-padding-bottom').val(tdBody.css('padding-bottom') || '10px');
     $('#edm-body-padding-left').val(tdBody.css('padding-left') || '10px');
     $('#edm-body-padding-right').val(tdBody.css('padding-right') || '10px');
-    $('#edm-font-family').val(tdBody.attr('data-font-family') || 'Arial, Helvetica, sans-serif');
-    $('#edm-font-size').val(tdBody.attr('data-font-size') || '14px');
-    $('#edm-line-height').val(tdBody.attr('data-line-height') || '1.42857143');
-    $('#edm-text-color').val(tdBody.attr('data-text-color') || '#000000');
+    $('#edm-font-family').val(tdBody.attr('data-font-family') || DEFAULT_FONT_FAMILY);
+    $('#edm-font-size').val(tdBody.attr('data-font-size') || DEFAULT_FONT_SIZE);
+    $('#edm-line-height').val(tdBody.attr('data-line-height') || DEFAULT_LINE_HEIGHT);
+    $('#edm-text-color').val(tdBody.attr('data-text-color') || DEFAULT_TEXT_COLOR);
 }
 
 function initKEditor(body) {
@@ -140,9 +144,24 @@ function initSettingPanel() {
         zindex: 9999
     });
 
+    // Init nicescroll
     settingPanel.getNiceScroll().hide();
 
-    settingPanel.find('input').on('change', function () {
+    // Init colorpicker
+    settingPanel.find('.color-picker').each(function () {
+        var input = $(this);
+        input.colorpicker({
+            format: 'hex',
+            container: input.parent()
+        }).trigger('changeColor.colorpicker');
+
+        input.on('changeColor.colorpicker', function (e) {
+            input.val(e.color.toHex());
+            applySetting();
+        });
+    });
+
+    settingPanel.find('input').not('.colorpicker').on('change', function () {
         applySetting();
     });
 

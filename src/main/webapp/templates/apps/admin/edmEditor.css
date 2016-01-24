@@ -2,6 +2,10 @@
     min-height: 100%;
 }
 
+body {
+    background: none;
+}
+
 #edm-area {
     min-width: 680px;
 }
@@ -39,38 +43,44 @@ body.opened-keditor-snippets #edm-area {
     transform: translate(0, 0);
 }
 
-#edm-setting input {
-    border: 1px solid #ccc;
-    width: 100%;
-    height: 30px;
+#edm-setting .panel {
+    margin-bottom: 0;
+}
+
+#edm-setting .panel + .panel {
+    margin-top: 10px;
+}
+
+#edm-setting .panel-heading,
+#edm-setting .panel-body {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+#edm-setting .panel-body .form-group {
+    margin-bottom: 0;
+}
+
+#edm-setting .panel-body .form-group + .form-group {
+    margin-top: 10px;
+}
+
+#edm-setting .form-control {
     padding: 6px 5px;
-    font-size: 12px;
-    line-height: 1.42857143;
-    margin-bottom: 10px;
 }
 
-.group-4-inputs {
-    margin: 0 -2px 10px;
+#edm-setting .row {
+    margin: 0 -2px;
 }
 
-.group-4-inputs:after {
-    clear: both;
-    content: " ";
-    display: block;
-    font-size: 0;
-    height: 0;
-    line-height: 0;
-    visibility: hidden;
-}
-
-.group-4-inputs > div {
-    float: left;
-    width: 25%;
+#edm-setting .row > div {
     padding: 0 2px;
 }
 
-.group-4-inputs > div input {
-    margin-bottom: 0 !important;
+#edm-setting .colorpicker {
+    top: 50px;
+    right: 15px;
+    left: auto;
 }
 
 /* ====================================================================================
@@ -103,7 +113,6 @@ body.opened-keditor-snippets div.cke_float[id*="cke_keditor-section-"] {
 #keditor-snippets-container {
     opacity: 1;
     background: #fff;
-    z-index: 10000;
 }
 
 #keditor-snippets-toggler {
