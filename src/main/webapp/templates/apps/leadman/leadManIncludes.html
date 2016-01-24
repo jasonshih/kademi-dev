@@ -465,18 +465,24 @@
 
         #if( $lead.profile )
         <div class="text-muted leadContactMethods">
+            #if($lead.profile.email)
             <a href="mailto:$lead.profile.email" class="text-muted">
                 <em aria-hidden="true" class="fa fa-envelope"></em>
             </a>
-            <a href="$lead.profile.phone" class="text-muted">
+            #end
+            #if($lead.profile.phone)
+            <a href="tel:$lead.profile.phone" class="text-muted">
                 <em aria-hidden="true" class="fa fa-mobile"></em>
             </a>
+            #end
+            <!--
             <a href="javascript:void(0)" class="text-muted">
                 <i aria-hidden="true" class="fa fa-twitter"></i>
             </a>
             <a href="javascript:void(0)" class="text-muted">
                 <i aria-hidden="true" class="fa fa-facebook"></i>
             </a>
+            -->
         </div>
         #end
 
