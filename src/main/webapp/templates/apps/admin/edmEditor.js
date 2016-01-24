@@ -1,4 +1,14 @@
 var win = $(window);
+var DEFAULT_EDM_BACKGROUND= '#fafafa';
+var DEFAULT_EDM_PADDING_TOP = '20px';
+var DEFAULT_EDM_PADDING_BOTTOM = '20px';
+var DEFAULT_EDM_PADDING_LEFT = '20px';
+var DEFAULT_EDM_PADDING_RIGHT = '20px';
+var DEFAULT_EDM_BODY_BACKGROUND = '#ffffff';
+var DEFAULT_EDM_BODY_PADDING_TOP = '10px';
+var DEFAULT_EDM_BODY_PADDING_BOTTOM = '10px';
+var DEFAULT_EDM_BODY_PADDING_LEFT = '10px';
+var DEFAULT_EDM_BODY_PADDING_RIGHT = '10px';
 var DEFAULT_FONT_FAMILY = 'Arial, Helvetica, san-serif';
 var DEFAULT_FONT_SIZE = '14px';
 var DEFAULT_LINE_HEIGHT = '1.42857143';
@@ -59,18 +69,18 @@ function processFileBody() {
     edmBody.html(edmHtml.find('td#edm-body-td').html());
 
     var tdWrapper = edmHtml.find('td#edm-wrapper-td');
-    $('#edm-background').val(tdWrapper.css('background-color') || '#fafafa');
-    $('#edm-padding-top').val(tdWrapper.css('padding-top') || '20px');
-    $('#edm-padding-bottom').val(tdWrapper.css('padding-bottom') || '20px');
-    $('#edm-padding-left').val(tdWrapper.css('padding-left') || '20px');
-    $('#edm-padding-right').val(tdWrapper.css('padding-right') || '20px');
+    $('#edm-background').val(tdWrapper.css('background-color') || DEFAULT_EDM_BACKGROUND);
+    $('#edm-padding-top').val(tdWrapper.css('padding-top') || DEFAULT_EDM_PADDING_TOP);
+    $('#edm-padding-bottom').val(tdWrapper.css('padding-bottom') || DEFAULT_EDM_PADDING_BOTTOM);
+    $('#edm-padding-left').val(tdWrapper.css('padding-left') || DEFAULT_EDM_PADDING_LEFT);
+    $('#edm-padding-right').val(tdWrapper.css('padding-right') || DEFAULT_EDM_PADDING_RIGHT);
 
     var tdBody = edmHtml.find('td#edm-body-td');
-    $('#edm-body-background').val(tdBody.css('background-color') || '#ffffff');
-    $('#edm-body-padding-top').val(tdBody.css('padding-top') || '10px');
-    $('#edm-body-padding-bottom').val(tdBody.css('padding-bottom') || '10px');
-    $('#edm-body-padding-left').val(tdBody.css('padding-left') || '10px');
-    $('#edm-body-padding-right').val(tdBody.css('padding-right') || '10px');
+    $('#edm-body-background').val(tdBody.css('background-color') || DEFAULT_EDM_BODY_BACKGROUND);
+    $('#edm-body-padding-top').val(tdBody.css('padding-top') || DEFAULT_EDM_BODY_PADDING_TOP);
+    $('#edm-body-padding-bottom').val(tdBody.css('padding-bottom') || DEFAULT_EDM_BODY_PADDING_BOTTOM);
+    $('#edm-body-padding-left').val(tdBody.css('padding-left') || DEFAULT_EDM_BODY_PADDING_LEFT);
+    $('#edm-body-padding-right').val(tdBody.css('padding-right') || DEFAULT_EDM_BODY_PADDING_RIGHT);
     $('#edm-font-family').val(tdBody.attr('data-font-family') || DEFAULT_FONT_FAMILY);
     $('#edm-font-size').val(tdBody.attr('data-font-size') || DEFAULT_FONT_SIZE);
     $('#edm-line-height').val(tdBody.attr('data-line-height') || DEFAULT_LINE_HEIGHT);
@@ -152,7 +162,8 @@ function initSettingPanel() {
         var input = $(this);
         input.colorpicker({
             format: 'hex',
-            container: input.parent()
+            container: input.parent(),
+            component: '.add-on, .input-group-addon'
         }).trigger('changeColor.colorpicker');
 
         input.on('changeColor.colorpicker', function (e) {
