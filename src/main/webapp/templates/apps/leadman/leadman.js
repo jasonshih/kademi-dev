@@ -410,6 +410,7 @@ function initNewNoteForm() {
             }
             Msg.info('Created note');
             modal.modal("hide");
+            $('#leadNotesBody').reloadFragment();
         }
     });
 
