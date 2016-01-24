@@ -57,15 +57,12 @@
                 </h3>
                 #if( $lead.profile )
                 <p>
-                    <i aria-hidden="true" class="fa fa-map-marker"></i>
-                    Street 1391 Depaul Dr
-
                     #if( $lead.profile.email )
-                    , $lead.profile.email
+                    <i class="fa fa-envelope"></i> $lead.profile.email
                     #end
 
                     #if( $lead.profile.phone )
-                    , $lead.profile.phone
+                    <i class="fa fa-phone"></i> $lead.profile.phone
                     #end
                 </p>
                 #end
