@@ -172,7 +172,7 @@
                                             <div class="form-group">
                                                 <label class="control-label col-md-3">Lead stage:</label>
                                                 <div class="col-md-3">
-                                                    <select name="stageName" class="form-control">
+                                                    <select name="stageName" class="form-control immediateUpdate">
                                                         <option value="">[None]</option>
                                                         #foreach( $stage in $page.allStages )
                                                         $formatter.option($stage, $stage, $page.stageName)
