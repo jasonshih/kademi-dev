@@ -230,6 +230,7 @@ function initNewLeadForm() {
             if (btn.hasClass("btnCreateAndClose")) {
                 Msg.info('Saved new lead');
                 modal.modal("hide");
+                $('#all_contacts').reloadFragment();
             } else {
                 Msg.info('Saved, going to the new lead');
                 if (resp.nextHref) {
@@ -359,6 +360,7 @@ function initNewQuickLeadForm() {
                 if (data.status) {
                     Msg.info('Saved new lead');
                     modal.modal("hide");
+                    $('#all_contacts').reloadFragment();
                 } else {
 
                 }
