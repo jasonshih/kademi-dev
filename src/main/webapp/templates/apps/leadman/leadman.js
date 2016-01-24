@@ -1,6 +1,7 @@
 $(function () {
     flog("leadman.js - init");
 
+    window.Msg.iconMode = "fa";
     jQuery.timeago.settings.allowFuture = true;
 
     initNewLeadForm();
