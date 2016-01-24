@@ -75,3 +75,13 @@ html body .fa {
 .navbar-toggle .icon-bar {
     background-color: #c5cae9;
 }
+
+li.current-user a .dropdown-toggle {
+    padding: 10px 4px 7px 9px;
+}
+
+li.current-user a > img {
+
+    max-width: 30px !important;
+    vertical-align: top;
+}

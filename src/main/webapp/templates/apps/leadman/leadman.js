@@ -23,6 +23,10 @@ $(function () {
     initAudioPlayer();
     initDeleteFile();
 
+    // init the login form
+    $(".login").user({
+    });
+
 
     // Clear down modals when closed
     $('body').on('hidden.bs.modal', '.modal', function () {

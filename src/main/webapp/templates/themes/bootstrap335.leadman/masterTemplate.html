@@ -96,13 +96,6 @@ $!bodyContent
                         </li>
 
                         <li>
-                            <a href="/profile" title="My profile" data-ripple="">
-                                <em class="icon-head fa-2x text-warning"></em>
-                                <span class="visible-xs-inline ml">My profile </span>
-                            </a>
-                        </li>
-
-                        <li>
                             <a href="/profile" title="Create a contact" class="createContact" title="Create a new customer profile">
                                 <i class="fa fa-2x  fa-user-plus text-success"></i>
                                 <span class="visible-xs-inline ml">Create a contact </span>
@@ -147,6 +140,16 @@ $!bodyContent
                             </form>
                         </li>
 
+                        <li>
+                            <a href="/profile" title="My profile" data-ripple="">
+                                <em class="icon-head fa-2x text-warning"></em>
+                                <span class="visible-xs-inline ml">My profile </span>
+                            </a>
+                        </li>
+
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        #if($user)
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                 Logged in to: $currentOrg.title
@@ -158,7 +161,29 @@ $!bodyContent
                                 #end
                             </ul>
                         </li>
-
+                        #end
+                        <li class="dropdown current-user user">
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                #if( $profile.photoHash )
+                                <img src="/_hashes/files/$profile.photoHash" class="circle-img" alt="">
+                                #end
+                                <span class="username">$user.nickName</span>
+                                <i class="clip-chevron-down"></i>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="/profile">
+                                        &nbsp;My Profile
+                                    </a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="#" class="logout">
+                                        &nbsp;Log Out
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
                 </div>
             </nav>
