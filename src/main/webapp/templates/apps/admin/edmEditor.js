@@ -9,10 +9,11 @@ var DEFAULT_EDM_BODY_PADDING_TOP = '10px';
 var DEFAULT_EDM_BODY_PADDING_BOTTOM = '10px';
 var DEFAULT_EDM_BODY_PADDING_LEFT = '10px';
 var DEFAULT_EDM_BODY_PADDING_RIGHT = '10px';
+var DEFAULT_TEXT_COLOR = '#333333';
+var DEFAULT_LINK_COLOR = '#337ab7';
 var DEFAULT_FONT_FAMILY = 'Arial, Helvetica, san-serif';
 var DEFAULT_FONT_SIZE = '14px';
 var DEFAULT_LINE_HEIGHT = '1.42857143';
-var DEFAULT_TEXT_COLOR = '#333333';
 
 function initEdmEditorPage(fileName) {
     flog('initEdmEditorPage', fileName);
@@ -56,6 +57,15 @@ function applyInlineCssForTextWrapper(target) {
     });
 }
 
+function applyInlineCssForLink(target) {
+    target.each(function () {
+        $(this).css({
+            'text-decoration': 'none',
+            'color': $('#edm-link-color').val()
+        });
+    });
+}
+
 function processFileBody() {
     var edmBody = $('#edm-body');
     var edmHtml = $('<div />').html($('#edm-html').html());
@@ -85,10 +95,11 @@ function processFileBody() {
     $('#edm-font-size').val(tdBody.attr('data-font-size') || DEFAULT_FONT_SIZE);
     $('#edm-line-height').val(tdBody.attr('data-line-height') || DEFAULT_LINE_HEIGHT);
     $('#edm-text-color').val(tdBody.attr('data-text-color') || DEFAULT_TEXT_COLOR);
+    $('#edm-link-color').val(tdBody.attr('data-link-color') || DEFAULT_LINK_COLOR);
 }
 
 function initKEditor(body) {
-    $('#edm-body').keditor({
+    $('#edm-header, #edm-body, #edm-footer').keditor({
         ckeditor: {
             skin: editorSkin,
             allowedContent: true, // DISABLES Advanced Content Filter. This is so templates with classes are allowed through
@@ -110,7 +121,7 @@ function initKEditor(body) {
                 {name: 'others', groups: ['others']},
                 {name: 'about', groups: ['about']}
             ],
-            extraPlugins: 'embed_video,fuse-image,sourcedialog,lineheight',
+            extraPlugins: 'embed_video,fuse-image,sourcedialog,lineheight,onchange',
             removePlugins: 'table,magicline,tabletools',
             removeButtons: 'Save,NewPage,Preview,Print,Templates,PasteText,PasteFromWord,Find,Replace,SelectAll,Scayt,Form,HiddenField,ImageButton,Button,Select,Textarea,TextField,Radio,Checkbox,Outdent,Indent,Blockquote,CreateDiv,Language,Table,HorizontalRule,Smiley,SpecialChar,PageBreak,Iframe,Styles,BGColor,Maximize,About,ShowBlocks,BidiLtr,BidiRtl,Flash,Image',
             enterMode: CKEDITOR.ENTER_DIV,
@@ -124,15 +135,28 @@ function initKEditor(body) {
         snippetsUrl: '/static/keditor/snippets/edm/snippets.html',
         snippetsListId: 'snippets-list',
         onInitContent: function (contentArea) {
+            var contentArea = $(this);
+            contentArea[contentArea.find('> section').length === 0 ? 'addClass' : 'removeClass']('empty');
+
             return contentArea.find('> table');
         },
         onSectionReady: function (section) {
-            applyInlineCssForTextWrapper(section.find('td.text-wrapper'));
+            var textWrapper = section.find('td.text-wrapper');
+            applyInlineCssForTextWrapper(textWrapper);
+            applyInlineCssForLink(textWrapper.find('a'));
+
+            var editor = section.find('.keditor-section-content').ckeditor().editor;
+            editor.on('change', function () {
+                applyInlineCssForLink(textWrapper.find('a'));
+            });
         },
         onContentChanged: function () {
             if (!body.hasClass('content-changed')) {
                 body.addClass('content-changed');
             }
+
+            var contentArea = $(this);
+            contentArea[contentArea.find('> section').length === 0 ? 'addClass' : 'removeClass']('empty');
         }
     });
 }
@@ -246,6 +270,7 @@ function getEdmBody() {
     var edmFontSize = $('#edm-font-size').val();
     var edmLineHeight = $('#edm-line-height').val();
     var edmTextColor = $('#edm-text-color').val();
+    var edmLinkColor = $('#edm-link-color').val();
     var styleTDBody = '';
     var attributeTableBody = '';
     var attributeTDBody = '';
@@ -276,6 +301,9 @@ function getEdmBody() {
     }
     if (edmTextColor) {
         attributeTDBody += ' data-text-color="' + edmTextColor + '" ';
+    }
+    if (edmLinkColor) {
+        attributeTDBody += ' data-link-color="' + edmLinkColor + '" ';
     }
 
     return (
