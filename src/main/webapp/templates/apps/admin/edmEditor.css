@@ -20,6 +20,49 @@ body.opened-keditor-snippets #edm-area {
     margin: 0 auto;
     max-width: 650px;
     box-sizing: border-box;
+    min-height: 100px;
+    outline: 3px dashed #ccc;
+    outline-offset: 3px;
+}
+
+#edm-body {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#edm-header,
+#edm-footer {
+    padding: 0;
+}
+
+#edm-header.empty,
+#edm-body.empty,
+#edm-footer.empty {
+    position: relative;
+}
+
+#edm-header.empty:before,
+#edm-body.empty:before,
+#edm-footer.empty:before {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 20px;
+    font-weight: bold;
+    color: #ccc;
+    transform: translate(-50%, -50%);
+}
+
+#edm-header.empty:before {
+    content: "EDM Header";
+}
+
+#edm-body.empty:before {
+    content: "EDM Body";
+}
+
+#edm-footer.empty:before {
+    content: "EDM Footer";
 }
 
 #edm-setting {
