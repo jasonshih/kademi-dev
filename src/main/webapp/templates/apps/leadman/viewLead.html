@@ -313,6 +313,11 @@
                                         </div>
                                     </div>
                                     <div id="files" role="tabpanel" class="tab-pane fade">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <button type="button" class="btn btn-success upload-files pull-right"><span class="fa fa-upload"></span> Upload</button>
+                                            </div>
+                                        </div>
                                         <table class="table table-hover">
                                             <thead>
                                                 <tr>
@@ -322,7 +327,7 @@
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
+                                            <tbody id="files-body">
                                                 #foreach($file in $page.children.ofType.leadFile)
                                                 <tr>
                                                     <td class="text-center">
@@ -426,11 +431,7 @@
 
             </div>
         </div>
-
-
         <hr/>
-
-
 
         <div class="modal fade" id="newTaskModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
             <div class="modal-dialog">
@@ -491,6 +492,34 @@
         </div>
 
 
+        <div class="modal fade" id="uploadFileModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Upload Files</h4>
+                    </div>
+                    <form method="post" action="$page.href" class="form-horizontal" enctype="multipart/form-data">
+                        <input type="hidden" name="uploadFiles" value="uploadFiles"/>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <div class="col-md-9">
+                                    <label for="exampleInputFile"></label>
+                                    <input name="files" type="file" multiple="true" class="required" id="exampleInputFile" />
+                                    <p class="help-block">Example block-level help text here.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-default" data-dismiss="modal" type="button">Exit</button>
+
+                            <button class="btn btn-primary" type="submit">Upload</button>
+                        </div>
+                    </form>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>
+
         #createModals()
 
         <script type="text/javascript">
@@ -504,6 +533,7 @@
                 });
 
                 initNewTaskModal();
+                initFileUploads();
 
                 $("#assignToMenu").on("click", "a", function (e) {
                     e.preventDefault();
@@ -566,6 +596,25 @@
                     error: function (resp) {
                         flog('error', resp);
                         Msg.error('Sorry couldnt set the visibility ' + resp);
+                    }
+                });
+            }
+
+            function initFileUploads() {
+                var modal = $('#uploadFileModal');
+                var form = modal.find('form');
+
+                $('body').on('click', '.upload-files', function (e) {
+                    e.preventDefault();
+
+                    modal.modal('show');
+                });
+
+                form.forms({
+                    callback: function (resp) {
+                        Msg.info('Files Uploaded');
+                        $('#files-body').reloadFragment();
+                        modal.modal('hide');
                     }
                 });
             }
