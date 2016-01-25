@@ -67,16 +67,23 @@ function applyInlineCssForLink(target) {
 }
 
 function processFileBody() {
+    var edmHeader = $('#edm-header');
     var edmBody = $('#edm-body');
+    var edmFooter = $('#edm-footer');
     var edmHtml = $('<div />').html($('#edm-html').html());
+
+    // Handle styles
     var edmStyle = $('#edm-style');
     var defaultStyle = edmStyle.html();
     var savedStyle = edmHtml.find('style').html();
-
     if (savedStyle && savedStyle.length > 0 && savedStyle !== defaultStyle) {
         edmStyle.html(savedStyle);
     }
+
+    // Fulfill header, body and footer data
+    edmHeader.html(edmHtml.find('td#edm-header-td').html());
     edmBody.html(edmHtml.find('td#edm-body-td').html());
+    edmFooter.html(edmHtml.find('td#edm-footer-td').html());
 
     var tdWrapper = edmHtml.find('td#edm-wrapper-td');
     $('#edm-background').val(tdWrapper.css('background-color') || DEFAULT_EDM_BACKGROUND);
@@ -91,11 +98,13 @@ function processFileBody() {
     $('#edm-body-padding-bottom').val(tdBody.css('padding-bottom') || DEFAULT_EDM_BODY_PADDING_BOTTOM);
     $('#edm-body-padding-left').val(tdBody.css('padding-left') || DEFAULT_EDM_BODY_PADDING_LEFT);
     $('#edm-body-padding-right').val(tdBody.css('padding-right') || DEFAULT_EDM_BODY_PADDING_RIGHT);
-    $('#edm-font-family').val(tdBody.attr('data-font-family') || DEFAULT_FONT_FAMILY);
-    $('#edm-font-size').val(tdBody.attr('data-font-size') || DEFAULT_FONT_SIZE);
-    $('#edm-line-height').val(tdBody.attr('data-line-height') || DEFAULT_LINE_HEIGHT);
-    $('#edm-text-color').val(tdBody.attr('data-text-color') || DEFAULT_TEXT_COLOR);
-    $('#edm-link-color').val(tdBody.attr('data-link-color') || DEFAULT_LINK_COLOR);
+
+    var tableContainer = edmHtml.find('table#edm-container');
+    $('#edm-font-family').val(tableContainer.attr('data-font-family') || DEFAULT_FONT_FAMILY);
+    $('#edm-font-size').val(tableContainer.attr('data-font-size') || DEFAULT_FONT_SIZE);
+    $('#edm-line-height').val(tableContainer.attr('data-line-height') || DEFAULT_LINE_HEIGHT);
+    $('#edm-text-color').val(tableContainer.attr('data-text-color') || DEFAULT_TEXT_COLOR);
+    $('#edm-link-color').val(tableContainer.attr('data-link-color') || DEFAULT_LINK_COLOR);
 }
 
 function initKEditor(body) {
@@ -135,8 +144,7 @@ function initKEditor(body) {
         snippetsUrl: '/static/keditor/snippets/edm/snippets.html',
         snippetsListId: 'snippets-list',
         onInitContent: function (contentArea) {
-            var contentArea = $(this);
-            contentArea[contentArea.find('> section').length === 0 ? 'addClass' : 'removeClass']('empty');
+            contentArea[contentArea.find('> table').length === 0 ? 'addClass' : 'removeClass']('empty');
 
             return contentArea.find('> table');
         },
@@ -222,7 +230,9 @@ function applySetting() {
     var edmBodyPaddingBottom = $('#edm-body-padding-bottom').val();
     var edmBodyPaddingLeft = $('#edm-body-padding-left').val();
     var edmBodyPaddingRight = $('#edm-body-padding-right').val();
+    var edmHeader = $('#edm-header');
     var edmBody = $('#edm-body');
+    var edmFooter = $('#edm-footer');
     edmBody.css({
         'background-color': edmBodyBackground,
         'padding-top': edmBodyPaddingTop,
@@ -231,12 +241,17 @@ function applySetting() {
         'padding-right': edmBodyPaddingRight
     });
 
+    applyInlineCssForTextWrapper(edmHeader.find('td.text-wrapper'));
     applyInlineCssForTextWrapper(edmBody.find('td.text-wrapper'));
+    applyInlineCssForTextWrapper(edmFooter.find('td.text-wrapper'));
 }
 
 function getEdmBody() {
+    var edmHeader = $('#edm-header').keditor('getContent', false);
     var edmBody = $('#edm-body').keditor('getContent', false);
+    var edmFooter = $('#edm-footer').keditor('getContent', false);
 
+    // EDM Page
     var edmBackground = $('#edm-background').val();
     var edmPaddingTop = $('#edm-padding-top').val();
     var edmPaddingBottom = $('#edm-padding-bottom').val();
@@ -261,19 +276,14 @@ function getEdmBody() {
         styleTDWrapper += 'padding-right: ' + edmPaddingRight + ';';
     }
 
+    // EDM Body
     var edmBodyBackground = $('#edm-body-background').val();
     var edmBodyPaddingTop = $('#edm-body-padding-top').val();
     var edmBodyPaddingBottom = $('#edm-body-padding-bottom').val();
     var edmBodyPaddingLeft = $('#edm-body-padding-left').val();
     var edmBodyPaddingRight = $('#edm-body-padding-right').val();
-    var edmFontFamily = $('#edm-font-family').val();
-    var edmFontSize = $('#edm-font-size').val();
-    var edmLineHeight = $('#edm-line-height').val();
-    var edmTextColor = $('#edm-text-color').val();
-    var edmLinkColor = $('#edm-link-color').val();
     var styleTDBody = '';
     var attributeTableBody = '';
-    var attributeTDBody = '';
     if (edmBodyBackground) {
         styleTDBody += 'background-color: ' + edmBodyBackground + ';';
         attributeTableBody += ' bgcolor="' + edmBodyBackground + '" ';
@@ -290,20 +300,28 @@ function getEdmBody() {
     if (edmBodyPaddingRight) {
         styleTDBody += 'padding-right: ' + edmBodyPaddingRight + ';';
     }
+
+    // EDM Default styles
+    var edmFontFamily = $('#edm-font-family').val();
+    var edmFontSize = $('#edm-font-size').val();
+    var edmLineHeight = $('#edm-line-height').val();
+    var edmTextColor = $('#edm-text-color').val();
+    var edmLinkColor = $('#edm-link-color').val();
+    var dataEdmStyles = '';
     if (edmFontFamily) {
-        attributeTDBody += ' data-font-family="' + edmFontFamily + '" ';
+        dataEdmStyles += ' data-font-family="' + edmFontFamily + '" ';
     }
     if (edmFontSize) {
-        attributeTDBody += ' data-font-size="' + edmFontSize + '" ';
+        dataEdmStyles += ' data-font-size="' + edmFontSize + '" ';
     }
     if (edmLineHeight) {
-        attributeTDBody += ' data-line-height="' + edmLineHeight + '" ';
+        dataEdmStyles += ' data-line-height="' + edmLineHeight + '" ';
     }
     if (edmTextColor) {
-        attributeTDBody += ' data-text-color="' + edmTextColor + '" ';
+        dataEdmStyles += ' data-text-color="' + edmTextColor + '" ';
     }
     if (edmLinkColor) {
-        attributeTDBody += ' data-link-color="' + edmLinkColor + '" ';
+        dataEdmStyles += ' data-link-color="' + edmLinkColor + '" ';
     }
 
     return (
@@ -311,10 +329,38 @@ function getEdmBody() {
         '    <tbody>\n' +
         '        <tr>\n' +
         '            <td id="edm-wrapper-td" style="' + styleTDWrapper + '" align="center">\n' +
-        '                <table cellpadding="0" cellspacing="0" border="0" width="100%" id="edm-body" ' + attributeTableBody + ' align="center">\n' +
+        '                <table cellpadding="0" cellspacing="0" border="0" width="650" id="edm-container" ' + dataEdmStyles + '>\n' +
         '                    <tbody>\n' +
         '                        <tr>\n' +
-        '                            <td id="edm-body-td" style="' + styleTDBody + '" ' + attributeTDBody + '>\n' + edmBody + '</td>\n' +
+        '                            <td>\n' +
+        '                                <table cellpadding="0" cellspacing="0" border="0" width="100%" id="edm-header" align="center">\n' +
+        '                                    <tbody>\n' +
+        '                                        <tr>\n' +
+        '                                            <td id="edm-header-td">\n' +
+                                                         edmHeader +
+        '                                            </td>\n' +
+        '                                        </tr>\n' +
+        '                                    </tbody>\n' +
+        '                                </table>\n' +
+        '                                <table cellpadding="0" cellspacing="0" border="0" width="100%" id="edm-body" ' + attributeTableBody + ' align="center">\n' +
+        '                                    <tbody>\n' +
+        '                                        <tr>\n' +
+        '                                            <td id="edm-body-td" style="' + styleTDBody + '" >\n' +
+                                                         edmBody +
+        '                                            </td>\n' +
+        '                                        </tr>\n' +
+        '                                    </tbody>\n' +
+        '                                </table>\n' +
+        '                                <table cellpadding="0" cellspacing="0" border="0" width="100%" id="edm-footer" align="center">\n' +
+        '                                    <tbody>\n' +
+        '                                        <tr>\n' +
+        '                                            <td id="edm-footer-td">\n' +
+                                                         edmFooter +
+        '                                            </td>\n' +
+        '                                        </tr>\n' +
+        '                                    </tbody>\n' +
+        '                                </table>\n' +
+        '                            </td>\n' +
         '                        </tr>\n' +
         '                    </tbody>\n' +
         '                </table>\n' +

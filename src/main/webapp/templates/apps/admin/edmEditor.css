@@ -21,11 +21,17 @@ body.opened-keditor-snippets #edm-area {
     max-width: 650px;
     box-sizing: border-box;
     min-height: 100px;
+    outline: 3px dashed #ccc;
+    outline-offset: 3px;
+}
+
+#edm-body {
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 #edm-header,
 #edm-footer {
-    border: 3px dashed #ccc;
     padding: 0;
 }
 
