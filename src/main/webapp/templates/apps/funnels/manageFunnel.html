@@ -4,7 +4,7 @@
     </head>
     <body>
         <h1>$page.title</h1>
-        <p class="lead">Leads = $page.leads.size()</p class="lead">
+        <p class="lead">Leads = $page.leads.size()</p>
 
         <div class="well">
             <xmp>$page.funnelXml</xmp>
@@ -23,10 +23,12 @@
                     <th>Last attained date</th>
                     <th>Stage</th>
                     <th>Source</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
-                #foreach( $lead in $page.leads )
+                #foreach( $leadPage in $page.children.ofType.lead )
+                #set($lead = $leadPage.lead)
                 <tr>
                     <td>$!lead.trackingId</td>
                     <td>$!lead.profile.email</td>
@@ -36,6 +38,9 @@
                     <td>$lead.lastAttainedDate</td>
                     <td>$!lead.stageName</td>
                     <td>$!lead.source</td>
+                    <td>
+                        <button data-leadid="$lead.id" type="button" class="btn btn-danger btn-del-lead"><i class="fa fa-trash"></i></button>
+                    </td>
                 </tr>
                 #end
             </tbody>
@@ -43,10 +48,17 @@
 
         <script type="text/javascript">
             $(function () {
+                $('body').on('click', '.btn-del-lead', function (e) {
+                    e.preventDefault();
 
+                    var btn = $(this);
+                    var tr = btn.closest('tr');
+                    var leadId = btn.data('leadid');
+                    confirmDelete(leadId, 'this lead', function () {
+                        tr.remove();
+                    });
+                });
             });
-
-
         </script>
     </body>
 </html>
