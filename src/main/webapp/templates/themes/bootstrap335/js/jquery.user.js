@@ -49,7 +49,6 @@
         urlSuffix: '/.dologin',
         afterLoginUrl: null,
         logoutSelector: '.logout',
-        validationMessageSelector: '.email span',
         requiredFieldsMessage: 'Please enter your credentials.',
         loginFailedMessage: 'Sorry, those login details were not recognised.',
         userNameProperty: '_loginUserName',
