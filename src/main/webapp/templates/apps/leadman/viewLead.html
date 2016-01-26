@@ -180,6 +180,17 @@
                                                     </select>
                                                 </div>
                                             </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3">Source</label>
+                                                <div class="col-md-3">
+                                                    <select name="source" class="form-control immediateUpdate">
+                                                        <option value="">[None]</option>
+                                                        #foreach( $source in $page.allSources )
+                                                        $formatter.option($source, $source, $page.source)
+                                                        #end
+                                                    </select>
+                                                </div>
+                                            </div>
 
                                             #foreach($field in $page.extraFields)
                                             <div class="form-group">

@@ -926,6 +926,8 @@ function isQuizComplete(e) {
                 if (response.status) {
                     flog('quiz validated ok', response);
                     quiz.addClass("validated");
+                    flog('quizSuccess');
+                    quiz.trigger('quizSuccess');
                     $(e.target).click();
                 } else {
                     flog('quiz validated returned false', response);
