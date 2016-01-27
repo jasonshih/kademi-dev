@@ -10,7 +10,23 @@ function initCheckout() {
 function initCartForm() {
     $('#cart-form').forms({
         validate: function (form) {
-            $('#cart-form').find('button[type=submit] i').show();
+            var icon = form.find('button[type=submit] i');
+            icon.show();
+
+            var phone = form.find('[name=phone]');
+            var phoneValue = phone.val();
+            if (phoneValue) {
+                var regex = /-|\+|\s|\(|\)|x|ext|,|\.|\//ig;
+                var phoneValue = phoneValue.replace(regex, '');
+                if (isNaN(phoneValue) || phoneValue.length < 5) {
+                    icon.hide();
+                    return {
+                        error: 1,
+                        errorFields: [phone],
+                        errorMessages: ['Please enter a valid phone number']
+                    };
+                }
+            }
 
             return true;
         },
