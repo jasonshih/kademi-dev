@@ -170,6 +170,16 @@
                                                 </div>
                                             </div>
                                             <div class="form-group">
+                                                <label class="control-label col-md-3">Funnel:</label>
+                                                <div class="col-md-3">
+                                                    <select name="funnel" class="form-control immediateUpdate">
+                                                        #foreach( $funnel in $page.allFunnels )
+                                                        $formatter.option($funnel.repo, $funnel.title, $page.funnelId)
+                                                        #end
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
                                                 <label class="control-label col-md-3">Lead stage:</label>
                                                 <div class="col-md-3">
                                                     <select name="stageName" class="form-control immediateUpdate">
