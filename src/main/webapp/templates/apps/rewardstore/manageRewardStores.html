@@ -71,7 +71,7 @@
                     <div class="form-group">
                         <label class="col-md-3 control-label" for="websiteName">Website</label>
                         <div class="col-md-8">
-                            <select name="websiteName" class="form-control">
+                            <select name="websiteName" class="form-control required" required="" id="websiteName">
                                 #foreach($website in $page.find("/websites").children.ofType.website)
                                 <option value="$website.name">$website.title</option>
                                 #end
@@ -81,7 +81,7 @@
                     <div class="form-group">
                         <label class="col-md-3 control-label" for="rewardName">Reward</label>
                         <div class="col-md-8">
-                            <select name="rewardName" class="form-control">
+                            <select name="rewardName" class="form-control required" required="" id="rewardName">
                                 #foreach($reward in $page.availableRewards)
                                 <option value="$reward.name">$reward.title</option>
                                 #end
