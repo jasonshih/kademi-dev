@@ -2,37 +2,47 @@
     #parse("/theme/masterTemplate.html")
     <head>
         #@themeHeader( "Analytics" )
-        
+
         #end
     </head>
-    <body class='add-container'>
+    <body>
         #@themeBody()
-
-        <div class="">
-            <div style="" class="unwrap">
-                <div class="container container-lg p-lg">
+        <div class="container container-lg p-lg">
+            <div class="row">
+                <div class="col-lg-2">
                     <h1>Analytics</h1>
-                    <svg id="funnel"></svg>
+                </div>
+                <div class="col-lg-10">
+                    <div class="btn-group pull-right">
+                        <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="aggr-title">Source</span> <i class="fa fa-caret-down"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="btn-select-aggr" href="source">Source</a></li>
+                            <li><a class="btn-select-aggr" href="assignedToOrg.id">Team</a></li>
+                            <li><a class="btn-select-aggr" href="assignedToProfile.id">Sales consultant</a></li>
+                            #foreach($ex in $page.aggreFields)
+                            <li><a class="btn-select-aggr" href="ex_$ex.name">$ex.title</a></li>
+                            #end
+                        </ul>
+                    </div>
                 </div>
             </div>
-            
+            <div>
+                <svg id="funnel"></svg>
+            </div>
         </div>
-
-
-
-
-        
-
-
-        #createModals()
 
         <script src="//d3js.org/d3.v3.min.js"></script>
         <script src="/theme/apps/leadman/analytics.js"></script>
+        <script src="/theme/apps/leadman/jquery.kfunnel.js?v=$formatter.now.time" type="text/javascript"></script>
         <script type="text/javascript">
             $(function () {
                 initLeadManAnalytics();
             });
         </script>
         #end
+
+        #createModals()
     </body>
 </html>
