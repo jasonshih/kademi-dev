@@ -26,13 +26,15 @@
         max-height: 200px;
     }
 </style>
+
+#set( $leadsPage = $page.find("/leads") )
 <div class="fw-boxed">
     <div class="panel panel-default">
         <div class="row">
             <div class="col-md-4">
                 <div class="row text-muted m0">
                     <div data-ripple="" class="col-xs-3 col-md-6 bb br pv-xxl infoBox" >
-                        <h1 class="text-thin">150</h1>
+                        <h1 class="text-thin">$leadsPage.numMyLeads</h1>
                         <div class="text-right text-sm text-muted">Leads</div>
                     </div>
                     <div data-ripple="" class="col-xs-3 col-md-6 bb br pv-xxl infoBox" >
@@ -40,12 +42,12 @@
                         <div class="text-right text-sm text-muted">Response time, mins</div>
                     </div>
                     <div data-ripple="" class="col-xs-3 col-md-6 bb-lg br pv-xxl infoBox" >
-                        <h1 class="text-thin">472k</h1>
+                        <h1 class="text-thin">$leadsPage.myLeadsEstimatedValue</h1>
                         <div class="text-right text-sm text-muted">Pipeline value</div>
                     </div>
                     <div data-ripple="" class="col-xs-3 col-md-6 bb-lg br pv-xxl infoBox" >
-                        <h1 class="text-thin">5</h1>
-                        <div class="text-right text-sm text-muted">Tasks due today</div>
+                        <h1 class="text-thin">$leadsPage.myDueTasks.size()</h1>
+                        <div class="text-right text-sm text-muted">Tasks due</div>
                     </div>
                 </div>
             </div>
@@ -89,7 +91,7 @@
 
 
 <div class="">
-    #set( $leadsPage = $page.find("/leads") )
+
 
     <br/>
 

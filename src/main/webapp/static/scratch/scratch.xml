@@ -1,46 +1,71 @@
-<RecordExecutionStep>
-    <preventDuplicates>false</preventDuplicates>
-    <execIdTemplate>StarClass-Dealer-Targets_2015</execIdTemplate>
-    <next class="TransactionStep" alwaysRollback="false">
-        <next class="ExcelInputStep">
-            <useXml>true</useXml>
-            <processRows>true</processRows>
-            <nextSheetSteps>
-                <NextSheetStep sheetNum="0" startRow="2">
-                    <next class="JsRowStep">
-                        <!-- Execute the next step for each month, setting the month number into attribute monthNum -->
-                        <jsPath>/integration/integration.js</jsPath>
-                        <execFn>foreachMonth</execFn>
-                        <next class="SalesDataInserter" mode="updateOrInsert" logInserts="true" logUpdates="true">
-                            <seriesName>star-class-partspurchase-data</seriesName>
-                            <column field="attributedTo" columnName="D">
-                                <expr>
-                                    org = pipeline.thisOrg.findChildOrgByField("StoreCode", value);
-                                    if(org != null){
-                                    return org.orgId;
-                                    }
-                                    return null;
-                                </expr>
-                            </column>
-                            <column field="amount" >
-                                <!-- column G + 10*month -->
-                                <expr><![CDATA[
-                                                    col = 2 + formatter.toInteger(pipeline.attributes.monthNum);
-                                                    if (0 >= row[col]) { return 1; } else { return row[col]; }
-                                                ]]></expr>
-                            </column>
-
-                            <column field="fromDate">
-                                <expr>formatter.monthStart(formatter.now, pipeline.attributes.monthNum)</expr>
-                            </column>
-                            <column field="toDate">
-                                <expr>formatter.monthEnd(formatter.now, pipeline.attributes.monthNum)</expr>
-                            </column>
-                        </next>
-
-                    </next>
-                </NextSheetStep>
-            </nextSheetSteps>
-        </next>
-    </next>
-</RecordExecutionStep>
+<funnel name="Car sales" leadsGroup="carEnquries" defaultInitialGoal="Direct Entry">
+    <title>Cusstomer requests test drive</title>
+    <source>facebook</source>
+    <source>google search</source>
+    <source>google ad</source>
+    <source>website</source>
+    <stage>cold</stage>
+    <stage>warm</stage>
+    <stage>hot</stage>
+    <goal name="viewLandingPage" stageName="cold">
+        <nextGoal name="submitForm" stageName="warm">
+            <nextGoal name="testDriveBooked" stageName="hot">
+                <nextGoal name="doneTestDrive">
+                    <nextGoal name="CloseTheSale" stageName="Closed">
+                        <exitActions>
+                            <createDataSeriesAction>
+                                <dataSeriesName>sales</dataSeriesName>
+                                <amountMvel>dealAmount</amountMvel>
+                                <recordDateMvel>closedDate</recordDateMvel>
+                            </createDataSeriesAction>
+                        </exitActions>
+                    </nextGoal>
+                    <triggers>
+                        <taskCompleteTrigger taskName="do-test-drive"/>
+                    </triggers>
+                    <enterActions>
+                        <createTaskAction taskName="do-test-drive" periodMultiples="0" descriptionMvel="Have the test drive"/>
+                    </enterActions>
+                </nextGoal>
+                <triggers>
+                    <taskCompleteTrigger taskName="arrange-time"/>
+                </triggers>
+                <enterActions>
+                    <createTaskAction taskName="arrange-time" frequency="days" periodMultiples="3" assignToOrgRule="hk" assignToGroupRule="retail" descriptionMvel="Contact the customer to arrange a time"/>
+                </enterActions>
+                <exitActions>
+                    <createDataSeriesAction>
+                        <dataSeriesName>new-leads</dataSeriesName>
+                        <amountMvel>1</amountMvel>
+                        <recordDateMvel>lead.createDate</recordDateMvel>
+                    </createDataSeriesAction>
+                    <calendarEventAction calendarName="test-drives" titleMvel="&apos;Test drive with &apos; + lead.profile.formattedName" dateMvel="lead.mostRecentTask.dueDate"/>
+                </exitActions>
+            </nextGoal>
+            <triggers>
+                <contactFormTrigger contactFormPath="/contactus" websiteName="infiniti-landingpage"/>
+                <automationTrigger triggerName="trigger1"/>
+            </triggers>
+        </nextGoal>
+        <triggers>
+            <pageViewTrigger path="/contactus" websiteName="infiniti-landingpage"/>
+        </triggers>
+        <exitActions>
+            <createDataSeriesAction>
+                <dataSeriesName>newLeads</dataSeriesName>
+                <amountMvel>1</amountMvel>
+                <recordDateMvel>createDate</recordDateMvel>
+            </createDataSeriesAction>
+        </exitActions>
+    </goal>
+    <goal name="Direct Entry" stageName="cold">
+        <nextGoal reference="../../goal/nextGoal/nextGoal"/>
+        <exitActions>
+            <createDataSeriesAction>
+                <dataSeriesName>newLeads</dataSeriesName>
+                <amountMvel>1</amountMvel>
+                <recordDateMvel>createDate</recordDateMvel>
+            </createDataSeriesAction>
+        </exitActions>
+    </goal>
+</funnel>
