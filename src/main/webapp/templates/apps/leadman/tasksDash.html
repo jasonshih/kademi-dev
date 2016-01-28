@@ -11,19 +11,48 @@
     <ul class="list-group ng-scope">
         <li class="list-group-item" style="padding-bottom: 45px">
             <p>
-                #set( $colour = $leadsPage.statusColour($task, 3) )
-                <a href="/tasks/$task.id/" class="mr btn btn-${colour} btn-sm btn-circle" data-target="#modalEditTask" data-toggle="modal">T</a>
-                <em>$!task.title</em>
+                <em>$!task.title -</em>
                 $task.taskDescription
             </p>
             <a href="/tasks/$task.id" class="btn btn-success pull-right takeTask">Take task</a>
+            #set( $lead = false )
+            #set( $lead = $task.relatedLead )
+            #if( $lead )
+            <div style="margin: 15px">
+                <h3 class="media-heading">
+                    <a href="/leads/$lead.id/">
+                        #if( $lead.profile )
+                        $lead.profile.formattedName
+                        #else
+                        No contact information
+                        #end
+                    </a>
+                </h3>
+                #if( $lead.profile )
+                <p>
+                    #if( $lead.profile.email )
+                    <i class="fa fa-envelope"></i> $lead.profile.email
+                    #end
+
+                    #if( $lead.profile.phone )
+                    <i class="fa fa-phone"></i> $lead.profile.phone
+                    #end
+                </p>
+                #end
+            </div>
+            #end
         </li>
     </ul>
+    <hr/>
     #end
     #end
 
     #set( $tasks = $leadsPage.myDueTasks )
     #if( $tasks.size() > 0)
+    <h3>
+        My Tasks
+    </h3>
+
     #foreach($task in $tasks)
     <ul class="list-group ng-scope">
         <li class="list-group-item task">
