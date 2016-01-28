@@ -1,5 +1,5 @@
 /*
- * Version 0.1.0
+ * Version 0.1.1 
  */
 
 (function ($) {
@@ -91,51 +91,78 @@
 
                 adjustButtonWidth = Math.max(1.3 * adjustButtonWidth, 300);
 
-                var trapBox = new Trapezoidal([[200, 0], [200 + adjustTopWidth, 0], [200 + (adjustTopWidth + adjustButtonWidth) / 2, totalHeight], [200 + (adjustTopWidth - adjustButtonWidth) / 2, totalHeight]]);
+                //var trapBox = new Trapezoidal([[200, 0], [200 + adjustTopWidth, 0], [200 + (adjustTopWidth + adjustButtonWidth) / 2, totalHeight], [200 + (adjustTopWidth - adjustButtonWidth) / 2, totalHeight]]);
+                var trapBox = new Trapezoidal([[0, 0], [adjustTopWidth, 0], [(adjustTopWidth + adjustButtonWidth) / 2, totalHeight], [(adjustTopWidth - adjustButtonWidth) / 2, totalHeight]]);
                 var data_set = [];
                 var name_set = new Set();
 
                 var color_codes = {};
                 function stringToColorCode(str) {
-                    return (str in color_codes) ? color_codes[str] : (color_codes[str] = '#' + ('000000' + (Math.random() * 0xFFFFFF << 0).toString(16)).slice(-6));
+                    var hash = djb2(str);
+                    var r = (hash & 0xFF0000) >> 16;
+                    var g = (hash & 0x00FF00) >> 8;
+                    var b = hash & 0x0000FF;
+                    return (str in color_codes) ? color_codes[str] : (color_codes[str] = "#" + ("0" + r.toString(16)).substr(-2) + ("0" + g.toString(16)).substr(-2) + ("0" + b.toString(16)).substr(-2));
+                }
+                function djb2(str)
+                {
+                    var hash = 5381;
+                    for (var i = 0; i < str.length; i++)
+                    {
+                        hash = ((hash << 5) + hash) + str.charCodeAt(i);
+                    }
+                    return hash;
+                }
+
+                var id_codes = {};
+                for (var i=0; i<json.stages[0].sources.length; i++)
+                {
+                    id_codes[json.stages[0].sources[i].name] = json.stages[0].sources[i].id;
                 }
 
                 for (var t = 0; t < size; t++) {
                     for (var i = 0; i < json.stages[t].sources.length; i++)
                     {
-                        data_set.push({"level": t, "name": json.stages[t].sources[i].name, "radius": Math.sqrt(json.stages[t].sources[i].count / maxCount) * (levelHeight / 2), "count": json.stages[t].sources[i].count});
+                        data_set.push({"level": t, "name": json.stages[t].sources[i].name, "id": id_codes[json.stages[t].sources[i].name],"radius": Math.sqrt(json.stages[t].sources[i].count / maxCount) * (levelHeight / 2), "count": json.stages[t].sources[i].count});
                         name_set.add(json.stages[t].sources[i].name);
                     }
                 }
 
-                for (var t = 0; t < size; t++) {
-                    svg.append("text")
-                            .style("fill", "black")
-                            .attr("x", 0)
-                            .attr("y", (t + 0.5) * levelHeight * 2)
-                            .attr("font-size", setting.stageNameFontSize)
-                            .attr("font-family", setting.stageNameFontFamily)
-                            .attr("fill", setting.stageNameFontColor)
-                            .text(json.stages[t].name);
-                }
+                //for (var t = 0; t < size; t++) {
+                //    svg.append("text")
+                //            .style("fill", "black")
+                //            .attr("x", 0)
+                //            .attr("y", (t + 0.5) * levelHeight * 2)
+                //            .attr("font-size", setting.stageNameFontSize)
+                //            .attr("font-family", setting.stageNameFontFamily)
+                //            .attr("fill", setting.stageNameFontColor)
+                //            .text(json.stages[t].name);
+                //}
 
                 var counter = 0;
                 name_set.forEach(function (value) {
                     svg.append("text")
                             .style("fill", "black")
-                            .attr("x", adjustTopWidth + 400)
+                            .attr("x", adjustTopWidth + 200)
                             .attr("y", (counter + 1) * 50 + 4)
                             .attr("font-size", setting.legendNameFontSize)
                             .attr("font-family", setting.legendNameFontFamily)
                             .attr("fill", setting.legendNameFontColor)
                             .text(value);
                     svg.append("ellipse")
-                            .attr("cx", adjustTopWidth + 370)
+                            .attr("cx", adjustTopWidth + 170)
                             .attr("cy", (counter + 1) * 50)
                             .attr("rx", 10)
                             .attr("ry", 10)
                             .attr("fill", stringToColorCode(value))
-                            .attr("stroke", d3.rgb(stringToColorCode(value)).darker());
+                            .attr("stroke", d3.rgb(stringToColorCode(value)).darker())
+                            .data([{"id": id_codes[value]}])
+                            //.enter()
+                            .on('click', function (d) {
+                                if (typeof setting.onBubbleClick === 'function') {
+                                    setting.onBubbleClick.call(this, d);
+                                }
+                            });
                     counter++;
                 });
 
