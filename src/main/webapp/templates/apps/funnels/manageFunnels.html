@@ -88,8 +88,8 @@
                     e.preventDefault();
                     var href = $(e.target).closest("a").attr("href");
                     confirmDelete(href, getFileName(href), function () {
-                        Msg.success("Deleted reward store");
-                        reloadStores();
+                        Msg.success("Deleted funnel");
+                        reloadFunnels();
                     });
                 });
 
