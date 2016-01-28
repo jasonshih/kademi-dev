@@ -3,7 +3,9 @@
     <head>
         #@themeHeader( "View lead" )
         <link rel="stylesheet" href="/static/timeline/timeline.css">
-            #end
+        <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/css/select2.min.css" rel="stylesheet" />
+        <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/js/select2.min.js"></script>
+        #end
     </head>
     <body class='add-container'>
         #@themeBody()
@@ -193,10 +195,17 @@
                                             <div class="form-group">
                                                 <label class="control-label col-md-3">Source</label>
                                                 <div class="col-md-3">
-                                                    <select name="source" class="form-control immediateUpdate">
+                                                    <select id="source-select" data-placeholder="Select a source" name="source" class="form-control immediateUpdate" style="width: 100%">
                                                         <option value="">[None]</option>
+                                                        #set($foundSource = false)
                                                         #foreach( $source in $page.allSources )
+                                                        #if($source == $page.source)
+                                                        #set($foundSource = true)
+                                                        #end
                                                         $formatter.option($source, $source, $page.source)
+                                                        #end
+                                                        #if(!$foundSource && $page.source)
+                                                        $formatter.option($page.source, $page.source, $page.source)
                                                         #end
                                                     </select>
                                                 </div>
@@ -575,6 +584,10 @@
                         Msg.info('Saved');
                         reloadTable();
                     }
+                });
+                
+                $('#source-select').select2({
+                    tags: "true"
                 });
 
             });
