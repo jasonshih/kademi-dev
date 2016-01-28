@@ -11,61 +11,64 @@
         <div class="">
             <div style="background:url(/theme/images/infiniti-bg.jpg) center center; background-size:cover; height: 160px" class="unwrap">
                 <div class="container container-lg p-lg">
-                    <div class="pull-right">
-
+                    <div class="pull-right text-right">
                         #if( $page.completed)
-                        #if( $page.cancelled)
-                        <div class="alert alert-warning">
-                            <p class="lead">
-                                <span class="fa fa-remove"></span>
-                                Lead cancelled <abbr title="$formatter.formatDateISO8601($page.closedDate)" class="timeago">$page.closedDate</abbr>
-                            </p>
-                        </div>
+                            #if( $page.cancelled)
+                                <div class="alert alert-warning">
+                                    <p class="lead">
+                                        <span class="fa fa-remove"></span>
+                                        Lead cancelled <abbr title="$formatter.formatDateISO8601($page.closedDate)" class="timeago">$page.closedDate</abbr>
+                                    </p>
+                                </div>
+                            #else
+                                <div class="alert alert-success">
+                                    <p class="lead">
+                                        <span class="fa fa-check"></span>
+                                        Lead closed <abbr title="$formatter.formatDateISO8601($page.closedDate)" class="timeago">$page.closedDate</abbr>
+                                    </p>
+                                </div>
+                            #end
                         #else
-                        <div class="alert alert-success">
-                            <p class="lead">
-                                <span class="fa fa-check"></span>
-                                Lead closed <abbr title="$formatter.formatDateISO8601($page.closedDate)" class="timeago">$page.closedDate</abbr>
-                            </p>
-                        </div>
-                        #end
-                        #else
-                        <div class="btn-group mb-sm mr dropdown">
-                            <button id="assignedBlock" class="btn btn-lg dropdown-toggle btn-info" data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false" >
-                                <span>
-                                    #if( $page.assignedTo )
-                                    Assigned to: $!page.assignedTo.firstName $!page.assignedTo.surName
-                                    #else
-                                    Not assigned
+                            <div class="btn-group">
+                                <button class="btn btn-primary btn-lg" data-target="#newTaskModal" data-toggle="modal">Add new Task</button>
+                                <a class="btn btn-success btn-lg createNote" href="$page.href">
+                                    Add a new note
+                                </a>
+                                <button class="btn btn-lg btn-warning" data-toggle="modal" data-target="#cancelDealModal">
+                                    <span class="fa fa-remove"></span>
+                                    Cancel
+                                </button>
+
+                                <button class="btn btn-lg btn-success" data-toggle="modal" data-target="#closeDealModal">
+                                    <span class="fa fa-dollar"></span>
+                                    Close deal
+                                </button>
+                            </div>
+
+                            <p></p>
+
+                            <div class="btn-group dropdown">
+                                <button id="assignedBlock" class="btn btn-lg dropdown-toggle btn-info" data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false" >
+                                    <span>
+                                        #if( $page.assignedTo )
+                                            Assigned to: $!page.assignedTo.firstName $!page.assignedTo.surName
+                                        #else
+                                            Not assigned
+                                        #end
+                                    </span>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" id="assignToMenu" role="menu">
+                                    <li><a href="$user.name">Assign to me</a></li>
+                                    <li><a href="">Clear</a></li>
+                                    #if ($page.find("/leads").teamMembers.size() > 0)
+                                        <li role="separator" class="divider"></li>
                                     #end
-                                </span>
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" id="assignToMenu" role="menu">
-                                <li><a href="$user.name">Assign to me</a></li>
-                                <li><a href="">Clear</a></li>
-                                <li role="separator" class="divider"></li>
-                                #foreach($user in $page.find("/leads").teamMembers)
-                                <li><a href="$user.name">$user.name</a></li>
-                                #end
-                            </ul>
-                        </div>
-
-                        <div class="btn-group">
-                            <button class="btn btn-primary btn-lg" data-target="#newTaskModal" data-toggle="modal">Add new Task</button>
-                            <a class="btn btn-success btn-lg createNote" href="$page.href">
-                                Add a new note
-                            </a>
-                            <button class="btn btn-lg btn-warning" data-toggle="modal" data-target="#cancelDealModal">
-                                <span class="fa fa-remove"></span>
-                                Cancel
-                            </button>
-
-                            <button class="btn btn-lg btn-success" data-toggle="modal" data-target="#closeDealModal">
-                                <span class="fa fa-dollar"></span>
-                                Close deal
-                            </button>
-                        </div>
+                                    #foreach($user in $page.find("/leads").teamMembers)
+                                        <li><a href="$user.name">$user.name</a></li>
+                                    #end
+                                </ul>
+                            </div>
                         #end
                     </div>
                     <div class="media mt-lg">
@@ -73,11 +76,11 @@
                         <div class="media-body">
                             <h2 class="mv-lg media-heading">
                                 #if($page.leadOrg)
-                                <span style="color: white">$page.leadOrg.formattedName</span>
+                                    <span style="color: white">$page.leadOrg.formattedName</span>
                                 #elseif( $page.profile )
-                                <a href="/custs/$page.profile.name" style="color: white">$page.customerDescription</a>
+                                    <a href="/custs/$page.profile.name" style="color: white">$page.customerDescription</a>
                                 #else
-                                No contact profile
+                                    No contact profile
                                 #end
                             </h2>
                             <div style='background-color: rgba(255, 255, 255, 0.7); padding: 5px; border-radius: 5px; width: 290px'>
@@ -124,40 +127,40 @@
                                         <div class="panel-body" id="leadNotesBody">
                                             #set( $notes = $page.notes )
                                             #if( $notes.size() > 0 )
-                                            <ul class="list-block">
-                                                #foreach($note in $notes)
-                                                <li class="media">
-                                                    <div class="pull-left">
-                                                        <img src="/theme/images/user/05.jpg" alt="Image" class="media-object img-circle thumb32">
-                                                    </div>
-                                                    <div class="media-body">
-                                                        <div class="media-heading">
-                                                            <p>
-                                                                <a href="/users/$note.createdBy.name">$note.createdBy.formattedName</a>
-                                                                #if( $note.inbound )
-                                                                <small class="text-muted fa fa-arrow-left"></small>
-                                                                <small class="text-muted fa fa-${note.icon}"></small>
-                                                                #else
-                                                                <small class="text-muted fa fa-${note.icon}"></small>
-                                                                <small class="text-muted fa fa-arrow-right"></small>
-                                                                #end
-                                                                #set($type = $note.actionType +  "-" + $note.inbound)
-                                                                <a class="note-edit" href="$note.id" data-type="$type" data-notes="$!note.notes">
-                                                                    <span class="fa fa-pencil"></span>
-                                                                </a>
-                                                            </p>
-                                                            <p>
-                                                                $!note.notes
-                                                            </p>
+                                                <ul class="list-block">
+                                                    #foreach($note in $notes)
+                                                    <li class="media">
+                                                        <div class="pull-left">
+                                                            <img src="/theme/images/user/05.jpg" alt="Image" class="media-object img-circle thumb32">
                                                         </div>
-                                                    </div>
-                                                </li>
-                                                #end
-                                            </ul>
+                                                        <div class="media-body">
+                                                            <div class="media-heading">
+                                                                <p>
+                                                                    <a href="/users/$note.createdBy.name">$note.createdBy.formattedName</a>
+                                                                    #if( $note.inbound )
+                                                                    <small class="text-muted fa fa-arrow-left"></small>
+                                                                    <small class="text-muted fa fa-${note.icon}"></small>
+                                                                    #else
+                                                                    <small class="text-muted fa fa-${note.icon}"></small>
+                                                                    <small class="text-muted fa fa-arrow-right"></small>
+                                                                    #end
+                                                                    #set($type = $note.actionType +  "-" + $note.inbound)
+                                                                    <a class="note-edit" href="$note.id" data-type="$type" data-notes="$!note.notes">
+                                                                        <span class="fa fa-pencil"></span>
+                                                                    </a>
+                                                                </p>
+                                                                <p>
+                                                                    $!note.notes
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    #end
+                                                </ul>
                                             #else
-                                            <p>
-                                                <span class="label label-warning">No contact with the lead yet</span>
-                                            </p>
+                                                <p>
+                                                    <span class="label label-warning">No contact with the lead yet</span>
+                                                </p>
                                             #end
                                         </div>
                                     </div>
@@ -174,7 +177,7 @@
                                                 <div class="col-md-3">
                                                     <select name="funnel" class="form-control immediateUpdate">
                                                         #foreach( $funnel in $page.allFunnels )
-                                                        $formatter.option($funnel.repo, $funnel.title, $page.funnelId)
+                                                            $formatter.option($funnel.repo, $funnel.title, $page.funnelId)
                                                         #end
                                                     </select>
                                                 </div>
@@ -185,7 +188,7 @@
                                                     <select name="stageName" class="form-control immediateUpdate">
                                                         <option value="">[None]</option>
                                                         #foreach( $stage in $page.allStages )
-                                                        $formatter.option($stage, $stage, $page.stageName)
+                                                            $formatter.option($stage, $stage, $page.stageName)
                                                         #end
                                                     </select>
                                                 </div>
@@ -197,25 +200,25 @@
                                                         <option value="">[None]</option>
                                                         #set($foundSource = false)
                                                         #foreach( $source in $page.allSources )
-                                                        #if($source == $page.source)
-                                                        #set($foundSource = true)
-                                                        #end
-                                                        $formatter.option($source, $source, $page.source)
+                                                            #if($source == $page.source)
+                                                                #set($foundSource = true)
+                                                            #end
+                                                            $formatter.option($source, $source, $page.source)
                                                         #end
                                                         #if(!$foundSource && $page.source)
-                                                        $formatter.option($page.source, $page.source, $page.source)
+                                                            $formatter.option($page.source, $page.source, $page.source)
                                                         #end
                                                     </select>
                                                 </div>
                                             </div>
 
                                             #foreach($field in $page.extraFields)
-                                            <div class="form-group">
-                                                <label class="control-label col-md-3">$field.title:</label>
-                                                <div class="col-md-3">
-                                                    <input type="text" value="$!field.value" name="extraField_$field.name" class="form-control immediateUpdate $formatter.ifTrue($field.required, 'required', '')"/>
+                                                <div class="form-group">
+                                                    <label class="control-label col-md-3">$field.title:</label>
+                                                    <div class="col-md-3">
+                                                        <input type="text" value="$!field.value" name="extraField_$field.name" class="form-control immediateUpdate $formatter.ifTrue($field.required, 'required', '')"/>
+                                                    </div>
                                                 </div>
-                                            </div>
                                             #end
 
                                         </div>
@@ -583,7 +586,7 @@
                         reloadTable();
                     }
                 });
-                
+
                 $('#source-select').select2({
                     tags: "true"
                 });
