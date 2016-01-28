@@ -2,6 +2,20 @@ html body .fa {
     line-height: inherit;
 }
 
+.nav > li > a {
+    line-height: 30px;
+    height: 81px;
+}
+
+.topnavbar > .navbar-header > .navbar-brand {
+    height: 81px;
+    line-height: 81px;
+}
+
+.navbar-form {
+    padding-top: 6px;
+}
+
 /* ============================================================================
    Fix Glyphicon
    ============================================================================ */
@@ -75,10 +89,12 @@ html body .fa {
     display: block;
     margin: 50px 0;
 }
+
 .tt-dropdown-menu {
     background-color: #fff;
     border: 1px solid #000;
 }
+
 .tt-suggestion.tt-cursor {
     background-color: #ccc;
 }
@@ -96,7 +112,6 @@ li.current-user a .dropdown-toggle {
 }
 
 li.current-user a > img {
-
     max-width: 30px !important;
     vertical-align: top;
 }
