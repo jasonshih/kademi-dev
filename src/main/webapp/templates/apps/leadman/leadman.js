@@ -221,9 +221,24 @@ function initNewLeadForm() {
         flog("initNewLeadForm - click");
         e.preventDefault();
         var funnelName = $(e.target).closest("a").attr("href");
-        form.find("select").val(funnelName);
+        form.find("select[name=funnel]").val(funnelName).change();
         modal.modal("show");
 
+    });
+
+    $('select[name=funnel]', form).on('change', function (e) {
+        var s = $(this);
+
+        $('#source-frm').reloadFragment({
+            url: window.location.href + '?leadName=' + s.val(),
+            whenComplete: function () {
+
+            }
+        });
+    });
+
+    $('#source-frm', form).select2({
+        tags: "true"
     });
 
     form.forms({
