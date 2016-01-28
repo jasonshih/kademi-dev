@@ -23,6 +23,7 @@
                     <th>Last attained date</th>
                     <th>Stage</th>
                     <th>Source</th>
+                    <th>Assigned to</th>
                     <th></th>
                 </tr>
             </thead>
@@ -38,6 +39,7 @@
                     <td>$lead.lastAttainedDate</td>
                     <td>$!lead.stageName</td>
                     <td>$!lead.source</td>
+                    <td>$!lead.assignedToProfile.formattedName</td>
                     <td>
                         <button data-leadid="$lead.id" type="button" class="btn btn-danger btn-del-lead"><i class="fa fa-trash"></i></button>
                     </td>
