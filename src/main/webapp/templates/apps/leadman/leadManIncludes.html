@@ -4,7 +4,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="">Enter a new lead</h4>
+                <h4 class="modal-title">Enter a new lead</h4>
             </div>
             <form method="post" action="/leads/" class="form-horizontal">
                 <div class="modal-body">
@@ -99,7 +99,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="">Enter a new contact</h4>
+                <h4 class="modal-title">Enter a new contact</h4>
             </div>
             <form method="post" action="/leads/" class="form-horizontal">
                 <input type="hidden" name="orgId" value="$currentOrg.orgId"/>
@@ -145,7 +145,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="">Enter a note on a lead</h4>
+                <h4 class="modal-title">Enter a note on a lead</h4>
             </div>
             <form method="post" action="" class="form-horizontal">
                 <div class="modal-body">
@@ -215,12 +215,44 @@
     </div><!-- /.modal-dialog -->
 </div>
 
+<div class="modal fade" id="updateCreatedDateModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Update Lead Created Date</h4>
+            </div>
+            <form method="post" action="" class="form-horizontal">
+                <div class="modal-body">
+                    <p class="form-message" style="display: none"></p>
+                    <input type="hidden" name="leadId" value="" />
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="createDate">Created date</label>
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <input type="text" name="createDate" id="createDate" class="form-control date-time">
+                                <span class="input-group-addon">
+                                    <span class="fa fa-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                    <button class="btn btn-primary" type="submit">Save note</button>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
 <div class="modal fade" id="editNoteModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
     <div class="modal-dialog modal-lg ">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="">Edit a note on a lead</h4>
+                <h4 class="modal-title">Edit a note on a lead</h4>
             </div>
             <form method="post" action="" class="form-horizontal">
                 <input type="hidden" name="editNote"/>
@@ -259,7 +291,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="">Edit task</h4>
+                <h4 class="modal-title">Edit task</h4>
             </div>
             <form method="post" action="" class="form-horizontal">
                 <div class="modal-body">
@@ -280,7 +312,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="">Mark deal as closed</h4>
+                <h4 class="modal-title">Mark deal as closed</h4>
             </div>
             <form method="post" action="$page.href" class="form-horizontal">
                 <input type="hidden" name="closeDeal"/>
@@ -320,10 +352,10 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="">Deal canceled</h4>
+                <h4 class="modal-title">Deal canceled</h4>
             </div>
             <form method="post" action="$page.href" class="form-horizontal">
-                <input type="hidden" name="closeDeal"/>
+                <input type="hidden" name="cancelDeal"/>
                 <div class="modal-body">
                     <p>Cancel this lead if you are sure it will not go ahead. The lead will be marked as closed without a sale.</p>
                 </div>
@@ -342,7 +374,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="">Cancel Task</h4>
+                <h4 class="modal-title">Cancel Task</h4>
             </div>
             <form method="post" action="" class="form-horizontal">
                 <input type="hidden" name="cancelTask"/>
@@ -364,7 +396,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="">Enter a new lead</h4>
+                <h4 class="modal-title">Enter a new lead</h4>
             </div>
             <form method="post" action="" class="form-horizontal" enctype="multipart/form-data">
                 <input type="hidden" name="quickLead"/>
@@ -406,7 +438,7 @@
 
 
 #macro( showLead $lead $hideButtons )
-<div class="media">
+<div class="media" id="$lead.id">
     <div class="media-left">
         <div class="avatar avatar-away">
             <img alt="..." src="/theme/apps/leadman/user-placeholder.png" class="img img-circle" style="width: 100px" />
@@ -425,7 +457,7 @@
                 #end
             </a>
             <small class="pull-right">
-                Lead created: <abbr title="$formatter.formatDateISO8601($lead.createDate)" class="timeago">$lead.createDate</abbr>
+                Lead created: <abbr title="$formatter.formatDateISO8601($lead.createDate)" data-iso="$formatter.formatDateISO8601($lead.createDate)" class="timeago">$formatter.formatDateISO8601($lead.createDate)</abbr>
             </small>
         </h3>
         #if($lead.organisation)
@@ -505,11 +537,15 @@
                     </a>
                 </li>
                 <li>
+                    <a href="/leads/$lead.id/" class="btn btn-warning updateCreatedDate" title="Update created date">
+                        <span class="fa fa-calendar"></span>
+                    </a>
+                </li>
+                <li>
                     <a href="/leads/$lead.id/" class="btn btn-primary createNote" title="Add note or contact">
                         <span class="fa fa-lightbulb-o"></span>
                     </a>
                 </li>
-
             </ul>
         </div>
         #end

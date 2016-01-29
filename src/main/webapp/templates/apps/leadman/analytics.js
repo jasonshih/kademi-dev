@@ -12,7 +12,11 @@
             url: data_url,
             onBubbleClick: function (data) {
                 flog(data);
-                searchOptions.filters = (searchOptions.aggr + "=" + data.name);
+                var name = data.name;
+                if (data.id > 0) {
+                    name = data.id;
+                }
+                searchOptions.filters = (searchOptions.aggr + "=" + name);
                 loadFunnel();
             }
         });

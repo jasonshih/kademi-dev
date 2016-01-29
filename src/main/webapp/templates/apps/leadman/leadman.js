@@ -22,10 +22,10 @@ $(function () {
     initProfileSearch();
     initAudioPlayer();
     initDeleteFile();
+    initCreatedDateModal();
 
     // init the login form
-    $(".login").user({
-    });
+    $(".login").user({});
 
 
     // Clear down modals when closed
@@ -39,7 +39,7 @@ $(function () {
         modal.find('abbr.timeago').timeago();
         modal.find('.date-time').datetimepicker({
             format: "DD/MM/YYYY HH:mm"
-                    //,startDate: date
+            //,startDate: date
         });
         var form = modal.find(".completeTaskForm");
         flog("complete task form", form);
@@ -113,7 +113,6 @@ function initCancelTaskModal() {
 }
 
 
-
 function initImmediateUpdate() {
     var onchange = function (e) {
         flog("field changed", e);
@@ -173,21 +172,73 @@ function initOrgSelector() {
 
 function initLeadActions() {
     flog("initLeadActions");
+
     $("body").on("click", ".closeLead", function (e) {
         flog("initLeadActions click - close");
         e.preventDefault();
         var href = $(e.target).closest("a").attr("href");
         closeLead(href);
     });
+
+    $("body").on("click", ".updateCreatedDate", function (e) {
+        flog("initLeadActions click - updateCreatedDate");
+        e.preventDefault();
+
+        var a = $(this);
+        var href = a.attr("href");
+
+        showCreatedDateModal(href, a);
+    });
+
     $("body").on("click", ".cancelLead", function (e) {
         flog("initLeadActions click - cancel");
         e.preventDefault();
         var href = $(e.target).closest("a").attr("href");
         cancelLead(href);
     });
-
 }
 
+function initCreatedDateModal() {
+    flog('initCreatedDateModal');
+
+    var modal = $('#updateCreatedDateModal');
+    var form = modal.find('form');
+
+    form.forms({
+        onSuccess: function () {
+            var targetId = form.find('[name=leadId]').val();
+            var target = $('#' + targetId);
+            var createdDate = $('#createDate').val();
+            var createdDateISO = moment(createdDate, 'DD/MM/YYYY hh:mm').toISOString();
+
+            flog('Update createdDate', target.find('.timeago'), createdDate, createdDateISO);
+
+            target.find('.timeago').attr({
+                title: createdDateISO,
+                'data-iso': createdDateISO
+            }).timeago("update", createdDateISO);
+            Msg.success('Created date is saved!');
+            modal.modal('hide');
+        }
+    });
+}
+
+function showCreatedDateModal(href, link) {
+    flog('showCreatedDateModal', href, link);
+
+    var modal = $('#updateCreatedDateModal');
+    var form = modal.find('form');
+
+    var media = link.closest('.media');
+    var id = media.attr('id');
+    var createDate = media.find('.timeago').attr('data-iso');
+
+    form.attr('action', href);
+    form.find('[name=leadId]').val(id);
+    form.find('[name=createDate]').val(moment(createDate).format('DD/MM/YYYY hh:mm'));
+
+    modal.modal('show');
+}
 
 function initTakeTasks() {
     $("body").on("click", ".takeTask", function (e) {
@@ -197,7 +248,6 @@ function initTakeTasks() {
         takeTask(href);
     });
 }
-
 
 function initNewLeadForm() {
     flog("initNewLeadForm");
@@ -299,9 +349,9 @@ function initNewQuickLeadForm() {
 
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
     navigator.getUserMedia = (navigator.getUserMedia ||
-            navigator.webkitGetUserMedia ||
-            navigator.mozGetUserMedia ||
-            navigator.msGetUserMedia);
+    navigator.webkitGetUserMedia ||
+    navigator.mozGetUserMedia ||
+    navigator.msGetUserMedia);
     window.URL = window.URL || window.webkitURL;
     var audio_context = new AudioContext();
     var recorder = null;
@@ -568,7 +618,7 @@ function initDateTimePickers() {
 
     $('.date-time').datetimepicker({
         format: "DD/MM/YYYY HH:mm"
-                //,startDate: date
+        //,startDate: date
     });
 }
 
@@ -707,7 +757,7 @@ function initTopNavSearch() {
                     break;
 
                 default:
-                    // Nothing
+                // Nothing
             }
         }
     });
@@ -797,13 +847,13 @@ function initOrgSearch() {
                 '</div>'
             ].join('\n'),
             suggestion: Handlebars.compile(
-                    '<div>'
-                    + '<strong>{{title}}</strong>'
-                    + '</br>'
-                    + '<span>{{phone}}</span>'
-                    + '</br>'
-                    + '<span>{{address}}, {{addressLine2}}, {{addressState}}, {{postcode}}</span>'
-                    + '</div>')
+                '<div>'
+                + '<strong>{{title}}</strong>'
+                + '</br>'
+                + '<span>{{phone}}</span>'
+                + '</br>'
+                + '<span>{{address}}, {{addressLine2}}, {{addressState}}, {{postcode}}</span>'
+                + '</div>')
         }
     });
 
@@ -838,13 +888,13 @@ function initProfileSearch() {
                 '</div>'
             ].join('\n'),
             suggestion: Handlebars.compile(
-                    '<div>'
-                    + '<strong>{{name}}</strong>'
-                    + '</br>'
-                    + '<span>{{phone}}</span>'
-                    + '</br>'
-                    + '<span>{{email}}</span>'
-                    + '</div>')
+                '<div>'
+                + '<strong>{{name}}</strong>'
+                + '</br>'
+                + '<span>{{phone}}</span>'
+                + '</br>'
+                + '<span>{{email}}</span>'
+                + '</div>')
         }
     });
 
