@@ -2,12 +2,13 @@ html body .fa {
     line-height: inherit;
 }
 
-.nav > li > a {
+.topnavbar .nav > li > a {
     line-height: 30px;
+    height: 81px;
 }
 
 .topnavbar > .navbar-header > .navbar-brand {
-/* BM: this is blowing out the tabs on the lead page    height: 81px; */
+    height: 81px;
     line-height: 81px;
 }
 
