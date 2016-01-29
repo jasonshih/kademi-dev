@@ -141,6 +141,11 @@
     color: inherit;
 }
 
+.timeline-body {
+    max-height: 100px;
+    overflow-x: scroll;
+}
+
 .timeline-body > p,
 .timeline-body > ul {
     margin-bottom: 0;
