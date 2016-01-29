@@ -166,60 +166,89 @@
                                     </div>
                                     <div id="details" role="tabpanel" class="tab-pane fade">
                                         <div class="form-horizontal">
-                                            <div class="form-group">
-                                                <label class="control-label col-md-3">Estimated deal value:</label>
-                                                <div class="col-md-3">
-                                                    <input type="number" value="$!page.dealAmount" name="dealAmount" class="form-control immediateUpdate"/>
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-sm-4">Estimated deal value:</label>
+                                                        <div class="col-sm-8">
+                                                            <input type="number" value="$!page.dealAmount" name="dealAmount" class="form-control immediateUpdate"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-sm-4">Funnel:</label>
+                                                        <div class="col-sm-8">
+                                                            <select name="funnel" class="form-control immediateUpdate">
+                                                                #foreach( $funnel in $page.allFunnels )
+                                                                $formatter.option($funnel.repo, $funnel.title, $page.funnelId)
+                                                                #end
+                                                            </select>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
-                                                <label class="control-label col-md-3">Funnel:</label>
-                                                <div class="col-md-3">
-                                                    <select name="funnel" class="form-control immediateUpdate">
-                                                        #foreach( $funnel in $page.allFunnels )
-                                                        $formatter.option($funnel.repo, $funnel.title, $page.funnelId)
-                                                        #end
-                                                    </select>
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-sm-4">Lead stage:</label>
+                                                        <div class="col-sm-8">
+                                                            <select name="stageName" class="form-control immediateUpdate">
+                                                                <option value="">[None]</option>
+                                                                #foreach( $stage in $page.allStages )
+                                                                $formatter.option($stage, $stage, $page.stageName)
+                                                                #end
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <label class="col-md-4 control-label" for="createDate">Created date</label>
+                                                        <div class="col-md-8">
+                                                            <div class="input-group">
+                                                                <input type="text" name="createDate" id="createDate" class="form-control date-time" value=" $formatter.formatDateTime( $!page.getCreateDate() )" />
+                                                                <span class="input-group-addon">
+                                                                    <span class="fa fa-calendar"></span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
-                                                <label class="control-label col-md-3">Lead stage:</label>
-                                                <div class="col-md-3">
-                                                    <select name="stageName" class="form-control immediateUpdate">
-                                                        <option value="">[None]</option>
-                                                        #foreach( $stage in $page.allStages )
-                                                        $formatter.option($stage, $stage, $page.stageName)
-                                                        #end
-                                                    </select>
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-sm-4">Source</label>
+                                                        <div class="col-sm-8">
+                                                            <select id="source-select" data-placeholder="Select a source" name="source" class="form-control immediateUpdate" style="width: 100%">
+                                                                <option value="">[None]</option>
+                                                                #set($foundSource = false)
+                                                                #foreach( $source in $page.allSources )
+                                                                #if($source == $page.source)
+                                                                #set($foundSource = true)
+                                                                #end
+                                                                $formatter.option($source, $source, $page.source)
+                                                                #end
+                                                                #if(!$foundSource && $page.source)
+                                                                $formatter.option($page.source, $page.source, $page.source)
+                                                                #end
+                                                            </select>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="control-label col-md-3">Source</label>
-                                                <div class="col-md-3">
-                                                    <select id="source-select" data-placeholder="Select a source" name="source" class="form-control immediateUpdate" style="width: 100%">
-                                                        <option value="">[None]</option>
-                                                        #set($foundSource = false)
-                                                        #foreach( $source in $page.allSources )
-                                                        #if($source == $page.source)
-                                                        #set($foundSource = true)
-                                                        #end
-                                                        $formatter.option($source, $source, $page.source)
-                                                        #end
-                                                        #if(!$foundSource && $page.source)
-                                                        $formatter.option($page.source, $page.source, $page.source)
-                                                        #end
-                                                    </select>
-                                                </div>
-                                            </div>
 
-                                            #foreach($field in $page.extraFields)
-                                            <div class="form-group">
-                                                <label class="control-label col-md-3">$field.title:</label>
-                                                <div class="col-md-3">
-                                                    <input type="text" value="$!field.value" name="extraField_$field.name" class="form-control immediateUpdate $formatter.ifTrue($field.required, 'required', '')"/>
+                                                #foreach($field in $page.extraFields)
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-sm-4">$field.title:</label>
+                                                        <div class="col-sm-8">
+                                                            <input type="text" value="$!field.value" name="extraField_$field.name" class="form-control immediateUpdate $formatter.ifTrue($field.required, 'required', '')"/>
+                                                        </div>
+                                                    </div>
                                                 </div>
+                                                #end
                                             </div>
-                                            #end
 
                                         </div>
 
@@ -556,6 +585,7 @@
         <script type="text/javascript">
             $(function () {
                 var form = $("#leadDetails");
+                var body = $(document.body);
                 form.forms({
                     callback: function (resp) {
                         Msg.info('Saved');
@@ -571,11 +601,49 @@
                     var name = $(e.target).attr("href");
                     assignTo(name);
                 });
-                $("body").on("change", ".dealValue", function (e) {
+
+                body.on("change", ".dealValue", function (e) {
                     var val = $(e.target).val();
                     setDealAmount(val);
                 });
-                $("body").on("change", "#description", function (e) {
+
+                var createDateTimer = null;
+                body.on("dp.change", "#createDate", function (e) {
+                    var val = $(e.target).val();
+
+                    if (e.oldDate && e.date !== e.oldDate) {
+                        clearTimeout(createDateTimer);
+                        createDateTimer = setTimeout(function () {
+                            $.ajax({
+                                url: window.location.pathname,
+                                data: {
+                                    createDate: val
+                                },
+                                type: 'post',
+                                dataType: 'json',
+                                success: function (resp) {
+                                    flog('Resp:', resp);
+
+                                    if (resp && resp.status) {
+                                        Msg.success('Created date is saved!');
+                                    } else {
+                                        if (resp.messages && resp.messages.length > 0) {
+                                            Msg.error(resp.messages[0]);
+                                        } else {
+                                            Msg.error('Error when saving created date. Please contact website administrators for resolving this problem!');
+                                        }
+                                    }
+                                },
+                                error: function (resp) {
+                                    flog('Error when saving created date', resp);
+                                    Msg.error('Error when saving created date. Please contact website administrators for resolving this problem!');
+                                }
+                            });
+                        }, 300);
+                    }
+                });
+
+                body.on("change", "#description", function (e) {
                     var val = $(e.target).val();
                     setLeadDescription(val);
                 });
@@ -590,8 +658,8 @@
                 $('#source-select').select2({
                     tags: "true"
                 });
-
             });
+
             function reloadTable() {
                 $("#tasksTableBody").reloadFragment({
                     whenComplete: function () {
