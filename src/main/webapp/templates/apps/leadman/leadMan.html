@@ -78,6 +78,9 @@
                             </tr>
                         </thead>
                         <tbody id="leadBody">
+                            <tr class="text-center">
+                                <td colspan="10">Loading...</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -110,8 +113,8 @@
             </tr>
             {{/each}}
             {{else}}
-            <tr>
-                <td>No Leads found</td>
+            <tr class="text-center">
+                <td colspan="10">No Leads found</td>
             </tr>
             {{/NotEmpty}}
         </script>
