@@ -20,6 +20,11 @@
         <link href="/templates/apps/email/manageAutoEmail.css" rel="stylesheet" type="text/css"/>
     </head>
     <body class="manageAutoEmail">
+        <small class="pull-right" style="opacity: 0.5">
+            <em>
+                ID : $page.trigger.id; name : $page.trigger.name
+            </em>
+        </small>
         <h2 class="p-b-20">
             <a href="#" id="emailTitle" data-type="text" data-pk="1" data-placement="right" data-placeholder="Title" data-original-title="Enter a title">$!page.job.title</a>
         </h2>
@@ -253,7 +258,7 @@
                                                         <div id="timerExpressionEditor" style="display:none;">$formatter.htmlEncode($page.job.timerExpression)</div>
                                                     </div>
                                                 </div>
-                                            </div>                                            
+                                            </div>
                                             <br/>
                                             <a class="btn btn-info" href="timerTriggers.html">View Queued triggers</a>
                                         </div>
