@@ -544,7 +544,12 @@ function initNewNoteForm() {
 
 function reloadTasks() {
     $("#tasksList").reloadFragment({
-        whenComplete: function () {
+        whenComplete: function (doc) {
+            flog("doc", doc);
+            var newLeads = doc.find("#dashLeadsList");
+            flog("newLeads", newLeads);
+            $("#dashLeadsList").html(newLeads.html());
+            flog("Done", $("#dashLeadsList"));
             $('abbr.timeago').timeago();
         }
     });

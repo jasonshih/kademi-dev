@@ -98,7 +98,6 @@
     <div role="tabpanel" id="all_contacts" class="tab-pane animation-fade active">
         #set( $leads = $leadsPage.myLeads )
 
-        #if( $leads.size() > 0 )
         <ul class="list-group leadsList" id="dashLeadsList">
             #foreach($lead in $leads)
             <li class="list-group-item">
@@ -106,6 +105,8 @@
             </li>
             #end
         </ul>
+        #if( $leads.size() > 0 )
+        
         #else
         <p class="lead">Couldnt find any leads</p>
         #end
