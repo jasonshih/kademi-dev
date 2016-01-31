@@ -73,10 +73,9 @@
                 </div>
                 <div class="col-md-4">
                     <select name="action" class="form-control">
-                        <option value="phone-false">Call to customer</option>
-                        <option value="phone-true">Call from customer</option>
-                        <option value="email-false">Email to customer</option>
-                        <option value="email-true">Email from customer</option>
+                        #foreach( $action in $page.actions )
+                        <option value="${action.id}-${action.inbound}">$action.text</option>
+                        #end
                     </select>
                 </div>
                 <div class="col-md-8">
@@ -101,10 +100,9 @@
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-right autoFillText">
-                                <li><a href="#">Call customer</a></li>
-                                <li><a href="#">Email customer</a></li>
-                                <li><a href="#">Send documents</a></li>
-                                <li><a href="#">Arrange a meeting</a></li>
+                                #foreach( $action in $page.actions )
+                                <li><a href="#">$action.text</a></li>
+                                #end                                
                             </ul>
                         </div><!-- /btn-group -->
                     </div>
