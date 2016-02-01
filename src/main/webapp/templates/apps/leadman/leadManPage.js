@@ -5,6 +5,41 @@
         query: ''
     };
 
+    var dataTable = null;
+
+    function initDataTable(hits) {
+        if (dataTable !== null) {
+            dataTable.destroy(false);
+        }
+
+        var source = $("#lead-template").html();
+        var template = Handlebars.compile(source);
+        var t = template(hits);
+        $('#leadBody').empty();
+        $('#leadBody').html(t);
+
+        dataTable = $('#leadTable').DataTable({
+            paging: false,
+            searching: false,
+            destroy: true,
+            info: false,
+            order: [
+                [7, 'desc']
+            ],
+            columns: [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                {"orderable": false}
+            ]
+        });
+    }
+
     function initOrgSelect() {
         $('body').on('click', '.btn-select-org', function (e) {
             e.preventDefault();
@@ -37,22 +72,17 @@
     }
 
     function doSearch() {
-        var source = $("#lead-template").html();
-        var template = Handlebars.compile(source);
         $.ajax({
             url: window.location.pathname + '?sLead&' + $.param(searchOptions),
             dataType: 'JSON',
             success: function (data, textStatus, jqXHR) {
-                var t = template(data.hits);
-                $('#leadBody').empty();
-                $('#leadBody').html(t);
-
                 $('#LeadTotal').html(data.hits.total);
                 $('#LeadSumValue').html(data.aggregations.dealAmountTotal.value || 0);
                 $('#leadAvgValue').html(data.aggregations.dealAmountAvg.value || 0);
 
                 updateSourcesPie(data.aggregations.sources.buckets);
                 updateStagesPie(data.aggregations.stages.buckets);
+                initDataTable(data.hits);
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 flog('error', jqXHR, textStatus, errorThrown);
@@ -129,9 +159,6 @@
     }
 
     w.initLeadManPage = function () {
-        initOrgSelect();
-        initSearchField();
-
         Handlebars.registerHelper('NotEmpty', function (conditional, options) {
             if (typeof conditional !== 'undefined' && typeof conditional.length !== 'undefined') {
                 if (conditional.length > 0) {
@@ -147,6 +174,8 @@
             return d.format('MMMM Do YYYY, h:mm:ss a');
         });
 
+        initOrgSelect();
+        initSearchField();
         doSearch();
     };
 })(this);
