@@ -85,7 +85,7 @@
                 </div>
             </div><!-- /.modal -->
         </div>
-   
+
         <!-- End Settings Modal -->
 
         <div class="table-responsive">
@@ -141,7 +141,7 @@
                                     <li class="divider"></li>
                                     <li><a href="$app.appName" class="btn-delete-app" title="Delete"><i class="fa fa-times"></i> Delete</a></li>
                                 </ul>
-                            </div>  
+                            </div>
                         </td>
                     </tr>
                     #end
@@ -166,7 +166,8 @@
             <div class="table-responsive">
                 <table class="table table-striped table-hover">
                     #foreach($app in $apps )
-                    <tr data-isCore="$app.core">
+                    #set( $coreClass = $formatter.ifTrue($app.core, "iscore", "") )
+                    <tr data-isCore="$app.core" class="${coreClass}">
                         <td class="CheckBoxWrapper">
                             #if( !$app.core || !$app.enabled)
                             $formatter.bsswitch("chk_${app.appId}", $app.appId, $app.enabled, $app.appId)
@@ -227,7 +228,7 @@
                 });
                 var appSettingsModal = $("#AppSettingsModal");
                 var settingsForm = appSettingsModal.find("form");
-                
+
                 settingsForm.forms({
                     callback : function(resp){
                         flog(resp);
@@ -240,14 +241,14 @@
                         }
                     }
                 });
-                
+
                 $('body').on('click', '.btn-delete-app', function(e){
                     e.preventDefault();
                     var btn = $(this);
                     var href = btn.attr('href');
                     var tr = btn.closest('tr');
                     var title = tr.find('.appTitle').text();
-                    
+
                     confirmDelete(href, title, function(){
                         tr.remove();
                     });

@@ -32,11 +32,11 @@ table.apps td h5 {
 }
 table.apps td p { font-size: 13px; }
 
-body .enabled button.settings {
+body .enabled button.settings, body .iscore button.settings {
     display: inline-block;
 }
 body .settings {
-    display: none; /** off by default, need enabled on parent **/    
+    display: none; /** off by default, need enabled on parent **/
 }
 div.settings {
     display: none;
