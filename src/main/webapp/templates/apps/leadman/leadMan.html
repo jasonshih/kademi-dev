@@ -3,9 +3,7 @@
     #parse("/theme/apps/leadman/leadManIncludes.html")
     <head>
         #@themeHeader( "Lead Management" )
-        <script src="/static/reload-fragment/1.0.1/jquery.reload-fragment-1.0.1.js" type="text/javascript" >//</script>
-        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/s/bs/dt-1.10.10,r-2.0.0/datatables.min.css"/>
-        <script type="text/javascript" src="https://cdn.datatables.net/s/bs/dt-1.10.10,r-2.0.0/datatables.min.js"></script>
+        <link href="/static/DataTables/datatables.min.css" rel="stylesheet" type="text/css"/>
         #end
         <style>
             .infoBox {
@@ -150,6 +148,8 @@
         <script src="/static/d3/d3.v3.js" type="text/javascript"></script>
         <link href="/static/nvd3/nv.d3.css" rel="stylesheet" type="text/css"/>
         <script src="/static/nvd3/nv.d3.js" type="text/javascript"></script>
+        <script src="/static/reload-fragment/1.0.1/jquery.reload-fragment-1.0.1.js" type="text/javascript" >//</script>
+        <script src="/static/DataTables/datatables.js" type="text/javascript"></script>
         <script type="text/javascript">
             $(function () {
                 initLeadManPage();
@@ -159,7 +159,7 @@
         <script id="lead-template" type="text/html">
             {{#NotEmpty hits}}
             {{#each hits}}
-            <tr data-leadid="{{_source.leadId}}">
+            <tr data-DT_RowId="{{_source.leadId}}">
                 <td>{{_source.organisation.title}}</td>
                 <td>{{_source.profile.firstName}}</td>
                 <td>{{_source.profile.surName}}</td>

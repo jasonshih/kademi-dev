@@ -9,14 +9,43 @@
 
     function initDataTable(hits) {
         if (dataTable !== null) {
-            dataTable.destroy(false);
+            dataTable.clear(false);
         }
 
-        var source = $("#lead-template").html();
-        var template = Handlebars.compile(source);
-        var t = template(hits);
         $('#leadBody').empty();
-        $('#leadBody').html(t);
+
+        editor = new $.fn.dataTable.Editor({
+            ajax: {
+                url: '/leads/?updateLead&leadId=_id_'
+            },
+            table: '#leadTable',
+            idSrc: 'leadId',
+            fields: [{
+                    label: 'Company Title',
+                    name: 'organisation.title',
+                    type: 'text'
+                }, {
+                    label: "First Name",
+                    name: "profile.firstName"
+                }, {
+                    label: "Surname",
+                    name: "profile.surName"
+                }, {
+                    label: "Email",
+                    name: "profile.email"
+                }, {
+                    label: 'Stage',
+                    name: 'stageName',
+                    type: 'select'
+                }
+            ]
+        });
+
+        $('#leadTable').on('click', 'tbody td', function (e) {
+            editor.inline(this, {
+                submitOnBlur: true
+            });
+        });
 
         dataTable = $('#leadTable').DataTable({
             paging: false,
@@ -27,17 +56,57 @@
                 [7, 'desc']
             ],
             columns: [
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                {"orderable": false}
+                {
+                    data: 'organisation.title',
+                    name: 'orgTitle',
+                    defaultContent: ""
+                },
+                {
+                    data: 'profile.firstName',
+                    defaultContent: ""
+                },
+                {
+                    data: 'profile.surName',
+                    defaultContent: ""
+                },
+                {
+                    data: 'profile.email',
+                    defaultContent: ""
+                },
+                {
+                    data: 'stageName',
+                    defaultContent: ""
+                },
+                {
+                    data: 'organisation.title',
+                    defaultContent: ""
+                },
+                {
+                    data: 'organisation.title',
+                    defaultContent: ""
+                },
+                {
+                    data: 'organisation.title',
+                    defaultContent: ""
+                },
+                {
+                    data: 'leadId',
+                    "orderable": false,
+                    render: function (data, type, full, meta) {
+                        flog(data, type, full, meta);
+                        return '<a class="btn btn-info" href="' + data + '"><i class="fa fa-eye"></i></a>';
+                    }
+                }
             ]
         });
+
+        for (var i in hits.hits) {
+            var hit = hits.hits[i];
+            var d = hit._source;
+            flog(d);
+            dataTable.row.add(d);
+        }
+        dataTable.draw();
     }
 
     function initOrgSelect() {
