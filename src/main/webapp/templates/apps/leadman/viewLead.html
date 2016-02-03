@@ -383,6 +383,7 @@
                                                 <tr>
                                                     <th class="text-center">Type</th>
                                                     <th>Name</th>
+                                                    <th>Notes</th>
                                                     <th>Date Uploaded</th>
                                                     <th></th>
                                                     <th>Action</th>
@@ -394,8 +395,17 @@
                                                     <td class="text-center">
                                                         #genFileIcon($file)
                                                     </td>
-                                                    <td>$file.name</td>
-                                                    <td>$formatter.formatDateTime($file.createdDate)</td>
+                                                    <td>
+                                                        <span #if($file.name.length() > 25)title="$file.name"#end>
+                                                            #if($file.name.length() > 25)
+                                                            $formatter.truncate($file.name, 20)
+                                                            #else
+                                                            $file.name
+                                                            #end
+                                                        </span>
+                                                    </td>
+                                                    <td>$!file.notes</td>
+                                                    <td><abbr class="timeago" title="$formatter.formatDateISO8601($file.createdDate)">$formatter.formatDateTime($file.createdDate)</abbr></td>
                                                     <td>
                                                         #if($file.is('audio/'))
                                                         <audio class="lead-audio-file" id="audio_$file.hash" src="$file.name"></audio>
@@ -733,8 +743,16 @@
                 form.forms({
                     callback: function (resp) {
                         Msg.info('Files Uploaded');
-                        $('#files-body').reloadFragment();
+                        reloadFileList();
                         modal.modal('hide');
+                    }
+                });
+            }
+
+            function reloadFileList() {
+                $('#files-body').reloadFragment({
+                    whenComplete: function () {
+                        $('#files-body abbr.timeago').timeago();
                     }
                 });
             }
