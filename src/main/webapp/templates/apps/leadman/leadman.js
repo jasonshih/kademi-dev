@@ -39,7 +39,7 @@ $(function () {
         modal.find('abbr.timeago').timeago();
         modal.find('.date-time').datetimepicker({
             format: "DD/MM/YYYY HH:mm"
-            //,startDate: date
+                    //,startDate: date
         });
         var form = modal.find(".completeTaskForm");
         flog("complete task form", form);
@@ -161,11 +161,12 @@ function initTasks() {
 
 function initOrgSelector() {
     flog("initOrgSelector", $(".selectOrg a"));
+    $.cookie("org", $(".selectOrg a").attr('href'), {path: '/'});
     $(".selectOrg").on("click", "a", function (e) {
         e.preventDefault();
         var orgId = $(e.target).closest("a").attr("href");
         flog("initOrgSelector - click", orgId);
-        $.cookie("org", orgId);
+        $.cookie("org", orgId, {path: '/'});
         window.location.reload();
     });
 }
@@ -292,6 +293,12 @@ function initNewLeadForm() {
     });
 
     form.forms({
+        beforePostForm: function (form, config, data) {
+            flog('beforePost', data);
+            data += '&assignedToOrgId=' + $.cookie('org');
+            flog('beforePost', data);
+            return data;
+        },
         onSuccess: function (resp, form, config, event) {
             flog('done new lead', resp, event);
             var btn = form.find(".clicked");
@@ -349,9 +356,9 @@ function initNewQuickLeadForm() {
 
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
     navigator.getUserMedia = (navigator.getUserMedia ||
-    navigator.webkitGetUserMedia ||
-    navigator.mozGetUserMedia ||
-    navigator.msGetUserMedia);
+            navigator.webkitGetUserMedia ||
+            navigator.mozGetUserMedia ||
+            navigator.msGetUserMedia);
     window.URL = window.URL || window.webkitURL;
     var audio_context = new AudioContext();
     var recorder = null;
@@ -421,6 +428,7 @@ function initNewQuickLeadForm() {
         formData.append('notes', $('[name=notes]', form).val());
         formData.append('quickLead', $('[name=quickLead]', form).val());
         formData.append('geoLocation', $('[name=geoLocation]', form).val());
+        formData.append('assignedToOrgId', $.cookie('org'));
 
         $.ajax({
             type: 'POST',
@@ -623,7 +631,7 @@ function initDateTimePickers() {
 
     $('.date-time').datetimepicker({
         format: "DD/MM/YYYY HH:mm"
-        //,startDate: date
+                //,startDate: date
     });
 }
 
@@ -762,7 +770,7 @@ function initTopNavSearch() {
                     break;
 
                 default:
-                // Nothing
+                    // Nothing
             }
         }
     });
@@ -852,13 +860,13 @@ function initOrgSearch() {
                 '</div>'
             ].join('\n'),
             suggestion: Handlebars.compile(
-                '<div>'
-                + '<strong>{{title}}</strong>'
-                + '</br>'
-                + '<span>{{phone}}</span>'
-                + '</br>'
-                + '<span>{{address}}, {{addressLine2}}, {{addressState}}, {{postcode}}</span>'
-                + '</div>')
+                    '<div>'
+                    + '<strong>{{title}}</strong>'
+                    + '</br>'
+                    + '<span>{{phone}}</span>'
+                    + '</br>'
+                    + '<span>{{address}}, {{addressLine2}}, {{addressState}}, {{postcode}}</span>'
+                    + '</div>')
         }
     });
 
@@ -893,13 +901,13 @@ function initProfileSearch() {
                 '</div>'
             ].join('\n'),
             suggestion: Handlebars.compile(
-                '<div>'
-                + '<strong>{{name}}</strong>'
-                + '</br>'
-                + '<span>{{phone}}</span>'
-                + '</br>'
-                + '<span>{{email}}</span>'
-                + '</div>')
+                    '<div>'
+                    + '<strong>{{name}}</strong>'
+                    + '</br>'
+                    + '<span>{{phone}}</span>'
+                    + '</br>'
+                    + '<span>{{email}}</span>'
+                    + '</div>')
         }
     });
 
