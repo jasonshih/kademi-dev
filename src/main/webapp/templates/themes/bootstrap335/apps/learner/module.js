@@ -60,8 +60,9 @@ function initModuleNav(pStatUrl, pFinished) {
             return false;
         }
         
-        checkSubmit(e);
+        //checkSubmit(e);
     });
+
     flog("setup pjax", $('.pages a'));
     $(document).pjax2('.panelBox', {
         selector: ".pages a",
