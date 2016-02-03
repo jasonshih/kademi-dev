@@ -407,6 +407,11 @@
                                                         <a target="_blank" href="$file.name" class="btn btn-success">
                                                             <i class="fa fa-eye"></i>
                                                         </a>
+                                                        #if($file.geoLocation)
+                                                        <a target="_blank" href="https://www.google.co.nz/maps/place//@${file.geoLocation.replace(":", ",")},17.25z?hl=en" title="View location on map" class="btn btn-info">
+                                                            <i class="fa fa-map-marker"></i>
+                                                        </a>
+                                                        #end
                                                         #end
                                                     </td>
                                                     <td>
@@ -575,20 +580,20 @@
         </div>
 
         #macro(genFileIcon $file)
-            #set($fIcon = "fa-file")
+        #set($fIcon = "fa-file")
 
-            #if($file.is('audio/'))
-                #set($fIcon = "fa-file-audio-o")
-            #elseif($file.is('image/'))
-                #set($fIcon = "fa-file-image-o")
-            #elseif($file.name.endsWith('.xlsx') || $file.name.endsWith('.xls'))
-                #set($fIcon = "fa-file-excel-o")
-            #elseif($file.name.endsWith('.pdf'))
-                #set($fIcon = "fa-file-pdf-o")
-            #else
-                #set($fIcon = "fa-file-o")
-            #end
-            <span title="$file.contentType"><i class="fa fa-2x $fIcon"></i></span>
+        #if($file.is('audio/'))
+        #set($fIcon = "fa-file-audio-o")
+        #elseif($file.is('image/'))
+        #set($fIcon = "fa-file-image-o")
+        #elseif($file.name.endsWith('.xlsx') || $file.name.endsWith('.xls'))
+        #set($fIcon = "fa-file-excel-o")
+        #elseif($file.name.endsWith('.pdf'))
+        #set($fIcon = "fa-file-pdf-o")
+        #else
+        #set($fIcon = "fa-file-o")
+        #end
+        <span title="$file.contentType"><i class="fa fa-2x $fIcon"></i></span>
         #end
 
         #createModals()
