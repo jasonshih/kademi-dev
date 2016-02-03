@@ -588,6 +588,8 @@
         #set($fIcon = "fa-file-image-o")
         #elseif($file.name.endsWith('.xlsx') || $file.name.endsWith('.xls'))
         #set($fIcon = "fa-file-excel-o")
+        #elseif($file.name.endsWith('.doc') || $file.name.endsWith('.docx') || $file.name.endsWith('.docm'))
+        #set($fIcon = "fa-file-word-o")
         #elseif($file.name.endsWith('.pdf'))
         #set($fIcon = "fa-file-pdf-o")
         #else
