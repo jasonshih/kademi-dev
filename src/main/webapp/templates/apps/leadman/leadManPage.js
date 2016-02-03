@@ -110,6 +110,8 @@
             ]
         });
 
+        var stages = [];
+
         for (var i in hits.hits) {
             var hit = hits.hits[i];
             dataTable.row.add(hit._source);
@@ -118,7 +120,11 @@
                 dataType: 'json',
                 success: function (data, textStatus, jqXHR) {
                     if (data.status) {
-                        editor.field('stageName').update(data.data);
+                        $.each(data.data, function (i, el) {
+                            if ($.inArray(el, stages) === -1)
+                                stages.push(el);
+                        });
+                        editor.field('stageName').update(stages);
                     }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
