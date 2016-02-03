@@ -66,7 +66,8 @@
                 },
                 {
                     data: 'stageName',
-                    defaultContent: ""
+                    defaultContent: "",
+                    className: 'editable'
                 },
                 {
                     data: 'source',
@@ -74,7 +75,8 @@
                 },
                 {
                     data: 'dealAmount',
-                    defaultContent: ""
+                    defaultContent: "",
+                    className: 'editable'
                 },
                 {
                     data: 'assignedToProfile',
