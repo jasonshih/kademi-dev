@@ -14,7 +14,7 @@
 
         $('#leadBody').empty();
 
-        editor = new $.fn.dataTable.Editor({
+        var editor = new $.fn.dataTable.Editor({
             ajax: {
                 url: '/leads/?updateLead&leadId=_id_'
             },
@@ -23,6 +23,11 @@
             fields: [{
                     label: 'Deal Amount',
                     name: 'dealAmount'
+                },
+                {
+                    label: 'Stage',
+                    name: 'stageName',
+                    type: 'select'
                 }
             ]
         });
@@ -108,9 +113,22 @@
         for (var i in hits.hits) {
             var hit = hits.hits[i];
             dataTable.row.add(hit._source);
+            $.ajax({
+                url: '/leads/?stageNames=' + hit._source.leadId,
+                dataType: 'json',
+                success: function (data, textStatus, jqXHR) {
+                    if (data.status) {
+                        editor.field('stageName').update(data.data);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+
+                }
+            });
         }
         dataTable.draw();
     }
+
 
     function initOrgSelect() {
         $('body').on('click', '.btn-select-org', function (e) {
