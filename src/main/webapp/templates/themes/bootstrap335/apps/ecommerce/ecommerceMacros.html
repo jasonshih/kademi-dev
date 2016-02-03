@@ -58,11 +58,11 @@
                 #foreach($p in $recentlyAdded)
                     #set($bg = "/theme/img/photo_holder.png")
                     #if( $p.fields.primaryImageId.value )
-                        #set($bg = $page.href + "$p.fields.tags.value/$p.fields.product.value/$p.fields.primaryImageId.value")
+                        #set($bg = $store.href + "$p.fields.tags.value/$p.fields.product.value/$p.fields.primaryImageId.value")
                     #end
                     <div class="media">
                         <div class="media-left">
-                            <a href="/$page.name/$p.fields.tags.value/$p.fields.product.value">
+                            <a href="/$store.name/$p.fields.tags.value/$p.fields.product.value">
                                 <img class="media-object" src="/theme/img/blank.gif" style="background-image: url($bg)" />
                             </a>
                         </div>
@@ -79,11 +79,11 @@
                 #foreach($p in $lastViewed)
                     #set($bg = "/theme/img/photo_holder.png")
                     #if( $p.fields.primaryImageId.value )
-                        #set($bg = $page.href + "$p.fields.tags.value/$p.fields.product.value/$p.fields.primaryImageId.value")
+                        #set($bg = $store.href + "$p.fields.tags.value/$p.fields.product.value/$p.fields.primaryImageId.value")
                     #end
                     <div class="media">
                         <div class="media-left">
-                            <a href="/$page.name/$p.fields.tags.value/$p.fields.product.value">
+                            <a href="/$store.name/$p.fields.tags.value/$p.fields.product.value">
                                 <img class="media-object" src="/theme/img/blank.gif" style="background-image: url($bg)" />
                             </a>
                         </div>
