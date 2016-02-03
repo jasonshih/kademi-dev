@@ -21,22 +21,8 @@
             table: '#leadTable',
             idSrc: 'leadId',
             fields: [{
-                    label: 'Company Title',
-                    name: 'organisation.title',
-                    type: 'text'
-                }, {
-                    label: "First Name",
-                    name: "profile.firstName"
-                }, {
-                    label: "Surname",
-                    name: "profile.surName"
-                }, {
-                    label: "Email",
-                    name: "profile.email"
-                }, {
-                    label: 'Stage',
-                    name: 'stageName',
-                    type: 'select'
+                    label: 'Deal Amount',
+                    name: 'dealAmount'
                 }
             ]
         });
@@ -78,16 +64,35 @@
                     defaultContent: ""
                 },
                 {
-                    data: 'organisation.title',
+                    data: 'source',
                     defaultContent: ""
                 },
                 {
-                    data: 'organisation.title',
+                    data: 'dealAmount',
                     defaultContent: ""
                 },
                 {
-                    data: 'organisation.title',
-                    defaultContent: ""
+                    data: 'assignedToProfile',
+                    defaultContent: "",
+                    render: function (d) {
+                        flog('Render ', d);
+                        if (typeof d !== 'undefined' && d !== null) {
+                            var f = d.firstName || '';
+                            var s = d.surName || '';
+                            return (f + ' ' + s).trim();
+                        }
+                        return '';
+                    }
+                },
+                {
+                    data: 'createdDate',
+                    defaultContent: "",
+                    render: function (d) {
+                        if (typeof d !== 'undefined' && d !== null) {
+                            return moment(d).format('DD/MM/YYYY') + '<br/>' + moment(d).format('h:mm:ss a');
+                        }
+                        return '';
+                    }
                 },
                 {
                     data: 'leadId',
@@ -102,9 +107,7 @@
 
         for (var i in hits.hits) {
             var hit = hits.hits[i];
-            var d = hit._source;
-            flog(d);
-            dataTable.row.add(d);
+            dataTable.row.add(hit._source);
         }
         dataTable.draw();
     }
