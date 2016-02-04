@@ -404,7 +404,10 @@
                                                             #end
                                                         </span>
                                                     </td>
-                                                    <td>$!file.notes</td>
+                                                    <td>
+                                                        <span>$!file.notes</span>
+                                                        <a href="$file.name" class="pull-right edit-file-note"><i class="fa fa-pencil"></i></a>
+                                                    </td>
                                                     <td><abbr class="timeago" title="$formatter.formatDateISO8601($file.createdDate)">$formatter.formatDateTime($file.createdDate)</abbr></td>
                                                     <td>
                                                         #if($file.is('audio/'))
@@ -589,6 +592,32 @@
             </div><!-- /.modal-dialog -->
         </div>
 
+        <div class="modal fade" id="editFileNoteModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Edit Note</h4>
+                    </div>
+                    <form method="post" action="$page.href" class="form-horizontal">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="updateNotes">Note</label>
+                                <div class="col-md-9">
+                                    <textarea name="updateNotes" class="form-control" id="updateNotes"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-default" data-dismiss="modal" type="button">Exit</button>
+
+                            <button class="btn btn-primary" type="submit">Save</button>
+                        </div>
+                    </form>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>
+
         #macro(genFileIcon $file)
         #set($fIcon = "fa-file")
 
@@ -623,6 +652,7 @@
 
                 initNewTaskModal();
                 initFileUploads();
+                initFileNoteEdit();
 
                 $("#assignToMenu").on("click", "a", function (e) {
                     e.preventDefault();
@@ -745,6 +775,30 @@
                         Msg.info('Files Uploaded');
                         reloadFileList();
                         modal.modal('hide');
+                    }
+                });
+            }
+
+            function initFileNoteEdit() {
+                var noteModal = $('#editFileNoteModal');
+                var noteForm = noteModal.find('form');
+                $('body').on('click', '.edit-file-note', function (e) {
+                    e.preventDefault();
+
+                    var btn = $(this);
+                    var span = btn.closest('td').find('span');
+                    var leadId = btn.attr('href');
+
+                    noteForm.attr('action', window.location.pathname + leadId);
+                    noteForm.find('textarea[name=updateNotes]').val(span.html());
+
+                    noteModal.modal('show');
+                });
+
+                noteForm.forms({
+                    onSuccess: function () {
+                        reloadFileList();
+                        noteModal.modal('hide');
                     }
                 });
             }
