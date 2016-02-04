@@ -83,15 +83,23 @@
         </div>
 
         <div class="btn-group">
-            <a target='_blank' href='$page.href?goto=' class="btn btn-sm btn-success">
+            <a target='_blank' href='$page.externalUrl' class="btn btn-sm btn-success">
                 <i class="fa fa-arrow-circle-right"></i> View website
             </a>
-            <a href='/repositories/$page.closest("website").name/$page.name' class="btn btn-sm btn-success">
-                <i class="fa fa-edit"></i> Edit pages
+            <a target='_blank' href='$page.href?goto=' class="btn btn-sm btn-success">
+                <i class="fa fa-arrow-circle-right"></i> Login to website
             </a>
+
+            <a href='/repositories/$page.closest("website").name/$page.name' class="btn btn-sm btn-info">
+                <i class="fa fa-file"></i> Files
+            </a>
+            <a href='/pages/$page.closest("website").name/$page.name' class="btn btn-sm btn-info">
+                <i class="fa fa-edit"></i> Pages
+            </a>
+
             <div class="btn-group">
-                <a class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" href="#">
-                    <b>Change website:</b> $page.closest("website").name
+                <a class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" href="#">
+                    <b>Select website:</b> $page.closest("website").name
                     <span class="caret"></span>
                 </a>
                 <ul role="menu" class="dropdown-menu list">
