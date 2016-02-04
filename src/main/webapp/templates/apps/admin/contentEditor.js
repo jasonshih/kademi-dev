@@ -4,9 +4,9 @@ function initContentEditorPage(fileName) {
     flog('initContentEditorPage', fileName);
     var body = $(document.body);
 
+    $('#content-area').css('min-height', win.height() - 50);
     initKEditor(body);
     initBtns(body, fileName);
-    initSnippetsToggler(body);
 
     win.on({
         keydown: function (e) {
@@ -52,7 +52,6 @@ function initKEditor(body) {
             stylesSet: 'myStyles:' + stylesPath
         },
         snippetsUrl: '/static/keditor/snippets/default/snippets.html',
-        snippetsListId: 'snippets-list',
         onContentChanged: function () {
             if (!body.hasClass('content-changed')) {
                 body.addClass('content-changed');
@@ -87,23 +86,6 @@ function initBtns(body, fileName) {
                 hideLoadingIcon();
             }
         })
-    });
-}
-
-function initSnippetsToggler(body) {
-    flog('initSnippetsToggler');
-
-    $('#keditor-snippets-toggler').on('click', function (e) {
-        e.preventDefault();
-
-        var icon = $(this).find('i');
-        if (body.hasClass('opened-keditor-snippets')) {
-            body.removeClass('opened-keditor-snippets');
-            icon.attr('class', 'glyphicon glyphicon-chevron-left')
-        } else {
-            body.addClass('opened-keditor-snippets');
-            icon.attr('class', 'glyphicon glyphicon-chevron-right')
-        }
     });
 }
 

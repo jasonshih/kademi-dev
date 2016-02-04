@@ -13,7 +13,7 @@
         <link rel="stylesheet" href="/theme/assets/plugins/bootstrap-3.3.5/css/bootstrap.min.css" />
         <link rel="stylesheet" href="/theme/assets/plugins/font-awesome/css/font-awesome.min.css"/>
         <link rel="stylesheet" href="/static/bootstrap-msg/0.3/bootstrap-msg.min.css" type="text/css" />
-        <link href="/static/keditor/1.0.2/dist/css/keditor-1.0.2.min.css" rel="stylesheet" type="text/css" />
+        <link href="/static/keditor/1.1.0/dist/css/keditor-1.1.0.min.css" rel="stylesheet" type="text/css" />
         <link href="/theme/apps/admin/contentEditor.css" rel="stylesheet" type="text/css" />
 
         <script src="/static/jquery/1.11.0/jquery-1.11.0.js">//</script>
@@ -27,7 +27,7 @@
         <script type="text/javascript" src="/static/ckeditor456/ckeditor.js" bottom="true">//</script>
         <script type="text/javascript" src="/static/ckeditor456/adapters/jquery.js" bottom="true">//</script>
         <script type="text/javascript" src="/static/nicescroll/3.6.6/jquery.nicescroll.min.js">//</script>
-        <script type="text/javascript" src="/static/keditor/1.0.2/dist/js/keditor-1.0.2.min.js" bottom="true">//</script>
+        <script type="text/javascript" src="/static/keditor/1.1.0/dist/js/keditor-1.1.0.min.js" bottom="true">//</script>
         <script type="text/javascript" src="/static/js/keymap.js">//</script>
         <script type="text/javascript" src="/static/js/init-theme.js">//</script>
 
@@ -37,21 +37,23 @@
         #set($fname = $params.fileName)
         #set($file = $folder.child($fname))
         #set($useHash = $params.useHash)
-        <div id="content-area" class="container">$!file.body</div>
-        <div id="keditor-snippets-container">
-            <div id="keditor-snippets-toolbar">
-                <div class="btn-group btn-group-justified">
-                    <div class="btn-group btn-group-sm">
-                        <button class="btn btn-primary btn-save-file" title="Save" type="button"><i class="fa fa-save"></i></button>
-                    </div>
-                    <div class="btn-group btn-group-sm">
-                        <a class="btn btn-default" title="Back to parent folder" href="./"><i class="fa fa-reply"></i></a>
-                    </div>
+
+        <nav class="navbar navbar-default navbar-inverse navbar-fixed-top">
+            <div class="container-fluid">
+                <ul class="nav navbar-nav">
+                </ul>
+                <div class="navbar-header">
+                    <a class="navbar-brand">$params.fileName</a>
                 </div>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="./" title="Back to parent folder"><i class="fa fa-reply"></i></a></li>
+                    <li><a href="#" class="btn-save-file" title="Save"><i class="fa fa-save"></i></a></li>
+                    <li><a href="texteditor?fileName=$params.fileName" title="Edit with text editor"><i class="fa fa-edit"></i></a></li>
+                </ul>
             </div>
-            <a id="keditor-snippets-toggler"><i class="glyphicon glyphicon-chevron-right"></i></a>
-            <div id="snippets-list" class="clearfix"></div>
-        </div>
+        </nav>
+
+        <div id="content-area">$!file.body</div>
 
         <script type="text/javascript">
             var useHash = "$!useHash";

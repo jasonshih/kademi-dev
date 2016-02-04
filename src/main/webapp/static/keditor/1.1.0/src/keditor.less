@@ -1,0 +1,330 @@
+/**!
+ * KEditor - Kademi content editor
+ * @copyright: Kademi (http://kademi.co)
+ * @author: Kademi (http://kademi.co)
+ * @version: @{version}
+ * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, $.fn.ckeditor, FontAwesome
+ */
+
+@kademi-pink                                : #ec135b;
+@keditor-border-color                       : #ddd;
+@keditor-border-color-hover                 : #ccc;
+@keditor-border-radius                      : 3px;
+@keditor-animation-duration                 : 0.3s;
+@keditor-sidebar-bg                         : #f0f0f0;
+@keditor-sidebar-toggler-color              : #666;
+@keditor-snippet-bg                         : #fff;
+@keditor-snippet-placeholder-bg             : #eee;
+
+@import "less/variables";
+@import "less/mixins";
+
+/* ==================================================================================
+   Mixins
+   ================================================================================== */
+.keditor-box-sizing() {
+    &,
+    * {
+        &,
+        &:before,
+        &:after {
+            box-sizing: border-box;
+        }
+    }
+}
+
+/* ==================================================================================
+   Body
+   ================================================================================== */
+body {
+    margin: 0;
+    overflow-y: scroll;
+}
+
+/* ==================================================================================
+   CKEditor
+   ================================================================================== */
+div.cke_float[id*="cke_keditor-component-content-"] {
+    padding: 0;
+}
+
+div.cke_float[id*="cke_keditor-component-content-"] .cke_top {
+    padding: 3px 3px 0;
+}
+
+/* ==================================================================================
+   opened-keditor-sidebar
+   ================================================================================== */
+body.opened-keditor-sidebar {
+    .keditor-content-area {
+        margin-right: 260px;
+    }
+
+    div.cke_float[id*="cke_keditor-component-content-"] {
+        margin-right: 287px;
+    }
+
+    #keditor-sidebar {
+        right: 0;
+    }
+}
+
+/* ==================================================================================
+   highlighted-container-content
+   ================================================================================== */
+body.highlighted-container-content {
+    .keditor-container-content {
+        outline-color: #2eb2e4;
+    }
+}
+
+/* ==================================================================================
+   Content area
+   ================================================================================== */
+.keditor-content-area {
+    min-height: 100px;
+    width: auto;
+    margin: 0;
+    padding: 80px 50px 30px;
+}
+
+/* ==================================================================================
+   Sidebar
+   ================================================================================== */
+#keditor-sidebar {
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    right: -255px;
+    bottom: 0;
+    background: @keditor-sidebar-bg;
+    opacity: .9;
+    border-left: 1px solid @keditor-border-color;
+    width: 255px;
+    box-shadow: -1px 0 5px rgba(0, 0, 0, .15);
+    padding: 10px;
+    .transition(all @keditor-animation-duration);
+    font: @font-size-base/@line-height-base @font-family-base;
+
+    .keditor-box-sizing();
+
+    &:hover {
+        opacity: 1;
+    }
+
+    @import "less/navs";
+}
+
+#keditor-sidebar-toggler {
+    position: absolute;
+    top: 100px;
+    width: 25px;
+    height: 30px;
+    left: -25px;
+    background: @keditor-sidebar-bg;
+    text-align: center;
+    line-height: 30px;
+    border: 1px solid @keditor-border-color;
+    border-right: 0;
+    cursor: pointer;
+    border-radius: @keditor-border-radius 0 0 @keditor-border-radius;
+    color: @keditor-sidebar-toggler-color;
+}
+
+/* ==================================================================================
+   Snippets
+   ================================================================================== */
+#keditor-snippets-list {
+    height: 100%;
+
+    .keditor-snippet {
+        &:hover {
+            opacity: .6;
+            border-color: @keditor-border-color-hover;
+        }
+    }
+}
+
+#keditor-snippets-type-switcher {
+    margin: 0;
+}
+
+#keditor-snippets-container {
+    height: ~"calc(100% - 42px)";
+    background: @keditor-snippet-bg;
+    padding: 10px 5px;
+    border: solid @keditor-border-color;
+    border-width: 0 1px 1px;
+
+    > .keditor-snippets {
+        height: 100%;
+        .clearfix();
+        overflow-y: auto;
+        overflow-x: hidden;
+        .transition(opacity @keditor-animation-duration);
+    }
+}
+
+.keditor-snippet {
+    padding: 5px;
+    border: 1px solid @keditor-sidebar-bg;
+    cursor: move;
+    .transition(all @keditor-animation-duration);
+    float: left;
+    background: @keditor-snippet-bg;
+    margin: 0 5px 10px;
+    .user-select(none);
+
+    img {
+        display: block;
+    }
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+/* ==================================================================================
+   Toolbar
+   ================================================================================== */
+.keditor-toolbar {
+    position: absolute;
+    display: none;
+    .keditor-box-sizing();
+
+    > a {
+        padding: 1px 3px;
+        font-size: 12px;
+        width: 20px;
+        height: 20px;
+        display: block;
+        text-align: center;
+        line-height: 20px;
+    }
+
+    .btn-container-reposition,
+    .btn-component-reposition {
+        cursor: move;
+    }
+}
+
+/* ==================================================================================
+   Container
+   ================================================================================== */
+.keditor-container {
+    position: relative;
+    outline: 3px dashed transparent;
+    outline-offset: 0;
+
+    > .keditor-toolbar {
+        top: -3px;
+        left: -39px;
+        border: 1px solid #333;
+        border-radius: @keditor-border-radius;
+        overflow: hidden;
+
+        > a {
+            background: #333;
+            color: #fff;
+
+            &:hover {
+                background: #34afe0;
+            }
+        }
+    }
+
+    &:hover {
+        outline-color: #b5e4f6;
+    }
+
+    &.showed-keditor-toolbar {
+        outline-color: #2eb2e4;
+
+        > .keditor-toolbar {
+            display: block;
+        }
+    }
+}
+
+.keditor-container-content {
+    min-height: 50px;
+    outline: 1px dashed #e0e0e0;
+    outline-offset: -1px;
+}
+
+/* ==================================================================================
+   Component
+   ================================================================================== */
+.keditor-component {
+    position: relative;
+
+    .keditor-toolbar {
+        top: 3px;
+        right: 3px;
+        left: 3px;
+        background-color: rgba(0, 0, 0, .5);
+        padding-bottom: 3px;
+        text-align: right;
+
+        > a {
+            border: 0;
+            background: none;
+            color: #fafafa;
+            text-align: center;
+            border-radius: 0;
+            .box-shadow(none);
+            .transition(all @keditor-animation-duration);
+            display: inline-block;
+
+            &:hover {
+                background-color: rgba(255, 255, 255, .2);
+            }
+        }
+    }
+
+    &:hover,
+    &.showed-keditor-toolbar {
+        outline: 3px solid rgba(0, 0, 0, .5);
+        outline-offset: -3px;
+    }
+
+    &.showed-keditor-toolbar {
+        .keditor-component-content {
+            outline: none !important;
+        }
+    }
+
+    &:hover {
+        .keditor-toolbar {
+            display: block;
+        }
+    }
+}
+
+/* ==================================================================================
+   Drag n Drop helper
+   ================================================================================== */
+.keditor-snippet {
+    .keditor-box-sizing();
+
+    // When dragging
+    &.ui-draggable-dragging {
+        .transition(none) !important;
+    }
+}
+
+.ui-sortable-placeholder {
+    background: @keditor-snippet-placeholder-bg !important;
+    visibility: visible !important;
+    height: 10px !important;
+    margin: 5px 0 !important;
+    float: none !important;
+    outline: none !important;
+}
+
+.keditor-section {
+    &.ui-sortable-helper {
+        background: #fff !important;
+        opacity: 0.5;
+    }
+}

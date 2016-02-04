@@ -1,5 +1,21 @@
-﻿#snippets-list {
-    height: calc(100% - 40px);
-    overflow-y: auto;
-    overflow-x: hidden;
+﻿body {
+    padding-top: 50px;
+}
+
+.navbar-fixed-top a {
+    height: 50px;
+}
+
+.navbar-fixed-top .navbar-nav > li > a:hover {
+    color: #fff;
+    background-color: #080808;
+}
+
+.navbar-fixed-top .fa {
+    font-size: 20px;
+    line-height: inherit;
+}
+
+#keditor-sidebar {
+    top: 50px;
 }
