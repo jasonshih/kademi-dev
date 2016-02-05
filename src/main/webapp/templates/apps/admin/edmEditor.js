@@ -23,7 +23,6 @@ function initEdmEditorPage(fileName) {
     initKEditor(body);
     initSettingPanel();
     initBtns(body, fileName);
-    initSnippetsToggler(body);
     Msg.iconMode = 'fa';
 
     win.on({
@@ -142,18 +141,29 @@ function initKEditor(body) {
             line_height: '1;1.2;1.5;2;2.2;2.5'
         },
         snippetsUrl: '/static/keditor/snippets/edm/snippets.html',
-        snippetsListId: 'snippets-list',
-        onInitContent: function (contentArea) {
-            contentArea[contentArea.find('> table').length === 0 ? 'addClass' : 'removeClass']('empty');
+        onInitContentArea: function (contentArea) {
+            contentArea[contentArea.find('.keditor-container-content').children().length === 0 ? 'addClass' : 'removeClass']('empty');
 
             return contentArea.find('> table');
         },
-        onSectionReady: function (section) {
-            var textWrapper = section.find('td.text-wrapper');
+        onSidebarToggled: function (isOpened) {
+            var settingPanel = $('#edm-setting');
+            if (isOpened) {
+                if ($('.btn-setting').parent().hasClass('active')) {
+                    settingPanel.getNiceScroll().show();
+                    setTimeout(function () {
+                        settingPanel.getNiceScroll().resize();
+                    }, 300);
+                }
+            } else {
+                settingPanel.getNiceScroll().hide();
+            }
+        },
+        onCKEditorReady: function (component, editor) {
+            var textWrapper = component.find('td.text-wrapper');
             applyInlineCssForTextWrapper(textWrapper);
             applyInlineCssForLink(textWrapper.find('a'));
 
-            var editor = section.find('.keditor-section-content').ckeditor().editor;
             editor.on('change', function () {
                 applyInlineCssForLink(textWrapper.find('a'));
             });
@@ -164,7 +174,7 @@ function initKEditor(body) {
             }
 
             var contentArea = $(this);
-            contentArea[contentArea.find('> section').length === 0 ? 'addClass' : 'removeClass']('empty');
+            contentArea[contentArea.find('.keditor-container-content').children().length === 0 ? 'addClass' : 'removeClass']('empty');
         }
     });
 }
@@ -428,43 +438,23 @@ function initBtns(body, fileName) {
     });
 
     var settingPanel = $('#edm-setting');
-    var snippetsList = $('#snippets-list');
-
     $('.btn-setting').on('click', function (e) {
         e.preventDefault();
 
         var btn = $(this);
+        var li = btn.parent();
 
-        if (btn.hasClass('active')) {
+        if (li.hasClass('active')) {
             settingPanel.getNiceScroll().hide();
-            snippetsList.getNiceScroll().show();
             settingPanel.removeClass('showed');
-            btn.removeClass('active');
+            li.removeClass('active');
         } else {
             settingPanel.getNiceScroll().show();
             setTimeout(function () {
                 settingPanel.getNiceScroll().resize();
             }, 300);
-            snippetsList.getNiceScroll().hide();
             settingPanel.addClass('showed');
-            btn.addClass('active');
-        }
-    });
-}
-
-function initSnippetsToggler(body) {
-    flog('initSnippetsToggler');
-
-    $('#keditor-snippets-toggler').on('click', function (e) {
-        e.preventDefault();
-
-        var icon = $(this).find('i');
-        if (body.hasClass('opened-keditor-snippets')) {
-            body.removeClass('opened-keditor-snippets');
-            icon.attr('class', 'fa fa-chevron-left')
-        } else {
-            body.addClass('opened-keditor-snippets');
-            icon.attr('class', 'fa fa-chevron-right')
+            li.addClass('active');
         }
     });
 }
