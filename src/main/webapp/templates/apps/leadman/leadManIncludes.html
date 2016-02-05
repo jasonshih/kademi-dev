@@ -27,6 +27,17 @@
                             </select>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2" for="newLeadStage">Stage</label>
+                        <div id="select-frm-div" class="col-md-4">
+                            <select id="newLeadStage" data-placeholder="Select a stage" name="stage" class="form-control" style="width: 100%">
+                                <option value="">[None]</option>
+                                #foreach( $stage in $page.find("/leads/").funnels.get($request.params.leadName).stages )
+                                $formatter.option($stage, $stage, null)
+                                #end
+                            </select>
+                        </div>
+                    </div>
                     <div class="form-group org-field">
                         <label class="control-label col-md-2" for="newOrgTitle">Company</label>
                         <div class="col-md-5">

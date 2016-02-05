@@ -286,6 +286,10 @@ function initNewLeadForm() {
 
             }
         });
+
+        $('#newLeadStage').reloadFragment({
+            url: window.location.href + '?leadName=' + s.val(),
+        });
     });
 
     $('#source-frm', form).select2({
