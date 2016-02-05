@@ -7,7 +7,7 @@
  *  application to get the toolbars you want
  */
 
-CKEDITOR_BASEPATH = "/static/ckeditor440/";
+CKEDITOR_BASEPATH = "/static/ckeditor456/";
 
 
 // Templates should push theme css files into this array, so they will be included in the editor
