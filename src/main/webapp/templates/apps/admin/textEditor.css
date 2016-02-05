@@ -54,6 +54,11 @@ h3 {
     height: 60px;
 }
 
+#editor-wrapper .editor-toolbar .fa,
+#editor-wrapper .editor-toolbar [class*="clip-"] {
+    line-height: inherit;
+}
+
 #editor-wrapper #editor {
     position: absolute;
     left: 0;

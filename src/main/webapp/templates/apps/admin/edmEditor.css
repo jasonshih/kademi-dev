@@ -1,19 +1,40 @@
-﻿html {
-    min-height: 100%;
-}
-
-body {
+﻿body {
     background: none;
+    padding-top: 50px;
 }
 
+.navbar-fixed-top a {
+    height: 50px;
+}
+
+.navbar-fixed-top .navbar-nav > li > a:hover {
+    color: #fff;
+    background-color: #080808;
+}
+
+.navbar-fixed-top .fa {
+    font-size: 20px;
+    line-height: inherit;
+}
+
+#keditor-sidebar {
+    top: 50px;
+}
+
+/* ==================================================================================
+   EDM Area
+   ================================================================================== */
 #edm-area {
     min-width: 680px;
 }
 
-body.opened-keditor-snippets #edm-area {
+body.opened-keditor-sidebar #edm-area {
     margin-right: 260px;
 }
 
+/* ==================================================================================
+   EDM header, body and footer
+   ================================================================================== */
 #edm-header,
 #edm-body,
 #edm-footer {
@@ -65,29 +86,31 @@ body.opened-keditor-snippets #edm-area {
     content: "EDM Footer";
 }
 
+/* ==================================================================================
+   EDM Setting
+   ================================================================================== */
 #edm-setting {
-    position: absolute;
-    top: 50px;
-    left: 5px;
-    right: 5px;
+    position: fixed;
+    top: 60px;
     bottom: 10px;
-    background: #fff;
+    background: #f0f0f0;
     transition: all 0.3s;
     font-size: 12px;
-    padding: 0 5px;
+    padding: 0;
     z-index: 1;
     overflow-y: auto;
-    overflow-x: hidden;
-    transform: translate(105%, 0);
+    overflow-x: hidden !important;
+    width: 235px;
+    right: -255px;
 }
 
-#edm-setting.showed {
-    z-index: 3;
-    transform: translate(0, 0);
+body.opened-keditor-sidebar #edm-setting.showed {
+    right: 10px;
 }
 
 #edm-setting .panel {
     margin-bottom: 0;
+    overflow: hidden;
 }
 
 #edm-setting .panel + .panel {
@@ -144,7 +167,7 @@ div.cke_float[id*="cke_keditor-section-"] {
     width: auto !important;
 }
 
-body.opened-keditor-snippets div.cke_float[id*="cke_keditor-section-"] {
+body.opened-keditor-sidebar div.cke_float[id*="cke_keditor-section-"] {
     margin-right: 232px;
     margin-top: 0;
     margin-left: 0;
@@ -153,17 +176,11 @@ body.opened-keditor-snippets div.cke_float[id*="cke_keditor-section-"] {
 /* ====================================================================================
    Customize KEditor
 /* ==================================================================================== */
-#keditor-snippets-container {
+#keditor-sidebar {
     opacity: 1;
-    background: #fff;
+    z-index: 0;
 }
 
-#keditor-snippets-toggler {
-    background: #fff;
-}
-
-#snippets-list {
-    height: calc(100% - 40px);
-    overflow-y: auto;
-    overflow-x: hidden;
+.keditor-container-content {
+    height: 50px;
 }
