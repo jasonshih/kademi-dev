@@ -121,7 +121,7 @@
             function initUpload() {
                 $("#doUploadCsv").mupload({
                     buttonText: "<i class=\"clip-folder\"></i> Upload spreadsheet",
-                    url: "points.csv",
+                    url: "export-leads.csv",
                     useJsonPut: false,
                     oncomplete: function (data, name, href) {
                         log("oncomplete:", data.result.data, name, href);

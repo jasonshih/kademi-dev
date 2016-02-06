@@ -69,7 +69,9 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a href="/dashboard" class="navbar-brand">Infiniti</a>
+                        <a href="/dashboard" class="navbar-brand">
+                            <i class="fa fa-home fa-2x"></i>
+                        </a>
                     </div>
                     <div id="nav-collapse" class="nav-wrapper collapse navbar-collapse">
                         <ul class="nav navbar-nav hidden-material">
@@ -158,8 +160,10 @@
                         <ul class="nav navbar-nav navbar-right">
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                    #if( $currentOrg )
                                     Logged in to: $currentOrg.title
                                     <span class="caret"></span>
+                                    #end
                                 </a>
                                 <ul class="dropdown-menu selectOrg">
                                     #foreach( $m in $memberships)

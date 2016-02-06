@@ -179,7 +179,8 @@
                                                     <div class="form-group">
                                                         <label class="control-label col-sm-4">Funnel:</label>
                                                         <div class="col-sm-8">
-                                                            <select name="funnel" class="form-control immediateUpdate">
+                                                            <select name="funnel" class="form-control immediateUpdate required">
+                                                                <option value="">[Select a funnel]</option>
                                                                 #foreach( $funnel in $page.allFunnels )
                                                                 $formatter.option($funnel.repo, $funnel.title, $page.funnelId)
                                                                 #end
