@@ -28,6 +28,9 @@
 </style>
 
 #set( $leadsPage = $page.find("/leads") )
+
+#set( $kpis = $page.find("/sales").availableKpis )
+
 <div class="fw-boxed">
     <div class="panel panel-default">
         <div class="row">
@@ -69,18 +72,18 @@
                     </div>
                     <div class="col-sm-6 col-xs-12">
                         <div class="p">
-                            Weekly sales target
+                            #foreach( $kpi in $kpis )
+                            #set( $color = "danger" )
+                            #set( $color = $kpi.progressLevel.levelName )
+                            #set( $perc = $kpi.getProgressOfLevelPerc("success") )
+
+                            <span class="pull-right">$formatter.toDecimal($perc,1)%</span>
+                            $kpi.title
+
                             <div class="progress progress-xs">
-                                <div style="width: 10%" class="progress-bar progress-bar-warning"></div>
+                                <div style="width: ${perc}%" class="progress-bar progress-bar-${color}"></div>
                             </div>
-                            Monthly sales target
-                            <div class="progress progress-xs">
-                                <div style="width: 82%" class="progress-bar progress-bar-info"></div>
-                            </div>
-                            Annual sales target
-                            <div class="progress progress-xs m0">
-                                <div style="width: 70%" class="progress-bar progress-bar-danger"></div>
-                            </div>
+                            #end
                         </div>
                     </div>
                 </div>
@@ -106,7 +109,7 @@
             #end
         </ul>
         #if( $leads.size() > 0 )
-        
+
         #else
         <p class="lead">Couldnt find any leads</p>
         #end

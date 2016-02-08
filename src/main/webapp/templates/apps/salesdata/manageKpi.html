@@ -485,19 +485,19 @@
                                 </tr>
                                 <tr>
                                     <th>Period start</th>
-                                    <td colspan="2">$page.queryStart</td>
+                                    <td colspan="2">$!page.queryStart</td>
                                 </tr>
                                 <tr>
                                     <th>Period end</th>
                                     <td colspan="2">
                                         #set($periodEndDate = $page.getPeriodEndDate( $page.queryStart ))
-                                        $periodEndDate
+                                        $!periodEndDate
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>Progress end</th>
                                     <td colspan="2">
-                                        $page.queryFinish
+                                        $!page.queryFinish
                                     </td>
                                 </tr>
                                 <tr>
@@ -524,7 +524,16 @@
                             </table>
 
                             <p class="lead">Level thresholds</p>
+                            <p>List of all levels, with the target values as calculated for the selected user, and the percentage of that level the current KPI value represents</p>
                             <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Level name</th>
+                                        <th>Level target</th>
+                                        <th>Percentage achieved</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
                                 #foreach($levelName in $page.levelNames)
                                 <tr>
                                     <th>$levelName</th>
@@ -545,6 +554,7 @@
 
                                 </tr>
                                 #end
+                                </tbody>
                             </table>
 
                             <hr/>
