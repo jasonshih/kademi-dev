@@ -506,8 +506,8 @@ function showFieldMessages(fieldMessages, form) {
                 errorMessage.html(message.message);
             } else {
                 parent.append(
-                    '<p class="help-block error-message">' + message.message + '</p>'
-                );
+                        '<p class="help-block error-message">' + message.message + '</p>'
+                        );
             }
 
             showErrorField(target);
@@ -1014,7 +1014,7 @@ function checkValidEmailAddress(form, config) {
 
     var error = 0;
     var errorFields = [];
-    var pattern = new RegExp(/^(("[\w-\s]+")|([\w-'']+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
+    var pattern = new RegExp(/^(("[\w-\s]+")|([\w-'']+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,66}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
 
     form.find('#email, input.email').each(function () {
         var input = $(this);
@@ -1520,11 +1520,11 @@ function validatePassword(pw, options) {
         for (i = start; i < pw.length; i++) {
             seq = seq.slice(1) + pw.charAt(i);
             if (
-                lower.indexOf(seq) > -1 ||
-                upper.indexOf(seq) > -1 ||
-                numbers.indexOf(seq) > -1 ||
-                (o.noQwertySequences && qwerty.indexOf(seq) > -1)
-            ) {
+                    lower.indexOf(seq) > -1 ||
+                    upper.indexOf(seq) > -1 ||
+                    numbers.indexOf(seq) > -1 ||
+                    (o.noQwertySequences && qwerty.indexOf(seq) > -1)
+                    ) {
                 return false;
             }
         }
@@ -1668,9 +1668,9 @@ function showValidation(target, text, form) {
     }
 
     showFieldMessages([{
-        field: id,
-        message: text
-    }], form);
+            field: id,
+            message: text
+        }], form);
 }
 
 function checkChars(form, inpClass, reg) {
