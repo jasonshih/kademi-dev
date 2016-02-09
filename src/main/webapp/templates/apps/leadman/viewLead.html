@@ -197,7 +197,8 @@
                                                             <select name="stageName" class="form-control immediateUpdate">
                                                                 <option value="">[None]</option>
                                                                 #foreach( $stage in $page.allStages )
-                                                                $formatter.option($stage, $stage, $page.stageName)
+                                                                #set($a = $formatter.ifNull($stage.desc, $stage.name))
+                                                                $formatter.option($stage.name, $a, $page.stageName)
                                                                 #end
                                                             </select>
                                                         </div>
