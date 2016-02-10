@@ -352,11 +352,28 @@ function loadKpiSeriesGraphData() {
 function handleKpiSeriesData(resp) {
     var aggr = (resp !== null ? resp.aggregations : null);
 
-    initKpiSeriesHistogram(aggr);
+    showKpiSeriesHistogram(aggr);
+    showLeaderboard(aggr.leaders);
 }
 
+function showLeaderboard(leaderboardAgg) {
+    flog("showLeaderboard", leaderboardAgg, leaderboardAgg.buckets);
+    var tbody = $("#kpiLeaderboard");
+    tbody.html("");
+    $.each(leaderboardAgg.buckets, function(i, leader) {
+        var tr = $("<tr>");
+        tr.append("<td>#" + i + "</td>");
+        var td = $("<td>");
+        td.html( leader.key );
+        tr.append(td);
+        td = $("<td class='text-right'>");
+        td.text( round(leader.metric.value,2) );
+        tr.append(td);
+        tbody.append(tr);
+    } );
+}
 
-function initKpiSeriesHistogram(aggr) {
+function showKpiSeriesHistogram(aggr) {
     flog("initKpiSeriesHistogram", aggr);
 
     $('#seriesHistogram svg').empty();
@@ -370,7 +387,7 @@ function initKpiSeriesHistogram(aggr) {
         myData.push(series);
 
         $.each(aggr.periodFrom.buckets, function (b, dateBucket) {
-            flog("aggValue", dateBucket);
+            //flog("aggValue", dateBucket);
             series.values.push({x: dateBucket.key, y: dateBucket.aggValue.value});
         });
 
