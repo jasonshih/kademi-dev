@@ -446,6 +446,21 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div>
+
+<div class="modal fade" id="modalLeadFromEmail" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Create/update lead from email</h4>
+            </div>
+            <div class="modal-body">
+                <p>To create a new lead from an email simply add a BCC to <a href="mailto:customer@goeshere.com?bcc=lead@${page.find('/').domainName}">lead@${page.find('/').domainName}</a></p>
+                <p>If a lead exists with that email address, your email will be captured and attached to the lead</p>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
 #end
 
 
