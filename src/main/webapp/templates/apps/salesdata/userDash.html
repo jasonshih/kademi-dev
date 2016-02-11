@@ -1,8 +1,7 @@
-#set( $mySeries = $page.find("/sales").mySeries )
-#if( !$mySeries.isEmpty() )
-data series - $mySeries.size()
-#foreach( $series in $mySeries )
-<div class="series-chart" data-href="$seried.href" style="border: solid green 1px">
+#set( $myKpis = $page.find("/sales").availableKpis )
+#if( !$myKpis.isEmpty() )
+#foreach( $kpi in $myKpis )
+<div class="series-chart" data-href="$kpi.href" data-visualisation="dateHistogram" style="border: solid green 1px">
     <svg></svg>
 </div>
 #end
@@ -13,6 +12,9 @@ data series - $mySeries.size()
             function () {
                 $(".series-chart").each(function (i, n) {
                     flog("show chart", i, n);
+                    var div = $(n);
+                    var kpiHref = div.data("href");
+                    
                 });
             }
     );
