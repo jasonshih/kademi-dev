@@ -25,11 +25,9 @@
         if (buckets.length > 0) {
             for (var i in buckets) {
                 var b = buckets[i];
-                var url = decodeURIComponent(b.key);
-                var uri = URI(url);
                 var t = '<div class="row">'
                         + '    <div class="col-md-10">'
-                        + '        <span>' + uri.directory() + '</span>'
+                        + '        <span>' + b.key + '</span>'
                         + '    </div>'
                         + '    <div class="col-md-2">'
                         + '        <span>' + b.doc_count + '</span>'
@@ -58,18 +56,83 @@
 
             for (var i in buckets) {
                 var b = buckets[i];
-                var url = decodeURIComponent(b.key);
-                var uri = URI(url);
-                var dir = uri.directory();
-                var t = '<tr data-url="' + dir + '">'
-                        + '    <td>' + dir + '</td>'
-                        + '    <td>' + b.doc_count + '</td>'
-                        + '    <td class="viewTime">Loading...</td>'
+                var plays = b.plays.doc_count;
+                var viewTime = b.viewTime.doc_count * 3;
+                var t = '<tr data-url="' + b.key + '">'
+                        + '    <td>' + b.key + '</td>'
+                        + '    <td>' + plays + '</td>'
+                        + '    <td class="viewTime">' + viewTime + ' seconds</td>'
                         + '</tr>';
 
                 tbody.append(t);
             }
         }
+    }
+
+    function initHistogram2(playHits, viewHits) {
+        $('#visualisation').empty();
+        nv.addGraph(function () {
+            var chart = nv.models.linePlusBarChart()
+                    .focusEnable(false)
+                    .margin({top: 30, right: 90, bottom: 60, left: 80});
+
+            chart.brush = null;
+
+            chart.xAxis
+                    .axisLabel("Date")
+                    .tickFormat(function (d) {
+                        return moment(d).format("DD MMM");
+                    })
+                    .rotateLabels(-45);
+
+            chart.y1Axis
+                    .tickFormat(function (d) {
+                        return d3.format(',f')(d) + " Plays";
+                    });
+
+            chart.y2Axis
+                    .tickFormat(function (d) {
+                        return d3.format(',f')(d) + " Seconds";
+                    });
+
+            //chart.bars.forceY([0]);
+
+            var myData = [];
+            var plays = {
+                values: [],
+                key: "Plays",
+                bar: true,
+                color: "#7777ff"
+            };
+            for (var i = 0; i < playHits.length; i++) {
+                var bucket = playHits[i];
+                plays.values.push(
+                        {x: bucket.key, y: bucket.doc_count});
+            }
+
+            var views = {
+                values: [],
+                key: "View time",
+                color: "#333"
+            };
+            for (var i = 0; i < viewHits.length; i++) {
+                var bucket = viewHits[i];
+                views.values.push(
+                        {x: bucket.key, y: (bucket.doc_count * 3)});
+            }
+
+            myData.push(plays);
+            myData.push(views);
+
+            d3.select('#visualisation')
+                    .datum(myData)
+                    .transition()
+                    .duration(0)
+                    .call(chart);
+
+            nv.utils.windowResize(chart.update);
+            return chart;
+        });
     }
 
     function processData(resp) {
@@ -81,6 +144,7 @@
         initTotalViewTime(totalViewTime);
         initAvgViewTime(totalPlays, totalViewTime);
         initVideoTable(videos);
+        initHistogram2(totalPlays.histogram.buckets, totalViewTime.histogram.buckets);
     }
 
     function loadData() {

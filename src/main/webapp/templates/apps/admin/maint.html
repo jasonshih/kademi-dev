@@ -142,6 +142,22 @@
 
                     <article class="panel panel-default">
                         <div class="panel-heading">
+                            <h3 class="panel-title">Find a website admin org</h3>
+                        </div>
+                        <div class="panel-body">
+                            <p>Find a website admin org</p>
+                            <br/>
+                            <form method="POST" action="maint" class="findWebsite" >
+                                <input type="text" name="findWebsite" value="" />
+                                <button class="btn-sm btn btn-warning">Submit</button>
+                            </form>
+                            <br/>
+                            <p id="findWebsiteResult"></p>
+                        </div>
+                    </article>
+
+                    <article class="panel panel-default">
+                        <div class="panel-heading">
                             <h3 class="panel-title">Manually initiate scheduled tasks</h3>
                         </div>
 
@@ -356,6 +372,13 @@
                     callback: function (resp) {
                         flog("resp", resp);
                         $("#findResourceClass").text(resp.messages[0]);
+                    }
+                });
+
+                $("form.findWebsite").forms({
+                    callback: function (resp) {
+                        flog("resp", resp);
+                        $("#findWebsiteResult").text(resp.messages[0]);
                     }
                 });
             });
