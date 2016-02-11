@@ -6,23 +6,23 @@
     var DEFAULT_KPI_OPTIONS = {
         startDate: null,
         endDate: null,
-        interval: "day"        
+        interval: "day"
     };
 
     $.fn.kpiVis = function (options) {
         var container = this;
         var config = $.extend({}, DEFAULT_KPI_OPTIONS, options);
-        
+
         var kpiHref = container.data("href");
         var visType = container.data("visualisation");
-        
+
         var options = {
             startDate: config.startDate,
             endDate: config.endDate,
             interval: config.interval
-        };        
-        
-        
+        };
+
+        loadKpiSeriesGraphData(kpiHref, options, container);
     };
 
 })(jQuery);

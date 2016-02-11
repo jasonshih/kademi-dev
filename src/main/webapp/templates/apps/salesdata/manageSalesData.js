@@ -275,7 +275,7 @@ function initSeriesGraphControls() {
 }
 
 function loadSeriesGraphData() {
-    var href = "?activity&" + $.param(options);
+    var href = "?dateHistogram&" + $.param(options);
     $.ajax({
         type: "GET",
         url: href,
