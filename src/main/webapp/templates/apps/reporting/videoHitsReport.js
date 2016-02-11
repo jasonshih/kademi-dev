@@ -15,7 +15,7 @@
         var a = totalPlays.doc_count;
         var b = totalViewTime.doc_count * 3;
         var elem = $('.avgViewTime');
-        elem.find('.values strong').text((b / a) + " seconds");
+        elem.find('.values strong').text(round(b / a, 2) + " seconds");
     }
 
     function initTopViews(buckets) {
