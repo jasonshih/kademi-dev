@@ -838,6 +838,7 @@ function checkRegexes(form) {
  */
 function shouldCheckValue(input) {
     var shouldCheck = false;
+    var isRequired = input.hasClass('required');
     var isRequiredIf = input.hasClass('required-if');
     var isRequiredIfShown = input.hasClass('required-if-shown');
 
@@ -851,7 +852,7 @@ function shouldCheckValue(input) {
         if (isShown) {
             shouldCheck = true;
         }
-    } else {
+    } else if (isRequired) {
         shouldCheck = true;
     }
 
