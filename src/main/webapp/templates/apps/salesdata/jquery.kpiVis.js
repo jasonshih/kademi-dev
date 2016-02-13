@@ -115,23 +115,45 @@ function showKpiSeriesHistogram(resp, container, visType, config) {
     var overallMetric = aggr.metric.value;
     container.find(".kpi-metric").text(round(overallMetric, 0));
 
-    if (config.levelClassSelector) {
-        var items = $(config.levelClassSelector);
-        var levelClass = config.levelClassPrefix + resp.progressLevelName;
-        items.addClass(levelClass);
-        if (config.levelClasses && resp.progressLevelName) {
-            var c = config.levelClasses[resp.progressLevelName];
-            items.addClass(c);
+    flog("level pref", container, container.find("*[data-level-class-prefix]"));
+    container.find("*[data-level-class-prefix]").each(function (i, n) {
+        flog("level class prefi", n);
+        var item = $(n);
+        var levelClassPrefix = item.data("level-class-prefix");
+        var levelClass = levelClassPrefix + resp.progressLevelName;
+        flog("add class, ", levelClass);
+        item.addClass(levelClass);
+    });
+
+    container.find("*[data-level-classes]").each(function (i, n) {
+        var item = $(n);
+        var sLevelClasses = item.data("level-classes");
+        var levelClasses = [];
+        var s = sLevelClasses;
+        if (s) {
+            var arr = s.split(",");
+            for (var i = 0; i < arr.length; i++) {
+                var pair = arr[i].split("=");
+                levelClasses[pair[0]] = pair[1];
+            }
+            var c = levelClasses[resp.progressLevelName];
+            item.addClass(c);
         }
-    }
+
+    });
+
     container.find(".kpi-progress").text(round(resp.progressValue, 2));
+
+    var levelTitle = resp.levelData[resp.progressLevelName].title;
+    container.find(".kpi-level").text(levelTitle);
 
     container.find(".kpi-target").each(function (i, n) {
         var s = $(n);
         var levelName = s.data("level");
         var levelAmount = resp.levelData[levelName].lowerBound;
-        s.text(round(levelAmount,0));
+        s.text(round(levelAmount, 0));
     });
+
 
     var svg = container.find("svg");
     svg.empty();
