@@ -62,7 +62,7 @@
                             #elseif($labelType == "trace")
                                 #set($labelType = "default")
                             #end
-                            <div class="$labelType col-row clearfix">
+                            <div class="$labelType col-row clearfix" style='table-layout:fixed'>
                                 <div class="col-lvl"><span class="label label-$labelType" >$event.level</span></div>
                                 <div class="col-user"><a target="_blank" class="userName" href="$!event.userHref">$!event.userName</a></div>
                                 <div class="col-msg">$event.message</div>
