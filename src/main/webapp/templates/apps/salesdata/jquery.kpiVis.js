@@ -6,30 +6,55 @@
     var DEFAULT_KPI_OPTIONS = {
         startDate: null,
         endDate: null,
-        interval: "day"
+        interval: "day",
+        levelClassPrefix: null, // if provided, will add a class like label-success for levels called "success"
+        levelClassSelector: null,
+        levelClasses: null
     };
 
     $.fn.kpiVis = function (options) {
         var container = this;
-        var config = $.extend({}, DEFAULT_KPI_OPTIONS, options);
 
-        var kpiHref = container.data("href");
-        var visType = container.data("visualisation");
+        container.each(function (i, n) {
+            var cont = $(n);
+            var config = $.extend({}, DEFAULT_KPI_OPTIONS, options);
 
-        var options = {
-            startDate: config.startDate,
-            endDate: config.endDate,
-            interval: config.interval
-        };
+            var opts = {
+                startDate: config.startDate,
+                endDate: config.endDate,
+                interval: config.interval
+            };
 
-        loadKpiSeriesGraphData(kpiHref, options, container, visType);
+            var kpiHref = cont.data("href");
+            var visType = cont.data("visualisation");
+            if (config.levelClassPrefix === null) {
+                config.levelClassPrefix = cont.data("level-class-prefix");
+            }
+            if (config.levelClassSelector === null) {
+                config.levelClassSelector = cont.data("level-class-selector");
+            }
+            if (config.levelClasses === null) {
+                config.levelClasses = [];
+                var s = cont.data("level-classes");
+                if (s) {
+                    var arr = s.split(",");
+                    for (var i = 0; i < arr.length; i++) {
+                        var pair = arr[i].split("=");
+                        config.levelClasses[pair[0]] = pair[1];
+                    }
+                }
+            }
+
+            loadKpiSeriesGraphData(kpiHref, opts, cont, visType, config);
+        });
     };
 
 })(jQuery);
 
 
-function loadKpiSeriesGraphData(href, opts, container, visType) {
+function loadKpiSeriesGraphData(href, opts, container, visType, config) {
     var href = href + "?dateHistogram&" + $.param(opts);
+    flog("loadKpiSeriesGraphData", href);
     $.ajax({
         type: "GET",
         url: href,
@@ -42,24 +67,25 @@ function loadKpiSeriesGraphData(href, opts, container, visType) {
             }
 
             flog('loadKpiData', href);
-            handleKpiSeriesData(json, container, visType);
+            handleKpiSeriesData(json, container, visType, config);
 
         }
     });
 }
 
 
-function handleKpiSeriesData(resp, container, visType) {
-    showKpiSeriesHistogram(resp, container, visType);
+function handleKpiSeriesData(resp, container, visType, config) {
+    showKpiSeriesHistogram(resp, container, visType, config);
 
     // TODO: what do we do with this? callback with data?
     // ie config.onData(aggr), and the provided function renders the leaderboard .. ?
+    var aggr = resp.aggregations;
     showLeaderboard(aggr.leaders);
 }
 
 
 function showLeaderboard(leaderboardAgg) {
-    flog("showLeaderboard", leaderboardAgg, leaderboardAgg.buckets);
+    //flog("showLeaderboard", leaderboardAgg, leaderboardAgg.buckets);
     var tbody = $("#kpiLeaderboard");
     tbody.html("");
     $.each(leaderboardAgg.buckets, function (i, leader) {
@@ -75,23 +101,42 @@ function showLeaderboard(leaderboardAgg) {
     });
 }
 
-function showKpiSeriesHistogram(resp, container, visType) {
-    flog("initKpiSeriesHistogram", resp);
+function showKpiSeriesHistogram(resp, container, visType, config) {
 
-    aggr = resp.aggregations;
+    var aggr = resp.aggregations;
 
     var kpiTitle = resp.kpiTitle;
-    container.find(".kpi-name").text(kpiTitle);
+    container.find(".kpi-title").text(kpiTitle);
 
-    var dataSeriesUnits = resp.dataSeriesUnits;
+    var dataSeriesUnits = resp.units;
+
     container.find(".kpi-units").text(dataSeriesUnits);
 
     var overallMetric = aggr.metric.value;
-    container.find(".kpi-metric").text(round(overallMetric,2));
+    container.find(".kpi-metric").text(round(overallMetric, 0));
 
+    if (config.levelClassSelector) {
+        var items = $(config.levelClassSelector);
+        var levelClass = config.levelClassPrefix + resp.progressLevelName;
+        items.addClass(levelClass);
+        if (config.levelClasses && resp.progressLevelName) {
+            var c = config.levelClasses[resp.progressLevelName];
+            items.addClass(c);
+        }
+    }
+    container.find(".kpi-progress").text(round(resp.progressValue, 2));
+
+    container.find(".kpi-target").each(function (i, n) {
+        var s = $(n);
+        var levelName = s.data("level");
+        var levelAmount = resp.levelData[levelName].lowerBound;
+        s.text(round(levelAmount,0));
+    });
 
     var svg = container.find("svg");
     svg.empty();
+
+    //flog("initKpiSeriesHistogram", resp, svg);
 
     nv.addGraph(function () {
 
@@ -105,17 +150,16 @@ function showKpiSeriesHistogram(resp, container, visType) {
         $.each(aggr.periodFrom.buckets, function (b, dateBucket) {
             //flog("aggValue", dateBucket);
             var v = dateBucket.aggValue.value;
-            if( v == null ) {
+            if (v == null) {
                 v = 0;
             }
             series.values.push({x: dateBucket.key, y: v});
         });
 
 
-        flog(myData);
 
         var chart;
-        flog("visType", visType);
+        //flog("myData", kpiTitle, myData);
         if (visType === "dateHistogram") {
             chart = nv.models.multiBarChart()
                     .margin({right: 50, left: 0, bottom: 30, top: 0})
@@ -128,33 +172,52 @@ function showKpiSeriesHistogram(resp, container, visType) {
             });
 
             chart.yAxis.tickFormat(d3.format(',.2f'));
-            flog("using datehisto");
+
+            chart.x(function (d) {
+                return d.x;
+            })
+            chart.y(function (d) {
+                return d.y;
+            });
+
+
+            d3.select(svg.get(0))
+                    .datum(myData)
+                    .call(chart);
+
+            nv.utils.windowResize(chart.update);
+
+            return chart;
+
         } else if (visType == "sparkline") {
             chart = nv.models.sparkline().height(100);
             chart.margin({right: 0, left: 0, bottom: 00, top: 0})
             chart.color(["#4caf50"]);
             myData = myData[0].values;
-            flog("using sparkline", myData);
+            chart.x(function (d) {
+                return d.x;
+            })
+            chart.y(function (d) {
+                return d.y;
+            });
+
+
+            d3.select(svg.get(0))
+                    .datum(myData)
+                    .call(chart);
+
+            nv.utils.windowResize(chart.update);
+
+            return chart;
+
         }
-
-        chart.x(function (d) {
-            return d.x;
-        })
-        chart.y(function (d) {
-            return d.y;
-        });
-
-
-        d3.select(svg.get(0))
-                .datum(myData)
-                .call(chart);
-
-        nv.utils.windowResize(chart.update);
-
-        return chart;
     });
 }
 
 function round(value, decimals) {
-    return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+    if (value) {
+        return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
+    } else {
+        return "-";
+    }
 }
