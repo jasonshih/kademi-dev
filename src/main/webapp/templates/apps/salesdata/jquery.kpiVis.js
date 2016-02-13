@@ -22,14 +22,14 @@
             interval: config.interval
         };
 
-        loadKpiSeriesGraphData(kpiHref, options, container);
+        loadKpiSeriesGraphData(kpiHref, options, container, visType);
     };
 
 })(jQuery);
 
 
-function loadKpiSeriesGraphData(href, opts, container) {
-    var href = href + "?activity&" + $.param(opts);
+function loadKpiSeriesGraphData(href, opts, container, visType) {
+    var href = href + "?dateHistogram&" + $.param(opts);
     $.ajax({
         type: "GET",
         url: href,
@@ -41,47 +41,58 @@ function loadKpiSeriesGraphData(href, opts, container) {
                 json = JSON.parse(resp);
             }
 
-            flog('response', json);
-            handleKpiSeriesData(json, container);
+            flog('loadKpiData', href);
+            handleKpiSeriesData(json, container, visType);
 
         }
     });
 }
 
 
-function handleKpiSeriesData(resp, container) {
-    var aggr = (resp !== null ? resp.aggregations : null);
+function handleKpiSeriesData(resp, container, visType) {
+    showKpiSeriesHistogram(resp, container, visType);
 
-    showKpiSeriesHistogram(aggr, container);
+    // TODO: what do we do with this? callback with data?
+    // ie config.onData(aggr), and the provided function renders the leaderboard .. ?
     showLeaderboard(aggr.leaders);
 }
+
 
 function showLeaderboard(leaderboardAgg) {
     flog("showLeaderboard", leaderboardAgg, leaderboardAgg.buckets);
     var tbody = $("#kpiLeaderboard");
     tbody.html("");
-    $.each(leaderboardAgg.buckets, function(i, leader) {
+    $.each(leaderboardAgg.buckets, function (i, leader) {
         var tr = $("<tr>");
         tr.append("<td>#" + i + "</td>");
         var td = $("<td>");
-        td.html( leader.key );
+        td.html(leader.key);
         tr.append(td);
         td = $("<td class='text-right'>");
-        td.text( round(leader.metric.value,2) );
+        td.text(round(leader.metric.value, 2));
         tr.append(td);
         tbody.append(tr);
-    } );
+    });
 }
 
-function showKpiSeriesHistogram(aggr, container) {
-    flog("initKpiSeriesHistogram", aggr);
-    var svg = container.find("svg");
-    if( svg.length === 0) {
-        svg = $("<svg>");
-        container.append(svg);
-    }
+function showKpiSeriesHistogram(resp, container, visType) {
+    flog("initKpiSeriesHistogram", resp);
 
+    aggr = resp.aggregations;
+
+    var kpiTitle = resp.kpiTitle;
+    container.find(".kpi-name").text(kpiTitle);
+
+    var dataSeriesUnits = resp.dataSeriesUnits;
+    container.find(".kpi-units").text(dataSeriesUnits);
+
+    var overallMetric = aggr.metric.value;
+    container.find(".kpi-metric").text(round(overallMetric,2));
+
+
+    var svg = container.find("svg");
     svg.empty();
+
     nv.addGraph(function () {
 
         var myData = [];
@@ -93,32 +104,46 @@ function showKpiSeriesHistogram(aggr, container) {
 
         $.each(aggr.periodFrom.buckets, function (b, dateBucket) {
             //flog("aggValue", dateBucket);
-            series.values.push({x: dateBucket.key, y: dateBucket.aggValue.value});
+            var v = dateBucket.aggValue.value;
+            if( v == null ) {
+                v = 0;
+            }
+            series.values.push({x: dateBucket.key, y: v});
         });
 
 
         flog(myData);
 
-        var chart = nv.models.multiBarChart()
-                .margin({right: 100})
-                .x(function (d) {
-                    return d.x;
-                })   //We can modify the data accessor functions...
-                .y(function (d) {
-                    return d.y;
-                })   //...in case your data is formatted differently.
-                //.useInteractiveGuideline(true)    //Tooltips which show all data points. Very nice!
-                .rightAlignYAxis(true)      //Let's move the y-axis to the right side.
-                .showControls(true)       //Allow user to choose 'Stacked', 'Stream', 'Expanded' mode.
-                .clipEdge(true);
+        var chart;
+        flog("visType", visType);
+        if (visType === "dateHistogram") {
+            chart = nv.models.multiBarChart()
+                    .margin({right: 50, left: 0, bottom: 30, top: 0})
+                    .rightAlignYAxis(true)      //Let's move the y-axis to the right side.
+                    .showControls(true)       //Allow user to choose 'Stacked', 'Stream', 'Expanded' mode.
+                    .clipEdge(true);
 
-        chart.xAxis
-                .tickFormat(function (d) {
-                    return d3.time.format('%x')(new Date(d))
-                });
+            chart.xAxis.tickFormat(function (d) {
+                return d3.time.format('%x')(new Date(d))
+            });
 
-        chart.yAxis
-                .tickFormat(d3.format(',.2f'));
+            chart.yAxis.tickFormat(d3.format(',.2f'));
+            flog("using datehisto");
+        } else if (visType == "sparkline") {
+            chart = nv.models.sparkline().height(100);
+            chart.margin({right: 0, left: 0, bottom: 00, top: 0})
+            chart.color(["#4caf50"]);
+            myData = myData[0].values;
+            flog("using sparkline", myData);
+        }
+
+        chart.x(function (d) {
+            return d.x;
+        })
+        chart.y(function (d) {
+            return d.y;
+        });
+
 
         d3.select(svg.get(0))
                 .datum(myData)
@@ -128,4 +153,8 @@ function showKpiSeriesHistogram(aggr, container) {
 
         return chart;
     });
+}
+
+function round(value, decimals) {
+    return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
 }

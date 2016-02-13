@@ -293,7 +293,7 @@ function initKpiSeriesGraphControls() {
     function cb(start, end) {
         options.startDate = start.format('DD/MM/YYYY');
         options.endDate = end.format('DD/MM/YYYY');
-        loadKpiSeriesGraphData(window.location.href, options, $("#seriesHistogram"));
+        loadKpiSeriesGraphData(window.location.href, options, $("#seriesHistogram"), "dateHistogram");
     }
 
     reportRange.exist(function () {

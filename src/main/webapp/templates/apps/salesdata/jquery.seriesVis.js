@@ -17,21 +17,23 @@
         var seriesHref = container.data("href");
         var visType = container.data("visualisation");
         var groupBy = container.data("group-by");
+        var aggregation = container.data("aggregation");
 
         var options = {
             startDate: config.startDate,
             endDate: config.endDate,
             interval: config.interval,
-            groupBy: groupBy
+            groupBy: groupBy,
+            aggregation : aggregation
         };
 
-        loadSeriesGraph(seriesHref, options, container);
+        loadSeriesGraph(seriesHref, options, container, visType);
     };
 
 })(jQuery);
 
 
-function loadSeriesGraph(href, opts, container) {
+function loadSeriesGraph(href, opts, container, visType) {
     var href = href + "?dateHistogram&" + $.param(opts);
     var svg = container.find("svg");
     if (svg.length === 0) {
@@ -50,31 +52,31 @@ function loadSeriesGraph(href, opts, container) {
                 json = JSON.parse(resp);
             }
 
-            flog('response', json);
-            handleSeriesData(json, svg);
+            flog('loadSeriesGraph: response', json);
+            handleSeriesData(json, svg, visType);
 
         }
     });
 }
 
 
-function handleSeriesData(resp, svg) {
+function handleSeriesData(resp, svg, visType) {
     var aggr = (resp !== null ? resp.aggregations : null);
-    showSeriesHistogram(aggr, svg);
+    showSeriesHistogram(aggr, svg, visType);
 }
 
 function findVal(arr, key) {
     var val = null;
     $.each(arr, function (b, item) {
         if(item.key === key ) {
-            val = item.sum.value;
+            val = item.aggValue.value;
         }
     });
     return val;
 }
 
 function showSeriesHistogram(aggr, svg) {
-    flog("initKpiSeriesHistogram", aggr);
+    flog("showSeriesHistogram", aggr);
 
     svg.empty();
     nv.addGraph(function () {
@@ -89,7 +91,7 @@ function showSeriesHistogram(aggr, svg) {
                 myData.push(series);
                 $.each(aggr.periodFrom.buckets, function (b, dateBucket) {
                     var val = findVal(dateBucket.groupBy.buckets, groupBucket.key);
-                    flog("aggValue", dateBucket, val);
+                    //flog("aggValue", dateBucket, val);
                     series.values.push({x: dateBucket.key, y: val});
                 });
 
@@ -112,7 +114,7 @@ function showSeriesHistogram(aggr, svg) {
 
             $.each(aggr.periodFrom.buckets, function (b, dateBucket) {
                 //flog("aggValue", dateBucket);
-                series.values.push({x: dateBucket.key, y: dateBucket.sum.value});
+                series.values.push({x: dateBucket.key, y: dateBucket.aggValue.value});
             });
 
         }
@@ -122,7 +124,7 @@ function showSeriesHistogram(aggr, svg) {
 
         var chart = nv.models.multiBarChart()
                 .stacked(true)
-                .margin({right: 100})
+                .margin({right: 50, left: 0, bottom: 15, top: 0})
                 .x(function (d) {
                     return d.x;
                 })   //We can modify the data accessor functions...

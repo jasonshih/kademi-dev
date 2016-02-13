@@ -310,14 +310,14 @@ function initSeriesHistogram(aggr) {
 
         var myData = [];
         var series = {
-            key: "Sum",
+            key: "Records",
             values: []
         };
         myData.push(series);
 
         $.each(aggr.periodFrom.buckets, function (b, dateBucket) {
             flog("dateBucket", dateBucket);
-            series.values.push({x: dateBucket.key, y: dateBucket.sum.value});
+            series.values.push({x: dateBucket.key, y: dateBucket.aggValue.value});
         });
 
 
