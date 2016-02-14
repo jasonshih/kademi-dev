@@ -59,8 +59,14 @@ function loadKpiSeriesGraphData(href, opts, container, visType, config) {
         queryType = "dateHistogram";
     }
     href += "&" + queryType;
+    if (queryType === "pointsLeaderboard") {
+        var max = container.data("max-records");
+        if (max) {
+            href += "&maxRecords=" + max;
+        }
+    }
 
-    flog("loadKpiSeriesGraphData", visType, href);
+    flog("loadKpiSeriesGraphData", container, visType, href);
     $.ajax({
         type: "GET",
         url: href,
@@ -70,19 +76,25 @@ function loadKpiSeriesGraphData(href, opts, container, visType, config) {
             if (visType === "dateHistogram" || visType === "sparkline") {
                 showKpiSeriesHistogram(resp, container, visType, config);
             } else if (visType === "kpiLeaderboard") {
-                showLeaderboard(resp, container, visType, config);
+                showKpiLeaderboard(resp, container, visType, config);
+            } else if (visType === "pointsLeaderboard") {
+                showPointsLeaderboard(resp, container, visType, config);
+            } else {
+                showKpiSummary(resp, container, visType, config);
             }
         }
     });
 }
 
 
-function showLeaderboard(resp, container, visType, config) {
-    var aggr = resp.aggregations;
-    leaderboardAgg = aggr.leaders;
-    //flog("showLeaderboard", leaderboardAgg, leaderboardAgg.buckets);
+function showPointsLeaderboard(resp, container, visType, config) {
+    if (!resp.status) {
+        flog("error in points leaderboard");
+        return;
+    }
+
     var tbody = container.find("tbody");
-    flog("showLeaderboard", tbody, leaderboardAgg.buckets);
+    flog("showPointsLeaderboard", tbody, resp.data);
     tbody.html("");
 
 //                                    <tr>
@@ -92,6 +104,34 @@ function showLeaderboard(resp, container, visType, config) {
 //                                        <td>$ 15,480.00</td>
 //                                    </tr>
 
+
+    $.each(resp.data, function (i, leader) {
+        flog("leader", leader);
+        var tr = $("<tr>");
+        tr.append("<td>#" + i + "</td>");
+        var td = $("<td>");
+        td.html(leader.member.firstName + " " + leader.member.surName);
+        tr.append(td);
+
+        td = $("<td class='text-right'>");
+        td.text(leader.numPoints);
+        tr.append(td);
+
+        td = $("<td class='text-right'>");
+        td.text(round(leader.kpiAmount, 2));
+        tr.append(td);
+
+        tbody.append(tr);
+    });
+}
+
+function showKpiLeaderboard(resp, container, visType, config) {
+    var aggr = resp.aggregations;
+    leaderboardAgg = aggr.leaders;
+    //flog("showLeaderboard", leaderboardAgg, leaderboardAgg.buckets);
+    var tbody = container.find("tbody");
+    flog("showLeaderboard", tbody, leaderboardAgg.buckets);
+    tbody.html("");
 
     $.each(leaderboardAgg.buckets, function (i, leader) {
         var tr = $("<tr>");
@@ -106,8 +146,7 @@ function showLeaderboard(resp, container, visType, config) {
     });
 }
 
-function showKpiSeriesHistogram(resp, container, visType, config) {
-
+function showKpiSummary(resp, container, visType, config) {
     var aggr = resp.aggregations;
 
     var kpiTitle = resp.kpiTitle;
@@ -149,7 +188,7 @@ function showKpiSeriesHistogram(resp, container, visType, config) {
 
     container.find(".kpi-progress").text(round(resp.progressValue, 2));
 
-    if (resp.levelData && resp.progressLevelName ) {
+    if (resp.levelData && resp.progressLevelName) {
         var levelTitle = resp.levelData[resp.progressLevelName].title;
         container.find(".kpi-level").text(levelTitle);
         container.find(".kpi-target").each(function (i, n) {
@@ -159,7 +198,13 @@ function showKpiSeriesHistogram(resp, container, visType, config) {
             s.text(round(levelAmount, 0));
         });
     }
+}
 
+function showKpiSeriesHistogram(resp, container, visType, config) {
+
+    showKpiSummary(resp, container, visType, config);
+
+    var aggr = resp.aggregations;
     var svg = container.find("svg");
     svg.empty();
 
