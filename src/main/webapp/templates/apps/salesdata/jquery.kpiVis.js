@@ -53,41 +53,46 @@
 
 
 function loadKpiSeriesGraphData(href, opts, container, visType, config) {
-    var href = href + "?dateHistogram&" + $.param(opts);
-    flog("loadKpiSeriesGraphData", href);
+    href = href + "?" + $.param(opts);
+    var queryType = visType;
+    if (queryType === "sparkline") {
+        queryType = "dateHistogram";
+    }
+    href += "&" + queryType;
+
+    flog("loadKpiSeriesGraphData", visType, href);
     $.ajax({
         type: "GET",
         url: href,
-        dataType: 'html',
+        dataType: 'json',
         success: function (resp) {
-            var json = null;
-
-            if (resp !== null && resp.length > 0) {
-                json = JSON.parse(resp);
+            flog("KPI data received", visType);
+            if (visType === "dateHistogram" || visType === "sparkline") {
+                showKpiSeriesHistogram(resp, container, visType, config);
+            } else if (visType === "kpiLeaderboard") {
+                showLeaderboard(resp, container, visType, config);
             }
-
-            flog('loadKpiData', href);
-            handleKpiSeriesData(json, container, visType, config);
-
         }
     });
 }
 
 
-function handleKpiSeriesData(resp, container, visType, config) {
-    showKpiSeriesHistogram(resp, container, visType, config);
-
-    // TODO: what do we do with this? callback with data?
-    // ie config.onData(aggr), and the provided function renders the leaderboard .. ?
+function showLeaderboard(resp, container, visType, config) {
     var aggr = resp.aggregations;
-    showLeaderboard(aggr.leaders);
-}
-
-
-function showLeaderboard(leaderboardAgg) {
+    leaderboardAgg = aggr.leaders;
     //flog("showLeaderboard", leaderboardAgg, leaderboardAgg.buckets);
-    var tbody = $("#kpiLeaderboard");
+    var tbody = container.find("tbody");
+    flog("showLeaderboard", tbody, leaderboardAgg.buckets);
     tbody.html("");
+
+//                                    <tr>
+//                                        <td class="text-bold">#1</td>
+//                                        <td>Joe Bloggs</td>
+//                                        <td>1395 pts</td>
+//                                        <td>$ 15,480.00</td>
+//                                    </tr>
+
+
     $.each(leaderboardAgg.buckets, function (i, leader) {
         var tr = $("<tr>");
         tr.append("<td>#" + i + "</td>");
@@ -144,16 +149,16 @@ function showKpiSeriesHistogram(resp, container, visType, config) {
 
     container.find(".kpi-progress").text(round(resp.progressValue, 2));
 
-    var levelTitle = resp.levelData[resp.progressLevelName].title;
-    container.find(".kpi-level").text(levelTitle);
-
-    container.find(".kpi-target").each(function (i, n) {
-        var s = $(n);
-        var levelName = s.data("level");
-        var levelAmount = resp.levelData[levelName].lowerBound;
-        s.text(round(levelAmount, 0));
-    });
-
+    if (resp.levelData && resp.progressLevelName ) {
+        var levelTitle = resp.levelData[resp.progressLevelName].title;
+        container.find(".kpi-level").text(levelTitle);
+        container.find(".kpi-target").each(function (i, n) {
+            var s = $(n);
+            var levelName = s.data("level");
+            var levelAmount = resp.levelData[levelName].lowerBound;
+            s.text(round(levelAmount, 0));
+        });
+    }
 
     var svg = container.find("svg");
     svg.empty();

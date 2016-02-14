@@ -82,13 +82,13 @@
                                 </div>
                                 <br/>
                                 <div>
-                                    <table class="table table-bordered table-striped">
+                                    <table class="table table-bordered table-striped" id="kpiLeaderboard">
                                         <thead>
                                             <tr>
                                                 <th colspan="2">Leaderboard</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="kpiLeaderboard">
+                                        <tbody>
                                             <tr>
                                                 <th colspan="2"><i>Loading...</i></th>
                                             </tr>
@@ -969,6 +969,7 @@
                 initLeaderboard();
                 initKpiSeriesGraphControls();
                 loadKpiSeriesGraphData(window.location.pathname, options, $("#seriesHistogram"), "dateHistogram", {});
+                loadKpiSeriesGraphData(window.location.pathname, options, $("#kpiLeaderboard"), "kpiLeaderboard", {});
 
             });
 
