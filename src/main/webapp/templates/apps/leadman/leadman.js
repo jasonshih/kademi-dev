@@ -416,6 +416,7 @@ function initNewQuickLeadForm() {
         $('.audio-rec', form).empty();
         $('.audio-rec', form).hide();
         $('.progress', form).hide();
+        $('.capture-msg', form).empty();
     });
 
     $('#quickInputFile', form).on('change', function (e) {
