@@ -1,14 +1,15 @@
 var win = $(window);
 var DEFAULT_EDM_BACKGROUND= '#fafafa';
-var DEFAULT_EDM_PADDING_TOP = '20px';
-var DEFAULT_EDM_PADDING_BOTTOM = '20px';
-var DEFAULT_EDM_PADDING_LEFT = '20px';
-var DEFAULT_EDM_PADDING_RIGHT = '20px';
+var DEFAULT_EDM_PADDING_TOP = '20';
+var DEFAULT_EDM_PADDING_BOTTOM = '20';
+var DEFAULT_EDM_PADDING_LEFT = '20';
+var DEFAULT_EDM_PADDING_RIGHT = '20';
+var DEFAULT_EDM_BODY_WIDTH = '650';
 var DEFAULT_EDM_BODY_BACKGROUND = '#ffffff';
-var DEFAULT_EDM_BODY_PADDING_TOP = '10px';
-var DEFAULT_EDM_BODY_PADDING_BOTTOM = '10px';
-var DEFAULT_EDM_BODY_PADDING_LEFT = '10px';
-var DEFAULT_EDM_BODY_PADDING_RIGHT = '10px';
+var DEFAULT_EDM_BODY_PADDING_TOP = '10';
+var DEFAULT_EDM_BODY_PADDING_BOTTOM = '10';
+var DEFAULT_EDM_BODY_PADDING_LEFT = '10';
+var DEFAULT_EDM_BODY_PADDING_RIGHT = '10';
 var DEFAULT_TEXT_COLOR = '#333333';
 var DEFAULT_LINK_COLOR = '#337ab7';
 var DEFAULT_FONT_FAMILY = 'Arial, Helvetica, san-serif';
@@ -36,7 +37,7 @@ function initEdmEditorPage(fileName) {
 
     window.onbeforeunload = function (e) {
         if (body.hasClass('content-changed')) {
-            e.returnValue = 'Are you sure you would like to leave the editor? You will lose any unsaved changes';
+            e.returnValue = '\n\nAre you sure you would like to leave the editor? You will lose any unsaved changes\n\n';
         }
     };
 
@@ -44,10 +45,8 @@ function initEdmEditorPage(fileName) {
 }
 
 function applyInlineCssForTextWrapper(target) {
-    target.each(function () {
+    target.find('.text-wrapper').each(function () {
         $(this).css({
-            '-ms-text-size-adjust': '100%',
-            '-webkit-text-size-adjust': '100%',
             'font-family': $('#edm-font-family').val(),
             'font-size': $('#edm-font-size').val(),
             'line-height': $('#edm-line-height').val(),
@@ -57,7 +56,7 @@ function applyInlineCssForTextWrapper(target) {
 }
 
 function applyInlineCssForLink(target) {
-    target.each(function () {
+    target.find('td.text-wrapper a').each(function () {
         $(this).css({
             'text-decoration': 'none',
             'color': $('#edm-link-color').val()
@@ -84,19 +83,29 @@ function processFileBody() {
     edmBody.html(edmHtml.find('td#edm-body-td').html());
     edmFooter.html(edmHtml.find('td#edm-footer-td').html());
 
+    $('#edm-body-width').val(edmHtml.find('#edm-container').attr('width') || DEFAULT_EDM_BODY_WIDTH);
+
     var tdWrapper = edmHtml.find('td#edm-wrapper-td');
     $('#edm-background').val(tdWrapper.css('background-color') || DEFAULT_EDM_BACKGROUND);
-    $('#edm-padding-top').val(tdWrapper.css('padding-top') || DEFAULT_EDM_PADDING_TOP);
-    $('#edm-padding-bottom').val(tdWrapper.css('padding-bottom') || DEFAULT_EDM_PADDING_BOTTOM);
-    $('#edm-padding-left').val(tdWrapper.css('padding-left') || DEFAULT_EDM_PADDING_LEFT);
-    $('#edm-padding-right').val(tdWrapper.css('padding-right') || DEFAULT_EDM_PADDING_RIGHT);
+    var paddingTop = tdWrapper.css('padding-top');
+    $('#edm-padding-top').val(paddingTop ? paddingTop.replace('px', '') : DEFAULT_EDM_PADDING_TOP);
+    var paddingBottom = tdWrapper.css('padding-bottom');
+    $('#edm-padding-bottom').val(paddingBottom ? paddingBottom.replace('px', '') : DEFAULT_EDM_PADDING_BOTTOM);
+    var paddingLeft = tdWrapper.css('padding-left');
+    $('#edm-padding-left').val(paddingLeft ? paddingLeft.replace('px', '') : DEFAULT_EDM_PADDING_LEFT);
+    var paddingRight = tdWrapper.css('padding-right');
+    $('#edm-padding-right').val(paddingRight ? paddingRight.replace('px', '') : DEFAULT_EDM_PADDING_RIGHT);
 
     var tdBody = edmHtml.find('td#edm-body-td');
     $('#edm-body-background').val(tdBody.css('background-color') || DEFAULT_EDM_BODY_BACKGROUND);
-    $('#edm-body-padding-top').val(tdBody.css('padding-top') || DEFAULT_EDM_BODY_PADDING_TOP);
-    $('#edm-body-padding-bottom').val(tdBody.css('padding-bottom') || DEFAULT_EDM_BODY_PADDING_BOTTOM);
-    $('#edm-body-padding-left').val(tdBody.css('padding-left') || DEFAULT_EDM_BODY_PADDING_LEFT);
-    $('#edm-body-padding-right').val(tdBody.css('padding-right') || DEFAULT_EDM_BODY_PADDING_RIGHT);
+    var paddingBodyTop = tdBody.css('padding-top');
+    $('#edm-body-padding-top').val(paddingBodyTop ? paddingBodyTop.replace('px', '') : DEFAULT_EDM_BODY_PADDING_TOP);
+    var paddingBodyBottom = tdBody.css('padding-bottom');
+    $('#edm-body-padding-bottom').val(paddingBodyBottom ? paddingBodyBottom.replace('px', '') : DEFAULT_EDM_BODY_PADDING_BOTTOM);
+    var paddingBodyLeft = tdBody.css('padding-left');
+    $('#edm-body-padding-left').val(paddingBodyLeft ? paddingBodyLeft.replace('px', '') : DEFAULT_EDM_BODY_PADDING_LEFT);
+    var paddingBodyRight = tdBody.css('padding-right');
+    $('#edm-body-padding-right').val(paddingBodyRight ? paddingBodyRight.replace('px', '') : DEFAULT_EDM_BODY_PADDING_RIGHT);
 
     var tableContainer = edmHtml.find('table#edm-container');
     $('#edm-font-family').val(tableContainer.attr('data-font-family') || DEFAULT_FONT_FAMILY);
@@ -160,12 +169,11 @@ function initKEditor(body) {
             }
         },
         onCKEditorReady: function (component, editor) {
-            var textWrapper = component.find('td.text-wrapper');
-            applyInlineCssForTextWrapper(textWrapper);
-            applyInlineCssForLink(textWrapper.find('a'));
+            applyInlineCssForTextWrapper(component);
+            applyInlineCssForLink(component);
 
             editor.on('change', function () {
-                applyInlineCssForLink(textWrapper.find('a'));
+                applyInlineCssForLink(component);
             });
         },
         onContentChanged: function () {
@@ -174,7 +182,7 @@ function initKEditor(body) {
             }
 
             var contentArea = $(this);
-            contentArea[contentArea.find('.keditor-container-content').children().length === 0 ? 'addClass' : 'removeClass']('empty');
+            contentArea[contentArea.children().length === 0 ? 'addClass' : 'removeClass']('empty');
         }
     });
 }
@@ -229,31 +237,37 @@ function applySetting() {
     var edmPaddingRight = $('#edm-padding-right').val();
     $('html').css('background-color', edmBackground);
     $('#edm-area').css({
-        'padding-top': edmPaddingTop,
-        'padding-bottom': edmPaddingBottom,
-        'padding-left': edmPaddingLeft,
-        'padding-right': edmPaddingRight
+        'padding-top': edmPaddingTop + 'px',
+        'padding-bottom': edmPaddingBottom + 'px',
+        'padding-left': edmPaddingLeft + 'px',
+        'padding-right': edmPaddingRight + 'px'
     });
+
+    var edmHeader = $('#edm-header');
+    var edmBody = $('#edm-body');
+    var edmFooter = $('#edm-footer');
 
     var edmBodyBackground = $('#edm-body-background').val();
     var edmBodyPaddingTop = $('#edm-body-padding-top').val();
     var edmBodyPaddingBottom = $('#edm-body-padding-bottom').val();
     var edmBodyPaddingLeft = $('#edm-body-padding-left').val();
     var edmBodyPaddingRight = $('#edm-body-padding-right').val();
-    var edmHeader = $('#edm-header');
-    var edmBody = $('#edm-body');
-    var edmFooter = $('#edm-footer');
     edmBody.css({
         'background-color': edmBodyBackground,
-        'padding-top': edmBodyPaddingTop,
-        'padding-bottom': edmBodyPaddingBottom,
-        'padding-left': edmBodyPaddingLeft,
-        'padding-right': edmBodyPaddingRight
+        'padding-top': edmBodyPaddingTop + 'px',
+        'padding-bottom': edmBodyPaddingBottom + 'px',
+        'padding-left': edmBodyPaddingLeft + 'px',
+        'padding-right': edmBodyPaddingRight + 'px'
     });
 
-    applyInlineCssForTextWrapper(edmHeader.find('td.text-wrapper'));
-    applyInlineCssForTextWrapper(edmBody.find('td.text-wrapper'));
-    applyInlineCssForTextWrapper(edmFooter.find('td.text-wrapper'));
+    applyInlineCssForTextWrapper(edmHeader);
+    applyInlineCssForTextWrapper(edmBody);
+    applyInlineCssForTextWrapper(edmFooter);
+
+    var edmBodyWidth = $('#edm-body-width').val();
+    edmHeader.innerWidth(edmBodyWidth);
+    edmBody.innerWidth(edmBodyWidth);
+    edmFooter.innerWidth(edmBodyWidth);
 }
 
 function getEdmBody() {
@@ -274,19 +288,20 @@ function getEdmBody() {
         attributeTableWrapper += ' bgcolor="' + edmBackground + '" ';
     }
     if (edmPaddingTop) {
-        styleTDWrapper += 'padding-top: ' + edmPaddingTop + ';';
+        styleTDWrapper += 'padding-top: ' + edmPaddingTop + 'px;';
     }
     if (edmPaddingBottom) {
-        styleTDWrapper += 'padding-bottom: ' + edmPaddingBottom + ';';
+        styleTDWrapper += 'padding-bottom: ' + edmPaddingBottom + 'px;';
     }
     if (edmPaddingLeft) {
-        styleTDWrapper += 'padding-left: ' + edmPaddingLeft + ';';
+        styleTDWrapper += 'padding-left: ' + edmPaddingLeft + 'px;';
     }
     if (edmPaddingRight) {
-        styleTDWrapper += 'padding-right: ' + edmPaddingRight + ';';
+        styleTDWrapper += 'padding-right: ' + edmPaddingRight + 'px;';
     }
 
     // EDM Body
+    var edmBodyWidth = $('#edm-body-width').val();
     var edmBodyBackground = $('#edm-body-background').val();
     var edmBodyPaddingTop = $('#edm-body-padding-top').val();
     var edmBodyPaddingBottom = $('#edm-body-padding-bottom').val();
@@ -299,16 +314,16 @@ function getEdmBody() {
         attributeTableBody += ' bgcolor="' + edmBodyBackground + '" ';
     }
     if (edmBodyPaddingTop) {
-        styleTDBody += 'padding-top: ' + edmBodyPaddingTop + ';';
+        styleTDBody += 'padding-top: ' + edmBodyPaddingTop + 'px;';
     }
     if (edmBodyPaddingBottom) {
-        styleTDBody += 'padding-bottom: ' + edmBodyPaddingBottom + ';';
+        styleTDBody += 'padding-bottom: ' + edmBodyPaddingBottom + 'px;';
     }
     if (edmBodyPaddingLeft) {
-        styleTDBody += 'padding-left: ' + edmBodyPaddingLeft + ';';
+        styleTDBody += 'padding-left: ' + edmBodyPaddingLeft + 'px;';
     }
     if (edmBodyPaddingRight) {
-        styleTDBody += 'padding-right: ' + edmBodyPaddingRight + ';';
+        styleTDBody += 'padding-right: ' + edmBodyPaddingRight + 'px;';
     }
 
     // EDM Default styles
@@ -339,7 +354,7 @@ function getEdmBody() {
         '    <tbody>\n' +
         '        <tr>\n' +
         '            <td id="edm-wrapper-td" style="' + styleTDWrapper + '" align="center">\n' +
-        '                <table cellpadding="0" cellspacing="0" border="0" width="650" id="edm-container" ' + dataEdmStyles + '>\n' +
+        '                <table cellpadding="0" cellspacing="0" border="0" width="' + edmBodyWidth + '" id="edm-container" ' + dataEdmStyles + '>\n' +
         '                    <tbody>\n' +
         '                        <tr>\n' +
         '                            <td>\n' +

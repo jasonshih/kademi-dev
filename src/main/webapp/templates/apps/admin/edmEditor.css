@@ -39,7 +39,6 @@ body.opened-keditor-sidebar #edm-area {
 #edm-body,
 #edm-footer {
     margin: 0 auto;
-    max-width: 650px;
     box-sizing: border-box;
     min-height: 100px;
     outline: 3px dashed #ccc;
