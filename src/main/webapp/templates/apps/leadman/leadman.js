@@ -415,10 +415,30 @@ function initNewQuickLeadForm() {
         form.trigger('reset');
         $('.audio-rec', form).empty();
         $('.audio-rec', form).hide();
+        $('.progress', form).hide();
+    });
+
+    $('#quickInputFile', form).on('change', function (e) {
+        var msg = $('.capture-msg', form);
+
+        var files = this.files;
+        if (files.length > 0) {
+            var f = files[0];
+            var fname = f.name;
+            if (fname.length > 20) {
+                fname = fname.substr(0, 17) + '...';
+            }
+
+            msg.html(fname + ' | ' + bytesToSize(f.size));
+
+        } else {
+            msg.empty();
+        }
     });
 
     form.on('submit', function (e) {
         e.preventDefault();
+        form.find('button[type=submit]').html('<i class="fa fa-spin fa-refresh"></i> Upload').attr('disabled', true);
 
         if (formData == null) {
             formData = new FormData();
@@ -441,8 +461,24 @@ function initNewQuickLeadForm() {
             data: formData,
             processData: false,
             contentType: false,
+            xhr: function ()
+            {
+                var xhr = new window.XMLHttpRequest();
+                //Upload progress
+                xhr.upload.addEventListener("progress", function (evt) {
+                    if (evt.lengthComputable) {
+                        var percentComplete = (evt.loaded / evt.total) * 100;
+                        $('.progress-bar', form)
+                                .html(round(percentComplete, 1) + '%')
+                                .css('width', percentComplete + '%');
+                        $('.progress', form).show();
+                    }
+                }, false);
+                return xhr;
+            },
             success: function (data, textStatus) {
                 flog('Success', data, textStatus);
+                form.find('button[type=submit]').html('Upload').attr('disabled', false);
                 if (data.status) {
                     Msg.info('Saved new lead');
                     modal.modal("hide");
@@ -457,10 +493,20 @@ function initNewQuickLeadForm() {
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 flog('Error', textStatus, errorThrown);
-            }
+                form.find('button[type=submit]').html('Upload').attr('disabled', false);
+            },
         });
     });
 }
+
+function bytesToSize(bytes) {
+    var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+    if (bytes == 0)
+        return '0 Byte';
+    var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+    return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
+}
+;
 
 function initNewContactForm() {
     var modal = $('#newContactModal');
