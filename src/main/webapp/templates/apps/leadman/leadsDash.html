@@ -136,6 +136,19 @@
             }, 500);
         });
 
+        var pieOptions = {
+            animate:{
+                duration: 700,
+                enabled: true
+            },
+            barColor: '#2095f2',
+            scaleColor: false,
+            lineWidth: 10,
+            lineCap: 'circle'
+        };
+
+        $('.easypie').easyPieChart(pieOptions);
+
         function doLeadSearch(q) {
             var href = window.location.pathname + "?q=" + q
             $("#leadsBody").reloadFragment({
