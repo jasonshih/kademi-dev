@@ -118,6 +118,26 @@ function initManagePoints() {
 
     initHistorySearch();
 
+    $('body').on('click', '.btn-refresh-pb', function (e) {
+        e.preventDefault();
+        if (confirm('Are you sure you want to refresh the points balance for all rewards?')) {
+            $.ajax({
+                url: window.location.pathname,
+                dataType: 'JSON',
+                type: 'POST',
+                data: {
+                    refreshPointsBalance: true
+                },
+                success: function (data, textStatus, jqXHR) {
+                    Msg.info(data.messages);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    Msg.error('Oh No! Something went wrong!');
+                }
+            });
+        }
+    });
+
 }
 
 function initEditReward(quiz) {
