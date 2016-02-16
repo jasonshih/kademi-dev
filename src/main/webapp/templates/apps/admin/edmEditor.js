@@ -1,5 +1,5 @@
 var win = $(window);
-var DEFAULT_EDM_BACKGROUND= '#fafafa';
+var DEFAULT_EDM_BACKGROUND = '#fafafa';
 var DEFAULT_EDM_PADDING_TOP = '20';
 var DEFAULT_EDM_PADDING_BOTTOM = '20';
 var DEFAULT_EDM_PADDING_LEFT = '20';
@@ -16,12 +16,12 @@ var DEFAULT_FONT_FAMILY = 'Arial, Helvetica, san-serif';
 var DEFAULT_FONT_SIZE = '14px';
 var DEFAULT_LINE_HEIGHT = '1.42857143';
 
-function initEdmEditorPage(fileName) {
+function initEdmEditorPage(fileName, snippets) {
     flog('initEdmEditorPage', fileName);
     var body = $(document.body);
 
     processFileBody();
-    initKEditor(body);
+    initKEditor(body, snippets);
     initSettingPanel();
     initBtns(body, fileName);
     Msg.iconMode = 'fa';
@@ -115,7 +115,7 @@ function processFileBody() {
     $('#edm-link-color').val(tableContainer.attr('data-link-color') || DEFAULT_LINK_COLOR);
 }
 
-function initKEditor(body) {
+function initKEditor(body, snippets) {
     $('#edm-header, #edm-body, #edm-footer').keditor({
         ckeditor: {
             skin: editorSkin,
@@ -149,7 +149,7 @@ function initKEditor(body) {
             stylesSet: 'myStyles:' + stylesPath,
             line_height: '1;1.2;1.5;2;2.2;2.5'
         },
-        snippetsUrl: '/static/keditor/snippets/edm/snippets.html',
+        snippetsUrl: snippets,
         onInitContentArea: function (contentArea) {
             contentArea[contentArea.find('.keditor-container-content').children().length === 0 ? 'addClass' : 'removeClass']('empty');
 
@@ -350,69 +350,69 @@ function getEdmBody() {
     }
 
     return (
-        '<table cellpadding="0" cellspacing="0" border="0" width="100%" id="edm-wrapper" ' + attributeTableWrapper + '>\n' +
-        '    <tbody>\n' +
-        '        <tr>\n' +
-        '            <td id="edm-wrapper-td" style="' + styleTDWrapper + '" align="center">\n' +
-        '                <table cellpadding="0" cellspacing="0" border="0" width="' + edmBodyWidth + '" id="edm-container" ' + dataEdmStyles + '>\n' +
-        '                    <tbody>\n' +
-        '                        <tr>\n' +
-        '                            <td>\n' +
-        '                                <table cellpadding="0" cellspacing="0" border="0" width="100%" id="edm-header" align="center">\n' +
-        '                                    <tbody>\n' +
-        '                                        <tr>\n' +
-        '                                            <td id="edm-header-td">\n' +
-                                                         edmHeader +
-        '                                            </td>\n' +
-        '                                        </tr>\n' +
-        '                                    </tbody>\n' +
-        '                                </table>\n' +
-        '                                <table cellpadding="0" cellspacing="0" border="0" width="100%" id="edm-body" ' + attributeTableBody + ' align="center">\n' +
-        '                                    <tbody>\n' +
-        '                                        <tr>\n' +
-        '                                            <td id="edm-body-td" style="' + styleTDBody + '" >\n' +
-                                                         edmBody +
-        '                                            </td>\n' +
-        '                                        </tr>\n' +
-        '                                    </tbody>\n' +
-        '                                </table>\n' +
-        '                                <table cellpadding="0" cellspacing="0" border="0" width="100%" id="edm-footer" align="center">\n' +
-        '                                    <tbody>\n' +
-        '                                        <tr>\n' +
-        '                                            <td id="edm-footer-td">\n' +
-                                                         edmFooter +
-        '                                            </td>\n' +
-        '                                        </tr>\n' +
-        '                                    </tbody>\n' +
-        '                                </table>\n' +
-        '                            </td>\n' +
-        '                        </tr>\n' +
-        '                    </tbody>\n' +
-        '                </table>\n' +
-        '            </td>\n' +
-        '        </tr>\n' +
-        '    </tbody>\n' +
-        '</table>\n'
-    );
+            '<table cellpadding="0" cellspacing="0" border="0" width="100%" id="edm-wrapper" ' + attributeTableWrapper + '>\n' +
+            '    <tbody>\n' +
+            '        <tr>\n' +
+            '            <td id="edm-wrapper-td" style="' + styleTDWrapper + '" align="center">\n' +
+            '                <table cellpadding="0" cellspacing="0" border="0" width="' + edmBodyWidth + '" id="edm-container" ' + dataEdmStyles + '>\n' +
+            '                    <tbody>\n' +
+            '                        <tr>\n' +
+            '                            <td>\n' +
+            '                                <table cellpadding="0" cellspacing="0" border="0" width="100%" id="edm-header" align="center">\n' +
+            '                                    <tbody>\n' +
+            '                                        <tr>\n' +
+            '                                            <td id="edm-header-td">\n' +
+            edmHeader +
+            '                                            </td>\n' +
+            '                                        </tr>\n' +
+            '                                    </tbody>\n' +
+            '                                </table>\n' +
+            '                                <table cellpadding="0" cellspacing="0" border="0" width="100%" id="edm-body" ' + attributeTableBody + ' align="center">\n' +
+            '                                    <tbody>\n' +
+            '                                        <tr>\n' +
+            '                                            <td id="edm-body-td" style="' + styleTDBody + '" >\n' +
+            edmBody +
+            '                                            </td>\n' +
+            '                                        </tr>\n' +
+            '                                    </tbody>\n' +
+            '                                </table>\n' +
+            '                                <table cellpadding="0" cellspacing="0" border="0" width="100%" id="edm-footer" align="center">\n' +
+            '                                    <tbody>\n' +
+            '                                        <tr>\n' +
+            '                                            <td id="edm-footer-td">\n' +
+            edmFooter +
+            '                                            </td>\n' +
+            '                                        </tr>\n' +
+            '                                    </tbody>\n' +
+            '                                </table>\n' +
+            '                            </td>\n' +
+            '                        </tr>\n' +
+            '                    </tbody>\n' +
+            '                </table>\n' +
+            '            </td>\n' +
+            '        </tr>\n' +
+            '    </tbody>\n' +
+            '</table>\n'
+            );
 }
 
 function getEdmContent() {
     var edmContent =
-        '<!DOCTYPE HTML>\n' +
-        '<html>\n' +
-        '    <head>\n' +
-        '        <title>Kademi EDM Title</title>\n' +
-        '        <style type="text/css">\n' +
-        '            {{styleContent}}\n' +
-        '        </style>\n' +
-        '    </head>\n' +
-        '    <body>\n' +
-        '        <center>\n' +
-        '{{bodyContent}}\n' +
-        '        </center>\n' +
-        '        <img src="http://$page.closest(\'website\').domainName${formatter.portString}/ack?i=$page.emailItem.id" height="1" width="1" alt="" />' +
-        '    </body>\n' +
-        '</html>';
+            '<!DOCTYPE HTML>\n' +
+            '<html>\n' +
+            '    <head>\n' +
+            '        <title>Kademi EDM Title</title>\n' +
+            '        <style type="text/css">\n' +
+            '            {{styleContent}}\n' +
+            '        </style>\n' +
+            '    </head>\n' +
+            '    <body>\n' +
+            '        <center>\n' +
+            '{{bodyContent}}\n' +
+            '        </center>\n' +
+            '        <img src="http://$page.closest(\'website\').domainName${formatter.portString}/ack?i=$page.emailItem.id" height="1" width="1" alt="" />' +
+            '    </body>\n' +
+            '</html>';
     var edmContentData = {
         styleContent: $('#edm-style').html().trim(),
         bodyContent: getEdmBody()

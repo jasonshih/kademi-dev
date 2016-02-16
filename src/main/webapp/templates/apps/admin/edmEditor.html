@@ -216,7 +216,7 @@
         <script type="text/javascript">
             var useHash = "$!useHash";
             $(function () {
-                initEdmEditorPage('$fname');
+                initEdmEditorPage('$fname', "$formatter.ifTrue($page.hasWebsite, 'edmSnippets', '/static/keditor/snippets/edm/snippets.html')");
             });
         </script>
 
