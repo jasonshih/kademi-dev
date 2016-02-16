@@ -34,13 +34,14 @@ $(function () {
     });
     $('body').on('shown.bs.modal', function (e) {
         flog("modal show");
-        var modal = $(this);
+        var modal = $(e.target).closest(".modal");
         jQuery.timeago.settings.allowFuture = true;
         modal.find('abbr.timeago').timeago();
-        modal.find('.date-time').datetimepicker({
-            format: "DD/MM/YYYY HH:mm"
-                    //,startDate: date
-        });
+//        flog("date picker", modal, modal.find('.date-time'));
+//        modal.find('.date-time').datetimepicker({
+//            format: "DD/MM/YYYY HH:mm"
+//                    //,startDate: date
+//        });
         var form = modal.find(".completeTaskForm");
         flog("complete task form", form);
         if (form.length > 0) {
@@ -680,9 +681,11 @@ function initDateTimePickers() {
     var date = new Date();
     date.setDate(date.getDate() - 1);
 
-    $('.date-time').datetimepicker({
-        format: "DD/MM/YYYY HH:mm"
-                //,startDate: date
+    var pickers = $('.date-time');
+    flog("pickers", pickers);
+    pickers.datetimepicker({
+        format: "d/m/Y H:i"
+        ,startDate: date
     });
 }
 

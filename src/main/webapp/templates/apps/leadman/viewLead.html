@@ -472,7 +472,9 @@
                                                     <span class="fa fa-check"></span>
                                                 </a>
                                             </div>
+                                            #if( $task.dueDate )
                                             Due in <abbr title="$formatter.formatDateISO8601($task.dueDate)" class="timeago">$task.dueDate</abbr>
+                                            #end
                                             #elseif( $task.is("canceled") )
                                             <span class="label label-warning">
                                                 Canceled

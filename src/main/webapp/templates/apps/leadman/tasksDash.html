@@ -59,7 +59,13 @@
             <p>
                 #set( $colour = $leadsPage.statusColour($task, 3) )
                 <a href="/tasks/$task.id/" class="mr btn btn-${colour} btn-sm btn-circle" data-target="#modalEditTask" data-toggle="modal">T</a>
-                <em>$!task.title</em>
+                <em>
+                    #if( $task.title )
+                    $task.title
+                    #else
+                    $task.taskDescription
+                    #end
+                </em>
                 #if( $task.dueDate )
                 <small class="pull-right">
                     Due <abbr title="$formatter.formatDateISO8601($task.dueDate)" class="timeago">$task.dueDate</abbr>

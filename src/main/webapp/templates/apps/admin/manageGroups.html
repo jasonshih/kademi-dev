@@ -75,7 +75,7 @@
                         <label for="appliesToRepository">A repository</label>
                         <select class="hide">
                             <option value="">-- Select a repository --</option>
-                            #foreach($r in $page.organisation.repositories)
+                            #foreach($r in $page.organisation.repositories())
                             <option value="$r.name">$r.name</option>
                             #end
                         </select>
@@ -140,7 +140,7 @@
                     <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
                     <button class="btn btn-sm btn-primary btn-save-group" type="submit">Save</button>
                 </div>
-            </form>                    
+            </form>
         </div>
 
         <div id="modal-groupFolder" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
@@ -148,7 +148,7 @@
                 <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
                 <h4 class="modal-title">Edit Folder</h4>
             </div>
-            <form class="form-horizontal" action="" method="post">            
+            <form class="form-horizontal" action="" method="post">
                 <input id="folderModalAction" class="form-control" type="hidden" name="updateFolder" id="name" value="updateFolder"/>
                 <div class="modal-body">
                     <p>Please use simple characters only, like letters and numbers, and spaces.</p>
@@ -165,7 +165,7 @@
                     <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
                     <button class="btn btn-sm btn-primary btn-save-group" type="submit">Save</button>
                 </div>
-            </form>                    
+            </form>
         </div>
 
         <div id="modal-addGroupToFolder" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
@@ -173,7 +173,7 @@
                 <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
                 <h4 class="modal-title">Add To Folder</h4>
             </div>
-            <form class="form-horizontal" action="" method="post">            
+            <form class="form-horizontal" action="" method="post">
                 <input id="folderModalAction" class="form-control" type="hidden" name="addToFolder" id="name" value="addToFolder"/>
                 <div class="modal-body">
                     <div class="form-horizontal">
@@ -193,7 +193,7 @@
                     <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
                     <button class="btn btn-sm btn-primary btn-save-group" type="submit">Save</button>
                 </div>
-            </form>                    
+            </form>
         </div>
 
         <div id="modal-rego-mode" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
@@ -242,6 +242,6 @@
                 initGroupAdminPortlet();
                 initManageGroup();
             });
-        </script>        
+        </script>
     </body>
 </html>

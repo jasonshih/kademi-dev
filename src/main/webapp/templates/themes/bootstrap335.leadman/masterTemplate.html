@@ -17,6 +17,7 @@
 <script src="/static/js/jquery.pjax.js" type="text/javascript" >//</script>
 <script src="/templates/themes/bootstrap335/js/jqBootstrapValidation.js">//</script>
 <script src="/templates/themes/bootstrap335/js/jqExtras.js">//</script>
+<script src="/templates/themes/bootstrap335/js/bootstrap.min.js">//</script>
 <script type="text/javascript" src="/static/js/jquery.cookie.js">//</script>
 <script type="text/javascript" src="/static/jquery-ui/1.10.4/js/jquery-ui-1.10.4.custom.min.js">//</script>
 <script type="text/javascript" src="/static/js/jquery.timeago.js" >//</script>
@@ -33,43 +34,38 @@ $templater.pushLess("/theme/less/bootstrap.less", "all")
 $templater.pushLess("/theme/theme-params.less", "all")
 $templater.pushLess("/theme/less/app.less", "all")
 
-#foreach( $lessSource in $templater.lessSources.entrySet())
-<link href="/$templater.getCombinedPath($lessSource.value)" rel="stylesheet" type="text/css" media="$lessSource.key" />
-#end
-
-
 <link rel="stylesheet" href="/static/bootstrap-msg/0.3/bootstrap-msg.min.css" type="text/css" />
 <link rel="stylesheet" href="/static/font-awesome/4.4.0/css/font-awesome.min.css"/>
 <link href="/theme/apps/leadman/quickLead.css" rel="stylesheet" type="text/css"/>
 
 
 
-    <!-- Theme extensions -->
-    <script src="/theme/scripts/vendor/modernizr.js"></script>
-    <script src="/theme/scripts/plugins.js"></script>
-    #foreach( $lessSource in $templater.lessSources.entrySet())
-    <link href="/$templater.getCombinedPath($lessSource.value)" rel="stylesheet" type="text/css" media="$lessSource.key" />
-    #end
+<!-- Theme extensions -->
+<script src="/theme/scripts/vendor/modernizr.js"></script>
 
-    #foreach( $cssEntry in $templater.cssSources.entrySet())
-    #foreach( $cssSource in $cssEntry.value)
-    <link href="$cssSource" rel="stylesheet" type="text/css" media="$lessSource.key" />
-    #end
-    #end
+#foreach( $lessSource in $templater.lessSources.entrySet())
+<link href="/$templater.getCombinedPath($lessSource.value)" rel="stylesheet" type="text/css" media="$!lessSource.key" />
+#end
 
-    <!-- TODO: merge js entries in each group to a single request  -->
-    #foreach( $jsEntry in $templater.jsSources.entrySet())
-    #foreach( $jsSource in $jsEntry.value)
-    <script src="$jsSource">//</script>
-    #end
-    #end
+#foreach( $cssEntry in $templater.cssSources.entrySet())
+#foreach( $cssSource in $cssEntry.value)
+<link href="$cssSource" rel="stylesheet" type="text/css" media="$!lessSource.key" />
+#end
+#end
+
+<!-- TODO: merge js entries in each group to a single request  -->
+#foreach( $jsEntry in $templater.jsSources.entrySet())
+#foreach( $jsSource in $jsEntry.value)
+<script src="$jsSource">//</script>
+#end
+#end
 
 
-    <style>
-        .select2-dropdown{
-            z-index: 1070 !important;
-        }
-    </style>
+<style>
+    .select2-dropdown{
+        z-index: 1070 !important;
+    }
+</style>
 
 $!bodyContent
 
