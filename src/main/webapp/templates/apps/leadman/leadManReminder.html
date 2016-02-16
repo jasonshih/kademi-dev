@@ -3,7 +3,7 @@
         <title>Tasks due today</title>
     </head>
     <body>
-        <p>Hi $profile.formattedName,</p>
+        <p>Hi $profile.formattedName(),</p>
 
         #set($daysOld = false)
         #set($dt = $formatter.endofDay($formatter.addDays($formatter.now, -3)))
@@ -26,12 +26,13 @@
             Total tasks overdue: $overDue.size()
         </p>
         #if($allDue.size() > 0)
-        <p>Here are your top $topSize tasks:</p>
+        <p>Here are your tasks:</p>
         <table>
             <thead>
                 <tr>
                     <th style="text-align: left;">Name</th>
                     <th style="text-align: left;">Description</th>
+                    <th style="text-align: left;">Due Date</th>
                     <th style="text-align: left;"></th>
                 </tr>
             </thead>
@@ -40,6 +41,7 @@
                 <tr>
                     <td style="text-align: left;">$!formatter.ifNull($t.title, $t.taskName)</td>
                     <td style="text-align: left;">$!t.taskDescription</td>
+                    <td style="text-align: left;">$formatter.formatDateTime($t.dueDate)</td>
                     <td style="text-align: left;">
                         #if($t.relatedLead)
                         #set($leadHref = "http://" + ${formatter.getDomainName($website)} + "/leads/" + $t.relatedLead.id)
