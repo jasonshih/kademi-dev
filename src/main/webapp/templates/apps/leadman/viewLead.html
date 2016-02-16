@@ -9,7 +9,7 @@
         #@themeBody()
 
         <div class="">
-            <div style="background:url(/theme/images/infiniti-bg.jpg) center center; background-size:cover; height: 160px" class="unwrap">
+            <div style="background:url(/theme/images/profile.jpg) center center; background-size:cover; height: 160px" class="unwrap">
                 <div class="container container-lg p-lg">
                     <div class="pull-right text-right">
                         #if( $page.completed)
@@ -80,7 +80,7 @@
                                 #elseif( $page.profile )
                                 <a href="/custs/$page.profile.name" style="color: white">$page.customerDescription</a>
                                 #else
-                                No contact profile
+                                <p style="color: white">$page.customerDescription</p>
                                 #end
                             </h2>
                             <div style='background-color: rgba(255, 255, 255, 0.7); padding: 5px; border-radius: 5px; width: 290px'>
@@ -267,13 +267,13 @@
                                                     <div class="form-group">
                                                         <label class="control-label col-md-2" for="nickName">Customer</label>
                                                         <div class="col-md-3">
-                                                            <input type="text" name="nickName" id="nickName" class="form-control" placeholder="nickName" value="$!p.nickName" />
+                                                            <input type="text" name="nickName" id="nickName" class="form-control" placeholder="nickName" value="$!page.nickName" />
                                                         </div>
                                                         <div class="col-md-3">
-                                                            <input type="text" name="firstName" id="firstName" class="form-control" placeholder="First name" value="$!p.firstName" />
+                                                            <input type="text" name="firstName" id="firstName" class="form-control" placeholder="First name" value="$!page.firstName" />
                                                         </div>
                                                         <div class="col-md-4">
-                                                            <input type="text" name="surName" id="surName" class="form-control" placeholder="Surname" value="$!p.surName" />
+                                                            <input type="text" name="surName" id="surName" class="form-control" placeholder="Surname" value="$!page.surName" />
                                                         </div>
                                                     </div>
 
