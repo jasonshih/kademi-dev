@@ -3,37 +3,55 @@
         <title>Tasks due today</title>
     </head>
     <body>
-        <p>Hi $profile.formattedName,</p>
+        <p>Hi $profile.formattedName(),</p>
 
-        <p><strong>Whoops! It seems you&#39;re not keeping your tasks under control.</strong></p>
+        #set($daysOld = false)
+        #set($dt = $formatter.endofDay($formatter.addDays($formatter.now, -3)))
+        #foreach($t in $overDue)
+        #if($t.dueDate.compareTo($dt) <= 0)
+        #set($daysOld = true)
+        #break
+        #end
+        #end
 
-        <p><strong>Well done! You&#39;re keeping on top of your tasks.</strong></p>
-
+        #if($overDue.size() == 0)
         <p><strong>You&#39;re amazing! You have no overdue tasks.</strong></p>
+        #elseif(!$daysOld)
+        <p><strong>Well done! You&#39;re keeping on top of your tasks.</strong></p>
+        #elseif($daysOld)
+        <p><strong>Whoops! It seems you&#39;re not keeping your tasks under control.</strong></p>
+        #end
 
         <p>Tasks due today: $dueToday.size()<br />
             Total tasks overdue: $overDue.size()
         </p>
-        #set($topSize = 5)
-        #if($dueToday.size() < 5)
-        #set($topSize = $dueToday.size())
-        #end
-        #if($topSize > 0)
-        <p>Here are your top $topSize tasks:</p>
-        <ol>
-            #foreach($t in $dueToday)
-            <li>
-                #set($leadHref = "http://" + ${formatter.getDomainName($website)} + "/dashboard")
-                #if($t.relatedLead)
-                #set($leadHref = "http://" + ${formatter.getDomainName($website)} + "/leads/" + $t.relatedLead.id)
+        #if($allDue.size() > 0)
+        <p>Here are your tasks:</p>
+        <table>
+            <thead>
+                <tr>
+                    <th style="text-align: left;">Name</th>
+                    <th style="text-align: left;">Description</th>
+                    <th style="text-align: left;">Due Date</th>
+                    <th style="text-align: left;"></th>
+                </tr>
+            </thead>
+            <tbody>
+                #foreach($t in $allDue)
+                <tr>
+                    <td style="text-align: left;">$!formatter.ifNull($t.title, $t.taskName)</td>
+                    <td style="text-align: left;">$!t.taskDescription</td>
+                    <td style="text-align: left;">$formatter.formatDateTime($t.dueDate)</td>
+                    <td style="text-align: left;">
+                        #if($t.relatedLead)
+                        #set($leadHref = "http://" + ${formatter.getDomainName($website)} + "/leads/" + $t.relatedLead.id)
+                        <a href="$leadHref">View Lead</a>
+                        #end
+                    </td>
+                </tr>
                 #end
-                <a href="$leadHref">$!formatter.ifNull($t.title, $t.taskName)</a>
-            </li>
-            #if($foreach.count == $topSize)
-            #break
-            #end
-            #end
-        </ol>
+            </tbody>
+        </table>
         #end
     </body>
 </html>
