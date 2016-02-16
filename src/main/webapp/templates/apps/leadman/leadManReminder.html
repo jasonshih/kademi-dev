@@ -1,0 +1,39 @@
+<html>
+    <head>
+        <title>Tasks due today: $dueToday.size()</title>
+    </head>
+    <body>
+        <p>Hi $profile.formattedName,</p>
+
+        <p><strong>Whoops! It seems you&#39;re not keeping your tasks under control.</strong></p>
+
+        <p><strong>Well done! You&#39;re keeping on top of your tasks.</strong></p>
+
+        <p><strong>You&#39;re amazing! You have no overdue tasks.</strong></p>
+
+        <p>Tasks due today: $dueToday.size()<br />
+            Total tasks overdue: $overDue.size()
+        </p>
+        #set($topSize = 5)
+        #if($dueToday.size() < 5)
+        #set($topSize = $dueToday.size())
+        #end
+        #if($topSize > 0)
+        <p>Here are your top $topSize tasks:</p>
+        <ol>
+            #foreach($t in $dueToday)
+            <li>
+                #set($leadHref = "http://" + ${formatter.getDomainName($website)} + "/dashboard")
+                #if($t.relatedLead)
+                #set($leadHref = "http://" + ${formatter.getDomainName($website)} + "/leads/" + $t.relatedLead.id)
+                #end
+                <a href="$leadHref">$!t.title</a>
+            </li>
+            #if($foreach.count == $topSize)
+            #break
+            #end
+            #end
+        </ol>
+        #end
+    </body>
+</html>
