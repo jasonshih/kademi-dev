@@ -1,8 +1,5 @@
-
-<script type="text/javascript" src="/static/reload-fragment/1.0.0/jquery.reload-fragment.js" >//</script>
-
 <div class="dashboard-upcoming-events" id="dashboard-upcoming-events">
-    #if( $userResource.find("Calendars").calendarInvites.size() > 0 ) 
+    #if( $userResource.find("Calendars").calendarInvites.size() > 0 )
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">Calendar invitations</h3>
@@ -16,7 +13,7 @@
                     </a>
                     <a class='btn btn-danger invite-decline' href='$invite.organisorEvent.href'>
                         <span class='glyphicon glyphicon-remove'></span>
-                    </a>                    
+                    </a>
                 </div>
 
                 You have been invited to
@@ -25,9 +22,9 @@
 
                 <div class='clearfix'></div>
             </div>
-            #end 
-        </div>    
-    </div>              
+            #end
+        </div>
+    </div>
     #end
 
     #set($calsHome = $page.find("/Calendars") )
@@ -41,9 +38,9 @@
             <div class="alert alert-info" role="alert">
                 <a href="$event.href">$event.title</a>; <abbr title="$formatter.formatDateISO8601($event.startDate)" class="timeago">$event.startDate</abbr>
             </div>
-            #end 
-        </div>    
-    </div>           
+            #end
+        </div>
+    </div>
     #end
 </div>
 <script type="text/javascript">
