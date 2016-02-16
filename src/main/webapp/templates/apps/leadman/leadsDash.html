@@ -38,20 +38,21 @@
                 <div class="row text-muted m0">
                     <div data-ripple="" class="col-xs-3 col-md-6 bb br pv-xxl infoBox" >
                         <h1 class="text-thin">$leadsPage.numMyLeads</h1>
-                        <div class="text-right text-sm text-muted">Leads</div>
+                        <div class="text-right text-sm text-muted">Active Leads</div>
                     </div>
                     <div data-ripple="" class="col-xs-3 col-md-6 bb br pv-xxl infoBox" >
-                        <h1 class="text-thin">34</h1>
-                        <div class="text-right text-sm text-muted">Response time, mins</div>
+                        <h1 class="text-thin">$leadsPage.myDueTasks.size()</h1>
+                        <div class="text-right text-sm text-muted">Tasks due</div>
                     </div>
                     <div data-ripple="" class="col-xs-3 col-md-6 bb-lg br pv-xxl infoBox" >
                         <h1 class="text-thin">$leadsPage.myLeadsEstimatedValue</h1>
                         <div class="text-right text-sm text-muted">Pipeline value</div>
                     </div>
                     <div data-ripple="" class="col-xs-3 col-md-6 bb-lg br pv-xxl infoBox" >
-                        <h1 class="text-thin">$leadsPage.myDueTasks.size()</h1>
-                        <div class="text-right text-sm text-muted">Tasks due</div>
-                    </div>
+                        #set( $closed = $leadsPage.closedDeals(30) )
+                        <h1 class="text-thin">$ $closed.value</h1>
+                        <div class="text-right text-sm text-muted">$closed.num closed leads, last 30 days</div>
+                    </div>                                        
                 </div>
             </div>
             <div class="col-md-8">
