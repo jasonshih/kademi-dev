@@ -1,46 +1,46 @@
 #macro( themeHeader, $title )
-    <title>$title</title>
-    <meta charset="utf-8">
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="/theme/vendor.css"/>
-    <link rel="stylesheet" href="/theme/overrides.css"/>
+<title>$title</title>
+<meta charset="utf-8">
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="/theme/vendor.css"/>
+<link rel="stylesheet" href="/theme/overrides.css"/>
 
-    <script type="text/javascript">
+<script type="text/javascript">
     // Templates should push page init function into this array. It will then be run after outer template init functions.
     var pageInitFunctions = new Array();
-    </script>
+</script>
 
-    <script src="/templates/themes/bootstrap335/js/common.js">//</script>
-    <script src="/static/jquery/1.11.0/jquery-1.11.0.js">//</script>
+<script src="/templates/themes/bootstrap335/js/common.js">//</script>
+<script src="/static/jquery/1.11.0/jquery-1.11.0.js">//</script>
 
-    <script src="/static/js/jquery.pjax.js" type="text/javascript" >//</script>
-    <script src="/templates/themes/bootstrap335/js/jqBootstrapValidation.js">//</script>
-    <script src="/templates/themes/bootstrap335/js/jqExtras.js">//</script>
-    <script src="/templates/themes/bootstrap335/js/bootstrap.min.js">//</script>
-    <script type="text/javascript" src="/static/js/jquery.cookie.js">//</script>
-    <script type="text/javascript" src="/static/jquery-ui/1.10.4/js/jquery-ui-1.10.4.custom.min.js">//</script>
-    <script type="text/javascript" src="/static/js/jquery.timeago.js" >//</script>
-    <script type="text/javascript" src="/static/jquery.forms/1.1.0/jquery.forms-1.1.0.js">//</script>
-    <script type="text/javascript" src="/theme/js/jquery.user.js">//</script>
-    <script type="text/javascript" src="/static/jquery.comments/1.0.4/jquery.comments-1.0.4.js" >//</script>
+<script src="/static/js/jquery.pjax.js" type="text/javascript" >//</script>
+<script src="/templates/themes/bootstrap335/js/jqBootstrapValidation.js">//</script>
+<script src="/templates/themes/bootstrap335/js/jqExtras.js">//</script>
+<script src="/templates/themes/bootstrap335/js/bootstrap.min.js">//</script>
+<script type="text/javascript" src="/static/js/jquery.cookie.js">//</script>
+<script type="text/javascript" src="/static/jquery-ui/1.10.4/js/jquery-ui-1.10.4.custom.min.js">//</script>
+<script type="text/javascript" src="/static/js/jquery.timeago.js" >//</script>
+<script type="text/javascript" src="/static/jquery.forms/1.1.0/jquery.forms-1.1.0.js">//</script>
+<script type="text/javascript" src="/theme/js/jquery.user.js">//</script>
+<script type="text/javascript" src="/static/jquery.comments/1.0.4/jquery.comments-1.0.4.js" >//</script>
 
-    <script type="text/javascript" src="/static/js/jquery.placeholder.js" >//</script>
-    <script type="text/javascript" src="/static/js/jquery.autogrow-textarea-1.0.0.js" >//</script>
-    <script type="text/javascript" src="/theme/js/init-theme.js" >//</script>
-    <script type="text/javascript" src="/static/bootstrap-msg/0.3/bootstrap-msg.min.js">//</script>
+<script type="text/javascript" src="/static/js/jquery.placeholder.js" >//</script>
+<script type="text/javascript" src="/static/js/jquery.autogrow-textarea-1.0.0.js" >//</script>
+<script type="text/javascript" src="/theme/js/init-theme.js" >//</script>
+<script type="text/javascript" src="/static/bootstrap-msg/0.3/bootstrap-msg.min.js">//</script>
 
-    $templater.pushLess("/theme/less/bootstrap.less", "all")
-    $templater.pushLess("/theme/theme-params.less", "all")
-    $templater.pushLess("/theme/less/app.less", "all")
+$templater.pushLess("/theme/less/bootstrap.less", "all")
+$templater.pushLess("/theme/theme-params.less", "all")
+$templater.pushLess("/theme/less/app.less", "all")
 
-    #foreach( $lessSource in $templater.lessSources.entrySet())
-    <link href="/$templater.getCombinedPath($lessSource.value)" rel="stylesheet" type="text/css" media="$lessSource.key" />
-    #end
+#foreach( $lessSource in $templater.lessSources.entrySet())
+<link href="/$templater.getCombinedPath($lessSource.value)" rel="stylesheet" type="text/css" media="$lessSource.key" />
+#end
 
 
-    <link rel="stylesheet" href="/static/bootstrap-msg/0.3/bootstrap-msg.min.css" type="text/css" />
-    <link rel="stylesheet" href="/static/font-awesome/4.4.0/css/font-awesome.min.css"/>
+<link rel="stylesheet" href="/static/bootstrap-msg/0.3/bootstrap-msg.min.css" type="text/css" />
+<link rel="stylesheet" href="/static/font-awesome/4.4.0/css/font-awesome.min.css"/>
 
 
 
@@ -80,310 +80,310 @@
         }
     </style>
 
-    $!bodyContent
+$!bodyContent
 
-    #parse("/theme/apps/leadman/includes.html")
-    #parse("/theme/apps/leadman/leadManIncludes.html")
+#parse("/theme/apps/leadman/includes.html")
+#parse("/theme/apps/leadman/leadManIncludes.html")
 
-    #portlets("header")
+#portlets("header")
 
-    <script src="/templates/themes/bootstrap335/js/theme.js">//</script>
+<script src="/templates/themes/bootstrap335/js/theme.js">//</script>
 #end
 
 
 #macro( themeBody )
 
-    #set( $memberships = $userResource.primaryMemberships )
-    #set( $currentOrgId = $request.getCookie("org").value )
-    #if( $currentOrgId )
-    #set( $curMembership = $memberships.filterByOrg($currentOrgId).first )
-    #else
-    #set( $curMembership = $memberships.first )
-    #end
-    #set( $currentOrg = $curMembership.org  )
+#set( $memberships = $userResource.primaryMemberships )
+#set( $currentOrgId = $request.getCookie("org").value )
+#if( $currentOrgId )
+#set( $curMembership = $memberships.filterByOrg($currentOrgId).first )
+#else
+#set( $curMembership = $memberships.first )
+#end
+#set( $currentOrg = $curMembership.org  )
 
-    <div class="aside-offscreen">
-        <div class="app-container aside-offscreen">
-            <header class="bg-primary">
-                <nav role="navigation" class="navbar topnavbar">
-                    <div class="navbar-header">
-                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav-collapse" aria-expanded="false">
-                            <span class="sr-only">Toggle navigation</span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                        <a href="/dashboard" class="navbar-brand">
-                            <i class="fa fa-home fa-2x"></i>
-                        </a>
-                    </div>
-                    <div id="nav-collapse" class="nav-wrapper collapse navbar-collapse">
-                        <ul class="nav navbar-nav hidden-material">
-                            <li>
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                    <i class="icon-bar-graph-2 fa-2x text-default"></i>
-                                    <span class="visible-xs-inline ml">Analytics</span>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    #set( $leadsPage = $page.find("/leads") )
-                                    #foreach($entry in $leadsPage.funnels.entrySet())
-                                    <li class="presentation" role="menuitem"><a href="/analytics/$entry.key">Analytics: $entry.value.title</a></li>
-                                    #end
-                                </ul>
+<div class="aside-offscreen">
+    <div class="app-container aside-offscreen">
+        <header class="bg-primary">
+            <nav role="navigation" class="navbar topnavbar">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav-collapse" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a href="/dashboard" class="navbar-brand">
+                        <i class="fa fa-home fa-2x"></i>
+                    </a>
+                </div>
+                <div id="nav-collapse" class="nav-wrapper collapse navbar-collapse">
+                    <ul class="nav navbar-nav hidden-material">
+                        <li>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                <i class="icon-bar-graph-2 fa-2x text-default"></i>
+                                <span class="visible-xs-inline ml">Analytics</span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                #set( $leadsPage = $page.find("/leads") )
+                                #foreach($entry in $leadsPage.funnels.entrySet())
+                                <li class="presentation" role="menuitem"><a href="/analytics/$entry.key">Analytics: $entry.value.title</a></li>
+                                #end
+                            </ul>
 
-                            </li>
+                        </li>
 
-                            <li>
-                                <a href="/custs/" title="Contacts" data-ripple="">
-                                    <i class="fa fa-users fa-2x text-info"></i>
-                                    <span class="visible-xs-inline ml">Contacts</span>
-                                </a>
-                            </li>
+                        <li>
+                            <a href="/custs/" title="Contacts" data-ripple="">
+                                <i class="fa fa-users fa-2x text-info"></i>
+                                <span class="visible-xs-inline ml">Contacts</span>
+                            </a>
+                        </li>
 
-                            <li>
-                                <a href="/Calendars/" title="Calendars" data-ripple="">
-                                    <i class="fa fa-calendar fa-2x text-info"></i>
-                                    <span class="visible-xs-inline ml">Calendar</span>
-                                </a>
-                            </li>
+                        <li>
+                            <a href="/Calendars/" title="Calendars" data-ripple="">
+                                <i class="fa fa-calendar fa-2x text-info"></i>
+                                <span class="visible-xs-inline ml">Calendar</span>
+                            </a>
+                        </li>
 
-                            <li>
-                                <a href="/leads/" title="Leads" data-ripple="">
-                                    <i class="fa fa-bullseye fa-2x text-success"></i>
-                                    <span class="visible-xs-inline ml">Leads</span>
-                                </a>
-                            </li>
+                        <li>
+                            <a href="/leads/" title="Leads" data-ripple="">
+                                <i class="fa fa-bullseye fa-2x text-success"></i>
+                                <span class="visible-xs-inline ml">Leads</span>
+                            </a>
+                        </li>
 
-                            <li>
-                                <a href="/profile" title="Create a contact" class="createContact" title="Create a new customer profile">
-                                    <i class="fa fa-2x  fa-user-plus text-success"></i>
-                                    <span class="visible-xs-inline ml">Create a contact </span>
-                                </a>
-                            </li>
+                        <li>
+                            <a href="/profile" title="Create a contact" class="createContact" title="Create a new customer profile">
+                                <i class="fa fa-2x  fa-user-plus text-success"></i>
+                                <span class="visible-xs-inline ml">Create a contact </span>
+                            </a>
+                        </li>
 
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" title="Enter a new lead">
-                                    <i class="fa fa-plus fa-2x"></i>
-                                    <span class="visible-xs-inline ml">Create a lead</span>
-                                    <span class="caret"></span>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li class="presentation" role="menuitem"><a href="#" data-target="#modalLeadFromEmail" data-toggle="modal">Lead from email</a></li>
-                                    #foreach($entry in $leadsPage.funnels.entrySet())
-                                    <li class="presentation" role="menuitem"><a href="$entry.key" class="createLead">$entry.value.title</a></li>
-                                    #end
-                                </ul>
-                            </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" title="Enter a new lead">
+                                <i class="fa fa-plus fa-2x"></i>
+                                <span class="visible-xs-inline ml">Create a lead</span>
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="presentation" role="menuitem"><a href="#" data-target="#modalLeadFromEmail" data-toggle="modal">Lead from email</a></li>
+                                #foreach($entry in $leadsPage.funnels.entrySet())
+                                <li class="presentation" role="menuitem"><a href="$entry.key" class="createLead">$entry.value.title</a></li>
+                                #end
+                            </ul>
+                        </li>
 
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" title="Enter a new lead">
-                                    <i class="fa fa-bolt fa-2x"></i>
-                                    <span class="visible-xs-inline ml">Create a lead</span>
-                                    <span class="caret"></span>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    #foreach($entry in $leadsPage.funnels.entrySet())
-                                    <li class="presentation" role="menuitem"><a href="$entry.key" class="createQuickLead">$entry.value.title</a></li>
-                                    #end
-                                </ul>
-                            </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" title="Enter a new lead">
+                                <i class="fa fa-bolt fa-2x"></i>
+                                <span class="visible-xs-inline ml">Quick Lead</span>
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                #foreach($entry in $leadsPage.funnels.entrySet())
+                                <li class="presentation" role="menuitem"><a href="$entry.key" class="createQuickLead">$entry.value.title</a></li>
+                                #end
+                            </ul>
+                        </li>
 
-                            <li>
-                                <form class="navbar-form" role="search">
-                                    <div class="input-group">
-                                        <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                                        <div class="lead-search-wrapper">
-                                            <input type="text" class="form-control" placeholder="Search for..." id="lead-search-input" />
-                                            <ul id="lead-search-suggestions" class="hide"></ul>
-                                        </div>
+                        <li>
+                            <form class="navbar-form" role="search">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                                    <div class="lead-search-wrapper">
+                                        <input type="text" class="form-control" placeholder="Search for..." id="lead-search-input" />
+                                        <ul id="lead-search-suggestions" class="hide"></ul>
                                     </div>
-                                </form>
-                            </li>
+                                </div>
+                            </form>
+                        </li>
 
-                        </ul>
-                        #if($user)
-                        <ul class="nav navbar-nav navbar-right">
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                    #if( $currentOrg )
-                                    Logged in to: $currentOrg.title
-                                    <span class="caret"></span>
-                                    #end
-                                </a>
-                                <ul class="dropdown-menu selectOrg">
-                                    #foreach( $m in $memberships)
-                                    <li><a href="$m.org.orgId">$m.org.title</a></li>
-                                    #end
-                                </ul>
-                            </li>
-                            <li class="dropdown current-user user">
-                                <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                                    #if( $profile.photoHash )
-                                    <img src="/_hashes/files/$profile.photoHash" class="circle-img" alt="">
-                                    #end
-                                    <span class="username">$user.nickName</span>
-                                    <i class="clip-chevron-down"></i>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a href="/profile">
-                                            &nbsp;My Profile
-                                        </a>
-                                    </li>
-                                    <li class="divider"></li>
-                                    <li>
-                                        <a href="#" class="logout">
-                                            &nbsp;Log Out
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                        #end
-                    </div>
-                </nav>
-            </header>
+                    </ul>
+                    #if($user)
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                #if( $currentOrg )
+                                Logged in to: $currentOrg.title
+                                <span class="caret"></span>
+                                #end
+                            </a>
+                            <ul class="dropdown-menu selectOrg">
+                                #foreach( $m in $memberships)
+                                <li><a href="$m.org.orgId">$m.org.title</a></li>
+                                #end
+                            </ul>
+                        </li>
+                        <li class="dropdown current-user user">
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                #if( $profile.photoHash )
+                                <img src="/_hashes/files/$profile.photoHash" class="circle-img" alt="">
+                                #end
+                                <span class="username">$user.nickName</span>
+                                <i class="clip-chevron-down"></i>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="/profile">
+                                        &nbsp;My Profile
+                                    </a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="#" class="logout">
+                                        &nbsp;Log Out
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    #end
+                </div>
+            </nav>
+        </header>
 
-            <!-- Main-->
-            <section>
-                <!-- Content-->
-                <div class="main-content app" id="maincontentContainer">
-                    $!bodyContent
-                </div> <!-- /container -->
+        <!-- Main-->
+        <section>
+            <!-- Content-->
+            <div class="main-content app" id="maincontentContainer">
+                $!bodyContent
+            </div> <!-- /container -->
 
-                <!-- END Content-->
-            </section>
+            <!-- END Content-->
+        </section>
 
-        </div>
     </div>
+</div>
 
-    <!-- Layer Morph-->
-    <div class="layer-morph-overlay">
-        <div class="layer-morph-inner bg-info"></div>
-    </div>
-    <div class="layer-morph-close"><em class="icon-cross"></em></div>
-    <div class="layer-morph-container bg-info">
-        <div class="layer-morph-wrapper">
-            <div id="layer-search" class="layer-morph">
-                <form action="#">
-                    <p class="help-block">Type and hit enter to search</p>
-                    <input type="text" placeholder="I'm looking for..." class="form-control input-huge">
-                    <button type="submit" class="hidden">Search</button>
-                </form>
-                <div class="row">
-                    <div class="col-md-4 col-sm-6 pv">
-                        <h4 class="text-bold pv-lg">People (4)</h4><br>
-                        <ul class="list-unstyled">
-                            <!-- START User-->
-                            <li class="media">
-                                <div class="media-left media-middle">
-                                    <!-- Contact avatar-->
-                                    <div class="point-pin"><a href=""><img src="/theme/images/user/05.jpg" alt="Image" class="media-object img-circle thumb40"></a>
-                                        <div class="point point-success point-lg"></div>
-                                    </div>
+<!-- Layer Morph-->
+<div class="layer-morph-overlay">
+    <div class="layer-morph-inner bg-info"></div>
+</div>
+<div class="layer-morph-close"><em class="icon-cross"></em></div>
+<div class="layer-morph-container bg-info">
+    <div class="layer-morph-wrapper">
+        <div id="layer-search" class="layer-morph">
+            <form action="#">
+                <p class="help-block">Type and hit enter to search</p>
+                <input type="text" placeholder="I'm looking for..." class="form-control input-huge">
+                <button type="submit" class="hidden">Search</button>
+            </form>
+            <div class="row">
+                <div class="col-md-4 col-sm-6 pv">
+                    <h4 class="text-bold pv-lg">People (4)</h4><br>
+                    <ul class="list-unstyled">
+                        <!-- START User-->
+                        <li class="media">
+                            <div class="media-left media-middle">
+                                <!-- Contact avatar-->
+                                <div class="point-pin"><a href=""><img src="/theme/images/user/05.jpg" alt="Image" class="media-object img-circle thumb40"></a>
+                                    <div class="point point-success point-lg"></div>
                                 </div>
-                                <!-- Contact info-->
-                                <div class="media-body">
-                                    <div class="media-heading"><a href="" class="text-md">Marc Fuller</a></div>
+                            </div>
+                            <!-- Contact info-->
+                            <div class="media-body">
+                                <div class="media-heading"><a href="" class="text-md">Marc Fuller</a></div>
+                            </div>
+                        </li>
+                        <!-- END User-->
+                        <!-- START User-->
+                        <li>
+                            <hr>
+                        </li>
+                        <li class="media">
+                            <div class="media-left media-middle">
+                                <!-- Contact avatar-->
+                                <div class="point-pin"><a href=""><img src="/theme/images/user/06.jpg" alt="Image" class="media-object img-circle thumb40"></a>
+                                    <div class="point point-success point-lg"></div>
                                 </div>
-                            </li>
-                            <!-- END User-->
-                            <!-- START User-->
-                            <li>
-                                <hr>
-                            </li>
-                            <li class="media">
-                                <div class="media-left media-middle">
-                                    <!-- Contact avatar-->
-                                    <div class="point-pin"><a href=""><img src="/theme/images/user/06.jpg" alt="Image" class="media-object img-circle thumb40"></a>
-                                        <div class="point point-success point-lg"></div>
-                                    </div>
+                            </div>
+                            <!-- Contact info-->
+                            <div class="media-body">
+                                <div class="media-heading"><a href="" class="text-md">Wade Wade</a></div>
+                            </div>
+                        </li>
+                        <!-- END User-->
+                        <!-- START User-->
+                        <li>
+                            <hr>
+                        </li>
+                        <li class="media">
+                            <div class="media-left media-middle">
+                                <!-- Contact avatar-->
+                                <div class="point-pin"><a href=""><img src="/theme/images/user/07.jpg" alt="Image" class="media-object img-circle thumb40"></a>
+                                    <div class="point point-danger point-lg"></div>
                                 </div>
-                                <!-- Contact info-->
-                                <div class="media-body">
-                                    <div class="media-heading"><a href="" class="text-md">Wade Wade</a></div>
+                            </div>
+                            <!-- Contact info-->
+                            <div class="media-body">
+                                <div class="media-heading"><a href="" class="text-md">Alan Boyd</a></div>
+                            </div>
+                        </li>
+                        <!-- END User-->
+                        <!-- START User-->
+                        <li>
+                            <hr>
+                        </li>
+                        <li class="media">
+                            <div class="media-left media-middle">
+                                <!-- Contact avatar-->
+                                <div class="point-pin"><a href=""><img src="/theme/images/user/01.jpg" alt="Image" class="media-object img-circle thumb40"></a>
+                                    <div class="point point-danger point-lg"></div>
                                 </div>
-                            </li>
-                            <!-- END User-->
-                            <!-- START User-->
-                            <li>
-                                <hr>
-                            </li>
-                            <li class="media">
-                                <div class="media-left media-middle">
-                                    <!-- Contact avatar-->
-                                    <div class="point-pin"><a href=""><img src="/theme/images/user/07.jpg" alt="Image" class="media-object img-circle thumb40"></a>
-                                        <div class="point point-danger point-lg"></div>
-                                    </div>
-                                </div>
-                                <!-- Contact info-->
-                                <div class="media-body">
-                                    <div class="media-heading"><a href="" class="text-md">Alan Boyd</a></div>
-                                </div>
-                            </li>
-                            <!-- END User-->
-                            <!-- START User-->
-                            <li>
-                                <hr>
-                            </li>
-                            <li class="media">
-                                <div class="media-left media-middle">
-                                    <!-- Contact avatar-->
-                                    <div class="point-pin"><a href=""><img src="/theme/images/user/01.jpg" alt="Image" class="media-object img-circle thumb40"></a>
-                                        <div class="point point-danger point-lg"></div>
-                                    </div>
-                                </div>
-                                <!-- Contact info-->
-                                <div class="media-body">
-                                    <div class="media-heading"><a href="" class="text-md">Ryan Carr</a></div>
-                                </div>
-                            </li>
-                            <!-- END User-->
-                        </ul>
-                    </div>
-                    <div class="col-md-4 col-sm-6 pv">
-                        <h4 class="text-bold pv-lg">Pages (3)</h4><br>
-                        <ul class="list-unstyled">
-                            <li class="media">
-                                <div class="media-left media-middle">
-                                    <div class="thumb40 bg-success circle text-center text-bold">D</div>
-                                </div>
-                                <div class="media-body">
-                                    <div class="media-heading clearfix"><a href="dashboard.html" data-layer-morph-close="" class="pull-left text-md">Dashboard</a><small class="text-muted pull-right mt">3 matches</small></div>
-                                </div>
-                            </li>
-                            <li>
-                                <hr>
-                            </li>
-                            <li class="media">
-                                <div class="media-left media-middle">
-                                    <div class="thumb40 bg-purple circle text-center text-bold">P</div>
-                                </div>
-                                <div class="media-body">
-                                    <div class="media-heading clearfix"><a href="extras.profile.html" data-layer-morph-close="" class="pull-left text-md">Profile</a><small class="text-muted pull-right mt">3 matches</small></div>
-                                </div>
-                            </li>
-                            <li>
-                                <hr>
-                            </li>
-                            <li class="media">
-                                <div class="media-left media-middle">
-                                    <div class="thumb40 bg-danger circle text-center text-bold">P</div>
-                                </div>
-                                <div class="media-body">
-                                    <div class="media-heading clearfix"><a href="extras.projects.html" data-layer-morph-close="" class="pull-left text-md">Projects</a><small class="text-muted pull-right mt">2 match(es)</small></div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
+                            </div>
+                            <!-- Contact info-->
+                            <div class="media-body">
+                                <div class="media-heading"><a href="" class="text-md">Ryan Carr</a></div>
+                            </div>
+                        </li>
+                        <!-- END User-->
+                    </ul>
+                </div>
+                <div class="col-md-4 col-sm-6 pv">
+                    <h4 class="text-bold pv-lg">Pages (3)</h4><br>
+                    <ul class="list-unstyled">
+                        <li class="media">
+                            <div class="media-left media-middle">
+                                <div class="thumb40 bg-success circle text-center text-bold">D</div>
+                            </div>
+                            <div class="media-body">
+                                <div class="media-heading clearfix"><a href="dashboard.html" data-layer-morph-close="" class="pull-left text-md">Dashboard</a><small class="text-muted pull-right mt">3 matches</small></div>
+                            </div>
+                        </li>
+                        <li>
+                            <hr>
+                        </li>
+                        <li class="media">
+                            <div class="media-left media-middle">
+                                <div class="thumb40 bg-purple circle text-center text-bold">P</div>
+                            </div>
+                            <div class="media-body">
+                                <div class="media-heading clearfix"><a href="extras.profile.html" data-layer-morph-close="" class="pull-left text-md">Profile</a><small class="text-muted pull-right mt">3 matches</small></div>
+                            </div>
+                        </li>
+                        <li>
+                            <hr>
+                        </li>
+                        <li class="media">
+                            <div class="media-left media-middle">
+                                <div class="thumb40 bg-danger circle text-center text-bold">P</div>
+                            </div>
+                            <div class="media-body">
+                                <div class="media-heading clearfix"><a href="extras.projects.html" data-layer-morph-close="" class="pull-left text-md">Projects</a><small class="text-muted pull-right mt">2 match(es)</small></div>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
-            <div class="layer-morph-footer">Naut</div>
         </div>
+        <div class="layer-morph-footer">Naut</div>
     </div>
-    <!-- End Layer Morph-->
+</div>
+<!-- End Layer Morph-->
 
-    <script src="/static/reload-fragment/1.0.2/jquery.reload-fragment-1.0.2.js" type="text/javascript" >//</script>
-    <script src="/theme/apps/leadman/leadman.js" type="text/javascript" >//</script>
+<script src="/static/reload-fragment/1.0.2/jquery.reload-fragment-1.0.2.js" type="text/javascript" >//</script>
+<script src="/theme/apps/leadman/leadman.js" type="text/javascript" >//</script>
 
 #end

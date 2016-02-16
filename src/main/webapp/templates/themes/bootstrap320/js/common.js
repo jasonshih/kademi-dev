@@ -2,14 +2,14 @@
  *  common.js - this is for helper functions which do not depend on jquery
  */
 if (!String.prototype.trim) {
-    String.prototype.trim = function() {
+    String.prototype.trim = function () {
         return this.replace(/^\s+|\s+$/g, "");
     };
 }
 
 // Ensure support for toISOString in all browsers
 if (!Date.prototype.toISOString) {
-    Date.prototype.toISOString = function() {
+    Date.prototype.toISOString = function () {
         function pad(n) {
             return n < 10 ? '0' + n : n
         }
@@ -22,9 +22,9 @@ if (!Date.prototype.toISOString) {
     };
 }
 
-var typewatch = (function() {
+var typewatch = (function () {
     var timer = 0;
-    return function(callback, ms) {
+    return function (callback, ms) {
         clearTimeout(timer);
         timer = setTimeout(callback, ms);
     }
@@ -37,38 +37,38 @@ function startsWith(str, prefix) {
     return str.indexOf(prefix) === 0;
 }
 
-Date.prototype.formatMMDDYYYY = function() {
+Date.prototype.formatMMDDYYYY = function () {
     return (this.getMonth() + 1) +
             "/" + this.getDate() +
             "/" + this.getFullYear();
 }
 
-Date.prototype.formatDDMMYYYY = function() {
+Date.prototype.formatDDMMYYYY = function () {
     return this.getDate() +
             "/" + (this.getMonth() + 1) +
             "/" + this.getFullYear();
 }
 
 
-Array.max = function(array) {
+Array.max = function (array) {
     return Math.max.apply(Math, array);
 };
 
-Array.min = function(array) {
+Array.min = function (array) {
     return Math.min.apply(Math, array);
 };
 
 /**
  * Adds a contains function to String objects
  */
-String.prototype.contains = function(it) {
+String.prototype.contains = function (it) {
     return this.indexOf(it) != -1;
 };
 
-String.prototype.startsWith = function(prefix) {
+String.prototype.startsWith = function (prefix) {
     return this.indexOf(prefix) === 0;
 };
-String.prototype.endsWith = function(suffix) {
+String.prototype.endsWith = function (suffix) {
     return this.match(suffix + "$") == suffix;
 };
 
@@ -105,7 +105,7 @@ function log() {
 //                    console.log(msg);
 //                } catch (ex) {
 //                    console.log(ex); // If current browser doesn't support JSON.stringify method
-//                }                
+//                }
 //            }
         } else {
             console.log(arguments);
@@ -134,7 +134,7 @@ function flog() {
 //                    console.log(msg);
 //                } catch (ex) {
 //                    console.log(ex); // If current browser doesn't support JSON.stringify method
-//                }                
+//                }
 //            }
         } else {
             console.log(arguments);
@@ -163,7 +163,7 @@ function toFileSize(num) {
 
 function toDisplayDateNoTime(dt) {
     var s = (dt.date) + "/" + (dt.month + 1) + "/" + (dt.year + 1900);
-    if( dt.hour ) {
+    if (dt.hour) {
         s += " " + dt.hour + ":" + dt.minute;
     }
     return s;
@@ -227,8 +227,7 @@ function dateOrd(post1, post2) {
     }
     if (n.day < m.day) {
         return -1;
-    }
-    else if (n.day > m.day) {
+    } else if (n.day > m.day) {
         return 1;
     }
     if (n.hours < m.hours) {
@@ -383,9 +382,9 @@ function getFileName(path) {
 }
 
 /**
- * 
+ *
  * Get the path of the resource which contains the given path
- * 
+ *
  */
 function getFolderPath(path) {
     path = stripFragment(path); // remove any fragment like #section
@@ -397,7 +396,7 @@ function getFolderPath(path) {
 }
 
 /**
- *  If the given path is a folder (ie ends with a slash) return it. Otherwise, 
+ *  If the given path is a folder (ie ends with a slash) return it. Otherwise,
  *  strip the file portion and remove the collection path
  */
 function toFolderPath(path) {
@@ -444,7 +443,7 @@ function profileImg(user) {
  * ReplaceAll by Fagner Brack (MIT Licensed)
  * Replaces all occurrences of a substring in a string
  */
-String.prototype.replaceAll = function(token, newToken, ignoreCase) {
+String.prototype.replaceAll = function (token, newToken, ignoreCase) {
     var str, i = -1, _token;
     if ((str = this.toString()) && typeof token === "string") {
         _token = ignoreCase === true ? token.toLowerCase() : undefined;
@@ -468,7 +467,7 @@ String.prototype.replaceAll = function(token, newToken, ignoreCase) {
 
 /**
  * Evaluate a relative path from an absolute path to get an absolute path to he relative path from the absolute path
- * 
+ *
  */
 function evaluateRelativePath(startFrom, relPath) {
     var arr = relPath.split("/");
@@ -502,8 +501,8 @@ function replaceSpecialChars(nameToUse) {
 function pulseBorder(node) {
     node.animate({
         boxShadow: '0 0 30px #ED9DAE'
-    }, 2000, function() {
-        setTimeout(function() {
+    }, 2000, function () {
+        setTimeout(function () {
             node.animate({
                 boxShadow: '0 0 0 #FFF'
             }, 1000);
@@ -521,9 +520,9 @@ function stripFragment(href) {
 
 /*
  * http://javascriptbase64.googlecode.com/svn/trunk/base64.js
- * 
+ *
  Copyright (c) 2008 Fred Palmer fred.palmer_at_gmail.com
- 
+
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
  files (the "Software"), to deal in the Software without
@@ -532,10 +531,10 @@ function stripFragment(href) {
  copies of the Software, and to permit persons to whom the
  Software is furnished to do so, subject to the following
  conditions:
- 
+
  The above copyright notice and this permission notice shall be
  included in all copies or substantial portions of the Software.
- 
+
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
  OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -564,7 +563,7 @@ StringBuffer.prototype.toString = function toString()
 var Base64 =
         {
             codex: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
-            encode: function(input)
+            encode: function (input)
             {
                 var output = new StringBuffer();
 
@@ -587,8 +586,7 @@ var Base64 =
                     if (isNaN(chr2))
                     {
                         enc3 = enc4 = 64;
-                    }
-                    else if (isNaN(chr3))
+                    } else if (isNaN(chr3))
                     {
                         enc4 = 64;
                     }
@@ -598,7 +596,7 @@ var Base64 =
 
                 return output.toString();
             },
-            decode: function(input)
+            decode: function (input)
             {
                 var output = new StringBuffer();
 
@@ -615,8 +613,7 @@ var Base64 =
                         var charCode2 = enumerator.current;
 
                         output.append(String.fromCharCode(((charCode & 31) << 6) | (charCode2 & 63)));
-                    }
-                    else
+                    } else
                     {
                         enumerator.moveNext();
                         var charCode2 = enumerator.current;
@@ -643,19 +640,17 @@ function Utf8EncodeEnumerator(input)
 Utf8EncodeEnumerator.prototype =
         {
             current: Number.NaN,
-            moveNext: function()
+            moveNext: function ()
             {
                 if (this._buffer.length > 0)
                 {
                     this.current = this._buffer.shift();
                     return true;
-                }
-                else if (this._index >= (this._input.length - 1))
+                } else if (this._index >= (this._input.length - 1))
                 {
                     this.current = Number.NaN;
                     return false;
-                }
-                else
+                } else
                 {
                     var charCode = this._input.charCodeAt(++this._index);
 
@@ -670,13 +665,11 @@ Utf8EncodeEnumerator.prototype =
                     if (charCode < 128)
                     {
                         this.current = charCode;
-                    }
-                    else if ((charCode > 127) && (charCode < 2048))
+                    } else if ((charCode > 127) && (charCode < 2048))
                     {
                         this.current = (charCode >> 6) | 192;
                         this._buffer.push((charCode & 63) | 128);
-                    }
-                    else
+                    } else
                     {
                         this.current = (charCode >> 12) | 224;
                         this._buffer.push(((charCode >> 6) & 63) | 128);
@@ -698,19 +691,17 @@ function Base64DecodeEnumerator(input)
 Base64DecodeEnumerator.prototype =
         {
             current: 64,
-            moveNext: function()
+            moveNext: function ()
             {
                 if (this._buffer.length > 0)
                 {
                     this.current = this._buffer.shift();
                     return true;
-                }
-                else if (this._index >= (this._input.length - 1))
+                } else if (this._index >= (this._input.length - 1))
                 {
                     this.current = 64;
                     return false;
-                }
-                else
+                } else
                 {
                     var enc1 = Base64.codex.indexOf(this._input.charAt(++this._index));
                     var enc2 = Base64.codex.indexOf(this._input.charAt(++this._index));
@@ -733,3 +724,7 @@ Base64DecodeEnumerator.prototype =
                 }
             }
         };
+
+function round(value, decimals) {
+    return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
+}
