@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>Tasks due today: $dueToday.size()</title>
+        <title>Tasks due today</title>
     </head>
     <body>
         <p>Hi $profile.formattedName,</p>
@@ -27,7 +27,7 @@
                 #if($t.relatedLead)
                 #set($leadHref = "http://" + ${formatter.getDomainName($website)} + "/leads/" + $t.relatedLead.id)
                 #end
-                <a href="$leadHref">$!t.title</a>
+                <a href="$leadHref">$!formatter.ifNull($t.title, $t.taskName)</a>
             </li>
             #if($foreach.count == $topSize)
             #break
