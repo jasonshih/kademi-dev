@@ -83,6 +83,7 @@ function initManageCalendar() {
 
 function initManageEvent() {
     flog('initManageEvent');
+    useHash = true;
     initHtmlEditors($('.htmleditor'), getStandardEditorHeight(), null, null, 'autogrow');
 
     window.onbeforeunload = isManageEventDirty;
