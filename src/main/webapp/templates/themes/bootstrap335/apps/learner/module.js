@@ -82,7 +82,8 @@ function initModuleNav(pStatUrl, pFinished) {
 
             initPrintLink(); // called by init-theme
             initPageNav();
-        }
+        },
+        debug: true
     });
 }
 
@@ -741,6 +742,7 @@ function getProgressPageIndex() {
         if (href === progressPage) {
             flog('Found current page', index);
             currentIndex = index;
+            return false;
         } else {
             flog('Nope, not this one', href, progressPage);
         }
@@ -861,7 +863,8 @@ function checkSubmit(e) {
         return;
     }
 
-    if (!isQuizComplete(e)) { // there might not be a quiz, which is ok
+    var quizComplete = isQuizComplete(e);
+    if (!quizComplete) { // there might not be a quiz, which is ok
         flog('Quiz is not complete (bs335)');
         e.preventDefault();
         e.stopPropagation();
@@ -870,7 +873,8 @@ function checkSubmit(e) {
         flog('Quiz is completed');
     }
 
-    if (isLastPage()) {
+    var lastPage = isLastPage();
+    if (lastPage) {
         e.preventDefault();
         e.stopPropagation();
         flog('Is lasted page. Doing completed method')
@@ -879,19 +883,7 @@ function checkSubmit(e) {
     }
 
     // all good, carry on with event processing
-    flog('Continue with normal action', e);
-
-    e.preventDefault();
-    $.pjax.click(e, '.panelBox', {
-        selector: '.pages a',
-        fragment: '.panelBox',
-        success: function () {
-            flog('Pjax success!');
-
-            initPrintLink(); // called by init-theme
-            initPageNav();
-        }
-    });
+    flog('all good, carry on with event processing', e);
 }
 
 /**
@@ -900,7 +892,7 @@ function checkSubmit(e) {
  */
 function isQuizComplete(e) {
     var quiz = $('form.quiz');
-    flog('isQuizComplete', quiz);
+    flog('isQuizComplete', e, quiz);
 
     if (quiz.length === 0) {
         flog('Quiz is empty, so is complete');
@@ -978,7 +970,32 @@ function isQuizComplete(e) {
                     flog('Validating quiz OK', response);
                     quiz.addClass('validated').trigger('quizSuccess');
 
-                    $(e.target).click();
+                    //var event = e;
+                    // Fix https://github.com/Kademi/kademi-dev/issues/1331
+                    if (getInternetExplorerVersion() !== -1) {
+                        var currentTarget = $(e.target);
+                        var newCurrentTarget = document.createElement('a');
+                        newCurrentTarget.href = currentTarget.prop('href');
+                        newCurrentTarget.setAttribute('ata-pjax-dir', currentTarget.attr('data-pjax-dir'));
+                        e.currentTarget = newCurrentTarget;
+
+                        flog('===============================', currentTarget.prop('href'));
+                    }
+
+                    //flog('Re-click clicked submit button!');
+                    //$(e.target).trigger('click');
+
+                    $.pjax.click(e, '.panelBox', {
+                        selector: '.pages a',
+                        fragment: '.panelBox',
+                        success: function () {
+                            flog('Pjax success!');
+
+                            initPrintLink(); // called by init-theme
+                            initPageNav();
+                        },
+                        debug: true
+                    });
                 } else {
                     flog('Validating quiz is false', response);
                     if (response.data && response.data.nextQuizBatch) {

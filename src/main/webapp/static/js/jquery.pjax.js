@@ -57,33 +57,44 @@
     //
     // Returns false if pjax runs, otherwise nothing.
     function handleClick(event, container, options) {
-        log("pjax::handleClick", event.target);
+        log("pjax::handleClick", event, event.target);
         options = optionsFor(container, options)
 
-        var link = event.currentTarget
+        var link = event.currentTarget;
 
         // Middle click, cmd click, and ctrl click should open
         // links in a new tab as normal.
-        if ( event.which > 1 || event.metaKey )
-            return
+        if ( event.which > 1 || event.metaKey ) {
+            if (options.debug) {
+                flog('Middle click or cmd click or ctrl click. Ignored!');
+            }
+            return;
+        }
 
         // Ignore cross origin links
-        if ( location.protocol !== link.protocol || location.host !== link.host )
-            return
+        if ( location.protocol !== link.protocol || location.host !== link.host ) {
+            if (options.debug) {
+                flog('Ignore cross origin links', 'Location protocol: ' + location.protocol + ', host: ' + location.host, 'Link protocol: ' + link.protocol + ', host: ' + link.host);
+            }
+            return;
+        }
 
         // Ignore anchors on the same page
-        if ( link.hash && link.href.replace(link.hash, '') ===
-            location.href.replace(location.hash, '') )
-            return
+        if ( link.hash && link.href.replace(link.hash, '') === location.href.replace(location.hash, '') ) {
+            if (options.debug) {
+                flog('Ignore anchors on the same page');
+            }
+            return;
+        }
 
         var defaults = {
             url: link.href,
             container: $(link).attr('data-pjax'),
             clickedElement: $(link),
             fragment: null
-        }
+        };
 
-        $.pjax($.extend({}, defaults, options))
+        $.pjax($.extend({}, defaults, options));
 
         event.preventDefault()
         return false
