@@ -970,7 +970,6 @@ function isQuizComplete(e) {
                     flog('Validating quiz OK', response);
                     quiz.addClass('validated').trigger('quizSuccess');
 
-                    //var event = e;
                     // Fix https://github.com/Kademi/kademi-dev/issues/1331
                     if (getInternetExplorerVersion() !== -1) {
                         var currentTarget = $(e.target);
@@ -978,12 +977,7 @@ function isQuizComplete(e) {
                         newCurrentTarget.href = currentTarget.prop('href');
                         newCurrentTarget.setAttribute('ata-pjax-dir', currentTarget.attr('data-pjax-dir'));
                         e.currentTarget = newCurrentTarget;
-
-                        flog('===============================', currentTarget.prop('href'));
                     }
-
-                    //flog('Re-click clicked submit button!');
-                    //$(e.target).trigger('click');
 
                     $.pjax.click(e, '.panelBox', {
                         selector: '.pages a',
