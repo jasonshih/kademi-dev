@@ -37,11 +37,11 @@ $(function () {
         var modal = $(e.target).closest(".modal");
         jQuery.timeago.settings.allowFuture = true;
         modal.find('abbr.timeago').timeago();
-//        flog("date picker", modal, modal.find('.date-time'));
-//        modal.find('.date-time').datetimepicker({
-//            format: "DD/MM/YYYY HH:mm"
-//                    //,startDate: date
-//        });
+        flog("date picker", modal, modal.find('.date-time'));
+        modal.find('.date-time').datetimepicker({
+            format: "d/m/Y H:m"
+                    //,startDate: date
+        });
         var form = modal.find(".completeTaskForm");
         flog("complete task form", form);
         if (form.length > 0) {
@@ -685,7 +685,7 @@ function initDateTimePickers() {
     flog("pickers", pickers);
     pickers.datetimepicker({
         format: "d/m/Y H:i"
-        ,startDate: date
+        , startDate: date
     });
 }
 
