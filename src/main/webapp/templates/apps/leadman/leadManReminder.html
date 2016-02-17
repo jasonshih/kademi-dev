@@ -27,7 +27,7 @@
         </p>
         #if($allDue.size() > 0)
         <p>Here are your tasks:</p>
-        <table>
+        <table cellpadding="5">
             <thead>
                 <tr>
                     <th style="text-align: left;">Name</th>
@@ -39,9 +39,23 @@
             <tbody>
                 #foreach($t in $allDue)
                 <tr>
-                    <td style="text-align: left;">$!formatter.ifNull($t.title, $t.taskName)</td>
-                    <td style="text-align: left;">$!t.taskDescription</td>
-                    <td style="text-align: left;">$formatter.formatDateTime($t.dueDate)</td>
+                    <td style="text-align: left;">
+                        #if($t.relatedLead)
+                        #if($t.relatedLead.profile)
+                        $t.relatedLead.profile.formattedName
+                        #elseif($t.relatedLead.organisation)
+                        $t.relatedLead.organisation.formattedName
+                        #else
+                        $!t.relatedLead.firstName $!t.relatedLead.surName
+                        #end
+                        #end
+                    </td>
+                    <td style="text-align: left;">
+                        $!formatter.ifNull($t.title, $t.taskName)
+                        <br/>
+                        $!t.taskDescription
+                    </td>
+                    <td style="text-align: left;">$formatter.formatDate($t.dueDate)</td>
                     <td style="text-align: left;">
                         #if($t.relatedLead)
                         #set($leadHref = "http://" + ${formatter.getDomainName($website)} + "/leads/" + $t.relatedLead.id)
