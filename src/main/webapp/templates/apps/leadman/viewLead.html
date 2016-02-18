@@ -259,10 +259,11 @@
                                         <textarea id="description" class="form-control" name="description" style="height: 400px">$!page.description</textarea>
                                     </div>
                                     <div id="profile" role="tabpanel" class="tab-pane fade">
-                                        <h4 class="page-header">Contact information</h4>
+                                        <h4 class="page-header">Contact information
+                                        </h4>
                                         <div class="row">
                                             <form method="post" action="$page.href" class="form-horizontal" id="leadDetails">
-                                                <div class="modal-body">
+                                                <div class="modal-body" id="profile-body">
                                                     #set( $p = $page.leadProfile )
                                                     <div class="form-group">
                                                         <label class="control-label col-md-2" for="nickName">Customer</label>
@@ -301,8 +302,10 @@
                                                         <div class="col-md-10 col-md-offset-2">
                                                             <button class="btn btn-sm btn-default" type="reset">Reset</button>
 
-                                                            <button class="btn btn-primary" type="submit">Save details</button>
-
+                                                            <button class="btn btn-primary" type="submit">Save details</button>.
+                                                            #if($page.leadProfile)
+                                                            <button class="btn btn-info" data-toggle="modal" data-target="#modal-change-profile" type="button">Change Profile</button>
+                                                            #end
                                                         </div>
                                                     </div>
                                                     #end
@@ -596,6 +599,56 @@
             </div><!-- /.modal-dialog -->
         </div>
 
+        <div class="modal fade" id="modal-change-profile" role="dialog" aria-labelledby="" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Assign new profile</h4>
+                    </div>
+                    <form method="post" action="$page.href" class="form-horizontal" enctype="multipart/form-data">
+                        <input type="hidden" name="assignNewProfile" value="assignNewProfile"/>
+                        <input type="hidden" name="userId"/>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="control-label col-md-2" for="nickName">Nick Name</label>
+                                <div class="col-md-8">
+                                    <input type="text" name="nickName" id="nickName" class="form-control required" placeholder="Nick name" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2" for="updateUserFirstName">Name</label>
+                                <div class="col-md-5">
+                                    <div class="input-group">
+                                        <input type="text" name="firstName" id="updateUserFirstName" class="form-control" placeholder="First name" />
+                                        <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <input type="text" name="surName" id="newUserSurName" class="form-control" placeholder="Surname" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2" for="newUserEmail">Contact</label>
+                                <div class="col-md-5">
+                                    <input type="text" name="email" id="newUserEmail" class="form-control required" placeholder="Email" />
+                                </div>
+                                <div class="col-md-5">
+                                    <input type="text" name="phone" id="phone" class="form-control" placeholder="Phone" />
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-default" data-dismiss="modal" type="button">Exit</button>
+
+                            <button class="btn btn-primary" type="submit">Save</button>
+                        </div>
+                    </form>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>
+
         <div class="modal fade" id="editFileNoteModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -657,6 +710,7 @@
                 initNewTaskModal();
                 initFileUploads();
                 initFileNoteEdit();
+                initUpdateUserModal();
 
                 $("#assignToMenu").on("click", "a", function (e) {
                     e.preventDefault();
@@ -811,6 +865,59 @@
                 $('#files-body').reloadFragment({
                     whenComplete: function () {
                         $('#files-body abbr.timeago').timeago();
+                    }
+                });
+            }
+
+            function initUpdateUserModal() {
+                var profileSearch = new Bloodhound({
+                    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+                    queryTokenizer: Bloodhound.tokenizers.whitespace,
+                    remote: {
+                        url: '/leads?profileSearch=%QUERY',
+                        wildcard: '%QUERY'
+                    }
+                });
+
+                var modal = $('#modal-change-profile');
+                var form = modal.find('form');
+
+                $('#updateUserFirstName', modal).typeahead({
+                    highlight: true
+                }, {
+                    display: 'firstName',
+                    limit: 10,
+                    source: profileSearch,
+                    templates: {
+                        empty: [
+                            '<div class="empty-message">',
+                            'No existing contacts were found.',
+                            '</div>'
+                        ].join('\n'),
+                        suggestion: Handlebars.compile(
+                                '<div>'
+                                + '<strong>{{name}}</strong>'
+                                + '</br>'
+                                + '<span>{{phone}}</span>'
+                                + '</br>'
+                                + '<span>{{email}}</span>'
+                                + '</div>')
+                    }
+                });
+
+                $('#updateUserFirstName', modal).bind('typeahead:select', function (ev, sug) {
+                    form.find('input[name=nickName]').val(sug.name);
+                    form.find('input[name=firstName]').val(sug.firstName);
+                    form.find('input[name=surName]').val(sug.surName);
+                    form.find('input[name=email]').val(sug.email);
+                    form.find('input[name=phone]').val(sug.phone);
+                });
+
+                form.forms({
+                    onSuccess: function (resp) {
+                        modal.modal('hide');
+                        Msg.success(resp.messages);
+                        $('#profile-body').reloadFragment();
                     }
                 });
             }

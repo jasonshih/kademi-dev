@@ -95,8 +95,6 @@
                         return d3.format(',f')(d) + " Seconds";
                     });
 
-            //chart.bars.forceY([0]);
-
             var myData = [];
             var plays = {
                 values: [],
@@ -124,6 +122,8 @@
             myData.push(plays);
             myData.push(views);
 
+            flog('mydata', myData);
+
             d3.select('#visualisation')
                     .datum(myData)
                     .transition()
@@ -136,15 +136,15 @@
     }
 
     function processData(resp) {
-        var totalPlays = resp.aggregations.totalPlays;
-        var totalViewTime = resp.aggregations.totalViewTime;
-        var videos = resp.aggregations.videos.videoUrls.buckets;
+        var totalPlays = resp.totalPlays;
+        var totalViewTime = resp.totalViewTime;
+        var videos = resp.videos.videoUrls.buckets;
 
         initTotalPlays(totalPlays);
         initTotalViewTime(totalViewTime);
         initAvgViewTime(totalPlays, totalViewTime);
         initVideoTable(videos);
-        initHistogram2(totalPlays.histogram.buckets, totalViewTime.histogram.buckets);
+        initHistogram2(totalPlays.histogram, totalViewTime.histogram);
     }
 
     function loadData() {
