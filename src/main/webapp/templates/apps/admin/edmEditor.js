@@ -118,6 +118,7 @@ function processFileBody() {
 function initKEditor(body, snippets) {
     $('#edm-header, #edm-body, #edm-footer').keditor({
         ckeditor: {
+            title: false,
             skin: editorSkin,
             allowedContent: true, // DISABLES Advanced Content Filter. This is so templates with classes are allowed through
             bodyId: 'editor',
