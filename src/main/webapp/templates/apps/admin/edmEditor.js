@@ -118,6 +118,7 @@ function processFileBody() {
 function initKEditor(body, snippets) {
     $('#edm-header, #edm-body, #edm-footer').keditor({
         ckeditor: {
+            title: false,
             skin: editorSkin,
             allowedContent: true, // DISABLES Advanced Content Filter. This is so templates with classes are allowed through
             bodyId: 'editor',
@@ -125,13 +126,14 @@ function initKEditor(body, snippets) {
             templates_replaceContent: false,
             toolbarGroups: [
                 {name: 'document', groups: ['mode', 'document', 'doctools']},
-                {name: 'clipboard', groups: ['clipboard', 'undo']},
                 {name: 'editing', groups: ['find', 'selection', 'spellchecker', 'editing']},
                 {name: 'forms', groups: ['forms']},
                 {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
                 {name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align', 'bidi', 'paragraph']},
                 {name: 'links', groups: ['links']},
                 {name: 'insert', groups: ['insert']},
+                '/',
+                {name: 'clipboard', groups: ['clipboard', 'undo']},
                 {name: 'styles', groups: ['styles']},
                 {name: 'colors', groups: ['colors']},
                 {name: 'tools', groups: ['tools']},
@@ -140,7 +142,7 @@ function initKEditor(body, snippets) {
             ],
             extraPlugins: 'embed_video,fuse-image,sourcedialog,lineheight,onchange',
             removePlugins: 'table,magicline,tabletools',
-            removeButtons: 'Save,NewPage,Preview,Print,Templates,PasteText,PasteFromWord,Find,Replace,SelectAll,Scayt,Form,HiddenField,ImageButton,Button,Select,Textarea,TextField,Radio,Checkbox,Outdent,Indent,Blockquote,CreateDiv,Language,Table,HorizontalRule,Smiley,SpecialChar,PageBreak,Iframe,Styles,BGColor,Maximize,About,ShowBlocks,BidiLtr,BidiRtl,Flash,Image',
+            removeButtons: 'Save,NewPage,Preview,Print,Templates,PasteText,PasteFromWord,Find,Replace,SelectAll,Scayt,Form,HiddenField,ImageButton,Button,Select,Textarea,TextField,Radio,Checkbox,Outdent,Indent,Blockquote,CreateDiv,Language,Table,HorizontalRule,Smiley,SpecialChar,PageBreak,Iframe,Styles,BGColor,Maximize,About,ShowBlocks,BidiLtr,BidiRtl,Flash,Image,Subscript,Superscript,Anchor',
             enterMode: CKEDITOR.ENTER_DIV,
             forceEnterMode: true,
             filebrowserBrowseUrl: '/static/fckfilemanager/browser/default/browser.html?Type=Image&Connector=/fck_connector.html',
