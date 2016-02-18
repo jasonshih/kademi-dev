@@ -59,8 +59,8 @@
                                         <span class="sr-only">Toggle Dropdown</span>
                                     </button>
                                     <ul class="dropdown-menu dropdown-sort-by">
-                                        <li #if($sort == 'title' && $asc == true) class="active" #end><a href="?sort=title&asc=true"><i class="fa fa-fw fa-sort-alpha-asc"></i> Name A-Z</a></li>
-                                        <li #if($sort == 'title' && $asc == false) class="active" #end><a href="?sort=title&asc=false"><i class="fa fa-fw fa-sort-alpha-desc"></i> Name Z-A</a></li>
+                                        <li #if($sort == 'sortableTitle' && $asc == true) class="active" #end><a href="?sort=sortableTitle&asc=true"><i class="fa fa-fw fa-sort-alpha-asc"></i> Name A-Z</a></li>
+                                        <li #if($sort == 'sortableTitle' && $asc == false) class="active" #end><a href="?sort=sortableTitle&asc=false"><i class="fa fa-fw fa-sort-alpha-desc"></i> Name Z-A</a></li>
                                         <li #if($sort == 'finalCost' && $asc == true) class="active" #end><a href="?sort=finalCost&asc=true"><i class="fa fa-fw fa-sort-numeric-asc"></i> Price Low-High</a></li>
                                         <li #if($sort == 'finalCost' && $asc == false) class="active" #end><a href="?sort=finalCost&asc=false"><i class="fa fa-fw fa-sort-numeric-desc"></i> Price High-Low</a></li>
                                     </ul>
