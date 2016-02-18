@@ -506,8 +506,8 @@ function showFieldMessages(fieldMessages, form) {
                 errorMessage.html(message.message);
             } else {
                 parent.append(
-                        '<p class="help-block error-message">' + message.message + '</p>'
-                        );
+                    '<p class="help-block error-message">' + message.message + '</p>'
+                );
             }
 
             showErrorField(target);
@@ -532,7 +532,7 @@ function resetValidation(form, config) {
 
     var alertMsg = getValidationMessage(form, config);
     if (alertMsg.length > 0) {
-        alertMsg.css('hide', 'none').html('<a class="close" data-dismiss="alert">&times;</a>');
+        alertMsg.css('display', 'none').html('<a class="close" data-dismiss="alert">&times;</a>');
     }
 }
 
@@ -1521,11 +1521,11 @@ function validatePassword(pw, options) {
         for (i = start; i < pw.length; i++) {
             seq = seq.slice(1) + pw.charAt(i);
             if (
-                    lower.indexOf(seq) > -1 ||
-                    upper.indexOf(seq) > -1 ||
-                    numbers.indexOf(seq) > -1 ||
-                    (o.noQwertySequences && qwerty.indexOf(seq) > -1)
-                    ) {
+                lower.indexOf(seq) > -1 ||
+                upper.indexOf(seq) > -1 ||
+                numbers.indexOf(seq) > -1 ||
+                (o.noQwertySequences && qwerty.indexOf(seq) > -1)
+            ) {
                 return false;
             }
         }
@@ -1669,9 +1669,9 @@ function showValidation(target, text, form) {
     }
 
     showFieldMessages([{
-            field: id,
-            message: text
-        }], form);
+        field: id,
+        message: text
+    }], form);
 }
 
 function checkChars(form, inpClass, reg) {
