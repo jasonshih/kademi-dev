@@ -971,17 +971,16 @@ function isQuizComplete(e) {
                     quiz.addClass('validated').trigger('quizSuccess');
 
                     // Fix https://github.com/Kademi/kademi-dev/issues/1331
-                    if (getInternetExplorerVersion() !== -1) {
-                        var currentTarget = $(e.target);
-                        var newCurrentTarget = document.createElement('a');
-                        newCurrentTarget.href = currentTarget.prop('href');
-                        newCurrentTarget.setAttribute('ata-pjax-dir', currentTarget.attr('data-pjax-dir'));
-                        e.currentTarget = newCurrentTarget;
+                    var currentTarget = $(e.target);
+                    if (!currentTarget.is('a')) {
+                        currentTarget = $(e.target).closest('a');
                     }
 
-                    $.pjax.click(e, '.panelBox', {
+                    $.pjax({
                         selector: '.pages a',
                         fragment: '.panelBox',
+                        container: '.panelBox',
+                        url: currentTarget.prop('href'),
                         success: function () {
                             flog('Pjax success!');
 
