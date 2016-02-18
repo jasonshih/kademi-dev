@@ -50,7 +50,13 @@
                     </div>
                     <div data-ripple="" class="col-xs-3 col-md-6 bb-lg br pv-xxl infoBox" >
                         #set( $closed = $leadsPage.closedDeals(30) )
-                        <h1 class="text-thin">$ $closed.value</h1>
+                        <h1 class="text-thin">
+                            #if( $closed.value )
+                            $ $closed.value
+                            #else
+                            N/A
+                            #end
+                        </h1>
                         <div class="text-right text-sm text-muted">$closed.num closed leads, last 30 days</div>
                     </div>                                        
                 </div>
