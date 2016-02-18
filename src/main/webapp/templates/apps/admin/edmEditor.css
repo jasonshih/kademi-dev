@@ -149,6 +149,16 @@ body.opened-keditor-sidebar #edm-setting.showed {
 }
 
 /* ====================================================================================
+   Customize CKEditor
+/* ==================================================================================== */
+.cke_combo__format .cke_combo_text,
+.cke_combo__font .cke_combo_text,
+.cke_combo__fontsize .cke_combo_text,
+.cke_combo__lineheight .cke_combo_text {
+    width: auto;
+}
+
+/* ====================================================================================
    Hide border of tables when CKEditor is enabled
 /* ==================================================================================== */
 .cke_show_borders table.cke_show_border,
