@@ -1,5 +1,5 @@
 /*
- * Version 0.1.3
+ * Version 0.1.4
  */
 
 (function ($) {
@@ -23,8 +23,10 @@
             width: 1000,
             height: 500,
             url: 'data.json',
-            onBubbleClick: function () {},
-            onGroupClick: function () {},
+            onBubbleClick: function () {
+            },
+            onGroupClick: function () {
+            },
         }, options);
 
         var width = setting.width;
@@ -117,7 +119,7 @@
                 }
 
                 var id_codes = {};
-                for (var i=0; i<json.stages[0].sources.length; i++)
+                for (var i = 0; i < json.stages[0].sources.length; i++)
                 {
                     flog("set ID code", json.stages[0].sources[i].name, json.stages[0].sources[i].id);
                     id_codes[json.stages[0].sources[i].name] = json.stages[0].sources[i].id;
@@ -130,8 +132,8 @@
                         data_set.push(
                                 {
                                     "level": t,
-                                    "name": itemName, "id": id_codes[itemName],"radius": Math.sqrt(json.stages[t].sources[i].count / maxCount) * (levelHeight / 2), "count": json.stages[t].sources[i].count}
-                                );
+                                    "name": itemName, "id": id_codes[itemName], "radius": Math.sqrt(json.stages[t].sources[i].count / maxCount) * (levelHeight / 2), "count": json.stages[t].sources[i].count}
+                        );
                         name_set.add(itemName);
                     }
                 }
@@ -149,36 +151,36 @@
 
                 var defs = svg.append("defs");
                 var filter = defs.append("filter")
-                    .attr("id", "drop-shadow")
-                    .attr("height", "130%");
+                        .attr("id", "drop-shadow")
+                        .attr("height", "130%");
 
                 filter.append("feGaussianBlur")
-                    .attr("in", "SourceAlpha")
-                    .attr("stdDeviation", 5)
-                    .attr("result", "blur");
+                        .attr("in", "SourceAlpha")
+                        .attr("stdDeviation", 5)
+                        .attr("result", "blur");
 
                 filter.append("feOffset")
-                    .attr("in", "blur")
-                    .attr("dx", 3)
-                    .attr("dy", 3)
-                    .attr("result", "offsetBlur");
+                        .attr("in", "blur")
+                        .attr("dx", 3)
+                        .attr("dy", 3)
+                        .attr("result", "offsetBlur");
 
                 var feMerge = filter.append("feMerge");
 
                 feMerge.append("feMergeNode")
-                    .attr("in", "offsetBlur");
+                        .attr("in", "offsetBlur");
                 feMerge.append("feMergeNode")
-                    .attr("in", "SourceGraphic");
+                        .attr("in", "SourceGraphic");
 
                 svg.append("rect")
-                    .attr("x", adjustTopWidth + 130)
-                    .attr("y", 0)
-                    .attr("width", 300)
-                    .attr("height", name_set.size * 60)
-                    .attr("fill", "white")
-                    .attr("stroke", "gray")
-                    .attr("stroke-width", 1)
-                    .style("filter", "url(#drop-shadow)");
+                        .attr("x", adjustTopWidth + 130)
+                        .attr("y", 0)
+                        .attr("width", 300)
+                        .attr("height", name_set.size * 60)
+                        .attr("fill", "white")
+                        .attr("stroke", "gray")
+                        .attr("stroke-width", 1)
+                        .style("filter", "url(#drop-shadow)");
 
                 var counter = 0;
                 name_set.forEach(function (value) {
@@ -203,7 +205,7 @@
                                 if (typeof setting.onGroupClick === 'function') {
                                     var id = id_codes[value];
                                     //flog("onGroupClick1", value, id, id_codes);
-                                    setting.onGroupClick.call(this, { id : id, name : value});
+                                    setting.onGroupClick.call(this, {id: id, name: value});
                                 }
                             });
                     counter++;
@@ -214,21 +216,21 @@
                 for (var t = 0; t < size; t++)
                 {
                     var gradient = svg.append("defs")
-                        .append("linearGradient")
-                        .attr("id", "gradient")
-                        .attr("x1", "10%")
-                        .attr("y1", "40%")
-                        .attr("x2", "10%")
-                        .attr("y2", "100%")
-                        .attr("spreadMethod", "pad");
+                            .append("linearGradient")
+                            .attr("id", "gradient")
+                            .attr("x1", "10%")
+                            .attr("y1", "40%")
+                            .attr("x2", "10%")
+                            .attr("y2", "100%")
+                            .attr("spreadMethod", "pad");
                     gradient.append("stop")
-                        .attr("offset", "0%")
-                        .attr("stop-color", "white")
-                        .attr("stop-opacity", 0.5);
+                            .attr("offset", "0%")
+                            .attr("stop-color", "white")
+                            .attr("stop-opacity", 0.5);
                     gradient.append("stop")
-                        .attr("offset", "100%")
-                        .attr("stop-color", "gray")
-                        .attr("stop-opacity", 0.5);
+                            .attr("offset", "100%")
+                            .attr("stop-color", "gray")
+                            .attr("stop-opacity", 0.5);
 
                     var trap = new Trapezoidal([[trapBox.left(t * totalHeight / size), t * totalHeight / size],
                         [trapBox.right(t * totalHeight / size), t * totalHeight / size],
@@ -240,15 +242,15 @@
                     if (t === size - 1)
                     {
                         polygon.style("fill", "url(#gradient)")
-                            .attr("stroke", setting.funnelBorderColor)
-                            .attr("stroke-width", setting.funnelBorderThickness);
+                                .attr("stroke", setting.funnelBorderColor)
+                                .attr("stroke-width", setting.funnelBorderThickness);
                     }
                     else
                     {
                         polygon
-                            .attr("fill", setting.funnelBackgroundColor)
-                            .attr("stroke", setting.funnelBorderColor)
-                            .attr("stroke-width", setting.funnelBorderThickness);
+                                .attr("fill", setting.funnelBackgroundColor)
+                                .attr("stroke", setting.funnelBorderColor)
+                                .attr("stroke-width", setting.funnelBorderThickness);
                     }
 
                     polygon.append("path")
@@ -365,7 +367,7 @@
                             }
                         })
                         .on("mousemove", function (d) {
-                            return tooltip.style("top", ((svg_pos.top + d.y) - d.radius * 2) + "px").style("left", ((svg_pos.left + d.x) - d.radius) + "px")
+                            return tooltip.style("top", ((d.y + svg_pos.top) - (d.radius + 32)) + "px").style("left", ((svg_pos.left + d.x) - d.radius) + "px")
                                     .html(function () {
                                         var tip = "";
                                         tip += "name:  " + d.name.toString() + "<br>";
@@ -438,35 +440,35 @@
                         })
                         .start();
 
-                for (var t=0; t<size; t++)
+                for (var t = 0; t < size; t++)
                 {
 
                     var text = svg.append("text")
-                        .attr("font-size", setting.stageNameFontSize)
-                        .attr("font-family", setting.stageNameFontFamily)
-                        .attr("fill", setting.stageNameFontColor)
-                        .text(json.stages[t].name);
+                            .attr("font-size", setting.stageNameFontSize)
+                            .attr("font-family", setting.stageNameFontFamily)
+                            .attr("fill", setting.stageNameFontColor)
+                            .text(json.stages[t].name);
                     var bbox = text[0][0].getBBox();
                     var ctm = text[0][0].getCTM();
                     console.log(bbox);
 
                     svg.append("rect")
-                        .attr("x", adjustTopWidth/2 - bbox.width/2 - 4)
-                        .attr("y", t * totalHeight / size)
-                        .attr("width", bbox.width + 8)
-                        .attr("height", bbox.height * 1.5)
-                        .attr("fill", setting.stageNameBackgroundColor);
+                            .attr("x", adjustTopWidth / 2 - bbox.width / 2 - 4)
+                            .attr("y", t * totalHeight / size)
+                            .attr("width", bbox.width + 8)
+                            .attr("height", bbox.height * 1.5)
+                            .attr("fill", setting.stageNameBackgroundColor);
 
-                    text.attr("x", adjustTopWidth/2 - bbox.width/2)
-                        .attr("y", t * totalHeight / size + bbox.height);
+                    text.attr("x", adjustTopWidth / 2 - bbox.width / 2)
+                            .attr("y", t * totalHeight / size + bbox.height);
 
                     svg.append("text")
-                        .attr("font-size", setting.stageNameFontSize)
-                        .attr("font-family", setting.stageNameFontFamily)
-                        .attr("fill", setting.stageNameFontColor)
-                        .attr("x", adjustTopWidth/2 - bbox.width/2)
-                        .attr("y", t * totalHeight / size + bbox.height)
-                        .text(json.stages[t].name);
+                            .attr("font-size", setting.stageNameFontSize)
+                            .attr("font-family", setting.stageNameFontFamily)
+                            .attr("fill", setting.stageNameFontColor)
+                            .attr("x", adjustTopWidth / 2 - bbox.width / 2)
+                            .attr("y", t * totalHeight / size + bbox.height)
+                            .text(json.stages[t].name);
                 }
             }
         });

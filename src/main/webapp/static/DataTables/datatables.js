@@ -4,20 +4,9199 @@
  *
  * To rebuild or modify this file with the latest versions of the included
  * software please visit:
- *   https://datatables.net/download/#bs/dt-1.10.10,e-1.5.4,r-2.0.0,se-1.1.0
+ *   https://datatables.net/download/#bs/moment-2.11.2,select2-4.0.1,dt-1.10.11,e-1.5.5,ef-select2-4.0.1,ef-title-1.0.0,r-2.0.2
  *
  * Included libraries:
- *   DataTables 1.10.10, Editor 1.5.4, Responsive 2.0.0, Select 1.1.0
+ *   Moment 2.11.2, Select2 4.0.1, DataTables 1.10.11, Editor 1.5.5, Field type - Select2 4.0.1, Field type - Title 1.0.0, Responsive 2.0.2
  */
 
-/*! DataTables 1.10.10
+//! moment.js
+//! version : 2.11.2
+//! authors : Tim Wood, Iskren Chernev, Moment.js contributors
+//! license : MIT
+//! momentjs.com
+
+;(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+    typeof define === 'function' && define.amd ? define(factory) :
+    global.moment = factory()
+}(this, function () { 'use strict';
+
+    var hookCallback;
+
+    function utils_hooks__hooks () {
+        return hookCallback.apply(null, arguments);
+    }
+
+    // This is done to register the method called with moment()
+    // without creating circular dependencies.
+    function setHookCallback (callback) {
+        hookCallback = callback;
+    }
+
+    function isArray(input) {
+        return Object.prototype.toString.call(input) === '[object Array]';
+    }
+
+    function isDate(input) {
+        return input instanceof Date || Object.prototype.toString.call(input) === '[object Date]';
+    }
+
+    function map(arr, fn) {
+        var res = [], i;
+        for (i = 0; i < arr.length; ++i) {
+            res.push(fn(arr[i], i));
+        }
+        return res;
+    }
+
+    function hasOwnProp(a, b) {
+        return Object.prototype.hasOwnProperty.call(a, b);
+    }
+
+    function extend(a, b) {
+        for (var i in b) {
+            if (hasOwnProp(b, i)) {
+                a[i] = b[i];
+            }
+        }
+
+        if (hasOwnProp(b, 'toString')) {
+            a.toString = b.toString;
+        }
+
+        if (hasOwnProp(b, 'valueOf')) {
+            a.valueOf = b.valueOf;
+        }
+
+        return a;
+    }
+
+    function create_utc__createUTC (input, format, locale, strict) {
+        return createLocalOrUTC(input, format, locale, strict, true).utc();
+    }
+
+    function defaultParsingFlags() {
+        // We need to deep clone this object.
+        return {
+            empty           : false,
+            unusedTokens    : [],
+            unusedInput     : [],
+            overflow        : -2,
+            charsLeftOver   : 0,
+            nullInput       : false,
+            invalidMonth    : null,
+            invalidFormat   : false,
+            userInvalidated : false,
+            iso             : false
+        };
+    }
+
+    function getParsingFlags(m) {
+        if (m._pf == null) {
+            m._pf = defaultParsingFlags();
+        }
+        return m._pf;
+    }
+
+    function valid__isValid(m) {
+        if (m._isValid == null) {
+            var flags = getParsingFlags(m);
+            m._isValid = !isNaN(m._d.getTime()) &&
+                flags.overflow < 0 &&
+                !flags.empty &&
+                !flags.invalidMonth &&
+                !flags.invalidWeekday &&
+                !flags.nullInput &&
+                !flags.invalidFormat &&
+                !flags.userInvalidated;
+
+            if (m._strict) {
+                m._isValid = m._isValid &&
+                    flags.charsLeftOver === 0 &&
+                    flags.unusedTokens.length === 0 &&
+                    flags.bigHour === undefined;
+            }
+        }
+        return m._isValid;
+    }
+
+    function valid__createInvalid (flags) {
+        var m = create_utc__createUTC(NaN);
+        if (flags != null) {
+            extend(getParsingFlags(m), flags);
+        }
+        else {
+            getParsingFlags(m).userInvalidated = true;
+        }
+
+        return m;
+    }
+
+    function isUndefined(input) {
+        return input === void 0;
+    }
+
+    // Plugins that add properties should also add the key here (null value),
+    // so we can properly clone ourselves.
+    var momentProperties = utils_hooks__hooks.momentProperties = [];
+
+    function copyConfig(to, from) {
+        var i, prop, val;
+
+        if (!isUndefined(from._isAMomentObject)) {
+            to._isAMomentObject = from._isAMomentObject;
+        }
+        if (!isUndefined(from._i)) {
+            to._i = from._i;
+        }
+        if (!isUndefined(from._f)) {
+            to._f = from._f;
+        }
+        if (!isUndefined(from._l)) {
+            to._l = from._l;
+        }
+        if (!isUndefined(from._strict)) {
+            to._strict = from._strict;
+        }
+        if (!isUndefined(from._tzm)) {
+            to._tzm = from._tzm;
+        }
+        if (!isUndefined(from._isUTC)) {
+            to._isUTC = from._isUTC;
+        }
+        if (!isUndefined(from._offset)) {
+            to._offset = from._offset;
+        }
+        if (!isUndefined(from._pf)) {
+            to._pf = getParsingFlags(from);
+        }
+        if (!isUndefined(from._locale)) {
+            to._locale = from._locale;
+        }
+
+        if (momentProperties.length > 0) {
+            for (i in momentProperties) {
+                prop = momentProperties[i];
+                val = from[prop];
+                if (!isUndefined(val)) {
+                    to[prop] = val;
+                }
+            }
+        }
+
+        return to;
+    }
+
+    var updateInProgress = false;
+
+    // Moment prototype object
+    function Moment(config) {
+        copyConfig(this, config);
+        this._d = new Date(config._d != null ? config._d.getTime() : NaN);
+        // Prevent infinite loop in case updateOffset creates new moment
+        // objects.
+        if (updateInProgress === false) {
+            updateInProgress = true;
+            utils_hooks__hooks.updateOffset(this);
+            updateInProgress = false;
+        }
+    }
+
+    function isMoment (obj) {
+        return obj instanceof Moment || (obj != null && obj._isAMomentObject != null);
+    }
+
+    function absFloor (number) {
+        if (number < 0) {
+            return Math.ceil(number);
+        } else {
+            return Math.floor(number);
+        }
+    }
+
+    function toInt(argumentForCoercion) {
+        var coercedNumber = +argumentForCoercion,
+            value = 0;
+
+        if (coercedNumber !== 0 && isFinite(coercedNumber)) {
+            value = absFloor(coercedNumber);
+        }
+
+        return value;
+    }
+
+    // compare two arrays, return the number of differences
+    function compareArrays(array1, array2, dontConvert) {
+        var len = Math.min(array1.length, array2.length),
+            lengthDiff = Math.abs(array1.length - array2.length),
+            diffs = 0,
+            i;
+        for (i = 0; i < len; i++) {
+            if ((dontConvert && array1[i] !== array2[i]) ||
+                (!dontConvert && toInt(array1[i]) !== toInt(array2[i]))) {
+                diffs++;
+            }
+        }
+        return diffs + lengthDiff;
+    }
+
+    function Locale() {
+    }
+
+    // internal storage for locale config files
+    var locales = {};
+    var globalLocale;
+
+    function normalizeLocale(key) {
+        return key ? key.toLowerCase().replace('_', '-') : key;
+    }
+
+    // pick the locale from the array
+    // try ['en-au', 'en-gb'] as 'en-au', 'en-gb', 'en', as in move through the list trying each
+    // substring from most specific to least, but move to the next array item if it's a more specific variant than the current root
+    function chooseLocale(names) {
+        var i = 0, j, next, locale, split;
+
+        while (i < names.length) {
+            split = normalizeLocale(names[i]).split('-');
+            j = split.length;
+            next = normalizeLocale(names[i + 1]);
+            next = next ? next.split('-') : null;
+            while (j > 0) {
+                locale = loadLocale(split.slice(0, j).join('-'));
+                if (locale) {
+                    return locale;
+                }
+                if (next && next.length >= j && compareArrays(split, next, true) >= j - 1) {
+                    //the next array item is better than a shallower substring of this one
+                    break;
+                }
+                j--;
+            }
+            i++;
+        }
+        return null;
+    }
+
+    function loadLocale(name) {
+        var oldLocale = null;
+        // TODO: Find a better way to register and load all the locales in Node
+        if (!locales[name] && (typeof module !== 'undefined') &&
+                module && module.exports) {
+            try {
+                oldLocale = globalLocale._abbr;
+                require('./locale/' + name);
+                // because defineLocale currently also sets the global locale, we
+                // want to undo that for lazy loaded locales
+                locale_locales__getSetGlobalLocale(oldLocale);
+            } catch (e) { }
+        }
+        return locales[name];
+    }
+
+    // This function will load locale and then set the global locale.  If
+    // no arguments are passed in, it will simply return the current global
+    // locale key.
+    function locale_locales__getSetGlobalLocale (key, values) {
+        var data;
+        if (key) {
+            if (isUndefined(values)) {
+                data = locale_locales__getLocale(key);
+            }
+            else {
+                data = defineLocale(key, values);
+            }
+
+            if (data) {
+                // moment.duration._locale = moment._locale = data;
+                globalLocale = data;
+            }
+        }
+
+        return globalLocale._abbr;
+    }
+
+    function defineLocale (name, values) {
+        if (values !== null) {
+            values.abbr = name;
+            locales[name] = locales[name] || new Locale();
+            locales[name].set(values);
+
+            // backwards compat for now: also set the locale
+            locale_locales__getSetGlobalLocale(name);
+
+            return locales[name];
+        } else {
+            // useful for testing
+            delete locales[name];
+            return null;
+        }
+    }
+
+    // returns locale data
+    function locale_locales__getLocale (key) {
+        var locale;
+
+        if (key && key._locale && key._locale._abbr) {
+            key = key._locale._abbr;
+        }
+
+        if (!key) {
+            return globalLocale;
+        }
+
+        if (!isArray(key)) {
+            //short-circuit everything else
+            locale = loadLocale(key);
+            if (locale) {
+                return locale;
+            }
+            key = [key];
+        }
+
+        return chooseLocale(key);
+    }
+
+    var aliases = {};
+
+    function addUnitAlias (unit, shorthand) {
+        var lowerCase = unit.toLowerCase();
+        aliases[lowerCase] = aliases[lowerCase + 's'] = aliases[shorthand] = unit;
+    }
+
+    function normalizeUnits(units) {
+        return typeof units === 'string' ? aliases[units] || aliases[units.toLowerCase()] : undefined;
+    }
+
+    function normalizeObjectUnits(inputObject) {
+        var normalizedInput = {},
+            normalizedProp,
+            prop;
+
+        for (prop in inputObject) {
+            if (hasOwnProp(inputObject, prop)) {
+                normalizedProp = normalizeUnits(prop);
+                if (normalizedProp) {
+                    normalizedInput[normalizedProp] = inputObject[prop];
+                }
+            }
+        }
+
+        return normalizedInput;
+    }
+
+    function isFunction(input) {
+        return input instanceof Function || Object.prototype.toString.call(input) === '[object Function]';
+    }
+
+    function makeGetSet (unit, keepTime) {
+        return function (value) {
+            if (value != null) {
+                get_set__set(this, unit, value);
+                utils_hooks__hooks.updateOffset(this, keepTime);
+                return this;
+            } else {
+                return get_set__get(this, unit);
+            }
+        };
+    }
+
+    function get_set__get (mom, unit) {
+        return mom.isValid() ?
+            mom._d['get' + (mom._isUTC ? 'UTC' : '') + unit]() : NaN;
+    }
+
+    function get_set__set (mom, unit, value) {
+        if (mom.isValid()) {
+            mom._d['set' + (mom._isUTC ? 'UTC' : '') + unit](value);
+        }
+    }
+
+    // MOMENTS
+
+    function getSet (units, value) {
+        var unit;
+        if (typeof units === 'object') {
+            for (unit in units) {
+                this.set(unit, units[unit]);
+            }
+        } else {
+            units = normalizeUnits(units);
+            if (isFunction(this[units])) {
+                return this[units](value);
+            }
+        }
+        return this;
+    }
+
+    function zeroFill(number, targetLength, forceSign) {
+        var absNumber = '' + Math.abs(number),
+            zerosToFill = targetLength - absNumber.length,
+            sign = number >= 0;
+        return (sign ? (forceSign ? '+' : '') : '-') +
+            Math.pow(10, Math.max(0, zerosToFill)).toString().substr(1) + absNumber;
+    }
+
+    var formattingTokens = /(\[[^\[]*\])|(\\)?([Hh]mm(ss)?|Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Qo?|YYYYYY|YYYYY|YYYY|YY|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|mm?|ss?|S{1,9}|x|X|zz?|ZZ?|.)/g;
+
+    var localFormattingTokens = /(\[[^\[]*\])|(\\)?(LTS|LT|LL?L?L?|l{1,4})/g;
+
+    var formatFunctions = {};
+
+    var formatTokenFunctions = {};
+
+    // token:    'M'
+    // padded:   ['MM', 2]
+    // ordinal:  'Mo'
+    // callback: function () { this.month() + 1 }
+    function addFormatToken (token, padded, ordinal, callback) {
+        var func = callback;
+        if (typeof callback === 'string') {
+            func = function () {
+                return this[callback]();
+            };
+        }
+        if (token) {
+            formatTokenFunctions[token] = func;
+        }
+        if (padded) {
+            formatTokenFunctions[padded[0]] = function () {
+                return zeroFill(func.apply(this, arguments), padded[1], padded[2]);
+            };
+        }
+        if (ordinal) {
+            formatTokenFunctions[ordinal] = function () {
+                return this.localeData().ordinal(func.apply(this, arguments), token);
+            };
+        }
+    }
+
+    function removeFormattingTokens(input) {
+        if (input.match(/\[[\s\S]/)) {
+            return input.replace(/^\[|\]$/g, '');
+        }
+        return input.replace(/\\/g, '');
+    }
+
+    function makeFormatFunction(format) {
+        var array = format.match(formattingTokens), i, length;
+
+        for (i = 0, length = array.length; i < length; i++) {
+            if (formatTokenFunctions[array[i]]) {
+                array[i] = formatTokenFunctions[array[i]];
+            } else {
+                array[i] = removeFormattingTokens(array[i]);
+            }
+        }
+
+        return function (mom) {
+            var output = '';
+            for (i = 0; i < length; i++) {
+                output += array[i] instanceof Function ? array[i].call(mom, format) : array[i];
+            }
+            return output;
+        };
+    }
+
+    // format date using native date object
+    function formatMoment(m, format) {
+        if (!m.isValid()) {
+            return m.localeData().invalidDate();
+        }
+
+        format = expandFormat(format, m.localeData());
+        formatFunctions[format] = formatFunctions[format] || makeFormatFunction(format);
+
+        return formatFunctions[format](m);
+    }
+
+    function expandFormat(format, locale) {
+        var i = 5;
+
+        function replaceLongDateFormatTokens(input) {
+            return locale.longDateFormat(input) || input;
+        }
+
+        localFormattingTokens.lastIndex = 0;
+        while (i >= 0 && localFormattingTokens.test(format)) {
+            format = format.replace(localFormattingTokens, replaceLongDateFormatTokens);
+            localFormattingTokens.lastIndex = 0;
+            i -= 1;
+        }
+
+        return format;
+    }
+
+    var match1         = /\d/;            //       0 - 9
+    var match2         = /\d\d/;          //      00 - 99
+    var match3         = /\d{3}/;         //     000 - 999
+    var match4         = /\d{4}/;         //    0000 - 9999
+    var match6         = /[+-]?\d{6}/;    // -999999 - 999999
+    var match1to2      = /\d\d?/;         //       0 - 99
+    var match3to4      = /\d\d\d\d?/;     //     999 - 9999
+    var match5to6      = /\d\d\d\d\d\d?/; //   99999 - 999999
+    var match1to3      = /\d{1,3}/;       //       0 - 999
+    var match1to4      = /\d{1,4}/;       //       0 - 9999
+    var match1to6      = /[+-]?\d{1,6}/;  // -999999 - 999999
+
+    var matchUnsigned  = /\d+/;           //       0 - inf
+    var matchSigned    = /[+-]?\d+/;      //    -inf - inf
+
+    var matchOffset    = /Z|[+-]\d\d:?\d\d/gi; // +00:00 -00:00 +0000 -0000 or Z
+    var matchShortOffset = /Z|[+-]\d\d(?::?\d\d)?/gi; // +00 -00 +00:00 -00:00 +0000 -0000 or Z
+
+    var matchTimestamp = /[+-]?\d+(\.\d{1,3})?/; // 123456789 123456789.123
+
+    // any word (or two) characters or numbers including two/three word month in arabic.
+    // includes scottish gaelic two word and hyphenated months
+    var matchWord = /[0-9]*['a-z\u00A0-\u05FF\u0700-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+|[\u0600-\u06FF\/]+(\s*?[\u0600-\u06FF]+){1,2}/i;
+
+
+    var regexes = {};
+
+    function addRegexToken (token, regex, strictRegex) {
+        regexes[token] = isFunction(regex) ? regex : function (isStrict, localeData) {
+            return (isStrict && strictRegex) ? strictRegex : regex;
+        };
+    }
+
+    function getParseRegexForToken (token, config) {
+        if (!hasOwnProp(regexes, token)) {
+            return new RegExp(unescapeFormat(token));
+        }
+
+        return regexes[token](config._strict, config._locale);
+    }
+
+    // Code from http://stackoverflow.com/questions/3561493/is-there-a-regexp-escape-function-in-javascript
+    function unescapeFormat(s) {
+        return regexEscape(s.replace('\\', '').replace(/\\(\[)|\\(\])|\[([^\]\[]*)\]|\\(.)/g, function (matched, p1, p2, p3, p4) {
+            return p1 || p2 || p3 || p4;
+        }));
+    }
+
+    function regexEscape(s) {
+        return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+    }
+
+    var tokens = {};
+
+    function addParseToken (token, callback) {
+        var i, func = callback;
+        if (typeof token === 'string') {
+            token = [token];
+        }
+        if (typeof callback === 'number') {
+            func = function (input, array) {
+                array[callback] = toInt(input);
+            };
+        }
+        for (i = 0; i < token.length; i++) {
+            tokens[token[i]] = func;
+        }
+    }
+
+    function addWeekParseToken (token, callback) {
+        addParseToken(token, function (input, array, config, token) {
+            config._w = config._w || {};
+            callback(input, config._w, config, token);
+        });
+    }
+
+    function addTimeToArrayFromToken(token, input, config) {
+        if (input != null && hasOwnProp(tokens, token)) {
+            tokens[token](input, config._a, config, token);
+        }
+    }
+
+    var YEAR = 0;
+    var MONTH = 1;
+    var DATE = 2;
+    var HOUR = 3;
+    var MINUTE = 4;
+    var SECOND = 5;
+    var MILLISECOND = 6;
+    var WEEK = 7;
+    var WEEKDAY = 8;
+
+    function daysInMonth(year, month) {
+        return new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
+    }
+
+    // FORMATTING
+
+    addFormatToken('M', ['MM', 2], 'Mo', function () {
+        return this.month() + 1;
+    });
+
+    addFormatToken('MMM', 0, 0, function (format) {
+        return this.localeData().monthsShort(this, format);
+    });
+
+    addFormatToken('MMMM', 0, 0, function (format) {
+        return this.localeData().months(this, format);
+    });
+
+    // ALIASES
+
+    addUnitAlias('month', 'M');
+
+    // PARSING
+
+    addRegexToken('M',    match1to2);
+    addRegexToken('MM',   match1to2, match2);
+    addRegexToken('MMM',  function (isStrict, locale) {
+        return locale.monthsShortRegex(isStrict);
+    });
+    addRegexToken('MMMM', function (isStrict, locale) {
+        return locale.monthsRegex(isStrict);
+    });
+
+    addParseToken(['M', 'MM'], function (input, array) {
+        array[MONTH] = toInt(input) - 1;
+    });
+
+    addParseToken(['MMM', 'MMMM'], function (input, array, config, token) {
+        var month = config._locale.monthsParse(input, token, config._strict);
+        // if we didn't find a month name, mark the date as invalid.
+        if (month != null) {
+            array[MONTH] = month;
+        } else {
+            getParsingFlags(config).invalidMonth = input;
+        }
+    });
+
+    // LOCALES
+
+    var MONTHS_IN_FORMAT = /D[oD]?(\[[^\[\]]*\]|\s+)+MMMM?/;
+    var defaultLocaleMonths = 'January_February_March_April_May_June_July_August_September_October_November_December'.split('_');
+    function localeMonths (m, format) {
+        return isArray(this._months) ? this._months[m.month()] :
+            this._months[MONTHS_IN_FORMAT.test(format) ? 'format' : 'standalone'][m.month()];
+    }
+
+    var defaultLocaleMonthsShort = 'Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec'.split('_');
+    function localeMonthsShort (m, format) {
+        return isArray(this._monthsShort) ? this._monthsShort[m.month()] :
+            this._monthsShort[MONTHS_IN_FORMAT.test(format) ? 'format' : 'standalone'][m.month()];
+    }
+
+    function localeMonthsParse (monthName, format, strict) {
+        var i, mom, regex;
+
+        if (!this._monthsParse) {
+            this._monthsParse = [];
+            this._longMonthsParse = [];
+            this._shortMonthsParse = [];
+        }
+
+        for (i = 0; i < 12; i++) {
+            // make the regex if we don't have it already
+            mom = create_utc__createUTC([2000, i]);
+            if (strict && !this._longMonthsParse[i]) {
+                this._longMonthsParse[i] = new RegExp('^' + this.months(mom, '').replace('.', '') + '$', 'i');
+                this._shortMonthsParse[i] = new RegExp('^' + this.monthsShort(mom, '').replace('.', '') + '$', 'i');
+            }
+            if (!strict && !this._monthsParse[i]) {
+                regex = '^' + this.months(mom, '') + '|^' + this.monthsShort(mom, '');
+                this._monthsParse[i] = new RegExp(regex.replace('.', ''), 'i');
+            }
+            // test the regex
+            if (strict && format === 'MMMM' && this._longMonthsParse[i].test(monthName)) {
+                return i;
+            } else if (strict && format === 'MMM' && this._shortMonthsParse[i].test(monthName)) {
+                return i;
+            } else if (!strict && this._monthsParse[i].test(monthName)) {
+                return i;
+            }
+        }
+    }
+
+    // MOMENTS
+
+    function setMonth (mom, value) {
+        var dayOfMonth;
+
+        if (!mom.isValid()) {
+            // No op
+            return mom;
+        }
+
+        // TODO: Move this out of here!
+        if (typeof value === 'string') {
+            value = mom.localeData().monthsParse(value);
+            // TODO: Another silent failure?
+            if (typeof value !== 'number') {
+                return mom;
+            }
+        }
+
+        dayOfMonth = Math.min(mom.date(), daysInMonth(mom.year(), value));
+        mom._d['set' + (mom._isUTC ? 'UTC' : '') + 'Month'](value, dayOfMonth);
+        return mom;
+    }
+
+    function getSetMonth (value) {
+        if (value != null) {
+            setMonth(this, value);
+            utils_hooks__hooks.updateOffset(this, true);
+            return this;
+        } else {
+            return get_set__get(this, 'Month');
+        }
+    }
+
+    function getDaysInMonth () {
+        return daysInMonth(this.year(), this.month());
+    }
+
+    var defaultMonthsShortRegex = matchWord;
+    function monthsShortRegex (isStrict) {
+        if (this._monthsParseExact) {
+            if (!hasOwnProp(this, '_monthsRegex')) {
+                computeMonthsParse.call(this);
+            }
+            if (isStrict) {
+                return this._monthsShortStrictRegex;
+            } else {
+                return this._monthsShortRegex;
+            }
+        } else {
+            return this._monthsShortStrictRegex && isStrict ?
+                this._monthsShortStrictRegex : this._monthsShortRegex;
+        }
+    }
+
+    var defaultMonthsRegex = matchWord;
+    function monthsRegex (isStrict) {
+        if (this._monthsParseExact) {
+            if (!hasOwnProp(this, '_monthsRegex')) {
+                computeMonthsParse.call(this);
+            }
+            if (isStrict) {
+                return this._monthsStrictRegex;
+            } else {
+                return this._monthsRegex;
+            }
+        } else {
+            return this._monthsStrictRegex && isStrict ?
+                this._monthsStrictRegex : this._monthsRegex;
+        }
+    }
+
+    function computeMonthsParse () {
+        function cmpLenRev(a, b) {
+            return b.length - a.length;
+        }
+
+        var shortPieces = [], longPieces = [], mixedPieces = [],
+            i, mom;
+        for (i = 0; i < 12; i++) {
+            // make the regex if we don't have it already
+            mom = create_utc__createUTC([2000, i]);
+            shortPieces.push(this.monthsShort(mom, ''));
+            longPieces.push(this.months(mom, ''));
+            mixedPieces.push(this.months(mom, ''));
+            mixedPieces.push(this.monthsShort(mom, ''));
+        }
+        // Sorting makes sure if one month (or abbr) is a prefix of another it
+        // will match the longer piece.
+        shortPieces.sort(cmpLenRev);
+        longPieces.sort(cmpLenRev);
+        mixedPieces.sort(cmpLenRev);
+        for (i = 0; i < 12; i++) {
+            shortPieces[i] = regexEscape(shortPieces[i]);
+            longPieces[i] = regexEscape(longPieces[i]);
+            mixedPieces[i] = regexEscape(mixedPieces[i]);
+        }
+
+        this._monthsRegex = new RegExp('^(' + mixedPieces.join('|') + ')', 'i');
+        this._monthsShortRegex = this._monthsRegex;
+        this._monthsStrictRegex = new RegExp('^(' + longPieces.join('|') + ')$', 'i');
+        this._monthsShortStrictRegex = new RegExp('^(' + shortPieces.join('|') + ')$', 'i');
+    }
+
+    function checkOverflow (m) {
+        var overflow;
+        var a = m._a;
+
+        if (a && getParsingFlags(m).overflow === -2) {
+            overflow =
+                a[MONTH]       < 0 || a[MONTH]       > 11  ? MONTH :
+                a[DATE]        < 1 || a[DATE]        > daysInMonth(a[YEAR], a[MONTH]) ? DATE :
+                a[HOUR]        < 0 || a[HOUR]        > 24 || (a[HOUR] === 24 && (a[MINUTE] !== 0 || a[SECOND] !== 0 || a[MILLISECOND] !== 0)) ? HOUR :
+                a[MINUTE]      < 0 || a[MINUTE]      > 59  ? MINUTE :
+                a[SECOND]      < 0 || a[SECOND]      > 59  ? SECOND :
+                a[MILLISECOND] < 0 || a[MILLISECOND] > 999 ? MILLISECOND :
+                -1;
+
+            if (getParsingFlags(m)._overflowDayOfYear && (overflow < YEAR || overflow > DATE)) {
+                overflow = DATE;
+            }
+            if (getParsingFlags(m)._overflowWeeks && overflow === -1) {
+                overflow = WEEK;
+            }
+            if (getParsingFlags(m)._overflowWeekday && overflow === -1) {
+                overflow = WEEKDAY;
+            }
+
+            getParsingFlags(m).overflow = overflow;
+        }
+
+        return m;
+    }
+
+    function warn(msg) {
+        if (utils_hooks__hooks.suppressDeprecationWarnings === false &&
+                (typeof console !==  'undefined') && console.warn) {
+            console.warn('Deprecation warning: ' + msg);
+        }
+    }
+
+    function deprecate(msg, fn) {
+        var firstTime = true;
+
+        return extend(function () {
+            if (firstTime) {
+                warn(msg + '\nArguments: ' + Array.prototype.slice.call(arguments).join(', ') + '\n' + (new Error()).stack);
+                firstTime = false;
+            }
+            return fn.apply(this, arguments);
+        }, fn);
+    }
+
+    var deprecations = {};
+
+    function deprecateSimple(name, msg) {
+        if (!deprecations[name]) {
+            warn(msg);
+            deprecations[name] = true;
+        }
+    }
+
+    utils_hooks__hooks.suppressDeprecationWarnings = false;
+
+    // iso 8601 regex
+    // 0000-00-00 0000-W00 or 0000-W00-0 + T + 00 or 00:00 or 00:00:00 or 00:00:00.000 + +00:00 or +0000 or +00)
+    var extendedIsoRegex = /^\s*((?:[+-]\d{6}|\d{4})-(?:\d\d-\d\d|W\d\d-\d|W\d\d|\d\d\d|\d\d))(?:(T| )(\d\d(?::\d\d(?::\d\d(?:[.,]\d+)?)?)?)([\+\-]\d\d(?::?\d\d)?|\s*Z)?)?/;
+    var basicIsoRegex = /^\s*((?:[+-]\d{6}|\d{4})(?:\d\d\d\d|W\d\d\d|W\d\d|\d\d\d|\d\d))(?:(T| )(\d\d(?:\d\d(?:\d\d(?:[.,]\d+)?)?)?)([\+\-]\d\d(?::?\d\d)?|\s*Z)?)?/;
+
+    var tzRegex = /Z|[+-]\d\d(?::?\d\d)?/;
+
+    var isoDates = [
+        ['YYYYYY-MM-DD', /[+-]\d{6}-\d\d-\d\d/],
+        ['YYYY-MM-DD', /\d{4}-\d\d-\d\d/],
+        ['GGGG-[W]WW-E', /\d{4}-W\d\d-\d/],
+        ['GGGG-[W]WW', /\d{4}-W\d\d/, false],
+        ['YYYY-DDD', /\d{4}-\d{3}/],
+        ['YYYY-MM', /\d{4}-\d\d/, false],
+        ['YYYYYYMMDD', /[+-]\d{10}/],
+        ['YYYYMMDD', /\d{8}/],
+        // YYYYMM is NOT allowed by the standard
+        ['GGGG[W]WWE', /\d{4}W\d{3}/],
+        ['GGGG[W]WW', /\d{4}W\d{2}/, false],
+        ['YYYYDDD', /\d{7}/]
+    ];
+
+    // iso time formats and regexes
+    var isoTimes = [
+        ['HH:mm:ss.SSSS', /\d\d:\d\d:\d\d\.\d+/],
+        ['HH:mm:ss,SSSS', /\d\d:\d\d:\d\d,\d+/],
+        ['HH:mm:ss', /\d\d:\d\d:\d\d/],
+        ['HH:mm', /\d\d:\d\d/],
+        ['HHmmss.SSSS', /\d\d\d\d\d\d\.\d+/],
+        ['HHmmss,SSSS', /\d\d\d\d\d\d,\d+/],
+        ['HHmmss', /\d\d\d\d\d\d/],
+        ['HHmm', /\d\d\d\d/],
+        ['HH', /\d\d/]
+    ];
+
+    var aspNetJsonRegex = /^\/?Date\((\-?\d+)/i;
+
+    // date from iso format
+    function configFromISO(config) {
+        var i, l,
+            string = config._i,
+            match = extendedIsoRegex.exec(string) || basicIsoRegex.exec(string),
+            allowTime, dateFormat, timeFormat, tzFormat;
+
+        if (match) {
+            getParsingFlags(config).iso = true;
+
+            for (i = 0, l = isoDates.length; i < l; i++) {
+                if (isoDates[i][1].exec(match[1])) {
+                    dateFormat = isoDates[i][0];
+                    allowTime = isoDates[i][2] !== false;
+                    break;
+                }
+            }
+            if (dateFormat == null) {
+                config._isValid = false;
+                return;
+            }
+            if (match[3]) {
+                for (i = 0, l = isoTimes.length; i < l; i++) {
+                    if (isoTimes[i][1].exec(match[3])) {
+                        // match[2] should be 'T' or space
+                        timeFormat = (match[2] || ' ') + isoTimes[i][0];
+                        break;
+                    }
+                }
+                if (timeFormat == null) {
+                    config._isValid = false;
+                    return;
+                }
+            }
+            if (!allowTime && timeFormat != null) {
+                config._isValid = false;
+                return;
+            }
+            if (match[4]) {
+                if (tzRegex.exec(match[4])) {
+                    tzFormat = 'Z';
+                } else {
+                    config._isValid = false;
+                    return;
+                }
+            }
+            config._f = dateFormat + (timeFormat || '') + (tzFormat || '');
+            configFromStringAndFormat(config);
+        } else {
+            config._isValid = false;
+        }
+    }
+
+    // date from iso format or fallback
+    function configFromString(config) {
+        var matched = aspNetJsonRegex.exec(config._i);
+
+        if (matched !== null) {
+            config._d = new Date(+matched[1]);
+            return;
+        }
+
+        configFromISO(config);
+        if (config._isValid === false) {
+            delete config._isValid;
+            utils_hooks__hooks.createFromInputFallback(config);
+        }
+    }
+
+    utils_hooks__hooks.createFromInputFallback = deprecate(
+        'moment construction falls back to js Date. This is ' +
+        'discouraged and will be removed in upcoming major ' +
+        'release. Please refer to ' +
+        'https://github.com/moment/moment/issues/1407 for more info.',
+        function (config) {
+            config._d = new Date(config._i + (config._useUTC ? ' UTC' : ''));
+        }
+    );
+
+    function createDate (y, m, d, h, M, s, ms) {
+        //can't just apply() to create a date:
+        //http://stackoverflow.com/questions/181348/instantiating-a-javascript-object-by-calling-prototype-constructor-apply
+        var date = new Date(y, m, d, h, M, s, ms);
+
+        //the date constructor remaps years 0-99 to 1900-1999
+        if (y < 100 && y >= 0 && isFinite(date.getFullYear())) {
+            date.setFullYear(y);
+        }
+        return date;
+    }
+
+    function createUTCDate (y) {
+        var date = new Date(Date.UTC.apply(null, arguments));
+
+        //the Date.UTC function remaps years 0-99 to 1900-1999
+        if (y < 100 && y >= 0 && isFinite(date.getUTCFullYear())) {
+            date.setUTCFullYear(y);
+        }
+        return date;
+    }
+
+    // FORMATTING
+
+    addFormatToken('Y', 0, 0, function () {
+        var y = this.year();
+        return y <= 9999 ? '' + y : '+' + y;
+    });
+
+    addFormatToken(0, ['YY', 2], 0, function () {
+        return this.year() % 100;
+    });
+
+    addFormatToken(0, ['YYYY',   4],       0, 'year');
+    addFormatToken(0, ['YYYYY',  5],       0, 'year');
+    addFormatToken(0, ['YYYYYY', 6, true], 0, 'year');
+
+    // ALIASES
+
+    addUnitAlias('year', 'y');
+
+    // PARSING
+
+    addRegexToken('Y',      matchSigned);
+    addRegexToken('YY',     match1to2, match2);
+    addRegexToken('YYYY',   match1to4, match4);
+    addRegexToken('YYYYY',  match1to6, match6);
+    addRegexToken('YYYYYY', match1to6, match6);
+
+    addParseToken(['YYYYY', 'YYYYYY'], YEAR);
+    addParseToken('YYYY', function (input, array) {
+        array[YEAR] = input.length === 2 ? utils_hooks__hooks.parseTwoDigitYear(input) : toInt(input);
+    });
+    addParseToken('YY', function (input, array) {
+        array[YEAR] = utils_hooks__hooks.parseTwoDigitYear(input);
+    });
+    addParseToken('Y', function (input, array) {
+        array[YEAR] = parseInt(input, 10);
+    });
+
+    // HELPERS
+
+    function daysInYear(year) {
+        return isLeapYear(year) ? 366 : 365;
+    }
+
+    function isLeapYear(year) {
+        return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+    }
+
+    // HOOKS
+
+    utils_hooks__hooks.parseTwoDigitYear = function (input) {
+        return toInt(input) + (toInt(input) > 68 ? 1900 : 2000);
+    };
+
+    // MOMENTS
+
+    var getSetYear = makeGetSet('FullYear', false);
+
+    function getIsLeapYear () {
+        return isLeapYear(this.year());
+    }
+
+    // start-of-first-week - start-of-year
+    function firstWeekOffset(year, dow, doy) {
+        var // first-week day -- which january is always in the first week (4 for iso, 1 for other)
+            fwd = 7 + dow - doy,
+            // first-week day local weekday -- which local weekday is fwd
+            fwdlw = (7 + createUTCDate(year, 0, fwd).getUTCDay() - dow) % 7;
+
+        return -fwdlw + fwd - 1;
+    }
+
+    //http://en.wikipedia.org/wiki/ISO_week_date#Calculating_a_date_given_the_year.2C_week_number_and_weekday
+    function dayOfYearFromWeeks(year, week, weekday, dow, doy) {
+        var localWeekday = (7 + weekday - dow) % 7,
+            weekOffset = firstWeekOffset(year, dow, doy),
+            dayOfYear = 1 + 7 * (week - 1) + localWeekday + weekOffset,
+            resYear, resDayOfYear;
+
+        if (dayOfYear <= 0) {
+            resYear = year - 1;
+            resDayOfYear = daysInYear(resYear) + dayOfYear;
+        } else if (dayOfYear > daysInYear(year)) {
+            resYear = year + 1;
+            resDayOfYear = dayOfYear - daysInYear(year);
+        } else {
+            resYear = year;
+            resDayOfYear = dayOfYear;
+        }
+
+        return {
+            year: resYear,
+            dayOfYear: resDayOfYear
+        };
+    }
+
+    function weekOfYear(mom, dow, doy) {
+        var weekOffset = firstWeekOffset(mom.year(), dow, doy),
+            week = Math.floor((mom.dayOfYear() - weekOffset - 1) / 7) + 1,
+            resWeek, resYear;
+
+        if (week < 1) {
+            resYear = mom.year() - 1;
+            resWeek = week + weeksInYear(resYear, dow, doy);
+        } else if (week > weeksInYear(mom.year(), dow, doy)) {
+            resWeek = week - weeksInYear(mom.year(), dow, doy);
+            resYear = mom.year() + 1;
+        } else {
+            resYear = mom.year();
+            resWeek = week;
+        }
+
+        return {
+            week: resWeek,
+            year: resYear
+        };
+    }
+
+    function weeksInYear(year, dow, doy) {
+        var weekOffset = firstWeekOffset(year, dow, doy),
+            weekOffsetNext = firstWeekOffset(year + 1, dow, doy);
+        return (daysInYear(year) - weekOffset + weekOffsetNext) / 7;
+    }
+
+    // Pick the first defined of two or three arguments.
+    function defaults(a, b, c) {
+        if (a != null) {
+            return a;
+        }
+        if (b != null) {
+            return b;
+        }
+        return c;
+    }
+
+    function currentDateArray(config) {
+        // hooks is actually the exported moment object
+        var nowValue = new Date(utils_hooks__hooks.now());
+        if (config._useUTC) {
+            return [nowValue.getUTCFullYear(), nowValue.getUTCMonth(), nowValue.getUTCDate()];
+        }
+        return [nowValue.getFullYear(), nowValue.getMonth(), nowValue.getDate()];
+    }
+
+    // convert an array to a date.
+    // the array should mirror the parameters below
+    // note: all values past the year are optional and will default to the lowest possible value.
+    // [year, month, day , hour, minute, second, millisecond]
+    function configFromArray (config) {
+        var i, date, input = [], currentDate, yearToUse;
+
+        if (config._d) {
+            return;
+        }
+
+        currentDate = currentDateArray(config);
+
+        //compute day of the year from weeks and weekdays
+        if (config._w && config._a[DATE] == null && config._a[MONTH] == null) {
+            dayOfYearFromWeekInfo(config);
+        }
+
+        //if the day of the year is set, figure out what it is
+        if (config._dayOfYear) {
+            yearToUse = defaults(config._a[YEAR], currentDate[YEAR]);
+
+            if (config._dayOfYear > daysInYear(yearToUse)) {
+                getParsingFlags(config)._overflowDayOfYear = true;
+            }
+
+            date = createUTCDate(yearToUse, 0, config._dayOfYear);
+            config._a[MONTH] = date.getUTCMonth();
+            config._a[DATE] = date.getUTCDate();
+        }
+
+        // Default to current date.
+        // * if no year, month, day of month are given, default to today
+        // * if day of month is given, default month and year
+        // * if month is given, default only year
+        // * if year is given, don't default anything
+        for (i = 0; i < 3 && config._a[i] == null; ++i) {
+            config._a[i] = input[i] = currentDate[i];
+        }
+
+        // Zero out whatever was not defaulted, including time
+        for (; i < 7; i++) {
+            config._a[i] = input[i] = (config._a[i] == null) ? (i === 2 ? 1 : 0) : config._a[i];
+        }
+
+        // Check for 24:00:00.000
+        if (config._a[HOUR] === 24 &&
+                config._a[MINUTE] === 0 &&
+                config._a[SECOND] === 0 &&
+                config._a[MILLISECOND] === 0) {
+            config._nextDay = true;
+            config._a[HOUR] = 0;
+        }
+
+        config._d = (config._useUTC ? createUTCDate : createDate).apply(null, input);
+        // Apply timezone offset from input. The actual utcOffset can be changed
+        // with parseZone.
+        if (config._tzm != null) {
+            config._d.setUTCMinutes(config._d.getUTCMinutes() - config._tzm);
+        }
+
+        if (config._nextDay) {
+            config._a[HOUR] = 24;
+        }
+    }
+
+    function dayOfYearFromWeekInfo(config) {
+        var w, weekYear, week, weekday, dow, doy, temp, weekdayOverflow;
+
+        w = config._w;
+        if (w.GG != null || w.W != null || w.E != null) {
+            dow = 1;
+            doy = 4;
+
+            // TODO: We need to take the current isoWeekYear, but that depends on
+            // how we interpret now (local, utc, fixed offset). So create
+            // a now version of current config (take local/utc/offset flags, and
+            // create now).
+            weekYear = defaults(w.GG, config._a[YEAR], weekOfYear(local__createLocal(), 1, 4).year);
+            week = defaults(w.W, 1);
+            weekday = defaults(w.E, 1);
+            if (weekday < 1 || weekday > 7) {
+                weekdayOverflow = true;
+            }
+        } else {
+            dow = config._locale._week.dow;
+            doy = config._locale._week.doy;
+
+            weekYear = defaults(w.gg, config._a[YEAR], weekOfYear(local__createLocal(), dow, doy).year);
+            week = defaults(w.w, 1);
+
+            if (w.d != null) {
+                // weekday -- low day numbers are considered next week
+                weekday = w.d;
+                if (weekday < 0 || weekday > 6) {
+                    weekdayOverflow = true;
+                }
+            } else if (w.e != null) {
+                // local weekday -- counting starts from begining of week
+                weekday = w.e + dow;
+                if (w.e < 0 || w.e > 6) {
+                    weekdayOverflow = true;
+                }
+            } else {
+                // default to begining of week
+                weekday = dow;
+            }
+        }
+        if (week < 1 || week > weeksInYear(weekYear, dow, doy)) {
+            getParsingFlags(config)._overflowWeeks = true;
+        } else if (weekdayOverflow != null) {
+            getParsingFlags(config)._overflowWeekday = true;
+        } else {
+            temp = dayOfYearFromWeeks(weekYear, week, weekday, dow, doy);
+            config._a[YEAR] = temp.year;
+            config._dayOfYear = temp.dayOfYear;
+        }
+    }
+
+    // constant that refers to the ISO standard
+    utils_hooks__hooks.ISO_8601 = function () {};
+
+    // date from string and format string
+    function configFromStringAndFormat(config) {
+        // TODO: Move this to another part of the creation flow to prevent circular deps
+        if (config._f === utils_hooks__hooks.ISO_8601) {
+            configFromISO(config);
+            return;
+        }
+
+        config._a = [];
+        getParsingFlags(config).empty = true;
+
+        // This array is used to make a Date, either with `new Date` or `Date.UTC`
+        var string = '' + config._i,
+            i, parsedInput, tokens, token, skipped,
+            stringLength = string.length,
+            totalParsedInputLength = 0;
+
+        tokens = expandFormat(config._f, config._locale).match(formattingTokens) || [];
+
+        for (i = 0; i < tokens.length; i++) {
+            token = tokens[i];
+            parsedInput = (string.match(getParseRegexForToken(token, config)) || [])[0];
+            // console.log('token', token, 'parsedInput', parsedInput,
+            //         'regex', getParseRegexForToken(token, config));
+            if (parsedInput) {
+                skipped = string.substr(0, string.indexOf(parsedInput));
+                if (skipped.length > 0) {
+                    getParsingFlags(config).unusedInput.push(skipped);
+                }
+                string = string.slice(string.indexOf(parsedInput) + parsedInput.length);
+                totalParsedInputLength += parsedInput.length;
+            }
+            // don't parse if it's not a known token
+            if (formatTokenFunctions[token]) {
+                if (parsedInput) {
+                    getParsingFlags(config).empty = false;
+                }
+                else {
+                    getParsingFlags(config).unusedTokens.push(token);
+                }
+                addTimeToArrayFromToken(token, parsedInput, config);
+            }
+            else if (config._strict && !parsedInput) {
+                getParsingFlags(config).unusedTokens.push(token);
+            }
+        }
+
+        // add remaining unparsed input length to the string
+        getParsingFlags(config).charsLeftOver = stringLength - totalParsedInputLength;
+        if (string.length > 0) {
+            getParsingFlags(config).unusedInput.push(string);
+        }
+
+        // clear _12h flag if hour is <= 12
+        if (getParsingFlags(config).bigHour === true &&
+                config._a[HOUR] <= 12 &&
+                config._a[HOUR] > 0) {
+            getParsingFlags(config).bigHour = undefined;
+        }
+        // handle meridiem
+        config._a[HOUR] = meridiemFixWrap(config._locale, config._a[HOUR], config._meridiem);
+
+        configFromArray(config);
+        checkOverflow(config);
+    }
+
+
+    function meridiemFixWrap (locale, hour, meridiem) {
+        var isPm;
+
+        if (meridiem == null) {
+            // nothing to do
+            return hour;
+        }
+        if (locale.meridiemHour != null) {
+            return locale.meridiemHour(hour, meridiem);
+        } else if (locale.isPM != null) {
+            // Fallback
+            isPm = locale.isPM(meridiem);
+            if (isPm && hour < 12) {
+                hour += 12;
+            }
+            if (!isPm && hour === 12) {
+                hour = 0;
+            }
+            return hour;
+        } else {
+            // this is not supposed to happen
+            return hour;
+        }
+    }
+
+    // date from string and array of format strings
+    function configFromStringAndArray(config) {
+        var tempConfig,
+            bestMoment,
+
+            scoreToBeat,
+            i,
+            currentScore;
+
+        if (config._f.length === 0) {
+            getParsingFlags(config).invalidFormat = true;
+            config._d = new Date(NaN);
+            return;
+        }
+
+        for (i = 0; i < config._f.length; i++) {
+            currentScore = 0;
+            tempConfig = copyConfig({}, config);
+            if (config._useUTC != null) {
+                tempConfig._useUTC = config._useUTC;
+            }
+            tempConfig._f = config._f[i];
+            configFromStringAndFormat(tempConfig);
+
+            if (!valid__isValid(tempConfig)) {
+                continue;
+            }
+
+            // if there is any input that was not parsed add a penalty for that format
+            currentScore += getParsingFlags(tempConfig).charsLeftOver;
+
+            //or tokens
+            currentScore += getParsingFlags(tempConfig).unusedTokens.length * 10;
+
+            getParsingFlags(tempConfig).score = currentScore;
+
+            if (scoreToBeat == null || currentScore < scoreToBeat) {
+                scoreToBeat = currentScore;
+                bestMoment = tempConfig;
+            }
+        }
+
+        extend(config, bestMoment || tempConfig);
+    }
+
+    function configFromObject(config) {
+        if (config._d) {
+            return;
+        }
+
+        var i = normalizeObjectUnits(config._i);
+        config._a = map([i.year, i.month, i.day || i.date, i.hour, i.minute, i.second, i.millisecond], function (obj) {
+            return obj && parseInt(obj, 10);
+        });
+
+        configFromArray(config);
+    }
+
+    function createFromConfig (config) {
+        var res = new Moment(checkOverflow(prepareConfig(config)));
+        if (res._nextDay) {
+            // Adding is smart enough around DST
+            res.add(1, 'd');
+            res._nextDay = undefined;
+        }
+
+        return res;
+    }
+
+    function prepareConfig (config) {
+        var input = config._i,
+            format = config._f;
+
+        config._locale = config._locale || locale_locales__getLocale(config._l);
+
+        if (input === null || (format === undefined && input === '')) {
+            return valid__createInvalid({nullInput: true});
+        }
+
+        if (typeof input === 'string') {
+            config._i = input = config._locale.preparse(input);
+        }
+
+        if (isMoment(input)) {
+            return new Moment(checkOverflow(input));
+        } else if (isArray(format)) {
+            configFromStringAndArray(config);
+        } else if (format) {
+            configFromStringAndFormat(config);
+        } else if (isDate(input)) {
+            config._d = input;
+        } else {
+            configFromInput(config);
+        }
+
+        if (!valid__isValid(config)) {
+            config._d = null;
+        }
+
+        return config;
+    }
+
+    function configFromInput(config) {
+        var input = config._i;
+        if (input === undefined) {
+            config._d = new Date(utils_hooks__hooks.now());
+        } else if (isDate(input)) {
+            config._d = new Date(+input);
+        } else if (typeof input === 'string') {
+            configFromString(config);
+        } else if (isArray(input)) {
+            config._a = map(input.slice(0), function (obj) {
+                return parseInt(obj, 10);
+            });
+            configFromArray(config);
+        } else if (typeof(input) === 'object') {
+            configFromObject(config);
+        } else if (typeof(input) === 'number') {
+            // from milliseconds
+            config._d = new Date(input);
+        } else {
+            utils_hooks__hooks.createFromInputFallback(config);
+        }
+    }
+
+    function createLocalOrUTC (input, format, locale, strict, isUTC) {
+        var c = {};
+
+        if (typeof(locale) === 'boolean') {
+            strict = locale;
+            locale = undefined;
+        }
+        // object construction must be done this way.
+        // https://github.com/moment/moment/issues/1423
+        c._isAMomentObject = true;
+        c._useUTC = c._isUTC = isUTC;
+        c._l = locale;
+        c._i = input;
+        c._f = format;
+        c._strict = strict;
+
+        return createFromConfig(c);
+    }
+
+    function local__createLocal (input, format, locale, strict) {
+        return createLocalOrUTC(input, format, locale, strict, false);
+    }
+
+    var prototypeMin = deprecate(
+         'moment().min is deprecated, use moment.min instead. https://github.com/moment/moment/issues/1548',
+         function () {
+             var other = local__createLocal.apply(null, arguments);
+             if (this.isValid() && other.isValid()) {
+                 return other < this ? this : other;
+             } else {
+                 return valid__createInvalid();
+             }
+         }
+     );
+
+    var prototypeMax = deprecate(
+        'moment().max is deprecated, use moment.max instead. https://github.com/moment/moment/issues/1548',
+        function () {
+            var other = local__createLocal.apply(null, arguments);
+            if (this.isValid() && other.isValid()) {
+                return other > this ? this : other;
+            } else {
+                return valid__createInvalid();
+            }
+        }
+    );
+
+    // Pick a moment m from moments so that m[fn](other) is true for all
+    // other. This relies on the function fn to be transitive.
+    //
+    // moments should either be an array of moment objects or an array, whose
+    // first element is an array of moment objects.
+    function pickBy(fn, moments) {
+        var res, i;
+        if (moments.length === 1 && isArray(moments[0])) {
+            moments = moments[0];
+        }
+        if (!moments.length) {
+            return local__createLocal();
+        }
+        res = moments[0];
+        for (i = 1; i < moments.length; ++i) {
+            if (!moments[i].isValid() || moments[i][fn](res)) {
+                res = moments[i];
+            }
+        }
+        return res;
+    }
+
+    // TODO: Use [].sort instead?
+    function min () {
+        var args = [].slice.call(arguments, 0);
+
+        return pickBy('isBefore', args);
+    }
+
+    function max () {
+        var args = [].slice.call(arguments, 0);
+
+        return pickBy('isAfter', args);
+    }
+
+    var now = function () {
+        return Date.now ? Date.now() : +(new Date());
+    };
+
+    function Duration (duration) {
+        var normalizedInput = normalizeObjectUnits(duration),
+            years = normalizedInput.year || 0,
+            quarters = normalizedInput.quarter || 0,
+            months = normalizedInput.month || 0,
+            weeks = normalizedInput.week || 0,
+            days = normalizedInput.day || 0,
+            hours = normalizedInput.hour || 0,
+            minutes = normalizedInput.minute || 0,
+            seconds = normalizedInput.second || 0,
+            milliseconds = normalizedInput.millisecond || 0;
+
+        // representation for dateAddRemove
+        this._milliseconds = +milliseconds +
+            seconds * 1e3 + // 1000
+            minutes * 6e4 + // 1000 * 60
+            hours * 36e5; // 1000 * 60 * 60
+        // Because of dateAddRemove treats 24 hours as different from a
+        // day when working around DST, we need to store them separately
+        this._days = +days +
+            weeks * 7;
+        // It is impossible translate months into days without knowing
+        // which months you are are talking about, so we have to store
+        // it separately.
+        this._months = +months +
+            quarters * 3 +
+            years * 12;
+
+        this._data = {};
+
+        this._locale = locale_locales__getLocale();
+
+        this._bubble();
+    }
+
+    function isDuration (obj) {
+        return obj instanceof Duration;
+    }
+
+    // FORMATTING
+
+    function offset (token, separator) {
+        addFormatToken(token, 0, 0, function () {
+            var offset = this.utcOffset();
+            var sign = '+';
+            if (offset < 0) {
+                offset = -offset;
+                sign = '-';
+            }
+            return sign + zeroFill(~~(offset / 60), 2) + separator + zeroFill(~~(offset) % 60, 2);
+        });
+    }
+
+    offset('Z', ':');
+    offset('ZZ', '');
+
+    // PARSING
+
+    addRegexToken('Z',  matchShortOffset);
+    addRegexToken('ZZ', matchShortOffset);
+    addParseToken(['Z', 'ZZ'], function (input, array, config) {
+        config._useUTC = true;
+        config._tzm = offsetFromString(matchShortOffset, input);
+    });
+
+    // HELPERS
+
+    // timezone chunker
+    // '+10:00' > ['10',  '00']
+    // '-1530'  > ['-15', '30']
+    var chunkOffset = /([\+\-]|\d\d)/gi;
+
+    function offsetFromString(matcher, string) {
+        var matches = ((string || '').match(matcher) || []);
+        var chunk   = matches[matches.length - 1] || [];
+        var parts   = (chunk + '').match(chunkOffset) || ['-', 0, 0];
+        var minutes = +(parts[1] * 60) + toInt(parts[2]);
+
+        return parts[0] === '+' ? minutes : -minutes;
+    }
+
+    // Return a moment from input, that is local/utc/zone equivalent to model.
+    function cloneWithOffset(input, model) {
+        var res, diff;
+        if (model._isUTC) {
+            res = model.clone();
+            diff = (isMoment(input) || isDate(input) ? +input : +local__createLocal(input)) - (+res);
+            // Use low-level api, because this fn is low-level api.
+            res._d.setTime(+res._d + diff);
+            utils_hooks__hooks.updateOffset(res, false);
+            return res;
+        } else {
+            return local__createLocal(input).local();
+        }
+    }
+
+    function getDateOffset (m) {
+        // On Firefox.24 Date#getTimezoneOffset returns a floating point.
+        // https://github.com/moment/moment/pull/1871
+        return -Math.round(m._d.getTimezoneOffset() / 15) * 15;
+    }
+
+    // HOOKS
+
+    // This function will be called whenever a moment is mutated.
+    // It is intended to keep the offset in sync with the timezone.
+    utils_hooks__hooks.updateOffset = function () {};
+
+    // MOMENTS
+
+    // keepLocalTime = true means only change the timezone, without
+    // affecting the local hour. So 5:31:26 +0300 --[utcOffset(2, true)]-->
+    // 5:31:26 +0200 It is possible that 5:31:26 doesn't exist with offset
+    // +0200, so we adjust the time as needed, to be valid.
+    //
+    // Keeping the time actually adds/subtracts (one hour)
+    // from the actual represented time. That is why we call updateOffset
+    // a second time. In case it wants us to change the offset again
+    // _changeInProgress == true case, then we have to adjust, because
+    // there is no such time in the given timezone.
+    function getSetOffset (input, keepLocalTime) {
+        var offset = this._offset || 0,
+            localAdjust;
+        if (!this.isValid()) {
+            return input != null ? this : NaN;
+        }
+        if (input != null) {
+            if (typeof input === 'string') {
+                input = offsetFromString(matchShortOffset, input);
+            } else if (Math.abs(input) < 16) {
+                input = input * 60;
+            }
+            if (!this._isUTC && keepLocalTime) {
+                localAdjust = getDateOffset(this);
+            }
+            this._offset = input;
+            this._isUTC = true;
+            if (localAdjust != null) {
+                this.add(localAdjust, 'm');
+            }
+            if (offset !== input) {
+                if (!keepLocalTime || this._changeInProgress) {
+                    add_subtract__addSubtract(this, create__createDuration(input - offset, 'm'), 1, false);
+                } else if (!this._changeInProgress) {
+                    this._changeInProgress = true;
+                    utils_hooks__hooks.updateOffset(this, true);
+                    this._changeInProgress = null;
+                }
+            }
+            return this;
+        } else {
+            return this._isUTC ? offset : getDateOffset(this);
+        }
+    }
+
+    function getSetZone (input, keepLocalTime) {
+        if (input != null) {
+            if (typeof input !== 'string') {
+                input = -input;
+            }
+
+            this.utcOffset(input, keepLocalTime);
+
+            return this;
+        } else {
+            return -this.utcOffset();
+        }
+    }
+
+    function setOffsetToUTC (keepLocalTime) {
+        return this.utcOffset(0, keepLocalTime);
+    }
+
+    function setOffsetToLocal (keepLocalTime) {
+        if (this._isUTC) {
+            this.utcOffset(0, keepLocalTime);
+            this._isUTC = false;
+
+            if (keepLocalTime) {
+                this.subtract(getDateOffset(this), 'm');
+            }
+        }
+        return this;
+    }
+
+    function setOffsetToParsedOffset () {
+        if (this._tzm) {
+            this.utcOffset(this._tzm);
+        } else if (typeof this._i === 'string') {
+            this.utcOffset(offsetFromString(matchOffset, this._i));
+        }
+        return this;
+    }
+
+    function hasAlignedHourOffset (input) {
+        if (!this.isValid()) {
+            return false;
+        }
+        input = input ? local__createLocal(input).utcOffset() : 0;
+
+        return (this.utcOffset() - input) % 60 === 0;
+    }
+
+    function isDaylightSavingTime () {
+        return (
+            this.utcOffset() > this.clone().month(0).utcOffset() ||
+            this.utcOffset() > this.clone().month(5).utcOffset()
+        );
+    }
+
+    function isDaylightSavingTimeShifted () {
+        if (!isUndefined(this._isDSTShifted)) {
+            return this._isDSTShifted;
+        }
+
+        var c = {};
+
+        copyConfig(c, this);
+        c = prepareConfig(c);
+
+        if (c._a) {
+            var other = c._isUTC ? create_utc__createUTC(c._a) : local__createLocal(c._a);
+            this._isDSTShifted = this.isValid() &&
+                compareArrays(c._a, other.toArray()) > 0;
+        } else {
+            this._isDSTShifted = false;
+        }
+
+        return this._isDSTShifted;
+    }
+
+    function isLocal () {
+        return this.isValid() ? !this._isUTC : false;
+    }
+
+    function isUtcOffset () {
+        return this.isValid() ? this._isUTC : false;
+    }
+
+    function isUtc () {
+        return this.isValid() ? this._isUTC && this._offset === 0 : false;
+    }
+
+    // ASP.NET json date format regex
+    var aspNetRegex = /^(\-)?(?:(\d*)[. ])?(\d+)\:(\d+)(?:\:(\d+)\.?(\d{3})?\d*)?$/;
+
+    // from http://docs.closure-library.googlecode.com/git/closure_goog_date_date.js.source.html
+    // somewhat more in line with 4.4.3.2 2004 spec, but allows decimal anywhere
+    var isoRegex = /^(-)?P(?:(?:([0-9,.]*)Y)?(?:([0-9,.]*)M)?(?:([0-9,.]*)D)?(?:T(?:([0-9,.]*)H)?(?:([0-9,.]*)M)?(?:([0-9,.]*)S)?)?|([0-9,.]*)W)$/;
+
+    function create__createDuration (input, key) {
+        var duration = input,
+            // matching against regexp is expensive, do it on demand
+            match = null,
+            sign,
+            ret,
+            diffRes;
+
+        if (isDuration(input)) {
+            duration = {
+                ms : input._milliseconds,
+                d  : input._days,
+                M  : input._months
+            };
+        } else if (typeof input === 'number') {
+            duration = {};
+            if (key) {
+                duration[key] = input;
+            } else {
+                duration.milliseconds = input;
+            }
+        } else if (!!(match = aspNetRegex.exec(input))) {
+            sign = (match[1] === '-') ? -1 : 1;
+            duration = {
+                y  : 0,
+                d  : toInt(match[DATE])        * sign,
+                h  : toInt(match[HOUR])        * sign,
+                m  : toInt(match[MINUTE])      * sign,
+                s  : toInt(match[SECOND])      * sign,
+                ms : toInt(match[MILLISECOND]) * sign
+            };
+        } else if (!!(match = isoRegex.exec(input))) {
+            sign = (match[1] === '-') ? -1 : 1;
+            duration = {
+                y : parseIso(match[2], sign),
+                M : parseIso(match[3], sign),
+                d : parseIso(match[4], sign),
+                h : parseIso(match[5], sign),
+                m : parseIso(match[6], sign),
+                s : parseIso(match[7], sign),
+                w : parseIso(match[8], sign)
+            };
+        } else if (duration == null) {// checks for null or undefined
+            duration = {};
+        } else if (typeof duration === 'object' && ('from' in duration || 'to' in duration)) {
+            diffRes = momentsDifference(local__createLocal(duration.from), local__createLocal(duration.to));
+
+            duration = {};
+            duration.ms = diffRes.milliseconds;
+            duration.M = diffRes.months;
+        }
+
+        ret = new Duration(duration);
+
+        if (isDuration(input) && hasOwnProp(input, '_locale')) {
+            ret._locale = input._locale;
+        }
+
+        return ret;
+    }
+
+    create__createDuration.fn = Duration.prototype;
+
+    function parseIso (inp, sign) {
+        // We'd normally use ~~inp for this, but unfortunately it also
+        // converts floats to ints.
+        // inp may be undefined, so careful calling replace on it.
+        var res = inp && parseFloat(inp.replace(',', '.'));
+        // apply sign while we're at it
+        return (isNaN(res) ? 0 : res) * sign;
+    }
+
+    function positiveMomentsDifference(base, other) {
+        var res = {milliseconds: 0, months: 0};
+
+        res.months = other.month() - base.month() +
+            (other.year() - base.year()) * 12;
+        if (base.clone().add(res.months, 'M').isAfter(other)) {
+            --res.months;
+        }
+
+        res.milliseconds = +other - +(base.clone().add(res.months, 'M'));
+
+        return res;
+    }
+
+    function momentsDifference(base, other) {
+        var res;
+        if (!(base.isValid() && other.isValid())) {
+            return {milliseconds: 0, months: 0};
+        }
+
+        other = cloneWithOffset(other, base);
+        if (base.isBefore(other)) {
+            res = positiveMomentsDifference(base, other);
+        } else {
+            res = positiveMomentsDifference(other, base);
+            res.milliseconds = -res.milliseconds;
+            res.months = -res.months;
+        }
+
+        return res;
+    }
+
+    // TODO: remove 'name' arg after deprecation is removed
+    function createAdder(direction, name) {
+        return function (val, period) {
+            var dur, tmp;
+            //invert the arguments, but complain about it
+            if (period !== null && !isNaN(+period)) {
+                deprecateSimple(name, 'moment().' + name  + '(period, number) is deprecated. Please use moment().' + name + '(number, period).');
+                tmp = val; val = period; period = tmp;
+            }
+
+            val = typeof val === 'string' ? +val : val;
+            dur = create__createDuration(val, period);
+            add_subtract__addSubtract(this, dur, direction);
+            return this;
+        };
+    }
+
+    function add_subtract__addSubtract (mom, duration, isAdding, updateOffset) {
+        var milliseconds = duration._milliseconds,
+            days = duration._days,
+            months = duration._months;
+
+        if (!mom.isValid()) {
+            // No op
+            return;
+        }
+
+        updateOffset = updateOffset == null ? true : updateOffset;
+
+        if (milliseconds) {
+            mom._d.setTime(+mom._d + milliseconds * isAdding);
+        }
+        if (days) {
+            get_set__set(mom, 'Date', get_set__get(mom, 'Date') + days * isAdding);
+        }
+        if (months) {
+            setMonth(mom, get_set__get(mom, 'Month') + months * isAdding);
+        }
+        if (updateOffset) {
+            utils_hooks__hooks.updateOffset(mom, days || months);
+        }
+    }
+
+    var add_subtract__add      = createAdder(1, 'add');
+    var add_subtract__subtract = createAdder(-1, 'subtract');
+
+    function moment_calendar__calendar (time, formats) {
+        // We want to compare the start of today, vs this.
+        // Getting start-of-today depends on whether we're local/utc/offset or not.
+        var now = time || local__createLocal(),
+            sod = cloneWithOffset(now, this).startOf('day'),
+            diff = this.diff(sod, 'days', true),
+            format = diff < -6 ? 'sameElse' :
+                diff < -1 ? 'lastWeek' :
+                diff < 0 ? 'lastDay' :
+                diff < 1 ? 'sameDay' :
+                diff < 2 ? 'nextDay' :
+                diff < 7 ? 'nextWeek' : 'sameElse';
+
+        var output = formats && (isFunction(formats[format]) ? formats[format]() : formats[format]);
+
+        return this.format(output || this.localeData().calendar(format, this, local__createLocal(now)));
+    }
+
+    function clone () {
+        return new Moment(this);
+    }
+
+    function isAfter (input, units) {
+        var localInput = isMoment(input) ? input : local__createLocal(input);
+        if (!(this.isValid() && localInput.isValid())) {
+            return false;
+        }
+        units = normalizeUnits(!isUndefined(units) ? units : 'millisecond');
+        if (units === 'millisecond') {
+            return +this > +localInput;
+        } else {
+            return +localInput < +this.clone().startOf(units);
+        }
+    }
+
+    function isBefore (input, units) {
+        var localInput = isMoment(input) ? input : local__createLocal(input);
+        if (!(this.isValid() && localInput.isValid())) {
+            return false;
+        }
+        units = normalizeUnits(!isUndefined(units) ? units : 'millisecond');
+        if (units === 'millisecond') {
+            return +this < +localInput;
+        } else {
+            return +this.clone().endOf(units) < +localInput;
+        }
+    }
+
+    function isBetween (from, to, units) {
+        return this.isAfter(from, units) && this.isBefore(to, units);
+    }
+
+    function isSame (input, units) {
+        var localInput = isMoment(input) ? input : local__createLocal(input),
+            inputMs;
+        if (!(this.isValid() && localInput.isValid())) {
+            return false;
+        }
+        units = normalizeUnits(units || 'millisecond');
+        if (units === 'millisecond') {
+            return +this === +localInput;
+        } else {
+            inputMs = +localInput;
+            return +(this.clone().startOf(units)) <= inputMs && inputMs <= +(this.clone().endOf(units));
+        }
+    }
+
+    function isSameOrAfter (input, units) {
+        return this.isSame(input, units) || this.isAfter(input,units);
+    }
+
+    function isSameOrBefore (input, units) {
+        return this.isSame(input, units) || this.isBefore(input,units);
+    }
+
+    function diff (input, units, asFloat) {
+        var that,
+            zoneDelta,
+            delta, output;
+
+        if (!this.isValid()) {
+            return NaN;
+        }
+
+        that = cloneWithOffset(input, this);
+
+        if (!that.isValid()) {
+            return NaN;
+        }
+
+        zoneDelta = (that.utcOffset() - this.utcOffset()) * 6e4;
+
+        units = normalizeUnits(units);
+
+        if (units === 'year' || units === 'month' || units === 'quarter') {
+            output = monthDiff(this, that);
+            if (units === 'quarter') {
+                output = output / 3;
+            } else if (units === 'year') {
+                output = output / 12;
+            }
+        } else {
+            delta = this - that;
+            output = units === 'second' ? delta / 1e3 : // 1000
+                units === 'minute' ? delta / 6e4 : // 1000 * 60
+                units === 'hour' ? delta / 36e5 : // 1000 * 60 * 60
+                units === 'day' ? (delta - zoneDelta) / 864e5 : // 1000 * 60 * 60 * 24, negate dst
+                units === 'week' ? (delta - zoneDelta) / 6048e5 : // 1000 * 60 * 60 * 24 * 7, negate dst
+                delta;
+        }
+        return asFloat ? output : absFloor(output);
+    }
+
+    function monthDiff (a, b) {
+        // difference in months
+        var wholeMonthDiff = ((b.year() - a.year()) * 12) + (b.month() - a.month()),
+            // b is in (anchor - 1 month, anchor + 1 month)
+            anchor = a.clone().add(wholeMonthDiff, 'months'),
+            anchor2, adjust;
+
+        if (b - anchor < 0) {
+            anchor2 = a.clone().add(wholeMonthDiff - 1, 'months');
+            // linear across the month
+            adjust = (b - anchor) / (anchor - anchor2);
+        } else {
+            anchor2 = a.clone().add(wholeMonthDiff + 1, 'months');
+            // linear across the month
+            adjust = (b - anchor) / (anchor2 - anchor);
+        }
+
+        return -(wholeMonthDiff + adjust);
+    }
+
+    utils_hooks__hooks.defaultFormat = 'YYYY-MM-DDTHH:mm:ssZ';
+
+    function toString () {
+        return this.clone().locale('en').format('ddd MMM DD YYYY HH:mm:ss [GMT]ZZ');
+    }
+
+    function moment_format__toISOString () {
+        var m = this.clone().utc();
+        if (0 < m.year() && m.year() <= 9999) {
+            if (isFunction(Date.prototype.toISOString)) {
+                // native implementation is ~50x faster, use it when we can
+                return this.toDate().toISOString();
+            } else {
+                return formatMoment(m, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]');
+            }
+        } else {
+            return formatMoment(m, 'YYYYYY-MM-DD[T]HH:mm:ss.SSS[Z]');
+        }
+    }
+
+    function format (inputString) {
+        var output = formatMoment(this, inputString || utils_hooks__hooks.defaultFormat);
+        return this.localeData().postformat(output);
+    }
+
+    function from (time, withoutSuffix) {
+        if (this.isValid() &&
+                ((isMoment(time) && time.isValid()) ||
+                 local__createLocal(time).isValid())) {
+            return create__createDuration({to: this, from: time}).locale(this.locale()).humanize(!withoutSuffix);
+        } else {
+            return this.localeData().invalidDate();
+        }
+    }
+
+    function fromNow (withoutSuffix) {
+        return this.from(local__createLocal(), withoutSuffix);
+    }
+
+    function to (time, withoutSuffix) {
+        if (this.isValid() &&
+                ((isMoment(time) && time.isValid()) ||
+                 local__createLocal(time).isValid())) {
+            return create__createDuration({from: this, to: time}).locale(this.locale()).humanize(!withoutSuffix);
+        } else {
+            return this.localeData().invalidDate();
+        }
+    }
+
+    function toNow (withoutSuffix) {
+        return this.to(local__createLocal(), withoutSuffix);
+    }
+
+    // If passed a locale key, it will set the locale for this
+    // instance.  Otherwise, it will return the locale configuration
+    // variables for this instance.
+    function locale (key) {
+        var newLocaleData;
+
+        if (key === undefined) {
+            return this._locale._abbr;
+        } else {
+            newLocaleData = locale_locales__getLocale(key);
+            if (newLocaleData != null) {
+                this._locale = newLocaleData;
+            }
+            return this;
+        }
+    }
+
+    var lang = deprecate(
+        'moment().lang() is deprecated. Instead, use moment().localeData() to get the language configuration. Use moment().locale() to change languages.',
+        function (key) {
+            if (key === undefined) {
+                return this.localeData();
+            } else {
+                return this.locale(key);
+            }
+        }
+    );
+
+    function localeData () {
+        return this._locale;
+    }
+
+    function startOf (units) {
+        units = normalizeUnits(units);
+        // the following switch intentionally omits break keywords
+        // to utilize falling through the cases.
+        switch (units) {
+        case 'year':
+            this.month(0);
+            /* falls through */
+        case 'quarter':
+        case 'month':
+            this.date(1);
+            /* falls through */
+        case 'week':
+        case 'isoWeek':
+        case 'day':
+            this.hours(0);
+            /* falls through */
+        case 'hour':
+            this.minutes(0);
+            /* falls through */
+        case 'minute':
+            this.seconds(0);
+            /* falls through */
+        case 'second':
+            this.milliseconds(0);
+        }
+
+        // weeks are a special case
+        if (units === 'week') {
+            this.weekday(0);
+        }
+        if (units === 'isoWeek') {
+            this.isoWeekday(1);
+        }
+
+        // quarters are also special
+        if (units === 'quarter') {
+            this.month(Math.floor(this.month() / 3) * 3);
+        }
+
+        return this;
+    }
+
+    function endOf (units) {
+        units = normalizeUnits(units);
+        if (units === undefined || units === 'millisecond') {
+            return this;
+        }
+        return this.startOf(units).add(1, (units === 'isoWeek' ? 'week' : units)).subtract(1, 'ms');
+    }
+
+    function to_type__valueOf () {
+        return +this._d - ((this._offset || 0) * 60000);
+    }
+
+    function unix () {
+        return Math.floor(+this / 1000);
+    }
+
+    function toDate () {
+        return this._offset ? new Date(+this) : this._d;
+    }
+
+    function toArray () {
+        var m = this;
+        return [m.year(), m.month(), m.date(), m.hour(), m.minute(), m.second(), m.millisecond()];
+    }
+
+    function toObject () {
+        var m = this;
+        return {
+            years: m.year(),
+            months: m.month(),
+            date: m.date(),
+            hours: m.hours(),
+            minutes: m.minutes(),
+            seconds: m.seconds(),
+            milliseconds: m.milliseconds()
+        };
+    }
+
+    function toJSON () {
+        // JSON.stringify(new Date(NaN)) === 'null'
+        return this.isValid() ? this.toISOString() : 'null';
+    }
+
+    function moment_valid__isValid () {
+        return valid__isValid(this);
+    }
+
+    function parsingFlags () {
+        return extend({}, getParsingFlags(this));
+    }
+
+    function invalidAt () {
+        return getParsingFlags(this).overflow;
+    }
+
+    function creationData() {
+        return {
+            input: this._i,
+            format: this._f,
+            locale: this._locale,
+            isUTC: this._isUTC,
+            strict: this._strict
+        };
+    }
+
+    // FORMATTING
+
+    addFormatToken(0, ['gg', 2], 0, function () {
+        return this.weekYear() % 100;
+    });
+
+    addFormatToken(0, ['GG', 2], 0, function () {
+        return this.isoWeekYear() % 100;
+    });
+
+    function addWeekYearFormatToken (token, getter) {
+        addFormatToken(0, [token, token.length], 0, getter);
+    }
+
+    addWeekYearFormatToken('gggg',     'weekYear');
+    addWeekYearFormatToken('ggggg',    'weekYear');
+    addWeekYearFormatToken('GGGG',  'isoWeekYear');
+    addWeekYearFormatToken('GGGGG', 'isoWeekYear');
+
+    // ALIASES
+
+    addUnitAlias('weekYear', 'gg');
+    addUnitAlias('isoWeekYear', 'GG');
+
+    // PARSING
+
+    addRegexToken('G',      matchSigned);
+    addRegexToken('g',      matchSigned);
+    addRegexToken('GG',     match1to2, match2);
+    addRegexToken('gg',     match1to2, match2);
+    addRegexToken('GGGG',   match1to4, match4);
+    addRegexToken('gggg',   match1to4, match4);
+    addRegexToken('GGGGG',  match1to6, match6);
+    addRegexToken('ggggg',  match1to6, match6);
+
+    addWeekParseToken(['gggg', 'ggggg', 'GGGG', 'GGGGG'], function (input, week, config, token) {
+        week[token.substr(0, 2)] = toInt(input);
+    });
+
+    addWeekParseToken(['gg', 'GG'], function (input, week, config, token) {
+        week[token] = utils_hooks__hooks.parseTwoDigitYear(input);
+    });
+
+    // MOMENTS
+
+    function getSetWeekYear (input) {
+        return getSetWeekYearHelper.call(this,
+                input,
+                this.week(),
+                this.weekday(),
+                this.localeData()._week.dow,
+                this.localeData()._week.doy);
+    }
+
+    function getSetISOWeekYear (input) {
+        return getSetWeekYearHelper.call(this,
+                input, this.isoWeek(), this.isoWeekday(), 1, 4);
+    }
+
+    function getISOWeeksInYear () {
+        return weeksInYear(this.year(), 1, 4);
+    }
+
+    function getWeeksInYear () {
+        var weekInfo = this.localeData()._week;
+        return weeksInYear(this.year(), weekInfo.dow, weekInfo.doy);
+    }
+
+    function getSetWeekYearHelper(input, week, weekday, dow, doy) {
+        var weeksTarget;
+        if (input == null) {
+            return weekOfYear(this, dow, doy).year;
+        } else {
+            weeksTarget = weeksInYear(input, dow, doy);
+            if (week > weeksTarget) {
+                week = weeksTarget;
+            }
+            return setWeekAll.call(this, input, week, weekday, dow, doy);
+        }
+    }
+
+    function setWeekAll(weekYear, week, weekday, dow, doy) {
+        var dayOfYearData = dayOfYearFromWeeks(weekYear, week, weekday, dow, doy),
+            date = createUTCDate(dayOfYearData.year, 0, dayOfYearData.dayOfYear);
+
+        // console.log("got", weekYear, week, weekday, "set", date.toISOString());
+        this.year(date.getUTCFullYear());
+        this.month(date.getUTCMonth());
+        this.date(date.getUTCDate());
+        return this;
+    }
+
+    // FORMATTING
+
+    addFormatToken('Q', 0, 'Qo', 'quarter');
+
+    // ALIASES
+
+    addUnitAlias('quarter', 'Q');
+
+    // PARSING
+
+    addRegexToken('Q', match1);
+    addParseToken('Q', function (input, array) {
+        array[MONTH] = (toInt(input) - 1) * 3;
+    });
+
+    // MOMENTS
+
+    function getSetQuarter (input) {
+        return input == null ? Math.ceil((this.month() + 1) / 3) : this.month((input - 1) * 3 + this.month() % 3);
+    }
+
+    // FORMATTING
+
+    addFormatToken('w', ['ww', 2], 'wo', 'week');
+    addFormatToken('W', ['WW', 2], 'Wo', 'isoWeek');
+
+    // ALIASES
+
+    addUnitAlias('week', 'w');
+    addUnitAlias('isoWeek', 'W');
+
+    // PARSING
+
+    addRegexToken('w',  match1to2);
+    addRegexToken('ww', match1to2, match2);
+    addRegexToken('W',  match1to2);
+    addRegexToken('WW', match1to2, match2);
+
+    addWeekParseToken(['w', 'ww', 'W', 'WW'], function (input, week, config, token) {
+        week[token.substr(0, 1)] = toInt(input);
+    });
+
+    // HELPERS
+
+    // LOCALES
+
+    function localeWeek (mom) {
+        return weekOfYear(mom, this._week.dow, this._week.doy).week;
+    }
+
+    var defaultLocaleWeek = {
+        dow : 0, // Sunday is the first day of the week.
+        doy : 6  // The week that contains Jan 1st is the first week of the year.
+    };
+
+    function localeFirstDayOfWeek () {
+        return this._week.dow;
+    }
+
+    function localeFirstDayOfYear () {
+        return this._week.doy;
+    }
+
+    // MOMENTS
+
+    function getSetWeek (input) {
+        var week = this.localeData().week(this);
+        return input == null ? week : this.add((input - week) * 7, 'd');
+    }
+
+    function getSetISOWeek (input) {
+        var week = weekOfYear(this, 1, 4).week;
+        return input == null ? week : this.add((input - week) * 7, 'd');
+    }
+
+    // FORMATTING
+
+    addFormatToken('D', ['DD', 2], 'Do', 'date');
+
+    // ALIASES
+
+    addUnitAlias('date', 'D');
+
+    // PARSING
+
+    addRegexToken('D',  match1to2);
+    addRegexToken('DD', match1to2, match2);
+    addRegexToken('Do', function (isStrict, locale) {
+        return isStrict ? locale._ordinalParse : locale._ordinalParseLenient;
+    });
+
+    addParseToken(['D', 'DD'], DATE);
+    addParseToken('Do', function (input, array) {
+        array[DATE] = toInt(input.match(match1to2)[0], 10);
+    });
+
+    // MOMENTS
+
+    var getSetDayOfMonth = makeGetSet('Date', true);
+
+    // FORMATTING
+
+    addFormatToken('d', 0, 'do', 'day');
+
+    addFormatToken('dd', 0, 0, function (format) {
+        return this.localeData().weekdaysMin(this, format);
+    });
+
+    addFormatToken('ddd', 0, 0, function (format) {
+        return this.localeData().weekdaysShort(this, format);
+    });
+
+    addFormatToken('dddd', 0, 0, function (format) {
+        return this.localeData().weekdays(this, format);
+    });
+
+    addFormatToken('e', 0, 0, 'weekday');
+    addFormatToken('E', 0, 0, 'isoWeekday');
+
+    // ALIASES
+
+    addUnitAlias('day', 'd');
+    addUnitAlias('weekday', 'e');
+    addUnitAlias('isoWeekday', 'E');
+
+    // PARSING
+
+    addRegexToken('d',    match1to2);
+    addRegexToken('e',    match1to2);
+    addRegexToken('E',    match1to2);
+    addRegexToken('dd',   matchWord);
+    addRegexToken('ddd',  matchWord);
+    addRegexToken('dddd', matchWord);
+
+    addWeekParseToken(['dd', 'ddd', 'dddd'], function (input, week, config, token) {
+        var weekday = config._locale.weekdaysParse(input, token, config._strict);
+        // if we didn't get a weekday name, mark the date as invalid
+        if (weekday != null) {
+            week.d = weekday;
+        } else {
+            getParsingFlags(config).invalidWeekday = input;
+        }
+    });
+
+    addWeekParseToken(['d', 'e', 'E'], function (input, week, config, token) {
+        week[token] = toInt(input);
+    });
+
+    // HELPERS
+
+    function parseWeekday(input, locale) {
+        if (typeof input !== 'string') {
+            return input;
+        }
+
+        if (!isNaN(input)) {
+            return parseInt(input, 10);
+        }
+
+        input = locale.weekdaysParse(input);
+        if (typeof input === 'number') {
+            return input;
+        }
+
+        return null;
+    }
+
+    // LOCALES
+
+    var defaultLocaleWeekdays = 'Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday'.split('_');
+    function localeWeekdays (m, format) {
+        return isArray(this._weekdays) ? this._weekdays[m.day()] :
+            this._weekdays[this._weekdays.isFormat.test(format) ? 'format' : 'standalone'][m.day()];
+    }
+
+    var defaultLocaleWeekdaysShort = 'Sun_Mon_Tue_Wed_Thu_Fri_Sat'.split('_');
+    function localeWeekdaysShort (m) {
+        return this._weekdaysShort[m.day()];
+    }
+
+    var defaultLocaleWeekdaysMin = 'Su_Mo_Tu_We_Th_Fr_Sa'.split('_');
+    function localeWeekdaysMin (m) {
+        return this._weekdaysMin[m.day()];
+    }
+
+    function localeWeekdaysParse (weekdayName, format, strict) {
+        var i, mom, regex;
+
+        if (!this._weekdaysParse) {
+            this._weekdaysParse = [];
+            this._minWeekdaysParse = [];
+            this._shortWeekdaysParse = [];
+            this._fullWeekdaysParse = [];
+        }
+
+        for (i = 0; i < 7; i++) {
+            // make the regex if we don't have it already
+
+            mom = local__createLocal([2000, 1]).day(i);
+            if (strict && !this._fullWeekdaysParse[i]) {
+                this._fullWeekdaysParse[i] = new RegExp('^' + this.weekdays(mom, '').replace('.', '\.?') + '$', 'i');
+                this._shortWeekdaysParse[i] = new RegExp('^' + this.weekdaysShort(mom, '').replace('.', '\.?') + '$', 'i');
+                this._minWeekdaysParse[i] = new RegExp('^' + this.weekdaysMin(mom, '').replace('.', '\.?') + '$', 'i');
+            }
+            if (!this._weekdaysParse[i]) {
+                regex = '^' + this.weekdays(mom, '') + '|^' + this.weekdaysShort(mom, '') + '|^' + this.weekdaysMin(mom, '');
+                this._weekdaysParse[i] = new RegExp(regex.replace('.', ''), 'i');
+            }
+            // test the regex
+            if (strict && format === 'dddd' && this._fullWeekdaysParse[i].test(weekdayName)) {
+                return i;
+            } else if (strict && format === 'ddd' && this._shortWeekdaysParse[i].test(weekdayName)) {
+                return i;
+            } else if (strict && format === 'dd' && this._minWeekdaysParse[i].test(weekdayName)) {
+                return i;
+            } else if (!strict && this._weekdaysParse[i].test(weekdayName)) {
+                return i;
+            }
+        }
+    }
+
+    // MOMENTS
+
+    function getSetDayOfWeek (input) {
+        if (!this.isValid()) {
+            return input != null ? this : NaN;
+        }
+        var day = this._isUTC ? this._d.getUTCDay() : this._d.getDay();
+        if (input != null) {
+            input = parseWeekday(input, this.localeData());
+            return this.add(input - day, 'd');
+        } else {
+            return day;
+        }
+    }
+
+    function getSetLocaleDayOfWeek (input) {
+        if (!this.isValid()) {
+            return input != null ? this : NaN;
+        }
+        var weekday = (this.day() + 7 - this.localeData()._week.dow) % 7;
+        return input == null ? weekday : this.add(input - weekday, 'd');
+    }
+
+    function getSetISODayOfWeek (input) {
+        if (!this.isValid()) {
+            return input != null ? this : NaN;
+        }
+        // behaves the same as moment#day except
+        // as a getter, returns 7 instead of 0 (1-7 range instead of 0-6)
+        // as a setter, sunday should belong to the previous week.
+        return input == null ? this.day() || 7 : this.day(this.day() % 7 ? input : input - 7);
+    }
+
+    // FORMATTING
+
+    addFormatToken('DDD', ['DDDD', 3], 'DDDo', 'dayOfYear');
+
+    // ALIASES
+
+    addUnitAlias('dayOfYear', 'DDD');
+
+    // PARSING
+
+    addRegexToken('DDD',  match1to3);
+    addRegexToken('DDDD', match3);
+    addParseToken(['DDD', 'DDDD'], function (input, array, config) {
+        config._dayOfYear = toInt(input);
+    });
+
+    // HELPERS
+
+    // MOMENTS
+
+    function getSetDayOfYear (input) {
+        var dayOfYear = Math.round((this.clone().startOf('day') - this.clone().startOf('year')) / 864e5) + 1;
+        return input == null ? dayOfYear : this.add((input - dayOfYear), 'd');
+    }
+
+    // FORMATTING
+
+    function hFormat() {
+        return this.hours() % 12 || 12;
+    }
+
+    addFormatToken('H', ['HH', 2], 0, 'hour');
+    addFormatToken('h', ['hh', 2], 0, hFormat);
+
+    addFormatToken('hmm', 0, 0, function () {
+        return '' + hFormat.apply(this) + zeroFill(this.minutes(), 2);
+    });
+
+    addFormatToken('hmmss', 0, 0, function () {
+        return '' + hFormat.apply(this) + zeroFill(this.minutes(), 2) +
+            zeroFill(this.seconds(), 2);
+    });
+
+    addFormatToken('Hmm', 0, 0, function () {
+        return '' + this.hours() + zeroFill(this.minutes(), 2);
+    });
+
+    addFormatToken('Hmmss', 0, 0, function () {
+        return '' + this.hours() + zeroFill(this.minutes(), 2) +
+            zeroFill(this.seconds(), 2);
+    });
+
+    function meridiem (token, lowercase) {
+        addFormatToken(token, 0, 0, function () {
+            return this.localeData().meridiem(this.hours(), this.minutes(), lowercase);
+        });
+    }
+
+    meridiem('a', true);
+    meridiem('A', false);
+
+    // ALIASES
+
+    addUnitAlias('hour', 'h');
+
+    // PARSING
+
+    function matchMeridiem (isStrict, locale) {
+        return locale._meridiemParse;
+    }
+
+    addRegexToken('a',  matchMeridiem);
+    addRegexToken('A',  matchMeridiem);
+    addRegexToken('H',  match1to2);
+    addRegexToken('h',  match1to2);
+    addRegexToken('HH', match1to2, match2);
+    addRegexToken('hh', match1to2, match2);
+
+    addRegexToken('hmm', match3to4);
+    addRegexToken('hmmss', match5to6);
+    addRegexToken('Hmm', match3to4);
+    addRegexToken('Hmmss', match5to6);
+
+    addParseToken(['H', 'HH'], HOUR);
+    addParseToken(['a', 'A'], function (input, array, config) {
+        config._isPm = config._locale.isPM(input);
+        config._meridiem = input;
+    });
+    addParseToken(['h', 'hh'], function (input, array, config) {
+        array[HOUR] = toInt(input);
+        getParsingFlags(config).bigHour = true;
+    });
+    addParseToken('hmm', function (input, array, config) {
+        var pos = input.length - 2;
+        array[HOUR] = toInt(input.substr(0, pos));
+        array[MINUTE] = toInt(input.substr(pos));
+        getParsingFlags(config).bigHour = true;
+    });
+    addParseToken('hmmss', function (input, array, config) {
+        var pos1 = input.length - 4;
+        var pos2 = input.length - 2;
+        array[HOUR] = toInt(input.substr(0, pos1));
+        array[MINUTE] = toInt(input.substr(pos1, 2));
+        array[SECOND] = toInt(input.substr(pos2));
+        getParsingFlags(config).bigHour = true;
+    });
+    addParseToken('Hmm', function (input, array, config) {
+        var pos = input.length - 2;
+        array[HOUR] = toInt(input.substr(0, pos));
+        array[MINUTE] = toInt(input.substr(pos));
+    });
+    addParseToken('Hmmss', function (input, array, config) {
+        var pos1 = input.length - 4;
+        var pos2 = input.length - 2;
+        array[HOUR] = toInt(input.substr(0, pos1));
+        array[MINUTE] = toInt(input.substr(pos1, 2));
+        array[SECOND] = toInt(input.substr(pos2));
+    });
+
+    // LOCALES
+
+    function localeIsPM (input) {
+        // IE8 Quirks Mode & IE7 Standards Mode do not allow accessing strings like arrays
+        // Using charAt should be more compatible.
+        return ((input + '').toLowerCase().charAt(0) === 'p');
+    }
+
+    var defaultLocaleMeridiemParse = /[ap]\.?m?\.?/i;
+    function localeMeridiem (hours, minutes, isLower) {
+        if (hours > 11) {
+            return isLower ? 'pm' : 'PM';
+        } else {
+            return isLower ? 'am' : 'AM';
+        }
+    }
+
+
+    // MOMENTS
+
+    // Setting the hour should keep the time, because the user explicitly
+    // specified which hour he wants. So trying to maintain the same hour (in
+    // a new timezone) makes sense. Adding/subtracting hours does not follow
+    // this rule.
+    var getSetHour = makeGetSet('Hours', true);
+
+    // FORMATTING
+
+    addFormatToken('m', ['mm', 2], 0, 'minute');
+
+    // ALIASES
+
+    addUnitAlias('minute', 'm');
+
+    // PARSING
+
+    addRegexToken('m',  match1to2);
+    addRegexToken('mm', match1to2, match2);
+    addParseToken(['m', 'mm'], MINUTE);
+
+    // MOMENTS
+
+    var getSetMinute = makeGetSet('Minutes', false);
+
+    // FORMATTING
+
+    addFormatToken('s', ['ss', 2], 0, 'second');
+
+    // ALIASES
+
+    addUnitAlias('second', 's');
+
+    // PARSING
+
+    addRegexToken('s',  match1to2);
+    addRegexToken('ss', match1to2, match2);
+    addParseToken(['s', 'ss'], SECOND);
+
+    // MOMENTS
+
+    var getSetSecond = makeGetSet('Seconds', false);
+
+    // FORMATTING
+
+    addFormatToken('S', 0, 0, function () {
+        return ~~(this.millisecond() / 100);
+    });
+
+    addFormatToken(0, ['SS', 2], 0, function () {
+        return ~~(this.millisecond() / 10);
+    });
+
+    addFormatToken(0, ['SSS', 3], 0, 'millisecond');
+    addFormatToken(0, ['SSSS', 4], 0, function () {
+        return this.millisecond() * 10;
+    });
+    addFormatToken(0, ['SSSSS', 5], 0, function () {
+        return this.millisecond() * 100;
+    });
+    addFormatToken(0, ['SSSSSS', 6], 0, function () {
+        return this.millisecond() * 1000;
+    });
+    addFormatToken(0, ['SSSSSSS', 7], 0, function () {
+        return this.millisecond() * 10000;
+    });
+    addFormatToken(0, ['SSSSSSSS', 8], 0, function () {
+        return this.millisecond() * 100000;
+    });
+    addFormatToken(0, ['SSSSSSSSS', 9], 0, function () {
+        return this.millisecond() * 1000000;
+    });
+
+
+    // ALIASES
+
+    addUnitAlias('millisecond', 'ms');
+
+    // PARSING
+
+    addRegexToken('S',    match1to3, match1);
+    addRegexToken('SS',   match1to3, match2);
+    addRegexToken('SSS',  match1to3, match3);
+
+    var token;
+    for (token = 'SSSS'; token.length <= 9; token += 'S') {
+        addRegexToken(token, matchUnsigned);
+    }
+
+    function parseMs(input, array) {
+        array[MILLISECOND] = toInt(('0.' + input) * 1000);
+    }
+
+    for (token = 'S'; token.length <= 9; token += 'S') {
+        addParseToken(token, parseMs);
+    }
+    // MOMENTS
+
+    var getSetMillisecond = makeGetSet('Milliseconds', false);
+
+    // FORMATTING
+
+    addFormatToken('z',  0, 0, 'zoneAbbr');
+    addFormatToken('zz', 0, 0, 'zoneName');
+
+    // MOMENTS
+
+    function getZoneAbbr () {
+        return this._isUTC ? 'UTC' : '';
+    }
+
+    function getZoneName () {
+        return this._isUTC ? 'Coordinated Universal Time' : '';
+    }
+
+    var momentPrototype__proto = Moment.prototype;
+
+    momentPrototype__proto.add               = add_subtract__add;
+    momentPrototype__proto.calendar          = moment_calendar__calendar;
+    momentPrototype__proto.clone             = clone;
+    momentPrototype__proto.diff              = diff;
+    momentPrototype__proto.endOf             = endOf;
+    momentPrototype__proto.format            = format;
+    momentPrototype__proto.from              = from;
+    momentPrototype__proto.fromNow           = fromNow;
+    momentPrototype__proto.to                = to;
+    momentPrototype__proto.toNow             = toNow;
+    momentPrototype__proto.get               = getSet;
+    momentPrototype__proto.invalidAt         = invalidAt;
+    momentPrototype__proto.isAfter           = isAfter;
+    momentPrototype__proto.isBefore          = isBefore;
+    momentPrototype__proto.isBetween         = isBetween;
+    momentPrototype__proto.isSame            = isSame;
+    momentPrototype__proto.isSameOrAfter     = isSameOrAfter;
+    momentPrototype__proto.isSameOrBefore    = isSameOrBefore;
+    momentPrototype__proto.isValid           = moment_valid__isValid;
+    momentPrototype__proto.lang              = lang;
+    momentPrototype__proto.locale            = locale;
+    momentPrototype__proto.localeData        = localeData;
+    momentPrototype__proto.max               = prototypeMax;
+    momentPrototype__proto.min               = prototypeMin;
+    momentPrototype__proto.parsingFlags      = parsingFlags;
+    momentPrototype__proto.set               = getSet;
+    momentPrototype__proto.startOf           = startOf;
+    momentPrototype__proto.subtract          = add_subtract__subtract;
+    momentPrototype__proto.toArray           = toArray;
+    momentPrototype__proto.toObject          = toObject;
+    momentPrototype__proto.toDate            = toDate;
+    momentPrototype__proto.toISOString       = moment_format__toISOString;
+    momentPrototype__proto.toJSON            = toJSON;
+    momentPrototype__proto.toString          = toString;
+    momentPrototype__proto.unix              = unix;
+    momentPrototype__proto.valueOf           = to_type__valueOf;
+    momentPrototype__proto.creationData      = creationData;
+
+    // Year
+    momentPrototype__proto.year       = getSetYear;
+    momentPrototype__proto.isLeapYear = getIsLeapYear;
+
+    // Week Year
+    momentPrototype__proto.weekYear    = getSetWeekYear;
+    momentPrototype__proto.isoWeekYear = getSetISOWeekYear;
+
+    // Quarter
+    momentPrototype__proto.quarter = momentPrototype__proto.quarters = getSetQuarter;
+
+    // Month
+    momentPrototype__proto.month       = getSetMonth;
+    momentPrototype__proto.daysInMonth = getDaysInMonth;
+
+    // Week
+    momentPrototype__proto.week           = momentPrototype__proto.weeks        = getSetWeek;
+    momentPrototype__proto.isoWeek        = momentPrototype__proto.isoWeeks     = getSetISOWeek;
+    momentPrototype__proto.weeksInYear    = getWeeksInYear;
+    momentPrototype__proto.isoWeeksInYear = getISOWeeksInYear;
+
+    // Day
+    momentPrototype__proto.date       = getSetDayOfMonth;
+    momentPrototype__proto.day        = momentPrototype__proto.days             = getSetDayOfWeek;
+    momentPrototype__proto.weekday    = getSetLocaleDayOfWeek;
+    momentPrototype__proto.isoWeekday = getSetISODayOfWeek;
+    momentPrototype__proto.dayOfYear  = getSetDayOfYear;
+
+    // Hour
+    momentPrototype__proto.hour = momentPrototype__proto.hours = getSetHour;
+
+    // Minute
+    momentPrototype__proto.minute = momentPrototype__proto.minutes = getSetMinute;
+
+    // Second
+    momentPrototype__proto.second = momentPrototype__proto.seconds = getSetSecond;
+
+    // Millisecond
+    momentPrototype__proto.millisecond = momentPrototype__proto.milliseconds = getSetMillisecond;
+
+    // Offset
+    momentPrototype__proto.utcOffset            = getSetOffset;
+    momentPrototype__proto.utc                  = setOffsetToUTC;
+    momentPrototype__proto.local                = setOffsetToLocal;
+    momentPrototype__proto.parseZone            = setOffsetToParsedOffset;
+    momentPrototype__proto.hasAlignedHourOffset = hasAlignedHourOffset;
+    momentPrototype__proto.isDST                = isDaylightSavingTime;
+    momentPrototype__proto.isDSTShifted         = isDaylightSavingTimeShifted;
+    momentPrototype__proto.isLocal              = isLocal;
+    momentPrototype__proto.isUtcOffset          = isUtcOffset;
+    momentPrototype__proto.isUtc                = isUtc;
+    momentPrototype__proto.isUTC                = isUtc;
+
+    // Timezone
+    momentPrototype__proto.zoneAbbr = getZoneAbbr;
+    momentPrototype__proto.zoneName = getZoneName;
+
+    // Deprecations
+    momentPrototype__proto.dates  = deprecate('dates accessor is deprecated. Use date instead.', getSetDayOfMonth);
+    momentPrototype__proto.months = deprecate('months accessor is deprecated. Use month instead', getSetMonth);
+    momentPrototype__proto.years  = deprecate('years accessor is deprecated. Use year instead', getSetYear);
+    momentPrototype__proto.zone   = deprecate('moment().zone is deprecated, use moment().utcOffset instead. https://github.com/moment/moment/issues/1779', getSetZone);
+
+    var momentPrototype = momentPrototype__proto;
+
+    function moment__createUnix (input) {
+        return local__createLocal(input * 1000);
+    }
+
+    function moment__createInZone () {
+        return local__createLocal.apply(null, arguments).parseZone();
+    }
+
+    var defaultCalendar = {
+        sameDay : '[Today at] LT',
+        nextDay : '[Tomorrow at] LT',
+        nextWeek : 'dddd [at] LT',
+        lastDay : '[Yesterday at] LT',
+        lastWeek : '[Last] dddd [at] LT',
+        sameElse : 'L'
+    };
+
+    function locale_calendar__calendar (key, mom, now) {
+        var output = this._calendar[key];
+        return isFunction(output) ? output.call(mom, now) : output;
+    }
+
+    var defaultLongDateFormat = {
+        LTS  : 'h:mm:ss A',
+        LT   : 'h:mm A',
+        L    : 'MM/DD/YYYY',
+        LL   : 'MMMM D, YYYY',
+        LLL  : 'MMMM D, YYYY h:mm A',
+        LLLL : 'dddd, MMMM D, YYYY h:mm A'
+    };
+
+    function longDateFormat (key) {
+        var format = this._longDateFormat[key],
+            formatUpper = this._longDateFormat[key.toUpperCase()];
+
+        if (format || !formatUpper) {
+            return format;
+        }
+
+        this._longDateFormat[key] = formatUpper.replace(/MMMM|MM|DD|dddd/g, function (val) {
+            return val.slice(1);
+        });
+
+        return this._longDateFormat[key];
+    }
+
+    var defaultInvalidDate = 'Invalid date';
+
+    function invalidDate () {
+        return this._invalidDate;
+    }
+
+    var defaultOrdinal = '%d';
+    var defaultOrdinalParse = /\d{1,2}/;
+
+    function ordinal (number) {
+        return this._ordinal.replace('%d', number);
+    }
+
+    function preParsePostFormat (string) {
+        return string;
+    }
+
+    var defaultRelativeTime = {
+        future : 'in %s',
+        past   : '%s ago',
+        s  : 'a few seconds',
+        m  : 'a minute',
+        mm : '%d minutes',
+        h  : 'an hour',
+        hh : '%d hours',
+        d  : 'a day',
+        dd : '%d days',
+        M  : 'a month',
+        MM : '%d months',
+        y  : 'a year',
+        yy : '%d years'
+    };
+
+    function relative__relativeTime (number, withoutSuffix, string, isFuture) {
+        var output = this._relativeTime[string];
+        return (isFunction(output)) ?
+            output(number, withoutSuffix, string, isFuture) :
+            output.replace(/%d/i, number);
+    }
+
+    function pastFuture (diff, output) {
+        var format = this._relativeTime[diff > 0 ? 'future' : 'past'];
+        return isFunction(format) ? format(output) : format.replace(/%s/i, output);
+    }
+
+    function locale_set__set (config) {
+        var prop, i;
+        for (i in config) {
+            prop = config[i];
+            if (isFunction(prop)) {
+                this[i] = prop;
+            } else {
+                this['_' + i] = prop;
+            }
+        }
+        // Lenient ordinal parsing accepts just a number in addition to
+        // number + (possibly) stuff coming from _ordinalParseLenient.
+        this._ordinalParseLenient = new RegExp(this._ordinalParse.source + '|' + (/\d{1,2}/).source);
+    }
+
+    var prototype__proto = Locale.prototype;
+
+    prototype__proto._calendar       = defaultCalendar;
+    prototype__proto.calendar        = locale_calendar__calendar;
+    prototype__proto._longDateFormat = defaultLongDateFormat;
+    prototype__proto.longDateFormat  = longDateFormat;
+    prototype__proto._invalidDate    = defaultInvalidDate;
+    prototype__proto.invalidDate     = invalidDate;
+    prototype__proto._ordinal        = defaultOrdinal;
+    prototype__proto.ordinal         = ordinal;
+    prototype__proto._ordinalParse   = defaultOrdinalParse;
+    prototype__proto.preparse        = preParsePostFormat;
+    prototype__proto.postformat      = preParsePostFormat;
+    prototype__proto._relativeTime   = defaultRelativeTime;
+    prototype__proto.relativeTime    = relative__relativeTime;
+    prototype__proto.pastFuture      = pastFuture;
+    prototype__proto.set             = locale_set__set;
+
+    // Month
+    prototype__proto.months            =        localeMonths;
+    prototype__proto._months           = defaultLocaleMonths;
+    prototype__proto.monthsShort       =        localeMonthsShort;
+    prototype__proto._monthsShort      = defaultLocaleMonthsShort;
+    prototype__proto.monthsParse       =        localeMonthsParse;
+    prototype__proto._monthsRegex      = defaultMonthsRegex;
+    prototype__proto.monthsRegex       = monthsRegex;
+    prototype__proto._monthsShortRegex = defaultMonthsShortRegex;
+    prototype__proto.monthsShortRegex  = monthsShortRegex;
+
+    // Week
+    prototype__proto.week = localeWeek;
+    prototype__proto._week = defaultLocaleWeek;
+    prototype__proto.firstDayOfYear = localeFirstDayOfYear;
+    prototype__proto.firstDayOfWeek = localeFirstDayOfWeek;
+
+    // Day of Week
+    prototype__proto.weekdays       =        localeWeekdays;
+    prototype__proto._weekdays      = defaultLocaleWeekdays;
+    prototype__proto.weekdaysMin    =        localeWeekdaysMin;
+    prototype__proto._weekdaysMin   = defaultLocaleWeekdaysMin;
+    prototype__proto.weekdaysShort  =        localeWeekdaysShort;
+    prototype__proto._weekdaysShort = defaultLocaleWeekdaysShort;
+    prototype__proto.weekdaysParse  =        localeWeekdaysParse;
+
+    // Hours
+    prototype__proto.isPM = localeIsPM;
+    prototype__proto._meridiemParse = defaultLocaleMeridiemParse;
+    prototype__proto.meridiem = localeMeridiem;
+
+    function lists__get (format, index, field, setter) {
+        var locale = locale_locales__getLocale();
+        var utc = create_utc__createUTC().set(setter, index);
+        return locale[field](utc, format);
+    }
+
+    function list (format, index, field, count, setter) {
+        if (typeof format === 'number') {
+            index = format;
+            format = undefined;
+        }
+
+        format = format || '';
+
+        if (index != null) {
+            return lists__get(format, index, field, setter);
+        }
+
+        var i;
+        var out = [];
+        for (i = 0; i < count; i++) {
+            out[i] = lists__get(format, i, field, setter);
+        }
+        return out;
+    }
+
+    function lists__listMonths (format, index) {
+        return list(format, index, 'months', 12, 'month');
+    }
+
+    function lists__listMonthsShort (format, index) {
+        return list(format, index, 'monthsShort', 12, 'month');
+    }
+
+    function lists__listWeekdays (format, index) {
+        return list(format, index, 'weekdays', 7, 'day');
+    }
+
+    function lists__listWeekdaysShort (format, index) {
+        return list(format, index, 'weekdaysShort', 7, 'day');
+    }
+
+    function lists__listWeekdaysMin (format, index) {
+        return list(format, index, 'weekdaysMin', 7, 'day');
+    }
+
+    locale_locales__getSetGlobalLocale('en', {
+        ordinalParse: /\d{1,2}(th|st|nd|rd)/,
+        ordinal : function (number) {
+            var b = number % 10,
+                output = (toInt(number % 100 / 10) === 1) ? 'th' :
+                (b === 1) ? 'st' :
+                (b === 2) ? 'nd' :
+                (b === 3) ? 'rd' : 'th';
+            return number + output;
+        }
+    });
+
+    // Side effect imports
+    utils_hooks__hooks.lang = deprecate('moment.lang is deprecated. Use moment.locale instead.', locale_locales__getSetGlobalLocale);
+    utils_hooks__hooks.langData = deprecate('moment.langData is deprecated. Use moment.localeData instead.', locale_locales__getLocale);
+
+    var mathAbs = Math.abs;
+
+    function duration_abs__abs () {
+        var data           = this._data;
+
+        this._milliseconds = mathAbs(this._milliseconds);
+        this._days         = mathAbs(this._days);
+        this._months       = mathAbs(this._months);
+
+        data.milliseconds  = mathAbs(data.milliseconds);
+        data.seconds       = mathAbs(data.seconds);
+        data.minutes       = mathAbs(data.minutes);
+        data.hours         = mathAbs(data.hours);
+        data.months        = mathAbs(data.months);
+        data.years         = mathAbs(data.years);
+
+        return this;
+    }
+
+    function duration_add_subtract__addSubtract (duration, input, value, direction) {
+        var other = create__createDuration(input, value);
+
+        duration._milliseconds += direction * other._milliseconds;
+        duration._days         += direction * other._days;
+        duration._months       += direction * other._months;
+
+        return duration._bubble();
+    }
+
+    // supports only 2.0-style add(1, 's') or add(duration)
+    function duration_add_subtract__add (input, value) {
+        return duration_add_subtract__addSubtract(this, input, value, 1);
+    }
+
+    // supports only 2.0-style subtract(1, 's') or subtract(duration)
+    function duration_add_subtract__subtract (input, value) {
+        return duration_add_subtract__addSubtract(this, input, value, -1);
+    }
+
+    function absCeil (number) {
+        if (number < 0) {
+            return Math.floor(number);
+        } else {
+            return Math.ceil(number);
+        }
+    }
+
+    function bubble () {
+        var milliseconds = this._milliseconds;
+        var days         = this._days;
+        var months       = this._months;
+        var data         = this._data;
+        var seconds, minutes, hours, years, monthsFromDays;
+
+        // if we have a mix of positive and negative values, bubble down first
+        // check: https://github.com/moment/moment/issues/2166
+        if (!((milliseconds >= 0 && days >= 0 && months >= 0) ||
+                (milliseconds <= 0 && days <= 0 && months <= 0))) {
+            milliseconds += absCeil(monthsToDays(months) + days) * 864e5;
+            days = 0;
+            months = 0;
+        }
+
+        // The following code bubbles up values, see the tests for
+        // examples of what that means.
+        data.milliseconds = milliseconds % 1000;
+
+        seconds           = absFloor(milliseconds / 1000);
+        data.seconds      = seconds % 60;
+
+        minutes           = absFloor(seconds / 60);
+        data.minutes      = minutes % 60;
+
+        hours             = absFloor(minutes / 60);
+        data.hours        = hours % 24;
+
+        days += absFloor(hours / 24);
+
+        // convert days to months
+        monthsFromDays = absFloor(daysToMonths(days));
+        months += monthsFromDays;
+        days -= absCeil(monthsToDays(monthsFromDays));
+
+        // 12 months -> 1 year
+        years = absFloor(months / 12);
+        months %= 12;
+
+        data.days   = days;
+        data.months = months;
+        data.years  = years;
+
+        return this;
+    }
+
+    function daysToMonths (days) {
+        // 400 years have 146097 days (taking into account leap year rules)
+        // 400 years have 12 months === 4800
+        return days * 4800 / 146097;
+    }
+
+    function monthsToDays (months) {
+        // the reverse of daysToMonths
+        return months * 146097 / 4800;
+    }
+
+    function as (units) {
+        var days;
+        var months;
+        var milliseconds = this._milliseconds;
+
+        units = normalizeUnits(units);
+
+        if (units === 'month' || units === 'year') {
+            days   = this._days   + milliseconds / 864e5;
+            months = this._months + daysToMonths(days);
+            return units === 'month' ? months : months / 12;
+        } else {
+            // handle milliseconds separately because of floating point math errors (issue #1867)
+            days = this._days + Math.round(monthsToDays(this._months));
+            switch (units) {
+                case 'week'   : return days / 7     + milliseconds / 6048e5;
+                case 'day'    : return days         + milliseconds / 864e5;
+                case 'hour'   : return days * 24    + milliseconds / 36e5;
+                case 'minute' : return days * 1440  + milliseconds / 6e4;
+                case 'second' : return days * 86400 + milliseconds / 1000;
+                // Math.floor prevents floating point math errors here
+                case 'millisecond': return Math.floor(days * 864e5) + milliseconds;
+                default: throw new Error('Unknown unit ' + units);
+            }
+        }
+    }
+
+    // TODO: Use this.as('ms')?
+    function duration_as__valueOf () {
+        return (
+            this._milliseconds +
+            this._days * 864e5 +
+            (this._months % 12) * 2592e6 +
+            toInt(this._months / 12) * 31536e6
+        );
+    }
+
+    function makeAs (alias) {
+        return function () {
+            return this.as(alias);
+        };
+    }
+
+    var asMilliseconds = makeAs('ms');
+    var asSeconds      = makeAs('s');
+    var asMinutes      = makeAs('m');
+    var asHours        = makeAs('h');
+    var asDays         = makeAs('d');
+    var asWeeks        = makeAs('w');
+    var asMonths       = makeAs('M');
+    var asYears        = makeAs('y');
+
+    function duration_get__get (units) {
+        units = normalizeUnits(units);
+        return this[units + 's']();
+    }
+
+    function makeGetter(name) {
+        return function () {
+            return this._data[name];
+        };
+    }
+
+    var milliseconds = makeGetter('milliseconds');
+    var seconds      = makeGetter('seconds');
+    var minutes      = makeGetter('minutes');
+    var hours        = makeGetter('hours');
+    var days         = makeGetter('days');
+    var months       = makeGetter('months');
+    var years        = makeGetter('years');
+
+    function weeks () {
+        return absFloor(this.days() / 7);
+    }
+
+    var round = Math.round;
+    var thresholds = {
+        s: 45,  // seconds to minute
+        m: 45,  // minutes to hour
+        h: 22,  // hours to day
+        d: 26,  // days to month
+        M: 11   // months to year
+    };
+
+    // helper function for moment.fn.from, moment.fn.fromNow, and moment.duration.fn.humanize
+    function substituteTimeAgo(string, number, withoutSuffix, isFuture, locale) {
+        return locale.relativeTime(number || 1, !!withoutSuffix, string, isFuture);
+    }
+
+    function duration_humanize__relativeTime (posNegDuration, withoutSuffix, locale) {
+        var duration = create__createDuration(posNegDuration).abs();
+        var seconds  = round(duration.as('s'));
+        var minutes  = round(duration.as('m'));
+        var hours    = round(duration.as('h'));
+        var days     = round(duration.as('d'));
+        var months   = round(duration.as('M'));
+        var years    = round(duration.as('y'));
+
+        var a = seconds < thresholds.s && ['s', seconds]  ||
+                minutes <= 1           && ['m']           ||
+                minutes < thresholds.m && ['mm', minutes] ||
+                hours   <= 1           && ['h']           ||
+                hours   < thresholds.h && ['hh', hours]   ||
+                days    <= 1           && ['d']           ||
+                days    < thresholds.d && ['dd', days]    ||
+                months  <= 1           && ['M']           ||
+                months  < thresholds.M && ['MM', months]  ||
+                years   <= 1           && ['y']           || ['yy', years];
+
+        a[2] = withoutSuffix;
+        a[3] = +posNegDuration > 0;
+        a[4] = locale;
+        return substituteTimeAgo.apply(null, a);
+    }
+
+    // This function allows you to set a threshold for relative time strings
+    function duration_humanize__getSetRelativeTimeThreshold (threshold, limit) {
+        if (thresholds[threshold] === undefined) {
+            return false;
+        }
+        if (limit === undefined) {
+            return thresholds[threshold];
+        }
+        thresholds[threshold] = limit;
+        return true;
+    }
+
+    function humanize (withSuffix) {
+        var locale = this.localeData();
+        var output = duration_humanize__relativeTime(this, !withSuffix, locale);
+
+        if (withSuffix) {
+            output = locale.pastFuture(+this, output);
+        }
+
+        return locale.postformat(output);
+    }
+
+    var iso_string__abs = Math.abs;
+
+    function iso_string__toISOString() {
+        // for ISO strings we do not use the normal bubbling rules:
+        //  * milliseconds bubble up until they become hours
+        //  * days do not bubble at all
+        //  * months bubble up until they become years
+        // This is because there is no context-free conversion between hours and days
+        // (think of clock changes)
+        // and also not between days and months (28-31 days per month)
+        var seconds = iso_string__abs(this._milliseconds) / 1000;
+        var days         = iso_string__abs(this._days);
+        var months       = iso_string__abs(this._months);
+        var minutes, hours, years;
+
+        // 3600 seconds -> 60 minutes -> 1 hour
+        minutes           = absFloor(seconds / 60);
+        hours             = absFloor(minutes / 60);
+        seconds %= 60;
+        minutes %= 60;
+
+        // 12 months -> 1 year
+        years  = absFloor(months / 12);
+        months %= 12;
+
+
+        // inspired by https://github.com/dordille/moment-isoduration/blob/master/moment.isoduration.js
+        var Y = years;
+        var M = months;
+        var D = days;
+        var h = hours;
+        var m = minutes;
+        var s = seconds;
+        var total = this.asSeconds();
+
+        if (!total) {
+            // this is the same as C#'s (Noda) and python (isodate)...
+            // but not other JS (goog.date)
+            return 'P0D';
+        }
+
+        return (total < 0 ? '-' : '') +
+            'P' +
+            (Y ? Y + 'Y' : '') +
+            (M ? M + 'M' : '') +
+            (D ? D + 'D' : '') +
+            ((h || m || s) ? 'T' : '') +
+            (h ? h + 'H' : '') +
+            (m ? m + 'M' : '') +
+            (s ? s + 'S' : '');
+    }
+
+    var duration_prototype__proto = Duration.prototype;
+
+    duration_prototype__proto.abs            = duration_abs__abs;
+    duration_prototype__proto.add            = duration_add_subtract__add;
+    duration_prototype__proto.subtract       = duration_add_subtract__subtract;
+    duration_prototype__proto.as             = as;
+    duration_prototype__proto.asMilliseconds = asMilliseconds;
+    duration_prototype__proto.asSeconds      = asSeconds;
+    duration_prototype__proto.asMinutes      = asMinutes;
+    duration_prototype__proto.asHours        = asHours;
+    duration_prototype__proto.asDays         = asDays;
+    duration_prototype__proto.asWeeks        = asWeeks;
+    duration_prototype__proto.asMonths       = asMonths;
+    duration_prototype__proto.asYears        = asYears;
+    duration_prototype__proto.valueOf        = duration_as__valueOf;
+    duration_prototype__proto._bubble        = bubble;
+    duration_prototype__proto.get            = duration_get__get;
+    duration_prototype__proto.milliseconds   = milliseconds;
+    duration_prototype__proto.seconds        = seconds;
+    duration_prototype__proto.minutes        = minutes;
+    duration_prototype__proto.hours          = hours;
+    duration_prototype__proto.days           = days;
+    duration_prototype__proto.weeks          = weeks;
+    duration_prototype__proto.months         = months;
+    duration_prototype__proto.years          = years;
+    duration_prototype__proto.humanize       = humanize;
+    duration_prototype__proto.toISOString    = iso_string__toISOString;
+    duration_prototype__proto.toString       = iso_string__toISOString;
+    duration_prototype__proto.toJSON         = iso_string__toISOString;
+    duration_prototype__proto.locale         = locale;
+    duration_prototype__proto.localeData     = localeData;
+
+    // Deprecations
+    duration_prototype__proto.toIsoString = deprecate('toIsoString() is deprecated. Please use toISOString() instead (notice the capitals)', iso_string__toISOString);
+    duration_prototype__proto.lang = lang;
+
+    // Side effect imports
+
+    // FORMATTING
+
+    addFormatToken('X', 0, 0, 'unix');
+    addFormatToken('x', 0, 0, 'valueOf');
+
+    // PARSING
+
+    addRegexToken('x', matchSigned);
+    addRegexToken('X', matchTimestamp);
+    addParseToken('X', function (input, array, config) {
+        config._d = new Date(parseFloat(input, 10) * 1000);
+    });
+    addParseToken('x', function (input, array, config) {
+        config._d = new Date(toInt(input));
+    });
+
+    // Side effect imports
+
+
+    utils_hooks__hooks.version = '2.11.2';
+
+    setHookCallback(local__createLocal);
+
+    utils_hooks__hooks.fn                    = momentPrototype;
+    utils_hooks__hooks.min                   = min;
+    utils_hooks__hooks.max                   = max;
+    utils_hooks__hooks.now                   = now;
+    utils_hooks__hooks.utc                   = create_utc__createUTC;
+    utils_hooks__hooks.unix                  = moment__createUnix;
+    utils_hooks__hooks.months                = lists__listMonths;
+    utils_hooks__hooks.isDate                = isDate;
+    utils_hooks__hooks.locale                = locale_locales__getSetGlobalLocale;
+    utils_hooks__hooks.invalid               = valid__createInvalid;
+    utils_hooks__hooks.duration              = create__createDuration;
+    utils_hooks__hooks.isMoment              = isMoment;
+    utils_hooks__hooks.weekdays              = lists__listWeekdays;
+    utils_hooks__hooks.parseZone             = moment__createInZone;
+    utils_hooks__hooks.localeData            = locale_locales__getLocale;
+    utils_hooks__hooks.isDuration            = isDuration;
+    utils_hooks__hooks.monthsShort           = lists__listMonthsShort;
+    utils_hooks__hooks.weekdaysMin           = lists__listWeekdaysMin;
+    utils_hooks__hooks.defineLocale          = defineLocale;
+    utils_hooks__hooks.weekdaysShort         = lists__listWeekdaysShort;
+    utils_hooks__hooks.normalizeUnits        = normalizeUnits;
+    utils_hooks__hooks.relativeTimeThreshold = duration_humanize__getSetRelativeTimeThreshold;
+    utils_hooks__hooks.prototype             = momentPrototype;
+
+    var _moment = utils_hooks__hooks;
+
+    return _moment;
+
+}));
+
+/*!
+ * Select2 4.0.1
+ * https://select2.github.io
+ *
+ * Released under the MIT license
+ * https://github.com/select2/select2/blob/master/LICENSE.md
+ */
+(function (factory) {
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module.
+    define(['jquery'], factory);
+  } else if (typeof exports === 'object') {
+    // Node/CommonJS
+    factory(require('jquery'));
+  } else {
+    // Browser globals
+    factory(jQuery);
+  }
+}(function (jQuery) {
+  // This is needed so we can catch the AMD loader configuration and use it
+  // The inner file should be wrapped (by `banner.start.js`) in a function that
+  // returns the AMD loader references.
+  var S2 =
+(function () {
+  // Restore the Select2 AMD loader so it can be used
+  // Needed mostly in the language files, where the loader is not inserted
+  if (jQuery && jQuery.fn && jQuery.fn.select2 && jQuery.fn.select2.amd) {
+    var S2 = jQuery.fn.select2.amd;
+  }
+var S2;(function () { if (!S2 || !S2.requirejs) {
+if (!S2) { S2 = {}; } else { require = S2; }
+/**
+ * @license almond 0.3.1 Copyright (c) 2011-2014, The Dojo Foundation All Rights Reserved.
+ * Available via the MIT or new BSD license.
+ * see: http://github.com/jrburke/almond for details
+ */
+//Going sloppy to avoid 'use strict' string cost, but strict practices should
+//be followed.
+/*jslint sloppy: true */
+/*global setTimeout: false */
+
+var requirejs, require, define;
+(function (undef) {
+    var main, req, makeMap, handlers,
+        defined = {},
+        waiting = {},
+        config = {},
+        defining = {},
+        hasOwn = Object.prototype.hasOwnProperty,
+        aps = [].slice,
+        jsSuffixRegExp = /\.js$/;
+
+    function hasProp(obj, prop) {
+        return hasOwn.call(obj, prop);
+    }
+
+    /**
+     * Given a relative module name, like ./something, normalize it to
+     * a real name that can be mapped to a path.
+     * @param {String} name the relative name
+     * @param {String} baseName a real name that the name arg is relative
+     * to.
+     * @returns {String} normalized name
+     */
+    function normalize(name, baseName) {
+        var nameParts, nameSegment, mapValue, foundMap, lastIndex,
+            foundI, foundStarMap, starI, i, j, part,
+            baseParts = baseName && baseName.split("/"),
+            map = config.map,
+            starMap = (map && map['*']) || {};
+
+        //Adjust any relative paths.
+        if (name && name.charAt(0) === ".") {
+            //If have a base name, try to normalize against it,
+            //otherwise, assume it is a top-level require that will
+            //be relative to baseUrl in the end.
+            if (baseName) {
+                name = name.split('/');
+                lastIndex = name.length - 1;
+
+                // Node .js allowance:
+                if (config.nodeIdCompat && jsSuffixRegExp.test(name[lastIndex])) {
+                    name[lastIndex] = name[lastIndex].replace(jsSuffixRegExp, '');
+                }
+
+                //Lop off the last part of baseParts, so that . matches the
+                //"directory" and not name of the baseName's module. For instance,
+                //baseName of "one/two/three", maps to "one/two/three.js", but we
+                //want the directory, "one/two" for this normalization.
+                name = baseParts.slice(0, baseParts.length - 1).concat(name);
+
+                //start trimDots
+                for (i = 0; i < name.length; i += 1) {
+                    part = name[i];
+                    if (part === ".") {
+                        name.splice(i, 1);
+                        i -= 1;
+                    } else if (part === "..") {
+                        if (i === 1 && (name[2] === '..' || name[0] === '..')) {
+                            //End of the line. Keep at least one non-dot
+                            //path segment at the front so it can be mapped
+                            //correctly to disk. Otherwise, there is likely
+                            //no path mapping for a path starting with '..'.
+                            //This can still fail, but catches the most reasonable
+                            //uses of ..
+                            break;
+                        } else if (i > 0) {
+                            name.splice(i - 1, 2);
+                            i -= 2;
+                        }
+                    }
+                }
+                //end trimDots
+
+                name = name.join("/");
+            } else if (name.indexOf('./') === 0) {
+                // No baseName, so this is ID is resolved relative
+                // to baseUrl, pull off the leading dot.
+                name = name.substring(2);
+            }
+        }
+
+        //Apply map config if available.
+        if ((baseParts || starMap) && map) {
+            nameParts = name.split('/');
+
+            for (i = nameParts.length; i > 0; i -= 1) {
+                nameSegment = nameParts.slice(0, i).join("/");
+
+                if (baseParts) {
+                    //Find the longest baseName segment match in the config.
+                    //So, do joins on the biggest to smallest lengths of baseParts.
+                    for (j = baseParts.length; j > 0; j -= 1) {
+                        mapValue = map[baseParts.slice(0, j).join('/')];
+
+                        //baseName segment has  config, find if it has one for
+                        //this name.
+                        if (mapValue) {
+                            mapValue = mapValue[nameSegment];
+                            if (mapValue) {
+                                //Match, update name to the new value.
+                                foundMap = mapValue;
+                                foundI = i;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (foundMap) {
+                    break;
+                }
+
+                //Check for a star map match, but just hold on to it,
+                //if there is a shorter segment match later in a matching
+                //config, then favor over this star map.
+                if (!foundStarMap && starMap && starMap[nameSegment]) {
+                    foundStarMap = starMap[nameSegment];
+                    starI = i;
+                }
+            }
+
+            if (!foundMap && foundStarMap) {
+                foundMap = foundStarMap;
+                foundI = starI;
+            }
+
+            if (foundMap) {
+                nameParts.splice(0, foundI, foundMap);
+                name = nameParts.join('/');
+            }
+        }
+
+        return name;
+    }
+
+    function makeRequire(relName, forceSync) {
+        return function () {
+            //A version of a require function that passes a moduleName
+            //value for items that may need to
+            //look up paths relative to the moduleName
+            var args = aps.call(arguments, 0);
+
+            //If first arg is not require('string'), and there is only
+            //one arg, it is the array form without a callback. Insert
+            //a null so that the following concat is correct.
+            if (typeof args[0] !== 'string' && args.length === 1) {
+                args.push(null);
+            }
+            return req.apply(undef, args.concat([relName, forceSync]));
+        };
+    }
+
+    function makeNormalize(relName) {
+        return function (name) {
+            return normalize(name, relName);
+        };
+    }
+
+    function makeLoad(depName) {
+        return function (value) {
+            defined[depName] = value;
+        };
+    }
+
+    function callDep(name) {
+        if (hasProp(waiting, name)) {
+            var args = waiting[name];
+            delete waiting[name];
+            defining[name] = true;
+            main.apply(undef, args);
+        }
+
+        if (!hasProp(defined, name) && !hasProp(defining, name)) {
+            throw new Error('No ' + name);
+        }
+        return defined[name];
+    }
+
+    //Turns a plugin!resource to [plugin, resource]
+    //with the plugin being undefined if the name
+    //did not have a plugin prefix.
+    function splitPrefix(name) {
+        var prefix,
+            index = name ? name.indexOf('!') : -1;
+        if (index > -1) {
+            prefix = name.substring(0, index);
+            name = name.substring(index + 1, name.length);
+        }
+        return [prefix, name];
+    }
+
+    /**
+     * Makes a name map, normalizing the name, and using a plugin
+     * for normalization if necessary. Grabs a ref to plugin
+     * too, as an optimization.
+     */
+    makeMap = function (name, relName) {
+        var plugin,
+            parts = splitPrefix(name),
+            prefix = parts[0];
+
+        name = parts[1];
+
+        if (prefix) {
+            prefix = normalize(prefix, relName);
+            plugin = callDep(prefix);
+        }
+
+        //Normalize according
+        if (prefix) {
+            if (plugin && plugin.normalize) {
+                name = plugin.normalize(name, makeNormalize(relName));
+            } else {
+                name = normalize(name, relName);
+            }
+        } else {
+            name = normalize(name, relName);
+            parts = splitPrefix(name);
+            prefix = parts[0];
+            name = parts[1];
+            if (prefix) {
+                plugin = callDep(prefix);
+            }
+        }
+
+        //Using ridiculous property names for space reasons
+        return {
+            f: prefix ? prefix + '!' + name : name, //fullName
+            n: name,
+            pr: prefix,
+            p: plugin
+        };
+    };
+
+    function makeConfig(name) {
+        return function () {
+            return (config && config.config && config.config[name]) || {};
+        };
+    }
+
+    handlers = {
+        require: function (name) {
+            return makeRequire(name);
+        },
+        exports: function (name) {
+            var e = defined[name];
+            if (typeof e !== 'undefined') {
+                return e;
+            } else {
+                return (defined[name] = {});
+            }
+        },
+        module: function (name) {
+            return {
+                id: name,
+                uri: '',
+                exports: defined[name],
+                config: makeConfig(name)
+            };
+        }
+    };
+
+    main = function (name, deps, callback, relName) {
+        var cjsModule, depName, ret, map, i,
+            args = [],
+            callbackType = typeof callback,
+            usingExports;
+
+        //Use name if no relName
+        relName = relName || name;
+
+        //Call the callback to define the module, if necessary.
+        if (callbackType === 'undefined' || callbackType === 'function') {
+            //Pull out the defined dependencies and pass the ordered
+            //values to the callback.
+            //Default to [require, exports, module] if no deps
+            deps = !deps.length && callback.length ? ['require', 'exports', 'module'] : deps;
+            for (i = 0; i < deps.length; i += 1) {
+                map = makeMap(deps[i], relName);
+                depName = map.f;
+
+                //Fast path CommonJS standard dependencies.
+                if (depName === "require") {
+                    args[i] = handlers.require(name);
+                } else if (depName === "exports") {
+                    //CommonJS module spec 1.1
+                    args[i] = handlers.exports(name);
+                    usingExports = true;
+                } else if (depName === "module") {
+                    //CommonJS module spec 1.1
+                    cjsModule = args[i] = handlers.module(name);
+                } else if (hasProp(defined, depName) ||
+                           hasProp(waiting, depName) ||
+                           hasProp(defining, depName)) {
+                    args[i] = callDep(depName);
+                } else if (map.p) {
+                    map.p.load(map.n, makeRequire(relName, true), makeLoad(depName), {});
+                    args[i] = defined[depName];
+                } else {
+                    throw new Error(name + ' missing ' + depName);
+                }
+            }
+
+            ret = callback ? callback.apply(defined[name], args) : undefined;
+
+            if (name) {
+                //If setting exports via "module" is in play,
+                //favor that over return value and exports. After that,
+                //favor a non-undefined return value over exports use.
+                if (cjsModule && cjsModule.exports !== undef &&
+                        cjsModule.exports !== defined[name]) {
+                    defined[name] = cjsModule.exports;
+                } else if (ret !== undef || !usingExports) {
+                    //Use the return value from the function.
+                    defined[name] = ret;
+                }
+            }
+        } else if (name) {
+            //May just be an object definition for the module. Only
+            //worry about defining if have a module name.
+            defined[name] = callback;
+        }
+    };
+
+    requirejs = require = req = function (deps, callback, relName, forceSync, alt) {
+        if (typeof deps === "string") {
+            if (handlers[deps]) {
+                //callback in this case is really relName
+                return handlers[deps](callback);
+            }
+            //Just return the module wanted. In this scenario, the
+            //deps arg is the module name, and second arg (if passed)
+            //is just the relName.
+            //Normalize module name, if it contains . or ..
+            return callDep(makeMap(deps, callback).f);
+        } else if (!deps.splice) {
+            //deps is a config object, not an array.
+            config = deps;
+            if (config.deps) {
+                req(config.deps, config.callback);
+            }
+            if (!callback) {
+                return;
+            }
+
+            if (callback.splice) {
+                //callback is an array, which means it is a dependency list.
+                //Adjust args if there are dependencies
+                deps = callback;
+                callback = relName;
+                relName = null;
+            } else {
+                deps = undef;
+            }
+        }
+
+        //Support require(['a'])
+        callback = callback || function () {};
+
+        //If relName is a function, it is an errback handler,
+        //so remove it.
+        if (typeof relName === 'function') {
+            relName = forceSync;
+            forceSync = alt;
+        }
+
+        //Simulate async callback;
+        if (forceSync) {
+            main(undef, deps, callback, relName);
+        } else {
+            //Using a non-zero value because of concern for what old browsers
+            //do, and latest browsers "upgrade" to 4 if lower value is used:
+            //http://www.whatwg.org/specs/web-apps/current-work/multipage/timers.html#dom-windowtimers-settimeout:
+            //If want a value immediately, use require('id') instead -- something
+            //that works in almond on the global level, but not guaranteed and
+            //unlikely to work in other AMD implementations.
+            setTimeout(function () {
+                main(undef, deps, callback, relName);
+            }, 4);
+        }
+
+        return req;
+    };
+
+    /**
+     * Just drops the config on the floor, but returns req in case
+     * the config return value is used.
+     */
+    req.config = function (cfg) {
+        return req(cfg);
+    };
+
+    /**
+     * Expose module registry for debugging and tooling
+     */
+    requirejs._defined = defined;
+
+    define = function (name, deps, callback) {
+        if (typeof name !== 'string') {
+            throw new Error('See almond README: incorrect module build, no module name');
+        }
+
+        //This module may not have dependencies
+        if (!deps.splice) {
+            //deps is not an array, so probably means
+            //an object literal or factory function for
+            //the value. Adjust args.
+            callback = deps;
+            deps = [];
+        }
+
+        if (!hasProp(defined, name) && !hasProp(waiting, name)) {
+            waiting[name] = [name, deps, callback];
+        }
+    };
+
+    define.amd = {
+        jQuery: true
+    };
+}());
+
+S2.requirejs = requirejs;S2.require = require;S2.define = define;
+}
+}());
+S2.define("almond", function(){});
+
+/* global jQuery:false, $:false */
+S2.define('jquery',[],function () {
+  var _$ = jQuery || $;
+
+  if (_$ == null && console && console.error) {
+    console.error(
+      'Select2: An instance of jQuery or a jQuery-compatible library was not ' +
+      'found. Make sure that you are including jQuery before Select2 on your ' +
+      'web page.'
+    );
+  }
+
+  return _$;
+});
+
+S2.define('select2/utils',[
+  'jquery'
+], function ($) {
+  var Utils = {};
+
+  Utils.Extend = function (ChildClass, SuperClass) {
+    var __hasProp = {}.hasOwnProperty;
+
+    function BaseConstructor () {
+      this.constructor = ChildClass;
+    }
+
+    for (var key in SuperClass) {
+      if (__hasProp.call(SuperClass, key)) {
+        ChildClass[key] = SuperClass[key];
+      }
+    }
+
+    BaseConstructor.prototype = SuperClass.prototype;
+    ChildClass.prototype = new BaseConstructor();
+    ChildClass.__super__ = SuperClass.prototype;
+
+    return ChildClass;
+  };
+
+  function getMethods (theClass) {
+    var proto = theClass.prototype;
+
+    var methods = [];
+
+    for (var methodName in proto) {
+      var m = proto[methodName];
+
+      if (typeof m !== 'function') {
+        continue;
+      }
+
+      if (methodName === 'constructor') {
+        continue;
+      }
+
+      methods.push(methodName);
+    }
+
+    return methods;
+  }
+
+  Utils.Decorate = function (SuperClass, DecoratorClass) {
+    var decoratedMethods = getMethods(DecoratorClass);
+    var superMethods = getMethods(SuperClass);
+
+    function DecoratedClass () {
+      var unshift = Array.prototype.unshift;
+
+      var argCount = DecoratorClass.prototype.constructor.length;
+
+      var calledConstructor = SuperClass.prototype.constructor;
+
+      if (argCount > 0) {
+        unshift.call(arguments, SuperClass.prototype.constructor);
+
+        calledConstructor = DecoratorClass.prototype.constructor;
+      }
+
+      calledConstructor.apply(this, arguments);
+    }
+
+    DecoratorClass.displayName = SuperClass.displayName;
+
+    function ctr () {
+      this.constructor = DecoratedClass;
+    }
+
+    DecoratedClass.prototype = new ctr();
+
+    for (var m = 0; m < superMethods.length; m++) {
+        var superMethod = superMethods[m];
+
+        DecoratedClass.prototype[superMethod] =
+          SuperClass.prototype[superMethod];
+    }
+
+    var calledMethod = function (methodName) {
+      // Stub out the original method if it's not decorating an actual method
+      var originalMethod = function () {};
+
+      if (methodName in DecoratedClass.prototype) {
+        originalMethod = DecoratedClass.prototype[methodName];
+      }
+
+      var decoratedMethod = DecoratorClass.prototype[methodName];
+
+      return function () {
+        var unshift = Array.prototype.unshift;
+
+        unshift.call(arguments, originalMethod);
+
+        return decoratedMethod.apply(this, arguments);
+      };
+    };
+
+    for (var d = 0; d < decoratedMethods.length; d++) {
+      var decoratedMethod = decoratedMethods[d];
+
+      DecoratedClass.prototype[decoratedMethod] = calledMethod(decoratedMethod);
+    }
+
+    return DecoratedClass;
+  };
+
+  var Observable = function () {
+    this.listeners = {};
+  };
+
+  Observable.prototype.on = function (event, callback) {
+    this.listeners = this.listeners || {};
+
+    if (event in this.listeners) {
+      this.listeners[event].push(callback);
+    } else {
+      this.listeners[event] = [callback];
+    }
+  };
+
+  Observable.prototype.trigger = function (event) {
+    var slice = Array.prototype.slice;
+
+    this.listeners = this.listeners || {};
+
+    if (event in this.listeners) {
+      this.invoke(this.listeners[event], slice.call(arguments, 1));
+    }
+
+    if ('*' in this.listeners) {
+      this.invoke(this.listeners['*'], arguments);
+    }
+  };
+
+  Observable.prototype.invoke = function (listeners, params) {
+    for (var i = 0, len = listeners.length; i < len; i++) {
+      listeners[i].apply(this, params);
+    }
+  };
+
+  Utils.Observable = Observable;
+
+  Utils.generateChars = function (length) {
+    var chars = '';
+
+    for (var i = 0; i < length; i++) {
+      var randomChar = Math.floor(Math.random() * 36);
+      chars += randomChar.toString(36);
+    }
+
+    return chars;
+  };
+
+  Utils.bind = function (func, context) {
+    return function () {
+      func.apply(context, arguments);
+    };
+  };
+
+  Utils._convertData = function (data) {
+    for (var originalKey in data) {
+      var keys = originalKey.split('-');
+
+      var dataLevel = data;
+
+      if (keys.length === 1) {
+        continue;
+      }
+
+      for (var k = 0; k < keys.length; k++) {
+        var key = keys[k];
+
+        // Lowercase the first letter
+        // By default, dash-separated becomes camelCase
+        key = key.substring(0, 1).toLowerCase() + key.substring(1);
+
+        if (!(key in dataLevel)) {
+          dataLevel[key] = {};
+        }
+
+        if (k == keys.length - 1) {
+          dataLevel[key] = data[originalKey];
+        }
+
+        dataLevel = dataLevel[key];
+      }
+
+      delete data[originalKey];
+    }
+
+    return data;
+  };
+
+  Utils.hasScroll = function (index, el) {
+    // Adapted from the function created by @ShadowScripter
+    // and adapted by @BillBarry on the Stack Exchange Code Review website.
+    // The original code can be found at
+    // http://codereview.stackexchange.com/q/13338
+    // and was designed to be used with the Sizzle selector engine.
+
+    var $el = $(el);
+    var overflowX = el.style.overflowX;
+    var overflowY = el.style.overflowY;
+
+    //Check both x and y declarations
+    if (overflowX === overflowY &&
+        (overflowY === 'hidden' || overflowY === 'visible')) {
+      return false;
+    }
+
+    if (overflowX === 'scroll' || overflowY === 'scroll') {
+      return true;
+    }
+
+    return ($el.innerHeight() < el.scrollHeight ||
+      $el.innerWidth() < el.scrollWidth);
+  };
+
+  Utils.escapeMarkup = function (markup) {
+    var replaceMap = {
+      '\\': '&#92;',
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      '\'': '&#39;',
+      '/': '&#47;'
+    };
+
+    // Do not try to escape the markup if it's not a string
+    if (typeof markup !== 'string') {
+      return markup;
+    }
+
+    return String(markup).replace(/[&<>"'\/\\]/g, function (match) {
+      return replaceMap[match];
+    });
+  };
+
+  // Append an array of jQuery nodes to a given element.
+  Utils.appendMany = function ($element, $nodes) {
+    // jQuery 1.7.x does not support $.fn.append() with an array
+    // Fall back to a jQuery object collection using $.fn.add()
+    if ($.fn.jquery.substr(0, 3) === '1.7') {
+      var $jqNodes = $();
+
+      $.map($nodes, function (node) {
+        $jqNodes = $jqNodes.add(node);
+      });
+
+      $nodes = $jqNodes;
+    }
+
+    $element.append($nodes);
+  };
+
+  return Utils;
+});
+
+S2.define('select2/results',[
+  'jquery',
+  './utils'
+], function ($, Utils) {
+  function Results ($element, options, dataAdapter) {
+    this.$element = $element;
+    this.data = dataAdapter;
+    this.options = options;
+
+    Results.__super__.constructor.call(this);
+  }
+
+  Utils.Extend(Results, Utils.Observable);
+
+  Results.prototype.render = function () {
+    var $results = $(
+      '<ul class="select2-results__options" role="tree"></ul>'
+    );
+
+    if (this.options.get('multiple')) {
+      $results.attr('aria-multiselectable', 'true');
+    }
+
+    this.$results = $results;
+
+    return $results;
+  };
+
+  Results.prototype.clear = function () {
+    this.$results.empty();
+  };
+
+  Results.prototype.displayMessage = function (params) {
+    var escapeMarkup = this.options.get('escapeMarkup');
+
+    this.clear();
+    this.hideLoading();
+
+    var $message = $(
+      '<li role="treeitem" aria-live="assertive"' +
+      ' class="select2-results__option"></li>'
+    );
+
+    var message = this.options.get('translations').get(params.message);
+
+    $message.append(
+      escapeMarkup(
+        message(params.args)
+      )
+    );
+
+    $message[0].className += ' select2-results__message';
+
+    this.$results.append($message);
+  };
+
+  Results.prototype.hideMessages = function () {
+    this.$results.find('.select2-results__message').remove();
+  };
+
+  Results.prototype.append = function (data) {
+    this.hideLoading();
+
+    var $options = [];
+
+    if (data.results == null || data.results.length === 0) {
+      if (this.$results.children().length === 0) {
+        this.trigger('results:message', {
+          message: 'noResults'
+        });
+      }
+
+      return;
+    }
+
+    data.results = this.sort(data.results);
+
+    for (var d = 0; d < data.results.length; d++) {
+      var item = data.results[d];
+
+      var $option = this.option(item);
+
+      $options.push($option);
+    }
+
+    this.$results.append($options);
+  };
+
+  Results.prototype.position = function ($results, $dropdown) {
+    var $resultsContainer = $dropdown.find('.select2-results');
+    $resultsContainer.append($results);
+  };
+
+  Results.prototype.sort = function (data) {
+    var sorter = this.options.get('sorter');
+
+    return sorter(data);
+  };
+
+  Results.prototype.setClasses = function () {
+    var self = this;
+
+    this.data.current(function (selected) {
+      var selectedIds = $.map(selected, function (s) {
+        return s.id.toString();
+      });
+
+      var $options = self.$results
+        .find('.select2-results__option[aria-selected]');
+
+      $options.each(function () {
+        var $option = $(this);
+
+        var item = $.data(this, 'data');
+
+        // id needs to be converted to a string when comparing
+        var id = '' + item.id;
+
+        if ((item.element != null && item.element.selected) ||
+            (item.element == null && $.inArray(id, selectedIds) > -1)) {
+          $option.attr('aria-selected', 'true');
+        } else {
+          $option.attr('aria-selected', 'false');
+        }
+      });
+
+      var $selected = $options.filter('[aria-selected=true]');
+
+      // Check if there are any selected options
+      if ($selected.length > 0) {
+        // If there are selected options, highlight the first
+        $selected.first().trigger('mouseenter');
+      } else {
+        // If there are no selected options, highlight the first option
+        // in the dropdown
+        $options.first().trigger('mouseenter');
+      }
+    });
+  };
+
+  Results.prototype.showLoading = function (params) {
+    this.hideLoading();
+
+    var loadingMore = this.options.get('translations').get('searching');
+
+    var loading = {
+      disabled: true,
+      loading: true,
+      text: loadingMore(params)
+    };
+    var $loading = this.option(loading);
+    $loading.className += ' loading-results';
+
+    this.$results.prepend($loading);
+  };
+
+  Results.prototype.hideLoading = function () {
+    this.$results.find('.loading-results').remove();
+  };
+
+  Results.prototype.option = function (data) {
+    var option = document.createElement('li');
+    option.className = 'select2-results__option';
+
+    var attrs = {
+      'role': 'treeitem',
+      'aria-selected': 'false'
+    };
+
+    if (data.disabled) {
+      delete attrs['aria-selected'];
+      attrs['aria-disabled'] = 'true';
+    }
+
+    if (data.id == null) {
+      delete attrs['aria-selected'];
+    }
+
+    if (data._resultId != null) {
+      option.id = data._resultId;
+    }
+
+    if (data.title) {
+      option.title = data.title;
+    }
+
+    if (data.children) {
+      attrs.role = 'group';
+      attrs['aria-label'] = data.text;
+      delete attrs['aria-selected'];
+    }
+
+    for (var attr in attrs) {
+      var val = attrs[attr];
+
+      option.setAttribute(attr, val);
+    }
+
+    if (data.children) {
+      var $option = $(option);
+
+      var label = document.createElement('strong');
+      label.className = 'select2-results__group';
+
+      var $label = $(label);
+      this.template(data, label);
+
+      var $children = [];
+
+      for (var c = 0; c < data.children.length; c++) {
+        var child = data.children[c];
+
+        var $child = this.option(child);
+
+        $children.push($child);
+      }
+
+      var $childrenContainer = $('<ul></ul>', {
+        'class': 'select2-results__options select2-results__options--nested'
+      });
+
+      $childrenContainer.append($children);
+
+      $option.append(label);
+      $option.append($childrenContainer);
+    } else {
+      this.template(data, option);
+    }
+
+    $.data(option, 'data', data);
+
+    return option;
+  };
+
+  Results.prototype.bind = function (container, $container) {
+    var self = this;
+
+    var id = container.id + '-results';
+
+    this.$results.attr('id', id);
+
+    container.on('results:all', function (params) {
+      self.clear();
+      self.append(params.data);
+
+      if (container.isOpen()) {
+        self.setClasses();
+      }
+    });
+
+    container.on('results:append', function (params) {
+      self.append(params.data);
+
+      if (container.isOpen()) {
+        self.setClasses();
+      }
+    });
+
+    container.on('query', function (params) {
+      self.hideMessages();
+      self.showLoading(params);
+    });
+
+    container.on('select', function () {
+      if (!container.isOpen()) {
+        return;
+      }
+
+      self.setClasses();
+    });
+
+    container.on('unselect', function () {
+      if (!container.isOpen()) {
+        return;
+      }
+
+      self.setClasses();
+    });
+
+    container.on('open', function () {
+      // When the dropdown is open, aria-expended="true"
+      self.$results.attr('aria-expanded', 'true');
+      self.$results.attr('aria-hidden', 'false');
+
+      self.setClasses();
+      self.ensureHighlightVisible();
+    });
+
+    container.on('close', function () {
+      // When the dropdown is closed, aria-expended="false"
+      self.$results.attr('aria-expanded', 'false');
+      self.$results.attr('aria-hidden', 'true');
+      self.$results.removeAttr('aria-activedescendant');
+    });
+
+    container.on('results:toggle', function () {
+      var $highlighted = self.getHighlightedResults();
+
+      if ($highlighted.length === 0) {
+        return;
+      }
+
+      $highlighted.trigger('mouseup');
+    });
+
+    container.on('results:select', function () {
+      var $highlighted = self.getHighlightedResults();
+
+      if ($highlighted.length === 0) {
+        return;
+      }
+
+      var data = $highlighted.data('data');
+
+      if ($highlighted.attr('aria-selected') == 'true') {
+        self.trigger('close', {});
+      } else {
+        self.trigger('select', {
+          data: data
+        });
+      }
+    });
+
+    container.on('results:previous', function () {
+      var $highlighted = self.getHighlightedResults();
+
+      var $options = self.$results.find('[aria-selected]');
+
+      var currentIndex = $options.index($highlighted);
+
+      // If we are already at te top, don't move further
+      if (currentIndex === 0) {
+        return;
+      }
+
+      var nextIndex = currentIndex - 1;
+
+      // If none are highlighted, highlight the first
+      if ($highlighted.length === 0) {
+        nextIndex = 0;
+      }
+
+      var $next = $options.eq(nextIndex);
+
+      $next.trigger('mouseenter');
+
+      var currentOffset = self.$results.offset().top;
+      var nextTop = $next.offset().top;
+      var nextOffset = self.$results.scrollTop() + (nextTop - currentOffset);
+
+      if (nextIndex === 0) {
+        self.$results.scrollTop(0);
+      } else if (nextTop - currentOffset < 0) {
+        self.$results.scrollTop(nextOffset);
+      }
+    });
+
+    container.on('results:next', function () {
+      var $highlighted = self.getHighlightedResults();
+
+      var $options = self.$results.find('[aria-selected]');
+
+      var currentIndex = $options.index($highlighted);
+
+      var nextIndex = currentIndex + 1;
+
+      // If we are at the last option, stay there
+      if (nextIndex >= $options.length) {
+        return;
+      }
+
+      var $next = $options.eq(nextIndex);
+
+      $next.trigger('mouseenter');
+
+      var currentOffset = self.$results.offset().top +
+        self.$results.outerHeight(false);
+      var nextBottom = $next.offset().top + $next.outerHeight(false);
+      var nextOffset = self.$results.scrollTop() + nextBottom - currentOffset;
+
+      if (nextIndex === 0) {
+        self.$results.scrollTop(0);
+      } else if (nextBottom > currentOffset) {
+        self.$results.scrollTop(nextOffset);
+      }
+    });
+
+    container.on('results:focus', function (params) {
+      params.element.addClass('select2-results__option--highlighted');
+    });
+
+    container.on('results:message', function (params) {
+      self.displayMessage(params);
+    });
+
+    if ($.fn.mousewheel) {
+      this.$results.on('mousewheel', function (e) {
+        var top = self.$results.scrollTop();
+
+        var bottom = (
+          self.$results.get(0).scrollHeight -
+          self.$results.scrollTop() +
+          e.deltaY
+        );
+
+        var isAtTop = e.deltaY > 0 && top - e.deltaY <= 0;
+        var isAtBottom = e.deltaY < 0 && bottom <= self.$results.height();
+
+        if (isAtTop) {
+          self.$results.scrollTop(0);
+
+          e.preventDefault();
+          e.stopPropagation();
+        } else if (isAtBottom) {
+          self.$results.scrollTop(
+            self.$results.get(0).scrollHeight - self.$results.height()
+          );
+
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      });
+    }
+
+    this.$results.on('mouseup', '.select2-results__option[aria-selected]',
+      function (evt) {
+      var $this = $(this);
+
+      var data = $this.data('data');
+
+      if ($this.attr('aria-selected') === 'true') {
+        if (self.options.get('multiple')) {
+          self.trigger('unselect', {
+            originalEvent: evt,
+            data: data
+          });
+        } else {
+          self.trigger('close', {});
+        }
+
+        return;
+      }
+
+      self.trigger('select', {
+        originalEvent: evt,
+        data: data
+      });
+    });
+
+    this.$results.on('mouseenter', '.select2-results__option[aria-selected]',
+      function (evt) {
+      var data = $(this).data('data');
+
+      self.getHighlightedResults()
+          .removeClass('select2-results__option--highlighted');
+
+      self.trigger('results:focus', {
+        data: data,
+        element: $(this)
+      });
+    });
+  };
+
+  Results.prototype.getHighlightedResults = function () {
+    var $highlighted = this.$results
+    .find('.select2-results__option--highlighted');
+
+    return $highlighted;
+  };
+
+  Results.prototype.destroy = function () {
+    this.$results.remove();
+  };
+
+  Results.prototype.ensureHighlightVisible = function () {
+    var $highlighted = this.getHighlightedResults();
+
+    if ($highlighted.length === 0) {
+      return;
+    }
+
+    var $options = this.$results.find('[aria-selected]');
+
+    var currentIndex = $options.index($highlighted);
+
+    var currentOffset = this.$results.offset().top;
+    var nextTop = $highlighted.offset().top;
+    var nextOffset = this.$results.scrollTop() + (nextTop - currentOffset);
+
+    var offsetDelta = nextTop - currentOffset;
+    nextOffset -= $highlighted.outerHeight(false) * 2;
+
+    if (currentIndex <= 2) {
+      this.$results.scrollTop(0);
+    } else if (offsetDelta > this.$results.outerHeight() || offsetDelta < 0) {
+      this.$results.scrollTop(nextOffset);
+    }
+  };
+
+  Results.prototype.template = function (result, container) {
+    var template = this.options.get('templateResult');
+    var escapeMarkup = this.options.get('escapeMarkup');
+
+    var content = template(result, container);
+
+    if (content == null) {
+      container.style.display = 'none';
+    } else if (typeof content === 'string') {
+      container.innerHTML = escapeMarkup(content);
+    } else {
+      $(container).append(content);
+    }
+  };
+
+  return Results;
+});
+
+S2.define('select2/keys',[
+
+], function () {
+  var KEYS = {
+    BACKSPACE: 8,
+    TAB: 9,
+    ENTER: 13,
+    SHIFT: 16,
+    CTRL: 17,
+    ALT: 18,
+    ESC: 27,
+    SPACE: 32,
+    PAGE_UP: 33,
+    PAGE_DOWN: 34,
+    END: 35,
+    HOME: 36,
+    LEFT: 37,
+    UP: 38,
+    RIGHT: 39,
+    DOWN: 40,
+    DELETE: 46
+  };
+
+  return KEYS;
+});
+
+S2.define('select2/selection/base',[
+  'jquery',
+  '../utils',
+  '../keys'
+], function ($, Utils, KEYS) {
+  function BaseSelection ($element, options) {
+    this.$element = $element;
+    this.options = options;
+
+    BaseSelection.__super__.constructor.call(this);
+  }
+
+  Utils.Extend(BaseSelection, Utils.Observable);
+
+  BaseSelection.prototype.render = function () {
+    var $selection = $(
+      '<span class="select2-selection" role="combobox" ' +
+      ' aria-haspopup="true" aria-expanded="false">' +
+      '</span>'
+    );
+
+    this._tabindex = 0;
+
+    if (this.$element.data('old-tabindex') != null) {
+      this._tabindex = this.$element.data('old-tabindex');
+    } else if (this.$element.attr('tabindex') != null) {
+      this._tabindex = this.$element.attr('tabindex');
+    }
+
+    $selection.attr('title', this.$element.attr('title'));
+    $selection.attr('tabindex', this._tabindex);
+
+    this.$selection = $selection;
+
+    return $selection;
+  };
+
+  BaseSelection.prototype.bind = function (container, $container) {
+    var self = this;
+
+    var id = container.id + '-container';
+    var resultsId = container.id + '-results';
+
+    this.container = container;
+
+    this.$selection.on('focus', function (evt) {
+      self.trigger('focus', evt);
+    });
+
+    this.$selection.on('blur', function (evt) {
+      self._handleBlur(evt);
+    });
+
+    this.$selection.on('keydown', function (evt) {
+      self.trigger('keypress', evt);
+
+      if (evt.which === KEYS.SPACE) {
+        evt.preventDefault();
+      }
+    });
+
+    container.on('results:focus', function (params) {
+      self.$selection.attr('aria-activedescendant', params.data._resultId);
+    });
+
+    container.on('selection:update', function (params) {
+      self.update(params.data);
+    });
+
+    container.on('open', function () {
+      // When the dropdown is open, aria-expanded="true"
+      self.$selection.attr('aria-expanded', 'true');
+      self.$selection.attr('aria-owns', resultsId);
+
+      self._attachCloseHandler(container);
+    });
+
+    container.on('close', function () {
+      // When the dropdown is closed, aria-expanded="false"
+      self.$selection.attr('aria-expanded', 'false');
+      self.$selection.removeAttr('aria-activedescendant');
+      self.$selection.removeAttr('aria-owns');
+
+      self.$selection.focus();
+
+      self._detachCloseHandler(container);
+    });
+
+    container.on('enable', function () {
+      self.$selection.attr('tabindex', self._tabindex);
+    });
+
+    container.on('disable', function () {
+      self.$selection.attr('tabindex', '-1');
+    });
+  };
+
+  BaseSelection.prototype._handleBlur = function (evt) {
+    var self = this;
+
+    // This needs to be delayed as the active element is the body when the tab
+    // key is pressed, possibly along with others.
+    window.setTimeout(function () {
+      // Don't trigger `blur` if the focus is still in the selection
+      if (
+        (document.activeElement == self.$selection[0]) ||
+        ($.contains(self.$selection[0], document.activeElement))
+      ) {
+        return;
+      }
+
+      self.trigger('blur', evt);
+    }, 1);
+  };
+
+  BaseSelection.prototype._attachCloseHandler = function (container) {
+    var self = this;
+
+    $(document.body).on('mousedown.select2.' + container.id, function (e) {
+      var $target = $(e.target);
+
+      var $select = $target.closest('.select2');
+
+      var $all = $('.select2.select2-container--open');
+
+      $all.each(function () {
+        var $this = $(this);
+
+        if (this == $select[0]) {
+          return;
+        }
+
+        var $element = $this.data('element');
+
+        $element.select2('close');
+      });
+    });
+  };
+
+  BaseSelection.prototype._detachCloseHandler = function (container) {
+    $(document.body).off('mousedown.select2.' + container.id);
+  };
+
+  BaseSelection.prototype.position = function ($selection, $container) {
+    var $selectionContainer = $container.find('.selection');
+    $selectionContainer.append($selection);
+  };
+
+  BaseSelection.prototype.destroy = function () {
+    this._detachCloseHandler(this.container);
+  };
+
+  BaseSelection.prototype.update = function (data) {
+    throw new Error('The `update` method must be defined in child classes.');
+  };
+
+  return BaseSelection;
+});
+
+S2.define('select2/selection/single',[
+  'jquery',
+  './base',
+  '../utils',
+  '../keys'
+], function ($, BaseSelection, Utils, KEYS) {
+  function SingleSelection () {
+    SingleSelection.__super__.constructor.apply(this, arguments);
+  }
+
+  Utils.Extend(SingleSelection, BaseSelection);
+
+  SingleSelection.prototype.render = function () {
+    var $selection = SingleSelection.__super__.render.call(this);
+
+    $selection.addClass('select2-selection--single');
+
+    $selection.html(
+      '<span class="select2-selection__rendered"></span>' +
+      '<span class="select2-selection__arrow" role="presentation">' +
+        '<b role="presentation"></b>' +
+      '</span>'
+    );
+
+    return $selection;
+  };
+
+  SingleSelection.prototype.bind = function (container, $container) {
+    var self = this;
+
+    SingleSelection.__super__.bind.apply(this, arguments);
+
+    var id = container.id + '-container';
+
+    this.$selection.find('.select2-selection__rendered').attr('id', id);
+    this.$selection.attr('aria-labelledby', id);
+
+    this.$selection.on('mousedown', function (evt) {
+      // Only respond to left clicks
+      if (evt.which !== 1) {
+        return;
+      }
+
+      self.trigger('toggle', {
+        originalEvent: evt
+      });
+    });
+
+    this.$selection.on('focus', function (evt) {
+      // User focuses on the container
+    });
+
+    this.$selection.on('blur', function (evt) {
+      // User exits the container
+    });
+
+    container.on('selection:update', function (params) {
+      self.update(params.data);
+    });
+  };
+
+  SingleSelection.prototype.clear = function () {
+    this.$selection.find('.select2-selection__rendered').empty();
+  };
+
+  SingleSelection.prototype.display = function (data, container) {
+    var template = this.options.get('templateSelection');
+    var escapeMarkup = this.options.get('escapeMarkup');
+
+    return escapeMarkup(template(data, container));
+  };
+
+  SingleSelection.prototype.selectionContainer = function () {
+    return $('<span></span>');
+  };
+
+  SingleSelection.prototype.update = function (data) {
+    if (data.length === 0) {
+      this.clear();
+      return;
+    }
+
+    var selection = data[0];
+
+    var $rendered = this.$selection.find('.select2-selection__rendered');
+    var formatted = this.display(selection, $rendered);
+
+    $rendered.empty().append(formatted);
+    $rendered.prop('title', selection.title || selection.text);
+  };
+
+  return SingleSelection;
+});
+
+S2.define('select2/selection/multiple',[
+  'jquery',
+  './base',
+  '../utils'
+], function ($, BaseSelection, Utils) {
+  function MultipleSelection ($element, options) {
+    MultipleSelection.__super__.constructor.apply(this, arguments);
+  }
+
+  Utils.Extend(MultipleSelection, BaseSelection);
+
+  MultipleSelection.prototype.render = function () {
+    var $selection = MultipleSelection.__super__.render.call(this);
+
+    $selection.addClass('select2-selection--multiple');
+
+    $selection.html(
+      '<ul class="select2-selection__rendered"></ul>'
+    );
+
+    return $selection;
+  };
+
+  MultipleSelection.prototype.bind = function (container, $container) {
+    var self = this;
+
+    MultipleSelection.__super__.bind.apply(this, arguments);
+
+    this.$selection.on('click', function (evt) {
+      self.trigger('toggle', {
+        originalEvent: evt
+      });
+    });
+
+    this.$selection.on(
+      'click',
+      '.select2-selection__choice__remove',
+      function (evt) {
+        // Ignore the event if it is disabled
+        if (self.options.get('disabled')) {
+          return;
+        }
+
+        var $remove = $(this);
+        var $selection = $remove.parent();
+
+        var data = $selection.data('data');
+
+        self.trigger('unselect', {
+          originalEvent: evt,
+          data: data
+        });
+      }
+    );
+  };
+
+  MultipleSelection.prototype.clear = function () {
+    this.$selection.find('.select2-selection__rendered').empty();
+  };
+
+  MultipleSelection.prototype.display = function (data, container) {
+    var template = this.options.get('templateSelection');
+    var escapeMarkup = this.options.get('escapeMarkup');
+
+    return escapeMarkup(template(data, container));
+  };
+
+  MultipleSelection.prototype.selectionContainer = function () {
+    var $container = $(
+      '<li class="select2-selection__choice">' +
+        '<span class="select2-selection__choice__remove" role="presentation">' +
+          '&times;' +
+        '</span>' +
+      '</li>'
+    );
+
+    return $container;
+  };
+
+  MultipleSelection.prototype.update = function (data) {
+    this.clear();
+
+    if (data.length === 0) {
+      return;
+    }
+
+    var $selections = [];
+
+    for (var d = 0; d < data.length; d++) {
+      var selection = data[d];
+
+      var $selection = this.selectionContainer();
+      var formatted = this.display(selection, $selection);
+
+      $selection.append(formatted);
+      $selection.prop('title', selection.title || selection.text);
+
+      $selection.data('data', selection);
+
+      $selections.push($selection);
+    }
+
+    var $rendered = this.$selection.find('.select2-selection__rendered');
+
+    Utils.appendMany($rendered, $selections);
+  };
+
+  return MultipleSelection;
+});
+
+S2.define('select2/selection/placeholder',[
+  '../utils'
+], function (Utils) {
+  function Placeholder (decorated, $element, options) {
+    this.placeholder = this.normalizePlaceholder(options.get('placeholder'));
+
+    decorated.call(this, $element, options);
+  }
+
+  Placeholder.prototype.normalizePlaceholder = function (_, placeholder) {
+    if (typeof placeholder === 'string') {
+      placeholder = {
+        id: '',
+        text: placeholder
+      };
+    }
+
+    return placeholder;
+  };
+
+  Placeholder.prototype.createPlaceholder = function (decorated, placeholder) {
+    var $placeholder = this.selectionContainer();
+
+    $placeholder.html(this.display(placeholder));
+    $placeholder.addClass('select2-selection__placeholder')
+                .removeClass('select2-selection__choice');
+
+    return $placeholder;
+  };
+
+  Placeholder.prototype.update = function (decorated, data) {
+    var singlePlaceholder = (
+      data.length == 1 && data[0].id != this.placeholder.id
+    );
+    var multipleSelections = data.length > 1;
+
+    if (multipleSelections || singlePlaceholder) {
+      return decorated.call(this, data);
+    }
+
+    this.clear();
+
+    var $placeholder = this.createPlaceholder(this.placeholder);
+
+    this.$selection.find('.select2-selection__rendered').append($placeholder);
+  };
+
+  return Placeholder;
+});
+
+S2.define('select2/selection/allowClear',[
+  'jquery',
+  '../keys'
+], function ($, KEYS) {
+  function AllowClear () { }
+
+  AllowClear.prototype.bind = function (decorated, container, $container) {
+    var self = this;
+
+    decorated.call(this, container, $container);
+
+    if (this.placeholder == null) {
+      if (this.options.get('debug') && window.console && console.error) {
+        console.error(
+          'Select2: The `allowClear` option should be used in combination ' +
+          'with the `placeholder` option.'
+        );
+      }
+    }
+
+    this.$selection.on('mousedown', '.select2-selection__clear',
+      function (evt) {
+        self._handleClear(evt);
+    });
+
+    container.on('keypress', function (evt) {
+      self._handleKeyboardClear(evt, container);
+    });
+  };
+
+  AllowClear.prototype._handleClear = function (_, evt) {
+    // Ignore the event if it is disabled
+    if (this.options.get('disabled')) {
+      return;
+    }
+
+    var $clear = this.$selection.find('.select2-selection__clear');
+
+    // Ignore the event if nothing has been selected
+    if ($clear.length === 0) {
+      return;
+    }
+
+    evt.stopPropagation();
+
+    var data = $clear.data('data');
+
+    for (var d = 0; d < data.length; d++) {
+      var unselectData = {
+        data: data[d]
+      };
+
+      // Trigger the `unselect` event, so people can prevent it from being
+      // cleared.
+      this.trigger('unselect', unselectData);
+
+      // If the event was prevented, don't clear it out.
+      if (unselectData.prevented) {
+        return;
+      }
+    }
+
+    this.$element.val(this.placeholder.id).trigger('change');
+
+    this.trigger('toggle', {});
+  };
+
+  AllowClear.prototype._handleKeyboardClear = function (_, evt, container) {
+    if (container.isOpen()) {
+      return;
+    }
+
+    if (evt.which == KEYS.DELETE || evt.which == KEYS.BACKSPACE) {
+      this._handleClear(evt);
+    }
+  };
+
+  AllowClear.prototype.update = function (decorated, data) {
+    decorated.call(this, data);
+
+    if (this.$selection.find('.select2-selection__placeholder').length > 0 ||
+        data.length === 0) {
+      return;
+    }
+
+    var $remove = $(
+      '<span class="select2-selection__clear">' +
+        '&times;' +
+      '</span>'
+    );
+    $remove.data('data', data);
+
+    this.$selection.find('.select2-selection__rendered').prepend($remove);
+  };
+
+  return AllowClear;
+});
+
+S2.define('select2/selection/search',[
+  'jquery',
+  '../utils',
+  '../keys'
+], function ($, Utils, KEYS) {
+  function Search (decorated, $element, options) {
+    decorated.call(this, $element, options);
+  }
+
+  Search.prototype.render = function (decorated) {
+    var $search = $(
+      '<li class="select2-search select2-search--inline">' +
+        '<input class="select2-search__field" type="search" tabindex="-1"' +
+        ' autocomplete="off" autocorrect="off" autocapitalize="off"' +
+        ' spellcheck="false" role="textbox" aria-autocomplete="list" />' +
+      '</li>'
+    );
+
+    this.$searchContainer = $search;
+    this.$search = $search.find('input');
+
+    var $rendered = decorated.call(this);
+
+    this._transferTabIndex();
+
+    return $rendered;
+  };
+
+  Search.prototype.bind = function (decorated, container, $container) {
+    var self = this;
+
+    decorated.call(this, container, $container);
+
+    container.on('open', function () {
+      self.$search.trigger('focus');
+    });
+
+    container.on('close', function () {
+      self.$search.val('');
+      self.$search.removeAttr('aria-activedescendant');
+      self.$search.trigger('focus');
+    });
+
+    container.on('enable', function () {
+      self.$search.prop('disabled', false);
+
+      self._transferTabIndex();
+    });
+
+    container.on('disable', function () {
+      self.$search.prop('disabled', true);
+    });
+
+    container.on('focus', function (evt) {
+      self.$search.trigger('focus');
+    });
+
+    container.on('results:focus', function (params) {
+      self.$search.attr('aria-activedescendant', params.id);
+    });
+
+    this.$selection.on('focusin', '.select2-search--inline', function (evt) {
+      self.trigger('focus', evt);
+    });
+
+    this.$selection.on('focusout', '.select2-search--inline', function (evt) {
+      self._handleBlur(evt);
+    });
+
+    this.$selection.on('keydown', '.select2-search--inline', function (evt) {
+      evt.stopPropagation();
+
+      self.trigger('keypress', evt);
+
+      self._keyUpPrevented = evt.isDefaultPrevented();
+
+      var key = evt.which;
+
+      if (key === KEYS.BACKSPACE && self.$search.val() === '') {
+        var $previousChoice = self.$searchContainer
+          .prev('.select2-selection__choice');
+
+        if ($previousChoice.length > 0) {
+          var item = $previousChoice.data('data');
+
+          self.searchRemoveChoice(item);
+
+          evt.preventDefault();
+        }
+      }
+    });
+
+    // Try to detect the IE version should the `documentMode` property that
+    // is stored on the document. This is only implemented in IE and is
+    // slightly cleaner than doing a user agent check.
+    // This property is not available in Edge, but Edge also doesn't have
+    // this bug.
+    var msie = document.documentMode;
+    var disableInputEvents = msie && msie <= 11;
+
+    // Workaround for browsers which do not support the `input` event
+    // This will prevent double-triggering of events for browsers which support
+    // both the `keyup` and `input` events.
+    this.$selection.on(
+      'input.searchcheck',
+      '.select2-search--inline',
+      function (evt) {
+        // IE will trigger the `input` event when a placeholder is used on a
+        // search box. To get around this issue, we are forced to ignore all
+        // `input` events in IE and keep using `keyup`.
+        if (disableInputEvents) {
+          self.$selection.off('input.search input.searchcheck');
+          return;
+        }
+
+        // Unbind the duplicated `keyup` event
+        self.$selection.off('keyup.search');
+      }
+    );
+
+    this.$selection.on(
+      'keyup.search input.search',
+      '.select2-search--inline',
+      function (evt) {
+        // IE will trigger the `input` event when a placeholder is used on a
+        // search box. To get around this issue, we are forced to ignore all
+        // `input` events in IE and keep using `keyup`.
+        if (disableInputEvents && evt.type === 'input') {
+          self.$selection.off('input.search input.searchcheck');
+          return;
+        }
+
+        var key = evt.which;
+
+        // We can freely ignore events from modifier keys
+        if (key == KEYS.SHIFT || key == KEYS.CTRL || key == KEYS.ALT) {
+          return;
+        }
+
+        // Tabbing will be handled during the `keydown` phase
+        if (key == KEYS.TAB) {
+          return;
+        }
+
+        self.handleSearch(evt);
+      }
+    );
+  };
+
+  /**
+   * This method will transfer the tabindex attribute from the rendered
+   * selection to the search box. This allows for the search box to be used as
+   * the primary focus instead of the selection container.
+   *
+   * @private
+   */
+  Search.prototype._transferTabIndex = function (decorated) {
+    this.$search.attr('tabindex', this.$selection.attr('tabindex'));
+    this.$selection.attr('tabindex', '-1');
+  };
+
+  Search.prototype.createPlaceholder = function (decorated, placeholder) {
+    this.$search.attr('placeholder', placeholder.text);
+  };
+
+  Search.prototype.update = function (decorated, data) {
+    var searchHadFocus = this.$search[0] == document.activeElement;
+
+    this.$search.attr('placeholder', '');
+
+    decorated.call(this, data);
+
+    this.$selection.find('.select2-selection__rendered')
+                   .append(this.$searchContainer);
+
+    this.resizeSearch();
+    if (searchHadFocus) {
+      this.$search.focus();
+    }
+  };
+
+  Search.prototype.handleSearch = function () {
+    this.resizeSearch();
+
+    if (!this._keyUpPrevented) {
+      var input = this.$search.val();
+
+      this.trigger('query', {
+        term: input
+      });
+    }
+
+    this._keyUpPrevented = false;
+  };
+
+  Search.prototype.searchRemoveChoice = function (decorated, item) {
+    this.trigger('unselect', {
+      data: item
+    });
+
+    this.$search.val(item.text);
+    this.handleSearch();
+  };
+
+  Search.prototype.resizeSearch = function () {
+    this.$search.css('width', '25px');
+
+    var width = '';
+
+    if (this.$search.attr('placeholder') !== '') {
+      width = this.$selection.find('.select2-selection__rendered').innerWidth();
+    } else {
+      var minimumWidth = this.$search.val().length + 1;
+
+      width = (minimumWidth * 0.75) + 'em';
+    }
+
+    this.$search.css('width', width);
+  };
+
+  return Search;
+});
+
+S2.define('select2/selection/eventRelay',[
+  'jquery'
+], function ($) {
+  function EventRelay () { }
+
+  EventRelay.prototype.bind = function (decorated, container, $container) {
+    var self = this;
+    var relayEvents = [
+      'open', 'opening',
+      'close', 'closing',
+      'select', 'selecting',
+      'unselect', 'unselecting'
+    ];
+
+    var preventableEvents = ['opening', 'closing', 'selecting', 'unselecting'];
+
+    decorated.call(this, container, $container);
+
+    container.on('*', function (name, params) {
+      // Ignore events that should not be relayed
+      if ($.inArray(name, relayEvents) === -1) {
+        return;
+      }
+
+      // The parameters should always be an object
+      params = params || {};
+
+      // Generate the jQuery event for the Select2 event
+      var evt = $.Event('select2:' + name, {
+        params: params
+      });
+
+      self.$element.trigger(evt);
+
+      // Only handle preventable events if it was one
+      if ($.inArray(name, preventableEvents) === -1) {
+        return;
+      }
+
+      params.prevented = evt.isDefaultPrevented();
+    });
+  };
+
+  return EventRelay;
+});
+
+S2.define('select2/translation',[
+  'jquery',
+  'require'
+], function ($, require) {
+  function Translation (dict) {
+    this.dict = dict || {};
+  }
+
+  Translation.prototype.all = function () {
+    return this.dict;
+  };
+
+  Translation.prototype.get = function (key) {
+    return this.dict[key];
+  };
+
+  Translation.prototype.extend = function (translation) {
+    this.dict = $.extend({}, translation.all(), this.dict);
+  };
+
+  // Static functions
+
+  Translation._cache = {};
+
+  Translation.loadPath = function (path) {
+    if (!(path in Translation._cache)) {
+      var translations = require(path);
+
+      Translation._cache[path] = translations;
+    }
+
+    return new Translation(Translation._cache[path]);
+  };
+
+  return Translation;
+});
+
+S2.define('select2/diacritics',[
+
+], function () {
+  var diacritics = {
+    '\u24B6': 'A',
+    '\uFF21': 'A',
+    '\u00C0': 'A',
+    '\u00C1': 'A',
+    '\u00C2': 'A',
+    '\u1EA6': 'A',
+    '\u1EA4': 'A',
+    '\u1EAA': 'A',
+    '\u1EA8': 'A',
+    '\u00C3': 'A',
+    '\u0100': 'A',
+    '\u0102': 'A',
+    '\u1EB0': 'A',
+    '\u1EAE': 'A',
+    '\u1EB4': 'A',
+    '\u1EB2': 'A',
+    '\u0226': 'A',
+    '\u01E0': 'A',
+    '\u00C4': 'A',
+    '\u01DE': 'A',
+    '\u1EA2': 'A',
+    '\u00C5': 'A',
+    '\u01FA': 'A',
+    '\u01CD': 'A',
+    '\u0200': 'A',
+    '\u0202': 'A',
+    '\u1EA0': 'A',
+    '\u1EAC': 'A',
+    '\u1EB6': 'A',
+    '\u1E00': 'A',
+    '\u0104': 'A',
+    '\u023A': 'A',
+    '\u2C6F': 'A',
+    '\uA732': 'AA',
+    '\u00C6': 'AE',
+    '\u01FC': 'AE',
+    '\u01E2': 'AE',
+    '\uA734': 'AO',
+    '\uA736': 'AU',
+    '\uA738': 'AV',
+    '\uA73A': 'AV',
+    '\uA73C': 'AY',
+    '\u24B7': 'B',
+    '\uFF22': 'B',
+    '\u1E02': 'B',
+    '\u1E04': 'B',
+    '\u1E06': 'B',
+    '\u0243': 'B',
+    '\u0182': 'B',
+    '\u0181': 'B',
+    '\u24B8': 'C',
+    '\uFF23': 'C',
+    '\u0106': 'C',
+    '\u0108': 'C',
+    '\u010A': 'C',
+    '\u010C': 'C',
+    '\u00C7': 'C',
+    '\u1E08': 'C',
+    '\u0187': 'C',
+    '\u023B': 'C',
+    '\uA73E': 'C',
+    '\u24B9': 'D',
+    '\uFF24': 'D',
+    '\u1E0A': 'D',
+    '\u010E': 'D',
+    '\u1E0C': 'D',
+    '\u1E10': 'D',
+    '\u1E12': 'D',
+    '\u1E0E': 'D',
+    '\u0110': 'D',
+    '\u018B': 'D',
+    '\u018A': 'D',
+    '\u0189': 'D',
+    '\uA779': 'D',
+    '\u01F1': 'DZ',
+    '\u01C4': 'DZ',
+    '\u01F2': 'Dz',
+    '\u01C5': 'Dz',
+    '\u24BA': 'E',
+    '\uFF25': 'E',
+    '\u00C8': 'E',
+    '\u00C9': 'E',
+    '\u00CA': 'E',
+    '\u1EC0': 'E',
+    '\u1EBE': 'E',
+    '\u1EC4': 'E',
+    '\u1EC2': 'E',
+    '\u1EBC': 'E',
+    '\u0112': 'E',
+    '\u1E14': 'E',
+    '\u1E16': 'E',
+    '\u0114': 'E',
+    '\u0116': 'E',
+    '\u00CB': 'E',
+    '\u1EBA': 'E',
+    '\u011A': 'E',
+    '\u0204': 'E',
+    '\u0206': 'E',
+    '\u1EB8': 'E',
+    '\u1EC6': 'E',
+    '\u0228': 'E',
+    '\u1E1C': 'E',
+    '\u0118': 'E',
+    '\u1E18': 'E',
+    '\u1E1A': 'E',
+    '\u0190': 'E',
+    '\u018E': 'E',
+    '\u24BB': 'F',
+    '\uFF26': 'F',
+    '\u1E1E': 'F',
+    '\u0191': 'F',
+    '\uA77B': 'F',
+    '\u24BC': 'G',
+    '\uFF27': 'G',
+    '\u01F4': 'G',
+    '\u011C': 'G',
+    '\u1E20': 'G',
+    '\u011E': 'G',
+    '\u0120': 'G',
+    '\u01E6': 'G',
+    '\u0122': 'G',
+    '\u01E4': 'G',
+    '\u0193': 'G',
+    '\uA7A0': 'G',
+    '\uA77D': 'G',
+    '\uA77E': 'G',
+    '\u24BD': 'H',
+    '\uFF28': 'H',
+    '\u0124': 'H',
+    '\u1E22': 'H',
+    '\u1E26': 'H',
+    '\u021E': 'H',
+    '\u1E24': 'H',
+    '\u1E28': 'H',
+    '\u1E2A': 'H',
+    '\u0126': 'H',
+    '\u2C67': 'H',
+    '\u2C75': 'H',
+    '\uA78D': 'H',
+    '\u24BE': 'I',
+    '\uFF29': 'I',
+    '\u00CC': 'I',
+    '\u00CD': 'I',
+    '\u00CE': 'I',
+    '\u0128': 'I',
+    '\u012A': 'I',
+    '\u012C': 'I',
+    '\u0130': 'I',
+    '\u00CF': 'I',
+    '\u1E2E': 'I',
+    '\u1EC8': 'I',
+    '\u01CF': 'I',
+    '\u0208': 'I',
+    '\u020A': 'I',
+    '\u1ECA': 'I',
+    '\u012E': 'I',
+    '\u1E2C': 'I',
+    '\u0197': 'I',
+    '\u24BF': 'J',
+    '\uFF2A': 'J',
+    '\u0134': 'J',
+    '\u0248': 'J',
+    '\u24C0': 'K',
+    '\uFF2B': 'K',
+    '\u1E30': 'K',
+    '\u01E8': 'K',
+    '\u1E32': 'K',
+    '\u0136': 'K',
+    '\u1E34': 'K',
+    '\u0198': 'K',
+    '\u2C69': 'K',
+    '\uA740': 'K',
+    '\uA742': 'K',
+    '\uA744': 'K',
+    '\uA7A2': 'K',
+    '\u24C1': 'L',
+    '\uFF2C': 'L',
+    '\u013F': 'L',
+    '\u0139': 'L',
+    '\u013D': 'L',
+    '\u1E36': 'L',
+    '\u1E38': 'L',
+    '\u013B': 'L',
+    '\u1E3C': 'L',
+    '\u1E3A': 'L',
+    '\u0141': 'L',
+    '\u023D': 'L',
+    '\u2C62': 'L',
+    '\u2C60': 'L',
+    '\uA748': 'L',
+    '\uA746': 'L',
+    '\uA780': 'L',
+    '\u01C7': 'LJ',
+    '\u01C8': 'Lj',
+    '\u24C2': 'M',
+    '\uFF2D': 'M',
+    '\u1E3E': 'M',
+    '\u1E40': 'M',
+    '\u1E42': 'M',
+    '\u2C6E': 'M',
+    '\u019C': 'M',
+    '\u24C3': 'N',
+    '\uFF2E': 'N',
+    '\u01F8': 'N',
+    '\u0143': 'N',
+    '\u00D1': 'N',
+    '\u1E44': 'N',
+    '\u0147': 'N',
+    '\u1E46': 'N',
+    '\u0145': 'N',
+    '\u1E4A': 'N',
+    '\u1E48': 'N',
+    '\u0220': 'N',
+    '\u019D': 'N',
+    '\uA790': 'N',
+    '\uA7A4': 'N',
+    '\u01CA': 'NJ',
+    '\u01CB': 'Nj',
+    '\u24C4': 'O',
+    '\uFF2F': 'O',
+    '\u00D2': 'O',
+    '\u00D3': 'O',
+    '\u00D4': 'O',
+    '\u1ED2': 'O',
+    '\u1ED0': 'O',
+    '\u1ED6': 'O',
+    '\u1ED4': 'O',
+    '\u00D5': 'O',
+    '\u1E4C': 'O',
+    '\u022C': 'O',
+    '\u1E4E': 'O',
+    '\u014C': 'O',
+    '\u1E50': 'O',
+    '\u1E52': 'O',
+    '\u014E': 'O',
+    '\u022E': 'O',
+    '\u0230': 'O',
+    '\u00D6': 'O',
+    '\u022A': 'O',
+    '\u1ECE': 'O',
+    '\u0150': 'O',
+    '\u01D1': 'O',
+    '\u020C': 'O',
+    '\u020E': 'O',
+    '\u01A0': 'O',
+    '\u1EDC': 'O',
+    '\u1EDA': 'O',
+    '\u1EE0': 'O',
+    '\u1EDE': 'O',
+    '\u1EE2': 'O',
+    '\u1ECC': 'O',
+    '\u1ED8': 'O',
+    '\u01EA': 'O',
+    '\u01EC': 'O',
+    '\u00D8': 'O',
+    '\u01FE': 'O',
+    '\u0186': 'O',
+    '\u019F': 'O',
+    '\uA74A': 'O',
+    '\uA74C': 'O',
+    '\u01A2': 'OI',
+    '\uA74E': 'OO',
+    '\u0222': 'OU',
+    '\u24C5': 'P',
+    '\uFF30': 'P',
+    '\u1E54': 'P',
+    '\u1E56': 'P',
+    '\u01A4': 'P',
+    '\u2C63': 'P',
+    '\uA750': 'P',
+    '\uA752': 'P',
+    '\uA754': 'P',
+    '\u24C6': 'Q',
+    '\uFF31': 'Q',
+    '\uA756': 'Q',
+    '\uA758': 'Q',
+    '\u024A': 'Q',
+    '\u24C7': 'R',
+    '\uFF32': 'R',
+    '\u0154': 'R',
+    '\u1E58': 'R',
+    '\u0158': 'R',
+    '\u0210': 'R',
+    '\u0212': 'R',
+    '\u1E5A': 'R',
+    '\u1E5C': 'R',
+    '\u0156': 'R',
+    '\u1E5E': 'R',
+    '\u024C': 'R',
+    '\u2C64': 'R',
+    '\uA75A': 'R',
+    '\uA7A6': 'R',
+    '\uA782': 'R',
+    '\u24C8': 'S',
+    '\uFF33': 'S',
+    '\u1E9E': 'S',
+    '\u015A': 'S',
+    '\u1E64': 'S',
+    '\u015C': 'S',
+    '\u1E60': 'S',
+    '\u0160': 'S',
+    '\u1E66': 'S',
+    '\u1E62': 'S',
+    '\u1E68': 'S',
+    '\u0218': 'S',
+    '\u015E': 'S',
+    '\u2C7E': 'S',
+    '\uA7A8': 'S',
+    '\uA784': 'S',
+    '\u24C9': 'T',
+    '\uFF34': 'T',
+    '\u1E6A': 'T',
+    '\u0164': 'T',
+    '\u1E6C': 'T',
+    '\u021A': 'T',
+    '\u0162': 'T',
+    '\u1E70': 'T',
+    '\u1E6E': 'T',
+    '\u0166': 'T',
+    '\u01AC': 'T',
+    '\u01AE': 'T',
+    '\u023E': 'T',
+    '\uA786': 'T',
+    '\uA728': 'TZ',
+    '\u24CA': 'U',
+    '\uFF35': 'U',
+    '\u00D9': 'U',
+    '\u00DA': 'U',
+    '\u00DB': 'U',
+    '\u0168': 'U',
+    '\u1E78': 'U',
+    '\u016A': 'U',
+    '\u1E7A': 'U',
+    '\u016C': 'U',
+    '\u00DC': 'U',
+    '\u01DB': 'U',
+    '\u01D7': 'U',
+    '\u01D5': 'U',
+    '\u01D9': 'U',
+    '\u1EE6': 'U',
+    '\u016E': 'U',
+    '\u0170': 'U',
+    '\u01D3': 'U',
+    '\u0214': 'U',
+    '\u0216': 'U',
+    '\u01AF': 'U',
+    '\u1EEA': 'U',
+    '\u1EE8': 'U',
+    '\u1EEE': 'U',
+    '\u1EEC': 'U',
+    '\u1EF0': 'U',
+    '\u1EE4': 'U',
+    '\u1E72': 'U',
+    '\u0172': 'U',
+    '\u1E76': 'U',
+    '\u1E74': 'U',
+    '\u0244': 'U',
+    '\u24CB': 'V',
+    '\uFF36': 'V',
+    '\u1E7C': 'V',
+    '\u1E7E': 'V',
+    '\u01B2': 'V',
+    '\uA75E': 'V',
+    '\u0245': 'V',
+    '\uA760': 'VY',
+    '\u24CC': 'W',
+    '\uFF37': 'W',
+    '\u1E80': 'W',
+    '\u1E82': 'W',
+    '\u0174': 'W',
+    '\u1E86': 'W',
+    '\u1E84': 'W',
+    '\u1E88': 'W',
+    '\u2C72': 'W',
+    '\u24CD': 'X',
+    '\uFF38': 'X',
+    '\u1E8A': 'X',
+    '\u1E8C': 'X',
+    '\u24CE': 'Y',
+    '\uFF39': 'Y',
+    '\u1EF2': 'Y',
+    '\u00DD': 'Y',
+    '\u0176': 'Y',
+    '\u1EF8': 'Y',
+    '\u0232': 'Y',
+    '\u1E8E': 'Y',
+    '\u0178': 'Y',
+    '\u1EF6': 'Y',
+    '\u1EF4': 'Y',
+    '\u01B3': 'Y',
+    '\u024E': 'Y',
+    '\u1EFE': 'Y',
+    '\u24CF': 'Z',
+    '\uFF3A': 'Z',
+    '\u0179': 'Z',
+    '\u1E90': 'Z',
+    '\u017B': 'Z',
+    '\u017D': 'Z',
+    '\u1E92': 'Z',
+    '\u1E94': 'Z',
+    '\u01B5': 'Z',
+    '\u0224': 'Z',
+    '\u2C7F': 'Z',
+    '\u2C6B': 'Z',
+    '\uA762': 'Z',
+    '\u24D0': 'a',
+    '\uFF41': 'a',
+    '\u1E9A': 'a',
+    '\u00E0': 'a',
+    '\u00E1': 'a',
+    '\u00E2': 'a',
+    '\u1EA7': 'a',
+    '\u1EA5': 'a',
+    '\u1EAB': 'a',
+    '\u1EA9': 'a',
+    '\u00E3': 'a',
+    '\u0101': 'a',
+    '\u0103': 'a',
+    '\u1EB1': 'a',
+    '\u1EAF': 'a',
+    '\u1EB5': 'a',
+    '\u1EB3': 'a',
+    '\u0227': 'a',
+    '\u01E1': 'a',
+    '\u00E4': 'a',
+    '\u01DF': 'a',
+    '\u1EA3': 'a',
+    '\u00E5': 'a',
+    '\u01FB': 'a',
+    '\u01CE': 'a',
+    '\u0201': 'a',
+    '\u0203': 'a',
+    '\u1EA1': 'a',
+    '\u1EAD': 'a',
+    '\u1EB7': 'a',
+    '\u1E01': 'a',
+    '\u0105': 'a',
+    '\u2C65': 'a',
+    '\u0250': 'a',
+    '\uA733': 'aa',
+    '\u00E6': 'ae',
+    '\u01FD': 'ae',
+    '\u01E3': 'ae',
+    '\uA735': 'ao',
+    '\uA737': 'au',
+    '\uA739': 'av',
+    '\uA73B': 'av',
+    '\uA73D': 'ay',
+    '\u24D1': 'b',
+    '\uFF42': 'b',
+    '\u1E03': 'b',
+    '\u1E05': 'b',
+    '\u1E07': 'b',
+    '\u0180': 'b',
+    '\u0183': 'b',
+    '\u0253': 'b',
+    '\u24D2': 'c',
+    '\uFF43': 'c',
+    '\u0107': 'c',
+    '\u0109': 'c',
+    '\u010B': 'c',
+    '\u010D': 'c',
+    '\u00E7': 'c',
+    '\u1E09': 'c',
+    '\u0188': 'c',
+    '\u023C': 'c',
+    '\uA73F': 'c',
+    '\u2184': 'c',
+    '\u24D3': 'd',
+    '\uFF44': 'd',
+    '\u1E0B': 'd',
+    '\u010F': 'd',
+    '\u1E0D': 'd',
+    '\u1E11': 'd',
+    '\u1E13': 'd',
+    '\u1E0F': 'd',
+    '\u0111': 'd',
+    '\u018C': 'd',
+    '\u0256': 'd',
+    '\u0257': 'd',
+    '\uA77A': 'd',
+    '\u01F3': 'dz',
+    '\u01C6': 'dz',
+    '\u24D4': 'e',
+    '\uFF45': 'e',
+    '\u00E8': 'e',
+    '\u00E9': 'e',
+    '\u00EA': 'e',
+    '\u1EC1': 'e',
+    '\u1EBF': 'e',
+    '\u1EC5': 'e',
+    '\u1EC3': 'e',
+    '\u1EBD': 'e',
+    '\u0113': 'e',
+    '\u1E15': 'e',
+    '\u1E17': 'e',
+    '\u0115': 'e',
+    '\u0117': 'e',
+    '\u00EB': 'e',
+    '\u1EBB': 'e',
+    '\u011B': 'e',
+    '\u0205': 'e',
+    '\u0207': 'e',
+    '\u1EB9': 'e',
+    '\u1EC7': 'e',
+    '\u0229': 'e',
+    '\u1E1D': 'e',
+    '\u0119': 'e',
+    '\u1E19': 'e',
+    '\u1E1B': 'e',
+    '\u0247': 'e',
+    '\u025B': 'e',
+    '\u01DD': 'e',
+    '\u24D5': 'f',
+    '\uFF46': 'f',
+    '\u1E1F': 'f',
+    '\u0192': 'f',
+    '\uA77C': 'f',
+    '\u24D6': 'g',
+    '\uFF47': 'g',
+    '\u01F5': 'g',
+    '\u011D': 'g',
+    '\u1E21': 'g',
+    '\u011F': 'g',
+    '\u0121': 'g',
+    '\u01E7': 'g',
+    '\u0123': 'g',
+    '\u01E5': 'g',
+    '\u0260': 'g',
+    '\uA7A1': 'g',
+    '\u1D79': 'g',
+    '\uA77F': 'g',
+    '\u24D7': 'h',
+    '\uFF48': 'h',
+    '\u0125': 'h',
+    '\u1E23': 'h',
+    '\u1E27': 'h',
+    '\u021F': 'h',
+    '\u1E25': 'h',
+    '\u1E29': 'h',
+    '\u1E2B': 'h',
+    '\u1E96': 'h',
+    '\u0127': 'h',
+    '\u2C68': 'h',
+    '\u2C76': 'h',
+    '\u0265': 'h',
+    '\u0195': 'hv',
+    '\u24D8': 'i',
+    '\uFF49': 'i',
+    '\u00EC': 'i',
+    '\u00ED': 'i',
+    '\u00EE': 'i',
+    '\u0129': 'i',
+    '\u012B': 'i',
+    '\u012D': 'i',
+    '\u00EF': 'i',
+    '\u1E2F': 'i',
+    '\u1EC9': 'i',
+    '\u01D0': 'i',
+    '\u0209': 'i',
+    '\u020B': 'i',
+    '\u1ECB': 'i',
+    '\u012F': 'i',
+    '\u1E2D': 'i',
+    '\u0268': 'i',
+    '\u0131': 'i',
+    '\u24D9': 'j',
+    '\uFF4A': 'j',
+    '\u0135': 'j',
+    '\u01F0': 'j',
+    '\u0249': 'j',
+    '\u24DA': 'k',
+    '\uFF4B': 'k',
+    '\u1E31': 'k',
+    '\u01E9': 'k',
+    '\u1E33': 'k',
+    '\u0137': 'k',
+    '\u1E35': 'k',
+    '\u0199': 'k',
+    '\u2C6A': 'k',
+    '\uA741': 'k',
+    '\uA743': 'k',
+    '\uA745': 'k',
+    '\uA7A3': 'k',
+    '\u24DB': 'l',
+    '\uFF4C': 'l',
+    '\u0140': 'l',
+    '\u013A': 'l',
+    '\u013E': 'l',
+    '\u1E37': 'l',
+    '\u1E39': 'l',
+    '\u013C': 'l',
+    '\u1E3D': 'l',
+    '\u1E3B': 'l',
+    '\u017F': 'l',
+    '\u0142': 'l',
+    '\u019A': 'l',
+    '\u026B': 'l',
+    '\u2C61': 'l',
+    '\uA749': 'l',
+    '\uA781': 'l',
+    '\uA747': 'l',
+    '\u01C9': 'lj',
+    '\u24DC': 'm',
+    '\uFF4D': 'm',
+    '\u1E3F': 'm',
+    '\u1E41': 'm',
+    '\u1E43': 'm',
+    '\u0271': 'm',
+    '\u026F': 'm',
+    '\u24DD': 'n',
+    '\uFF4E': 'n',
+    '\u01F9': 'n',
+    '\u0144': 'n',
+    '\u00F1': 'n',
+    '\u1E45': 'n',
+    '\u0148': 'n',
+    '\u1E47': 'n',
+    '\u0146': 'n',
+    '\u1E4B': 'n',
+    '\u1E49': 'n',
+    '\u019E': 'n',
+    '\u0272': 'n',
+    '\u0149': 'n',
+    '\uA791': 'n',
+    '\uA7A5': 'n',
+    '\u01CC': 'nj',
+    '\u24DE': 'o',
+    '\uFF4F': 'o',
+    '\u00F2': 'o',
+    '\u00F3': 'o',
+    '\u00F4': 'o',
+    '\u1ED3': 'o',
+    '\u1ED1': 'o',
+    '\u1ED7': 'o',
+    '\u1ED5': 'o',
+    '\u00F5': 'o',
+    '\u1E4D': 'o',
+    '\u022D': 'o',
+    '\u1E4F': 'o',
+    '\u014D': 'o',
+    '\u1E51': 'o',
+    '\u1E53': 'o',
+    '\u014F': 'o',
+    '\u022F': 'o',
+    '\u0231': 'o',
+    '\u00F6': 'o',
+    '\u022B': 'o',
+    '\u1ECF': 'o',
+    '\u0151': 'o',
+    '\u01D2': 'o',
+    '\u020D': 'o',
+    '\u020F': 'o',
+    '\u01A1': 'o',
+    '\u1EDD': 'o',
+    '\u1EDB': 'o',
+    '\u1EE1': 'o',
+    '\u1EDF': 'o',
+    '\u1EE3': 'o',
+    '\u1ECD': 'o',
+    '\u1ED9': 'o',
+    '\u01EB': 'o',
+    '\u01ED': 'o',
+    '\u00F8': 'o',
+    '\u01FF': 'o',
+    '\u0254': 'o',
+    '\uA74B': 'o',
+    '\uA74D': 'o',
+    '\u0275': 'o',
+    '\u01A3': 'oi',
+    '\u0223': 'ou',
+    '\uA74F': 'oo',
+    '\u24DF': 'p',
+    '\uFF50': 'p',
+    '\u1E55': 'p',
+    '\u1E57': 'p',
+    '\u01A5': 'p',
+    '\u1D7D': 'p',
+    '\uA751': 'p',
+    '\uA753': 'p',
+    '\uA755': 'p',
+    '\u24E0': 'q',
+    '\uFF51': 'q',
+    '\u024B': 'q',
+    '\uA757': 'q',
+    '\uA759': 'q',
+    '\u24E1': 'r',
+    '\uFF52': 'r',
+    '\u0155': 'r',
+    '\u1E59': 'r',
+    '\u0159': 'r',
+    '\u0211': 'r',
+    '\u0213': 'r',
+    '\u1E5B': 'r',
+    '\u1E5D': 'r',
+    '\u0157': 'r',
+    '\u1E5F': 'r',
+    '\u024D': 'r',
+    '\u027D': 'r',
+    '\uA75B': 'r',
+    '\uA7A7': 'r',
+    '\uA783': 'r',
+    '\u24E2': 's',
+    '\uFF53': 's',
+    '\u00DF': 's',
+    '\u015B': 's',
+    '\u1E65': 's',
+    '\u015D': 's',
+    '\u1E61': 's',
+    '\u0161': 's',
+    '\u1E67': 's',
+    '\u1E63': 's',
+    '\u1E69': 's',
+    '\u0219': 's',
+    '\u015F': 's',
+    '\u023F': 's',
+    '\uA7A9': 's',
+    '\uA785': 's',
+    '\u1E9B': 's',
+    '\u24E3': 't',
+    '\uFF54': 't',
+    '\u1E6B': 't',
+    '\u1E97': 't',
+    '\u0165': 't',
+    '\u1E6D': 't',
+    '\u021B': 't',
+    '\u0163': 't',
+    '\u1E71': 't',
+    '\u1E6F': 't',
+    '\u0167': 't',
+    '\u01AD': 't',
+    '\u0288': 't',
+    '\u2C66': 't',
+    '\uA787': 't',
+    '\uA729': 'tz',
+    '\u24E4': 'u',
+    '\uFF55': 'u',
+    '\u00F9': 'u',
+    '\u00FA': 'u',
+    '\u00FB': 'u',
+    '\u0169': 'u',
+    '\u1E79': 'u',
+    '\u016B': 'u',
+    '\u1E7B': 'u',
+    '\u016D': 'u',
+    '\u00FC': 'u',
+    '\u01DC': 'u',
+    '\u01D8': 'u',
+    '\u01D6': 'u',
+    '\u01DA': 'u',
+    '\u1EE7': 'u',
+    '\u016F': 'u',
+    '\u0171': 'u',
+    '\u01D4': 'u',
+    '\u0215': 'u',
+    '\u0217': 'u',
+    '\u01B0': 'u',
+    '\u1EEB': 'u',
+    '\u1EE9': 'u',
+    '\u1EEF': 'u',
+    '\u1EED': 'u',
+    '\u1EF1': 'u',
+    '\u1EE5': 'u',
+    '\u1E73': 'u',
+    '\u0173': 'u',
+    '\u1E77': 'u',
+    '\u1E75': 'u',
+    '\u0289': 'u',
+    '\u24E5': 'v',
+    '\uFF56': 'v',
+    '\u1E7D': 'v',
+    '\u1E7F': 'v',
+    '\u028B': 'v',
+    '\uA75F': 'v',
+    '\u028C': 'v',
+    '\uA761': 'vy',
+    '\u24E6': 'w',
+    '\uFF57': 'w',
+    '\u1E81': 'w',
+    '\u1E83': 'w',
+    '\u0175': 'w',
+    '\u1E87': 'w',
+    '\u1E85': 'w',
+    '\u1E98': 'w',
+    '\u1E89': 'w',
+    '\u2C73': 'w',
+    '\u24E7': 'x',
+    '\uFF58': 'x',
+    '\u1E8B': 'x',
+    '\u1E8D': 'x',
+    '\u24E8': 'y',
+    '\uFF59': 'y',
+    '\u1EF3': 'y',
+    '\u00FD': 'y',
+    '\u0177': 'y',
+    '\u1EF9': 'y',
+    '\u0233': 'y',
+    '\u1E8F': 'y',
+    '\u00FF': 'y',
+    '\u1EF7': 'y',
+    '\u1E99': 'y',
+    '\u1EF5': 'y',
+    '\u01B4': 'y',
+    '\u024F': 'y',
+    '\u1EFF': 'y',
+    '\u24E9': 'z',
+    '\uFF5A': 'z',
+    '\u017A': 'z',
+    '\u1E91': 'z',
+    '\u017C': 'z',
+    '\u017E': 'z',
+    '\u1E93': 'z',
+    '\u1E95': 'z',
+    '\u01B6': 'z',
+    '\u0225': 'z',
+    '\u0240': 'z',
+    '\u2C6C': 'z',
+    '\uA763': 'z',
+    '\u0386': '\u0391',
+    '\u0388': '\u0395',
+    '\u0389': '\u0397',
+    '\u038A': '\u0399',
+    '\u03AA': '\u0399',
+    '\u038C': '\u039F',
+    '\u038E': '\u03A5',
+    '\u03AB': '\u03A5',
+    '\u038F': '\u03A9',
+    '\u03AC': '\u03B1',
+    '\u03AD': '\u03B5',
+    '\u03AE': '\u03B7',
+    '\u03AF': '\u03B9',
+    '\u03CA': '\u03B9',
+    '\u0390': '\u03B9',
+    '\u03CC': '\u03BF',
+    '\u03CD': '\u03C5',
+    '\u03CB': '\u03C5',
+    '\u03B0': '\u03C5',
+    '\u03C9': '\u03C9',
+    '\u03C2': '\u03C3'
+  };
+
+  return diacritics;
+});
+
+S2.define('select2/data/base',[
+  '../utils'
+], function (Utils) {
+  function BaseAdapter ($element, options) {
+    BaseAdapter.__super__.constructor.call(this);
+  }
+
+  Utils.Extend(BaseAdapter, Utils.Observable);
+
+  BaseAdapter.prototype.current = function (callback) {
+    throw new Error('The `current` method must be defined in child classes.');
+  };
+
+  BaseAdapter.prototype.query = function (params, callback) {
+    throw new Error('The `query` method must be defined in child classes.');
+  };
+
+  BaseAdapter.prototype.bind = function (container, $container) {
+    // Can be implemented in subclasses
+  };
+
+  BaseAdapter.prototype.destroy = function () {
+    // Can be implemented in subclasses
+  };
+
+  BaseAdapter.prototype.generateResultId = function (container, data) {
+    var id = container.id + '-result-';
+
+    id += Utils.generateChars(4);
+
+    if (data.id != null) {
+      id += '-' + data.id.toString();
+    } else {
+      id += '-' + Utils.generateChars(4);
+    }
+    return id;
+  };
+
+  return BaseAdapter;
+});
+
+S2.define('select2/data/select',[
+  './base',
+  '../utils',
+  'jquery'
+], function (BaseAdapter, Utils, $) {
+  function SelectAdapter ($element, options) {
+    this.$element = $element;
+    this.options = options;
+
+    SelectAdapter.__super__.constructor.call(this);
+  }
+
+  Utils.Extend(SelectAdapter, BaseAdapter);
+
+  SelectAdapter.prototype.current = function (callback) {
+    var data = [];
+    var self = this;
+
+    this.$element.find(':selected').each(function () {
+      var $option = $(this);
+
+      var option = self.item($option);
+
+      data.push(option);
+    });
+
+    callback(data);
+  };
+
+  SelectAdapter.prototype.select = function (data) {
+    var self = this;
+
+    data.selected = true;
+
+    // If data.element is a DOM node, use it instead
+    if ($(data.element).is('option')) {
+      data.element.selected = true;
+
+      this.$element.trigger('change');
+
+      return;
+    }
+
+    if (this.$element.prop('multiple')) {
+      this.current(function (currentData) {
+        var val = [];
+
+        data = [data];
+        data.push.apply(data, currentData);
+
+        for (var d = 0; d < data.length; d++) {
+          var id = data[d].id;
+
+          if ($.inArray(id, val) === -1) {
+            val.push(id);
+          }
+        }
+
+        self.$element.val(val);
+        self.$element.trigger('change');
+      });
+    } else {
+      var val = data.id;
+
+      this.$element.val(val);
+      this.$element.trigger('change');
+    }
+  };
+
+  SelectAdapter.prototype.unselect = function (data) {
+    var self = this;
+
+    if (!this.$element.prop('multiple')) {
+      return;
+    }
+
+    data.selected = false;
+
+    if ($(data.element).is('option')) {
+      data.element.selected = false;
+
+      this.$element.trigger('change');
+
+      return;
+    }
+
+    this.current(function (currentData) {
+      var val = [];
+
+      for (var d = 0; d < currentData.length; d++) {
+        var id = currentData[d].id;
+
+        if (id !== data.id && $.inArray(id, val) === -1) {
+          val.push(id);
+        }
+      }
+
+      self.$element.val(val);
+
+      self.$element.trigger('change');
+    });
+  };
+
+  SelectAdapter.prototype.bind = function (container, $container) {
+    var self = this;
+
+    this.container = container;
+
+    container.on('select', function (params) {
+      self.select(params.data);
+    });
+
+    container.on('unselect', function (params) {
+      self.unselect(params.data);
+    });
+  };
+
+  SelectAdapter.prototype.destroy = function () {
+    // Remove anything added to child elements
+    this.$element.find('*').each(function () {
+      // Remove any custom data set by Select2
+      $.removeData(this, 'data');
+    });
+  };
+
+  SelectAdapter.prototype.query = function (params, callback) {
+    var data = [];
+    var self = this;
+
+    var $options = this.$element.children();
+
+    $options.each(function () {
+      var $option = $(this);
+
+      if (!$option.is('option') && !$option.is('optgroup')) {
+        return;
+      }
+
+      var option = self.item($option);
+
+      var matches = self.matches(params, option);
+
+      if (matches !== null) {
+        data.push(matches);
+      }
+    });
+
+    callback({
+      results: data
+    });
+  };
+
+  SelectAdapter.prototype.addOptions = function ($options) {
+    Utils.appendMany(this.$element, $options);
+  };
+
+  SelectAdapter.prototype.option = function (data) {
+    var option;
+
+    if (data.children) {
+      option = document.createElement('optgroup');
+      option.label = data.text;
+    } else {
+      option = document.createElement('option');
+
+      if (option.textContent !== undefined) {
+        option.textContent = data.text;
+      } else {
+        option.innerText = data.text;
+      }
+    }
+
+    if (data.id) {
+      option.value = data.id;
+    }
+
+    if (data.disabled) {
+      option.disabled = true;
+    }
+
+    if (data.selected) {
+      option.selected = true;
+    }
+
+    if (data.title) {
+      option.title = data.title;
+    }
+
+    var $option = $(option);
+
+    var normalizedData = this._normalizeItem(data);
+    normalizedData.element = option;
+
+    // Override the option's data with the combined data
+    $.data(option, 'data', normalizedData);
+
+    return $option;
+  };
+
+  SelectAdapter.prototype.item = function ($option) {
+    var data = {};
+
+    data = $.data($option[0], 'data');
+
+    if (data != null) {
+      return data;
+    }
+
+    if ($option.is('option')) {
+      data = {
+        id: $option.val(),
+        text: $option.text(),
+        disabled: $option.prop('disabled'),
+        selected: $option.prop('selected'),
+        title: $option.prop('title')
+      };
+    } else if ($option.is('optgroup')) {
+      data = {
+        text: $option.prop('label'),
+        children: [],
+        title: $option.prop('title')
+      };
+
+      var $children = $option.children('option');
+      var children = [];
+
+      for (var c = 0; c < $children.length; c++) {
+        var $child = $($children[c]);
+
+        var child = this.item($child);
+
+        children.push(child);
+      }
+
+      data.children = children;
+    }
+
+    data = this._normalizeItem(data);
+    data.element = $option[0];
+
+    $.data($option[0], 'data', data);
+
+    return data;
+  };
+
+  SelectAdapter.prototype._normalizeItem = function (item) {
+    if (!$.isPlainObject(item)) {
+      item = {
+        id: item,
+        text: item
+      };
+    }
+
+    item = $.extend({}, {
+      text: ''
+    }, item);
+
+    var defaults = {
+      selected: false,
+      disabled: false
+    };
+
+    if (item.id != null) {
+      item.id = item.id.toString();
+    }
+
+    if (item.text != null) {
+      item.text = item.text.toString();
+    }
+
+    if (item._resultId == null && item.id && this.container != null) {
+      item._resultId = this.generateResultId(this.container, item);
+    }
+
+    return $.extend({}, defaults, item);
+  };
+
+  SelectAdapter.prototype.matches = function (params, data) {
+    var matcher = this.options.get('matcher');
+
+    return matcher(params, data);
+  };
+
+  return SelectAdapter;
+});
+
+S2.define('select2/data/array',[
+  './select',
+  '../utils',
+  'jquery'
+], function (SelectAdapter, Utils, $) {
+  function ArrayAdapter ($element, options) {
+    var data = options.get('data') || [];
+
+    ArrayAdapter.__super__.constructor.call(this, $element, options);
+
+    this.addOptions(this.convertToOptions(data));
+  }
+
+  Utils.Extend(ArrayAdapter, SelectAdapter);
+
+  ArrayAdapter.prototype.select = function (data) {
+    var $option = this.$element.find('option').filter(function (i, elm) {
+      return elm.value == data.id.toString();
+    });
+
+    if ($option.length === 0) {
+      $option = this.option(data);
+
+      this.addOptions($option);
+    }
+
+    ArrayAdapter.__super__.select.call(this, data);
+  };
+
+  ArrayAdapter.prototype.convertToOptions = function (data) {
+    var self = this;
+
+    var $existing = this.$element.find('option');
+    var existingIds = $existing.map(function () {
+      return self.item($(this)).id;
+    }).get();
+
+    var $options = [];
+
+    // Filter out all items except for the one passed in the argument
+    function onlyItem (item) {
+      return function () {
+        return $(this).val() == item.id;
+      };
+    }
+
+    for (var d = 0; d < data.length; d++) {
+      var item = this._normalizeItem(data[d]);
+
+      // Skip items which were pre-loaded, only merge the data
+      if ($.inArray(item.id, existingIds) >= 0) {
+        var $existingOption = $existing.filter(onlyItem(item));
+
+        var existingData = this.item($existingOption);
+        var newData = $.extend(true, {}, existingData, item);
+
+        var $newOption = this.option(newData);
+
+        $existingOption.replaceWith($newOption);
+
+        continue;
+      }
+
+      var $option = this.option(item);
+
+      if (item.children) {
+        var $children = this.convertToOptions(item.children);
+
+        Utils.appendMany($option, $children);
+      }
+
+      $options.push($option);
+    }
+
+    return $options;
+  };
+
+  return ArrayAdapter;
+});
+
+S2.define('select2/data/ajax',[
+  './array',
+  '../utils',
+  'jquery'
+], function (ArrayAdapter, Utils, $) {
+  function AjaxAdapter ($element, options) {
+    this.ajaxOptions = this._applyDefaults(options.get('ajax'));
+
+    if (this.ajaxOptions.processResults != null) {
+      this.processResults = this.ajaxOptions.processResults;
+    }
+
+    AjaxAdapter.__super__.constructor.call(this, $element, options);
+  }
+
+  Utils.Extend(AjaxAdapter, ArrayAdapter);
+
+  AjaxAdapter.prototype._applyDefaults = function (options) {
+    var defaults = {
+      data: function (params) {
+        return $.extend({}, params, {
+          q: params.term
+        });
+      },
+      transport: function (params, success, failure) {
+        var $request = $.ajax(params);
+
+        $request.then(success);
+        $request.fail(failure);
+
+        return $request;
+      }
+    };
+
+    return $.extend({}, defaults, options, true);
+  };
+
+  AjaxAdapter.prototype.processResults = function (results) {
+    return results;
+  };
+
+  AjaxAdapter.prototype.query = function (params, callback) {
+    var matches = [];
+    var self = this;
+
+    if (this._request != null) {
+      // JSONP requests cannot always be aborted
+      if ($.isFunction(this._request.abort)) {
+        this._request.abort();
+      }
+
+      this._request = null;
+    }
+
+    var options = $.extend({
+      type: 'GET'
+    }, this.ajaxOptions);
+
+    if (typeof options.url === 'function') {
+      options.url = options.url.call(this.$element, params);
+    }
+
+    if (typeof options.data === 'function') {
+      options.data = options.data.call(this.$element, params);
+    }
+
+    function request () {
+      var $request = options.transport(options, function (data) {
+        var results = self.processResults(data, params);
+
+        if (self.options.get('debug') && window.console && console.error) {
+          // Check to make sure that the response included a `results` key.
+          if (!results || !results.results || !$.isArray(results.results)) {
+            console.error(
+              'Select2: The AJAX results did not return an array in the ' +
+              '`results` key of the response.'
+            );
+          }
+        }
+
+        callback(results);
+      }, function () {
+        // TODO: Handle AJAX errors
+      });
+
+      self._request = $request;
+    }
+
+    if (this.ajaxOptions.delay && params.term !== '') {
+      if (this._queryTimeout) {
+        window.clearTimeout(this._queryTimeout);
+      }
+
+      this._queryTimeout = window.setTimeout(request, this.ajaxOptions.delay);
+    } else {
+      request();
+    }
+  };
+
+  return AjaxAdapter;
+});
+
+S2.define('select2/data/tags',[
+  'jquery'
+], function ($) {
+  function Tags (decorated, $element, options) {
+    var tags = options.get('tags');
+
+    var createTag = options.get('createTag');
+
+    if (createTag !== undefined) {
+      this.createTag = createTag;
+    }
+
+    decorated.call(this, $element, options);
+
+    if ($.isArray(tags)) {
+      for (var t = 0; t < tags.length; t++) {
+        var tag = tags[t];
+        var item = this._normalizeItem(tag);
+
+        var $option = this.option(item);
+
+        this.$element.append($option);
+      }
+    }
+  }
+
+  Tags.prototype.query = function (decorated, params, callback) {
+    var self = this;
+
+    this._removeOldTags();
+
+    if (params.term == null || params.page != null) {
+      decorated.call(this, params, callback);
+      return;
+    }
+
+    function wrapper (obj, child) {
+      var data = obj.results;
+
+      for (var i = 0; i < data.length; i++) {
+        var option = data[i];
+
+        var checkChildren = (
+          option.children != null &&
+          !wrapper({
+            results: option.children
+          }, true)
+        );
+
+        var checkText = option.text === params.term;
+
+        if (checkText || checkChildren) {
+          if (child) {
+            return false;
+          }
+
+          obj.data = data;
+          callback(obj);
+
+          return;
+        }
+      }
+
+      if (child) {
+        return true;
+      }
+
+      var tag = self.createTag(params);
+
+      if (tag != null) {
+        var $option = self.option(tag);
+        $option.attr('data-select2-tag', true);
+
+        self.addOptions([$option]);
+
+        self.insertTag(data, tag);
+      }
+
+      obj.results = data;
+
+      callback(obj);
+    }
+
+    decorated.call(this, params, wrapper);
+  };
+
+  Tags.prototype.createTag = function (decorated, params) {
+    var term = $.trim(params.term);
+
+    if (term === '') {
+      return null;
+    }
+
+    return {
+      id: term,
+      text: term
+    };
+  };
+
+  Tags.prototype.insertTag = function (_, data, tag) {
+    data.unshift(tag);
+  };
+
+  Tags.prototype._removeOldTags = function (_) {
+    var tag = this._lastTag;
+
+    var $options = this.$element.find('option[data-select2-tag]');
+
+    $options.each(function () {
+      if (this.selected) {
+        return;
+      }
+
+      $(this).remove();
+    });
+  };
+
+  return Tags;
+});
+
+S2.define('select2/data/tokenizer',[
+  'jquery'
+], function ($) {
+  function Tokenizer (decorated, $element, options) {
+    var tokenizer = options.get('tokenizer');
+
+    if (tokenizer !== undefined) {
+      this.tokenizer = tokenizer;
+    }
+
+    decorated.call(this, $element, options);
+  }
+
+  Tokenizer.prototype.bind = function (decorated, container, $container) {
+    decorated.call(this, container, $container);
+
+    this.$search =  container.dropdown.$search || container.selection.$search ||
+      $container.find('.select2-search__field');
+  };
+
+  Tokenizer.prototype.query = function (decorated, params, callback) {
+    var self = this;
+
+    function select (data) {
+      self.trigger('select', {
+        data: data
+      });
+    }
+
+    params.term = params.term || '';
+
+    var tokenData = this.tokenizer(params, this.options, select);
+
+    if (tokenData.term !== params.term) {
+      // Replace the search term if we have the search box
+      if (this.$search.length) {
+        this.$search.val(tokenData.term);
+        this.$search.focus();
+      }
+
+      params.term = tokenData.term;
+    }
+
+    decorated.call(this, params, callback);
+  };
+
+  Tokenizer.prototype.tokenizer = function (_, params, options, callback) {
+    var separators = options.get('tokenSeparators') || [];
+    var term = params.term;
+    var i = 0;
+
+    var createTag = this.createTag || function (params) {
+      return {
+        id: params.term,
+        text: params.term
+      };
+    };
+
+    while (i < term.length) {
+      var termChar = term[i];
+
+      if ($.inArray(termChar, separators) === -1) {
+        i++;
+
+        continue;
+      }
+
+      var part = term.substr(0, i);
+      var partParams = $.extend({}, params, {
+        term: part
+      });
+
+      var data = createTag(partParams);
+
+      if (data == null) {
+        i++;
+        continue;
+      }
+
+      callback(data);
+
+      // Reset the term to not include the tokenized portion
+      term = term.substr(i + 1) || '';
+      i = 0;
+    }
+
+    return {
+      term: term
+    };
+  };
+
+  return Tokenizer;
+});
+
+S2.define('select2/data/minimumInputLength',[
+
+], function () {
+  function MinimumInputLength (decorated, $e, options) {
+    this.minimumInputLength = options.get('minimumInputLength');
+
+    decorated.call(this, $e, options);
+  }
+
+  MinimumInputLength.prototype.query = function (decorated, params, callback) {
+    params.term = params.term || '';
+
+    if (params.term.length < this.minimumInputLength) {
+      this.trigger('results:message', {
+        message: 'inputTooShort',
+        args: {
+          minimum: this.minimumInputLength,
+          input: params.term,
+          params: params
+        }
+      });
+
+      return;
+    }
+
+    decorated.call(this, params, callback);
+  };
+
+  return MinimumInputLength;
+});
+
+S2.define('select2/data/maximumInputLength',[
+
+], function () {
+  function MaximumInputLength (decorated, $e, options) {
+    this.maximumInputLength = options.get('maximumInputLength');
+
+    decorated.call(this, $e, options);
+  }
+
+  MaximumInputLength.prototype.query = function (decorated, params, callback) {
+    params.term = params.term || '';
+
+    if (this.maximumInputLength > 0 &&
+        params.term.length > this.maximumInputLength) {
+      this.trigger('results:message', {
+        message: 'inputTooLong',
+        args: {
+          maximum: this.maximumInputLength,
+          input: params.term,
+          params: params
+        }
+      });
+
+      return;
+    }
+
+    decorated.call(this, params, callback);
+  };
+
+  return MaximumInputLength;
+});
+
+S2.define('select2/data/maximumSelectionLength',[
+
+], function (){
+  function MaximumSelectionLength (decorated, $e, options) {
+    this.maximumSelectionLength = options.get('maximumSelectionLength');
+
+    decorated.call(this, $e, options);
+  }
+
+  MaximumSelectionLength.prototype.query =
+    function (decorated, params, callback) {
+      var self = this;
+
+      this.current(function (currentData) {
+        var count = currentData != null ? currentData.length : 0;
+        if (self.maximumSelectionLength > 0 &&
+          count >= self.maximumSelectionLength) {
+          self.trigger('results:message', {
+            message: 'maximumSelected',
+            args: {
+              maximum: self.maximumSelectionLength
+            }
+          });
+          return;
+        }
+        decorated.call(self, params, callback);
+      });
+  };
+
+  return MaximumSelectionLength;
+});
+
+S2.define('select2/dropdown',[
+  'jquery',
+  './utils'
+], function ($, Utils) {
+  function Dropdown ($element, options) {
+    this.$element = $element;
+    this.options = options;
+
+    Dropdown.__super__.constructor.call(this);
+  }
+
+  Utils.Extend(Dropdown, Utils.Observable);
+
+  Dropdown.prototype.render = function () {
+    var $dropdown = $(
+      '<span class="select2-dropdown">' +
+        '<span class="select2-results"></span>' +
+      '</span>'
+    );
+
+    $dropdown.attr('dir', this.options.get('dir'));
+
+    this.$dropdown = $dropdown;
+
+    return $dropdown;
+  };
+
+  Dropdown.prototype.bind = function () {
+    // Should be implemented in subclasses
+  };
+
+  Dropdown.prototype.position = function ($dropdown, $container) {
+    // Should be implmented in subclasses
+  };
+
+  Dropdown.prototype.destroy = function () {
+    // Remove the dropdown from the DOM
+    this.$dropdown.remove();
+  };
+
+  return Dropdown;
+});
+
+S2.define('select2/dropdown/search',[
+  'jquery',
+  '../utils'
+], function ($, Utils) {
+  function Search () { }
+
+  Search.prototype.render = function (decorated) {
+    var $rendered = decorated.call(this);
+
+    var $search = $(
+      '<span class="select2-search select2-search--dropdown">' +
+        '<input class="select2-search__field" type="search" tabindex="-1"' +
+        ' autocomplete="off" autocorrect="off" autocapitalize="off"' +
+        ' spellcheck="false" role="textbox" />' +
+      '</span>'
+    );
+
+    this.$searchContainer = $search;
+    this.$search = $search.find('input');
+
+    $rendered.prepend($search);
+
+    return $rendered;
+  };
+
+  Search.prototype.bind = function (decorated, container, $container) {
+    var self = this;
+
+    decorated.call(this, container, $container);
+
+    this.$search.on('keydown', function (evt) {
+      self.trigger('keypress', evt);
+
+      self._keyUpPrevented = evt.isDefaultPrevented();
+    });
+
+    // Workaround for browsers which do not support the `input` event
+    // This will prevent double-triggering of events for browsers which support
+    // both the `keyup` and `input` events.
+    this.$search.on('input', function (evt) {
+      // Unbind the duplicated `keyup` event
+      $(this).off('keyup');
+    });
+
+    this.$search.on('keyup input', function (evt) {
+      self.handleSearch(evt);
+    });
+
+    container.on('open', function () {
+      self.$search.attr('tabindex', 0);
+
+      self.$search.focus();
+
+      window.setTimeout(function () {
+        self.$search.focus();
+      }, 0);
+    });
+
+    container.on('close', function () {
+      self.$search.attr('tabindex', -1);
+
+      self.$search.val('');
+    });
+
+    container.on('results:all', function (params) {
+      if (params.query.term == null || params.query.term === '') {
+        var showSearch = self.showSearch(params);
+
+        if (showSearch) {
+          self.$searchContainer.removeClass('select2-search--hide');
+        } else {
+          self.$searchContainer.addClass('select2-search--hide');
+        }
+      }
+    });
+  };
+
+  Search.prototype.handleSearch = function (evt) {
+    if (!this._keyUpPrevented) {
+      var input = this.$search.val();
+
+      this.trigger('query', {
+        term: input
+      });
+    }
+
+    this._keyUpPrevented = false;
+  };
+
+  Search.prototype.showSearch = function (_, params) {
+    return true;
+  };
+
+  return Search;
+});
+
+S2.define('select2/dropdown/hidePlaceholder',[
+
+], function () {
+  function HidePlaceholder (decorated, $element, options, dataAdapter) {
+    this.placeholder = this.normalizePlaceholder(options.get('placeholder'));
+
+    decorated.call(this, $element, options, dataAdapter);
+  }
+
+  HidePlaceholder.prototype.append = function (decorated, data) {
+    data.results = this.removePlaceholder(data.results);
+
+    decorated.call(this, data);
+  };
+
+  HidePlaceholder.prototype.normalizePlaceholder = function (_, placeholder) {
+    if (typeof placeholder === 'string') {
+      placeholder = {
+        id: '',
+        text: placeholder
+      };
+    }
+
+    return placeholder;
+  };
+
+  HidePlaceholder.prototype.removePlaceholder = function (_, data) {
+    var modifiedData = data.slice(0);
+
+    for (var d = data.length - 1; d >= 0; d--) {
+      var item = data[d];
+
+      if (this.placeholder.id === item.id) {
+        modifiedData.splice(d, 1);
+      }
+    }
+
+    return modifiedData;
+  };
+
+  return HidePlaceholder;
+});
+
+S2.define('select2/dropdown/infiniteScroll',[
+  'jquery'
+], function ($) {
+  function InfiniteScroll (decorated, $element, options, dataAdapter) {
+    this.lastParams = {};
+
+    decorated.call(this, $element, options, dataAdapter);
+
+    this.$loadingMore = this.createLoadingMore();
+    this.loading = false;
+  }
+
+  InfiniteScroll.prototype.append = function (decorated, data) {
+    this.$loadingMore.remove();
+    this.loading = false;
+
+    decorated.call(this, data);
+
+    if (this.showLoadingMore(data)) {
+      this.$results.append(this.$loadingMore);
+    }
+  };
+
+  InfiniteScroll.prototype.bind = function (decorated, container, $container) {
+    var self = this;
+
+    decorated.call(this, container, $container);
+
+    container.on('query', function (params) {
+      self.lastParams = params;
+      self.loading = true;
+    });
+
+    container.on('query:append', function (params) {
+      self.lastParams = params;
+      self.loading = true;
+    });
+
+    this.$results.on('scroll', function () {
+      var isLoadMoreVisible = $.contains(
+        document.documentElement,
+        self.$loadingMore[0]
+      );
+
+      if (self.loading || !isLoadMoreVisible) {
+        return;
+      }
+
+      var currentOffset = self.$results.offset().top +
+        self.$results.outerHeight(false);
+      var loadingMoreOffset = self.$loadingMore.offset().top +
+        self.$loadingMore.outerHeight(false);
+
+      if (currentOffset + 50 >= loadingMoreOffset) {
+        self.loadMore();
+      }
+    });
+  };
+
+  InfiniteScroll.prototype.loadMore = function () {
+    this.loading = true;
+
+    var params = $.extend({}, {page: 1}, this.lastParams);
+
+    params.page++;
+
+    this.trigger('query:append', params);
+  };
+
+  InfiniteScroll.prototype.showLoadingMore = function (_, data) {
+    return data.pagination && data.pagination.more;
+  };
+
+  InfiniteScroll.prototype.createLoadingMore = function () {
+    var $option = $(
+      '<li ' +
+      'class="select2-results__option select2-results__option--load-more"' +
+      'role="treeitem" aria-disabled="true"></li>'
+    );
+
+    var message = this.options.get('translations').get('loadingMore');
+
+    $option.html(message(this.lastParams));
+
+    return $option;
+  };
+
+  return InfiniteScroll;
+});
+
+S2.define('select2/dropdown/attachBody',[
+  'jquery',
+  '../utils'
+], function ($, Utils) {
+  function AttachBody (decorated, $element, options) {
+    this.$dropdownParent = options.get('dropdownParent') || $(document.body);
+
+    decorated.call(this, $element, options);
+  }
+
+  AttachBody.prototype.bind = function (decorated, container, $container) {
+    var self = this;
+
+    var setupResultsEvents = false;
+
+    decorated.call(this, container, $container);
+
+    container.on('open', function () {
+      self._showDropdown();
+      self._attachPositioningHandler(container);
+
+      if (!setupResultsEvents) {
+        setupResultsEvents = true;
+
+        container.on('results:all', function () {
+          self._positionDropdown();
+          self._resizeDropdown();
+        });
+
+        container.on('results:append', function () {
+          self._positionDropdown();
+          self._resizeDropdown();
+        });
+      }
+    });
+
+    container.on('close', function () {
+      self._hideDropdown();
+      self._detachPositioningHandler(container);
+    });
+
+    this.$dropdownContainer.on('mousedown', function (evt) {
+      evt.stopPropagation();
+    });
+  };
+
+  AttachBody.prototype.destroy = function (decorated) {
+    decorated.call(this);
+
+    this.$dropdownContainer.remove();
+  };
+
+  AttachBody.prototype.position = function (decorated, $dropdown, $container) {
+    // Clone all of the container classes
+    $dropdown.attr('class', $container.attr('class'));
+
+    $dropdown.removeClass('select2');
+    $dropdown.addClass('select2-container--open');
+
+    $dropdown.css({
+      position: 'absolute',
+      top: -999999
+    });
+
+    this.$container = $container;
+  };
+
+  AttachBody.prototype.render = function (decorated) {
+    var $container = $('<span></span>');
+
+    var $dropdown = decorated.call(this);
+    $container.append($dropdown);
+
+    this.$dropdownContainer = $container;
+
+    return $container;
+  };
+
+  AttachBody.prototype._hideDropdown = function (decorated) {
+    this.$dropdownContainer.detach();
+  };
+
+  AttachBody.prototype._attachPositioningHandler =
+      function (decorated, container) {
+    var self = this;
+
+    var scrollEvent = 'scroll.select2.' + container.id;
+    var resizeEvent = 'resize.select2.' + container.id;
+    var orientationEvent = 'orientationchange.select2.' + container.id;
+
+    var $watchers = this.$container.parents().filter(Utils.hasScroll);
+    $watchers.each(function () {
+      $(this).data('select2-scroll-position', {
+        x: $(this).scrollLeft(),
+        y: $(this).scrollTop()
+      });
+    });
+
+    $watchers.on(scrollEvent, function (ev) {
+      var position = $(this).data('select2-scroll-position');
+      $(this).scrollTop(position.y);
+    });
+
+    $(window).on(scrollEvent + ' ' + resizeEvent + ' ' + orientationEvent,
+      function (e) {
+      self._positionDropdown();
+      self._resizeDropdown();
+    });
+  };
+
+  AttachBody.prototype._detachPositioningHandler =
+      function (decorated, container) {
+    var scrollEvent = 'scroll.select2.' + container.id;
+    var resizeEvent = 'resize.select2.' + container.id;
+    var orientationEvent = 'orientationchange.select2.' + container.id;
+
+    var $watchers = this.$container.parents().filter(Utils.hasScroll);
+    $watchers.off(scrollEvent);
+
+    $(window).off(scrollEvent + ' ' + resizeEvent + ' ' + orientationEvent);
+  };
+
+  AttachBody.prototype._positionDropdown = function () {
+    var $window = $(window);
+
+    var isCurrentlyAbove = this.$dropdown.hasClass('select2-dropdown--above');
+    var isCurrentlyBelow = this.$dropdown.hasClass('select2-dropdown--below');
+
+    var newDirection = null;
+
+    var position = this.$container.position();
+    var offset = this.$container.offset();
+
+    offset.bottom = offset.top + this.$container.outerHeight(false);
+
+    var container = {
+      height: this.$container.outerHeight(false)
+    };
+
+    container.top = offset.top;
+    container.bottom = offset.top + container.height;
+
+    var dropdown = {
+      height: this.$dropdown.outerHeight(false)
+    };
+
+    var viewport = {
+      top: $window.scrollTop(),
+      bottom: $window.scrollTop() + $window.height()
+    };
+
+    var enoughRoomAbove = viewport.top < (offset.top - dropdown.height);
+    var enoughRoomBelow = viewport.bottom > (offset.bottom + dropdown.height);
+
+    var css = {
+      left: offset.left,
+      top: container.bottom
+    };
+
+    // Fix positioning with static parents
+    if (this.$dropdownParent[0].style.position !== 'static') {
+      var parentOffset = this.$dropdownParent.offset();
+
+      css.top -= parentOffset.top;
+      css.left -= parentOffset.left;
+    }
+
+    if (!isCurrentlyAbove && !isCurrentlyBelow) {
+      newDirection = 'below';
+    }
+
+    if (!enoughRoomBelow && enoughRoomAbove && !isCurrentlyAbove) {
+      newDirection = 'above';
+    } else if (!enoughRoomAbove && enoughRoomBelow && isCurrentlyAbove) {
+      newDirection = 'below';
+    }
+
+    if (newDirection == 'above' ||
+      (isCurrentlyAbove && newDirection !== 'below')) {
+      css.top = container.top - dropdown.height;
+    }
+
+    if (newDirection != null) {
+      this.$dropdown
+        .removeClass('select2-dropdown--below select2-dropdown--above')
+        .addClass('select2-dropdown--' + newDirection);
+      this.$container
+        .removeClass('select2-container--below select2-container--above')
+        .addClass('select2-container--' + newDirection);
+    }
+
+    this.$dropdownContainer.css(css);
+  };
+
+  AttachBody.prototype._resizeDropdown = function () {
+    var css = {
+      width: this.$container.outerWidth(false) + 'px'
+    };
+
+    if (this.options.get('dropdownAutoWidth')) {
+      css.minWidth = css.width;
+      css.width = 'auto';
+    }
+
+    this.$dropdown.css(css);
+  };
+
+  AttachBody.prototype._showDropdown = function (decorated) {
+    this.$dropdownContainer.appendTo(this.$dropdownParent);
+
+    this._positionDropdown();
+    this._resizeDropdown();
+  };
+
+  return AttachBody;
+});
+
+S2.define('select2/dropdown/minimumResultsForSearch',[
+
+], function () {
+  function countResults (data) {
+    var count = 0;
+
+    for (var d = 0; d < data.length; d++) {
+      var item = data[d];
+
+      if (item.children) {
+        count += countResults(item.children);
+      } else {
+        count++;
+      }
+    }
+
+    return count;
+  }
+
+  function MinimumResultsForSearch (decorated, $element, options, dataAdapter) {
+    this.minimumResultsForSearch = options.get('minimumResultsForSearch');
+
+    if (this.minimumResultsForSearch < 0) {
+      this.minimumResultsForSearch = Infinity;
+    }
+
+    decorated.call(this, $element, options, dataAdapter);
+  }
+
+  MinimumResultsForSearch.prototype.showSearch = function (decorated, params) {
+    if (countResults(params.data.results) < this.minimumResultsForSearch) {
+      return false;
+    }
+
+    return decorated.call(this, params);
+  };
+
+  return MinimumResultsForSearch;
+});
+
+S2.define('select2/dropdown/selectOnClose',[
+
+], function () {
+  function SelectOnClose () { }
+
+  SelectOnClose.prototype.bind = function (decorated, container, $container) {
+    var self = this;
+
+    decorated.call(this, container, $container);
+
+    container.on('close', function () {
+      self._handleSelectOnClose();
+    });
+  };
+
+  SelectOnClose.prototype._handleSelectOnClose = function () {
+    var $highlightedResults = this.getHighlightedResults();
+
+    // Only select highlighted results
+    if ($highlightedResults.length < 1) {
+      return;
+    }
+
+    var data = $highlightedResults.data('data');
+
+    // Don't re-select already selected resulte
+    if (
+      (data.element != null && data.element.selected) ||
+      (data.element == null && data.selected)
+    ) {
+      return;
+    }
+
+    this.trigger('select', {
+        data: data
+    });
+  };
+
+  return SelectOnClose;
+});
+
+S2.define('select2/dropdown/closeOnSelect',[
+
+], function () {
+  function CloseOnSelect () { }
+
+  CloseOnSelect.prototype.bind = function (decorated, container, $container) {
+    var self = this;
+
+    decorated.call(this, container, $container);
+
+    container.on('select', function (evt) {
+      self._selectTriggered(evt);
+    });
+
+    container.on('unselect', function (evt) {
+      self._selectTriggered(evt);
+    });
+  };
+
+  CloseOnSelect.prototype._selectTriggered = function (_, evt) {
+    var originalEvent = evt.originalEvent;
+
+    // Don't close if the control key is being held
+    if (originalEvent && originalEvent.ctrlKey) {
+      return;
+    }
+
+    this.trigger('close', {});
+  };
+
+  return CloseOnSelect;
+});
+
+S2.define('select2/i18n/en',[],function () {
+  // English
+  return {
+    errorLoading: function () {
+      return 'The results could not be loaded.';
+    },
+    inputTooLong: function (args) {
+      var overChars = args.input.length - args.maximum;
+
+      var message = 'Please delete ' + overChars + ' character';
+
+      if (overChars != 1) {
+        message += 's';
+      }
+
+      return message;
+    },
+    inputTooShort: function (args) {
+      var remainingChars = args.minimum - args.input.length;
+
+      var message = 'Please enter ' + remainingChars + ' or more characters';
+
+      return message;
+    },
+    loadingMore: function () {
+      return 'Loading more results…';
+    },
+    maximumSelected: function (args) {
+      var message = 'You can only select ' + args.maximum + ' item';
+
+      if (args.maximum != 1) {
+        message += 's';
+      }
+
+      return message;
+    },
+    noResults: function () {
+      return 'No results found';
+    },
+    searching: function () {
+      return 'Searching…';
+    }
+  };
+});
+
+S2.define('select2/defaults',[
+  'jquery',
+  'require',
+
+  './results',
+
+  './selection/single',
+  './selection/multiple',
+  './selection/placeholder',
+  './selection/allowClear',
+  './selection/search',
+  './selection/eventRelay',
+
+  './utils',
+  './translation',
+  './diacritics',
+
+  './data/select',
+  './data/array',
+  './data/ajax',
+  './data/tags',
+  './data/tokenizer',
+  './data/minimumInputLength',
+  './data/maximumInputLength',
+  './data/maximumSelectionLength',
+
+  './dropdown',
+  './dropdown/search',
+  './dropdown/hidePlaceholder',
+  './dropdown/infiniteScroll',
+  './dropdown/attachBody',
+  './dropdown/minimumResultsForSearch',
+  './dropdown/selectOnClose',
+  './dropdown/closeOnSelect',
+
+  './i18n/en'
+], function ($, require,
+
+             ResultsList,
+
+             SingleSelection, MultipleSelection, Placeholder, AllowClear,
+             SelectionSearch, EventRelay,
+
+             Utils, Translation, DIACRITICS,
+
+             SelectData, ArrayData, AjaxData, Tags, Tokenizer,
+             MinimumInputLength, MaximumInputLength, MaximumSelectionLength,
+
+             Dropdown, DropdownSearch, HidePlaceholder, InfiniteScroll,
+             AttachBody, MinimumResultsForSearch, SelectOnClose, CloseOnSelect,
+
+             EnglishTranslation) {
+  function Defaults () {
+    this.reset();
+  }
+
+  Defaults.prototype.apply = function (options) {
+    options = $.extend({}, this.defaults, options);
+
+    if (options.dataAdapter == null) {
+      if (options.ajax != null) {
+        options.dataAdapter = AjaxData;
+      } else if (options.data != null) {
+        options.dataAdapter = ArrayData;
+      } else {
+        options.dataAdapter = SelectData;
+      }
+
+      if (options.minimumInputLength > 0) {
+        options.dataAdapter = Utils.Decorate(
+          options.dataAdapter,
+          MinimumInputLength
+        );
+      }
+
+      if (options.maximumInputLength > 0) {
+        options.dataAdapter = Utils.Decorate(
+          options.dataAdapter,
+          MaximumInputLength
+        );
+      }
+
+      if (options.maximumSelectionLength > 0) {
+        options.dataAdapter = Utils.Decorate(
+          options.dataAdapter,
+          MaximumSelectionLength
+        );
+      }
+
+      if (options.tags) {
+        options.dataAdapter = Utils.Decorate(options.dataAdapter, Tags);
+      }
+
+      if (options.tokenSeparators != null || options.tokenizer != null) {
+        options.dataAdapter = Utils.Decorate(
+          options.dataAdapter,
+          Tokenizer
+        );
+      }
+
+      if (options.query != null) {
+        var Query = require(options.amdBase + 'compat/query');
+
+        options.dataAdapter = Utils.Decorate(
+          options.dataAdapter,
+          Query
+        );
+      }
+
+      if (options.initSelection != null) {
+        var InitSelection = require(options.amdBase + 'compat/initSelection');
+
+        options.dataAdapter = Utils.Decorate(
+          options.dataAdapter,
+          InitSelection
+        );
+      }
+    }
+
+    if (options.resultsAdapter == null) {
+      options.resultsAdapter = ResultsList;
+
+      if (options.ajax != null) {
+        options.resultsAdapter = Utils.Decorate(
+          options.resultsAdapter,
+          InfiniteScroll
+        );
+      }
+
+      if (options.placeholder != null) {
+        options.resultsAdapter = Utils.Decorate(
+          options.resultsAdapter,
+          HidePlaceholder
+        );
+      }
+
+      if (options.selectOnClose) {
+        options.resultsAdapter = Utils.Decorate(
+          options.resultsAdapter,
+          SelectOnClose
+        );
+      }
+    }
+
+    if (options.dropdownAdapter == null) {
+      if (options.multiple) {
+        options.dropdownAdapter = Dropdown;
+      } else {
+        var SearchableDropdown = Utils.Decorate(Dropdown, DropdownSearch);
+
+        options.dropdownAdapter = SearchableDropdown;
+      }
+
+      if (options.minimumResultsForSearch !== 0) {
+        options.dropdownAdapter = Utils.Decorate(
+          options.dropdownAdapter,
+          MinimumResultsForSearch
+        );
+      }
+
+      if (options.closeOnSelect) {
+        options.dropdownAdapter = Utils.Decorate(
+          options.dropdownAdapter,
+          CloseOnSelect
+        );
+      }
+
+      if (
+        options.dropdownCssClass != null ||
+        options.dropdownCss != null ||
+        options.adaptDropdownCssClass != null
+      ) {
+        var DropdownCSS = require(options.amdBase + 'compat/dropdownCss');
+
+        options.dropdownAdapter = Utils.Decorate(
+          options.dropdownAdapter,
+          DropdownCSS
+        );
+      }
+
+      options.dropdownAdapter = Utils.Decorate(
+        options.dropdownAdapter,
+        AttachBody
+      );
+    }
+
+    if (options.selectionAdapter == null) {
+      if (options.multiple) {
+        options.selectionAdapter = MultipleSelection;
+      } else {
+        options.selectionAdapter = SingleSelection;
+      }
+
+      // Add the placeholder mixin if a placeholder was specified
+      if (options.placeholder != null) {
+        options.selectionAdapter = Utils.Decorate(
+          options.selectionAdapter,
+          Placeholder
+        );
+      }
+
+      if (options.allowClear) {
+        options.selectionAdapter = Utils.Decorate(
+          options.selectionAdapter,
+          AllowClear
+        );
+      }
+
+      if (options.multiple) {
+        options.selectionAdapter = Utils.Decorate(
+          options.selectionAdapter,
+          SelectionSearch
+        );
+      }
+
+      if (
+        options.containerCssClass != null ||
+        options.containerCss != null ||
+        options.adaptContainerCssClass != null
+      ) {
+        var ContainerCSS = require(options.amdBase + 'compat/containerCss');
+
+        options.selectionAdapter = Utils.Decorate(
+          options.selectionAdapter,
+          ContainerCSS
+        );
+      }
+
+      options.selectionAdapter = Utils.Decorate(
+        options.selectionAdapter,
+        EventRelay
+      );
+    }
+
+    if (typeof options.language === 'string') {
+      // Check if the language is specified with a region
+      if (options.language.indexOf('-') > 0) {
+        // Extract the region information if it is included
+        var languageParts = options.language.split('-');
+        var baseLanguage = languageParts[0];
+
+        options.language = [options.language, baseLanguage];
+      } else {
+        options.language = [options.language];
+      }
+    }
+
+    if ($.isArray(options.language)) {
+      var languages = new Translation();
+      options.language.push('en');
+
+      var languageNames = options.language;
+
+      for (var l = 0; l < languageNames.length; l++) {
+        var name = languageNames[l];
+        var language = {};
+
+        try {
+          // Try to load it with the original name
+          language = Translation.loadPath(name);
+        } catch (e) {
+          try {
+            // If we couldn't load it, check if it wasn't the full path
+            name = this.defaults.amdLanguageBase + name;
+            language = Translation.loadPath(name);
+          } catch (ex) {
+            // The translation could not be loaded at all. Sometimes this is
+            // because of a configuration problem, other times this can be
+            // because of how Select2 helps load all possible translation files.
+            if (options.debug && window.console && console.warn) {
+              console.warn(
+                'Select2: The language file for "' + name + '" could not be ' +
+                'automatically loaded. A fallback will be used instead.'
+              );
+            }
+
+            continue;
+          }
+        }
+
+        languages.extend(language);
+      }
+
+      options.translations = languages;
+    } else {
+      var baseTranslation = Translation.loadPath(
+        this.defaults.amdLanguageBase + 'en'
+      );
+      var customTranslation = new Translation(options.language);
+
+      customTranslation.extend(baseTranslation);
+
+      options.translations = customTranslation;
+    }
+
+    return options;
+  };
+
+  Defaults.prototype.reset = function () {
+    function stripDiacritics (text) {
+      // Used 'uni range + named function' from http://jsperf.com/diacritics/18
+      function match(a) {
+        return DIACRITICS[a] || a;
+      }
+
+      return text.replace(/[^\u0000-\u007E]/g, match);
+    }
+
+    function matcher (params, data) {
+      // Always return the object if there is nothing to compare
+      if ($.trim(params.term) === '') {
+        return data;
+      }
+
+      // Do a recursive check for options with children
+      if (data.children && data.children.length > 0) {
+        // Clone the data object if there are children
+        // This is required as we modify the object to remove any non-matches
+        var match = $.extend(true, {}, data);
+
+        // Check each child of the option
+        for (var c = data.children.length - 1; c >= 0; c--) {
+          var child = data.children[c];
+
+          var matches = matcher(params, child);
+
+          // If there wasn't a match, remove the object in the array
+          if (matches == null) {
+            match.children.splice(c, 1);
+          }
+        }
+
+        // If any children matched, return the new object
+        if (match.children.length > 0) {
+          return match;
+        }
+
+        // If there were no matching children, check just the plain object
+        return matcher(params, match);
+      }
+
+      var original = stripDiacritics(data.text).toUpperCase();
+      var term = stripDiacritics(params.term).toUpperCase();
+
+      // Check if the text contains the term
+      if (original.indexOf(term) > -1) {
+        return data;
+      }
+
+      // If it doesn't contain the term, don't return anything
+      return null;
+    }
+
+    this.defaults = {
+      amdBase: './',
+      amdLanguageBase: './i18n/',
+      closeOnSelect: true,
+      debug: false,
+      dropdownAutoWidth: false,
+      escapeMarkup: Utils.escapeMarkup,
+      language: EnglishTranslation,
+      matcher: matcher,
+      minimumInputLength: 0,
+      maximumInputLength: 0,
+      maximumSelectionLength: 0,
+      minimumResultsForSearch: 0,
+      selectOnClose: false,
+      sorter: function (data) {
+        return data;
+      },
+      templateResult: function (result) {
+        return result.text;
+      },
+      templateSelection: function (selection) {
+        return selection.text;
+      },
+      theme: 'default',
+      width: 'resolve'
+    };
+  };
+
+  Defaults.prototype.set = function (key, value) {
+    var camelKey = $.camelCase(key);
+
+    var data = {};
+    data[camelKey] = value;
+
+    var convertedData = Utils._convertData(data);
+
+    $.extend(this.defaults, convertedData);
+  };
+
+  var defaults = new Defaults();
+
+  return defaults;
+});
+
+S2.define('select2/options',[
+  'require',
+  'jquery',
+  './defaults',
+  './utils'
+], function (require, $, Defaults, Utils) {
+  function Options (options, $element) {
+    this.options = options;
+
+    if ($element != null) {
+      this.fromElement($element);
+    }
+
+    this.options = Defaults.apply(this.options);
+
+    if ($element && $element.is('input')) {
+      var InputCompat = require(this.get('amdBase') + 'compat/inputData');
+
+      this.options.dataAdapter = Utils.Decorate(
+        this.options.dataAdapter,
+        InputCompat
+      );
+    }
+  }
+
+  Options.prototype.fromElement = function ($e) {
+    var excludedData = ['select2'];
+
+    if (this.options.multiple == null) {
+      this.options.multiple = $e.prop('multiple');
+    }
+
+    if (this.options.disabled == null) {
+      this.options.disabled = $e.prop('disabled');
+    }
+
+    if (this.options.language == null) {
+      if ($e.prop('lang')) {
+        this.options.language = $e.prop('lang').toLowerCase();
+      } else if ($e.closest('[lang]').prop('lang')) {
+        this.options.language = $e.closest('[lang]').prop('lang');
+      }
+    }
+
+    if (this.options.dir == null) {
+      if ($e.prop('dir')) {
+        this.options.dir = $e.prop('dir');
+      } else if ($e.closest('[dir]').prop('dir')) {
+        this.options.dir = $e.closest('[dir]').prop('dir');
+      } else {
+        this.options.dir = 'ltr';
+      }
+    }
+
+    $e.prop('disabled', this.options.disabled);
+    $e.prop('multiple', this.options.multiple);
+
+    if ($e.data('select2Tags')) {
+      if (this.options.debug && window.console && console.warn) {
+        console.warn(
+          'Select2: The `data-select2-tags` attribute has been changed to ' +
+          'use the `data-data` and `data-tags="true"` attributes and will be ' +
+          'removed in future versions of Select2.'
+        );
+      }
+
+      $e.data('data', $e.data('select2Tags'));
+      $e.data('tags', true);
+    }
+
+    if ($e.data('ajaxUrl')) {
+      if (this.options.debug && window.console && console.warn) {
+        console.warn(
+          'Select2: The `data-ajax-url` attribute has been changed to ' +
+          '`data-ajax--url` and support for the old attribute will be removed' +
+          ' in future versions of Select2.'
+        );
+      }
+
+      $e.attr('ajax--url', $e.data('ajaxUrl'));
+      $e.data('ajax--url', $e.data('ajaxUrl'));
+    }
+
+    var dataset = {};
+
+    // Prefer the element's `dataset` attribute if it exists
+    // jQuery 1.x does not correctly handle data attributes with multiple dashes
+    if ($.fn.jquery && $.fn.jquery.substr(0, 2) == '1.' && $e[0].dataset) {
+      dataset = $.extend(true, {}, $e[0].dataset, $e.data());
+    } else {
+      dataset = $e.data();
+    }
+
+    var data = $.extend(true, {}, dataset);
+
+    data = Utils._convertData(data);
+
+    for (var key in data) {
+      if ($.inArray(key, excludedData) > -1) {
+        continue;
+      }
+
+      if ($.isPlainObject(this.options[key])) {
+        $.extend(this.options[key], data[key]);
+      } else {
+        this.options[key] = data[key];
+      }
+    }
+
+    return this;
+  };
+
+  Options.prototype.get = function (key) {
+    return this.options[key];
+  };
+
+  Options.prototype.set = function (key, val) {
+    this.options[key] = val;
+  };
+
+  return Options;
+});
+
+S2.define('select2/core',[
+  'jquery',
+  './options',
+  './utils',
+  './keys'
+], function ($, Options, Utils, KEYS) {
+  var Select2 = function ($element, options) {
+    if ($element.data('select2') != null) {
+      $element.data('select2').destroy();
+    }
+
+    this.$element = $element;
+
+    this.id = this._generateId($element);
+
+    options = options || {};
+
+    this.options = new Options(options, $element);
+
+    Select2.__super__.constructor.call(this);
+
+    // Set up the tabindex
+
+    var tabindex = $element.attr('tabindex') || 0;
+    $element.data('old-tabindex', tabindex);
+    $element.attr('tabindex', '-1');
+
+    // Set up containers and adapters
+
+    var DataAdapter = this.options.get('dataAdapter');
+    this.dataAdapter = new DataAdapter($element, this.options);
+
+    var $container = this.render();
+
+    this._placeContainer($container);
+
+    var SelectionAdapter = this.options.get('selectionAdapter');
+    this.selection = new SelectionAdapter($element, this.options);
+    this.$selection = this.selection.render();
+
+    this.selection.position(this.$selection, $container);
+
+    var DropdownAdapter = this.options.get('dropdownAdapter');
+    this.dropdown = new DropdownAdapter($element, this.options);
+    this.$dropdown = this.dropdown.render();
+
+    this.dropdown.position(this.$dropdown, $container);
+
+    var ResultsAdapter = this.options.get('resultsAdapter');
+    this.results = new ResultsAdapter($element, this.options, this.dataAdapter);
+    this.$results = this.results.render();
+
+    this.results.position(this.$results, this.$dropdown);
+
+    // Bind events
+
+    var self = this;
+
+    // Bind the container to all of the adapters
+    this._bindAdapters();
+
+    // Register any DOM event handlers
+    this._registerDomEvents();
+
+    // Register any internal event handlers
+    this._registerDataEvents();
+    this._registerSelectionEvents();
+    this._registerDropdownEvents();
+    this._registerResultsEvents();
+    this._registerEvents();
+
+    // Set the initial state
+    this.dataAdapter.current(function (initialData) {
+      self.trigger('selection:update', {
+        data: initialData
+      });
+    });
+
+    // Hide the original select
+    $element.addClass('select2-hidden-accessible');
+    $element.attr('aria-hidden', 'true');
+
+    // Synchronize any monitored attributes
+    this._syncAttributes();
+
+    $element.data('select2', this);
+  };
+
+  Utils.Extend(Select2, Utils.Observable);
+
+  Select2.prototype._generateId = function ($element) {
+    var id = '';
+
+    if ($element.attr('id') != null) {
+      id = $element.attr('id');
+    } else if ($element.attr('name') != null) {
+      id = $element.attr('name') + '-' + Utils.generateChars(2);
+    } else {
+      id = Utils.generateChars(4);
+    }
+
+    id = 'select2-' + id;
+
+    return id;
+  };
+
+  Select2.prototype._placeContainer = function ($container) {
+    $container.insertAfter(this.$element);
+
+    var width = this._resolveWidth(this.$element, this.options.get('width'));
+
+    if (width != null) {
+      $container.css('width', width);
+    }
+  };
+
+  Select2.prototype._resolveWidth = function ($element, method) {
+    var WIDTH = /^width:(([-+]?([0-9]*\.)?[0-9]+)(px|em|ex|%|in|cm|mm|pt|pc))/i;
+
+    if (method == 'resolve') {
+      var styleWidth = this._resolveWidth($element, 'style');
+
+      if (styleWidth != null) {
+        return styleWidth;
+      }
+
+      return this._resolveWidth($element, 'element');
+    }
+
+    if (method == 'element') {
+      var elementWidth = $element.outerWidth(false);
+
+      if (elementWidth <= 0) {
+        return 'auto';
+      }
+
+      return elementWidth + 'px';
+    }
+
+    if (method == 'style') {
+      var style = $element.attr('style');
+
+      if (typeof(style) !== 'string') {
+        return null;
+      }
+
+      var attrs = style.split(';');
+
+      for (var i = 0, l = attrs.length; i < l; i = i + 1) {
+        var attr = attrs[i].replace(/\s/g, '');
+        var matches = attr.match(WIDTH);
+
+        if (matches !== null && matches.length >= 1) {
+          return matches[1];
+        }
+      }
+
+      return null;
+    }
+
+    return method;
+  };
+
+  Select2.prototype._bindAdapters = function () {
+    this.dataAdapter.bind(this, this.$container);
+    this.selection.bind(this, this.$container);
+
+    this.dropdown.bind(this, this.$container);
+    this.results.bind(this, this.$container);
+  };
+
+  Select2.prototype._registerDomEvents = function () {
+    var self = this;
+
+    this.$element.on('change.select2', function () {
+      self.dataAdapter.current(function (data) {
+        self.trigger('selection:update', {
+          data: data
+        });
+      });
+    });
+
+    this._sync = Utils.bind(this._syncAttributes, this);
+
+    if (this.$element[0].attachEvent) {
+      this.$element[0].attachEvent('onpropertychange', this._sync);
+    }
+
+    var observer = window.MutationObserver ||
+      window.WebKitMutationObserver ||
+      window.MozMutationObserver
+    ;
+
+    if (observer != null) {
+      this._observer = new observer(function (mutations) {
+        $.each(mutations, self._sync);
+      });
+      this._observer.observe(this.$element[0], {
+        attributes: true,
+        subtree: false
+      });
+    } else if (this.$element[0].addEventListener) {
+      this.$element[0].addEventListener('DOMAttrModified', self._sync, false);
+    }
+  };
+
+  Select2.prototype._registerDataEvents = function () {
+    var self = this;
+
+    this.dataAdapter.on('*', function (name, params) {
+      self.trigger(name, params);
+    });
+  };
+
+  Select2.prototype._registerSelectionEvents = function () {
+    var self = this;
+    var nonRelayEvents = ['toggle', 'focus'];
+
+    this.selection.on('toggle', function () {
+      self.toggleDropdown();
+    });
+
+    this.selection.on('focus', function (params) {
+      self.focus(params);
+    });
+
+    this.selection.on('*', function (name, params) {
+      if ($.inArray(name, nonRelayEvents) !== -1) {
+        return;
+      }
+
+      self.trigger(name, params);
+    });
+  };
+
+  Select2.prototype._registerDropdownEvents = function () {
+    var self = this;
+
+    this.dropdown.on('*', function (name, params) {
+      self.trigger(name, params);
+    });
+  };
+
+  Select2.prototype._registerResultsEvents = function () {
+    var self = this;
+
+    this.results.on('*', function (name, params) {
+      self.trigger(name, params);
+    });
+  };
+
+  Select2.prototype._registerEvents = function () {
+    var self = this;
+
+    this.on('open', function () {
+      self.$container.addClass('select2-container--open');
+    });
+
+    this.on('close', function () {
+      self.$container.removeClass('select2-container--open');
+    });
+
+    this.on('enable', function () {
+      self.$container.removeClass('select2-container--disabled');
+    });
+
+    this.on('disable', function () {
+      self.$container.addClass('select2-container--disabled');
+    });
+
+    this.on('blur', function () {
+      self.$container.removeClass('select2-container--focus');
+    });
+
+    this.on('query', function (params) {
+      if (!self.isOpen()) {
+        self.trigger('open', {});
+      }
+
+      this.dataAdapter.query(params, function (data) {
+        self.trigger('results:all', {
+          data: data,
+          query: params
+        });
+      });
+    });
+
+    this.on('query:append', function (params) {
+      this.dataAdapter.query(params, function (data) {
+        self.trigger('results:append', {
+          data: data,
+          query: params
+        });
+      });
+    });
+
+    this.on('keypress', function (evt) {
+      var key = evt.which;
+
+      if (self.isOpen()) {
+        if (key === KEYS.ESC || key === KEYS.TAB ||
+            (key === KEYS.UP && evt.altKey)) {
+          self.close();
+
+          evt.preventDefault();
+        } else if (key === KEYS.ENTER) {
+          self.trigger('results:select', {});
+
+          evt.preventDefault();
+        } else if ((key === KEYS.SPACE && evt.ctrlKey)) {
+          self.trigger('results:toggle', {});
+
+          evt.preventDefault();
+        } else if (key === KEYS.UP) {
+          self.trigger('results:previous', {});
+
+          evt.preventDefault();
+        } else if (key === KEYS.DOWN) {
+          self.trigger('results:next', {});
+
+          evt.preventDefault();
+        }
+      } else {
+        if (key === KEYS.ENTER || key === KEYS.SPACE ||
+            (key === KEYS.DOWN && evt.altKey)) {
+          self.open();
+
+          evt.preventDefault();
+        }
+      }
+    });
+  };
+
+  Select2.prototype._syncAttributes = function () {
+    this.options.set('disabled', this.$element.prop('disabled'));
+
+    if (this.options.get('disabled')) {
+      if (this.isOpen()) {
+        this.close();
+      }
+
+      this.trigger('disable', {});
+    } else {
+      this.trigger('enable', {});
+    }
+  };
+
+  /**
+   * Override the trigger method to automatically trigger pre-events when
+   * there are events that can be prevented.
+   */
+  Select2.prototype.trigger = function (name, args) {
+    var actualTrigger = Select2.__super__.trigger;
+    var preTriggerMap = {
+      'open': 'opening',
+      'close': 'closing',
+      'select': 'selecting',
+      'unselect': 'unselecting'
+    };
+
+    if (args === undefined) {
+      args = {};
+    }
+
+    if (name in preTriggerMap) {
+      var preTriggerName = preTriggerMap[name];
+      var preTriggerArgs = {
+        prevented: false,
+        name: name,
+        args: args
+      };
+
+      actualTrigger.call(this, preTriggerName, preTriggerArgs);
+
+      if (preTriggerArgs.prevented) {
+        args.prevented = true;
+
+        return;
+      }
+    }
+
+    actualTrigger.call(this, name, args);
+  };
+
+  Select2.prototype.toggleDropdown = function () {
+    if (this.options.get('disabled')) {
+      return;
+    }
+
+    if (this.isOpen()) {
+      this.close();
+    } else {
+      this.open();
+    }
+  };
+
+  Select2.prototype.open = function () {
+    if (this.isOpen()) {
+      return;
+    }
+
+    this.trigger('query', {});
+  };
+
+  Select2.prototype.close = function () {
+    if (!this.isOpen()) {
+      return;
+    }
+
+    this.trigger('close', {});
+  };
+
+  Select2.prototype.isOpen = function () {
+    return this.$container.hasClass('select2-container--open');
+  };
+
+  Select2.prototype.hasFocus = function () {
+    return this.$container.hasClass('select2-container--focus');
+  };
+
+  Select2.prototype.focus = function (data) {
+    // No need to re-trigger focus events if we are already focused
+    if (this.hasFocus()) {
+      return;
+    }
+
+    this.$container.addClass('select2-container--focus');
+    this.trigger('focus', {});
+  };
+
+  Select2.prototype.enable = function (args) {
+    if (this.options.get('debug') && window.console && console.warn) {
+      console.warn(
+        'Select2: The `select2("enable")` method has been deprecated and will' +
+        ' be removed in later Select2 versions. Use $element.prop("disabled")' +
+        ' instead.'
+      );
+    }
+
+    if (args == null || args.length === 0) {
+      args = [true];
+    }
+
+    var disabled = !args[0];
+
+    this.$element.prop('disabled', disabled);
+  };
+
+  Select2.prototype.data = function () {
+    if (this.options.get('debug') &&
+        arguments.length > 0 && window.console && console.warn) {
+      console.warn(
+        'Select2: Data can no longer be set using `select2("data")`. You ' +
+        'should consider setting the value instead using `$element.val()`.'
+      );
+    }
+
+    var data = [];
+
+    this.dataAdapter.current(function (currentData) {
+      data = currentData;
+    });
+
+    return data;
+  };
+
+  Select2.prototype.val = function (args) {
+    if (this.options.get('debug') && window.console && console.warn) {
+      console.warn(
+        'Select2: The `select2("val")` method has been deprecated and will be' +
+        ' removed in later Select2 versions. Use $element.val() instead.'
+      );
+    }
+
+    if (args == null || args.length === 0) {
+      return this.$element.val();
+    }
+
+    var newVal = args[0];
+
+    if ($.isArray(newVal)) {
+      newVal = $.map(newVal, function (obj) {
+        return obj.toString();
+      });
+    }
+
+    this.$element.val(newVal).trigger('change');
+  };
+
+  Select2.prototype.destroy = function () {
+    this.$container.remove();
+
+    if (this.$element[0].detachEvent) {
+      this.$element[0].detachEvent('onpropertychange', this._sync);
+    }
+
+    if (this._observer != null) {
+      this._observer.disconnect();
+      this._observer = null;
+    } else if (this.$element[0].removeEventListener) {
+      this.$element[0]
+        .removeEventListener('DOMAttrModified', this._sync, false);
+    }
+
+    this._sync = null;
+
+    this.$element.off('.select2');
+    this.$element.attr('tabindex', this.$element.data('old-tabindex'));
+
+    this.$element.removeClass('select2-hidden-accessible');
+    this.$element.attr('aria-hidden', 'false');
+    this.$element.removeData('select2');
+
+    this.dataAdapter.destroy();
+    this.selection.destroy();
+    this.dropdown.destroy();
+    this.results.destroy();
+
+    this.dataAdapter = null;
+    this.selection = null;
+    this.dropdown = null;
+    this.results = null;
+  };
+
+  Select2.prototype.render = function () {
+    var $container = $(
+      '<span class="select2 select2-container">' +
+        '<span class="selection"></span>' +
+        '<span class="dropdown-wrapper" aria-hidden="true"></span>' +
+      '</span>'
+    );
+
+    $container.attr('dir', this.options.get('dir'));
+
+    this.$container = $container;
+
+    this.$container.addClass('select2-container--' + this.options.get('theme'));
+
+    $container.data('element', this.$element);
+
+    return $container;
+  };
+
+  return Select2;
+});
+
+S2.define('jquery-mousewheel',[
+  'jquery'
+], function ($) {
+  // Used to shim jQuery.mousewheel for non-full builds.
+  return $;
+});
+
+S2.define('jquery.select2',[
+  'jquery',
+  'jquery-mousewheel',
+
+  './select2/core',
+  './select2/defaults'
+], function ($, _, Select2, Defaults) {
+  if ($.fn.select2 == null) {
+    // All methods that should return the element
+    var thisMethods = ['open', 'close', 'destroy'];
+
+    $.fn.select2 = function (options) {
+      options = options || {};
+
+      if (typeof options === 'object') {
+        this.each(function () {
+          var instanceOptions = $.extend(true, {}, options);
+
+          var instance = new Select2($(this), instanceOptions);
+        });
+
+        return this;
+      } else if (typeof options === 'string') {
+        var ret;
+
+        this.each(function () {
+          var instance = $(this).data('select2');
+
+          if (instance == null && window.console && console.error) {
+            console.error(
+              'The select2(\'' + options + '\') method was called on an ' +
+              'element that is not using Select2.'
+            );
+          }
+
+          var args = Array.prototype.slice.call(arguments, 1);
+
+          ret = instance[options].apply(instance, args);
+        });
+
+        // Check if we should be returning `this`
+        if ($.inArray(options, thisMethods) > -1) {
+          return this;
+        }
+
+        return ret;
+      } else {
+        throw new Error('Invalid arguments for Select2: ' + options);
+      }
+    };
+  }
+
+  if ($.fn.select2.defaults == null) {
+    $.fn.select2.defaults = Defaults;
+  }
+
+  return Select2;
+});
+
+  // Return the AMD loader configuration so it can be used outside of this file
+  return {
+    define: S2.define,
+    require: S2.require
+  };
+}());
+
+  // Autoload the jQuery bindings
+  // We know that all of the modules exist above this, so we're safe
+  var select2 = S2.require('jquery.select2');
+
+  // Hold the AMD module references on the jQuery function that was just loaded
+  // This allows Select2 to use the internal loader outside of this file, such
+  // as in the language files.
+  jQuery.fn.select2.amd = S2;
+
+  // Return the Select2 instance for anyone who is importing it.
+  return select2;
+}));
+
+
+/*! DataTables 1.10.11
  * ©2008-2015 SpryMedia Ltd - datatables.net/license
  */
 
 /**
  * @summary     DataTables
  * @description Paginate, search and order HTML tables
- * @version     1.10.10
+ * @version     1.10.11
  * @file        jquery.dataTables.js
  * @author      SpryMedia Ltd (www.sprymedia.co.uk)
  * @contact     www.sprymedia.co.uk/contact
@@ -756,6 +9935,7 @@
 		oCol._bAttrSrc = $.isPlainObject( mDataSrc ) && (
 			attrTest(mDataSrc.sort) || attrTest(mDataSrc.type) || attrTest(mDataSrc.filter)
 		);
+		oCol._setter = null;
 	
 		oCol.fnGetData = function (rowData, type, meta) {
 			var innerData = mData( rowData, type, undefined, meta );
@@ -880,7 +10060,7 @@
 	 */
 	function _fnVisbleColumns( oSettings )
 	{
-		return _fnGetColumns( oSettings, 'bVisible' ).length;
+		return $( _pluck( oSettings.aoColumns, 'nTh' ) ).filter(':visible').length;
 	}
 	
 	
@@ -1186,8 +10366,9 @@
 			return defaultContent;
 		}
 	
-		/* When the data source is null, we can use default column data */
-		if ( (cellData === rowData || cellData === null) && defaultContent !== null ) {
+		// When the data source is null and a specific data type is requested (i.e.
+		// not the original data), we can use default column data
+		if ( (cellData === rowData || cellData === null) && defaultContent !== null && type !== undefined ) {
 			cellData = defaultContent;
 		}
 		else if ( typeof cellData === 'function' ) {
@@ -1783,8 +10964,9 @@
 				cells.push( nTd );
 	
 				// Need to create the HTML if new, or if a rendering function is defined
-				if ( !nTrIn || oCol.mRender || oCol.mData !== i )
-				{
+				if ( (!nTrIn || oCol.mRender || oCol.mData !== i) &&
+					 (!$.isPlainObject(oCol.mData) || oCol.mData._ !== i+'.display')
+				) {
 					nTd.innerHTML = _fnGetCellData( oSettings, iRow, i, 'display' );
 				}
 	
@@ -3888,11 +13070,12 @@
 			footer         = settings.nTFoot ? $(settings.nTFoot) : null,
 			browser        = settings.oBrowser,
 			ie67           = browser.bScrollOversize,
+			dtHeaderCells  = _pluck( settings.aoColumns, 'nTh' ),
 			headerTrgEls, footerTrgEls,
 			headerSrcEls, footerSrcEls,
 			headerCopy, footerCopy,
 			headerWidths=[], footerWidths=[],
-			headerContent=[],
+			headerContent=[], footerContent=[],
 			idx, correction, sanityWidth,
 			zeroOut = function(nSizer) {
 				var style = nSizer.style;
@@ -3924,17 +13107,17 @@
 		// Remove the old minimised thead and tfoot elements in the inner table
 		table.children('thead, tfoot').remove();
 	
-		// Clone the current header and footer elements and then place it into the inner table
-		headerCopy = header.clone().prependTo( table );
-		headerTrgEls = header.find('tr'); // original header is in its own table
-		headerSrcEls = headerCopy.find('tr');
-		headerCopy.find('th, td').removeAttr('tabindex');
-	
 		if ( footer ) {
 			footerCopy = footer.clone().prependTo( table );
 			footerTrgEls = footer.find('tr'); // the original tfoot is in its own table and must be sized
 			footerSrcEls = footerCopy.find('tr');
 		}
+	
+		// Clone the current header and footer elements and then place it into the inner table
+		headerCopy = header.clone().prependTo( table );
+		headerTrgEls = header.find('tr'); // original header is in its own table
+		headerSrcEls = headerCopy.find('tr');
+		headerCopy.find('th, td').removeAttr('tabindex');
 	
 	
 		/*
@@ -4001,7 +13184,11 @@
 	
 		// Apply all widths in final pass
 		_fnApplyToChildren( function(nToSize, i) {
-			nToSize.style.width = headerWidths[i];
+			// Only apply widths to the DataTables detected header cells - this
+			// prevents complex headers from having contradictory sizes applied
+			if ( $.inArray( nToSize, dtHeaderCells ) !== -1 ) {
+				nToSize.style.width = headerWidths[i];
+			}
 		}, headerTrgEls );
 	
 		$(headerSrcEls).height(0);
@@ -4012,6 +13199,7 @@
 			_fnApplyToChildren( zeroOut, footerSrcEls );
 	
 			_fnApplyToChildren( function(nSizer) {
+				footerContent.push( nSizer.innerHTML );
 				footerWidths.push( _fnStringToCss( $(nSizer).css('width') ) );
 			}, footerSrcEls );
 	
@@ -4039,7 +13227,7 @@
 		if ( footer )
 		{
 			_fnApplyToChildren( function(nSizer, i) {
-				nSizer.innerHTML = "";
+				nSizer.innerHTML = '<div class="dataTables_sizing" style="height:0;overflow:hidden;">'+footerContent[i]+'</div>';
 				nSizer.style.width = footerWidths[i];
 			}, footerSrcEls );
 		}
@@ -4109,6 +13297,9 @@
 			divFooterInner[0].style.width = _fnStringToCss( iOuterWidth );
 			divFooterInner[0].style[padding] = bScrolling ? barWidth+"px" : "0px";
 		}
+	
+		// Correct DOM ordering for colgroup - comes before the thead
+		table.children('colgroup').insertBefore( table.children('thead') );
 	
 		/* Adjust the position of the header in case we loose the y-scrollbar */
 		divBody.scroll();
@@ -4282,6 +13473,10 @@
 						.appendTo( tr );
 				}
 			}
+	
+			// Tidy the temporary table - remove name attributes so there aren't
+			// duplicated in the dom (radio elements for example)
+			$('[name]', tmpTable).removeAttr('name');
 	
 			// Table has been built, attach to the document so we can work with it.
 			// A holding element is used, positioned at the top of the container
@@ -7801,9 +16996,17 @@
 	
 			// Selector - node
 			if ( sel.nodeName ) {
-				if ( $.inArray( sel, nodes ) !== -1 ) {
-					return [ sel._DT_RowIndex ]; // sel is a TR node that is in the table
-					                             // and DataTables adds a prop for fast lookup
+				if ( sel._DT_RowIndex !== undefined ) {
+					return [ sel._DT_RowIndex ]; // Property added by DT for fast lookup
+				}
+				else if ( sel._DT_CellIndex ) {
+					return [ sel._DT_CellIndex.row ];
+				}
+				else {
+					var host = $(sel).closest('*[data-dt-row]');
+					return host.length ?
+						[ host.data('dt-row') ] :
+						[];
 				}
 			}
 	
@@ -8363,17 +17566,35 @@
 						return $.map( names, function (name, i) {
 							return name === match[1] ? i : null;
 						} );
+	
+					default:
+						return [];
 				}
 			}
-			else {
-				// jQuery selector on the TH elements for the columns
-				return $( nodes )
-					.filter( s )
-					.map( function () {
-						return $.inArray( this, nodes ); // `nodes` is column index complete and in order
-					} )
-					.toArray();
+	
+			// Cell in the table body
+			if ( s.nodeName && s._DT_CellIndex ) {
+				return [ s._DT_CellIndex.column ];
 			}
+	
+			// jQuery selector on the TH elements for the columns
+			var jqResult = $( nodes )
+				.filter( s )
+				.map( function () {
+					return $.inArray( this, nodes ); // `nodes` is column index complete and in order
+				} )
+				.toArray();
+	
+			if ( jqResult.length || ! s.nodeName ) {
+				return jqResult;
+			}
+	
+			// Otherwise a node which might have a `dt-column` data attribute, or be
+			// a child or such an element
+			var host = $(s).closest('*[data-dt-column]');
+			return host.length ?
+				[ host.data('dt-column') ] :
+				[];
 		};
 	
 		return _selector_run( 'column', selector, run, settings, opts );
@@ -8426,11 +17647,6 @@
 		if ( recalc === undefined || recalc ) {
 			// Automatically adjust column sizing
 			_fnAdjustColumnSizing( settings );
-	
-			// Realign columns for scrolling
-			if ( settings.oScroll.sX || settings.oScroll.sY ) {
-				_fnScrollDraw( settings );
-			}
 		}
 	
 		_fnCallbackFire( settings, null, 'column-visibility', [settings, column, vis, recalc] );
@@ -8591,7 +17807,7 @@
 			}
 	
 			// Selector - jQuery filtered cells
-			return allCells
+			var jqResult = allCells
 				.filter( s )
 				.map( function (i, el) {
 					return { // use a new object, in case someone changes the values
@@ -8600,6 +17816,21 @@
 	 				};
 				} )
 				.toArray();
+	
+			if ( jqResult.length || ! s.nodeName ) {
+				return jqResult;
+			}
+	
+			// Otherwise the selector is a node, and there is one last option - the
+			// element might be a child of an element which has dt-row and dt-column
+			// data attributes
+			host = $(s).closest('*[data-dt-row]');
+			return host.length ?
+				[ {
+					row: host.data('dt-row'),
+					column: host.data('dt-column')
+				} ] :
+				[];
 		};
 	
 		return _selector_run( 'cell', selector, run, settings, opts );
@@ -8667,9 +17898,10 @@
 	
 	_api_registerPlural( 'cells().nodes()', 'cell().node()', function () {
 		return this.iterator( 'cell', function ( settings, row, column ) {
-			var cells = settings.aoData[ row ].anCells;
-			return cells ?
-				cells[ column ] :
+			var data = settings.aoData[ row ];
+	
+			return data && data.anCells ?
+				data.anCells[ column ] :
 				undefined;
 		}, 1 );
 	} );
@@ -9317,7 +18549,7 @@
 	 *  @type string
 	 *  @default Version number
 	 */
-	DataTable.version = "1.10.10";
+	DataTable.version = "1.10.11";
 
 	/**
 	 * Private data store, containing all of the settings objects that are
@@ -13771,7 +23003,7 @@
 		 *
 		 *  @type string
 		 */
-		build:"bs/dt-1.10.10,e-1.5.4,r-2.0.0,se-1.1.0",
+		build:"bs/moment-2.11.2,select2-4.0.1,dt-1.10.11,e-1.5.5,ef-select2-4.0.1,ef-title-1.0.0,r-2.0.2",
 	
 	
 		/**
@@ -14838,6 +24070,12 @@
 	 * to make working with DataTables a little bit easier.
 	 */
 	
+	var __htmlEscapeEntities = function ( d ) {
+		return typeof d === 'string' ?
+			d.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;') :
+			d;
+	};
+	
 	/**
 	 * Helpers for `columns.render`.
 	 *
@@ -14876,9 +24114,10 @@
 					var flo = parseFloat( d );
 	
 					// If NaN then there isn't much formatting that we can do - just
-					// return immediately
+					// return immediately, escaping any HTML (this was supposed to
+					// be a number after all)
 					if ( isNaN( flo ) ) {
-						return d;
+						return __htmlEscapeEntities( d );
 					}
 	
 					d = Math.abs( flo );
@@ -14900,11 +24139,7 @@
 	
 		text: function () {
 			return {
-				display: function ( d ) {
-					return typeof d === 'string' ?
-						d.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;') :
-						d;
-				}
+				display: __htmlEscapeEntities
 			};
 		}
 	};
@@ -15404,839 +24639,8766 @@ DataTable.ext.renderer.pageButton.bootstrap = function ( settings, host, idx, bu
 };
 
 
-/*
- * TableTools Bootstrap compatibility
- * Required TableTools 2.1+
- */
-if ( DataTable.TableTools ) {
-	// Set the classes that TableTools uses to something suitable for Bootstrap
-	$.extend( true, DataTable.TableTools.classes, {
-		"container": "DTTT btn-group",
-		"buttons": {
-			"normal": "btn btn-default",
-			"disabled": "disabled"
-		},
-		"collection": {
-			"container": "DTTT_dropdown dropdown-menu",
-			"buttons": {
-				"normal": "",
-				"disabled": "disabled"
-			}
-		},
-		"print": {
-			"info": "DTTT_print_info"
-		},
-		"select": {
-			"row": "active"
-		}
-	} );
-
-	// Have the collection use a bootstrap compatible drop down
-	$.extend( true, DataTable.TableTools.DEFAULTS.oTags, {
-		"collection": {
-			"container": "ul",
-			"button": "li",
-			"liner": "a"
-		}
-	} );
-}
-
-
 return DataTable;
 }));
 
-/*!
- * File:        dataTables.editor.min.js
- * Version:     1.5.4
- * Author:      SpryMedia (www.sprymedia.co.uk)
- * Info:        http://editor.datatables.net
- * 
- * Copyright 2012-2016 SpryMedia, all rights reserved.
- * License: DataTables Editor - http://editor.datatables.net/license
+/*! DataTables Editor v1.5.5
+ *
+ * ©2012-2016 SpryMedia Ltd, all rights reserved.
+ * License: editor.datatables.net/license
  */
+
+/**
+ * @summary     DataTables Editor
+ * @description Table editing library for DataTables
+ * @version     1.5.5
+ * @file        dataTables.editor.js
+ * @author      SpryMedia Ltd
+ * @contact     www.datatables.net/contact
+ */
+
+/*jslint evil: true, undef: true, browser: true */
+/*globals jQuery,alert,console */
+
+(function( factory ){
+	if ( typeof define === 'function' && define.amd ) {
+		// AMD
+		define( ['jquery', 'datatables.net'], function ( $ ) {
+			return factory( $, window, document );
+		} );
+	}
+	else if ( typeof exports === 'object' ) {
+		// CommonJS
+		module.exports = function (root, $) {
+			if ( ! root ) {
+				root = window;
+			}
+
+			if ( ! $ || ! $.fn.dataTable ) {
+				$ = require('datatables.net')(root, $).$;
+			}
+
+			return factory( $, root, root.document );
+		};
+	}
+	else {
+		// Browser
+		factory( jQuery, window, document );
+	}
+}(function( $, window, document, undefined ) {
+'use strict';
+var DataTable = $.fn.dataTable;
+
+
+if ( ! DataTable || ! DataTable.versionCheck || ! DataTable.versionCheck('1.10.7') ) {
+	throw 'Editor requires DataTables 1.10.7 or newer';
+}
+
+/**
+ * Editor is a plug-in for <a href="http://datatables.net">DataTables</a> which
+ * provides an interface for creating, reading, editing and deleting and entries
+ * (a CRUD interface) in a DataTable. The documentation presented here is
+ * primarily focused on presenting the API for Editor. For a full list of
+ * features, examples and the server interface protocol, please refer to the <a
+ * href="http://editor.datatables.net">Editor web-site</a>.
+ *
+ * Note that in this documentation, for brevity, the `DataTable` refers to the
+ * jQuery parameter `jQuery.fn.dataTable` through which it may be  accessed.
+ * Therefore, when creating a new Editor instance, use `jQuery.fn.Editor` as
+ * shown in the examples below.
+ *
+ *  @class
+ *  @param {object} [oInit={}] Configuration object for Editor. Options
+ *    are defined by {@link Editor.defaults}.
+ *  @requires jQuery 1.7+
+ *  @requires DataTables 1.10+
+ */
+var Editor = function ( opts )
+{
+	if ( ! this instanceof Editor ) {
+		alert( "DataTables Editor must be initialised as a 'new' instance'" );
+	}
+
+	this._constructor( opts );
+};
+
+// Export Editor as a DataTables property
+DataTable.Editor = Editor;
+$.fn.DataTable.Editor = Editor;
+
+// Internal methods
+
+
+/**
+ * Get an Editor node based on the data-dte-e (element) attribute and return it
+ * as a jQuery object.
+ *  @param {string} dis The data-dte-e attribute name to match for the element
+ *  @param {node} [ctx=document] The context for the search - recommended this
+ *    parameter is included for performance.
+ *  @returns {jQuery} jQuery object of found node(s).
+ *  @private
+ */
+var _editor_el = function ( dis, ctx )
+{
+	if ( ctx === undefined ) {
+		ctx = document;
+	}
+
+	return $('*[data-dte-e="'+dis+'"]', ctx);
+};
+
+
+/** @internal Counter for unique event namespaces in the inline control */
+var __inlineCounter = 0;
+
+var _pluck = function ( a, prop )
+{
+	var out = [];
+
+	$.each( a, function ( idx, el ) {
+		out.push( el[ prop ] );
+	} );
+
+	return out;
+};
+
+// Field class
+
+
+Editor.Field = function ( opts, classes, host ) {
+	var that = this;
+	var multiI18n = host.i18n.multi;
+
+	opts = $.extend( true, {}, Editor.Field.defaults, opts );
+	
+	if ( ! Editor.fieldTypes[ opts.type ] ) {
+		throw "Error adding field - unknown field type "+opts.type;
+	}
+
+	this.s = $.extend( {}, Editor.Field.settings, { // has to be a shallow copy!
+		type:       Editor.fieldTypes[ opts.type ],
+		name:       opts.name,
+		classes:    classes,
+		host:       host,
+		opts:       opts,
+		multiValue: false
+	} );
+
+	// No id, so assign one to have the label reference work
+	if ( ! opts.id ) {
+		opts.id = 'DTE_Field_'+opts.name;
+	}
+
+	// Backwards compatibility
+	if ( opts.dataProp ) {
+		opts.data = opts.dataProp;
+	}
+
+	// If no `data` option is given, then we use the name from the field as the
+	// data prop to read data for the field from DataTables
+	if ( opts.data === '' ) {
+		opts.data = opts.name;
+	}
+
+	// Get and set functions in the data object for the record
+	var dtPrivateApi = DataTable.ext.oApi;
+	this.valFromData = function ( d ) { // get val from data
+		// wrapper to automatically pass `editor` as the type
+		return dtPrivateApi._fnGetObjectDataFn( opts.data )( d, 'editor' );
+	};
+	this.valToData = dtPrivateApi._fnSetObjectDataFn( opts.data ); // set val to data
+
+	// Field HTML structure
+	var template = $(
+		'<div class="'+classes.wrapper+' '+classes.typePrefix+opts.type+' '+classes.namePrefix+opts.name+' '+opts.className+'">'+
+			'<label data-dte-e="label" class="'+classes.label+'" for="'+opts.id+'">'+
+				opts.label+
+				'<div data-dte-e="msg-label" class="'+classes['msg-label']+'">'+opts.labelInfo+'</div>'+
+			'</label>'+
+			'<div data-dte-e="input" class="'+classes.input+'">'+
+				// Field specific HTML is added here if there is any
+				'<div data-dte-e="input-control" class="'+classes.inputControl+'"/>'+
+				'<div data-dte-e="multi-value" class="'+classes.multiValue+'">'+
+					multiI18n.title+
+					'<span data-dte-e="multi-info" class="'+classes.multiInfo+'">'+
+						multiI18n.info+
+					'</span>'+
+				'</div>'+
+				'<div data-dte-e="msg-multi" class="'+classes.multiRestore+'">'+
+					multiI18n.restore+
+				'</div>'+
+				'<div data-dte-e="msg-error" class="'+classes['msg-error']+'"></div>'+
+				'<div data-dte-e="msg-message" class="'+classes['msg-message']+'"></div>'+
+				'<div data-dte-e="msg-info" class="'+classes['msg-info']+'">'+opts.fieldInfo+'</div>'+
+			'</div>'+
+		'</div>');
+
+	var input = this._typeFn( 'create', opts );
+	if ( input !== null ) {
+		_editor_el('input-control', template).prepend( input );
+	}
+	else {
+		template.css('display', "none");
+	}
+
+	this.dom = $.extend( true, {}, Editor.Field.models.dom, {
+		container:    template,
+		inputControl: _editor_el('input-control', template),
+		label:        _editor_el('label', template),
+		fieldInfo:    _editor_el('msg-info', template),
+		labelInfo:    _editor_el('msg-label', template),
+		fieldError:   _editor_el('msg-error', template),
+		fieldMessage: _editor_el('msg-message', template),
+		multi:        _editor_el('multi-value', template),
+		multiReturn:  _editor_el('msg-multi', template),
+		multiInfo:    _editor_el('multi-info', template)
+	} );
+
+	// On click - set a common value for the field
+	this.dom.multi.on( 'click', function () {
+		that.val('');
+	} );
+
+	this.dom.multiReturn.on( 'click', function () {
+		that.s.multiValue = true;
+		that._multiValueCheck();
+	} );
+
+	// Field type extension methods - add a method to the field for the public
+	// methods that each field type defines beyond the default ones that already
+	// exist as part of this instance
+	$.each( this.s.type, function ( name, fn ) {
+		if ( typeof fn === 'function' && that[name] === undefined ) {
+			that[ name ] = function () {
+				var args = Array.prototype.slice.call( arguments );
+
+				args.unshift( name );
+				var ret = that._typeFn.apply( that, args );
+
+				// Return the given value if there is one, or the field instance
+				// for chaining if there is no value
+				return ret === undefined ?
+					that :
+					ret;
+			};
+		}
+	} );
+};
+
+
+Editor.Field.prototype = {
+	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+	 * Public
+	 */
+	def: function ( set ) {
+		var opts = this.s.opts;
+
+		if ( set === undefined ) {
+			// Backwards compat
+			var def = opts['default'] !== undefined ?
+				opts['default'] :
+				opts.def;
+
+			return $.isFunction( def ) ?
+				def() :
+				def;
+		}
+
+		opts.def = set;
+		return this;
+	},
+
+	disable: function () {
+		this._typeFn( 'disable' );
+		return this;
+	},
+
+	displayed: function () {
+		var container = this.dom.container;
+
+		return container.parents('body').length && container.css('display') != 'none' ?
+			true :
+			false;
+	},
+
+	enable: function () {
+		this._typeFn( 'enable' );
+		return this;
+	},
+
+	error: function ( msg, fn ) {
+		var classes = this.s.classes;
+
+		// Add or remove the error class
+		if ( msg ) {
+			this.dom.container.addClass( classes.error );
+		}
+		else {
+			this.dom.container.removeClass( classes.error );
+		}
+
+		return this._msg( this.dom.fieldError, msg, fn );
+	},
+
+	isMultiValue: function () {
+		return this.s.multiValue;
+	},
+
+	inError: function () {
+		return this.dom.container.hasClass( this.s.classes.error );
+	},
+
+	input: function () {
+		return this.s.type.input ?
+			this._typeFn( 'input' ) :
+			$('input, select, textarea', this.dom.container);
+	},
+
+	focus: function () {
+		if ( this.s.type.focus ) {
+			this._typeFn( 'focus' );
+		}
+		else {
+			$('input, select, textarea', this.dom.container).focus();
+		}
+
+		return this;
+	},
+
+	get: function () {
+		// When multi-value a single get is undefined
+		if ( this.isMultiValue() ) {
+			return undefined;
+		}
+
+		var val = this._typeFn( 'get' );
+		return val !== undefined ?
+			val :
+			this.def();
+	},
+
+	hide: function ( animate ) {
+		var el = this.dom.container;
+
+		if ( animate === undefined ) {
+			animate = true;
+		}
+
+		if ( this.s.host.display() && animate ) {
+			el.slideUp();
+		}
+		else {
+			el.css( 'display', 'none' );
+		}
+		return this;
+	},
+
+	label: function ( str ) {
+		var label = this.dom.label;
+
+		if ( str === undefined ) {
+			return label.html();
+		}
+
+		label.html( str );
+		return this;
+	},
+
+	message: function ( msg, fn ) {
+		return this._msg( this.dom.fieldMessage, msg, fn );
+	},
+
+	// There is no `multiVal()` as its arguments could be ambiguous
+	// id is an idSrc value _only_
+	multiGet: function ( id ) {
+		var value;
+		var multiValues = this.s.multiValues;
+		var multiIds = this.s.multiIds;
+
+		if ( id === undefined ) {
+			// Get an object with the values for each item being edited
+			value = {};
+
+			for ( var i=0 ; i<multiIds.length ; i++ ) {
+				value[ multiIds[i] ] = this.isMultiValue() ?
+					multiValues[ multiIds[i] ] :
+					this.val();
+			}
+		}
+		else if ( this.isMultiValue() ) {
+			// Individual value
+			value = multiValues[ id ];
+		}
+		else {
+			// Common value
+			value = this.val();
+		}
+
+		return value;
+	},
+
+	multiSet: function ( id, val )
+	{
+		var multiValues = this.s.multiValues;
+		var multiIds = this.s.multiIds;
+
+		if ( val === undefined ) {
+			val = id;
+			id = undefined;
+		}
+
+		// Set
+		var set = function ( idSrc, val ) {
+			// Get an individual item's value - add the id to the edit ids if
+			// it isn't already in the set.
+			if ( $.inArray( multiIds ) === -1 ) {
+				multiIds.push( idSrc );
+			}
+
+			multiValues[ idSrc ] = val;
+		};
+
+		if ( $.isPlainObject( val ) && id === undefined ) {
+			// idSrc / value pairs passed in
+			$.each( val, function ( idSrc, innerVal ) {
+				set( idSrc, innerVal );
+			} );
+		}
+		else if ( id === undefined ) {
+			// Set same value for all existing ids
+			$.each( multiIds, function ( i, idSrc ) {
+				set( idSrc, val );
+			} );
+		}
+		else {
+			// Setting an individual property
+			set( id, val );
+		}
+
+		this.s.multiValue = true;
+		this._multiValueCheck();
+
+		return this;
+	},
+
+	name: function () {
+		return this.s.opts.name;
+	},
+
+	node: function () {
+		return this.dom.container[0];
+	},
+
+	set: function ( val ) {
+		this.s.multiValue = false;
+
+		var decode = this.s.opts.entityDecode;
+		if ( (decode === undefined || decode === true) && typeof val === 'string' ) {
+			val = val
+				.replace(/&gt;/g, '>')
+				.replace(/&lt;/g, '<')
+				.replace(/&amp;/g, '&')
+				.replace(/&quot;/g, '"')
+				.replace(/&#39;/g, '\'')
+				.replace(/&#10;/g, '\n');
+		}
+
+		this._typeFn( 'set', val );
+
+		this._multiValueCheck();
+
+		return this;
+	},
+
+	show: function ( animate ) {
+		var el = this.dom.container;
+
+		if ( animate === undefined ) {
+			animate = true;
+		}
+
+		if ( this.s.host.display() && animate ) {
+			el.slideDown();
+		}
+		else {
+			el.css( 'display', 'block' );
+		}
+		return this;
+	},
+
+	val: function ( val ) {
+		return val === undefined ?
+			this.get() :
+			this.set( val );
+	},
+
+
+	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+	 * Internal - Called from Editor only and are not publicly documented -
+	 * these APIs can change!
+	 */
+	dataSrc: function () {
+		return this.s.opts.data;
+	},
+
+	destroy: function () {
+		// remove element
+		this.dom.container.remove();
+
+		// field's own destroy method if there is one
+		this._typeFn( 'destroy' );
+		return this;
+	},
+
+	multiIds: function () {
+		return this.s.multiIds;
+	},
+
+	multiInfoShown: function ( show ) {
+		this.dom.multiInfo.css( { display: show ? 'block' : 'none' } );
+	},
+
+	multiReset: function () {
+		this.s.multiIds = [];
+		this.s.multiValues = {};
+	},
+
+	valFromData: null,
+
+	valToData: null,
+
+
+	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+	 * Private
+	 */
+	_errorNode: function () {
+		return this.dom.fieldError;
+	},
+
+	_msg: function ( el, msg, fn ) {
+		if ( typeof msg === 'function' ) {
+			var editor = this.s.host;
+			msg = msg( editor, new DataTable.Api( editor.s.table ) );
+		}
+
+		if ( el.parent().is(":visible") ) {
+			el.html( msg );
+
+			if ( msg ) {
+				el.slideDown( fn ); // fn can be undefined - so jQuery won't execute it
+			}
+			else {
+				el.slideUp( fn );
+			}
+		}
+		else {
+			// Not visible, so immediately set, or blank out the element
+			el
+				.html( msg || '' )
+				.css( 'display', msg ? 'block' : 'none' );
+
+			if ( fn ) {
+				fn();
+			}
+		}
+
+		return this;
+	},
+
+	_multiValueCheck: function () {
+		var last;
+		var ids = this.s.multiIds;
+		var values = this.s.multiValues;
+		var val;
+		var different = false;
+
+		if ( ids ) {
+			for ( var i=0 ; i<ids.length ; i++ ) {
+				val = values[ ids[i] ];
+
+				if ( i > 0 && val !== last ) {
+					different = true;
+					break;
+				}
+
+				last = val;
+			}
+		}
+
+		if ( different && this.s.multiValue ) {
+			// Different values
+			this.dom.inputControl.css( { display: 'none' } );
+			this.dom.multi.css( { display: 'block' } );
+		}
+		else {
+			// All the same value
+			this.dom.inputControl.css( { display: 'block' } );
+			this.dom.multi.css( { display: 'none' } );
+
+			if ( this.s.multiValue ) {
+				this.val( last );
+			}
+		}
+
+		this.dom.multiReturn.css( {
+			display: ids && ids.length > 1 && different && ! this.s.multiValue ?
+				'block' :
+				'none'
+		} );
+
+		this.s.host._multiInfo();
+
+		return true;
+	},
+
+	_typeFn: function ( name /*, ... */ ) {
+		// Remove the name from the arguments list, so the rest can be passed
+		// straight into the field type
+		var args = Array.prototype.slice.call( arguments );
+		args.shift();
+
+		// Insert the options as the first parameter - all field type methods
+		// take the field's configuration object as the first parameter
+		args.unshift( this.s.opts );
+
+		var fn = this.s.type[ name ];
+		if ( fn ) {
+			return fn.apply( this.s.host, args );
+		}
+	}
+};
+
+
+Editor.Field.models = {};
+
+
+/**
+ * Initialisation options that can be given to Editor.Field at initialisation
+ * time.
+ *  @namespace
+ */
+Editor.Field.defaults = {
+	/**
+	 * Class name to assign to the field's container element (in addition to the other
+	 * classes that Editor assigns by default).
+	 *  @type string
+	 *  @default <i>Empty string</i>
+	 */
+	"className": "",
+
+	/**
+	 * The data property (`mData` in DataTables terminology) that is used to
+	 * read from and write to the table. If not given then it will take the same
+	 * value as the `name` that is given in the field object. Note that `data`
+	 * can be given as null, which will result in Editor not using a DataTables
+	 * row property for the value of the field for either getting or setting
+	 * data.
+	 *
+	 * In previous versions of Editor (1.2-) this was called `dataProp`. The old
+	 * name can still be used for backwards compatibility, but the new form is
+	 * preferred.
+	 *  @type string
+	 *  @default <i>Empty string</i>
+	 */
+	"data": "",
+
+	/**
+	 * The default value for the field. Used when creating new rows (editing will
+	 * use the currently set value). If given as a function the function will be
+	 * executed and the returned value used as the default
+	 *
+	 * In Editor 1.2 and earlier this field was called `default` - however
+	 * `default` is a reserved word in Javascript, so it couldn't be used
+	 * unquoted. `default` will still work with Editor 1.3, but the new property
+	 * name of `def` is preferred.
+	 *  @type string|function
+	 *  @default <i>Empty string</i>
+	 */
+	"def": "",
+
+	/**
+	 * Helpful information text about the field that is shown below the input control.
+	 *  @type string
+	 *  @default <i>Empty string</i>
+	 */
+	"fieldInfo": "",
+
+	/**
+	 * The ID of the field. This is used by the `label` HTML tag as the "for" attribute 
+	 * improved accessibility. Although this using this parameter is not mandatory,
+	 * it is a good idea to assign the ID to the DOM element that is the input for the
+	 * field (if this is applicable).
+	 *  @type string
+	 *  @default <i>Calculated</i>
+	 */
+	"id": "",
+
+	/**
+	 * The label to display for the field input (i.e. the name that is visually 
+	 * assigned to the field).
+	 *  @type string
+	 *  @default <i>Empty string</i>
+	 */
+	"label": "",
+
+	/**
+	 * Helpful information text about the field that is shown below the field label.
+	 *  @type string
+	 *  @default <i>Empty string</i>
+	 */
+	"labelInfo": "",
+
+	/**
+	 * The name for the field that is submitted to the server. This is the only
+	 * mandatory parameter in the field description object.
+	 *  @type string
+	 *  @default <i>null</i>
+	 */
+	"name": null,
+
+	/**
+	 * The input control that is presented to the end user. The options available 
+	 * are defined by {@link Editor.fieldTypes} and any extensions made 
+	 * to that object.
+	 *  @type string
+	 *  @default text
+	 */
+	"type": "text"
+};
+
+
+
+/**
+ * 
+ *  @namespace
+ */
+Editor.Field.models.settings = {
+	type: null,
+	name: null,
+	classes: null,
+	opts: null,
+	host: null
+};
+
+
+
+/**
+ * 
+ *  @namespace
+ */
+Editor.Field.models.dom = {
+	container: null,
+	label: null,
+	labelInfo: null,
+	fieldInfo: null,
+	fieldError: null,
+	fieldMessage: null
+};
+
+
+/*
+ * Models
+ */
+
+/**
+ * Object models container, for the various models that DataTables has available
+ * to it. These models define the objects that are used to hold the active state
+ * and configuration of the table.
+ *  @namespace
+ */
+Editor.models = {};
+
+
+/**
+ * Editor makes very few assumptions about how its form will actually be
+ * displayed to the end user (where in the DOM, interaction etc), instead
+ * focusing on providing form interaction controls only. To actually display
+ * a form in the browser we need to use a display controller, and then select
+ * which one we want to use at initialisation time using the `display`
+ * option. For example a display controller could display the form in a
+ * lightbox (as the default display controller does), it could completely
+ * empty the document and put only the form in place, ir could work with
+ * DataTables to use `fnOpen` / `fnClose` to show the form in a "details" row
+ * and so on.
+ *
+ * Editor has two built-in display controllers ('lightbox' and 'envelope'),
+ * but others can readily be created and installed for use as plug-ins. When
+ * creating a display controller plug-in you **must** implement the methods
+ * in this control. Additionally when closing the display internally you
+ * **must** trigger a `requestClose` event which Editor will listen
+ * for and act upon (this allows Editor to ask the user if they are sure
+ * they want to close the form, for example).
+ *  @namespace
+ */
+Editor.models.displayController = {
+	/**
+	 * Initialisation method, called by Editor when itself, initialises.
+	 *  @param {object} dte The DataTables Editor instance that has requested
+	 *    the action - this allows access to the Editor API if required.
+	 *  @returns {object} The object that Editor will use to run the 'open'
+	 *    and 'close' methods against. If static methods are used then
+	 *    just return the object that holds the init, open and close methods,
+	 *    however, this allows the display to be created with a 'new'
+	 *    instance of an object is the display controller calls for that.
+	 *  @type function
+	 */
+	"init": function ( dte ) {},
+
+	/**
+	 * Display the form (add it to the visual display in the document)
+	 *  @param {object} dte The DataTables Editor instance that has requested
+	 *    the action - this allows access to the Editor API if required.
+	 *  @param {element} append The DOM node that contains the form to be
+	 *    displayed
+	 *  @param {function} [fn] Callback function that is to be executed when
+	 *    the form has been displayed. Note that this parameter is optional.
+	 */
+	"open": function ( dte, append, fn ) {},
+
+	/**
+	 * Hide the form (remove it form the visual display in the document)
+	 *  @param {object} dte The DataTables Editor instance that has requested
+	 *    the action - this allows access to the Editor API if required.
+	 *  @param {function} [fn] Callback function that is to be executed when
+	 *    the form has been hidden. Note that this parameter is optional.
+	 */
+	"close": function ( dte, fn ) {}
+};
+
+
+
+/**
+ * Model object for input types which are available to fields (assigned to
+ * {@link Editor.fieldTypes}). Any plug-ins which add additional
+ * input types to Editor **must** implement the methods in this object 
+ * (dummy functions are given in the model so they can be used as defaults
+ * if extending this object).
+ *
+ * All functions in the model are executed in the Editor's instance scope,
+ * so you have full access to the settings object and the API methods if
+ * required.
+ *  @namespace
+ *  @example
+ *    // Add a simple text input (the 'text' type that is built into Editor
+ *    // does this, so you wouldn't implement this exactly as show, but it
+ *    // it is a good example.
+ *
+ *    var Editor = $.fn.Editor;
+ *
+ *    Editor.fieldTypes.myInput = $.extend( true, {}, Editor.models.type, {
+ *      "create": function ( conf ) {
+ *        // We store the 'input' element in the configuration object so
+ *        // we can easily access it again in future.
+ *        conf._input = document.createElement('input');
+ *        conf._input.id = conf.id;
+ *        return conf._input;
+ *      },
+ *    
+ *      "get": function ( conf ) {
+ *        return conf._input.value;
+ *      },
+ *    
+ *      "set": function ( conf, val ) {
+ *        conf._input.value = val;
+ *      },
+ *    
+ *      "enable": function ( conf ) {
+ *        conf._input.disabled = false;
+ *      },
+ *    
+ *      "disable": function ( conf ) {
+ *        conf._input.disabled = true;
+ *      }
+ *    } );
+ */
+Editor.models.fieldType = {
+	/**
+	 * Create the field - this is called when the field is added to the form.
+	 * Note that this is called at initialisation time, or when the 
+	 * {@link Editor#add} API method is called, not when the form is displayed. 
+	 * If you need to know when the form is shown, you can use the API to listen 
+	 * for the `open` event.
+	 *  @param {object} conf The configuration object for the field in question:
+	 *    {@link Editor.models.field}.
+	 *  @returns {element|null} The input element (or a wrapping element if a more
+	 *    complex input is required) or null if nothing is to be added to the
+	 *    DOM for this input type.
+	 *  @type function
+	 */
+	"create": function ( conf ) {},
+
+	/**
+	 * Get the value from the field
+	 *  @param {object} conf The configuration object for the field in question:
+	 *    {@link Editor.models.field}.
+	 *  @returns {*} The value from the field - the exact value will depend on the
+	 *    formatting required by the input type control.
+	 *  @type function
+	 */
+	"get": function ( conf ) {},
+
+	/**
+	 * Set the value for a field
+	 *  @param {object} conf The configuration object for the field in question:
+	 *    {@link Editor.models.field}.
+	 *  @param {*} val The value to set the field to - the exact value will
+	 *    depend on the formatting required by the input type control.
+	 *  @type function
+	 */
+	"set": function ( conf, val ) {},
+
+	/**
+	 * Enable the field - i.e. allow user interface
+	 *  @param {object} conf The configuration object for the field in question:
+	 *    {@link Editor.models.field}.
+	 *  @type function
+	 */
+	"enable": function ( conf ) {},
+
+	/**
+	 * Disable the field - i.e. disallow user interface
+	 *  @param {object} conf The configuration object for the field in question:
+	 *    {@link Editor.models.field}.
+	 *  @type function
+	 */
+	"disable": function ( conf ) {}
+};
+
+
+
+/**
+ * Settings object for Editor - this provides the state for each instance of
+ * Editor and can be accessed through the instance's `s` property. Note that the
+ * settings object is considered to be "private" and thus is liable to change
+ * between versions. As such if you do read any of the setting parameters,
+ * please keep this in mind when upgrading!
+ *  @namespace
+ */
+Editor.models.settings = {
+	/**
+	 * URL to submit Ajax data to.
+	 * This is directly set by the initialisation parameter / default of the same name.
+	 *  @type string
+	 *  @default null
+	 */
+	"ajaxUrl": null,
+
+	/**
+	 * Ajax submit function.
+	 * This is directly set by the initialisation parameter / default of the same name.
+	 *  @type function
+	 *  @default null
+	 */
+	"ajax": null,
+
+	/**
+	 * Data source for get and set data actions. This allows Editor to perform
+	 * as an Editor for virtually any data source simply by defining additional
+	 * data sources.
+	 *  @type object
+	 *  @default null
+	 */
+	"dataSource": null,
+
+	/**
+	 * DataTable selector, can be anything that the Api supports
+	 * This is directly set by the initialisation parameter / default of the same name.
+	 *  @type string
+	 *  @default null
+	 */
+	"domTable": null,
+
+	/**
+	 * The initialisation object that was given by the user - stored for future reference.
+	 * This is directly set by the initialisation parameter / default of the same name.
+	 *  @type string
+	 *  @default null
+	 */
+	"opts": null,
+
+	/**
+	 * The display controller object for the Form.
+	 * This is directly set by the initialisation parameter / default of the same name.
+	 *  @type string
+	 *  @default null
+	 */
+	"displayController": null,
+
+	/**
+	 * The form fields - see {@link Editor.models.field} for details of the 
+	 * objects held in this array.
+	 *  @type object
+	 *  @default null
+	 */
+	"fields": {},
+
+	/**
+	 * Field order - order that the fields will appear in on the form. Array of strings,
+	 * the names of the fields.
+	 *  @type array
+	 *  @default null
+	 */
+	"order": [],
+
+	/**
+	 * The ID of the row being edited (set to -1 on create and remove actions)
+	 *  @type string
+	 *  @default null
+	 */
+	"id": -1,
+
+	/**
+	 * Flag to indicate if the form is currently displayed (true) or not (false)
+	 *  @type string
+	 *  @default null
+	 */
+	"displayed": false,
+
+	/**
+	 * Flag to indicate if the form is current in a processing state (true) or not (false)
+	 *  @type string
+	 *  @default null
+	 */
+	"processing": false,
+
+	/**
+	 * Developer provided identifier for the elements to be edited (i.e. at
+	 * `dt-type row-selector` to select rows to edit or delete.
+	 *  @type array
+	 *  @default null
+	 */
+	"modifier": null,
+
+	/**
+	 * The current form action - 'create', 'edit' or 'remove'. If no current action then
+	 * it is set to null.
+	 *  @type string
+	 *  @default null
+	 */
+	"action": null,
+
+	/**
+	 * JSON property from which to read / write the row's ID property.
+	 *  @type string
+	 *  @default null
+	 */
+	"idSrc": null
+};
+
+
+
+/**
+ * Model of the buttons that can be used with the {@link Editor#buttons}
+ * method for creating and displaying buttons (also the {@link Editor#button}
+ * argument option for the {@link Editor#create}, {@link Editor#edit} and 
+ * {@link Editor#remove} methods). Although you don't need to extend this object,
+ * it is available for reference to show the options available.
+ *  @namespace
+ */
+Editor.models.button = {
+	/**
+	 * The text to put into the button. This can be any HTML string you wish as 
+	 * it will be rendered as HTML (allowing images etc to be shown inside the
+	 * button).
+	 *  @type string
+	 *  @default null
+	 */
+	"label": null,
+
+	/**
+	 * Callback function which the button is activated. For example for a 'submit' 
+	 * button you would call the {@link Editor#submit} API method, while for a cancel button
+	 * you would call the {@link Editor#close} API method. Note that the function is executed 
+	 * in the scope of the Editor instance, so you can call the Editor's API methods 
+	 * using the `this` keyword.
+	 *  @type function
+	 *  @default null
+	 */
+	"fn": null,
+
+	/**
+	 * The CSS class(es) to apply to the button which can be useful for styling buttons 
+	 * which preform different functions each with a distinctive visual appearance.
+	 *  @type string
+	 *  @default null
+	 */
+	"className": null
+};
+
+
+
+/**
+ * This is really an internal namespace
+ *
+ *  @namespace
+ */
+Editor.models.formOptions = {
+	/**
+	 * Action to take when the return key is pressed when focused in a form
+	 * element. Cam be `submit` or `none`. Could also be `blur` or `close`, but
+	 * why would you ever want that. Replaces `submitOnReturn` from 1.4.
+	 * 
+	 * @type string
+	 */
+	onReturn: 'submit',
+
+	/**
+	 * Action to take on blur. Can be `close`, `submit` or `none`. Replaces
+	 * `submitOnBlur` from 1.4
+	 * 
+	 * @type string
+	 */
+	onBlur: 'close',
+
+	/**
+	 * Action to take when the lightbox background is clicked - can be `close`,
+	 * `submit`, `blur` or `none`. Replaces `blurOnBackground` from 1.4
+	 * 
+	 * @type string
+	 */
+	onBackground: 'blur',
+
+	/**
+	 * Close for at the end of the Ajax request. Can be `close` or `none`.
+	 * Replaces `closeOnComplete` from 1.4.
+	 * 
+	 * @type string
+	 */
+	onComplete: 'close',
+
+	/**
+	 * Action to take when the `esc` key is pressed when focused in the form -
+	 * can be `close`, `submit`, `blur` or `none`
+	 * 
+	 * @type string
+	 */
+	onEsc: 'close',
+
+	/**
+	 * Data to submit to the server when submitting a form. If an option is
+	 * selected that results in no data being submitted, the Ajax request will
+	 * not be made Can be `all`, `changed` or `allIfChanged`. This effects the
+	 * edit action only.
+	 *
+	 * @type string
+	 */
+	submit: 'all',
+
+	/**
+	 * Field identifier to focus on
+	 * 
+	 * @type null|integer|string
+	 */
+	focus: 0,
+
+	/**
+	 * Buttons to show in the form
+	 * 
+	 * @type string|boolean|array|object
+	 */
+	buttons: true,
+
+	/**
+	 * Form title
+	 * 
+	 * @type string|boolean
+	 */
+	title: true,
+
+	/**
+	 * Form message
+	 * 
+	 * @type string|boolean
+	 */
+	message: true,
+
+	/**
+	 * DataTables redraw option
+	 * 
+	 * @type string|boolean
+	 */
+	drawType: false
+};
+
+
+/*
+ * Display controllers
+ */
+
+/**
+ * Display controllers. See {@link Editor.models.displayController} for
+ * full information about the display controller options for Editor. The display
+ * controllers given in this object can be utilised by specifying the
+ * {@link Editor.defaults.display} option.
+ *  @namespace
+ */
+Editor.display = {};
+
+
+(function(window, document, $, DataTable) {
+
+
+var self;
+
+Editor.display.lightbox = $.extend( true, {}, Editor.models.displayController, {
+	/*
+	 * API methods
+	 */
+	"init": function ( dte ) {
+		self._init();
+		return self;
+	},
+
+	"open": function ( dte, append, callback ) {
+		if ( self._shown ) {
+			if ( callback ) {
+				callback();
+			}
+			return;
+		}
+
+		self._dte = dte;
+
+		var content = self._dom.content;
+		content.children().detach();
+		content
+			.append( append )
+			.append( self._dom.close );
+
+		self._shown = true;
+		self._show( callback );
+	},
+
+	"close": function ( dte, callback ) {
+		if ( !self._shown ) {
+			if ( callback ) {
+				callback();
+			}
+			return;
+		}
+
+		self._dte = dte;
+		self._hide( callback );
+
+		self._shown = false;
+	},
+
+	node: function ( dte ) {
+		return self._dom.wrapper[0];
+	},
+
+
+	/*
+	 * Private methods
+	 */
+	"_init": function () {
+		if ( self._ready ) {
+			return;
+		}
+
+		var dom = self._dom;
+		dom.content = $('div.DTED_Lightbox_Content', self._dom.wrapper);
+
+		dom.wrapper.css( 'opacity', 0 );
+		dom.background.css( 'opacity', 0 );
+	},
+
+
+	"_show": function ( callback ) {
+		var that = this;
+		var dom = self._dom;
+
+		// Mobiles have very poor position fixed abilities, so we need to know
+		// when using mobile A media query isn't good enough
+		if ( window.orientation !== undefined ) {
+			$('body').addClass( 'DTED_Lightbox_Mobile' );
+		}
+
+		// Adjust size for the content
+		dom.content.css( 'height', 'auto' );
+		dom.wrapper.css( {
+			top: -self.conf.offsetAni
+		} );
+
+		$('body')
+			.append( self._dom.background )
+			.append( self._dom.wrapper );
+
+		self._heightCalc();
+
+		dom.wrapper
+			.stop()
+				.animate( {
+				opacity: 1,
+				top: 0
+			}, callback );
+
+		dom.background
+			.stop()
+			.animate( {
+				opacity: 1
+			} );
+
+		// Event handlers - assign on show (and unbind on hide) rather than init
+		// since we might need to refer to different editor instances - 12563
+		dom.close.bind( 'click.DTED_Lightbox', function (e) {
+			self._dte.close();
+		} );
+
+		dom.background.bind( 'click.DTED_Lightbox', function (e) {
+			self._dte.background();
+		} );
+
+		$('div.DTED_Lightbox_Content_Wrapper', dom.wrapper).bind( 'click.DTED_Lightbox', function (e) {
+			if ( $(e.target).hasClass('DTED_Lightbox_Content_Wrapper') ) {
+				self._dte.background();
+			}
+		} );
+
+		$(window).bind( 'resize.DTED_Lightbox', function () {
+			self._heightCalc();
+		} );
+
+		self._scrollTop = $('body').scrollTop();
+
+		// For smaller screens we need to hide the other elements in the
+		// document since iOS and Android both mess up display:fixed when
+		// the virtual keyboard is shown
+		if ( window.orientation !== undefined ) {
+			var kids = $('body').children().not( dom.background ).not( dom.wrapper );
+			$('body').append( '<div class="DTED_Lightbox_Shown"/>' );
+			$('div.DTED_Lightbox_Shown').append( kids );
+		}
+	},
+
+
+	"_heightCalc": function () {
+		// Set the max-height for the form content
+		var dom = self._dom;
+		var maxHeight = $(window).height() - (self.conf.windowPadding*2) -
+			$('div.DTE_Header', dom.wrapper).outerHeight() -
+			$('div.DTE_Footer', dom.wrapper).outerHeight();
+
+		$('div.DTE_Body_Content', dom.wrapper).css(
+			'maxHeight',
+			maxHeight
+		);
+	},
+
+
+	"_hide": function ( callback ) {
+		var dom = self._dom;
+
+		if ( !callback ) {
+			callback = function () {};
+		}
+
+		if ( window.orientation !== undefined  ) {
+			var show = $('div.DTED_Lightbox_Shown');
+			show.children().appendTo('body');
+			show.remove();
+		}
+
+		// Restore scroll state
+		$('body')
+			.removeClass( 'DTED_Lightbox_Mobile' )
+			.scrollTop( self._scrollTop );
+
+		dom.wrapper
+			.stop()
+			.animate( {
+				opacity: 0,
+				top: self.conf.offsetAni
+			}, function () {
+				$(this).detach();
+				callback();
+			} );
+
+		dom.background
+			.stop()
+			.animate( {
+				opacity: 0
+			}, function () {
+				$(this).detach();
+			} );
+
+		// Event handlers
+		dom.close.unbind( 'click.DTED_Lightbox' );
+		dom.background.unbind( 'click.DTED_Lightbox' );
+		$('div.DTED_Lightbox_Content_Wrapper', dom.wrapper).unbind( 'click.DTED_Lightbox' );
+		$(window).unbind( 'resize.DTED_Lightbox' );
+	},
+
+
+	/*
+	 * Private properties
+	 */
+	"_dte": null,
+	"_ready": false,
+	"_shown": false,
+	"_dom": {
+		"wrapper": $(
+			'<div class="DTED DTED_Lightbox_Wrapper">'+
+				'<div class="DTED_Lightbox_Container">'+
+					'<div class="DTED_Lightbox_Content_Wrapper">'+
+						'<div class="DTED_Lightbox_Content">'+
+						'</div>'+
+					'</div>'+
+				'</div>'+
+			'</div>'
+		),
+
+		"background": $(
+			'<div class="DTED_Lightbox_Background"><div/></div>'
+		),
+
+		"close": $(
+			'<div class="DTED_Lightbox_Close"></div>'
+		),
+
+		"content": null
+	}
+} );
+
+self = Editor.display.lightbox;
+
+self.conf = {
+	"offsetAni": 25,
+	"windowPadding": 25
+};
+
+
+}(window, document, jQuery, jQuery.fn.dataTable));
+
+
+
+(function(window, document, $, DataTable) {
+
+
+var self;
+
+Editor.display.envelope = $.extend( true, {}, Editor.models.displayController, {
+	/*
+	 * API methods
+	 */
+	"init": function ( dte ) {
+		self._dte = dte;
+		self._init();
+		return self;
+	},
+
+
+	"open": function ( dte, append, callback ) {
+		self._dte = dte;
+		$(self._dom.content).children().detach();
+		self._dom.content.appendChild( append );
+		self._dom.content.appendChild( self._dom.close );
+
+		self._show( callback );
+	},
+
+
+	"close": function ( dte, callback ) {
+		self._dte = dte;
+		self._hide( callback );
+	},
+
+	node: function ( dte ) {
+		return self._dom.wrapper[0];
+	},
+
+
+	/*
+	 * Private methods
+	 */
+	"_init": function () {
+		if ( self._ready ) {
+			return;
+		}
+
+		self._dom.content = $('div.DTED_Envelope_Container', self._dom.wrapper)[0];
+
+		document.body.appendChild( self._dom.background );
+		document.body.appendChild( self._dom.wrapper );
+
+		// For IE6-8 we need to make it a block element to read the opacity...
+		self._dom.background.style.visbility = 'hidden';
+		self._dom.background.style.display = 'block';
+		self._cssBackgroundOpacity = $(self._dom.background).css('opacity');
+		self._dom.background.style.display = 'none';
+		self._dom.background.style.visbility = 'visible';
+	},
+
+
+	"_show": function ( callback ) {
+		var that = this;
+		var formHeight;
+
+		if ( !callback ) {
+			callback = function () {};
+		}
+
+		// Adjust size for the content
+		self._dom.content.style.height = 'auto';
+
+		var style = self._dom.wrapper.style;
+		style.opacity = 0;
+		style.display = 'block';
+
+		var targetRow = self._findAttachRow();
+		var height = self._heightCalc();
+		var width = targetRow.offsetWidth;
+
+		style.display = 'none';
+		style.opacity = 1;
+
+		// Prep the display
+		self._dom.wrapper.style.width = width+"px";
+		self._dom.wrapper.style.marginLeft = -(width/2)+"px";
+		self._dom.wrapper.style.top = ($(targetRow).offset().top + targetRow.offsetHeight)+"px";
+		self._dom.content.style.top = ((-1 * height) - 20)+"px";
+
+		// Start animating in the background
+		self._dom.background.style.opacity = 0;
+		self._dom.background.style.display = 'block';
+		$(self._dom.background).animate( {
+			'opacity': self._cssBackgroundOpacity
+		}, 'normal' );
+
+		// Animate in the display
+		$(self._dom.wrapper).fadeIn();
+
+		// Slide the slider down to 'open' the view
+		if ( self.conf.windowScroll ) {
+			// Scroll the window so we can see the editor first
+			$('html,body').animate( {
+				"scrollTop": $(targetRow).offset().top + targetRow.offsetHeight - self.conf.windowPadding
+			}, function () {
+				// Now open the editor
+				$(self._dom.content).animate( {
+					"top": 0
+				}, 600, callback );
+			} );
+		}
+		else {
+			// Just open the editor without moving the document position
+			$(self._dom.content).animate( {
+				"top": 0
+			}, 600, callback );
+		}
+
+		// Event handlers
+		$(self._dom.close).bind( 'click.DTED_Envelope', function (e) {
+			self._dte.close();
+		} );
+
+		$(self._dom.background).bind( 'click.DTED_Envelope', function (e) {
+			self._dte.background();
+		} );
+
+		$('div.DTED_Lightbox_Content_Wrapper', self._dom.wrapper).bind( 'click.DTED_Envelope', function (e) {
+			if ( $(e.target).hasClass('DTED_Envelope_Content_Wrapper') ) {
+				self._dte.background();
+			}
+		} );
+
+		$(window).bind( 'resize.DTED_Envelope', function () {
+			self._heightCalc();
+		} );
+	},
+
+
+	"_heightCalc": function () {
+		var formHeight;
+
+		formHeight = self.conf.heightCalc ?
+			self.conf.heightCalc( self._dom.wrapper ) :
+			$(self._dom.content).children().height();
+
+		// Set the max-height for the form content
+		var maxHeight = $(window).height() - (self.conf.windowPadding*2) -
+			$('div.DTE_Header', self._dom.wrapper).outerHeight() -
+			$('div.DTE_Footer', self._dom.wrapper).outerHeight();
+
+		$('div.DTE_Body_Content', self._dom.wrapper).css('maxHeight', maxHeight);
+
+		return $(self._dte.dom.wrapper).outerHeight();
+	},
+
+
+	"_hide": function ( callback ) {
+		if ( !callback ) {
+			callback = function () {};
+		}
+
+		$(self._dom.content).animate( {
+			"top": -(self._dom.content.offsetHeight+50)
+		}, 600, function () {
+			$([self._dom.wrapper, self._dom.background]).fadeOut( 'normal', callback );
+		} );
+
+		// Event handlers
+		$(self._dom.close).unbind( 'click.DTED_Lightbox' );
+		$(self._dom.background).unbind( 'click.DTED_Lightbox' );
+		$('div.DTED_Lightbox_Content_Wrapper', self._dom.wrapper).unbind( 'click.DTED_Lightbox' );
+		$(window).unbind( 'resize.DTED_Lightbox' );
+	},
+
+
+	"_findAttachRow": function () {
+		var dt = $(self._dte.s.table).DataTable();
+
+		// Figure out where we want to put the form display
+		if ( self.conf.attach === 'head' ) {
+			return dt.table().header();
+		}
+		else if ( self._dte.s.action === 'create' ) {
+			return dt.table().header();
+		}
+		else {
+			return dt.row( self._dte.s.modifier ).node();
+		}
+	},
+
+
+	/*
+	 * Private properties
+	 */
+	"_dte": null,
+	"_ready": false,
+	"_cssBackgroundOpacity": 1, // read from the CSS dynamically, but stored for future reference
+
+
+	"_dom": {
+		"wrapper": $(
+			'<div class="DTED DTED_Envelope_Wrapper">'+
+				'<div class="DTED_Envelope_ShadowLeft"></div>'+
+				'<div class="DTED_Envelope_ShadowRight"></div>'+
+				'<div class="DTED_Envelope_Container"></div>'+
+			'</div>'
+		)[0],
+
+		"background": $(
+			'<div class="DTED_Envelope_Background"><div/></div>'
+		)[0],
+
+		"close": $(
+			'<div class="DTED_Envelope_Close">&times;</div>'
+		)[0],
+
+		"content": null
+	}
+} );
+
+
+// Assign to 'self' for easy referencing of our own object!
+self = Editor.display.envelope;
+
+
+// Configuration object - can be accessed globally using 
+// $.fn.Editor.display.envelope.conf (!)
+self.conf = {
+	"windowPadding": 50,
+	"heightCalc": null,
+	"attach": "row",
+	"windowScroll": true
+};
+
+
+}(window, document, jQuery, jQuery.fn.dataTable));
+
+
+/*
+ * Prototype includes
+ */
+
+
+/**
+ * Add a new field to the from. This is the method that is called automatically when
+ * fields are given in the initialisation objects as {@link Editor.defaults.fields}.
+ *  @memberOf Editor
+ *  @param {object|array} field The object that describes the field (the full object is
+ *    described by {@link Editor.model.field}. Note that multiple fields can
+ *    be given by passing in an array of field definitions.
+ */
+Editor.prototype.add = function ( cfg )
+{
+	// Allow multiple fields to be added at the same time
+	if ( $.isArray( cfg ) ) {
+		for ( var i=0, iLen=cfg.length ; i<iLen ; i++ ) {
+			this.add( cfg[i] );
+		}
+	}
+	else {
+		var name = cfg.name;
+
+		if ( name === undefined ) {
+			throw "Error adding field. The field requires a `name` option";
+		}
+
+		if ( this.s.fields[ name ] ) {
+			throw "Error adding field '"+name+"'. A field already exists with this name";
+		}
+
+		// Allow the data source to add / modify the field properties
+		// Dev: would this be better as an event `preAddField`? And have the
+		// data sources init only once, but can listen for such events? More
+		// complexity, but probably more flexible...
+		this._dataSource( 'initField', cfg );
+
+		this.s.fields[ name ] = new Editor.Field( cfg, this.classes.field, this );
+		this.s.order.push( name );
+	}
+
+	this._displayReorder( this.order() );
+
+	return this;
+};
+
+
+/**
+ * Perform background activation tasks.
+ * 
+ * This is NOT publicly documented on the Editor web-site, but rather can be
+ * used by display controller plug-ins to perform the required task on
+ * background activation.
+ *
+ * @return {Editor} Editor instance, for chaining
+ */
+Editor.prototype.background = function ()
+{
+	var onBackground = this.s.editOpts.onBackground;
+
+	if ( onBackground === 'blur' ) {
+		this.blur();
+	}
+	else if ( onBackground === 'close' ) {
+		this.close();
+	}
+	else if ( onBackground === 'submit' ) {
+		this.submit();
+	}
+
+	return this;
+};
+
+
+/**
+ * Blur the currently displayed editor.
+ *
+ * A blur is different from a `close()` in that it might cause either a close or
+ * the form to be submitted. A typical example of a blur would be clicking on
+ * the background of the bubble or main editing forms - i.e. it might be a
+ * close, or it might submit depending upon the configuration, while a click on
+ * the close box is a very definite close.
+ *
+ * @return {Editor} Editor instance, for chaining
+ */
+Editor.prototype.blur = function ()
+{
+	this._blur();
+
+	return this;
+};
+
+
+
+Editor.prototype.bubble = function ( cells, fieldNames, show, opts )
+{
+	var that = this;
+
+	// Some other field in inline edit mode?
+	if ( this._tidy( function () { that.bubble( cells, fieldNames, opts ); } ) ) {
+		return this;
+	}
+
+	// Argument shifting
+	if ( $.isPlainObject( fieldNames ) ) {
+		opts = fieldNames;
+		fieldNames = undefined;
+		show = true;
+	}
+	else if ( typeof fieldNames === 'boolean' ) {
+		show = fieldNames;
+		fieldNames = undefined;
+		opts = undefined;
+	}
+
+	if ( $.isPlainObject( show ) ) {
+		opts = show;
+		show = true;
+	}
+
+	if ( show === undefined ) {
+		show = true;
+	}
+
+	opts = $.extend( {}, this.s.formOptions.bubble, opts );
+
+	var editFields = this._dataSource( 'individual', cells, fieldNames );
+
+	this._edit( cells, editFields, 'bubble' );
+
+	var ret = this._preopen( 'bubble' );
+	if ( ! ret ) {
+		return this;
+	}
+
+	// Keep the bubble in position on resize
+	var namespace = this._formOptions( opts );
+	$(window).on( 'resize.'+namespace, function () {
+		that.bubblePosition();
+	} );
+
+	// Store the nodes that are being used so the bubble can be positioned
+	var nodes = [];
+	this.s.bubbleNodes = nodes.concat.apply( nodes, _pluck( editFields, 'attach' ) );
+
+	// Create container display
+	var classes = this.classes.bubble;
+	var background = $( '<div class="'+classes.bg+'"><div/></div>' );
+	var container = $(
+			'<div class="'+classes.wrapper+'">'+
+				'<div class="'+classes.liner+'">'+
+					'<div class="'+classes.table+'">'+
+						'<div class="'+classes.close+'" />'+
+					'</div>'+
+				'</div>'+
+				'<div class="'+classes.pointer+'" />'+
+			'</div>'
+		);
+
+	if ( show ) {
+		container.appendTo( 'body' );
+		background.appendTo( 'body' );
+	}
+
+	var liner = container.children().eq(0);
+	var table = liner.children();
+	var close = table.children();
+	liner.append( this.dom.formError );
+	table.prepend( this.dom.form );
+
+	if ( opts.message ) {
+		liner.prepend( this.dom.formInfo );
+	}
+
+	if ( opts.title ) {
+		liner.prepend( this.dom.header );
+	}
+
+	if ( opts.buttons ) {
+		table.append( this.dom.buttons );
+	}
+
+	var pair = $().add( container ).add( background );
+	this._closeReg( function ( submitComplete ) {
+		pair.animate(
+			{ opacity: 0 },
+			function () {
+				pair.detach();
+
+				$(window).off( 'resize.'+namespace );
+
+				// Clear error messages "offline"
+				that._clearDynamicInfo();
+			}
+		);
+	} );
+
+	// Close event handlers
+	background.click( function () {
+		that.blur();
+	} );
+
+	close.click( function () {
+		that._close();
+	} );
+
+	this.bubblePosition();
+
+	pair.animate( { opacity: 1 } );
+
+	this._focus( this.s.includeFields, opts.focus );
+	this._postopen( 'bubble' );
+
+	return this;
+};
+
+
+/**
+ * Reposition the editing bubble (`bubble()`) when it is visible. This can be
+ * used to update the bubble position if other elements on the page change
+ * position. Editor will automatically call this method on window resize.
+ *
+ * @return {Editor} Editor instance, for chaining
+ */
+Editor.prototype.bubblePosition = function ()
+{
+	var
+		wrapper = $('div.DTE_Bubble'),
+		liner = $('div.DTE_Bubble_Liner'),
+		nodes = this.s.bubbleNodes;
+
+	// Average the node positions to insert the container
+	var position = { top: 0, left: 0, right: 0, bottom: 0 };
+
+	$.each( nodes, function (i, node) {
+		var pos = $(node).offset();
+
+		position.top += pos.top;
+		position.left += pos.left;
+		position.right += pos.left + node.offsetWidth;
+		position.bottom += pos.top + node.offsetHeight;
+	} );
+
+	position.top /= nodes.length;
+	position.left /= nodes.length;
+	position.right /= nodes.length;
+	position.bottom /= nodes.length;
+
+	var
+		top = position.top,
+		left = (position.left + position.right) / 2,
+		width = liner.outerWidth(),
+		visLeft = left - (width / 2),
+		visRight = visLeft + width,
+		docWidth = $(window).width(),
+		padding = 15,
+		classes = this.classes.bubble;
+
+	wrapper.css( {
+		top: top,
+		left: left
+	} );
+
+	// Correct for overflow from the top of the document by positioning below
+	// the field if needed
+	if ( liner.length && liner.offset().top < 0 ) {
+		wrapper
+			.css( 'top', position.bottom )
+			.addClass( 'below' );
+	}
+	else {
+		wrapper.removeClass( 'below' );
+	}
+
+	// Attempt to correct for overflow to the right of the document
+	if ( visRight+padding > docWidth ) {
+		var diff = visRight - docWidth;
+
+		// If left overflowing, that takes priority
+		liner.css( 'left', visLeft < padding ?
+			-(visLeft-padding) :
+			-(diff+padding)
+		);
+	}
+	else {
+		// Correct overflow to the left
+		liner.css( 'left', visLeft < padding ? -(visLeft-padding) : 0 );
+	}
+
+	return this;
+};
+
+
+/**
+ * Setup the buttons that will be shown in the footer of the form - calling this
+ * method will replace any buttons which are currently shown in the form.
+ *  @param {array|object} buttons A single button definition to add to the form or
+ *    an array of objects with the button definitions to add more than one button.
+ *    The options for the button definitions are fully defined by the
+ *    {@link Editor.models.button} object.
+ *  @param {string} buttons.label The text to put into the button. This can be any
+ *    HTML string you wish as it will be rendered as HTML (allowing images etc to 
+ *    be shown inside the button).
+ *  @param {function} [buttons.fn] Callback function which the button is activated.
+ *    For example for a 'submit' button you would call the {@link Editor#submit} method,
+ *    while for a cancel button you would call the {@link Editor#close} method. Note that
+ *    the function is executed in the scope of the Editor instance, so you can call
+ *    the Editor's API methods using the `this` keyword.
+ *  @param {string} [buttons.className] The CSS class(es) to apply to the button
+ *    which can be useful for styling buttons which preform different functions
+ *    each with a distinctive visual appearance.
+ *  @return {Editor} Editor instance, for chaining
+ */
+Editor.prototype.buttons = function ( buttons )
+{
+	var that = this;
+
+	if ( buttons === '_basic' ) {
+		// Special string to create a basic button - undocumented
+		buttons = [ {
+			label: this.i18n[ this.s.action ].submit,
+			fn: function () { this.submit(); }
+		} ];
+	}
+	else if ( ! $.isArray( buttons ) ) {
+		// Allow a single button to be passed in as an object with an array
+		buttons = [ buttons ];
+	}
+
+	$(this.dom.buttons).empty();
+
+	$.each( buttons, function ( i, btn ) {
+		if ( typeof btn === 'string' ) {
+			btn = {
+				label: btn,
+				fn: function () { this.submit(); }
+			};
+		}
+
+		$( '<button/>', {
+				'class': that.classes.form.button+(btn.className ? ' '+btn.className : '')
+			} )
+			.html( typeof btn.label === 'function' ?
+				btn.label( that ) :
+				btn.label || ''
+			)
+			.attr( 'tabindex', 0 )
+			.on( 'keyup', function (e) {
+				if ( e.keyCode === 13 && btn.fn ) {
+					btn.fn.call( that );
+				}
+			} )
+			.on( 'keypress', function (e) {
+				// Stop the browser activating the click event - if we don't
+				// have this and the Ajax return is fast, the keyup in
+				// `_formOptions()` might trigger another submit
+				if ( e.keyCode === 13 ) {
+					e.preventDefault();
+				}
+			} )
+			.on( 'click', function (e) {
+				e.preventDefault();
+
+				if ( btn.fn ) {
+					btn.fn.call( that );
+				}
+			} )
+			.appendTo( that.dom.buttons );
+	} );
+
+	return this;
+};
+
+
+/**
+ * Remove fields from the form (fields are those that have been added using the
+ * {@link Editor#add} method or the `fields` initialisation option). A single,
+ * multiple or all fields can be removed at a time based on the passed parameter.
+ * Fields are identified by the `name` property that was given to each field
+ * when added to the form.
+ *  @param {string|array} [fieldName] Field or fields to remove from the form. If
+ *    not given then all fields are removed from the form. If given as a string
+ *    then the single matching field will be removed. If given as an array of
+ *    strings, then all matching fields will be removed.
+ *  @return {Editor} Editor instance, for chaining
+ *
+ *  @example
+ *    // Clear the form of current fields and then add a new field 
+ *    // before displaying a 'create' display
+ *    editor.clear();
+ *    editor.add( {
+ *      "label": "User name",
+ *      "name": "username"
+ *    } );
+ *    editor.create( "Create user" );
+ *
+ *  @example
+ *    // Remove an individual field
+ *    editor.clear( "username" );
+ *
+ *  @example
+ *    // Remove multiple fields
+ *    editor.clear( [ "first_name", "last_name" ] );
+ */
+Editor.prototype.clear = function ( fieldName )
+{
+	var that = this;
+	var fields = this.s.fields;
+
+	if ( typeof fieldName === 'string' ) {
+		// Remove an individual form element
+		fields[ fieldName ].destroy();
+		delete fields[ fieldName ];
+
+		var orderIdx = $.inArray( fieldName, this.s.order );
+		this.s.order.splice( orderIdx, 1 );
+	}
+	else {
+		$.each( this._fieldNames( fieldName ), function (i, name) {
+			that.clear( name );
+		} );
+	}
+
+	return this;
+};
+
+
+/**
+ * Close the form display.
+ * 
+ * Note that `close()` will close any of the three Editor form types (main,
+ * bubble and inline).
+ *
+ *  @return {Editor} Editor instance, for chaining
+ */
+Editor.prototype.close = function ()
+{
+	this._close( false );
+
+	return this;
+};
+
+
+/**
+ * Create a new record - show the form that allows the user to enter information
+ * for a new row and then subsequently submit that data.
+ *  @param {boolean} [show=true] Show the form or not.
+ * 
+ *  @example
+ *    // Show the create form with a submit button
+ *    editor
+ *      .title( 'Add new record' )
+ *      .buttons( {
+ *        "label": "Save",
+ *        "fn": function () {
+ *          this.submit();
+ *        }
+ *      } )
+ *      .create();
+ * 
+ *  @example
+ *    // Don't show the form and automatically submit it after programatically 
+ *    // setting the values of fields (and using the field defaults)
+ *    editor
+ *      create()
+ *      set( 'name',   'Test user' )
+ *      set( 'access', 'Read only' )
+ *      submit();
+ */
+Editor.prototype.create = function ( arg1, arg2, arg3, arg4 )
+{
+	var that = this;
+	var fields = this.s.fields;
+	var count = 1;
+
+	// Some other field in inline edit mode?
+	if ( this._tidy( function () { that.create( arg1, arg2, arg3, arg4 ); } ) ) {
+		return this;
+	}
+
+	// Multi-row creation support (only supported by the 1.3+ style of calling
+	// this method, so a max of three arguments
+	if ( typeof arg1 === 'number' ) {
+		count = arg1;
+		arg1 = arg2;
+		arg2 = arg3;
+	}
+
+	// Set up the edit fields for submission
+	this.s.editFields = {};
+	for ( var i=0 ; i<count ; i++ ) {
+		this.s.editFields[ i ] = {
+			fields: this.s.fields
+		};
+	}
+
+	var argOpts = this._crudArgs( arg1, arg2, arg3, arg4 );
+
+	this.s.action = "create";
+	this.s.modifier = null;
+	this.dom.form.style.display = 'block';
+
+	this._actionClass();
+
+	// Allow all fields to be displayed for the create form
+	this._displayReorder( this.fields() );
+
+	// Set the default for the fields
+	$.each( fields, function ( name, field ) {
+		field.multiReset();
+		field.set( field.def() );
+	} );
+
+	this._event( 'initCreate' );
+	this._assembleMain();
+	this._formOptions( argOpts.opts );
+
+	argOpts.maybeOpen();
+
+	return this;
+};
+
+/**
+ * Create a dependent link between two or more fields. This method is used to
+ * listen for a change in a field's value which will trigger updating of the
+ * form. This update can consist of updating an options list, changing values
+ * or making fields hidden / visible.
+ *
+ * @param {string} parent The name of the field to listen to changes from
+ * @param {string|object|function} url Callback definition. This can be:
+ *   * A string, which will be used as a URL to submit the request for update to
+ *   * An object, which is used to extend an Ajax object for the request. The
+ *     `url` parameter must be specified.
+ *   * A function, which is used as a callback, allowing non-ajax updates.
+ * @return {Editor} Editor instance, for chaining
+ */
+Editor.prototype.dependent = function ( parent, url, opts ) {
+	if ( $.isArray( parent ) ) {
+		for ( var i=0, ien=parent.length ; i<ien ; i++ ) {
+			this.dependent( parent[i], url, opts );
+		}
+
+		return this;
+	}
+
+	var that = this;
+	var field = this.field( parent );
+	var ajaxOpts = {
+		type: 'POST',
+		dataType: 'json'
+	};
+
+	opts = $.extend( {
+		event: 'change',
+		data: null,
+		preUpdate: null,
+		postUpdate: null
+	}, opts );
+
+	var update = function ( json ) {
+		if ( opts.preUpdate ) {
+			opts.preUpdate( json );
+		}
+
+		// Field specific
+		$.each( {
+			labels:   'label',
+			options:  'update',
+			values:   'val',
+			messages: 'message',
+			errors:   'error'
+		}, function ( jsonProp, fieldFn ) {
+			if ( json[ jsonProp ] ) {
+				$.each( json[ jsonProp ], function ( field, val ) {
+					that.field( field )[ fieldFn ]( val );
+				} );
+			}
+		} );
+
+		// Form level
+		$.each( [ 'hide', 'show', 'enable', 'disable' ], function ( i, key ) {
+			if ( json[ key ] ) {
+				that[ key ]( json[ key ] );
+			}
+		} );
+
+		if ( opts.postUpdate ) {
+			opts.postUpdate( json );
+		}
+	};
+
+	field.input().on( opts.event, function () {
+		var data = {};
+		data.rows = that.s.editFields ?
+			_pluck( that.s.editFields, 'data' ) :
+			null;
+		data.row = data.rows ?
+			data.rows[0] :
+			null;
+		data.values = that.val();
+
+		if ( opts.data ) {
+			var ret = opts.data( data );
+
+			if ( ret ) {
+				opts.data = ret;
+			}
+		}
+
+		if ( typeof url === 'function' ) {
+			var o = url( field.val(), data, update );
+
+			if ( o ) {
+				update( o );
+			}
+		}
+		else {
+			if ( $.isPlainObject( url ) ) {
+				$.extend( ajaxOpts, url );
+			}
+			else {
+				ajaxOpts.url = url;
+			}
+
+			$.ajax( $.extend( ajaxOpts, {
+				url: url,
+				data: data,
+				success: update
+			} ) );
+		}
+	} );
+
+	return this;
+};
+
+
+/**
+ * Disable one or more field inputs, disallowing subsequent user interaction with the 
+ * fields until they are re-enabled.
+ *  @param {string|array} name The field name (from the `name` parameter given when
+ *   originally setting up the field) to disable, or an array of field names to disable
+ *   multiple fields with a single call.
+ *  @return {Editor} Editor instance, for chaining
+ * 
+ *  @example
+ *    // Show a 'create' record form, but with a field disabled
+ *    editor.disable( 'account_type' );
+ *    editor.create( 'Add new user', {
+ *      "label": "Save",
+ *      "fn": function () { this.submit(); }
+ *    } );
+ * 
+ *  @example
+ *    // Disable multiple fields by using an array of field names
+ *    editor.disable( ['account_type', 'access_level'] );
+ */
+Editor.prototype.disable = function ( name )
+{
+	var fields = this.s.fields;
+
+	$.each( this._fieldNames( name ), function ( i, n ) {
+		fields[ n ].disable();
+	} );
+
+	return this;
+};
+
+
+/**
+ * Display, or remove the editing form from the display
+ *  @param {boolean} show Show (`true`) or hide (`false`)
+ *  @return {Editor} Editor instance, for chaining
+ */
+Editor.prototype.display = function ( show )
+{
+	if ( show === undefined ) {
+		return this.s.displayed;
+	}
+	return this[ show ? 'open' : 'close' ]();
+};
+
+
+/**
+ * Fields which are currently displayed
+ *  @return {string[]} Field names that are shown
+ */
+Editor.prototype.displayed = function ()
+{
+	return $.map( this.s.fields, function ( field, name ) {
+		return field.displayed() ? name : null;
+	} );
+};
+
+
+/**
+ * Get display controller node
+ *
+ *  @return {node} Display controller host element
+ */
+Editor.prototype.displayNode = function ()
+{
+	return this.s.displayController.node( this );
+};
+
+
+/**
+ * Edit a record - show the form, pre-populated with the data that is in the given 
+ * DataTables row, that allows the user to enter information for the row to be modified
+ * and then subsequently submit that data.
+ *  @param {node} items The TR element from the DataTable that is to be edited
+ *  @param {boolean} [show=true] Show the form or not.
+ *  @return {Editor} Editor instance, for chaining
+ * 
+ *  @example
+ *    // Show the edit form for the first row in the DataTable with a submit button
+ *    editor.edit( $('#example tbody tr:eq(0)')[0], 'Edit record', {
+ *      "label": "Update",
+ *      "fn": function () { this.submit(); }
+ *    } );
+ *
+ *  @example
+ *    // Use the title and buttons API methods to show an edit form (this provides
+ *    // the same result as example above, but is a different way of achieving it
+ *    editor.title( 'Edit record' );
+ *    editor.buttons( {
+ *      "label": "Update",
+ *      "fn": function () { this.submit(); }
+ *    } );
+ *    editor.edit( $('#example tbody tr:eq(0)')[0] );
+ * 
+ *  @example
+ *    // Automatically submit an edit without showing the user the form
+ *    editor.edit( TRnode, null, null, false );
+ *    editor.set( 'name', 'Updated name' );
+ *    editor.set( 'access', 'Read only' );
+ *    editor.submit();
+ */
+Editor.prototype.edit = function ( items, arg1, arg2, arg3, arg4 )
+{
+	var that = this;
+
+	// Some other field in inline edit mode?
+	if ( this._tidy( function () { that.edit( items, arg1, arg2, arg3, arg4 ); } ) ) {
+		return this;
+	}
+
+	var fields = this.s.fields;
+	var argOpts = this._crudArgs( arg1, arg2, arg3, arg4 );
+
+	this._edit( items, this._dataSource( 'fields', items ), 'main' );
+	this._assembleMain();
+	this._formOptions( argOpts.opts );
+
+	argOpts.maybeOpen();
+
+	return this;
+};
+
+
+/**
+ * Enable one or more field inputs, restoring user interaction with the fields.
+ *  @param {string|array} name The field name (from the `name` parameter given when
+ *   originally setting up the field) to enable, or an array of field names to enable
+ *   multiple fields with a single call.
+ *  @return {Editor} Editor instance, for chaining
+ * 
+ *  @example
+ *    // Show a 'create' form with buttons which will enable and disable certain fields
+ *    editor.create( 'Add new user', [
+ *      {
+ *        "label": "User name only",
+ *        "fn": function () {
+ *          this.enable('username');
+ *          this.disable( ['first_name', 'last_name'] );
+ *        }
+ *      }, {
+ *        "label": "Name based",
+ *        "fn": function () {
+ *          this.disable('username');
+ *          this.enable( ['first_name', 'last_name'] );
+ *        }
+ *      }, {
+ *        "label": "Submit",
+ *        "fn": function () { this.submit(); }
+ *      }
+ *    );
+ */
+Editor.prototype.enable = function ( name )
+{
+	var fields = this.s.fields;
+
+	$.each( this._fieldNames( name ), function ( i, n ) {
+		fields[ n ].enable();
+	} );
+
+	return this;
+};
+
+
+/**
+ * Show that a field, or the form globally, is in an error state. Note that
+ * errors are cleared on each submission of the form.
+ *  @param {string} [name] The name of the field that is in error. If not
+ *    given then the global form error display is used.
+ *  @param {string} msg The error message to show
+ *  @return {Editor} Editor instance, for chaining
+ * 
+ *  @example
+ *    // Show an error if the field is required
+ *    editor.create( 'Add new user', {
+ *      "label": "Submit",
+ *      "fn": function () {
+ *        if ( this.get('username') === '' ) {
+ *          this.error( 'username', 'A user name is required' );
+ *          return;
+ *        }
+ *        this.submit();
+ *      }
+ *    } );
+ * 
+ *  @example
+ *    // Show a field and a global error for a required field
+ *    editor.create( 'Add new user', {
+ *      "label": "Submit",
+ *      "fn": function () {
+ *        if ( this.get('username') === '' ) {
+ *          this.error( 'username', 'A user name is required' );
+ *          this.error( 'The data could not be saved because it is incomplete' );
+ *          return;
+ *        }
+ *        this.submit();
+ *      }
+ *    } );
+ */
+Editor.prototype.error = function ( name, msg )
+{
+	if ( msg === undefined ) {
+		// Global error
+		this._message( this.dom.formError, name );
+	}
+	else {
+		// Field error
+		this.s.fields[ name ].error( msg );
+	}
+
+	return this;
+};
+
+
+/**
+ * Get a field object, configured for a named field, which can then be
+ * manipulated through its API. This function effectively acts as a
+ * proxy to the field extensions, allowing easy access to the methods
+ * for a named field. The methods that are available depend upon the field
+ * type plug-in for Editor.
+ *
+ *   @param {string} name Field name to be obtained
+ *   @return {Editor.Field} Field instance
+ *
+ *   @example
+ *     // Update the values available in a select list
+ *     editor.field('island').update( [
+ *       'Lewis and Harris',
+ *       'South Uist',
+ *       'North Uist',
+ *       'Benbecula',
+ *       'Barra'
+ *     ] );
+ *
+ *   @example
+ *     // Equivalent calls
+ *     editor.field('name').set('John Smith');
+ *
+ *     // results in the same action as:
+ *     editor.set('John Smith');
+ */
+Editor.prototype.field = function ( name )
+{
+	return this.s.fields[ name ];
+};
+
+
+/**
+ * Get a list of the fields that are used by the Editor instance.
+ *  @returns {string[]} Array of field names
+ * 
+ *  @example
+ *    // Get current fields and move first item to the end
+ *    var fields = editor.fields();
+ *    var first = fields.shift();
+ *    fields.push( first );
+ *    editor.order( fields );
+ */
+Editor.prototype.fields = function ()
+{
+	return $.map( this.s.fields, function ( field, name ) {
+		return name;
+	} );
+};
+
+
+/**
+ * Get the value of a field
+ *  @param {string|array} [name] The field name (from the `name` parameter given
+ *    when originally setting up the field) to disable. If not given, then an
+ *    object of fields is returned, with the value of each field from the
+ *    instance represented in the array (the object properties are the field
+ *    names). Also an array of field names can be given to get a collection of
+ *    data from the form.
+ *  @returns {*|object} Value from the named field
+ * 
+ *  @example
+ *    // Client-side validation - check that a field has been given a value 
+ *    // before submitting the form
+ *    editor.create( 'Add new user', {
+ *      "label": "Submit",
+ *      "fn": function () {
+ *        if ( this.get('username') === '' ) {
+ *          this.error( 'username', 'A user name is required' );
+ *          return;
+ *        }
+ *        this.submit();
+ *      }
+ *    } );
+ */
+Editor.prototype.get = function ( name )
+{
+	var fields = this.s.fields;
+
+	if ( ! name ) {
+		name = this.fields();
+	}
+
+	if ( $.isArray( name ) ) {
+		var out = {};
+
+		$.each( name, function (i, n) {
+			out[n] = fields[n].get();
+		} );
+
+		return out;
+	}
+
+	return fields[ name ].get();
+};
+
+
+/**
+ * Remove a field from the form display. Note that the field will still be submitted
+ * with the other fields in the form, but it simply won't be visible to the user.
+ *  @param {string|array} [name] The field name (from the `name` parameter given when
+ *   originally setting up the field) to hide or an array of names. If not given then all 
+ *   fields are hidden.
+ *  @param {boolean} [animate=true] Animate if visible
+ *  @return {Editor} Editor instance, for chaining
+ * 
+ *  @example
+ *    // Show a 'create' record form, but with some fields hidden
+ *    editor.hide( 'account_type' );
+ *    editor.hide( 'access_level' );
+ *    editor.create( 'Add new user', {
+ *      "label": "Save",
+ *      "fn": function () { this.submit(); }
+ *    } );
+ *
+ *  @example
+ *    // Show a single field by hiding all and then showing one
+ *    editor.hide();
+ *    editor.show('access_type');
+ */
+Editor.prototype.hide = function ( names, animate )
+{
+	var fields = this.s.fields;
+
+	$.each( this._fieldNames( names ), function (i, n) {
+		fields[ n ].hide( animate );
+	} );
+
+	return this;
+};
+
+
+/**
+ * Determine if there is an error state in the form, either the form's global
+ * error message, or one or more fields.
+ *
+ * @param {string|array|undefined} [inNames] The field names to check. All
+ *   fields checked if undefined.
+ * @return {boolean} `true` if there is an error in the form
+ */
+Editor.prototype.inError = function ( inNames )
+{
+	// Is there a global error?
+	if ( $(this.dom.formError).is(':visible') ) {
+		return true;
+	}
+
+	// Field specific
+	var fields = this.s.fields;
+	var names = this._fieldNames( inNames );
+
+	for ( var i=0, ien=names.length ; i<ien ; i++ ) {
+		if ( fields[ names[i] ].inError() ) {
+			return true;
+		}
+	}
+
+	return false;
+};
+
+
+/**
+ * Inline editing for a single field. This method provides a method to allow
+ * end users to very quickly edit fields in place. For example, a user could
+ * simply click on a cell in a table, the contents of which would be replaced
+ * with the editing input field for that cell.
+ *
+ * @param {string|node|DataTables.Api|cell-selector} cell The cell or field to
+ *   be edited (note that for table editing this must be a cell - for standalone
+ *   editing it can also be the field name to edit).
+ * @param {string} [fieldName] The field name to be edited. This parameter is
+ *   optional. If not provided, Editor will attempt to resolve the correct field
+ *   from the cell / element given as the first parameter. If it is unable to do
+ *   so, it will throw an error.
+ * @param {object} [opts] Inline editing options - see the `form-options` type
+ *  @return {Editor} Editor instance, for chaining
+ */
+Editor.prototype.inline = function ( cell, fieldName, opts )
+{
+	var that = this;
+
+	// Argument shifting
+	if ( $.isPlainObject( fieldName ) ) {
+		opts = fieldName;
+		fieldName = undefined;
+	}
+
+	opts = $.extend( {}, this.s.formOptions.inline, opts );
+
+	var editFields = this._dataSource( 'individual', cell, fieldName );
+	var node, field;
+	var countOuter=0, countInner;
+	var closed=false;
+
+	// Read the individual cell information from the editFields object
+	$.each( editFields, function ( i, editField ) {
+		// Only a single row
+		if ( countOuter > 0 ) {
+			throw 'Cannot edit more than one row inline at a time';
+		}
+
+		node = $(editField.attach[0]);
+
+		// Only a single item in that row
+		countInner = 0;
+		$.each( editField.displayFields, function ( j, f ) {
+			if ( countInner > 0 ) {
+				throw 'Cannot edit more than one field inline at a time';
+			}
+
+			field = f;
+			countInner++;
+		} );
+
+		countOuter++;
+
+		// If only changed values are to be submitted, then only allow the
+		// individual field that we are editing to be edited.
+		// This is currently disabled, as I'm not convinced that it is actually
+		// useful!
+		// if ( opts.submit === 'changed' ) {
+		// 	editField.fields = editField.displayFields;
+		// }
+	} );
+	
+	// Already in edit mode for this cell?
+	if ( $('div.DTE_Field', node).length ) {
+		return this;
+	}
+
+	// Some other field in inline edit mode?
+	if ( this._tidy( function () { that.inline( cell, fieldName, opts ); } ) ) {
+		return this;
+	}
+
+	// Start a full row edit, but don't display - we will be showing the field
+	this._edit( cell, editFields, 'inline' );
+	var namespace = this._formOptions( opts );
+
+	var ret = this._preopen( 'inline' );
+	if ( ! ret ) {
+		return this;
+	}
+
+	// Remove from DOM, keeping event handlers, and include text nodes in remove
+	var children = node.contents().detach();
+
+	node.append( $(
+		'<div class="DTE DTE_Inline">'+
+			'<div class="DTE_Inline_Field"/>'+
+			'<div class="DTE_Inline_Buttons"/>'+
+		'</div>'
+	) );
+
+	node.find('div.DTE_Inline_Field').append( field.node() );
+
+	if ( opts.buttons ) {
+		// Use prepend for the CSS, so we can float the buttons right
+		node.find('div.DTE_Inline_Buttons').append( this.dom.buttons );
+	}
+
+	this._closeReg( function ( submitComplete ) {
+		// Mark that this specific inline edit has closed
+		closed = true;
+
+		$(document).off( 'click'+namespace );
+
+		// If there was no submit, we need to put the DOM back as it was. If
+		// there was a submit, the write of the new value will set the DOM to
+		// how it should be
+		if ( ! submitComplete ) {
+			node.contents().detach();
+			node.append( children );
+		}
+
+		// Clear error messages "offline"
+		that._clearDynamicInfo();
+	} );
+
+	// Submit and blur actions
+	setTimeout( function () {
+		// If already closed, possibly due to some other aspect of the event
+		// that triggered the inline call, don't add the event listener - it
+		// isn't needed (and is dangerous)
+		if ( closed ) {
+			return;
+		}
+
+		$(document).on( 'click'+namespace, function ( e ) {
+			// Was the click inside or owned by the editing node? If not, then
+			// come out of editing mode.
+
+			// andSelf is deprecated in jQ1.8, but we want 1.7 compat
+			var back = $.fn.addBack ? 'addBack' : 'andSelf';
+
+			if ( ! field._typeFn( 'owns', e.target ) && 
+				 $.inArray( node[0], $(e.target).parents()[ back ]() ) === -1 )
+			{
+				that.blur();
+			}
+		} );
+	}, 0 );
+
+	this._focus( [ field ], opts.focus );
+	this._postopen( 'inline' );
+
+	return this;
+};
+
+
+/**
+ * Show an information message for the form as a whole, or for an individual
+ * field. This can be used to provide helpful information to a user about an
+ * individual field, or more typically the form (for example when deleting
+ * a record and asking for confirmation).
+ *  @param {string} [name] The name of the field to show the message for. If not
+ *    given then a global message is shown for the form
+ *  @param {string|function} msg The message to show
+ *  @return {Editor} Editor instance, for chaining
+ * 
+ *  @example
+ *    // Show a global message for a 'create' form
+ *    editor.message( 'Add a new user to the database by completing the fields below' );
+ *    editor.create( 'Add new user', {
+ *      "label": "Submit",
+ *      "fn": function () { this.submit(); }
+ *    } );
+ * 
+ *  @example
+ *    // Show a message for an individual field when a 'help' icon is clicked on
+ *    $('#user_help').click( function () {
+ *      editor.message( 'user', 'The user name is what the system user will login with' );
+ *    } );
+ */
+Editor.prototype.message = function ( name, msg )
+{
+	if ( msg === undefined ) {
+		// Global message
+		this._message( this.dom.formInfo, name );
+	}
+	else {
+		// Field message
+		this.s.fields[ name ].message( msg );
+	}
+
+	return this;
+};
+
+
+/**
+ * Get which mode of operation the Editor form is in
+ *  @return {string} `create`, `edit`, `remove` or `null` if no active state.
+ */
+Editor.prototype.mode = function ()
+{
+	return this.s.action;
+};
+
+
+/**
+ * Get the modifier that was used to trigger the edit or delete action.
+ *  @return {*} The identifier that was used for the editing / remove method
+ *    called.
+ */
+Editor.prototype.modifier = function ()
+{
+	return this.s.modifier;
+};
+
+
+/**
+ * Get the values from one or more fields, taking into account multiple data
+ * points being edited at the same time.
+ *
+ * @param  {string|array} fieldNames A single field name or an array of field
+ *   names.
+ * @return {object} If a string is given as the first parameter an object that
+ *   contains the value for each row being edited is returned. If an array is
+ *   given, then the object has the field names as the parameter name and the
+ *   value is the value object with values for each row being edited.
+ */
+Editor.prototype.multiGet = function ( fieldNames )
+{
+	var fields = this.s.fields;
+
+	if ( fieldNames === undefined ) {
+		fieldNames = this.fields();
+	}
+
+	if ( $.isArray( fieldNames ) ) {
+		var out = {};
+
+		$.each( fieldNames, function ( i, name ) {
+			out[ name ] = fields[ name ].multiGet();
+		} );
+
+		return out;
+	}
+
+	return fields[ fieldNames ].multiGet();
+};
+
+
+/**
+ * Set the values for one or more fields, taking into account multiple data
+ * points being edited at the same time.
+ *
+ * @param  {object|string} fieldNames The name of the field to set, or an object
+ *   with the field names as the parameters that contains the value object to
+ *   set for each field.
+ * @param  {*} [val] Value to set if first parameter is given as a string.
+ *   Otherwise it is ignored.
+ *  @return {Editor} Editor instance, for chaining
+ */
+Editor.prototype.multiSet = function ( fieldNames, val )
+{
+	var fields = this.s.fields;
+
+	if ( $.isPlainObject( fieldNames ) && val === undefined ) {
+		$.each( fieldNames, function ( name, value ) {
+			fields[ name ].multiSet( value );
+		} );
+	}
+	else {
+		fields[ fieldNames ].multiSet( val );
+	}
+
+	return this;
+};
+
+
+/**
+ * Get the container node for an individual field.
+ *  @param {string|array} name The field name (from the `name` parameter given
+ *   when originally setting up the field) to get the DOM node for.
+ *  @return {node|array} Field container node
+ * 
+ *  @example
+ *    // Dynamically add a class to a field's container
+ *    $(editor.node( 'account_type' )).addClass( 'account' );
+ */
+Editor.prototype.node = function ( name )
+{
+	var fields = this.s.fields;
+
+	if ( ! name ) {
+		name = this.order();
+	}
+
+	return $.isArray( name ) ?
+		$.map( name, function (n) {
+			return fields[ n ].node();
+		} ) :
+		fields[ name ].node();
+};
+
+
+/**
+ * Remove a bound event listener to the editor instance. This method provides a 
+ * shorthand way of binding jQuery events that would be the same as writing 
+ * `$(editor).off(...)` for convenience.
+ *  @param {string} name Event name to remove the listeners for - event names are
+ *    defined by {@link Editor}.
+ *  @param {function} [fn] The function to remove. If not given, all functions which
+ *    are assigned to the given event name will be removed.
+ *  @return {Editor} Editor instance, for chaining
+ *
+ *  @example
+ *    // Add an event to alert when the form is shown and then remove the listener
+ *    // so it will only fire once
+ *    editor.on( 'open', function () {
+ *      alert('Form displayed!');
+ *      editor.off( 'open' );
+ *    } );
+ */
+Editor.prototype.off = function ( name, fn )
+{
+	$(this).off( this._eventName( name ), fn );
+
+	return this;
+};
+
+
+/**
+ * Listen for an event which is fired off by Editor when it performs certain
+ * actions. This method provides a shorthand way of binding jQuery events that
+ * would be the same as writing  `$(editor).on(...)` for convenience.
+ *  @param {string} name Event name to add the listener for - event names are
+ *    defined by {@link Editor}.
+ *  @param {function} fn The function to run when the event is triggered.
+ *  @return {Editor} Editor instance, for chaining
+ *
+ *  @example
+ *    // Log events on the console when they occur
+ *    editor.on( 'open', function () { console.log( 'Form opened' ); } );
+ *    editor.on( 'close', function () { console.log( 'Form closed' ); } );
+ *    editor.on( 'submit', function () { console.log( 'Form submitted' ); } );
+ */
+Editor.prototype.on = function ( name, fn )
+{
+	$(this).on( this._eventName( name ), fn );
+
+	return this;
+};
+
+
+/**
+ * Listen for a single event event which is fired off by Editor when it performs
+ * certain actions. This method provides a shorthand way of binding jQuery
+ * events that would be the same as writing  `$(editor).one(...)` for
+ * convenience.
+ *  @param {string} name Event name to add the listener for - event names are
+ *    defined by {@link Editor}.
+ *  @param {function} fn The function to run when the event is triggered.
+ *  @return {Editor} Editor instance, for chaining
+ */
+Editor.prototype.one = function ( name, fn )
+{
+	$(this).one( this._eventName( name ), fn );
+
+	return this;
+};
+
+
+/**
+ * Display the main form editor to the end user in the web-browser.
+ * 
+ * Note that the `close()` method will close any of the three Editor form types
+ * (main, bubble and inline), but this method will open only the main type.
+ *  @return {Editor} Editor instance, for chaining
+ * 
+ *  @example
+ *    // Build a 'create' form, but don't display it until some values have
+ *    // been set. When done, then display the form.
+ *    editor.create( 'Create user', {
+ *      "label": "Submit",
+ *      "fn": function () { this.submit(); }
+ *    }, false );
+ *    editor.set( 'name', 'Test user' );
+ *    editor.set( 'access', 'Read only' );
+ *    editor.open();
+ */
+Editor.prototype.open = function ()
+{
+	var that = this;
+
+	// Insert the display elements in order
+	this._displayReorder();
+
+	// Define how to do a close
+	this._closeReg( function ( submitComplete ) {
+		that.s.displayController.close( that, function () {
+			that._clearDynamicInfo();
+		} );
+	} );
+
+	// Run the standard open with common events
+	var ret = this._preopen( 'main' );
+	if ( ! ret ) {
+		return this;
+	}
+
+	this.s.displayController.open( this, this.dom.wrapper );
+	this._focus(
+		$.map( this.s.order, function (name) {
+			return that.s.fields[ name ];
+		} ),
+		this.s.editOpts.focus
+	);
+	this._postopen( 'main' );
+
+	return this;
+};
+
+
+/**
+ * Get or set the ordering of fields, as they are displayed in the form. When used as
+ * a getter, the field names are returned in an array, in their current order, and when
+ * used as a setting you can alter the field ordering by passing in an array with all
+ * field names in their new order.
+ * 
+ * Note that all fields *must* be included when reordering, and no additional fields can 
+ * be added here (use {@link Editor#add} to add more fields). Finally, for setting the 
+ * order, you can pass an array of the field names, or give the field names as individual
+ * parameters (see examples below).
+ *  @param {array|string} [set] Field order to set.
+ *  @return {Editor} Editor instance, for chaining
+ * 
+ *  @example
+ *    // Get field ordering
+ *    var order = editor.order();
+ * 
+ *  @example
+ *    // Set the field order
+ *    var order = editor.order();
+ *    order.unshift( order.pop() ); // move the last field into the first position
+ *    editor.order( order );
+ * 
+ *  @example
+ *    // Set the field order as arguments
+ *    editor.order( "pupil", "grade", "dept", "exam-board" );
+ *
+ */
+Editor.prototype.order = function ( set /*, ... */ )
+{
+	if ( !set ) {
+		return this.s.order;
+	}
+
+	// Allow new layout to be passed in as arguments
+	if ( arguments.length && ! $.isArray( set ) ) {
+		set = Array.prototype.slice.call(arguments);
+	}
+
+	// Sanity check - array must exactly match the fields we have available
+	if ( this.s.order.slice().sort().join('-') !== set.slice().sort().join('-') ) {
+		throw "All fields, and no additional fields, must be provided for ordering.";
+	}
+
+	// Copy the new array into the order (so the reference is maintained)
+	$.extend( this.s.order, set );
+
+	this._displayReorder();
+
+	return this;
+};
+
+
+/**
+ * Remove (delete) entries from the table. The rows to remove are given as
+ * either a single DOM node or an array of DOM nodes (including a jQuery
+ * object).
+ *  @param {node|array} items The row, or array of nodes, to delete
+ *  @param {boolean} [show=true] Show the form or not.
+ *  @return {Editor} Editor instance, for chaining
+ * 
+ *  @example
+ *    // Delete a given row with a message to let the user know exactly what is
+ *    // happening
+ *    editor.message( "Are you sure you want to remove this row?" );
+ *    editor.remove( row_to_delete, 'Delete row', {
+ *      "label": "Confirm",
+ *      "fn": function () { this.submit(); }
+ *    } );
+ * 
+ *  @example
+ *    // Delete the first row in a table without asking the user for confirmation
+ *    editor.remove( '', $('#example tbody tr:eq(0)')[0], null, false );
+ *    editor.submit();
+ * 
+ *  @example
+ *    // Delete all rows in a table with a submit button
+ *    editor.remove( $('#example tbody tr'), 'Delete all rows', {
+ *      "label": "Delete all",
+ *      "fn": function () { this.submit(); }
+ *    } );
+ */
+Editor.prototype.remove = function ( items, arg1, arg2, arg3, arg4 )
+{
+	var that = this;
+
+	// Some other field in inline edit mode?
+	if ( this._tidy( function () { that.remove( items, arg1, arg2, arg3, arg4 ); } ) ) {
+		return this;
+	}
+
+	// Allow a single row node to be passed in to remove, Can't use $.isArray
+	// as we also allow array like objects to be passed in (API, jQuery)
+	if ( items.length === undefined ) {
+		items = [ items ];
+	}
+
+	var argOpts = this._crudArgs( arg1, arg2, arg3, arg4 );
+	var editFields = this._dataSource( 'fields', items );
+
+	this.s.action = "remove";
+	this.s.modifier = items;
+	this.s.editFields = editFields;
+	this.dom.form.style.display = 'none';
+
+	this._actionClass();
+
+	this._event( 'initRemove', [
+		_pluck( editFields, 'node' ),
+		_pluck( editFields, 'data' ),
+		items
+	] );
+
+	this._event( 'initMultiRemove', [
+		editFields,
+		items
+	] );
+
+	this._assembleMain();
+	this._formOptions( argOpts.opts );
+
+	argOpts.maybeOpen();
+
+	var opts = this.s.editOpts;
+	if ( opts.focus !== null ) {
+		$('button', this.dom.buttons).eq( opts.focus ).focus();
+	}
+
+	return this;
+};
+
+
+/**
+ * Set the value of a field
+ *  @param {string|object} name The field name (from the `name` parameter given
+ *    when originally setting up the field) to set the value of. If given as an
+ *    object the object parameter name will be the value of the field to set and
+ *    the value the value to set for the field.
+ *  @param {*} [val] The value to set the field to. The format of the value will
+ *    depend upon the field type. Not required if the first parameter is given
+ *    as an object.
+ *  @return {Editor} Editor instance, for chaining
+ *
+ *  @example
+ *    // Set the values of a few fields before then automatically submitting the form
+ *    editor.create( null, null, false );
+ *    editor.set( 'name', 'Test user' );
+ *    editor.set( 'access', 'Read only' );
+ *    editor.submit();
+ */
+Editor.prototype.set = function ( set, val )
+{
+	var fields = this.s.fields;
+
+	if ( ! $.isPlainObject( set ) ) {
+		var o = {};
+		o[ set ] = val;
+		set = o;
+	}
+
+	$.each( set, function (n, v) {
+		fields[ n ].set( v );
+	} );
+
+	return this;
+};
+
+
+/**
+ * Show a field in the display that was previously hidden.
+ *  @param {string|array} [names] The field name (from the `name` parameter
+ *   given when originally setting up the field) to make visible, or an array of
+ *   field names to make visible. If not given all fields are shown.
+ *  @param {boolean} [animate=true] Animate if visible
+ *  @return {Editor} Editor instance, for chaining
+ * 
+ *  @example
+ *    // Shuffle the fields that are visible, hiding one field and making two
+ *    // others visible before then showing the {@link Editor#create} record form.
+ *    editor.hide( 'username' );
+ *    editor.show( 'account_type' );
+ *    editor.show( 'access_level' );
+ *    editor.create( 'Add new user', {
+ *      "label": "Save",
+ *      "fn": function () { this.submit(); }
+ *    } );
+ *
+ *  @example
+ *    // Show all fields
+ *    editor.show();
+ */
+Editor.prototype.show = function ( names, animate )
+{
+	var fields = this.s.fields;
+
+	$.each( this._fieldNames( names ), function (i, n) {
+		fields[ n ].show( animate );
+	} );
+
+	return this;
+};
+
+
+/**
+ * Submit a form to the server for processing. The exact action performed will depend
+ * on which of the methods {@link Editor#create}, {@link Editor#edit} or 
+ * {@link Editor#remove} were called to prepare the form - regardless of which one is 
+ * used, you call this method to submit data.
+ *  @param {function} [successCallback] Callback function that is executed once the
+ *    form has been successfully submitted to the server and no errors occurred.
+ *  @param {function} [errorCallback] Callback function that is executed if the
+ *    server reports an error due to the submission (this includes a JSON formatting
+ *    error should the error return invalid JSON).
+ *  @param {function} [formatdata] Callback function that is passed in the data
+ *    that will be submitted to the server, allowing pre-formatting of the data,
+ *    removal of data or adding of extra fields.
+ *  @param {boolean} [hide=true] When the form is successfully submitted, by default
+ *    the form display will be hidden - this option allows that to be overridden.
+ *  @return {Editor} Editor instance, for chaining
+ *
+ *  @example
+ *    // Submit data from a form button
+ *    editor.create( 'Add new record', {
+ *      "label": "Save",
+ *      "fn": function () {
+ *        this.submit();
+ *      }
+ *    } );
+ *
+ *  @example
+ *    // Submit without showing the user the form
+ *    editor.create( null, null, false );
+ *    editor.submit();
+ *
+ *  @example
+ *    // Provide success and error callback methods
+ *    editor.create( 'Add new record', {
+ *      "label": "Save",
+ *      "fn": function () {
+ *        this.submit( function () {
+ *            alert( 'Form successfully submitted!' );
+ *          }, function () {
+ *            alert( 'Form  encountered an error :-(' );
+ *          }
+ *        );
+ *      }
+ *    } );
+ *  
+ *  @example
+ *    // Add an extra field to the data
+ *    editor.create( 'Add new record', {
+ *      "label": "Save",
+ *      "fn": function () {
+ *        this.submit( null, null, function (data) {
+ *          data.extra = "Extra information";
+ *        } );
+ *      }
+ *    } );
+ *
+ *  @example
+ *    // Don't hide the form immediately - change the title and then close the form
+ *    // after a small amount of time
+ *    editor.create( 'Add new record', {
+ *      "label": "Save",
+ *      "fn": function () {
+ *        this.submit( 
+ *          function () {
+ *            var that = this;
+ *            this.title( 'Data successfully added!' );
+ *            setTimeout( function () {
+ *              that.close();
+ *            }, 1000 );
+ *          },
+ *          null,
+ *          null,
+ *          false
+ *        );
+ *      }
+ *    } );
+ *    
+ */
+Editor.prototype.submit = function ( successCallback, errorCallback, formatdata, hide )
+{
+	var
+		that = this,
+		fields = this.s.fields,
+		errorFields = [],
+		errorReady = 0,
+		sent = false;
+
+	if ( this.s.processing || ! this.s.action ) {
+		return this;
+	}
+	this._processing( true );
+
+	// If there are fields in error, we want to wait for the error notification
+	// to be cleared before the form is submitted - errorFields tracks the
+	// fields which are in the error state, while errorReady tracks those which
+	// are ready to submit
+	var send = function () {
+		if ( errorFields.length !== errorReady || sent ) {
+			return;
+		}
+
+		sent = true;
+		that._submit( successCallback, errorCallback, formatdata, hide );
+	};
+
+	// Remove the global error (don't know if the form is still in an error
+	// state!)
+	this.error();
+
+	// Count how many fields are in error
+	$.each( fields, function ( name, field ) {
+		if ( field.inError() ) {
+			errorFields.push( name );
+		}
+	} );
+
+	// Remove the error display
+	$.each( errorFields, function ( i, name ) {
+		fields[ name ].error('', function () {
+			errorReady++;
+			send();
+		} );
+	} );
+
+	send();
+
+	return this;
+};
+
+
+/**
+ * Set the title of the form
+ *  @param {string|function} title The title to give to the form
+ *  @return {Editor} Editor instance, for chaining
+ *
+ *  @example
+ *    // Create an edit display used the title, buttons and edit methods (note that
+ *    // this is just an example, typically you would use the parameters of the edit
+ *    // method to achieve this.
+ *    editor.title( 'Edit record' );
+ *    editor.buttons( {
+ *      "label": "Update",
+ *      "fn": function () { this.submit(); }
+ *    } );
+ *    editor.edit( TR_to_edit );
+ *
+ *  @example
+ *    // Show a create form, with a timer for the duration that the form is open
+ *    editor.create( 'Add new record - time on form: 0s', {
+ *      "label": "Save",
+ *      "fn": function () { this.submit(); }
+ *    } );
+ *    
+ *    // Add an event to the editor to stop the timer when the display is removed
+ *    var runTimer = true;
+ *    var timer = 0;
+ *    editor.on( 'close', function () {
+ *      runTimer = false;
+ *      editor.off( 'close' );
+ *    } );
+ *    // Start the timer running
+ *    updateTitle();
+ *
+ *    // Local function to update the title once per second
+ *    function updateTitle() {
+ *      editor.title( 'Add new record - time on form: '+timer+'s' );
+ *      timer++;
+ *      if ( runTimer ) {
+ *        setTimeout( function() {
+ *          updateTitle();
+ *        }, 1000 );
+ *      }
+ *    }
+ */
+Editor.prototype.title = function ( title )
+{
+	var header = $(this.dom.header).children( 'div.'+this.classes.header.content );
+
+	if ( title === undefined ) {
+		return header.html();
+	}
+
+	if ( typeof title === 'function' ) {
+		title = title( this, new DataTable.Api(this.s.table) );
+	}
+
+	header.html( title );
+
+	return this;
+};
+
+
+/**
+ * Get or set the value of a specific field, or get the value of all fields in
+ * the form.
+ *
+ * @param {string|array} [names] The field name(s) to get or set the value of.
+ *   If not given, then the value of all fields will be obtained.
+ * @param {*} [value] Value to set
+ * @return {Editor|object|*} Editor instance, for chaining if used as a setter,
+ *   an object containing the values of the requested fields if used as a
+ *   getter with multiple fields requested, or the value of the requested field
+ *   if a single field is requested.
+ */
+Editor.prototype.val = function ( field, value )
+{
+	if ( value === undefined ) {
+		return this.get( field ); // field can be undefined to get all
+	}
+
+	return this.set( field, value );
+};
+
+
+/*
+ * DataTables 1.10 API integration. Provides the ability to control basic Editor
+ * aspects from the DataTables API. Full control does of course require use of
+ * the Editor API though.
+ */
+var apiRegister = DataTable.Api.register;
+
+
+function __getInst( api ) {
+	var ctx = api.context[0];
+	return ctx.oInit.editor || ctx._editor;
+}
+
+// Set sensible defaults for the editing options
+function __setBasic( inst, opts, type, plural ) {
+	if ( ! opts ) {
+		opts = {};
+	}
+
+	if ( opts.buttons === undefined ) {
+		opts.buttons = '_basic';
+	}
+
+	if ( opts.title === undefined ) {
+		opts.title = inst.i18n[ type ].title;
+	}
+
+	if ( opts.message === undefined ) {
+		if ( type === 'remove' ) {
+			var confirm = inst.i18n[ type ].confirm;
+			opts.message = plural!==1 ? confirm._.replace(/%d/, plural) : confirm['1'];
+		}
+		else {
+			opts.message = '';
+		}
+	}
+
+	return opts;
+}
+
+
+apiRegister( 'editor()', function () {
+	return __getInst( this );
+} );
+
+// Row editing
+apiRegister( 'row.create()', function ( opts ) {
+	// main
+	var inst = __getInst( this );
+	inst.create( __setBasic( inst, opts, 'create' ) );
+	return this;
+} );
+
+apiRegister( 'row().edit()', function ( opts ) {
+	// main
+	var inst = __getInst( this );
+	inst.edit( this[0][0], __setBasic( inst, opts, 'edit' ) );
+	return this;
+} );
+
+apiRegister( 'rows().edit()', function ( opts ) {
+	// main
+	var inst = __getInst( this );
+	inst.edit( this[0], __setBasic( inst, opts, 'edit' ) );
+	return this;
+} );
+
+apiRegister( 'row().delete()', function ( opts ) {
+	// main
+	var inst = __getInst( this );
+	inst.remove( this[0][0], __setBasic( inst, opts, 'remove', 1 ) );
+	return this;
+} );
+
+apiRegister( 'rows().delete()', function ( opts ) {
+	// main
+	var inst = __getInst( this );
+	inst.remove( this[0], __setBasic( inst, opts, 'remove', this[0].length ) );
+	return this;
+} );
+
+apiRegister( 'cell().edit()', function ( type, opts ) {
+	// inline or bubble
+	if ( ! type ) {
+		type = 'inline';
+	}
+	else if ( $.isPlainObject( type ) ) {
+		opts = type;
+		type = 'inline';
+	}
+
+	__getInst( this )[ type ]( this[0][0], opts );
+	return this;
+} );
+
+apiRegister( 'cells().edit()', function ( opts ) {
+	// bubble only at the moment
+	__getInst( this ).bubble( this[0], opts );
+	return this;
+} );
+
+apiRegister( 'file()', function ( name, id ) {
+	return Editor.files[ name ][ id ];
+} );
+
+apiRegister( 'files()', function ( name, value ) {
+	if ( ! name ) {
+		return Editor.files;
+	}
+
+	if ( ! value ) {
+		return Editor.files[ name ];
+	}
+
+	// The setter option of this method is not publicly documented
+	Editor.files[ name ] = value;
+
+	return this;
+} );
+
+// Global listener for file information updates via DataTables' Ajax JSON
+$(document).on( 'xhr.dt', function (e, ctx, json) {
+	if ( e.namespace !== 'dt' ) {
+		return;
+	}
+
+	if ( json && json.files ) {
+		$.each( json.files, function ( name, files ) {
+			Editor.files[ name ] = files;
+		} );
+	}
+} );
+
+
+/**
+ * Common error message emitter. This method is not (yet) publicly documented on
+ * the Editor site. It might be in future.
+ *
+ * @param  {string} msg Error message
+ * @param  {int}    tn  Tech note link
+ */
+Editor.error = function ( msg, tn )
+{
+	throw tn ?
+		msg +' For more information, please refer to https://datatables.net/tn/'+tn :
+		msg;
+};
+
+
+/**
+ * Obtain label / value pairs of data from a data source, be it an array or
+ * object, for use in an input that requires label / value pairs such as
+ * `select`, `radio` and `checkbox` inputs.
+ *
+ * A callback function is triggered for each label / value pair found, so the
+ * caller can add it to the input as required.
+ *
+ * @static
+ * @param {object|array} An object or array of data to iterate over getting the
+ *     label / value pairs.
+ * @param {object} props When an array of objects is passed in as the data
+ *     source by default the label will be read from the `label` property and
+ *     the value from the `value` property of the object. This option can alter
+ *     that behaviour.
+ * @param {function} fn Callback function. Takes three parameters: the label,
+ *      the value and the iterator index.
+ */
+Editor.pairs = function ( data, props, fn )
+{
+	var i, ien, dataPoint;
+
+	// Define default properties to read the data from if using an object.
+	// The passed in `props` object and override.
+	props = $.extend( {
+		label: 'label',
+		value: 'value'
+	}, props );
+
+	if ( $.isArray( data ) ) {
+		// As an array, we iterate each item which can be an object or value
+		for ( i=0, ien=data.length ; i<ien ; i++ ) {
+			dataPoint = data[i];
+
+			if ( $.isPlainObject( dataPoint ) ) {
+				fn( 
+					dataPoint[ props.value ] === undefined ?
+						dataPoint[ props.label ] :
+						dataPoint[ props.value ],
+					dataPoint[ props.label ],
+					i
+				);
+			}
+			else {
+				fn( dataPoint, dataPoint, i );
+			}
+		}
+	}
+	else {
+		// As an object the key is the label and the value is the value
+		i = 0;
+
+		$.each( data, function ( key, val ) {
+			fn( val, key, i );
+			i++;
+		} );
+	}
+};
+
+
+/**
+ * Make a string safe to use as a DOM ID. This is primarily for use by field
+ * plug-in authors.
+ *
+ * @static
+ * @param {string} String to make safe
+ * @param {string} Safe string
+ */
+Editor.safeId = function ( id )
+{
+	return id.replace(/\./g, '-');
+};
+
+
+/**
+ * Field specific upload method. This can be used to upload a file to the Editor
+ * libraries. This method is not (yet) publicly documented on the Editor site.
+ * It might be in future.
+ *
+ * @static
+ * @param {Editor} editor The Editor instance operating on
+ * @param {object} conf Field configuration object
+ * @param {Files} files The file(s) to upload
+ * @param {function} progressCallback Upload progress callback
+ * @param {function} completeCallback Callback function for once the file has
+ *     been uploaded
+ */
+Editor.upload = function ( editor, conf, files, progressCallback, completeCallback )
+{
+	var reader = new FileReader();
+	var counter = 0;
+	var ids = [];
+	var generalError = 'A server error occurred while uploading the file';
+
+	// Clear any existing errors, as the new upload might not be in error
+	editor.error( conf.name, '' );
+
+	progressCallback( conf, conf.fileReadText || "<i>Uploading file</i>" );
+
+	reader.onload = function ( e ) {
+		var data = new FormData();
+		var ajax;
+
+		data.append( 'action', 'upload' );
+		data.append( 'uploadField', conf.name );
+		data.append( 'upload', files[ counter ] );
+
+		if ( conf.ajaxData ) {
+			conf.ajaxData( data );
+		}
+
+		if ( conf.ajax ) {
+			ajax = conf.ajax;
+		}
+		else if ( typeof editor.s.ajax === 'string' || $.isPlainObject( editor.s.ajax ) ) {
+			ajax = editor.s.ajax;
+		}
+
+		if ( ! ajax ) {
+			throw 'No Ajax option specified for upload plug-in';
+		}
+
+		if ( typeof ajax === 'string' ) {
+			ajax = { url: ajax };
+		}
+
+		// Use preSubmit to stop form submission during an upload, since the
+		// value won't be known until that point.
+		var submit = false;
+		editor
+			.on( 'preSubmit.DTE_Upload', function () {
+				submit = true;
+				return false;
+			} );
+
+		$.ajax( $.extend( {}, ajax, {
+			type: 'post',
+			data: data,
+			dataType: 'json',
+			contentType: false,
+			processData: false,
+			xhr: function () {
+				var xhr = $.ajaxSettings.xhr();
+
+				if ( xhr.upload ) {
+					xhr.upload.onprogress = function ( e ) {
+						if ( e.lengthComputable ) {
+							var percent = (e.loaded/e.total*100).toFixed(0)+"%";
+
+							progressCallback( conf, files.length === 1 ?
+								percent :
+								counter+':'+files.length+' '+percent
+							);
+						}
+					};
+					xhr.upload.onloadend = function ( e ) {
+						progressCallback( conf );
+					};
+				}
+
+				return xhr;
+			},
+			success: function ( json ) {
+				editor.off( 'preSubmit.DTE_Upload' );
+
+				if ( json.fieldErrors && json.fieldErrors.length ) {
+					var errors = json.fieldErrors;
+
+					for ( var i=0, ien=errors.length ; i<ien ; i++ ) {
+						editor.error( errors[i].name, errors[i].status );
+					}
+				}
+				else if ( json.error ) {
+					editor.error( json.error );
+				}
+				else if ( ! json.upload || ! json.upload.id ) {
+					editor.error( conf.name, generalError );
+				}
+				else {
+					if ( json.files ) {
+						$.each( json.files, function ( name, value ) {
+							Editor.files[ name ] = value;
+						} );
+					}
+
+					ids.push( json.upload.id );
+
+					if ( counter < files.length-1 ) {
+						counter++;
+						reader.readAsDataURL( files[counter] );
+					}
+					else {
+						completeCallback.call( editor, ids );
+						
+						if ( submit ) {
+							editor.submit();
+						}
+					}
+				}
+			},
+			error: function () {
+				editor.error( conf.name, generalError );
+			}
+		} ) );
+	};
+
+	reader.readAsDataURL( files[0] );
+};
+
+
+/**
+ * Editor constructor - take the developer configuration and apply it to the instance.
+ *  @param {object} init The initialisation options provided by the developer - see
+ *    {@link Editor.defaults} for a full list of options.
+ *  @private
+ */
+Editor.prototype._constructor = function ( init )
+{
+	init = $.extend( true, {}, Editor.defaults, init );
+	this.s = $.extend( true, {}, Editor.models.settings, {
+		table:      init.domTable || init.table,
+		dbTable:    init.dbTable || null, // legacy
+		ajaxUrl:    init.ajaxUrl,
+		ajax:       init.ajax,
+		idSrc:      init.idSrc,
+		dataSource: init.domTable || init.table ?
+			Editor.dataSources.dataTable :
+			Editor.dataSources.html,
+		formOptions: init.formOptions,
+		legacyAjax:  init.legacyAjax
+	} );
+	this.classes = $.extend( true, {}, Editor.classes );
+	this.i18n = init.i18n;
+
+	var that = this;
+	var classes = this.classes;
+
+	this.dom = {
+		"wrapper": $(
+			'<div class="'+classes.wrapper+'">'+
+				'<div data-dte-e="processing" class="'+classes.processing.indicator+'"></div>'+
+				'<div data-dte-e="body" class="'+classes.body.wrapper+'">'+
+					'<div data-dte-e="body_content" class="'+classes.body.content+'"/>'+
+				'</div>'+
+				'<div data-dte-e="foot" class="'+classes.footer.wrapper+'">'+
+					'<div class="'+classes.footer.content+'"/>'+
+				'</div>'+
+			'</div>'
+		)[0],
+		"form": $(
+			'<form data-dte-e="form" class="'+classes.form.tag+'">'+
+				'<div data-dte-e="form_content" class="'+classes.form.content+'"/>'+
+			'</form>'
+		)[0],
+		"formError":   $('<div data-dte-e="form_error" class="'+classes.form.error+'"/>')[0],
+		"formInfo":    $('<div data-dte-e="form_info" class="'+classes.form.info+'"/>')[0],
+		"header":      $('<div data-dte-e="head" class="'+classes.header.wrapper+'"><div class="'+classes.header.content+'"/></div>')[0],
+		"buttons":     $('<div data-dte-e="form_buttons" class="'+classes.form.buttons+'"/>')[0]
+	};
+
+	// Customise the TableTools buttons with the i18n settings - worth noting that
+	// this could easily be done outside the Editor instance, but this makes things
+	// a bit easier to understand and more cohesive. Also worth noting that when
+	// there are two or more Editor instances, the init sequence should be
+	// Editor / DataTables, Editor / DataTables etc, since the value of these button
+	// instances matter when you create the TableTools buttons for the DataTable.
+	if ( $.fn.dataTable.TableTools ) {
+		var ttButtons = $.fn.dataTable.TableTools.BUTTONS;
+		var i18n = this.i18n;
+
+		$.each(['create', 'edit', 'remove'], function (i, val) {
+			ttButtons['editor_'+val].sButtonText = i18n[val].button;
+		} );
+	}
+
+	// Bind callback methods
+	$.each( init.events, function (evt, fn) {
+		that.on( evt, function () {
+			// When giving events in the constructor the event argument was not
+			// given in 1.2-, so we remove it here. This is solely for
+			// backwards compatibility as the events in the initialisation are
+			// not documented in 1.3+.
+			var args = Array.prototype.slice.call(arguments);
+			args.shift();
+			fn.apply( that, args );
+		} );
+	} );
+
+	// Cache the DOM nodes
+	var dom = this.dom;
+	var wrapper = dom.wrapper;
+	dom.formContent   = _editor_el('form_content', dom.form)[0];
+	dom.footer        = _editor_el('foot', wrapper)[0];
+	dom.body          = _editor_el('body', wrapper)[0];
+	dom.bodyContent   = _editor_el('body_content', wrapper)[0];
+	dom.processing    = _editor_el('processing', wrapper)[0];
+
+	// Add any fields which are given on initialisation
+	if ( init.fields ) {
+		this.add( init.fields );
+	}
+
+	$(document)
+		.on( 'init.dt.dte', function (e, settings, json) {
+			// Attempt to attach to a DataTable automatically when the table is
+			// initialised
+			if ( that.s.table && settings.nTable === $(that.s.table).get(0) ) {
+				settings._editor = that;
+			}
+		} )
+		.on( 'xhr.dt', function (e, settings, json) {
+			// Automatically update fields which have a field name defined in
+			// the returned json - saves an `initComplete` for the user
+			if ( json && that.s.table && settings.nTable === $(that.s.table).get(0) ) {
+				that._optionsUpdate( json );
+			}
+		} );
+
+	// Prep the display controller
+	this.s.displayController = Editor.display[init.display].init( this );
+
+	this._event( 'initComplete', [] );
+};
+
+/*global __inlineCounter*/
+
+/**
+ * Set the class on the form to relate to the action that is being performed.
+ * This allows styling to be applied to the form to reflect the state that
+ * it is in.
+ *
+ * @private
+ */
+Editor.prototype._actionClass = function ()
+{
+	var classesActions = this.classes.actions;
+	var action = this.s.action;
+	var wrapper = $(this.dom.wrapper);
+
+	wrapper.removeClass( [classesActions.create, classesActions.edit, classesActions.remove].join(' ') );
+
+	if ( action === "create" ) {
+		wrapper.addClass( classesActions.create );
+	}
+	else if ( action === "edit" ) {
+		wrapper.addClass( classesActions.edit );
+	}
+	else if ( action === "remove" ) {
+		wrapper.addClass( classesActions.remove );
+	}
+};
+
+
+/**
+ * Create an Ajax request in the same style as DataTables 1.10, with full
+ * backwards compatibility for Editor 1.2.
+ *
+ * @param  {object} data Data to submit
+ * @param  {function} success Success callback
+ * @param  {function} error Error callback
+ * @private
+ */
+Editor.prototype._ajax = function ( data, success, error )
+{
+	var opts = {
+		type:     'POST',
+		dataType: 'json',
+		data:     null,
+		error:    error,
+		success:  function ( json, status, xhr ) {
+			if ( xhr.status === 204 ) {
+				json = {};
+			}
+			success( json );
+		}
+	};
+	var a;
+	var action = this.s.action;
+	var ajaxSrc = this.s.ajax || this.s.ajaxUrl;
+	var id = action === 'edit' || action === 'remove' ?
+		_pluck( this.s.editFields, 'idSrc' ) :
+		null;
+
+	if ( $.isArray( id ) ) {
+		id = id.join(',');
+	}
+
+	// Get the correct object for rest style
+	if ( $.isPlainObject( ajaxSrc ) && ajaxSrc[ action ] ) {
+		ajaxSrc = ajaxSrc[ action ];
+	}
+
+	if ( $.isFunction( ajaxSrc ) ) {
+		// As a function, execute it, passing in the required parameters
+		var uri = null;
+		var method = null;
+
+		// If the old style ajaxSrc is given, we need to process it for
+		// backwards compatibility with 1.2-. Unfortunate otherwise this would
+		// be a very simply function!
+		if ( this.s.ajaxUrl ) {
+			var url = this.s.ajaxUrl;
+
+			if ( url.create ) {
+				uri = url[ action ];
+			}
+
+			if ( uri.indexOf(' ') !== -1 ) {
+				a = uri.split(' ');
+				method = a[0];
+				uri = a[1];
+			}
+
+			uri = uri.replace( /_id_/, id );
+		}
+		
+		ajaxSrc( method, uri, data, success, error );
+		return;
+	}
+	else if ( typeof ajaxSrc === 'string' ) {
+		// As a string it gives the URL. For backwards compatibility it can also
+		// give the method.
+		if ( ajaxSrc.indexOf(' ') !== -1 ) {
+			a = ajaxSrc.split(' ');
+			opts.type = a[0];
+			opts.url = a[1];
+		}
+		else {
+			opts.url = ajaxSrc;
+		}
+	}
+	else {
+		// As an object, we extend the defaults
+		opts = $.extend( {}, opts, ajaxSrc || {} );
+	}
+
+	// URL macros
+	opts.url = opts.url.replace( /_id_/, id );
+
+	// Data processing option like in DataTables
+	if ( opts.data ) {
+		var newData = $.isFunction( opts.data ) ?
+			opts.data( data ) :  // fn can manipulate data or return an object
+			opts.data;           // object or array to merge
+
+		// If the function returned something, use that alone
+		data = $.isFunction( opts.data ) && newData ?
+			newData :
+			$.extend( true, data, newData );
+	}
+
+	opts.data = data;
+
+	// If a DELETE method is used there are a number of servers which will
+	// reject the request if it has a body. So we need to append to the URL.
+	//
+	// http://stackoverflow.com/questions/15088955
+	// http://bugs.jquery.com/ticket/11586
+	if ( opts.type === 'DELETE' ) {
+		var params = $.param( opts.data );
+
+		opts.url += opts.url.indexOf('?') === -1 ?
+			'?'+params :
+			'&'+params;
+
+		delete opts.data;
+	}
+
+	// Finally, make the ajax call
+	$.ajax( opts );
+};
+
+
+/**
+ * Create the DOM structure from the source elements for the main form.
+ * This is required since the elements can be moved around for other form types
+ * (bubble).
+ *
+ * @private
+ */
+Editor.prototype._assembleMain = function ()
+{
+	var dom = this.dom;
+
+	$(dom.wrapper)
+		.prepend( dom.header );
+
+	$(dom.footer)
+		.append( dom.formError )
+		.append( dom.buttons );
+
+	$(dom.bodyContent)
+		.append( dom.formInfo )
+		.append( dom.form );
+};
+
+
+/**
+ * Blur the editing window. A blur is different from a close in that it might
+ * cause either a close or the form to be submitted. A typical example of a
+ * blur would be clicking on the background of the bubble or main editing forms
+ * - i.e. it might be a close, or it might submit depending upon the
+ * configuration, while a click on the close box is a very definite close.
+ *
+ * @private
+ */
+Editor.prototype._blur = function ()
+{
+	var opts = this.s.editOpts;
+
+	if ( this._event( 'preBlur' ) === false ) {
+		return;
+	}
+
+	if ( opts.onBlur === 'submit' ) {
+		this.submit();
+	}
+	else if ( opts.onBlur === 'close' ) {
+		this._close();
+	}
+};
+
+
+/**
+ * Clear all of the information that might have been dynamically set while
+ * the form was visible - specifically errors and dynamic messages
+ *
+ * @private
+ */
+Editor.prototype._clearDynamicInfo = function ()
+{
+	var errorClass = this.classes.field.error;
+	var fields = this.s.fields;
+
+	$('div.'+errorClass, this.dom.wrapper).removeClass( errorClass );
+
+	$.each( fields, function (name, field) {
+		field
+			.error('')
+			.message('');
+	} );
+
+	this
+		.error('')
+		.message('');
+};
+
+
+/**
+ * Close an editing display, firing callbacks and events as needed
+ *
+ * @param  {function} submitComplete Function to call after the preClose event
+ * @private
+ */
+Editor.prototype._close = function ( submitComplete )
+{
+	// Allow preClose event to cancel the opening of the display
+	if ( this._event( 'preClose' ) === false ) {
+		return;
+	}
+
+	if ( this.s.closeCb ) {
+		this.s.closeCb( submitComplete );
+		this.s.closeCb = null;
+	}
+
+	if ( this.s.closeIcb ) {
+		this.s.closeIcb();
+		this.s.closeIcb = null;
+	}
+
+	// Remove focus control
+	$('body').off( 'focus.editor-focus' );
+
+	this.s.displayed = false;
+	this._event( 'close' );
+};
+
+
+/**
+ * Register a function to be called when the editing display is closed. This is
+ * used by function that create the editing display to tidy up the display on
+ * close - for example removing event handlers to prevent memory leaks.
+ *
+ * @param  {function} fn Function to call on close
+ * @private
+ */
+Editor.prototype._closeReg = function ( fn )
+{
+	this.s.closeCb = fn;
+};
+
+
+/**
+ * Argument shifting for the create(), edit() and remove() methods. In Editor
+ * 1.3 the preferred form of calling those three methods is with just two
+ * parameters (one in the case of create() - the id and the show flag), while in
+ * previous versions four / three parameters could be passed in, including the
+ * buttons and title options. In 1.3 the chaining API is preferred, but we want
+ * to support the old form as well, so this function is provided to perform
+ * that argument shifting, common to all three.
+ *
+ * @private
+ */
+Editor.prototype._crudArgs = function ( arg1, arg2, arg3, arg4 )
+{
+	var that = this;
+	var title;
+	var buttons;
+	var show;
+	var opts;
+
+	if ( $.isPlainObject( arg1 ) ) {
+		// Form options passed in as the first option
+		opts = arg1;
+	}
+	else if ( typeof arg1 === 'boolean' ) {
+		// Show / hide passed in as the first option - form options second
+		show = arg1;
+		opts = arg2; // can be undefined
+	}
+	else {
+		// Old style arguments
+		title = arg1; // can be undefined
+		buttons = arg2; // can be undefined
+		show = arg3; // can be undefined
+		opts = arg4; // can be undefined
+	}
+
+	// If all undefined, then fall into here
+	if ( show === undefined ) {
+		show = true;
+	}
+
+	if ( title ) {
+		that.title( title );
+	}
+
+	if ( buttons ) {
+		that.buttons( buttons );
+	}
+
+	return {
+		opts: $.extend( {}, this.s.formOptions.main, opts ),
+		maybeOpen: function () {
+			if ( show ) {
+				that.open();
+			}
+		}
+	};
+};
+
+
+/**
+ * Execute the data source abstraction layer functions. This is simply a case
+ * of executing the function with the Editor scope, passing in the remaining
+ * parameters.
+ *
+ * @param {string) name Function name to execute
+ * @private
+ */
+Editor.prototype._dataSource = function ( name /*, ... */ )
+{
+	// Remove the name from the arguments list, so the rest can be passed
+	// straight into the field type
+	var args = Array.prototype.slice.call( arguments );
+	args.shift();
+
+	var fn = this.s.dataSource[ name ];
+	if ( fn ) {
+		return fn.apply( this, args );
+	}
+};
+
+
+/**
+ * Insert the fields into the DOM, in the correct order
+ *
+ * @private
+ */
+Editor.prototype._displayReorder = function ( includeFields )
+{
+	var formContent = $(this.dom.formContent);
+	var fields = this.s.fields;
+	var order = this.s.order;
+
+	if ( includeFields ) {
+		this.s.includeFields = includeFields;
+	}
+	else {
+		includeFields = this.s.includeFields;
+	}
+
+	// Empty before adding in the required fields
+	formContent.children().detach();
+
+	$.each( order, function (i, fieldOrName) {
+		var name = fieldOrName instanceof Editor.Field ?
+			fieldOrName.name() :
+			fieldOrName;
+
+		if ( $.inArray( name, includeFields ) !== -1 ) {
+			formContent.append( fields[ name ].node() );
+		}
+	} );
+
+	this._event( 'displayOrder', [
+		this.s.displayed,
+		this.s.action,
+		formContent
+	] );
+};
+
+
+/**
+ * Generic editing handler. This can be called by the three editing modes (main,
+ * bubble and inline) to configure Editor for a row edit, and fire the required
+ * events to ensure that the editing interfaces all provide a common API.
+ *
+ * @param {*} rows Identifier for the item(s) to be edited
+ * @param {string} type Editing type - for the initEdit event
+ * @private
+ */
+Editor.prototype._edit = function ( items, editFields, type )
+{
+	var that = this;
+	var fields = this.s.fields;
+	var usedFields = [];
+	var includeInOrder;
+
+	this.s.editFields = editFields;
+	this.s.modifier = items;
+	this.s.action = "edit";
+	this.dom.form.style.display = 'block';
+
+	this._actionClass();
+
+	// Setup the field values for editing
+	$.each( fields, function ( name, field ) {
+		field.multiReset();
+		includeInOrder = true;
+
+		$.each( editFields, function ( idSrc, edit ) {
+			if ( edit.fields[ name ] ) {
+				var val = field.valFromData( edit.data );
+
+				field.multiSet( idSrc, val !== undefined ?
+					val :
+					field.def()
+				);
+
+				// If there is an displayFields object, we need to know if this
+				// field is present in it or not. If not, then the field isn't
+				// displayed
+				if ( edit.displayFields && ! edit.displayFields[ name ] ) {
+					includeInOrder = false;
+				}
+			}
+		} );
+
+		// If the field is used, then add it to the fields to be shown
+		if ( field.multiIds().length !== 0 && includeInOrder ) {
+			usedFields.push( name );
+		}
+	} );
+
+	// Remove the fields that are not required from the display
+	var currOrder = this.order().slice();
+
+	for ( var i=currOrder.length ; i >= 0 ; i-- ) {
+		if ( $.inArray( currOrder[i], usedFields ) === -1 ) {
+			currOrder.splice( i, 1 );
+		}
+	}
+
+	this._displayReorder( currOrder );
+
+	// Save the set data values so we can decided in submit if data has changed
+	this.s.editData = $.extend( true, {}, this.multiGet() );
+
+	// Events
+	this._event( 'initEdit', [
+		_pluck( editFields, 'node' )[0],
+		_pluck( editFields, 'data' )[0],
+		items,
+		type
+	] );
+
+	this._event( 'initMultiEdit', [
+		editFields,
+		items,
+		type
+	] );
+};
+
+
+/**
+ * Fire callback functions and trigger events.
+ *
+ * @param {string|array} trigger Name(s) of the jQuery custom event to trigger
+ * @param {array) args Array of arguments to pass to the triggered event
+ * @return {*} Return from the event
+ * @private
+ */
+Editor.prototype._event = function ( trigger, args )
+{
+	if ( ! args ) {
+		args = [];
+	}
+
+	// Allow an array to be passed in for the trigger to fire multiple events
+	if ( $.isArray( trigger ) ) {
+		for ( var i=0, ien=trigger.length ; i<ien ; i++ ) {
+			this._event( trigger[i], args );
+		}
+	}
+	else {
+		var e = $.Event( trigger );
+
+		$(this).triggerHandler( e, args );
+
+		return e.result;
+	}
+};
+
+
+/**
+ * 'Modernise' event names, from the old style `on[A-Z]` names to camelCase.
+ * This is done to provide backwards compatibility with Editor 1.2- event names.
+ * The names themselves were updated for consistency with DataTables.
+ *
+ * @param {string} Event name to modernise
+ * @return {string} String with new event name structure
+ * @private
+ */
+Editor.prototype._eventName = function ( input )
+{
+	var name;
+	var names = input.split( ' ' );
+
+	for ( var i=0, ien=names.length ; i<ien ; i++ ) {
+		name = names[i];
+
+		// Strip the 'on' part and lowercase the first character
+		var onStyle = name.match(/^on([A-Z])/);
+		if ( onStyle ) {
+			name = onStyle[1].toLowerCase() + name.substring( 3 );
+		}
+
+		names[i] = name;
+	}
+
+	return names.join( ' ' );
+};
+
+
+/**
+ * Convert a field name input parameter to an array of field names.
+ *
+ * Many of the API methods provide the ability to pass `undefined` a string or
+ * array of strings to identify fields. This method harmonises that.
+ *
+ * @param  {array|string} [fieldNames] Field names to get
+ * @return {array}                     Field names
+ * @private
+ */
+Editor.prototype._fieldNames = function ( fieldNames )
+{
+	if ( fieldNames === undefined ) {
+		return this.fields();
+	}
+	else if ( ! $.isArray( fieldNames ) ) {
+		return [ fieldNames ];
+	}
+
+	return fieldNames;
+};
+
+
+/**
+ * Focus on a field. Providing the logic to allow complex focus expressions
+ *
+ * @param {array} fields Array of Field instances or field names for the fields
+ *     that are shown
+ * @param {null|string|integer} focus Field identifier to focus on
+ * @private
+ */
+Editor.prototype._focus = function ( fieldsIn, focus )
+{
+	var that = this;
+	var field;
+	var fields = $.map( fieldsIn, function ( fieldOrName ) {
+		return typeof fieldOrName === 'string' ?
+			that.s.fields[ fieldOrName ] :
+			fieldOrName;
+	} );
+
+	if ( typeof focus === 'number' ) {
+		field = fields[ focus ];
+	}
+	else if ( focus ) {
+		if ( focus.indexOf( 'jq:' ) === 0 ) {
+			field = $('div.DTE '+focus.replace(/^jq:/, ''));
+		}
+		else {
+			field = this.s.fields[ focus ];
+		}
+	}
+
+	this.s.setFocus = field;
+
+	if ( field ) {
+		field.focus();
+	}
+};
+
+
+/**
+ * Form options - common function so all editing methods can provide the same
+ * basic options, DRY.
+ *
+ * @param {object} opts Editing options. See model.formOptions
+ * @private
+ */
+Editor.prototype._formOptions = function ( opts )
+{
+	var that = this;
+	var inlineCount = __inlineCounter++;
+	var namespace = '.dteInline'+inlineCount;
+
+	// Backwards compatibility with 1.4
+	if ( opts.closeOnComplete !== undefined ) {
+		opts.onComplete = opts.closeOnComplete ? 'close' : 'none';
+	}
+
+	if ( opts.submitOnBlur !== undefined ) {
+		opts.onBlur = opts.submitOnBlur ? 'submit' : 'close';
+	}
+
+	if ( opts.submitOnReturn !== undefined ) {
+		opts.onReturn = opts.submitOnReturn ? 'submit' : 'none';
+	}
+
+	if ( opts.blurOnBackground !== undefined ) {
+		opts.onBackground = opts.blurOnBackground ? 'blur' : 'none';
+	}
+
+	this.s.editOpts = opts;
+
+	// When submitting by Ajax we don't want to close a form that has been
+	// opened during the ajax request, so we keep a count of the form opening
+	this.s.editCount = inlineCount;
+
+	if ( typeof opts.title === 'string' || typeof opts.title === 'function' ) {
+		this.title( opts.title );
+		opts.title = true;
+	}
+
+	if ( typeof opts.message === 'string' || typeof opts.message === 'function' ) {
+		this.message( opts.message );
+		opts.message = true;
+	}
+
+	if ( typeof opts.buttons !== 'boolean' ) {
+		this.buttons( opts.buttons );
+		opts.buttons = true;
+	}
+
+	$(document).on( 'keydown'+namespace, function ( e ) {
+		var el = $(document.activeElement);
+		var name = el.length ? el[0].nodeName.toLowerCase() : null;
+		var type = $(el).attr('type');
+		var returnFriendlyNode = name === 'input';
+
+		if ( that.s.displayed && opts.onReturn === 'submit' && e.keyCode === 13 && returnFriendlyNode ) { // return
+			e.preventDefault();
+			that.submit();
+		}
+		else if ( e.keyCode === 27 ) { // esc
+			e.preventDefault();
+
+			switch( opts.onEsc ) {
+				case 'blur':
+					that.blur();
+					break;
+
+				case 'close':
+					that.close();
+					break;
+
+				case 'submit':
+					that.submit();
+					break;
+
+				default: // 'none' - no action
+					break;
+			}
+		}
+		else if ( el.parents('.DTE_Form_Buttons').length ) {
+			if ( e.keyCode === 37 ) { // left
+				el.prev( 'button' ).focus();
+			}
+			else if ( e.keyCode === 39 ) { // right
+				el.next( 'button' ).focus();
+			}
+		}
+	} );
+
+	this.s.closeIcb = function () {
+		$(document).off( 'keydown'+namespace );
+	};
+
+	return namespace;
+};
+
+
+/**
+ * Convert from the 1.5+ data interchange format to the 1.4- format if suitable.
+ *
+ * @param  {string} direction 'send' or 'receive'
+ * @param  {string} action    CRUD action
+ * @param  {object} data      Data object to transform
+ * @private
+ */
+Editor.prototype._legacyAjax = function ( direction, action, data )
+{
+	if ( ! this.s.legacyAjax ) {
+		return;
+	}
+
+	if ( direction === 'send' ) {
+		if ( action === 'create' || action === 'edit' ) {
+			var id;
+
+			$.each( data.data, function ( rowId, values ) {
+				if ( id !== undefined ) {
+					throw 'Editor: Multi-row editing is not supported by the legacy Ajax data format';
+				}
+
+				id = rowId;
+			} );
+
+			data.data = data.data[ id ];
+
+			if ( action === 'edit' ) {
+				data.id = id;
+			}
+		}
+		else {
+			data.id = $.map( data.data, function ( values, id ) {
+				return id;
+			} );
+
+			delete data.data;
+		}
+	}
+	else {
+		if ( ! data.data && data.row ) {
+			// 1.4 libraries retuned data in the `row` property
+			data.data = [ data.row ];
+		}
+		else {
+			// 1.4- allowed data not to be returned - 1.5 requires it
+			data.data = [];
+		}
+	}
+};
+
+
+/**
+ * Update the field options from a JSON data source
+ *
+ * @param  {object} json JSON object from the server
+ * @private
+ */
+Editor.prototype._optionsUpdate = function ( json )
+{
+	var that = this;
+
+	if ( json.options ) {
+		$.each( this.s.fields, function (name, field) {
+			if ( json.options[ name ] !== undefined ) {
+				var fieldInst = that.field( name );
+
+				if ( fieldInst && fieldInst.update ) {
+					fieldInst.update( json.options[ name ] );
+				}
+			}
+		} );
+	}
+};
+
+
+/**
+ * Show a message in the form. This can be used for error messages or dynamic
+ * messages (information display) as the structure for each is basically the
+ * same. This method will take into account if the form is visible or not - if
+ * so then the message is shown with an effect for the end user, otherwise
+ * it is just set immediately.
+ *
+ * @param {element} el The field display node to use
+ * @param {string|function} msg The message to show
+ * @private
+ */
+Editor.prototype._message = function ( el, msg )
+{
+	if ( typeof msg === 'function' ) {
+		msg = msg( this, new DataTable.Api(this.s.table) );
+	}
+
+	el = $(el);
+
+	if ( ! msg && this.s.displayed ) {
+		// Clear the message with visual effect since the form is visible
+		el
+			.stop()
+			.fadeOut( function () {
+				el.html( '' );
+			} );
+	}
+	else if ( ! msg ) {
+		// Clear the message without visual effect
+		el
+			.html( '' )
+			.css('display', 'none');
+	}
+	else if ( this.s.displayed ) {
+		// Show the message with visual effect
+		el
+			.stop()
+			.html( msg )
+			.fadeIn();
+	}
+	else {
+		// Show the message without visual effect
+		el
+			.html( msg )
+			.css('display', 'block');
+	}
+};
+
+
+/**
+ * Update the multi-value information display to not show redundant information
+ *
+ * @private
+ */
+Editor.prototype._multiInfo = function ()
+{
+	var fields = this.s.fields;
+	var include = this.s.includeFields;
+	var show = true;
+
+	if ( ! include ) {
+		return;
+	}
+
+	for ( var i=0, ien=include.length ; i<ien ; i++ ) {
+		var field = fields[ include[i] ];
+
+		if ( field.isMultiValue() && show ) {
+			fields[ include[i] ].multiInfoShown( show );
+			show = false;
+		}
+		else {
+			fields[ include[i] ].multiInfoShown( false );
+		}
+	}
+};
+
+
+/**
+ * Common display editing form method called by all editing methods after the
+ * form has been configured and displayed. This is to ensure all fire the same
+ * events.
+ *
+ * @param  {string} Editing type
+ * @return {boolean} `true`
+ * @private
+ */
+Editor.prototype._postopen = function ( type )
+{
+	var that = this;
+	var focusCapture = this.s.displayController.captureFocus;
+	if ( focusCapture === undefined ) {
+		focusCapture = true;
+	}
+
+	$(this.dom.form)
+		.off( 'submit.editor-internal' )
+		.on( 'submit.editor-internal', function (e) {
+			e.preventDefault();
+		} );
+
+	// Focus capture - when the Editor form is shown we capture the browser's
+	// focus action. Without doing this is would result in the user being able
+	// to control items under the Editor display - triggering actions that
+	// shouldn't be possible while the editing is shown.
+	if ( focusCapture && (type === 'main' || type === 'bubble') ) {
+		$('body').on( 'focus.editor-focus', function () {
+			if ( $(document.activeElement).parents('.DTE').length === 0 &&
+			     $(document.activeElement).parents('.DTED').length === 0
+			) {
+				if ( that.s.setFocus ) {
+					that.s.setFocus.focus();
+				}
+			}
+		} );
+	}
+
+	this._multiInfo();
+
+	this._event( 'open', [type, this.s.action] );
+
+	return true;
+};
+
+
+/**
+ * Common display editing form method called by all editing methods before the
+ * form has been configured and displayed. This is to ensure all fire the same
+ * events.
+ *
+ * @param  {string} Editing type
+ * @return {boolean} `false` if the open is cancelled by the preOpen event,
+ *   otherwise `true`
+ * @private
+ */
+Editor.prototype._preopen = function ( type )
+{
+	// Allow preOpen event to cancel the opening of the display
+	if ( this._event( 'preOpen', [type, this.s.action] ) === false ) {
+		// Tidy- this would normally be done on close, but we never get that far
+		this._clearDynamicInfo();
+
+		return false;
+	}
+
+	this.s.displayed = type;
+
+	return true;
+};
+
+
+/**
+ * Set the form into processing mode or take it out of processing mode. In
+ * processing mode a processing indicator is shown and user interaction with the
+ * form buttons is blocked
+ *
+ * @param {boolean} processing true if to go into processing mode and false if
+ *   to come out of processing mode
+ * @private
+ */
+Editor.prototype._processing = function ( processing )
+{
+	var wrapper = $(this.dom.wrapper);
+	var procStyle = this.dom.processing.style;
+	var procClass = this.classes.processing.active;
+
+	if ( processing ) {
+		procStyle.display = 'block';
+		wrapper.addClass( procClass );
+		$('div.DTE').addClass( procClass );
+	}
+	else {
+		procStyle.display = 'none';
+		wrapper.removeClass( procClass );
+		$('div.DTE').removeClass( procClass );
+	}
+
+	this.s.processing = processing;
+
+	this._event( 'processing', [processing] );
+};
+
+
+/**
+ * Submit a form to the server for processing. This is the private method that is used
+ * by the 'submit' API method, which should always be called in preference to calling
+ * this method directly.
+ *
+ * @param {function} [successCallback] Callback function that is executed once the
+ *   form has been successfully submitted to the server and no errors occurred.
+ * @param {function} [errorCallback] Callback function that is executed if the
+ *   server reports an error due to the submission (this includes a JSON formatting
+ *   error should the error return invalid JSON).
+ * @param {function} [formatdata] Callback function that is passed in the data
+ *   that will be submitted to the server, allowing pre-formatting of the data,
+ *   removal of data or adding of extra fields.
+ * @param {boolean} [hide=true] When the form is successfully submitted, by default
+ *   the form display will be hidden - this option allows that to be overridden.
+ * @private
+ */
+Editor.prototype._submit = function ( successCallback, errorCallback, formatdata, hide )
+{
+	var that = this;
+	var i, iLen, eventRet, errorNodes;
+	var changed = false, allData = {}, changedData = {};
+	var setBuilder =  DataTable.ext.oApi._fnSetObjectDataFn;
+	var dataSource = this.s.dataSource;
+	var fields = this.s.fields;
+	var action = this.s.action;
+	var editCount = this.s.editCount;
+	var modifier = this.s.modifier;
+	var editFields = this.s.editFields;
+	var editData = this.s.editData;
+	var opts = this.s.editOpts;
+	var changedSubmit = opts.submit;
+	var submitParams = {
+		"action": this.s.action,
+		"data": {}
+	};
+	var submitParamsLocal;
+
+	// For backwards compatibility
+	if ( this.s.dbTable ) {
+		submitParams.table = this.s.dbTable;
+	}
+
+	// Gather the data that is to be submitted
+	if ( action === "create" || action === "edit" ) {
+		$.each( editFields, function ( idSrc, edit ) {
+			var allRowData = {};
+			var changedRowData = {};
+
+			$.each( fields, function (name, field) {
+				if ( edit.fields[ name ] ) {
+					var value = field.multiGet( idSrc );
+					var builder = setBuilder( name );
+					var manyBuilder = $.isArray( value ) && name.indexOf('[]') !== -1 ?
+						setBuilder( name.replace(/\[.*$/,'')+'-many-count' ) :
+						null;
+
+					builder( allRowData, value );
+
+					// We need to tell the server-side if an array submission
+					// actually has no elements so it knows if the array was
+					// being submitted or not (since otherwise it doesn't know
+					// if the array was empty, or just not being submitted)
+					if ( manyBuilder ) {
+						manyBuilder( allRowData, value.length );
+					}
+
+					// Build a changed object for if that is the selected data
+					// type
+					if ( action === 'edit' && value !== editData[ name ][ idSrc ] ) {
+						builder( changedRowData, value );
+						changed = true;
+
+						if ( manyBuilder ) {
+							manyBuilder( changedRowData, value.length );
+						}
+					}
+				}
+			} );
+
+			if ( ! $.isEmptyObject( allRowData ) ) {
+				allData[ idSrc ] = allRowData;
+			}
+
+			if ( ! $.isEmptyObject( changedRowData ) ) {
+				changedData[ idSrc ] = changedRowData;
+			}
+		} );
+
+		// Decide what data to submit to the server for edit (create is all, always)
+		if ( action === 'create' || changedSubmit === 'all' || (changedSubmit === 'allIfChanged' && changed) ) {
+			submitParams.data = allData;
+		}
+		else if ( changedSubmit === 'changed' && changed ) {
+			submitParams.data = changedData;
+		}
+		else {
+			// Nothing to submit
+			this.s.action = null;
+
+			if ( opts.onComplete === 'close' && (hide === undefined || hide) ) {
+				this._close( false );
+			}
+
+			if ( successCallback ) {
+				successCallback.call( this );
+			}
+
+			this._processing( false );
+			this._event( 'submitComplete' );
+			return;
+		}
+	}
+	else if ( action === "remove" ) {
+		$.each( editFields, function ( idSrc, edit ) {
+			submitParams.data[ idSrc ] = edit.data;
+		} );
+	}
+
+	this._legacyAjax( 'send', action, submitParams );
+
+	// Local copy of the submit parameters, needed for the data lib prep since
+	// the preSubmit can modify the format and we need to know what the format is
+	submitParamsLocal = $.extend( true, {}, submitParams );
+
+	// Allow the data to be submitted to the server to be preprocessed by callback
+	// and event functions
+	if ( formatdata ) {
+		formatdata( submitParams );
+	}
+	if ( this._event( 'preSubmit', [submitParams, action] ) === false ) {
+		this._processing( false );
+		return;
+	}
+
+	// Submit to the server (or whatever method is defined in the settings)
+	this._ajax(
+		submitParams,
+		function (json) {
+			var setData;
+			that._legacyAjax( 'receive', action, json );
+			that._event( 'postSubmit', [json, submitParams, action] );
+
+			if ( !json.error ) {
+				json.error = "";
+			}
+			if ( !json.fieldErrors ) {
+				json.fieldErrors = [];
+			}
+
+			if ( json.error || json.fieldErrors.length ) {
+				// Global form error
+				that.error( json.error );
+
+				// Field specific errors
+				$.each( json.fieldErrors, function (i, err) {
+					var field = fields[ err.name ];
+
+					field.error( err.status || "Error" );
+
+					if ( i === 0 ) {
+						// Scroll the display to the first error and focus
+						$(that.dom.bodyContent, that.s.wrapper).animate( {
+							"scrollTop": $(field.node()).position().top
+						}, 500 );
+
+						field.focus();
+					}
+				} );
+
+				if ( errorCallback ) {
+					errorCallback.call( that, json );
+				}
+			}
+			else {
+				// Create a data store that the data source can use, which is
+				// unique to this action
+				var store = {};
+				that._dataSource( 'prep', action, modifier, submitParamsLocal, json.data, store );
+
+				if ( action === "create"  || action === "edit" ) {
+					for ( i=0 ; i<json.data.length ; i++ ) {
+						setData = json.data[ i ];
+						that._event( 'setData', [json, setData, action] );
+
+						if ( action === "create" ) {
+							// New row was created to add it to the DT
+							that._event( 'preCreate', [json, setData] );
+							that._dataSource( 'create', fields, setData, store );
+							that._event( ['create', 'postCreate'], [json, setData] );
+						}
+						else if ( action === "edit" ) {
+							// Row was updated, so tell the DT
+							that._event( 'preEdit', [json, setData] );
+							that._dataSource( 'edit', modifier, fields, setData, store );
+							that._event( ['edit', 'postEdit'], [json, setData] );
+						}
+					}
+				}
+				else if ( action === "remove" ) {
+					// Remove the rows given and then redraw the table
+					that._event( 'preRemove', [json] );
+					that._dataSource( 'remove', modifier, fields, store );
+					that._event( ['remove', 'postRemove'], [json] );
+				}
+
+				that._dataSource( 'commit', action, modifier, json.data, store );
+
+				// Submission complete
+				if ( editCount === that.s.editCount ) {
+					that.s.action = null;
+
+					if ( opts.onComplete === 'close' && (hide === undefined || hide) ) {
+						that._close( true );
+					}
+				}
+
+				// All done - fire off the callbacks and events
+				if ( successCallback ) {
+					successCallback.call( that, json );
+				}
+				that._event( 'submitSuccess', [json, setData] );
+			}
+
+			that._processing( false );
+			that._event( 'submitComplete', [json, setData] );
+		},
+		function (xhr, err, thrown) {
+			that._event( 'postSubmit', [xhr, err, thrown, submitParams] );
+
+			that.error( that.i18n.error.system );
+			that._processing( false );
+
+			if ( errorCallback ) {
+				errorCallback.call( that, xhr, err, thrown );
+			}
+
+			that._event( ['submitError', 'submitComplete'], [xhr, err, thrown, submitParams] );
+		}
+	); // /ajax submit
+};
+
+
+/**
+ * Check to see if the form needs to be tidied before a new action can be performed.
+ * This includes if the from is currently processing an old action and if it
+ * is inline editing.
+ *
+ * @param {function} fn Callback function
+ * @returns {boolean} `true` if was in inline mode, `false` otherwise
+ * @private
+ */
+Editor.prototype._tidy = function ( fn )
+{
+	var that = this;
+	var dt = this.s.table ?
+		new $.fn.dataTable.Api( this.s.table ) :
+		null;
+
+	var ssp = false;
+	if ( dt ) {
+		ssp = dt.settings()[0].oFeatures.bServerSide;
+	}
+
+	if ( this.s.processing ) {
+		// If currently processing, wait until the action is complete
+		this.one( 'submitComplete', function () {
+			// If server-side processing is being used in DataTables, first
+			// check that we are still processing (might not be if nothing was
+			// submitted) and then wait for the draw to finished
+			if ( ssp ) {
+				dt.one( 'draw', fn );
+			}
+			else {
+				setTimeout( function () {
+					fn();
+				}, 10 );
+			}
+		} );
+
+		return true;
+	}
+	else if ( this.display() === 'inline' || this.display() === 'bubble' ) {
+		// If there is an inline edit box, it needs to be tidied
+		this
+			.one( 'close', function () {
+				// On close if processing then we need to wait for the submit to
+				// complete before running the callback as onBlur was set to
+				// submit
+				if ( ! that.s.processing ) {
+					// IE needs a small timeout, otherwise it may not focus on a
+					// field if one already has focus
+					setTimeout( function () {
+						fn();
+					}, 10 );
+				}
+				else {
+					// Need to wait for the submit to finish
+					that.one( 'submitComplete', function ( e, json ) {
+						// If SSP then need to wait for the draw
+						if ( ssp && json ) {
+							dt.one( 'draw', fn );
+						}
+						else {
+							setTimeout( function () {
+								fn();
+							}, 10 );
+						}
+					} );
+				}
+			} )
+			.blur();
+
+		return true;
+	}
+
+	return false;
+};
+
+
+/*
+ * Defaults
+ */
+
+
+// Dev node - although this file is held in the models directory (because it
+// really is a model, it is assigned to Editor.defaults for easy
+// and sensible access to set the defaults for Editor.
+
+/**
+ * Initialisation options that can be given to Editor at initialisation time.
+ *  @namespace
+ */
+Editor.defaults = {
+	/**
+	 * jQuery selector that can be used to identify the table you wish to apply
+	 * this editor instance to.
+	 *
+	 * In previous versions of Editor (1.2 and earlier), this parameter was
+	 * called `table`. The name has been altered in 1.3+ to simplify the
+	 * initialisation. This is a backwards compatible change - if you pass in
+	 * a `table` option it will be used.
+	 *  @type string
+	 *  @default <i>Empty string</i>
+	 *
+	 *  @example
+	 *    $(document).ready(function() {
+	 *      var editor = new $.fn.Editor( {
+	 *        "ajax": "php/index.php",
+	 *        "table": "#example"
+	 *      } );
+	 *    } );
+	 */
+	"table": null,
+
+	/**
+	 * The URL, or collection of URLs when using a REST interface, which will accept 
+	 * the data for the create, edit and remove functions. The target script / program
+	 * must accept data in the format defined by Editor and return the expected JSON as
+	 * required by Editor. When given as an object, the `create`, `edit` and `remove`
+	 * properties should be defined, each being the URL to send the data to for that
+	 * action. When used as an object, the string `_id_` will be replaced for the edit
+	 * and remove actions, allowing a URL to be dynamically created for those actions.
+	 *  @type string|object
+	 *  @default <i>Empty string</i>
+	 *  @deprecated This option has been deprecated in favour of the `ajax` option.
+	 *    It can still be used, but it is recommended that you use the `ajax` option
+	 *    which provides all of the abilities of this old option and more.
+	 */
+	"ajaxUrl": null,
+
+	/**
+	 * Fields to initialise the form with - see {@link Editor.models.field} for
+	 * a full list of the options available to each field. Note that if fields are not 
+	 * added to the form at initialisation time using this option, they can be added using
+	 * the {@link Editor#add} API method.
+	 *  @type array
+	 *  @default []
+	 *
+	 *  @example
+	 *    $(document).ready(function() {
+	 *      var editor = new $.fn.Editor( {
+	 *        "ajax": "php/index.php",
+	 *        "table": "#example",
+	 *        "fields": [ {
+	 *            "label": "User name:",
+	 *            "name": "username"
+	 *          }
+	 *          // More fields would typically be added here!
+	 *        } ]
+	 *      } );
+	 *    } );
+	 */
+	"fields": [],
+
+	/**
+	 * The display controller for the form. The form itself is just a collection of
+	 * DOM elements which require a display container. This display controller allows
+	 * the visual appearance of the form to be significantly altered without major
+	 * alterations to the Editor code. There are two display controllers built into
+	 * Editor *lightbox* and *envelope*. The value of this property will
+	 * be used to access the display controller defined in {@link Editor.display}
+	 * for the given name. Additional display controllers can be added by adding objects
+	 * to that object, through extending the displayController model:
+	 * {@link Editor.models.displayController}.
+	 *  @type string
+	 *  @default lightbox
+	 *
+	 *  @example
+	 *    $(document).ready(function() {
+	 *      var editor = new $.fn.Editor( {
+	 *        "ajax": "php/index.php",
+	 *        "table": "#example",
+	 *        "display": 'envelope'
+	 *      } );
+	 *    } );
+	 */
+	"display": 'lightbox',
+
+	/**
+	 * Control how the Ajax call to update data on the server.
+	 *
+	 * This option matches the `dt-init ajax` option in that is can be provided
+	 * in one of three different ways:
+	 *
+	 * * string - As a string, the value given is used as the url to target
+	 *   the Ajax request to, using the default Editor Ajax options. Note that
+	 *   for backwards compatibility you can use the form "METHOD URL" - for
+	 *   example: `"PUT api/users"`, although it is recommended you use the
+	 *   object form described below.
+	 * * object - As an object, the `ajax` property has two forms:
+	 *   * Used to extend and override the default Ajax options that Editor
+	 *     uses. This can be very useful for adding extra data for example, or
+	 *     changing the HTTP request type.
+	 *   * With `create`, `edit` and `remove` properties, Editor will use the
+	 *     option for the action that it is taking, which can be useful for
+	 *     REST style interfaces. The value of each property can be a string,
+	 *     object or function, using exactly the same options as the main `ajax`
+	 *     option. All three options must be defined if this form is to be used.
+	 * * function - As a function this gives complete control over the method
+	 *   used to update the server (if indeed a server is being used!). For
+	 *   example, you could use a different data store such as localStorage,
+	 *   Firebase or route the data through a web-socket.
+	 *
+	 *  @example
+	 *    // As a string - all actions are submitted to this URI as POST requests
+	 *    $(document).ready(function() {
+	 *      var editor = new $.fn.Editor( {
+	 *        "ajax": 'php/index.php',
+	 *        "table": "#example"
+	 *      } );
+	 *    } );
+	 *
+	 *  @example
+	 *    // As an object - using GET rather than POST
+	 *    $(document).ready(function() {
+	 *      var editor = new $.fn.Editor( {
+	 *        "ajax": {
+	 *          "type": 'GET',
+	 *          "url": 'php/index.php
+	 *        },
+	 *        "table": "#example"
+	 *      } );
+	 *    } );
+	 *
+	 *  @example
+	 *    // As an object - each action is submitted to a different URI as POST requests
+	 *    $(document).ready(function() {
+	 *      var editor = new $.fn.Editor( {
+	 *        "ajax": {
+	 *          "create": "/rest/user/create",
+	 *          "edit":   "/rest/user/_id_/edit",
+	 *          "remove": "/rest/user/_id_/delete"
+	 *        },
+	 *        "table": "#example"
+	 *      } );
+	 *    } );
+	 *
+	 *  @example
+	 *    // As an object - with different HTTP methods for each action
+	 *    $(document).ready(function() {
+	 *      var editor = new $.fn.Editor( {
+	 *        "ajax": {
+	 *          "create": {
+	 *          	type: 'POST',
+	 *          	url:  '/rest/user/create'
+	 *          },
+	 *          "edit": {
+	 *          	type: 'PUT',
+	 *          	url:  '/rest/user/edit/_id_'
+	 *          },
+	 *          "remove": {
+	 *          	type: 'DELETE',
+	 *          	url:  '/rest/user/delete'
+	 *          }
+	 *        },
+	 *        "table": "#example"
+	 *      } );
+	 *    } );
+	 *
+	 *    // As a function - Making a custom `$.ajax` call
+	 *    $(document).ready(function() {
+	 *      var editor = new $.fn.Editor( {
+	 *        "ajax": "php/index.php",
+	 *        "table": "#example",
+	 *        "ajax": function ( method, url, data, successCallback, errorCallback ) {
+	 *          $.ajax( {
+	 *            "type": method,
+	 *            "url":  url,
+	 *            "data": data,
+	 *            "dataType": "json",
+	 *            "success": function (json) {
+	 *              successCallback( json );
+	 *            },
+	 *            "error": function (xhr, error, thrown) {
+	 *              errorCallback( xhr, error, thrown );
+	 *            }
+	 *          } );
+	 *        }
+	 *      } );
+	 *    } );
+	 */
+	"ajax": null,
+
+	/**
+	 * JSON property from which to read / write the row's ID property (i.e. its
+	 * unique column index that identifies the row to the database). By default
+	 * Editor will use the `DT_RowId` property from the data source object
+	 * (DataTable's magic property to set the DOM id for the row).
+	 *
+	 * If you want to read a parameter from the data source object instead of
+	 * using `DT_RowId`, set this option to the property name to use.
+	 *
+	 * Like other data source options the `srcId` option can be given in dotted
+	 * object notation to read nested objects.
+	 *  @type null|string
+	 *  @default DT_RowId
+	 *
+	 *  @example
+	 *    // Using a data source such as:
+	 *    // { "id":12, "browser":"Chrome", ... }
+	 *    $(document).ready(function() {
+	 *      var editor = new $.fn.Editor( {
+	 *        "ajax": "php/index.php",
+	 *        "table": "#example",
+	 *        "idSrc": "id"
+	 *      } );
+	 *    } );
+	 */
+	"idSrc": 'DT_RowId',
+
+	/**
+	 * Events / callbacks - event handlers can be assigned as an individual function
+	 * during initialisation using the parameters in this name space. The names, and
+	 * the parameters passed to each callback match their event equivalent in the
+	 * {@link Editor} object.
+	 *  @namespace
+	 *  @deprecated Since 1.3. Use the `on()` API method instead. Note that events
+	 *    passed in do still operate as they did in 1.2- but are no longer
+	 *    individually documented.
+	 */
+	"events": {},
+
+	/**
+	 * Internationalisation options for Editor. All client-side strings that the
+	 * end user can see in the interface presented by Editor can be modified here.
+	 *
+	 * You may also wish to refer to the <a href="http://datatables.net/usage/i18n">
+	 * DataTables internationalisation options</a> to provide a fully language 
+	 * customised table interface.
+	 *  @namespace
+	 *
+	 *  @example
+	 *    // Set the 'create' button text. All other strings used are the
+	 *    // default values.
+	 *    var editor = new $.fn.Editor( {
+	 *      "ajax": "data/source",
+	 *      "table": "#example",
+	 *      "i18n": {
+	 *        "create": {
+	 *          "button": "New user"
+	 *        }
+	 *      }
+	 *    } );
+	 *
+	 *  @example
+	 *    // Set the submit text for all three actions
+	 *    var editor = new $.fn.Editor( {
+	 *      "ajax": "data/source",
+	 *      "table": "#example",
+	 *      "i18n": {
+	 *        "create": {
+	 *          "submit": "Create new user"
+	 *        },
+	 *        "edit": {
+	 *          "submit": "Update user"
+	 *        },
+	 *        "remove": {
+	 *          "submit": "Remove user"
+	 *        }
+	 *      }
+	 *    } );
+	 */
+	"i18n": {
+		/**
+		 * Strings used when working with the Editor 'create' action (creating new
+		 * records).
+		 *  @namespace
+		 */
+		"create": {
+			/**
+			 * TableTools button text
+			 *  @type string
+			 *  @default New
+			 */
+			"button": "New",
+
+			/**
+			 * Display container title (when showing the editor display)
+			 *  @type string
+			 *  @default Create new entry
+			 */
+			"title":  "Create new entry",
+
+			/**
+			 * Submit button text
+			 *  @type string
+			 *  @default Create
+			 */
+			"submit": "Create"
+		},
+
+		/**
+		 * Strings used when working with the Editor 'edit' action (editing existing
+		 * records).
+		 *  @namespace
+		 */
+		"edit": {
+			/**
+			 * TableTools button text
+			 *  @type string
+			 *  @default Edit
+			 */
+			"button": "Edit",
+
+			/**
+			 * Display container title (when showing the editor display)
+			 *  @type string
+			 *  @default Edit entry
+			 */
+			"title":  "Edit entry",
+
+			/**
+			 * Submit button text
+			 *  @type string
+			 *  @default Update
+			 */
+			"submit": "Update"
+		},
+
+		/**
+		 * Strings used when working with the Editor 'delete' action (deleting 
+		 * existing records).
+		 *  @namespace
+		 */
+		"remove": {
+			/**
+			 * TableTools button text
+			 *  @type string
+			 *  @default Delete
+			 */
+			"button": "Delete",
+
+			/**
+			 * Display container title (when showing the editor display)
+			 *  @type string
+			 *  @default Delete
+			 */
+			"title":  "Delete",
+
+			/**
+			 * Submit button text
+			 *  @type string
+			 *  @default Delete
+			 */
+			"submit": "Delete",
+
+			/**
+			 * Deletion confirmation message.
+			 *
+			 * As Editor has the ability to delete either a single or multiple rows
+			 * at a time, this option can be given as either a string (which will be
+			 * used regardless of how many records are selected) or as an object 
+			 * where the property "_" will be used (with %d substituted for the number
+			 * of records to be deleted) as the delete message, unless there is a
+			 * key with the number of records to be deleted. This allows Editor
+			 * to consider the different pluralisation characteristics of different
+			 * languages.
+			 *  @type object|string
+			 *  @default Are you sure you wish to delete %d rows?
+			 *
+			 *  @example
+			 *    // String - no plural consideration
+			 *    var editor = new $.fn.Editor( {
+			 *      "ajax": "data/source",
+			 *      "table": "#example",
+			 *      "i18n": {
+			 *        "remove": {
+			 *          "confirm": "Are you sure you wish to delete %d record(s)?"
+			 *        }
+			 *      }
+			 *    } );
+			 *
+			 *  @example
+			 *    // Basic 1 (singular) or _ (plural)
+			 *    var editor = new $.fn.Editor( {
+			 *      "ajax": "data/source",
+			 *      "table": "#example",
+			 *      "i18n": {
+			 *        "remove": {
+			 *          "confirm": {
+			 *            "_": "Confirm deletion of %d records.",
+			 *            "1": "Confirm deletion of record."
+			 *        }
+			 *      }
+			 *    } );
+			 *
+			 *  @example
+			 *    // Singular, dual and plural
+			 *    var editor = new $.fn.Editor( {
+			 *      "ajax": "data/source",
+			 *      "table": "#example",
+			 *      "i18n": {
+			 *        "remove": {
+			 *          "confirm": {
+			 *            "_": "Confirm deletion of %d records.",
+			 *            "1": "Confirm deletion of record.",
+			 *            "2": "Confirm deletion of both record."
+			 *        }
+			 *      }
+			 *    } );
+			 *        
+			 */
+			"confirm": {
+				"_": "Are you sure you wish to delete %d rows?",
+				"1": "Are you sure you wish to delete 1 row?"
+			}
+		},
+
+		/**
+		 * Strings used for error conditions.
+		 *  @namespace
+		 */
+		"error": {
+			/**
+			 * Generic server error message
+			 *  @type string
+			 *  @default A system error has occurred (<a target=\"_blank\" href=\"//datatables.net/tn/12\">More information</a>)
+			 */
+			"system": "A system error has occurred (<a target=\"_blank\" href=\"//datatables.net/tn/12\">More information</a>)."
+		},
+
+		/**
+		 * Strings used for multi-value editing
+		 *  @namespace
+		 */
+		"multi": {
+			/**
+			 * Shown in place of the field value when a field has multiple values
+			 */
+			"title": "Multiple values",
+
+			/**
+			 * Shown below the multi title text, although only the first
+			 * instance of this text is shown in the form to reduce redundancy
+			 */
+			"info": "The selected items contain different values for this input. To edit and set all items for this input to the same value, click or tap here, otherwise they will retain their individual values.",
+
+			/**
+			 * Shown below the field input when group editing a value to allow
+			 * the user to return to the original multiple values
+			 */
+			"restore": "Undo changes"
+		},
+
+		"datetime": {
+			previous: 'Previous',
+			next:     'Next',
+			months:   [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ],
+			weekdays: [ 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat' ],
+			amPm:     [ 'am', 'pm' ],
+			unknown:  '-'
+		}
+	},
+
+	formOptions: {
+		bubble: $.extend( {}, Editor.models.formOptions, {
+			title: false,
+			message: false,
+			buttons: '_basic',
+			submit: 'changed'
+		} ),
+
+		inline: $.extend( {}, Editor.models.formOptions, {
+			buttons: false,
+			submit: 'changed'
+		} ),
+
+		main: $.extend( {}, Editor.models.formOptions )
+	},
+
+	/**
+	 * Submit data to the server in the 1.4- data format (`true`) or in the 1.5+
+	 * data format (`false` - default).
+	 *
+	 * @type Boolean
+	 */
+	legacyAjax: false
+};
+
+
+/*
+ * Extensions
+ */
+
 (function(){
 
-// Please note that this message is for information only, it does not effect the
-// running of the Editor script below, which will stop executing after the
-// expiry date. For documentation, purchasing options and more information about
-// Editor, please see https://editor.datatables.net .
-var remaining = Math.ceil(
-	(new Date( 1455667200 * 1000 ).getTime() - new Date().getTime()) / (1000*60*60*24)
-);
 
-if ( remaining <= 0 ) {
-	alert(
-		'Thank you for trying DataTables Editor\n\n'+
-		'Your trial has now expired. To purchase a license '+
-		'for Editor, please see https://editor.datatables.net/purchase'
-	);
-	throw 'Editor - Trial expired';
-}
-else if ( remaining <= 7 ) {
-	console.log(
-		'DataTables Editor trial info - '+remaining+
-		' day'+(remaining===1 ? '' : 's')+' remaining'
-	);
+var __dataSources = Editor.dataSources = {};
+
+
+/* -  -  -  -  -  -  -  -  -  -
+ * DataTables editor interface
+ */
+
+var __dtIsSsp = function ( dt ) {
+	return dt.settings()[0].oFeatures.bServerSide;
+};
+
+var __dtApi = function ( table ) {
+	return $(table).DataTable();
+};
+
+var __dtHighlight = function ( node ) {
+	// Highlight a row using CSS transitions. The timeouts need to match the
+	// transition duration from the CSS
+	node = $(node);
+
+	setTimeout( function () {
+		node.addClass( 'highlight' );
+
+		setTimeout( function () {
+			node
+				.addClass( 'noHighlight' )
+				.removeClass( 'highlight' );
+
+			setTimeout( function () {
+				node.removeClass( 'noHighlight' );
+			}, 550 );
+		}, 500 );
+	}, 20 );
+};
+
+var __dtRowSelector = function ( out, dt, identifier, fields, idFn )
+{
+	dt.rows( identifier ).indexes().each( function ( idx ) {
+		var row = dt.row( idx );
+		var data = row.data();
+		var idSrc = idFn( data );
+
+		if ( idSrc === undefined ) {
+			Editor.error( 'Unable to find row identifier', 14 );
+		}
+
+		out[ idSrc ] = {
+			idSrc:  idSrc,
+			data:   data,
+			node:   row.node(),
+			fields: fields,
+			type:   'row'
+		};
+	} );
+};
+
+var __dtColumnSelector = function ( out, dt, identifier, fields, idFn )
+{
+	dt.cells( null, identifier ).indexes().each( function ( idx ) {
+		__dtCellSelector( out, dt, idx, fields, idFn );
+	} );
+};
+
+var __dtCellSelector = function ( out, dt, identifier, allFields, idFn, forceFields )
+{
+	dt.cells( identifier ).indexes().each( function ( idx ) {
+		var cell = dt.cell( idx );
+		var row = dt.row( idx.row );
+		var data = row.data();
+		var idSrc = idFn( data );
+		var fields = forceFields || __dtFieldsFromIdx( dt, allFields, idx.column );
+
+		// Use the row selector to get the row information
+		__dtRowSelector(out, dt, idx.row, allFields, idFn);
+
+		out[ idSrc ].attach = [ cell.node() ];
+		out[ idSrc ].displayFields = fields; // all fields are edited, but only
+		                                     // these are actually displayed
+	} );
+};
+
+var __dtFieldsFromIdx = function ( dt, fields, idx )
+{
+	var field;
+	var col = dt.settings()[0].aoColumns[ idx ];
+	var dataSrc = col.editField !== undefined ?
+		col.editField :
+		col.mData;
+	var resolvedFields = {};
+	var run = function ( field, dataSrc ) {
+		if ( field.dataSrc() === dataSrc ) {
+			resolvedFields[ field.name() ] = field;
+		}
+	};
+
+	$.each( fields, function ( name, fieldInst ) {
+		if ( $.isArray( dataSrc ) ) {
+			for ( var i=0 ; i<dataSrc.length ; i++ ) {
+				run( fieldInst, dataSrc[i] );
+			}
+		}
+		else {
+			run( fieldInst, dataSrc );
+		}
+	} );
+
+	if ( $.isEmptyObject( resolvedFields ) ) {
+		Editor.error('Unable to automatically determine field from source. Please specify the field name.', 11);
+	}
+
+	return resolvedFields;
+};
+
+
+
+__dataSources.dataTable = {
+	individual: function ( identifier, fieldNames ) {
+		var idFn = DataTable.ext.oApi._fnGetObjectDataFn( this.s.idSrc );
+		var dt = __dtApi( this.s.table );
+		var fields = this.s.fields;
+		var out = {};
+		var forceFields;
+		var responsiveNode;
+
+		// Responsive field - this isn't really needed as of DT 1.10.11. To be
+		// removed in Editor 1.6
+		if ( identifier.nodeName && $(identifier).hasClass( 'dtr-data' ) ) {
+			responsiveNode = identifier;
+
+			// Overwrite the selector so that DataTables will select based on
+			// the cell that Responsive is showing data for
+			identifier = dt.responsive.index( $(identifier).closest('li') );
+		}
+
+		if ( fieldNames ) {
+			if ( ! $.isArray( fieldNames ) ) {
+				fieldNames = [ fieldNames ];
+			}
+
+			forceFields = {};
+
+			$.each( fieldNames, function ( i, name ) {
+				forceFields[ name ] = fields[ name ];
+			} );
+		}
+
+		__dtCellSelector( out, dt, identifier, fields, idFn, forceFields );
+
+		// If Responsive, we want it to attach the editor to the element that
+		// was clicked on
+		if ( responsiveNode ) {
+			$.each( out, function ( i, val ) {
+				val.attach = [ responsiveNode ];
+			} );
+		}
+
+		return out;
+	},
+
+	// get idSrc, fields to edit, data and node for each item
+	fields: function ( identifier )
+	{
+		var idFn = DataTable.ext.oApi._fnGetObjectDataFn( this.s.idSrc );
+		var dt = __dtApi( this.s.table );
+		var fields = this.s.fields;
+		var out = {};
+
+		if ( $.isPlainObject( identifier ) && ( identifier.rows !== undefined || identifier.columns !== undefined || identifier.cells !== undefined ) ) {
+			// Multi-item type selector
+			if ( identifier.rows !== undefined ) {
+				__dtRowSelector( out, dt, identifier.rows, fields, idFn );
+			}
+
+			if ( identifier.columns !== undefined ) {
+				__dtColumnSelector( out, dt, identifier.columns, fields, idFn );
+			}
+			
+			if ( identifier.cells !== undefined ) {
+				__dtCellSelector( out, dt, identifier.cells, fields, idFn );
+			}
+		}
+		else {
+			// Just a rows selector
+			__dtRowSelector( out, dt, identifier, fields, idFn );
+		}
+
+		return out;
+	},
+
+	create: function ( fields, data ) {
+		var dt = __dtApi( this.s.table );
+
+		if ( ! __dtIsSsp( dt ) ) {
+			var row = dt.row.add( data );
+			__dtHighlight( row.node() );
+		}
+	},
+
+	edit: function ( identifier, fields, data, store ) {
+		var dt = __dtApi( this.s.table );
+
+		// No point in doing anything when server-side processing - the commit
+		// will redraw the table
+		if ( ! __dtIsSsp( dt ) ) {
+			// The identifier can select one or more rows, but the data will
+			// refer to just a single row. We need to determine which row from
+			// the set is the one to operator on.
+			var idFn = DataTable.ext.oApi._fnGetObjectDataFn( this.s.idSrc );
+			var rowId = idFn( data );
+			var row;
+
+			// Find the row to edit - attempt to do an id look up first for speed
+			row = dt.row( '#'+rowId );
+
+			// If not found, then we need to do it the slow way
+			if ( ! row.any() ) {
+				row = dt.row( function ( rowIdx, rowData, rowNode ) {
+					return rowId == idFn( rowData );
+				} );
+			}
+
+			if ( row.any() ) {
+				row.data( data );
+
+				// Remove the item from the list of indexes now that is has been
+				// updated
+				var idx = $.inArray( rowId, store.rowIds );
+				store.rowIds.splice( idx, 1 );
+			}
+			else {
+				// If not found, then its a new row (change in pkey possibly)
+				row = dt.row.add( data );
+			}
+
+			__dtHighlight( row.node() );
+		}
+	},
+
+	remove: function ( identifier, fields ) {
+		// No confirmation from the server 
+		var dt = __dtApi( this.s.table );
+
+		if ( ! __dtIsSsp( dt ) ) {
+			dt.rows( identifier ).remove();
+		}
+	},
+
+	prep: function ( action, identifier, submit, data, store ) {
+		// On edit we store the ids of the rows that are being edited
+		if ( action === 'edit' ) {
+			store.rowIds = $.map( submit.data, function ( val, key ) {
+				if ( ! $.isEmptyObject( submit.data[ key ] ) ) {
+					return key;
+				}
+			} );
+		}
+	},
+
+	commit: function ( action, identifier, data, store ) {
+		// Updates complete - redraw
+		var dt = __dtApi( this.s.table );
+
+		// On edit, if there are any rows left in the `store.rowIds`, then they
+		// were not returned by the server and should be removed (they might not
+		// meet filtering requirements any more for example)
+		if ( action === 'edit' && store.rowIds.length ) {
+			var ids = store.rowIds;
+			var idFn = DataTable.ext.oApi._fnGetObjectDataFn( this.s.idSrc );
+			var row;
+
+			for ( var i=0, ien=ids.length ; i<ien ; i++ ) {
+				// Find the row to edit - attempt to do an id look up first for speed
+				row = dt.row( '#'+ids[i] );
+
+				// If not found, then we need to do it the slow way
+				if ( ! row.any() ) {
+					row = dt.row( function ( rowIdx, rowData, rowNode ) {
+						return ids[i] === idFn( rowData );
+					} );
+				}
+
+				if ( row.any() ) {
+					row.remove();
+				}
+			}
+		}
+
+		var drawType = this.s.editOpts.drawType;
+		if ( drawType !== 'none' ) {
+			dt.draw( drawType );
+		}
+	}
+};
+
+
+
+/* -  -  -  -  -  -  -  -
+ * HTML editor interface
+ */
+
+function __html_set( identifier, fields, data ) {
+	$.each( data, function ( name, value ) {
+		var field = fields[ name ];
+
+		if ( field ) {
+			__html_el( identifier, field.dataSrc() )
+				.each( function () {
+					// This is very frustrating, but in IE if you just write directly
+					// to innerHTML, and elements that are overwritten are GC'ed,
+					// even if there is a reference to them elsewhere
+					while ( this.childNodes.length ) {
+						this.removeChild( this.firstChild );
+					}
+				} )
+				.html(
+					field.valFromData( data )
+				);
+		}
+	} );
 }
 
-})();
-var C7Z={'G2h':"j",'c0h':"s",'l8h':"n",'Q6':"a",'U8':"at",'M7':"Tabl",'F4h':"u",'F0c':"les",'w6':"b",'t4r':(function(a4r){return (function(k4r,N4r){return (function(e4r){return {j4r:e4r,o0r:e4r,}
-;}
-)(function(X4r){var p4r,q4r=0;for(var x4r=k4r;q4r<X4r["length"];q4r++){var b4r=N4r(X4r,q4r);p4r=q4r===0?b4r:p4r^b4r;}
-return p4r?x4r:!x4r;}
-);}
-)((function(L4r,s4r,E4r,O4r){var i4r=29;return L4r(a4r,i4r)-O4r(s4r,E4r)>i4r;}
-)(parseInt,Date,(function(s4r){return (''+s4r)["substring"](1,(s4r+'')["length"]-1);}
-)('_getTime2'),function(s4r,E4r){return new s4r()[E4r]();}
-),function(X4r,q4r){var T4r=parseInt(X4r["charAt"](q4r),16)["toString"](2);return T4r["charAt"](T4r["length"]-1);}
-);}
-)('2qb6g64ej'),'V7':"e",'C8h':"q",'A7c':"table",'N6':"or",'e8c':"tion",'W7':"er",'I4c':".",'D9':"et",'u1c':"nc",'p5h':"f",'X3h':"y",'a2c':"ect",'i6':"d",'R4h':"t",'D4h':"fn"}
-;C7Z.x0r=function(n){for(;C7Z;)return C7Z.t4r.j4r(n);}
-;C7Z.b0r=function(i){if(C7Z&&i)return C7Z.t4r.o0r(i);}
-;C7Z.p0r=function(g){while(g)return C7Z.t4r.o0r(g);}
-;C7Z.L0r=function(f){while(f)return C7Z.t4r.o0r(f);}
-;C7Z.a0r=function(l){if(C7Z&&l)return C7Z.t4r.j4r(l);}
-;C7Z.s0r=function(d){if(C7Z&&d)return C7Z.t4r.j4r(d);}
-;C7Z.E0r=function(c){while(c)return C7Z.t4r.j4r(c);}
-;C7Z.q0r=function(n){while(n)return C7Z.t4r.o0r(n);}
-;C7Z.X0r=function(a){if(C7Z&&a)return C7Z.t4r.j4r(a);}
-;C7Z.j0r=function(g){for(;C7Z;)return C7Z.t4r.j4r(g);}
-;C7Z.t0r=function(e){if(C7Z&&e)return C7Z.t4r.o0r(e);}
-;C7Z.F0r=function(j){if(C7Z&&j)return C7Z.t4r.o0r(j);}
-;C7Z.y0r=function(h){for(;C7Z;)return C7Z.t4r.o0r(h);}
-;C7Z.W0r=function(a){if(C7Z&&a)return C7Z.t4r.o0r(a);}
-;C7Z.u0r=function(e){for(;C7Z;)return C7Z.t4r.j4r(e);}
-;C7Z.c0r=function(k){if(C7Z&&k)return C7Z.t4r.j4r(k);}
-;C7Z.m0r=function(a){for(;C7Z;)return C7Z.t4r.j4r(a);}
-;C7Z.J0r=function(a){while(a)return C7Z.t4r.j4r(a);}
-;C7Z.Y0r=function(e){if(C7Z&&e)return C7Z.t4r.o0r(e);}
-;C7Z.A0r=function(b){for(;C7Z;)return C7Z.t4r.o0r(b);}
-;C7Z.l0r=function(l){for(;C7Z;)return C7Z.t4r.j4r(l);}
-;C7Z.G0r=function(f){while(f)return C7Z.t4r.o0r(f);}
-;C7Z.r0r=function(d){for(;C7Z;)return C7Z.t4r.j4r(d);}
-;C7Z.Q0r=function(b){while(b)return C7Z.t4r.j4r(b);}
-;C7Z.g0r=function(m){if(C7Z&&m)return C7Z.t4r.o0r(m);}
-;C7Z.h0r=function(i){for(;C7Z;)return C7Z.t4r.o0r(i);}
-;C7Z.z0r=function(i){while(i)return C7Z.t4r.o0r(i);}
-;C7Z.H0r=function(e){while(e)return C7Z.t4r.j4r(e);}
-;C7Z.K0r=function(m){while(m)return C7Z.t4r.o0r(m);}
-;C7Z.M0r=function(e){if(C7Z&&e)return C7Z.t4r.o0r(e);}
-;C7Z.f0r=function(l){for(;C7Z;)return C7Z.t4r.j4r(l);}
-;C7Z.U0r=function(i){while(i)return C7Z.t4r.j4r(i);}
-;(function(d){C7Z.C0r=function(f){for(;C7Z;)return C7Z.t4r.o0r(f);}
-;C7Z.V0r=function(h){if(C7Z&&h)return C7Z.t4r.j4r(h);}
-;C7Z.w0r=function(l){while(l)return C7Z.t4r.o0r(l);}
-;var x9=C7Z.U0r("d3")?"appendChild":"xp",X2h=C7Z.f0r("84")?"RFC_2822":"obj",K8B=C7Z.w0r("aa")?"offset":"md";(C7Z.p5h+C7Z.F4h+C7Z.u1c+C7Z.e8c)===typeof define&&define[(C7Z.Q6+K8B)]?define([(C7Z.G2h+C7Z.C8h+C7Z.F4h+C7Z.W7+C7Z.X3h),(C7Z.i6+C7Z.Q6+C7Z.R4h+C7Z.Q6+C7Z.A7c+C7Z.c0h+C7Z.I4c+C7Z.l8h+C7Z.V7+C7Z.R4h)],function(p){return d(p,window,document);}
-):(X2h+C7Z.a2c)===typeof exports?module[(C7Z.V7+x9+C7Z.N6+C7Z.R4h+C7Z.c0h)]=function(p,r){var l8B=C7Z.M0r("5f")?"getDate":"document",o5c=C7Z.V0r("75e5")?"$":"postUpdate";p||(p=window);if(!r||!r[(C7Z.D4h)][(C7Z.i6+C7Z.U8+C7Z.Q6+C7Z.M7+C7Z.V7)])r=C7Z.C0r("d1e3")?require((C7Z.i6+C7Z.U8+C7Z.U8+C7Z.Q6+C7Z.w6+C7Z.F0c+C7Z.I4c+C7Z.l8h+C7Z.D9))(p,r)[o5c]:4;return d(r,p,p[l8B]);}
-:d(jQuery,window,document);}
-)(function(d,p,r,h){C7Z.N0r=function(f){if(C7Z&&f)return C7Z.t4r.j4r(f);}
-;C7Z.O0r=function(g){if(C7Z&&g)return C7Z.t4r.o0r(g);}
-;C7Z.i0r=function(f){for(;C7Z;)return C7Z.t4r.j4r(f);}
-;C7Z.T0r=function(j){while(j)return C7Z.t4r.o0r(j);}
-;C7Z.R0r=function(d){if(C7Z&&d)return C7Z.t4r.j4r(d);}
-;C7Z.I0r=function(d){while(d)return C7Z.t4r.o0r(d);}
-;C7Z.d0r=function(a){for(;C7Z;)return C7Z.t4r.o0r(a);}
-;C7Z.P0r=function(l){if(C7Z&&l)return C7Z.t4r.j4r(l);}
-;C7Z.B0r=function(l){for(;C7Z;)return C7Z.t4r.o0r(l);}
-;C7Z.S0r=function(m){if(C7Z&&m)return C7Z.t4r.j4r(m);}
-;C7Z.v0r=function(a){for(;C7Z;)return C7Z.t4r.j4r(a);}
-;C7Z.n0r=function(g){if(C7Z&&g)return C7Z.t4r.j4r(g);}
-;C7Z.D0r=function(e){for(;C7Z;)return C7Z.t4r.j4r(e);}
-;var P4B=C7Z.K0r("d18")?"buttons-remove":"1.5.4",j5c=C7Z.H0r("8b71")?"rsio":"total",O9B=C7Z.D0r("84")?"multiple":"Editor",d0c=C7Z.n0r("72")?"rFiel":"_constructor",N7="Type",r2h="editorFields",K2c="uplo",k6c=C7Z.v0r("28")?"_multiInfo":"div.rendered",l9h=C7Z.z0r("cf")?"_picker":"Event",h7B=C7Z.S0r("a581")?"prop":"icker",x7c=C7Z.h0r("7fff")?"_lastSet":"ker",A8c="tep",u2c=C7Z.B0r("febe")?"post":"#",W9c="_va",a0B="checked",B9h=C7Z.g0r("18bb")?" />":'<td class="',O1B="radio",m5h="prop",T9h=C7Z.Q0r("13b8")?"rat":"formContent",v5c="_in",a6c="checkbox",u8=C7Z.P0r("7a7a")?"TableTools":"optionsPair",b7B=C7Z.r0r("f1")?"editor_remove":"pairs",j4="kb",A6B=C7Z.G0r("42b7")?"editData":"multiple",H2B="_v",u5c="_addOptions",B3B=C7Z.l0r("3f8")?"status":"_a",z9B="placeholder",m6B="select",P7B="eId",T5B="tend",Q3B="sswo",J4="_inp",h2c="attr",P1c="/>",f0h="readonly",J3=C7Z.A0r("45")?"_val":"fn",D1h=false,N0c=C7Z.Y0r("63")?"abled":"arguments",S8B="_i",N4c="_inpu",J8c="eldType",v2B=C7Z.J0r("fb")?"Math":"els",E0c="pes",f4h=C7Z.m0r("75d")?"div.clearValue button":"preventDefault",j6c=C7Z.d0r("5aea")?"_input":"getUTCMinutes",w9="datetime",y3c="ults",R9="edito",V0=C7Z.I0r("87")?"fa":"info",b9B="ampm",H5B="npu",E6B="getFullYear",S9h='alue',t4c=C7Z.c0r("dcf")?"data":"text",C0B=C7Z.u0r("15d3")?"footer":"fix",w9h="getU",G1B="year",C5B='ype',a7c="selected",w0h="disabled",N3=C7Z.W0r("d3e")?"toLowerCase":"scr",U5B=C7Z.y0r("ad84")?"namespace":"arguments",M2B="lYe",f5B=C7Z.R0r("5e36")?"uploadMany":"getUTCMonth",P2c="pag",O3="TC",f3h="Ti",i2h="led",C2=C7Z.F0r("28fd")?"dataSource":"inpu",k6B="last",Q9c=C7Z.t0r("c43")?"hours12":"?",B6c="parts",N7c="par",M9B="_setTime",O3c=C7Z.j0r("531b")?"separator":"_set",g4h="play",C4c="input",k5=C7Z.T0r("352")?"pairs":"tS",D4c="mom",z7B="UTC",z1h="etC",o0=C7Z.X0r("d7c")?"column":"itle",B6h="pt",T0B=C7Z.q0r("bd46")?"_blur":"_o",X8h="_setCalander",C5=C7Z.E0r("22")?"init":"Date",d0="of",s7c="inp",n8="date",H3B="format",W5h="_instance",z8B="DateTime",n5B="fin",f4=C7Z.s0r("54")?"></":"</div></div></div>",s3c=C7Z.i0r("c7e")?"</":"hours",T1h=C7Z.a0r("e75")?"getMonth":"pm",w8c="tes",V7c=">",q7c="<",B8c="hours",l2=C7Z.L0r("fb")?"focus.editor-focus":'el',o1='utt',w2c=C7Z.O0r("a4ba")?'ass':"div.DTE_Bubble_Liner",N5="YY",G1="Y",x1B=C7Z.p0r("8677")?"multiRestore":"eti",S3c="YYYY-MM-DD",M3c=C7Z.b0r("33")?"info":"ome",Z3c="classPrefix",h9=C7Z.N0r("d3")?"getUTCMonth":"ateT",V6="Types",E4="sa",M7B=C7Z.x0r("1f17")?"orientation":"sel",B4r="8",o6="editor",S1c="confirm",n4B="exten",M3="_remove",I8h="formButtons",k7c="fnGetSelectedIndexes",G1h="gl",d1c="_sin",a1h="dito",N8c="BUTTONS",R2h="eT",K6c="ckgrou",y7c="ubb",C9h="DTE_",N1B="Tri",q3c="_C",b9c="Bub",M9h="DTE_Bubbl",W8c="Bu",X0h="_Acti",s6="store",Q8c="_I",R6B="sag",L1B="E_",D3c="_E",e7c="l_I",L1c="TE_L",y2="eld_In",L0="Fi",s7h="_Labe",E8B="_Name",S9="btn",S2h="rm_",J5c="DTE_F",a6="ooter_Co",v6h="Foo",W0B="DTE",o9c="cessi",K8c="DTE_P",d1h="g_I",l1B="ssin",v0="oce",p7="]",f3="[",G2="data",h1c="be",l6h='dit',t2h="tm",A4h="Src",n4h="Ob",V0B="oApi",H7="rowIds",b2c="dSr",p3B="ide",o3="Se",S0c="rows",d4="columns",n9c="DataTable",Q1="Ge",B7="_fn",b8c="sC",k1B="idSrc",N2h="aT",T4c="att",N3c="ica",t0="mat",H6B="mn",J7c="ell",p9B="xes",I8B="cells",K5c="indexes",z7h=20,r5=500,d2B="our",f9="ataS",h6='[data-editor-id="',M6="keyless",b1B="formOp",C1c="bas",m3="dels",u9B="hu",V0h="pli",E1B="mb",M6B="ovem",L9c="ber",U5c="tem",t9B="ugu",o6B="pri",I5B="ebruar",w2="J",h1="evio",k9c="hang",S5="Und",t6="ues",E8c="dual",G0="heir",C1="rwis",k3="ere",E7B="ame",c1c="his",n9="nput",d1B="ffer",q4B="ontai",W7c="ted",H8h="ec",D8="The",X9h="ltip",w4B='>).',u0='io',S0h='mat',a1='M',B4='2',f8='1',r0='/',y0='.',f0B='tatabl',Z4r='="//',z5='ef',E1h='k',I9h='blan',j8B='rge',F5c=' (<',i9='red',A5B='ccu',W8h='rr',O2='em',r2c='yst',q9='A',w1c="ele",i6c="?",u2=" %",O5c="ish",w6B="ure",b1h="Are",L4h="rea",w4r="Ne",t5c="_R",l3B="defa",I7h=10,P3c="submitComplete",G4r="lete",p6B="mp",T8="dat",s8="isEmptyObject",t3h="any",P6h="able",U4="removeClass",W6B="addClass",y7B="ces",C0c="options",R0="M",G9h=": ",G4B="eI",T0="ke",t2="utto",K7B="ttr",y8c="ode",e2="ey",g2c="editCount",g7h="tu",a9c="mpl",a4c="str",Y5="toLowerCase",W0c="match",A9="inArray",y2h="ush",L1h="eac",a3c="includeFields",r8c="ields",Z6B="ont",q8c="taS",X7B="main",P7c="boolean",I3c="sP",H5h="seCb",Z2="onBlur",O6="ep",w3="Of",b4="reate",R6="jo",c5B="editFields",t8="Clas",Y4c="emov",x5B="cr",y9c="eCl",S7c="processing",u9h="yCo",b0c="orm",t7h="TableTools",u7c='tto',F6='ea',K6h="for",b0B='or',F7B='y',d4h="cla",t1="dataTable",K0B="taSo",m2c="rc",h3B="ajax",J5h="ajaxUrl",m1h="status",M0="ror",z1c="rs",q7h="eS",O9="ff",S0="oa",Q6c="Up",J3h="TE_",q9h="aja",d5c="ja",J6B="Da",I1h="jax",e6="upload",E2c="loa",B1="af",j8h="ea",B4c="value",a2="ray",c9h="pair",z4h="files",f6B="fil",s0c="cells().edit()",U2B="isP",f9h="rows().delete()",h1h="remove",l0c="elet",Y7c="().",N4B="edit",a9h="row().edit()",f7c="()",l8="ito",s3B="Api",G7h="pu",v4B="ach",G6="button",A0="dit",R7="_event",m4r="_ev",a5="_actionClass",d6="em",g4c="ove",y5h="rem",z3c="na",p4h="join",n3="ai",I0B="_p",a8="appe",L2c="rd",Z3B="one",k9B="_eventName",J7B="multiSet",h3="Get",z9h="multiGet",h3h="lds",t0h="focus",t4="ocus",P0="ar",J1h="eF",Q0B="mi",T="lear",K3="eg",h4B="clo",k4h="e_",I1c="_In",k8="tons",h5c='"/></',Q4r="inline",x7h="E_F",K5h="ha",p3="atta",G3c="han",w7B="Ca",Y8c="vi",F0B="ndi",L1="_dataSource",H4="xte",P5B="isPlainObject",F3c=":",A1c="rr",q6="isArray",g1c="eld",y4="Op",t3="_assembleMain",B5B="ain",n1B="ce",x0c="rg",N1h="_tidy",I5h="lle",z4="map",n2c="open",a6B="displayed",B0B="disable",e0="N",f2B="ield",d2="ax",c3="aj",X8B="url",L7c="bj",Z1h="ws",i7="ow",F6h="put",r3="fiel",g5B="up",q0B="da",F3="U",c6B="pre",j5h="ang",E5c="exte",Z4c="son",d6h="eO",K2="yb",q0="pti",H6="_fo",l2h="eat",F4c="eve",T7h="rder",n7="eo",E9B="_di",S5B="block",X7c="modifier",F2h="ds",S2B="Fiel",v1c="number",r4h="create",R5c="_close",R3h="_fieldNames",f7h="To",K2h="call",Z3h="ent",j8="preventDefault",T7B="keyCode",W1B="eyCo",C7h=13,y1c="Na",c8="ass",O8B="ton",S4r="form",i2c="string",f1="buttons",O7B="Arra",W4r="submit",l6B="action",s0="8n",O3h="i1",H8c="dCl",v4h="W",P1B="set",d1="eft",m9h="offset",D4B="ub",K9c="B",i0="bble",e4c="pen",A0B="post",J2B="cu",u8B="elds",g1B="off",U4c="_closeReg",l9B="add",E3c="but",D2h="end",W4c="formInfo",m7h="ren",k0c="app",b7c='" /></',R9c="tab",W2B='"><div class="',h6h='<div class="',m4c="Opt",P0c="rm",Q1B="_f",Y4B="pr",X2c="bubble",u3h="_edit",q2B="ur",a4="S",h6B="_da",P8="O",C6B="nO",W4="bub",C7c="bm",g9="su",P="mit",Y9="sub",Q0="blur",D1="editOpts",u5B="_displayReorder",V4c="order",B2h="field",V9B="sse",H1c="it",J9c="A",i8c="ng",S6h="fields",Q9="ion",w7h=". ",F6B="ing",D6c="Er",X9="ad",o1h=50,A1B="ve",A1="disp",n6c=';</',x1='im',I1='">&',O6c='elo',T0h='ro',Y4h='elope_Back',Y0h='nv',E0h='nta',T6='C',w1h='lope_',h0c='ht',k2c='wR',r0h='S',c4c='nve',N6h='f',Y2h='wLe',Z5c='had',e0c='_S',x5h='ope',r4r='ve',X5c='_En',X='er',K7c='Wra',E7='vel',d7='_E',M4r="node",U6="modi",A8="row",x1h="cti",i3="header",x7="ab",c3h="attach",S="Ta",j5="H",A3c="_B",U8h="hi",Q2B="ind",E0B="target",E9c="iv",J7h="gr",N3B="con",C8c="offsetHeight",B9="ate",v0c=",",O0="tml",T1B="onf",O2c="fadeIn",W5="splay",M6h="pa",y3="ei",M1c="find",H2="ock",O9c="spl",U3B="opacity",K1B="_do",Z1c="ne",u0h="back",U4r="_cssBackgroundOpacity",T2="hidden",x8B="style",D1c="wra",i7c="pend",k5h="bod",B2c="body",u6h="iner",w3B="Co",j9c="elo",Y2c="nv",U9="_hide",h0="ose",c0B="il",Q4c="dC",Y8h="nte",k8h="ll",m6h="tr",X0B="layC",z6c="model",H0="vel",q6h=25,T3h="ligh",s6h='se',G8h='_Cl',T3='bo',u0B='ght',D8c='TED',q5c='/></',N9c='un',R5B='Backgr',K1c='tbox_',l5c='_L',J7='>',O8h='nte',V1B='Co',j9B='gh',c5c='pp',Z9='ra',n6h='W',I6B='on',p6='_C',n9h='b',m9c='Ligh',F9h='_',Z2c='ED',D3B='ntaine',O2h='_Co',J8B='ox',x7B='ightb',Y1='L',N6B='pe',j1h='ox_W',r5B='htb',h2B='Lig',r5c='D_',p2h='TE',x5c="ze",w4h="unbind",b5B="un",m9="ou",E3h="kgr",P9="ac",L9="det",f4r="im",o4="an",j1c="detach",D7B="animate",r0B="top",D3h="eC",e5B="appendTo",T1c="children",l1c="tio",o2c="ten",h1B="_Con",D2B="_Bod",e4h="outerHeight",M8c="per",E2h="E_H",z4B='"/>',l7B='x',c4B='h',Q7='E',U0h='T',U7='D',h5h="dy",h9B="scrollTop",U9c="_scrollTop",o3B="_h",g3h="z",Y1c="t_Wra",G0B="DT",d9B="hasClass",j2="get",m8B="ig",c7c="bind",z1B="_Li",H3="TE",W6c="grou",K3h="ack",k5c="bo",V8="gh",Y7="TED_",S8c="ick",u7="ox",D9c="ight",t7="TED",K5B="ic",q0c="clos",l6c="stop",v8h="ound",y8="kg",a1c="_heightCalc",c8h="background",m7c="ody",R6c="offsetAni",e3="conf",L4="ap",J9h="wr",v2="au",P4="ght",c4h="he",K0c="igh",E2="L",a1B="Cl",B3c="io",I3="ta",u8c="ri",S4c="_dom",r9B="ci",d3c="ro",a9B="ck",J3c="ba",G3B="tent",M0h="htb",r0c="_L",U0B="ED",H8="div",j4B="content",j6B="_s",U3c="dte",I9B="cl",B1c="nd",T8c="append",X7h="dr",W3c="hil",J4c="_d",z2B="_dte",b2="sh",V6h="roller",H5c="ayC",x4h="tb",L0h="li",F1c="all",q5h="lo",n2h="close",h3c="ubmi",K5="formOptions",l1h="tton",C2c="bu",w8="se",B8="od",n9B="dTy",d4B="iel",t5h="odels",i8B="displayController",O3B="tti",n4c="ext",Z7="defaults",Z4h="del",u6B="mo",g6h="shift",m6="os",V9c="tur",G4="R",E5h="ult",z6h="lue",M4h="ol",y5B="ml",S8="Ap",J6c="fie",r4c="Id",j7B="emo",B0c="isp",C3h="pl",R4B="_typeFn",G3h="pla",q3h="ace",O6h="ts",B3="op",c8B="ue",a0="mul",L2B="opts",v0B="_m",J1="multiValue",i6B="ct",f2c="je",k6h="nOb",E8="P",i9c="is",g6c="ra",n4="Ar",j8c="multiValues",o4h="al",z3="V",R3B="va",M0c="sM",j3B="multiIds",c9B="iV",i7B="lt",c1="ag",N4h="html",B9B="ht",l5="ay",i4c="displ",M5h="slideUp",B2B="lay",Z0="dis",N9B="ho",M1="ef",R9B="lu",y4r="Va",P2B="us",c4="oc",g5h="ner",K6="cus",f6="fo",F7h="ainer",l2c=", ",r9="classes",g5c="nt",G0c="ldE",Z8B="ie",q7B="las",X2B="ine",Q0h="nta",Q1h="dd",d8="as",Z6="en",i3h="la",b6="sp",Q6B="cs",N3h="parents",Y1B="container",i9h="do",P9c="sabl",V4B="di",Y1h="de",O1h="opt",R7B="ly",I4B="pp",x4="Fn",m2B="function",o6c="each",z2h="_multiValueCheck",w5c=true,p0h="Value",q5B="click",d3="on",W8="val",H0h="lick",g8h="multi",N0B="lti",M2h="multi-value",Y9c="essa",m8c="nf",l0B="bel",G8="models",Q5="F",X7="xt",j0B="dom",i1h="none",U8B="display",Q5B="css",I0h="pe",x2c=null,o0h="te",W3="eFn",V5B="ms",F0="ge",S8h='"></',k9="rror",U1B='r',C4='an',j1B='p',Y7B='lass',W6='nf',z3B='pa',e4B='ss',l4c='u',l9c='"/><',p7c="C",g4r="in",g1h='n',A1h='o',f4c='t',v8='at',m9B="ut",P6c="np",y6B='la',C7='nput',A0h='><',Y3='bel',m1='></',P3B='v',d3h='i',Y4r='</',b8="I",A0c="-",N1='las',j7='be',H4B='g',C1h='m',h5='iv',L2='<',f0='">',h4h="label",r1B='s',X0='as',B7h='c',w8B='" ',a5B='ta',Z9h='a',U7c=' ',b9h='ab',n3h='l',u4c='"><',N7h="nam",X0c="typ",K4B="x",z5c="re",t9h="ty",d5B="wrapper",y7h="_fnSetObjectDataFn",w7="ata",n1="ed",e7h="_fnGetObjectDataFn",E3="om",c5="Fr",F8h="pi",R3c="oA",Y4="am",n8B="id",I8c="name",k2h="fieldTypes",b2B="settings",X2="ex",c7B="type",R1h="wn",V6c="no",P4h="ld",H6h="g",C7B="rro",l3c="yp",q0h="p",h2h="Ty",s3="el",E1="fi",t6B="ul",J8h="def",T2h="extend",E8h="l",I9c="mu",U6h="Field",P3h="push",I1B="ch",G0h='"]',Y6c='="',I6h='e',v7B='te',b0='-',Z1B='ata',u7h='d',h7c="bl",q7="ataT",c0="Edit",A2c="'",v9B="' ",H5=" '",v8c="ni",X6="st",i7h="ditor",Z5="E",u9="es",A4B="w",m5="ble",D5="D",S4="uir",b7="eq",p7B=" ",Q7h="itor",a3B="Ed",o1c="7",l8c="0",s2h="k",D7="c",n5h="h",n1c="onC",m2="si",E4B="v",T1="versionCheck",K8h="abl",C0="T",m4h="",h6c="sage",k0="mes",F8c="1",u3c="replace",F9="_",r4=1,a5h="message",s7B="co",R8h="i18n",H9="ov",f2h="m",R2="age",B6="ss",Y8B="me",x2h="tl",A7="18n",E4h="le",r8h="ti",K7="title",N2c="ns",t8h="o",L5B="ons",M7h="tt",x0B="tor",w1B="_e",B0h="r",Q5h="to",C3B="edi",d5h="i",l4=0;function v(a){var p0c="oI",W1="context";a=a[W1][l4];return a[(p0c+C7Z.l8h+d5h+C7Z.R4h)][(C3B+Q5h+B0h)]||a[(w1B+C7Z.i6+d5h+x0B)];}
-function A(a,b,c,e){var R0B="_basic",L6c="utt";b||(b={}
-);b[(C7Z.w6+C7Z.F4h+M7h+L5B)]===h&&(b[(C7Z.w6+L6c+t8h+N2c)]=R0B);b[K7]===h&&(b[(r8h+C7Z.R4h+E4h)]=a[(d5h+A7)][c][(C7Z.R4h+d5h+x2h+C7Z.V7)]);b[(Y8B+B6+R2)]===h&&((B0h+C7Z.V7+f2h+H9+C7Z.V7)===c?(a=a[(R8h)][c][(s7B+C7Z.l8h+C7Z.p5h+d5h+B0h+f2h)],b[a5h]=r4!==e?a[F9][u3c](/%d/,e):a[F8c]):b[(k0+h6c)]=m4h);return b;}
-var t=d[(C7Z.p5h+C7Z.l8h)][(C7Z.i6+C7Z.U8+C7Z.Q6+C0+K8h+C7Z.V7)];if(!t||!t[T1]||!t[(E4B+C7Z.V7+B0h+m2+n1c+n5h+C7Z.V7+D7+s2h)]((F8c+C7Z.I4c+F8c+l8c+C7Z.I4c+o1c)))throw (a3B+Q7h+p7B+B0h+b7+S4+C7Z.V7+C7Z.c0h+p7B+D5+C7Z.U8+C7Z.Q6+C0+C7Z.Q6+m5+C7Z.c0h+p7B+F8c+C7Z.I4c+F8c+l8c+C7Z.I4c+o1c+p7B+t8h+B0h+p7B+C7Z.l8h+C7Z.V7+A4B+C7Z.V7+B0h);var f=function(a){var B7c="_constructor",d2h="anc",Q2="ew",C2B="sed",h4r="ali",i8h="DataT";!this instanceof f&&alert((i8h+K8h+u9+p7B+Z5+i7h+p7B+f2h+C7Z.F4h+X6+p7B+C7Z.w6+C7Z.V7+p7B+d5h+v8c+r8h+h4r+C2B+p7B+C7Z.Q6+C7Z.c0h+p7B+C7Z.Q6+H5+C7Z.l8h+Q2+v9B+d5h+C7Z.l8h+X6+d2h+C7Z.V7+A2c));this[B7c](a);}
-;t[(c0+C7Z.N6)]=f;d[C7Z.D4h][(D5+q7+C7Z.Q6+h7c+C7Z.V7)][(a3B+d5h+Q5h+B0h)]=f;var u=function(a,b){var l0='*[';b===h&&(b=r);return d((l0+u7h+Z1B+b0+u7h+v7B+b0+I6h+Y6c)+a+(G0h),b);}
-,M=l4,y=function(a,b){var c=[];d[(C7Z.V7+C7Z.Q6+I1B)](a,function(a,d){c[P3h](d[b]);}
-);return c;}
-;f[(U6h)]=function(a,b,c){var h8B="iRe",L6B="msg-error",U1h="input-control",r2="dIn",x6B="ssa",z0='sag',b2h='ror',u3B="tiRest",A7h='sg',g6B="inf",c5h="Info",Q0c='lt',e2c="ltiVa",e6c='ue',o4B='al',b3="ontro",Y2B='ol',n3B='tr',t5B='npu',B0="sg",k4B="lassName",g4B="namePrefix",U2="peP",v1h="valTo",t9="dataProp",D0B="DTE_Field_",i2="ype",u0c="nk",O8=" - ",e=this,j=c[R8h][(I9c+E8h+r8h)],a=d[T2h](!l4,{}
-,f[U6h][(J8h+C7Z.Q6+t6B+C7Z.R4h+C7Z.c0h)],a);if(!f[(E1+s3+C7Z.i6+h2h+q0h+C7Z.V7+C7Z.c0h)][a[(C7Z.R4h+l3c+C7Z.V7)]])throw (Z5+C7B+B0h+p7B+C7Z.Q6+C7Z.i6+C7Z.i6+d5h+C7Z.l8h+H6h+p7B+C7Z.p5h+d5h+C7Z.V7+P4h+O8+C7Z.F4h+u0c+V6c+R1h+p7B+C7Z.p5h+d5h+C7Z.V7+E8h+C7Z.i6+p7B+C7Z.R4h+i2+p7B)+a[c7B];this[C7Z.c0h]=d[(X2+C7Z.R4h+C7Z.V7+C7Z.l8h+C7Z.i6)]({}
-,f[U6h][b2B],{type:f[k2h][a[(C7Z.R4h+i2)]],name:a[I8c],classes:b,host:c,opts:a,multiValue:!r4}
-);a[(d5h+C7Z.i6)]||(a[(n8B)]=D0B+a[I8c]);a[t9]&&(a.data=a[t9]);""===a.data&&(a.data=a[(C7Z.l8h+Y4+C7Z.V7)]);var o=t[(X2+C7Z.R4h)][(R3c+F8h)];this[(E4B+C7Z.Q6+E8h+c5+E3+D5+C7Z.Q6+C7Z.R4h+C7Z.Q6)]=function(b){return o[e7h](a.data)(b,(n1+Q7h));}
-;this[(v1h+D5+w7)]=o[y7h](a.data);b=d('<div class="'+b[d5B]+" "+b[(t9h+U2+z5c+E1+K4B)]+a[(X0c+C7Z.V7)]+" "+b[g4B]+a[(N7h+C7Z.V7)]+" "+a[(D7+k4B)]+(u4c+n3h+b9h+I6h+n3h+U7c+u7h+Z9h+a5B+b0+u7h+v7B+b0+I6h+Y6c+n3h+b9h+I6h+n3h+w8B+B7h+n3h+X0+r1B+Y6c)+b[h4h]+'" for="'+a[(n8B)]+(f0)+a[h4h]+(L2+u7h+h5+U7c+u7h+Z9h+a5B+b0+u7h+v7B+b0+I6h+Y6c+C1h+r1B+H4B+b0+n3h+Z9h+j7+n3h+w8B+B7h+N1+r1B+Y6c)+b[(f2h+B0+A0c+E8h+C7Z.Q6+C7Z.w6+s3)]+(f0)+a[(E8h+C7Z.Q6+C7Z.w6+C7Z.V7+E8h+b8+C7Z.l8h+C7Z.p5h+t8h)]+(Y4r+u7h+d3h+P3B+m1+n3h+Z9h+Y3+A0h+u7h+d3h+P3B+U7c+u7h+Z9h+a5B+b0+u7h+v7B+b0+I6h+Y6c+d3h+C7+w8B+B7h+y6B+r1B+r1B+Y6c)+b[(d5h+P6c+m9B)]+(u4c+u7h+d3h+P3B+U7c+u7h+v8+Z9h+b0+u7h+f4c+I6h+b0+I6h+Y6c+d3h+t5B+f4c+b0+B7h+A1h+g1h+n3B+Y2B+w8B+B7h+n3h+X0+r1B+Y6c)+b[(g4r+q0h+m9B+p7c+b3+E8h)]+(l9c+u7h+h5+U7c+u7h+Z9h+f4c+Z9h+b0+u7h+f4c+I6h+b0+I6h+Y6c+C1h+l4c+n3h+f4c+d3h+b0+P3B+o4B+e6c+w8B+B7h+n3h+Z9h+e4B+Y6c)+b[(f2h+C7Z.F4h+e2c+E8h+C7Z.F4h+C7Z.V7)]+(f0)+j[(r8h+C7Z.R4h+E4h)]+(L2+r1B+z3B+g1h+U7c+u7h+v8+Z9h+b0+u7h+f4c+I6h+b0+I6h+Y6c+C1h+l4c+Q0c+d3h+b0+d3h+W6+A1h+w8B+B7h+Y7B+Y6c)+b[(f2h+C7Z.F4h+E8h+r8h+c5h)]+(f0)+j[(g6B+t8h)]+(Y4r+r1B+j1B+C4+m1+u7h+d3h+P3B+A0h+u7h+h5+U7c+u7h+v8+Z9h+b0+u7h+v7B+b0+I6h+Y6c+C1h+A7h+b0+C1h+l4c+Q0c+d3h+w8B+B7h+n3h+X0+r1B+Y6c)+b[(f2h+t6B+u3B+t8h+z5c)]+(f0)+j.restore+(Y4r+u7h+h5+A0h+u7h+h5+U7c+u7h+Z1B+b0+u7h+v7B+b0+I6h+Y6c+C1h+r1B+H4B+b0+I6h+U1B+b2h+w8B+B7h+y6B+e4B+Y6c)+b[(f2h+C7Z.c0h+H6h+A0c+C7Z.V7+k9)]+(S8h+u7h+d3h+P3B+A0h+u7h+d3h+P3B+U7c+u7h+Z9h+a5B+b0+u7h+v7B+b0+I6h+Y6c+C1h+r1B+H4B+b0+C1h+I6h+r1B+z0+I6h+w8B+B7h+y6B+r1B+r1B+Y6c)+b[(f2h+B0+A0c+f2h+C7Z.V7+x6B+F0)]+(S8h+u7h+h5+A0h+u7h+h5+U7c+u7h+v8+Z9h+b0+u7h+v7B+b0+I6h+Y6c+C1h+r1B+H4B+b0+d3h+W6+A1h+w8B+B7h+Y7B+Y6c)+b[(V5B+H6h+A0c+d5h+C7Z.l8h+C7Z.p5h+t8h)]+'">'+a[(C7Z.p5h+d5h+C7Z.V7+E8h+r2+C7Z.p5h+t8h)]+"</div></div></div>");c=this[(F9+C7Z.R4h+C7Z.X3h+q0h+W3)]((D7+B0h+C7Z.V7+C7Z.Q6+o0h),a);x2c!==c?u(U1h,b)[(q0h+z5c+I0h+C7Z.l8h+C7Z.i6)](c):b[Q5B](U8B,i1h);this[j0B]=d[(C7Z.V7+X7+C7Z.V7+C7Z.l8h+C7Z.i6)](!l4,{}
-,f[(Q5+d5h+C7Z.V7+E8h+C7Z.i6)][G8][j0B],{container:b,inputControl:u(U1h,b),label:u((E8h+C7Z.Q6+l0B),b),fieldInfo:u((V5B+H6h+A0c+d5h+m8c+t8h),b),labelInfo:u((f2h+B0+A0c+E8h+C7Z.Q6+l0B),b),fieldError:u(L6B,b),fieldMessage:u((f2h+C7Z.c0h+H6h+A0c+f2h+Y9c+F0),b),multi:u(M2h,b),multiReturn:u((V5B+H6h+A0c+f2h+C7Z.F4h+E8h+C7Z.R4h+d5h),b),multiInfo:u((I9c+N0B+A0c+d5h+m8c+t8h),b)}
-);this[(C7Z.i6+E3)][g8h][(t8h+C7Z.l8h)]((D7+H0h),function(){e[W8](m4h);}
-);this[j0B][(f2h+t6B+C7Z.R4h+h8B+C7Z.R4h+C7Z.F4h+B0h+C7Z.l8h)][(d3)](q5B,function(){e[C7Z.c0h][(f2h+t6B+C7Z.R4h+d5h+p0h)]=w5c;e[z2h]();}
-);d[o6c](this[C7Z.c0h][(t9h+q0h+C7Z.V7)],function(a,b){typeof b===m2B&&e[a]===h&&(e[a]=function(){var t8c="nshift",b=Array.prototype.slice.call(arguments);b[(C7Z.F4h+t8c)](a);b=e[(F9+C7Z.R4h+l3c+C7Z.V7+x4)][(C7Z.Q6+I4B+R7B)](e,b);return b===h?e:b;}
-);}
-);}
-;f.Field.prototype={def:function(a){var p1h="isFu",z3h="fau",b=this[C7Z.c0h][(O1h+C7Z.c0h)];if(a===h)return a=b["default"]!==h?b[(C7Z.i6+C7Z.V7+z3h+E8h+C7Z.R4h)]:b[J8h],d[(p1h+C7Z.l8h+D7+C7Z.e8c)](a)?a():a;b[(Y1h+C7Z.p5h)]=a;return this;}
-,disable:function(){var v1B="_ty";this[(v1B+q0h+C7Z.V7+x4)]((V4B+P9c+C7Z.V7));return this;}
-,displayed:function(){var a=this[(i9h+f2h)][Y1B];return a[(N3h)]("body").length&&"none"!=a[(Q6B+C7Z.c0h)]((C7Z.i6+d5h+b6+i3h+C7Z.X3h))?!0:!1;}
-,enable:function(){this[(F9+C7Z.R4h+l3c+C7Z.V7+x4)]((Z6+K8h+C7Z.V7));return this;}
-,error:function(a,b){var R4r="_ms",R2c="removeC",c=this[C7Z.c0h][(D7+E8h+d8+C7Z.c0h+u9)];a?this[(C7Z.i6+t8h+f2h)][Y1B][(C7Z.Q6+Q1h+p7c+i3h+B6)](c.error):this[(C7Z.i6+t8h+f2h)][(D7+t8h+Q0h+X2B+B0h)][(R2c+q7B+C7Z.c0h)](c.error);return this[(R4r+H6h)](this[(C7Z.i6+E3)][(C7Z.p5h+Z8B+G0c+C7B+B0h)],a,b);}
-,isMultiValue:function(){return this[C7Z.c0h][(f2h+C7Z.F4h+E8h+C7Z.R4h+d5h+p0h)];}
-,inError:function(){var r6="Class";return this[(C7Z.i6+t8h+f2h)][(s7B+g5c+C7Z.Q6+g4r+C7Z.W7)][(n5h+d8+r6)](this[C7Z.c0h][r9].error);}
-,input:function(){var k8B="tar",q8="typeFn";return this[C7Z.c0h][(X0c+C7Z.V7)][(d5h+P6c+m9B)]?this[(F9+q8)]("input"):d((g4r+q0h+C7Z.F4h+C7Z.R4h+l2c+C7Z.c0h+s3+C7Z.V7+D7+C7Z.R4h+l2c+C7Z.R4h+C7Z.V7+K4B+k8B+C7Z.V7+C7Z.Q6),this[j0B][(D7+t8h+C7Z.l8h+C7Z.R4h+F7h)]);}
-,focus:function(){var j4c="_typ";this[C7Z.c0h][c7B][(f6+K6)]?this[(j4c+C7Z.V7+Q5+C7Z.l8h)]("focus"):d("input, select, textarea",this[(i9h+f2h)][(s7B+Q0h+d5h+g5h)])[(C7Z.p5h+c4+P2B)]();return this;}
-,get:function(){var I4r="Mul";if(this[(d5h+C7Z.c0h+I4r+C7Z.R4h+d5h+y4r+R9B+C7Z.V7)]())return h;var a=this[(F9+C7Z.R4h+l3c+W3)]((H6h+C7Z.V7+C7Z.R4h));return a!==h?a:this[(C7Z.i6+M1)]();}
-,hide:function(a){var b=this[(j0B)][Y1B];a===h&&(a=!0);this[C7Z.c0h][(N9B+C7Z.c0h+C7Z.R4h)][(Z0+q0h+B2B)]()&&a?b[M5h]():b[Q5B]((i4c+l5),(i1h));return this;}
-,label:function(a){var b=this[j0B][(E8h+C7Z.Q6+C7Z.w6+C7Z.V7+E8h)];if(a===h)return b[(B9B+f2h+E8h)]();b[N4h](a);return this;}
-,message:function(a,b){var T5="ieldM",z1="_msg";return this[z1](this[(i9h+f2h)][(C7Z.p5h+T5+u9+C7Z.c0h+c1+C7Z.V7)],a,b);}
-,multiGet:function(a){var n0B="isM",b=this[C7Z.c0h][(I9c+i7B+c9B+C7Z.Q6+R9B+C7Z.V7+C7Z.c0h)],c=this[C7Z.c0h][j3B];if(a===h)for(var a={}
-,e=0;e<c.length;e++)a[c[e]]=this[(d5h+M0c+C7Z.F4h+N0B+y4r+E8h+C7Z.F4h+C7Z.V7)]()?b[c[e]]:this[(R3B+E8h)]();else a=this[(n0B+C7Z.F4h+i7B+d5h+z3+o4h+C7Z.F4h+C7Z.V7)]()?b[a]:this[(R3B+E8h)]();return a;}
-,multiSet:function(a,b){var j7c="heck",l0h="ueC",f4B="tiVa",J1B="lai",c=this[C7Z.c0h][j8c],e=this[C7Z.c0h][j3B];b===h&&(b=a,a=h);var j=function(a,b){d[(g4r+n4+g6c+C7Z.X3h)](e)===-1&&e[P3h](a);c[a]=b;}
-;d[(i9c+E8+J1B+k6h+f2c+i6B)](b)&&a===h?d[o6c](b,function(a,b){j(a,b);}
-):a===h?d[(C7Z.V7+C7Z.Q6+D7+n5h)](e,function(a,c){j(c,b);}
-):j(a,b);this[C7Z.c0h][J1]=!0;this[(v0B+C7Z.F4h+E8h+f4B+E8h+l0h+j7c)]();return this;}
-,name:function(){return this[C7Z.c0h][L2B][I8c];}
-,node:function(){return this[(i9h+f2h)][(D7+t8h+C7Z.l8h+C7Z.R4h+C7Z.Q6+g4r+C7Z.V7+B0h)][0];}
-,set:function(a){var I2h="lace",y6h="rep",x8="repla",E9="yDecod",q8B="nti",C8B="iVal";this[C7Z.c0h][(a0+C7Z.R4h+C8B+c8B)]=!1;var b=this[C7Z.c0h][(B3+O6h)][(C7Z.V7+q8B+C7Z.R4h+E9+C7Z.V7)];if((b===h||!0===b)&&"string"===typeof a)a=a[(x8+D7+C7Z.V7)](/&gt;/g,">")[u3c](/&lt;/g,"<")[(y6h+E8h+q3h)](/&amp;/g,"&")[(y6h+I2h)](/&quot;/g,'"')[(B0h+C7Z.V7+G3h+D7+C7Z.V7)](/&#39;/g,"'");this[R4B]((C7Z.c0h+C7Z.D9),a);this[z2h]();return this;}
-,show:function(a){var f5h="slideDown",x9c="ntain",b=this[j0B][(s7B+x9c+C7Z.V7+B0h)];a===h&&(a=!0);this[C7Z.c0h][(N9B+X6)][(C7Z.i6+i9c+C3h+l5)]()&&a?b[f5h]():b[(Q5B)]((C7Z.i6+B0c+i3h+C7Z.X3h),"block");return this;}
-,val:function(a){return a===h?this[(F0+C7Z.R4h)]():this[(C7Z.c0h+C7Z.D9)](a);}
-,dataSrc:function(){return this[C7Z.c0h][(t8h+q0h+C7Z.R4h+C7Z.c0h)].data;}
-,destroy:function(){var e8h="oy",A2="estr";this[j0B][(D7+t8h+g5c+F7h)][(B0h+j7B+E4B+C7Z.V7)]();this[R4B]((C7Z.i6+A2+e8h));return this;}
-,multiIds:function(){return this[C7Z.c0h][(I9c+E8h+r8h+r4c+C7Z.c0h)];}
-,multiInfoShown:function(a){var P8c="multiInfo";this[(C7Z.i6+E3)][P8c][(Q6B+C7Z.c0h)]({display:a?(h7c+c4+s2h):(i1h)}
-);}
-,multiReset:function(){var t1c="Ids";this[C7Z.c0h][(a0+C7Z.R4h+d5h+t1c)]=[];this[C7Z.c0h][j8c]={}
-;}
-,valFromData:null,valToData:null,_errorNode:function(){return this[(j0B)][(J6c+G0c+B0h+B0h+t8h+B0h)];}
-,_msg:function(a,b,c){var b0h="lock",Y5B="Do",p5="sl",I6c="unctio";if((C7Z.p5h+I6c+C7Z.l8h)===typeof b)var e=this[C7Z.c0h][(n5h+t8h+X6)],b=b(e,new t[(S8+d5h)](e[C7Z.c0h][C7Z.A7c]));a.parent()[(i9c)](":visible")?(a[(N4h)](b),b?a[(p5+n8B+C7Z.V7+Y5B+A4B+C7Z.l8h)](c):a[M5h](c)):(a[(B9B+y5B)](b||"")[(D7+B6)]((C7Z.i6+d5h+C7Z.c0h+q0h+B2B),b?(C7Z.w6+b0h):"none"),c&&c());return this;}
-,_multiValueCheck:function(){var e5h="ultiI",i5="tiV",P2h="inputControl",Y6B="ntr",w6h="utC",a,b=this[C7Z.c0h][j3B],c=this[C7Z.c0h][(f2h+t6B+C7Z.R4h+c9B+C7Z.Q6+E8h+C7Z.F4h+u9)],e,d=!1;if(b)for(var o=0;o<b.length;o++){e=c[b[o]];if(0<o&&e!==a){d=!0;break;}
-a=e;}
-d&&this[C7Z.c0h][J1]?(this[(C7Z.i6+E3)][(d5h+C7Z.l8h+q0h+w6h+t8h+Y6B+M4h)][(D7+C7Z.c0h+C7Z.c0h)]({display:(V6c+C7Z.l8h+C7Z.V7)}
-),this[(i9h+f2h)][(I9c+E8h+C7Z.R4h+d5h)][(Q6B+C7Z.c0h)]({display:(h7c+t8h+D7+s2h)}
-)):(this[j0B][P2h][Q5B]({display:"block"}
-),this[j0B][g8h][(Q6B+C7Z.c0h)]({display:"none"}
-),this[C7Z.c0h][(f2h+C7Z.F4h+N0B+z3+C7Z.Q6+z6h)]&&this[W8](a));b&&1<b.length&&this[(i9h+f2h)][(f2h+E5h+d5h+G4+C7Z.V7+V9c+C7Z.l8h)][Q5B]({display:d&&!this[C7Z.c0h][(f2h+C7Z.F4h+E8h+i5+C7Z.Q6+z6h)]?"block":(i1h)}
-);this[C7Z.c0h][(n5h+m6+C7Z.R4h)][(F9+f2h+e5h+m8c+t8h)]();return !0;}
-,_typeFn:function(a){var y6="ply",a8B="if",B9c="uns",b=Array.prototype.slice.call(arguments);b[g6h]();b[(B9c+n5h+a8B+C7Z.R4h)](this[C7Z.c0h][L2B]);var c=this[C7Z.c0h][c7B][a];if(c)return c[(C7Z.Q6+q0h+y6)](this[C7Z.c0h][(N9B+X6)],b);}
+function __html_els ( identifier, names ) {
+	var out = $();
+
+	for ( var i=0, ien=names.length ; i<ien ; i++ ) {
+		out = out.add( __html_el( identifier, names[i] ) );
+	}
+
+	return out;
 }
-;f[(Q5+d5h+C7Z.V7+P4h)][(u6B+Z4h+C7Z.c0h)]={}
-;f[U6h][Z7]={className:"",data:"",def:"",fieldInfo:"",id:"",label:"",labelInfo:"",name:null,type:(C7Z.R4h+n4c)}
-;f[(Q5+Z8B+E8h+C7Z.i6)][G8][(C7Z.c0h+C7Z.V7+O3B+C7Z.l8h+H6h+C7Z.c0h)]={type:x2c,name:x2c,classes:x2c,opts:x2c,host:x2c}
-;f[U6h][G8][(C7Z.i6+t8h+f2h)]={container:x2c,label:x2c,labelInfo:x2c,fieldInfo:x2c,fieldError:x2c,fieldMessage:x2c}
-;f[(f2h+t8h+C7Z.i6+s3+C7Z.c0h)]={}
-;f[G8][i8B]={init:function(){}
-,open:function(){}
-,close:function(){}
+
+function __html_el ( identifier, name ) {
+	var context = identifier === 'keyless' ?
+		document :
+		$('[data-editor-id="'+identifier+'"]');
+
+	return $('[data-editor-field="'+name+'"]', context);
 }
-;f[(f2h+t5h)][(C7Z.p5h+d4B+n9B+I0h)]={create:function(){}
-,get:function(){}
-,set:function(){}
-,enable:function(){}
-,disable:function(){}
+
+
+
+__dataSources.html = {
+	initField: function ( cfg ) {
+		// This is before the field has been initialised so can't use it API
+		var label = $('[data-editor-label="'+(cfg.data || cfg.name)+'"]');
+		if ( ! cfg.label && label.length ) {
+			cfg.label = label.html();
+		}
+	},
+
+	individual: function ( identifier, fieldNames ) {
+		// Auto detection of the field name and id
+		if ( identifier instanceof $ || identifier.nodeName ) {
+			if ( ! fieldNames ) {
+				fieldNames = [ $( identifier ).attr('data-editor-field') ];
+			}
+
+			identifier = $( identifier ).parents('[data-editor-id]').data('editor-id');
+		}
+
+		// no id given and none found
+		if ( ! identifier ) {
+			identifier = 'keyless';
+		}
+
+		// no field name - cannot continue
+		if ( fieldNames && ! $.isArray( fieldNames ) ) {
+			fieldNames = [ fieldNames ];
+		}
+
+		if ( ! fieldNames || fieldNames.length === 0 ) {
+			throw 'Cannot automatically determine field name from data source';
+		}
+
+		var out = __dataSources.html.fields.call( this, identifier );
+		var fields = this.s.fields;
+		var forceFields = {};
+
+		$.each( fieldNames, function ( i, name ) {
+			forceFields[ name ] = fields[ name ];
+		} );
+
+		$.each( out, function ( id, set ) {
+			set.type = 'cell';
+			set.attach = __html_els( identifier, fieldNames ).toArray();
+			set.fields = fields;
+			set.displayFields = forceFields;
+		} );
+
+		return out;
+	},
+
+	// get idSrc, fields to edit, data and node for each item
+	fields: function ( identifier )
+	{
+		var out = {};
+		var data = {};
+		var fields = this.s.fields;
+
+		if ( ! identifier ) {
+			identifier = 'keyless';
+		}
+
+		$.each( fields, function ( name, field ) {
+			var val = __html_el( identifier, field.dataSrc() ).html();
+
+			// If no HTML element is present, jQuery returns null. We want undefined
+			field.valToData( data, val === null ? undefined : val );
+		} );
+
+		out[ identifier ] = {
+			idSrc: identifier,
+			data: data,
+			node: document,
+			fields: fields,
+			type: 'row'
+		};
+
+		return out;
+	},
+
+	create: function ( fields, data ) {
+		// If there is an element with the id that has been created, then use it
+		// to assign the values
+		if ( data ) {
+			var idFn = DataTable.ext.oApi._fnGetObjectDataFn( this.s.idSrc );
+			var id = idFn( data );
+
+			if ( $('[data-editor-id="'+id+'"]').length ) {
+				__html_set( id, fields, data );
+			}
+		}
+	},
+
+	edit: function ( identifier, fields, data ) {
+		// Get the ids from the returned data or `keyless` if not found
+		var idFn = DataTable.ext.oApi._fnGetObjectDataFn( this.s.idSrc );
+		var id = idFn( data ) || 'keyless';
+
+		__html_set( id, fields, data );
+	},
+
+	remove: function ( identifier, fields ) {
+		// If there is an element with an ID property matching the identifier,
+		// remove it
+		$('[data-editor-id="'+identifier+'"]').remove();
+	}
+};
+
+
+}());
+
+
+
+/**
+ * Class names that are used by Editor for its various display components.
+ * A copy of this object is taken when an Editor instance is initialised, thus
+ * allowing different classes to be used in different instances if required.
+ * Class name changes can be useful for easy integration with CSS frameworks,
+ * for example Twitter Bootstrap.
+ *  @namespace
+ */
+Editor.classes = {
+	/**
+	 * Applied to the base DIV element that contains all other Editor elements
+	 */
+	"wrapper": "DTE",
+
+	/**
+	 * Processing classes
+	 *  @namespace
+	 */
+	"processing": {
+		/**
+		 * Processing indicator element
+		 */
+		"indicator": "DTE_Processing_Indicator",
+
+		/**
+		 * Added to the base element ("wrapper") when the form is "processing"
+		 */
+		"active": "DTE_Processing"
+	},
+
+	/**
+	 * Display header classes
+	 *  @namespace
+	 */
+	"header": {
+		/**
+		 * Container for the header elements
+		 */
+		"wrapper": "DTE_Header",
+
+		/**
+		 * Liner for the header content
+		 */
+		"content": "DTE_Header_Content"
+	},
+
+	/**
+	 * Display body classes
+	 *  @namespace
+	 */
+	"body": {
+		/**
+		 * Container for the body elements
+		 */
+		"wrapper": "DTE_Body",
+
+		/**
+		 * Liner for the body content
+		 */
+		"content": "DTE_Body_Content"
+	},
+
+	/**
+	 * Display footer classes
+	 *  @namespace
+	 */
+	"footer": {
+		/**
+		 * Container for the footer elements
+		 */
+		"wrapper": "DTE_Footer",
+		
+		/**
+		 * Liner for the footer content
+		 */
+		"content": "DTE_Footer_Content"
+	},
+
+	/**
+	 * Form classes
+	 *  @namespace
+	 */
+	"form": {
+		/**
+		 * Container for the form elements
+		 */
+		"wrapper": "DTE_Form",
+
+		/**
+		 * Liner for the form content
+		 */
+		"content": "DTE_Form_Content",
+
+		/**
+		 * Applied to the <form> tag
+		 */
+		"tag":     "",
+
+		/**
+		 * Global form information
+		 */
+		"info":    "DTE_Form_Info",
+
+		/**
+		 * Global error imformation
+		 */
+		"error":   "DTE_Form_Error",
+
+		/**
+		 * Buttons container
+		 */
+		"buttons": "DTE_Form_Buttons",
+
+		/**
+		 * Buttons container
+		 */
+		"button": "btn"
+	},
+
+	/**
+	 * Field classes
+	 *  @namespace
+	 */
+	"field": {
+		/**
+		 * Container for each field
+		 */
+		"wrapper":     "DTE_Field",
+
+		/**
+		 * Class prefix for the field type - field type is added to the end allowing
+		 * styling based on field type.
+		 */
+		"typePrefix":  "DTE_Field_Type_",
+
+		/**
+		 * Class prefix for the field name - field name is added to the end allowing
+		 * styling based on field name.
+		 */
+		"namePrefix":  "DTE_Field_Name_",
+
+		/**
+		 * Field label
+		 */
+		"label":       "DTE_Label",
+
+		/**
+		 * Field input container
+		 */
+		"input":       "DTE_Field_Input",
+
+		/**
+		 * Input elements wrapper
+		 */
+		"inputControl": "DTE_Field_InputControl",
+
+		/**
+		 * Field error state (added to the field.wrapper element when in error state
+		 */
+		"error":       "DTE_Field_StateError",
+
+		/**
+		 * Label information text
+		 */
+		"msg-label":   "DTE_Label_Info",
+
+		/**
+		 * Error information text
+		 */
+		"msg-error":   "DTE_Field_Error",
+
+		/**
+		 * Live messaging (API) information text
+		 */
+		"msg-message": "DTE_Field_Message",
+
+		/**
+		 * General information text
+		 */
+		"msg-info":    "DTE_Field_Info",
+
+		/**
+		 * Multi-value information display wrapper
+		 */
+		"multiValue":  "multi-value",
+
+		/**
+		 * Multi-value information descriptive text
+		 */
+		"multiInfo":  "multi-info",
+
+		/**
+		 * Multi-value information display
+		 */
+		"multiRestore":  "multi-restore"
+	},
+
+	/**
+	 * Action classes - these are added to the Editor base element ("wrapper")
+	 * and allows styling based on the type of form view that is being employed.
+	 *  @namespace
+	 */
+	"actions": {
+		/**
+		 * Editor is in 'create' state
+		 */
+		"create": "DTE_Action_Create",
+
+		/**
+		 * Editor is in 'edit' state
+		 */
+		"edit":   "DTE_Action_Edit",
+
+		/**
+		 * Editor is in 'remove' state
+		 */
+		"remove": "DTE_Action_Remove"
+	},
+
+	/**
+	 * Bubble editing classes - these are used to display the bubble editor
+	 *  @namespace
+	 */
+	"bubble": {
+		/**
+		 * Bubble container element
+		 */
+		"wrapper": "DTE DTE_Bubble",
+
+		/**
+		 * Bubble content liner
+		 */
+		"liner": "DTE_Bubble_Liner",
+
+		/**
+		 * Bubble table display wrapper, so the buttons and form can be shown
+		 * as table cells (via css)
+		 */
+		"table": "DTE_Bubble_Table",
+
+		/**
+		 * Close button
+		 */
+		"close": "DTE_Bubble_Close",
+
+		/**
+		 * Pointer shown which node is being edited
+		 */
+		"pointer": "DTE_Bubble_Triangle",
+
+		/**
+		 * Fixed background
+		 */
+		"bg": "DTE_Bubble_Background"
+	}
+};
+
+
+
+/*
+ * Add helpful TableTool buttons to make life easier
+ *
+ * Note that the values that require a string to make any sense (the button text
+ * for example) are set by Editor when Editor is initialised through the i18n
+ * options.
+ */
+if ( DataTable.TableTools ) {
+	var ttButtons = DataTable.TableTools.BUTTONS;
+	var ttButtonBase = {
+		sButtonText: null,
+		editor:      null,
+		formTitle:   null
+	};
+
+	ttButtons.editor_create = $.extend( true, ttButtons.text, ttButtonBase, {
+		formButtons: [ {
+			label: null,
+			fn: function (e) { this.submit(); }
+		} ],
+
+		fnClick: function( button, config ) {
+			var editor = config.editor;
+			var i18nCreate = editor.i18n.create;
+			var buttons = config.formButtons;
+
+			if ( ! buttons[0].label ) {
+				buttons[0].label = i18nCreate.submit;
+			}
+
+			editor.create( {
+				title: i18nCreate.title,
+				buttons: buttons
+			} );
+		}
+	} );
+
+
+	ttButtons.editor_edit = $.extend( true, ttButtons.select_single, ttButtonBase, {
+		formButtons: [ {
+			label: null,
+			fn: function (e) { this.submit(); }
+		} ],
+
+		fnClick: function( button, config ) {
+			var selected = this.fnGetSelectedIndexes();
+			if ( selected.length !== 1 ) {
+				return;
+			}
+
+			var editor = config.editor;
+			var i18nEdit = editor.i18n.edit;
+			var buttons = config.formButtons;
+
+			if ( ! buttons[0].label ) {
+				buttons[0].label = i18nEdit.submit;
+			}
+
+			editor.edit( selected[0], {
+				title: i18nEdit.title,
+				buttons: buttons
+			} );
+		}
+	} );
+
+
+	ttButtons.editor_remove = $.extend( true, ttButtons.select, ttButtonBase, {
+		question: null,
+
+		formButtons: [
+			{
+				label: null,
+				fn: function (e) {
+					// Executed in the Form instance's scope
+					var that = this;
+					this.submit( function ( json ) {
+						var tt = $.fn.dataTable.TableTools.fnGetInstance(
+							$(that.s.table).DataTable().table().node()
+						);
+						tt.fnSelectNone();
+					} );
+				}
+			}
+		],
+
+		fnClick: function( button, config ) {
+			var rows = this.fnGetSelectedIndexes();
+			if ( rows.length === 0 ) {
+				return;
+			}
+
+			var editor = config.editor;
+			var i18nRemove = editor.i18n.remove;
+			var buttons = config.formButtons;
+			var question = typeof i18nRemove.confirm === 'string' ?
+				i18nRemove.confirm :
+				i18nRemove.confirm[rows.length] ?
+					i18nRemove.confirm[rows.length] : i18nRemove.confirm._;
+
+			if ( ! buttons[0].label ) {
+				buttons[0].label = i18nRemove.submit;
+			}
+
+			editor.remove( rows, {
+				message: question.replace( /%d/g, rows.length ),
+				title: i18nRemove.title,
+				buttons: buttons
+			} );
+		}
+	} );
 }
-;f[(f2h+B8+s3+C7Z.c0h)][(w8+C7Z.R4h+r8h+C7Z.l8h+H6h+C7Z.c0h)]={ajaxUrl:x2c,ajax:x2c,dataSource:x2c,domTable:x2c,opts:x2c,displayController:x2c,fields:{}
-,order:[],id:-r4,displayed:!r4,processing:!r4,modifier:x2c,action:x2c,idSrc:x2c}
-;f[(f2h+t8h+Z4h+C7Z.c0h)][(C2c+l1h)]={label:x2c,fn:x2c,className:x2c}
-;f[G8][K5]={onReturn:(C7Z.c0h+h3c+C7Z.R4h),onBlur:n2h,onBackground:(h7c+C7Z.F4h+B0h),onComplete:n2h,onEsc:(D7+q5h+C7Z.c0h+C7Z.V7),submit:F1c,focus:l4,buttons:!l4,title:!l4,message:!l4,drawType:!r4}
-;f[(C7Z.i6+i9c+q0h+i3h+C7Z.X3h)]={}
-;var q=jQuery,m;f[U8B][(L0h+H6h+n5h+x4h+t8h+K4B)]=q[T2h](!0,{}
-,f[(f2h+t8h+C7Z.i6+C7Z.V7+E8h+C7Z.c0h)][(i4c+H5c+d3+C7Z.R4h+V6h)],{init:function(){var N5B="ini";m[(F9+N5B+C7Z.R4h)]();return m;}
-,open:function(a,b,c){var L6="_show",p9="_shown",L2h="detac",Q4h="own";if(m[(F9+b2+Q4h)])c&&c();else{m[(z2B)]=a;a=m[(J4c+t8h+f2h)][(D7+d3+C7Z.R4h+C7Z.V7+C7Z.l8h+C7Z.R4h)];a[(D7+W3c+X7h+Z6)]()[(L2h+n5h)]();a[T8c](b)[(C7Z.Q6+q0h+q0h+C7Z.V7+B1c)](m[(F9+C7Z.i6+t8h+f2h)][(I9B+t8h+w8)]);m[p9]=true;m[L6](c);}
+
+
+$.extend( DataTable.ext.buttons, {
+	create: {
+		text: function ( dt, node, config ) {
+			return dt.i18n( 'buttons.create', config.editor.i18n.create.button );
+		},
+		className: 'buttons-create',
+		editor: null,
+		formButtons: {
+			label: function ( editor ) {
+				return editor.i18n.create.submit;
+			},
+			fn: function (e) {
+				this.submit();
+			}
+		},
+		formMessage: null,
+		formTitle: null,
+		action: function( e, dt, node, config ) {
+			var editor = config.editor;
+			var buttons = config.formButtons;
+
+			editor.create( {
+				buttons: config.formButtons,
+				message: config.formMessage,
+				title:   config.formTitle || editor.i18n.create.title
+			} );
+		}
+	},
+
+	edit: {
+		extend: 'selected',
+		text: function ( dt, node, config ) {
+			return dt.i18n( 'buttons.edit', config.editor.i18n.edit.button );
+		},
+		className: 'buttons-edit',
+		editor: null,
+		formButtons: {
+			label: function ( editor ) {
+				return editor.i18n.edit.submit;
+			},
+			fn: function (e) {
+				this.submit();
+			}
+		},
+		formMessage: null,
+		formTitle: null,
+		action: function( e, dt, node, config ) {
+			var editor = config.editor;
+			var rows = dt.rows( { selected: true } ).indexes();
+			var columns = dt.columns( { selected: true } ).indexes();
+			var cells = dt.cells( { selected: true } ).indexes();
+
+			var items = columns.length || cells.length ?
+				{
+					rows: rows,
+					columns: columns,
+					cells: cells
+				} :
+				rows;
+
+			editor.edit( items, {
+				message: config.formMessage,
+				buttons: config.formButtons,
+				title:   config.formTitle || editor.i18n.edit.title
+			} );
+		}
+	},
+
+	remove: {
+		extend: 'selected',
+		text: function ( dt, node, config ) {
+			return dt.i18n( 'buttons.remove', config.editor.i18n.remove.button );
+		},
+		className: 'buttons-remove',
+		editor: null,
+		formButtons: {
+			label: function ( editor ) {
+				return editor.i18n.remove.submit;
+			},
+			fn: function (e) {
+				this.submit();
+			}
+		},
+		formMessage: function ( editor, dt ) {
+			var rows = dt.rows( { selected: true } ).indexes();
+			var i18n = editor.i18n.remove;
+			var question = typeof i18n.confirm === 'string' ?
+				i18n.confirm :
+				i18n.confirm[rows.length] ?
+					i18n.confirm[rows.length] : i18n.confirm._;
+
+			return question.replace( /%d/g, rows.length );
+		},
+		formTitle: null,
+		action: function( e, dt, node, config ) {
+			var editor = config.editor;
+
+			editor.remove( dt.rows( { selected: true } ).indexes(), {
+				buttons: config.formButtons,
+				message: config.formMessage,
+				title:   config.formTitle || editor.i18n.remove.title
+			} );
+		}
+	}
+} );
+
+/**
+ * Field types array - this can be used to add field types or modify the pre-
+ * defined options. See the online Editor documentation for information about
+ * the built in field types.
+ *
+ * Note that we use a DataTables ext object to allow plug-ins to be loaded
+ * before Editor itself. This is useful for the online DataTables download
+ * builder.
+ *
+ *  @namespace
+ */
+Editor.fieldTypes = {};
+/*
+ * This file provides a DateTime GUI picker (calender and time input). Only the
+ * format YYYY-MM-DD is supported without additional software, but the end user
+ * experience can be greatly enhanced by including the momentjs library which
+ * provides date / time parsing and formatting options.
+ *
+ * This functionality is required because the HTML5 date and datetime input
+ * types are not widely supported in desktop browsers.
+ *
+ * Constructed by using:
+ *
+ *     new Editor.DateTime( input, opts )
+ *
+ * where `input` is the HTML input element to use and `opts` is an object of
+ * options based on the `Editor.DateTime.defaults` object.
+ */
+
+Editor.DateTime = function ( input, opts ) {
+	this.c = $.extend( true, {}, Editor.DateTime.defaults, opts );
+	var classPrefix = this.c.classPrefix;
+	var i18n = this.c.i18n;
+
+	// Only IS8601 dates are supported without moment
+	if ( ! window.moment && this.c.format !== 'YYYY-MM-DD' ) {
+		throw "Editor datetime: Without momentjs only the format 'YYYY-MM-DD' can be used";
+	}
+
+	var timeBlock = function ( type ) {
+		return '<div class="'+classPrefix+'-timeblock">'+
+				'<div class="'+classPrefix+'-iconUp">'+
+					'<button>'+i18n.previous+'</button>'+
+				'</div>'+
+				'<div class="'+classPrefix+'-label">'+
+					'<span/>'+
+					'<select class="'+classPrefix+'-'+type+'"/>'+
+				'</div>'+
+				'<div class="'+classPrefix+'-iconDown">'+
+					'<button>'+i18n.next+'</button>'+
+				'</div>'+
+			'</div>';
+	};
+
+	var gap = function () {
+		return '<span>:</span>';
+	};
+
+	// DOM structure
+	var structure = $(
+		'<div class="'+classPrefix+'">'+
+			'<div class="'+classPrefix+'-date">'+
+				'<div class="'+classPrefix+'-title">'+
+					'<div class="'+classPrefix+'-iconLeft">'+
+						'<button>'+i18n.previous+'</button>'+
+					'</div>'+
+					'<div class="'+classPrefix+'-iconRight">'+
+						'<button>'+i18n.next+'</button>'+
+					'</div>'+
+					'<div class="'+classPrefix+'-label">'+
+						'<span/>'+
+						'<select class="'+classPrefix+'-month"/>'+
+					'</div>'+
+					'<div class="'+classPrefix+'-label">'+
+						'<span/>'+
+						'<select class="'+classPrefix+'-year"/>'+
+					'</div>'+
+				'</div>'+
+				'<div class="'+classPrefix+'-calendar"/>'+
+			'</div>'+
+			'<div class="'+classPrefix+'-time">'+
+				timeBlock( 'hours' )+
+				gap()+
+				timeBlock( 'minutes' )+
+				gap()+
+				timeBlock( 'seconds' )+
+				timeBlock( 'ampm' )+
+			'</div>'+
+		'</div>'
+	);
+
+	this.dom = {
+		container: structure,
+		date:      structure.find( '.'+classPrefix+'-date' ),
+		title:     structure.find( '.'+classPrefix+'-title' ),
+		calendar:  structure.find( '.'+classPrefix+'-calendar' ),
+		time:      structure.find( '.'+classPrefix+'-time' ),
+		input:     $(input)
+	};
+
+	this.s = {
+		/** @type {Date} Date value that the picker has currently selected */
+		d: null,
+
+		/** @type {Date} Date of the calender - might not match the value */
+		display: null,
+
+		/** @type {String} Unique namespace string for this instance */
+		namespace: 'editor-dateime-'+(Editor.DateTime._instance++),
+
+		/** @type {Object} Parts of the picker that should be shown */
+		parts: {
+			date:    this.c.format.match( /[YMD]/ ) !== null,
+			time:    this.c.format.match( /[Hhm]/ ) !== null,
+			seconds: this.c.format.indexOf( 's' )   !== -1,
+			hours12: this.c.format.match( /[haA]/ ) !== null
+		}
+	};
+
+	this.dom.container
+		.append( this.dom.date )
+		.append( this.dom.time );
+
+	this.dom.date
+		.append( this.dom.title )
+		.append( this.dom.calendar );
+
+	this._constructor();
+};
+
+$.extend( Editor.DateTime.prototype, {
+	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+	 * Public
+	 */
+	
+	/**
+	 * Destroy the control
+	 */
+	destroy: function () {
+		this._hide();
+		this.dom.container().off('').empty();
+		this.dom.input.off('.editor-datetime');
+	},
+
+	max: function ( date ) {
+		this.c.maxDate = date;
+
+		this._optionsTitle();
+		this._setCalander();
+	},
+
+	min: function ( date ) {
+		this.c.minDate = date;
+
+		this._optionsTitle();
+		this._setCalander();
+	},
+
+	/**
+	 * Check if an element belongs to this control
+	 *
+	 * @param  {node} node Element to check
+	 * @return {boolean}   true if owned by this control, false otherwise
+	 */
+	owns: function ( node ) {
+		return $(node).parents().filter( this.dom.container ).length > 0;
+	},
+
+	/**
+	 * Get / set the value
+	 *
+	 * @param  {string|Date} set   Value to set
+	 * @param  {boolean} [write=true] Flag to indicate if the formatted value
+	 *   should be written into the input element
+	 */
+	val: function ( set, write ) {
+		if ( set === undefined ) {
+			return this.s.d;
+		}
+
+		if ( set instanceof Date ) {
+			this.s.d = this._dateToUtc( set );
+		}
+		else if ( set === null || set === '' ) {
+			this.s.d = null;
+		}
+		else if ( typeof set === 'string' ) {
+			if ( window.moment ) {
+				// Use moment if possible (even for ISO8601 strings, since it
+				// will correctly handle 0000-00-00 and the like)
+				var m = window.moment.utc( set, this.c.format, this.c.momentLocale, this.c.momentStrict );
+				this.s.d = m.isValid() ? m.toDate() : null;
+			}
+			else {
+				// Else must be using ISO8601 without moment (constructor would
+				// have thrown an error otherwise)
+				var match = set.match(/(\d{4})\-(\d{2})\-(\d{2})/ );
+				this.s.d = match ?
+					new Date( Date.UTC(match[1], match[2]-1, match[3]) ) :
+					null;
+			}
+		}
+
+		if ( write || write === undefined ) {
+			if ( this.s.d ) {
+				this._writeOutput();
+			}
+			else {
+				// The input value was not valid...
+				this.dom.input.val( set );
+			}
+		}
+
+		// We need a date to be able to display the calendar at all
+		if ( ! this.s.d ) {
+			this.s.d = this._dateToUtc( new Date() );
+		}
+
+		this.s.display = new Date( this.s.d.toString() );
+
+		// Update the display elements for the new value
+		this._setTitle();
+		this._setCalander();
+		this._setTime();
+	},
+
+
+	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+	 * Constructor
+	 */
+	
+	/**
+	 * Build the control and assign initial event handlers
+	 *
+	 * @private
+	 */
+	_constructor: function () {
+		var that = this;
+		var classPrefix = this.c.classPrefix;
+		var container = this.dom.container;
+		var i18n = this.c.i18n;
+
+		if ( ! this.s.parts.date ) {
+			this.dom.date.css( 'display', 'none' );
+		}
+
+		if ( ! this.s.parts.time ) {
+			this.dom.time.css( 'display', 'none' );
+		}
+
+		if ( ! this.s.parts.seconds ) {
+			this.dom.time.children('div.editor-datetime-timeblock').eq(2).remove();
+			this.dom.time.children('span').eq(1).remove();
+		}
+
+		if ( ! this.s.parts.hours12 ) {
+			this.dom.time.children('div.editor-datetime-timeblock').last().remove();
+		}
+
+		// Render the options
+		this._optionsTitle();
+		this._optionsTime( 'hours', this.s.parts.hours12 ? 12 : 24, 1 );
+		this._optionsTime( 'minutes', 60, this.c.minutesIncrement );
+		this._optionsTime( 'seconds', 60, this.c.secondsIncrement );
+		this._options( 'ampm', [ 'am', 'pm' ], i18n.amPm );
+
+		// Trigger the display of the widget when clicking or focusing on the
+		// input element
+		this.dom.input
+			.on('focus.editor-datetime click.editor-datetime', function () {
+				// If already visible - don't do anything
+				if ( that.dom.container.is(':visible') || that.dom.input.is(':disabled') ) {
+					return;
+				}
+
+				// In case the value has changed by text
+				that.val( that.dom.input.val(), false );
+
+				that._show();
+			} )
+			.on('keyup.editor-datetime', function () {
+				// Update the calender's displayed value as the user types
+				if ( that.dom.container.is(':visible') ) {
+					that.val( that.dom.input.val(), false );
+				}
+			} );
+
+		// Main event handlers for input in the widget
+		this.dom.container
+			.on( 'change', 'select', function () {
+				var select = $(this);
+				var val = select.val();
+
+				if ( select.hasClass(classPrefix+'-month') ) {
+					// Month select
+					that.s.display.setUTCMonth( val );
+					that._setTitle();
+					that._setCalander();
+				}
+				else if ( select.hasClass(classPrefix+'-year') ) {
+					// Year select
+					that.s.display.setUTCFullYear( val );
+					that._setTitle();
+					that._setCalander();
+				}
+				else if ( select.hasClass(classPrefix+'-hours') || select.hasClass(classPrefix+'-ampm') ) {
+					// Hours - need to take account of AM/PM input if present
+					if ( that.s.parts.hours12 ) {
+						var hours = $(that.dom.container).find('.'+classPrefix+'-hours').val() * 1;
+						var pm = $(that.dom.container).find('.'+classPrefix+'-ampm').val() === 'pm';
+
+						that.s.d.setUTCHours( hours === 12 && !pm ?
+							0 :
+							pm && hours !== 12 ?
+								hours + 12 :
+								hours
+						);
+					}
+					else {
+						that.s.d.setUTCHours( val );
+					}
+
+					that._setTime();
+					that._writeOutput( true );
+				}
+				else if ( select.hasClass(classPrefix+'-minutes') ) {
+					// Minutes select
+					that.s.d.setUTCMinutes( val );
+					that._setTime();
+					that._writeOutput( true );
+				}
+				else if ( select.hasClass(classPrefix+'-seconds') ) {
+					// Seconds select
+					that.s.d.setSeconds( val );
+					that._setTime();
+					that._writeOutput( true );
+				}
+
+				that.dom.input.focus();
+				that._position();
+			} )
+			.on( 'click', function (e) {
+				var nodeName = e.target.nodeName.toLowerCase();
+
+				if ( nodeName === 'select' ) {
+					return;
+				}
+
+				e.stopPropagation();
+
+				if ( nodeName === 'button' ) {
+					var button = $(e.target);
+					var parent = button.parent();
+					var select;
+
+					if ( parent.hasClass('disabled') ) {
+						return;
+					}
+
+					if ( parent.hasClass(classPrefix+'-iconLeft') ) {
+						// Previous month
+						that.s.display.setUTCMonth( that.s.display.getUTCMonth()-1 );
+						that._setTitle();
+						that._setCalander();
+
+						that.dom.input.focus();
+					}
+					else if ( parent.hasClass(classPrefix+'-iconRight') ) {
+						// Next month
+						that.s.display.setUTCMonth( that.s.display.getUTCMonth()+1 );
+						that._setTitle();
+						that._setCalander();
+
+						that.dom.input.focus();
+					}
+					else if ( parent.hasClass(classPrefix+'-iconUp') ) {
+						// Value increase - common to all time selects
+						select = parent.parent().find('select')[0];
+						select.selectedIndex = select.selectedIndex !== select.options.length - 1 ?
+							select.selectedIndex+1 :
+							0;
+						$(select).change();
+					}
+					else if ( parent.hasClass(classPrefix+'-iconDown') ) {
+						// Value decrease - common to all time selects
+						select = parent.parent().find('select')[0];
+						select.selectedIndex = select.selectedIndex === 0 ?
+							select.options.length - 1 :
+							select.selectedIndex-1;
+						$(select).change();
+					}
+					else {
+						// Calender click
+						if ( ! that.s.d ) {
+							that.s.d = that._dateToUtc( new Date() );
+						}
+
+						that.s.d.setUTCFullYear( button.data('year') );
+						that.s.d.setUTCMonth( button.data('month') );
+						that.s.d.setUTCDate( button.data('day') );
+
+						that._writeOutput( true );
+
+						// This is annoying but IE has some kind of async
+						// behaviour with focus and the focus from the above
+						// write would occur after this hide - resulting in the
+						// calender opening immediately
+						setTimeout( function () {
+							that._hide();
+						}, 10 );
+					}
+				}
+				else {
+					// Click anywhere else in the widget - return focus to the
+					// input element
+					that.dom.input.focus();
+				}
+			} );
+	},
+
+
+	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+	 * Private
+	 */
+
+	/**
+	 * Compare the date part only of two dates - this is made super easy by the
+	 * toDateString method!
+	 *
+	 * @param  {Date} a Date 1
+	 * @param  {Date} b Date 2
+	 * @private
+	 */
+	_compareDates: function( a, b ) {
+		return a.toDateString() === b.toDateString();
+	},
+
+	/**
+	 * Get the number of days in a method. Based on
+	 * http://stackoverflow.com/a/4881951 by Matti Virkkunen
+	 *
+	 * @param  {integer} year  Year
+	 * @param  {integer} month Month (starting at 0)
+	 * @private
+	 */
+	_daysInMonth: function ( year, month ) {
+		// 
+		var isLeap = ((year % 4) === 0 && ((year % 100) !== 0 || (year % 400) === 0));
+		var months = [31, (isLeap ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+		return months[month];
+	},
+
+	/**
+	 * Create a new date object which has the UTC values set to the local time.
+	 * This allows the local time to be used directly for the library which
+	 * always bases its calculations and display on UTC.
+	 *
+	 * @param  {Date} s Date to "convert"
+	 * @return {Date}   Shifted date
+	 */
+	_dateToUtc: function ( s ) {
+		return new Date( Date.UTC(
+			s.getFullYear(), s.getMonth(), s.getDate(),
+			s.getHours(), s.getMinutes(), s.getSeconds()
+		) );
+	},
+
+	/**
+	 * Hide the control and remove events related to its display
+	 *
+	 * @private
+	 */
+	_hide: function () {
+		var namespace = this.s.namespace;
+
+		this.dom.container.detach();
+
+		$(window).off( '.'+namespace );
+		$(document).off( 'keydown.'+namespace );
+		$('div.DTE_Body_Content').off( 'scroll.'+namespace );
+		$('body').off( 'click.'+namespace );
+	},
+
+	/**
+	 * Convert a 24 hour value to a 12 hour value
+	 *
+	 * @param  {integer} val 24 hour value
+	 * @return {integer}     12 hour value
+	 * @private
+	 */
+	_hours24To12: function ( val ) {
+		return val === 0 ?
+			12 :
+			val > 12 ?
+				val - 12 :
+				val;
+	},
+
+	/**
+	 * Generate the HTML for a single day in the calender - this is basically
+	 * and HTML cell with a button that has data attributes so we know what was
+	 * clicked on (if it is clicked on) and a bunch of classes for styling.
+	 *
+	 * @param  {object} day Day object from the `_htmlMonth` method
+	 * @return {string}     HTML cell
+	 */
+	_htmlDay: function( day )
+	{
+		if ( day.empty ) {
+			return '<td class="empty"></td>';
+		}
+
+		var classes = [ 'day' ];
+		var classPrefix = this.c.classPrefix;
+
+		if ( day.disabled ) {
+			classes.push( 'disabled' );
+		}
+
+		if ( day.today ) {
+			classes.push( 'today' );
+		}
+
+		if ( day.selected ) {
+			classes.push( 'selected' );
+		}
+
+		return '<td data-day="' + day.day + '" class="' + classes.join(' ') + '">' +
+				'<button class="'+classPrefix+'-button '+classPrefix+'-day" type="button" ' +'data-year="' + day.year + '" data-month="' + day.month + '" data-day="' + day.day + '">' +
+						day.day +
+				'</button>' +
+			'</td>';
+	},
+
+
+	/**
+	 * Create the HTML for a month to be displayed in the calender table.
+	 * 
+	 * Based upon the logic used in Pikaday - MIT licensed
+	 * Copyright (c) 2014 David Bushell
+	 * https://github.com/dbushell/Pikaday
+	 *
+	 * @param  {integer} year  Year
+	 * @param  {integer} month Month (starting at 0)
+	 * @return {string} Calender month HTML
+	 * @private
+	 */
+	_htmlMonth: function ( year, month ) {
+		var now    = new Date(),
+			days   = this._daysInMonth( year, month ),
+			before = new Date( Date.UTC(year, month, 1) ).getUTCDay(),
+			data   = [],
+			row    = [];
+
+		if ( this.c.firstDay > 0 ) {
+			before -= this.c.firstDay;
+
+			if (before < 0) {
+				before += 7;
+			}
+		}
+
+		var cells = days + before,
+			after = cells;
+
+		while ( after > 7 ) {
+			after -= 7;
+		}
+
+		cells += 7 - after;
+
+		var minDate = this.c.minDate;
+		var maxDate = this.c.maxDate;
+
+		if ( minDate ) {
+			minDate.setUTCHours(0);
+			minDate.setUTCMinutes(0);
+			minDate.setSeconds(0);
+		}
+
+		if ( maxDate ) {
+			maxDate.setUTCHours(23);
+			maxDate.setUTCMinutes(59);
+			maxDate.setSeconds(59);
+		}
+
+		for ( var i=0, r=0 ; i<cells ; i++ ) {
+			var day      = new Date( Date.UTC(year, month, 1 + (i - before)) ),
+				selected = this.s.d ? this._compareDates(day, this.s.d) : false,
+				today    = this._compareDates(day, now),
+				empty    = i < before || i >= (days + before),
+				disabled = (minDate && day < minDate) ||
+				           (maxDate && day > maxDate);
+
+			var disableDays = this.c.disableDays;
+			if ( $.isArray( disableDays ) && $.inArray( day.getUTCDay(), disableDays ) !== -1 ) {
+				disabled = true;
+			}
+			else if ( typeof disableDays === 'function' && disableDays( day ) === true ) {
+				disabled = true;
+			}
+
+			var dayConfig = {
+				day:      1 + (i - before),
+				month:    month,
+				year:     year,
+				selected: selected,
+				today:    today,
+				disabled: disabled,
+				empty:    empty
+			};
+
+			row.push( this._htmlDay(dayConfig) );
+
+			if ( ++r === 7 ) {
+				if ( this.c.showWeekNumber ) {
+					row.unshift( this._htmlWeekOfYear(i - before, month, year) );
+				}
+
+				data.push( '<tr>'+row.join('')+'</tr>' );
+				row = [];
+				r = 0;
+			}
+		}
+
+		var className = this.c.classPrefix+'-table';
+		if ( this.c.showWeekNumber ) {
+			className += ' weekNumber';
+		}
+
+		return '<table class="'+className+'">' +
+				'<thead>'+
+					this._htmlMonthHead() +
+				'</thead>'+
+				'<tbody>'+
+					data.join('') +
+				'</tbody>'+
+			'</table>';
+	},
+
+	/**
+	 * Create the calender table's header (week days)
+	 *
+	 * @return {string} HTML cells for the row
+	 * @private
+	 */
+	_htmlMonthHead: function () {
+		var a = [];
+		var firstDay = this.c.firstDay;
+		var i18n = this.c.i18n;
+
+		// Take account of the first day shift
+		var dayName = function ( day ) {
+			day += firstDay;
+
+			while (day >= 7) {
+				day -= 7;
+			}
+
+			return i18n.weekdays[day];
+		};
+		
+		// Empty cell in the header
+		if ( this.c.showWeekNumber ) {
+			a.push( '<th></th>' );
+		}
+
+		for ( var i=0 ; i<7 ; i++ ) {
+			a.push( '<th>'+dayName( i )+'</th>' );
+		}
+
+		return a.join('');
+	},
+
+	/**
+	 * Create a cell that contains week of the year - ISO style
+	 *
+	 * Based on http://javascript.about.com/library/blweekyear.htm
+	 *
+	 * @param  {integer} d Day of month
+	 * @param  {integer} m Month of year (zero index)
+	 * @param  {integer} y Year
+	 * @return {string}   
+	 * @private
+	 */
+	_htmlWeekOfYear: function ( d, m, y ) {
+		var onejan = new Date(y, 0, 1),
+			weekNum = Math.ceil((((new Date(y, m, d) - onejan) / 86400000) + onejan.getUTCDay()+1)/7);
+
+		return '<td class="'+this.c.classPrefix+'-week">' + weekNum + '</td>';
+	},
+
+	/**
+	 * Create option elements from a range in an array
+	 *
+	 * @param  {string} selector Class name unique to the select element to use
+	 * @param  {array} values   Array of values
+	 * @param  {array} [labels] Array of labels. If given must be the same
+	 *   length as the values parameter.
+	 * @private
+	 */
+	_options: function ( selector, values, labels ) {
+		if ( ! labels ) {
+			labels = values;
+		}
+
+		var select = this.dom.container.find('select.'+this.c.classPrefix+'-'+selector);
+		select.empty();
+
+		for ( var i=0, ien=values.length ; i<ien ; i++ ) {
+			select.append( '<option value="'+values[i]+'">'+labels[i]+'</option>' );
+		}
+	},
+
+	/**
+	 * Set an option and update the option's span pair (since the select element
+	 * has opacity 0 for styling)
+	 *
+	 * @param  {string} selector Class name unique to the select element to use
+	 * @param  {*}      val      Value to set
+	 * @private
+	 */
+	_optionSet: function ( selector, val ) {
+		var select = this.dom.container.find('select.'+this.c.classPrefix+'-'+selector);
+		var span = select.parent().children('span');
+
+		select.val( val );
+
+		var selected = select.find('option:selected');
+		span.html( selected.length !== 0 ?
+			selected.text() :
+			this.c.i18n.unknown
+		);
+	},
+
+	/**
+	 * Create time option list. Can't just use `_options` for the time as the
+	 * hours can be a little complex and we want to be able to control the
+	 * increment option for the minutes and seconds.
+	 *
+	 * @param  {jQuery} select Select element to operate on
+	 * @param  {integer} count  Value to loop to
+	 * @param  {integer} inc    Increment value
+	 * @private
+	 */
+	_optionsTime: function ( select, count, inc ) {
+		var classPrefix = this.c.classPrefix;
+		var sel = this.dom.container.find('select.'+classPrefix+'-'+select);
+		var start=0, end=count;
+		var render = count === 12 ?
+			function (i) { return i; } :
+			this._pad;
+
+		if ( count === 12 ) {
+			start = 1;
+			end = 13;
+		}
+
+		for ( var i=start ; i<end ; i+=inc ) {
+			sel.append( '<option value="'+i+'">'+render(i)+'</option>' );
+		}
+	},
+
+	/**
+	 * Create the options for the month and year
+	 *
+	 * @param  {integer} year  Year
+	 * @param  {integer} month Month (starting at 0)
+	 * @private
+	 */
+	_optionsTitle: function ( year, month ) {
+		var classPrefix = this.c.classPrefix;
+		var i18n = this.c.i18n;
+		var min = this.c.minDate;
+		var max = this.c.maxDate;
+		var minYear = min ? min.getFullYear() : null;
+		var maxYear = max ? max.getFullYear() : null;
+
+		var i = minYear !== null ? minYear : new Date().getFullYear() - this.c.yearRange;
+		var j = maxYear !== null ? maxYear : new Date().getFullYear() + this.c.yearRange;
+
+		this._options( 'month', this._range( 0, 11 ), i18n.months );
+		this._options( 'year', this._range( i, j ) );
+	},
+
+	/**
+	 * Simple two digit pad
+	 *
+	 * @param  {integer} i      Value that might need padding
+	 * @return {string|integer} Padded value
+	 * @private
+	 */
+	_pad: function ( i ) {
+		return i<10 ? '0'+i : i;
+	},
+
+	/**
+	 * Position the calender to look attached to the input element
+	 * @private
+	 */
+	_position: function () {
+		var offset = this.dom.input.offset();
+		var container = this.dom.container;
+		var inputHeight = this.dom.input.outerHeight();
+
+		container
+			.css( {
+				top: offset.top + inputHeight,
+				left: offset.left
+			} )
+			.appendTo( 'body' );
+
+		var calHeight = container.outerHeight();
+		var scrollTop = $('body').scrollTop();
+
+		if ( offset.top + inputHeight + calHeight - scrollTop > $(window).height() ) {
+			var newTop = offset.top - calHeight;
+
+			container.css( 'top', newTop < 0 ? 0 : newTop );
+		}
+	},
+
+	/**
+	 * Create a simple array with a range of values
+	 *
+	 * @param  {integer} start Start value (inclusive)
+	 * @param  {integer} end   End value (inclusive)
+	 * @return {array}         Created array
+	 * @private
+	 */
+	_range: function ( start, end ) {
+		var a = [];
+
+		for ( var i=start ; i<=end ; i++ ) {
+			a.push( i );
+		}
+
+		return a;
+	},
+
+	/**
+	 * Redraw the calender based on the display date - this is a destructive
+	 * operation
+	 *
+	 * @private
+	 */
+	_setCalander: function () {
+		this.dom.calendar
+			.empty()
+			.append( this._htmlMonth(
+				this.s.display.getUTCFullYear(),
+				this.s.display.getUTCMonth()
+			) );
+	},
+
+	/**
+	 * Set the month and year for the calender based on the current display date
+	 *
+	 * @private
+	 */
+	_setTitle: function () {
+		this._optionSet( 'month', this.s.display.getUTCMonth() );
+		this._optionSet( 'year', this.s.display.getUTCFullYear() );
+	},
+
+	/**
+	 * Set the time based on the current value of the widget
+	 *
+	 * @private
+	 */
+	_setTime: function () {
+		var d = this.s.d;
+		var hours = d ? d.getUTCHours() : 0;
+
+		if ( this.s.parts.hours12 ) {
+			this._optionSet( 'hours', this._hours24To12( hours ) );
+			this._optionSet( 'ampm', hours < 12 ? 'am' : 'pm' );
+		}
+		else {
+			this._optionSet( 'hours', hours );
+		}
+
+		this._optionSet( 'minutes', d ? d.getUTCMinutes() : 0 );
+		this._optionSet( 'seconds', d ? d.getSeconds() : 0 );
+	},
+
+	/**
+	 * Show the widget and add events to the document required only while it
+	 * is displayed
+	 * 
+	 * @private
+	 */
+	_show: function () {
+		var that = this;
+		var namespace = this.s.namespace;
+
+		this._position();
+
+		// Need to reposition on scroll
+		$(window).on( 'scroll.'+namespace+' resize.'+namespace, function () {
+			that._position();
+		} );
+
+		$('div.DTE_Body_Content').on( 'scroll.'+namespace, function () {
+			that._position();
+		} );
+
+		// On tab focus will move to a different field (no keyboard navigation
+		// in the date picker - this might need to be changed).
+		// On esc the Editor might close. Even if it doesn't the date picker
+		// should
+		$(document).on( 'keydown.'+namespace, function (e) {
+			if (
+				e.keyCode === 9  || // tab
+				e.keyCode === 27 || // esc
+				e.keyCode === 13    // return
+			) {
+				that._hide();
+			}
+		} );
+
+		// Hide if clicking outside of the widget - but in a different click
+		// event from the one that was used to trigger the show (bubble and
+		// inline)
+		setTimeout( function () {
+			$('body').on( 'click.'+namespace, function (e) {
+				var parents = $(e.target).parents();
+
+				if ( ! parents.filter( that.dom.container ).length && e.target !== that.dom.input[0] ) {
+					that._hide();
+				}
+			} );
+		}, 10 );
+	},
+
+	/**
+	 * Write the formatted string to the input element this control is attached
+	 * to
+	 *
+	 * @private
+	 */
+	_writeOutput: function ( focus ) {
+		var date = this.s.d;
+
+		// Use moment if possible - otherwise it must be ISO8601 (or the
+		// constructor would have thrown an error)
+		var out = window.moment ?
+			window.moment.utc( date, undefined, this.c.momentLocale, this.c.momentStrict ).format( this.c.format ) :
+			date.getUTCFullYear() +'-'+
+	            this._pad(date.getUTCMonth() + 1) +'-'+
+	            this._pad(date.getUTCDate());
+		
+		this.dom.input.val( out );
+
+		if ( focus ) {
+			this.dom.input.focus();
+		}
+	}
+} );
+
+
+/**
+ * For generating unique namespaces
+ *
+ * @type {Number}
+ * @private
+ */
+Editor.DateTime._instance = 0;
+
+/**
+ * Defaults for the date time picker
+ *
+ * @type {Object}
+ */
+Editor.DateTime.defaults = {
+	// Not documented - could be an internal property
+	classPrefix: 'editor-datetime',
+
+	// function or array of ints
+	disableDays: null,
+
+	// first day of the week (0: Sunday, 1: Monday, etc)
+	firstDay: 1,
+
+	format: 'YYYY-MM-DD',
+
+	// Not documented as i18n is done by the Editor.defaults.i18n obj
+	i18n: Editor.defaults.i18n.datetime,
+
+	maxDate: null,
+
+	minDate: null,
+
+	minutesIncrement: 1,
+
+	momentStrict: true,
+
+	momentLocale: 'en',
+
+	secondsIncrement: 1,
+
+	// show the ISO week number at the head of the row
+	showWeekNumber: false,
+
+	// overruled by max / min date
+	yearRange: 10
+};
+
+
+
+(function() {
+
+var fieldTypes = Editor.fieldTypes;
+
+// Upload private helper method
+function _buttonText ( conf, text )
+{
+	if ( text === null || text === undefined ) {
+		text = conf.uploadText || "Choose file...";
+	}
+
+	conf._input.find('div.upload button').html( text );
 }
-,close:function(a,b){var g1="hide";if(m[(F9+b2+t8h+A4B+C7Z.l8h)]){m[(F9+U3c)]=a;m[(F9+g1)](b);m[(j6B+N9B+R1h)]=false;}
-else b&&b();}
-,node:function(){return m[(J4c+t8h+f2h)][d5B][0];}
-,_init:function(){var h2="ox_Co",r7B="_ready";if(!m[r7B]){var a=m[(F9+C7Z.i6+E3)];a[j4B]=q((H8+C7Z.I4c+D5+C0+U0B+r0c+d5h+H6h+M0h+h2+C7Z.l8h+G3B),m[(F9+i9h+f2h)][d5B]);a[d5B][(D7+B6)]("opacity",0);a[(J3c+a9B+H6h+d3c+C7Z.F4h+B1c)][(Q5B)]((B3+C7Z.Q6+r9B+t9h),0);}
+
+function _commonUpload ( editor, conf, dropCallback )
+{
+	var btnClass = editor.classes.form.button;
+	var container = $(
+		'<div class="editor_upload">'+
+			'<div class="eu_table">'+
+				'<div class="row">'+
+					'<div class="cell upload">'+
+						'<button class="'+btnClass+'" />'+
+						'<input type="file"/>'+
+					'</div>'+
+					'<div class="cell clearValue">'+
+						'<button class="'+btnClass+'" />'+
+					'</div>'+
+				'</div>'+
+				'<div class="row second">'+
+					'<div class="cell">'+
+						'<div class="drop"><span/></div>'+
+					'</div>'+
+					'<div class="cell">'+
+						'<div class="rendered"/>'+
+					'</div>'+
+				'</div>'+
+			'</div>'+
+		'</div>'
+	);
+
+	conf._input = container;
+	conf._enabled = true;
+
+	_buttonText( conf );
+
+	if ( window.FileReader && conf.dragDrop !== false ) {
+		container.find('div.drop span').text(
+			conf.dragDropText || "Drag and drop a file here to upload"
+		);
+
+		var dragDrop = container.find('div.drop');
+		dragDrop
+			.on( 'drop', function (e) {
+				if ( conf._enabled ) {
+					Editor.upload( editor, conf, e.originalEvent.dataTransfer.files, _buttonText, dropCallback );
+					dragDrop.removeClass('over');
+				}
+				return false;
+			} )
+			.on( 'dragleave dragexit', function (e) {
+				if ( conf._enabled ) {
+					dragDrop.removeClass('over');
+				}
+				return false;
+			} )
+			.on( 'dragover', function (e) {
+				if ( conf._enabled ) {
+					dragDrop.addClass('over');
+				}
+				return false;
+			} );
+
+		// When an Editor is open with a file upload input there is a
+		// reasonable chance that the user will miss the drop point when
+		// dragging and dropping. Rather than loading the file in the browser,
+		// we want nothing to happen, otherwise the form will be lost.
+		editor
+			.on( 'open', function () {
+				$('body').on( 'dragover.DTE_Upload drop.DTE_Upload', function (e) {
+					return false;
+				} );
+			} )
+			.on( 'close', function () {
+				$('body').off( 'dragover.DTE_Upload drop.DTE_Upload' );
+			} );
+	}
+	else {
+		container.addClass( 'noDrop' );
+		container.append( container.find('div.rendered') );
+	}
+
+	container.find('div.clearValue button').on( 'click', function () {
+		Editor.fieldTypes.upload.set.call( editor, conf, '' );
+	} );
+
+	container.find('input[type=file]').on('change', function () {
+		Editor.upload( editor, conf, this.files, _buttonText, dropCallback );
+	} );
+
+	return container;
 }
-,_show:function(a){var L8B='wn',t3B='_Sh',K6B='tb',S4h='_Lig',T8h="not",h7h="dre",I5="chi",U3="orientation",V4="ghtbox",Q3h="box",a7h="Wrapp",u4h="nt_",V9h="Con",p8h="x_",M9c="bi",p2c="mate",a2h="Mob",E6h="DTED_",b=m[S4c];p[(t8h+u8c+Z6+I3+C7Z.R4h+B3c+C7Z.l8h)]!==h&&q("body")[(C7Z.Q6+C7Z.i6+C7Z.i6+a1B+d8+C7Z.c0h)]((E6h+E2+K0c+C7Z.R4h+C7Z.w6+t8h+K4B+F9+a2h+d5h+E4h));b[(s7B+C7Z.l8h+C7Z.R4h+C7Z.V7+C7Z.l8h+C7Z.R4h)][(D7+C7Z.c0h+C7Z.c0h)]((c4h+d5h+P4),(v2+Q5h));b[(J9h+L4+I0h+B0h)][Q5B]({top:-m[e3][R6c]}
-);q((C7Z.w6+m7c))[T8c](m[(F9+C7Z.i6+E3)][c8h])[(C7Z.Q6+q0h+q0h+C7Z.V7+B1c)](m[(F9+C7Z.i6+E3)][d5B]);m[a1c]();b[d5B][(C7Z.c0h+Q5h+q0h)]()[(C7Z.Q6+v8c+f2h+C7Z.Q6+C7Z.R4h+C7Z.V7)]({opacity:1,top:0}
-,a);b[(C7Z.w6+C7Z.Q6+D7+y8+B0h+v8h)][(l6c)]()[(C7Z.Q6+C7Z.l8h+d5h+p2c)]({opacity:1}
-);b[(q0c+C7Z.V7)][(C7Z.w6+d5h+C7Z.l8h+C7Z.i6)]((D7+E8h+K5B+s2h+C7Z.I4c+D5+t7+r0c+D9c+C7Z.w6+u7),function(){m[z2B][n2h]();}
-);b[c8h][(M9c+C7Z.l8h+C7Z.i6)]((D7+E8h+S8c+C7Z.I4c+D5+Y7+E2+d5h+V8+C7Z.R4h+k5c+K4B),function(){m[(z2B)][(C7Z.w6+K3h+W6c+B1c)]();}
-);q((H8+C7Z.I4c+D5+H3+D5+z1B+H6h+M0h+t8h+p8h+V9h+o0h+u4h+a7h+C7Z.V7+B0h),b[(J9h+C7Z.Q6+q0h+I0h+B0h)])[c7c]((I9B+d5h+D7+s2h+C7Z.I4c+D5+H3+D5+F9+E2+m8B+n5h+C7Z.R4h+Q3h),function(a){var R="und",r6B="ox_C";q(a[(I3+B0h+j2)])[d9B]((G0B+U0B+F9+E2+m8B+M0h+r6B+d3+C7Z.R4h+Z6+Y1c+q0h+I0h+B0h))&&m[z2B][(C7Z.w6+C7Z.Q6+D7+s2h+H6h+d3c+R)]();}
-);q(p)[(C7Z.w6+g4r+C7Z.i6)]((B0h+C7Z.V7+m2+g3h+C7Z.V7+C7Z.I4c+D5+C0+Z5+D5+z1B+V4),function(){var T2B="eig";m[(o3B+T2B+n5h+C7Z.R4h+p7c+o4h+D7)]();}
-);m[U9c]=q((k5c+C7Z.i6+C7Z.X3h))[h9B]();if(p[U3]!==h){a=q((k5c+h5h))[(I5+E8h+h7h+C7Z.l8h)]()[T8h](b[c8h])[(C7Z.l8h+t8h+C7Z.R4h)](b[(J9h+C7Z.Q6+q0h+q0h+C7Z.W7)]);q((C7Z.w6+t8h+h5h))[T8c]((L2+u7h+h5+U7c+B7h+N1+r1B+Y6c+U7+U0h+Q7+U7+S4h+c4B+K6B+A1h+l7B+t3B+A1h+L8B+z4B));q("div.DTED_Lightbox_Shown")[T8c](a);}
+
+// Typically a change event caused by the end user will be added to a queue that
+// the browser will handle when no other script is running. However, using
+// `$().trigger()` will cause it to happen immediately, so in order to simulate
+// the standard browser behaviour we use setTimeout. This also means that
+// `dependent()` and other change event listeners will trigger when the field
+// values have all been set, rather than as they are being set - 31594
+function _triggerChange ( input ) {
+	setTimeout( function () {
+		input.trigger( 'change', {editorSet: true} );
+	}, 0 );
 }
-,_heightCalc:function(){var J0="_Fo",Z8h="outerH",e4="wrappe",R0c="win",a=m[(F9+C7Z.i6+t8h+f2h)],b=q(p).height()-m[(D7+d3+C7Z.p5h)][(R0c+i9h+A4B+E8+C7Z.Q6+C7Z.i6+C7Z.i6+g4r+H6h)]*2-q((H8+C7Z.I4c+D5+C0+E2h+C7Z.V7+C7Z.Q6+Y1h+B0h),a[(e4+B0h)])[(Z8h+C7Z.V7+D9c)]()-q((H8+C7Z.I4c+D5+H3+J0+t8h+C7Z.R4h+C7Z.V7+B0h),a[(A4B+B0h+C7Z.Q6+q0h+M8c)])[e4h]();q((H8+C7Z.I4c+D5+H3+D2B+C7Z.X3h+h1B+o2c+C7Z.R4h),a[(A4B+g6c+q0h+I0h+B0h)])[Q5B]("maxHeight",b);}
-,_hide:function(a){var l7h="ED_Li",H3c="rapp",F2="ightb",b9="nbi",B8h="unbi",K1h="bile",R9h="ox_Mo",V1h="Li",T9c="emove",z0h="Show",R4="D_Lig",m7B="ienta",b=m[(F9+i9h+f2h)];a||(a=function(){}
-);if(p[(C7Z.N6+m7B+l1c+C7Z.l8h)]!==h){var c=q((C7Z.i6+d5h+E4B+C7Z.I4c+D5+C0+Z5+R4+B9B+C7Z.w6+t8h+K4B+F9+z0h+C7Z.l8h));c[T1c]()[e5B]((k5c+h5h));c[(B0h+T9c)]();}
-q((k5c+C7Z.i6+C7Z.X3h))[(z5c+u6B+E4B+D3h+E8h+C7Z.Q6+B6)]((D5+Y7+V1h+P4+C7Z.w6+R9h+K1h))[h9B](m[U9c]);b[d5B][(C7Z.c0h+r0B)]()[(D7B)]({opacity:0,top:m[(s7B+m8c)][R6c]}
-,function(){q(this)[j1c]();a();}
-);b[c8h][(X6+B3)]()[(o4+f4r+C7Z.Q6+o0h)]({opacity:0}
-,function(){q(this)[(L9+C7Z.Q6+I1B)]();}
-);b[n2h][(B8h+B1c)]("click.DTED_Lightbox");b[(C7Z.w6+P9+E3h+m9+C7Z.l8h+C7Z.i6)][(C7Z.F4h+b9+B1c)]((I9B+d5h+a9B+C7Z.I4c+D5+Y7+E2+F2+t8h+K4B));q("div.DTED_Lightbox_Content_Wrapper",b[(A4B+H3c+C7Z.V7+B0h)])[(b5B+C7Z.w6+d5h+C7Z.l8h+C7Z.i6)]((I9B+d5h+a9B+C7Z.I4c+D5+C0+Z5+D5+F9+E2+F2+t8h+K4B));q(p)[w4h]((z5c+m2+x5c+C7Z.I4c+D5+C0+l7h+V8+x4h+u7));}
-,_dte:null,_ready:!1,_shown:!1,_dom:{wrapper:q((L2+u7h+h5+U7c+B7h+y6B+r1B+r1B+Y6c+U7+p2h+U7+U7c+U7+U0h+Q7+r5c+h2B+r5B+j1h+U1B+Z9h+j1B+N6B+U1B+u4c+u7h+d3h+P3B+U7c+B7h+y6B+r1B+r1B+Y6c+U7+U0h+Q7+r5c+Y1+x7B+J8B+O2h+D3B+U1B+u4c+u7h+d3h+P3B+U7c+B7h+N1+r1B+Y6c+U7+U0h+Z2c+F9h+m9c+f4c+n9h+J8B+p6+I6B+f4c+I6h+g1h+f4c+F9h+n6h+Z9+c5c+I6h+U1B+u4c+u7h+h5+U7c+B7h+n3h+X0+r1B+Y6c+U7+p2h+r5c+Y1+d3h+j9B+f4c+n9h+J8B+F9h+V1B+O8h+g1h+f4c+S8h+u7h+d3h+P3B+m1+u7h+d3h+P3B+m1+u7h+h5+m1+u7h+h5+J7)),background:q((L2+u7h+d3h+P3B+U7c+B7h+n3h+Z9h+e4B+Y6c+U7+U0h+Z2c+l5c+d3h+j9B+K1c+R5B+A1h+N9c+u7h+u4c+u7h+h5+q5c+u7h+d3h+P3B+J7)),close:q((L2+u7h+d3h+P3B+U7c+B7h+n3h+X0+r1B+Y6c+U7+D8c+F9h+Y1+d3h+u0B+T3+l7B+G8h+A1h+s6h+S8h+u7h+h5+J7)),content:null}
+
+
+// A number of the fields in this file use the same get, set, enable and disable
+// methods (specifically the text based controls), so in order to reduce the code
+// size, we just define them once here in our own local base model for the field
+// types.
+var baseFieldType = $.extend( true, {}, Editor.models.fieldType, {
+	get: function ( conf ) {
+		return conf._input.val();
+	},
+
+	set: function ( conf, val ) {
+		conf._input.val( val );
+		_triggerChange( conf._input );
+	},
+
+	enable: function ( conf ) {
+		conf._input.prop( 'disabled', false );
+	},
+
+	disable: function ( conf ) {
+		conf._input.prop( 'disabled', true );
+	}
+} );
+
+
+
+fieldTypes.hidden = {
+	create: function ( conf ) {
+		conf._val = conf.value;
+		return null;
+	},
+
+	get: function ( conf ) {
+		return conf._val;
+	},
+
+	set: function ( conf, val ) {
+		conf._val = val;
+	}
+};
+
+
+fieldTypes.readonly = $.extend( true, {}, baseFieldType, {
+	create: function ( conf ) {
+		conf._input = $('<input/>').attr( $.extend( {
+			id: Editor.safeId( conf.id ),
+			type: 'text',
+			readonly: 'readonly'
+		}, conf.attr || {} ) );
+
+		return conf._input[0];
+	}
+} );
+
+
+fieldTypes.text = $.extend( true, {}, baseFieldType, {
+	create: function ( conf ) {
+		conf._input = $('<input/>').attr( $.extend( {
+			id: Editor.safeId( conf.id ),
+			type: 'text'
+		}, conf.attr || {} ) );
+
+		return conf._input[0];
+	}
+} );
+
+
+fieldTypes.password = $.extend( true, {}, baseFieldType, {
+	create: function ( conf ) {
+		conf._input = $('<input/>').attr( $.extend( {
+			id: Editor.safeId( conf.id ),
+			type: 'password'
+		}, conf.attr || {} ) );
+
+		return conf._input[0];
+	}
+} );
+
+fieldTypes.textarea = $.extend( true, {}, baseFieldType, {
+	create: function ( conf ) {
+		conf._input = $('<textarea/>').attr( $.extend( {
+			id: Editor.safeId( conf.id )
+		}, conf.attr || {} ) );
+		return conf._input[0];
+	}
+} );
+
+
+fieldTypes.select = $.extend( true, {}, baseFieldType, {
+	// Locally "private" function that can be reused for the create and update methods
+	_addOptions: function ( conf, opts ) {
+		var elOpts = conf._input[0].options;
+		var countOffset = 0;
+
+		elOpts.length = 0;
+
+		if ( conf.placeholder !== undefined ) {
+			countOffset += 1;
+			elOpts[0] = new Option( conf.placeholder, conf.placeholderValue !== undefined ?
+				conf.placeholderValue :
+				''
+			);
+
+			var disabled = conf.placeholderDisabled !== undefined ?
+				conf.placeholderDisabled :
+				true;
+
+			elOpts[0].hidden = disabled; // can't be hidden if not disabled!
+			elOpts[0].disabled = disabled;
+		}
+
+		if ( opts ) {
+			Editor.pairs( opts, conf.optionsPair, function ( val, label, i ) {
+				elOpts[ i+countOffset ] = new Option( label, val );
+				elOpts[ i+countOffset ]._editor_val = val;
+			} );
+		}
+	},
+
+	create: function ( conf ) {
+		conf._input = $('<select/>').attr( $.extend( {
+			id: Editor.safeId( conf.id ),
+			multiple: conf.multiple === true
+		}, conf.attr || {} ) );
+
+		fieldTypes.select._addOptions( conf, conf.options || conf.ipOpts );
+
+		return conf._input[0];
+	},
+
+	update: function ( conf, options ) {
+		// Get the current value
+		var currVal = fieldTypes.select.get( conf );
+		var lastSet = conf._lastSet;
+
+		fieldTypes.select._addOptions( conf, options );
+
+		// First attempt to set the current value as read
+		var res = fieldTypes.select.set( conf, currVal, true );
+
+		// If that couldn't be found attempt to set the previous selected value
+		if ( ! res && lastSet ) {
+			fieldTypes.select.set( conf, lastSet, true );
+		}
+
+		_triggerChange( conf._input );
+	},
+
+	get: function ( conf ) {
+		var val = conf._input.find('option:selected').map( function () {
+			return this._editor_val;
+		} ).toArray();
+
+		if ( conf.multiple ) {
+			return conf.separator ?
+				val.join( conf.separator ) :
+				val;
+		}
+
+		return val.length ? val[0] : null;
+	},
+
+	set: function ( conf, val, localUpdate ) {
+		if ( ! localUpdate ) {
+			conf._lastSet = val;
+		}
+
+		// Can't just use `$().val()` because it won't work with strong types
+		if ( conf.multiple && conf.separator && ! $.isArray( val ) ) {
+			val = val.split( conf.separator );
+		}
+		else if ( ! $.isArray( val ) ) {
+			val = [ val ];
+		}
+
+		var i, len=val.length, found, allFound = false;
+		var options = conf._input.find('option');
+
+		conf._input.find('option').each( function () {
+			found = false;
+
+			for ( i=0 ; i<len ; i++ ) {
+				// Weak typing
+				if ( this._editor_val == val[i] ) {
+					found = true;
+					allFound = true;
+					break;
+				}
+			}
+
+			this.selected = found;
+		} );
+
+		// If there is a placeholder, we might need to select it if nothing else
+		// was selected. It doesn't make sense to select when multi is enabled
+		if ( conf.placeholder && ! allFound && ! conf.multiple && options.length ) {
+			options[0].selected = true;
+		}
+
+		// Update will call change itself, otherwise multiple might be called
+		if ( ! localUpdate ) {
+			_triggerChange( conf._input );
+		}
+
+		return allFound;
+	}
+} );
+
+
+fieldTypes.checkbox = $.extend( true, {}, baseFieldType, {
+	// Locally "private" function that can be reused for the create and update methods
+	_addOptions: function ( conf, opts ) {
+		var val, label;
+		var elOpts = conf._input[0].options;
+		var jqInput = conf._input.empty();
+
+		if ( opts ) {
+			Editor.pairs( opts, conf.optionsPair, function ( val, label, i ) {
+				jqInput.append(
+					'<div>'+
+						'<input id="'+Editor.safeId( conf.id )+'_'+i+'" type="checkbox" />'+
+						'<label for="'+Editor.safeId( conf.id )+'_'+i+'">'+label+'</label>'+
+					'</div>'
+				);
+				$('input:last', jqInput).attr('value', val)[0]._editor_val = val;
+			} );
+		}
+	},
+
+
+	create: function ( conf ) {
+		conf._input = $('<div />');
+		fieldTypes.checkbox._addOptions( conf, conf.options || conf.ipOpts );
+
+		return conf._input[0];
+	},
+
+	get: function ( conf ) {
+		var out = [];
+		conf._input.find('input:checked').each( function () {
+			out.push( this._editor_val );
+		} );
+		return ! conf.separator ?
+			out :
+			out.length === 1 ?
+				out[0] :
+				out.join(conf.separator);
+	},
+
+	set: function ( conf, val ) {
+		var jqInputs = conf._input.find('input');
+		if ( ! $.isArray(val) && typeof val === 'string' ) {
+			val = val.split( conf.separator || '|' );
+		}
+		else if ( ! $.isArray(val) ) {
+			val = [ val ];
+		}
+
+		var i, len=val.length, found;
+
+		jqInputs.each( function () {
+			found = false;
+
+			for ( i=0 ; i<len ; i++ ) {
+				if ( this._editor_val == val[i] ) {
+					found = true;
+					break;
+				}
+			}
+
+			this.checked = found;
+		} );
+
+		_triggerChange( jqInputs );
+	},
+
+	enable: function ( conf ) {
+		conf._input.find('input').prop('disabled', false);
+	},
+
+	disable: function ( conf ) {
+		conf._input.find('input').prop('disabled', true);
+	},
+
+	update: function ( conf, options ) {
+		// Get the current value
+		var checkbox = fieldTypes.checkbox;
+		var currVal = checkbox.get( conf );
+
+		checkbox._addOptions( conf, options );
+		checkbox.set( conf, currVal );
+	}
+} );
+
+
+fieldTypes.radio = $.extend( true, {}, baseFieldType, {
+	// Locally "private" function that can be reused for the create and update methods
+	_addOptions: function ( conf, opts ) {
+		var val, label;
+		var elOpts = conf._input[0].options;
+		var jqInput = conf._input.empty();
+
+		if ( opts ) {
+			Editor.pairs( opts, conf.optionsPair, function ( val, label, i ) {
+				jqInput.append(
+					'<div>'+
+						'<input id="'+Editor.safeId( conf.id )+'_'+i+'" type="radio" name="'+conf.name+'" />'+
+						'<label for="'+Editor.safeId( conf.id )+'_'+i+'">'+label+'</label>'+
+					'</div>'
+				);
+				$('input:last', jqInput).attr('value', val)[0]._editor_val = val;
+			} );
+		}
+	},
+
+
+	create: function ( conf ) {
+		conf._input = $('<div />');
+		fieldTypes.radio._addOptions( conf, conf.options || conf.ipOpts );
+
+		// this is ugly, but IE6/7 has a problem with radio elements that are created
+		// and checked before being added to the DOM! Basically it doesn't check them. As
+		// such we use the _preChecked property to set cache the checked button and then
+		// check it again when the display is shown. This has no effect on other browsers
+		// other than to cook a few clock cycles.
+		this.on('open', function () {
+			conf._input.find('input').each( function () {
+				if ( this._preChecked ) {
+					this.checked = true;
+				}
+			} );
+		} );
+
+		return conf._input[0];
+	},
+
+	get: function ( conf ) {
+		var el = conf._input.find('input:checked');
+		return el.length ? el[0]._editor_val : undefined;
+	},
+
+	set: function ( conf, val ) {
+		var that  = this;
+
+		conf._input.find('input').each( function () {
+			this._preChecked = false;
+
+			if ( this._editor_val == val ) {
+				this.checked = true;
+				this._preChecked = true;
+			}
+			else {
+				// In a detached DOM tree, there is no relationship between the
+				// input elements, so we need to uncheck any element that does
+				// not match the value
+				this.checked = false;
+				this._preChecked = false;
+			}
+		} );
+
+		_triggerChange( conf._input.find('input:checked') );
+	},
+
+	enable: function ( conf ) {
+		conf._input.find('input').prop('disabled', false);
+	},
+
+	disable: function ( conf ) {
+		conf._input.find('input').prop('disabled', true);
+	},
+
+	update: function ( conf, options ) {
+		var radio = fieldTypes.radio;
+		var currVal = radio.get( conf );
+
+		radio._addOptions( conf, options );
+
+		// Select the current value if it exists in the new data set, otherwise
+		// select the first radio input so there is always a value selected
+		var inputs = conf._input.find('input');
+		radio.set( conf, inputs.filter('[value="'+currVal+'"]').length ?
+			currVal :
+			inputs.eq(0).attr('value')
+		);
+	}
+} );
+
+
+fieldTypes.date = $.extend( true, {}, baseFieldType, {
+	create: function ( conf ) {
+		conf._input = $('<input />').attr( $.extend( {
+			id: Editor.safeId( conf.id ),
+			type: 'text'
+		}, conf.attr ) );
+
+		if ( $.datepicker ) {
+			// jQuery UI date picker
+			conf._input.addClass( 'jqueryui' );
+
+			if ( ! conf.dateFormat ) {
+				conf.dateFormat = $.datepicker.RFC_2822;
+			}
+
+			if ( conf.dateImage === undefined ) {
+				conf.dateImage = "../../images/calender.png";
+			}
+
+			// Allow the element to be attached to the DOM
+			setTimeout( function () {
+				$( conf._input ).datepicker( $.extend( {
+					showOn: "both",
+					dateFormat: conf.dateFormat,
+					buttonImage: conf.dateImage,
+					buttonImageOnly: true
+				}, conf.opts ) );
+
+				$('#ui-datepicker-div').css('display','none');
+			}, 10 );
+		}
+		else {
+			// HTML5 (only Chrome and Edge on the desktop support this atm)
+			conf._input.attr( 'type', 'date' );
+		}
+
+		return conf._input[0];
+	},
+
+	// use default get method as will work for all
+
+	set: function ( conf, val ) {
+		if ( $.datepicker && conf._input.hasClass('hasDatepicker') ) {
+			// Due to the async init of the control it is possible that we might
+			// try to set a value before it has been initialised!
+			conf._input.datepicker( "setDate" , val ).change();
+		}
+		else {
+			$(conf._input).val( val );
+		}
+	},
+
+	enable: function ( conf ) {
+		$.datepicker ?
+			conf._input.datepicker( "enable" ) :
+			$(conf._input).prop( 'disabled', false );
+	},
+
+	disable: function ( conf ) {
+		$.datepicker ?
+			conf._input.datepicker( "disable" ) :
+			$(conf._input).prop( 'disabled', true );
+	},
+
+	owns: function ( conf, node ) {
+		return $(node).parents('div.ui-datepicker').length || $(node).parents('div.ui-datepicker-header').length ?
+			true :
+			false;
+	}
+} );
+
+
+fieldTypes.datetime = $.extend( true, {}, baseFieldType, {
+	create: function ( conf ) {
+		conf._input = $('<input />').attr( $.extend( true, {
+			id:   Editor.safeId( conf.id ),
+			type: 'text'
+		}, conf.attr ) );
+
+		conf._picker = new Editor.DateTime( conf._input, $.extend( {
+			format: conf.format, // can be undefined
+			i18n: this.i18n.datetime
+		}, conf.opts ) );
+
+		return conf._input[0];
+	},
+
+	// default get, disable and enable options are okay
+
+	set: function ( conf, val ) {
+		conf._picker.val( val );
+
+		_triggerChange( conf._input );
+	},
+
+	owns: function ( conf, node ) {
+		return conf._picker.owns( node );
+	},
+
+	destroy: function ( conf ) {
+		conf._picker.destroy();
+	},
+
+	minDate: function ( conf, min ) {
+		conf._picker.min( min );
+	},
+
+	maxDate: function ( conf, max ) {
+		conf._picker.max( max );
+	}
+} );
+
+
+fieldTypes.upload = $.extend( true, {}, baseFieldType, {
+	create: function ( conf ) {
+		var editor = this;
+		var container = _commonUpload( editor, conf, function ( val ) {
+			Editor.fieldTypes.upload.set.call( editor, conf, val[0] );
+		} );
+
+		return container;
+	},
+
+	get: function ( conf ) {
+		return conf._val;
+	},
+
+	set: function ( conf, val ) {
+		conf._val = val;
+
+		var container = conf._input;
+
+		if ( conf.display ) {
+			var rendered = container.find('div.rendered');
+
+			if ( conf._val ) {
+				rendered.html( conf.display( conf._val ) );
+			}
+			else {
+				rendered
+					.empty()
+					.append( '<span>'+( conf.noFileText || 'No file' )+'</span>' );
+			}
+		}
+
+		var button = container.find('div.clearValue button');
+		if ( val && conf.clearText ) {
+			button.html( conf.clearText );
+			container.removeClass( 'noClear' );
+		}
+		else {
+			container.addClass( 'noClear' );
+		}
+
+		conf._input.find('input').triggerHandler( 'upload.editor', [ conf._val ] );
+	},
+
+	enable: function ( conf ) {
+		conf._input.find('input').prop('disabled', false);
+		conf._enabled = true;
+	},
+
+	disable: function ( conf ) {
+		conf._input.find('input').prop('disabled', true);
+		conf._enabled = false;
+	}
+} );
+
+
+fieldTypes.uploadMany = $.extend( true, {}, baseFieldType, {
+	create: function ( conf ) {
+		var editor = this;
+		var container = _commonUpload( editor, conf, function ( val ) {
+			conf._val = conf._val.concat( val );
+			Editor.fieldTypes.uploadMany.set.call( editor, conf, conf._val );
+		} );
+
+		container
+			.addClass( 'multi' )
+			.on( 'click', 'button.remove', function (e) {
+				e.stopPropagation();
+
+				var idx = $(this).data('idx');
+
+				conf._val.splice( idx, 1 );
+				Editor.fieldTypes.uploadMany.set.call( editor, conf, conf._val );
+			} );
+
+		return container;
+	},
+
+	get: function ( conf ) {
+		return conf._val;
+	},
+
+	set: function ( conf, val ) {
+		// Default value for fields is an empty string, whereas we want []
+		if ( ! val ) {
+			val = [];
+		}
+
+		if ( ! $.isArray( val ) ) {
+			throw 'Upload collections must have an array as a value';
+		}
+
+		conf._val = val;
+
+		var that = this;
+		var container = conf._input;
+
+		if ( conf.display ) {
+			var rendered = container.find('div.rendered').empty();
+			
+			if ( val.length ) {
+				var list = $('<ul/>').appendTo( rendered );
+
+				$.each( val, function ( i, file ) {
+					list.append(
+						'<li>'+
+							conf.display( file, i )+
+							' <button class="'+that.classes.form.button+' remove" data-idx="'+i+'">&times;</button>'+
+						'</li>'
+					);
+				} );
+			}
+			else {
+				rendered.append( '<span>'+( conf.noFileText || 'No files' )+'</span>' );
+			}
+		}
+
+		conf._input.find('input').triggerHandler( 'upload.editor', [ conf._val ] );
+	},
+
+	enable: function ( conf ) {
+		conf._input.find('input').prop('disabled', false);
+		conf._enabled = true;
+	},
+
+	disable: function ( conf ) {
+		conf._input.find('input').prop('disabled', true);
+		conf._enabled = false;
+	}
+} );
+
+
+}());
+
+
+// If there are field types available on DataTables we copy them in (after the
+// built in ones to allow overrides) and then expose the field types object.
+if ( DataTable.ext.editorFields ) {
+	$.extend( Editor.fieldTypes, DataTable.ext.editorFields );
 }
-);m=f[(Z0+q0h+E8h+l5)][(T3h+C7Z.R4h+k5c+K4B)];m[(D7+t8h+C7Z.l8h+C7Z.p5h)]={offsetAni:q6h,windowPadding:q6h}
-;var l=jQuery,g;f[U8B][(C7Z.V7+C7Z.l8h+H0+t8h+I0h)]=l[T2h](!0,{}
-,f[(z6c+C7Z.c0h)][(C7Z.i6+B0c+X0B+d3+m6h+t8h+k8h+C7Z.V7+B0h)],{init:function(a){g[(z2B)]=a;g[(F9+d5h+v8c+C7Z.R4h)]();return g;}
-,open:function(a,b,c){var C9c="hild",x8c="ppendC",h9c="appen",i2B="hildren";g[(J4c+C7Z.R4h+C7Z.V7)]=a;l(g[(F9+C7Z.i6+t8h+f2h)][(s7B+C7Z.l8h+C7Z.R4h+C7Z.V7+g5c)])[(D7+i2B)]()[j1c]();g[(F9+C7Z.i6+t8h+f2h)][(D7+t8h+Y8h+g5c)][(h9c+Q4c+n5h+c0B+C7Z.i6)](b);g[(F9+C7Z.i6+t8h+f2h)][(s7B+C7Z.l8h+o0h+g5c)][(C7Z.Q6+x8c+C9c)](g[S4c][(D7+E8h+h0)]);g[(F9+C7Z.c0h+n5h+t8h+A4B)](c);}
-,close:function(a,b){g[(z2B)]=a;g[U9](b);}
-,node:function(){return g[(F9+C7Z.i6+t8h+f2h)][(A4B+B0h+C7Z.Q6+I4B+C7Z.W7)][0];}
-,_init:function(){var E3B="ility",Q1c="tyl",z9c="isb",L7="ndChi",L3="pe_";if(!g[(F9+B0h+C7Z.V7+C7Z.Q6+h5h)]){g[S4c][(D7+d3+G3B)]=l((V4B+E4B+C7Z.I4c+D5+t7+F9+Z5+Y2c+j9c+L3+w3B+C7Z.l8h+C7Z.R4h+C7Z.Q6+u6h),g[(F9+j0B)][(A4B+B0h+L4+M8c)])[0];r[B2c][(C7Z.Q6+q0h+q0h+C7Z.V7+L7+P4h)](g[(J4c+E3)][c8h]);r[(k5h+C7Z.X3h)][(L4+i7c+p7c+W3c+C7Z.i6)](g[(S4c)][(D1c+q0h+q0h+C7Z.W7)]);g[S4c][c8h][x8B][(E4B+z9c+d5h+L0h+t9h)]=(T2);g[(J4c+E3)][c8h][(X6+C7Z.X3h+E8h+C7Z.V7)][U8B]=(C7Z.w6+E8h+t8h+D7+s2h);g[U4r]=l(g[S4c][(u0h+W6c+C7Z.l8h+C7Z.i6)])[(D7+C7Z.c0h+C7Z.c0h)]((B3+C7Z.Q6+r9B+C7Z.R4h+C7Z.X3h));g[(F9+C7Z.i6+E3)][(C7Z.w6+K3h+H6h+B0h+v8h)][(C7Z.c0h+Q1c+C7Z.V7)][U8B]=(C7Z.l8h+t8h+Z1c);g[S4c][(C7Z.w6+C7Z.Q6+D7+s2h+H6h+B0h+v8h)][x8B][(E4B+d5h+C7Z.c0h+C7Z.w6+E3B)]="visible";}
-}
-,_show:function(a){var R3="lope",s2c="En",X9c="ED_",q2="ED_L",U1c="bin",H7B="nim",l4B="wPadding",C5h="ani",C0h="roll",z2c="wS",G8B="ndo",k3h="wi",q6c="orma",X4h="roun",e6B="etHe",r6h="offs",N4="marginLeft",t6h="ffsetW",M2c="Ro",y8B="Att";a||(a=function(){}
-);g[(K1B+f2h)][j4B][x8B].height=(v2+C7Z.R4h+t8h);var b=g[(K1B+f2h)][(D1c+I4B+C7Z.W7)][(C7Z.c0h+t9h+E4h)];b[U3B]=0;b[(C7Z.i6+d5h+O9c+l5)]=(h7c+H2);var c=g[(F9+M1c+y8B+P9+n5h+M2c+A4B)](),e=g[(F9+n5h+y3+H6h+n5h+C7Z.R4h+p7c+o4h+D7)](),d=c[(t8h+t6h+n8B+C7Z.R4h+n5h)];b[(C7Z.i6+d5h+C7Z.c0h+q0h+E8h+C7Z.Q6+C7Z.X3h)]=(C7Z.l8h+t8h+C7Z.l8h+C7Z.V7);b[(t8h+M6h+D7+d5h+t9h)]=1;g[S4c][d5B][x8B].width=d+(q0h+K4B);g[(F9+C7Z.i6+E3)][(J9h+C7Z.Q6+I4B+C7Z.W7)][x8B][N4]=-(d/2)+(q0h+K4B);g._dom.wrapper.style.top=l(c).offset().top+c[(r6h+e6B+K0c+C7Z.R4h)]+"px";g._dom.content.style.top=-1*e-20+(q0h+K4B);g[S4c][(C7Z.w6+C7Z.Q6+D7+y8+B0h+t8h+b5B+C7Z.i6)][(C7Z.c0h+t9h+E4h)][(B3+C7Z.Q6+r9B+C7Z.R4h+C7Z.X3h)]=0;g[(S4c)][(J3c+D7+y8+X4h+C7Z.i6)][(C7Z.c0h+t9h+E8h+C7Z.V7)][(V4B+W5)]=(h7c+c4+s2h);l(g[S4c][c8h])[(o4+f4r+C7Z.U8+C7Z.V7)]({opacity:g[U4r]}
-,(C7Z.l8h+q6c+E8h));l(g[S4c][d5B])[O2c]();g[(D7+T1B)][(k3h+G8B+z2c+D7+C0h)]?l((n5h+O0+v0c+C7Z.w6+B8+C7Z.X3h))[(C5h+f2h+B9)]({scrollTop:l(c).offset().top+c[C8c]-g[(D7+T1B)][(A4B+d5h+C7Z.l8h+C7Z.i6+t8h+l4B)]}
-,function(){l(g[S4c][(D7+t8h+C7Z.l8h+o2c+C7Z.R4h)])[D7B]({top:0}
-,600,a);}
-):l(g[(J4c+E3)][(N3B+G3B)])[(C7Z.Q6+H7B+C7Z.Q6+o0h)]({top:0}
-,600,a);l(g[S4c][n2h])[(C7Z.w6+d5h+C7Z.l8h+C7Z.i6)]("click.DTED_Envelope",function(){g[(F9+U3c)][n2h]();}
-);l(g[S4c][c8h])[(U1c+C7Z.i6)]("click.DTED_Envelope",function(){g[(z2B)][(u0h+J7h+t8h+C7Z.F4h+C7Z.l8h+C7Z.i6)]();}
-);l((C7Z.i6+E9c+C7Z.I4c+D5+C0+q2+m8B+n5h+x4h+u7+F9+p7c+d3+C7Z.R4h+Z6+Y1c+I4B+C7Z.V7+B0h),g[(F9+i9h+f2h)][d5B])[c7c]((q5B+C7Z.I4c+D5+C0+X9c+s2c+E4B+C7Z.V7+q5h+I0h),function(a){var K9h="backgr",l7c="Wrapper",a7="e_Con",D9h="TED_E",r7h="Cla";l(a[E0B])[(n5h+C7Z.Q6+C7Z.c0h+r7h+C7Z.c0h+C7Z.c0h)]((D5+D9h+C7Z.l8h+E4B+j9c+q0h+a7+G3B+F9+l7c))&&g[z2B][(K9h+m9+B1c)]();}
-);l(p)[(C7Z.w6+Q2B)]((z5c+m2+g3h+C7Z.V7+C7Z.I4c+D5+t7+F9+Z5+Y2c+C7Z.V7+R3),function(){g[a1c]();}
-);}
-,_heightCalc:function(){var H7c="dy_",r8B="rHei",U9B="Paddin",d8c="wrap",n0h="heightCalc";g[e3][n0h]?g[(D7+T1B)][n0h](g[S4c][(d8c+q0h+C7Z.V7+B0h)]):l(g[S4c][(N3B+C7Z.R4h+C7Z.V7+C7Z.l8h+C7Z.R4h)])[(D7+U8h+P4h+B0h+C7Z.V7+C7Z.l8h)]().height();var a=l(p).height()-g[(D7+T1B)][(A4B+d5h+B1c+t8h+A4B+U9B+H6h)]*2-l("div.DTE_Header",g[(S4c)][d5B])[e4h]()-l("div.DTE_Footer",g[(S4c)][d5B])[(t8h+C7Z.F4h+o0h+r8B+H6h+B9B)]();l((V4B+E4B+C7Z.I4c+D5+C0+Z5+A3c+t8h+H7c+w3B+C7Z.l8h+C7Z.R4h+Z6+C7Z.R4h),g[(F9+C7Z.i6+E3)][d5B])[(Q5B)]((f2h+C7Z.Q6+K4B+j5+C7Z.V7+m8B+n5h+C7Z.R4h),a);return l(g[(J4c+C7Z.R4h+C7Z.V7)][j0B][(d8c+M8c)])[e4h]();}
-,_hide:function(a){var O8c="_Ligh",c6h="rap",U2h="pper",q2c="_Wr",g7="Conten",q6B="box_",i5B="D_",F1h="unbin",y9h="clic";a||(a=function(){}
-);l(g[(J4c+E3)][(D7+t8h+C7Z.l8h+o2c+C7Z.R4h)])[D7B]({top:-(g[(K1B+f2h)][(s7B+Y8h+C7Z.l8h+C7Z.R4h)][C8c]+50)}
-,600,function(){var x3h="fadeOut";l([g[S4c][(J9h+C7Z.Q6+q0h+q0h+C7Z.W7)],g[(F9+i9h+f2h)][c8h]])[x3h]("normal",a);}
-);l(g[(J4c+t8h+f2h)][n2h])[w4h]((y9h+s2h+C7Z.I4c+D5+H3+D5+z1B+V8+x4h+u7));l(g[(F9+j0B)][c8h])[(F1h+C7Z.i6)]("click.DTED_Lightbox");l((H8+C7Z.I4c+D5+H3+i5B+E2+d5h+H6h+B9B+q6B+g7+C7Z.R4h+q2c+C7Z.Q6+U2h),g[(F9+C7Z.i6+t8h+f2h)][(A4B+c6h+M8c)])[w4h]((D7+E8h+S8c+C7Z.I4c+D5+C0+Z5+D5+O8c+C7Z.R4h+k5c+K4B));l(p)[w4h]("resize.DTED_Lightbox");}
-,_findAttachRow:function(){var a=l(g[z2B][C7Z.c0h][(I3+h7c+C7Z.V7)])[(D5+C7Z.Q6+I3+S+C7Z.w6+E4h)]();return g[(D7+t8h+C7Z.l8h+C7Z.p5h)][c3h]==="head"?a[(C7Z.R4h+x7+E8h+C7Z.V7)]()[i3]():g[(J4c+C7Z.R4h+C7Z.V7)][C7Z.c0h][(C7Z.Q6+x1h+t8h+C7Z.l8h)]===(D7+z5c+C7Z.Q6+C7Z.R4h+C7Z.V7)?a[C7Z.A7c]()[i3]():a[A8](g[z2B][C7Z.c0h][(U6+E1+C7Z.V7+B0h)])[M4r]();}
-,_dte:null,_ready:!1,_cssBackgroundOpacity:1,_dom:{wrapper:l((L2+u7h+h5+U7c+B7h+N1+r1B+Y6c+U7+p2h+U7+U7c+U7+p2h+U7+d7+g1h+E7+A1h+j1B+I6h+F9h+K7c+j1B+j1B+X+u4c+u7h+h5+U7c+B7h+N1+r1B+Y6c+U7+D8c+X5c+r4r+n3h+x5h+e0c+Z5c+A1h+Y2h+N6h+f4c+S8h+u7h+h5+A0h+u7h+h5+U7c+B7h+n3h+X0+r1B+Y6c+U7+U0h+Q7+r5c+Q7+c4c+n3h+x5h+F9h+r0h+Z5c+A1h+k2c+d3h+H4B+h0c+S8h+u7h+h5+A0h+u7h+h5+U7c+B7h+y6B+e4B+Y6c+U7+U0h+Q7+r5c+Q7+g1h+r4r+w1h+T6+A1h+E0h+d3h+g1h+I6h+U1B+S8h+u7h+h5+m1+u7h+d3h+P3B+J7))[0],background:l((L2+u7h+d3h+P3B+U7c+B7h+Y7B+Y6c+U7+p2h+r5c+Q7+Y0h+Y4h+H4B+T0h+l4c+g1h+u7h+u4c+u7h+d3h+P3B+q5c+u7h+d3h+P3B+J7))[0],close:l((L2+u7h+h5+U7c+B7h+Y7B+Y6c+U7+D8c+d7+g1h+P3B+O6c+j1B+I6h+F9h+T6+n3h+A1h+s6h+I1+f4c+x1+I6h+r1B+n6c+u7h+d3h+P3B+J7))[0],content:null}
-}
-);g=f[(A1+E8h+C7Z.Q6+C7Z.X3h)][(Z6+A1B+E8h+t8h+I0h)];g[(D7+T1B)]={windowPadding:o1h,heightCalc:x2c,attach:A8,windowScroll:!l4}
-;f.prototype.add=function(a){var x0h="aSourc",j4h="lready",r1c="'. ",W1h="ddi",K4r="` ",O4B=" `",k6="uire",S5h="isAr";if(d[(S5h+B0h+l5)](a))for(var b=0,c=a.length;b<c;b++)this[(X9+C7Z.i6)](a[b]);else{b=a[I8c];if(b===h)throw (D6c+B0h+C7Z.N6+p7B+C7Z.Q6+C7Z.i6+C7Z.i6+F6B+p7B+C7Z.p5h+d5h+C7Z.V7+E8h+C7Z.i6+w7h+C0+n5h+C7Z.V7+p7B+C7Z.p5h+d4B+C7Z.i6+p7B+B0h+b7+k6+C7Z.c0h+p7B+C7Z.Q6+O4B+C7Z.l8h+C7Z.Q6+f2h+C7Z.V7+K4r+t8h+q0h+C7Z.R4h+Q9);if(this[C7Z.c0h][S6h][b])throw (D6c+d3c+B0h+p7B+C7Z.Q6+W1h+i8c+p7B+C7Z.p5h+d5h+C7Z.V7+E8h+C7Z.i6+H5)+b+(r1c+J9c+p7B+C7Z.p5h+d4B+C7Z.i6+p7B+C7Z.Q6+j4h+p7B+C7Z.V7+K4B+d5h+X6+C7Z.c0h+p7B+A4B+H1c+n5h+p7B+C7Z.R4h+n5h+d5h+C7Z.c0h+p7B+C7Z.l8h+Y4+C7Z.V7);this[(F9+C7Z.i6+C7Z.U8+x0h+C7Z.V7)]("initField",a);this[C7Z.c0h][S6h][b]=new f[(Q5+Z8B+P4h)](a,this[(I9B+C7Z.Q6+V9B+C7Z.c0h)][B2h],this);this[C7Z.c0h][V4c][P3h](b);}
-this[u5B](this[(C7Z.N6+C7Z.i6+C7Z.W7)]());return this;}
-;f.prototype.background=function(){var H9h="nBa",a=this[C7Z.c0h][D1][(t8h+H9h+D7+E3h+m9+B1c)];Q0===a?this[Q0]():n2h===a?this[n2h]():(Y9+P)===a&&this[(g9+C7c+d5h+C7Z.R4h)]();return this;}
-;f.prototype.blur=function(){var G9B="_blur";this[G9B]();return this;}
-;f.prototype.bubble=function(a,b,c,e){var v0h="_focus",L4B="imate",C4B="bubblePosition",M7c="prepend",v4c="Erro",O6B="dTo",m5B="poi",S3h='" /></div></div><div class="',g8="liner",K0h="rappe",i0h="asse",b4c="apply",q3B="bubbleNodes",d7h="esi",X8c="ions",c2c="individual",F3B="mOptio",F1="sPla",s0B="olean",X4="isPla",I4h="_tid",j=this;if(this[(I4h+C7Z.X3h)](function(){j[(W4+m5)](a,b,e);}
-))return this;d[(X4+d5h+C6B+C7Z.w6+f2c+D7+C7Z.R4h)](b)?(e=b,b=h,c=!l4):(C7Z.w6+t8h+s0B)===typeof b&&(c=b,e=b=h);d[(d5h+F1+d5h+C7Z.l8h+P8+C7Z.w6+C7Z.G2h+C7Z.a2c)](c)&&(e=c,c=!l4);c===h&&(c=!l4);var e=d[T2h]({}
-,this[C7Z.c0h][(C7Z.p5h+C7Z.N6+F3B+C7Z.l8h+C7Z.c0h)][(W4+h7c+C7Z.V7)],e),o=this[(h6B+C7Z.R4h+C7Z.Q6+a4+t8h+q2B+D7+C7Z.V7)](c2c,a,b);this[u3h](a,o,(X2c));if(!this[(F9+Y4B+C7Z.V7+t8h+q0h+C7Z.V7+C7Z.l8h)]((W4+m5)))return this;var f=this[(Q1B+t8h+P0c+m4c+X8c)](e);d(p)[d3]((B0h+d7h+g3h+C7Z.V7+C7Z.I4c)+f,function(){var l5h="bbleP";j[(C2c+l5h+m6+H1c+B3c+C7Z.l8h)]();}
-);var k=[];this[C7Z.c0h][q3B]=k[(D7+d3+D7+C7Z.U8)][b4c](k,y(o,c3h));k=this[(D7+E8h+i0h+C7Z.c0h)][(C2c+C7Z.w6+m5)];o=d(h6h+k[(C7Z.w6+H6h)]+(u4c+u7h+h5+q5c+u7h+h5+J7));k=d(h6h+k[(A4B+K0h+B0h)]+W2B+k[g8]+W2B+k[(R9c+E4h)]+(u4c+u7h+d3h+P3B+U7c+B7h+n3h+Z9h+e4B+Y6c)+k[(I9B+t8h+w8)]+S3h+k[(m5B+g5c+C7Z.V7+B0h)]+(b7c+u7h+h5+J7));c&&(k[e5B]((k5c+C7Z.i6+C7Z.X3h)),o[(k0c+C7Z.V7+C7Z.l8h+O6B)]((C7Z.w6+t8h+C7Z.i6+C7Z.X3h)));var c=k[(D7+U8h+E8h+C7Z.i6+m7h)]()[(b7)](l4),w=c[T1c](),g=w[(I1B+d5h+E8h+C7Z.i6+B0h+Z6)]();c[T8c](this[(i9h+f2h)][(f6+B0h+f2h+v4c+B0h)]);w[M7c](this[j0B][(C7Z.p5h+t8h+P0c)]);e[(k0+C7Z.c0h+C7Z.Q6+H6h+C7Z.V7)]&&c[M7c](this[(i9h+f2h)][W4c]);e[K7]&&c[(q0h+z5c+q0h+Z6+C7Z.i6)](this[j0B][i3]);e[(C2c+l1h+C7Z.c0h)]&&w[(C7Z.Q6+I4B+D2h)](this[j0B][(E3c+C7Z.R4h+t8h+N2c)]);var z=d()[(X9+C7Z.i6)](k)[l9B](o);this[U4c](function(){z[D7B]({opacity:l4}
-,function(){var Q9B="icInfo",F9c="ynam",s2B="rD";z[j1c]();d(p)[g1B]((z5c+m2+x5c+C7Z.I4c)+f);j[(F9+D7+E4h+C7Z.Q6+s2B+F9c+Q9B)]();}
-);}
-);o[(D7+E8h+K5B+s2h)](function(){j[Q0]();}
-);g[(D7+H0h)](function(){var E7h="_cl";j[(E7h+t8h+C7Z.c0h+C7Z.V7)]();}
-);this[C4B]();z[(C7Z.Q6+C7Z.l8h+L4B)]({opacity:r4}
-);this[v0h](this[C7Z.c0h][(d5h+C7Z.l8h+D7+E8h+C7Z.F4h+C7Z.i6+C7Z.V7+Q5+d5h+u8B)],e[(f6+J2B+C7Z.c0h)]);this[(F9+A0B+t8h+e4c)]((C2c+i0));return this;}
-;f.prototype.bubblePosition=function(){var V2h="lef",L0B="veClas",u8h="th",O7="ft",e3h="eNo",k0B="bubb",m3c="e_L",a=d("div.DTE_Bubble"),b=d((V4B+E4B+C7Z.I4c+D5+H3+F9+K9c+D4B+C7Z.w6+E8h+m3c+u6h)),c=this[C7Z.c0h][(k0B+E8h+e3h+Y1h+C7Z.c0h)],e=0,j=0,o=0,f=0;d[(C7Z.V7+C7Z.Q6+D7+n5h)](c,function(a,b){var o3c="setWidth",c=d(b)[m9h]();e+=c.top;j+=c[(E8h+C7Z.V7+O7)];o+=c[(E8h+d1)]+b[(g1B+o3c)];f+=c.top+b[(t8h+C7Z.p5h+C7Z.p5h+P1B+j5+y3+H6h+B9B)];}
-);var e=e/c.length,j=j/c.length,o=o/c.length,f=f/c.length,c=e,k=(j+o)/2,w=b[(m9+C7Z.R4h+C7Z.V7+B0h+v4h+d5h+C7Z.i6+u8h)](),g=k-w/2,w=g+w,h=d(p).width();a[(D7+B6)]({top:c,left:k}
-);b.length&&0>b[(g1B+C7Z.c0h+C7Z.V7+C7Z.R4h)]().top?a[Q5B]("top",f)[(C7Z.Q6+C7Z.i6+H8c+C7Z.Q6+B6)]("below"):a[(B0h+C7Z.V7+f2h+t8h+L0B+C7Z.c0h)]("below");w+15>h?b[(Q6B+C7Z.c0h)]((V2h+C7Z.R4h),15>g?-(g-15):-(w-h+15)):b[(D7+C7Z.c0h+C7Z.c0h)]((E4h+O7),15>g?-(g-15):0);return this;}
-;f.prototype.buttons=function(a){var X3B="_b",b=this;(X3B+d8+K5B)===a?a=[{label:this[(O3h+s0)][this[C7Z.c0h][l6B]][W4r],fn:function(){this[W4r]();}
-}
-]:d[(i9c+O7B+C7Z.X3h)](a)||(a=[a]);d(this[(i9h+f2h)][f1]).empty();d[o6c](a,function(a,e){var j2h="keypress",C4r="eyu",k7="tabindex",e8B="className",i3c="<button/>";i2c===typeof e&&(e={label:e,fn:function(){var T0c="bmi";this[(g9+T0c+C7Z.R4h)]();}
-}
-);d(i3c,{"class":b[r9][S4r][(E3c+O8B)]+(e[e8B]?p7B+e[(D7+E8h+c8+y1c+f2h+C7Z.V7)]:m4h)}
-)[N4h](m2B===typeof e[(E8h+C7Z.Q6+l0B)]?e[h4h](b):e[(i3h+C7Z.w6+s3)]||m4h)[(C7Z.U8+C7Z.R4h+B0h)](k7,l4)[d3]((s2h+C4r+q0h),function(a){C7h===a[(s2h+W1B+C7Z.i6+C7Z.V7)]&&e[(C7Z.p5h+C7Z.l8h)]&&e[C7Z.D4h][(D7+C7Z.Q6+k8h)](b);}
-)[(d3)](j2h,function(a){C7h===a[T7B]&&a[j8]();}
-)[d3]((I9B+K5B+s2h),function(a){var X6B="faul",V2="ev";a[(q0h+B0h+V2+Z3h+D5+C7Z.V7+X6B+C7Z.R4h)]();e[(C7Z.p5h+C7Z.l8h)]&&e[C7Z.D4h][K2h](b);}
-)[(C7Z.Q6+q0h+q0h+C7Z.V7+C7Z.l8h+C7Z.i6+f7h)](b[j0B][f1]);}
-);return this;}
-;f.prototype.clear=function(a){var P0h="destroy",b=this,c=this[C7Z.c0h][S6h];(C7Z.c0h+m6h+d5h+C7Z.l8h+H6h)===typeof a?(c[a][P0h](),delete  c[a],a=d[(g4r+O7B+C7Z.X3h)](a,this[C7Z.c0h][(t8h+B0h+C7Z.i6+C7Z.W7)]),this[C7Z.c0h][V4c][(O9c+d5h+D7+C7Z.V7)](a,r4)):d[o6c](this[R3h](a),function(a,c){var W7h="clear";b[W7h](c);}
-);return this;}
-;f.prototype.close=function(){this[R5c](!r4);return this;}
-;f.prototype.create=function(a,b,c,e){var e3B="Ma",l6="sembl",o0B="Cr",G6h="gs",C9B="_cru",C4h="itFie",j=this,o=this[C7Z.c0h][(C7Z.p5h+d5h+C7Z.V7+E8h+C7Z.i6+C7Z.c0h)],f=r4;if(this[(F9+C7Z.R4h+n8B+C7Z.X3h)](function(){j[r4h](a,b,c,e);}
-))return this;v1c===typeof a&&(f=a,a=b,b=c);this[C7Z.c0h][(C7Z.V7+C7Z.i6+d5h+C7Z.R4h+S2B+C7Z.i6+C7Z.c0h)]={}
-;for(var k=l4;k<f;k++)this[C7Z.c0h][(n1+C4h+E8h+F2h)][k]={fields:this[C7Z.c0h][S6h]}
-;f=this[(C9B+C7Z.i6+J9c+B0h+G6h)](a,b,c,e);this[C7Z.c0h][(P9+C7Z.R4h+d5h+d3)]=r4h;this[C7Z.c0h][X7c]=x2c;this[j0B][(S4r)][x8B][(C7Z.i6+d5h+W5)]=S5B;this[(F9+C7Z.Q6+x1h+t8h+C7Z.l8h+p7c+E8h+C7Z.Q6+C7Z.c0h+C7Z.c0h)]();this[(E9B+b6+i3h+C7Z.X3h+G4+n7+T7h)](this[(C7Z.p5h+d5h+u8B)]());d[(C7Z.V7+C7Z.Q6+D7+n5h)](o,function(a,b){var z8="Rese";b[(f2h+t6B+C7Z.R4h+d5h+z8+C7Z.R4h)]();b[(C7Z.c0h+C7Z.D9)](b[J8h]());}
-);this[(F9+F4c+g5c)]((d5h+C7Z.l8h+H1c+o0B+l2h+C7Z.V7));this[(F9+C7Z.Q6+C7Z.c0h+l6+C7Z.V7+e3B+g4r)]();this[(H6+B0h+f2h+P8+q0+L5B)](f[L2B]);f[(f2h+C7Z.Q6+K2+d6h+e4c)]();return this;}
-;f.prototype.dependent=function(a,b,c){var C5c="ST",e=this,j=this[B2h](a),o={type:(E8+P8+C5c),dataType:(C7Z.G2h+Z4c)}
-,c=d[(E5c+B1c)]({event:(I1B+j5h+C7Z.V7),data:null,preUpdate:null,postUpdate:null}
-,c),f=function(a){var X3="ostUpdate";var Q8h="stUp";var I2="err";var N9h="messag";var X6c="eUp";c[(c6B+F3+q0h+q0B+C7Z.R4h+C7Z.V7)]&&c[(q0h+B0h+X6c+C7Z.i6+C7Z.U8+C7Z.V7)](a);d[(C7Z.V7+C7Z.Q6+D7+n5h)]({labels:(E8h+x7+C7Z.V7+E8h),options:(g5B+q0B+C7Z.R4h+C7Z.V7),values:(R3B+E8h),messages:(N9h+C7Z.V7),errors:(I2+t8h+B0h)}
-,function(b,c){a[b]&&d[o6c](a[b],function(a,b){e[(r3+C7Z.i6)](a)[c](b);}
-);}
-);d[(C7Z.V7+C7Z.Q6+I1B)]([(U8h+Y1h),"show",(C7Z.V7+C7Z.l8h+C7Z.Q6+h7c+C7Z.V7),(C7Z.i6+d5h+C7Z.c0h+C7Z.Q6+C7Z.w6+E4h)],function(b,c){if(a[c])e[c](a[c]);}
-);c[(q0h+t8h+Q8h+q0B+o0h)]&&c[(q0h+X3)](a);}
-;j[(d5h+C7Z.l8h+F6h)]()[(t8h+C7Z.l8h)](c[(C7Z.V7+E4B+Z6+C7Z.R4h)],function(){var R0h="Pl",p5c="nct",I0c="values",S4B="editF",e5="ditF",I7="ows",a={}
-;a[(B0h+I7)]=e[C7Z.c0h][(C7Z.V7+e5+Z8B+E8h+F2h)]?y(e[C7Z.c0h][(S4B+Z8B+P4h+C7Z.c0h)],(q0B+I3)):null;a[(B0h+i7)]=a[(B0h+I7)]?a[(d3c+Z1h)][0]:null;a[I0c]=e[(E4B+o4h)]();if(c.data){var g=c.data(a);g&&(c.data=g);}
-(C7Z.p5h+C7Z.F4h+p5c+d5h+t8h+C7Z.l8h)===typeof b?(a=b(j[W8](),a,f))&&f(a):(d[(i9c+R0h+C7Z.Q6+d5h+C6B+L7c+C7Z.V7+D7+C7Z.R4h)](b)?d[(X2+C7Z.R4h+C7Z.V7+B1c)](o,b):o[X8B]=b,d[(c3+d2)](d[T2h](o,{url:b,data:a,success:f}
-)));}
-);return this;}
-;f.prototype.disable=function(a){var b=this[C7Z.c0h][S6h];d[o6c](this[(Q1B+f2B+e0+Y4+C7Z.V7+C7Z.c0h)](a),function(a,e){b[e][B0B]();}
-);return this;}
-;f.prototype.display=function(a){return a===h?this[C7Z.c0h][a6B]:this[a?n2c:(D7+E8h+t8h+C7Z.c0h+C7Z.V7)]();}
-;f.prototype.displayed=function(){return d[z4](this[C7Z.c0h][S6h],function(a,b){var h8="ye",j0h="displa";return a[(j0h+h8+C7Z.i6)]()?b:x2c;}
-);}
-;f.prototype.displayNode=function(){return this[C7Z.c0h][(C7Z.i6+d5h+b6+E8h+C7Z.Q6+C7Z.X3h+p7c+d3+C7Z.R4h+d3c+I5h+B0h)][(C7Z.l8h+t8h+C7Z.i6+C7Z.V7)](this);}
-;f.prototype.edit=function(a,b,c,e,d){var A5="maybeOpen",p5B="udA",f=this;if(this[N1h](function(){f[(C7Z.V7+C7Z.i6+d5h+C7Z.R4h)](a,b,c,e,d);}
-))return this;var n=this[(F9+D7+B0h+p5B+x0c+C7Z.c0h)](b,c,e,d);this[u3h](a,this[(h6B+I3+a4+m9+B0h+n1B)]((E1+u8B),a),(f2h+B5B));this[t3]();this[(F9+f6+B0h+f2h+y4+C7Z.R4h+B3c+N2c)](n[(B3+O6h)]);n[A5]();return this;}
-;f.prototype.enable=function(a){var b=this[C7Z.c0h][S6h];d[o6c](this[(F9+E1+g1c+y1c+Y8B+C7Z.c0h)](a),function(a,e){b[e][(C7Z.V7+C7Z.l8h+C7Z.Q6+C7Z.w6+E8h+C7Z.V7)]();}
-);return this;}
-;f.prototype.error=function(a,b){var p4c="formError",n2="_message";b===h?this[n2](this[j0B][p4c],a):this[C7Z.c0h][(E1+u8B)][a].error(b);return this;}
-;f.prototype.field=function(a){return this[C7Z.c0h][(E1+C7Z.V7+E8h+C7Z.i6+C7Z.c0h)][a];}
-;f.prototype.fields=function(){return d[(f2h+C7Z.Q6+q0h)](this[C7Z.c0h][S6h],function(a,b){return b;}
-);}
-;f.prototype.get=function(a){var b=this[C7Z.c0h][(C7Z.p5h+d5h+u8B)];a||(a=this[S6h]());if(d[q6](a)){var c={}
-;d[o6c](a,function(a,d){c[d]=b[d][j2]();}
-);return c;}
-return b[a][(H6h+C7Z.V7+C7Z.R4h)]();}
-;f.prototype.hide=function(a,b){var H1h="Names",j6h="_fie",c=this[C7Z.c0h][S6h];d[o6c](this[(j6h+P4h+H1h)](a),function(a,d){c[d][(n5h+d5h+Y1h)](b);}
-);return this;}
-;f.prototype.inError=function(a){var s4B="Err";if(d(this[(j0B)][(C7Z.p5h+C7Z.N6+f2h+Z5+A1c+C7Z.N6)])[i9c]((F3c+E4B+i9c+d5h+C7Z.w6+E4h)))return !0;for(var b=this[C7Z.c0h][S6h],a=this[R3h](a),c=0,e=a.length;c<e;c++)if(b[a[c]][(d5h+C7Z.l8h+s4B+t8h+B0h)]())return !0;return !1;}
-;f.prototype.inline=function(a,b,c){var I3h="po",h7='ton',R5='_Bu',n6='ne',U4h='I',S3='ie',D3='F',T9='e_',e8='E_',b5c='ine',W2c='Inl',I8='TE_',m8h="contents",y0h="_preopen",d8B="nli",Q9h="nline",p3h="ua",e=this;d[P5B](b)&&(c=b,b=h);var c=d[(C7Z.V7+H4+B1c)]({}
-,this[C7Z.c0h][K5][(d5h+C7Z.l8h+E8h+d5h+Z1c)],c),j=this[L1]((d5h+F0B+Y8c+C7Z.i6+p3h+E8h),a,b),f,n,k=0,g,I=!1;d[o6c](j,function(a,b){var G4c="displayFields",K4="nno";if(k>0)throw (w7B+K4+C7Z.R4h+p7B+C7Z.V7+C7Z.i6+d5h+C7Z.R4h+p7B+f2h+t8h+z5c+p7B+C7Z.R4h+G3c+p7B+t8h+Z1c+p7B+B0h+i7+p7B+d5h+Q9h+p7B+C7Z.Q6+C7Z.R4h+p7B+C7Z.Q6+p7B+C7Z.R4h+d5h+Y8B);f=d(b[(p3+I1B)][0]);g=0;d[o6c](b[G4c],function(a,b){var D5c="Can";if(g>0)throw (D5c+C7Z.l8h+t8h+C7Z.R4h+p7B+C7Z.V7+C7Z.i6+d5h+C7Z.R4h+p7B+f2h+C7Z.N6+C7Z.V7+p7B+C7Z.R4h+K5h+C7Z.l8h+p7B+t8h+Z1c+p7B+C7Z.p5h+f2B+p7B+d5h+d8B+C7Z.l8h+C7Z.V7+p7B+C7Z.Q6+C7Z.R4h+p7B+C7Z.Q6+p7B+C7Z.R4h+d5h+f2h+C7Z.V7);n=b;g++;}
-);k++;}
-);if(d((C7Z.i6+E9c+C7Z.I4c+D5+C0+x7h+f2B),f).length||this[N1h](function(){e[(d5h+d8B+C7Z.l8h+C7Z.V7)](a,b,c);}
-))return this;this[u3h](a,j,(Q4r));var z=this[(H6+B0h+f2h+m4c+Q9+C7Z.c0h)](c);if(!this[y0h]((d5h+Q9h)))return this;var N=f[m8h]()[j1c]();f[(k0c+Z6+C7Z.i6)](d((L2+u7h+h5+U7c+B7h+n3h+Z9h+r1B+r1B+Y6c+U7+p2h+U7c+U7+I8+W2c+b5c+u4c+u7h+d3h+P3B+U7c+B7h+y6B+r1B+r1B+Y6c+U7+U0h+e8+W2c+d3h+g1h+T9+D3+S3+n3h+u7h+l9c+u7h+h5+U7c+B7h+n3h+Z9h+r1B+r1B+Y6c+U7+U0h+e8+U4h+g1h+n3h+d3h+n6+R5+f4c+h7+r1B+h5c+u7h+d3h+P3B+J7)));f[M1c]("div.DTE_Inline_Field")[(C7Z.Q6+q0h+q0h+Z6+C7Z.i6)](n[(V6c+Y1h)]());c[(C7Z.w6+C7Z.F4h+C7Z.R4h+k8)]&&f[(E1+B1c)]((V4B+E4B+C7Z.I4c+D5+C0+Z5+I1c+E8h+g4r+k4h+K9c+C7Z.F4h+C7Z.R4h+Q5h+C7Z.l8h+C7Z.c0h))[T8c](this[(C7Z.i6+E3)][f1]);this[(F9+h4B+C7Z.c0h+C7Z.V7+G4+K3)](function(a){var e2B="cInfo",F8B="yna";I=true;d(r)[g1B]((I9B+d5h+D7+s2h)+z);if(!a){f[m8h]()[(L9+C7Z.Q6+D7+n5h)]();f[(L4+q0h+C7Z.V7+C7Z.l8h+C7Z.i6)](N);}
-e[(F9+D7+T+D5+F8B+Q0B+e2B)]();}
-);setTimeout(function(){if(!I)d(r)[(t8h+C7Z.l8h)]("click"+z,function(a){var B1h="aren",F3h="inAr",G6B="_t",Z3="addBack",b=d[(C7Z.D4h)][Z3]?"addBack":"andSelf";!n[(G6B+l3c+J1h+C7Z.l8h)]("owns",a[(C7Z.R4h+C7Z.Q6+x0c+C7Z.D9)])&&d[(F3h+B0h+C7Z.Q6+C7Z.X3h)](f[0],d(a[(C7Z.R4h+P0+F0+C7Z.R4h)])[(q0h+B1h+O6h)]()[b]())===-1&&e[Q0]();}
-);}
-,0);this[(F9+C7Z.p5h+t4)]([n],c[t0h]);this[(F9+I3h+C7Z.c0h+C7Z.R4h+B3+Z6)]("inline");return this;}
-;f.prototype.message=function(a,b){var G3="formIn",J0B="ssag";b===h?this[(v0B+C7Z.V7+J0B+C7Z.V7)](this[(j0B)][(G3+f6)],a):this[C7Z.c0h][(C7Z.p5h+Z8B+h3h)][a][(Y8B+C7Z.c0h+C7Z.c0h+C7Z.Q6+H6h+C7Z.V7)](b);return this;}
-;f.prototype.mode=function(){return this[C7Z.c0h][(P9+C7Z.R4h+d5h+d3)];}
-;f.prototype.modifier=function(){var R8="fier";return this[C7Z.c0h][(U6+R8)];}
-;f.prototype.multiGet=function(a){var b=this[C7Z.c0h][(J6c+E8h+C7Z.i6+C7Z.c0h)];a===h&&(a=this[(E1+u8B)]());if(d[q6](a)){var c={}
-;d[o6c](a,function(a,d){c[d]=b[d][z9h]();}
-);return c;}
-return b[a][(g8h+h3)]();}
-;f.prototype.multiSet=function(a,b){var C1B="tiSet",c=this[C7Z.c0h][(E1+s3+F2h)];d[P5B](a)&&b===h?d[o6c](a,function(a,b){c[a][J7B](b);}
-):c[a][(f2h+t6B+C1B)](b);return this;}
-;f.prototype.node=function(a){var x9B="ma",I6="der",b=this[C7Z.c0h][(C7Z.p5h+d5h+s3+F2h)];a||(a=this[(C7Z.N6+I6)]());return d[q6](a)?d[(x9B+q0h)](a,function(a){return b[a][M4r]();}
-):b[a][(M4r)]();}
-;f.prototype.off=function(a,b){var Z4B="Name";d(this)[g1B](this[(F9+C7Z.V7+A1B+g5c+Z4B)](a),b);return this;}
-;f.prototype.on=function(a,b){d(this)[(d3)](this[k9B](a),b);return this;}
-;f.prototype.one=function(a,b){d(this)[Z3B](this[k9B](a),b);return this;}
-;f.prototype.open=function(){var N0h="yC",U8c="preo",v1="yR",a=this;this[(E9B+O9c+C7Z.Q6+v1+n7+L2c+C7Z.W7)]();this[U4c](function(){a[C7Z.c0h][(A1+i3h+C7Z.X3h+p7c+t8h+g5c+d3c+E8h+E8h+C7Z.W7)][(D7+E8h+t8h+C7Z.c0h+C7Z.V7)](a,function(){var g0h="_clearDynamicInfo";a[g0h]();}
-);}
-);if(!this[(F9+U8c+q0h+C7Z.V7+C7Z.l8h)]((f2h+B5B)))return this;this[C7Z.c0h][(C7Z.i6+d5h+O9c+C7Z.Q6+N0h+t8h+C7Z.l8h+m6h+t8h+E8h+E4h+B0h)][n2c](this,this[(i9h+f2h)][(A4B+B0h+a8+B0h)]);this[(F9+C7Z.p5h+c4+P2B)](d[(f2h+L4)](this[C7Z.c0h][V4c],function(b){return a[C7Z.c0h][(J6c+P4h+C7Z.c0h)][b];}
-),this[C7Z.c0h][D1][t0h]);this[(I0B+m6+C7Z.R4h+t8h+e4c)]((f2h+n3+C7Z.l8h));return this;}
-;f.prototype.order=function(a){var s8h="rderin",w6c="vided",F5="ditio",B2="joi",h0h="sort",g7c="slic";if(!a)return this[C7Z.c0h][(t8h+B0h+C7Z.i6+C7Z.W7)];arguments.length&&!d[q6](a)&&(a=Array.prototype.slice.call(arguments));if(this[C7Z.c0h][(V4c)][(C7Z.c0h+E8h+d5h+D7+C7Z.V7)]()[(C7Z.c0h+t8h+B0h+C7Z.R4h)]()[(p4h)](A0c)!==a[(g7c+C7Z.V7)]()[h0h]()[(B2+C7Z.l8h)](A0c))throw (J9c+E8h+E8h+p7B+C7Z.p5h+d5h+C7Z.V7+E8h+C7Z.i6+C7Z.c0h+l2c+C7Z.Q6+C7Z.l8h+C7Z.i6+p7B+C7Z.l8h+t8h+p7B+C7Z.Q6+C7Z.i6+F5+z3c+E8h+p7B+C7Z.p5h+d5h+C7Z.V7+E8h+C7Z.i6+C7Z.c0h+l2c+f2h+C7Z.F4h+C7Z.c0h+C7Z.R4h+p7B+C7Z.w6+C7Z.V7+p7B+q0h+B0h+t8h+w6c+p7B+C7Z.p5h+C7Z.N6+p7B+t8h+s8h+H6h+C7Z.I4c);d[(X2+C7Z.R4h+C7Z.V7+C7Z.l8h+C7Z.i6)](this[C7Z.c0h][(t8h+T7h)],a);this[u5B]();return this;}
-;f.prototype.remove=function(a,b,c,e,j){var G7="focu",j5B="Ope",e1h="formO",E4c="itM",o2B="mov",V8c="itR",i5c="rce",p8c="_crudArgs",d7c="tid",f=this;if(this[(F9+d7c+C7Z.X3h)](function(){f[(y5h+g4c)](a,b,c,e,j);}
-))return this;a.length===h&&(a=[a]);var n=this[p8c](b,c,e,j),k=this[(F9+C7Z.i6+w7+a4+t8h+C7Z.F4h+i5c)]((C7Z.p5h+d5h+s3+C7Z.i6+C7Z.c0h),a);this[C7Z.c0h][(C7Z.Q6+D7+r8h+t8h+C7Z.l8h)]=(B0h+d6+H9+C7Z.V7);this[C7Z.c0h][X7c]=a;this[C7Z.c0h][(n1+d5h+C7Z.R4h+Q5+Z8B+E8h+F2h)]=k;this[(C7Z.i6+t8h+f2h)][(C7Z.p5h+t8h+P0c)][(X6+C7Z.X3h+E4h)][(Z0+G3h+C7Z.X3h)]=(C7Z.l8h+d3+C7Z.V7);this[a5]();this[(m4r+Z3h)]((d5h+C7Z.l8h+V8c+C7Z.V7+o2B+C7Z.V7),[y(k,M4r),y(k,(C7Z.i6+C7Z.Q6+C7Z.R4h+C7Z.Q6)),a]);this[R7]((g4r+E4c+t6B+r8h+G4+C7Z.V7+u6B+A1B),[k,a]);this[t3]();this[(F9+e1h+q0h+r8h+d3+C7Z.c0h)](n[(t8h+q0h+O6h)]);n[(f2h+C7Z.Q6+K2+C7Z.V7+j5B+C7Z.l8h)]();n=this[C7Z.c0h][(C7Z.V7+A0+P8+q0h+C7Z.R4h+C7Z.c0h)];x2c!==n[(G7+C7Z.c0h)]&&d(G6,this[(C7Z.i6+E3)][f1])[(C7Z.V7+C7Z.C8h)](n[(f6+D7+C7Z.F4h+C7Z.c0h)])[t0h]();return this;}
-;f.prototype.set=function(a,b){var c=this[C7Z.c0h][(C7Z.p5h+d4B+C7Z.i6+C7Z.c0h)];if(!d[P5B](a)){var e={}
-;e[a]=b;a=e;}
-d[(C7Z.V7+v4B)](a,function(a,b){c[a][(P1B)](b);}
-);return this;}
-;f.prototype.show=function(a,b){var c=this[C7Z.c0h][(C7Z.p5h+d5h+g1c+C7Z.c0h)];d[(C7Z.V7+v4B)](this[R3h](a),function(a,d){c[d][(C7Z.c0h+N9B+A4B)](b);}
-);return this;}
-;f.prototype.submit=function(a,b,c,e){var j=this,f=this[C7Z.c0h][S6h],n=[],k=l4,g=!r4;if(this[C7Z.c0h][(Y4B+c4+C7Z.V7+B6+d5h+i8c)]||!this[C7Z.c0h][(P9+C7Z.R4h+Q9)])return this;this[(F9+Y4B+t8h+D7+C7Z.V7+C7Z.c0h+C7Z.c0h+d5h+i8c)](!l4);var h=function(){var s1c="_submit";n.length!==k||g||(g=!0,j[s1c](a,b,c,e));}
-;this.error();d[o6c](f,function(a,b){var H8B="inError";b[H8B]()&&n[(G7h+b2)](a);}
-);d[o6c](n,function(a,b){f[b].error("",function(){k++;h();}
-);}
-);h();return this;}
-;f.prototype.title=function(a){var z9="fu",Q8="heade",J3B="sses",a4B="div.",b=d(this[(C7Z.i6+E3)][(c4h+C7Z.Q6+Y1h+B0h)])[(I1B+c0B+C7Z.i6+m7h)](a4B+this[(I9B+C7Z.Q6+J3B)][(Q8+B0h)][j4B]);if(a===h)return b[(n5h+C7Z.R4h+y5B)]();(z9+C7Z.u1c+C7Z.R4h+d5h+t8h+C7Z.l8h)===typeof a&&(a=a(this,new t[(J9c+F8h)](this[C7Z.c0h][(C7Z.R4h+C7Z.Q6+h7c+C7Z.V7)])));b[(N4h)](a);return this;}
-;f.prototype.val=function(a,b){return b===h?this[(H6h+C7Z.D9)](a):this[P1B](a,b);}
-;var i=t[s3B][(z5c+H6h+d5h+C7Z.c0h+C7Z.R4h+C7Z.V7+B0h)];i((C7Z.V7+C7Z.i6+l8+B0h+f7c),function(){return v(this);}
-);i((B0h+i7+C7Z.I4c+D7+z5c+B9+f7c),function(a){var Q5c="creat",b=v(this);b[(D7+B0h+C7Z.V7+B9)](A(b,a,(Q5c+C7Z.V7)));return this;}
-);i(a9h,function(a){var b=v(this);b[N4B](this[l4][l4],A(b,a,(C7Z.V7+A0)));return this;}
-);i((B0h+t8h+Z1h+Y7c+C7Z.V7+A0+f7c),function(a){var b=v(this);b[N4B](this[l4],A(b,a,(C7Z.V7+C7Z.i6+H1c)));return this;}
-);i((B0h+i7+Y7c+C7Z.i6+l0c+C7Z.V7+f7c),function(a){var b=v(this);b[h1h](this[l4][l4],A(b,a,(B0h+C7Z.V7+f2h+t8h+E4B+C7Z.V7),r4));return this;}
-);i(f9h,function(a){var G7c="move",b=v(this);b[h1h](this[0],A(b,a,(z5c+G7c),this[0].length));return this;}
-);i((n1B+E8h+E8h+Y7c+C7Z.V7+C7Z.i6+d5h+C7Z.R4h+f7c),function(a,b){a?d[(U2B+E8h+C7Z.Q6+d5h+C7Z.l8h+P8+C7Z.w6+C7Z.G2h+C7Z.V7+D7+C7Z.R4h)](a)&&(b=a,a=Q4r):a=(d5h+C7Z.l8h+L0h+C7Z.l8h+C7Z.V7);v(this)[a](this[l4][l4],b);return this;}
-);i(s0c,function(a){v(this)[(W4+C7Z.w6+E4h)](this[l4],a);return this;}
-);i((C7Z.p5h+c0B+C7Z.V7+f7c),function(a,b){var M8B="file";return f[(M8B+C7Z.c0h)][a][b];}
-);i((f6B+C7Z.V7+C7Z.c0h+f7c),function(a,b){if(!a)return f[z4h];if(!b)return f[(E1+C7Z.F0c)][a];f[z4h][a]=b;return this;}
-);d(r)[(d3)]((K4B+n5h+B0h+C7Z.I4c+C7Z.i6+C7Z.R4h),function(a,b,c){var U5h="dt";U5h===a[(N7h+u9+q0h+P9+C7Z.V7)]&&c&&c[z4h]&&d[(C7Z.V7+C7Z.Q6+D7+n5h)](c[(C7Z.p5h+c0B+u9)],function(a,b){f[z4h][a]=b;}
-);}
-);f.error=function(a,b){var X4c="/",a2B="bles",w4c="://",D6h="tp",v9c="nformati",a5c="ore";throw b?a+(p7B+Q5+t8h+B0h+p7B+f2h+a5c+p7B+d5h+v9c+t8h+C7Z.l8h+l2c+q0h+E4h+C7Z.Q6+C7Z.c0h+C7Z.V7+p7B+B0h+C7Z.V7+C7Z.p5h+C7Z.W7+p7B+C7Z.R4h+t8h+p7B+n5h+C7Z.R4h+D6h+C7Z.c0h+w4c+C7Z.i6+C7Z.U8+C7Z.U8+C7Z.Q6+a2B+C7Z.I4c+C7Z.l8h+C7Z.D9+X4c+C7Z.R4h+C7Z.l8h+X4c)+b:a;}
-;f[(c9h+C7Z.c0h)]=function(a,b,c){var g3c="nObj",e,j,f,b=d[T2h]({label:"label",value:(E4B+C7Z.Q6+E8h+c8B)}
-,b);if(d[(d5h+C7Z.c0h+J9c+B0h+a2)](a)){e=0;for(j=a.length;e<j;e++)f=a[e],d[(U2B+E8h+n3+g3c+C7Z.a2c)](f)?c(f[b[B4c]]===h?f[b[(E8h+C7Z.Q6+C7Z.w6+C7Z.V7+E8h)]]:f[b[B4c]],f[b[(E8h+C7Z.Q6+l0B)]],e):c(f,f,e);}
-else e=0,d[(j8h+D7+n5h)](a,function(a,b){c(b,a,e);e++;}
-);}
-;f[(C7Z.c0h+B1+C7Z.V7+r4c)]=function(a){return a[u3c](/\./g,A0c);}
-;f[(C7Z.F4h+q0h+E2c+C7Z.i6)]=function(a,b,c,e,j){var Z0c="taU",H1="eadAsD",o9B="RL",h4c="onload",o=new FileReader,n=l4,k=[];a.error(b[(I8c)],"");o[h4c]=function(){var F2B="oad",U6c="Submi",V8B="ug",y0B="pload",T4B="Pla",w7c="ajaxData",g=new FormData,h;g[(a8+C7Z.l8h+C7Z.i6)]((C7Z.Q6+D7+r8h+t8h+C7Z.l8h),e6);g[T8c]((g5B+q5h+X9+S2B+C7Z.i6),b[I8c]);g[(C7Z.Q6+I4B+D2h)]((C7Z.F4h+q0h+E8h+t8h+C7Z.Q6+C7Z.i6),c[n]);b[(C7Z.Q6+I1h+J6B+C7Z.R4h+C7Z.Q6)]&&b[w7c](g);if(b[(c3+C7Z.Q6+K4B)])h=b[(C7Z.Q6+d5c+K4B)];else if((X6+B0h+g4r+H6h)===typeof a[C7Z.c0h][(C7Z.Q6+d5c+K4B)]||d[(i9c+T4B+d5h+C7Z.l8h+P8+C7Z.w6+C7Z.G2h+C7Z.a2c)](a[C7Z.c0h][(C7Z.Q6+d5c+K4B)]))h=a[C7Z.c0h][(q9h+K4B)];if(!h)throw (e0+t8h+p7B+J9c+C7Z.G2h+C7Z.Q6+K4B+p7B+t8h+q0h+C7Z.R4h+d5h+d3+p7B+C7Z.c0h+q0h+C7Z.V7+r9B+C7Z.p5h+d5h+n1+p7B+C7Z.p5h+C7Z.N6+p7B+C7Z.F4h+y0B+p7B+q0h+E8h+V8B+A0c+d5h+C7Z.l8h);i2c===typeof h&&(h={url:h}
-);var z=!r4;a[(t8h+C7Z.l8h)]((c6B+U6c+C7Z.R4h+C7Z.I4c+D5+J3h+Q6c+E8h+F2B),function(){z=!l4;return !r4;}
-);d[(C7Z.Q6+d5c+K4B)](d[T2h](h,{type:"post",data:g,dataType:"json",contentType:!1,processData:!1,xhr:function(){var y4c="nl",S9c="npro",W5B="xhr",W5c="ngs",d9h="xS",a=d[(C7Z.Q6+C7Z.G2h+C7Z.Q6+d9h+C7Z.D9+C7Z.R4h+d5h+W5c)][W5B]();a[e6]&&(a[e6][(t8h+S9c+H6h+B0h+C7Z.V7+C7Z.c0h+C7Z.c0h)]=function(a){var n8h="toFixed",K4h="mputa",i6h="gt";a[(E8h+C7Z.V7+C7Z.l8h+i6h+n5h+w3B+K4h+C7Z.w6+E4h)]&&(a=(100*(a[(q5h+C7Z.Q6+Y1h+C7Z.i6)]/a[(C7Z.R4h+t8h+I3+E8h)]))[n8h](0)+"%",e(b,1===c.length?a:n+":"+c.length+" "+a));}
-,a[e6][(t8h+y4c+S0+C7Z.i6+Z6+C7Z.i6)]=function(){e(b);}
-);return a;}
-,success:function(b){var J2c="sD",T3B="dA",T3c="fieldErrors",y7="ldEr";a[(t8h+O9)]((Y4B+q7h+C7Z.F4h+C7c+H1c+C7Z.I4c+D5+C0+Z5+F9+F3+q0h+E2c+C7Z.i6));if(b[(J6c+G0c+C7B+z1c)]&&b[(C7Z.p5h+Z8B+y7+M0+C7Z.c0h)].length)for(var b=b[T3c],e=0,g=b.length;e<g;e++)a.error(b[e][(C7Z.l8h+C7Z.Q6+Y8B)],b[e][m1h]);else b.error?a.error(b.error):(b[(C7Z.p5h+d5h+E4h+C7Z.c0h)]&&d[(C7Z.V7+C7Z.Q6+D7+n5h)](b[(C7Z.p5h+d5h+C7Z.F0c)],function(a,b){f[(C7Z.p5h+c0B+C7Z.V7+C7Z.c0h)][a]=b;}
-),k[(G7h+C7Z.c0h+n5h)](b[e6][n8B]),n<c.length-1?(n++,o[(z5c+C7Z.Q6+T3B+J2c+w7+F3+o9B)](c[n])):(j[(D7+C7Z.Q6+k8h)](a,k),z&&a[(Y9+Q0B+C7Z.R4h)]()));}
-}
-));}
-;o[(B0h+H1+C7Z.Q6+Z0c+o9B)](c[l4]);}
-;f.prototype._constructor=function(a){var Y0="nitC",s1B="hr",I7c="init",u6c="ssing",G1c="body_content",w2B="foot",v7c="ooter",t0B="form_content",z0c="vent",o5="TT",O4="BU",G6c="bleToo",G5h='_bu',B4B="ader",J9="info",v2h='fo',v2c='m_',H9c='_e',r1='rm',p9h='ent',s4h='nt',n7c="tag",i0c="ter",A2h="foo",F4B='oot',i1c='co',m4B='ody_',x9h="dic",U1='ssing',j1='roc',s6c="xtend",d9c="cyAj",b5="ega",v4="Option",v7="Source",V9="rces",s8B="domT",z5h="Tab",N2="domTable",x5="efault";a=d[T2h](!l4,{}
-,f[(C7Z.i6+x5+C7Z.c0h)],a);this[C7Z.c0h]=d[(X2+o0h+B1c)](!l4,{}
-,f[G8][b2B],{table:a[N2]||a[(R9c+E8h+C7Z.V7)],dbTable:a[(C7Z.i6+C7Z.w6+z5h+E8h+C7Z.V7)]||x2c,ajaxUrl:a[J5h],ajax:a[h3B],idSrc:a[(d5h+C7Z.i6+a4+m2c)],dataSource:a[(s8B+K8h+C7Z.V7)]||a[(I3+h7c+C7Z.V7)]?f[(C7Z.i6+C7Z.Q6+K0B+C7Z.F4h+V9)][t1]:f[(q0B+I3+v7+C7Z.c0h)][(N4h)],formOptions:a[(f6+P0c+v4+C7Z.c0h)],legacyAjax:a[(E8h+b5+d9c+d2)]}
-);this[(I9B+C7Z.Q6+C7Z.c0h+C7Z.c0h+u9)]=d[(C7Z.V7+s6c)](!l4,{}
-,f[(d4h+V9B+C7Z.c0h)]);this[(R8h)]=a[R8h];var b=this,c=this[(D7+i3h+V9B+C7Z.c0h)];this[j0B]={wrapper:d('<div class="'+c[(D1c+q0h+M8c)]+(u4c+u7h+h5+U7c+u7h+Z9h+f4c+Z9h+b0+u7h+f4c+I6h+b0+I6h+Y6c+j1B+j1+I6h+U1+w8B+B7h+Y7B+Y6c)+c[(q0h+B0h+c4+C7Z.V7+C7Z.c0h+C7Z.c0h+d5h+C7Z.l8h+H6h)][(g4r+x9h+C7Z.Q6+C7Z.R4h+C7Z.N6)]+(S8h+u7h+h5+A0h+u7h+d3h+P3B+U7c+u7h+Z1B+b0+u7h+v7B+b0+I6h+Y6c+n9h+A1h+u7h+F7B+w8B+B7h+Y7B+Y6c)+c[B2c][d5B]+(u4c+u7h+d3h+P3B+U7c+u7h+Z9h+f4c+Z9h+b0+u7h+v7B+b0+I6h+Y6c+n9h+m4B+i1c+g1h+v7B+g1h+f4c+w8B+B7h+y6B+r1B+r1B+Y6c)+c[(k5h+C7Z.X3h)][(N3B+o2c+C7Z.R4h)]+(h5c+u7h+h5+A0h+u7h+d3h+P3B+U7c+u7h+Z9h+a5B+b0+u7h+v7B+b0+I6h+Y6c+N6h+F4B+w8B+B7h+Y7B+Y6c)+c[(A2h+i0c)][(A4B+B0h+L4+q0h+C7Z.V7+B0h)]+'"><div class="'+c[(C7Z.p5h+t8h+t8h+C7Z.R4h+C7Z.W7)][j4B]+'"/></div></div>')[0],form:d('<form data-dte-e="form" class="'+c[S4r][(n7c)]+(u4c+u7h+h5+U7c+u7h+Z1B+b0+u7h+f4c+I6h+b0+I6h+Y6c+N6h+b0B+C1h+F9h+B7h+A1h+s4h+p9h+w8B+B7h+N1+r1B+Y6c)+c[S4r][(s7B+C7Z.l8h+C7Z.R4h+Z6+C7Z.R4h)]+'"/></form>')[0],formError:d((L2+u7h+h5+U7c+u7h+Z9h+f4c+Z9h+b0+u7h+v7B+b0+I6h+Y6c+N6h+A1h+r1+H9c+U1B+T0h+U1B+w8B+B7h+Y7B+Y6c)+c[(C7Z.p5h+t8h+P0c)].error+(z4B))[0],formInfo:d((L2+u7h+d3h+P3B+U7c+u7h+v8+Z9h+b0+u7h+f4c+I6h+b0+I6h+Y6c+N6h+A1h+U1B+v2c+d3h+g1h+v2h+w8B+B7h+n3h+X0+r1B+Y6c)+c[(K6h+f2h)][J9]+'"/>')[0],header:d((L2+u7h+d3h+P3B+U7c+u7h+Z1B+b0+u7h+v7B+b0+I6h+Y6c+c4B+F6+u7h+w8B+B7h+n3h+Z9h+r1B+r1B+Y6c)+c[(c4h+B4B)][(A4B+B0h+k0c+C7Z.V7+B0h)]+'"><div class="'+c[(n5h+C7Z.V7+B4B)][j4B]+'"/></div>')[0],buttons:d((L2+u7h+d3h+P3B+U7c+u7h+Z9h+a5B+b0+u7h+v7B+b0+I6h+Y6c+N6h+A1h+r1+G5h+u7c+g1h+r1B+w8B+B7h+y6B+e4B+Y6c)+c[(S4r)][(C7Z.w6+m9B+k8)]+(z4B))[0]}
-;if(d[C7Z.D4h][t1][t7h]){var e=d[(C7Z.p5h+C7Z.l8h)][t1][(S+G6c+E8h+C7Z.c0h)][(O4+o5+P8+e0+a4)],j=this[R8h];d[o6c]([(D7+B0h+j8h+C7Z.R4h+C7Z.V7),(C7Z.V7+C7Z.i6+d5h+C7Z.R4h),h1h],function(a,b){var q1c="sButtonText",u9c="editor_";e[u9c+b][q1c]=j[b][G6];}
-);}
-d[o6c](a[(C7Z.V7+z0c+C7Z.c0h)],function(a,c){b[(d3)](a,function(){var T5h="ppl",a=Array.prototype.slice.call(arguments);a[g6h]();c[(C7Z.Q6+T5h+C7Z.X3h)](b,a);}
-);}
-);var c=this[(C7Z.i6+t8h+f2h)],o=c[(A4B+g6c+I4B+C7Z.V7+B0h)];c[(C7Z.p5h+b0c+p7c+t8h+g5c+C7Z.V7+C7Z.l8h+C7Z.R4h)]=u(t0B,c[(f6+P0c)])[l4];c[(C7Z.p5h+v7c)]=u((w2B),o)[l4];c[B2c]=u(B2c,o)[l4];c[(k5c+C7Z.i6+u9h+C7Z.l8h+C7Z.R4h+Z6+C7Z.R4h)]=u(G1c,o)[l4];c[(q0h+B0h+c4+C7Z.V7+u6c)]=u(S7c,o)[l4];a[S6h]&&this[l9B](a[S6h]);d(r)[(d3)]((I7c+C7Z.I4c+C7Z.i6+C7Z.R4h+C7Z.I4c+C7Z.i6+o0h),function(a,c){var g3="_editor",e5c="nTable";b[C7Z.c0h][(I3+h7c+C7Z.V7)]&&c[e5c]===d(b[C7Z.c0h][(C7Z.R4h+C7Z.Q6+m5)])[(H6h+C7Z.V7+C7Z.R4h)](l4)&&(c[g3]=b);}
-)[(d3)]((K4B+s1B+C7Z.I4c+C7Z.i6+C7Z.R4h),function(a,c,e){e&&(b[C7Z.c0h][C7Z.A7c]&&c[(C7Z.l8h+C0+C7Z.Q6+C7Z.w6+E4h)]===d(b[C7Z.c0h][C7Z.A7c])[j2](l4))&&b[(F9+B3+r8h+L5B+F3+q0h+C7Z.i6+C7Z.Q6+C7Z.R4h+C7Z.V7)](e);}
-);this[C7Z.c0h][i8B]=f[U8B][a[(A1+i3h+C7Z.X3h)]][(d5h+C7Z.l8h+d5h+C7Z.R4h)](this);this[(w1B+E4B+Z3h)]((d5h+Y0+t8h+f2h+q0h+E8h+C7Z.V7+C7Z.R4h+C7Z.V7),[]);}
-;f.prototype._actionClass=function(){var F8="remov",w9B="ctions",a=this[r9][(C7Z.Q6+w9B)],b=this[C7Z.c0h][(P9+C7Z.R4h+Q9)],c=d(this[j0B][d5B]);c[(F8+y9c+c8)]([a[(x5B+j8h+C7Z.R4h+C7Z.V7)],a[(C7Z.V7+V4B+C7Z.R4h)],a[(B0h+Y4c+C7Z.V7)]][p4h](p7B));r4h===b?c[(X9+Q4c+i3h+B6)](a[r4h]):(C3B+C7Z.R4h)===b?c[(X9+Q4c+E8h+C7Z.Q6+C7Z.c0h+C7Z.c0h)](a[N4B]):h1h===b&&c[(X9+C7Z.i6+t8+C7Z.c0h)](a[(z5c+f2h+t8h+A1B)]);}
-;f.prototype._ajax=function(a,b,c){var M3h="dexOf",V0c="rl",s6B="ET",p8B="EL",U5="unct",S5c="sF",i5h="replac",J0h="xUrl",D6B="rra",L7B="isA",k5B="dS",W6h="xU",d2c="POST",e={type:(d2c),dataType:(C7Z.G2h+Z4c),data:null,error:c,success:function(a,c,e){204===e[(C7Z.c0h+C7Z.R4h+C7Z.U8+P2B)]&&(a={}
-);b(a);}
-}
-,j;j=this[C7Z.c0h][l6B];var f=this[C7Z.c0h][(h3B)]||this[C7Z.c0h][(c3+C7Z.Q6+W6h+B0h+E8h)],n="edit"===j||"remove"===j?y(this[C7Z.c0h][c5B],(d5h+k5B+B0h+D7)):null;d[(L7B+D6B+C7Z.X3h)](n)&&(n=n[(R6+g4r)](","));d[P5B](f)&&f[j]&&(f=f[j]);if(d[(d5h+C7Z.c0h+Q5+C7Z.F4h+C7Z.l8h+D7+l1c+C7Z.l8h)](f)){var g=null,e=null;if(this[C7Z.c0h][J5h]){var h=this[C7Z.c0h][(q9h+J0h)];h[(D7+b4)]&&(g=h[j]);-1!==g[(g4r+C7Z.i6+C7Z.V7+K4B+w3)](" ")&&(j=g[(C7Z.c0h+q0h+L0h+C7Z.R4h)](" "),e=j[0],g=j[1]);g=g[(i5h+C7Z.V7)](/_id_/,n);}
-f(e,g,a,b,c);}
-else(C7Z.c0h+C7Z.R4h+B0h+F6B)===typeof f?-1!==f[(d5h+B1c+C7Z.V7+K4B+P8+C7Z.p5h)](" ")?(j=f[(C7Z.c0h+q0h+E8h+d5h+C7Z.R4h)](" "),e[c7B]=j[0],e[(X8B)]=j[1]):e[X8B]=f:e=d[T2h]({}
-,e,f||{}
-),e[(X8B)]=e[(q2B+E8h)][(B0h+O6+i3h+D7+C7Z.V7)](/_id_/,n),e.data&&(c=d[(d5h+S5c+C7Z.F4h+C7Z.l8h+i6B+d5h+t8h+C7Z.l8h)](e.data)?e.data(a):e.data,a=d[(i9c+Q5+U5+Q9)](e.data)&&c?c:d[(n4c+D2h)](!0,a,c)),e.data=a,(D5+p8B+s6B+Z5)===e[(t9h+I0h)]&&(a=d[(q0h+C7Z.Q6+B0h+C7Z.Q6+f2h)](e.data),e[(C7Z.F4h+V0c)]+=-1===e[(C7Z.F4h+B0h+E8h)][(g4r+M3h)]("?")?"?"+a:"&"+a,delete  e.data),d[(C7Z.Q6+d5c+K4B)](e);}
-;f.prototype._assembleMain=function(){var X9B="bodyContent",L9h="mErr",f1B="footer",a=this[j0B];d(a[(J9h+L4+I0h+B0h)])[(Y4B+C7Z.V7+q0h+C7Z.V7+B1c)](a[i3]);d(a[f1B])[(L4+q0h+C7Z.V7+B1c)](a[(C7Z.p5h+t8h+B0h+L9h+t8h+B0h)])[(C7Z.Q6+I4B+C7Z.V7+B1c)](a[(C7Z.w6+C7Z.F4h+M7h+t8h+C7Z.l8h+C7Z.c0h)]);d(a[X9B])[T8c](a[W4c])[T8c](a[(C7Z.p5h+t8h+B0h+f2h)]);}
-;f.prototype._blur=function(){var H1B="onBlu",g8c="Opts",a=this[C7Z.c0h][(C7Z.V7+C7Z.i6+d5h+C7Z.R4h+g8c)];!r4!==this[(F9+F4c+g5c)]((c6B+K9c+E8h+C7Z.F4h+B0h))&&(W4r===a[(Z2)]?this[W4r]():n2h===a[(H1B+B0h)]&&this[R5c]());}
-;f.prototype._clearDynamicInfo=function(){var A9h="veCl",a=this[(d4h+C7Z.c0h+C7Z.c0h+C7Z.V7+C7Z.c0h)][B2h].error,b=this[C7Z.c0h][S6h];d((V4B+E4B+C7Z.I4c)+a,this[(C7Z.i6+E3)][d5B])[(B0h+j7B+A9h+d8+C7Z.c0h)](a);d[(C7Z.V7+v4B)](b,function(a,b){b.error("")[(Y8B+B6+C7Z.Q6+H6h+C7Z.V7)]("");}
-);this.error("")[(f2h+Y9c+H6h+C7Z.V7)]("");}
-;f.prototype._close=function(a){var L5h="lose",Z7c="loseIcb",a8c="closeIcb",K7h="loseCb",e9B="los",Q4B="preC";!r4!==this[(m4r+Z6+C7Z.R4h)]((Q4B+e9B+C7Z.V7))&&(this[C7Z.c0h][(I9B+t8h+H5h)]&&(this[C7Z.c0h][(h4B+C7Z.c0h+D3h+C7Z.w6)](a),this[C7Z.c0h][(D7+K7h)]=x2c),this[C7Z.c0h][a8c]&&(this[C7Z.c0h][a8c](),this[C7Z.c0h][(D7+Z7c)]=x2c),d((C7Z.w6+t8h+C7Z.i6+C7Z.X3h))[(t8h+O9)]((f6+J2B+C7Z.c0h+C7Z.I4c+C7Z.V7+V4B+C7Z.R4h+t8h+B0h+A0c+C7Z.p5h+t4)),this[C7Z.c0h][a6B]=!r4,this[R7]((D7+L5h)));}
-;f.prototype._closeReg=function(a){this[C7Z.c0h][(D7+q5h+H5h)]=a;}
-;f.prototype._crudArgs=function(a,b,c,e){var j=this,f,g,k;d[(d5h+I3c+i3h+d5h+k6h+f2c+i6B)](a)||(P7c===typeof a?(k=a,a=b):(f=a,g=b,k=c,a=e));k===h&&(k=!l4);f&&j[K7](f);g&&j[(C7Z.w6+C7Z.F4h+M7h+t8h+N2c)](g);return {opts:d[T2h]({}
-,this[C7Z.c0h][(C7Z.p5h+t8h+P0c+y4+C7Z.R4h+d5h+t8h+N2c)][X7B],a),maybeOpen:function(){k&&j[(B3+Z6)]();}
-}
-;}
-;f.prototype._dataSource=function(a){var c9="ift",b=Array.prototype.slice.call(arguments);b[(C7Z.c0h+n5h+c9)]();var c=this[C7Z.c0h][(q0B+q8c+t8h+C7Z.F4h+m2c+C7Z.V7)][a];if(c)return c[(C7Z.Q6+I4B+R7B)](this,b);}
-;f.prototype._displayReorder=function(a){var u1h="ayOrder",Y3c="childre",n6B="rde",b=d(this[(i9h+f2h)][(S4r+p7c+Z6B+C7Z.V7+C7Z.l8h+C7Z.R4h)]),c=this[C7Z.c0h][(C7Z.p5h+r8c)],e=this[C7Z.c0h][(t8h+n6B+B0h)];a?this[C7Z.c0h][a3c]=a:a=this[C7Z.c0h][a3c];b[(Y3c+C7Z.l8h)]()[(Y1h+C7Z.R4h+C7Z.Q6+D7+n5h)]();d[(C7Z.V7+v4B)](e,function(e,o){var p1B="inA",g=o instanceof f[U6h]?o[(z3c+Y8B)]():o;-r4!==d[(p1B+A1c+l5)](g,a)&&b[T8c](c[g][(C7Z.l8h+B8+C7Z.V7)]());}
-);this[(w1B+A1B+g5c)]((C7Z.i6+i9c+C3h+u1h),[this[C7Z.c0h][(Z0+q0h+B2B+C7Z.V7+C7Z.i6)],this[C7Z.c0h][(P9+r8h+t8h+C7Z.l8h)],b]);}
-;f.prototype._edit=function(a,b,c){var M4="tD",R5h="ayRe",b3h="splice",W8B="odif",e=this[C7Z.c0h][(C7Z.p5h+d5h+C7Z.V7+h3h)],j=[],f;this[C7Z.c0h][c5B]=b;this[C7Z.c0h][(f2h+W8B+d5h+C7Z.V7+B0h)]=a;this[C7Z.c0h][(P9+C7Z.R4h+d5h+t8h+C7Z.l8h)]=(C7Z.V7+C7Z.i6+d5h+C7Z.R4h);this[(j0B)][(f6+P0c)][(C7Z.c0h+t9h+E4h)][(Z0+C3h+C7Z.Q6+C7Z.X3h)]="block";this[a5]();d[(o6c)](e,function(a,c){var n4r="multiRese";c[(n4r+C7Z.R4h)]();f=!0;d[(L1h+n5h)](b,function(b,e){var r6c="yFi",o8B="ayFi";if(e[(C7Z.p5h+r8c)][a]){var d=c[(W8+c5+t8h+f2h+D5+C7Z.Q6+I3)](e.data);c[J7B](b,d!==h?d:c[(J8h)]());e[(A1+E8h+o8B+g1c+C7Z.c0h)]&&!e[(C7Z.i6+i9c+G3h+r6c+C7Z.V7+E8h+C7Z.i6+C7Z.c0h)][a]&&(f=!1);}
-}
-);0!==c[(a0+C7Z.R4h+d5h+b8+C7Z.i6+C7Z.c0h)]().length&&f&&j[(q0h+y2h)](a);}
-);for(var e=this[(t8h+L2c+C7Z.V7+B0h)]()[(C7Z.c0h+E8h+K5B+C7Z.V7)](),g=e.length;0<=g;g--)-1===d[A9](e[g],j)&&e[b3h](g,1);this[(F9+C7Z.i6+i9c+C3h+R5h+t8h+L2c+C7Z.W7)](e);this[C7Z.c0h][(C7Z.V7+V4B+M4+C7Z.U8+C7Z.Q6)]=this[z9h]();this[(R7)]((d5h+C7Z.l8h+d5h+C7Z.R4h+c0),[y(b,"node")[0],y(b,"data")[0],a,c]);this[(m4r+C7Z.V7+C7Z.l8h+C7Z.R4h)]("initMultiEdit",[b,a,c]);}
-;f.prototype._event=function(a,b){var S2c="result",M3B="dle",g8B="rH",r8="gg";b||(b=[]);if(d[q6](a))for(var c=0,e=a.length;c<e;c++)this[(m4r+C7Z.V7+g5c)](a[c],b);else return c=d[(Z5+E4B+C7Z.V7+C7Z.l8h+C7Z.R4h)](a),d(this)[(C7Z.R4h+B0h+d5h+r8+C7Z.V7+g8B+C7Z.Q6+C7Z.l8h+M3B+B0h)](c,b),c[S2c];}
-;f.prototype._eventName=function(a){var r3B="bstrin";for(var b=a[(C7Z.c0h+C3h+H1c)](" "),c=0,e=b.length;c<e;c++){var a=b[c],d=a[(W0c)](/^on([A-Z])/);d&&(a=d[1][Y5]()+a[(g9+r3B+H6h)](3));b[c]=a;}
-return b[(C7Z.G2h+t8h+d5h+C7Z.l8h)](" ");}
-;f.prototype._fieldNames=function(a){return a===h?this[(E1+u8B)]():!d[q6](a)?[a]:a;}
-;f.prototype._focus=function(a,b){var l3="setF",L5c="div.DTE ",r7="jq",c=this,e,j=d[(f2h+C7Z.Q6+q0h)](a,function(a){return (a4c+d5h+i8c)===typeof a?c[C7Z.c0h][(C7Z.p5h+d5h+s3+C7Z.i6+C7Z.c0h)][a]:a;}
-);v1c===typeof b?e=j[b]:b&&(e=l4===b[(d5h+C7Z.l8h+Y1h+K4B+P8+C7Z.p5h)]((r7+F3c))?d(L5c+b[(B0h+C7Z.V7+C3h+q3h)](/^jq:/,m4h)):this[C7Z.c0h][(C7Z.p5h+f2B+C7Z.c0h)][b]);(this[C7Z.c0h][(l3+t8h+J2B+C7Z.c0h)]=e)&&e[(C7Z.p5h+t8h+D7+C7Z.F4h+C7Z.c0h)]();}
-;f.prototype._formOptions=function(a){var P4c="cb",a3="down",d8h="essag",Z6c="titl",J4B="Back",F4="onBackground",v5="nBack",L3c="rn",A6="tOnRe",o5h="subm",u1B="onReturn",t9c="OnR",l4r="Bl",b3c="mitO",l1="eOnC",j9="onComplete",d4c="OnCom",a7B="teIn",b=this,c=M++,e=(C7Z.I4c+C7Z.i6+a7B+E8h+d5h+C7Z.l8h+C7Z.V7)+c;a[(h4B+w8+d4c+q0h+E4h+o0h)]!==h&&(a[j9]=a[(D7+E8h+t8h+C7Z.c0h+l1+t8h+a9c+C7Z.V7+C7Z.R4h+C7Z.V7)]?n2h:(C7Z.l8h+t8h+C7Z.l8h+C7Z.V7));a[(C7Z.c0h+D4B+f2h+d5h+C7Z.R4h+P8+C7Z.l8h+K9c+E8h+C7Z.F4h+B0h)]!==h&&(a[Z2]=a[(Y9+b3c+C7Z.l8h+l4r+q2B)]?(C7Z.c0h+C7Z.F4h+C7Z.w6+P):(D7+q5h+C7Z.c0h+C7Z.V7));a[(W4r+t9c+C7Z.V7+C7Z.R4h+q2B+C7Z.l8h)]!==h&&(a[u1B]=a[(o5h+d5h+A6+g7h+L3c)]?W4r:(i1h));a[(C7Z.w6+R9B+B0h+P8+v5+J7h+t8h+b5B+C7Z.i6)]!==h&&(a[F4]=a[(C7Z.w6+R9B+B0h+P8+C7Z.l8h+J4B+J7h+t8h+b5B+C7Z.i6)]?(h7c+C7Z.F4h+B0h):i1h);this[C7Z.c0h][(N4B+P8+q0h+O6h)]=a;this[C7Z.c0h][g2c]=c;if(i2c===typeof a[K7]||m2B===typeof a[K7])this[(C7Z.R4h+d5h+C7Z.R4h+E8h+C7Z.V7)](a[(Z6c+C7Z.V7)]),a[K7]=!l4;if(i2c===typeof a[a5h]||m2B===typeof a[a5h])this[a5h](a[(f2h+u9+h6c)]),a[(f2h+d8h+C7Z.V7)]=!l4;P7c!==typeof a[f1]&&(this[(C7Z.w6+m9B+O8B+C7Z.c0h)](a[(C7Z.w6+m9B+k8)]),a[(C7Z.w6+C7Z.F4h+M7h+d3+C7Z.c0h)]=!l4);d(r)[(d3)]((s2h+e2+a3)+e,function(c){var c2h="nex",Z5B="keyCo",V1c="_F",A5h="onEsc",o2h="tDefault",B3h="rev",W4B="eEl",e=d(r[(P9+C7Z.R4h+d5h+E4B+W4B+d6+C7Z.V7+g5c)]),f=e.length?e[0][(C7Z.l8h+y8c+y1c+f2h+C7Z.V7)][Y5]():null;d(e)[(C7Z.Q6+K7B)]("type");if(b[C7Z.c0h][(C7Z.i6+d5h+C7Z.c0h+G3h+C7Z.X3h+n1)]&&a[(d3+G4+C7Z.V7+C7Z.R4h+C7Z.F4h+B0h+C7Z.l8h)]===(Y9+f2h+d5h+C7Z.R4h)&&c[(s2h+W1B+Y1h)]===13&&(f==="input"||f===(w8+E8h+C7Z.V7+D7+C7Z.R4h))){c[j8]();b[(g9+C7c+d5h+C7Z.R4h)]();}
-else if(c[T7B]===27){c[(q0h+B3h+Z6+o2h)]();switch(a[A5h]){case (C7Z.w6+R9B+B0h):b[(C7Z.w6+R9B+B0h)]();break;case "close":b[n2h]();break;case (g9+C7Z.w6+f2h+H1c):b[W4r]();}
-}
-else e[N3h]((C7Z.I4c+D5+H3+V1c+b0c+A3c+t2+N2c)).length&&(c[(Z5B+Y1h)]===37?e[(q0h+z5c+E4B)]((C2c+C7Z.R4h+C7Z.R4h+d3))[(C7Z.p5h+t8h+K6)]():c[(T0+C7Z.X3h+p7c+y8c)]===39&&e[(c2h+C7Z.R4h)]((C7Z.w6+C7Z.F4h+C7Z.R4h+C7Z.R4h+t8h+C7Z.l8h))[(C7Z.p5h+t4)]());}
-);this[C7Z.c0h][(q0c+G4B+P4c)]=function(){var W3B="keyd";d(r)[(t8h+C7Z.p5h+C7Z.p5h)]((W3B+t8h+R1h)+e);}
-;return e;}
-;f.prototype._legacyAjax=function(a,b,c){var A3B="acyA",L8h="leg";if(this[C7Z.c0h][(L8h+A3B+I1h)])if((C7Z.c0h+Z6+C7Z.i6)===a)if((D7+B0h+C7Z.V7+C7Z.Q6+C7Z.R4h+C7Z.V7)===b||(n1+H1c)===b){var e;d[(C7Z.V7+P9+n5h)](c.data,function(a){var f8B="cy",h4="porte",F7="Edi";if(e!==h)throw (F7+C7Z.R4h+C7Z.N6+G9h+R0+t6B+C7Z.R4h+d5h+A0c+B0h+i7+p7B+C7Z.V7+C7Z.i6+d5h+C7Z.R4h+d5h+C7Z.l8h+H6h+p7B+d5h+C7Z.c0h+p7B+C7Z.l8h+t8h+C7Z.R4h+p7B+C7Z.c0h+g5B+h4+C7Z.i6+p7B+C7Z.w6+C7Z.X3h+p7B+C7Z.R4h+c4h+p7B+E8h+K3+C7Z.Q6+f8B+p7B+J9c+I1h+p7B+C7Z.i6+C7Z.U8+C7Z.Q6+p7B+C7Z.p5h+C7Z.N6+f2h+C7Z.Q6+C7Z.R4h);e=a;}
-);c.data=c.data[e];(N4B)===b&&(c[n8B]=e);}
-else c[(n8B)]=d[(f2h+C7Z.Q6+q0h)](c.data,function(a,b){return b;}
-),delete  c.data;else c.data=!c.data&&c[(d3c+A4B)]?[c[(B0h+i7)]]:[];}
-;f.prototype._optionsUpdate=function(a){var b=this;a[(O1h+d5h+t8h+C7Z.l8h+C7Z.c0h)]&&d[(C7Z.V7+v4B)](this[C7Z.c0h][(E1+s3+C7Z.i6+C7Z.c0h)],function(c){var r2B="update",w0B="upd";if(a[(t8h+q0h+C7Z.R4h+Q9+C7Z.c0h)][c]!==h){var e=b[B2h](c);e&&e[(w0B+C7Z.U8+C7Z.V7)]&&e[r2B](a[C0c][c]);}
-}
-);}
-;f.prototype._message=function(a,b){var P9B="Out",e7B="ade",K3B="functio";(K3B+C7Z.l8h)===typeof b&&(b=b(this,new t[s3B](this[C7Z.c0h][C7Z.A7c])));a=d(a);!b&&this[C7Z.c0h][a6B]?a[l6c]()[(C7Z.p5h+e7B+P9B)](function(){a[(B9B+y5B)](m4h);}
-):b?this[C7Z.c0h][a6B]?a[(X6+B3)]()[(N4h)](b)[O2c]():a[(n5h+O0)](b)[Q5B]((Z0+q0h+E8h+C7Z.Q6+C7Z.X3h),(h7c+H2)):a[N4h](m4h)[(D7+C7Z.c0h+C7Z.c0h)]((V4B+C7Z.c0h+q0h+E8h+C7Z.Q6+C7Z.X3h),(C7Z.l8h+Z3B));}
-;f.prototype._multiInfo=function(){var l5B="foS",w8h="iI",y1B="multiInfoShown",x4B="ulti",a=this[C7Z.c0h][(r3+F2h)],b=this[C7Z.c0h][a3c],c=!0;if(b)for(var e=0,d=b.length;e<d;e++)a[b[e]][(d5h+M0c+x4B+y4r+E8h+c8B)]()&&c?(a[b[e]][y1B](c),c=!1):a[b[e]][(I9c+i7B+w8h+C7Z.l8h+l5B+n5h+i7+C7Z.l8h)](!1);}
-;f.prototype._postopen=function(a){var D2c="_multiInfo",s3h="foc",R1B="submit.editor-internal",g2h="tern",v6B="reF",b=this,c=this[C7Z.c0h][i8B][(D7+C7Z.Q6+q0h+g7h+v6B+c4+C7Z.F4h+C7Z.c0h)];c===h&&(c=!l4);d(this[(j0B)][S4r])[(g1B)]((g9+C7Z.w6+f2h+H1c+C7Z.I4c+C7Z.V7+C7Z.i6+l8+B0h+A0c+d5h+C7Z.l8h+g2h+C7Z.Q6+E8h))[(d3)](R1B,function(a){var Z7h="Def",t2c="prev";a[(t2c+Z3h+Z7h+C7Z.Q6+E5h)]();}
-);if(c&&((X7B)===a||X2c===a))d((C7Z.w6+B8+C7Z.X3h))[(t8h+C7Z.l8h)]((s3h+P2B+C7Z.I4c+C7Z.V7+V4B+C7Z.R4h+t8h+B0h+A0c+C7Z.p5h+c4+P2B),function(){var x6="ocu",M8="tF",D0h="setFocus",q9B="are",n5c="veE",f1c="leme",L4c="tiv";0===d(r[(P9+L4c+C7Z.V7+Z5+f1c+g5c)])[(M6h+B0h+C7Z.V7+g5c+C7Z.c0h)](".DTE").length&&0===d(r[(P9+r8h+n5c+E4h+f2h+C7Z.V7+C7Z.l8h+C7Z.R4h)])[(q0h+q9B+C7Z.l8h+C7Z.R4h+C7Z.c0h)]((C7Z.I4c+D5+C0+U0B)).length&&b[C7Z.c0h][D0h]&&b[C7Z.c0h][(w8+M8+x6+C7Z.c0h)][t0h]();}
-);this[D2c]();this[(w1B+E4B+Z3h)](n2c,[a,this[C7Z.c0h][l6B]]);return !l4;}
-;f.prototype._preopen=function(a){var x2="aye";if(!r4===this[R7]((c6B+P8+q0h+C7Z.V7+C7Z.l8h),[a,this[C7Z.c0h][l6B]]))return !r4;this[C7Z.c0h][(C7Z.i6+i9c+C3h+x2+C7Z.i6)]=a;return !l4;}
-;f.prototype._processing=function(a){var z6="sing",N0="ven",j6="rocessing",a9="div.DTE",y9B="pro",b=d(this[j0B][(A4B+B0h+a8+B0h)]),c=this[(C7Z.i6+E3)][(y9B+y7B+C7Z.c0h+d5h+C7Z.l8h+H6h)][x8B],e=this[r9][S7c][(C7Z.Q6+D7+C7Z.R4h+d5h+E4B+C7Z.V7)];a?(c[U8B]=(C7Z.w6+q5h+a9B),b[W6B](e),d(a9)[W6B](e)):(c[U8B]=(V6c+Z1c),b[(z5c+f2h+H9+y9c+d8+C7Z.c0h)](e),d((V4B+E4B+C7Z.I4c+D5+H3))[U4](e));this[C7Z.c0h][(q0h+j6)]=a;this[(w1B+N0+C7Z.R4h)]((q0h+B0h+c4+u9+z6),[a]);}
-;f.prototype._submit=function(a,b,c,e){var U2c="_ajax",m6c="oces",i3B="Sub",D4r="_legacyAjax",K4c="_c",J0c="let",g0B="nCom",i1="ged",a0c="lIfC",y5="dbTable",A5c="tOpts",L5="tDa",G2B="oAp",f=this,g,n=!1,k={}
-,w={}
-,m=t[n4c][(G2B+d5h)][y7h],l=this[C7Z.c0h][S6h],i=this[C7Z.c0h][(P9+C7Z.R4h+B3c+C7Z.l8h)],p=this[C7Z.c0h][(C3B+C7Z.R4h+p7c+t8h+b5B+C7Z.R4h)],q=this[C7Z.c0h][X7c],r=this[C7Z.c0h][(n1+d5h+C7Z.R4h+Q5+d5h+C7Z.V7+E8h+F2h)],s=this[C7Z.c0h][(C7Z.V7+C7Z.i6+d5h+L5+I3)],u=this[C7Z.c0h][(C7Z.V7+C7Z.i6+d5h+A5c)],v=u[(C7Z.c0h+D4B+f2h+d5h+C7Z.R4h)],x={action:this[C7Z.c0h][(C7Z.Q6+i6B+Q9)],data:{}
-}
-,y;this[C7Z.c0h][y5]&&(x[(C7Z.R4h+P6h)]=this[C7Z.c0h][y5]);if("create"===i||"edit"===i)if(d[(j8h+D7+n5h)](r,function(a,b){var T7="pty",c={}
-,e={}
-;d[(j8h+I1B)](l,function(f,j){var t1B="ount",i0B="[]",c2="dex",m7="sArra",d5="G";if(b[S6h][f]){var g=j[(I9c+E8h+C7Z.R4h+d5h+d5+C7Z.V7+C7Z.R4h)](a),o=m(f),h=d[(d5h+m7+C7Z.X3h)](g)&&f[(d5h+C7Z.l8h+c2+P8+C7Z.p5h)]((i0B))!==-1?m(f[u3c](/\[.*$/,"")+(A0c+f2h+t3h+A0c+D7+t1B)):null;o(c,g);h&&h(c,g.length);if(i===(C7Z.V7+V4B+C7Z.R4h)&&g!==s[f][a]){o(e,g);n=true;h&&h(e,g.length);}
-}
-}
-);d[(i9c+Z5+f2h+T7+P8+C7Z.w6+f2c+i6B)](c)||(k[a]=c);d[s8](e)||(w[a]=e);}
-),"create"===i||(o4h+E8h)===v||(o4h+a0c+n5h+j5h+n1)===v&&n)x.data=k;else if((I1B+C7Z.Q6+C7Z.l8h+i1)===v&&n)x.data=w;else{this[C7Z.c0h][l6B]=null;(D7+E8h+m6+C7Z.V7)===u[(t8h+g0B+q0h+J0c+C7Z.V7)]&&(e===h||e)&&this[(K4c+E8h+m6+C7Z.V7)](!1);a&&a[K2h](this);this[(F9+Y4B+c4+C7Z.V7+B6+d5h+C7Z.l8h+H6h)](!1);this[(m4r+C7Z.V7+g5c)]("submitComplete");return ;}
-else "remove"===i&&d[o6c](r,function(a,b){x.data[a]=b.data;}
-);this[D4r]("send",i,x);y=d[(C7Z.V7+K4B+o0h+B1c)](!0,{}
-,x);c&&c(x);!1===this[(F9+F4c+g5c)]((Y4B+C7Z.V7+i3B+Q0B+C7Z.R4h),[x,i])?this[(F9+Y4B+m6c+C7Z.c0h+g4r+H6h)](!1):this[U2c](x,function(c){var m0c="bmit",u7B="_pr",A4c="ete",s5c="omp",q1B="nC",k3B="urce",W9="tRe",g9B="postE",e3c="event",Y0B="reC",T6B="urc",F0h="aS",x3B="dE",B1B="stSu",N2B="ive",n;f[D4r]((B0h+C7Z.V7+D7+C7Z.V7+N2B),i,c);f[(F9+C7Z.V7+E4B+C7Z.V7+g5c)]((q0h+t8h+B1B+C7c+H1c),[c,x,i]);if(!c.error)c.error="";if(!c[(C7Z.p5h+f2B+D6c+B0h+t8h+B0h+C7Z.c0h)])c[(C7Z.p5h+Z8B+G0c+A1c+t8h+z1c)]=[];if(c.error||c[(E1+C7Z.V7+P4h+Z5+B0h+B0h+C7Z.N6+C7Z.c0h)].length){f.error(c.error);d[(C7Z.V7+C7Z.Q6+I1B)](c[(C7Z.p5h+d5h+C7Z.V7+E8h+x3B+B0h+M0+C7Z.c0h)],function(a,b){var z0B="yCon",c=l[b[I8c]];c.error(b[m1h]||"Error");if(a===0){d(f[j0B][(C7Z.w6+t8h+C7Z.i6+z0B+o0h+g5c)],f[C7Z.c0h][d5B])[D7B]({scrollTop:d(c[(C7Z.l8h+y8c)]()).position().top}
-,500);c[t0h]();}
-}
-);b&&b[(D7+C7Z.Q6+E8h+E8h)](f,c);}
-else{var k={}
-;f[(F9+T8+F0h+t8h+T6B+C7Z.V7)]((Y4B+C7Z.V7+q0h),i,q,y,c.data,k);if(i===(x5B+C7Z.V7+C7Z.U8+C7Z.V7)||i===(C7Z.V7+C7Z.i6+d5h+C7Z.R4h))for(g=0;g<c.data.length;g++){n=c.data[g];f[R7]((C7Z.c0h+C7Z.V7+L5+I3),[c,n,i]);if(i==="create"){f[(w1B+E4B+Z3h)]((q0h+Y0B+z5c+C7Z.Q6+C7Z.R4h+C7Z.V7),[c,n]);f[(J4c+C7Z.Q6+q8c+t8h+q2B+n1B)]("create",l,n,k);f[(F9+e3c)]([(D7+B0h+l2h+C7Z.V7),"postCreate"],[c,n]);}
-else if(i==="edit"){f[R7]((Y4B+C7Z.V7+c0),[c,n]);f[L1]("edit",q,l,n,k);f[R7]([(n1+d5h+C7Z.R4h),(g9B+A0)],[c,n]);}
-}
-else if(i===(B0h+d6+g4c)){f[R7]("preRemove",[c]);f[(h6B+K0B+T6B+C7Z.V7)]((y5h+H9+C7Z.V7),q,l,k);f[(F9+F4c+g5c)]([(y5h+t8h+A1B),(q0h+t8h+C7Z.c0h+W9+f2h+g4c)],[c]);}
-f[(J4c+C7Z.Q6+K0B+k3B)]((D7+E3+f2h+H1c),i,q,c.data,k);if(p===f[C7Z.c0h][g2c]){f[C7Z.c0h][(C7Z.Q6+i6B+d5h+t8h+C7Z.l8h)]=null;u[(t8h+q1B+s5c+E8h+A4c)]===(I9B+t8h+w8)&&(e===h||e)&&f[R5c](true);}
-a&&a[(D7+o4h+E8h)](f,c);f[R7]("submitSuccess",[c,n]);}
-f[(u7B+c4+u9+C7Z.c0h+g4r+H6h)](false);f[(w1B+A1B+g5c)]((C7Z.c0h+C7Z.F4h+m0c+w3B+p6B+G4r),[c,n]);}
-,function(a,c,e){var i4h="_processing",c6="syst";f[R7]((q0h+t8h+X6+a4+C7Z.F4h+C7Z.w6+P),[a,c,e,x]);f.error(f[(O3h+s0)].error[(c6+C7Z.V7+f2h)]);f[i4h](false);b&&b[(K2h)](f,a,c,e);f[R7](["submitError","submitComplete"],[a,c,e,x]);}
-);}
-;f.prototype._tidy=function(a){var t6c="inl",W3h="tCo";if(this[C7Z.c0h][S7c])return this[(Z3B)]((C7Z.c0h+D4B+f2h+d5h+W3h+a9c+C7Z.V7+C7Z.R4h+C7Z.V7),a),!l4;if((t6c+d5h+Z1c)===this[U8B]()||X2c===this[U8B]()){var b=this;this[(Z3B)](n2h,function(){if(b[C7Z.c0h][S7c])b[(t8h+C7Z.l8h+C7Z.V7)](P3c,function(){var w9c="bServerSide",y1h="oFea",D0c="aTable",c=new d[C7Z.D4h][(C7Z.i6+C7Z.U8+D0c)][(S8+d5h)](b[C7Z.c0h][C7Z.A7c]);if(b[C7Z.c0h][C7Z.A7c]&&c[b2B]()[l4][(y1h+V9c+C7Z.V7+C7Z.c0h)][w9c])c[(d3+C7Z.V7)]((C7Z.i6+g6c+A4B),a);else setTimeout(function(){a();}
-,I7h);}
-);else setTimeout(function(){a();}
-,I7h);}
-)[Q0]();return !l4;}
-return !r4;}
-;f[(l3B+C7Z.F4h+E8h+O6h)]={table:null,ajaxUrl:null,fields:[],display:(E8h+K0c+x4h+u7),ajax:null,idSrc:(G0B+t5c+i7+r4c),events:{}
-,i18n:{create:{button:(w4r+A4B),title:"Create new entry",submit:(p7c+L4h+C7Z.R4h+C7Z.V7)}
-,edit:{button:(c0),title:"Edit entry",submit:(F3+q0h+q0B+C7Z.R4h+C7Z.V7)}
-,remove:{button:(D5+C7Z.V7+G4r),title:"Delete",submit:(D5+C7Z.V7+E8h+C7Z.V7+C7Z.R4h+C7Z.V7),confirm:{_:(b1h+p7B+C7Z.X3h+m9+p7B+C7Z.c0h+w6B+p7B+C7Z.X3h+t8h+C7Z.F4h+p7B+A4B+O5c+p7B+C7Z.R4h+t8h+p7B+C7Z.i6+C7Z.V7+E8h+C7Z.D9+C7Z.V7+u2+C7Z.i6+p7B+B0h+t8h+A4B+C7Z.c0h+i6c),1:(b1h+p7B+C7Z.X3h+t8h+C7Z.F4h+p7B+C7Z.c0h+C7Z.F4h+B0h+C7Z.V7+p7B+C7Z.X3h+t8h+C7Z.F4h+p7B+A4B+d5h+C7Z.c0h+n5h+p7B+C7Z.R4h+t8h+p7B+C7Z.i6+w1c+C7Z.R4h+C7Z.V7+p7B+F8c+p7B+B0h+t8h+A4B+i6c)}
-}
-,error:{system:(q9+U7c+r1B+r2c+O2+U7c+I6h+W8h+A1h+U1B+U7c+c4B+X0+U7c+A1h+A5B+U1B+i9+F5c+Z9h+U7c+f4c+Z9h+j8B+f4c+Y6c+F9h+I9h+E1h+w8B+c4B+U1B+z5+Z4r+u7h+Z9h+f0B+I6h+r1B+y0+g1h+I6h+f4c+r0+f4c+g1h+r0+f8+B4+f0+a1+A1h+U1B+I6h+U7c+d3h+W6+b0B+S0h+u0+g1h+Y4r+Z9h+w4B)}
-,multi:{title:(R0+C7Z.F4h+X9h+E4h+p7B+E4B+C7Z.Q6+R9B+C7Z.V7+C7Z.c0h),info:(D8+p7B+C7Z.c0h+s3+H8h+W7c+p7B+d5h+o0h+V5B+p7B+D7+q4B+C7Z.l8h+p7B+C7Z.i6+d5h+d1B+Z6+C7Z.R4h+p7B+E4B+C7Z.Q6+z6h+C7Z.c0h+p7B+C7Z.p5h+C7Z.N6+p7B+C7Z.R4h+U8h+C7Z.c0h+p7B+d5h+n9+w7h+C0+t8h+p7B+C7Z.V7+A0+p7B+C7Z.Q6+B1c+p7B+C7Z.c0h+C7Z.D9+p7B+C7Z.Q6+E8h+E8h+p7B+d5h+o0h+V5B+p7B+C7Z.p5h+t8h+B0h+p7B+C7Z.R4h+c1c+p7B+d5h+C7Z.l8h+q0h+C7Z.F4h+C7Z.R4h+p7B+C7Z.R4h+t8h+p7B+C7Z.R4h+n5h+C7Z.V7+p7B+C7Z.c0h+E7B+p7B+E4B+o4h+C7Z.F4h+C7Z.V7+l2c+D7+E8h+d5h+D7+s2h+p7B+t8h+B0h+p7B+C7Z.R4h+L4+p7B+n5h+k3+l2c+t8h+C7Z.R4h+c4h+C1+C7Z.V7+p7B+C7Z.R4h+n5h+C7Z.V7+C7Z.X3h+p7B+A4B+d5h+E8h+E8h+p7B+B0h+C7Z.V7+I3+g4r+p7B+C7Z.R4h+G0+p7B+d5h+F0B+Y8c+E8c+p7B+E4B+C7Z.Q6+E8h+t6+C7Z.I4c),restore:(S5+t8h+p7B+D7+k9c+C7Z.V7+C7Z.c0h)}
-,datetime:{previous:(E8+B0h+h1+P2B),next:"Next",months:(w2+o4+C7Z.F4h+C7Z.Q6+B0h+C7Z.X3h+p7B+Q5+I5B+C7Z.X3h+p7B+R0+C7Z.Q6+m2c+n5h+p7B+J9c+o6B+E8h+p7B+R0+C7Z.Q6+C7Z.X3h+p7B+w2+b5B+C7Z.V7+p7B+w2+t6B+C7Z.X3h+p7B+J9c+t9B+X6+p7B+a4+O6+U5c+L9c+p7B+P8+D7+Q5h+C7Z.w6+C7Z.V7+B0h+p7B+e0+M6B+C7Z.w6+C7Z.W7+p7B+D5+C7Z.V7+n1B+E1B+C7Z.V7+B0h)[(C7Z.c0h+V0h+C7Z.R4h)](" "),weekdays:(a4+b5B+p7B+R0+d3+p7B+C0+c8B+p7B+v4h+n1+p7B+C0+u9B+p7B+Q5+u8c+p7B+a4+C7Z.Q6+C7Z.R4h)[(C7Z.c0h+C3h+d5h+C7Z.R4h)](" "),amPm:["am","pm"],unknown:"-"}
-}
-,formOptions:{bubble:d[T2h]({}
-,f[(u6B+m3)][K5],{title:!1,message:!1,buttons:(F9+C1c+K5B),submit:"changed"}
-),inline:d[(E5c+C7Z.l8h+C7Z.i6)]({}
-,f[G8][(b1B+l1c+N2c)],{buttons:!1,submit:"changed"}
-),main:d[T2h]({}
-,f[(f2h+t8h+Y1h+E8h+C7Z.c0h)][K5])}
-,legacyAjax:!1}
-;var J=function(a,b,c){d[(C7Z.V7+C7Z.Q6+I1B)](c,function(e){var J2h="FromD",z2="aSr";(e=b[e])&&C(a,e[(C7Z.i6+C7Z.Q6+C7Z.R4h+z2+D7)]())[o6c](function(){var P7h="firstChild",W2h="Chi";for(;this[(D7+W3c+C7Z.i6+e0+t8h+Y1h+C7Z.c0h)].length;)this[(B0h+C7Z.V7+f2h+t8h+E4B+C7Z.V7+W2h+E8h+C7Z.i6)](this[P7h]);}
-)[(B9B+y5B)](e[(W8+J2h+C7Z.Q6+I3)](c));}
-);}
-,C=function(a,b){var b4B='[data-editor-field="',c=M6===a?r:d(h6+a+(G0h));return d(b4B+b+G0h,c);}
-,D=f[(C7Z.i6+f9+d2B+y7B)]={}
-,K=function(a){a=d(a);setTimeout(function(){var f3B="highlight";a[W6B](f3B);setTimeout(function(){var Y8=550,s1h="moveC",s0h="noHighlight";a[W6B](s0h)[(B0h+C7Z.V7+s1h+q7B+C7Z.c0h)](f3B);setTimeout(function(){a[(B0h+C7Z.V7+f2h+g4c+a1B+C7Z.Q6+C7Z.c0h+C7Z.c0h)](s0h);}
-,Y8);}
-,r5);}
-,z7h);}
-,E=function(a,b,c,e,d){b[(A8+C7Z.c0h)](c)[K5c]()[o6c](function(c){var V6B="ifier",c=b[(d3c+A4B)](c),g=c.data(),k=d(g);k===h&&f.error((F3+z3c+C7Z.w6+E8h+C7Z.V7+p7B+C7Z.R4h+t8h+p7B+C7Z.p5h+Q2B+p7B+B0h+i7+p7B+d5h+C7Z.i6+C7Z.V7+C7Z.l8h+C7Z.R4h+V6B),14);a[k]={idSrc:k,data:g,node:c[(C7Z.l8h+B8+C7Z.V7)](),fields:e,type:"row"}
-;}
-);}
-,F=function(a,b,c,e,j,g){var v8B="inde";b[I8B](c)[(v8B+p9B)]()[(j8h+D7+n5h)](function(c){var H2h="playF",N6c="eci",t0c="rom",s5h="mData",y5c="editField",P1h="aoColumns",k=b[(D7+J7c)](c),i=b[(B0h+t8h+A4B)](c[A8]).data(),i=j(i),l;if(!(l=g)){l=c[(D7+t8h+E8h+C7Z.F4h+H6B)];l=b[b2B]()[0][P1h][l];var m=l[(C7Z.V7+C7Z.i6+H1c+Q5+d5h+s3+C7Z.i6)]!==h?l[y5c]:l[s5h],p={}
-;d[(j8h+D7+n5h)](e,function(a,b){var s5="Sr",s1="dataSr",k2="Arr";if(d[(i9c+k2+C7Z.Q6+C7Z.X3h)](m))for(var c=0;c<m.length;c++){var e=b,f=m[c];e[(s1+D7)]()===f&&(p[e[(C7Z.l8h+E7B)]()]=e);}
-else b[(C7Z.i6+C7Z.Q6+C7Z.R4h+C7Z.Q6+s5+D7)]()===m&&(p[b[(z3c+f2h+C7Z.V7)]()]=b);}
-);d[s8](p)&&f.error((F3+C7Z.l8h+P6h+p7B+C7Z.R4h+t8h+p7B+C7Z.Q6+C7Z.F4h+Q5h+t0+N3c+k8h+C7Z.X3h+p7B+C7Z.i6+C7Z.V7+o0h+B0h+f2h+X2B+p7B+C7Z.p5h+Z8B+E8h+C7Z.i6+p7B+C7Z.p5h+t0c+p7B+C7Z.c0h+m9+B0h+n1B+w7h+E8+E8h+j8h+C7Z.c0h+C7Z.V7+p7B+C7Z.c0h+q0h+N6c+C7Z.p5h+C7Z.X3h+p7B+C7Z.R4h+c4h+p7B+C7Z.p5h+d4B+C7Z.i6+p7B+C7Z.l8h+C7Z.Q6+f2h+C7Z.V7+C7Z.I4c),11);l=p;}
-E(a,b,c[(A8)],e,j);a[i][(T4c+C7Z.Q6+I1B)]=[k[M4r]()];a[i][(C7Z.i6+d5h+C7Z.c0h+H2h+f2B+C7Z.c0h)]=l;}
-);}
-;D[(T8+N2h+C7Z.Q6+m5)]={individual:function(a,b){var o7B="index",O5B="pon",b5h="aFn",e9c="ctD",T8B="nG",c=t[(X2+C7Z.R4h)][(R3c+q0h+d5h)][(Q1B+T8B+C7Z.V7+C7Z.R4h+P8+L7c+C7Z.V7+e9c+C7Z.U8+b5h)](this[C7Z.c0h][k1B]),e=d(this[C7Z.c0h][(R9c+E4h)])[(D5+C7Z.Q6+I3+C0+C7Z.Q6+C7Z.w6+E4h)](),f=this[C7Z.c0h][S6h],g={}
-,h,k;a[(C7Z.l8h+B8+C7Z.V7+y1c+Y8B)]&&d(a)[(n5h+C7Z.Q6+b8c+i3h+C7Z.c0h+C7Z.c0h)]("dtr-data")&&(k=a,a=e[(B0h+C7Z.V7+C7Z.c0h+O5B+m2+A1B)][o7B](d(a)[(I9B+h0+X6)]("li")));b&&(d[(i9c+n4+g6c+C7Z.X3h)](b)||(b=[b]),h={}
-,d[(L1h+n5h)](b,function(a,b){h[b]=f[b];}
-));F(g,e,a,f,c,h);k&&d[(C7Z.V7+C7Z.Q6+D7+n5h)](g,function(a,b){b[(p3+D7+n5h)]=[k];}
-);return g;}
-,fields:function(a){var H9B="ls",h0B="col",Y3B="Dat",f9c="tObject",b=t[n4c][(R3c+q0h+d5h)][(B7+Q1+f9c+Y3B+C7Z.Q6+Q5+C7Z.l8h)](this[C7Z.c0h][(k1B)]),c=d(this[C7Z.c0h][(C7Z.R4h+P6h)])[n9c](),e=this[C7Z.c0h][S6h],f={}
-;d[P5B](a)&&(a[(B0h+i7+C7Z.c0h)]!==h||a[d4]!==h||a[I8B]!==h)?(a[(B0h+t8h+Z1h)]!==h&&E(f,c,a[S0c],e,b),a[d4]!==h&&c[I8B](null,a[(h0B+C7Z.F4h+H6B+C7Z.c0h)])[(g4r+Y1h+p9B)]()[(C7Z.V7+v4B)](function(a){F(f,c,a,e,b);}
-),a[(D7+J7c+C7Z.c0h)]!==h&&F(f,c,a[(D7+C7Z.V7+E8h+H9B)],e,b)):E(f,c,a,e,b);return f;}
-,create:function(a,b){var C6h="bServe",z8c="oFeatures",c=d(this[C7Z.c0h][C7Z.A7c])[(J6B+I3+C0+C7Z.Q6+m5)]();c[(w8+O3B+i8c+C7Z.c0h)]()[0][z8c][(C6h+B0h+a4+n8B+C7Z.V7)]||(c=c[(B0h+t8h+A4B)][(C7Z.Q6+C7Z.i6+C7Z.i6)](b),K(c[(V6c+C7Z.i6+C7Z.V7)]()));}
-,edit:function(a,b,c,e){var c2B="plic",N8="ny",X3c="ataFn",U7h="Obj",c1B="rS",K2B="rve",w0c="atu",g0="tings";a=d(this[C7Z.c0h][(I3+C7Z.w6+E8h+C7Z.V7)])[n9c]();if(!a[(w8+C7Z.R4h+g0)]()[0][(t8h+Q5+C7Z.V7+w0c+B0h+u9)][(C7Z.w6+o3+K2B+c1B+p3B)]){var f=t[(n4c)][(R3c+F8h)][(F9+C7Z.D4h+Q1+C7Z.R4h+U7h+C7Z.V7+i6B+D5+X3c)](this[C7Z.c0h][(d5h+b2c+D7)]),g=f(c),b=a[A8]("#"+g);b[(t3h)]()||(b=a[A8](function(a,b){return g==f(b);}
-));b[(C7Z.Q6+N8)]()&&(b.data(c),K(b[M4r]()),c=d[A9](g,e[H7]),e[H7][(C7Z.c0h+c2B+C7Z.V7)](c,1));}
-}
-,remove:function(a){var V7B="rSide",m0B="bSer",Y3h="oFeat",b=d(this[C7Z.c0h][C7Z.A7c])[(J6B+I3+S+h7c+C7Z.V7)]();b[b2B]()[0][(Y3h+C7Z.F4h+B0h+C7Z.V7+C7Z.c0h)][(m0B+A1B+V7B)]||b[S0c](a)[h1h]();}
-,prep:function(a,b,c,e,f){"edit"===a&&(f[(H7)]=d[(f2h+C7Z.Q6+q0h)](c.data,function(a,b){var J6="sEmp";if(!d[(d5h+J6+t9h+P8+C7Z.w6+f2c+i6B)](c.data[b]))return b;}
-));}
-,commit:function(a,b,c,e){var W7B="wTyp",M9="draw",q4="taTab";b=d(this[C7Z.c0h][(R9c+E4h)])[(J6B+q4+E4h)]();if("edit"===a&&e[(B0h+t8h+A4B+b8+F2h)].length)for(var f=e[(A8+b8+C7Z.i6+C7Z.c0h)],g=t[n4c][V0B][(B7+h3+n4h+C7Z.G2h+H8h+C7Z.R4h+D5+C7Z.U8+C7Z.Q6+x4)](this[C7Z.c0h][(n8B+A4h)]),h=0,e=f.length;h<e;h++)a=b[(B0h+i7)]("#"+f[h]),a[(o4+C7Z.X3h)]()||(a=b[A8](function(a,b){return f[h]===g(b);}
-)),a[(t3h)]()&&a[h1h]();b[M9](this[C7Z.c0h][D1][(X7h+C7Z.Q6+W7B+C7Z.V7)]);}
-}
-;D[(n5h+t2h+E8h)]={initField:function(a){var e2h='[',b=d((e2h+u7h+Z1B+b0+I6h+l6h+A1h+U1B+b0+n3h+Z9h+n9h+I6h+n3h+Y6c)+(a.data||a[I8c])+(G0h));!a[(i3h+h1c+E8h)]&&b.length&&(a[h4h]=b[N4h]());}
-,individual:function(a,b){var S9B="mine",Q6h="lly",h9h="tomatica",C6="ot",b6B="nts",U0="pare",v4r="nodeName";if(a instanceof d||a[v4r])b||(b=[d(a)[(C7Z.U8+C7Z.R4h+B0h)]((G2+A0c+C7Z.V7+C7Z.i6+d5h+x0B+A0c+C7Z.p5h+d5h+g1c))]),a=d(a)[(U0+b6B)]((f3+C7Z.i6+w7+A0c+C7Z.V7+C7Z.i6+d5h+Q5h+B0h+A0c+d5h+C7Z.i6+p7)).data("editor-id");a||(a="keyless");b&&!d[q6](b)&&(b=[b]);if(!b||0===b.length)throw (w7B+C7Z.l8h+C7Z.l8h+C6+p7B+C7Z.Q6+C7Z.F4h+h9h+Q6h+p7B+C7Z.i6+C7Z.V7+C7Z.R4h+C7Z.V7+B0h+S9B+p7B+C7Z.p5h+d5h+s3+C7Z.i6+p7B+C7Z.l8h+E7B+p7B+C7Z.p5h+d3c+f2h+p7B+C7Z.i6+C7Z.U8+C7Z.Q6+p7B+C7Z.c0h+m9+B0h+n1B);var c=D[(n5h+C7Z.R4h+f2h+E8h)][S6h][(D7+o4h+E8h)](this,a),e=this[C7Z.c0h][S6h],f={}
-;d[(C7Z.V7+P9+n5h)](b,function(a,b){f[b]=e[b];}
-);d[o6c](c,function(c,g){var Y5c="playFiel",X1B="cel";g[(t9h+q0h+C7Z.V7)]=(X1B+E8h);for(var h=a,i=b,l=d(),m=0,p=i.length;m<p;m++)l=l[(l9B)](C(h,i[m]));g[c3h]=l[(Q5h+n4+g6c+C7Z.X3h)]();g[S6h]=e;g[(C7Z.i6+i9c+Y5c+C7Z.i6+C7Z.c0h)]=f;}
-);return c;}
-,fields:function(a){var p8="less",b={}
-,c={}
-,e=this[C7Z.c0h][(J6c+E8h+C7Z.i6+C7Z.c0h)];a||(a=(s2h+e2+p8));d[(C7Z.V7+v4B)](e,function(b,e){var K0="valToData",d=C(a,e[(T8+C7Z.Q6+A4h)]())[(N4h)]();e[K0](c,null===d?h:d);}
-);b[a]={idSrc:a,data:c,node:r,fields:e,type:(B0h+i7)}
-;return b;}
-,create:function(a,b){if(b){var c=t[(X2+C7Z.R4h)][V0B][e7h](this[C7Z.c0h][(d5h+b2c+D7)])(b);d('[data-editor-id="'+c+(G0h)).length&&J(c,a,b);}
-}
-,edit:function(a,b,c){var v6="taFn",S1B="_fnG";a=t[n4c][(V0B)][(S1B+C7Z.D9+n4h+C7Z.G2h+C7Z.V7+D7+C7Z.R4h+J6B+v6)](this[C7Z.c0h][k1B])(c)||"keyless";J(a,b,c);}
-,remove:function(a){d('[data-editor-id="'+a+(G0h))[(B0h+d6+t8h+A1B)]();}
-}
-;f[(I9B+c8+C7Z.V7+C7Z.c0h)]={wrapper:(D5+C0+Z5),processing:{indicator:(D5+C0+Z5+F9+E8+B0h+v0+l1B+d1h+C7Z.l8h+C7Z.i6+N3c+x0B),active:(K8c+B0h+t8h+o9c+i8c)}
-,header:{wrapper:(W0B+F9+j5+C7Z.V7+C7Z.Q6+Y1h+B0h),content:(G0B+E2h+C7Z.V7+C7Z.Q6+C7Z.i6+C7Z.W7+F9+p7c+d3+o0h+C7Z.l8h+C7Z.R4h)}
-,body:{wrapper:(D5+H3+D2B+C7Z.X3h),content:"DTE_Body_Content"}
-,footer:{wrapper:(D5+H3+F9+v6h+C7Z.R4h+C7Z.W7),content:(D5+C0+x7h+a6+C7Z.l8h+G3B)}
-,form:{wrapper:"DTE_Form",content:"DTE_Form_Content",tag:"",info:(J5c+t8h+B0h+f2h+I1c+C7Z.p5h+t8h),error:(D5+J3h+Q5+t8h+S2h+Z5+A1c+t8h+B0h),buttons:"DTE_Form_Buttons",button:(S9)}
-,field:{wrapper:(G0B+x7h+d4B+C7Z.i6),typePrefix:"DTE_Field_Type_",namePrefix:(W0B+F9+Q5+d4B+C7Z.i6+E8B+F9),label:(D5+C0+Z5+s7h+E8h),input:(D5+H3+F9+L0+y2+q0h+m9B),inputControl:"DTE_Field_InputControl",error:"DTE_Field_StateError","msg-label":(D5+L1c+x7+C7Z.V7+e7c+m8c+t8h),"msg-error":(W0B+F9+Q5+d5h+C7Z.V7+P4h+D3c+k9),"msg-message":(G0B+L1B+U6h+F9+R0+u9+R6B+C7Z.V7),"msg-info":(D5+C0+Z5+F9+Q5+d5h+C7Z.V7+P4h+Q8c+C7Z.l8h+C7Z.p5h+t8h),multiValue:"multi-value",multiInfo:"multi-info",multiRestore:(a0+r8h+A0c+B0h+C7Z.V7+s6)}
-,actions:{create:"DTE_Action_Create",edit:(D5+H3+X0h+t8h+C7Z.l8h+D3c+V4B+C7Z.R4h),remove:"DTE_Action_Remove"}
-,bubble:{wrapper:"DTE DTE_Bubble",liner:(G0B+L1B+W8c+i0+r0c+d5h+Z1c+B0h),table:(M9h+k4h+C7Z.M7+C7Z.V7),close:(D5+C0+L1B+b9c+C7Z.w6+E4h+q3c+q5h+w8),pointer:(D5+C0+Z5+A3c+C7Z.F4h+C7Z.w6+C7Z.w6+E8h+C7Z.V7+F9+N1B+C7Z.Q6+C7Z.l8h+H6h+E4h),bg:(C9h+K9c+y7c+E8h+C7Z.V7+F9+K9c+C7Z.Q6+K6c+B1c)}
-}
-;if(t[(C0+x7+E8h+R2h+t8h+M4h+C7Z.c0h)]){var i=t[t7h][N8c],G={sButtonText:x2c,editor:x2c,formTitle:x2c}
-;i[(C3B+Q5h+B0h+F9+D7+b4)]=d[(X2+o2c+C7Z.i6)](!l4,i[(C7Z.R4h+X2+C7Z.R4h)],G,{formButtons:[{label:x2c,fn:function(){this[(Y9+P)]();}
-}
-],fnClick:function(a,b){var k8c="abel",c=b[(n1+H1c+t8h+B0h)],e=c[R8h][r4h],d=b[(f6+P0c+K9c+C7Z.F4h+M7h+t8h+N2c)];if(!d[l4][(E8h+k8c)])d[l4][h4h]=e[W4r];c[r4h]({title:e[(C7Z.R4h+d5h+x2h+C7Z.V7)],buttons:d}
-);}
-}
-);i[(C7Z.V7+a1h+B0h+F9+N4B)]=d[(C7Z.V7+K4B+C7Z.R4h+D2h)](!0,i[(C7Z.c0h+C7Z.V7+E8h+C7Z.V7+i6B+d1c+G1h+C7Z.V7)],G,{formButtons:[{label:null,fn:function(){this[(C7Z.c0h+C7Z.F4h+C7Z.w6+f2h+d5h+C7Z.R4h)]();}
-}
-],fnClick:function(a,b){var c=this[k7c]();if(c.length===1){var e=b[(C7Z.V7+i7h)],d=e[R8h][(C7Z.V7+C7Z.i6+d5h+C7Z.R4h)],f=b[I8h];if(!f[0][(E8h+C7Z.Q6+h1c+E8h)])f[0][(h4h)]=d[(C7Z.c0h+C7Z.F4h+C7Z.w6+f2h+d5h+C7Z.R4h)];e[(n1+d5h+C7Z.R4h)](c[0],{title:d[K7],buttons:f}
-);}
-}
-}
-);i[(N4B+t8h+B0h+M3)]=d[(n4B+C7Z.i6)](!0,i[(C7Z.c0h+C7Z.V7+E4h+D7+C7Z.R4h)],G,{question:null,formButtons:[{label:null,fn:function(){var a=this;this[W4r](function(){var Y5h="fnSelectNone",P0B="fnGetInstance";d[C7Z.D4h][t1][(S+C7Z.w6+E8h+R2h+t8h+M4h+C7Z.c0h)][P0B](d(a[C7Z.c0h][C7Z.A7c])[n9c]()[C7Z.A7c]()[(C7Z.l8h+B8+C7Z.V7)]())[Y5h]();}
-);}
-}
-],fnClick:function(a,b){var E6c="epl",N1c="ir",N8B="fir",c=this[k7c]();if(c.length!==0){var e=b[(C7Z.V7+V4B+C7Z.R4h+t8h+B0h)],d=e[R8h][(B0h+Y4c+C7Z.V7)],f=b[(C7Z.p5h+b0c+K9c+t2+N2c)],g=typeof d[(s7B+C7Z.l8h+N8B+f2h)]===(a4c+F6B)?d[(e3+N1c+f2h)]:d[(D7+d3+E1+P0c)][c.length]?d[(N3B+E1+B0h+f2h)][c.length]:d[S1c][F9];if(!f[0][h4h])f[0][h4h]=d[(C7Z.c0h+D4B+P)];e[h1h](c,{message:g[(B0h+E6c+C7Z.Q6+D7+C7Z.V7)](/%d/g,c.length),title:d[(C7Z.R4h+d5h+C7Z.R4h+E4h)],buttons:f}
-);}
-}
-}
-);}
-d[(X2+o2c+C7Z.i6)](t[n4c][(C7Z.w6+m9B+Q5h+C7Z.l8h+C7Z.c0h)],{create:{text:function(a,b,c){return a[R8h]((C7Z.w6+m9B+O8B+C7Z.c0h+C7Z.I4c+D7+z5c+C7Z.Q6+o0h),c[o6][R8h][(x5B+l2h+C7Z.V7)][(G6)]);}
-,className:"buttons-create",editor:null,formButtons:{label:function(a){return a[(d5h+F8c+B4r+C7Z.l8h)][r4h][(C7Z.c0h+C7Z.F4h+C7Z.w6+P)];}
-,fn:function(){this[(Y9+Q0B+C7Z.R4h)]();}
-}
-,formMessage:null,formTitle:null,action:function(a,b,c,e){var o2="itl",D2="18",K9B="mT",m3B="formMessage",n5="formB";a=e[o6];a[(D7+B0h+j8h+C7Z.R4h+C7Z.V7)]({buttons:e[(n5+m9B+C7Z.R4h+t8h+C7Z.l8h+C7Z.c0h)],message:e[m3B],title:e[(C7Z.p5h+t8h+B0h+K9B+d5h+x2h+C7Z.V7)]||a[(d5h+D2+C7Z.l8h)][r4h][(C7Z.R4h+o2+C7Z.V7)]}
-);}
-}
-,edit:{extend:(M7B+H8h+C7Z.R4h+n1),text:function(a,b,c){return a[R8h]("buttons.edit",c[(C3B+C7Z.R4h+C7Z.N6)][R8h][(C7Z.V7+A0)][G6]);}
-,className:"buttons-edit",editor:null,formButtons:{label:function(a){return a[(R8h)][(C3B+C7Z.R4h)][(g9+C7Z.w6+f2h+d5h+C7Z.R4h)];}
-,fn:function(){this[(Y9+Q0B+C7Z.R4h)]();}
-}
-,formMessage:null,formTitle:null,action:function(a,b,c,e){var Z0h="ormTit",S1h="ssage",O0B="Me",h8h="xe",r3c="nde",a=e[o6],c=b[S0c]({selected:!0}
-)[(Q2B+X2+u9)](),d=b[d4]({selected:!0}
-)[(d5h+r3c+h8h+C7Z.c0h)](),b=b[(I8B)]({selected:!0}
-)[K5c]();a[(N4B)](d.length||b.length?{rows:c,columns:d,cells:b}
-:c,{message:e[(C7Z.p5h+C7Z.N6+f2h+O0B+S1h)],buttons:e[I8h],title:e[(C7Z.p5h+Z0h+E8h+C7Z.V7)]||a[(O3h+s0)][N4B][K7]}
-);}
-}
-,remove:{extend:"selected",text:function(a,b,c){return a[(R8h)]("buttons.remove",c[(C7Z.V7+V4B+Q5h+B0h)][(d5h+A7)][(B0h+Y4c+C7Z.V7)][G6]);}
-,className:(E3c+C7Z.R4h+t8h+C7Z.l8h+C7Z.c0h+A0c+B0h+d6+t8h+A1B),editor:null,formButtons:{label:function(a){var c6c="remo";return a[(d5h+A7)][(c6c+A1B)][(C7Z.c0h+D4B+f2h+d5h+C7Z.R4h)];}
-,fn:function(){this[(C7Z.c0h+D4B+f2h+H1c)]();}
-}
-,formMessage:function(a,b){var M1h="nfi",c=b[(A8+C7Z.c0h)]({selected:!0}
-)[(Q2B+X2+u9)](),e=a[R8h][h1h];return ((C7Z.c0h+C7Z.R4h+B0h+d5h+i8c)===typeof e[S1c]?e[(D7+t8h+m8c+d5h+B0h+f2h)]:e[(s7B+M1h+B0h+f2h)][c.length]?e[S1c][c.length]:e[(D7+t8h+M1h+P0c)][F9])[u3c](/%d/g,c.length);}
-,formTitle:null,action:function(a,b,c,e){var O0h="formTitle";a=e[(C7Z.V7+V4B+Q5h+B0h)];a[(B0h+d6+H9+C7Z.V7)](b[(B0h+t8h+Z1h)]({selected:!0}
-)[K5c](),{buttons:e[(K6h+f2h+K9c+C7Z.F4h+C7Z.R4h+C7Z.R4h+L5B)],message:e[(C7Z.p5h+C7Z.N6+f2h+R0+C7Z.V7+C7Z.c0h+E4+H6h+C7Z.V7)],title:e[O0h]||a[R8h][(B0h+j7B+E4B+C7Z.V7)][(C7Z.R4h+H1c+E8h+C7Z.V7)]}
-);}
-}
-}
-);f[(B2h+V6)]={}
-;f[(D5+h9+d5h+Y8B)]=function(a,b){var Q3="alend",v9="editor-dateime-",H3h="alenda",P6="-title",s5B="-date",R2B="nds",A9c="eco",g5="<span>:</span>",w3c="inu",e1=">:</",o7c="pan",o8='ime',b6h='-calendar"/></div><div class="',k4c='onth',J1c='-iconRight"><button>',G5B="viou",u5h='tton',k9h='eft',k1c='conL',o1B='itle',i1B='ate',t8B='ct',g7B='/><',f8c='</button></div><div class="',a8h="rma",Z2h="hout",p1c="aul";this[D7]=d[T2h](!l4,{}
-,f[(J6B+C7Z.R4h+C7Z.V7+C0+f4r+C7Z.V7)][(C7Z.i6+M1+p1c+C7Z.R4h+C7Z.c0h)],b);var c=this[D7][Z3c],e=this[D7][(O3h+s0)];if(!p[(f2h+M3c+g5c)]&&S3c!==this[D7][(C7Z.p5h+b0c+C7Z.U8)])throw (Z5+C7Z.i6+d5h+x0B+p7B+C7Z.i6+C7Z.Q6+C7Z.R4h+x1B+f2h+C7Z.V7+G9h+v4h+H1c+Z2h+p7B+f2h+E3+C7Z.V7+C7Z.l8h+C7Z.R4h+C7Z.G2h+C7Z.c0h+p7B+t8h+C7Z.l8h+E8h+C7Z.X3h+p7B+C7Z.R4h+n5h+C7Z.V7+p7B+C7Z.p5h+t8h+a8h+C7Z.R4h+H5+G1+G1+N5+A0c+R0+R0+A0c+D5+D5+v9B+D7+o4+p7B+C7Z.w6+C7Z.V7+p7B+C7Z.F4h+w8+C7Z.i6);var g=function(a){var Z8c="</button></div></div>",o0c="next",p4B='-iconDown"><button>',q1='ele',m1B='abe',F2c="revi",o4r='ut',t4h='U',b3B='meblo';return (L2+u7h+h5+U7c+B7h+n3h+X0+r1B+Y6c)+c+(b0+f4c+d3h+b3B+B7h+E1h+u4c+u7h+d3h+P3B+U7c+B7h+n3h+X0+r1B+Y6c)+c+(b0+d3h+B7h+I6B+t4h+j1B+u4c+n9h+o4r+f4c+A1h+g1h+J7)+e[(q0h+F2c+t8h+P2B)]+f8c+c+(b0+n3h+m1B+n3h+u4c+r1B+z3B+g1h+g7B+r1B+q1+t8B+U7c+B7h+n3h+w2c+Y6c)+c+A0c+a+(h5c+u7h+h5+A0h+u7h+h5+U7c+B7h+Y7B+Y6c)+c+p4B+e[o0c]+Z8c;}
-,g=d((L2+u7h+d3h+P3B+U7c+B7h+n3h+w2c+Y6c)+c+(u4c+u7h+d3h+P3B+U7c+B7h+n3h+Z9h+r1B+r1B+Y6c)+c+(b0+u7h+i1B+u4c+u7h+d3h+P3B+U7c+B7h+n3h+w2c+Y6c)+c+(b0+f4c+o1B+u4c+u7h+h5+U7c+B7h+n3h+w2c+Y6c)+c+(b0+d3h+k1c+k9h+u4c+n9h+l4c+u5h+J7)+e[(c6B+G5B+C7Z.c0h)]+f8c+c+J1c+e[(Z1c+K4B+C7Z.R4h)]+(Y4r+n9h+o1+I6B+m1+u7h+d3h+P3B+A0h+u7h+d3h+P3B+U7c+B7h+N1+r1B+Y6c)+c+(b0+n3h+Z9h+j7+n3h+u4c+r1B+j1B+C4+g7B+r1B+l2+I6h+B7h+f4c+U7c+B7h+N1+r1B+Y6c)+c+(b0+C1h+k4c+h5c+u7h+d3h+P3B+A0h+u7h+d3h+P3B+U7c+B7h+n3h+Z9h+e4B+Y6c)+c+(b0+n3h+Z9h+Y3+u4c+r1B+z3B+g1h+g7B+r1B+I6h+n3h+I6h+t8B+U7c+B7h+n3h+w2c+Y6c)+c+(b0+F7B+I6h+Z9h+U1B+h5c+u7h+h5+m1+u7h+d3h+P3B+A0h+u7h+d3h+P3B+U7c+B7h+N1+r1B+Y6c)+c+b6h+c+(b0+f4c+o8+f0)+g(B8c)+(q7c+C7Z.c0h+o7c+e1+C7Z.c0h+M6h+C7Z.l8h+V7c)+g((f2h+w3c+w8c))+g5+g((C7Z.c0h+A9c+R2B))+g((C7Z.Q6+f2h+T1h))+(s3c+C7Z.i6+E9c+f4+C7Z.i6+E9c+V7c));this[(C7Z.i6+t8h+f2h)]={container:g,date:g[(E1+B1c)](C7Z.I4c+c+s5B),title:g[(n5B+C7Z.i6)](C7Z.I4c+c+P6),calendar:g[(C7Z.p5h+Q2B)](C7Z.I4c+c+(A0c+D7+H3h+B0h)),time:g[(n5B+C7Z.i6)](C7Z.I4c+c+(A0c+C7Z.R4h+d5h+Y8B)),input:d(a)}
-;this[C7Z.c0h]={d:x2c,display:x2c,namespace:v9+f[z8B][W5h]++,parts:{date:x2c!==this[D7][H3B][W0c](/[YMD]/),time:x2c!==this[D7][H3B][W0c](/[Hhm]/),seconds:-r4!==this[D7][(C7Z.p5h+b0c+C7Z.U8)][(g4r+Y1h+K4B+w3)](C7Z.c0h),hours12:x2c!==this[D7][(f6+P0c+C7Z.Q6+C7Z.R4h)][(f2h+C7Z.U8+I1B)](/[haA]/)}
-}
-;this[(C7Z.i6+E3)][Y1B][T8c](this[j0B][n8])[T8c](this[(C7Z.i6+E3)][(C7Z.R4h+d5h+f2h+C7Z.V7)]);this[(j0B)][n8][(L4+q0h+D2h)](this[j0B][K7])[(L4+e4c+C7Z.i6)](this[j0B][(D7+Q3+P0)]);this[(F9+s7B+N2c+m6h+C7Z.F4h+D7+x0B)]();}
-;d[(C7Z.V7+K4B+o0h+B1c)](f.DateTime.prototype,{destroy:function(){this[U9]();this[j0B][(D7+Z6B+C7Z.Q6+d5h+Z1c+B0h)]()[g1B]("").empty();this[(C7Z.i6+E3)][(s7c+C7Z.F4h+C7Z.R4h)][(d0+C7Z.p5h)]((C7Z.I4c+C7Z.V7+C7Z.i6+H1c+C7Z.N6+A0c+C7Z.i6+C7Z.U8+x1B+f2h+C7Z.V7));}
-,max:function(a){var P5="_optionsTitle",V1="max";this[D7][(V1+C5)]=a;this[P5]();this[X8h]();}
-,min:function(a){var j3c="ande",e0B="minDate";this[D7][e0B]=a;this[(T0B+B6h+Q9+C7Z.c0h+C0+o0)]();this[(F9+C7Z.c0h+z1h+C7Z.Q6+E8h+j3c+B0h)]();}
-,owns:function(a){var j0c="filter";return 0<d(a)[(M6h+B0h+C7Z.V7+C7Z.l8h+C7Z.R4h+C7Z.c0h)]()[(j0c)](this[(C7Z.i6+t8h+f2h)][(D7+t8h+C7Z.l8h+I3+d5h+g5h)]).length;}
-,val:function(a,b){var P7="Title",d3B="rin",Z5h="toS",k1="teO",D8B="_wri",t7B="toDate",d6B="isValid",C8="YYY",l3h="Utc",n8c="teTo";if(a===h)return this[C7Z.c0h][C7Z.i6];if(a instanceof Date)this[C7Z.c0h][C7Z.i6]=this[(J4c+C7Z.Q6+n8c+l3h)](a);else if(null===a||""===a)this[C7Z.c0h][C7Z.i6]=null;else if("string"===typeof a)if((C8+G1+A0c+R0+R0+A0c+D5+D5)===this[D7][(f6+P0c+C7Z.Q6+C7Z.R4h)]){var c=a[W0c](/(\d{4})\-(\d{2})\-(\d{2})/);this[C7Z.c0h][C7Z.i6]=c?new Date(Date[(z7B)](c[1],c[2]-1,c[3])):null;}
-else c=p[(D4c+Z3h)][(C7Z.F4h+C7Z.R4h+D7)](a,this[D7][H3B],this[D7][(f2h+M3c+g5c+E2+t8h+D7+C7Z.Q6+E4h)],this[D7][(f2h+M3c+C7Z.l8h+k5+C7Z.R4h+B0h+d5h+i6B)]),this[C7Z.c0h][C7Z.i6]=c[d6B]()?c[t7B]():null;if(b||b===h)this[C7Z.c0h][C7Z.i6]?this[(D8B+k1+C7Z.F4h+C7Z.R4h+q0h+m9B)]():this[j0B][C4c][W8](a);this[C7Z.c0h][C7Z.i6]||(this[C7Z.c0h][C7Z.i6]=this[(J4c+B9+f7h+F3+C7Z.R4h+D7)](new Date));this[C7Z.c0h][(Z0+g4h)]=new Date(this[C7Z.c0h][C7Z.i6][(Z5h+C7Z.R4h+d3B+H6h)]());this[(O3c+P7)]();this[X8h]();this[M9B]();}
-,_constructor:function(){var c7="change",k3c="_writeOutput",G2c="setUT",K9="setUTCMonth",Q2h="tain",j7h="yup",g3B="amPm",E5B="ment",e9="ndsIncr",V="seco",y2c="sTi",i4="men",G5="ute",x3="nsTi",A9B="s12",x3c="_optionsTime",l7="nsT",J4h="time",V8h="ldre",V3c="tim",g9h="econd",O4h="non",e7="efi",d0h="Pr",a=this,b=this[D7][(D7+E8h+C7Z.Q6+B6+d0h+e7+K4B)],c=this[D7][(d5h+A7)];this[C7Z.c0h][(N7c+O6h)][(T8+C7Z.V7)]||this[j0B][n8][Q5B]("display",(O4h+C7Z.V7));this[C7Z.c0h][(q0h+P0+O6h)][(C7Z.R4h+d5h+Y8B)]||this[(C7Z.i6+E3)][(C7Z.R4h+f4r+C7Z.V7)][Q5B]((C7Z.i6+i9c+q0h+i3h+C7Z.X3h),(V6c+C7Z.l8h+C7Z.V7));this[C7Z.c0h][B6c][(C7Z.c0h+g9h+C7Z.c0h)]||(this[(C7Z.i6+E3)][(V3c+C7Z.V7)][(D7+n5h+d5h+V8h+C7Z.l8h)]((C7Z.i6+d5h+E4B+C7Z.I4c+C7Z.V7+C7Z.i6+d5h+x0B+A0c+C7Z.i6+C7Z.U8+C7Z.V7+r8h+Y8B+A0c+C7Z.R4h+f4r+C7Z.V7+C7Z.w6+q5h+a9B))[(C7Z.V7+C7Z.C8h)](2)[h1h](),this[(i9h+f2h)][(r8h+Y8B)][T1c]("span")[(C7Z.V7+C7Z.C8h)](1)[(z5c+f2h+t8h+A1B)]());this[C7Z.c0h][(q0h+P0+C7Z.R4h+C7Z.c0h)][Q9c]||this[j0B][J4h][(I1B+d5h+P4h+B0h+C7Z.V7+C7Z.l8h)]("div.editor-datetime-timeblock")[k6B]()[h1h]();this[(T0B+B6h+B3c+l7+d5h+C7Z.R4h+E4h)]();this[x3c]("hours",this[C7Z.c0h][B6c][(N9B+C7Z.F4h+B0h+A9B)]?12:24,1);this[(F9+B3+l1c+x3+f2h+C7Z.V7)]("minutes",60,this[D7][(Q0B+C7Z.l8h+G5+C7Z.c0h+b8+C7Z.l8h+D7+B0h+C7Z.V7+i4+C7Z.R4h)]);this[(F9+t8h+q0h+C7Z.R4h+Q9+y2c+Y8B)]("seconds",60,this[D7][(V+e9+C7Z.V7+E5B)]);this[(F9+B3+C7Z.R4h+d5h+t8h+N2c)]("ampm",[(C7Z.Q6+f2h),(q0h+f2h)],c[g3B]);this[(i9h+f2h)][C4c][(d3)]((f6+D7+C7Z.F4h+C7Z.c0h+C7Z.I4c+C7Z.V7+C7Z.i6+H1c+C7Z.N6+A0c+C7Z.i6+C7Z.U8+C7Z.V7+V3c+C7Z.V7+p7B+D7+L0h+a9B+C7Z.I4c+C7Z.V7+C7Z.i6+d5h+C7Z.R4h+C7Z.N6+A0c+C7Z.i6+C7Z.U8+C7Z.V7+r8h+Y8B),function(){var K8="_sh",J5B="ib";if(!a[(j0B)][(s7B+g5c+n3+C7Z.l8h+C7Z.W7)][(d5h+C7Z.c0h)]((F3c+E4B+i9c+J5B+E4h))&&!a[(C7Z.i6+t8h+f2h)][(C2+C7Z.R4h)][i9c]((F3c+C7Z.i6+d5h+C7Z.c0h+x7+i2h))){a[(E4B+o4h)](a[j0B][(d5h+P6c+m9B)][W8](),false);a[(K8+i7)]();}
-}
-)[d3]((T0+j7h+C7Z.I4c+C7Z.V7+i7h+A0c+C7Z.i6+C7Z.U8+C7Z.D9+d5h+f2h+C7Z.V7),function(){var G5c="isible";a[(C7Z.i6+t8h+f2h)][(D7+Z6B+C7Z.Q6+d5h+g5h)][(d5h+C7Z.c0h)]((F3c+E4B+G5c))&&a[(W8)](a[(C7Z.i6+E3)][(d5h+C7Z.l8h+q0h+C7Z.F4h+C7Z.R4h)][(E4B+C7Z.Q6+E8h)](),false);}
-);this[(j0B)][(D7+d3+Q2h+C7Z.V7+B0h)][d3]("change","select",function(){var E6="ite",J2="setSeconds",P5c="utput",k2B="etTime",U7B="nute",N7B="CHou",O1c="mpm",k7B="asC",f7B="hasCla",q1h="setCa",b1="Ye",l9="tFull",q8h="ear",r9c="ander",m4="tC",Y2="setT",c=d(this),f=c[W8]();if(c[(n5h+C7Z.Q6+b8c+E8h+c8)](b+"-month")){a[C7Z.c0h][(C7Z.i6+B0c+E8h+l5)][K9](f);a[(F9+Y2+o0)]();a[(j6B+C7Z.V7+m4+o4h+r9c)]();}
-else if(c[(K5h+C7Z.c0h+p7c+q7B+C7Z.c0h)](b+(A0c+C7Z.X3h+q8h))){a[C7Z.c0h][(C7Z.i6+i9c+q0h+i3h+C7Z.X3h)][(C7Z.c0h+C7Z.V7+l9+b1+P0)](f);a[(F9+C7Z.c0h+C7Z.D9+f3h+x2h+C7Z.V7)]();a[(F9+q1h+E8h+C7Z.Q6+C7Z.l8h+Y1h+B0h)]();}
-else if(c[(f7B+B6)](b+(A0c+n5h+m9+z1c))||c[(n5h+k7B+E8h+C7Z.Q6+B6)](b+(A0c+C7Z.Q6+O1c))){if(a[C7Z.c0h][(q0h+C7Z.Q6+B0h+C7Z.R4h+C7Z.c0h)][Q9c]){c=d(a[(C7Z.i6+E3)][Y1B])[M1c]("."+b+(A0c+n5h+t8h+q2B+C7Z.c0h))[(E4B+o4h)]()*1;f=d(a[(j0B)][(D7+t8h+C7Z.l8h+C7Z.R4h+B5B+C7Z.V7+B0h)])[(n5B+C7Z.i6)]("."+b+"-ampm")[W8]()==="pm";a[C7Z.c0h][C7Z.i6][(G2c+N7B+z1c)](c===12&&!f?0:f&&c!==12?c+12:c);}
-else a[C7Z.c0h][C7Z.i6][(C7Z.c0h+C7Z.D9+F3+O3+j5+t8h+q2B+C7Z.c0h)](f);a[M9B]();a[k3c](true);}
-else if(c[(n5h+k7B+i3h+C7Z.c0h+C7Z.c0h)](b+(A0c+f2h+d5h+C7Z.l8h+C7Z.F4h+C7Z.R4h+u9))){a[C7Z.c0h][C7Z.i6][(C7Z.c0h+C7Z.D9+F3+C0+p7c+R0+d5h+U7B+C7Z.c0h)](f);a[(F9+C7Z.c0h+k2B)]();a[(F9+J9h+H1c+d6h+P5c)](true);}
-else if(c[(n5h+d8+a1B+C7Z.Q6+C7Z.c0h+C7Z.c0h)](b+"-seconds")){a[C7Z.c0h][C7Z.i6][J2](f);a[(O3c+C0+d5h+Y8B)]();a[(F9+J9h+E6+P8+m9B+q0h+m9B)](true);}
-a[j0B][C4c][(C7Z.p5h+c4+P2B)]();a[(I0B+m6+d5h+C7Z.e8c)]();}
-)[(d3)]("click",function(c){var R7c="setFullYear",l2B="oUt",o9="Inde",f5c="In",U="dInde",v5h="lec",o5B="lect",P2="selectedIndex",O5="edIndex",l4h="Titl",A2B="nR",o6h="sCla",W9B="nder",g9c="conL",v3="sCl",K1="pPr",M6c="sto",j2B="werC",p0B="toLo",v3h="Nam",f=c[E0B][(C7Z.l8h+t8h+Y1h+v3h+C7Z.V7)][(p0B+j2B+d8+C7Z.V7)]();if(f!==(M7B+H8h+C7Z.R4h)){c[(M6c+K1+t8h+P2c+C7Z.Q6+r8h+t8h+C7Z.l8h)]();if(f==="button"){c=d(c[E0B]);f=c.parent();if(!f[(d9B)]("disabled"))if(f[(K5h+v3+C7Z.Q6+C7Z.c0h+C7Z.c0h)](b+(A0c+d5h+g9c+M1+C7Z.R4h))){a[C7Z.c0h][(V4B+C7Z.c0h+G3h+C7Z.X3h)][K9](a[C7Z.c0h][U8B][f5B]()-1);a[(j6B+C7Z.D9+C0+d5h+C7Z.R4h+E4h)]();a[(j6B+z1h+C7Z.Q6+E8h+C7Z.Q6+W9B)]();a[(j0B)][C4c][(t0h)]();}
-else if(f[(n5h+C7Z.Q6+o6h+B6)](b+(A0c+d5h+D7+t8h+A2B+D9c))){a[C7Z.c0h][U8B][K9](a[C7Z.c0h][(Z0+g4h)][f5B]()+1);a[(F9+C7Z.c0h+C7Z.D9+l4h+C7Z.V7)]();a[X8h]();a[(j0B)][(d5h+C7Z.l8h+q0h+m9B)][(C7Z.p5h+t8h+J2B+C7Z.c0h)]();}
-else if(f[(n5h+C7Z.Q6+o6h+B6)](b+"-iconUp")){c=f.parent()[(C7Z.p5h+d5h+B1c)]("select")[0];c[(M7B+H8h+C7Z.R4h+O5)]=c[P2]!==c[(B3+r8h+t8h+N2c)].length-1?c[P2]+1:0;d(c)[(D7+n5h+j5h+C7Z.V7)]();}
-else if(f[d9B](b+"-iconDown")){c=f.parent()[M1c]((w8+o5B))[0];c[(w8+v5h+C7Z.R4h+C7Z.V7+U+K4B)]=c[(C7Z.c0h+w1c+i6B+C7Z.V7+C7Z.i6+f5c+C7Z.i6+X2)]===0?c[C0c].length-1:c[(C7Z.c0h+s3+H8h+C7Z.R4h+C7Z.V7+C7Z.i6+o9+K4B)]-1;d(c)[c7]();}
-else{if(!a[C7Z.c0h][C7Z.i6])a[C7Z.c0h][C7Z.i6]=a[(h6B+C7Z.R4h+C7Z.V7+C0+l2B+D7)](new Date);a[C7Z.c0h][C7Z.i6][R7c](c.data((C7Z.X3h+C7Z.V7+P0)));a[C7Z.c0h][C7Z.i6][K9](c.data("month"));a[C7Z.c0h][C7Z.i6][(G2c+p7c+J6B+C7Z.R4h+C7Z.V7)](c.data((C7Z.i6+C7Z.Q6+C7Z.X3h)));a[k3c](true);setTimeout(function(){a[(o3B+d5h+Y1h)]();}
-,10);}
-}
-else a[(C7Z.i6+t8h+f2h)][(g4r+q0h+C7Z.F4h+C7Z.R4h)][(C7Z.p5h+t4)]();}
-}
-);}
-,_compareDates:function(a,b){var O4c="ateStr";return a[(Q5h+D5+C7Z.U8+q7h+C7Z.R4h+u8c+C7Z.l8h+H6h)]()===b[(C7Z.R4h+t8h+D5+O4c+g4r+H6h)]();}
-,_daysInMonth:function(a,b){return [31,0===a%4&&(0!==a%100||0===a%400)?29:28,31,30,31,30,31,31,30,31,30,31][b];}
-,_dateToUtc:function(a){var f8h="getMinutes",j3="tHo",X1c="getDate",f6c="getMonth",v6c="Ful";return new Date(Date[z7B](a[(j2+v6c+M2B+C7Z.Q6+B0h)](),a[f6c](),a[X1c](),a[(H6h+C7Z.V7+j3+C7Z.F4h+B0h+C7Z.c0h)](),a[f8h](),a[(F0+k5+C7Z.V7+D7+d3+C7Z.i6+C7Z.c0h)]()));}
-,_hide:function(){var p0="oll",a=this[C7Z.c0h][U5B];this[(C7Z.i6+t8h+f2h)][(D7+t8h+g5c+n3+Z1c+B0h)][j1c]();d(p)[(g1B)]("."+a);d(r)[(t8h+O9)]("keydown."+a);d((C7Z.i6+d5h+E4B+C7Z.I4c+D5+C0+L1B+K9c+m7c+h1B+o0h+g5c))[(d0+C7Z.p5h)]((N3+p0+C7Z.I4c)+a);d("body")[(d0+C7Z.p5h)]("click."+a);}
-,_hours24To12:function(a){return 0===a?12:12<a?a-12:a;}
-,_htmlDay:function(a){var g2="day",p2='ay',W1c="oday",A4r="today",T6c="efix",w0="sPr",V3h='pty';if(a.empty)return (L2+f4c+u7h+U7c+B7h+y6B+r1B+r1B+Y6c+I6h+C1h+V3h+S8h+f4c+u7h+J7);var b=["day"],c=this[D7][(I9B+C7Z.Q6+C7Z.c0h+w0+T6c)];a[w0h]&&b[(q0h+C7Z.F4h+b2)]("disabled");a[A4r]&&b[(G7h+b2)]((C7Z.R4h+W1c));a[a7c]&&b[(q0h+C7Z.F4h+C7Z.c0h+n5h)]("selected");return (L2+f4c+u7h+U7c+u7h+Z9h+a5B+b0+u7h+p2+Y6c)+a[g2]+'" class="'+b[(C7Z.G2h+t8h+d5h+C7Z.l8h)](" ")+'"><button class="'+c+"-button "+c+(b0+u7h+Z9h+F7B+w8B+f4c+C5B+Y6c+n9h+l4c+f4c+f4c+A1h+g1h+w8B+u7h+Z1B+b0+F7B+F6+U1B+Y6c)+a[G1B]+(w8B+u7h+Z1B+b0+C1h+I6B+f4c+c4B+Y6c)+a[(f2h+Z6B+n5h)]+(w8B+u7h+Z9h+f4c+Z9h+b0+u7h+p2+Y6c)+a[(g2)]+'">'+a[(q0B+C7Z.X3h)]+(s3c+C7Z.w6+m9B+Q5h+C7Z.l8h+f4+C7Z.R4h+C7Z.i6+V7c);}
-,_htmlMonth:function(a,b){var R1="><",M5B="_htmlMonthHead",p6c='le',A6h="showWeekNumber",D5B="_htmlWeekOfYear",w1="unshift",N5c="umber",f0c="kN",e1B="We",L3h="lDa",t4B="funct",U6B="TCD",S7B="sAr",H6c="reDa",y1="compa",z7c="CMi",w5h="UT",x2B="Ho",b8B="Mi",w5B="setUTCHours",Y7h="minD",r3h="firstDay",I7B="Day",c0c="getUT",c3B="_daysInMonth",c=new Date,e=this[c3B](a,b),f=(new Date(Date[(z7B)](a,b,1)))[(c0c+p7c+D5+l5)](),g=[],h=[];0<this[D7][(E1+z1c+C7Z.R4h+I7B)]&&(f-=this[D7][r3h],0>f&&(f+=7));for(var k=e+f,i=k;7<i;)i-=7;var k=k+(7-i),i=this[D7][(Y7h+B9)],l=this[D7][(f2h+d2+C5)];i&&(i[w5B](0),i[(P1B+z7B+b8B+C7Z.l8h+C7Z.F4h+C7Z.R4h+u9)](0),i[(C7Z.c0h+C7Z.V7+k5+C7Z.V7+s7B+B1c+C7Z.c0h)](0));l&&(l[(P1B+F3+O3+x2B+C7Z.F4h+z1c)](23),l[(P1B+w5h+z7c+C7Z.l8h+C7Z.F4h+C7Z.R4h+C7Z.V7+C7Z.c0h)](59),l[(P1B+a4+C7Z.V7+D7+t8h+B1c+C7Z.c0h)](59));for(var m=0,p=0;m<k;m++){var q=new Date(Date[(F3+O3)](a,b,1+(m-f))),r=this[C7Z.c0h][C7Z.i6]?this[(F9+D7+t8h+p6B+C7Z.Q6+z5c+D5+C7Z.Q6+C7Z.R4h+u9)](q,this[C7Z.c0h][C7Z.i6]):!1,s=this[(F9+y1+H6c+w8c)](q,c),t=m<f||m>=e+f,u=i&&q<i||l&&q>l,v=this[D7][(C7Z.i6+i9c+K8h+C7Z.V7+J6B+C7Z.X3h+C7Z.c0h)];d[(d5h+S7B+g6c+C7Z.X3h)](v)&&-1!==d[(A9)](q[(w9h+U6B+C7Z.Q6+C7Z.X3h)](),v)?u=!0:(t4B+d5h+t8h+C7Z.l8h)===typeof v&&!0===v(q)&&(u=!0);h[(q0h+C7Z.F4h+C7Z.c0h+n5h)](this[(F9+n5h+C7Z.R4h+f2h+L3h+C7Z.X3h)]({day:1+(m-f),month:b,year:a,selected:r,today:s,disabled:u,empty:t}
-));7===++p&&(this[D7][(C7Z.c0h+N9B+A4B+e1B+C7Z.V7+f0c+N5c)]&&h[w1](this[D5B](m-f,b,a)),g[(q0h+C7Z.F4h+b2)]("<tr>"+h[(C7Z.G2h+t8h+g4r)]("")+(s3c+C7Z.R4h+B0h+V7c)),h=[],p=0);}
-c=this[D7][(D7+q7B+I3c+B0h+C7Z.V7+C0B)]+(A0c+C7Z.R4h+C7Z.Q6+m5);this[D7][A6h]&&(c+=" weekNumber");return (L2+f4c+b9h+p6c+U7c+B7h+n3h+Z9h+r1B+r1B+Y6c)+c+(u4c+f4c+c4B+I6h+Z9h+u7h+J7)+this[M5B]()+(s3c+C7Z.R4h+c4h+X9+R1+C7Z.R4h+k5c+h5h+V7c)+g[p4h]("")+(s3c+C7Z.R4h+k5h+C7Z.X3h+f4+C7Z.R4h+K8h+C7Z.V7+V7c);}
-,_htmlMonthHead:function(){var P6B="um",a3h="eekN",O5h="first",a=[],b=this[D7][(O5h+D5+C7Z.Q6+C7Z.X3h)],c=this[D7][R8h],e=function(a){var f6h="weekdays";for(a+=b;7<=a;)a-=7;return c[f6h][a];}
-;this[D7][(b2+t8h+A4B+v4h+a3h+P6B+h1c+B0h)]&&a[P3h]((q7c+C7Z.R4h+n5h+f4+C7Z.R4h+n5h+V7c));for(var d=0;7>d;d++)a[(G7h+C7Z.c0h+n5h)]((q7c+C7Z.R4h+n5h+V7c)+e(d)+(s3c+C7Z.R4h+n5h+V7c));return a[(C7Z.G2h+t8h+d5h+C7Z.l8h)]("");}
-,_htmlWeekOfYear:function(a,b,c){var y8h="getUTCDay",e=new Date(c,0,1),a=Math[(n1B+d5h+E8h)](((new Date(c,b,a)-e)/864E5+e[y8h]()+1)/7);return '<td class="'+this[D7][Z3c]+'-week">'+a+(s3c+C7Z.R4h+C7Z.i6+V7c);}
-,_options:function(a,b,c){c||(c=b);a=this[j0B][Y1B][(n5B+C7Z.i6)]("select."+this[D7][Z3c]+"-"+a);a.empty();for(var e=0,d=b.length;e<d;e++)a[T8c]('<option value="'+b[e]+(f0)+c[e]+(s3c+t8h+q0h+l1c+C7Z.l8h+V7c));}
-,_optionSet:function(a,b){var H4r="unknown",M4B="ssP",c=this[(C7Z.i6+t8h+f2h)][(s7B+C7Z.l8h+I3+g4r+C7Z.W7)][(C7Z.p5h+Q2B)]((C7Z.c0h+w1c+D7+C7Z.R4h+C7Z.I4c)+this[D7][(d4h+M4B+z5c+C0B)]+"-"+a),e=c.parent()[(I1B+c0B+X7h+C7Z.V7+C7Z.l8h)]((C7Z.c0h+q0h+C7Z.Q6+C7Z.l8h));c[W8](b);c=c[M1c]((B3+C7Z.e8c+F3c+C7Z.c0h+C7Z.V7+E8h+C7Z.V7+D7+o0h+C7Z.i6));e[N4h](0!==c.length?c[t4c]():this[D7][(d5h+A7)][H4r]);}
-,_optionsTime:function(a,b,c){var Q8B='ion',S6B="_pad",a=this[(C7Z.i6+E3)][(D7+d3+I3+d5h+g5h)][(C7Z.p5h+Q2B)]("select."+this[D7][Z3c]+"-"+a),e=0,d=b,f=12===b?function(a){return a;}
-:this[S6B];12===b&&(e=1,d=13);for(b=e;b<d;b+=c)a[T8c]((L2+A1h+j1B+f4c+Q8B+U7c+P3B+S9h+Y6c)+b+(f0)+f(b)+(s3c+t8h+q0h+C7Z.R4h+B3c+C7Z.l8h+V7c));}
-,_optionsTitle:function(){var Y6="ange",X5B="_r",i9B="months",O0c="_range",X5="_options",H4c="yearRange",A7B="Yea",F1B="tFu",D6="nge",F4r="xD",a=this[D7][(O3h+B4r+C7Z.l8h)],b=this[D7][(f2h+g4r+D5+C7Z.U8+C7Z.V7)],c=this[D7][(f2h+C7Z.Q6+F4r+C7Z.Q6+o0h)],b=b?b[E6B]():null,c=c?c[E6B]():null,b=null!==b?b:(new Date)[E6B]()-this[D7][(C7Z.X3h+C7Z.V7+P0+G4+C7Z.Q6+D6)],c=null!==c?c:(new Date)[(F0+F1B+k8h+A7B+B0h)]()+this[D7][H4c];this[X5]("month",this[O0c](0,11),a[i9B]);this[X5]("year",this[(X5B+Y6)](b,c));}
-,_pad:function(a){return 10>a?"0"+a:a;}
-,_position:function(){var L0c="Top",w4="sc",I9="Heig",Q2c="outer",a=this[j0B][C4c][m9h](),b=this[(i9h+f2h)][(D7+d3+C7Z.R4h+F7h)],c=this[(C7Z.i6+t8h+f2h)][(d5h+H5B+C7Z.R4h)][e4h]();b[(D7+C7Z.c0h+C7Z.c0h)]({top:a.top+c,left:a[(E8h+d1)]}
-)[e5B]((C7Z.w6+t8h+h5h));var e=b[(Q2c+I9+n5h+C7Z.R4h)](),f=d((k5c+h5h))[(w4+B0h+t8h+E8h+E8h+L0c)]();a.top+c+e-f>d(p).height()&&(a=a.top-e,b[(Q5B)]((r0B),0>a?0:a));}
-,_range:function(a,b){for(var c=[],e=a;e<=b;e++)c[(P3h)](e);return c;}
-,_setCalander:function(){var W9h="lMont",r4B="htm",L8c="calendar";this[j0B][L8c].empty()[T8c](this[(F9+r4B+W9h+n5h)](this[C7Z.c0h][(C7Z.i6+B0c+i3h+C7Z.X3h)][E6B](),this[C7Z.c0h][(V4B+C7Z.c0h+q0h+i3h+C7Z.X3h)][f5B]()));}
-,_setTitle:function(){var s9="UTCMont",n0c="onth",R6h="_op";this[(R6h+C7Z.R4h+Q9+a4+C7Z.D9)]((f2h+n0c),this[C7Z.c0h][(V4B+W5)][(F0+C7Z.R4h+s9+n5h)]());this[(F9+t8h+q0+d3+a4+C7Z.V7+C7Z.R4h)]((C7Z.X3h+C7Z.V7+P0),this[C7Z.c0h][U8B][E6B]());}
-,_setTime:function(){var E2B="getSeconds",Y9B="ionSe",M8h="_opt",R1c="getUTCMinutes",T4="ionS",m8="12",u2h="rs24",V5h="_optionSet",V4r="Hours",b8h="etU",a=this[C7Z.c0h][C7Z.i6],b=a?a[(H6h+b8h+C0+p7c+V4r)]():0;this[C7Z.c0h][B6c][Q9c]?(this[V5h]("hours",this[(F9+n5h+m9+u2h+f7h+m8)](b)),this[(T0B+B6h+T4+C7Z.V7+C7Z.R4h)]((b9B),12>b?"am":(q0h+f2h))):this[(T0B+B6h+d5h+d3+a4+C7Z.V7+C7Z.R4h)]((N9B+q2B+C7Z.c0h),b);this[V5h]("minutes",a?a[R1c]():0);this[(M8h+Y9B+C7Z.R4h)]("seconds",a?a[E2B]():0);}
-,_show:function(){var M5="iti",M0B="pos",a=this,b=this[C7Z.c0h][U5B];this[(F9+M0B+M5+t8h+C7Z.l8h)]();d(p)[(t8h+C7Z.l8h)]("scroll."+b+" resize."+b,function(){var v5B="itio",J9B="_po";a[(J9B+C7Z.c0h+v5B+C7Z.l8h)]();}
-);d((C7Z.i6+d5h+E4B+C7Z.I4c+D5+C0+Z5+A3c+m7c+F9+w3B+C7Z.l8h+C7Z.R4h+Z3h))[d3]((N3+t8h+k8h+C7Z.I4c)+b,function(){var Z4="_position";a[Z4]();}
-);d(r)[d3]("keydown."+b,function(b){(9===b[T7B]||27===b[(s2h+W1B+Y1h)]||13===b[(T0+u9h+Y1h)])&&a[(F9+n5h+p3B)]();}
-);setTimeout(function(){d((B2c))[d3]((I9B+d5h+a9B+C7Z.I4c)+b,function(b){var M4c="lter";!d(b[(C7Z.R4h+P0+F0+C7Z.R4h)])[N3h]()[(E1+M4c)](a[(C7Z.i6+E3)][Y1B]).length&&b[(E0B)]!==a[(j0B)][(g4r+q0h+C7Z.F4h+C7Z.R4h)][0]&&a[(F9+U8h+C7Z.i6+C7Z.V7)]();}
-);}
-,10);}
-,_writeOutput:function(a){var U9h="tStri",S3B="ca",u5="utc",U3h="moment",Z9c="UTCD",G9c="CF",b=this[C7Z.c0h][C7Z.i6],b="YYYY-MM-DD"===this[D7][H3B]?b[(w9h+C0+G9c+t6B+M2B+C7Z.Q6+B0h)]()+"-"+this[(F9+q0h+X9)](b[f5B]()+1)+"-"+this[(F9+M6h+C7Z.i6)](b[(H6h+C7Z.V7+C7Z.R4h+Z9c+C7Z.Q6+o0h)]()):p[(U3h)][u5](b,h,this[D7][(D4c+C7Z.V7+g5c+E2+t8h+S3B+E4h)],this[D7][(D4c+C7Z.V7+C7Z.l8h+U9h+D7+C7Z.R4h)])[H3B](this[D7][H3B]);this[(j0B)][C4c][(E4B+C7Z.Q6+E8h)](b);a&&this[(C7Z.i6+t8h+f2h)][(d5h+C7Z.l8h+q0h+C7Z.F4h+C7Z.R4h)][t0h]();}
-}
-);f[(C5+f3h+f2h+C7Z.V7)][W5h]=l4;f[z8B][(C7Z.i6+C7Z.V7+V0+E5h+C7Z.c0h)]={classPrefix:(R9+B0h+A0c+C7Z.i6+C7Z.U8+C7Z.D9+d5h+Y8B),disableDays:x2c,firstDay:r4,format:(G1+N5+G1+A0c+R0+R0+A0c+D5+D5),i18n:f[(C7Z.i6+C7Z.V7+C7Z.p5h+C7Z.Q6+y3c)][(d5h+F8c+B4r+C7Z.l8h)][w9],maxDate:x2c,minDate:x2c,minutesIncrement:r4,momentStrict:!l4,momentLocale:Z6,secondsIncrement:r4,showWeekNumber:!r4,yearRange:I7h}
-;var H=function(a,b){var o7="Choose file...",E0="uploadText";if(x2c===b||b===h)b=a[E0]||o7;a[(F9+s7c+C7Z.F4h+C7Z.R4h)][(C7Z.p5h+d5h+C7Z.l8h+C7Z.i6)]((V4B+E4B+C7Z.I4c+C7Z.F4h+C3h+t8h+X9+p7B+C7Z.w6+C7Z.F4h+C7Z.R4h+C7Z.R4h+d3))[t4c](b);}
-,L=function(a,b,c){var Q7c="=",Y9h="ppe",O9h="noDrop",N8h="plo",q3="dragover",I2B="over",z7="exit",r5h="drop",H4h="dragDropText",n1h="div.drop span",n0="dragDrop",O="FileR",F9B="_enabled",Z0B='ere',S7='nd',R8c='pan',x6c='eco',G4h='V',O2B='ear',P8h='ile',p1='" /><',U0c='tt',V2c='pl',J4r='ell',I3B='w',A3='bl',w2h='u_ta',k7h='oa',A6c='upl',e=a[r9][(f6+B0h+f2h)][G6],e=d((L2+u7h+h5+U7c+B7h+n3h+X0+r1B+Y6c+I6h+l6h+b0B+F9h+A6c+k7h+u7h+u4c+u7h+h5+U7c+B7h+Y7B+Y6c+I6h+w2h+A3+I6h+u4c+u7h+d3h+P3B+U7c+B7h+Y7B+Y6c+U1B+A1h+I3B+u4c+u7h+h5+U7c+B7h+y6B+e4B+Y6c+B7h+J4r+U7c+l4c+V2c+A1h+Z9h+u7h+u4c+n9h+l4c+U0c+A1h+g1h+U7c+B7h+y6B+e4B+Y6c)+e+(p1+d3h+C7+U7c+f4c+C5B+Y6c+N6h+P8h+h5c+u7h+d3h+P3B+A0h+u7h+h5+U7c+B7h+y6B+e4B+Y6c+B7h+J4r+U7c+B7h+n3h+O2B+G4h+S9h+u4c+n9h+o1+I6B+U7c+B7h+y6B+r1B+r1B+Y6c)+e+(b7c+u7h+h5+m1+u7h+d3h+P3B+A0h+u7h+h5+U7c+B7h+n3h+X0+r1B+Y6c+U1B+A1h+I3B+U7c+r1B+x6c+g1h+u7h+u4c+u7h+d3h+P3B+U7c+B7h+n3h+X0+r1B+Y6c+B7h+l2+n3h+u4c+u7h+d3h+P3B+U7c+B7h+n3h+X0+r1B+Y6c+u7h+U1B+A1h+j1B+u4c+r1B+R8c+q5c+u7h+h5+m1+u7h+d3h+P3B+A0h+u7h+d3h+P3B+U7c+B7h+n3h+w2c+Y6c+B7h+I6h+n3h+n3h+u4c+u7h+d3h+P3B+U7c+B7h+y6B+r1B+r1B+Y6c+U1B+I6h+S7+Z0B+u7h+h5c+u7h+d3h+P3B+m1+u7h+d3h+P3B+m1+u7h+h5+m1+u7h+h5+J7));b[j6c]=e;b[F9B]=!l4;H(b);if(p[(O+C7Z.V7+C7Z.Q6+C7Z.i6+C7Z.W7)]&&!r4!==b[n0]){e[M1c](n1h)[t4c](b[H4h]||(D5+B0h+c1+p7B+C7Z.Q6+B1c+p7B+C7Z.i6+d3c+q0h+p7B+C7Z.Q6+p7B+C7Z.p5h+d5h+E8h+C7Z.V7+p7B+n5h+C7Z.V7+B0h+C7Z.V7+p7B+C7Z.R4h+t8h+p7B+C7Z.F4h+q0h+E8h+t8h+C7Z.Q6+C7Z.i6));var g=e[M1c]((V4B+E4B+C7Z.I4c+C7Z.i6+B0h+B3));g[(t8h+C7Z.l8h)](r5h,function(e){var P1="dataTransfer",F7c="Ev",y9="gina";b[F9B]&&(f[e6](a,b,e[(t8h+u8c+y9+E8h+F7c+Z6+C7Z.R4h)][P1][(C7Z.p5h+c0B+C7Z.V7+C7Z.c0h)],H,c),g[U4]((H9+C7Z.V7+B0h)));return !r4;}
-)[d3]((C7Z.i6+B0h+C7Z.Q6+H6h+E8h+C7Z.V7+C7Z.Q6+A1B+p7B+C7Z.i6+B0h+C7Z.Q6+H6h+z7),function(){var n7B="lass";b[F9B]&&g[(B0h+d6+t8h+E4B+C7Z.V7+p7c+n7B)](I2B);return !r4;}
-)[d3](q3,function(){b[F9B]&&g[W6B]((H9+C7Z.V7+B0h));return !r4;}
-);a[(t8h+C7Z.l8h)]((t8h+e4c),function(){var m0="TE_U",w3h="rag";d(B2c)[(t8h+C7Z.l8h)]((C7Z.i6+w3h+I2B+C7Z.I4c+D5+C0+Z5+F9+Q6c+E8h+t8h+X9+p7B+C7Z.i6+B0h+t8h+q0h+C7Z.I4c+D5+m0+N8h+C7Z.Q6+C7Z.i6),function(){return !r4;}
-);}
-)[d3](n2h,function(){var A3h="_Up",W0h="E_U",Y="ago";d(B2c)[(g1B)]((C7Z.i6+B0h+Y+A1B+B0h+C7Z.I4c+D5+C0+W0h+q0h+E8h+t8h+C7Z.Q6+C7Z.i6+p7B+C7Z.i6+B0h+t8h+q0h+C7Z.I4c+D5+H3+A3h+q5h+X9));}
-);}
-else e[(X9+C7Z.i6+p7c+E8h+d8+C7Z.c0h)](O9h),e[(C7Z.Q6+Y9h+C7Z.l8h+C7Z.i6)](e[(E1+C7Z.l8h+C7Z.i6)]((C7Z.i6+E9c+C7Z.I4c+B0h+Z6+C7Z.i6+k3+C7Z.i6)));e[(C7Z.p5h+d5h+B1c)](f4h)[(t8h+C7Z.l8h)](q5B,function(){var y2B="cal",m3h="uploa",B6B="dT";f[(C7Z.p5h+d5h+C7Z.V7+E8h+B6B+C7Z.X3h+E0c)][(m3h+C7Z.i6)][P1B][(y2B+E8h)](a,b,m4h);}
-);e[(n5B+C7Z.i6)]((d5h+H5B+C7Z.R4h+f3+C7Z.R4h+l3c+C7Z.V7+Q7c+C7Z.p5h+c0B+C7Z.V7+p7))[(t8h+C7Z.l8h)]((I1B+C7Z.Q6+i8c+C7Z.V7),function(){f[(C7Z.F4h+N8h+X9)](a,b,this[z4h],H,c);}
-);return e;}
-,B=function(a){setTimeout(function(){var V4h="trigger";a[V4h]((D7+G3c+H6h+C7Z.V7),{editorSet:!l4}
-);}
-,l4);}
-,s=f[(E1+s3+C7Z.i6+h2h+E0c)],i=d[T2h](!l4,{}
-,f[(u6B+C7Z.i6+v2B)][(E1+J8c)],{get:function(a){return a[(N4c+C7Z.R4h)][(E4B+C7Z.Q6+E8h)]();}
-,set:function(a,b){a[j6c][(E4B+C7Z.Q6+E8h)](b);B(a[(S8B+C7Z.l8h+q0h+m9B)]);}
-,enable:function(a){a[(S8B+P6c+C7Z.F4h+C7Z.R4h)][(q0h+B0h+t8h+q0h)]((Z0+N0c),D1h);}
-,disable:function(a){a[(F9+g4r+G7h+C7Z.R4h)][(q0h+B0h+B3)](w0h,w5c);}
-}
-);s[T2]={create:function(a){a[(F9+E4B+C7Z.Q6+E8h)]=a[(E4B+C7Z.Q6+z6h)];return x2c;}
-,get:function(a){return a[J3];}
-,set:function(a,b){a[(F9+W8)]=b;}
-}
-;s[f0h]=d[(C7Z.V7+H4+C7Z.l8h+C7Z.i6)](!l4,{}
-,i,{create:function(a){a[j6c]=d((q7c+d5h+P6c+C7Z.F4h+C7Z.R4h+P1c))[(T4c+B0h)](d[T2h]({id:f[(E4+C7Z.p5h+G4B+C7Z.i6)](a[(d5h+C7Z.i6)]),type:(o0h+X7),readonly:(B0h+C7Z.V7+X9+d3+R7B)}
-,a[h2c]||{}
-));return a[j6c][l4];}
-}
-);s[(C7Z.R4h+n4c)]=d[(C7Z.V7+K4B+o0h+B1c)](!l4,{}
-,i,{create:function(a){a[(F9+g4r+q0h+C7Z.F4h+C7Z.R4h)]=d((q7c+d5h+C7Z.l8h+G7h+C7Z.R4h+P1c))[(C7Z.Q6+K7B)](d[T2h]({id:f[(C7Z.c0h+B1+C7Z.V7+r4c)](a[(d5h+C7Z.i6)]),type:(C7Z.R4h+C7Z.V7+K4B+C7Z.R4h)}
-,a[(C7Z.U8+C7Z.R4h+B0h)]||{}
-));return a[(J4+C7Z.F4h+C7Z.R4h)][l4];}
-}
-);s[(M6h+Q3B+L2c)]=d[(C7Z.V7+K4B+T5B)](!l4,{}
-,i,{create:function(a){var P3="password";a[(F9+d5h+n9)]=d((q7c+d5h+C7Z.l8h+F6h+P1c))[(h2c)](d[(C7Z.V7+X7+C7Z.V7+C7Z.l8h+C7Z.i6)]({id:f[(C7Z.c0h+B1+P7B)](a[(d5h+C7Z.i6)]),type:P3}
-,a[h2c]||{}
-));return a[(S8B+C7Z.l8h+F6h)][l4];}
-}
-);s[(C7Z.R4h+C7Z.V7+K4B+I3+B0h+j8h)]=d[(C7Z.V7+X7+Z6+C7Z.i6)](!l4,{}
-,i,{create:function(a){var H0c="feId",v7h="<textarea/>";a[j6c]=d(v7h)[h2c](d[T2h]({id:f[(E4+H0c)](a[(d5h+C7Z.i6)])}
-,a[(C7Z.Q6+C7Z.R4h+C7Z.R4h+B0h)]||{}
-));return a[(F9+g4r+F6h)][l4];}
-}
-);s[m6B]=d[(n4c+C7Z.V7+C7Z.l8h+C7Z.i6)](!0,{}
-,i,{_addOptions:function(a,b){var p9c="irs",B8B="Di",Q3c="sabled",s9h="rDi",C3="placeholderValue",S2="lde",c=a[j6c][0][C0c],e=0;c.length=0;if(a[z9B]!==h){e=e+1;c[0]=new Option(a[(C3h+q3h+N9B+S2+B0h)],a[C3]!==h?a[C3]:"");var d=a[(C3h+C7Z.Q6+n1B+n5h+t8h+S2+s9h+Q3c)]!==h?a[(C3h+P9+C7Z.V7+N9B+E8h+C7Z.i6+C7Z.V7+B0h+B8B+C7Z.c0h+N0c)]:true;c[0][T2]=d;c[0][(C7Z.i6+i9c+K8h+C7Z.V7+C7Z.i6)]=d;}
-b&&f[(q0h+C7Z.Q6+p9c)](b,a[(t8h+q0h+C7Z.R4h+B3c+C7Z.l8h+C7Z.c0h+E8+n3+B0h)],function(a,b,d){var d7B="r_va";c[d+e]=new Option(b,a);c[d+e][(F9+R9+d7B+E8h)]=a;}
-);}
-,create:function(a){var D4="ipOpts",E9h="ptio";a[j6c]=d("<select/>")[(C7Z.U8+m6h)](d[(C7Z.V7+K4B+o0h+B1c)]({id:f[(C7Z.c0h+C7Z.Q6+C7Z.p5h+C7Z.V7+b8+C7Z.i6)](a[n8B]),multiple:a[(I9c+i7B+d5h+q0h+E4h)]===true}
-,a[h2c]||{}
-));s[m6B][(B3B+C7Z.i6+C7Z.i6+P8+E9h+N2c)](a,a[C0c]||a[D4]);return a[(F9+d5h+C7Z.l8h+q0h+C7Z.F4h+C7Z.R4h)][0];}
-,update:function(a,b){var X1h="sele",D1B="_lastSet",c=s[m6B][(H6h+C7Z.D9)](a),e=a[D1B];s[m6B][u5c](a,b);!s[(X1h+i6B)][P1B](a,c,true)&&e&&s[m6B][(C7Z.c0h+C7Z.V7+C7Z.R4h)](a,e,true);}
-,get:function(a){var d6c="rator",b=a[(S8B+C7Z.l8h+G7h+C7Z.R4h)][M1c]("option:selected")[z4](function(){return this[(w1B+C7Z.i6+d5h+Q5h+B0h+H2B+o4h)];}
-)[(C7Z.R4h+t8h+n4+a2)]();return a[A6B]?a[(C7Z.c0h+O6+C7Z.Q6+d6c)]?b[(C7Z.G2h+t8h+g4r)](a[(w8+M6h+d6c)]):b:b.length?b[0]:null;}
-,set:function(a,b,c){var s8c="ato",a0h="separator",z8h="ple";if(!c)a[(F9+k6B+o3+C7Z.R4h)]=b;var b=a[(a0+C7Z.R4h+d5h+z8h)]&&a[a0h]&&!d[q6](b)?b[(C7Z.c0h+C3h+H1c)](a[(w8+N7c+s8c+B0h)]):[b],e,f=b.length,g,h=false,c=a[(S8B+P6c+m9B)][(C7Z.p5h+d5h+C7Z.l8h+C7Z.i6)]("option");a[j6c][(C7Z.p5h+d5h+B1c)]("option")[(C7Z.V7+P9+n5h)](function(){var j0="or_va";g=false;for(e=0;e<f;e++)if(this[(F9+C3B+C7Z.R4h+j0+E8h)]==b[e]){h=g=true;break;}
-this[(C7Z.c0h+C7Z.V7+E8h+H8h+W7c)]=g;}
-);if(a[z9B]&&!h&&!a[A6B]&&c.length)c[0][a7c]=true;B(a[j6c]);return h;}
-}
-);s[(D7+n5h+C7Z.V7+D7+j4+t8h+K4B)]=d[(n4c+Z6+C7Z.i6)](!0,{}
-,i,{_addOptions:function(a,b){var c=a[(F9+d5h+C7Z.l8h+q0h+m9B)].empty();b&&f[b7B](b,a[u8],function(b,g,h){var S6c="_ed",s2="safe",i8="fe";c[(T8c)]('<div><input id="'+f[(C7Z.c0h+C7Z.Q6+i8+r4c)](a[n8B])+"_"+h+'" type="checkbox" /><label for="'+f[(s2+b8+C7Z.i6)](a[n8B])+"_"+h+(f0)+g+(s3c+E8h+C7Z.Q6+C7Z.w6+s3+f4+C7Z.i6+d5h+E4B+V7c));d("input:last",c)[(C7Z.Q6+C7Z.R4h+C7Z.R4h+B0h)]("value",b)[0][(S6c+d5h+C7Z.R4h+C7Z.N6+F9+W8)]=b;}
-);}
-,create:function(a){var t3c="ip";a[j6c]=d("<div />");s[a6c][(B3B+Q1h+P8+q0h+C7Z.R4h+d5h+t8h+C7Z.l8h+C7Z.c0h)](a,a[(t8h+q0h+l1c+C7Z.l8h+C7Z.c0h)]||a[(t3c+P8+q0h+C7Z.R4h+C7Z.c0h)]);return a[(v5c+q0h+C7Z.F4h+C7Z.R4h)][0];}
-,get:function(a){var p7h="sepa",r7c="eck",b=[];a[(J4+m9B)][(n5B+C7Z.i6)]((d5h+C7Z.l8h+q0h+m9B+F3c+D7+n5h+r7c+n1))[(C7Z.V7+P9+n5h)](function(){var n2B="_editor_val";b[(q0h+y2h)](this[n2B]);}
-);return !a[(w8+q0h+C7Z.Q6+B0h+C7Z.Q6+Q5h+B0h)]?b:b.length===1?b[0]:b[(R6+g4r)](a[(p7h+T9h+t8h+B0h)]);}
-,set:function(a,b){var C6c="tring",c=a[(F9+g4r+F6h)][(E1+B1c)]((g4r+F6h));!d[q6](b)&&typeof b===(C7Z.c0h+C6c)?b=b[(C7Z.c0h+q0h+E8h+d5h+C7Z.R4h)](a[(C7Z.c0h+O6+C7Z.Q6+T9h+t8h+B0h)]||"|"):d[q6](b)||(b=[b]);var e,f=b.length,g;c[(o6c)](function(){var p4="che";g=false;for(e=0;e<f;e++)if(this[(w1B+V4B+C7Z.R4h+C7Z.N6+F9+E4B+o4h)]==b[e]){g=true;break;}
-this[(p4+D7+s2h+C7Z.V7+C7Z.i6)]=g;}
-);B(c);}
-,enable:function(a){a[(F9+d5h+H5B+C7Z.R4h)][M1c]((d5h+n9))[m5h]((Z0+C7Z.Q6+C7Z.w6+E8h+C7Z.V7+C7Z.i6),false);}
-,disable:function(a){a[(F9+s7c+C7Z.F4h+C7Z.R4h)][M1c]((d5h+C7Z.l8h+G7h+C7Z.R4h))[m5h]("disabled",true);}
-,update:function(a,b){var u4r="_ad",c=s[a6c],e=c[(j2)](a);c[(u4r+C7Z.i6+P8+q0h+l1c+N2c)](a,b);c[(P1B)](a,e);}
-}
-);s[O1B]=d[T2h](!0,{}
-,i,{_addOptions:function(a,b){var c=a[j6c].empty();b&&f[b7B](b,a[u8],function(b,g,h){var g2B="saf";c[(C7Z.Q6+q0h+i7c)]((L2+u7h+h5+A0h+d3h+C7+U7c+d3h+u7h+Y6c)+f[(g2B+C7Z.V7+b8+C7Z.i6)](a[n8B])+"_"+h+'" type="radio" name="'+a[(N7h+C7Z.V7)]+'" /><label for="'+f[(g2B+P7B)](a[(d5h+C7Z.i6)])+"_"+h+'">'+g+(s3c+E8h+C7Z.Q6+C7Z.w6+C7Z.V7+E8h+f4+C7Z.i6+d5h+E4B+V7c));d((d5h+C7Z.l8h+G7h+C7Z.R4h+F3c+E8h+d8+C7Z.R4h),c)[h2c]("value",b)[0][(w1B+C7Z.i6+d5h+C7Z.R4h+C7Z.N6+F9+E4B+o4h)]=b;}
-);}
-,create:function(a){var L8="ipOpt";a[j6c]=d((q7c+C7Z.i6+E9c+B9h));s[(O1B)][u5c](a,a[C0c]||a[(L8+C7Z.c0h)]);this[(t8h+C7Z.l8h)]((t8h+I0h+C7Z.l8h),function(){a[(F9+g4r+G7h+C7Z.R4h)][M1c]((d5h+C7Z.l8h+q0h+m9B))[(C7Z.V7+C7Z.Q6+I1B)](function(){var k0h="_preChecked";if(this[k0h])this[a0B]=true;}
-);}
-);return a[(F9+C2+C7Z.R4h)][0];}
-,get:function(a){var T5c="r_";a=a[j6c][M1c]((g4r+G7h+C7Z.R4h+F3c+D7+c4h+D7+s2h+n1));return a.length?a[0][(w1B+C7Z.i6+H1c+t8h+T5c+E4B+o4h)]:h;}
-,set:function(a,b){var O7h="ecked";a[j6c][(C7Z.p5h+d5h+B1c)]((g4r+q0h+C7Z.F4h+C7Z.R4h))[o6c](function(){var K3c="hec",f7="cked",t5="_edito",s9B="Ch";this[(I0B+B0h+C7Z.V7+s9B+C7Z.V7+D7+T0+C7Z.i6)]=false;if(this[(t5+B0h+W9c+E8h)]==b)this[(F9+q0h+z5c+s9B+C7Z.V7+f7)]=this[a0B]=true;else this[(F9+q0h+z5c+p7c+K3c+s2h+C7Z.V7+C7Z.i6)]=this[a0B]=false;}
-);B(a[j6c][(C7Z.p5h+g4r+C7Z.i6)]((g4r+q0h+m9B+F3c+D7+n5h+O7h)));}
-,enable:function(a){var x4c="rop";a[(S8B+C7Z.l8h+q0h+C7Z.F4h+C7Z.R4h)][(M1c)]((g4r+q0h+C7Z.F4h+C7Z.R4h))[(q0h+x4c)]("disabled",false);}
-,disable:function(a){a[j6c][(C7Z.p5h+g4r+C7Z.i6)]("input")[(Y4B+t8h+q0h)]((Z0+C7Z.Q6+C7Z.w6+E8h+C7Z.V7+C7Z.i6),true);}
-,update:function(a,b){var g0c="alu",Z2B="lte",S0B="ption",Z7B="dO",c=s[O1B],e=c[(H6h+C7Z.V7+C7Z.R4h)](a);c[(F9+C7Z.Q6+C7Z.i6+Z7B+S0B+C7Z.c0h)](a,b);var d=a[j6c][M1c]((C4c));c[(C7Z.c0h+C7Z.D9)](a,d[(E1+Z2B+B0h)]('[value="'+e+'"]').length?e:d[(b7)](0)[h2c]((E4B+g0c+C7Z.V7)));}
-}
-);s[n8]=d[T2h](!0,{}
-,i,{create:function(a){var L9B="Im",u6="teI",c3c="RFC_2822",c4r="cke",u1="dateFormat",y4h="epic",u4B="safeId";a[(F9+s7c+m9B)]=d((q7c+d5h+P6c+m9B+B9h))[(C7Z.Q6+C7Z.R4h+m6h)](d[T2h]({id:f[u4B](a[(n8B)]),type:"text"}
-,a[(C7Z.Q6+C7Z.R4h+m6h)]));if(d[(T8+y4h+s2h+C7Z.W7)]){a[j6c][(X9+H8c+c8)]("jqueryui");if(!a[u1])a[u1]=d[(q0B+o0h+F8h+c4r+B0h)][c3c];if(a[(C7Z.i6+C7Z.Q6+u6+f2h+R2)]===h)a[(C7Z.i6+C7Z.Q6+o0h+L9B+R2)]="../../images/calender.png";setTimeout(function(){var D9B="epicker",C3c="dateImage",T4h="oth";d(a[j6c])[(q0B+o0h+q0h+K5B+s2h+C7Z.V7+B0h)](d[T2h]({showOn:(C7Z.w6+T4h),dateFormat:a[(q0B+C7Z.R4h+J1h+t8h+B0h+t0)],buttonImage:a[C3c],buttonImageOnly:true}
-,a[L2B]));d((u2c+C7Z.F4h+d5h+A0c+C7Z.i6+C7Z.U8+D9B+A0c+C7Z.i6+d5h+E4B))[Q5B]((V4B+C7Z.c0h+q0h+E8h+C7Z.Q6+C7Z.X3h),(C7Z.l8h+d3+C7Z.V7));}
-,10);}
-else a[(v5c+F6h)][(C7Z.Q6+C7Z.R4h+m6h)]("type",(C7Z.i6+C7Z.Q6+C7Z.R4h+C7Z.V7));return a[j6c][0];}
-,set:function(a,b){var f1h="hange",V5c="cker",m1c="has",y4B="datepicker";d[y4B]&&a[j6c][(n5h+C7Z.Q6+C7Z.c0h+a1B+d8+C7Z.c0h)]((m1c+J6B+o0h+q0h+d5h+V5c))?a[(S8B+C7Z.l8h+G7h+C7Z.R4h)][y4B]((P1B+D5+C7Z.Q6+C7Z.R4h+C7Z.V7),b)[(D7+f1h)]():d(a[j6c])[(E4B+C7Z.Q6+E8h)](b);}
-,enable:function(a){d[(C7Z.i6+C7Z.Q6+o0h+F8h+a9B+C7Z.V7+B0h)]?a[(v5c+G7h+C7Z.R4h)][(C7Z.i6+C7Z.Q6+A8c+K5B+x7c)]("enable"):d(a[(v5c+q0h+C7Z.F4h+C7Z.R4h)])[(m5h)]("disabled",false);}
-,disable:function(a){d[(n8+F8h+a9B+C7Z.V7+B0h)]?a[j6c][(q0B+A8c+K5B+x7c)]("disable"):d(a[(N4c+C7Z.R4h)])[m5h]("disabled",true);}
-,owns:function(a,b){return d(b)[N3h]((C7Z.i6+d5h+E4B+C7Z.I4c+C7Z.F4h+d5h+A0c+C7Z.i6+C7Z.U8+C7Z.V7+q0h+S8c+C7Z.W7)).length||d(b)[N3h]("div.ui-datepicker-header").length?true:false;}
-}
-);s[(C7Z.i6+C7Z.U8+C7Z.V7+C7Z.R4h+d5h+Y8B)]=d[(C7Z.V7+X7+Z6+C7Z.i6)](!l4,{}
-,i,{create:function(a){var O1="pic",s4c="tex",I5c="feI";a[(S8B+C7Z.l8h+q0h+m9B)]=d((q7c+d5h+C7Z.l8h+q0h+C7Z.F4h+C7Z.R4h+B9h))[h2c](d[(C7Z.V7+X7+C7Z.V7+C7Z.l8h+C7Z.i6)](w5c,{id:f[(C7Z.c0h+C7Z.Q6+I5c+C7Z.i6)](a[(n8B)]),type:(s4c+C7Z.R4h)}
-,a[h2c]));a[(F9+O1+x7c)]=new f[z8B](a[j6c],d[T2h]({format:a[(S4r+C7Z.Q6+C7Z.R4h)],i18n:this[R8h][(C7Z.i6+C7Z.Q6+C7Z.R4h+x1B+f2h+C7Z.V7)]}
-,a[L2B]));return a[(F9+d5h+C7Z.l8h+G7h+C7Z.R4h)][l4];}
-,set:function(a,b){a[(F9+q0h+h7B)][W8](b);B(a[(J4+C7Z.F4h+C7Z.R4h)]);}
-,owns:function(a,b){a[l9h][(i7+N2c)](b);}
-,destroy:function(a){var V5="stroy";a[(I0B+h7B)][(C7Z.i6+C7Z.V7+V5)]();}
-,minDate:function(a,b){a[l9h][(Q0B+C7Z.l8h)](b);}
-,maxDate:function(a,b){var F6c="_pick";a[(F6c+C7Z.W7)][(f2h+C7Z.Q6+K4B)](b);}
-}
-);s[(g5B+E8h+t8h+C7Z.Q6+C7Z.i6)]=d[(C7Z.V7+K4B+T5B)](!l4,{}
-,i,{create:function(a){var b=this;return L(b,a,function(c){f[k2h][(g5B+E8h+S0+C7Z.i6)][P1B][(D7+F1c)](b,a,c[l4]);}
-);}
-,get:function(a){return a[(W9c+E8h)];}
-,set:function(a,b){var L7h="ploa",P9h="triggerHandler",e1c="oC",s7="noC",o4c="clearText",L3B="noFileText";a[(H2B+o4h)]=b;var c=a[(S8B+C7Z.l8h+F6h)];if(a[U8B]){var d=c[(E1+C7Z.l8h+C7Z.i6)](k6c);a[J3]?d[(n5h+t2h+E8h)](a[(U8B)](a[(F9+R3B+E8h)])):d.empty()[T8c]((q7c+C7Z.c0h+q0h+C7Z.Q6+C7Z.l8h+V7c)+(a[L3B]||(e0+t8h+p7B+C7Z.p5h+d5h+E8h+C7Z.V7))+(s3c+C7Z.c0h+q0h+o4+V7c));}
-d=c[(E1+B1c)](f4h);if(b&&a[o4c]){d[N4h](a[o4c]);c[(z5c+u6B+E4B+C7Z.V7+t8+C7Z.c0h)]((s7+T));}
-else c[(C7Z.Q6+C7Z.i6+Q4c+q7B+C7Z.c0h)]((C7Z.l8h+e1c+E8h+j8h+B0h));a[j6c][(C7Z.p5h+d5h+B1c)](C4c)[P9h]((C7Z.F4h+L7h+C7Z.i6+C7Z.I4c+C7Z.V7+V4B+C7Z.R4h+C7Z.N6),[a[J3]]);}
-,enable:function(a){a[j6c][(M1c)]((d5h+C7Z.l8h+q0h+C7Z.F4h+C7Z.R4h))[m5h](w0h,D1h);a[(F9+Z6+C7Z.Q6+h7c+C7Z.V7+C7Z.i6)]=w5c;}
-,disable:function(a){var y0c="nabl",k4="disab";a[(S8B+n9)][(E1+B1c)]((g4r+G7h+C7Z.R4h))[m5h]((k4+E8h+n1),w5c);a[(F9+C7Z.V7+y0c+C7Z.V7+C7Z.i6)]=D1h;}
-}
-);s[(K2c+X9+R0+t3h)]=d[T2h](!0,{}
-,i,{create:function(a){var b=this,c=L(b,a,function(c){var G7B="loadM",v3B="onc";a[J3]=a[(F9+E4B+C7Z.Q6+E8h)][(D7+v3B+C7Z.U8)](c);f[k2h][(g5B+G7B+C7Z.Q6+C7Z.l8h+C7Z.X3h)][(P1B)][(K2h)](b,a,a[(F9+W8)]);}
-);c[(W6B)]((f2h+t6B+r8h))[d3]("click",(C7Z.w6+C7Z.F4h+C7Z.R4h+C7Z.R4h+d3+C7Z.I4c+B0h+d6+t8h+A1B),function(c){var x0="Many",V3="ldT",W2="lic",T9B="stopPro";c[(T9B+P2c+C7Z.Q6+r8h+d3)]();c=d(this).data("idx");a[J3][(b6+W2+C7Z.V7)](c,1);f[(C7Z.p5h+Z8B+V3+C7Z.X3h+q0h+u9)][(g5B+E8h+S0+C7Z.i6+x0)][(w8+C7Z.R4h)][K2h](b,a,a[J3]);}
-);return c;}
-,get:function(a){return a[J3];}
-,set:function(a,b){var G8c="dler",Q="rHa",Y0c="igg",h8c="No",Z9B="leText",u2B="ppend",A8h="Uplo";b||(b=[]);if(!d[(d5h+C7Z.c0h+J9c+B0h+B0h+C7Z.Q6+C7Z.X3h)](b))throw (A8h+X9+p7B+D7+t8h+I5h+D7+C7Z.R4h+B3c+N2c+p7B+f2h+C7Z.F4h+X6+p7B+n5h+C7Z.Q6+E4B+C7Z.V7+p7B+C7Z.Q6+C7Z.l8h+p7B+C7Z.Q6+A1c+l5+p7B+C7Z.Q6+C7Z.c0h+p7B+C7Z.Q6+p7B+E4B+C7Z.Q6+R9B+C7Z.V7);a[(W9c+E8h)]=b;var c=this,e=a[j6c];if(a[(V4B+b6+E8h+C7Z.Q6+C7Z.X3h)]){e=e[(M1c)]("div.rendered").empty();if(b.length){var f=d("<ul/>")[e5B](e);d[(o6c)](b,function(b,d){var E5='me',H0B='ove',M1B="ses",c8c=' <';f[(L4+q0h+Z6+C7Z.i6)]("<li>"+a[U8B](d,b)+(c8c+n9h+o1+I6B+U7c+B7h+y6B+e4B+Y6c)+c[(D7+q7B+M1B)][(C7Z.p5h+C7Z.N6+f2h)][G6]+(U7c+U1B+I6h+C1h+H0B+w8B+u7h+v8+Z9h+b0+d3h+u7h+l7B+Y6c)+b+(I1+f4c+d3h+E5+r1B+n6c+n9h+l4c+u7c+g1h+m1+n3h+d3h+J7));}
-);}
-else e[(C7Z.Q6+u2B)]((q7c+C7Z.c0h+q0h+o4+V7c)+(a[(C7Z.l8h+t8h+Q5+d5h+Z9B)]||(h8c+p7B+C7Z.p5h+d5h+C7Z.F0c))+(s3c+C7Z.c0h+q0h+C7Z.Q6+C7Z.l8h+V7c));}
-a[j6c][M1c]((d5h+P6c+m9B))[(m6h+Y0c+C7Z.V7+Q+C7Z.l8h+G8c)]((C7Z.F4h+q0h+E2c+C7Z.i6+C7Z.I4c+C7Z.V7+A0+t8h+B0h),[a[(W9c+E8h)]]);}
-,enable:function(a){a[(S8B+C7Z.l8h+q0h+m9B)][(C7Z.p5h+d5h+B1c)]("input")[(Y4B+B3)]((C7Z.i6+d5h+P9c+C7Z.V7+C7Z.i6),false);a[(F9+Z6+C7Z.Q6+C7Z.w6+i2h)]=true;}
-,disable:function(a){var b1c="bled",G9="_ena";a[j6c][M1c]((d5h+H5B+C7Z.R4h))[m5h]("disabled",true);a[(G9+b1c)]=false;}
-}
-);t[(C7Z.V7+X7)][r2h]&&d[(C7Z.V7+K4B+T5B)](f[(J6c+P4h+N7+C7Z.c0h)],t[n4c][(n1+l8+d0c+C7Z.i6+C7Z.c0h)]);t[(n4c)][r2h]=f[k2h];f[(C7Z.p5h+c0B+u9)]={}
-;f.prototype.CLASS=(O9B);f[(E4B+C7Z.V7+j5c+C7Z.l8h)]=P4B;return f;}
-);
+
+DataTable.ext.editorFields = Editor.fieldTypes;
+
+
+/**
+ * File information for uploads
+ */
+Editor.files = {};
+
+
+/**
+ * Name of this class
+ *  @constant CLASS
+ *  @type     String
+ *  @default  Editor
+ */
+Editor.prototype.CLASS = "Editor";
+
+
+/**
+ * DataTables Editor version
+ *  @constant  Editor.VERSION
+ *  @type      String
+ *  @default   See code
+ *  @static
+ */
+Editor.version = "1.5.5";
+
+
+// Event documentation for JSDoc
+/**
+ * Processing event, fired when Editor submits data to the server for processing.
+ * This can be used to provide your own processing indicator if your UI framework
+ * already has one.
+ *  @name Editor#processing
+ *  @event
+ *  @param {event} e jQuery event object
+ *  @param {boolean} processing Flag for if the processing is running (true) or
+ *    not (false).
+ */
+
+/**
+ * Form displayed event, fired when the form is made available in the DOM. This
+ * can be useful for fields that require height and width calculations to be
+ * performed since the element is not available in the document until the
+ * form is displayed.
+ *  @name Editor#open
+ *  @event
+ *  @param {event} e jQuery event object
+ *  @param {string} type Editing type
+ */
+
+/**
+ * Before a form is displayed, this event is fired. It allows the open action to be
+ * cancelled by returning false from the function.
+ *  @name Editor#preOpen
+ *  @event
+ *  @param {event} e jQuery event object
+ */
+
+/**
+ * Form hidden event, fired when the form is removed from the document. The
+ * of the compliment `open` event.
+ *  @name Editor#close
+ *  @event
+ *  @param {event} e jQuery event object
+ */
+
+/**
+ * Before a form is closed, this event is fired. It allows the close action to be
+ * cancelled by returning false from the function. This can be useful for confirming
+ * that the user actually wants to close the display (if they have unsaved changes
+ * for example).
+ *  @name Editor#preClose
+ *  @event
+ *  @param {event} e jQuery event object
+ *  @param {string} trigger Action that caused the close event - can be undefined.
+ *    Typically defined by the display controller.
+ */
+
+/**
+ * Emitted before a form blur occurs. A form blur is similar to a close, but
+ * is triggered by a user, typically, clicking on the background, while a close
+ * occurs due to a click on the close button. A blur can precede a close.
+ *  @name Editor#preBlur
+ *  @event
+ *  @param {event} e jQuery event object
+ */
+
+/**
+ * Pre-submit event for the form, fired just before the data is submitted to
+ * the server. This event allows you to modify the data that will be submitted
+ * to the server. Note that this event runs after the 'formatdata' callback
+ * function of the {@link Editor#submit} API method.
+ *  @name Editor#preSubmit
+ *  @event
+ *  @param {event} e jQuery event object
+ *  @param {object} data The data object that will be submitted to the server
+ *  @param {string} action The action type for this submit - `create`, `edit` or
+ *    `remove`.
+ */
+
+/**
+ * Post-submit event for the form, fired immediately after the data has been
+ * loaded by the Ajax call, allowing modification or any other interception
+ * of the data returned form the server.
+ *  @name Editor#postSubmit
+ *  @event
+ *  @param {event} e jQuery event object
+ *  @param {object} json The JSON object returned from the server
+ *  @param {object} data The data object that was be submitted to the server
+ *  @param {string} action The action type for this submit - `create`, `edit` or
+ *    `remove`.
+ */
+
+/**
+ * Submission complete event, fired when data has been submitted to the server and
+ * after any of the return handling code has been run (updating the DataTable
+ * for example). Note that unlike `submitSuccess` and `submitError`, `submitComplete`
+ * will be fired for both a successful submission and an error. Additionally this
+ * event will be fired after `submitSuccess` or `submitError`.
+ *  @name Editor#submitComplete
+ *  @event
+ *  @param {event} e jQuery event object
+ *  @param {object} json The JSON object returned from the server
+ *  @param {object} data The data that was used to update the DataTable
+ */
+
+/**
+ * Submission complete and successful event, fired when data has been successfully
+ * submitted to the server and all actions required by the returned data (inserting
+ * or updating a row) have been completed.
+ *  @name Editor#submitSuccess
+ *  @event
+ *  @param {event} e jQuery event object
+ *  @param {object} json The JSON object returned from the server
+ *  @param {object} data The data that was used to update the DataTable
+ */
+
+/**
+ * Submission complete, but in error event, fired when data has been submitted to
+ * the server but an error occurred on the server (typically a JSON formatting error)
+ *  @name Editor#submitError
+ *  @event
+ *  @param {event} e jQuery event object
+ *  @param {object} xhr The Ajax object
+ *  @param {string} err The error message from jQuery
+ *  @param {object} thrown The exception thrown by jQuery
+ *  @param {object} data The data that was used to update the DataTable
+ */
+
+/**
+ * Create method activated event, fired when the create API method has been called,
+ * just prior to the form being shown. Useful for manipulating the form specifically
+ * for the create state.
+ *  @name Editor#initCreate
+ *  @event
+ *  @param {event} e jQuery event object
+ */
+
+/**
+ * Pre-create new row event, fired just before DataTables calls the fnAddData method
+ * to add new data to the DataTable, allowing modification of the data that will be
+ * used to insert into the table.
+ *  @name Editor#preCreate
+ *  @event
+ *  @param {event} e jQuery event object
+ *  @param {object} json The JSON object returned from the server
+ *  @param {object} data The data that will be used to update the DataTable
+ */
+
+/**
+ * Create new row event, fired when a new row has been created in the DataTable by
+ * a form submission. This is called just after the fnAddData call to the DataTable.
+ *  @name Editor#create
+ *  @event
+ *  @param {event} e jQuery event object
+ *  @param {object} json The JSON object returned from the server
+ *  @param {object} data The data that was used to update the DataTable
+ */
+
+/**
+ * As per the `create` event - included for naming consistency.
+ *  @name Editor#postCreate
+ *  @event
+ *  @param {event} e jQuery event object
+ *  @param {object} json The JSON object returned from the server
+ *  @param {object} data The data that was used to update the DataTable
+ */
+
+/**
+ * Edit method activated event, fired when the edit API method has been called,
+ * just prior to the form being shown. Useful for manipulating the form specifically
+ * for the edit state.
+ *  @name Editor#initEdit
+ *  @event
+ *  @param {event} e jQuery event object
+ *  @param {node} tr TR element of the row to be edited
+ *  @param {array|object} data Data source array / object for the row to be
+ *    edited
+ */
+
+/**
+ * Pre-edit row event, fired just before DataTables calls the fnUpdate method
+ * to edit data in a DataTables row, allowing modification of the data that will be
+ * used to update the table.
+ *  @name Editor#preEdit
+ *  @event
+ *  @param {event} e jQuery event object
+ *  @param {object} json The JSON object returned from the server
+ *  @param {object} data The data that will be used to update the DataTable
+ */
+
+/**
+ * Edit row event, fired when a row has been edited in the DataTable by a form
+ * submission. This is called just after the fnUpdate call to the DataTable.
+ *  @name Editor#edit
+ *  @event
+ *  @param {event} e jQuery event object
+ *  @param {object} json The JSON object returned from the server
+ *  @param {object} data The data that was used to update the DataTable
+ */
+
+/**
+ * As per the `edit` event - included for naming consistency.
+ *  @name Editor#postEdit
+ *  @event
+ *  @param {event} e jQuery event object
+ *  @param {object} json The JSON object returned from the server
+ *  @param {object} data The data that was used to update the DataTable
+ */
+
+/**
+ * Remove method activated event, fired when the remove API method has been
+ * called, just prior to the form being shown. Useful for manipulating the form
+ * specifically for the remove state.
+ *  @name Editor#initRemove
+ *  @event
+ *  @param {event} e jQuery event object
+ *  @param {array} trs Array of the TR elements for the removed to be deleted
+ *  @param {array} data Array of the data source array / objects for the rows to
+ *    be deleted. This is in the same index order as the TR nodes in the second
+ *    parameter.
+ */
+
+/**
+ * Pre-remove row event, fired just before DataTables calls the fnDeleteRow method
+ * to delete a DataTables row.
+ *  @name Editor#preRemove
+ *  @event
+ *  @param {event} e jQuery event object
+ *  @param {object} json The JSON object returned from the server
+ */
+
+/**
+ * Row removed event, fired when a row has been removed in the DataTable by a form
+ * submission. This is called just after the fnDeleteRow call to the DataTable.
+ *  @name Editor#remove
+ *  @event
+ *  @param {event} e jQuery event object
+ *  @param {object} json The JSON object returned from the server
+ */
+
+/**
+ * As per the `postRemove` event - included for naming consistency.
+ *  @name Editor#postRemove
+ *  @event
+ *  @param {event} e jQuery event object
+ *  @param {object} json The JSON object returned from the server
+ */
+
+/**
+ * Set data event, fired when the data is gathered from the form to be used
+ * to update the DataTable. This is a "global" version of `preCreate`, `preEdit`
+ * and `preRemove` and can be used to manipulate the data that will be added
+ * to the DataTable for all three actions
+ *  @name Editor#setData
+ *  @event
+ *  @param {event} e jQuery event object
+ *  @param {object} json The JSON object returned from the server
+ *  @param {object} data The data that will be used to update the DataTable
+ *  @param {string} action The action being performed by the form - 'create',
+ *    'edit' or 'remove'.
+ */
+
+/**
+ * Initialisation of the Editor instance has been completed.
+ *  @name Editor#initComplete
+ *  @event
+ *  @param {event} e jQuery event object
+ */
+
+
+return Editor;
+}));
+
 
 /*! Bootstrap integration for DataTables' Editor
  * ©2015 SpryMedia Ltd - datatables.net/license
@@ -16404,7 +33566,8 @@ DataTable.Editor.display.bootstrap = $.extend( true, {}, DataTable.Editor.models
 			})
 			.appendTo( 'body' )
 			.modal( {
-				"backdrop": "static"
+				backdrop: "static",
+				keyboard: false
 			} );
 
 		$('input:not([type=checkbox]):not([type=radio]), select, textarea', self._dom.content)
@@ -16453,18 +33616,267 @@ return DataTable.Editor;
 }));
 
 
-/*! Responsive 2.0.0
- * 2014-2015 SpryMedia Ltd - datatables.net/license
+/**
+ * [Select2](http://ivaynberg.github.io/select2) is a replacement for HTML
+ * `-tag select` elements, enhancing standard `-tag select`'s with searching,
+ * remote data sets and more. This plug-in provides the ability to use Select2
+ * with Editor very easily.
+ *
+ * @name Select2
+ * @summary Use the Select2 library with Editor for complex select input options.
+ * @requires [Select2](http://ivaynberg.github.io/select2)
+ * @depcss //cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/css/select2.min.css
+ * @depjs //cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/js/select2.min.js
+ * 
+ * @opt `e-type object` **`options`**: - The values and labels to be used in the Select2 list. This can be given in a number of different forms:
+ *   * `e-type object` - Name / value pairs, where the property name is used as the label and the value as the field value. For example: `{ "Edinburgh": 51, "London": 76, ... }`.
+ *   * `e-type array` - An array of objects with the properties `label` and `value` defined. For example: `[ { label: "Edinburgh", value: 51 }, { label: "London", value: 76 } ]`.
+ *   * `e-type array` - An array of values (e.g. numbers, strings etc). Each element in the array will be used for both the label and the value. For example: `[ "Edinburgh", "London" ]`.
+ * @opt `e-type object` **`opts`**: Select2 initialisation options object.
+ *     Please refer to the Select2 documentation for the full range
+ *     of options available.
+ * @opt `e-type object` **`attr`**: Attributes that are applied to the
+ *     `-tag select` element before Select2 is initialised
+ *
+ * @method **`inst`**: Execute a Select2 method, using the arguments given. The
+ *     return value is that returned by the Select2 method. For example you could
+ *     use `editor.field('priority').inst('val')` to get the value from Select2
+ *     directly.
+ * @method **`update`**: Update the list of options that are available in the
+ *     Select2 list. This uses the same format as `options` for the
+ *     initialisation.
+ *
+ * @example
+ * // Create an Editor instance with a Select2 field and data
+ * new $.fn.dataTable.Editor( {
+ *   "ajax": "php/todo.php",
+ *   "table": "#example",
+ *   "fields": [ {
+ *           "label": "Item:",
+ *           "name": "item"
+ *       }, {
+ *           "label": "Priority:",
+ *           "name": "priority",
+ *           "type": "select2",
+ *           "options": [
+ *               { "label": "1 (highest)", "value": "1" },
+ *               { "label": "2",           "value": "2" },
+ *               { "label": "3",           "value": "3" },
+ *               { "label": "4",           "value": "4" },
+ *               { "label": "5 (lowest)",  "value": "5" }
+ *           ]
+ *       }, {
+ *           "label": "Status:",
+ *           "name": "status",
+ *           "type": "radio",
+ *           "default": "Done",
+ *           "options": [
+ *               { "label": "To do", "value": "To do" },
+ *               { "label": "Done", "value": "Done" }
+ *           ]
+ *       }
+ *   ]
+ * } );
+ *
+ * @example
+ * // Add a Select2 field to Editor with Select2 options set
+ * editor.add( {
+ *     "label": "State:",
+ *     "name": "state",
+ *     "type": "select2",
+ *     "opts": {
+ *         "placeholder": "Select State",
+ *         "allowClear": true
+ *     }
+ * } );
+ * 
+ */
+
+(function( factory ){
+	if ( typeof define === 'function' && define.amd ) {
+		// AMD
+		define( ['jquery', 'datatables', 'datatables-editor'], factory );
+	}
+	else if ( typeof exports === 'object' ) {
+		// Node / CommonJS
+		module.exports = function ($, dt) {
+			if ( ! $ ) { $ = require('jquery'); }
+			factory( $, dt || $.fn.dataTable || require('datatables') );
+		};
+	}
+	else if ( jQuery ) {
+		// Browser standard
+		factory( jQuery, jQuery.fn.dataTable );
+	}
+}(function( $, DataTable ) {
+'use strict';
+
+
+if ( ! DataTable.ext.editorFields ) {
+	DataTable.ext.editorFields = {};
+}
+
+var _fieldTypes = DataTable.Editor ?
+    DataTable.Editor.fieldTypes :
+    DataTable.ext.editorFields;
+
+
+_fieldTypes.select2 = {
+	_addOptions: function ( conf, opts ) {
+		var elOpts = conf._input[0].options;
+
+		elOpts.length = 0;
+
+		if ( opts ) {
+			DataTable.Editor.pairs( opts, conf.optionsPair, function ( val, label, i ) {
+				elOpts[i] = new Option( label, val );
+			} );
+		}
+	},
+
+	create: function ( conf ) {
+		conf._input = $('<select/>')
+			.attr( $.extend( {
+				id: DataTable.Editor.safeId( conf.id )
+			}, conf.attr || {} ) );
+
+		var options = $.extend( {
+				width: '100%'
+			}, conf.opts );
+
+		_fieldTypes.select2._addOptions( conf, conf.options || conf.ipOpts );
+		conf._input.select2( options );
+
+		// On open, need to have the instance update now that it is in the DOM
+		this.on( 'open.select2-'+DataTable.Editor.safeId( conf.id ), function () {
+			conf._input.select2( options );
+		} );
+
+		return conf._input[0];
+	},
+
+	get: function ( conf ) {
+		var val = conf._input.val();
+
+		return conf._input.prop('multiple') && val === null ?
+			[] :
+			val;
+	},
+
+	set: function ( conf, val ) {
+		conf._input.val( val );
+	},
+
+	enable: function ( conf ) {
+		conf._input.select2('enable');
+		$(conf._input).removeClass( 'disabled' );
+	},
+
+	disable: function ( conf ) {
+		conf._input.select2('disable');
+		$(conf._input).addClass( 'disabled' );
+	},
+
+	// Non-standard Editor methods - custom to this plug-in
+	inst: function ( conf ) {
+		var args = Array.prototype.slice.call( arguments );
+		args.shift();
+
+		return conf._input.select2.apply( conf._input, args );
+	},
+
+	update: function ( conf, data ) {
+		_fieldTypes.select2._addOptions( conf, data );
+		$(conf._input).trigger('change');
+	},
+
+	focus: function ( conf ) {
+		conf._input.select2('open');
+	}
+};
+
+
+}));
+
+
+/**
+ * Use a field as a grouping title for other fields. This provides the end
+ * user with easy to understand grouping.
+ *
+ * Fields defined with this type are not submitted to the server, but they do
+ * need to be initialised as normal using `e-api add()` or `e-init fields`.
+ *
+ * @name Field set title
+ * @summary Field grouping display
+ *
+ * @scss editor.title.scss
+ *
+ * @example
+ *     
+ * new $.fn.dataTable.Editor( {
+ *   "ajax": "php/dates.php",
+ *   "table": "#staff",
+ *   "fields": [ {
+ *       "label": "Personal information",
+ *       "name": "pinfo",
+ *       "type": "title"
+ *     }, 
+ *     // additional fields...
+ *   ]
+ * } );
+ */
+
+(function( factory ){
+	if ( typeof define === 'function' && define.amd ) {
+		// AMD
+		define( ['jquery', 'datatables', 'datatables-editor'], factory );
+	}
+	else if ( typeof exports === 'object' ) {
+		// Node / CommonJS
+		module.exports = function ($, dt) {
+			if ( ! $ ) { $ = require('jquery'); }
+			factory( $, dt || $.fn.dataTable || require('datatables') );
+		};
+	}
+	else if ( jQuery ) {
+		// Browser standard
+		factory( jQuery, jQuery.fn.dataTable );
+	}
+}(function( $, DataTable ) {
+'use strict';
+
+
+if ( ! DataTable.ext.editorFields ) {
+    DataTable.ext.editorFields = {};
+}
+
+var _fieldTypes = DataTable.Editor ?
+    DataTable.Editor.fieldTypes :
+    DataTable.ext.editorFields;
+
+
+_fieldTypes.title = {
+    create: function ( field )      { return $('<div/>')[0]; },
+    get:    function ( field )      { return ''; },
+    set:    function ( field, val ) {}
+};
+
+
+}));
+
+
+/*! Responsive 2.0.2
+ * 2014-2016 SpryMedia Ltd - datatables.net/license
  */
 
 /**
  * @summary     Responsive
  * @description Responsive tables plug-in for DataTables
- * @version     2.0.0
+ * @version     2.0.2
  * @file        dataTables.responsive.js
  * @author      SpryMedia Ltd (www.sprymedia.co.uk)
  * @contact     www.sprymedia.co.uk/contact
- * @copyright   Copyright 2014-2015 SpryMedia Ltd.
+ * @copyright   Copyright 2014-2016 SpryMedia Ltd.
  *
  * This source file is free software, available under the following license:
  *   MIT license - http://datatables.net/license/mit
@@ -16568,8 +33980,15 @@ var Responsive = function ( settings, opts ) {
 	}
 
 	// details is an object, but for simplicity the user can give it as a string
+	// or a boolean
 	if ( opts && typeof opts.details === 'string' ) {
 		opts.details = { type: opts.details };
+	}
+	else if ( opts && opts.details === false ) {
+		opts.details = { type: false };
+	}
+	else if ( opts && opts.details === true ) {
+		opts.details = { type: 'inline' };
 	}
 
 	this.c = $.extend( true, {}, Responsive.defaults, DataTable.defaults.responsive, opts );
@@ -16592,13 +34011,21 @@ $.extend( Responsive.prototype, {
 		var that = this;
 		var dt = this.s.dt;
 		var dtPrivateSettings = dt.settings()[0];
+		var oldWindowWidth = $(window).width();
 
 		dt.settings()[0]._responsive = this;
 
 		// Use DataTables' throttle function to avoid processor thrashing on
 		// resize
 		$(window).on( 'resize.dtr orientationchange.dtr', DataTable.util.throttle( function () {
-			that._resize();
+			// iOS has a bug whereby resize can fire when only scrolling
+			// See: http://stackoverflow.com/questions/8898412
+			var width = $(window).width();
+
+			if ( width !== oldWindowWidth ) {
+				that._resize();
+				oldWindowWidth = width;
+			}
 		} ) );
 
 		// DataTables doesn't currently trigger an event when a row is added, so
@@ -16642,6 +34069,7 @@ $.extend( Responsive.prototype, {
 
 		// Details handler
 		var details = this.c.details;
+
 		if ( details.type !== false ) {
 			that._detailsInit();
 
@@ -16664,11 +34092,24 @@ $.extend( Responsive.prototype, {
 		}
 
 		dt.on( 'column-reorder.dtr', function (e, settings, details) {
-			// This requires ColReorder 1.2.1 or newer
-			if ( details.drop ) {
-				that._classLogic();
-				that._resizeAuto();
-				that._resize();
+			that._classLogic();
+			that._resizeAuto();
+			that._resize();
+		} );
+
+		// Change in column sizes means we need to calc
+		dt.on( 'column-sizing.dtr', function () {
+			that._resize();
+		});
+
+		dt.on( 'init.dtr', function (e, settings, details) {
+			that._resizeAuto();
+			that._resize();
+
+			// If columns were hidden, then DataTables needs to adjust the
+			// column sizing
+			if ( $.inArray( false, that.s.current ) ) {
+				dt.columns.adjust();
 			}
 		} );
 
@@ -16715,7 +34156,6 @@ $.extend( Responsive.prototype, {
 				}
 				return a.columnIdx - b.columnIdx;
 			} );
-
 
 		// Class logic - determine which columns are in this breakpoint based
 		// on the classes. If no class control (i.e. `auto`) then `-` is used
@@ -16830,8 +34270,10 @@ $.extend( Responsive.prototype, {
 			var priority = dt.settings()[0].aoColumns[i].responsivePriority;
 
 			if ( priority === undefined ) {
-				priority = $(column.header).data('priority') !== undefined ?
-					$(column.header).data('priority') * 1 :
+				var dataPriority = $(column.header()).data('priority');
+
+				priority = dataPriority !== undefined ?
+					dataPriority * 1 :
 					10000;
 			}
 
@@ -16964,15 +34406,18 @@ $.extend( Responsive.prototype, {
 	{
 		var that = this;
 		var dt = this.s.dt;
+		var details = this.c.details;
 
-		var res = this.c.details.display( row, update, function () {
-			return that.c.details.renderer(
-				dt, row[0], that._detailsObj(row[0])
-			);
-		} );
+		if ( details && details.type ) {
+			var res = details.display( row, update, function () {
+				return details.renderer(
+					dt, row[0], that._detailsObj(row[0])
+				);
+			} );
 
-		if ( res === true || res === false ) {
-			$(dt.table().node()).triggerHandler( 'responsive-display.dt', [dt, row, res, update] );
+			if ( res === true || res === false ) {
+				$(dt.table().node()).triggerHandler( 'responsive-display.dt', [dt, row, res, update] );
+			}
 		}
 	},
 
@@ -16990,7 +34435,7 @@ $.extend( Responsive.prototype, {
 
 		// The inline type always uses the first child as the target
 		if ( details.type === 'inline' ) {
-			details.target = 'td:first-child';
+			details.target = 'td:first-child, th:first-child';
 		}
 
 		// Keyboard accessibility
@@ -16999,7 +34444,7 @@ $.extend( Responsive.prototype, {
 		} );
 		that._tabIndexes(); // Initial draw has already happened
 
-		$( dt.table().body() ).on( 'keyup.dtr', 'td', function (e) {
+		$( dt.table().body() ).on( 'keyup.dtr', 'td, th', function (e) {
 			if ( e.keyCode === 13 && $(this).data('dtr-keyboard') ) {
 				$(this).click();
 			}
@@ -17007,15 +34452,11 @@ $.extend( Responsive.prototype, {
 
 		// type.target can be a string jQuery selector or a column index
 		var target   = details.target;
-		var selector = typeof target === 'string' ? target : 'td';
+		var selector = typeof target === 'string' ? target : 'td, th';
 
 		// Click handler to show / hide the details rows when they are available
 		$( dt.table().body() )
-			.on( 'mousedown.dtr', selector, function (e) {
-				// For mouse users, prevent the focus ring from showing
-				e.preventDefault();
-			} )
-			.on( 'click.dtr', selector, function () {
+			.on( 'click.dtr mousedown.dtr mouseup.dtr', selector, function (e) {
 				// If the table is not collapsed (i.e. there is no hidden columns)
 				// then take no action
 				if ( ! $(dt.table().node()).hasClass('collapsed' ) ) {
@@ -17042,10 +34483,21 @@ $.extend( Responsive.prototype, {
 				// $().closest() includes itself in its check
 				var row = dt.row( $(this).closest('tr') );
 
-				// The renderer is given as a function so the caller can execute it
-				// only when they need (i.e. if hiding there is no point is running
-				// the renderer)
-				that._detailsDisplay( row, false );
+				// Check event type to do an action
+				if ( e.type === 'click' ) {
+					// The renderer is given as a function so the caller can execute it
+					// only when they need (i.e. if hiding there is no point is running
+					// the renderer)
+					that._detailsDisplay( row, false );
+				}
+				else if ( e.type === 'mousedown' ) {
+					// For mouse users, prevent the focus ring from showing
+					$(this).css('outline', 'none');
+				}
+				else if ( e.type === 'mouseup' ) {
+					// And then re-allow at the end of the click
+					$(this).blur().css('outline', '');
+				}
 			} );
 	},
 
@@ -17066,9 +34518,11 @@ $.extend( Responsive.prototype, {
 			}
 
 			return {
-				title:   dt.settings()[0].aoColumns[ i ].sTitle,
-				data:    dt.cell( rowIdx, i ).render( that.c.orthogonal ),
-				hidden:  dt.column( i ).visible() && !that.s.current[ i ]
+				title:       dt.settings()[0].aoColumns[ i ].sTitle,
+				data:        dt.cell( rowIdx, i ).render( that.c.orthogonal ),
+				hidden:      dt.column( i ).visible() && !that.s.current[ i ],
+				columnIndex: i,
+				rowIndex:    rowIdx
 			};
 		} );
 	},
@@ -17147,7 +34601,7 @@ $.extend( Responsive.prototype, {
 		// any columns that are not visible but can be shown
 		var collapsedClass = false;
 		for ( i=0, ien=columns.length ; i<ien ; i++ ) {
-			if ( columnsVis[i] === false && ! columns[i].never ) {
+			if ( columnsVis[i] === false && ! columns[i].never && ! columns[i].control ) {
 				collapsedClass = true;
 				break;
 			}
@@ -17166,6 +34620,9 @@ $.extend( Responsive.prototype, {
 
 		if ( changed ) {
 			this._redrawChildren();
+
+			// Inform listeners of the change
+			$(dt.table().node()).trigger( 'responsive-resize.dt', [dt, this.s.current] );
 		}
 	},
 
@@ -17199,7 +34656,7 @@ $.extend( Responsive.prototype, {
 		var columnWidths = dt.columns;
 		var clonedTable  = dt.table().node().cloneNode( false );
 		var clonedHeader = $( dt.table().header().cloneNode( false ) ).appendTo( clonedTable );
-		var clonedBody   = $( dt.table().body().cloneNode( false ) ).appendTo( clonedTable );
+		var clonedBody   = $( dt.table().body() ).clone( false, false ).empty().appendTo( clonedTable ); // use jQuery because of IE8
 
 		// Header
 		var headerCells = dt.columns()
@@ -17416,12 +34873,6 @@ Responsive.display = {
 					)
 					.appendTo( 'body' );
 
-				if ( options && options.header ) {
-					modal.find( 'div.dtr-modal-content' ).prepend(
-						'<h2>'+options.header( row )+'</h2>'
-					);
-				}
-
 				$(document).on( 'keyup.dtr', function (e) {
 					if ( e.keyCode === 27 ) {
 						e.stopPropagation();
@@ -17434,6 +34885,12 @@ Responsive.display = {
 				$('div.dtr-modal-content')
 					.empty()
 					.append( render() );
+			}
+
+			if ( options && options.header ) {
+				$('div.dtr-modal-content').prepend(
+					'<h2>'+options.header( row )+'</h2>'
+				);
 			}
 		};
 	}
@@ -17491,7 +34948,7 @@ Responsive.defaults = {
 		renderer: function ( api, rowIdx, columns ) {
 			var data = $.map( columns, function ( col, i ) {
 				return col.hidden ?
-					'<li data-dtr-index="'+i+'">'+
+					'<li data-dtr-index="'+col.columnIndex+'" data-dt-row="'+col.rowIndex+'" data-dt-column="'+col.columnIndex+'">'+
 						'<span class="dtr-title">'+
 							col.title+
 						'</span> '+
@@ -17573,7 +35030,7 @@ Api.register( 'responsive.hasHidden()', function () {
  * @name Responsive.version
  * @static
  */
-Responsive.version = '2.0.0';
+Responsive.version = '2.0.2';
 
 
 $.fn.dataTable.Responsive = Responsive;
@@ -17581,7 +35038,7 @@ $.fn.DataTable.Responsive = Responsive;
 
 // Attach a listener to the document which listens for DataTables initialisation
 // events so we can automatically initialise
-$(document).on( 'init.dt.dtr', function (e, settings, json) {
+$(document).on( 'preInit.dt.dtr', function (e, settings, json) {
 	if ( e.namespace !== 'dt' ) {
 		return;
 	}
@@ -17601,1046 +35058,6 @@ $(document).on( 'init.dt.dtr', function (e, settings, json) {
 
 
 return Responsive;
-}));
-
-
-/*! Select for DataTables 1.1.0
- * 2015 SpryMedia Ltd - datatables.net/license/mit
- */
-
-/**
- * @summary     Select for DataTables
- * @description A collection of API methods, events and buttons for DataTables
- *   that provides selection options of the items in a DataTable
- * @version     1.1.0
- * @file        dataTables.select.js
- * @author      SpryMedia Ltd (www.sprymedia.co.uk)
- * @contact     datatables.net/forums
- * @copyright   Copyright 2015 SpryMedia Ltd.
- *
- * This source file is free software, available under the following license:
- *   MIT license - http://datatables.net/license/mit
- *
- * This source file is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE. See the license files for details.
- *
- * For details please refer to: http://www.datatables.net/extensions/select
- */
-(function( factory ){
-	if ( typeof define === 'function' && define.amd ) {
-		// AMD
-		define( ['jquery', 'datatables.net'], function ( $ ) {
-			return factory( $, window, document );
-		} );
-	}
-	else if ( typeof exports === 'object' ) {
-		// CommonJS
-		module.exports = function (root, $) {
-			if ( ! root ) {
-				root = window;
-			}
-
-			if ( ! $ || ! $.fn.dataTable ) {
-				$ = require('datatables.net')(root, $).$;
-			}
-
-			return factory( $, root, root.document );
-		};
-	}
-	else {
-		// Browser
-		factory( jQuery, window, document );
-	}
-}(function( $, window, document, undefined ) {
-'use strict';
-var DataTable = $.fn.dataTable;
-
-
-// Version information for debugger
-DataTable.select = {};
-DataTable.select.version = '1.1.0';
-
-/*
-
-Select is a collection of API methods, event handlers, event emitters and
-buttons (for the `Buttons` extension) for DataTables. It provides the following
-features, with an overview of how they are implemented:
-
-## Selection of rows, columns and cells. Whether an item is selected or not is
-   stored in:
-
-* rows: a `_select_selected` property which contains a boolean value of the
-  DataTables' `aoData` object for each row
-* columns: a `_select_selected` property which contains a boolean value of the
-  DataTables' `aoColumns` object for each column
-* cells: a `_selected_cells` property which contains an array of boolean values
-  of the `aoData` object for each row. The array is the same length as the
-  columns array, with each element of it representing a cell.
-
-This method of using boolean flags allows Select to operate when nodes have not
-been created for rows / cells (DataTables' defer rendering feature).
-
-## API methods
-
-A range of API methods are available for triggering selection and de-selection
-of rows. Methods are also available to configure the selection events that can
-be triggered by an end user (such as which items are to be selected). To a large
-extent, these of API methods *is* Select. It is basically a collection of helper
-functions that can be used to select items in a DataTable.
-
-Configuration of select is held in the object `_select` which is attached to the
-DataTables settings object on initialisation. Select being available on a table
-is not optional when Select is loaded, but its default is for selection only to
-be available via the API - so the end user wouldn't be able to select rows
-without additional configuration.
-
-The `_select` object contains the following properties:
-
-```
-{
-	items:string     - Can be `rows`, `columns` or `cells`. Defines what item 
-	                   will be selected if the user is allowed to activate row
-	                   selection using the mouse.
-	style:string     - Can be `none`, `single`, `multi` or `os`. Defines the
-	                   interaction style when selecting items
-	blurable:boolean - If row selection can be cleared by clicking outside of
-	                   the table
-	info:boolean     - If the selection summary should be shown in the table
-	                   information elements
-}
-```
-
-In addition to the API methods, Select also extends the DataTables selector
-options for rows, columns and cells adding a `selected` option to the selector
-options object, allowing the developer to select only selected items or
-unselected items.
-
-## Mouse selection of items
-
-Clicking on items can be used to select items. This is done by a simple event
-handler that will select the items using the API methods.
-
- */
-
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- * Local functions
- */
-
-/**
- * Add one or more cells to the selection when shift clicking in OS selection
- * style cell selection.
- *
- * Cell range is more complicated than row and column as we want to select
- * in the visible grid rather than by index in sequence. For example, if you
- * click first in cell 1-1 and then shift click in 2-2 - cells 1-2 and 2-1
- * should also be selected (and not 1-3, 1-4. etc)
- * 
- * @param  {DataTable.Api} dt   DataTable
- * @param  {object}        idx  Cell index to select to
- * @param  {object}        last Cell index to select from
- * @private
- */
-function cellRange( dt, idx, last )
-{
-	var indexes;
-	var columnIndexes;
-	var rowIndexes;
-	var selectColumns = function ( start, end ) {
-		if ( start > end ) {
-			var tmp = end;
-			end = start;
-			start = tmp;
-		}
-		
-		var record = false;
-		return dt.columns( ':visible' ).indexes().filter( function (i) {
-			if ( i === start ) {
-				record = true;
-			}
-			
-			if ( i === end ) { // not else if, as start might === end
-				record = false;
-				return true;
-			}
-
-			return record;
-		} );
-	};
-
-	var selectRows = function ( start, end ) {
-		var indexes = dt.rows( { search: 'applied' } ).indexes();
-
-		// Which comes first - might need to swap
-		if ( indexes.indexOf( start ) > indexes.indexOf( end ) ) {
-			var tmp = end;
-			end = start;
-			start = tmp;
-		}
-
-		var record = false;
-		return indexes.filter( function (i) {
-			if ( i === start ) {
-				record = true;
-			}
-			
-			if ( i === end ) {
-				record = false;
-				return true;
-			}
-
-			return record;
-		} );
-	};
-
-	if ( ! dt.cells( { selected: true } ).any() && ! last ) {
-		// select from the top left cell to this one
-		columnIndexes = selectColumns( 0, idx.column );
-		rowIndexes = selectRows( 0 , idx.row );
-	}
-	else {
-		// Get column indexes between old and new
-		columnIndexes = selectColumns( last.column, idx.column );
-		rowIndexes = selectRows( last.row , idx.row );
-	}
-
-	indexes = dt.cells( rowIndexes, columnIndexes ).flatten();
-
-	if ( ! dt.cells( idx, { selected: true } ).any() ) {
-		// Select range
-		dt.cells( indexes ).select();
-	}
-	else {
-		// Deselect range
-		dt.cells( indexes ).deselect();
-	}
-}
-
-/**
- * Disable mouse selection by removing the selectors
- *
- * @param {DataTable.Api} dt DataTable to remove events from
- * @private
- */
-function disableMouseSelection( dt )
-{
-	var ctx = dt.settings()[0];
-	var selector = ctx._select.selector;
-
-	$( dt.table().body() )
-		.off( 'mousedown.dtSelect', selector )
-		.off( 'mouseup.dtSelect', selector )
-		.off( 'click.dtSelect', selector );
-
-	$('body').off( 'click.dtSelect' );
-}
-
-/**
- * Attach mouse listeners to the table to allow mouse selection of items
- *
- * @param {DataTable.Api} dt DataTable to remove events from
- * @private
- */
-function enableMouseSelection ( dt )
-{
-	var body = $( dt.table().body() );
-	var ctx = dt.settings()[0];
-	var selector = ctx._select.selector;
-
-	body
-		.on( 'mousedown.dtSelect', selector, function(e) {
-			// Disallow text selection for shift clicking on the table so multi
-			// element selection doesn't look terrible!
-			if ( e.shiftKey ) {
-				body
-					.css( '-moz-user-select', 'none' )
-					.one('selectstart.dtSelect', selector, function () {
-						return false;
-					} );
-			}
-		} )
-		.on( 'mouseup.dtSelect', selector, function(e) {
-			// Allow text selection to occur again, Mozilla style (tested in FF
-			// 35.0.1 - still required)
-			body.css( '-moz-user-select', '' );
-		} )
-		.on( 'click.dtSelect', selector, function ( e ) {
-			var items = dt.select.items();
-			var idx;
-
-			var ctx = dt.settings()[0];
-
-			// Ignore clicks inside a sub-table
-			if ( $(e.target).closest('tbody')[0] != body[0] ) {
-				return;
-			}
-
-			var cell = $(e.target).closest('td, th');
-			var cellIndex = dt.cell( cell ).index();
-
-			// Check the cell actually belongs to the host DataTable (so child rows,
-			// etc, are ignored)
-			if ( ! dt.cell( cell ).any() ) {
-				return;
-			}
-
-			if ( items === 'row' ) {
-				idx = cellIndex.row;
-				typeSelect( e, dt, ctx, 'row', idx );
-			}
-			else if ( items === 'column' ) {
-				idx = dt.cell( cell ).index().column;
-				typeSelect( e, dt, ctx, 'column', idx );
-			}
-			else if ( items === 'cell' ) {
-				idx = dt.cell( cell ).index();
-				typeSelect( e, dt, ctx, 'cell', idx );
-			}
-
-			ctx._select_lastCell = cellIndex;
-		} );
-
-	// Blurable
-	$('body').on( 'click.dtSelect', function ( e ) {
-		if ( ctx._select.blurable ) {
-			// If the click was inside the DataTables container, don't blur
-			if ( $(e.target).parents().filter( dt.table().container() ).length ) {
-				return;
-			}
-
-			// Don't blur in Editor form
-			if ( $(e.target).parents('div.DTE').length ) {
-				return;
-			}
-
-			clear( ctx, true );
-		}
-	} );
-}
-
-/**
- * Trigger an event on a DataTable
- *
- * @param {DataTable.Api} api      DataTable to trigger events on
- * @param  {boolean}      selected true if selected, false if deselected
- * @param  {string}       type     Item type acting on
- * @param  {boolean}      any      Require that there are values before
- *     triggering
- * @private
- */
-function eventTrigger ( api, type, args, any )
-{
-	if ( any && ! api.flatten().length ) {
-		return;
-	}
-
-	args.unshift( api );
-
-	$(api.table().node()).triggerHandler( type+'.dt', args );
-}
-
-/**
- * Update the information element of the DataTable showing information about the
- * items selected. This is done by adding tags to the existing text
- * 
- * @param {DataTable.Api} api DataTable to update
- * @private
- */
-function info ( api )
-{
-	var ctx = api.settings()[0];
-
-	if ( ! ctx._select.info || ! ctx.aanFeatures.i ) {
-		return;
-	}
-
-	var output  = $('<span class="select-info"/>');
-	var add = function ( name, num ) {
-		output.append( $('<span class="select-item"/>').append( api.i18n(
-			'select.'+name+'s',
-			{ _: '%d '+name+'s selected', 0: '', 1: '1 '+name+' selected' },
-			num
-		) ) );
-	};
-
-	add( 'row',    api.rows( { selected: true } ).flatten().length );
-	add( 'column', api.columns( { selected: true } ).flatten().length );
-	add( 'cell',   api.cells( { selected: true } ).flatten().length );
-
-	// Internal knowledge of DataTables to loop over all information elements
-	$.each( ctx.aanFeatures.i, function ( i, el ) {
-		el = $(el);
-
-		var exisiting = el.children('span.select-info');
-		if ( exisiting.length ) {
-			exisiting.remove();
-		}
-
-		if ( output.text() !== '' ) {
-			el.append( output );
-		}
-	} );
-}
-
-/**
- * Initialisation of a new table. Attach event handlers and callbacks to allow
- * Select to operate correctly.
- *
- * This will occur _after_ the initial DataTables initialisation, although
- * before Ajax data is rendered, if there is ajax data
- *
- * @param  {DataTable.settings} ctx Settings object to operate on
- * @private
- */
-function init ( ctx ) {
-	var api = new DataTable.Api( ctx );
-
-	// Row callback so that classes can be added to rows and cells if the item
-	// was selected before the element was created. This will happen with the
-	// `deferRender` option enabled.
-	// 
-	// This method of attaching to `aoRowCreatedCallback` is a hack until
-	// DataTables has proper events for row manipulation If you are reviewing
-	// this code to create your own plug-ins, please do not do this!
-	ctx.aoRowCreatedCallback.push( {
-		fn: function ( row, data, index ) {
-			var i, ien;
-			var d = ctx.aoData[ index ];
-
-			// Row
-			if ( d._select_selected ) {
-				$( row ).addClass( ctx._select.className );
-			}
-
-			// Cells and columns - if separated out, we would need to do two
-			// loops, so it makes sense to combine them into a single one
-			for ( i=0, ien=ctx.aoColumns.length ; i<ien ; i++ ) {
-				if ( ctx.aoColumns[i]._select_selected || (d._selected_cells && d._selected_cells[i]) ) {
-					$(d.anCells[i]).addClass( ctx._select.className );
-				}
-			}
-		},
-		sName: 'select-deferRender'
-	} );
-
-	// On Ajax reload we want to reselect all rows which are currently selected,
-	// if there is an rowId (i.e. a unique value to identify each row with)
-	api.on( 'preXhr.dt.dtSelect', function () {
-		// note that column selection doesn't need to be cached and then
-		// reselected, as they are already selected
-		var rows = api.rows( { selected: true } ).ids( true ).filter( function ( d ) {
-			return d !== undefined;
-		} );
-
-		var cells = api.cells( { selected: true } ).eq(0).map( function ( cellIdx ) {
-			var id = api.row( cellIdx.row ).id( true );
-			return id ?
-				{ row: id, column: cellIdx.column } :
-				undefined;
-		} ).filter( function ( d ) {
-			return d !== undefined;
-		} );
-
-		// On the next draw, reselect the currently selected items
-		api.one( 'draw.dt.dtSelect', function () {
-			api.rows( rows ).select();
-
-			// `cells` is not a cell index selector, so it needs a loop
-			if ( cells.any() ) {
-				cells.each( function ( id ) {
-					api.cells( id.row, id.column ).select();
-				} );
-			}
-		} );
-	} );
-
-	// Update the table information element with selected item summary
-	api.on( 'draw.dtSelect.dt select.dtSelect.dt deselect.dtSelect.dt', function () {
-		info( api );
-	} );
-
-	// Clean up and release
-	api.on( 'destroy.dtSelect', function () {
-		disableMouseSelection( api );
-		api.off( '.dtSelect' );
-	} );
-}
-
-/**
- * Add one or more items (rows or columns) to the selection when shift clicking
- * in OS selection style
- *
- * @param  {DataTable.Api} dt   DataTable
- * @param  {string}        type Row or column range selector
- * @param  {object}        idx  Item index to select to
- * @param  {object}        last Item index to select from
- * @private
- */
-function rowColumnRange( dt, type, idx, last )
-{
-	// Add a range of rows from the last selected row to this one
-	var indexes = dt[type+'s']( { search: 'applied' } ).indexes();
-	var idx1 = $.inArray( last, indexes );
-	var idx2 = $.inArray( idx, indexes );
-
-	if ( ! dt[type+'s']( { selected: true } ).any() && idx1 === -1 ) {
-		// select from top to here - slightly odd, but both Windows and Mac OS
-		// do this
-		indexes.splice( $.inArray( idx, indexes )+1, indexes.length );
-	}
-	else {
-		// reverse so we can shift click 'up' as well as down
-		if ( idx1 > idx2 ) {
-			var tmp = idx2;
-			idx2 = idx1;
-			idx1 = tmp;
-		}
-
-		indexes.splice( idx2+1, indexes.length );
-		indexes.splice( 0, idx1 );
-	}
-
-	if ( ! dt[type]( idx, { selected: true } ).any() ) {
-		// Select range
-		dt[type+'s']( indexes ).select();
-	}
-	else {
-		// Deselect range - need to keep the clicked on row selected
-		indexes.splice( $.inArray( idx, indexes ), 1 );
-		dt[type+'s']( indexes ).deselect();
-	}
-}
-
-/**
- * Clear all selected items
- *
- * @param  {DataTable.settings} ctx Settings object of the host DataTable
- * @param  {boolean} [force=false] Force the de-selection to happen, regardless
- *     of selection style
- * @private
- */
-function clear( ctx, force )
-{
-	if ( force || ctx._select.style === 'single' ) {
-		var api = new DataTable.Api( ctx );
-		
-		api.rows( { selected: true } ).deselect();
-		api.columns( { selected: true } ).deselect();
-		api.cells( { selected: true } ).deselect();
-	}
-}
-
-/**
- * Select items based on the current configuration for style and items.
- *
- * @param  {object}             e    Mouse event object
- * @param  {DataTables.Api}     dt   DataTable
- * @param  {DataTable.settings} ctx  Settings object of the host DataTable
- * @param  {string}             type Items to select
- * @param  {int|object}         idx  Index of the item to select
- * @private
- */
-function typeSelect ( e, dt, ctx, type, idx )
-{
-	var style = dt.select.style();
-	var isSelected = dt[type]( idx, { selected: true } ).any();
-
-	if ( style === 'os' ) {
-		if ( e.ctrlKey || e.metaKey ) {
-			// Add or remove from the selection
-			dt[type]( idx ).select( ! isSelected );
-		}
-		else if ( e.shiftKey ) {
-			if ( type === 'cell' ) {
-				cellRange( dt, idx, ctx._select_lastCell || null );
-			}
-			else {
-				rowColumnRange( dt, type, idx, ctx._select_lastCell ?
-					ctx._select_lastCell[type] :
-					null
-				);
-			}
-		}
-		else {
-			// No cmd or shift click - deselect if selected, or select
-			// this row only
-			var selected = dt[type+'s']( { selected: true } );
-
-			if ( isSelected && selected.flatten().length === 1 ) {
-				dt[type]( idx ).deselect();
-			}
-			else {
-				selected.deselect();
-				dt[type]( idx ).select();
-			}
-		}
-	}
-	else {
-		dt[ type ]( idx ).select( ! isSelected );
-	}
-}
-
-
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- * DataTables selectors
- */
-
-// row and column are basically identical just assigned to different properties
-// and checking a different array, so we can dynamically create the functions to
-// reduce the code size
-$.each( [
-	{ type: 'row', prop: 'aoData' },
-	{ type: 'column', prop: 'aoColumns' }
-], function ( i, o ) {
-	DataTable.ext.selector[ o.type ].push( function ( settings, opts, indexes ) {
-		var selected = opts.selected;
-		var data;
-		var out = [];
-
-		if ( selected === undefined ) {
-			return indexes;
-		}
-
-		for ( var i=0, ien=indexes.length ; i<ien ; i++ ) {
-			data = settings[ o.prop ][ indexes[i] ];
-
-			if ( (selected === true && data._select_selected === true) ||
-				 (selected === false && ! data._select_selected )
-			) {
-				out.push( indexes[i] );
-			}
-		}
-
-		return out;
-	} );
-} );
-
-DataTable.ext.selector.cell.push( function ( settings, opts, cells ) {
-	var selected = opts.selected;
-	var rowData;
-	var out = [];
-
-	if ( selected === undefined ) {
-		return cells;
-	}
-
-	for ( var i=0, ien=cells.length ; i<ien ; i++ ) {
-		rowData = settings.aoData[ cells[i].row ];
-
-		if ( (selected === true && rowData._selected_cells && rowData._selected_cells[ cells[i].column ] === true) ||
-			 (selected === false && ( ! rowData._selected_cells || ! rowData._selected_cells[ cells[i].column ] ) )
-		) {
-			out.push( cells[i] );
-		}
-	}
-
-	return out;
-} );
-
-
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- * DataTables API
- *
- * For complete documentation, please refer to the docs/api directory or the
- * DataTables site
- */
-
-// Local variables to improve compression
-var apiRegister = DataTable.Api.register;
-var apiRegisterPlural = DataTable.Api.registerPlural;
-
-apiRegister( 'select()', function () {} );
-
-apiRegister( 'select.blurable()', function ( flag ) {
-	if ( flag === undefined ) {
-		return this.context[0]._select.blurable;
-	}
-
-	return this.iterator( 'table', function ( ctx ) {
-		ctx._select.blurable = flag;
-	} );
-} );
-
-apiRegister( 'select.info()', function ( flag ) {
-	if ( info === undefined ) {
-		return this.context[0]._select.info;
-	}
-
-	return this.iterator( 'table', function ( ctx ) {
-		ctx._select.info = flag;
-	} );
-} );
-
-apiRegister( 'select.items()', function ( items ) {
-	if ( items === undefined ) {
-		return this.context[0]._select.items;
-	}
-
-	return this.iterator( 'table', function ( ctx ) {
-		ctx._select.items = items;
-
-		eventTrigger( new DataTable.Api( ctx ), 'selectItems', [ items ] );
-	} );
-} );
-
-// Takes effect from the _next_ selection. None disables future selection, but
-// does not clear the current selection. Use the `deselect` methods for that
-apiRegister( 'select.style()', function ( style ) {
-	if ( style === undefined ) {
-		return this.context[0]._select.style;
-	}
-
-	return this.iterator( 'table', function ( ctx ) {
-		ctx._select.style = style;
-
-		if ( ! ctx._select_init ) {
-			init( ctx );
-		}
-
-		// Add / remove mouse event handlers. They aren't required when only
-		// API selection is available
-		var dt = new DataTable.Api( ctx );
-		disableMouseSelection( dt );
-		
-		if ( style !== 'api' ) {
-			enableMouseSelection( dt );
-		}
-
-		eventTrigger( new DataTable.Api( ctx ), 'selectStyle', [ style ] );
-	} );
-} );
-
-apiRegister( 'select.selector()', function ( selector ) {
-	if ( selector === undefined ) {
-		return this.context[0]._select.selector;
-	}
-
-	return this.iterator( 'table', function ( ctx ) {
-		disableMouseSelection( new DataTable.Api( ctx ) );
-
-		ctx._select.selector = selector;
-
-		if ( ctx._select.style !== 'api' ) {
-			enableMouseSelection( new DataTable.Api( ctx ) );
-		}
-	} );
-} );
-
-
-
-apiRegisterPlural( 'rows().select()', 'row().select()', function ( select ) {
-	var api = this;
-
-	if ( select === false ) {
-		return this.deselect();
-	}
-
-	this.iterator( 'row', function ( ctx, idx ) {
-		clear( ctx );
-
-		ctx.aoData[ idx ]._select_selected = true;
-		$( ctx.aoData[ idx ].nTr ).addClass( ctx._select.className );
-	} );
-
-	this.iterator( 'table', function ( ctx, i ) {
-		eventTrigger( api, 'select', [ 'row', api[i] ], true );
-	} );
-
-	return this;
-} );
-
-apiRegisterPlural( 'columns().select()', 'column().select()', function ( select ) {
-	var api = this;
-
-	if ( select === false ) {
-		return this.deselect();
-	}
-
-	this.iterator( 'column', function ( ctx, idx ) {
-		clear( ctx );
-
-		ctx.aoColumns[ idx ]._select_selected = true;
-
-		var column = new DataTable.Api( ctx ).column( idx );
-
-		$( column.header() ).addClass( ctx._select.className );
-		$( column.footer() ).addClass( ctx._select.className );
-
-		column.nodes().to$().addClass( ctx._select.className );
-	} );
-
-	this.iterator( 'table', function ( ctx, i ) {
-		eventTrigger( api, 'select', [ 'column', api[i] ], true );
-	} );
-
-	return this;
-} );
-
-apiRegisterPlural( 'cells().select()', 'cell().select()', function ( select ) {
-	var api = this;
-
-	if ( select === false ) {
-		return this.deselect();
-	}
-
-	this.iterator( 'cell', function ( ctx, rowIdx, colIdx ) {
-		clear( ctx );
-
-		var data = ctx.aoData[ rowIdx ];
-
-		if ( data._selected_cells === undefined ) {
-			data._selected_cells = [];
-		}
-
-		data._selected_cells[ colIdx ] = true;
-
-		if ( data.anCells ) {
-			$( data.anCells[ colIdx ] ).addClass( ctx._select.className );
-		}
-	} );
-
-	this.iterator( 'table', function ( ctx, i ) {
-		eventTrigger( api, 'select', [ 'cell', api[i] ], true );
-	} );
-
-	return this;
-} );
-
-
-apiRegisterPlural( 'rows().deselect()', 'row().deselect()', function () {
-	var api = this;
-
-	this.iterator( 'row', function ( ctx, idx ) {
-		ctx.aoData[ idx ]._select_selected = false;
-		$( ctx.aoData[ idx ].nTr ).removeClass( ctx._select.className );
-	} );
-
-	this.iterator( 'table', function ( ctx, i ) {
-		eventTrigger( api, 'deselect', [ 'row', api[i] ], true );
-	} );
-
-	return this;
-} );
-
-apiRegisterPlural( 'columns().deselect()', 'column().deselect()', function () {
-	var api = this;
-
-	this.iterator( 'column', function ( ctx, idx ) {
-		ctx.aoColumns[ idx ]._select_selected = false;
-
-		var api = new DataTable.Api( ctx );
-		var column = api.column( idx );
-
-		$( column.header() ).removeClass( ctx._select.className );
-		$( column.footer() ).removeClass( ctx._select.className );
-
-		// Need to loop over each cell, rather than just using
-		// `column().nodes()` as cells which are individually selected should
-		// not have the `selected` class removed from them
-		api.cells( null, idx ).indexes().each( function (cellIdx) {
-			var data = ctx.aoData[ cellIdx.row ];
-			var cellSelected = data._selected_cells;
-
-			if ( data.anCells && (! cellSelected || ! cellSelected[ cellIdx.column ]) ) {
-				$( data.anCells[ cellIdx.column  ] ).removeClass( ctx._select.className );
-			}
-		} );
-	} );
-
-	this.iterator( 'table', function ( ctx, i ) {
-		eventTrigger( api, 'deselect', [ 'column', api[i] ], true );
-	} );
-
-	return this;
-} );
-
-apiRegisterPlural( 'cells().deselect()', 'cell().deselect()', function () {
-	var api = this;
-
-	this.iterator( 'cell', function ( ctx, rowIdx, colIdx ) {
-		var data = ctx.aoData[ rowIdx ];
-
-		data._selected_cells[ colIdx ] = false;
-
-		// Remove class only if the cells exist, and the cell is not column
-		// selected, in which case the class should remain (since it is selected
-		// in the column)
-		if ( data.anCells && ! ctx.aoColumns[ colIdx ]._select_selected ) {
-			$( data.anCells[ colIdx ] ).removeClass( ctx._select.className );
-		}
-	} );
-
-	this.iterator( 'table', function ( ctx, i ) {
-		eventTrigger( api, 'deselect', [ 'cell', api[i] ], true );
-	} );
-
-	return this;
-} );
-
-
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- * Buttons
- */
-function i18n( label, def ) {
-	return function (dt) {
-		return dt.i18n( 'buttons.'+label, def );
-	};
-}
-
-$.extend( DataTable.ext.buttons, {
-	selected: {
-		text: i18n( 'selected', 'Selected' ),
-		className: 'buttons-selected',
-		init: function ( dt, button, config ) {
-			var that = this;
-
-			// .DT namespace listeners are removed by DataTables automatically
-			// on table destroy
-			dt.on( 'draw.dt.DT select.dt.DT deselect.dt.DT', function () {
-				var enable = that.rows( { selected: true } ).any() ||
-				             that.columns( { selected: true } ).any() ||
-				             that.cells( { selected: true } ).any();
-
-				that.enable( enable );
-			} );
-
-			this.disable();
-		}
-	},
-	selectedSingle: {
-		text: i18n( 'selectedSingle', 'Selected single' ),
-		className: 'buttons-selected-single',
-		init: function ( dt, button, config ) {
-			var that = this;
-
-			dt.on( 'draw.dt.DT select.dt.DT deselect.dt.DT', function () {
-				var count = dt.rows( { selected: true } ).flatten().length +
-				            dt.columns( { selected: true } ).flatten().length +
-				            dt.cells( { selected: true } ).flatten().length;
-
-				that.enable( count === 1 );
-			} );
-
-			this.disable();
-		}
-	},
-	selectAll: {
-		text: i18n( 'selectAll', 'Select all' ),
-		className: 'buttons-select-all',
-		action: function () {
-			var items = this.select.items();
-			this[ items+'s' ]().select();
-		}
-	},
-	selectNone: {
-		text: i18n( 'selectNone', 'Deselect all' ),
-		className: 'buttons-select-none',
-		action: function () {
-			clear( this.settings()[0], true );
-		}
-	}
-} );
-
-$.each( [ 'Row', 'Column', 'Cell' ], function ( i, item ) {
-	var lc = item.toLowerCase();
-
-	DataTable.ext.buttons[ 'select'+item+'s' ] = {
-		text: i18n( 'select'+item+'s', 'Select '+lc+'s' ),
-		className: 'buttons-select-'+lc+'s',
-		action: function () {
-			this.select.items( lc );
-		},
-		init: function ( dt, button, config ) {
-			var that = this;
-
-			dt.on( 'selectItems.dt.DT', function ( e, ctx, items ) {
-				that.active( items === lc );
-			} );
-		}
-	};
-} );
-
-
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- * Initialisation
- */
-
-// DataTables creation - check if the buttons have been defined for this table,
-// they will have been if the `B` option was used in `dom`, otherwise we should
-// create the buttons instance here so they can be inserted into the document
-// using the API
-$(document).on( 'preInit.dt.dtSelect', function (e, ctx, json) {
-	if ( e.namespace !== 'dt' ) {
-		return;
-	}
-
-	var opts = ctx.oInit.select || DataTable.defaults.select;
-	var dt = new DataTable.Api( ctx );
-
-	// Set defaults
-	var items = 'row';
-	var style = 'api';
-	var blurable = false;
-	var info = true;
-	var selector = 'td, th';
-	var className = 'selected';
-
-	ctx._select = {};
-
-	// Initialisation customisations
-	if ( opts === true ) {
-		style = 'os';
-	}
-	else if ( typeof opts === 'string' ) {
-		style = opts;
-	}
-	else if ( $.isPlainObject( opts ) ) {
-		if ( opts.blurable !== undefined ) {
-			blurable = opts.blurable;
-		}
-
-		if ( opts.info !== undefined ) {
-			info = opts.info;
-		}
-
-		if ( opts.items !== undefined ) {
-			items = opts.items;
-		}
-
-		if ( opts.style !== undefined ) {
-			style = opts.style;
-		}
-
-		if ( opts.selector !== undefined ) {
-			selector = opts.selector;
-		}
-
-		if ( opts.className !== undefined ) {
-			className = opts.className;
-		}
-	}
-
-	dt.select.selector( selector );
-	dt.select.items( items );
-	dt.select.style( style );
-	dt.select.blurable( blurable );
-	dt.select.info( info );
-	ctx._select.className = className;
-
-	// If the init options haven't enabled select, but there is a selectable
-	// class name, then enable
-	if ( $( dt.table().node() ).hasClass( 'selectable' ) ) {
-		dt.select.style( 'os' );
-	}
-} );
-
-
-return DataTable.select;
 }));
 
 
