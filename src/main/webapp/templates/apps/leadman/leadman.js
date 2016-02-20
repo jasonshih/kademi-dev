@@ -54,6 +54,17 @@ $(function () {
                 }
             });
         }
+        if( modal.hasClass("modalInitForm")) {
+            modal.find("form").forms({
+                onSuccess: function (resp) {
+                    flog("onSuccess", resp, modal);
+                    Msg.info("Done");
+                    form.closest(".modal").modal("hide");
+                    flog("done");
+                    window.location.reload();
+                }
+            });
+        }
     })
     $("body").on("click", ".autoFillText", function (e) {
         e.preventDefault();
@@ -190,13 +201,6 @@ function initLeadActions() {
         var href = a.attr("href");
 
         showCreatedDateModal(href, a);
-    });
-
-    $("body").on("click", ".cancelLead", function (e) {
-        flog("initLeadActions click - cancel");
-        e.preventDefault();
-        var href = $(e.target).closest("a").attr("href");
-        cancelLead(href);
     });
 }
 
@@ -641,9 +645,7 @@ function takeTask(href) {
 function closeLead(href) {
     setLead(href, "closeDeal", "close this lead, ie sale has been completed");
 }
-function cancelLead(href) {
-    setLead(href, "cancelDeal", "cancel this lead");
-}
+
 function setLead(href, status, actionDescription) {
     flog("SetLead", href, status);
     if (confirm("Are you sure you want to " + actionDescription + "?")) {
