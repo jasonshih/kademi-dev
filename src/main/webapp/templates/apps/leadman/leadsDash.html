@@ -45,7 +45,9 @@
                         <div class="text-right text-sm text-muted">Tasks due</div>
                     </div>
                     <div data-ripple="" class="col-xs-3 col-md-6 bb-lg br pv-xxl infoBox" >
-                        <h1 class="text-thin">$leadsPage.myLeadsEstimatedValue</h1>
+                        <h1 class="text-thin">
+                            $ $formatter.formatUnits($leadsPage.myLeadsEstimatedValue)
+                        </h1>
                         <div class="text-right text-sm text-muted">Pipeline value</div>
                     </div>
                     <div data-ripple="" class="col-xs-3 col-md-6 bb-lg br pv-xxl infoBox" >
@@ -54,7 +56,7 @@
                         <h1 class="text-thin">
                             $ $formatter.formatUnits($closed.value)
                         </h1>
-                        <div class="text-right text-sm text-muted">$closed.num closed leads, last 30 days</div>
+                        <div class="text-right text-sm text-muted">$closed.num closed last 30 days</div>
                         #else
                         <h1 class="text-thin">None</h1>
                         <div class="text-right text-sm text-muted">No closed leads, last 30 days</div>

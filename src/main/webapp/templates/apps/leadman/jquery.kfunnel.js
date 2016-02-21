@@ -27,6 +27,8 @@
             },
             onGroupClick: function () {
             },
+            onData : function (resp) {
+            }
         }, options);
 
         var width = setting.width;
@@ -65,6 +67,7 @@
             });
 
             function handleDataReceived(resp) {
+                setting.onData(resp);
                 elem.empty();
                 var json = resp;
                 var size = json.stages.length;
@@ -173,9 +176,9 @@
                         .attr("in", "SourceGraphic");
 
                 svg.append("rect")
-                        .attr("x", adjustTopWidth + 130)
+                        .attr("x", adjustTopWidth + 30)
                         .attr("y", 0)
-                        .attr("width", 300)
+                        .attr("width", 250)
                         .attr("height", name_set.size * 60)
                         .attr("fill", "white")
                         .attr("stroke", "gray")
@@ -186,14 +189,14 @@
                 name_set.forEach(function (value) {
                     svg.append("text")
                             .style("fill", "black")
-                            .attr("x", adjustTopWidth + 200)
+                            .attr("x", adjustTopWidth + 100)
                             .attr("y", (counter + 1) * 50 + 4)
                             .attr("font-size", setting.legendNameFontSize)
                             .attr("font-family", setting.legendNameFontFamily)
                             .attr("fill", setting.legendNameFontColor)
                             .text(value);
                     svg.append("ellipse")
-                            .attr("cx", adjustTopWidth + 170)
+                            .attr("cx", adjustTopWidth + 70)
                             .attr("cy", (counter + 1) * 50)
                             .attr("rx", 10)
                             .attr("ry", 10)
@@ -488,7 +491,7 @@
         {
             for (var j = 0; j < source[i].bydate.length; j++)
             {
-                var date_str = source[i].bydate[j].data;
+                var date_str = source[i].bydate[j].date;
                 var date_list = date_str.split("/");
                 var date = parseInt(date_list[0]) + parseInt(date_list[1]) * 100 + parseInt(date_list[2]) * 100000;
                 date_set.add(date);
@@ -511,7 +514,7 @@
         {
             for (var j = 0; j < source[i].bydate.length; j++)
             {
-                var date_str = source[i].bydate[j].data;
+                var date_str = source[i].bydate[j].date;
                 var date_list = date_str.split("/");
                 var date = parseInt(date_list[0]) + parseInt(date_list[1]) * 100 + parseInt(date_list[2]) * 100000;
 
