@@ -2,11 +2,14 @@
 
     var searchOptions = {
         aggr: 'source',
-        filters: null
+        filters: null,
+        stage: null
     };
 
-    function loadFunnel() {
-        var data_url = w.location.pathname + "?asJson&" + $.param(searchOptions);
+    loadFunnel = function (url) {
+        var data_url = url || w.location.pathname + "?asJson&" + $.param(searchOptions);
+
+        flog('data_url', data_url);
 
         t('div #funnel').funnel({
             url: data_url,
@@ -53,6 +56,10 @@
                 var newAggName = nextAgg.attr("href");
                 flog("newAggName", newAggName);
                 //searchOptions.aggr = newAggName;
+                var uri = URI(window.location.pathname);
+                var filters = searchOptions.aggr + "=" + name;
+                uri.setSearch("filters", filters);
+                history.pushState(null, null, uri.toString());
 
                 loadFunnel();
 
@@ -147,5 +154,13 @@
         loadFunnel();
         initAggrSelect();
         initDataTable();
+
+        $(w).bind('popstate', function (event) {
+            var uri = new URI(w.location.pathname + w.location.search);
+            uri.addQuery('asJson');
+
+            flog('popstate', uri.toString());
+            loadFunnel(uri.toString());
+        });
     };
 })(this, jQuery);
