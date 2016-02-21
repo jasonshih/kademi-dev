@@ -112,26 +112,21 @@ $!bodyContent
                 </div>
                 <div id="nav-collapse" class="nav-wrapper collapse navbar-collapse">
                     <ul class="nav navbar-nav hidden-material">
-                        <li>
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                <i class="icon-bar-graph-2 fa-2x text-default"></i>
-                                <span class="visible-xs-inline ml">Analytics</span>
+                        #foreach($item in $menu.items)
+                        <li class="$formatter.ifTrue($item.active, 'active', '') $formatter.ifTrue($item.items.empty, '', 'dropdown')">
+                            <a href="$formatter.ifNull($item.href, '#')" #if(!$item.items.empty)class="dropdown-toggle" data-toggle="dropdown"#end title="$!item.text" data-ripple="">
+                                <i class="$item.cssClass fa-2x text-default"></i>
+                                <span class="visible-xs-inline ml">$!item.text</span>
                             </a>
+                            #if(!$item.items.empty)
                             <ul class="dropdown-menu">
-                                #set( $leadsPage = $page.find("/leads") )
-                                #foreach($entry in $leadsPage.funnels.entrySet())
-                                <li class="presentation" role="menuitem"><a href="/analytics/$entry.key">Analytics: $entry.value.title</a></li>
+                                #foreach($entry in $item.items)
+                                <li class="presentation $formatter.ifTrue($item.active, 'active', '')" role="menuitem"><a href="$entry.href">$entry.text</a></li>
                                 #end
                             </ul>
-
+                            #end
                         </li>
-
-                        <li>
-                            <a href="/custs/" title="Contacts" data-ripple="">
-                                <i class="fa fa-users fa-2x text-info"></i>
-                                <span class="visible-xs-inline ml">Contacts</span>
-                            </a>
-                        </li>
+                        #end
 
                         <li>
                             <a href="/Calendars/" title="Calendars" data-ripple="">
@@ -140,57 +135,11 @@ $!bodyContent
                             </a>
                         </li>
 
-                        <li>
-                            <a href="/leads/" title="Leads" data-ripple="">
-                                <i class="fa fa-bullseye fa-2x text-success"></i>
-                                <span class="visible-xs-inline ml">Leads</span>
-                            </a>
-                        </li>
+                        #portlets("extraNav")
+
 
                         <li>
-                            <a href="/profile" title="Create a contact" class="createContact" title="Create a new customer profile">
-                                <i class="fa fa-2x  fa-user-plus text-success"></i>
-                                <span class="visible-xs-inline ml">Create a contact </span>
-                            </a>
-                        </li>
-
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" title="Enter a new lead">
-                                <i class="fa fa-plus fa-2x"></i>
-                                <span class="visible-xs-inline ml">Create a lead</span>
-                                <span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li class="presentation" role="menuitem"><a href="#" data-target="#modalLeadFromEmail" data-toggle="modal">Lead from email</a></li>
-                                #foreach($entry in $leadsPage.funnels.entrySet())
-                                <li class="presentation" role="menuitem"><a href="$entry.key" class="createLead">$entry.value.title</a></li>
-                                #end
-                            </ul>
-                        </li>
-
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" title="Enter a new lead">
-                                <i class="fa fa-bolt fa-2x"></i>
-                                <span class="visible-xs-inline ml">Quick Lead</span>
-                                <span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                #foreach($entry in $leadsPage.funnels.entrySet())
-                                <li class="presentation" role="menuitem"><a href="$entry.key" class="createQuickLead">$entry.value.title</a></li>
-                                #end
-                            </ul>
-                        </li>
-
-                        <li>
-                            <form class="navbar-form" role="search">
-                                <div class="input-group">
-                                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                                    <div class="lead-search-wrapper">
-                                        <input type="text" class="form-control" placeholder="Search for..." id="lead-search-input" />
-                                        <ul id="lead-search-suggestions" class="hide"></ul>
-                                    </div>
-                                </div>
-                            </form>
+                            #portlets("searchInput")
                         </li>
 
                     </ul>
