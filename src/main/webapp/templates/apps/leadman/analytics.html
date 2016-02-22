@@ -5,13 +5,20 @@
         <script type="text/javascript" src="/static/uri/1.15.1/URI.js">//</script>
         <link href="/static/nvd3/nv.d3.css" rel="stylesheet" type="text/css"/>
         #end
+        <style>
+            @media (min-width: 768px) {
+                .no-scroll-medium{
+                    overflow: hidden;
+                }
+            }
+        </style>
     </head>
     <body>
         #@themeBody()
         <div class="">
             <div class="row">
                 <div class="col-lg-6">
-                    <div id="leadsContainer">
+                    <div id="leadsContainer" class="table-responsive no-scroll-medium">
                         <table id="leadTable" class="table table-striped table-bordered table-hover">
                             <thead>
                                 <tr>
@@ -63,7 +70,7 @@
                         </ul>
                     </div>
                     <hr/>
-                    <div>
+                    <div class="table-responsive no-scroll-medium">
                         <svg id="funnel"></svg>
                     </div>
 

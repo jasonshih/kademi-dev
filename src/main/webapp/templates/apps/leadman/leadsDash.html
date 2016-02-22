@@ -2,6 +2,7 @@
 <style>
     .infoBox {
         height: 100px;
+        padding-bottom: 10px;
     }
     .infoBox h1 {
         margin-top: 0;
@@ -25,6 +26,12 @@
     .leadInner {
         max-height: 200px;
     }
+    
+    @media (max-width: 767px) {
+        .infoBox{
+            height: 140px;
+        }
+    }
 </style>
 
 #set( $leadsPage = $page.find("/leads") )
@@ -36,21 +43,21 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="row text-muted m0">
-                    <div data-ripple="" class="col-xs-3 col-md-6 bb br pv-xxl infoBox" >
+                    <div data-ripple="" class="col-xs-6 col-md-6 bb br pv-xxl infoBox" >
                         <h1 class="text-thin">$leadsPage.numMyLeads</h1>
                         <div class="text-right text-sm text-muted">Active Leads</div>
                     </div>
-                    <div data-ripple="" class="col-xs-3 col-md-6 bb br pv-xxl infoBox" >
+                    <div data-ripple="" class="col-xs-6 col-md-6 bb br pv-xxl infoBox" >
                         <h1 class="text-thin">$leadsPage.myDueTasks.size()</h1>
                         <div class="text-right text-sm text-muted">Tasks due</div>
                     </div>
-                    <div data-ripple="" class="col-xs-3 col-md-6 bb-lg br pv-xxl infoBox" >
+                    <div data-ripple="" class="col-xs-6 col-md-6 bb-lg br pv-xxl infoBox" >
                         <h1 class="text-thin">
                             $ $formatter.formatUnits($leadsPage.myLeadsEstimatedValue)
                         </h1>
                         <div class="text-right text-sm text-muted">Pipeline value</div>
                     </div>
-                    <div data-ripple="" class="col-xs-3 col-md-6 bb-lg br pv-xxl infoBox" >
+                    <div data-ripple="" class="col-xs-6 col-md-6 bb-lg br pv-xxl infoBox" >
                         #set( $closed = $leadsPage.closedDeals(30) )
                         #if( $closed.value )
                         <h1 class="text-thin">

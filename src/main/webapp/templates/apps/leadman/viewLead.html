@@ -4,14 +4,69 @@
         #@themeHeader( "View lead" )
         <link rel="stylesheet" href="/static/timeline/timeline.css">
             #end
+        <style>
+            #lead-cover{
+                background:url(/theme/images/profile.jpg) center center; 
+                background-size:cover; 
+                height: 160px
+            }
+            @media (max-width: 767px) {
+                #lead-cover{
+                    height: auto;
+                }
+                #lead-cover .btn-group .btn{
+                    margin-bottom: 5px;
+                    margin-top: 10px;
+                }
+                #assignedBlock + ul{
+                    left: initial;
+                    right: 0;
+                }
+            }
+            @media (max-width: 991px) {
+                #lead-cover{
+                    height: auto;
+                }
+            }
+        </style>
     </head>
     <body class='add-container'>
         #@themeBody()
 
         <div class="">
-            <div style="background:url(/theme/images/profile.jpg) center center; background-size:cover; height: 160px" class="unwrap">
+            <div id="lead-cover" style="" class="unwrap">
                 <div class="container container-lg p-lg">
-                    <div class="pull-right text-right">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6">
+                            <div class="media mt-lg">
+                                <div class="media-left media-middle"><a href=""><img src="/theme/apps/leadman/user-placeholder.png" class="media-object thumb96 img-circle"></a></div>
+                                <div class="media-body">
+                                    <h2 class="mv-lg media-heading">
+                                        #if($page.leadOrg)
+                                        <span style="color: white">$page.leadOrg.formattedName</span>
+                                        #elseif( $page.profile )
+                                        <a href="/custs/$page.profile.name" style="color: white">$page.customerDescription</a>
+                                        #else
+                                        <p style="color: white">$page.customerDescription</p>
+                                        #end
+                                    </h2>
+                                    <div style='background-color: rgba(255, 255, 255, 0.7); padding: 5px; border-radius: 5px;'>
+                                        Capture -
+                                        <a href="mailto:from-lead-$page.leadId@${page.find('/').domainName}"> <em class="fa fa-envelope fa-fw"></em> From</a>
+                                        |
+                                        <a href="mailto:to-lead-$page.leadId@${page.find('/').domainName}"> <em class="fa fa-envelope fa-fw"></em> To</a>
+                                        |
+                                        <a href="mailto:forward-to-$page.leadId@${page.find('/').domainName}"> <em class="fa fa-envelope fa-fw"></em> Forward</a>
+                                        <!--
+                                        <button type="button" class="btn btn-info btn-xs mr-sm"> <em class="fa fa-twitter fa-fw"></em></button>
+                                        <button type="button" class="btn btn-primary btn-xs mr-sm"> <em class="fa fa-facebook fa-fw"></em></button>
+                                        <button type="button" class="btn btn-danger btn-xs"> <em class="fa fa-google-plus fa-fw"></em></button>
+                                        -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12 text-right">
                         #if( $page.completed)
                         #if( $page.cancelled)
                         <div class="alert alert-warning">
@@ -29,17 +84,18 @@
                         </div>
                         #end
                         #else
+
                         <div class="btn-group">
-                            <button class="btn btn-primary btn-lg" data-target="#newTaskModal" data-toggle="modal">Add new Task</button>
-                            <a class="btn btn-success btn-lg createNote" href="$page.href">
+                                <button class="btn btn-primary" data-target="#newTaskModal" data-toggle="modal">Add new Task</button>
+                                <a class="btn btn-success createNote" href="$page.href">
                                 Add a new note
                             </a>
-                            <a href="$page.href?cancel" class="btn btn-danger btn-lg" title="Deal cancelled" data-target="#modalCancelLead" data-toggle="modal">
+                                <a href="$page.href?cancel" class="btn btn-danger" title="Deal cancelled" data-target="#modalCancelLead" data-toggle="modal">
                                 <span class="fa fa-remove"></span>
                                 Cancel
                             </a>
 
-                            <button class="btn btn-lg btn-success" data-toggle="modal" data-target="#closeDealModal">
+                                <button class="btn btn-success" data-toggle="modal" data-target="#closeDealModal">
                                 <span class="fa fa-dollar"></span>
                                 Close deal
                             </button>
@@ -48,7 +104,7 @@
                         <p></p>
 
                         <div class="btn-group dropdown">
-                            <button id="assignedBlock" class="btn btn-lg dropdown-toggle btn-info" data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false" >
+                                <button id="assignedBlock" class="btn dropdown-toggle btn-info" data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false" >
                                 <span>
                                     #if( $page.assignedTo )
                                     Assigned to: $!page.assignedTo.firstName $!page.assignedTo.surName
@@ -71,35 +127,11 @@
                         </div>
                         #end
                     </div>
-                    <div class="media mt-lg">
-                        <div class="media-left media-middle"><a href=""><img src="/theme/apps/leadman/user-placeholder.png" class="media-object thumb96 img-circle"></a></div>
-                        <div class="media-body">
-                            <h2 class="mv-lg media-heading">
-                                #if($page.leadOrg)
-                                <span style="color: white">$page.leadOrg.formattedName</span>
-                                #elseif( $page.profile )
-                                <a href="/custs/$page.profile.name" style="color: white">$page.customerDescription</a>
-                                #else
-                                <p style="color: white">$page.customerDescription</p>
-                                #end
-                            </h2>
-                            <div style='background-color: rgba(255, 255, 255, 0.7); padding: 5px; border-radius: 5px; width: 290px'>
-                                Capture -
-                                <a href="mailto:from-lead-$page.leadId@${page.find('/').domainName}"> <em class="fa fa-envelope fa-fw"></em> From</a>
-                                |
-                                <a href="mailto:to-lead-$page.leadId@${page.find('/').domainName}"> <em class="fa fa-envelope fa-fw"></em> To</a>
-                                |
-                                <a href="mailto:forward-to-$page.leadId@${page.find('/').domainName}"> <em class="fa fa-envelope fa-fw"></em> Forward</a>
-                                <!--
-                                <button type="button" class="btn btn-info btn-xs mr-sm"> <em class="fa fa-twitter fa-fw"></em></button>
-                                <button type="button" class="btn btn-primary btn-xs mr-sm"> <em class="fa fa-facebook fa-fw"></em></button>
-                                <button type="button" class="btn btn-danger btn-xs"> <em class="fa fa-google-plus fa-fw"></em></button>
-                                -->
                             </div>
+
                         </div>
                     </div>
-                </div>
-            </div>
+            <div class="clearfix"></div>
             <div class="container container-lg">
                 <div class="row">
                     <div class="col-lg-9">
@@ -300,11 +332,11 @@
                                                     #else
                                                     <div class="form-group">
                                                         <div class="col-md-10 col-md-offset-2">
-                                                            <button class="btn btn-sm btn-default" type="reset">Reset</button>
+                                                            <button class="btn btn-sm btn-default btn-fullwidth-mobile" type="reset">Reset</button>
 
-                                                            <button class="btn btn-primary" type="submit">Save details</button>.
+                                                            <button class="btn btn-primary btn-fullwidth-mobile" type="submit">Save details</button>
                                                             #if($page.leadProfile)
-                                                            <button class="btn btn-info" data-toggle="modal" data-target="#modal-change-profile" type="button">Change Profile</button>
+                                                            <button class="btn btn-info btn-fullwidth-mobile" data-toggle="modal" data-target="#modal-change-profile" type="button">Change Profile</button>
                                                             #end
                                                         </div>
                                                     </div>
@@ -383,6 +415,7 @@
                                                 <button type="button" class="btn btn-success upload-files pull-right"><span class="fa fa-upload"></span> Upload</button>
                                             </div>
                                         </div>
+                                        <div class="table-responsive">
                                         <table class="table table-hover">
                                             <thead>
                                                 <tr>
@@ -443,9 +476,11 @@
                                             </tbody>
                                         </table>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
+                    </div>
                     </div>
                     <div class="col-lg-3">
                         <div class="task-item-list">

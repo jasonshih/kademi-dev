@@ -10,6 +10,9 @@
                 text-decoration: none;
                 border-bottom: 1px black dotted;
             }
+            #lead-query-container{
+                margin-bottom: 10px;
+            }
         </style>
     </head>
     <body class='add-container'>
@@ -24,7 +27,7 @@
                     </div>
                 </div>
                 <div class="col-sm-2">
-                    <div class="btn-group">
+                    <div class="btn-group" style="margin-bottom: 10px">
                         <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="aggr-title">Assigned to me</span> <i class="fa fa-caret-down"></i>
                         </button>
@@ -43,20 +46,20 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="row text-muted m0">
-                                <div data-ripple="" class="col-xs-3 col-md-6 bb br pv-xxl infoBox" >
+                                <div data-ripple="" class="col-xs-6 col-sm-3 col-md-6 bb br pv-xxl infoBox" >
                                     <h1 class="text-thin" id="LeadTotal">Loading...</h1>
                                     <div class="text-right text-sm text-muted">Leads</div>
                                 </div>
-                                <div data-ripple="" class="col-xs-3 col-md-6 bb br pv-xxl infoBox" >
+                                <div data-ripple="" class="col-xs-6 col-sm-3 col-md-6 bb br pv-xxl infoBox" >
                                     <h1 class="text-thin" id="LeadSumValue">Loading...</h1>
                                     <div class="text-right text-sm text-muted">Total Value</div>
                                 </div>
-                                <div data-ripple="" class="col-xs-3 col-md-6 bb-lg br pv-xxl infoBox" >
+                                <div data-ripple="" class="col-xs-6 col-sm-3 col-md-6 bb-lg br pv-xxl infoBox" >
                                     <h1 class="text-thin" id="leadAvgValue">Loading...</h1>
                                     <div class="text-right text-sm text-muted">Average Value</div>
                                 </div>
-                                <div data-ripple="" class="col-xs-3 col-md-6 bb-lg br pv-xxl infoBox" >
-                                    <h1 class="text-thin">$leadsPage.myDueTasks.size()</h1>
+                                <div data-ripple="" class="col-xs-6 col-sm-3 col-md-6 bb-lg br pv-xxl infoBox" >
+                                    <h1 class="text-thin">$formatter.ifNull($leadsPage.myDueTasks.size(), 0)</h1>
                                     <div class="text-right text-sm text-muted">Tasks due</div>
                                 </div>
                             </div>

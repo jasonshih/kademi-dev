@@ -1,3 +1,12 @@
+.select2-dropdown{
+    z-index: 1070 !important;
+}
+@media (max-width: 767px) {
+    .form-group [class^="col-md"] + div{
+        margin-top: 10px;
+    }
+}  
+
 html body .fa {
     line-height: inherit;
 }
