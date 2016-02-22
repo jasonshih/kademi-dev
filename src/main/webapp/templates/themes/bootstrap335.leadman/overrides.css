@@ -4,7 +4,7 @@ html body .fa {
 
 .topnavbar .nav > li > a {
     line-height: 30px;
-    /*height: 81px;*/
+    height: 81px;
 }
 
 .topnavbar > .navbar-header > .navbar-brand {
@@ -156,6 +156,9 @@ li.current-user a > img {
 
     .navbar-brand{
         display: inline-block !important;
+    }
+    .topnavbar .nav > li > a {
+        height: auto;
     }
 }
 
