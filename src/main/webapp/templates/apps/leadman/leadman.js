@@ -274,10 +274,10 @@ function initNewLeadForm() {
         }
     });
 
-    $(".createLead").click(function (e) {
-        flog("initNewLeadForm - click");
+    $(".createLead").click(function (e) {        
         e.preventDefault();
         var funnelName = $(e.target).closest("a").attr("href");
+        flog("initNewLeadForm - click. funnelName=", funnelName, e.target);
         form.find("select[name=funnel]").val(funnelName).change();
         modal.modal("show");
 
@@ -285,7 +285,7 @@ function initNewLeadForm() {
 
     $('select[name=funnel]', form).on('change', function (e) {
         var s = $(this);
-
+        flog("funnel change",  s.val(), s);
         $('#source-frm').reloadFragment({
             url: window.location.href + '?leadName=' + s.val(),
             whenComplete: function () {
