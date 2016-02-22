@@ -1,0 +1,1007 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    #parse("/theme/masterTemplate.html")
+    <head>
+        #@themeHeader( "View lead" )
+        <link rel="stylesheet" href="/static/timeline/timeline.css">
+            #end
+        <style>
+            #lead-cover{
+                background:url(/theme/images/profile.jpg) center center; 
+                background-size:cover; 
+                height: 160px
+            }
+            @media (max-width: 767px) {
+                #lead-cover{
+                    height: auto;
+                }
+                #lead-cover .btn-group .btn{
+                    margin-bottom: 5px;
+                    margin-top: 10px;
+                }
+                #assignedBlock + ul{
+                    left: initial;
+                    right: 0;
+                }
+            }
+            @media (max-width: 991px) {
+                #lead-cover{
+                    height: auto;
+                }
+            }
+        </style>
+    </head>
+    <body class='add-container'>
+        #@themeBody()
+
+        <div class="">
+            <div id="lead-cover" style="" class="unwrap">
+                <div class="container container-lg p-lg">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6">
+                            <div class="media mt-lg">
+                                <div class="media-left media-middle"><a href=""><img src="/theme/apps/leadman/user-placeholder.png" class="media-object thumb96 img-circle"></a></div>
+                                <div class="media-body">
+                                    <h2 class="mv-lg media-heading">
+                                        #if($page.leadOrg)
+                                        <span style="color: white">$page.leadOrg.formattedName</span>
+                                        #elseif( $page.profile )
+                                        <a href="/custs/$page.profile.name" style="color: white">$page.customerDescription</a>
+                                        #else
+                                        <p style="color: white">$page.customerDescription</p>
+                                        #end
+                                    </h2>
+                                    <div style='background-color: rgba(255, 255, 255, 0.7); padding: 5px; border-radius: 5px;'>
+                                        Capture -
+                                        <a href="mailto:from-lead-$page.leadId@${page.find('/').domainName}"> <em class="fa fa-envelope fa-fw"></em> From</a>
+                                        |
+                                        <a href="mailto:to-lead-$page.leadId@${page.find('/').domainName}"> <em class="fa fa-envelope fa-fw"></em> To</a>
+                                        |
+                                        <a href="mailto:forward-to-$page.leadId@${page.find('/').domainName}"> <em class="fa fa-envelope fa-fw"></em> Forward</a>
+                                        <!--
+                                        <button type="button" class="btn btn-info btn-xs mr-sm"> <em class="fa fa-twitter fa-fw"></em></button>
+                                        <button type="button" class="btn btn-primary btn-xs mr-sm"> <em class="fa fa-facebook fa-fw"></em></button>
+                                        <button type="button" class="btn btn-danger btn-xs"> <em class="fa fa-google-plus fa-fw"></em></button>
+                                        -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12 text-right">
+                            #if( $page.completed)
+                            #if( $page.cancelled)
+                            <div class="alert alert-warning">
+                                <p class="lead">
+                                    <span class="fa fa-remove"></span>
+                                    Lead cancelled <abbr title="$formatter.formatDateISO8601($page.closedDate)" class="timeago">$page.closedDate</abbr>
+                                </p>
+                            </div>
+                            #else
+                            <div class="alert alert-success">
+                                <p class="lead">
+                                    <span class="fa fa-check"></span>
+                                    Lead closed <abbr title="$formatter.formatDateISO8601($page.closedDate)" class="timeago">$page.closedDate</abbr>
+                                </p>
+                            </div>
+                            #end
+                            #else
+
+                            <div class="btn-group">
+                                <button class="btn btn-primary" data-target="#newTaskModal" data-toggle="modal">Add new Task</button>
+                                <a class="btn btn-success createNote" href="$page.href">
+                                    Add a new note
+                                </a>
+                                <a href="$page.href?cancel" class="btn btn-danger" title="Deal cancelled" data-target="#modalCancelLead" data-toggle="modal">
+                                    <span class="fa fa-remove"></span>
+                                    Cancel
+                                </a>
+
+                                <button class="btn btn-success" data-toggle="modal" data-target="#closeDealModal">
+                                    <span class="fa fa-dollar"></span>
+                                    Close deal
+                                </button>
+                            </div>
+
+                            <p></p>
+
+                            <div class="btn-group dropdown">
+                                <button id="assignedBlock" class="btn dropdown-toggle btn-info" data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false" >
+                                <span>
+                                    #if( $page.assignedTo )
+                                    Assigned to: $!page.assignedTo.firstName $!page.assignedTo.surName
+                                    #else
+                                    Not assigned
+                                    #end
+                                </span>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" id="assignToMenu" role="menu">
+                                    <li><a href="$user.name">Assign to me</a></li>
+                                    <li><a href="">Clear</a></li>
+                                    #if ($page.find("/leads").teamMembers.size() > 0)
+                                    <li role="separator" class="divider"></li>
+                                    #end
+                                    #foreach($user in $page.find("/leads").teamMembers)
+                                    <li><a href="$user.name">$user.name</a></li>
+                                    #end
+                                </ul>
+                            </div>
+                            #end
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="container container-lg">
+                <div class="row">
+                    <div class="col-lg-9">
+                        <div class="panel">
+                            <div class="panel-body">
+                                <ul role="tablist" class="nav nav-tabs">
+                                    <li role="presentation" class="active"><a href="#activity" aria-controls="activity" role="tab" data-toggle="tab">Activity</a></li>
+                                    <li role="presentation"><a href="#notes" aria-controls="tasks" role="tab" data-toggle="tab">Notes</a></li>
+                                    <li role="presentation"><a href="#details" aria-controls="details" role="tab" data-toggle="tab">Details</a></li>
+                                    <li role="presentation"><a href="#company" aria-controls="company" role="tab" data-toggle="tab">Company</a></li>
+                                    <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a></li>
+                                    <li role="presentation"><a href="#files" aria-controls="files" role="tab" data-toggle="tab">Files</a></li>
+                                </ul>
+                                <div class="tab-content">
+                                    <div id="activity" role="tabpanel" class="tab-pane fade active in">
+                                        #showTimeline($page.timelineItems)
+                                    </div>
+                                    <div id="notes" role="tabpanel" class="tab-pane fade">
+                                        <div class="panel-heading no-shadow">
+                                            <a class="btn btn-success createNote pull-right" href="$page.href">
+                                                <span class="fa fa-plus"></span>
+                                            </a>
+                                            Recent contacts
+                                        </div>
+                                        <div class="panel-body" id="leadNotesBody">
+                                            #set( $notes = $page.notes )
+                                            #if( $notes.size() > 0 )
+                                            <ul class="list-block">
+                                                #foreach($note in $notes)
+                                                <li class="media">
+                                                    <div class="pull-left">
+                                                        <img src="/theme/images/user/05.jpg" alt="Image" class="media-object img-circle thumb32">
+                                                    </div>
+                                                    <div class="media-body">
+                                                        <div class="media-heading">
+                                                            <p>
+                                                                <a href="/users/$note.createdBy.name">$note.createdBy.formattedName</a>
+                                                                #if( $note.inbound )
+                                                                <small class="text-muted fa fa-arrow-left"></small>
+                                                                <small class="text-muted fa fa-${note.icon}"></small>
+                                                                #else
+                                                                <small class="text-muted fa fa-${note.icon}"></small>
+                                                                <small class="text-muted fa fa-arrow-right"></small>
+                                                                #end
+                                                                #set($type = $note.actionType +  "-" + $note.inbound)
+                                                                <a class="note-edit" href="$note.id" data-type="$type" data-notes="$!note.notes">
+                                                                    <span class="fa fa-pencil"></span>
+                                                                </a>
+                                                            </p>
+                                                            <p>
+                                                                <pre>$!note.notes</pre>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                #end
+                                            </ul>
+                                            #else
+                                            <p>
+                                                <span class="label label-warning">No contact with the lead yet</span>
+                                            </p>
+                                            #end
+                                        </div>
+                                    </div>
+                                    <div id="details" role="tabpanel" class="tab-pane fade">
+                                        <div class="form-horizontal">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-sm-4">Estimated deal value:</label>
+                                                        <div class="col-sm-8">
+                                                            <input type="number" value="$!page.dealAmount" name="dealAmount" class="form-control immediateUpdate"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-sm-4">Funnel:</label>
+                                                        <div class="col-sm-8">
+                                                            <select name="funnel" class="form-control immediateUpdate required">
+                                                                <option value="">[Select a funnel]</option>
+                                                                #foreach( $funnel in $page.allFunnels )
+                                                                $formatter.option($funnel.repo, $funnel.title, $page.funnelId)
+                                                                #end
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-sm-4">Lead stage:</label>
+                                                        <div class="col-sm-8">
+                                                            <select name="stageName" class="form-control immediateUpdate">
+                                                                <option value="">[None]</option>
+                                                                #foreach( $stage in $page.allStages )
+                                                                #set($a = $formatter.ifNull($stage.desc, $stage.name))
+                                                                $formatter.option($stage.name, $a, $page.stageName)
+                                                                #end
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <label class="col-md-4 control-label" for="createDate">Created date</label>
+                                                        <div class="col-md-8">
+                                                            <div class="input-group">
+                                                                <input type="text" name="createDate" id="createDate" class="form-control date-time" value=" $formatter.formatDateTime( $!page.getCreateDate() )" />
+                                                                <span class="input-group-addon">
+                                                                    <span class="fa fa-calendar"></span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-sm-4">Source</label>
+                                                        <div class="col-sm-8">
+                                                            <select id="source-select" data-placeholder="Select a source" name="source" class="form-control immediateUpdate" style="width: 100%">
+                                                                <option value="">[None]</option>
+                                                                #set($foundSource = false)
+                                                                #foreach( $source in $page.allSources )
+                                                                #if($source == $page.source)
+                                                                #set($foundSource = true)
+                                                                #end
+                                                                $formatter.option($source, $source, $page.source)
+                                                                #end
+                                                                #if(!$foundSource && $page.source)
+                                                                $formatter.option($page.source, $page.source, $page.source)
+                                                                #end
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                #foreach($field in $page.extraFields)
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-sm-4">$field.title:</label>
+                                                        <div class="col-sm-8">
+                                                            <input type="text" value="$!field.value" name="extraField_$field.name" class="form-control immediateUpdate $formatter.ifTrue($field.required, 'required', '')"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                #end
+                                            </div>
+
+                                        </div>
+
+                                        <hr/>
+
+                                        <textarea id="description" class="form-control" name="description" style="height: 400px">$!page.description</textarea>
+                                    </div>
+                                    <div id="profile" role="tabpanel" class="tab-pane fade">
+                                        <h4 class="page-header">Contact information
+                                        </h4>
+                                        <div class="row">
+                                            <form method="post" action="$page.href" class="form-horizontal" id="leadDetails">
+                                                <div class="modal-body" id="profile-body">
+                                                    #set( $p = $page.leadProfile )
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-2" for="nickName">Customer</label>
+                                                        <div class="col-md-3">
+                                                            <input type="text" name="nickName" id="nickName" class="form-control" placeholder="nickName" value="$!page.nickName" />
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <input type="text" name="firstName" id="firstName" class="form-control" placeholder="First name" value="$!page.firstName" />
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <input type="text" name="surName" id="surName" class="form-control" placeholder="Surname" value="$!page.surName" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-2" for="newUserEmail">Contact</label>
+                                                        <div class="col-md-5">
+                                                            <input type="text" name="email" id="email" class="form-control" placeholder="Email" value="$!p.email" />
+                                                        </div>
+                                                        <div class="col-md-5">
+                                                            <input type="text" name="phone" id="phone" class="form-control" placeholder="Phone" value="$!p.phone" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-2" for="notes">Notes</label>
+                                                        <div class="col-md-10">
+                                                            <textarea name="notes" class="form-control" style="height: 100px">$!page.description</textarea>
+                                                        </div>
+                                                    </div>
+
+
+                                                    #if( $page.completed)
+                                                    #else
+                                                    <div class="form-group">
+                                                        <div class="col-md-10 col-md-offset-2">
+                                                            <button class="btn btn-sm btn-default btn-fullwidth-mobile" type="reset">Reset</button>
+
+                                                            <button class="btn btn-primary btn-fullwidth-mobile" type="submit">Save details</button>
+                                                            #if($page.leadProfile)
+                                                            <button class="btn btn-info btn-fullwidth-mobile" data-toggle="modal" data-target="#modal-change-profile" type="button">Change Profile</button>
+                                                            #end
+                                                        </div>
+                                                    </div>
+                                                    #end
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div id="company" role="tabpanel" class="tab-pane fade">
+                                        <h4 class="page-header">Contact information</h4>
+                                        <div class="row">
+                                            <form method="post" action="$page.href" class="form-horizontal" id="leadOrgDetails">
+                                                <input type="hidden" name="leadOrgDetails" value="leadOrgDetails"/>
+                                                <div class="modal-body">
+                                                    #set( $leadOrg = $page.leadOrg )
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-2" for="title">Company</label>
+                                                        <div class="col-md-3">
+                                                            <input type="text" name="title" class="form-control" placeholder="Title" value="$!leadOrg.title" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-2" for="newCompanyEmail">Contact</label>
+                                                        <div class="col-md-5">
+                                                            <input type="text" name="email" id="newCompanyEmail" class="form-control email" placeholder="Email" value="$!leadOrg.email" />
+                                                        </div>
+                                                        <div class="col-md-5">
+                                                            <input type="text" name="phone" class="form-control" placeholder="Phone" value="$!leadOrg.phone" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-2" for="newUserEmail">Address</label>
+                                                        <div class="col-md-5">
+                                                            <input type="text" name="address" class="form-control" placeholder="Address" value="$!leadOrg.address" />
+                                                        </div>
+                                                        <div class="col-md-5">
+                                                            <input type="text" name="addressLine2" class="form-control" placeholder="Address 2" value="$!leadOrg.addressLine2" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <div class="col-md-offset-2 col-md-5">
+                                                            <input type="text" name="addressState" class="form-control" placeholder="State" value="$!leadOrg.addressState" />
+                                                        </div>
+                                                        <div class="col-md-5">
+                                                            <input type="text" name="postcode" class="form-control" placeholder="Postcode" value="$!leadOrg.postcode" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-2" for="notes">Notes</label>
+                                                        <div class="col-md-10">
+                                                            <textarea name="notes" class="form-control" style="height: 100px">$!page.description</textarea>
+                                                        </div>
+                                                    </div>
+
+
+                                                    #if( $page.completed)
+                                                    #else
+                                                    <div class="form-group">
+                                                        <div class="col-md-10 col-md-offset-2">
+                                                            <button class="btn btn-primary" type="submit">Save details</button>
+
+                                                        </div>
+                                                    </div>
+                                                    #end
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div id="files" role="tabpanel" class="tab-pane fade">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <button type="button" class="btn btn-success upload-files pull-right"><span class="fa fa-upload"></span> Upload</button>
+                                            </div>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                <tr>
+                                                    <th class="text-center">Type</th>
+                                                    <th>Name</th>
+                                                    <th>Notes</th>
+                                                    <th>Date Uploaded</th>
+                                                    <th></th>
+                                                    <th>Action</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody id="files-body">
+                                                #foreach($file in $page.children.ofType.leadFile)
+                                                <tr>
+                                                    <td class="text-center">
+                                                        #genFileIcon($file)
+                                                    </td>
+                                                    <td>
+                                                        <span #if($file.name.length() > 25)title="$file.name"#end>
+                                                            #if($file.name.length() > 25)
+                                                            $formatter.truncate($file.name, 20)
+                                                            #else
+                                                            $file.name
+                                                            #end
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <span>$!file.notes</span>
+                                                        <a href="$file.name" class="pull-right edit-file-note"><i class="fa fa-pencil"></i></a>
+                                                    </td>
+                                                    <td><abbr class="timeago" title="$formatter.formatDateISO8601($file.createdDate)">$formatter.formatDateTime($file.createdDate)</abbr></td>
+                                                    <td>
+                                                        #if($file.is('audio/'))
+                                                        <audio class="lead-audio-file" id="audio_$file.hash" src="$file.name"></audio>
+                                                        <button type="button" data-id="audio_$file.hash" class="btn btn-success play-audio">
+                                                            <i class="fa fa-play"></i>
+                                                        </button>
+                                                        <span class="lead-audio-duration"></span>
+                                                        #elseif($file.is('image/'))
+                                                        <a target="_blank" href="$file.name" class="btn btn-success">
+                                                            <i class="fa fa-eye"></i>
+                                                        </a>
+                                                        #if($file.geoLocation)
+                                                        <a target="_blank" href="https://www.google.co.nz/maps/place//@${file.geoLocation.replace(":", ",")},17.25z?hl=en" title="View location on map" class="btn btn-info">
+                                                        <i class="fa fa-map-marker"></i>
+                                                        </a>
+                                                        #end
+                                                        #end
+                                                    </td>
+                                                    <td>
+                                                        <div class="btn-group" role="group">
+                                                            <a title="Download" download="$file.name" href="$file.name" class="btn btn-info"><i class="fa fa-download"></i></a>
+                                                            <button title="Delete" type="button" data-fname="$file.name" class="btn btn-danger btn-delete-file"><i class="fa fa-trash"></i></button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                #end
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="task-item-list">
+                            <div id="tasksList" role="tablist" aria-multiselectable="true" class="panel-group">
+                                <div class="panel panel-default">
+                                    #foreach($task in $page.children)
+                                    <div id="headingOne" role="tab" class="panel-heading">
+                                        <h4 class="panel-title clearfix task-item">
+                                            <div class="pull-left">
+                                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                                    <span class="task-title">$task.title</span>
+                                                </a>
+                                            </div>
+                                            <a href="$task.href" class="pull-left" data-target="#modalEditTask" data-toggle="modal">
+                                                <span class="task-edit fa fa-pencil"></span>
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="collapseOne" role="tabpanel" aria-labelledby="headingOne" class="panel-collapse collapse in">
+                                        <div class="panel-body">
+                                            #if( $task.is("open") )
+                                            <div class="btn-group pull-right">
+                                                <a class="btn btn-danger btnCancelTask" title="Cancel task" href="$task.href">
+                                                    <span class="fa fa-remove"></span>
+                                                </a>
+                                                <a href="$task.href" class="mr btn btn-success" data-target="#modalEditTask" data-toggle="modal">
+                                                    <span class="fa fa-check"></span>
+                                                </a>
+                                            </div>
+                                            #if( $task.dueDate )
+                                            Due in <abbr title="$formatter.formatDateISO8601($task.dueDate)" class="timeago">$task.dueDate</abbr>
+                                            #end
+                                            #elseif( $task.is("canceled") )
+                                            <span class="label label-warning">
+                                                Canceled
+                                            </span>
+                                            -
+                                            <abbr title="$formatter.formatDateISO8601($task.completedDate)" class="timeago">$task.completedDate</abbr>
+                                            #else
+                                            <span class="label label-success">
+                                                Completed
+                                            </span>
+                                            <abbr title="$formatter.formatDateISO8601($task.completedDate)" class="timeago">$task.completedDate</abbr>
+                                            #end
+
+                                            -
+                                            $!task.taskDescription
+                                        </div>
+                                    </div>
+                                    #end
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="fw-boxed">
+            <div class="panel panel-default">
+
+            </div>
+        </div>
+        <hr/>
+
+        <div class="modal fade" id="newTaskModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="">Create a task</h4>
+                    </div>
+                    <form method="post" action="$page.href" class="form-horizontal">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="newTaskTitle">Description</label>
+                                <div class="col-md-9">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="title" placeholder="Next follow-up task" />
+                                        <div class="input-group-btn">
+                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <span class="fa fa-pencil"></span>
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-right autoFillText">
+                                                <li><a href="#">Call customer</a></li>
+                                                <li><a href="#">Email customer</a></li>
+                                                <li><a href="#">Send documents</a></li>
+                                                <li><a href="#">Arrange a meeting</a></li>
+                                            </ul>
+                                        </div><!-- /btn-group -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="dueDate">Task Due</label>
+                                <div class="col-md-9">
+                                    <div class="input-group">
+                                        <input type="text" name="dueDate" class="form-control date-time" value="$formatter.formatDateTime($formatter.addDays($formatter.now, 7))">
+                                            <span class="input-group-addon">
+                                                <span class="fa fa-calendar"></span>
+                                            </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="taskDescription">Description</label>
+                                <div class="col-md-9">
+                                    <textarea name="taskDescription" id="taskDescription" class="form-control" placeholder="Enter task details here"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+
+                            <button class="btn btn-primary" type="submit">Create and view</button>
+                        </div>
+                    </form>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>
+
+
+        <div class="modal fade" id="uploadFileModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Upload Files</h4>
+                    </div>
+                    <form method="post" action="$page.href" class="form-horizontal" enctype="multipart/form-data">
+                        <input type="hidden" name="uploadFiles" value="uploadFiles"/>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <div class="col-md-9">
+                                    <label for="exampleInputFile"></label>
+                                    <input name="files" type="file" multiple="true" class="required" id="exampleInputFile" />
+                                    <p class="help-block">Example block-level help text here.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-default" data-dismiss="modal" type="button">Exit</button>
+
+                            <button class="btn btn-primary" type="submit">Upload</button>
+                        </div>
+                    </form>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>
+
+        <div class="modal fade" id="modal-change-profile" role="dialog" aria-labelledby="" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Assign new profile</h4>
+                    </div>
+                    <form method="post" action="$page.href" class="form-horizontal" enctype="multipart/form-data">
+                        <input type="hidden" name="assignNewProfile" value="assignNewProfile"/>
+                        <input type="hidden" name="userId"/>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="control-label col-md-2" for="nickName">Nick Name</label>
+                                <div class="col-md-8">
+                                    <input type="text" name="nickName" id="nickName" class="form-control required" placeholder="Nick name" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2" for="updateUserFirstName">Name</label>
+                                <div class="col-md-5">
+                                    <div class="input-group">
+                                        <input type="text" name="firstName" id="updateUserFirstName" class="form-control" placeholder="First name" />
+                                        <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <input type="text" name="surName" id="newUserSurName" class="form-control" placeholder="Surname" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2" for="newUserEmail">Contact</label>
+                                <div class="col-md-5">
+                                    <input type="text" name="email" id="newUserEmail" class="form-control required" placeholder="Email" />
+                                </div>
+                                <div class="col-md-5">
+                                    <input type="text" name="phone" id="phone" class="form-control" placeholder="Phone" />
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-default" data-dismiss="modal" type="button">Exit</button>
+
+                            <button class="btn btn-primary" type="submit">Save</button>
+                        </div>
+                    </form>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>
+
+        <div class="modal fade" id="editFileNoteModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Edit Note</h4>
+                    </div>
+                    <form method="post" action="$page.href" class="form-horizontal">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="updateNotes">Note</label>
+                                <div class="col-md-9">
+                                    <textarea name="updateNotes" class="form-control" id="updateNotes"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-default" data-dismiss="modal" type="button">Exit</button>
+
+                            <button class="btn btn-primary" type="submit">Save</button>
+                        </div>
+                    </form>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>
+
+        #macro(genFileIcon $file)
+        #set($fIcon = "fa-file")
+
+        #if($file.is('audio/'))
+        #set($fIcon = "fa-file-audio-o")
+        #elseif($file.is('image/'))
+        #set($fIcon = "fa-file-image-o")
+        #elseif($file.name.endsWith('.xlsx') || $file.name.endsWith('.xls'))
+        #set($fIcon = "fa-file-excel-o")
+        #elseif($file.name.endsWith('.doc') || $file.name.endsWith('.docx') || $file.name.endsWith('.docm'))
+        #set($fIcon = "fa-file-word-o")
+        #elseif($file.name.endsWith('.pdf'))
+        #set($fIcon = "fa-file-pdf-o")
+        #else
+        #set($fIcon = "fa-file-o")
+        #end
+        <span title="$file.contentType"><i class="fa fa-2x $fIcon"></i></span>
+        #end
+
+        #createModals()
+
+        <script type="text/javascript">
+            $(function () {
+                var form = $("#leadDetails");
+                var body = $(document.body);
+                form.forms({
+                    callback: function (resp) {
+                        Msg.info('Saved');
+                        reloadTable();
+                    }
+                });
+
+                initNewTaskModal();
+                initFileUploads();
+                initFileNoteEdit();
+                initUpdateUserModal();
+
+                $("#assignToMenu").on("click", "a", function (e) {
+                    e.preventDefault();
+                    var name = $(e.target).attr("href");
+                    assignTo(name);
+                });
+
+                body.on("change", ".dealValue", function (e) {
+                    var val = $(e.target).val();
+                    setDealAmount(val);
+                });
+
+                var createDateTimer = null;
+                body.on("dp.change", "#createDate", function (e) {
+                    var val = $(e.target).val();
+
+                    if (e.oldDate && e.date !== e.oldDate) {
+                        clearTimeout(createDateTimer);
+                        createDateTimer = setTimeout(function () {
+                            $.ajax({
+                                url: window.location.pathname,
+                                data: {
+                                    createDate: val
+                                },
+                                type: 'post',
+                                dataType: 'json',
+                                success: function (resp) {
+                                    flog('Resp:', resp);
+
+                                    if (resp && resp.status) {
+                                        Msg.success('Created date is saved!');
+                                    } else {
+                                        if (resp.messages && resp.messages.length > 0) {
+                                            Msg.error(resp.messages[0]);
+                                        } else {
+                                            Msg.error('Error when saving created date. Please contact website administrators for resolving this problem!');
+                                        }
+                                    }
+                                },
+                                error: function (resp) {
+                                    flog('Error when saving created date', resp);
+                                    Msg.error('Error when saving created date. Please contact website administrators for resolving this problem!');
+                                }
+                            });
+                        }, 300);
+                    }
+                });
+
+                body.on("change", "#description", function (e) {
+                    var val = $(e.target).val();
+                    setLeadDescription(val);
+                });
+
+                $('#leadOrgDetails').forms({
+                    callback: function (resp) {
+                        Msg.info('Saved');
+                    }
+                });
+
+                $('#source-select').select2({
+                    tags: "true"
+                });
+            });
+
+            function reloadTable() {
+                $("#tasksTableBody").reloadFragment({
+                    whenComplete: function () {
+                        $('abbr.timeago').timeago();
+                    }
+                });
+            }
+
+            function initNewTaskModal() {
+                var modal = $("#newTaskModal");
+                var form = modal.find("form");
+                form.forms({
+                    callback: function (resp) {
+                        Msg.info('Created new task');
+                        reloadTasks();
+                        modal.modal("hide");
+                    }
+                });
+            }
+
+            function assignTo(name) {
+                $.ajax({
+                    type: 'POST',
+                    url: window.location.pathname,
+                    data: {
+                        assignToName: name
+                    },
+                    dataType: 'json',
+                    success: function (resp) {
+                        if (resp && resp.status) {
+                            Msg.info("Assigned");
+                            $("#assignedBlock").reloadFragment();
+                        } else {
+                            Msg.error("Sorry, we couldnt change the assignment");
+                        }
+                    },
+                    error: function (resp) {
+                        flog('error', resp);
+                        Msg.error('Sorry couldnt set the visibility ' + resp);
+                    }
+                });
+            }
+
+            function initFileUploads() {
+                var modal = $('#uploadFileModal');
+                var form = modal.find('form');
+
+                $('body').on('click', '.upload-files', function (e) {
+                    e.preventDefault();
+
+                    modal.modal('show');
+                });
+
+                form.forms({
+                    callback: function (resp) {
+                        Msg.info('Files Uploaded');
+                        reloadFileList();
+                        modal.modal('hide');
+                    }
+                });
+            }
+
+            function initFileNoteEdit() {
+                var noteModal = $('#editFileNoteModal');
+                var noteForm = noteModal.find('form');
+                $('body').on('click', '.edit-file-note', function (e) {
+                    e.preventDefault();
+
+                    var btn = $(this);
+                    var span = btn.closest('td').find('span');
+                    var leadId = btn.attr('href');
+
+                    noteForm.attr('action', window.location.pathname + leadId);
+                    noteForm.find('textarea[name=updateNotes]').val(span.html());
+
+                    noteModal.modal('show');
+                });
+
+                noteForm.forms({
+                    onSuccess: function () {
+                        reloadFileList();
+                        noteModal.modal('hide');
+                    }
+                });
+            }
+
+            function reloadFileList() {
+                $('#files-body').reloadFragment({
+                    whenComplete: function () {
+                        $('#files-body abbr.timeago').timeago();
+                    }
+                });
+            }
+
+            function initUpdateUserModal() {
+                var profileSearch = new Bloodhound({
+                    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+                    queryTokenizer: Bloodhound.tokenizers.whitespace,
+                    remote: {
+                        url: '/leads?profileSearch=%QUERY',
+                        wildcard: '%QUERY'
+                    }
+                });
+
+                var modal = $('#modal-change-profile');
+                var form = modal.find('form');
+
+                $('#updateUserFirstName', modal).typeahead({
+                    highlight: true
+                }, {
+                    display: 'firstName',
+                    limit: 10,
+                    source: profileSearch,
+                    templates: {
+                        empty: [
+                            '<div class="empty-message">',
+                            'No existing contacts were found.',
+                            '</div>'
+                        ].join('\n'),
+                        suggestion: Handlebars.compile(
+                                '<div>'
+                                + '<strong>{{name}}</strong>'
+                                + '</br>'
+                                + '<span>{{phone}}</span>'
+                                + '</br>'
+                                + '<span>{{email}}</span>'
+                                + '</div>')
+                    }
+                });
+
+                $('#updateUserFirstName', modal).bind('typeahead:select', function (ev, sug) {
+                    form.find('input[name=nickName]').val(sug.name);
+                    form.find('input[name=firstName]').val(sug.firstName);
+                    form.find('input[name=surName]').val(sug.surName);
+                    form.find('input[name=email]').val(sug.email);
+                    form.find('input[name=phone]').val(sug.phone);
+                });
+
+                form.forms({
+                    onSuccess: function (resp) {
+                        modal.modal('hide');
+                        Msg.success(resp.messages);
+                        $('#profile-body').reloadFragment();
+                    }
+                });
+            }
+
+            function setDealAmount(val) {
+                $.ajax({
+                    type: 'POST',
+                    url: window.location.pathname,
+                    data: {
+                        dealAmount: val
+                    },
+                    dataType: 'json',
+                    success: function (resp) {
+                        if (resp && resp.status) {
+                            Msg.info("Updated");
+                        } else {
+                            Msg.error("Sorry, we couldnt change the deal amount");
+                        }
+                    },
+                    error: function (resp) {
+                        flog('error', resp);
+                        Msg.error('Sorry couldnt set the visibility ' + resp);
+                    }
+                });
+            }
+
+            function setLeadDescription(val) {
+                $.ajax({
+                    type: 'POST',
+                    url: window.location.pathname,
+                    data: {
+                        description: val
+                    },
+                    dataType: 'json',
+                    success: function (resp) {
+                        if (resp && resp.status) {
+                            Msg.info("Updated");
+                        } else {
+                            Msg.error("Sorry, we couldnt change the description");
+                        }
+                    },
+                    error: function (resp) {
+                        flog('error', resp);
+                        Msg.error('Sorry couldnt set the visibility ' + resp);
+                    }
+                });
+            }
+
+        </script>
+        #end
+    </body>
+</html>
