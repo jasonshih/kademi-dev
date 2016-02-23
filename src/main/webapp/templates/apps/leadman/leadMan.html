@@ -39,6 +39,19 @@
                         </ul>
                     </div>
                 </div>
+                <div class="col-md-2">
+                    #if(!$request.params.leadType)
+                    #set($request.params.leadType = 'active')
+                    #end
+                    <div class="btn-group" data-toggle="buttons">
+                        <label class="btn btn-success $formatter.ifEqual('active', '', $request.params.leadType, 'active')">
+                            <input type="radio" name="leadType" id="active" autocomplete="off" $formatter.ifEqual('checked="checked"', '', $request.params.leadType, 'active')/> Active
+                        </label>
+                        <label class="btn btn-warning $formatter.ifEqual('active', '', $request.params.leadType, 'closed')">
+                            <input type="radio" name="leadType" id="closed" autocomplete="off" $formatter.ifEqual('checked="checked"', '', $request.params.leadType, 'closed')/> Closed
+                        </label>
+                    </div>
+                </div>
             </div>
             <br/>
             <div class="fw-boxed">
