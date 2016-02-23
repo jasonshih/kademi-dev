@@ -10,6 +10,22 @@
                 background-size:cover; 
                 height: 160px
             }
+            .btn-task-panel {
+                width: 50px;
+                border-radius: 0;
+                padding: 10px 0;
+                text-align: center;
+            }
+            .btn-task-panel:first-child {
+                border-radius: 5px 5px 0 0;
+            }
+            .btn-task-panel:last-child {
+                border-radius: 0 0 5px 5px;
+            }
+            .btn-task-panel-wrap {
+                width: 50px;
+                margin: 0 0 0 15px;
+            }
             @media (max-width: 767px) {
                 #lead-cover{
                     height: auto;
@@ -502,11 +518,11 @@
                                     <div id="collapseOne" role="tabpanel" aria-labelledby="headingOne" class="panel-collapse collapse in">
                                         <div class="panel-body">
                                             #if( $task.is("open") )
-                                            <div class="btn-group pull-right">
-                                                <a class="btn btn-danger btnCancelTask" title="Cancel task" href="$task.href">
+                                            <div class="btn-task-panel-wrap pull-right">
+                                                <a class="btn btn-danger btnCancelTask btn-task-panel" title="Cancel task" href="$task.href">
                                                     <span class="fa fa-remove"></span>
                                                 </a>
-                                                <a href="$task.href" class="mr btn btn-success" data-target="#modalEditTask" data-toggle="modal">
+                                                <a href="$task.href" class="btn btn-success btn-task-panel" data-target="#modalEditTask" data-toggle="modal">
                                                     <span class="fa fa-check"></span>
                                                 </a>
                                             </div>
