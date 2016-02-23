@@ -42,15 +42,15 @@
             <div class="col-md-4">
                 <div class="row text-muted m0">
                     <div data-ripple="" class="col-xs-6 col-md-6 bb br pv-xxl infoBox" >
-                        <h1 class="text-thin">$leadsPage.numMyLeads</h1>
+                        <h1 class="text-strong">$leadsPage.numMyLeads</h1>
                         <div class="text-right text-sm text-muted">Active Leads</div>
                     </div>
                     <div data-ripple="" class="col-xs-6 col-md-6 bb br pv-xxl infoBox" >
-                        <h1 class="text-thin">$leadsPage.myDueTasks.size()</h1>
+                        <h1 class="text-strong">$leadsPage.myDueTasks.size()</h1>
                         <div class="text-right text-sm text-muted">Tasks due</div>
                     </div>
                     <div data-ripple="" class="col-xs-6 col-md-6 bb-lg br pv-xxl infoBox" >
-                        <h1 class="text-thin">
+                        <h1 class="text-strong">
                             $ $formatter.formatUnits($leadsPage.myLeadsEstimatedValue)
                         </h1>
                         <div class="text-right text-sm text-muted">Pipeline value</div>
@@ -58,12 +58,12 @@
                     <div data-ripple="" class="col-xs-6 col-md-6 bb-lg br pv-xxl infoBox" >
                         #set( $closed = $leadsPage.closedDeals(30) )
                         #if( $closed.value )
-                        <h1 class="text-thin">
+                        <h1 class="text-strong">
                             $ $formatter.formatUnits($closed.value)
                         </h1>
                         <div class="text-right text-sm text-muted">$closed.num closed last 30 days</div>
                         #else
-                        <h1 class="text-thin">None</h1>
+                        <h1 class="text-strong">None</h1>
                         <div class="text-right text-sm text-muted">No closed leads, last 30 days</div>
                         #end
 
@@ -77,11 +77,11 @@
                             <div class="row row-flush text-center">
                                 <div class="col-xs-6">
                                     <p class="mt-lg">Task completion</p>
-                                    <div data-percent="75" class="easypie"><span>75</span></div>
+                                    <div data-percent="75" data-line-width="20" class="easypie"><span>75</span></div>
                                 </div>
                                 <div class="col-xs-6">
                                     <p class="mt-lg">Conversion rate</p>
-                                    <div data-percent="22" class="easypie"><span>22</span></div>
+                                    <div data-percent="22" data-line-width="20" class="easypie"><span>22</span></div>
                                 </div>
                             </div>
                         </div>
