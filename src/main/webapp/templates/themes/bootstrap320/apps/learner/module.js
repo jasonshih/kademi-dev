@@ -975,20 +975,23 @@ function isQuizComplete(e) {
                     if (!currentTarget.is('a')) {
                         currentTarget = $(e.target).closest('a');
                     }
+                    if (isLastPage() && currentTarget.hasClass('nextBtn')) {
+                        completed();
+                    } else {
+                        $.pjax({
+                            selector: '.pages a',
+                            fragment: '.panelBox',
+                            container: '.panelBox',
+                            url: currentTarget.prop('href'),
+                            success: function () {
+                                flog('Pjax success!');
 
-                    $.pjax({
-                        selector: '.pages a',
-                        fragment: '.panelBox',
-                        container: '.panelBox',
-                        url: currentTarget.prop('href'),
-                        success: function () {
-                            flog('Pjax success!');
-
-                            initPrintLink(); // called by init-theme
-                            initPageNav();
-                        },
-                        debug: true
-                    });
+                                initPrintLink(); // called by init-theme
+                                initPageNav();
+                            },
+                            debug: true
+                        });
+                    }
                 } else {
                     flog('Validating quiz is false', response);
                     if (response.data && response.data.nextQuizBatch) {
