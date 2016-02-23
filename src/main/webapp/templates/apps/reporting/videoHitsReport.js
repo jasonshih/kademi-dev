@@ -3,7 +3,7 @@
         var elem = $('.totalPlays');
         elem.find('.values strong').text(totalPlays.doc_count);
 
-        initTopViews(totalPlays.topViews.buckets);
+        //initTopViews(totalPlays.topViews.buckets);
     }
 
     function initTotalViewTime(data) {
