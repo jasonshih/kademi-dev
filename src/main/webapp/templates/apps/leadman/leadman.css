@@ -1,0 +1,13 @@
+@media (max-width: 767px) {
+    .form-group [class^="col-md"] + div{
+        margin-top: 10px;
+    }
+
+    .btn-fullwidth-mobile{
+        width: 100%;
+        margin-left: 0 !important;
+    }
+    .btn-fullwidth-mobile + button{
+        margin-top: 10px;
+    }
+}

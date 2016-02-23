@@ -1,6 +1,7 @@
 #set( $leadsPage = $page.find("/leads") )
 
 #macro( createModals )
+<link rel="stylesheet" href="/theme/apps/leadman/leadman.css">
 <div class="modal fade" id="newLeadModal" role="dialog" aria-labelledby="" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -99,9 +100,9 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                    <button class="btn btn-primary btnCreateAndClose" type="submit">Create and close</button>
-                    <button class="btn btn-primary" type="submit">Create and view</button>
+                    <button class="btn btn-sm btn-default btn-fullwidth-mobile" data-dismiss="modal" type="button">Close</button>
+                    <button class="btn btn-primary btnCreateAndClose btn-fullwidth-mobile" type="submit">Create and close</button>
+                    <button class="btn btn-primary btn-fullwidth-mobile" type="submit">Create and view</button>
                 </div>
             </form>
         </div><!-- /.modal-content -->

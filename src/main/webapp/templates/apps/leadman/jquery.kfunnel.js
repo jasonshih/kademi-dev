@@ -27,7 +27,7 @@
             },
             onGroupClick: function () {
             },
-            onData : function (resp) {
+            onData: function (resp) {
             }
         }, options);
 
@@ -122,20 +122,28 @@
                 }
 
                 var id_codes = {};
-                for (var i = 0; i < json.stages[0].sources.length; i++)
-                {
-                    flog("set ID code", json.stages[0].sources[i].name, json.stages[0].sources[i].id);
-                    id_codes[json.stages[0].sources[i].name] = json.stages[0].sources[i].id;
+                flog("stages", json.stages);
+                for (var si = 0; si < json.stages.length; si++) {
+                    for (var i = 0; i < json.stages[si].sources.length; i++) {
+                        //flog("set ID code", json.stages[si].sources[i].name, json.stages[0].sources[i].id);
+                        if( json.stages[si].sources[i].id ) {
+                            id_codes[json.stages[si].sources[i].name] = json.stages[si].sources[i].id;
+                        }
+                    }
                 }
 
                 for (var t = 0; t < size; t++) {
                     for (var i = 0; i < json.stages[t].sources.length; i++)
                     {
                         var itemName = json.stages[t].sources[i].name;
+                        flog("item id - ", id_codes[itemName]);
                         data_set.push(
                                 {
                                     "level": t,
-                                    "name": itemName, "id": id_codes[itemName], "radius": Math.sqrt(json.stages[t].sources[i].count / maxCount) * (levelHeight / 2), "count": json.stages[t].sources[i].count}
+                                    "name": itemName,
+                                    "id": id_codes[itemName],
+                                    "radius": Math.sqrt(json.stages[t].sources[i].count / maxCount) * (levelHeight / 2),
+                                    "count": json.stages[t].sources[i].count}
                         );
                         name_set.add(itemName);
                     }

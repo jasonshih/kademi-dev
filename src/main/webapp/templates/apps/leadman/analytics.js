@@ -13,13 +13,14 @@
 
         t('div #funnel').funnel({
             url: data_url,
-            stageHeight: "150px",
+            stageHeight: "120px",
             stageNameFontSize: "14px",
             stageNameBackgroundColor: "gray",
             width: 400,
-            height: 310,
+            height: 260,
             onData: function (resp) {
                 initHistogram(resp);
+                initPies(resp);
             },
             onBubbleClick: function (data, stage) {
                 flog("onBubbleClick", data, stage.name);
@@ -51,8 +52,8 @@
 
                 // Select an aggregation other then the selected filter
                 var aggs = $(".btn-select-aggr");
-                flog("aggs", aggs);
-                var nextAgg = aggs.not("[href=" + searchOptions.aggr + "]").first();
+                flog("aggs", aggs, "filter out", searchOptions.aggr);
+                var nextAgg = aggs.not("[href='" + searchOptions.aggr + "']").first();
                 var newAggName = nextAgg.attr("href");
                 flog("newAggName", newAggName);
                 //searchOptions.aggr = newAggName;
@@ -150,10 +151,66 @@
         });
     }
 
+    function initPies(aggs) {
+        var reasonsAgg = aggs.summary.aggregations.cancelledReasons.buckets;
+        var closedByOrgAgg = aggs.summary.aggregations.closedByOrg.orgId.buckets;
+        var lostByOrgAgg = aggs.summary.aggregations.lostByOrg.orgId.buckets;
+        flog("initPies", closedByOrgAgg);
+        nv.addGraph(function () {
+            var chartLost = nv.models.pieChart()
+                    .x(function (d) {
+                        return d.key;
+                    })
+                    .y(function (d) {
+                        return d.doc_count
+                    })
+                    .donut(true)
+                    .showLabels(false);                
+           
+
+            d3.select("#lostReasonsPie svg")
+                    .datum(reasonsAgg)
+                    .transition().duration(1200)
+                    .call(chartLost);
+
+            var chartClosedByOrg = nv.models.pieChart()
+                    .x(function (d) {
+                        return d.key;
+                    })
+                    .y(function (d) {
+                        return d.doc_count
+                    })
+                    .donut(true)
+                    .showLabels(false);   
+            
+            d3.select("#closedByOrgPie svg")
+                    .datum(closedByOrgAgg)
+                    .transition().duration(1200)
+                    .call(chartClosedByOrg);
+
+            var chartLostByOrg = nv.models.pieChart()
+                    .x(function (d) {
+                        return d.key;
+                    })
+                    .y(function (d) {
+                        return d.doc_count
+                    })
+                    .donut(true)
+                    .showLabels(false);   
+            
+            d3.select("#conversionRatePie svg")
+                    .datum(lostByOrgAgg)
+                    .transition().duration(1200)
+                    .call(chartLostByOrg);
+
+            return chartLost;
+        });
+    }
+
     w.initLeadManAnalytics = function () {
         loadFunnel();
         initAggrSelect();
-        initDataTable();
+        initDataTable();        
 
         $(w).bind('popstate', function (event) {
             var uri = new URI(w.location.pathname + w.location.search);
