@@ -142,9 +142,9 @@
     }
 
     function processData(resp) {
-        var totalPlays = resp.totalPlays;
-        var totalViewTime = resp.totalViewTime;
-        var videos = resp.videos.videoUrls.buckets;
+        var totalPlays = resp.aggr.totalPlays;
+        var totalViewTime = resp.aggr.totalViewTime;
+        var videos = resp.aggr.videos.videoUrls.buckets;
 
         initTotalPlays(totalPlays);
         initTotalViewTime(totalViewTime);
