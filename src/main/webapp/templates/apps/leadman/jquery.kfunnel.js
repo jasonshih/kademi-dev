@@ -27,6 +27,8 @@
             },
             onGroupClick: function () {
             },
+            onData: function (resp) {
+            }
         }, options);
 
         var width = setting.width;
@@ -65,6 +67,7 @@
             });
 
             function handleDataReceived(resp) {
+                setting.onData(resp);
                 elem.empty();
                 var json = resp;
                 var size = json.stages.length;
@@ -119,20 +122,28 @@
                 }
 
                 var id_codes = {};
-                for (var i = 0; i < json.stages[0].sources.length; i++)
-                {
-                    flog("set ID code", json.stages[0].sources[i].name, json.stages[0].sources[i].id);
-                    id_codes[json.stages[0].sources[i].name] = json.stages[0].sources[i].id;
+                flog("stages", json.stages);
+                for (var si = 0; si < json.stages.length; si++) {
+                    for (var i = 0; i < json.stages[si].sources.length; i++) {
+                        //flog("set ID code", json.stages[si].sources[i].name, json.stages[0].sources[i].id);
+                        if( json.stages[si].sources[i].id ) {
+                            id_codes[json.stages[si].sources[i].name] = json.stages[si].sources[i].id;
+                        }
+                    }
                 }
 
                 for (var t = 0; t < size; t++) {
                     for (var i = 0; i < json.stages[t].sources.length; i++)
                     {
                         var itemName = json.stages[t].sources[i].name;
+                        flog("item id - ", id_codes[itemName]);
                         data_set.push(
                                 {
                                     "level": t,
-                                    "name": itemName, "id": id_codes[itemName], "radius": Math.sqrt(json.stages[t].sources[i].count / maxCount) * (levelHeight / 2), "count": json.stages[t].sources[i].count}
+                                    "name": itemName,
+                                    "id": id_codes[itemName],
+                                    "radius": Math.sqrt(json.stages[t].sources[i].count / maxCount) * (levelHeight / 2),
+                                    "count": json.stages[t].sources[i].count}
                         );
                         name_set.add(itemName);
                     }
@@ -173,9 +184,9 @@
                         .attr("in", "SourceGraphic");
 
                 svg.append("rect")
-                        .attr("x", adjustTopWidth + 130)
+                        .attr("x", adjustTopWidth + 30)
                         .attr("y", 0)
-                        .attr("width", 300)
+                        .attr("width", 250)
                         .attr("height", name_set.size * 60)
                         .attr("fill", "white")
                         .attr("stroke", "gray")
@@ -186,14 +197,14 @@
                 name_set.forEach(function (value) {
                     svg.append("text")
                             .style("fill", "black")
-                            .attr("x", adjustTopWidth + 200)
+                            .attr("x", adjustTopWidth + 100)
                             .attr("y", (counter + 1) * 50 + 4)
                             .attr("font-size", setting.legendNameFontSize)
                             .attr("font-family", setting.legendNameFontFamily)
                             .attr("fill", setting.legendNameFontColor)
                             .text(value);
                     svg.append("ellipse")
-                            .attr("cx", adjustTopWidth + 170)
+                            .attr("cx", adjustTopWidth + 70)
                             .attr("cy", (counter + 1) * 50)
                             .attr("rx", 10)
                             .attr("ry", 10)
@@ -488,7 +499,7 @@
         {
             for (var j = 0; j < source[i].bydate.length; j++)
             {
-                var date_str = source[i].bydate[j].data;
+                var date_str = source[i].bydate[j].date;
                 var date_list = date_str.split("/");
                 var date = parseInt(date_list[0]) + parseInt(date_list[1]) * 100 + parseInt(date_list[2]) * 100000;
                 date_set.add(date);
@@ -511,7 +522,7 @@
         {
             for (var j = 0; j < source[i].bydate.length; j++)
             {
-                var date_str = source[i].bydate[j].data;
+                var date_str = source[i].bydate[j].date;
                 var date_list = date_str.split("/");
                 var date = parseInt(date_list[0]) + parseInt(date_list[1]) * 100 + parseInt(date_list[2]) * 100000;
 

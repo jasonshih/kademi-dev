@@ -10,6 +10,9 @@
                 text-decoration: none;
                 border-bottom: 1px black dotted;
             }
+            #lead-query-container{
+                margin-bottom: 10px;
+            }
         </style>
     </head>
     <body class='add-container'>
@@ -24,7 +27,7 @@
                     </div>
                 </div>
                 <div class="col-sm-2">
-                    <div class="btn-group">
+                    <div class="btn-group" style="margin-bottom: 10px">
                         <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="aggr-title">Assigned to me</span> <i class="fa fa-caret-down"></i>
                         </button>
@@ -36,6 +39,19 @@
                         </ul>
                     </div>
                 </div>
+                <div class="col-md-2">
+                    #if(!$request.params.leadType)
+                    #set($request.params.leadType = 'active')
+                    #end
+                    <div class="btn-group" data-toggle="buttons">
+                        <label class="btn btn-success $formatter.ifEqual('active', '', $request.params.leadType, 'active')">
+                            <input type="radio" name="leadType" id="active" autocomplete="off" $formatter.ifEqual('checked="checked"', '', $request.params.leadType, 'active')/> Active
+                        </label>
+                        <label class="btn btn-warning $formatter.ifEqual('active', '', $request.params.leadType, 'closed')">
+                            <input type="radio" name="leadType" id="closed" autocomplete="off" $formatter.ifEqual('checked="checked"', '', $request.params.leadType, 'closed')/> Closed
+                        </label>
+                    </div>
+                </div>
             </div>
             <br/>
             <div class="fw-boxed">
@@ -43,20 +59,20 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="row text-muted m0">
-                                <div data-ripple="" class="col-xs-3 col-md-6 bb br pv-xxl infoBox" >
+                                <div data-ripple="" class="col-xs-6 col-sm-3 col-md-6 bb br pv-xxl infoBox" >
                                     <h1 class="text-thin" id="LeadTotal">Loading...</h1>
                                     <div class="text-right text-sm text-muted">Leads</div>
                                 </div>
-                                <div data-ripple="" class="col-xs-3 col-md-6 bb br pv-xxl infoBox" >
+                                <div data-ripple="" class="col-xs-6 col-sm-3 col-md-6 bb br pv-xxl infoBox" >
                                     <h1 class="text-thin" id="LeadSumValue">Loading...</h1>
                                     <div class="text-right text-sm text-muted">Total Value</div>
                                 </div>
-                                <div data-ripple="" class="col-xs-3 col-md-6 bb-lg br pv-xxl infoBox" >
+                                <div data-ripple="" class="col-xs-6 col-sm-3 col-md-6 bb-lg br pv-xxl infoBox" >
                                     <h1 class="text-thin" id="leadAvgValue">Loading...</h1>
                                     <div class="text-right text-sm text-muted">Average Value</div>
                                 </div>
-                                <div data-ripple="" class="col-xs-3 col-md-6 bb-lg br pv-xxl infoBox" >
-                                    <h1 class="text-thin">$leadsPage.myDueTasks.size()</h1>
+                                <div data-ripple="" class="col-xs-6 col-sm-3 col-md-6 bb-lg br pv-xxl infoBox" >
+                                    <h1 class="text-thin">$formatter.ifNull($leadsPage.myDueTasks.size(), 0)</h1>
                                     <div class="text-right text-sm text-muted">Tasks due</div>
                                 </div>
                             </div>
@@ -87,36 +103,38 @@
                 <div class="panel panel-default">
                     <div class="row">
                         <div class="col-md-12">
-                            <table id="leadTable" class="table table-striped table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>Company Title</th>
-                                        <th>First Name</th>
-                                        <th>Surame</th>
-                                        <th>Email</th>
-                                        <th>Stage</th>
-                                        <th>Source</th>
-                                        <th>Deal Amount</th>
-                                        <th>Assigned To</th>
-                                        <th>Created Date</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="leadBody">
-                                    <tr class="text-center">
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td>Loading...</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <div class="table-responsive">
+                                <table id="leadTable" class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Company Title</th>
+                                            <th>First Name</th>
+                                            <th>Surame</th>
+                                            <th>Email</th>
+                                            <th>Stage</th>
+                                            <th>Source</th>
+                                            <th>Deal Amount</th>
+                                            <th>Assigned To</th>
+                                            <th>Created Date</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="leadBody">
+                                        <tr class="text-center">
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>Loading...</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>

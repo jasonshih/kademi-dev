@@ -2,7 +2,8 @@
 
     var searchOptions = {
         team: null,
-        query: ''
+        query: '',
+        leadType: null
     };
 
     var dataTable = null;
@@ -169,6 +170,16 @@
         });
     }
 
+    function initLeadTypeSelect() {
+        $('body').on('change', 'input[name=leadType]', function (e) {
+            var btn = $(this);
+            var type = btn.attr('id');
+            searchOptions.leadType = type;
+
+            doSearch();
+        });
+    }
+
     function doSearch() {
         $.ajax({
             url: window.location.pathname + '?sLead&' + $.param(searchOptions),
@@ -274,6 +285,7 @@
 
         initOrgSelect();
         initSearchField();
+        initLeadTypeSelect();
         doSearch();
     };
 })(this);

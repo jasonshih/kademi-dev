@@ -23,6 +23,7 @@ $(function () {
     initAudioPlayer();
     initDeleteFile();
     initCreatedDateModal();
+    initLeadmanModal();
 
     // init the login form
     $(".login").user({});
@@ -51,6 +52,17 @@ $(function () {
                     form.closest(".modal").modal("hide");
                     flog("done");
                     reloadTasks();
+                }
+            });
+        }
+        if( modal.hasClass("modalInitForm")) {
+            modal.find("form").forms({
+                onSuccess: function (resp) {
+                    flog("onSuccess", resp, modal);
+                    Msg.info("Done");
+                    form.closest(".modal").modal("hide");
+                    flog("done");
+                    window.location.reload();
                 }
             });
         }
@@ -191,13 +203,6 @@ function initLeadActions() {
 
         showCreatedDateModal(href, a);
     });
-
-    $("body").on("click", ".cancelLead", function (e) {
-        flog("initLeadActions click - cancel");
-        e.preventDefault();
-        var href = $(e.target).closest("a").attr("href");
-        cancelLead(href);
-    });
 }
 
 function initCreatedDateModal() {
@@ -269,10 +274,10 @@ function initNewLeadForm() {
         }
     });
 
-    $(".createLead").click(function (e) {
-        flog("initNewLeadForm - click");
+    $(".createLead").click(function (e) {        
         e.preventDefault();
         var funnelName = $(e.target).closest("a").attr("href");
+        flog("initNewLeadForm - click. funnelName=", funnelName, e.target);
         form.find("select[name=funnel]").val(funnelName).change();
         modal.modal("show");
 
@@ -280,7 +285,7 @@ function initNewLeadForm() {
 
     $('select[name=funnel]', form).on('change', function (e) {
         var s = $(this);
-
+        flog("funnel change",  s.val(), s);
         $('#source-frm').reloadFragment({
             url: window.location.href + '?leadName=' + s.val(),
             whenComplete: function () {
@@ -641,9 +646,7 @@ function takeTask(href) {
 function closeLead(href) {
     setLead(href, "closeDeal", "close this lead, ie sale has been completed");
 }
-function cancelLead(href) {
-    setLead(href, "cancelDeal", "cancel this lead");
-}
+
 function setLead(href, status, actionDescription) {
     flog("SetLead", href, status);
     if (confirm("Are you sure you want to " + actionDescription + "?")) {
@@ -1052,5 +1055,16 @@ function initDeleteFile() {
         confirmDelete(fname, fname, function () {
             tr.remove();
         });
+    });
+}
+
+// Minified version of isMobile included in the HTML since it's small
+!function(a){var b=/iPhone/i,c=/iPod/i,d=/iPad/i,e=/(?=.*\bAndroid\b)(?=.*\bMobile\b)/i,f=/Android/i,g=/IEMobile/i,h=/(?=.*\bWindows\b)(?=.*\bARM\b)/i,i=/BlackBerry/i,j=/BB10/i,k=/Opera Mini/i,l=/(?=.*\bFirefox\b)(?=.*\bMobile\b)/i,m=new RegExp("(?:Nexus 7|BNTV250|Kindle Fire|Silk|GT-P1000)","i"),n=function(a,b){return a.test(b)},o=function(a){var o=a||navigator.userAgent,p=o.split("[FBAN");return"undefined"!=typeof p[1]&&(o=p[0]),this.apple={phone:n(b,o),ipod:n(c,o),tablet:!n(b,o)&&n(d,o),device:n(b,o)||n(c,o)||n(d,o)},this.android={phone:n(e,o),tablet:!n(e,o)&&n(f,o),device:n(e,o)||n(f,o)},this.windows={phone:n(g,o),tablet:n(h,o),device:n(g,o)||n(h,o)},this.other={blackberry:n(i,o),blackberry10:n(j,o),opera:n(k,o),firefox:n(l,o),device:n(i,o)||n(j,o)||n(k,o)||n(l,o)},this.seven_inch=n(m,o),this.any=this.apple.device||this.android.device||this.windows.device||this.other.device||this.seven_inch,this.phone=this.apple.phone||this.android.phone||this.windows.phone,this.tablet=this.apple.tablet||this.android.tablet||this.windows.tablet,"undefined"==typeof window?this:void 0},p=function(){var a=new o;return a.Class=o,a};"undefined"!=typeof module&&module.exports&&"undefined"==typeof window?module.exports=o:"undefined"!=typeof module&&module.exports&&"undefined"!=typeof window?module.exports=p():"function"==typeof define&&define.amd?define("isMobile",[],a.isMobile=p()):a.isMobile=p()}(this);
+
+function initLeadmanModal(){
+    $('.modal').on('show.bs.modal', function () {
+        if(isMobile.phone && $('#nav-collapse').hasClass('in')){
+            $('.navbar-toggle').trigger('click')
+        }
     });
 }

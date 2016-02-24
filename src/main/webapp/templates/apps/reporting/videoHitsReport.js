@@ -3,7 +3,7 @@
         var elem = $('.totalPlays');
         elem.find('.values strong').text(totalPlays.doc_count);
 
-        initTopViews(totalPlays.topViews.buckets);
+        //initTopViews(totalPlays.topViews.buckets);
     }
 
     function initTotalViewTime(data) {
@@ -53,12 +53,12 @@
         tbody.empty();
 
         if (buckets.length > 0) {
-
             for (var i in buckets) {
                 var b = buckets[i];
                 var plays = b.plays.doc_count;
-                var viewTime = b.viewTime.doc_count * 3;
-                var t = '<tr data-url="' + b.key + '">'
+                var viewTime = b.viewTime && b.viewTime.doc_count ? b.viewTime.doc_count : 0
+                viewTime = viewTime * 3;
+                var t = '<tr data-url="' + b.key + '" class="clickable">'
                         + '    <td>' + b.key + '</td>'
                         + '    <td>' + plays + '</td>'
                         + '    <td class="viewTime">' + viewTime + ' seconds</td>'
@@ -67,6 +67,12 @@
                 tbody.append(t);
             }
         }
+
+        tbody.on('click', 'tr.clickable', function (e) {
+            var btn = $(this);
+            var url = btn.data('url');
+            window.location.search = '?video=' + encodeURIComponent(url);
+        });
     }
 
     function initHistogram2(playHits, viewHits) {
@@ -136,9 +142,9 @@
     }
 
     function processData(resp) {
-        var totalPlays = resp.totalPlays;
-        var totalViewTime = resp.totalViewTime;
-        var videos = resp.videos.videoUrls.buckets;
+        var totalPlays = resp.aggr.totalPlays;
+        var totalViewTime = resp.aggr.totalViewTime;
+        var videos = resp.aggr.videos.videoUrls.buckets;
 
         initTotalPlays(totalPlays);
         initTotalViewTime(totalViewTime);
@@ -149,7 +155,7 @@
 
     function loadData() {
         $.ajax({
-            url: window.location.pathname + "?asJson",
+            url: window.location.pathname + "?asJson&" + window.location.search.substr(1),
             dataType: 'json',
             success: function (data, textStatus, jqXHR) {
                 flog('success', data, textStatus);

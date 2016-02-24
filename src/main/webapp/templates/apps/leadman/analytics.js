@@ -2,17 +2,26 @@
 
     var searchOptions = {
         aggr: 'source',
-        filters: null
+        filters: null,
+        stage: null
     };
 
-    function loadFunnel() {
-        var data_url = w.location.pathname + "?asJson&" + $.param(searchOptions);
+    loadFunnel = function (url) {
+        var data_url = url || w.location.pathname + "?asJson&" + $.param(searchOptions);
+
+        flog('data_url', data_url);
 
         t('div #funnel').funnel({
             url: data_url,
-            stageHeight : "150px",
-            stageNameFontSize : "14px",
-            stageNameBackgroundColor : "gray",
+            stageHeight: "120px",
+            stageNameFontSize: "14px",
+            stageNameBackgroundColor: "gray",
+            width: 400,
+            height: 260,
+            onData: function (resp) {
+                initHistogram(resp);
+                initPies(resp);
+            },
             onBubbleClick: function (data, stage) {
                 flog("onBubbleClick", data, stage.name);
                 var name = data.name;
@@ -25,15 +34,15 @@
                 var filters = searchOptions.aggr + "=" + name;
                 uri.setSearch("filters", filters);
                 uri.setSearch("stage", stage.name);
-                history.pushState(null, null, uri.toString() );
+                history.pushState(null, null, uri.toString());
                 $("#leadsContainer").reloadFragment({
-                    url : uri.toString(),
-                    whenComplete : function() {
+                    url: uri.toString(),
+                    whenComplete: function () {
                         initDataTable();
                     }
                 });
             },
-            onGroupClick : function(data, value) {
+            onGroupClick: function (data, value) {
                 flog("onGroupClick", data, value);
                 var name = data.name;
                 if (data.id > 0) {
@@ -43,15 +52,81 @@
 
                 // Select an aggregation other then the selected filter
                 var aggs = $(".btn-select-aggr");
-                flog("aggs", aggs);
-                var nextAgg = aggs.not("[href=" + searchOptions.aggr + "]").first();
+                flog("aggs", aggs, "filter out", searchOptions.aggr);
+                var nextAgg = aggs.not("[href='" + searchOptions.aggr + "']").first();
                 var newAggName = nextAgg.attr("href");
                 flog("newAggName", newAggName);
                 //searchOptions.aggr = newAggName;
+                var uri = URI(window.location.pathname);
+                var filters = searchOptions.aggr + "=" + name;
+                uri.setSearch("filters", filters);
+                history.pushState(null, null, uri.toString());
 
                 loadFunnel();
 
             }
+        });
+    }
+
+    function initHistogram(resp) {
+        flog("initHistogram", resp.summary);
+        $('#histo svg').empty();
+        var closedBuckets = resp.summary.aggregations.closed.bydate.buckets;
+        var cancelledBuckets = resp.summary.aggregations.cancelled.bydate.buckets;
+
+        var myData = [];
+        var closedSales = {
+            key: "Closed sales",
+            color: "#4caf50",
+            values: []
+        };
+        myData.push(closedSales);
+
+        $.each(closedBuckets, function (b, dateBucket) {
+            var v = dateBucket.doc_count;
+            if (v == null) {
+                v = 0;
+            }
+            closedSales.values.push({x: dateBucket.key, y: v});
+        });
+
+        var cancelledSales = {
+            key: "Cancelled sales",
+            color: "#ea8b00",
+            values: []
+        };
+        myData.push(cancelledSales);
+        $.each(cancelledBuckets, function (b, dateBucket) {
+            var v = dateBucket.doc_count;
+            if (v == null) {
+                v = 0;
+            }
+            cancelledSales.values.push({x: dateBucket.key, y: v});
+        });
+
+
+        nv.addGraph(function () {
+            var chart = nv.models.multiBarChart()
+                    .reduceXTicks(true)   //If 'false', every single x-axis tick label will be rendered.
+                    .rotateLabels(45)      //Angle to rotate x-axis labels.
+                    .showControls(false)   //Allow user to switch between 'Grouped' and 'Stacked' mode.
+                    .groupSpacing(0.1)    //Distance between each group of bars.
+                    ;
+
+            chart.xAxis.tickFormat(function (d) {
+                return d3.time.format('%x')(new Date(d))
+            });
+
+            chart.yAxis.tickFormat(d3.format(',.2f'));
+
+
+            d3.select('#histo svg')
+                    .datum(myData)
+                    .call(chart);
+
+            nv.utils.windowResize(chart.update);
+
+            return chart;
         });
     }
 
@@ -72,13 +147,77 @@
     function initDataTable() {
         flog("initDataTable", $('#leadTable'));
         var dataTable = $('#leadTable').DataTable({
+            paging: false
+        });
+    }
 
+    function initPies(aggs) {
+        var reasonsAgg = aggs.summary.aggregations.cancelledReasons.buckets;
+        var closedByOrgAgg = aggs.summary.aggregations.closedByOrg.orgId.buckets;
+        var lostByOrgAgg = aggs.summary.aggregations.lostByOrg.orgId.buckets;
+        flog("initPies", closedByOrgAgg);
+        nv.addGraph(function () {
+            var chartLost = nv.models.pieChart()
+                    .x(function (d) {
+                        return d.key;
+                    })
+                    .y(function (d) {
+                        return d.doc_count
+                    })
+                    .donut(true)
+                    .showLabels(false);                
+           
+
+            d3.select("#lostReasonsPie svg")
+                    .datum(reasonsAgg)
+                    .transition().duration(1200)
+                    .call(chartLost);
+
+            var chartClosedByOrg = nv.models.pieChart()
+                    .x(function (d) {
+                        return d.key;
+                    })
+                    .y(function (d) {
+                        return d.doc_count
+                    })
+                    .donut(true)
+                    .showLabels(false);   
+            
+            d3.select("#closedByOrgPie svg")
+                    .datum(closedByOrgAgg)
+                    .transition().duration(1200)
+                    .call(chartClosedByOrg);
+
+            var chartLostByOrg = nv.models.pieChart()
+                    .x(function (d) {
+                        return d.key;
+                    })
+                    .y(function (d) {
+                        return d.doc_count
+                    })
+                    .donut(true)
+                    .showLabels(false);   
+            
+            d3.select("#conversionRatePie svg")
+                    .datum(lostByOrgAgg)
+                    .transition().duration(1200)
+                    .call(chartLostByOrg);
+
+            return chartLost;
         });
     }
 
     w.initLeadManAnalytics = function () {
         loadFunnel();
         initAggrSelect();
-        initDataTable();
+        initDataTable();        
+
+        $(w).bind('popstate', function (event) {
+            var uri = new URI(w.location.pathname + w.location.search);
+            uri.addQuery('asJson');
+
+            flog('popstate', uri.toString());
+            loadFunnel(uri.toString());
+        });
     };
 })(this, jQuery);
