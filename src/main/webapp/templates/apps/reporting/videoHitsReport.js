@@ -78,26 +78,58 @@
 
     function initSegsDisplay(segs) {
         $('#videoSegmentsDiv').show();
-        var table = $('#videoSegTable');
-        var tbody = table.find('tbody');
-        tbody.empty();
+        $('#segmentHistogram').empty();
 
-        if (segs.length > 0) {
+        nv.addGraph(function () {
+            var chart = nv.models.lineChart()
+                    .margin({top: 30, right: 90, bottom: 60, left: 80}) //Adjust chart margins to give the x-axis some breathing room.
+                    .showLegend(true)                                   //Show the legend, allowing users to turn on/off line series.
+                    .showYAxis(true)                                    //Show the y-axis
+                    .showXAxis(true)                                    //Show the x-axis
+                    ;
+
+            chart.xAxis
+                    .axisLabel('Time')
+                    .tickFormat(function (d) {
+                        return msToTime(d);
+                    });
+
+            chart.yAxis
+                    .axisLabel('Plays')
+                    .tickFormat(d3.format(',f'));
+
+            var myData = [];
+            var s = {
+                values: [],
+                key: 'Plays',
+                color: '#57bda6'
+            };
+
             var startTime = 0;
             for (var i in segs) {
                 var b = segs[i];
                 var plays = b.count;
                 var endTime = startTime + (b.duration * 1000);
-                var viewTime = msToTime(startTime) + " - " + msToTime(endTime);
                 startTime = endTime;
-                var t = '<tr>'
-                        + '    <td>' + viewTime + '</td>'
-                        + '    <td>' + plays + '</td>'
-                        + '</tr>';
 
-                tbody.append(t);
+                s.values.push({
+                    x: endTime,
+                    y: plays
+
+                });
             }
-        }
+            myData.push(s);
+
+            d3.select('#segmentHistogram') //Select the <svg> element you want to render the chart in.   
+                    .datum(myData)         //Populate the <svg> element with chart data...
+                    .call(chart);          //Finally, render the chart!
+
+            //Update the chart when window resizes.
+            nv.utils.windowResize(function () {
+                chart.update()
+            });
+            return chart;
+        });
     }
 
     function initHistogram2(playHits, viewHits) {
