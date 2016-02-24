@@ -207,16 +207,6 @@ $(function () {
     initVideoHitsReport();
 });
 
-Number.prototype.toTime = function () {
-    var self = this / 1000;
-    var min = (self) << 0;
-    var sec = round((self * 60) % 60, 0);
-    if (sec == 0)
-        sec = '00';
-
-    return min + ':' + sec
-};
-
 function msToTime(duration) {
     var milliseconds = parseInt((duration % 1000) / 100)
             , seconds = parseInt((duration / 1000) % 60)
