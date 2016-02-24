@@ -11,3 +11,9 @@
         margin-top: 10px;
     }
 }
+
+@media (max-width: 991px) {
+    .form-group [class^="col-md"] + div{
+        margin-top: 15px;
+    }
+}
