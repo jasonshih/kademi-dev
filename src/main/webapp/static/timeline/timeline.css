@@ -216,3 +216,17 @@
 .tldate span{
 
 }
+
+
+/* iPad portrait */
+@media (min-width: 768px) and (max-width: 991px) {
+    .timeline:before{
+        left: 60%;
+    }
+    .tldate{
+        left: 60%;
+    }
+    .timeline > li > .timeline-badge{
+        left: 60%;
+    }
+}
