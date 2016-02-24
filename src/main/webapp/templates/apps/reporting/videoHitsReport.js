@@ -56,7 +56,8 @@
             for (var i in buckets) {
                 var b = buckets[i];
                 var plays = b.plays.doc_count;
-                var viewTime = b.viewTime.doc_count * 3;
+                var viewTime = b.viewTime && b.viewTime.doc_count ? b.viewTime.doc_count : 0
+                viewTime = b.viewTime.doc_count * 3;
                 var t = '<tr data-url="' + b.key + '" class="clickable">'
                         + '    <td>' + b.key + '</td>'
                         + '    <td>' + plays + '</td>'
