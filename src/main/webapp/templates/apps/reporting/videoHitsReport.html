@@ -56,9 +56,32 @@
             </div>
         </div>
         <br/>
-        <div class="row">
+        <div class="row" id="videoTableDiv" style="display:none;">
             <div class="col-md-12">
                 <table class="table table-hover" id="videoTable">
+                    <colgroup>
+                        <col/>
+                        <col style="width:90px"/>
+                        <col style="width:190px"/>
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Total plays</th>
+                            <th>Total view time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="text-center">
+                            <td colspan="3">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row" id="videoSegmentsDiv" style="display:none;">
+            <div class="col-md-12">
+                <table class="table table-hover" id="videoSegTable">
                     <colgroup>
                         <col/>
                         <col style="width:90px"/>

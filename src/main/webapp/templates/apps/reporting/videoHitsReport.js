@@ -48,6 +48,7 @@
     }
 
     function initVideoTable(buckets) {
+        $('#videoTableDiv').show();
         var videoTable = $('#videoTable');
         var tbody = videoTable.find('tbody');
         tbody.empty();
@@ -73,6 +74,30 @@
             var url = btn.data('url');
             window.location.search = '?video=' + encodeURIComponent(url);
         });
+    }
+
+    function initSegsDisplay(segs) {
+        $('#videoSegmentsDiv').show();
+        var table = $('#videoSegTable');
+        var tbody = table.find('tbody');
+        tbody.empty();
+
+        if (segs.length > 0) {
+            var startTime = 0;
+            for (var i in segs) {
+                var b = segs[i];
+                var plays = b.count;
+                var endTime = startTime + (b.duration * 1000);
+                var viewTime = msToTime(startTime) + " - " + msToTime(endTime);
+                startTime = endTime;
+                var t = '<tr>'
+                        + '    <td>' + viewTime + '</td>'
+                        + '    <td>' + plays + '</td>'
+                        + '</tr>';
+
+                tbody.append(t);
+            }
+        }
     }
 
     function initHistogram2(playHits, viewHits) {
@@ -146,10 +171,16 @@
         var totalViewTime = resp.aggr.totalViewTime;
         var videos = resp.aggr.videos.videoUrls.buckets;
 
+        var segs = resp.segs;
+        if (segs !== null && typeof segs !== 'undefined') {
+            initSegsDisplay(segs);
+        } else {
+            initVideoTable(videos);
+        }
+
         initTotalPlays(totalPlays);
         initTotalViewTime(totalViewTime);
         initAvgViewTime(totalPlays, totalViewTime);
-        initVideoTable(videos);
         initHistogram2(totalPlays.histogram, totalViewTime.histogram);
     }
 
@@ -175,3 +206,26 @@
 $(function () {
     initVideoHitsReport();
 });
+
+Number.prototype.toTime = function () {
+    var self = this / 1000;
+    var min = (self) << 0;
+    var sec = round((self * 60) % 60, 0);
+    if (sec == 0)
+        sec = '00';
+
+    return min + ':' + sec
+};
+
+function msToTime(duration) {
+    var milliseconds = parseInt((duration % 1000) / 100)
+            , seconds = parseInt((duration / 1000) % 60)
+            , minutes = parseInt((duration / (1000 * 60)) % 60)
+            , hours = parseInt((duration / (1000 * 60 * 60)) % 24);
+
+    hours = (hours < 10) ? "0" + hours : hours;
+    minutes = (minutes < 10) ? "0" + minutes : minutes;
+    seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+    return minutes + ":" + seconds + "." + milliseconds;
+}
