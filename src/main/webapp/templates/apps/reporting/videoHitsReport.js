@@ -76,7 +76,67 @@
         });
     }
 
-    function initSegsDisplay(segs) {
+    function initAgentDonut(buckets) {
+        $("#agentDonut").empty();
+
+        nv.addGraph(function () {
+            var chart = nv.models.pieChart()
+                    .x(function (d) {
+                        return d.key;
+                    })
+                    .y(function (d) {
+                        return d.doc_count;
+                    })
+                    .showLabels(false)     //Display pie labels
+                    .showLegend(false)     //Display pie labels
+                    .labelThreshold(.04)  //Configure the minimum slice size for labels to show up
+                    .labelType("value") //Configure what type of data to show in the label. Can be "key", "value" or "percent"
+                    .donut(true)          //Turn on Donut mode. Makes pie chart look tasty!
+                    .donutRatio(0.5)     //Configure how big you want the donut hole size to be.
+                    .title("Browsers")
+                    .margin({"left": 0, "right": 0, "top": 0, "bottom": 0})
+                    ;
+
+            d3.select("#agentDonut")
+                    .datum(buckets)
+                    .transition().duration(350)
+                    .call(chart);
+
+            return chart;
+        });
+    }
+
+    function initDeviceDonut(buckets) {
+        $("#deviceDonut").empty();
+
+        nv.addGraph(function () {
+            var chart = nv.models.pieChart()
+                    .x(function (d) {
+                        return d.key;
+                    })
+                    .y(function (d) {
+                        return d.doc_count;
+                    })
+                    .showLabels(false)     //Display pie labels
+                    .showLegend(false)     //Display pie labels
+                    .labelThreshold(.04)  //Configure the minimum slice size for labels to show up
+                    .labelType("value") //Configure what type of data to show in the label. Can be "key", "value" or "percent"
+                    .donut(true)          //Turn on Donut mode. Makes pie chart look tasty!
+                    .donutRatio(0.5)     //Configure how big you want the donut hole size to be.
+                    .title("Devices")
+                    .margin({"left": 0, "right": 0, "top": 0, "bottom": 0})
+                    ;
+
+            d3.select("#deviceDonut")
+                    .datum(buckets)
+                    .transition().duration(350)
+                    .call(chart);
+
+            return chart;
+        });
+    }
+
+    function initSegsDisplay(playlist) {
         $('#videoSegmentsDiv').show();
         $('#segmentHistogram').empty();
 
@@ -99,26 +159,27 @@
                     .tickFormat(d3.format(',f'));
 
             var myData = [];
-            var s = {
-                values: [],
-                key: 'Plays',
-                color: '#57bda6'
-            };
+            for (var i in playlist) {
+                var p = playlist[i];
+                var s = {
+                    values: [],
+                    key: i
+                };
+                var startTime = 0;
+                for (var i in p) {
+                    var b = p[i];
+                    var plays = b.count;
+                    var endTime = startTime + (b.duration * 1000);
+                    startTime = endTime;
 
-            var startTime = 0;
-            for (var i in segs) {
-                var b = segs[i];
-                var plays = b.count;
-                var endTime = startTime + (b.duration * 1000);
-                startTime = endTime;
+                    s.values.push({
+                        x: endTime,
+                        y: plays
 
-                s.values.push({
-                    x: endTime,
-                    y: plays
-
-                });
+                    });
+                }
+                myData.push(s);
             }
-            myData.push(s);
 
             d3.select('#segmentHistogram') //Select the <svg> element you want to render the chart in.   
                     .datum(myData)         //Populate the <svg> element with chart data...
@@ -198,14 +259,25 @@
         });
     }
 
+    function initVideos(hash) {
+        $('#videoDiv').html('<img class="video-jw" src="/_hashes/files/' + hash + '/alt-640-360.png" />');
+        doInitVideos();
+    }
+
     function processData(resp) {
         var totalPlays = resp.aggr.totalPlays;
         var totalViewTime = resp.aggr.totalViewTime;
         var videos = resp.aggr.videos.videoUrls.buckets;
+        var deviceCategory = resp.aggr.deviceCategory.buckets;
+        var userAgent = resp.aggr.userAgent.buckets;
 
-        var segs = resp.segs;
-        if (segs !== null && typeof segs !== 'undefined') {
-            initSegsDisplay(segs);
+        var playlist = resp.playlist;
+        if (playlist !== null && typeof playlist !== 'undefined') {
+            $('#vidStats').show();
+            initSegsDisplay(playlist);
+            initDeviceDonut(deviceCategory);
+            initAgentDonut(userAgent);
+            initVideos(resp.fileHash);
         } else {
             initVideoTable(videos);
         }
