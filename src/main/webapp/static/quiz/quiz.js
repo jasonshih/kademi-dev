@@ -2,10 +2,10 @@ var selectedCourse = null;
 
 function loadQuizEditor(modal, data) {
     flog("loadQuizEditor. Data=", data);
-    modal.find("input[name=maxAttempts]").val(data.maxAttempts);
-    modal.find("input[name=passMarkPerc]").val(data.passMarkPerc);
-    modal.find("select[name=batchMode]").val(data.batchMode);
-    modal.find("input[name=batchSize]").val(data.batchSize);
+    modal.find("input[name=maxAttempts]").val( data.maxAttempts );
+    modal.find("input[name=passMarkPerc]").val( data.passMarkPerc );
+    modal.find("select[name=batchMode]").val( data.batchMode );
+    modal.find("input[name=batchSize]").val( data.batchSize );
     modal.find('#quiz-questions').html(data.body);
     var olQuiz = modal.find('ol.quiz');
     if (olQuiz.length === 0) {
@@ -18,29 +18,24 @@ function loadQuizEditor(modal, data) {
     // set answers into the quiz
     var quizItems = modal.find('ol.quiz > li');
     flog("Got quizItems", quizItems, "from modal", modal);
-    flog("Data", data);
-    for (var i in data.params) {
-        var prop = data.params[i];
-        var t = prop.title;
-        var v = prop.value;
-        flog('Prop', prop);
-        if (t.startsWith('answer')) {
-            var n = t.replace('answer', ''); // get the answer number
+    for (prop in data) {
+        if (prop.startsWith('answer')) {
+            var n = prop.replace('answer', ''); // get the answer number
             flog('answer number:', n, 'quizItems', quizItems);
             //var li = $(quizItems[n]);
             //var li = quizItems.find('#' + n);
             var li = hackyFind(quizItems, n);
             flog('li', li);
-            flog('answer', n, t, v, li);
+            flog('answer', n, prop, data[prop], li);
             var input = li.find('input[type=text],select,textarea');
             if (input.length > 0) {
-                input.val(v); // set answer on textboxes, selects and textareas
-                flog('restored input', input, v);
+                input.val(data[prop]); // set answer on textboxes, selects and textareas
+                flog('restored input', input, data[prop]);
             } else {
                 var radios = li.find('input[type=radio]');
                 flog('radios', radios);
                 radios.attr('checked', '');
-                var val = v;
+                var val = data[prop];
                 var radio = radios.filter('[value=' + val + ']');
                 flog('radio val', val, radio);
                 radio.prop('checked', true); // set radio buttons
@@ -48,7 +43,7 @@ function loadQuizEditor(modal, data) {
             }
         }
     }
-    modal.find('input[type=radio]').closest('ol').each(function (i, n) {
+    modal.find('input[type=radio]').closest('ol').each(function(i, n) {
         var ol = $(n);
         ensureOneEmptyRadio(ol);
     });
@@ -57,7 +52,7 @@ function loadQuizEditor(modal, data) {
 function hackyFind(arr, id) {
     flog('hackyFind id=', id, 'array', arr);
     var found = null;
-    $.each(arr, function (i, n) {
+    $.each(arr, function(i, n) {
         var node = $(n);
         var nodeId = node.attr('id')
         var answerClass = 'answer' + id; // old way of identifying answers
@@ -73,13 +68,13 @@ function prepareQuizForSave(quizWrapper, data) {
     var quiz = quizWrapper.find('#quiz-questions');
     // Set names onto all inputs. Just number them answer0, answer1, etc. And add a class to the li with the name of the input, to use in front end validation
     var questions = quiz.find('ol.quiz > li');
-    questions.each(function (q, n) {
+    questions.each(function(q, n) {
         var li = $(n);
         var id = li.attr('id');
         setClass(li, 'answer', id); // will remove old classes
         li.data('type', 'input');
         //setClass(li, 'answer', q); // will remove old classes
-        li.find('input,select,textarea').each(function (inpNum, inp) {
+        li.find('input,select,textarea').each(function(inpNum, inp) {
             $(inp).attr('name', 'answer' + q);
         });
     });
@@ -100,8 +95,8 @@ function prepareQuizForSave(quizWrapper, data) {
             template: quizWrapper.find('input[name=template]').val(),
             order: quizWrapper.find('input[name=order]').val(),
             maxAttempts: quizWrapper.find('input[name=maxAttempts]').val(),
-            batchMode: quizWrapper.find('select[name=batchMode]').val(),
-            batchSize: quizWrapper.find('input[name=batchSize]').val(),
+            batchMode : quizWrapper.find('select[name=batchMode]').val(),
+            batchSize : quizWrapper.find('input[name=batchSize]').val(),
             passMarkPerc: quizWrapper.find('input[name=passMarkPerc]').val()
         };
     }
@@ -109,7 +104,7 @@ function prepareQuizForSave(quizWrapper, data) {
     // Update the names of all inputs to be the class on the question li
     var inputs = quiz.find('input,select,textarea').not('.newQuestionType,input[name=pageTitle],input[name=pageName]');
     flog('update input names', inputs);
-    inputs.each(function (i, n) {
+    inputs.each(function(i, n) {
         var inp = $(n);
         var name = inp.closest('li[id]').attr('class'); // the question li is the closest one with an id. question name is its class
         inp.attr('name', name);
@@ -119,7 +114,7 @@ function prepareQuizForSave(quizWrapper, data) {
     // Find all inputs and add them to the data object
     var inputs = quiz.find('input[type=text],select,textarea,input[type=radio]:checked').not('.newQuestionType,input[name=pageTitle],input[name=pageName]');
     flog('add inputs', inputs);
-    inputs.each(function (i, n) {
+    inputs.each(function(i, n) {
         var inp = $(n);
         var name = inp.attr('name');
         var val = inp.val();
@@ -142,7 +137,7 @@ function initQuizBuilder() {
 
     flog('quizWrapper', quizWrapper);
 
-    quizWrapper.on('click', 'h3, p, label', function (e) {
+    quizWrapper.on('click', 'h3, p, label', function(e) {
         e.stopPropagation();
         e.preventDefault();
 
@@ -164,7 +159,7 @@ function initQuizBuilder() {
         flog('detached target', target);
 
         inp.focus();
-        inp.focusout(function () {
+        inp.focusout(function() {
             // put back original element
             var newText = inp.val().trim();
             flog('focusout: target=', target, 'newText=', newText);
@@ -186,7 +181,7 @@ function initQuizBuilder() {
         });
     });
 
-    quizWrapper.on('keyup', 'input.radioLabel', function (e) {
+    quizWrapper.on('keyup', 'input.radioLabel', function(e) {
         var inp = $(e.target);
         var li = inp.closest('li');
         var ul = li.closest('ul');
@@ -198,7 +193,7 @@ function initQuizBuilder() {
     });
 
     // Suppress enter key to prevent users from submitting, and closing, the modal edit window accidentally
-    quizWrapper.on('keypress', 'input', function (e) {
+    quizWrapper.on('keypress', 'input', function(e) {
         if (e.which == 13) {
             e.preventDefault();
             e.stopPropagation();
@@ -207,7 +202,7 @@ function initQuizBuilder() {
     });
 
     // insert a delete X on hover of a question li
-    quizWrapper.on('mouseenter', 'ol.quiz > li', function (e) {
+    quizWrapper.on('mouseenter', 'ol.quiz > li', function(e) {
         var li = $(this);
 
         if (li.find('span.delete').length > 0) {
@@ -216,16 +211,16 @@ function initQuizBuilder() {
         li.append('<span class="delete btn btn-xs btn-danger" title="Delete this question"><i class="fa fa-times"></i></span>');
     });
 
-    quizWrapper.on('mouseleave', 'ol.quiz > li', function (e) {
+    quizWrapper.on('mouseleave', 'ol.quiz > li', function(e) {
         $(this).find('span.delete').remove();
     });
 
-    quizWrapper.on('click', 'span.delete', function (e) {
+    quizWrapper.on('click', 'span.delete', function(e) {
         var li = $(e.target).closest('li');
         li.remove();
     });
 
-    $('.btn-add-question').next().find('a').click(function (e) {
+    $('.btn-add-question').next().find('a').click(function(e) {
         e.preventDefault();
 
         var btn = $(this);
@@ -277,7 +272,7 @@ function initQuizBuilder() {
 }
 
 function removeEmptyRadios(ol) {
-    ol.find('li').each(function (i, n) {
+    ol.find('li').each(function(i, n) {
         var li = $(n);
         var txt = li.find('label').text().trim()
         if (txt == '' || txt.startsWith('[')) {
@@ -316,7 +311,7 @@ function setClass(element, prefix, suffix) {
     flog('setClass', el, el.attr('class'));
     var classes = el.attr('class');
     if (classes) {
-        $.each(classes.split(' '), function (i, n) {
+        $.each(classes.split(' '), function(i, n) {
             if (n.startsWith(prefix)) {
                 el.removeClass(n);
             }
