@@ -1,3 +1,7 @@
 #editor {
     padding: 10px !important;
 }
+#editor .dropdown {
+    float: none;
+}
+
