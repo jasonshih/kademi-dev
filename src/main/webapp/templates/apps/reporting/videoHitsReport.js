@@ -136,7 +136,7 @@
         });
     }
 
-    function initSegsDisplay(segs) {
+    function initSegsDisplay(playlist) {
         $('#videoSegmentsDiv').show();
         $('#segmentHistogram').empty();
 
@@ -159,26 +159,27 @@
                     .tickFormat(d3.format(',f'));
 
             var myData = [];
-            var s = {
-                values: [],
-                key: 'Plays',
-                color: '#57bda6'
-            };
+            for (var i in playlist) {
+                var p = playlist[i];
+                var s = {
+                    values: [],
+                    key: i
+                };
+                var startTime = 0;
+                for (var i in p) {
+                    var b = p[i];
+                    var plays = b.count;
+                    var endTime = startTime + (b.duration * 1000);
+                    startTime = endTime;
 
-            var startTime = 0;
-            for (var i in segs) {
-                var b = segs[i];
-                var plays = b.count;
-                var endTime = startTime + (b.duration * 1000);
-                startTime = endTime;
+                    s.values.push({
+                        x: endTime,
+                        y: plays
 
-                s.values.push({
-                    x: endTime,
-                    y: plays
-
-                });
+                    });
+                }
+                myData.push(s);
             }
-            myData.push(s);
 
             d3.select('#segmentHistogram') //Select the <svg> element you want to render the chart in.   
                     .datum(myData)         //Populate the <svg> element with chart data...
@@ -270,10 +271,10 @@
         var deviceCategory = resp.aggr.deviceCategory.buckets;
         var userAgent = resp.aggr.userAgent.buckets;
 
-        var segs = resp.segs;
-        if (segs !== null && typeof segs !== 'undefined') {
+        var playlist = resp.playlist;
+        if (playlist !== null && typeof playlist !== 'undefined') {
             $('#vidStats').show();
-            initSegsDisplay(segs);
+            initSegsDisplay(playlist);
             initDeviceDonut(deviceCategory);
             initAgentDonut(userAgent);
             initVideos(resp.fileHash);
