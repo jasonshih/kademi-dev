@@ -540,9 +540,11 @@ function doInitVideos() {
     if (images.length === 0) {
         return;
     }
-    $.getScript("/static/jwplayer/6.8/jwplayer.js", function () {
-        jwplayer.key = "cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=";
-        replaceImagesWithJWPlayer(images);
+    $.getScript("/static/jwplayer/6.8/jwplayer.js", function () {        
+        $.getScript("/static/jwplayer/6.8/jwplayer.html5.js", function () {
+            jwplayer.key = "cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=";
+            replaceImagesWithJWPlayer(images);
+        });
     });
 }
 
@@ -552,13 +554,13 @@ function replaceImagesWithJWPlayer(images) {
         var src = img.attr("data-video-src");
         var posterUrl = img.attr("src");
         if (src == null) {
-            log("replaceImagesWithJWPlayer: derive video base path from src", posterUrl);
+            flog("replaceImagesWithJWPlayer: derive video base path from src", posterUrl);
             src = getFolderPath(posterUrl);
         } else {
-            log("replaceImagesWithJWPlayer: Using data-video-src", src);
+            flog("replaceImagesWithJWPlayer: Using data-video-src", src);
         }
         src += "/alt-hls.m3u8";
-        log("jwplayer item", img, i, src);
+        flog("jwplayer item", img, i, src);
         buildJWPlayer(img, i + 10, src, posterUrl);
     });
 }
