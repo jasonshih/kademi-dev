@@ -51,6 +51,7 @@ $(function () {
     });
     initPrintLink();
     initVideos();
+    initAudios();
     initContentFeatures();
 });
 
