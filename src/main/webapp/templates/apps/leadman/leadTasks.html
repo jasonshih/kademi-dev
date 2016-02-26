@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    #parse("/theme/masterTemplate.html")
+    #parse("/theme/apps/leadman/leadManIncludes.html")
+    <head>
+        #@themeHeader( $page.title )
+        #end
+    </head>
+    <body>
+        #@themeBody()
+        <div class="container">
+            <div class="fw-boxed">
+                <div class="panel panel-default">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr >
+                                        <th class="text-center" width="2%">
+                                        </th>
+                                        <th class="text-center" width="2%">
+                                        </th>
+                                        <th class="text-center">
+                                        </th>
+                                        <th class="text-center">
+                                        </th>
+                                        <th class="text-center">
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    #if($page.searchResult.hits.hits.size() > 0)
+                                    #foreach($hit in $page.searchResult.hits.hits)
+                                    <tr>
+                                        <td>
+                                            $hit.source.taskName
+                                        </td>
+                                        <td>
+                                            <i class="fa fa-user"></i>
+                                        </td>
+                                        <td>
+                                            <i class="fa fa-envelope-o">  Task name </i>
+                                        </td>
+                                        <td>
+                                            <i class="fa fa-map-marker">  255 Oak Str, Kohovos, 685 01 </i>
+                                        </td>
+                                        <td>
+                                            <i class="fa fa-calendar"></i> 22.12/.2014
+                                        </td>
+                                    </tr>
+                                    #end
+                                    #else
+
+                                    #end
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        #end
+
+        #createModals()
+    </body>
+</html>
