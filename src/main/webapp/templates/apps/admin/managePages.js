@@ -182,8 +182,10 @@ function showEditModal(name, pageArticle) {
                 addMetaTag(data.metas[i].name, data.metas[i].content);
             }
 
-            for (var i = 0; i < data.params.length; i++) {
-                addParam(data.params[i].title, data.params[i].value);
+            for (var key in data) {
+                if (key !== 'title' && key !== 'itemType' && key !== 'category' && key !== 'tags' && key !== 'metas' && key !== 'body' && key !== 'cssFiles' && key !== 'template') {
+                    addParam(key, data[key]);
+                }
             }
 
             modal.modal('show');
