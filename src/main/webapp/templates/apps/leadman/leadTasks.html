@@ -13,47 +13,45 @@
                 <div class="panel panel-default">
                     <div class="row">
                         <div class="col-md-12">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr >
-                                        <th class="text-center" width="2%">
-                                        </th>
-                                        <th class="text-center" width="2%">
-                                        </th>
-                                        <th class="text-center">
-                                        </th>
-                                        <th class="text-center">
-                                        </th>
-                                        <th class="text-center">
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    #if($page.searchResult.hits.hits.size() > 0)
-                                    #foreach($hit in $page.searchResult.hits.hits)
-                                    <tr>
-                                        <td>
-                                            $hit.source.taskName
-                                        </td>
-                                        <td>
-                                            <i class="fa fa-user"></i>
-                                        </td>
-                                        <td>
-                                            <i class="fa fa-envelope-o">  Task name </i>
-                                        </td>
-                                        <td>
-                                            <i class="fa fa-map-marker">  255 Oak Str, Kohovos, 685 01 </i>
-                                        </td>
-                                        <td>
-                                            <i class="fa fa-calendar"></i> 22.12/.2014
-                                        </td>
-                                    </tr>
-                                    #end
-                                    #else
+                            <div style="padding: 10px;">
+                                #if($page.searchResult.hits.hits.size() > 0)
+                                #foreach($hit in $page.searchResult.hits.hits)
+                                <div class="media">
+                                    <div class="media-left media-middle">
+                                        #set($pic = "/theme/apps/user/profile.png")
+                                        #if($hit.source.assignedToProfile.name)
+                                        #set($pic = "/users/" + $hit.source.assignedToProfile.name + "/pic")
+                                        #end
+                                        #if($hit.source.assignedToProfile.name)
+                                        <a href="?assignedTo=$hit.source.assignedToProfile.name" title="View tasks assigned to $hit.source.assignedToProfile.name">
+                                            #else
+                                            <a href="?assignedTo=NONE" title="View all unassigned tasks">
+                                                #end
+                                                <img class="img-rounded media-object" alt="64x64" src="$pic" data-holder-rendered="true" style="width: 64px; height: 64px;">
+                                            </a>
+                                    </div>
+                                    <div class="media-body">
+                                        #set($icon = '<i title="Active" class="fa fa-check-square-o text-success"></i>')
+                                        #if(!$hit.source.cancelled && $hit.source.completedDate)
+                                        #set($icon = '<i title="Closed" class="fa fa-exclamation-triangle text-warning"></i>')
+                                        #elseif($hit.source.cancelled)
+                                        #set($icon = '<i title="Cancelled" class="fa fa-times-circle-o text-danger"></i>')
+                                        #end
+                                        <h4 class="media-heading">$icon <a href="$hit.source.id" data-target="#modalEditTask" data-toggle="modal">$!formatter.ifNull($hit.source.title, $hit.source.taskName)</a></h4>
+                                        <p>
+                                            &num;$hit.source.id opened
+                                            <span title="$formatter.formatDateTime($formatter.parseDate($hit.source.createdDate))">$formatter.formatAge($formatter.parseDate($hit.source.createdDate))</span>
+                                            #if($hit.source.dueDate)
+                                            &VerticalBar; Due $formatter.formatDate($formatter.parseDate($hit.source.dueDate))
+                                            #end
+                                        </p>
+                                    </div>
+                                </div>
+                                #end
+                                #else
 
-                                    #end
-                                </tbody>
-                            </table>
+                                #end
+                            </div>
                         </div>
                     </div>
                 </div>
