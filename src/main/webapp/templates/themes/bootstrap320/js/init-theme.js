@@ -434,7 +434,7 @@ function doInitAudio(){
 }
 
 function initAudios() {
-    log("initAudios");
+    flog("initAudios");
     doInitAudio();
     $(document).on("pjaxComplete", function () {
         doInitAudio();
