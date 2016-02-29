@@ -8,57 +8,81 @@
     </head>
     <body>
         #@themeBody()
+        #set($searchResult = $page.searchResult)
         <div class="container">
             <div class="fw-boxed">
                 <div class="panel panel-default">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr >
-                                        <th class="text-center" width="2%">
-                                        </th>
-                                        <th class="text-center" width="2%">
-                                        </th>
-                                        <th class="text-center">
-                                        </th>
-                                        <th class="text-center">
-                                        </th>
-                                        <th class="text-center">
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    #if($page.searchResult.hits.hits.size() > 0)
-                                    #foreach($hit in $page.searchResult.hits.hits)
-                                    <tr>
-                                        <td>
-                                            $hit.source.taskName
-                                        </td>
-                                        <td>
-                                            <i class="fa fa-user"></i>
-                                        </td>
-                                        <td>
-                                            <i class="fa fa-envelope-o">  Task name </i>
-                                        </td>
-                                        <td>
-                                            <i class="fa fa-map-marker">  255 Oak Str, Kohovos, 685 01 </i>
-                                        </td>
-                                        <td>
-                                            <i class="fa fa-calendar"></i> 22.12/.2014
-                                        </td>
-                                    </tr>
-                                    #end
-                                    #else
-
-                                    #end
-                                </tbody>
-                            </table>
+                    <div style="padding: 10px;">
+                        <div class="btn-group" data-toggle="buttons">
+                            #set($type = "active")
+                            #if($request.params.type)
+                            #set($type = $request.params.type)
+                            #end
+                            <label class="btn btn-success #if($type == 'active')active#end">
+                                <input type="radio" name="taskType" value="active" autocomplete="off" #if($type == 'active')checked="checked"#end/> Active
+                            </label>
+                            <label class="btn btn-warning #if($type == 'closed')active#end">
+                                <input type="radio" name="taskType" value="closed" autocomplete="off" #if($type == 'closed')checked="checked"#end/> Closed
+                            </label>
+                            <label class="btn btn-danger #if($type == 'cancelled')active#end">
+                                <input type="radio" name="taskType" value="cancelled" autocomplete="off" #if($type == 'cancelled')checked="checked"#end/> Cancelled
+                            </label>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="container">
+            <div class="fw-boxed">
+                <div class="panel panel-default">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div style="padding: 10px;">
+                                #if($searchResult.hits.hits.size() > 0)
+                                #foreach($hit in $searchResult.hits.hits)
+                                <div class="media">
+                                    <div class="media-left media-middle">
+                                        #set($pic = "/theme/apps/user/profile.png")
+                                        #if($hit.source.assignedToProfile.name)
+                                        #set($pic = "/users/" + $hit.source.assignedToProfile.name + "/pic")
+                                        #end
+                                        #if($hit.source.assignedToProfile.name)
+                                        <a href="$hit.source.assignedToProfile.name" class="filter-assignedto"  title="View tasks assigned to $hit.source.assignedToProfile.name">
+                                            #else
+                                            <a href="NONE" class="filter-assignedto" title="View all unassigned tasks">
+                                                #end
+                                                <img class="img-rounded media-object" alt="64x64" src="$pic" data-holder-rendered="true" style="width: 64px; height: 64px;">
+                                            </a>
+                                    </div>
+                                    <div class="media-body">
+                                        #set($icon = '<i title="Active" class="fa fa-check-square-o text-success"></i>')
+                                        #if(!$hit.source.cancelled && $hit.source.completedDate)
+                                        #set($icon = '<i title="Closed" class="fa fa-exclamation-triangle text-warning"></i>')
+                                        #elseif($hit.source.cancelled)
+                                        #set($icon = '<i title="Cancelled" class="fa fa-times-circle-o text-danger"></i>')
+                                        #end
+                                        <h4 class="media-heading">$icon <a href="$hit.source.id" data-target="#modalEditTask" data-toggle="modal">$!formatter.ifNull($hit.source.title, $hit.source.taskName)</a></h4>
+                                        <p>
+                                            &num;$hit.source.id opened
+                                            <span title="$formatter.formatDateTime($formatter.parseDate($hit.source.createdDate))">$formatter.formatAge($formatter.parseDate($hit.source.createdDate))</span>
+                                            #if($hit.source.dueDate)
+                                            &VerticalBar; Due $formatter.formatDate($formatter.parseDate($hit.source.dueDate))
+                                            #end
+                                        </p>
+                                    </div>
+                                </div>
+                                #end
+                                #else
+
+                                #end
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="/static/uri/1.15.1/URI.js" type="text/javascript"></script>
+        <script src="/theme/apps/leadman/leadTasks.js" type="text/javascript"></script>
         #end
 
         #createModals()
