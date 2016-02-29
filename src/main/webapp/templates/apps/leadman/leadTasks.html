@@ -47,9 +47,9 @@
                                         #set($pic = "/users/" + $hit.source.assignedToProfile.name + "/pic")
                                         #end
                                         #if($hit.source.assignedToProfile.name)
-                                        <a href="?assignedTo=$hit.source.assignedToProfile.name" title="View tasks assigned to $hit.source.assignedToProfile.name">
+                                        <a href="$hit.source.assignedToProfile.name" class="filter-assignedto"  title="View tasks assigned to $hit.source.assignedToProfile.name">
                                             #else
-                                            <a href="?assignedTo=NONE" title="View all unassigned tasks">
+                                            <a href="NONE" class="filter-assignedto" title="View all unassigned tasks">
                                                 #end
                                                 <img class="img-rounded media-object" alt="64x64" src="$pic" data-holder-rendered="true" style="width: 64px; height: 64px;">
                                             </a>
