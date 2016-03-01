@@ -490,10 +490,6 @@
             var componentContent = component.children('.keditor-component-content');
             componentContent.prop('contenteditable', true);
 
-            var contentId = KEditor.generateId('component-content');
-            flog('Id for component content is: ' + contentId);
-            componentContent.attr('id', contentId);
-
             componentContent.on('input', function (e) {
                 if (typeof options.onComponentChanged === 'function') {
                     options.onComponentChanged.call(contentArea, e, component);
