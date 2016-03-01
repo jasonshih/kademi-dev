@@ -11,7 +11,8 @@
                     flog("finished upload", data);
                 },
                 isInCkeditor: false,
-                isFullWidth: true
+                isFullWidth: true,
+                acceptedFiles: ''  // To filter which file type should be uploaded
             }, options);
 
             flog("init milton uploads", container);
@@ -104,6 +105,10 @@
                             });
                         }
                     };
+
+                    if(config.acceptedFiles){
+                        dzConfig.acceptedFiles = config.acceptedFiles;
+                    }
 
                     if (!config.useDropzone) {
                         flog("do not use dropzone, use button instead")

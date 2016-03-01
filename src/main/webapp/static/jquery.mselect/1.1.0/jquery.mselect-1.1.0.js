@@ -13,10 +13,11 @@
         btnClass: 'btn btn-success',
         btnOkClass: 'btn btn-sm btn-primary',
         modalTitle: 'Select file',
-        contentTypes: ['image', 'video'],
+        contentTypes: ['image', 'video', 'audio'],
         excludedEndPaths: ['.mil/'],
         basePath: '/',
         pagePath: window.location.pathname,
+        bs3Modal: false,
         showModal: function (modal) {
             modal.modal('show');
         },
@@ -36,8 +37,12 @@
                 target.on('click', function (e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    
-                    var modal = getModal(config);
+
+                    if(config.bs3Modal){
+                        var modal = getModalBS3(config);
+                    }else{
+                        var modal = getModal(config);
+                    }
                     config.showModal(modal);
                 });
             } else {
@@ -46,7 +51,7 @@
                 target.html(getSelectContainer(config));
                 initSelectContainer(target, config);
             }
-            
+
             flog('[jquery.mselect] Initialized mselect');
         }
     };
@@ -82,6 +87,24 @@
         return false;
     }
 
+    function isAudio(filename){
+        var ext = getExtension(filename);
+        switch (ext.toLowerCase()) {
+            // Since jwplayer supports mp3, aac and Vorbis
+            case 'mp3':
+            case 'aac':
+            case 'ogg':
+            case 'oga':
+                // etc
+                return true;
+        }
+        return false;
+    }
+
+    function getAcceptedFiles(contentTypes){
+        return contentTypes.map(function(a){ return a+'/*'}).join(',');
+    }
+
     function initSelectContainer(container, config, onOk) {
         flog('[jquery.mselect] initSelectContainer', container, config);
 
@@ -102,7 +125,14 @@
                         jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
                         buildJWPlayer(previewContainer.find('div.jp-video'), 100, selectedUrl, selectedUrl + '/alt-640-360.png');
                     });
-                } else if (isImage(selectedUrl)) {
+                } else if (isAudio(selectedUrl)) {
+                    previewContainer.html('<div class="jp-audio"><div id="kaudio-player-100" /></div>');
+                    $.getScript('/static/jwplayer/6.10/jwplayer.js', function () {
+                        jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
+                        buildJWAudioPlayer(100, selectedUrl);
+                    });
+                }
+                else if (isImage(selectedUrl)) {
                     previewContainer.html('<img src="' + selectedUrl + '" />');
                 } else {
                     previewContainer.html('<p class="alert alert-warning">Unsupported preview file</p>')
@@ -114,6 +144,7 @@
 
         $('#milton-btn-upload-file').mupload({
             url: config.basePath,
+            acceptedFiles: getAcceptedFiles(config.contentTypes),
             buttonText: '<i class="fa fa-upload"></i>',
             oncomplete: function (data, name, href) {
                 flog('[jquery.mselect] oncomplete', data);
@@ -135,12 +166,14 @@
                         fileType = 'video';
                     } else if (isImage(url)) {
                         fileType = 'image';
+                    }else if(isAudio(url)){
+                        fileType = 'audio';
                     }
                     config.onSelectFile.call(this, url, relUrl, fileType);
                 }
 
                 if (typeof onOk === 'function') {
-                    onOK.call(this);
+                    onOk.call(this);
                 }
             } else {
                 flog('[jquery.mselect] No selected file!');
@@ -195,4 +228,34 @@
         return modal;
     }
 
+    function getModalBS3(config) {
+        flog('[jquery.mselect] getModal', config);
+
+        var modal = $('#modal-milton-file-select');
+        if (modal.length === 0) {
+            $('body').append(
+                '<div id="modal-milton-file-select" class="modal modal-md fade" aria-hidden="true" tabindex="-1">' +
+                '   <div class="modal-dialog">'+
+                '       <div class="modal-content">'+
+                '           <div class="modal-header">' +
+                '               <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>' +
+                '               <h4 class="modal-title">' + config.modalTitle + '</h4>' +
+                '           </div>' +
+                '           <div class="modal-body">' + getSelectContainer(config) + '</div>' +
+                '           <div class="modal-footer">' +
+                '               <button class="' + config.btnOkClass + ' btn-ok" type="button"> OK </button>' +
+                '           </div>' +
+                '       </div>' +
+                '   </div>' +
+                '</div>'
+            );
+            modal = $('#modal-milton-file-select');
+
+            initSelectContainer(modal, config, function () {
+                modal.modal('hide');
+            });
+        }
+
+        return modal;
+    }
 })(jQuery);

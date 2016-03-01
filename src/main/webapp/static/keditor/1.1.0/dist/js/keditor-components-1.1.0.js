@@ -19,6 +19,17 @@
          */
         init: function (contentArea, container, component, options) {
             flog('init "audio" component', component);
+            this.componentId = KEditor.generateId('component-audio');
+            component.find('[data-src]').attr('id', this.componentId);
+            this.src = component.find('[data-src]').attr('data-src');
+            this.width = 300;
+            this.autoStart = false;
+            var instance = KEditor.components['audio'];
+            $.getScript('/static/jwplayer/6.10/jwplayer.js', function () {
+                jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
+                instance.buildJWAudioPlayerPreview();
+            });
+
         },
 
         /**
@@ -76,16 +87,16 @@
                             '<input type="checkbox" id="audio-autoplay" />' +
                         '</div>' +
                     '</div>' +
+                    //'<div class="form-group">' +
+                    //    '<label for="audio-showcontrols" class="col-sm-12">Show Controls</label>' +
+                    //    '<div class="col-sm-12">' +
+                    //    '<input type="checkbox" id="audio-showcontrols" checked />' +
+                    //    '</div>' +
+                    //'</div>' +
                     '<div class="form-group">' +
-                        '<label for="audio-showcontrols" class="col-sm-12">Show Controls</label>' +
+                        '<label for="audio-width" class="col-sm-12">Width (px)</label>' +
                         '<div class="col-sm-12">' +
-                        '<input type="checkbox" id="audio-showcontrols" checked />' +
-                        '</div>' +
-                    '</div>' +
-                    '<div class="form-group">' +
-                        '<label for="audio-width" class="col-sm-12">Width (%)</label>' +
-                        '<div class="col-sm-12">' +
-                        '<input type="number" id="audio-width" min="20" max="100" class="form-control" value="100" />' +
+                        '<input type="number" id="audio-width" min="200" max="500" class="form-control" value="300" />' +
                         '</div>' +
                     '</div>' +
                 '</form>'
@@ -101,26 +112,16 @@
          * @param {Object} options
          */
         showSettingForm: function (form, component, options) {
+            var instance = KEditor.components['audio'];
             var audio = component.find('audio');
-            var fileInput = form.find('#audioFileInput');
             var btnAudioFileInput = form.find('.btn-audioFileInput');
-            btnAudioFileInput.on('click', function(e){
-                e.preventDefault();
-
-                fileInput.trigger('click');
-            });
-            fileInput.on('change', function () {
-                var file = this.files[0];
-                if (/audio/.test(file.type)) {
-                    // Todo: Upload to your server :)
-
-                    audio.attr('src', URL.createObjectURL(file));
-
-                    audio.load(function () {
-                        KEditor.showSettingPanel(component, options);
-                    });
-                } else {
-                    alert('Your selected file is not an audio file!');
+            btnAudioFileInput.mselect({
+                contentTypes: ['audio'],
+                bs3Modal: true,
+                pagePath: window.location.pathname.replace('contenteditor',''),
+                onSelectFile: function(url){
+                    instance.src = url;
+                    instance.refreshAudioPlayerPreview();
                 }
             });
 
@@ -131,20 +132,23 @@
                 }else{
                     audio.removeAttr('autoplay');
                 }
+                instance.autostart = this.checked;
+                instance.buildJWAudioPlayerPreview();
             });
 
-            var showcontrolsToggle = form.find('#audio-showcontrols');
-            showcontrolsToggle.on('click', function(e){
-                if(this.checked){
-                    audio.attr('controls','controls');
-                }else{
-                    audio.removeAttr('controls');
-                }
-            });
+            //var showcontrolsToggle = form.find('#audio-showcontrols');
+            //showcontrolsToggle.on('click', function(e){
+            //    if(this.checked){
+            //        audio.attr('controls','controls');
+            //    }else{
+            //        audio.removeAttr('controls');
+            //    }
+            //});
 
             var audioWidth = form.find('#audio-width');
             audioWidth.on('change', function(){
-                audio.css('width',this.value+'%');
+                instance.width = this.value;
+                instance.resizeAudioPlayerPreview();
             });
         },
 
@@ -154,8 +158,48 @@
          */
         hideSettingForm: function (form) {
 
+        },
+
+
+        buildJWAudioPlayerPreview: function () {
+            var instance = KEditor.components['audio'];
+            var playerInstance = jwplayer(instance.componentId);
+            var width = instance.width || 300;
+            var src = instance.src;
+            var autostart = instance.autostart;
+            playerInstance.setup({
+                file: src,
+                width: width,
+                height: 40,
+                autostart: autostart,
+                flashplayer: "/static/jwplayer/6.10/jwplayer.flash.swf",
+                html5player: "/static/jwplayer/6.10/jwplayer.html5.js",
+                primary: "flash"
+            });
+            playerInstance.onReady(function () {
+                log('jwplayer preview init done');
+            });
+        },
+
+        refreshAudioPlayerPreview: function(){
+            var instance = KEditor.components['audio'];
+            var playerInstance = jwplayer(instance.componentId);
+            var src = instance.src;
+            playerInstance.load([{
+                file: src
+            }]);
+            playerInstance.play();
+        },
+
+        resizeAudioPlayerPreview: function(){
+            var instance = KEditor.components['audio'];
+            var playerInstance = jwplayer(instance.componentId);
+            var width = instance.width || 300;
+
+            playerInstance.resize(width,40);
         }
     };
+
 })(jQuery);
 
 /**
