@@ -21,4 +21,18 @@ $(function () {
 
         window.location.search = uri.search();
     });
+
+    $('body').on('submit', '#search-tasks-form', function (e) {
+        e.preventDefault();
+
+        var form = $(this);
+        var searchField = form.find('input');
+        var val = searchField.val();
+
+        var uri = new URI(window.location.search);
+        uri.removeSearch('q');
+        uri = uri.addSearch('q', val);
+
+        window.location.search = uri.search();
+    });
 });
