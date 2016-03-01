@@ -176,7 +176,7 @@ gulp.task('watch', function () {
 });
 
 // Gulp Build
-gulp.task('build', ['build-css-dist', 'build-js-dist', 'build-snippets-examples']);
+gulp.task('build', ['build-css-dist', 'build-js-dist']);
 
 // Gulp Dev
 gulp.task('dev', ['build-css-test', 'build-js-test', 'build-snippets-test', 'watch']);

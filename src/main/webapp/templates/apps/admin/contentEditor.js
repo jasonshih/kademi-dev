@@ -26,33 +26,34 @@ function initContentEditorPage(fileName) {
     hideLoadingIcon();
 }
 
-function initKEditor(body) {
-    $.keditor.components['text'].options = {
-        skin: editorSkin,
-        allowedContent: true, // DISABLES Advanced Content Filter. This is so templates with classes are allowed through
-        bodyId: 'editor',
-        templates_files: [templatesPath],
-        templates_replaceContent: false,
-        toolbarGroups: toolbarSets['Default'],
-        extraPlugins: 'embed_video,fuse-image,sourcedialog',
-        removePlugins: standardRemovePlugins + ',autogrow,magicline',
-        enterMode: 'P',
-        forceEnterMode: true,
-        filebrowserBrowseUrl: '/static/fckfilemanager/browser/default/browser.html?Type=Image&Connector=/fck_connector.html',
-        filebrowserUploadUrl: '/uploader/upload',
-        format_tags: 'p;h1;h2;h3;h4;h5;h6', // removed p2
-        format_p2: {
-            element: 'p',
-            attributes: {
-                'class': 'lessSpace'
-            }
-        },
-        minimumChangeMilliseconds: 100,
-        stylesSet: 'myStyles:' + stylesPath
-    };
+$.keditor.components['text'].options = {
+    skin: editorSkin,
+    allowedContent: true, // DISABLES Advanced Content Filter. This is so templates with classes are allowed through
+    bodyId: 'editor',
+    templates_files: [templatesPath],
+    templates_replaceContent: false,
+    toolbarGroups: toolbarSets['Default'],
+    extraPlugins: 'embed_video,fuse-image,sourcedialog',
+    removePlugins: standardRemovePlugins + ',autogrow,magicline,showblocks',
+    removeButtons: 'Find,Replace,SelectAll,Scayt',
+    enterMode: 'P',
+    forceEnterMode: true,
+    filebrowserBrowseUrl: '/static/fckfilemanager/browser/default/browser.html?Type=Image&Connector=/fck_connector.html',
+    filebrowserUploadUrl: '/uploader/upload',
+    format_tags: 'p;h1;h2;h3;h4;h5;h6', // removed p2
+    format_p2: {
+        element: 'p',
+        attributes: {
+            'class': 'lessSpace'
+        }
+    },
+    minimumChangeMilliseconds: 100,
+    stylesSet: 'myStyles:' + stylesPath
+};
 
+function initKEditor(body) {
     $('#content-area').keditor({
-        snippetsUrl: '/static/keditor/snippets/default/snippets.html',
+        snippetsUrl: '/editorSnippets.html',
         onContentChanged: function () {
             if (!body.hasClass('content-changed')) {
                 body.addClass('content-changed');
