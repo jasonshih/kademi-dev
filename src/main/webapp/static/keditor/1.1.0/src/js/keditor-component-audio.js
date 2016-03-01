@@ -19,12 +19,19 @@
          */
         init: function (contentArea, container, component, options) {
             flog('init "audio" component', component);
-            this.componentId = KEditor.generateId('component-audio');
-            component.find('[data-src]').attr('id', this.componentId);
-            this.src = component.find('[data-src]').attr('data-src');
-            this.width = 300;
-            this.autoStart = false;
-            var instance = KEditor.components['audio'];
+            this.component = component;
+            var img = component.find('img[data-src]');
+            if(!img.attr('id')){
+                this.componentId = $.keditor.generateId('component-audio');
+                img.attr('id', this.componentId);
+            }else{
+                this.componentId = img.attr('id');
+            }
+
+            this.src = img.attr('data-src');
+            this.width = img.attr('data-width');
+            this.autostart = img.attr('data-autostart');
+            var instance = this;
             $.getScript('/static/jwplayer/6.10/jwplayer.js', function () {
                 jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
                 instance.buildJWAudioPlayerPreview();
@@ -40,8 +47,7 @@
         getContent: function (component, options) {
             flog('getContent "audio" component, component');
 
-            var instance = KEditor.components['audio'];
-            var html = '<img src="/static/keditor/snippets/default/preview/audio.png" data-autostart="'+instance.autostart+'" data-width="'+instance.width+'" data-kaudio="'+instance.src+'" />';
+            var html = '<img data-componentId="'+this.componentId+'" src="/theme/apps/content/preview/audio.png" data-autostart="'+this.autostart+'" data-width="'+this.width+'" data-src="'+this.src+'" data-kaudio="'+this.src+'" />';
             return html;
         },
 
@@ -67,7 +73,6 @@
          */
         initSettingForm: function (form, options) {
             flog('init "audio" settings', form);
-            var self = this;
             form.append(
                 '<form class="form-horizontal">' +
                     '<div class="form-group">' +
@@ -110,7 +115,7 @@
          * @param {Object} options
          */
         showSettingForm: function (form, component, options) {
-            var instance = KEditor.components['audio'];
+            var instance = this;
             var audio = component.find('audio');
             var btnAudioFileInput = form.find('.btn-audioFileInput');
             btnAudioFileInput.mselect({
@@ -160,11 +165,10 @@
 
 
         buildJWAudioPlayerPreview: function () {
-            var instance = KEditor.components['audio'];
-            var playerInstance = jwplayer(instance.componentId);
-            var width = instance.width;
-            var src = instance.src;
-            var autostart = instance.autostart;
+            var width = this.width;
+            var src = this.src;
+            var autostart = this.autostart == "true";
+            var playerInstance = jwplayer(this.componentId);
             playerInstance.setup({
                 file: src,
                 width: width,
@@ -180,7 +184,7 @@
         },
 
         refreshAudioPlayerPreview: function(){
-            var instance = KEditor.components['audio'];
+            var instance = this;
             var playerInstance = jwplayer(instance.componentId);
             var src = instance.src;
             playerInstance.load([{
@@ -190,7 +194,7 @@
         },
 
         resizeAudioPlayerPreview: function(){
-            var instance = KEditor.components['audio'];
+            var instance = this;
             var playerInstance = jwplayer(instance.componentId);
             var width = instance.width;
 

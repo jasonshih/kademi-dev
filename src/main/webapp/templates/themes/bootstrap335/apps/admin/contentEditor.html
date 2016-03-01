@@ -18,12 +18,12 @@
             <script type="text/javascript" src="/static/ckeditor456/adapters/jquery.js">//</script>
             <script type="text/javascript" src="/static/nicescroll/3.6.6/jquery.nicescroll.min.js">//</script>
             <script type="text/javascript" src="/static/keditor/1.1.0/dist/js/keditor-1.1.0.min.js">//</script>
-            <script type="text/javascript" src="/static/keditor/1.1.0/dist/js/keditor-components-1.1.0.min.js">//</script>
+            <script type="text/javascript" src="/static/keditor/1.1.0/dist/js/keditor-components-1.1.0.js">//</script>
             <script type="text/javascript" src="/static/js/keymap.js">//</script>
             <script type="text/javascript" src="/theme/apps/admin/contentEditor.js">//</script>
         #end
     </head>
-    <body>
+    <body class="contenteditor-page"> <!-- detect contenteditor page -->
         #set($fname = $params.fileName)
         #set($file = $folder.child($fname))
         #set($useHash = $params.useHash)
