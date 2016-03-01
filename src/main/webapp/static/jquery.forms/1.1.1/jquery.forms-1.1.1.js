@@ -24,10 +24,13 @@
  * @param {String} confirmPasswordErrorMessage The error message when confirmPassword fields are invalid
  * @param {String} simpleCharsErrorMessage The error message when simpleChars fields are invalid
  * @param {String} numericErrorMessage The error message when numeric fields are invalid
- * @param {String} urlErrorMessage The error message when url fields are invalid
+ * @param {String} hrefErrorMessage The error message when url fields are invalid
+ * @param {String} phoneErrorMessage The error message when phone fields are invalid
  * @param {Number} [animationDuration=300] The speed of all animations in jquery.forms
  * @param {Function} renderMessageWrapper The render method for message wrapper in jquery.forms. Arguments are 'messageContent' and 'type'. 'messageContent' is message content. 'type' can be 'danger', 'success', 'info' and 'warning'.
  * @param {Function} renderErrorMessage The render method for error messages in jquery.forms. Arguments are 'message'. 'message' is message content, can be string or array.
+ * @param {String} phoneRegionCode Region code for phone validation
+ * @param {String} phoneCarrierCode Carrier code for phone validation
  */
 
 (function ($) {
@@ -52,6 +55,11 @@
 
     // Version for jquery.forms
     $.fn.forms.version = '1.1.1';
+
+    // Get libphonenumber.js
+    $.getScriptOnce('/static/libphonenumber/7.2.6/libphonenumber.js', function () {
+        flog('[jquery.forms] libphonenumber.js is loaded');
+    });
 
     // Default configuration
     $.fn.forms.DEFAULT = {
@@ -112,6 +120,7 @@
         reallySimpleCharsErrorMessage: 'Please use only letters and numbers, no punctuation, dots, etc',
         numberErrorMessage: 'Please enter digits',
         hrefErrorMessage: 'Please enter valid website address',
+        phoneErrorMessage: 'Please enter valid phone number',
         animationDuration: 150,
         renderMessageWrapper: function (messageContent, type) {
             return '<div class="form-message alert alert-' + type + '" style="display: none"><a class="close" data-dismiss="alert">&times;</a>' + messageContent + '</div>';
@@ -127,7 +136,9 @@
             }
 
             return '<ul class="error-message">' + htmlMessages + '</ul>';
-        }
+        },
+        phoneRegionCode: defaultRegionCode,
+        phoneCarrierCode: ''
     };
 
     var methods = {
@@ -615,11 +626,18 @@ function validateFormFields(form, config) {
             errorMessages.push(config.numberErrorMessage);
         }
 
-        var resultRegexes = checkRegexes(form, config);
+        var resultRegexes = checkRegexes(form);
         if (resultRegexes.error > 0) {
             error += resultRegexes.error;
             errorFields = errorFields.concat(resultRegexes.errorFields);
             errorMessages = errorMessages.concat(resultRegexes.errorMessages);
+        }
+
+        var resultPhones = checkPhones(form, config);
+        if (resultPhones.error > 0) {
+            error += resultPhones.error;
+            errorFields = errorFields.concat(resultPhones.errorFields);
+            errorMessages.push(config.phoneErrorMessage);
         }
 
         if (typeof config.validate === 'function') {
@@ -828,6 +846,45 @@ function checkRegexes(form) {
         error: error,
         errorFields: errorFields,
         errorMessages: errorMessages
+    };
+}
+
+/**
+ * Check phone fields with id or class is phone
+ * @param {jQuery} form
+ * @param {Object} config
+ * @returns {{error: Number, errorFields: Array}}
+ */
+function checkPhones(form, config) {
+    flog('[jquery.forms] checkPhones', form, config);
+
+    var error = 0;
+    var errorFields = [];
+
+    form.find('.phone, #phone').each(function () {
+        flog(this);
+        var input = $(this);
+        var shouldCheck = shouldCheckValue(input);
+
+        if (shouldCheck) {
+            var val = input.val();
+            flog('[jquery.forms] Input: ' + val + ', Region Code: ' + config.phoneRegionCode + ', Carrier Code: ' + config.phoneCarrierCode);
+            var parsingResult = phoneNumberParser(val, config.phoneRegionCode, config.phoneCarrierCode);
+            flog('[jquery.forms] Parsing result', parsingResult);
+
+            if (!(parsingResult.isPossibleNumber && parsingResult.isNumberValid)) {
+                flog('[jquery.forms] Phone field is invalid', input);
+
+                errorFields.push(input);
+                error++;
+                input.attr('error-message', config.requiredErrorMessage);
+            }
+        }
+    });
+
+    return {
+        error: error,
+        errorFields: errorFields
     };
 }
 
