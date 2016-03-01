@@ -8,15 +8,16 @@ $(function () {
         window.location.search = uri.search();
     });
 
-    $('body').on('click', '.filter-assignedto', function (e) {
+    $('body').on('click', '.filter', function (e) {
         e.preventDefault();
 
         var btn = $(this);
-        var name = btn.attr('href');
+        var name = btn.data('name');
+        var value = btn.data('value');
 
         var uri = new URI(window.location.search);
-        uri.removeSearch('assignedTo');
-        uri = uri.addSearch('assignedTo', name);
+        uri.removeSearch(name);
+        uri = uri.addSearch(name, value);
 
         window.location.search = uri.search();
     });
