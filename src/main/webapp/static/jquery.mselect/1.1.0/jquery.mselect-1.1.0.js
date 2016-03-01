@@ -129,7 +129,7 @@
                     previewContainer.html('<div class="jp-audio"><div id="kaudio-player-100" /></div>');
                     $.getScript('/static/jwplayer/6.10/jwplayer.js', function () {
                         jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
-                        buildJWAudioPlayer(100, selectedUrl);
+                        buildJWAudioPlayer(100, selectedUrl, 300, true);
                     });
                 }
                 else if (isImage(selectedUrl)) {

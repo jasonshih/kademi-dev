@@ -30,7 +30,7 @@
 
             this.src = img.attr('data-src');
             this.width = img.attr('data-width');
-            this.autostart = img.attr('data-autostart');
+            this.autostart = img.attr('data-autostart')==='true';
             var instance = this;
             $.getScript('/static/jwplayer/6.10/jwplayer.js', function () {
                 jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
@@ -129,6 +129,9 @@
             });
 
             var autoplayToggle = form.find('#audio-autoplay');
+            if(this.autostart){
+                autoplayToggle.prop('checked', true);
+            }
             autoplayToggle.on('click', function(e){
                 if(this.checked){
                     audio.attr('autoplay','autoplay');
@@ -149,6 +152,7 @@
             //});
 
             var audioWidth = form.find('#audio-width');
+            audioWidth.val(this.width);
             audioWidth.on('change', function(){
                 instance.width = this.value;
                 instance.resizeAudioPlayerPreview();
@@ -167,7 +171,7 @@
         buildJWAudioPlayerPreview: function () {
             var width = this.width;
             var src = this.src;
-            var autostart = this.autostart == "true";
+            var autostart = this.autostart;
             var playerInstance = jwplayer(this.componentId);
             playerInstance.setup({
                 file: src,
