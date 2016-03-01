@@ -19,3 +19,7 @@
 #keditor-sidebar {
     top: 50px;
 }
+
+body.opened-keditor-sidebar div.cke_float[id*=cke_keditor-component-content-] {
+    margin-right: 477px;
+}

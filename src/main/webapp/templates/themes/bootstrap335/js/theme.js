@@ -51,7 +51,10 @@ $(function() {
     });
     initPrintLink();
     initVideos();
-    initAudios();
+    // Make sure initAudios isnt undefined
+    if(typeof initAudios === 'function'){
+        initAudios();
+    }
     initContentFeatures();
 });
 
