@@ -3,6 +3,8 @@
     <head>
         #@themeHeader( "Search contacts" )
         <script src="/static/reload-fragment/1.0.1/jquery.reload-fragment-1.0.1.js" type="text/javascript" >//</script>
+        <link href="//www.fuelcdn.com/fuelux/3.13.0/css/fuelux.min.css" rel="stylesheet"/>
+        <script src="//www.fuelcdn.com/fuelux/3.13.0/js/fuelux.min.js">//</script>
         #end
     </head>
     <body class='add-container'>
@@ -11,7 +13,7 @@
         #parse("/theme/apps/leadman/includes.html")
         #parse("/theme/apps/leadman/leadManIncludes.html")
 
-        <div class="row">
+        <div class="row fuelux">
             <div class="col-lg-12">
                 <div class="row">
                     <div class="col-lg-6">
@@ -22,9 +24,109 @@
                     <div class="col-lg-6">
                         <div class="btn-group pull-right" style="margin-bottom: 10px">
                             <a href="#" class="btn btn-success createContact"><i class="fa fa-user-plus"></i> Add a new contact</a>
+                            <a href="#importerWizard" class="btn btn-success importerWizard" data-toggle="collapse" ><i class="fa fa-user-plus"></i> Import</a>
                         </div>
                     </div>
                 </div>
+                <div class="row collapse"  id="importerWizard" style="margin-bottom:30px">
+                    <div class="col-lg-12">
+                        <div class="wizard" id="myWizard">
+                            <div class="steps-container">
+                                <ul class="steps">
+                                    <li data-step="1" data-name="upload" class="active">
+                                        <span class="badge">1</span>Upload
+                                        <span class="chevron"></span>
+                                    </li>
+                                    <li data-step="2">
+                                        <span class="badge">2</span>Select columns
+                                        <span class="chevron"></span>
+                                    </li>
+                                    <li data-step="3" data-name="import">
+                                        <span class="badge">3</span>Import
+                                        <span class="chevron"></span>
+                                    </li>
+                                    <li data-step="4" data-name="processing">
+                                        <span class="badge">4</span>Processing
+                                        <span class="chevron"></span>
+                                    </li>
+                                    <li data-step="5" data-name="complete">
+                                        <span class="badge">5</span>Complete
+                                        <span class="chevron"></span>
+                                    </li>
+
+                                </ul>
+                            </div>
+                            <div class="actions">
+                                <button type="button" class="btn btn-default btn-prev">
+                                    <span class="glyphicon glyphicon-arrow-left"></span>Prev
+                                </button>
+                                <button type="button" class="btn btn-primary btn-next" data-last="Complete">Next
+                                    <span class="glyphicon glyphicon-arrow-right"></span>
+                                </button>
+                            </div>
+                            <form method="post" action="$page.href">
+                                <div class="step-content">
+                                    <div class="step-pane active sample-pane alert" data-step="1">
+                                        <h4>Upload CSV File</h4>
+                                        <div id='btn-upload' class="pull-left"></div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="step-pane sample-pane alert" data-step="2">
+                                        <h4>Select columns</h4>
+
+                                        <input type="hidden" name="fileHash" value=""/>
+
+                                        <p>Please select which destination field each column should be imported into:</p>
+
+                                        <div class="control-group form-group row">
+                                            <label class="control-label col-md-1" for="startRow">Start row</label>
+                                            <div class="controls col-md-2">
+                                                <input type="text" name="startRow" id="startRow" class="form-control" value=""/>
+                                            </div>
+                                        </div>
+
+                                        <div class="table-responsive" style="max-height: 300px">
+                                            <table class="table table-bordered table-striped" id="importerTable" >
+                                                <thead>
+                                                    <tr id="importerHead">
+                                                        <th>Please wait...</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="importerBody">
+                                                    <tr>
+                                                        <td>Loading...</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="step-pane sample-pane alert" data-step="3">
+                                        <h4>Start importing</h4>
+                                        <p>Press the button here to begin importing. This process imports at a rate of about 1000 rows per minute,
+                                            so may take some time depending on the size of the file</p>
+                                        <button type="submit" class="btn btn-success">Import now</button>
+                                    </div>
+                                    <div class="step-pane sample-pane alert" data-step="4">
+                                        <h4>Import running</h4>
+                                        <div class="process-results">
+                                            <p>
+                                                <strong>Process Status:</strong>
+                                                <strong id='job-status'></strong>
+                                            </p>
+                                        </div>
+
+                                    </div>
+                                    <div class="step-pane sample-pane alert" data-step="4">
+                                        <h4>Finished</h4>
+
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="row">
                     <div class="col-lg-12" id="searchResults">
                         #if( $page.searchResults.isEmpty() )
@@ -109,50 +211,18 @@
         #createModals()
 
         <script type="text/javascript" src="/static/uri/1.15.1/URI.js">//</script>
+        <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
+        <script type="text/javascript" src="/theme/apps/leadman/leadProfiles.js">//</script>
         <script type="text/javascript">
             $(function () {
                 initSearchUser();
+                initUploads();
+                doCheckProcessStatus();
             });
-
-            function initSearchUser() {
-                $('#user-query').keyup(function () {
-                    typewatch(function () {
-                        flog('do search');
-                        doSearch();
-                    }, 500);
-                });
-                $('#search-group').change(function () {
-                    doSearch();
-                });
+            function doCheckProcessStatus() {
+                checkProcessStatus("$page.taskName");
             }
 
-            function doSearch() {
-                var query = $('#user-query').val();
-                var groupName = $('#search-group').val();
-                flog('doSearch', query, groupName);
-                var uri = URI(window.location);
-                uri.setSearch('q', query);
-                uri.setSearch('g', groupName);
-                flog('doSearch', uri.toString());
-                var newHref = uri.toString();
-                window.history.pushState('', newHref, newHref);
-                Msg.info('Searching...', 50000);
-                $.ajax({
-                    type: 'GET',
-                    url: newHref,
-                    success: function (data) {
-                        Msg.info('Search complete', 5000);
-                        flog('success', data);
-                        var newDom = $(data);
-                        var $fragment = newDom.find('#searchResults');
-                        $('#searchResults').replaceWith($fragment);
-                        $('abbr.timeago').timeago();
-                    },
-                    error: function (resp) {
-                        Msg.error('An error occured doing the user search. Please check your internet connection and try again');
-                    }
-                });
-            }
         </script>
         #end
     </body>
