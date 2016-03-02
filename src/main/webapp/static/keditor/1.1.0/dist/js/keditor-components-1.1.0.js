@@ -27,7 +27,7 @@
             }else{
                 this.componentId = img.attr('id');
             }
-            if(!img.parent().hasClass('video-wrapper')){
+            if(!img.parent().hasClass('audio-wrapper')){
                 img.wrap('<div class="audio-wrapper"></div>');
             }
             this.src = img.attr('data-src');
@@ -167,7 +167,7 @@
             playerInstance.setup({
                 file: src,
                 width: width,
-                height: 40,
+                height: 30,
                 autostart: autostart,
                 flashplayer: "/static/jwplayer/6.10/jwplayer.flash.swf",
                 html5player: "/static/jwplayer/6.10/jwplayer.html5.js",
@@ -193,7 +193,7 @@
             var playerInstance = jwplayer(instance.componentId);
             var width = instance.width;
 
-            playerInstance.resize(width,40);
+            playerInstance.resize(width,30);
         }
     };
 

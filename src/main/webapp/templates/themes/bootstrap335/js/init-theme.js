@@ -331,7 +331,7 @@ function buildJWAudioPlayer(count, src, autostart){
     playerInstance.setup({
         file: src,
         width: '100%',
-        height: 40,
+        height: 30,
         autostart: autostart,
         flashplayer: "/static/jwplayer/6.10/jwplayer.flash.swf",
         html5player: "/static/jwplayer/6.10/jwplayer.html5.js",
