@@ -11,17 +11,18 @@
 
     KEditor.components['photo'] = {
         init: function (contentArea, container, component, options) {
-            // Do nothing
+            flog('init "photo" component', component);
+
+            var componentContent = component.children('.keditor-component-content');
+            var img = componentContent.find('img');
+
+            img.css('display', 'inline-block');
         },
 
         getContent: function (component, options) {
-            flog('getContent "photo" component, component');
+            flog('getContent "photo" component', component);
 
             var componentContent = component.children('.keditor-component-content');
-            componentContent.find('.photo-toolbar').remove();
-            var img = componentContent.find('img');
-            img.unwrap();
-
             return componentContent.html();
         },
 
@@ -34,6 +35,7 @@
         settingTitle: 'Photo',
 
         initSettingForm: function (form, options) {
+            flog('initSettingForm "photo" component');
             var self = this;
 
             form.append(
@@ -136,6 +138,8 @@
         },
 
         showSettingForm: function (form, component, options) {
+            flog('showSettingForm "photo" component', component);
+
             var self = this;
             var inputAlign = form.find('#photo-align');
             var inputResponsive = form.find('#photo-responsive');
