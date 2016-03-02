@@ -41,7 +41,6 @@
                 '   <div class="form-group">' +
                 '       <div class="col-sm-12">' +
                 '           <button type="button" class="btn btn-block btn-primary" id="photo-edit">Change Photo</button>' +
-                '           <input type="file" style="display: none" />' +
                 '       </div>' +
                 '   </div>' +
                 '   <div class="form-group">' +
@@ -76,26 +75,14 @@
             );
 
             var photoEdit = form.find('#photo-edit');
-            var fileInput = photoEdit.next();
-            photoEdit.on('click', function (e) {
-                e.preventDefault();
-
-                fileInput.trigger('click');
-            });
-            fileInput.on('change', function () {
-                var file = this.files[0];
-                if (/image/.test(file.type)) {
+            photoEdit.mselect({
+                contentTypes: ['image'],
+                bs3Modal: true,
+                pagePath: window.location.pathname.replace('contenteditor',''),
+                onSelectFile: function(url) {
                     var img = KEditor.settingComponent.find('img');
-                    img.attr('src', URL.createObjectURL(file));
-                    img.css({
-                        width: '',
-                        height: ''
-                    });
-                    img.load(function () {
-                        KEditor.showSettingPanel(KEditor.settingComponent, options);
-                    });
-                } else {
-                    alert('Your selected file is not photo!');
+                    img.attr('src', url);
+                    self.showSettingForm(form, KEditor.settingComponent, options);
                 }
             });
 
