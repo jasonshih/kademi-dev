@@ -126,10 +126,10 @@
                         buildJWPlayer(previewContainer.find('div.jp-video'), 100, selectedUrl, selectedUrl + '/alt-640-360.png');
                     });
                 } else if (isAudio(selectedUrl)) {
-                    previewContainer.html('<div class="jp-audio"><div id="kaudio-player-100" /></div>');
+                    previewContainer.html('<div class="jp-audio" style="padding: 15px"><div id="kaudio-player-100" /></div>');
                     $.getScript('/static/jwplayer/6.10/jwplayer.js', function () {
                         jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
-                        buildJWAudioPlayer(100, selectedUrl, 300, true);
+                        buildJWAudioPlayer(100, selectedUrl, false);
                     });
                 }
                 else if (isImage(selectedUrl)) {

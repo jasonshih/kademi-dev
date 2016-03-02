@@ -21,7 +21,7 @@
             flog('init "video" component', component);
 
             this.component = component;
-            var img = component.find('img[data-src]');
+            var img = component.find('img[data-video-src]');
             if(!img.attr('id')){
                 this.componentId = $.keditor.generateId('component-video');
                 img.attr('id', this.componentId);
@@ -29,7 +29,10 @@
                 this.componentId = img.attr('id');
             }
 
-            this.src = img.attr('data-src');
+            if(!img.parent().hasClass('video-wrapper')){
+                img.wrap('<div class="video-wrapper"></div>');
+            }
+            this.src = img.attr('data-video-src');
             this.aspectratio = img.attr('data-aspectratio');
             this.repeat = img.attr('data-repeat') === 'true';
             this.controls = img.attr('data-controls') === 'true';
@@ -48,8 +51,8 @@
          */
         getContent: function (component, options) {
             flog('getContent "video" component, component');
-
-            var html = '<img id="'+this.componentId+'" src="/theme/apps/content/preview/audio.png" data-autostart="'+this.autostart+'" data-aspectratio="'+this.aspectratio+'" data-src="'+this.src+'" data-repeat="'+this.repeat+'" data-controls="'+this.controls+'" />';
+            var posterHref = this.src + '/alt-640-360.png';
+            var html = '<img id="'+this.componentId+'" class="video-jw" src="'+posterHref+'" data-autostart="'+this.autostart+'" data-aspectratio="'+this.aspectratio+'" data-video-src="'+this.src+'" data-repeat="'+this.repeat+'" data-controls="'+this.controls+'" />';
             return html;
         },
 
@@ -165,7 +168,7 @@
             });
 
             var ratio = form.find('.video-ratio');
-            ratio.find('[value='+this.aspectratio+']').prop('checked', true);
+            form.find('.video-ratio[value="'+this.aspectratio+'"]').prop('checked', true);
             ratio.on('click', function(e){
                 if(this.checked){
                     instance.aspectratio = this.value;
@@ -202,8 +205,9 @@
             var aspectratio = this.aspectratio;
             var controls = this.controls;
             var playerInstance = jwplayer(this.componentId);
+            var posterHref = src + '/alt-640-360.png';
 
-            flog("buildJWPlayer", src, "size=", h, w);
+            flog("buildJWPlayer", src, "aspectratio=", aspectratio);
             playerInstance.setup({
                 autostart: autostart,
                 repeat: repeat,
@@ -228,13 +232,13 @@
             });
             playerInstance.onReady(function () {
                 flog('jwplayer preview init done');
+
             });
         },
 
         refreshVideoPlayerPreview: function(){
-            var instance = this;
-            var playerInstance = jwplayer(instance.componentId);
-            var src = instance.src;
+            var playerInstance = jwplayer(this.componentId);
+            var src = this.src;
             playerInstance.load([{
                 file: src
             }]);

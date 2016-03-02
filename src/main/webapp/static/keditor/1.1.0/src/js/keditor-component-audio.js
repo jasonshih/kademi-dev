@@ -27,7 +27,9 @@
             }else{
                 this.componentId = img.attr('id');
             }
-
+            if(!img.parent().hasClass('video-wrapper')){
+                img.wrap('<div class="audio-wrapper"></div>');
+            }
             this.src = img.attr('data-src');
             this.width = img.attr('data-width');
             this.autostart = img.attr('data-autostart')==='true';
