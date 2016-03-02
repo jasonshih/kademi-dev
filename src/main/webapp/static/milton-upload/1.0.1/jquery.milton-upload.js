@@ -26,10 +26,10 @@
             config.id = Math.floor(Math.random() * 1000000);
             flog('id', config.id);
 
-            var isSupport = typeof(window.FileReader) !== 'undefined';
+            var isDropZoneSupport = typeof(window.FileReader) !== 'undefined';
+            if (isDropZoneSupport) {
+                flog('Dropzone is supported');
 
-            flog('Dropzone is supported');
-            if (isSupport) {
                 var formHtml = "<form action='" + actionUrl + "' method='POST' enctype='multipart/form-data' style='position: relative'>"
                     + "<input type='hidden' name='overwrite' value='true'>";
                 // If not using a dropzone, generate a bootstrap button
@@ -41,7 +41,7 @@
                 }
                 formHtml += "</form>";
                 var form = $(formHtml);
-                form.css("position: relative");
+                form.css("position", "relative");
                 if (config.useDropzone) {
                     form.addClass("dropzone");
 
@@ -155,17 +155,17 @@
                     container.addClass('fallback-dropzone');
                     container.append(
                         '<p class="fallback-message">' +
-                            'Your browser does not support drag\'n\'drop file uploads.' +
-                            'Please use the fallback button below to upload your files like in the olden days.' +
+                        '   Your browser does not support drag\'n\'drop file uploads.' +
+                        '   Please use the fallback button below to upload your files like in the olden days.' +
                         '</p>'
                     );
                 }
 
                 var button = $(
                     '<span id="' + config.id + '" type="button" class="' + buttonClass + ' fileinput-button fallback-button">' +
-                        '<span class="' + spanClass + '">' + config.buttonText + '</span>' +
-                        '<span class="fallback-progress"></span>' +
-                        '<input type="file" name="files[]" data-url="' + actionUrl + '" />' +
+                    '   <span class="' + spanClass + '">' + config.buttonText + '</span>' +
+                    '   <span class="fallback-progress"></span>' +
+                    '   <input type="file" name="files[]" data-url="' + actionUrl + '" />' +
                     '</span>'
                 );
 
@@ -186,10 +186,7 @@
                     progressall: function (e, data) {
                         var progress = parseInt(data.loaded / data.total * 100, 10);
 
-                        button.find('.fallback-progress').show().css(
-                            'width',
-                            progress + '%'
-                        );
+                        button.find('.fallback-progress').show().css('width', progress + '%');
                     },
                     fail: function (e, data) {
                         alert("An error occured uploading because: " + data.errorThrown);
@@ -216,4 +213,5 @@
             $.error('Method ' + method + ' does not exist on jQuery.tooltip');
         }
     };
+
 })(jQuery);
