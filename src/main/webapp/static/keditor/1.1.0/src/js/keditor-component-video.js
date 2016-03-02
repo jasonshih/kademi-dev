@@ -69,7 +69,7 @@
         settingEnabled: true,
 
         // Title of setting panel
-        settingTitle: 'Video settings',
+        settingTitle: 'Video Settings',
 
         /**
          * Initialize setting form of this type

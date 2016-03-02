@@ -230,7 +230,7 @@
 
         settingEnabled: true,
 
-        settingTitle: 'Google Map Viewer',
+        settingTitle: 'Google Map Settings',
 
         initSettingForm: function (form, options) {
             flog('initSettingForm "googlemap" component');
@@ -332,7 +332,7 @@
 
         settingEnabled: true,
 
-        settingTitle: 'Photo',
+        settingTitle: 'Photo Settings',
 
         initSettingForm: function (form, options) {
             flog('initSettingForm "photo" component');
@@ -676,7 +676,7 @@
         settingEnabled: true,
 
         // Title of setting panel
-        settingTitle: 'Video settings',
+        settingTitle: 'Video Settings',
 
         /**
          * Initialize setting form of this type
@@ -885,7 +885,7 @@
 
         settingEnabled: true,
 
-        settingTitle: 'Vimeo Player',
+        settingTitle: 'Vimeo Settings',
 
         initSettingForm: function (form, options) {
             flog('initSettingForm "vimeo" component');
@@ -1000,7 +1000,7 @@
 
         settingEnabled: true,
 
-        settingTitle: 'Youtube Player',
+        settingTitle: 'Youtube Settings',
 
         initSettingForm: function (form, options) {
             flog('initSettingForm "youtube" component');

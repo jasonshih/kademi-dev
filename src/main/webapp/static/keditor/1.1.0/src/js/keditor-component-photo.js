@@ -32,7 +32,7 @@
 
         settingEnabled: true,
 
-        settingTitle: 'Photo',
+        settingTitle: 'Photo Settings',
 
         initSettingForm: function (form, options) {
             flog('initSettingForm "photo" component');
