@@ -116,7 +116,6 @@
          */
         showSettingForm: function (form, component, options) {
             var instance = this;
-            var audio = component.find('audio');
             var btnAudioFileInput = form.find('.btn-audioFileInput');
             btnAudioFileInput.mselect({
                 contentTypes: ['audio'],
@@ -133,22 +132,12 @@
                 autoplayToggle.prop('checked', true);
             }
             autoplayToggle.on('click', function(e){
-                if(this.checked){
-                    audio.attr('autoplay','autoplay');
-                }else{
-                    audio.removeAttr('autoplay');
-                }
                 instance.autostart = this.checked;
                 instance.buildJWAudioPlayerPreview();
             });
 
             //var showcontrolsToggle = form.find('#audio-showcontrols');
             //showcontrolsToggle.on('click', function(e){
-            //    if(this.checked){
-            //        audio.attr('controls','controls');
-            //    }else{
-            //        audio.removeAttr('controls');
-            //    }
             //});
 
             var audioWidth = form.find('#audio-width');
