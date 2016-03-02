@@ -336,11 +336,18 @@ function doInitVideos() {
 }
 
 function replaceImagesWithJWPlayer(images) {
+    // will not transform images which in /contenteditor page
+    if($(document.body).hasClass('contenteditor-page'))
+        return;
+
     images.each(function (i, n) {
         var img = $(n);
         var src = img.attr("data-video-src");
         var posterUrl = img.attr("src");
-
+        var aspectratio = img.attr("data-aspectratio");
+        var autostart = img.attr('data-autostart')==='true';
+        var repeat = img.attr('data-repeat')==='true';
+        var controls = img.attr('data-controls')==='true';
         if (src == null) {
             flog("replaceImagesWithJWPlayer: derive video base path from src", posterUrl);
             src = getFolderPath(posterUrl);
@@ -349,12 +356,12 @@ function replaceImagesWithJWPlayer(images) {
         }
         src += "/alt-hls.m3u8";
         flog("jwplayer item", img, i, src);
-        buildJWPlayer(img, i + 10, src, posterUrl);
+        buildJWPlayer(img, i + 10, src, posterUrl, aspectratio, autostart, repeat, controls);
     });
 }
 
 
-function buildJWPlayer(itemToReplace, count, src, posterHref) {
+function buildJWPlayer(itemToReplace, count, src, posterHref, aspectratio, autostart, repeat, controls) {
     flog("itemToReplace", itemToReplace);
 
 
@@ -365,6 +372,10 @@ function buildJWPlayer(itemToReplace, count, src, posterHref) {
     var w = itemToReplace.width();
     if (w < 100) {
         w = 640;
+    }
+
+    if(!aspectratio){
+        aspectratio = w + ":" + h;
     }
 
     var div = buildJWPlayerContainer(count);
@@ -379,7 +390,10 @@ function buildJWPlayer(itemToReplace, count, src, posterHref) {
         flashplayer: "/static/jwplayer/6.10/jwplayer.flash.swf",
         html5player: "/static/jwplayer/6.10/jwplayer.html5.js",
         width: "100%",
-        aspectratio: w + ":" + h,
+        aspectratio: aspectratio,
+        autostart: autostart,
+        repeat: repeat,
+        controls: controls,
         androidhls: true, //enable hls on android 4.1+
         playlist: [{
                 image: posterHref,
@@ -407,22 +421,13 @@ function buildJWPlayerContainer(count) {
     return $(c);
 }
 
-function buildJWAudioPlayer(count, src, width, autostart){
+function buildJWAudioPlayer(count, src, autostart){
     var playerInstance = jwplayer("kaudio-player-"+count);
-
-    // Support responsive player
-    if(isMobile.phone){
-        width = "100%";
-    }else{
-        if(!width){
-            width = 300;
-        }
-    }
 
     playerInstance.setup({
         file: src,
-        width: width,
-        height: 40,
+        width: '100%',
+        height: 30,
         autostart: autostart,
         flashplayer: "/static/jwplayer/6.10/jwplayer.flash.swf",
         html5player: "/static/jwplayer/6.10/jwplayer.html5.js",
@@ -461,18 +466,20 @@ function replaceImagesWithAudio(images) {
         var src = img.attr("data-kaudio");
         var width = img.attr("data-width");
         var autostart = img.attr("data-autostart")==='true';
+        if(!width){
+            width = 300;
+        }
+        img.wrap('<div style="width: ' + width + 'px; max-width: 100%; margin-left: auto; margin-right: auto" ></div>');
         if (src) {
             log("replaceImagesWithAudio: Using data-kaudio", src);
             var audioWrap = $('<div id="kaudio-player-'+i+'" />');
             audioWrap.insertAfter(img);
             img.hide();
-            buildJWAudioPlayer(i, src, width, autostart);
+            buildJWAudioPlayer(i, src, autostart);
         } else {
             log("replaceImagesWithAudio: audio not found", src);
         }
     });
 }
 
-// Minified version of isMobile included in the HTML since it's small
-!function(a){var b=/iPhone/i,c=/iPod/i,d=/iPad/i,e=/(?=.*\bAndroid\b)(?=.*\bMobile\b)/i,f=/Android/i,g=/IEMobile/i,h=/(?=.*\bWindows\b)(?=.*\bARM\b)/i,i=/BlackBerry/i,j=/BB10/i,k=/Opera Mini/i,l=/(?=.*\bFirefox\b)(?=.*\bMobile\b)/i,m=new RegExp("(?:Nexus 7|BNTV250|Kindle Fire|Silk|GT-P1000)","i"),n=function(a,b){return a.test(b)},o=function(a){var o=a||navigator.userAgent,p=o.split("[FBAN");return"undefined"!=typeof p[1]&&(o=p[0]),this.apple={phone:n(b,o),ipod:n(c,o),tablet:!n(b,o)&&n(d,o),device:n(b,o)||n(c,o)||n(d,o)},this.android={phone:n(e,o),tablet:!n(e,o)&&n(f,o),device:n(e,o)||n(f,o)},this.windows={phone:n(g,o),tablet:n(h,o),device:n(g,o)||n(h,o)},this.other={blackberry:n(i,o),blackberry10:n(j,o),opera:n(k,o),firefox:n(l,o),device:n(i,o)||n(j,o)||n(k,o)||n(l,o)},this.seven_inch=n(m,o),this.any=this.apple.device||this.android.device||this.windows.device||this.other.device||this.seven_inch,this.phone=this.apple.phone||this.android.phone||this.windows.phone,this.tablet=this.apple.tablet||this.android.tablet||this.windows.tablet,"undefined"==typeof window?this:void 0},p=function(){var a=new o;return a.Class=o,a};"undefined"!=typeof module&&module.exports&&"undefined"==typeof window?module.exports=o:"undefined"!=typeof module&&module.exports&&"undefined"!=typeof window?module.exports=p():"function"==typeof define&&define.amd?define("isMobile",[],a.isMobile=p()):a.isMobile=p()}(this);
 /** End init-theme.js */

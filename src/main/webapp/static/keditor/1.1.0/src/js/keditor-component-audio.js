@@ -27,7 +27,9 @@
             }else{
                 this.componentId = img.attr('id');
             }
-
+            if(!img.parent().hasClass('audio-wrapper')){
+                img.wrap('<div class="audio-wrapper"></div>');
+            }
             this.src = img.attr('data-src');
             this.width = img.attr('data-width');
             this.autostart = img.attr('data-autostart')==='true';
@@ -116,7 +118,6 @@
          */
         showSettingForm: function (form, component, options) {
             var instance = this;
-            var audio = component.find('audio');
             var btnAudioFileInput = form.find('.btn-audioFileInput');
             btnAudioFileInput.mselect({
                 contentTypes: ['audio'],
@@ -133,22 +134,12 @@
                 autoplayToggle.prop('checked', true);
             }
             autoplayToggle.on('click', function(e){
-                if(this.checked){
-                    audio.attr('autoplay','autoplay');
-                }else{
-                    audio.removeAttr('autoplay');
-                }
                 instance.autostart = this.checked;
                 instance.buildJWAudioPlayerPreview();
             });
 
             //var showcontrolsToggle = form.find('#audio-showcontrols');
             //showcontrolsToggle.on('click', function(e){
-            //    if(this.checked){
-            //        audio.attr('controls','controls');
-            //    }else{
-            //        audio.removeAttr('controls');
-            //    }
             //});
 
             var audioWidth = form.find('#audio-width');
@@ -176,7 +167,7 @@
             playerInstance.setup({
                 file: src,
                 width: width,
-                height: 40,
+                height: 30,
                 autostart: autostart,
                 flashplayer: "/static/jwplayer/6.10/jwplayer.flash.swf",
                 html5player: "/static/jwplayer/6.10/jwplayer.html5.js",
@@ -202,7 +193,7 @@
             var playerInstance = jwplayer(instance.componentId);
             var width = instance.width;
 
-            playerInstance.resize(width,40);
+            playerInstance.resize(width,30);
         }
     };
 

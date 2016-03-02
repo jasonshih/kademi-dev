@@ -27,7 +27,9 @@
             }else{
                 this.componentId = img.attr('id');
             }
-
+            if(!img.parent().hasClass('audio-wrapper')){
+                img.wrap('<div class="audio-wrapper"></div>');
+            }
             this.src = img.attr('data-src');
             this.width = img.attr('data-width');
             this.autostart = img.attr('data-autostart')==='true';
@@ -116,7 +118,6 @@
          */
         showSettingForm: function (form, component, options) {
             var instance = this;
-            var audio = component.find('audio');
             var btnAudioFileInput = form.find('.btn-audioFileInput');
             btnAudioFileInput.mselect({
                 contentTypes: ['audio'],
@@ -133,22 +134,12 @@
                 autoplayToggle.prop('checked', true);
             }
             autoplayToggle.on('click', function(e){
-                if(this.checked){
-                    audio.attr('autoplay','autoplay');
-                }else{
-                    audio.removeAttr('autoplay');
-                }
                 instance.autostart = this.checked;
                 instance.buildJWAudioPlayerPreview();
             });
 
             //var showcontrolsToggle = form.find('#audio-showcontrols');
             //showcontrolsToggle.on('click', function(e){
-            //    if(this.checked){
-            //        audio.attr('controls','controls');
-            //    }else{
-            //        audio.removeAttr('controls');
-            //    }
             //});
 
             var audioWidth = form.find('#audio-width');
@@ -176,7 +167,7 @@
             playerInstance.setup({
                 file: src,
                 width: width,
-                height: 40,
+                height: 30,
                 autostart: autostart,
                 flashplayer: "/static/jwplayer/6.10/jwplayer.flash.swf",
                 html5player: "/static/jwplayer/6.10/jwplayer.html5.js",
@@ -202,7 +193,7 @@
             var playerInstance = jwplayer(instance.componentId);
             var width = instance.width;
 
-            playerInstance.resize(width,40);
+            playerInstance.resize(width,30);
         }
     };
 
@@ -635,6 +626,29 @@
          */
         init: function (contentArea, container, component, options) {
             flog('init "video" component', component);
+
+            this.component = component;
+            var img = component.find('img[data-video-src]');
+            if(!img.attr('id')){
+                this.componentId = $.keditor.generateId('component-video');
+                img.attr('id', this.componentId);
+            }else{
+                this.componentId = img.attr('id');
+            }
+
+            if(!img.parent().hasClass('video-wrapper')){
+                img.wrap('<div class="video-wrapper"></div>');
+            }
+            this.src = img.attr('data-video-src');
+            this.aspectratio = img.attr('data-aspectratio');
+            this.repeat = img.attr('data-repeat') === 'true';
+            this.controls = img.attr('data-controls') === 'true';
+            this.autostart = img.attr('data-autostart') === 'true';
+            var instance = this;
+            $.getScript('/static/jwplayer/6.10/jwplayer.js', function () {
+                jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
+                instance.buildJWVideoPlayerPreview();
+            });
         },
 
         /**
@@ -644,12 +658,9 @@
          */
         getContent: function (component, options) {
             flog('getContent "video" component, component');
-
-            var componentContent = component.children('.keditor-component-content');
-            var video = componentContent.find('video');
-            video.unwrap();
-
-            return componentContent.html();
+            var posterHref = this.src + '/alt-640-360.png';
+            var html = '<img id="'+this.componentId+'" class="video-jw" src="'+posterHref+'" data-autostart="'+this.autostart+'" data-aspectratio="'+this.aspectratio+'" data-video-src="'+this.src+'" data-repeat="'+this.repeat+'" data-controls="'+this.controls+'" />';
+            return html;
         },
 
         /**
@@ -693,7 +704,7 @@
                         '</div>' +
                     '</div>' +
                     '<div class="form-group">' +
-                        '<label for="video-loop" class="col-sm-12">Loop</label>' +
+                        '<label for="video-loop" class="col-sm-12">Repeat</label>' +
                         '<div class="col-sm-12">' +
                         '<input type="checkbox" id="video-loop" />' +
                         '</div>' +
@@ -707,18 +718,18 @@
                     '<div class="form-group">' +
                         '<label for="" class="col-sm-12">Ratio</label>' +
                         '<div class="col-sm-12">' +
-                        '<input type="radio" name="video-radio" class="video-ratio" value="4/3" checked /> 4:3' +
+                        '<input type="radio" name="video-radio" class="video-ratio" value="4:3" checked /> 4:3' +
                         '</div>' +
                         '<div class="col-sm-12">' +
-                        '<input type="radio" name="video-radio" class="video-ratio" value="16/9" /> 16:9' +
+                        '<input type="radio" name="video-radio" class="video-ratio" value="16:9" /> 16:9' +
                         '</div>' +
                     '</div>' +
-                    '<div class="form-group">' +
-                        '<label for="video-width" class="col-sm-12">Width (px)</label>' +
-                        '<div class="col-sm-12">' +
-                        '<input type="number" id="video-width" min="320" max="1920" class="form-control" value="320" />' +
-                        '</div>' +
-                    '</div>' +
+                    //'<div class="form-group">' +
+                    //    '<label for="video-width" class="col-sm-12">Width (px)</label>' +
+                    //    '<div class="col-sm-12">' +
+                    //    '<input type="number" id="video-width" min="320" max="1920" class="form-control" value="320" />' +
+                    //    '</div>' +
+                    //'</div>' +
                 '</form>'
             );
 
@@ -732,80 +743,58 @@
          * @param {Object} options
          */
         showSettingForm: function (form, component, options) {
-            var video = component.find('video');
-            var fileInput = form.find('#videoFileInput');
+            var instance = this;
             var btnVideoFileInput = form.find('.btn-videoFileInput');
-            btnVideoFileInput.on('click', function(e){
-                e.preventDefault();
-
-                fileInput.trigger('click');
-            });
-            fileInput.on('change', function () {
-                var file = this.files[0];
-                if (/video/.test(file.type)) {
-                    // Todo: Upload to your server :)
-
-                    video.attr('src', URL.createObjectURL(file));
-
-                    video.load(function () {
-                        KEditor.showSettingPanel(component, options);
-                    });
-                } else {
-                    alert('Your selected file is not an video file!');
+            btnVideoFileInput.mselect({
+                contentTypes: ['video'],
+                bs3Modal: true,
+                pagePath: window.location.pathname.replace('contenteditor',''),
+                onSelectFile: function(url){
+                    instance.src = url;
+                    instance.refreshVideoPlayerPreview();
                 }
             });
 
             var autoplayToggle = form.find('#video-autoplay');
+            if(this.autostart){
+                autoplayToggle.prop('checked', true);
+            }
             autoplayToggle.on('click', function(e){
-                if(this.checked){
-                    video.prop('autoplay', true);
-                }else{
-                    video.removeProp('autoplay');
-                }
+                instance.autostart = this.checked;
+                instance.buildJWVideoPlayerPreview();
             });
 
+
             var loopToggle = form.find('#video-loop');
+            if(this.repeat){
+                loopToggle.prop('checked', true);
+            }
             loopToggle.on('click', function(e){
-                if(this.checked){
-                    video.prop('loop', true);
-                }else{
-                    video.removeProp('loop');
-                }
+                instance.repeat = this.checked;
+                instance.buildJWVideoPlayerPreview();
             });
 
             var ratio = form.find('.video-ratio');
+            form.find('.video-ratio[value="'+this.aspectratio+'"]').prop('checked', true);
             ratio.on('click', function(e){
                 if(this.checked){
-                    var currentWidth = video.css('width') || video.prop('width');
-                    currentWidth = currentWidth.replace('px','');
-
-                    var currentRatio = this.value==='16/9'? 16/9 : 4/3;
-                    var height = currentWidth/currentRatio;
-                    video.css('width',currentWidth+'px');
-                    video.css('height',height+'px');
-                    video.removeProp('width');
-                    video.removeProp('height');
+                    instance.aspectratio = this.value;
+                    instance.buildJWVideoPlayerPreview();
                 }
             });
 
             var showcontrolsToggle = form.find('#video-showcontrols');
+            if(this.controls){
+                showcontrolsToggle.prop('checked', true);
+            }
             showcontrolsToggle.on('click', function(e){
-                if(this.checked){
-                    video.attr('controls','controls');
-                }else{
-                    video.removeAttr('controls');
-                }
+                instance.controls = this.checked;
+                instance.buildJWVideoPlayerPreview();
             });
 
-            var videoWidth = form.find('#video-width');
-            videoWidth.on('change', function(){
-                video.css('width',this.value+'px');
-                var currentRatio = form.find('.video-ratio:checked').val() === '16/9'? 16/9 : 4/3;
-                var height = this.value / currentRatio;
-                video.css('height',height+'px');
-                video.removeProp('width');
-                video.removeProp('height');
-            });
+            //var videoWidth = form.find('#video-width');
+            //videoWidth.on('change', function(){
+            //});
         },
 
         /**
@@ -814,6 +803,53 @@
          */
         hideSettingForm: function (form) {
 
+        },
+
+        buildJWVideoPlayerPreview: function () {
+            var src = this.src;
+            var autostart = this.autostart;
+            var repeat = this.repeat;
+            var aspectratio = this.aspectratio;
+            var controls = this.controls;
+            var playerInstance = jwplayer(this.componentId);
+            var posterHref = src + '/alt-640-360.png';
+
+            flog("buildJWPlayer", src, "aspectratio=", aspectratio);
+            playerInstance.setup({
+                autostart: autostart,
+                repeat: repeat,
+                controls: controls,
+                aspectratio: aspectratio,
+                flashplayer: "/static/jwplayer/6.10/jwplayer.flash.swf",
+                html5player: "/static/jwplayer/6.10/jwplayer.html5.js",
+                width: "100%",
+                androidhls: true, //enable hls on android 4.1+
+                playlist: [{
+                    image: posterHref,
+                    sources: [{
+                        file: src
+                    }
+                        , {
+                            file: src + "/../alt-640-360.webm"
+                        }, {
+                            file: src + "/../alt-640-360.m4v"
+                        }]
+                }]
+                , primary: "flash"
+            });
+            playerInstance.onReady(function () {
+                flog('jwplayer preview init done');
+
+            });
+        },
+
+        refreshVideoPlayerPreview: function(){
+            var playerInstance = jwplayer(this.componentId);
+            var src = this.src;
+            playerInstance.load([{
+                file: src
+            }]);
+            playerInstance.play();
         }
     };
 })(jQuery);
