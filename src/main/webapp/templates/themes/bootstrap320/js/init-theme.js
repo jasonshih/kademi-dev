@@ -336,11 +336,18 @@ function doInitVideos() {
 }
 
 function replaceImagesWithJWPlayer(images) {
+    // will not transform images which in /contenteditor page
+    if($(document.body).hasClass('contenteditor-page'))
+        return;
+
     images.each(function (i, n) {
         var img = $(n);
         var src = img.attr("data-video-src");
         var posterUrl = img.attr("src");
-
+        var aspectratio = img.attr("data-aspectratio");
+        var autostart = img.attr('data-autostart')==='true';
+        var repeat = img.attr('data-repeat')==='true';
+        var controls = img.attr('data-controls')==='true';
         if (src == null) {
             flog("replaceImagesWithJWPlayer: derive video base path from src", posterUrl);
             src = getFolderPath(posterUrl);
@@ -349,12 +356,12 @@ function replaceImagesWithJWPlayer(images) {
         }
         src += "/alt-hls.m3u8";
         flog("jwplayer item", img, i, src);
-        buildJWPlayer(img, i + 10, src, posterUrl);
+        buildJWPlayer(img, i + 10, src, posterUrl, aspectratio, autostart, repeat, controls);
     });
 }
 
 
-function buildJWPlayer(itemToReplace, count, src, posterHref) {
+function buildJWPlayer(itemToReplace, count, src, posterHref, aspectratio, autostart, repeat, controls) {
     flog("itemToReplace", itemToReplace);
 
 
@@ -365,6 +372,10 @@ function buildJWPlayer(itemToReplace, count, src, posterHref) {
     var w = itemToReplace.width();
     if (w < 100) {
         w = 640;
+    }
+
+    if(!aspectratio){
+        aspectratio = w + ":" + h;
     }
 
     var div = buildJWPlayerContainer(count);
@@ -379,7 +390,10 @@ function buildJWPlayer(itemToReplace, count, src, posterHref) {
         flashplayer: "/static/jwplayer/6.10/jwplayer.flash.swf",
         html5player: "/static/jwplayer/6.10/jwplayer.html5.js",
         width: "100%",
-        aspectratio: w + ":" + h,
+        aspectratio: aspectratio,
+        autostart: autostart,
+        repeat: repeat,
+        controls: controls,
         androidhls: true, //enable hls on android 4.1+
         playlist: [{
                 image: posterHref,
