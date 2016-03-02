@@ -17,6 +17,7 @@
 }
 .audio-wrapper > div {
   display: inline-block !important;
+  max-width: 100%;
 }
 
 /**
