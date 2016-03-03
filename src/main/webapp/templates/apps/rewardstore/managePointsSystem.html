@@ -177,7 +177,8 @@
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu pull-right" role="menu">
-                                    <li class="presentation" role="menuitem"><a href="#" class="btn-clear-history"><i class="fa fa-trash"></i> Clear All</a></li>
+                                    <li class="presentation" role="menuitem"><a href="#" class="btn-clear-history"><i class="fa fa-trash"></i> Delete All</a></li>
+                                    <li class="presentation" role="menuitem"><a href="#" class="btnExpireAll"><i class="fa fa-clock-o"></i> Expire All</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -202,6 +203,7 @@
                                 <col />
                                 <col />
                                 <col />
+                                <col />
                                 <col width="25px;"/>
                             </colgroup>
                             <thead>
@@ -210,6 +212,7 @@
                                     <th>Issued Date</th>
                                     <th>Issued To</th>
                                     <th>Reason</th>
+                                    <th>Expired</th>
                                     <th><input   type="checkbox" name="toRemoveId" class="chk-all" value="" /></th>
                                 </tr>
                             </thead>
@@ -220,6 +223,11 @@
                                     <td>$formatter.formatDateTime($points.issuedDate)</td>
                                     <td>$points.issuedTo.formattedName</td>
                                     <td>$!points.reason</td>
+                                    <td>
+                                        #if( $points.expired )
+                                        $formatter.formatDateTime($points.expiryDate)
+                                        #end
+                                    </td>
                                     <td><input type="checkbox" name="toRemoveId" value="$points.id" /></td>
                                 </tr>
                                 #end
@@ -405,6 +413,7 @@
                     $("#modalGroup input[name=" + name + "]").check(false);
                 });
                 initRemovePoints();
+                initExpireAllPoints();
                 initClearAllPoints();
 
                 initDeleteDebits();
@@ -484,6 +493,7 @@
                     }
                 });
             }
+
 
             function doRemovePoints(checkBoxes) {
                 Msg.info("Deleting...", 2000);
