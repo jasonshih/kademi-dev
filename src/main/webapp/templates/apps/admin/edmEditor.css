@@ -187,7 +187,6 @@ body.opened-keditor-sidebar div.cke_float[id*="cke_keditor-section-"] {
 /* ==================================================================================== */
 #keditor-sidebar {
     opacity: 1;
-    z-index: 0;
 }
 
 .keditor-container-content {
