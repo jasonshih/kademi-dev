@@ -1,11 +1,11 @@
 var win = $(window);
 
-function initContentEditorPage(fileName) {
+function initContentEditorPage(fileName, snippetsUrl) {
     flog('initContentEditorPage', fileName);
     var body = $(document.body);
 
     $('#content-area').css('min-height', win.height() - 50);
-    initKEditor(body);
+    initKEditor(body, snippetsUrl);
     initBtns(body, fileName);
 
     win.on({
@@ -51,9 +51,9 @@ $.keditor.components['text'].options = {
     stylesSet: 'myStyles:' + stylesPath
 };
 
-function initKEditor(body) {
+function initKEditor(body, snippetsUrl) {
     $('#content-area').keditor({
-        snippetsUrl: '/editorSnippets.html',
+        snippetsUrl: snippetsUrl,
         onContentChanged: function () {
             if (!body.hasClass('content-changed')) {
                 body.addClass('content-changed');
