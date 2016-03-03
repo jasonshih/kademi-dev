@@ -230,8 +230,10 @@
                                                     <div id="product-images">
                                                         #foreach($i in $page.images)
                                                         <div class="col-xs-6 col-md-3 product-image-thumb">
-                                                            <a href="$i.href" target="_blank" class="thumbnail"><img src="$i.href/alt-150-150.png"/></a>
-                                                            <a class="del-image btn btn-xs btn-danger" href="$i.href">
+                                                            <a href="$formatter.percentEncode($i.name)" target="_blank" class="thumbnail">
+                                                                <img src="$formatter.percentEncode($i.name)/alt-150-150.png"/>
+                                                            </a>
+                                                            <a class="del-image btn btn-xs btn-danger" href="$formatter.percentEncode($i.name)">
                                                                 <span class="fa fa-times"></span>
                                                             </a>
                                                             <span class="label label-default">
