@@ -91,3 +91,35 @@ function setGroupRecipient(name, groupType, isRecip) {
         flog("exception in createJob", e);
     }
 }
+
+
+
+
+function initExpireAllPoints() {
+    $('body').on('click', '.btnExpireAll', function (e) {
+        e.preventDefault();
+        if (confirm("Are you sure you want to expire all records? This can not be undone! All points records in this points system will be marked as expired and not available for redemptions.")) {
+            $.ajax({
+                type: 'POST',
+                data: {
+                    expireAll: true
+                },
+                dataType: "json",
+                url: "",
+                success: function (data) {
+                    flog("success", data);
+                    if (data.status) {
+                        $('#tablePointsBody').reloadFragment();
+                        Msg.success("All points have been expired");
+                    } else {
+                        Msg.error("There was a problem expiring points. Please try again and contact the administrator if you still have problems");
+                    }
+                },
+                error: function (resp) {
+                    Msg.error("An error occurred removing points. You might not have permission to do this");
+                }
+            });
+        }
+    });
+}
+
