@@ -69,7 +69,31 @@ gulp.task('build-css-components', function () {
         .pipe(gulp.dest('./dist/css/'))
 });
 
-gulp.task('build-css-dist', gulpsync.sync(['clean-css-dist', 'build-css-keditor', 'build-css-components']));
+gulp.task('build-css-edm-components', function () {
+    return gulp.src(['./src/less/keditor-edm-component-*.less', '!./src/less/keditor.less', '!./src/less/_*.less'])
+        .pipe(plumber())
+        .pipe(less())
+        .pipe(concat('keditor-edm-components.css'))
+        .pipe(replace('@{version}', pjson.version))
+        .pipe(rename({
+            suffix: '-' + pjson.version
+        }))
+        .pipe(gulp.dest('./dist/css/'), {
+            base: './src/less/'
+        })
+        .pipe(sourcemaps.init())
+        .pipe(cssmin({
+            keepSpecialComments: '1',
+            advanced: false
+        }))
+        .pipe(rename({
+            suffix: '.min'
+        }))
+        .pipe(sourcemaps.write('./'))
+        .pipe(gulp.dest('./dist/css/'))
+});
+
+gulp.task('build-css-dist', gulpsync.sync(['clean-css-dist', 'build-css-keditor', 'build-css-components', 'build-css-edm-components']));
 
 gulp.task('clean-js-dist', function () {
     return clearFolder('./dist/js/*.*');
@@ -118,7 +142,29 @@ gulp.task('build-js-components', function () {
         .pipe(gulp.dest('./dist/js/')).on('error', gutil.log);
 });
 
-gulp.task('build-js-dist', gulpsync.sync(['clean-js-dist', 'build-js-keditor', 'build-js-components']));
+gulp.task('build-js-edm-components', function () {
+    return gulp.src(['./src/js/keditor-edm-component-*.js', '!./src/js/keditor.js'])
+        .pipe(plumber())
+        .pipe(concat('keditor-edm-components.js'))
+        .pipe(replace('@{version}', pjson.version))
+        .pipe(rename({
+            suffix: '-' + pjson.version
+        }))
+        .pipe(gulp.dest('./dist/js/'), {
+            base: './src/'
+        })
+        .pipe(sourcemaps.init())
+        .pipe(uglify({
+            preserveComments: 'some'
+        }))
+        .pipe(rename({
+            suffix: '.min'
+        }))
+        .pipe(sourcemaps.write('.'))
+        .pipe(gulp.dest('./dist/js/')).on('error', gutil.log);
+});
+
+gulp.task('build-js-dist', gulpsync.sync(['clean-js-dist', 'build-js-keditor', 'build-js-components', 'build-js-edm-components']));
 
 gulp.task('clean-snippets-examples', function () {
     return clearFolder('./examples/snippets');

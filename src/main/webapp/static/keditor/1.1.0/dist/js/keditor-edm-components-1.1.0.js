@@ -2,7 +2,7 @@
  * KEditor Text Component
  * @copyright: Kademi (http://kademi.co)
  * @author: Kademi (http://kademi.co)
- * @version: @{version}
+ * @version: 1.1.0
  * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap, FontAwesome (optional)
  */
 (function ($) {
@@ -13,6 +13,10 @@
     // ---------------------------------------------------------------------
     KEditor.components['text'] = {
         options: {
+            title: false,
+            allowedContent: true, // DISABLES Advanced Content Filter. This is so templates with classes are allowed through
+            bodyId: 'editor',
+            templates_replaceContent: false,
             toolbarGroups: [
                 {name: 'document', groups: ['mode', 'document', 'doctools']},
                 {name: 'editing', groups: ['find', 'selection', 'spellchecker', 'editing']},
@@ -27,17 +31,18 @@
                 {name: 'colors', groups: ['colors']},
                 {name: 'tools', groups: ['tools']},
                 {name: 'others', groups: ['others']},
+                {name: 'about', groups: ['about']}
             ],
-            title: false,
-            allowedContent: true, // DISABLES Advanced Content Filter. This is so templates with classes: allowed through
-            bodyId: 'editor',
-            templates_replaceContent: false,
-            enterMode: 'P',
-            forceEnterMode: true,
-            format_tags: 'p;h1;h2;h3;h4;h5;h6',
+            extraPlugins: 'embed_video,fuse-image,sourcedialog,lineheight,onchange',
             removePlugins: 'table,magicline,tabletools',
             removeButtons: 'Save,NewPage,Preview,Print,Templates,PasteText,PasteFromWord,Find,Replace,SelectAll,Scayt,Form,HiddenField,ImageButton,Button,Select,Textarea,TextField,Radio,Checkbox,Outdent,Indent,Blockquote,CreateDiv,Language,Table,HorizontalRule,Smiley,SpecialChar,PageBreak,Iframe,Styles,BGColor,Maximize,About,ShowBlocks,BidiLtr,BidiRtl,Flash,Image,Subscript,Superscript,Anchor',
-            minimumChangeMilliseconds: 100
+            enterMode: CKEDITOR.ENTER_DIV,
+            forceEnterMode: true,
+            filebrowserBrowseUrl: '/static/fckfilemanager/browser/default/browser.html?Type=Image&Connector=/fck_connector.html',
+            filebrowserUploadUrl: '/uploader/upload',
+            format_tags: 'p;h1;h2;h3;h4;h5;h6',
+            stylesSet: 'myStyles:' + stylesPath,
+            line_height: '1;1.2;1.5;2;2.2;2.5'
         },
 
         init: function (contentArea, container, component, options) {
