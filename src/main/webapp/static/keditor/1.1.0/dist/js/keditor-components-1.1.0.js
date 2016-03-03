@@ -577,6 +577,9 @@
                 }
             });
 
+            self.options.skin = editorSkin;
+            self.options.templates_files = [templatesPath];
+
             var editor = componentContent.ckeditor(self.options).editor;
             editor.on('instanceReady', function () {
                 flog('CKEditor is ready', component);

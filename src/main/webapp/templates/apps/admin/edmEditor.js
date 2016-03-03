@@ -117,40 +117,6 @@ function processFileBody() {
 
 function initKEditor(body, snippets) {
     $('#edm-header, #edm-body, #edm-footer').keditor({
-        ckeditor: {
-            title: false,
-            skin: editorSkin,
-            allowedContent: true, // DISABLES Advanced Content Filter. This is so templates with classes are allowed through
-            bodyId: 'editor',
-            templates_files: [templatesPath],
-            templates_replaceContent: false,
-            toolbarGroups: [
-                {name: 'document', groups: ['mode', 'document', 'doctools']},
-                {name: 'editing', groups: ['find', 'selection', 'spellchecker', 'editing']},
-                {name: 'forms', groups: ['forms']},
-                {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
-                {name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align', 'bidi', 'paragraph']},
-                {name: 'links', groups: ['links']},
-                {name: 'insert', groups: ['insert']},
-                '/',
-                {name: 'clipboard', groups: ['clipboard', 'undo']},
-                {name: 'styles', groups: ['styles']},
-                {name: 'colors', groups: ['colors']},
-                {name: 'tools', groups: ['tools']},
-                {name: 'others', groups: ['others']},
-                {name: 'about', groups: ['about']}
-            ],
-            extraPlugins: 'embed_video,fuse-image,sourcedialog,lineheight,onchange',
-            removePlugins: 'table,magicline,tabletools',
-            removeButtons: 'Save,NewPage,Preview,Print,Templates,PasteText,PasteFromWord,Find,Replace,SelectAll,Scayt,Form,HiddenField,ImageButton,Button,Select,Textarea,TextField,Radio,Checkbox,Outdent,Indent,Blockquote,CreateDiv,Language,Table,HorizontalRule,Smiley,SpecialChar,PageBreak,Iframe,Styles,BGColor,Maximize,About,ShowBlocks,BidiLtr,BidiRtl,Flash,Image,Subscript,Superscript,Anchor',
-            enterMode: CKEDITOR.ENTER_DIV,
-            forceEnterMode: true,
-            filebrowserBrowseUrl: '/static/fckfilemanager/browser/default/browser.html?Type=Image&Connector=/fck_connector.html',
-            filebrowserUploadUrl: '/uploader/upload',
-            format_tags: 'p;h1;h2;h3;h4;h5;h6',
-            stylesSet: 'myStyles:' + stylesPath,
-            line_height: '1;1.2;1.5;2;2.2;2.5'
-        },
         snippetsUrl: snippets,
         onInitContentArea: function (contentArea) {
             contentArea[contentArea.find('.keditor-container-content').children().length === 0 ? 'addClass' : 'removeClass']('empty');
