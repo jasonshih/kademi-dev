@@ -34,7 +34,7 @@
             this.width = img.attr('data-width');
             this.autostart = img.attr('data-autostart')==='true';
             var instance = this;
-            $.getScript('/static/jwplayer/6.10/jwplayer.js', function () {
+            $.getScriptOnce('/static/jwplayer/6.10/jwplayer.js', function () {
                 jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
                 instance.buildJWAudioPlayerPreview();
             });

@@ -13,7 +13,7 @@
         <script type="text/javascript" src="/static/nicescroll/3.6.6/jquery.nicescroll.min.js">//</script>
         <script type="text/javascript" src="/static/keditor/1.1.0/dist/js/keditor-1.1.0.min.js">//</script>
         <script type="text/javascript" src="/static/keditor/1.1.0/dist/js/keditor-components-1.1.0.min.js">//</script>
-        <script type="text/javascript" src="/editorSnippets.js">//</script>
+        <script type="text/javascript" src="/webSnippetsHandler">//</script>
         <script type="text/javascript" src="/static/js/keymap.js">//</script>
         <script type="text/javascript" src="/theme/apps/admin/contentEditor.js">//</script>
     </head>
@@ -42,7 +42,7 @@
         <script type="text/javascript">
             var useHash = "$!useHash";
             $(function () {
-                initContentEditorPage('$fname');
+                initContentEditorPage('$fname', "/webSnippets");
             });
         </script>
 
