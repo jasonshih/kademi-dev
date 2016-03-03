@@ -12,6 +12,7 @@ $(function () {
     initLeadActions();
     initOrgSelector();
     initDateTimePickers();
+    initDateTimePikersForModal();
     initTasks();
     initImmediateUpdate();
     initCloseDealModal();
@@ -692,6 +693,18 @@ function initDateTimePickers() {
     });
 }
 
+function initDateTimePikersForModal(){
+    $('.modal').on('shown.bs.modal', function(){
+        var pickers = $(this).find('.date-time');
+        var date = new Date();
+        date.setDate(date.getDate() - 1);
+        flog("pickers", pickers);
+        pickers.datetimepicker({
+            format: "d/m/Y H:i"
+            , startDate: date
+        });
+    });
+}
 
 function assignTo(name, href) {
     $.ajax({
