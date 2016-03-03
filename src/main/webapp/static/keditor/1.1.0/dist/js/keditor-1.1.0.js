@@ -255,7 +255,7 @@
                     snippetsComponentHtml += snippetHtml;
                 }
 
-                snippetsContentHtml += '<script id="keditor-snippet-' + i + '" type="text/html">' + content + '</script>';
+                snippetsContentHtml += '<script id="keditor-snippet-' + i + '" type="text/template">' + content + '</script>';
             });
 
             $('#' + options.snippetsListId).html(

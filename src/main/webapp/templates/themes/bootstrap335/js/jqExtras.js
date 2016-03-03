@@ -2,20 +2,41 @@
  *  jqExtras.js - this is for functions which work with jquery. Generally should be loaded
  *  after jquery
  */
-(function($) {
-    $.ajaxSetup({ cache: false }); // fix caching problem with some corp proxy servers
-
-    $.getScriptOnce = function(url, successhandler) {
-        if ($.inArray(url, $.getScriptOnce.loaded) === -1) {
-            $.getScriptOnce.loaded.push(url);
+(function ($) {
+    $.getScriptOnce = function (url, successhandler) {
+        var scriptMeta = $.getScriptOnce.loaded[url];
+        if (scriptMeta === null || scriptMeta === undefined) {
+            scriptMeta = {
+                url: url,
+                loaded: false,
+                callbacks: []
+            };
+            $.getScriptOnce.loaded[url] = scriptMeta;
             if (successhandler === undefined) {
-                return $.getScript(url);
+                return $.cachedScript(url);
             } else {
-                return $.getScript(url, function(script, textStatus, jqXHR) {
+                return $.getScript(url, function (script, textStatus, jqXHR) {
+                    //flog('getScriptOnce: Loaded!!', url, 'callback', successhandler);
+                    scriptMeta.loaded = true;
                     successhandler(script, textStatus, jqXHR);
+                    for (var i = 0; i < scriptMeta.callbacks.length; i++) {
+                        scriptMeta.callbacks[i](script, textStatus, jqXHR);
+                    }
                 });
             }
         } else {
+            if (successhandler === undefined) {
+                // do nothing
+            } else {
+                //flog('getScriptOnce: Got script meta: ', url, scriptMeta);
+                if (!scriptMeta.loaded) {
+                    //flog('call later');
+                    scriptMeta.callbacks.push(successhandler);
+                } else {
+                    //flog('call immediately');
+                    successhandler(url);
+                }
+            }
             return false;
         }
 
@@ -26,10 +47,24 @@
     var scripts = document.getElementsByTagName('script');
     for (i = 0; i < scripts.length; i++) {
         var scr = scripts[i];
-        var url = $(scr).attr("src");
+        var url = $(scr).attr('src');
         $.getScriptOnce.loaded.push(url);
     }
 }(jQuery));
+
+jQuery.cachedScript = function (url, callback, options) {
+    options = $.extend(options || {}, {
+        dataType: 'script',
+        cache: true,
+        url: url
+    });
+    if (callback) {
+        options.success = callback;
+    }
+    // Use $.ajax() since it is more flexible than $.getScript
+    // Return the jqXHR object so we can chain callbacks
+    return jQuery.ajax(options);
+};
 
 // Function check/uncheck for checkbox
 $.fn.check = function(is_check) {

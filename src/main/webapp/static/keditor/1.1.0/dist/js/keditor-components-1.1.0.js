@@ -21,22 +21,24 @@
             flog('init "audio" component', component);
             this.component = component;
             var img = component.find('img[data-src]');
-            if(!img.attr('id')){
-                this.componentId = $.keditor.generateId('component-audio');
-                img.attr('id', this.componentId);
-            }else{
-                this.componentId = img.attr('id');
+            var componentId = '';
+            if (!img.attr('id')) {
+                componentId = $.keditor.generateId('component-audio');
+                img.attr('id', componentId);
+            } else {
+                componentId = img.attr('id');
             }
-            if(!img.parent().hasClass('audio-wrapper')){
+            if (!img.parent().hasClass('audio-wrapper')) {
                 img.wrap('<div class="audio-wrapper"></div>');
             }
             this.src = img.attr('data-src');
             this.width = img.attr('data-width');
-            this.autostart = img.attr('data-autostart')==='true';
+            this.autostart = img.attr('data-autostart') === 'true';
             var instance = this;
             $.getScriptOnce('/static/jwplayer/6.10/jwplayer.js', function () {
+                flog('=====================================');
                 jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
-                instance.buildJWAudioPlayerPreview();
+                instance.buildJWAudioPlayerPreview(componentId);
             });
 
         },
@@ -49,7 +51,10 @@
         getContent: function (component, options) {
             flog('getContent "audio" component, component');
 
-            var html = '<img data-componentId="'+this.componentId+'" src="/theme/apps/content/preview/audio.png" data-autostart="'+this.autostart+'" data-width="'+this.width+'" data-src="'+this.src+'" data-kaudio="'+this.src+'" />';
+            var img = component.find('img[data-src]');
+            var componentId = img.attr('id');
+
+            var html = '<img data-componentId="' + componentId + '" src="/theme/apps/content/preview/audio.png" data-autostart="' + this.autostart + '" data-width="' + this.width + '" data-src="' + this.src + '" data-kaudio="' + this.src + '" />';
             return html;
         },
 
@@ -77,33 +82,33 @@
             flog('init "audio" settings', form);
             form.append(
                 '<form class="form-horizontal">' +
-                    '<div class="form-group">' +
-                        '<label for="audioFileInput" class="col-sm-12">Audio file</label>' +
-                        '<div class="col-sm-12">' +
-                            '<div class="audio-toolbar">'+
-                                '<a href="#" class="btn-audioFileInput btn btn-sm btn-primary"><i class="fa fa-upload"></i></a>'+
-                                '<input id="audioFileInput" type="file" style="display: none">' +
-                            '</div>' +
-                        '</div>' +
-                    '</div>' +
-                    '<div class="form-group">' +
-                        '<label for="audio-autoplay" class="col-sm-12">Autoplay</label>' +
-                        '<div class="col-sm-12">' +
-                            '<input type="checkbox" id="audio-autoplay" />' +
-                        '</div>' +
-                    '</div>' +
+                '<div class="form-group">' +
+                '<label for="audioFileInput" class="col-sm-12">Audio file</label>' +
+                '<div class="col-sm-12">' +
+                '<div class="audio-toolbar">' +
+                '<a href="#" class="btn-audioFileInput btn btn-sm btn-primary"><i class="fa fa-upload"></i></a>' +
+                '<input id="audioFileInput" type="file" style="display: none">' +
+                '</div>' +
+                '</div>' +
+                '</div>' +
+                '<div class="form-group">' +
+                '<label for="audio-autoplay" class="col-sm-12">Autoplay</label>' +
+                '<div class="col-sm-12">' +
+                '<input type="checkbox" id="audio-autoplay" />' +
+                '</div>' +
+                '</div>' +
                     //'<div class="form-group">' +
                     //    '<label for="audio-showcontrols" class="col-sm-12">Show Controls</label>' +
                     //    '<div class="col-sm-12">' +
                     //    '<input type="checkbox" id="audio-showcontrols" checked />' +
                     //    '</div>' +
                     //'</div>' +
-                    '<div class="form-group">' +
-                        '<label for="audio-width" class="col-sm-12">Width (px)</label>' +
-                        '<div class="col-sm-12">' +
-                        '<input type="number" id="audio-width" min="200" max="500" class="form-control" value="300" />' +
-                        '</div>' +
-                    '</div>' +
+                '<div class="form-group">' +
+                '<label for="audio-width" class="col-sm-12">Width (px)</label>' +
+                '<div class="col-sm-12">' +
+                '<input type="number" id="audio-width" min="200" max="500" class="form-control" value="300" />' +
+                '</div>' +
+                '</div>' +
                 '</form>'
             );
 
@@ -122,20 +127,23 @@
             btnAudioFileInput.mselect({
                 contentTypes: ['audio'],
                 bs3Modal: true,
-                pagePath: window.location.pathname.replace('contenteditor',''),
-                onSelectFile: function(url){
+                pagePath: window.location.pathname.replace('contenteditor', ''),
+                onSelectFile: function (url) {
                     instance.src = url;
                     instance.refreshAudioPlayerPreview();
                 }
             });
 
+            var img = component.find('img[data-src]');
+            var componentId = img.attr('id');
+
             var autoplayToggle = form.find('#audio-autoplay');
-            if(this.autostart){
+            if (this.autostart) {
                 autoplayToggle.prop('checked', true);
             }
-            autoplayToggle.on('click', function(e){
+            autoplayToggle.on('click', function (e) {
                 instance.autostart = this.checked;
-                instance.buildJWAudioPlayerPreview();
+                instance.buildJWAudioPlayerPreview(componentId);
             });
 
             //var showcontrolsToggle = form.find('#audio-showcontrols');
@@ -144,7 +152,7 @@
 
             var audioWidth = form.find('#audio-width');
             audioWidth.val(this.width);
-            audioWidth.on('change', function(){
+            audioWidth.on('change', function () {
                 instance.width = this.value;
                 instance.resizeAudioPlayerPreview();
             });
@@ -158,12 +166,12 @@
 
         },
 
-
-        buildJWAudioPlayerPreview: function () {
+        buildJWAudioPlayerPreview: function (componentId) {
+            flog('=======', componentId);
             var width = this.width;
             var src = this.src;
             var autostart = this.autostart;
-            var playerInstance = jwplayer(this.componentId);
+            var playerInstance = jwplayer(componentId);
             playerInstance.setup({
                 file: src,
                 width: width,
@@ -178,7 +186,7 @@
             });
         },
 
-        refreshAudioPlayerPreview: function(){
+        refreshAudioPlayerPreview: function () {
             var instance = this;
             var playerInstance = jwplayer(instance.componentId);
             var src = instance.src;
@@ -188,12 +196,12 @@
             playerInstance.play();
         },
 
-        resizeAudioPlayerPreview: function(){
+        resizeAudioPlayerPreview: function () {
             var instance = this;
             var playerInstance = jwplayer(instance.componentId);
             var width = instance.width;
 
-            playerInstance.resize(width,30);
+            playerInstance.resize(width, 30);
         }
     };
 
