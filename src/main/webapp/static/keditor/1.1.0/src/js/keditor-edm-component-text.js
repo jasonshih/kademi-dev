@@ -33,7 +33,7 @@
                 {name: 'others', groups: ['others']},
                 {name: 'about', groups: ['about']}
             ],
-            extraPlugins: 'embed_video,fuse-image,sourcedialog,lineheight,onchange',
+            extraPlugins: 'sourcedialog,lineheight',
             removePlugins: 'table,magicline,tabletools',
             removeButtons: 'Save,NewPage,Preview,Print,Templates,PasteText,PasteFromWord,Find,Replace,SelectAll,Scayt,Form,HiddenField,ImageButton,Button,Select,Textarea,TextField,Radio,Checkbox,Outdent,Indent,Blockquote,CreateDiv,Language,Table,HorizontalRule,Smiley,SpecialChar,PageBreak,Iframe,Styles,BGColor,Maximize,About,ShowBlocks,BidiLtr,BidiRtl,Flash,Image,Subscript,Superscript,Anchor',
             enterMode: CKEDITOR.ENTER_DIV,

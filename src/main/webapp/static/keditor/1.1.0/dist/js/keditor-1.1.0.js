@@ -811,7 +811,7 @@
 
                     if (components.length > 0) {
                         components.each(function () {
-                            KEditor.deleteComponent($(this));
+                            KEditor.deleteComponent($(this), options);
                         });
                     }
 
@@ -890,7 +890,7 @@
                         options.onBeforeComponentDeleted.call(contentArea, e, component);
                     }
 
-                    KEditor.deleteComponent(component);
+                    KEditor.deleteComponent(component, options);
 
                     if (typeof options.onComponentDeleted === 'function') {
                         options.onComponentDeleted.call(contentArea, e, component);

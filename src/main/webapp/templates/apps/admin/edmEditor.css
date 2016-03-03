@@ -192,3 +192,7 @@ body.opened-keditor-sidebar div.cke_float[id*="cke_keditor-section-"] {
 .keditor-container-content {
     height: 50px;
 }
+
+#msg {
+    z-index: 99999;
+}
