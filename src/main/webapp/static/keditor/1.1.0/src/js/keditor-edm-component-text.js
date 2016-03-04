@@ -33,7 +33,7 @@
                 {name: 'others', groups: ['others']},
                 {name: 'about', groups: ['about']}
             ],
-            extraPlugins: 'sourcedialog,lineheight',
+            extraPlugins: 'sourcedialog,lineheight,onchange',
             removePlugins: 'table,magicline,tabletools',
             removeButtons: 'Save,NewPage,Preview,Print,Templates,PasteText,PasteFromWord,Find,Replace,SelectAll,Scayt,Form,HiddenField,ImageButton,Button,Select,Textarea,TextField,Radio,Checkbox,Outdent,Indent,Blockquote,CreateDiv,Language,Table,HorizontalRule,Smiley,SpecialChar,PageBreak,Iframe,Styles,BGColor,Maximize,About,ShowBlocks,BidiLtr,BidiRtl,Flash,Image,Subscript,Superscript,Anchor',
             enterMode: CKEDITOR.ENTER_DIV,
@@ -100,6 +100,105 @@
             if (editor) {
                 editor.destroy();
             }
+        },
+
+        settingEnabled: true,
+
+        settingTitle: 'Text Settings',
+
+        initSettingForm: function (form, options) {
+            flog('initSettingForm "text" component');
+            form.append(
+                '<form class="form-horizontal">' +
+                '    <div class="form-group form-group-sm">' +
+                '       <div class="col-md-12">' +
+                '           <label for="edm-text-color">Background</label>' +
+                '           <div class="input-group color-picker">' +
+                '               <span class="input-group-addon"><i></i></span>' +
+                '               <input type="text" value="" id="text-bg-color" class="form-control" />' +
+                '           </div>' +
+                '       </div>' +
+                '    </div>' +
+                '    <div class="form-group">' +
+                '       <div class="col-md-12">' +
+                '           <label>Padding (in px)</label>' +
+                '           <div class="row row-sm text-center">' +
+                '               <div class="col-xs-4 col-xs-offset-4">' +
+                '                   <input type="number" value="" id="text-padding-top" class="form-control" />' +
+                '                   <small>top</small>' +
+                '               </div>' +
+                '           </div>' +
+                '           <div class="row row-sm text-center">' +
+                '               <div class="col-xs-4">' +
+                '                   <input type="number" value="" id="text-padding-left" class="form-control" />' +
+                '                   <small>left</small>' +
+                '               </div>' +
+                '               <div class="col-xs-4 col-xs-offset-4">' +
+                '                   <input type="number" value="" id="text-padding-right" class="form-control" />' +
+                '                   <small>right</small>' +
+                '               </div>' +
+                '           </div>' +
+                '           <div class="row row-sm text-center">' +
+                '               <div class="col-xs-4 col-xs-offset-4">' +
+                '                   <input type="number" value="" id="text-padding-bottom" class="form-control" />' +
+                '                   <small>bottom</small>' +
+                '               </div>' +
+                '           </div>' +
+                '       </div>' +
+                '    </div>' +
+                '</form>'
+            );
+
+            var textPaddingTop = form.find('#text-padding-top');
+            var textPaddingBottom = form.find('#text-padding-bottom');
+            var textPaddingLeft = form.find('#text-padding-left');
+            var textPaddingRight = form.find('#text-padding-right');
+            textPaddingTop.on('change', function () {
+                KEditor.settingComponent.find('.wrapper').css('padding-top', (this.value > 0 ? this.value : 0) + 'px');
+            });
+            textPaddingBottom.on('change', function () {
+                KEditor.settingComponent.find('.wrapper').css('padding-bottom', (this.value > 0 ? this.value : 0) + 'px');
+            });
+            textPaddingLeft.on('change', function () {
+                KEditor.settingComponent.find('.wrapper').css('padding-left', (this.value > 0 ? this.value : 0) + 'px');
+            });
+            textPaddingRight.on('change', function () {
+                KEditor.settingComponent.find('.wrapper').css('padding-right', (this.value > 0 ? this.value : 0) + 'px');
+            });
+
+            var colorPicker = form.find('.color-picker');
+            initColorPicker(colorPicker, function (color) {
+                var wrapper = KEditor.settingComponent.find('.wrapper');
+                var table = wrapper.closest('table');
+                if (color) {
+                    wrapper.css('background-color', color);
+                    table.attr('bgcolor', color);
+                } else {
+                    wrapper.css('background-color', '');
+                    table.removeAttr('bgcolor');
+                }
+            });
+        },
+
+        showSettingForm: function (form, component, options) {
+            flog('showSettingForm "text" component', component);
+
+            var wrapper = component.find('.wrapper');
+            var textPaddingTop = form.find('#text-padding-top');
+            var textPaddingBottom = form.find('#text-padding-bottom');
+            var textPaddingLeft = form.find('#text-padding-left');
+            var textPaddingRight = form.find('#text-padding-right');
+            textPaddingTop.val(wrapper.css('padding-top').replace('px', '') || '0');
+            textPaddingBottom.val(wrapper.css('padding-bottom').replace('px', '') || '0');
+            textPaddingLeft.val(wrapper.css('padding-left').replace('px', '') || '0');
+            textPaddingRight.val(wrapper.css('padding-right').replace('px', '') || '0');
+
+            var colorPicker = form.find('.color-picker');
+            colorPicker.colorpicker('setValue', wrapper.css('background-color') || '');
+        },
+
+        hideSettingForm: function (form) {
+            // Do nothing
         }
     };
 

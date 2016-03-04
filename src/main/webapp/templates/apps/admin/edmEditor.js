@@ -136,13 +136,15 @@ function initKEditor(body, snippets) {
                 settingPanel.getNiceScroll().hide();
             }
         },
-        onCKEditorReady: function (component, editor) {
-            applyInlineCssForTextWrapper(component);
-            applyInlineCssForLink(component);
-
-            editor.on('change', function () {
+        onComponentReady: function (component, editor) {
+            if (editor) {
+                applyInlineCssForTextWrapper(component);
                 applyInlineCssForLink(component);
-            });
+
+                editor.on('change', function () {
+                    applyInlineCssForLink(component);
+                });
+            }
         },
         onContentChanged: function () {
             if (!body.hasClass('content-changed')) {
@@ -236,6 +238,35 @@ function applySetting() {
     edmHeader.innerWidth(edmBodyWidth);
     edmBody.innerWidth(edmBodyWidth);
     edmFooter.innerWidth(edmBodyWidth);
+}
+
+function initColorPicker(target, onChangeHandle) {
+    target.each(function () {
+        var colorPicker = $(this);
+        var input = colorPicker.find('input');
+        var previewer = colorPicker.find('.input-group-addon i');
+
+        colorPicker.colorpicker({
+            format: 'hex',
+            container: colorPicker.parent(),
+            component: '.input-group-addon',
+            colorSelectors: {
+                'transparent': 'transparent'
+            }
+        }).on('changeColor.colorpicker', function (e) {
+            var colorHex = e.color.toHex();
+
+            if (!input.val() || input.val().trim().length === 0) {
+                colorHex = '';
+                previewer.css('background-color', '');
+            }
+
+            if (typeof onChangeHandle === 'function') {
+                onChangeHandle(colorHex);
+            }
+        });
+
+    });
 }
 
 function getEdmBody() {

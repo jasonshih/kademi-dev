@@ -31,8 +31,6 @@
 
         initSettingForm: function (form, options) {
             flog('initSettingForm "spacer" component');
-            var self = this;
-
             form.append(
                 '<form class="form-horizontal">' +
                 '   <div class="form-group">' +
