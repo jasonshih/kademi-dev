@@ -137,7 +137,7 @@
                                 <li role="separator" class="divider"></li>
                                 #end
                                 #foreach($user in $page.find("/leads").teamMembers)
-                                <li><a href="$user.name">$user.name</a></li>
+                                <li><a href="$user.name">$!user.firstName $!user.surName</a></li>
                                 #end
                             </ul>
                         </div>
@@ -316,7 +316,7 @@
                                                     <div class="form-group">
                                                         <label class="control-label col-md-2" for="nickName">Customer</label>
                                                         <div class="col-md-3">
-                                                            <input type="text" name="nickName" id="nickName" class="form-control" placeholder="nickName" value="$!page.nickName" />
+                                                            <input type="text" name="nickName" id="nickName" class="form-control" placeholder="nickName" value="$!page.profile.nickName" />
                                                         </div>
                                                         <div class="col-md-3">
                                                             <input type="text" name="firstName" id="firstName" class="form-control" placeholder="First name" value="$!page.firstName" />
@@ -482,7 +482,7 @@
                                                         #end
                                                     </td>
                                                     <td>
-                                                        <div class="btn-group" role="group">
+                                                        <div style="min-width: 125px;" class="btn-group" role="group">
                                                             <a title="Download" download="$file.name" href="$file.name" class="btn btn-info"><i class="fa fa-download"></i></a>
                                                             <button title="Delete" type="button" data-fname="$file.name" class="btn btn-danger btn-delete-file"><i class="fa fa-trash"></i></button>
                                                         </div>
@@ -745,8 +745,6 @@
         <span title="$file.contentType"><i class="fa fa-2x $fIcon"></i></span>
         #end
 
-        #createModals()
-
         <script type="text/javascript">
             $(function () {
                 var form = $("#leadDetails");
@@ -754,7 +752,7 @@
                 form.forms({
                     callback: function (resp) {
                         Msg.info('Saved');
-                        reloadTable();
+                        // reloadTable();
                     }
                 });
 

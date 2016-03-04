@@ -716,7 +716,7 @@ function assignTo(name, href) {
         dataType: 'json',
         success: function (resp) {
             if (resp && resp.status) {
-                Msg.info("Assigned");
+                Msg.info("The assignment has been changed!");
                 $("#assignedBlock").reloadFragment({
                     url: href || window.location.pathname
                 });

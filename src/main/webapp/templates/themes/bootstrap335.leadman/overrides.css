@@ -125,6 +125,12 @@ li.current-user a > img {
     vertical-align: top;
 }
 
+.profilePic .sidebar{
+    height: auto;
+    overflow: auto;
+    padding-bottom: 0;
+}
+
 /* Supports collapse menu even on ipad portrait screen */
 @media (max-width: 991px) {
     .navbar-header {
