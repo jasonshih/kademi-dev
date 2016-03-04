@@ -26,7 +26,8 @@
 
                     <div class="btn-group mb-sm mr dropdown">
                         <button id="assignedBlock" class="btn dropdown-toggle btn-info" data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false" title="Assign this task to someone" >
-                            <span class="fa fa-user">
+                            <i class="fa fa-user"></i>
+                            <span>
                                 #if( $page.assignedTo )
                                 $page.assignedTo.name
                                 #else
@@ -41,7 +42,7 @@
                             #if($teamMembers && $teamMembers.size() > 0)
                             <li role="separator" class="divider"></li>
                             #foreach($user in $teamMembers)
-                            <li><a href="$user.name">$user.name</a></li>
+                            <li><a href="$user.name">$!user.firstName $!user.surName</a></li>
                             #end
                             #end
                         </ul>
