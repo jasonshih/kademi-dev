@@ -347,7 +347,7 @@ function replaceImagesWithJWPlayer(images) {
         var aspectratio = img.attr("data-aspectratio");
         var autostart = img.attr('data-autostart')==='true';
         var repeat = img.attr('data-repeat')==='true';
-        var controls = img.attr('data-controls')==='true';
+        var controls = true; // Force showing controls for now
         if (src == null) {
             flog("replaceImagesWithJWPlayer: derive video base path from src", posterUrl);
             src = getFolderPath(posterUrl);
