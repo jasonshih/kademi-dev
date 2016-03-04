@@ -134,9 +134,10 @@ function initImmediateUpdate() {
         var href = target.data("href");
         var name = target.attr("name");
         var value = target.val();
+        var form = target.parents('.form-horizontal');
         var oldValue = target.data("original-value");
         if (value != oldValue) {
-            updateField(href, name, value);
+            updateField(href, name, value, form);
         }
     };
     $("body").on("change", ".immediateUpdate", function (e) {
@@ -371,11 +372,12 @@ function initNewQuickLeadForm() {
             navigator.mozGetUserMedia ||
             navigator.msGetUserMedia);
     window.URL = window.URL || window.webkitURL;
-    var audio_context = new AudioContext();
+    var audio_context;
     var recorder = null;
 
     if (!navigator.getUserMedia) {
-        $('.voiceMemo', form).remove();
+        // IE 11 doesnt support this API for now
+        form.find('.voiceMemo').remove();
     }
 
     modal.on('click', '#recordMemo', function (e) {
@@ -731,7 +733,7 @@ function assignTo(name, href) {
     });
 }
 
-function updateField(href, fieldName, fieldValue) {
+function updateField(href, fieldName, fieldValue, form) {
     var data = {};
     data[fieldName] = fieldValue;
     flog("updateField", href, data, fieldName, fieldValue);
@@ -741,7 +743,12 @@ function updateField(href, fieldName, fieldValue) {
         data: data,
         dataType: 'json',
         success: function (resp) {
-            Msg.info("Saved " + fieldName);
+            var fieldLabel = fieldName;
+            var label = form.find('[name='+fieldName+']').parents('.form-group').find('label');
+            if(label.length){
+                fieldLabel = label.text().replace(':','');
+            }
+            Msg.info("Saved " + fieldLabel);
             reloadTasks();
         },
         error: function (resp) {
