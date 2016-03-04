@@ -316,7 +316,7 @@
                                                     <div class="form-group">
                                                         <label class="control-label col-md-2" for="nickName">Customer</label>
                                                         <div class="col-md-3">
-                                                            <input type="text" name="nickName" id="nickName" class="form-control" placeholder="nickName" value="$!page.nickName" />
+                                                            <input type="text" name="nickName" id="nickName" class="form-control" placeholder="nickName" value="$!page.profile.nickName" />
                                                         </div>
                                                         <div class="col-md-3">
                                                             <input type="text" name="firstName" id="firstName" class="form-control" placeholder="First name" value="$!page.firstName" />
@@ -754,7 +754,7 @@
                 form.forms({
                     callback: function (resp) {
                         Msg.info('Saved');
-                        reloadTable();
+                        // reloadTable();
                     }
                 });
 
