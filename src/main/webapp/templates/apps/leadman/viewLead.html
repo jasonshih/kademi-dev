@@ -137,7 +137,7 @@
                                 <li role="separator" class="divider"></li>
                                 #end
                                 #foreach($user in $page.find("/leads").teamMembers)
-                                <li><a href="$user.name">$user.name</a></li>
+                                <li><a href="$user.name">$!user.firstName $!user.surName</a></li>
                                 #end
                             </ul>
                         </div>
