@@ -110,7 +110,7 @@
             flog('initSettingForm "text" component');
             form.append(
                 '<form class="form-horizontal">' +
-                '    <div class="form-group form-group-sm">' +
+                '    <div class="form-group">' +
                 '       <div class="col-md-12">' +
                 '           <label for="edm-text-color">Background</label>' +
                 '           <div class="input-group color-picker">' +
@@ -170,12 +170,13 @@
             initColorPicker(colorPicker, function (color) {
                 var wrapper = KEditor.settingComponent.find('.wrapper');
                 var table = wrapper.closest('table');
-                if (color) {
+                if (color && color !== 'transparent') {
                     wrapper.css('background-color', color);
                     table.attr('bgcolor', color);
                 } else {
                     wrapper.css('background-color', '');
                     table.removeAttr('bgcolor');
+                    form.find('#photo-bg-color').val('');
                 }
             });
         },
@@ -185,13 +186,23 @@
 
             var wrapper = component.find('.wrapper');
             var textPaddingTop = form.find('#text-padding-top');
+            var paddingTop = wrapper.css('padding-top');
+            textPaddingTop.val(paddingTop ? paddingTop.replace('px', '') : '0');
+
             var textPaddingBottom = form.find('#text-padding-bottom');
+            var paddingBottom = wrapper.css('padding-bottom');
+            textPaddingBottom.val(paddingBottom ? paddingBottom.replace('px', '') : '0');
+
             var textPaddingLeft = form.find('#text-padding-left');
+            var paddingLeft = wrapper.css('padding-left');
+            textPaddingLeft.val(paddingLeft ? paddingLeft.replace('px', '') : '0');
+
             var textPaddingRight = form.find('#text-padding-right');
-            textPaddingTop.val(wrapper.css('padding-top').replace('px', '') || '0');
-            textPaddingBottom.val(wrapper.css('padding-bottom').replace('px', '') || '0');
-            textPaddingLeft.val(wrapper.css('padding-left').replace('px', '') || '0');
-            textPaddingRight.val(wrapper.css('padding-right').replace('px', '') || '0');
+            var paddingRight = wrapper.css('padding-right');
+            textPaddingRight.val(paddingRight ? paddingRight.replace('px', '') : '0');
+
+            var colorPicker = form.find('.color-picker');
+            colorPicker.colorpicker('setValue', wrapper.css('background-color') || '');
 
             var colorPicker = form.find('.color-picker');
             colorPicker.colorpicker('setValue', wrapper.css('background-color') || '');
