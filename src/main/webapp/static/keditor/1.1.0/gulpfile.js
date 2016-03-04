@@ -216,9 +216,8 @@ gulp.task('copy-snippets-src-test', function () {
 gulp.task('build-snippets-test', gulpsync.sync(['clean-snippets-test', 'copy-snippets-src-test']));
 
 gulp.task('watch', function () {
-    gulp.watch(['./src/less/*.less'], ['build-css-test']);
-    gulp.watch(['./src/js/*.js'], ['build-js-test']);
-    gulp.watch(['./src/snippets/**/*.*'], ['build-snippets-test']);
+    gulp.watch(['./src/less/*.less'], ['build-css-dist']);
+    gulp.watch(['./src/js/*.js'], ['build-js-dist']);
 });
 
 // Gulp Build
