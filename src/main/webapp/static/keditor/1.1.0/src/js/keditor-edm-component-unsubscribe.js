@@ -43,7 +43,6 @@
         },
 
         settingTitle: 'Unsubscribe Settings'
-
     });
 
 })(jQuery);

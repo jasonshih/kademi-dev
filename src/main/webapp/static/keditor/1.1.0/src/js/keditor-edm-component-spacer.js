@@ -53,7 +53,7 @@
 
             var spacerHeight = form.find('#spacer-height');
             spacerHeight.on('change', function () {
-                KEditor.settingComponent.find('.spacer').attr('height', this.value).css('height', this.value);
+                KEditor.settingComponent.find('.spacer').attr('height', this.value);
             });
 
             var colorPicker = form.find('.color-picker');
@@ -62,10 +62,10 @@
                 var table = wrapper.closest('table');
 
                 if (color && color !== 'transparent') {
-                    wrapper.css('background-color', color);
+                    setStyle(wrapper, 'background-color', color);
                     table.attr('bgcolor', color);
                 } else {
-                    wrapper.css('background-color', '');
+                    setStyle(wrapper, 'background-color', '');
                     table.removeAttr('bgcolor');
                     form.find('#spacer-bg-color').val('');
                 }

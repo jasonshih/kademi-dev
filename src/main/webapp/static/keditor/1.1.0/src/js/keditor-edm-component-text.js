@@ -154,16 +154,16 @@
             var textPaddingLeft = form.find('.text-padding-left');
             var textPaddingRight = form.find('.text-padding-right');
             textPaddingTop.on('change', function () {
-                KEditor.settingComponent.find('.wrapper').css('padding-top', (this.value > 0 ? this.value : 0) + 'px');
+                setStyle(KEditor.settingComponent.find('.wrapper'), 'padding-top', (this.value > 0 ? this.value : 0) + 'px');
             });
             textPaddingBottom.on('change', function () {
-                KEditor.settingComponent.find('.wrapper').css('padding-bottom', (this.value > 0 ? this.value : 0) + 'px');
+                setStyle(KEditor.settingComponent.find('.wrapper'), 'padding-bottom', (this.value > 0 ? this.value : 0) + 'px');
             });
             textPaddingLeft.on('change', function () {
-                KEditor.settingComponent.find('.wrapper').css('padding-left', (this.value > 0 ? this.value : 0) + 'px');
+                setStyle(KEditor.settingComponent.find('.wrapper'), 'padding-left', (this.value > 0 ? this.value : 0) + 'px');
             });
             textPaddingRight.on('change', function () {
-                KEditor.settingComponent.find('.wrapper').css('padding-right', (this.value > 0 ? this.value : 0) + 'px');
+                setStyle(KEditor.settingComponent.find('.wrapper'), 'padding-right', (this.value > 0 ? this.value : 0) + 'px');
             });
 
             var colorPicker = form.find('.color-picker');
@@ -171,10 +171,10 @@
                 var wrapper = KEditor.settingComponent.find('.wrapper');
                 var table = wrapper.closest('table');
                 if (color && color !== 'transparent') {
-                    wrapper.css('background-color', color);
+                    setStyle(wrapper, 'background-color', color);
                     table.attr('bgcolor', color);
                 } else {
-                    wrapper.css('background-color', '');
+                    setStyle(wrapper, 'background-color', '');
                     table.removeAttr('bgcolor');
                     form.find('#photo-bg-color').val('');
                 }

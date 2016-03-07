@@ -46,21 +46,19 @@ function initEdmEditorPage(fileName, snippets) {
 
 function applyInlineCssForTextWrapper(target) {
     target.find('.text-wrapper').each(function () {
-        $(this).css({
-            'font-family': $('#edm-font-family').val(),
-            'font-size': $('#edm-font-size').val(),
-            'line-height': $('#edm-line-height').val(),
-            'color': $('#edm-text-color').val()
-        });
+        var textWrapper = $(this);
+        setStyle(textWrapper, 'font-family', $('#edm-font-family').val());
+        setStyle(textWrapper, 'font-size', $('#edm-font-size').val());
+        setStyle(textWrapper, 'line-height', $('#edm-line-height').val());
+        setStyle(textWrapper, 'color', $('#edm-text-color').val());
     });
 }
 
 function applyInlineCssForLink(target) {
     target.find('td.text-wrapper a').each(function () {
-        $(this).css({
-            'text-decoration': 'none',
-            'color': $('#edm-link-color').val()
-        });
+        var link = $(this);
+        setStyle(link, 'text-decoration', 'none');
+        setStyle(link, 'color', $('#edm-link-color').val());
     });
 }
 
@@ -205,13 +203,12 @@ function applySetting() {
     var edmPaddingBottom = $('#edm-padding-bottom').val();
     var edmPaddingLeft = $('#edm-padding-left').val();
     var edmPaddingRight = $('#edm-padding-right').val();
-    $('html').css('background-color', edmBackground);
-    $('#edm-area').css({
-        'padding-top': edmPaddingTop + 'px',
-        'padding-bottom': edmPaddingBottom + 'px',
-        'padding-left': edmPaddingLeft + 'px',
-        'padding-right': edmPaddingRight + 'px'
-    });
+    setStyle($('html'), 'background-color', edmBackground);
+    var edmArea = $('#edm-area');
+    setStyle(edmArea, 'padding-top', edmPaddingTop + 'px');
+    setStyle(edmArea, 'padding-bottom', edmPaddingBottom + 'px');
+    setStyle(edmArea, 'padding-left', edmPaddingLeft + 'px');
+    setStyle(edmArea, 'padding-right', edmPaddingRight + 'px');
 
     var edmHeader = $('#edm-header');
     var edmBody = $('#edm-body');
@@ -222,13 +219,11 @@ function applySetting() {
     var edmBodyPaddingBottom = $('#edm-body-padding-bottom').val();
     var edmBodyPaddingLeft = $('#edm-body-padding-left').val();
     var edmBodyPaddingRight = $('#edm-body-padding-right').val();
-    edmBody.css({
-        'background-color': edmBodyBackground,
-        'padding-top': edmBodyPaddingTop + 'px',
-        'padding-bottom': edmBodyPaddingBottom + 'px',
-        'padding-left': edmBodyPaddingLeft + 'px',
-        'padding-right': edmBodyPaddingRight + 'px'
-    });
+    setStyle(edmBody, 'background-color', edmBodyBackground);
+    setStyle(edmBody, 'padding-top', edmBodyPaddingTop + 'px');
+    setStyle(edmBody, 'padding-bottom', edmBodyPaddingBottom + 'px');
+    setStyle(edmBody, 'padding-left', edmBodyPaddingLeft + 'px');
+    setStyle(edmBody, 'padding-right', edmBodyPaddingRight + 'px');
 
     applyInlineCssForTextWrapper(edmHeader);
     applyInlineCssForTextWrapper(edmBody);
@@ -266,6 +261,38 @@ function initColorPicker(target, onChangeHandle) {
             }
         });
 
+    });
+}
+
+function setStyle(target, name, value) {
+    target.each(function () {
+        var self = $(this);
+        var styles = self.attr('style');
+        styles = styles ? styles.split(';') : [];
+        var isExisting = false;
+
+        for (var i = 0; i < styles.length; i++) {
+            var style = styles[i];
+            if (style && style.trim().length > 0 && style.indexOf(':') !== -1) {
+                style = style.split(':');
+
+                if (style[0].trim() === name) {
+                    if (value) {
+                        styles[i] = name + ':' + value;
+                    } else {
+                        styles.splice(i, 1);
+                    }
+
+                    isExisting = true;
+                }
+            }
+        }
+
+        if (!isExisting) {
+            styles.push(name + ':' + value);
+        }
+
+        self.attr('style', styles.join(';'));
     });
 }
 
@@ -349,50 +376,50 @@ function getEdmBody() {
     }
 
     return (
-            '<table cellpadding="0" cellspacing="0" border="0" width="100%" id="edm-wrapper" ' + attributeTableWrapper + '>\n' +
-            '    <tbody>\n' +
-            '        <tr>\n' +
-            '            <td id="edm-wrapper-td" style="' + styleTDWrapper + '" align="center">\n' +
-            '                <table cellpadding="0" cellspacing="0" border="0" width="' + edmBodyWidth + '" id="edm-container" ' + dataEdmStyles + '>\n' +
-            '                    <tbody>\n' +
-            '                        <tr>\n' +
-            '                            <td>\n' +
-            '                                <table cellpadding="0" cellspacing="0" border="0" width="100%" id="edm-header" align="center">\n' +
-            '                                    <tbody>\n' +
-            '                                        <tr>\n' +
-            '                                            <td id="edm-header-td">\n' +
-            edmHeader +
-            '                                            </td>\n' +
-            '                                        </tr>\n' +
-            '                                    </tbody>\n' +
-            '                                </table>\n' +
-            '                                <table cellpadding="0" cellspacing="0" border="0" width="100%" id="edm-body" ' + attributeTableBody + ' align="center">\n' +
-            '                                    <tbody>\n' +
-            '                                        <tr>\n' +
-            '                                            <td id="edm-body-td" style="' + styleTDBody + '" >\n' +
-            edmBody +
-            '                                            </td>\n' +
-            '                                        </tr>\n' +
-            '                                    </tbody>\n' +
-            '                                </table>\n' +
-            '                                <table cellpadding="0" cellspacing="0" border="0" width="100%" id="edm-footer" align="center">\n' +
-            '                                    <tbody>\n' +
-            '                                        <tr>\n' +
-            '                                            <td id="edm-footer-td">\n' +
-            edmFooter +
-            '                                            </td>\n' +
-            '                                        </tr>\n' +
-            '                                    </tbody>\n' +
-            '                                </table>\n' +
-            '                            </td>\n' +
-            '                        </tr>\n' +
-            '                    </tbody>\n' +
-            '                </table>\n' +
-            '            </td>\n' +
-            '        </tr>\n' +
-            '    </tbody>\n' +
-            '</table>\n'
-            );
+        '<table cellpadding="0" cellspacing="0" border="0" width="100%" id="edm-wrapper" ' + attributeTableWrapper + '>\n' +
+        '    <tbody>\n' +
+        '        <tr>\n' +
+        '            <td id="edm-wrapper-td" style="' + styleTDWrapper + '" align="center">\n' +
+        '                <table cellpadding="0" cellspacing="0" border="0" width="' + edmBodyWidth + '" id="edm-container" ' + dataEdmStyles + '>\n' +
+        '                    <tbody>\n' +
+        '                        <tr>\n' +
+        '                            <td>\n' +
+        '                                <table cellpadding="0" cellspacing="0" border="0" width="100%" id="edm-header" align="center">\n' +
+        '                                    <tbody>\n' +
+        '                                        <tr>\n' +
+        '                                            <td id="edm-header-td">\n' +
+        edmHeader +
+        '                                            </td>\n' +
+        '                                        </tr>\n' +
+        '                                    </tbody>\n' +
+        '                                </table>\n' +
+        '                                <table cellpadding="0" cellspacing="0" border="0" width="100%" id="edm-body" ' + attributeTableBody + ' align="center">\n' +
+        '                                    <tbody>\n' +
+        '                                        <tr>\n' +
+        '                                            <td id="edm-body-td" style="' + styleTDBody + '" >\n' +
+        edmBody +
+        '                                            </td>\n' +
+        '                                        </tr>\n' +
+        '                                    </tbody>\n' +
+        '                                </table>\n' +
+        '                                <table cellpadding="0" cellspacing="0" border="0" width="100%" id="edm-footer" align="center">\n' +
+        '                                    <tbody>\n' +
+        '                                        <tr>\n' +
+        '                                            <td id="edm-footer-td">\n' +
+        edmFooter +
+        '                                            </td>\n' +
+        '                                        </tr>\n' +
+        '                                    </tbody>\n' +
+        '                                </table>\n' +
+        '                            </td>\n' +
+        '                        </tr>\n' +
+        '                    </tbody>\n' +
+        '                </table>\n' +
+        '            </td>\n' +
+        '        </tr>\n' +
+        '    </tbody>\n' +
+        '</table>\n'
+    );
 }
 
 function getEdmContent() {

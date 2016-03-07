@@ -89,7 +89,7 @@
 
             var lineHeight = form.find('#line-height');
             lineHeight.on('change', function () {
-                KEditor.settingComponent.find('.wrapper').attr('height', this.value).css('height', this.value);
+                setStyle(KEditor.settingComponent.find('.wrapper div'), 'height', this.value);
             });
             
             var linePaddingTop = form.find('#line-padding-top');
@@ -97,16 +97,16 @@
             var linePaddingLeft = form.find('#line-padding-left');
             var linePaddingRight = form.find('#line-padding-right');
             linePaddingTop.on('change', function () {
-                KEditor.settingComponent.find('.wrapper').css('padding-top', (this.value > 0 ? this.value : 0) + 'px');
+                setStyle(KEditor.settingComponent.find('.wrapper'), 'padding-top', (this.value > 0 ? this.value : 0) + 'px');
             });
             linePaddingBottom.on('change', function () {
-                KEditor.settingComponent.find('.wrapper').css('padding-bottom', (this.value > 0 ? this.value : 0) + 'px');
+                setStyle(KEditor.settingComponent.find('.wrapper'), 'padding-bottom', (this.value > 0 ? this.value : 0) + 'px');
             });
             linePaddingLeft.on('change', function () {
-                KEditor.settingComponent.find('.wrapper').css('padding-left', (this.value > 0 ? this.value : 0) + 'px');
+                setStyle(KEditor.settingComponent.find('.wrapper'), 'padding-left', (this.value > 0 ? this.value : 0) + 'px');
             });
             linePaddingRight.on('change', function () {
-                KEditor.settingComponent.find('.wrapper').css('padding-right', (this.value > 0 ? this.value : 0) + 'px');
+                setStyle(KEditor.settingComponent.find('.wrapper'), 'padding-right', (this.value > 0 ? this.value : 0) + 'px');
             });
 
             var lineBgColorPicker = form.find('.line-bg-color-picker');
@@ -115,10 +115,10 @@
                 var table = wrapper.closest('table');
 
                 if (color && color !== 'transparent') {
-                    wrapper.css('background-color', color);
+                    setStyle(wrapper, 'background-color', color);
                     table.attr('bgcolor', color);
                 } else {
-                    wrapper.css('background-color', '');
+                    setStyle(wrapper, 'background-color', '');
                     table.removeAttr('bgcolor');
                     form.find('#line-bg-color').val('');
                 }
@@ -130,9 +130,9 @@
                 var div = wrapper.children('div');
 
                 if (color && color !== 'transparent') {
-                    div.css('background-color', color);
+                    setStyle(div, 'background-color', color);
                 } else {
-                    div.css('background-color', '');
+                    setStyle(div, 'background-color', '');
                     form.find('#line-color').val('');
                 }
             });
@@ -294,16 +294,16 @@
             var photoPaddingLeft = form.find('#photo-padding-left');
             var photoPaddingRight = form.find('#photo-padding-right');
             photoPaddingTop.on('change', function () {
-                KEditor.settingComponent.find('.wrapper').css('padding-top', (this.value > 0 ? this.value : 0) + 'px');
+                setStyle(KEditor.settingComponent.find('.wrapper'), 'padding-top', (this.value > 0 ? this.value : 0) + 'px');
             });
             photoPaddingBottom.on('change', function () {
-                KEditor.settingComponent.find('.wrapper').css('padding-bottom', (this.value > 0 ? this.value : 0) + 'px');
+                setStyle(KEditor.settingComponent.find('.wrapper'), 'padding-bottom', (this.value > 0 ? this.value : 0) + 'px');
             });
             photoPaddingLeft.on('change', function () {
-                KEditor.settingComponent.find('.wrapper').css('padding-left', (this.value > 0 ? this.value : 0) + 'px');
+                setStyle(KEditor.settingComponent.find('.wrapper'), 'padding-left', (this.value > 0 ? this.value : 0) + 'px');
             });
             photoPaddingRight.on('change', function () {
-                KEditor.settingComponent.find('.wrapper').css('padding-right', (this.value > 0 ? this.value : 0) + 'px');
+                setStyle(KEditor.settingComponent.find('.wrapper'), 'padding-right', (this.value > 0 ? this.value : 0) + 'px');
             });
 
             var colorPicker = form.find('.color-picker');
@@ -311,10 +311,10 @@
                 var wrapper = KEditor.settingComponent.find('.wrapper');
                 var table = wrapper.closest('table');
                 if (color && color !== 'transparent') {
-                    wrapper.css('background-color', color);
+                    setStyle(wrapper, 'background-color', color);
                     table.attr('bgcolor', color);
                 } else {
-                    wrapper.css('background-color', '');
+                    setStyle(wrapper, 'background-color', '');
                     table.removeAttr('bgcolor');
                     form.find('#photo-bg-color').val('');
                 }
@@ -438,7 +438,7 @@
 
             var spacerHeight = form.find('#spacer-height');
             spacerHeight.on('change', function () {
-                KEditor.settingComponent.find('.spacer').attr('height', this.value).css('height', this.value);
+                KEditor.settingComponent.find('.spacer').attr('height', this.value);
             });
 
             var colorPicker = form.find('.color-picker');
@@ -447,10 +447,10 @@
                 var table = wrapper.closest('table');
 
                 if (color && color !== 'transparent') {
-                    wrapper.css('background-color', color);
+                    setStyle(wrapper, 'background-color', color);
                     table.attr('bgcolor', color);
                 } else {
-                    wrapper.css('background-color', '');
+                    setStyle(wrapper, 'background-color', '');
                     table.removeAttr('bgcolor');
                     form.find('#spacer-bg-color').val('');
                 }
@@ -631,16 +631,16 @@
             var textPaddingLeft = form.find('.text-padding-left');
             var textPaddingRight = form.find('.text-padding-right');
             textPaddingTop.on('change', function () {
-                KEditor.settingComponent.find('.wrapper').css('padding-top', (this.value > 0 ? this.value : 0) + 'px');
+                setStyle(KEditor.settingComponent.find('.wrapper'), 'padding-top', (this.value > 0 ? this.value : 0) + 'px');
             });
             textPaddingBottom.on('change', function () {
-                KEditor.settingComponent.find('.wrapper').css('padding-bottom', (this.value > 0 ? this.value : 0) + 'px');
+                setStyle(KEditor.settingComponent.find('.wrapper'), 'padding-bottom', (this.value > 0 ? this.value : 0) + 'px');
             });
             textPaddingLeft.on('change', function () {
-                KEditor.settingComponent.find('.wrapper').css('padding-left', (this.value > 0 ? this.value : 0) + 'px');
+                setStyle(KEditor.settingComponent.find('.wrapper'), 'padding-left', (this.value > 0 ? this.value : 0) + 'px');
             });
             textPaddingRight.on('change', function () {
-                KEditor.settingComponent.find('.wrapper').css('padding-right', (this.value > 0 ? this.value : 0) + 'px');
+                setStyle(KEditor.settingComponent.find('.wrapper'), 'padding-right', (this.value > 0 ? this.value : 0) + 'px');
             });
 
             var colorPicker = form.find('.color-picker');
@@ -648,10 +648,10 @@
                 var wrapper = KEditor.settingComponent.find('.wrapper');
                 var table = wrapper.closest('table');
                 if (color && color !== 'transparent') {
-                    wrapper.css('background-color', color);
+                    setStyle(wrapper, 'background-color', color);
                     table.attr('bgcolor', color);
                 } else {
-                    wrapper.css('background-color', '');
+                    setStyle(wrapper, 'background-color', '');
                     table.removeAttr('bgcolor');
                     form.find('#photo-bg-color').val('');
                 }
@@ -737,7 +737,6 @@
         },
 
         settingTitle: 'Unsubscribe Settings'
-
     });
 
 })(jQuery);
