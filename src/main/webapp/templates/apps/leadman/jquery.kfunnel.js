@@ -494,7 +494,7 @@
             chart_data.names.push(source[i].name);
         }
 
-        var date_set = new Set();
+        var date_set = [];
         for (var i = 0; i < len; i++)
         {
             for (var j = 0; j < source[i].bydate.length; j++)
@@ -502,11 +502,11 @@
                 var date_str = source[i].bydate[j].date;
                 var date_list = date_str.split("/");
                 var date = parseInt(date_list[0]) + parseInt(date_list[1]) * 100 + parseInt(date_list[2]) * 100000;
-                date_set.add(date);
+                date_set.push(date);
             }
         }
 
-        chart_data.dates = Array.from(date_set).sort();
+        chart_data.dates = date_set.sort();
 
         var empty_list = [];
         for (var i = 0; i < len; i++)
