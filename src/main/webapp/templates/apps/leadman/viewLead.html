@@ -506,7 +506,7 @@
                                     <div id="headingOne" role="tab" class="panel-heading">
                                         <h4 class="panel-title clearfix task-item">
                                             <div class="pull-left">
-                                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                                <a data-toggle="collapse" data-parent="#accordion" href="#$task.href.replace('/','_')" aria-expanded="true" aria-controls="collapseOne">
                                                     <span class="task-title">$task.title</span>
                                                 </a>
                                             </div>
@@ -515,7 +515,7 @@
                                             </a>
                                         </h4>
                                     </div>
-                                    <div id="collapseOne" role="tabpanel" aria-labelledby="headingOne" class="panel-collapse collapse in">
+                                    <div id="$task.href.replace('/','_')" role="tabpanel" aria-labelledby="" class="panel-collapse collapse in">
                                         <div class="panel-body">
                                             #if( $task.is("open") )
                                             <div class="btn-task-panel-wrap pull-right">

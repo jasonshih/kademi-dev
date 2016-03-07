@@ -160,11 +160,24 @@ function initTasks() {
         var link = $(e.target).closest("a");
         var href = link.attr("href");
         var name = getFileName(href);
-        confirmDelete(href, name, function () {
-            var modal = link.closest(".modal");
-            modal.modal("hide");
-            $("a[href='" + href + "']").closest(".task").remove();
-        });
+
+        var c = confirm('Are you sure to cancel this task?');
+        if(!c) return;
+        $.ajax({
+            url: href,
+            data: {cancelTask: ''},
+            dataType: 'text',
+            type: 'post',
+            success: function(){
+                Msg.info('Task cancelled');
+                var modal = link.closest(".modal");
+                modal.modal("hide");
+                reloadTasks();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                flog('Error', textStatus, errorThrown);
+            }
+        })
     });
     $("body").on("click", ".btnTaskDone", function (e) {
         flog("click");
