@@ -330,14 +330,16 @@ function doInitVideos() {
         return;
     }
     $.getScript("/static/jwplayer/6.10/jwplayer.js", function () {
-        jwplayer.key = "cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=";
-        replaceImagesWithJWPlayer(images);
+        $.getScript("/static/jwplayer/6.10/jwplayer.html5.js", function () {
+            jwplayer.key = "cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=";
+            replaceImagesWithJWPlayer(images);
+        });
     });
 }
 
 function replaceImagesWithJWPlayer(images) {
     // will not transform images which in /contenteditor page
-    if($(document.body).hasClass('contenteditor-page'))
+    if ($(document.body).hasClass('contenteditor-page'))
         return;
 
     images.each(function (i, n) {
@@ -345,8 +347,8 @@ function replaceImagesWithJWPlayer(images) {
         var src = img.attr("data-video-src");
         var posterUrl = img.attr("src");
         var aspectratio = img.attr("data-aspectratio");
-        var autostart = img.attr('data-autostart')==='true';
-        var repeat = img.attr('data-repeat')==='true';
+        var autostart = img.attr('data-autostart') === 'true';
+        var repeat = img.attr('data-repeat') === 'true';
         var controls = true; // Force showing controls for now
         if (src == null) {
             flog("replaceImagesWithJWPlayer: derive video base path from src", posterUrl);
@@ -374,7 +376,7 @@ function buildJWPlayer(itemToReplace, count, src, posterHref, aspectratio, autos
         w = 640;
     }
 
-    if(!aspectratio){
+    if (!aspectratio) {
         aspectratio = w + ":" + h;
     }
 
@@ -421,8 +423,8 @@ function buildJWPlayerContainer(count) {
     return $(c);
 }
 
-function buildJWAudioPlayer(count, src, autostart){
-    var playerInstance = jwplayer("kaudio-player-"+count);
+function buildJWAudioPlayer(count, src, autostart) {
+    var playerInstance = jwplayer("kaudio-player-" + count);
 
     playerInstance.setup({
         file: src,
@@ -438,7 +440,7 @@ function buildJWAudioPlayer(count, src, autostart){
     });
 }
 
-function doInitAudio(){
+function doInitAudio() {
     var images = $('img[data-kaudio]');
     if (images.length === 0) {
         return;
@@ -458,21 +460,21 @@ function initAudios() {
 }
 function replaceImagesWithAudio(images) {
     // will not transform images which in /contenteditor page
-    if($(document.body).hasClass('contenteditor-page'))
+    if ($(document.body).hasClass('contenteditor-page'))
         return;
 
     images.each(function (i, n) {
         var img = $(n);
         var src = img.attr("data-kaudio");
         var width = img.attr("data-width");
-        var autostart = img.attr("data-autostart")==='true';
-        if(!width){
+        var autostart = img.attr("data-autostart") === 'true';
+        if (!width) {
             width = 300;
         }
         img.wrap('<div style="width: ' + width + 'px; max-width: 100%; margin-left: auto; margin-right: auto" ></div>');
         if (src) {
             log("replaceImagesWithAudio: Using data-kaudio", src);
-            var audioWrap = $('<div id="kaudio-player-'+i+'" />');
+            var audioWrap = $('<div id="kaudio-player-' + i + '" />');
             audioWrap.insertAfter(img);
             img.hide();
             buildJWAudioPlayer(i, src, autostart);
