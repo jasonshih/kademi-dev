@@ -34,15 +34,6 @@
             form.append(
                 '<form class="form-horizontal">' +
                 '    <div class="form-group">' +
-                '       <div class="col-md-12">' +
-                '           <label>Background</label>' +
-                '           <div class="input-group color-picker">' +
-                '               <span class="input-group-addon"><i></i></span>' +
-                '               <input type="text" value="" id="spacer-bg-color" class="form-control" />' +
-                '           </div>' +
-                '       </div>' +
-                '    </div>' +
-                '    <div class="form-group">' +
                 '       <label for="spacer-height" class="col-sm-12">Height</label>' +
                 '       <div class="col-sm-12">' +
                 '           <input type="number" id="spacer-height" class="form-control" />' +
@@ -56,20 +47,8 @@
                 KEditor.settingComponent.find('.spacer').attr('height', this.value);
             });
 
-            var colorPicker = form.find('.color-picker');
-            initColorPicker(colorPicker, function (color) {
-                var wrapper = KEditor.settingComponent.find('.wrapper');
-                var table = wrapper.closest('table');
-
-                if (color && color !== 'transparent') {
-                    setStyle(wrapper, 'background-color', color);
-                    table.attr('bgcolor', color);
-                } else {
-                    setStyle(wrapper, 'background-color', '');
-                    table.removeAttr('bgcolor');
-                    form.find('#spacer-bg-color').val('');
-                }
-            });
+            form = form.find('form');
+            KEditor.initBgColorControl(form, 'prepend');
         },
 
         showSettingForm: function (form, component, options) {
@@ -78,9 +57,7 @@
             var spacerHeight = form.find('#spacer-height');
             spacerHeight.val(component.find('.spacer').attr('height'));
 
-            var wrapper = component.find('.wrapper');
-            var colorPicker = form.find('.color-picker');
-            colorPicker.colorpicker('setValue', wrapper.css('background-color') || '');
+            KEditor.showBgColorControl(form, component);
         },
 
         hideSettingForm: function (form) {

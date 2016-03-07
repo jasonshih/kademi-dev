@@ -35,44 +35,8 @@
                 '<form class="form-horizontal">' +
                 '    <div class="form-group">' +
                 '       <div class="col-md-12">' +
-                '           <label>Background</label>' +
-                '           <div class="input-group color-picker line-bg-color-picker">' +
-                '               <span class="input-group-addon"><i></i></span>' +
-                '               <input type="text" value="" id="line-bg-color" class="form-control" />' +
-                '           </div>' +
-                '       </div>' +
-                '    </div>' +
-                '    <div class="form-group">' +
-                '       <div class="col-md-12">' +
-                '           <label>Padding (in px)</label>' +
-                '           <div class="row row-sm text-center">' +
-                '               <div class="col-xs-4 col-xs-offset-4">' +
-                '                   <input type="number" value="" id="line-padding-top" class="form-control" />' +
-                '                   <small>top</small>' +
-                '               </div>' +
-                '           </div>' +
-                '           <div class="row row-sm text-center">' +
-                '               <div class="col-xs-4">' +
-                '                   <input type="number" value="" id="line-padding-left" class="form-control" />' +
-                '                   <small>left</small>' +
-                '               </div>' +
-                '               <div class="col-xs-4 col-xs-offset-4">' +
-                '                   <input type="number" value="" id="line-padding-right" class="form-control" />' +
-                '                   <small>right</small>' +
-                '               </div>' +
-                '           </div>' +
-                '           <div class="row row-sm text-center">' +
-                '               <div class="col-xs-4 col-xs-offset-4">' +
-                '                   <input type="number" value="" id="line-padding-bottom" class="form-control" />' +
-                '                   <small>bottom</small>' +
-                '               </div>' +
-                '           </div>' +
-                '       </div>' +
-                '    </div>' +
-                '    <div class="form-group">' +
-                '       <div class="col-md-12">' +
                 '           <label>Color</label>' +
-                '           <div class="input-group color-picker line-color-picker">' +
+                '           <div class="input-group line-color-picker">' +
                 '               <span class="input-group-addon"><i></i></span>' +
                 '               <input type="text" value="" id="line-color" class="form-control" />' +
                 '           </div>' +
@@ -91,38 +55,10 @@
             lineHeight.on('change', function () {
                 setStyle(KEditor.settingComponent.find('.wrapper div'), 'height', this.value);
             });
-            
-            var linePaddingTop = form.find('#line-padding-top');
-            var linePaddingBottom = form.find('#line-padding-bottom');
-            var linePaddingLeft = form.find('#line-padding-left');
-            var linePaddingRight = form.find('#line-padding-right');
-            linePaddingTop.on('change', function () {
-                setStyle(KEditor.settingComponent.find('.wrapper'), 'padding-top', (this.value > 0 ? this.value : 0) + 'px');
-            });
-            linePaddingBottom.on('change', function () {
-                setStyle(KEditor.settingComponent.find('.wrapper'), 'padding-bottom', (this.value > 0 ? this.value : 0) + 'px');
-            });
-            linePaddingLeft.on('change', function () {
-                setStyle(KEditor.settingComponent.find('.wrapper'), 'padding-left', (this.value > 0 ? this.value : 0) + 'px');
-            });
-            linePaddingRight.on('change', function () {
-                setStyle(KEditor.settingComponent.find('.wrapper'), 'padding-right', (this.value > 0 ? this.value : 0) + 'px');
-            });
 
-            var lineBgColorPicker = form.find('.line-bg-color-picker');
-            initColorPicker(lineBgColorPicker, function (color) {
-                var wrapper = KEditor.settingComponent.find('.wrapper');
-                var table = wrapper.closest('table');
-
-                if (color && color !== 'transparent') {
-                    setStyle(wrapper, 'background-color', color);
-                    table.attr('bgcolor', color);
-                } else {
-                    setStyle(wrapper, 'background-color', '');
-                    table.removeAttr('bgcolor');
-                    form.find('#line-bg-color').val('');
-                }
-            });
+            form = form.find('form');
+            KEditor.initPaddingControls(form, 'prepend');
+            KEditor.initBgColorControl(form, 'prepend');
 
             var lineColorPicker = form.find('.line-color-picker');
             initColorPicker(lineColorPicker, function (color) {
@@ -145,27 +81,10 @@
             var height = component.find('.wrapper > div').css('height');
             lineHeight.val(height ? height.replace('px', '') : '0');
 
+            KEditor.showBgColorControl(form, component);
+            KEditor.showPaddingControls(form, component);
+
             var wrapper = component.find('.wrapper');
-            
-            var linePaddingTop = form.find('#line-padding-top');
-            var paddingTop = wrapper.css('padding-top');
-            linePaddingTop.val(paddingTop ? paddingTop.replace('px', '') : '0');
-
-            var linePaddingBottom = form.find('#line-padding-bottom');
-            var paddingBottom = wrapper.css('padding-bottom');
-            linePaddingBottom.val(paddingBottom ? paddingBottom.replace('px', '') : '0');
-
-            var linePaddingLeft = form.find('#line-padding-left');
-            var paddingLeft = wrapper.css('padding-left');
-            linePaddingLeft.val(paddingLeft ? paddingLeft.replace('px', '') : '0');
-
-            var linePaddingRight = form.find('#line-padding-right');
-            var paddingRight = wrapper.css('padding-right');
-            linePaddingRight.val(paddingRight ? paddingRight.replace('px', '') : '0');
-
-            var lineBgColorPicker = form.find('.line-bg-color-picker');
-            lineBgColorPicker.colorpicker('setValue', wrapper.css('background-color') || '');
-
             var div = wrapper.children('div');
             var lineColorPicker = form.find('.line-color-picker');
             flog(div.css('background-color'));
@@ -216,48 +135,12 @@
 
             form.append(
                 '<form class="form-horizontal">' +
-                '   <div class="form-group">' +
+                '   <div class="form-group photo-edit-wrapper">' +
                 '       <div class="col-sm-12">' +
                 '           <button type="button" class="btn btn-block btn-primary" id="photo-edit">Change Photo</button>' +
                 '       </div>' +
                 '   </div>' +
-                '    <div class="form-group">' +
-                '       <div class="col-md-12">' +
-                '           <label>Background</label>' +
-                '           <div class="input-group color-picker">' +
-                '               <span class="input-group-addon"><i></i></span>' +
-                '               <input type="text" value="" id="photo-bg-color" class="form-control" />' +
-                '           </div>' +
-                '       </div>' +
-                '    </div>' +
-                '    <div class="form-group">' +
-                '       <div class="col-md-12">' +
-                '           <label>Padding (in px)</label>' +
-                '           <div class="row row-sm text-center">' +
-                '               <div class="col-xs-4 col-xs-offset-4">' +
-                '                   <input type="number" value="" id="photo-padding-top" class="form-control" />' +
-                '                   <small>top</small>' +
-                '               </div>' +
-                '           </div>' +
-                '           <div class="row row-sm text-center">' +
-                '               <div class="col-xs-4">' +
-                '                   <input type="number" value="" id="photo-padding-left" class="form-control" />' +
-                '                   <small>left</small>' +
-                '               </div>' +
-                '               <div class="col-xs-4 col-xs-offset-4">' +
-                '                   <input type="number" value="" id="photo-padding-right" class="form-control" />' +
-                '                   <small>right</small>' +
-                '               </div>' +
-                '           </div>' +
-                '           <div class="row row-sm text-center">' +
-                '               <div class="col-xs-4 col-xs-offset-4">' +
-                '                   <input type="number" value="" id="photo-padding-bottom" class="form-control" />' +
-                '                   <small>bottom</small>' +
-                '               </div>' +
-                '           </div>' +
-                '       </div>' +
-                '    </div>' +
-                '   <div class="form-group">' +
+                '   <div class="form-group photo-alt-wrapper">' +
                 '       <label for="photo-alt" class="col-sm-12">Alt text</label>' +
                 '       <div class="col-sm-12">' +
                 '           <input type="text" id="photo-alt" class="form-control" />' +
@@ -276,8 +159,8 @@
             photoEdit.mselect({
                 contentTypes: ['image'],
                 bs3Modal: true,
-                pagePath: window.location.pathname.replace('contenteditor',''),
-                onSelectFile: function(url) {
+                pagePath: window.location.pathname.replace('contenteditor', ''),
+                onSelectFile: function (url) {
                     var img = KEditor.settingComponent.find('img');
                     img.attr('src', url);
                     self.showSettingForm(form, KEditor.settingComponent, options);
@@ -287,37 +170,6 @@
             var inputAlt = form.find('#photo-alt');
             inputAlt.on('change', function () {
                 KEditor.settingComponent.find('img').attr('alt', this.value);
-            });
-
-            var photoPaddingTop = form.find('#photo-padding-top');
-            var photoPaddingBottom = form.find('#photo-padding-bottom');
-            var photoPaddingLeft = form.find('#photo-padding-left');
-            var photoPaddingRight = form.find('#photo-padding-right');
-            photoPaddingTop.on('change', function () {
-                setStyle(KEditor.settingComponent.find('.wrapper'), 'padding-top', (this.value > 0 ? this.value : 0) + 'px');
-            });
-            photoPaddingBottom.on('change', function () {
-                setStyle(KEditor.settingComponent.find('.wrapper'), 'padding-bottom', (this.value > 0 ? this.value : 0) + 'px');
-            });
-            photoPaddingLeft.on('change', function () {
-                setStyle(KEditor.settingComponent.find('.wrapper'), 'padding-left', (this.value > 0 ? this.value : 0) + 'px');
-            });
-            photoPaddingRight.on('change', function () {
-                setStyle(KEditor.settingComponent.find('.wrapper'), 'padding-right', (this.value > 0 ? this.value : 0) + 'px');
-            });
-
-            var colorPicker = form.find('.color-picker');
-            initColorPicker(colorPicker, function (color) {
-                var wrapper = KEditor.settingComponent.find('.wrapper');
-                var table = wrapper.closest('table');
-                if (color && color !== 'transparent') {
-                    setStyle(wrapper, 'background-color', color);
-                    table.attr('bgcolor', color);
-                } else {
-                    setStyle(wrapper, 'background-color', '');
-                    table.removeAttr('bgcolor');
-                    form.find('#photo-bg-color').val('');
-                }
             });
 
             var chkFullWidth = form.find('#photo-fullwidth');
@@ -335,6 +187,10 @@
                     });
                 }
             });
+
+            form = form.find('form');
+            KEditor.initBgColorControl(form, 'after', '.photo-edit-wrapper');
+            KEditor.initPaddingControls(form, 'before', '.photo-alt-wrapper');
         },
 
         showSettingForm: function (form, component, options) {
@@ -346,30 +202,13 @@
             var inputAlt = form.find('#photo-alt');
             inputAlt.val(img.attr('alt') || '');
 
-            var wrapper = component.find('.wrapper');
-            var textPaddingTop = form.find('#text-padding-top');
-            var paddingTop = wrapper.css('padding-top');
-            textPaddingTop.val(paddingTop ? paddingTop.replace('px', '') : '0');
-
-            var textPaddingBottom = form.find('#text-padding-bottom');
-            var paddingBottom = wrapper.css('padding-bottom');
-            textPaddingBottom.val(paddingBottom ? paddingBottom.replace('px', '') : '0');
-
-            var textPaddingLeft = form.find('#text-padding-left');
-            var paddingLeft = wrapper.css('padding-left');
-            textPaddingLeft.val(paddingLeft ? paddingLeft.replace('px', '') : '0');
-
-            var textPaddingRight = form.find('#text-padding-right');
-            var paddingRight = wrapper.css('padding-right');
-            textPaddingRight.val(paddingRight ? paddingRight.replace('px', '') : '0');
-
-            var colorPicker = form.find('.color-picker');
-            colorPicker.colorpicker('setValue', wrapper.css('background-color') || '');
+            KEditor.showBgColorControl(form, component);
+            KEditor.showPaddingControls(form, component);
 
             var chkFullWidth = form.find('#photo-fullwidth');
             chkFullWidth.prop('checked', img.attr('width') === '100%');
 
-            $('<img />').attr('src', img.attr('src')).load(function() {
+            $('<img />').attr('src', img.attr('src')).load(function () {
                 self.ratio = this.width / this.height;
                 self.width = this.width;
                 self.height = this.height;
@@ -419,15 +258,6 @@
             form.append(
                 '<form class="form-horizontal">' +
                 '    <div class="form-group">' +
-                '       <div class="col-md-12">' +
-                '           <label>Background</label>' +
-                '           <div class="input-group color-picker">' +
-                '               <span class="input-group-addon"><i></i></span>' +
-                '               <input type="text" value="" id="spacer-bg-color" class="form-control" />' +
-                '           </div>' +
-                '       </div>' +
-                '    </div>' +
-                '    <div class="form-group">' +
                 '       <label for="spacer-height" class="col-sm-12">Height</label>' +
                 '       <div class="col-sm-12">' +
                 '           <input type="number" id="spacer-height" class="form-control" />' +
@@ -441,20 +271,8 @@
                 KEditor.settingComponent.find('.spacer').attr('height', this.value);
             });
 
-            var colorPicker = form.find('.color-picker');
-            initColorPicker(colorPicker, function (color) {
-                var wrapper = KEditor.settingComponent.find('.wrapper');
-                var table = wrapper.closest('table');
-
-                if (color && color !== 'transparent') {
-                    setStyle(wrapper, 'background-color', color);
-                    table.attr('bgcolor', color);
-                } else {
-                    setStyle(wrapper, 'background-color', '');
-                    table.removeAttr('bgcolor');
-                    form.find('#spacer-bg-color').val('');
-                }
-            });
+            form = form.find('form');
+            KEditor.initBgColorControl(form, 'prepend');
         },
 
         showSettingForm: function (form, component, options) {
@@ -463,9 +281,7 @@
             var spacerHeight = form.find('#spacer-height');
             spacerHeight.val(component.find('.spacer').attr('height'));
 
-            var wrapper = component.find('.wrapper');
-            var colorPicker = form.find('.color-picker');
-            colorPicker.colorpicker('setValue', wrapper.css('background-color') || '');
+            KEditor.showBgColorControl(form, component);
         },
 
         hideSettingForm: function (form) {
@@ -587,102 +403,19 @@
             flog('initSettingForm "text" component');
             form.append(
                 '<form class="form-horizontal">' +
-                '    <div class="form-group">' +
-                '       <div class="col-md-12">' +
-                '           <label for="edm-text-color">Background</label>' +
-                '           <div class="input-group color-picker">' +
-                '               <span class="input-group-addon"><i></i></span>' +
-                '               <input type="text" value="" id="text-bg-color" class="form-control" />' +
-                '           </div>' +
-                '       </div>' +
-                '    </div>' +
-                '    <div class="form-group">' +
-                '       <div class="col-md-12">' +
-                '           <label>Padding (in px)</label>' +
-                '           <div class="row row-sm text-center">' +
-                '               <div class="col-xs-4 col-xs-offset-4">' +
-                '                   <input type="number" value="" class="text-padding-top form-control" />' +
-                '                   <small>top</small>' +
-                '               </div>' +
-                '           </div>' +
-                '           <div class="row row-sm text-center">' +
-                '               <div class="col-xs-4">' +
-                '                   <input type="number" value="" class="text-padding-left form-control" />' +
-                '                   <small>left</small>' +
-                '               </div>' +
-                '               <div class="col-xs-4 col-xs-offset-4">' +
-                '                   <input type="number" value="" class="text-padding-right form-control" />' +
-                '                   <small>right</small>' +
-                '               </div>' +
-                '           </div>' +
-                '           <div class="row row-sm text-center">' +
-                '               <div class="col-xs-4 col-xs-offset-4">' +
-                '                   <input type="number" value="" class="text-padding-bottom form-control" />' +
-                '                   <small>bottom</small>' +
-                '               </div>' +
-                '           </div>' +
-                '       </div>' +
-                '    </div>' +
                 '</form>'
             );
 
-            var textPaddingTop = form.find('.text-padding-top');
-            var textPaddingBottom = form.find('.text-padding-bottom');
-            var textPaddingLeft = form.find('.text-padding-left');
-            var textPaddingRight = form.find('.text-padding-right');
-            textPaddingTop.on('change', function () {
-                setStyle(KEditor.settingComponent.find('.wrapper'), 'padding-top', (this.value > 0 ? this.value : 0) + 'px');
-            });
-            textPaddingBottom.on('change', function () {
-                setStyle(KEditor.settingComponent.find('.wrapper'), 'padding-bottom', (this.value > 0 ? this.value : 0) + 'px');
-            });
-            textPaddingLeft.on('change', function () {
-                setStyle(KEditor.settingComponent.find('.wrapper'), 'padding-left', (this.value > 0 ? this.value : 0) + 'px');
-            });
-            textPaddingRight.on('change', function () {
-                setStyle(KEditor.settingComponent.find('.wrapper'), 'padding-right', (this.value > 0 ? this.value : 0) + 'px');
-            });
-
-            var colorPicker = form.find('.color-picker');
-            initColorPicker(colorPicker, function (color) {
-                var wrapper = KEditor.settingComponent.find('.wrapper');
-                var table = wrapper.closest('table');
-                if (color && color !== 'transparent') {
-                    setStyle(wrapper, 'background-color', color);
-                    table.attr('bgcolor', color);
-                } else {
-                    setStyle(wrapper, 'background-color', '');
-                    table.removeAttr('bgcolor');
-                    form.find('#photo-bg-color').val('');
-                }
-            });
+            form = form.find('form');
+            KEditor.initBgColorControl(form, 'append');
+            KEditor.initPaddingControls(form, 'append');
         },
 
         showSettingForm: function (form, component, options) {
             flog('showSettingForm "text" component', component);
 
-            var wrapper = component.find('.wrapper');
-            var textPaddingTop = form.find('.text-padding-top');
-            var paddingTop = wrapper.css('padding-top');
-            textPaddingTop.val(paddingTop ? paddingTop.replace('px', '') : '0');
-
-            var textPaddingBottom = form.find('.text-padding-bottom');
-            var paddingBottom = wrapper.css('padding-bottom');
-            textPaddingBottom.val(paddingBottom ? paddingBottom.replace('px', '') : '0');
-
-            var textPaddingLeft = form.find('.text-padding-left');
-            var paddingLeft = wrapper.css('padding-left');
-            textPaddingLeft.val(paddingLeft ? paddingLeft.replace('px', '') : '0');
-
-            var textPaddingRight = form.find('.text-padding-right');
-            var paddingRight = wrapper.css('padding-right');
-            textPaddingRight.val(paddingRight ? paddingRight.replace('px', '') : '0');
-
-            var colorPicker = form.find('.color-picker');
-            colorPicker.colorpicker('setValue', wrapper.css('background-color') || '');
-
-            var colorPicker = form.find('.color-picker');
-            colorPicker.colorpicker('setValue', wrapper.css('background-color') || '');
+            KEditor.showBgColorControl(form, component);
+            KEditor.showPaddingControls(form, component);
         },
 
         hideSettingForm: function (form) {
