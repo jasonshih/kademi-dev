@@ -544,7 +544,7 @@ function initNewNoteForm() {
     var form = modal.find('form');
     form.find('.newLeadForm').hide();
 
-    $(".createNote").click(function (e) {
+    $(document.body).on('click', '.createNote', function (e) {
         e.preventDefault();
         var href = $(e.target).closest("a").attr("href");
         form.attr("action", href);
