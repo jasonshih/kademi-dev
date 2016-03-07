@@ -34,18 +34,18 @@
             form.append(
                 '<form class="form-horizontal">' +
                 '    <div class="form-group">' +
-                '       <label for="spacer-height" class="col-sm-12">Height</label>' +
-                '       <div class="col-sm-12">' +
-                '           <input type="number" id="spacer-height" class="form-control" />' +
-                '       </div>' +
-                '    </div>' +
-                '    <div class="form-group">' +
                 '       <div class="col-md-12">' +
                 '           <label>Background</label>' +
                 '           <div class="input-group color-picker">' +
                 '               <span class="input-group-addon"><i></i></span>' +
                 '               <input type="text" value="" id="spacer-bg-color" class="form-control" />' +
                 '           </div>' +
+                '       </div>' +
+                '    </div>' +
+                '    <div class="form-group">' +
+                '       <label for="spacer-height" class="col-sm-12">Height</label>' +
+                '       <div class="col-sm-12">' +
+                '           <input type="number" id="spacer-height" class="form-control" />' +
                 '       </div>' +
                 '    </div>' +
                 '</form>'
