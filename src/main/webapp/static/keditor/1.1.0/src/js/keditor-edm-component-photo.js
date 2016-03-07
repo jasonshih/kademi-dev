@@ -42,7 +42,7 @@
                 '   </div>' +
                 '    <div class="form-group">' +
                 '       <div class="col-md-12">' +
-                '           <label for="edm-photo-color">Background</label>' +
+                '           <label>Background</label>' +
                 '           <div class="input-group color-picker">' +
                 '               <span class="input-group-addon"><i></i></span>' +
                 '               <input type="text" value="" id="photo-bg-color" class="form-control" />' +
