@@ -124,23 +124,23 @@
                 '           <label>Padding (in px)</label>' +
                 '           <div class="row row-sm text-center">' +
                 '               <div class="col-xs-4 col-xs-offset-4">' +
-                '                   <input type="number" value="" id="text-padding-top" class="form-control" />' +
+                '                   <input type="number" value="" class="text-padding-top form-control" />' +
                 '                   <small>top</small>' +
                 '               </div>' +
                 '           </div>' +
                 '           <div class="row row-sm text-center">' +
                 '               <div class="col-xs-4">' +
-                '                   <input type="number" value="" id="text-padding-left" class="form-control" />' +
+                '                   <input type="number" value="" class="text-padding-left form-control" />' +
                 '                   <small>left</small>' +
                 '               </div>' +
                 '               <div class="col-xs-4 col-xs-offset-4">' +
-                '                   <input type="number" value="" id="text-padding-right" class="form-control" />' +
+                '                   <input type="number" value="" class="text-padding-right form-control" />' +
                 '                   <small>right</small>' +
                 '               </div>' +
                 '           </div>' +
                 '           <div class="row row-sm text-center">' +
                 '               <div class="col-xs-4 col-xs-offset-4">' +
-                '                   <input type="number" value="" id="text-padding-bottom" class="form-control" />' +
+                '                   <input type="number" value="" class="text-padding-bottom form-control" />' +
                 '                   <small>bottom</small>' +
                 '               </div>' +
                 '           </div>' +
@@ -149,10 +149,10 @@
                 '</form>'
             );
 
-            var textPaddingTop = form.find('#text-padding-top');
-            var textPaddingBottom = form.find('#text-padding-bottom');
-            var textPaddingLeft = form.find('#text-padding-left');
-            var textPaddingRight = form.find('#text-padding-right');
+            var textPaddingTop = form.find('.text-padding-top');
+            var textPaddingBottom = form.find('.text-padding-bottom');
+            var textPaddingLeft = form.find('.text-padding-left');
+            var textPaddingRight = form.find('.text-padding-right');
             textPaddingTop.on('change', function () {
                 KEditor.settingComponent.find('.wrapper').css('padding-top', (this.value > 0 ? this.value : 0) + 'px');
             });
@@ -185,19 +185,19 @@
             flog('showSettingForm "text" component', component);
 
             var wrapper = component.find('.wrapper');
-            var textPaddingTop = form.find('#text-padding-top');
+            var textPaddingTop = form.find('.text-padding-top');
             var paddingTop = wrapper.css('padding-top');
             textPaddingTop.val(paddingTop ? paddingTop.replace('px', '') : '0');
 
-            var textPaddingBottom = form.find('#text-padding-bottom');
+            var textPaddingBottom = form.find('.text-padding-bottom');
             var paddingBottom = wrapper.css('padding-bottom');
             textPaddingBottom.val(paddingBottom ? paddingBottom.replace('px', '') : '0');
 
-            var textPaddingLeft = form.find('#text-padding-left');
+            var textPaddingLeft = form.find('.text-padding-left');
             var paddingLeft = wrapper.css('padding-left');
             textPaddingLeft.val(paddingLeft ? paddingLeft.replace('px', '') : '0');
 
-            var textPaddingRight = form.find('#text-padding-right');
+            var textPaddingRight = form.find('.text-padding-right');
             var paddingRight = wrapper.css('padding-right');
             textPaddingRight.val(paddingRight ? paddingRight.replace('px', '') : '0');
 
