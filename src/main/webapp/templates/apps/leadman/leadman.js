@@ -160,11 +160,24 @@ function initTasks() {
         var link = $(e.target).closest("a");
         var href = link.attr("href");
         var name = getFileName(href);
-        confirmDelete(href, name, function () {
-            var modal = link.closest(".modal");
-            modal.modal("hide");
-            $("a[href='" + href + "']").closest(".task").remove();
-        });
+
+        var c = confirm('Are you sure to cancel this task?');
+        if(!c) return;
+        $.ajax({
+            url: href,
+            data: {cancelTask: ''},
+            dataType: 'text',
+            type: 'post',
+            success: function(){
+                Msg.info('Task cancelled');
+                var modal = link.closest(".modal");
+                modal.modal("hide");
+                reloadTasks();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                flog('Error', textStatus, errorThrown);
+            }
+        })
     });
     $("body").on("click", ".btnTaskDone", function (e) {
         flog("click");
@@ -544,7 +557,7 @@ function initNewNoteForm() {
     var form = modal.find('form');
     form.find('.newLeadForm').hide();
 
-    $(".createNote").click(function (e) {
+    $(document.body).on('click', '.createNote', function (e) {
         e.preventDefault();
         var href = $(e.target).closest("a").attr("href");
         form.attr("action", href);
@@ -684,26 +697,19 @@ function setLead(href, status, actionDescription) {
 
 
 function initDateTimePickers() {
-    var date = new Date();
-    date.setDate(date.getDate() - 1);
-
     var pickers = $('.date-time');
     flog("pickers", pickers);
     pickers.datetimepicker({
-        format: "d/m/Y H:i"
-        , startDate: date
+        format: 'DD/MM/YYYY H:mm'
     });
 }
 
 function initDateTimePikersForModal(){
     $('.modal').on('shown.bs.modal', function(){
         var pickers = $(this).find('.date-time');
-        var date = new Date();
-        date.setDate(date.getDate() - 1);
         flog("pickers", pickers);
         pickers.datetimepicker({
-            format: "d/m/Y H:i"
-            , startDate: date
+            format: 'DD/MM/YYYY H:mm'
         });
     });
 }

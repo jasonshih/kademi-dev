@@ -33,19 +33,22 @@
             flog('initSettingForm "spacer" component');
             form.append(
                 '<form class="form-horizontal">' +
-                '   <div class="form-group">' +
+                '    <div class="form-group">' +
                 '       <label for="spacer-height" class="col-sm-12">Height</label>' +
                 '       <div class="col-sm-12">' +
                 '           <input type="number" id="spacer-height" class="form-control" />' +
                 '       </div>' +
-                '   </div>' +
+                '    </div>' +
                 '</form>'
             );
 
             var spacerHeight = form.find('#spacer-height');
             spacerHeight.on('change', function () {
-                KEditor.settingComponent.find('.spacer').attr('height', this.value).css('height', this.value);
+                KEditor.settingComponent.find('.spacer').attr('height', this.value);
             });
+
+            form = form.find('form');
+            KEditor.initBgColorControl(form, 'prepend');
         },
 
         showSettingForm: function (form, component, options) {
@@ -53,6 +56,8 @@
 
             var spacerHeight = form.find('#spacer-height');
             spacerHeight.val(component.find('.spacer').attr('height'));
+
+            KEditor.showBgColorControl(form, component);
         },
 
         hideSettingForm: function (form) {

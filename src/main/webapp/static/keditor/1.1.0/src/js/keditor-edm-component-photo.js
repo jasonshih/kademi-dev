@@ -35,48 +35,12 @@
 
             form.append(
                 '<form class="form-horizontal">' +
-                '   <div class="form-group">' +
+                '   <div class="form-group photo-edit-wrapper">' +
                 '       <div class="col-sm-12">' +
                 '           <button type="button" class="btn btn-block btn-primary" id="photo-edit">Change Photo</button>' +
                 '       </div>' +
                 '   </div>' +
-                '    <div class="form-group">' +
-                '       <div class="col-md-12">' +
-                '           <label for="edm-photo-color">Background</label>' +
-                '           <div class="input-group color-picker">' +
-                '               <span class="input-group-addon"><i></i></span>' +
-                '               <input type="text" value="" id="photo-bg-color" class="form-control" />' +
-                '           </div>' +
-                '       </div>' +
-                '    </div>' +
-                '    <div class="form-group">' +
-                '       <div class="col-md-12">' +
-                '           <label>Padding (in px)</label>' +
-                '           <div class="row row-sm text-center">' +
-                '               <div class="col-xs-4 col-xs-offset-4">' +
-                '                   <input type="number" value="" id="photo-padding-top" class="form-control" />' +
-                '                   <small>top</small>' +
-                '               </div>' +
-                '           </div>' +
-                '           <div class="row row-sm text-center">' +
-                '               <div class="col-xs-4">' +
-                '                   <input type="number" value="" id="photo-padding-left" class="form-control" />' +
-                '                   <small>left</small>' +
-                '               </div>' +
-                '               <div class="col-xs-4 col-xs-offset-4">' +
-                '                   <input type="number" value="" id="photo-padding-right" class="form-control" />' +
-                '                   <small>right</small>' +
-                '               </div>' +
-                '           </div>' +
-                '           <div class="row row-sm text-center">' +
-                '               <div class="col-xs-4 col-xs-offset-4">' +
-                '                   <input type="number" value="" id="photo-padding-bottom" class="form-control" />' +
-                '                   <small>bottom</small>' +
-                '               </div>' +
-                '           </div>' +
-                '       </div>' +
-                '    </div>' +
-                '   <div class="form-group">' +
+                '   <div class="form-group photo-alt-wrapper">' +
                 '       <label for="photo-alt" class="col-sm-12">Alt text</label>' +
                 '       <div class="col-sm-12">' +
                 '           <input type="text" id="photo-alt" class="form-control" />' +
@@ -95,8 +59,8 @@
             photoEdit.mselect({
                 contentTypes: ['image'],
                 bs3Modal: true,
-                pagePath: window.location.pathname.replace('contenteditor',''),
-                onSelectFile: function(url) {
+                pagePath: window.location.pathname.replace('contenteditor', ''),
+                onSelectFile: function (url) {
                     var img = KEditor.settingComponent.find('img');
                     img.attr('src', url);
                     self.showSettingForm(form, KEditor.settingComponent, options);
@@ -106,37 +70,6 @@
             var inputAlt = form.find('#photo-alt');
             inputAlt.on('change', function () {
                 KEditor.settingComponent.find('img').attr('alt', this.value);
-            });
-
-            var photoPaddingTop = form.find('#photo-padding-top');
-            var photoPaddingBottom = form.find('#photo-padding-bottom');
-            var photoPaddingLeft = form.find('#photo-padding-left');
-            var photoPaddingRight = form.find('#photo-padding-right');
-            photoPaddingTop.on('change', function () {
-                KEditor.settingComponent.find('.wrapper').css('padding-top', (this.value > 0 ? this.value : 0) + 'px');
-            });
-            photoPaddingBottom.on('change', function () {
-                KEditor.settingComponent.find('.wrapper').css('padding-bottom', (this.value > 0 ? this.value : 0) + 'px');
-            });
-            photoPaddingLeft.on('change', function () {
-                KEditor.settingComponent.find('.wrapper').css('padding-left', (this.value > 0 ? this.value : 0) + 'px');
-            });
-            photoPaddingRight.on('change', function () {
-                KEditor.settingComponent.find('.wrapper').css('padding-right', (this.value > 0 ? this.value : 0) + 'px');
-            });
-
-            var colorPicker = form.find('.color-picker');
-            initColorPicker(colorPicker, function (color) {
-                var wrapper = KEditor.settingComponent.find('.wrapper');
-                var table = wrapper.closest('table');
-                if (color && color !== 'transparent') {
-                    wrapper.css('background-color', color);
-                    table.attr('bgcolor', color);
-                } else {
-                    wrapper.css('background-color', '');
-                    table.removeAttr('bgcolor');
-                    form.find('#photo-bg-color').val('');
-                }
             });
 
             var chkFullWidth = form.find('#photo-fullwidth');
@@ -154,6 +87,10 @@
                     });
                 }
             });
+
+            form = form.find('form');
+            KEditor.initBgColorControl(form, 'after', '.photo-edit-wrapper');
+            KEditor.initPaddingControls(form, 'before', '.photo-alt-wrapper');
         },
 
         showSettingForm: function (form, component, options) {
@@ -165,30 +102,13 @@
             var inputAlt = form.find('#photo-alt');
             inputAlt.val(img.attr('alt') || '');
 
-            var wrapper = component.find('.wrapper');
-            var textPaddingTop = form.find('#text-padding-top');
-            var paddingTop = wrapper.css('padding-top');
-            textPaddingTop.val(paddingTop ? paddingTop.replace('px', '') : '0');
-
-            var textPaddingBottom = form.find('#text-padding-bottom');
-            var paddingBottom = wrapper.css('padding-bottom');
-            textPaddingBottom.val(paddingBottom ? paddingBottom.replace('px', '') : '0');
-
-            var textPaddingLeft = form.find('#text-padding-left');
-            var paddingLeft = wrapper.css('padding-left');
-            textPaddingLeft.val(paddingLeft ? paddingLeft.replace('px', '') : '0');
-
-            var textPaddingRight = form.find('#text-padding-right');
-            var paddingRight = wrapper.css('padding-right');
-            textPaddingRight.val(paddingRight ? paddingRight.replace('px', '') : '0');
-
-            var colorPicker = form.find('.color-picker');
-            colorPicker.colorpicker('setValue', wrapper.css('background-color') || '');
+            KEditor.showBgColorControl(form, component);
+            KEditor.showPaddingControls(form, component);
 
             var chkFullWidth = form.find('#photo-fullwidth');
             chkFullWidth.prop('checked', img.attr('width') === '100%');
 
-            $('<img />').attr('src', img.attr('src')).load(function() {
+            $('<img />').attr('src', img.attr('src')).load(function () {
                 self.ratio = this.width / this.height;
                 self.width = this.width;
                 self.height = this.height;
