@@ -70,6 +70,15 @@ function initModuleNav(pStatUrl, pFinished) {
             return false;
         }
 
+        var currentActiveLink = $('.list-group.pages a.list-group-item.active');
+        var clickedLink = a;
+        if(currentActiveLink.index()<clickedLink.index() && !checkNext()){
+            flog('Preventing click on next page if current page is incomplete quiz page', a);
+            e.stopPropagation();
+            e.preventDefault();
+            return false;
+        }
+
         //checkSubmit(e);
     });
 
