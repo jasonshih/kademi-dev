@@ -1,0 +1,93 @@
+(function ($) {
+    var KEditor = $.keditor;
+    var flog = KEditor.log;
+
+    KEditor.components['productList'] = {
+        init: function (contentArea, container, component, options) {
+            // Do nothing
+        },
+
+        getContent: function (component, options) {
+            flog('getContent "line" component', component);
+
+            var componentContent = component.children('.keditor-component-content');
+            return componentContent.html();
+        },
+
+        destroy: function (component, options) {
+            // Do nothing
+        },
+
+        settingEnabled: true,
+
+        settingTitle: 'Line Settings',
+
+        initSettingForm: function (form, options) {
+            // TODO: settings for product list
+            flog('initSettingForm "line" component');
+            form.append(
+                '<form class="form-horizontal">' +
+                '    <div class="form-group">' +
+                '       <div class="col-md-12">' +
+                '           <label>Color</label>' +
+                '           <div class="input-group">' +
+                '               <span class="input-group-addon"><i></i></span>' +
+                '               <input type="text" value="" id="line-color" class="form-control" />' +
+                '           </div>' +
+                '       </div>' +
+                '    </div>' +
+                '    <div class="form-group">' +
+                '       <label for="line-height" class="col-sm-12">Height</label>' +
+                '       <div class="col-sm-12">' +
+                '           <input type="number" id="line-height" class="form-control" />' +
+                '       </div>' +
+                '    </div>' +
+                '</form>'
+            );
+
+            var lineHeight = form.find('#line-height');
+            lineHeight.on('change', function () {
+                setStyle(KEditor.settingComponent.find('.wrapper div'), 'height', this.value);
+            });
+
+            form = form.find('form');
+            KEditor.initPaddingControls(form, 'prepend');
+            KEditor.initBgColorControl(form, 'prepend');
+
+            var lineColorPicker = form.find('.line-color-picker');
+            initColorPicker(lineColorPicker, function (color) {
+                var wrapper = KEditor.settingComponent.find('.wrapper');
+                var div = wrapper.children('div');
+
+                if (color && color !== 'transparent') {
+                    setStyle(div, 'background-color', color);
+                } else {
+                    setStyle(div, 'background-color', '');
+                    form.find('#line-color').val('');
+                }
+            });
+        },
+
+        showSettingForm: function (form, component, options) {
+            flog('showSettingForm "line" component', component);
+
+            var lineHeight = form.find('#line-height');
+            var height = component.find('.wrapper > div').css('height');
+            lineHeight.val(height ? height.replace('px', '') : '0');
+
+            KEditor.showBgColorControl(form, component);
+            KEditor.showPaddingControls(form, component);
+
+            var wrapper = component.find('.wrapper');
+            var div = wrapper.children('div');
+            var lineColorPicker = form.find('.line-color-picker');
+            flog(div.css('background-color'));
+            lineColorPicker.colorpicker('setValue', div.css('background-color') || '');
+        },
+
+        hideSettingForm: function (form) {
+            // Do nothing
+        }
+    };
+
+})(jQuery);
