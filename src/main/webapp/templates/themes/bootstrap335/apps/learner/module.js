@@ -49,6 +49,8 @@ function initModuleNav(pStatUrl, pFinished) {
 
     // This needs to be just done once, not on each pjax transition
     $(document.body).on('click', '.nextBtn', function (e) {
+        flog('Clicked on .nextBtn');
+
         if (!checkNext()) {
             e.stopPropagation();
             e.preventDefault();
@@ -58,7 +60,7 @@ function initModuleNav(pStatUrl, pFinished) {
         checkSubmit(e);
     });
 
-    var pageLinks = $('.pages a');
+    var pageLinks = $('.pages a').not('.nextBtn');
     pageLinks.click(function (e) {
         var a = $(this);
 
@@ -70,16 +72,17 @@ function initModuleNav(pStatUrl, pFinished) {
             return false;
         }
 
-        var currentActiveLink = $('.list-group.pages a.list-group-item.active');
-        var clickedLink = a;
-        if(currentActiveLink.index()<clickedLink.index() && !checkNext()){
-            flog('Preventing click on next page if current page is incomplete quiz page', a);
-            e.stopPropagation();
-            e.preventDefault();
-            return false;
+        var currentIndex = getCurrentPageIndex();
+        var clickedIndex = a.index();
+        if (clickedIndex > currentIndex) {
+            if (!checkNext()) {
+                e.stopPropagation();
+                e.preventDefault();
+                return false;
+            }
         }
 
-        //checkSubmit(e);
+        checkSubmit(e, true);
     });
 
     flog('Setup pjax', pageLinks);
@@ -861,8 +864,8 @@ function initModalLinks() {
  * Also checks to see if this is the last page, in which case a finished dialog is
  * displayed
  */
-function checkSubmit(e) {
-    flog('checkSubmit', e);
+function checkSubmit(e, isPageLink) {
+    flog('checkSubmit', e, isPageLink);
 
     var isNextBtnVisible = $('.nextBtn:visible');
     flog('isNextBtnVisible: ' + isNextBtnVisible.length === 0);
@@ -882,13 +885,15 @@ function checkSubmit(e) {
         flog('Quiz is completed');
     }
 
-    var lastPage = isLastPage();
-    if (lastPage) {
-        e.preventDefault();
-        e.stopPropagation();
-        flog('Is lasted page. Doing completed method')
-        completed();
-        return;
+    if (!isPageLink) {
+        var lastPage = isLastPage();
+        if (lastPage) {
+            e.preventDefault();
+            e.stopPropagation();
+            flog('Is lasted page. Doing completed method');
+            completed();
+            return;
+        }
     }
 
     // all good, carry on with event processing
@@ -967,6 +972,7 @@ function isQuizComplete(e) {
     quiz.find('input[name=quiz]').val(pageName);
     try {
         flog('Doing check quiz\'s answers');
+
         $.ajax({
             type: 'POST',
             url: modStatusUrl,
@@ -1009,11 +1015,38 @@ function isQuizComplete(e) {
                         quiz.find('ol.quiz').replaceWith(response.data.nextQuizBatch);
                         tidyUpQuiz();
                     } else {
-                        alert('Please check your answers');
-                        $.each(response.fieldMessages, function (i, n) {
-                            var inp = quiz.find('li.' + n.field);
-                            inp.addClass('error');
-                        });
+                        // The quiz has already been completed
+                        if (response && response.messages && response.messages[0] && response.messages[0].indexOf('The quiz has already been completed') !== -1) {
+                            flog('The quiz has already been completed!');
+
+                            var currentTarget = $(e.target);
+                            if (!currentTarget.is('a')) {
+                                currentTarget = $(e.target).closest('a');
+                            }
+                            if (isLastPage() && currentTarget.hasClass('nextBtn')) {
+                                completed();
+                            } else {
+                                $.pjax({
+                                    selector: '.pages a',
+                                    fragment: '.panelBox',
+                                    container: '.panelBox',
+                                    url: currentTarget.prop('href'),
+                                    success: function () {
+                                        flog('Pjax success!');
+
+                                        initPrintLink(); // called by init-theme
+                                        initPageNav();
+                                    },
+                                    debug: true
+                                });
+                            }
+                        } else {
+                            alert('Please check your answers');
+                            $.each(response.fieldMessages, function (i, n) {
+                                var inp = quiz.find('li.' + n.field);
+                                inp.addClass('error');
+                            });
+                        }
                     }
                 }
             },
