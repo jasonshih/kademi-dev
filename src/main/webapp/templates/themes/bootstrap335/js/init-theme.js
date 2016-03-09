@@ -186,9 +186,10 @@ function initRotation() {
 function initPrintLink() {
     var links = $("a.print2");
     flog("initPrintLink", links);
-    links.click(function (e) {
+    links.off('click').on('click',function (e) {
         e.preventDefault();
         window.print();
+        return false;
     });
 }
 
