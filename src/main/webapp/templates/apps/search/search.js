@@ -13,10 +13,10 @@ function initContentSearch() {
             }, 500);
         },
         input: function () {
-            var query = $(this).val();
-            if (query == '') {
-                flog("do search on change event", searchResults);
-                searchResults.load('contentSearch?q=' + encodeURIComponent(query.trim()) + ' #search-results > *');
+            var query = $(this).val() || '';
+            if (query.trim() === '') {
+                flog("Query is empty. Clear search result panel!", searchResults);
+                searchResults.html('');
             }
         }
     });
