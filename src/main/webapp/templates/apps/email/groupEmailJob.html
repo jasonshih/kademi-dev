@@ -94,6 +94,43 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="control-label col-md-3" for="themeSiteId">Choose a website</label>
+                            <div class="col-md-4">
+                                <select name="themeSiteId" id="themeSiteId" class="form-control">
+                                    #foreach($website in $page.websites)
+                                    $formatter.option($website.id, $website.name, $page.themeSiteId)
+                                    #end
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for=""></label>
+                            <div class="col-md-4">
+                                <div class="well">
+                                    $formatter.checkbox("passwordReset", "passwordReset", $page.job.passwordReset, "true")
+                                    <label for="passwordReset" style="float: none">Password reset. Only send to users without a password</label>
+                                    <p>Use this to invite new users to your site, they will be given a link that prompts them to create a password. You can use it multiple times and it will only be sent to users who have not registered.</p>
+
+                                    <div class="panel-toggled" data-toggled="display" data-actor="#passwordReset">
+                                        <div class="form-group">
+                                            <div class="col-md-6">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">Reset password link text:</span>
+                                                    <input type="text" value="$!page.job.passwordResetLinkText" id="passwordResetLinkText" placeholder="Please enter the text of the password reset link" class="form-control" name="passwordResetLinkText" />
+                                                </div>
+                                                <span class="help-block">
+                                                    <i class="fa fa-info-circle"></i> Eg: Click here to get started!
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group">
                             <label class="control-label col-md-3" for="notes">Notes</label>
                             <div class="col-md-8">
                                 <textarea cols="100" id="notes" name="notes" rows="10" placeholder="" class="form-control">$!page.notes</textarea>
@@ -218,21 +255,8 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Start content of Recipients tab -->
 
-                    <!-- Start content of Message tab -->
-                    <div id="messages" class="tab-pane">
-                        <div class="form-group">
-                            <label class="control-label col-md-2" for="themeSiteId">Choose a website</label>
-                            <div class="col-md-4">
-                                <select name="themeSiteId" id="themeSiteId" class="form-control">
-                                    #foreach($website in $page.websites)
-                                    $formatter.option($website.id, $website.name, $page.themeSiteId)
-                                    #end
-                                </select>
-                            </div>
-                        </div>
-
+                    <div id="attachments" class="tab-pane">
                         <div class="form-group">
                             <div class="col-md-6">
                                 <div class="add-attachment btn-upload"></div>
@@ -249,32 +273,11 @@
                                     #end
                                 </div>
                             </div>
+                        </div>                        
+                    </div>
 
-                            <div class="col-md-6">
-                                <div class="well">
-                                    $formatter.checkbox("passwordReset", "passwordReset", $page.job.passwordReset, "true")
-                                    <label for="passwordReset" style="float: none">Password reset. Only send to users without a password</label>
-                                    <p>Use this to invite new users to your site, they will be given a link that prompts them to create a password. You can use it multiple times and it will only be sent to users who have not registered.</p>
-
-                                    <div class="panel-toggled" data-toggled="display" data-actor="#passwordReset">
-                                        <div class="form-group">
-                                            <div class="col-md-6">
-                                                <div class="input-group">
-                                                    <span class="input-group-addon">Reset password link text:</span>
-                                                    <input type="text" value="$!page.job.passwordResetLinkText" id="passwordResetLinkText" placeholder="Please enter the text of the password reset link" class="form-control" name="passwordResetLinkText" />
-                                                </div>
-                                                <span class="help-block">
-                                                    <i class="fa fa-info-circle"></i> Eg: Click here to get started!
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <hr/>
-
+                    <!-- Start content of Message tab -->
+                    <div id="messages" class="tab-pane">                       
                         <div class="row">
                             <div class="col-lg-12">
                                 <a href="htmleditor?fileName=index.html&useHash=true" target="_blank" class="btn btn-primary" >
