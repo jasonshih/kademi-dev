@@ -525,6 +525,8 @@
     var KEditor = $.keditor;
     var flog = KEditor.log;
 
+    CKEDITOR.disableAutoInline = true;
+
     // Text component
     // ---------------------------------------------------------------------
     KEditor.components['text'] = {
@@ -542,7 +544,7 @@
                 {name: 'styles', groups: ['styles']},
                 {name: 'colors', groups: ['colors']},
                 {name: 'tools', groups: ['tools']},
-                {name: 'others', groups: ['others']},
+                {name: 'others', groups: ['others']}
             ],
             title: false,
             allowedContent: true, // DISABLES Advanced Content Filter. This is so templates with classes: allowed through
