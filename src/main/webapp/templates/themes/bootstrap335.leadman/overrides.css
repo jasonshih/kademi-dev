@@ -130,6 +130,14 @@ li.current-user a > img {
     overflow: auto;
     padding-bottom: 0;
 }
+.username{
+    width: 70px;
+    -ms-text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+}
 
 /* Supports collapse menu even on ipad portrait screen */
 @media (max-width: 991px) {
@@ -186,5 +194,31 @@ li.current-user a > img {
     }
     .btn-fullwidth-mobile + button{
         margin-top: 10px;
+    }
+    #lead-search-input {
+        width: 100%;
+    }
+    #nav-collapse .navbar-form{
+        margin-left: 0;
+        margin-right: 0;
+    }
+    .username{
+        width: 200px;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1024px){
+    #lead-search-input{
+        width: 200px;
+    }
+    .logged-in-title{
+        display: none;
+    }
+    .org-menu{
+        padding-top: 38px !important;
+    }
+
+    .username{
+        width: 50px;
     }
 }
