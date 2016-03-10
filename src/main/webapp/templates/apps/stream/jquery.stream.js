@@ -2,7 +2,7 @@
     var methods = {
         init: function (options) {
             var config = $.extend({
-                "streamHref": "/stream",
+                "streamHref": "/stream/",
                 "templateSource": $("#entry-template").html()
             }, options);
 
@@ -35,7 +35,7 @@
                 return this["_id"];
             });
             Handlebars.registerHelper('itemTypeIcon', function (itemType) {
-                if( itemType ) {
+                if (itemType) {
                     itemType = itemType[0];
                     return "fa fa-" + itemType;
                 }
@@ -49,7 +49,7 @@
             var config = this.data("streamConfig");
             var container = this;
             var href = config.streamHref;
-            if( streamHref ) {
+            if (streamHref) {
                 href = streamHref;
             }
             $.ajax({
