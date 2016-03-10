@@ -55,6 +55,9 @@ $(function () {
     if(typeof initAudios === 'function'){
         initAudios();
     }
+    if(typeof initTablesForCkeditor === 'function'){
+        initTablesForCkeditor();
+    }
     initContentFeatures();
 });
 

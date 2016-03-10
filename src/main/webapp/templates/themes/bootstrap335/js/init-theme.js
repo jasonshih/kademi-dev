@@ -448,4 +448,26 @@ function replaceImagesWithAudio(images) {
     });
 }
 
+function initTablesForCkeditor(){
+    flog('checking tables for cellpadding or cellspacing, if yes make a workaround since bootstrap doesnt support this');
+    $('table').each(function(){
+        var cellPadding = $(this).attr('cellpadding');
+        var cellSpacing = $(this).attr('cellspacing');
+        if(cellSpacing){
+            // Support cellpadding and cellspacing in css way
+            flog('cellspacing found', this, cellSpacing);
+            $(this).css({
+                'border-collapse': 'separate',
+                'border-spacing': cellSpacing + 'px'
+            });
+            $(this).removeAttr('cellspacing');
+        }
+        if(cellPadding){
+            flog('cellPadding found', this, cellPadding);
+            $(this).find('th,td').css({'padding': cellPadding + 'px'});
+            $(this).removeAttr('cellpadding');
+        }
+    })
+}
+
 /** End init-theme.js */
