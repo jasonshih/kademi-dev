@@ -78,11 +78,11 @@
                                 <div class="col-xs-6">
                                     #set($taskStats = $page.find('/leads/').taskStatus)
                                     <p class="mt-lg">Task completion </p>
-                                    <div data-percent="$taskStats.percentage" data-line-width="20" class="easypie"><span>$taskStats.percentage%</span></div>
+                                    <div data-percent="$taskStats.completePerc" data-line-width="20" class="easypie"><span>$taskStats.completePerc%</span></div>
                                 </div>
                                 <div class="col-xs-6">
                                     <p class="mt-lg">Conversion rate</p>
-                                    <div data-percent="22" data-line-width="20" class="easypie"><span>22</span></div>
+                                    <div data-percent="$taskStats.convertedPerc" data-line-width="20" class="easypie"><span>$taskStats.convertedPerc%</span></div>
                                 </div>
                             </div>
                         </div>
