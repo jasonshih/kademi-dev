@@ -141,15 +141,15 @@ $!bodyContent
                     #if($user)
                     <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <a href="#" class="dropdown-toggle org-menu" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                 #if( $currentOrg )
-                                Logged in to: $currentOrg.title
+                                <span class="logged-in-title">Logged in to: $currentOrg.title</span>
                                 <span class="caret"></span>
                                 #end
                             </a>
                             <ul class="dropdown-menu selectOrg">
                                 #foreach( $m in $memberships)
-                                <li><a href="$m.org.orgId">$m.org.title</a></li>
+                                <li><a href="$m.org.orgId">$m.org.title #if($m.org.orgId ==$currentOrg.orgId) <i class="fa fa-check text-success"></i> #end</a></li>
                                 #end
                             </ul>
                         </li>
