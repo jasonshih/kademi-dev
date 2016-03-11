@@ -18,6 +18,32 @@ function initUploads() {
                 evt.preventDefault();
             }
         }
+
+        if(data.step === 2){
+            var startRow = $('#startRow').val();
+            if(!startRow){
+                alert('Please enter start row value');
+                $('#startRow').trigger('focus').parents('.form-group').addClass('has-error');
+                evt.preventDefault();
+                return false;
+            }else{
+                $('#startRow').parents('.form-group').removeClass('has-error');
+            }
+
+            var importerHead = $('#importerHead');
+            var selectedCols = [];
+            importerHead.find('select').each(function(){
+                if(this.value){
+                    selectedCols.push(this.value);
+                }
+            });
+
+            if(selectedCols.length<1){
+                alert('Please select at least 1 column data to import');
+                importerHead.find('select').first().trigger('focus');
+                evt.preventDefault();
+            }
+        }
     });
 
     flog("Init importer form", form);
@@ -48,7 +74,7 @@ function initUploads() {
             for (var col = 0; col < data.numCols; col++) {
                 var td = $("<th>");
                 thead.append(td);
-                var select = $("<select name='col" + col + "'>");
+                var select = $("<select class='form-control' name='col" + col + "'>");
                 select.append("<option value=''>[Do not import]</option>");
                 $.each(fields, function (i, field) {
                     select.append("<option value='"+field+"'>" + displayFields[i] + "</option>");
