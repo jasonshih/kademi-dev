@@ -23,6 +23,7 @@ KEditor is a JQuery plugin which provides a content editor with drag and drop sn
  * @option {String|Function} defaultComponentType Default component type of component. If type of component does not exist in KEditor.components, will be used 'defaultComponentType' as type of this component. If is function, argument is component - jQuery object of component
  * @option {String} snippetsUrl Url to snippets file
  * @option {String} [snippetsListId="keditor-snippets-list"] Id of element which contains snippets. As default, value is "keditor-snippets-list" and KEditor will render snippets sidebar automatically. If you specific other id, only snippets will rendered and put into your element
+ * @option {Function} onSidebarToggled Method will be called after toggled sidebar. Arguments: isOpened
  * @option {Function} onInitContentArea Method will be called when initializing content area. It can return array of jQuery objects which will be initialized as container in content area. By default, all first level sections under content area will be initialized. Arguments: contentArea
  * @option {Function} onContentChanged Callback will be called when content is changed. Includes add, delete, duplicate container or component. Or content of a component is changed. Arguments: event
  * @option {Function} onInitContainer Callback will be called when initializing container. It can return array of jQuery objects which will be initialized as editable components in container content (NOTE: these objects MUST be under elements which have attribute data-type="container-content"). By default, all first level sections under container content will be initialized. Arguments: container
@@ -40,6 +41,8 @@ KEditor is a JQuery plugin which provides a content editor with drag and drop sn
  * @option {Function} onComponentDuplicated Callback will be called when a component is duplicated. Arguments: event, originalComponent, newComponent
  * @option {Function} onComponentSelected Callback will be called when a component is selected. Arguments: event, selectedComponent
  * @option {Function} onComponentSnippetDropped Callback will be called after a component snippet is dropped into a container. Arguments: event, newComponent, droppedComponent
+ * @option {Function} onDynamicContentLoaded Callback will be called after dynamic content is loaded. Arguments: dynamicElement, response, status, xhr
+ * @option {Function} onDynamicContentError Callback will be called if loading dynamic content is error, abort or timeout. Arguments: dynamicElement, response, status, xhr
  */
 $.keditor.DEFAULTS = {
     btnMoveContainerText: '<i class="fa fa-sort"></i>',
@@ -53,6 +56,8 @@ $.keditor.DEFAULTS = {
     defaultComponentType: 'text',
     snippetsUrl: 'snippets/default/snippets.html',
     snippetsListId: 'keditor-snippets-list',
+    onSidebarToggled: function (isOpened) {
+    },
     onInitContentArea: function (contentArea) {
     },
     onContentChanged: function (event) {
@@ -86,6 +91,10 @@ $.keditor.DEFAULTS = {
     onComponentSelected: function (event, selectedComponent) {
     },
     onComponentSnippetDropped: function (event, newComponent, droppedComponent) {
+    },
+    onDynamicContentLoaded: function (dynamicElement, response, status, xhr) {
+    },
+    onDynamicContentError: function (dynamicElement, response, status, xhr) {
     }
 };
 ```
@@ -185,6 +194,26 @@ $.keditor.components['typeName'] = {
 ```
 
 __**Note**__: `KEditor.settingComponent` is component which will be applied setting. You can access this component after setting panel is showed.
+
+# Dynamic content
+If you want a element which has dynamic content, you can do like the following
+```html
+<div data-dynamic-href="/path/to/dynamic/content" data-attribute-one="1" data-attribute-two="2" ...></div>
+```
+So the content of this `div` will be get from `/path/to/dynamic/content?attributeOne=1&attributeTwo=2`
+
+Example:
+```html
+<!-- 
+    Here is example of a component with type is "products" and have dynamic content inside.
+    Full url for getting dynamic content is "/_components/ecommerce/productList?numProducts=4&store=store1&category=c1"
+ -->
+<div data-type="component-products">
+    <div data-dynamic-href='/_components/ecommerce/productList' data-num-products='4' data-store="store1" data-category="c1"></div>
+</div>
+```
+
+__**Note**__: All `data-*` attribute will be converted to camel-case. Example: data-number-products will be `numberProducts`.
 
 # License
 Please read at https://github.com/Kademi/keditor/blob/master/LICENSE.md

@@ -214,9 +214,6 @@ li.current-user a > img {
     .logged-in-title{
         display: none;
     }
-    .org-menu{
-        padding-top: 38px !important;
-    }
 
     .username{
         width: 50px;
