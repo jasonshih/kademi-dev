@@ -701,7 +701,7 @@ function initDateTimePickers() {
     var pickers = $('.date-time');
     flog("pickers", pickers);
     pickers.datetimepicker({
-        format: 'DD/MM/YYYY H:mm'
+        format: 'DD/MM/YYYY HH:mm'
     });
 }
 
@@ -710,7 +710,7 @@ function initDateTimePikersForModal() {
         var pickers = $(this).find('.date-time');
         flog("pickers", pickers);
         pickers.datetimepicker({
-            format: 'DD/MM/YYYY H:mm'
+            format: 'DD/MM/YYYY HH:mm'
         });
     });
 }
