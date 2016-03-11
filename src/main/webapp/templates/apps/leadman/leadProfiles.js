@@ -2,13 +2,20 @@
 function initUploads() {
     var form = $("#importerWizard form");
 
-    $('#myWizard').wizard({
+    $('#myWizard').wizard();
+    $('#importerWizard').on('show.bs.collapse', function () {
+        var curStep = $('#myWizard').wizard('selectedItem');
+        if(!form.find('input[name=fileHash]').val()){
+            curStep = 1;
+        }
+        $('#myWizard').wizard('selectedItem', { step: curStep });
     });
+
     $('#myWizard').on('actionclicked.fu.wizard', function (evt, data) {
-        if (data.step === 1) {
+        if (data.step === 1 && $('#importerWizard').attr('aria-expanded')=='true') {
             if (form.find("input[name=fileHash]").val() == "") {
                 alert("Please select a file to upload");
-                event.preventDefault();
+                evt.preventDefault();
             }
         }
     });
