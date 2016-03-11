@@ -40,6 +40,7 @@ function initUploads() {
             var table = data.table;
             form.find("input[name=fileHash]").val(table.hash);
             var fields = data.destFields;
+            var displayFields = data.displayFields;
             var thead = $("#importerHead");
             thead.html("");
             flog("headers:", data.numCols);
@@ -50,7 +51,7 @@ function initUploads() {
                 var select = $("<select name='col" + col + "'>");
                 select.append("<option value=''>[Do not import]</option>");
                 $.each(fields, function (i, field) {
-                    select.append("<option>" + field + "</option>");
+                    select.append("<option value='"+field+"'>" + displayFields[i] + "</option>");
                 });
                 td.append(select);
             }
