@@ -12,6 +12,7 @@ $(function () {
     initLeadActions();
     initOrgSelector();
     initDateTimePickers();
+    initDateTimePikersForModal();
     initTasks();
     initImmediateUpdate();
     initCloseDealModal();
@@ -55,7 +56,7 @@ $(function () {
                 }
             });
         }
-        if( modal.hasClass("modalInitForm")) {
+        if (modal.hasClass("modalInitForm")) {
             modal.find("form").forms({
                 onSuccess: function (resp) {
                     flog("onSuccess", resp, modal);
@@ -133,9 +134,10 @@ function initImmediateUpdate() {
         var href = target.data("href");
         var name = target.attr("name");
         var value = target.val();
+        var form = target.parents('.form-horizontal');
         var oldValue = target.data("original-value");
         if (value != oldValue) {
-            updateField(href, name, value);
+            updateField(href, name, value, form);
         }
     };
     $("body").on("change", ".immediateUpdate", function (e) {
@@ -158,11 +160,25 @@ function initTasks() {
         var link = $(e.target).closest("a");
         var href = link.attr("href");
         var name = getFileName(href);
-        confirmDelete(href, name, function () {
-            var modal = link.closest(".modal");
-            modal.modal("hide");
-            $("a[href='" + href + "']").closest(".task").remove();
-        });
+
+        var c = confirm('Are you sure to cancel this task?');
+        if (!c)
+            return;
+        $.ajax({
+            url: href,
+            data: {cancelTask: ''},
+            dataType: 'text',
+            type: 'post',
+            success: function () {
+                Msg.info('Task cancelled');
+                var modal = link.closest(".modal");
+                modal.modal("hide");
+                reloadTasks();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                flog('Error', textStatus, errorThrown);
+            }
+        })
     });
     $("body").on("click", ".btnTaskDone", function (e) {
         flog("click");
@@ -274,7 +290,7 @@ function initNewLeadForm() {
         }
     });
 
-    $(".createLead").click(function (e) {        
+    $(".createLead").click(function (e) {
         e.preventDefault();
         var funnelName = $(e.target).closest("a").attr("href");
         flog("initNewLeadForm - click. funnelName=", funnelName, e.target);
@@ -285,7 +301,7 @@ function initNewLeadForm() {
 
     $('select[name=funnel]', form).on('change', function (e) {
         var s = $(this);
-        flog("funnel change",  s.val(), s);
+        flog("funnel change", s.val(), s);
         $('#source-frm').reloadFragment({
             url: window.location.href + '?leadName=' + s.val(),
             whenComplete: function () {
@@ -370,11 +386,12 @@ function initNewQuickLeadForm() {
             navigator.mozGetUserMedia ||
             navigator.msGetUserMedia);
     window.URL = window.URL || window.webkitURL;
-    var audio_context = new AudioContext();
+    var audio_context;
     var recorder = null;
 
     if (!navigator.getUserMedia) {
-        $('.voiceMemo', form).remove();
+        // IE 11 doesnt support this API for now
+        form.find('.voiceMemo').remove();
     }
 
     modal.on('click', '#recordMemo', function (e) {
@@ -541,7 +558,7 @@ function initNewNoteForm() {
     var form = modal.find('form');
     form.find('.newLeadForm').hide();
 
-    $(".createNote").click(function (e) {
+    $(document.body).on('click', '.createNote', function (e) {
         e.preventDefault();
         var href = $(e.target).closest("a").attr("href");
         form.attr("action", href);
@@ -549,7 +566,7 @@ function initNewNoteForm() {
     });
 
     form.forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             if (resp.nextHref) {
                 window.location.href = resp.nextHref;
             }
@@ -681,17 +698,22 @@ function setLead(href, status, actionDescription) {
 
 
 function initDateTimePickers() {
-    var date = new Date();
-    date.setDate(date.getDate() - 1);
-
     var pickers = $('.date-time');
     flog("pickers", pickers);
     pickers.datetimepicker({
-        format: "d/m/Y H:i"
-        , startDate: date
+        format: 'DD/MM/YYYY HH:mm'
     });
 }
 
+function initDateTimePikersForModal() {
+    $('.modal').on('shown.bs.modal', function () {
+        var pickers = $(this).find('.date-time');
+        flog("pickers", pickers);
+        pickers.datetimepicker({
+            format: 'DD/MM/YYYY HH:mm'
+        });
+    });
+}
 
 function assignTo(name, href) {
     $.ajax({
@@ -703,7 +725,7 @@ function assignTo(name, href) {
         dataType: 'json',
         success: function (resp) {
             if (resp && resp.status) {
-                Msg.info("Assigned");
+                Msg.info("The assignment has been changed!");
                 $("#assignedBlock").reloadFragment({
                     url: href || window.location.pathname
                 });
@@ -718,7 +740,7 @@ function assignTo(name, href) {
     });
 }
 
-function updateField(href, fieldName, fieldValue) {
+function updateField(href, fieldName, fieldValue, form) {
     var data = {};
     data[fieldName] = fieldValue;
     flog("updateField", href, data, fieldName, fieldValue);
@@ -728,7 +750,12 @@ function updateField(href, fieldName, fieldValue) {
         data: data,
         dataType: 'json',
         success: function (resp) {
-            Msg.info("Saved " + fieldName);
+            var fieldLabel = fieldName;
+            var label = form.find('[name=' + fieldName + ']').parents('.form-group').find('label');
+            if (label.length) {
+                fieldLabel = label.text().replace(':', '');
+            }
+            Msg.info("Saved " + fieldLabel);
             reloadTasks();
         },
         error: function (resp) {
@@ -1059,11 +1086,22 @@ function initDeleteFile() {
 }
 
 // Minified version of isMobile included in the HTML since it's small
-!function(a){var b=/iPhone/i,c=/iPod/i,d=/iPad/i,e=/(?=.*\bAndroid\b)(?=.*\bMobile\b)/i,f=/Android/i,g=/IEMobile/i,h=/(?=.*\bWindows\b)(?=.*\bARM\b)/i,i=/BlackBerry/i,j=/BB10/i,k=/Opera Mini/i,l=/(?=.*\bFirefox\b)(?=.*\bMobile\b)/i,m=new RegExp("(?:Nexus 7|BNTV250|Kindle Fire|Silk|GT-P1000)","i"),n=function(a,b){return a.test(b)},o=function(a){var o=a||navigator.userAgent,p=o.split("[FBAN");return"undefined"!=typeof p[1]&&(o=p[0]),this.apple={phone:n(b,o),ipod:n(c,o),tablet:!n(b,o)&&n(d,o),device:n(b,o)||n(c,o)||n(d,o)},this.android={phone:n(e,o),tablet:!n(e,o)&&n(f,o),device:n(e,o)||n(f,o)},this.windows={phone:n(g,o),tablet:n(h,o),device:n(g,o)||n(h,o)},this.other={blackberry:n(i,o),blackberry10:n(j,o),opera:n(k,o),firefox:n(l,o),device:n(i,o)||n(j,o)||n(k,o)||n(l,o)},this.seven_inch=n(m,o),this.any=this.apple.device||this.android.device||this.windows.device||this.other.device||this.seven_inch,this.phone=this.apple.phone||this.android.phone||this.windows.phone,this.tablet=this.apple.tablet||this.android.tablet||this.windows.tablet,"undefined"==typeof window?this:void 0},p=function(){var a=new o;return a.Class=o,a};"undefined"!=typeof module&&module.exports&&"undefined"==typeof window?module.exports=o:"undefined"!=typeof module&&module.exports&&"undefined"!=typeof window?module.exports=p():"function"==typeof define&&define.amd?define("isMobile",[],a.isMobile=p()):a.isMobile=p()}(this);
+!function (a) {
+    var b = /iPhone/i, c = /iPod/i, d = /iPad/i, e = /(?=.*\bAndroid\b)(?=.*\bMobile\b)/i, f = /Android/i, g = /IEMobile/i, h = /(?=.*\bWindows\b)(?=.*\bARM\b)/i, i = /BlackBerry/i, j = /BB10/i, k = /Opera Mini/i, l = /(?=.*\bFirefox\b)(?=.*\bMobile\b)/i, m = new RegExp("(?:Nexus 7|BNTV250|Kindle Fire|Silk|GT-P1000)", "i"), n = function (a, b) {
+        return a.test(b)
+    }, o = function (a) {
+        var o = a || navigator.userAgent, p = o.split("[FBAN");
+        return"undefined" != typeof p[1] && (o = p[0]), this.apple = {phone: n(b, o), ipod: n(c, o), tablet: !n(b, o) && n(d, o), device: n(b, o) || n(c, o) || n(d, o)}, this.android = {phone: n(e, o), tablet: !n(e, o) && n(f, o), device: n(e, o) || n(f, o)}, this.windows = {phone: n(g, o), tablet: n(h, o), device: n(g, o) || n(h, o)}, this.other = {blackberry: n(i, o), blackberry10: n(j, o), opera: n(k, o), firefox: n(l, o), device: n(i, o) || n(j, o) || n(k, o) || n(l, o)}, this.seven_inch = n(m, o), this.any = this.apple.device || this.android.device || this.windows.device || this.other.device || this.seven_inch, this.phone = this.apple.phone || this.android.phone || this.windows.phone, this.tablet = this.apple.tablet || this.android.tablet || this.windows.tablet, "undefined" == typeof window ? this : void 0
+    }, p = function () {
+        var a = new o;
+        return a.Class = o, a
+    };
+    "undefined" != typeof module && module.exports && "undefined" == typeof window ? module.exports = o : "undefined" != typeof module && module.exports && "undefined" != typeof window ? module.exports = p() : "function" == typeof define && define.amd ? define("isMobile", [], a.isMobile = p()) : a.isMobile = p()
+}(this);
 
-function initLeadmanModal(){
+function initLeadmanModal() {
     $('.modal').on('show.bs.modal', function () {
-        if(isMobile.phone && $('#nav-collapse').hasClass('in')){
+        if (isMobile.phone && $('#nav-collapse').hasClass('in')) {
             $('.navbar-toggle').trigger('click')
         }
     });

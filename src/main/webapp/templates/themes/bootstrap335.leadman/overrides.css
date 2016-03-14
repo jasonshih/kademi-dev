@@ -61,7 +61,7 @@ html body .fa {
 }
 
 #lead-search-input {
-    width: 300px;
+    width: 260px;
 }
 
 #lead-search-suggestions li + li {
@@ -125,6 +125,23 @@ li.current-user a > img {
     vertical-align: top;
 }
 
+.profilePic .sidebar{
+    height: auto;
+    overflow: auto;
+    padding-bottom: 0;
+}
+.username{
+    width: 70px;
+    -ms-text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+}
+table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:after, table.dataTable thead .sorting:after{
+    content: '' !important;
+}
+
 /* Supports collapse menu even on ipad portrait screen */
 @media (max-width: 991px) {
     .navbar-header {
@@ -180,5 +197,28 @@ li.current-user a > img {
     }
     .btn-fullwidth-mobile + button{
         margin-top: 10px;
+    }
+    #lead-search-input {
+        width: 100%;
+    }
+    #nav-collapse .navbar-form{
+        margin-left: 0;
+        margin-right: 0;
+    }
+    .username{
+        width: 200px;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1024px){
+    #lead-search-input{
+        width: 200px;
+    }
+    .logged-in-title{
+        display: none;
+    }
+
+    .username{
+        width: 50px;
     }
 }

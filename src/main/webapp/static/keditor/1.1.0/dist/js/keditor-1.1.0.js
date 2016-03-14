@@ -17,6 +17,7 @@
  * @option {String|Function} defaultComponentType Default component type of component. If type of component does not exist in KEditor.components, will be used 'defaultComponentType' as type of this component. If is function, argument is component - jQuery object of component
  * @option {String} snippetsUrl Url to snippets file
  * @option {String} [snippetsListId="keditor-snippets-list"] Id of element which contains snippets. As default, value is "keditor-snippets-list" and KEditor will render snippets sidebar automatically. If you specific other id, only snippets will rendered and put into your element
+ * @option {Function} onSidebarToggled Method will be called after toggled sidebar. Arguments: isOpened
  * @option {Function} onInitContentArea Method will be called when initializing content area. It can return array of jQuery objects which will be initialized as container in content area. By default, all first level sections under content area will be initialized. Arguments: contentArea
  * @option {Function} onContentChanged Callback will be called when content is changed. Includes add, delete, duplicate container or component. Or content of a component is changed. Arguments: event
  * @option {Function} onInitContainer Callback will be called when initializing container. It can return array of jQuery objects which will be initialized as editable components in container content (NOTE: these objects MUST be under elements which have attribute data-type="container-content"). By default, all first level sections under container content will be initialized. Arguments: container
@@ -34,6 +35,8 @@
  * @option {Function} onComponentDuplicated Callback will be called when a component is duplicated. Arguments: event, originalComponent, newComponent
  * @option {Function} onComponentSelected Callback will be called when a component is selected. Arguments: event, selectedComponent
  * @option {Function} onComponentSnippetDropped Callback will be called after a component snippet is dropped into a container. Arguments: event, newComponent, droppedComponent
+ * @option {Function} onDynamicContentLoaded Callback will be called after dynamic content is loaded. Arguments: dynamicElement, response, status, xhr
+ * @option {Function} onDynamicContentError Callback will be called if loading dynamic content is error, abort or timeout. Arguments: dynamicElement, response, status, xhr
  */
 (function ($) {
     // Log function will print log message when "KEditor.debug" equals "true"
@@ -96,6 +99,8 @@
             defaultComponentType: 'text',
             snippetsUrl: 'snippets/default/snippets.html',
             snippetsListId: 'keditor-snippets-list',
+            onSidebarToggled: function (isOpened) {
+            },
             onInitContentArea: function (contentArea) {
             },
             onContentChanged: function (event) {
@@ -129,6 +134,10 @@
             onComponentSelected: function (event, selectedComponent) {
             },
             onComponentSnippetDropped: function (event, newComponent, droppedComponent) {
+            },
+            onDynamicContentLoaded: function (dynamicElement, response, status, xhr) {
+            },
+            onDynamicContentError: function (dynamicElement, response, status, xhr) {
             }
         },
 
@@ -181,7 +190,7 @@
                     '   </div>' +
                     '</div>'
                 );
-                KEditor.initSidebarToggler();
+                KEditor.initSidebarToggler(options);
             } else {
                 flog('Render KEditor snippets content after custom snippets list with id="' + options.snippetsListId + '"');
                 $('#' + options.snippetsListId).after('<div id="keditor-snippets-content" style="display: none"></div>');
@@ -211,20 +220,25 @@
             }
         },
 
-        initSidebarToggler: function () {
-            flog('initSidebarToggler');
+        initSidebarToggler: function (options) {
+            flog('initSidebarToggler', options);
 
             var body = $(document.body);
             $('#keditor-sidebar-toggler').on('click', function (e) {
                 e.preventDefault();
 
                 var icon = $(this).find('i');
-                if (body.hasClass('opened-keditor-sidebar')) {
+                var isOpened = body.hasClass('opened-keditor-sidebar');
+                if (isOpened) {
                     body.removeClass('opened-keditor-sidebar');
                     icon.attr('class', 'fa fa-chevron-left')
                 } else {
                     body.addClass('opened-keditor-sidebar');
                     icon.attr('class', 'fa fa-chevron-right')
+                }
+
+                if (typeof options.onSidebarToggled === 'function') {
+                    options.onSidebarToggled.call(null, !isOpened);
                 }
             });
         },
@@ -382,7 +396,7 @@
 
             var settingForm = $('#keditor-setting-' + componentType);
             if (typeof componentData.showSettingForm === 'function') {
-                flog('Show setting form of component type "' + componentType+ '"');
+                flog('Show setting form of component type "' + componentType + '"');
                 componentData.showSettingForm.call(componentData, settingForm, component, options);
                 settingForm.addClass('active');
             } else {
@@ -692,19 +706,28 @@
                     '</div>'
                 );
 
-                if (typeof componentData.init === 'function') {
-                    componentData.init.call(componentData, contentArea, container, component, options);
-                } else {
-                    $(document.body).removeClass('highlighted-container-content');
-                    error('"init" function of component type "' + componentType + '" does not exist!');
-                }
+                var dynamicContentRequests = [];
+                component.find('[data-dynamic-href]').each(function () {
+                    var dynamicElement = $(this);
 
-                if (typeof options.onInitComponent === 'function') {
-                    options.onInitComponent.call(contentArea, component);
-                }
+                    dynamicContentRequests.push(KEditor.initDynamicContent(contentArea, dynamicElement, options));
+                });
 
-                component.addClass('keditor-initialized-component');
-                component.removeClass('keditor-initializing-component');
+                $.when.apply(null, dynamicContentRequests).then(function () {
+                    if (typeof componentData.init === 'function') {
+                        componentData.init.call(componentData, contentArea, container, component, options);
+                    } else {
+                        $(document.body).removeClass('highlighted-container-content');
+                        error('"init" function of component type "' + componentType + '" does not exist!');
+                    }
+
+                    if (typeof options.onInitComponent === 'function') {
+                        options.onInitComponent.call(contentArea, component);
+                    }
+
+                    component.addClass('keditor-initialized-component');
+                    component.removeClass('keditor-initializing-component');
+                });
             } else {
                 if (component.hasClass('keditor-initialized-component')) {
                     flog('Component is already initialized!');
@@ -811,7 +834,7 @@
 
                     if (components.length > 0) {
                         components.each(function () {
-                            KEditor.deleteComponent($(this));
+                            KEditor.deleteComponent($(this), options);
                         });
                     }
 
@@ -835,20 +858,15 @@
 
                 var component = btn.closest('.keditor-component');
                 if (body.hasClass('opened-keditor-setting')) {
-                    var componentType = KEditor.getComponentType(component, options);
-                    var activeForm = $('#keditor-setting-forms').children('.active');
-                    var activeSettingType = activeForm.attr('data-type');
-
-                    flog('Active setting type: ' + activeSettingType, 'Component type: ' + componentType);
-                    if (activeSettingType && activeSettingType !== componentType) {
-                        KEditor.showSettingPanel(component, options);
+                    if (!component.is(KEditor.settingComponent)) {
                         KEditor.settingComponent = component;
+                        KEditor.showSettingPanel(component, options);
                     } else {
                         KEditor.hideSettingPanel();
                     }
                 } else {
-                    KEditor.showSettingPanel(component, options);
                     KEditor.settingComponent = component;
+                    KEditor.showSettingPanel(component, options);
                 }
             });
 
@@ -895,7 +913,7 @@
                         options.onBeforeComponentDeleted.call(contentArea, e, component);
                     }
 
-                    KEditor.deleteComponent(component);
+                    KEditor.deleteComponent(component, options);
 
                     if (typeof options.onComponentDeleted === 'function') {
                         options.onComponentDeleted.call(contentArea, e, component);
@@ -925,6 +943,47 @@
             component.remove();
         },
 
+        initDynamicContent: function (contentArea, dynamicElement, options) {
+            flog('initDynamicContent', contentArea, dynamicElement, options);
+
+            var dynamicHref = dynamicElement.attr('data-dynamic-href');
+            var data = {};
+
+            $.each(dynamicElement.get(0).attributes, function (i, attr) {
+                if (attr.name.indexOf('data-') === 0 && attr.name !== 'data-dynamic-href' && attr.name !== 'data-type') {
+                    var camelCaseName = attr.name.substr(5).replace(/-(.)/g, function ($0, $1) {
+                        return $1.toUpperCase();
+                    });
+                    data[camelCaseName] = attr.value;
+                }
+            });
+
+            data = $.param(data);
+            flog('Dynamic href: ' + dynamicHref, 'Data: ' + data);
+
+            return $.ajax({
+                url: dynamicHref,
+                data: data,
+                type: 'GET',
+                dataType: 'HTML',
+                success: function (response, status, xhr) {
+                    flog('Dynamic content is loaded', dynamicElement, response, status, xhr);
+                    dynamicElement.html(response);
+
+                    if (typeof options.onDynamicContentLoaded === 'function') {
+                        options.onDynamicContentLoaded.call(contentArea, dynamicElement, response, status, xhr);
+                    }
+                },
+                error: function (response, status, xhr) {
+                    flog('Error when loading dynamic content', dynamicElement, response, status, xhr);
+
+                    if (typeof options.onDynamicContentError === 'function') {
+                        options.onDynamicContentError.call(contentArea, dynamicElement, response, status, xhr);
+                    }
+                }
+            });
+        },
+
         getComponentContent: function (component, options) {
             var dataType = component.attr('data-type');
             var componentType = KEditor.getComponentType(component, options);
@@ -935,6 +994,12 @@
             } else {
                 error('"getContent" function of component type "' + componentType + '" does not exist!');
             }
+
+            var tempDiv = $('<div />').html(content);
+            tempDiv.find('[data-dynamic-href]').each(function () {
+                $(this).html('');
+            });
+            content = tempDiv.html();
 
             return '<section data-type="' + dataType + '">' + content + '</section>';
         },

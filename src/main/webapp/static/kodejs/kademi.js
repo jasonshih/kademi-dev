@@ -22,7 +22,7 @@
 
     var hasOwn = class2type.hasOwnProperty;
 
-    var support = {};
+    var support = {cors: true};
 
     var Kademi = {fn: {}};
 
@@ -112,7 +112,8 @@
         error: function (msg) {
             throw new Error(msg);
         },
-        noop: function () {},
+        noop: function () {
+        },
         isFunction: function (obj) {
             return Kademi.type(obj) === "function";
         },
@@ -1891,5 +1892,9 @@
         };
     });
 
-    exports.Kademi = exports.$k = Kademi;
+    support.cors = true;
+
+    Kademi.support = support;
+
+    exports.Kademi = exports.$k = exports.$ = Kademi;
 })(this);

@@ -26,6 +26,16 @@
                 width: 50px;
                 margin: 0 0 0 15px;
             }
+            
+            .lead-note-author{
+                margin-right: 10px;;
+            }
+            .note-item{
+                margin-bottom: 30px;
+            }
+            .note-item > div + div{
+                margin-top: 15px;
+            }
             @media (max-width: 767px) {
                 #lead-cover{
                     height: auto;
@@ -137,7 +147,7 @@
                                 <li role="separator" class="divider"></li>
                                 #end
                                 #foreach($user in $page.find("/leads").teamMembers)
-                                <li><a href="$user.name">$user.name</a></li>
+                                <li><a href="$user.name">$!user.firstName $!user.surName</a></li>
                                 #end
                             </ul>
                         </div>
@@ -175,36 +185,30 @@
                                         <div class="panel-body" id="leadNotesBody">
                                             #set( $notes = $page.notes )
                                             #if( $notes.size() > 0 )
-                                            <ul class="list-block">
+                                            <div class="list-notes">
                                                 #foreach($note in $notes)
-                                                <li class="media">
-                                                    <div class="pull-left">
-                                                        <img src="/theme/images/user/05.jpg" alt="Image" class="media-object img-circle thumb32">
+                                                <div class="note-item">
+                                                    <div>
+                                                        <img src="/theme/images/user/05.jpg" alt="Image" class="img-circle thumb32 lead-note-author">
+                                                        <a href="/users/$note.createdBy.name">$note.createdBy.formattedName</a>
+                                                        #if( $note.inbound )
+                                                        <small class="text-muted fa fa-arrow-left"></small>
+                                                        <small class="text-muted fa fa-${note.icon}"></small>
+                                                        #else
+                                                        <small class="text-muted fa fa-${note.icon}"></small>
+                                                        <small class="text-muted fa fa-arrow-right"></small>
+                                                        #end
+                                                        #set($type = $note.actionType +  "-" + $note.inbound)
+                                                        <a class="note-edit" href="$note.id" data-type="$type" data-notes="$!note.notes">
+                                                            <span class="fa fa-pencil"></span>
+                                                        </a>
                                                     </div>
-                                                    <div class="media-body">
-                                                        <div class="media-heading">
-                                                            <p>
-                                                                <a href="/users/$note.createdBy.name">$note.createdBy.formattedName</a>
-                                                                #if( $note.inbound )
-                                                                <small class="text-muted fa fa-arrow-left"></small>
-                                                                <small class="text-muted fa fa-${note.icon}"></small>
-                                                                #else
-                                                                <small class="text-muted fa fa-${note.icon}"></small>
-                                                                <small class="text-muted fa fa-arrow-right"></small>
-                                                                #end
-                                                                #set($type = $note.actionType +  "-" + $note.inbound)
-                                                                <a class="note-edit" href="$note.id" data-type="$type" data-notes="$!note.notes">
-                                                                    <span class="fa fa-pencil"></span>
-                                                                </a>
-                                                            </p>
-                                                            <p>
-                                                                <pre>$!note.notes</pre>
-                                                            </p>
-                                                        </div>
+                                                    <div>
+                                                        <pre>$!note.notes</pre>
                                                     </div>
-                                                </li>
+                                                </div>
                                                 #end
-                                            </ul>
+                                            </div>
                                             #else
                                             <p>
                                                 <span class="label label-warning">No contact with the lead yet</span>
@@ -257,7 +261,7 @@
                                                         <label class="col-md-4 control-label" for="createDate">Created date</label>
                                                         <div class="col-md-8">
                                                             <div class="input-group">
-                                                                <input type="text" name="createDate" id="createDate" class="form-control date-time" value=" $formatter.formatDateTime( $!page.getCreateDate() )" />
+                                                                <input type="text" name="createDate" id="createDate" class="form-control date-time immediateUpdate" value=" $formatter.formatDateTime( $!page.getCreateDate() )" />
                                                                 <span class="input-group-addon">
                                                                     <span class="fa fa-calendar"></span>
                                                                 </span>
@@ -316,7 +320,7 @@
                                                     <div class="form-group">
                                                         <label class="control-label col-md-2" for="nickName">Customer</label>
                                                         <div class="col-md-3">
-                                                            <input type="text" name="nickName" id="nickName" class="form-control" placeholder="nickName" value="$!page.nickName" />
+                                                            <input type="text" name="nickName" id="nickName" class="form-control" placeholder="nickName" value="$!page.profile.nickName" />
                                                         </div>
                                                         <div class="col-md-3">
                                                             <input type="text" name="firstName" id="firstName" class="form-control" placeholder="First name" value="$!page.firstName" />
@@ -482,7 +486,7 @@
                                                         #end
                                                     </td>
                                                     <td>
-                                                        <div class="btn-group" role="group">
+                                                        <div style="min-width: 125px;" class="btn-group" role="group">
                                                             <a title="Download" download="$file.name" href="$file.name" class="btn btn-info"><i class="fa fa-download"></i></a>
                                                             <button title="Delete" type="button" data-fname="$file.name" class="btn btn-danger btn-delete-file"><i class="fa fa-trash"></i></button>
                                                         </div>
@@ -506,7 +510,7 @@
                                     <div id="headingOne" role="tab" class="panel-heading">
                                         <h4 class="panel-title clearfix task-item">
                                             <div class="pull-left">
-                                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                                <a data-toggle="collapse" data-parent="#accordion" href="#$task.href.replace('/','_')" aria-expanded="true" aria-controls="collapseOne">
                                                     <span class="task-title">$task.title</span>
                                                 </a>
                                             </div>
@@ -515,7 +519,7 @@
                                             </a>
                                         </h4>
                                     </div>
-                                    <div id="collapseOne" role="tabpanel" aria-labelledby="headingOne" class="panel-collapse collapse in">
+                                    <div id="$task.href.replace('/','_')" role="tabpanel" aria-labelledby="" class="panel-collapse collapse in">
                                         <div class="panel-body">
                                             #if( $task.is("open") )
                                             <div class="btn-task-panel-wrap pull-right">
@@ -614,7 +618,7 @@
                         <div class="modal-footer">
                             <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
 
-                            <button class="btn btn-primary" type="submit">Create and view</button>
+                            <button class="btn btn-primary" type="submit">Create</button>
                         </div>
                     </form>
                 </div><!-- /.modal-content -->
@@ -745,8 +749,6 @@
         <span title="$file.contentType"><i class="fa fa-2x $fIcon"></i></span>
         #end
 
-        #createModals()
-
         <script type="text/javascript">
             $(function () {
                 var form = $("#leadDetails");
@@ -754,7 +756,7 @@
                 form.forms({
                     callback: function (resp) {
                         Msg.info('Saved');
-                        reloadTable();
+                        // reloadTable();
                     }
                 });
 

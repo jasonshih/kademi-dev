@@ -21,20 +21,24 @@
             flog('init "audio" component', component);
             this.component = component;
             var img = component.find('img[data-src]');
-            if(!img.attr('id')){
-                this.componentId = $.keditor.generateId('component-audio');
-                img.attr('id', this.componentId);
-            }else{
-                this.componentId = img.attr('id');
+            var componentId = '';
+            if (!img.attr('id')) {
+                componentId = $.keditor.generateId('component-audio');
+                img.attr('id', componentId);
+            } else {
+                componentId = img.attr('id');
             }
-
+            if (!img.parent().hasClass('audio-wrapper')) {
+                img.wrap('<div class="audio-wrapper"></div>');
+            }
             this.src = img.attr('data-src');
             this.width = img.attr('data-width');
-            this.autostart = img.attr('data-autostart')==='true';
+            this.autostart = img.attr('data-autostart') === 'true';
             var instance = this;
-            $.getScript('/static/jwplayer/6.10/jwplayer.js', function () {
+            $.getScriptOnce('/static/jwplayer/6.10/jwplayer.js', function () {
+                flog('=====================================');
                 jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
-                instance.buildJWAudioPlayerPreview();
+                instance.buildJWAudioPlayerPreview(componentId);
             });
 
         },
@@ -47,7 +51,10 @@
         getContent: function (component, options) {
             flog('getContent "audio" component, component');
 
-            var html = '<img data-componentId="'+this.componentId+'" src="/theme/apps/content/preview/audio.png" data-autostart="'+this.autostart+'" data-width="'+this.width+'" data-src="'+this.src+'" data-kaudio="'+this.src+'" />';
+            var img = component.find('img[data-src]');
+            var componentId = img.attr('id');
+
+            var html = '<img data-componentId="' + componentId + '" src="/theme/apps/content/preview/audio.png" data-autostart="' + this.autostart + '" data-width="' + this.width + '" data-src="' + this.src + '" data-kaudio="' + this.src + '" />';
             return html;
         },
 
@@ -75,33 +82,33 @@
             flog('init "audio" settings', form);
             form.append(
                 '<form class="form-horizontal">' +
-                    '<div class="form-group">' +
-                        '<label for="audioFileInput" class="col-sm-12">Audio file</label>' +
-                        '<div class="col-sm-12">' +
-                            '<div class="audio-toolbar">'+
-                                '<a href="#" class="btn-audioFileInput btn btn-sm btn-primary"><i class="fa fa-upload"></i></a>'+
-                                '<input id="audioFileInput" type="file" style="display: none">' +
-                            '</div>' +
-                        '</div>' +
-                    '</div>' +
-                    '<div class="form-group">' +
-                        '<label for="audio-autoplay" class="col-sm-12">Autoplay</label>' +
-                        '<div class="col-sm-12">' +
-                            '<input type="checkbox" id="audio-autoplay" />' +
-                        '</div>' +
-                    '</div>' +
+                '<div class="form-group">' +
+                '<label for="audioFileInput" class="col-sm-12">Audio file</label>' +
+                '<div class="col-sm-12">' +
+                '<div class="audio-toolbar">' +
+                '<a href="#" class="btn-audioFileInput btn btn-sm btn-primary"><i class="fa fa-upload"></i></a>' +
+                '<input id="audioFileInput" type="file" style="display: none">' +
+                '</div>' +
+                '</div>' +
+                '</div>' +
+                '<div class="form-group">' +
+                '<label for="audio-autoplay" class="col-sm-12">Autoplay</label>' +
+                '<div class="col-sm-12">' +
+                '<input type="checkbox" id="audio-autoplay" />' +
+                '</div>' +
+                '</div>' +
                     //'<div class="form-group">' +
                     //    '<label for="audio-showcontrols" class="col-sm-12">Show Controls</label>' +
                     //    '<div class="col-sm-12">' +
                     //    '<input type="checkbox" id="audio-showcontrols" checked />' +
                     //    '</div>' +
                     //'</div>' +
-                    '<div class="form-group">' +
-                        '<label for="audio-width" class="col-sm-12">Width (px)</label>' +
-                        '<div class="col-sm-12">' +
-                        '<input type="number" id="audio-width" min="200" max="500" class="form-control" value="300" />' +
-                        '</div>' +
-                    '</div>' +
+                '<div class="form-group">' +
+                '<label for="audio-width" class="col-sm-12">Width (px)</label>' +
+                '<div class="col-sm-12">' +
+                '<input type="number" id="audio-width" min="200" max="500" class="form-control" value="300" />' +
+                '</div>' +
+                '</div>' +
                 '</form>'
             );
 
@@ -116,44 +123,36 @@
          */
         showSettingForm: function (form, component, options) {
             var instance = this;
-            var audio = component.find('audio');
             var btnAudioFileInput = form.find('.btn-audioFileInput');
             btnAudioFileInput.mselect({
                 contentTypes: ['audio'],
                 bs3Modal: true,
-                pagePath: window.location.pathname.replace('contenteditor',''),
-                onSelectFile: function(url){
+                pagePath: window.location.pathname.replace('contenteditor', ''),
+                onSelectFile: function (url) {
                     instance.src = url;
                     instance.refreshAudioPlayerPreview();
                 }
             });
 
+            var img = component.find('img[data-src]');
+            var componentId = img.attr('id');
+
             var autoplayToggle = form.find('#audio-autoplay');
-            if(this.autostart){
+            if (this.autostart) {
                 autoplayToggle.prop('checked', true);
             }
-            autoplayToggle.on('click', function(e){
-                if(this.checked){
-                    audio.attr('autoplay','autoplay');
-                }else{
-                    audio.removeAttr('autoplay');
-                }
+            autoplayToggle.on('click', function (e) {
                 instance.autostart = this.checked;
-                instance.buildJWAudioPlayerPreview();
+                instance.buildJWAudioPlayerPreview(componentId);
             });
 
             //var showcontrolsToggle = form.find('#audio-showcontrols');
             //showcontrolsToggle.on('click', function(e){
-            //    if(this.checked){
-            //        audio.attr('controls','controls');
-            //    }else{
-            //        audio.removeAttr('controls');
-            //    }
             //});
 
             var audioWidth = form.find('#audio-width');
             audioWidth.val(this.width);
-            audioWidth.on('change', function(){
+            audioWidth.on('change', function () {
                 instance.width = this.value;
                 instance.resizeAudioPlayerPreview();
             });
@@ -167,16 +166,16 @@
 
         },
 
-
-        buildJWAudioPlayerPreview: function () {
+        buildJWAudioPlayerPreview: function (componentId) {
+            flog('=======', componentId);
             var width = this.width;
             var src = this.src;
             var autostart = this.autostart;
-            var playerInstance = jwplayer(this.componentId);
+            var playerInstance = jwplayer(componentId);
             playerInstance.setup({
                 file: src,
                 width: width,
-                height: 40,
+                height: 30,
                 autostart: autostart,
                 flashplayer: "/static/jwplayer/6.10/jwplayer.flash.swf",
                 html5player: "/static/jwplayer/6.10/jwplayer.html5.js",
@@ -187,7 +186,7 @@
             });
         },
 
-        refreshAudioPlayerPreview: function(){
+        refreshAudioPlayerPreview: function () {
             var instance = this;
             var playerInstance = jwplayer(instance.componentId);
             var src = instance.src;
@@ -197,12 +196,12 @@
             playerInstance.play();
         },
 
-        resizeAudioPlayerPreview: function(){
+        resizeAudioPlayerPreview: function () {
             var instance = this;
             var playerInstance = jwplayer(instance.componentId);
             var width = instance.width;
 
-            playerInstance.resize(width,40);
+            playerInstance.resize(width, 30);
         }
     };
 
@@ -239,7 +238,7 @@
 
         settingEnabled: true,
 
-        settingTitle: 'Google Map Viewer',
+        settingTitle: 'Google Map Settings',
 
         initSettingForm: function (form, options) {
             flog('initSettingForm "googlemap" component');
@@ -320,17 +319,18 @@
 
     KEditor.components['photo'] = {
         init: function (contentArea, container, component, options) {
-            // Do nothing
+            flog('init "photo" component', component);
+
+            var componentContent = component.children('.keditor-component-content');
+            var img = componentContent.find('img');
+
+            img.css('display', 'inline-block');
         },
 
         getContent: function (component, options) {
-            flog('getContent "photo" component, component');
+            flog('getContent "photo" component', component);
 
             var componentContent = component.children('.keditor-component-content');
-            componentContent.find('.photo-toolbar').remove();
-            var img = componentContent.find('img');
-            img.unwrap();
-
             return componentContent.html();
         },
 
@@ -340,9 +340,10 @@
 
         settingEnabled: true,
 
-        settingTitle: 'Photo',
+        settingTitle: 'Photo Settings',
 
         initSettingForm: function (form, options) {
+            flog('initSettingForm "photo" component');
             var self = this;
 
             form.append(
@@ -350,7 +351,6 @@
                 '   <div class="form-group">' +
                 '       <div class="col-sm-12">' +
                 '           <button type="button" class="btn btn-block btn-primary" id="photo-edit">Change Photo</button>' +
-                '           <input type="file" style="display: none" />' +
                 '       </div>' +
                 '   </div>' +
                 '   <div class="form-group">' +
@@ -360,6 +360,17 @@
                 '               <option value="left">Left</option>' +
                 '               <option value="center">Center</option>' +
                 '               <option value="right">Right</option>' +
+                '           </select>' +
+                '       </div>' +
+                '   </div>' +
+                '   <div class="form-group">' +
+                '       <label for="photo-style" class="col-sm-12">Style</label>' +
+                '       <div class="col-sm-12">' +
+                '           <select id="photo-style" class="form-control">' +
+                '               <option value="">None</option>' +
+                '               <option value="img-rounded">Rounded</option>' +
+                '               <option value="img-circle">Circle</option>' +
+                '               <option value="img-thumbnail">Thumbnail</option>' +
                 '           </select>' +
                 '       </div>' +
                 '   </div>' +
@@ -385,26 +396,14 @@
             );
 
             var photoEdit = form.find('#photo-edit');
-            var fileInput = photoEdit.next();
-            photoEdit.on('click', function (e) {
-                e.preventDefault();
-
-                fileInput.trigger('click');
-            });
-            fileInput.on('change', function () {
-                var file = this.files[0];
-                if (/image/.test(file.type)) {
+            photoEdit.mselect({
+                contentTypes: ['image'],
+                bs3Modal: true,
+                pagePath: window.location.pathname.replace('contenteditor',''),
+                onSelectFile: function(url) {
                     var img = KEditor.settingComponent.find('img');
-                    img.attr('src', URL.createObjectURL(file));
-                    img.css({
-                        width: '',
-                        height: ''
-                    });
-                    img.load(function () {
-                        KEditor.showSettingPanel(KEditor.settingComponent, options);
-                    });
-                } else {
-                    alert('Your selected file is not photo!');
+                    img.attr('src', url);
+                    self.showSettingForm(form, KEditor.settingComponent, options);
                 }
             });
 
@@ -417,6 +416,17 @@
             var inputResponsive = form.find('#photo-responsive');
             inputResponsive.on('click', function () {
                 KEditor.settingComponent.find('img')[this.checked ? 'addClass' : 'removeClass']('img-responsive');
+            });
+
+            var cbbStyle = form.find('#photo-style');
+            cbbStyle.on('change', function () {
+                var img = KEditor.settingComponent.find('img');
+                var val = this.value;
+
+                img.removeClass('img-rounded img-circle img-thumbnail');
+                if (val) {
+                    img.addClass(val);
+                }
             });
 
             var inputWidth = form.find('#photo-width');
@@ -458,11 +468,14 @@
         },
 
         showSettingForm: function (form, component, options) {
+            flog('showSettingForm "photo" component', component);
+
             var self = this;
             var inputAlign = form.find('#photo-align');
             var inputResponsive = form.find('#photo-responsive');
             var inputWidth = form.find('#photo-width');
             var inputHeight = form.find('#photo-height');
+            var cbbStyle = form.find('#photo-style');
 
             var panel = component.find('.photo-panel');
             var img = panel.find('img');
@@ -470,6 +483,16 @@
             var algin = panel.css('text-align');
             if (algin !== 'right' || algin !== 'center') {
                 algin = 'left';
+            }
+
+            if (img.hasClass('img-rounded')) {
+                cbbStyle.val('img-rounded');
+            } else if (img.hasClass('img-circle')) {
+                cbbStyle.val('img-circle');
+            } else if (img.hasClass('img-thumbnail')) {
+                cbbStyle.val('img-thumbnail');
+            } else {
+                cbbStyle.val('');
             }
 
             inputAlign.val(algin);
@@ -502,6 +525,8 @@
     var KEditor = $.keditor;
     var flog = KEditor.log;
 
+    CKEDITOR.disableAutoInline = true;
+
     // Text component
     // ---------------------------------------------------------------------
     KEditor.components['text'] = {
@@ -519,7 +544,7 @@
                 {name: 'styles', groups: ['styles']},
                 {name: 'colors', groups: ['colors']},
                 {name: 'tools', groups: ['tools']},
-                {name: 'others', groups: ['others']},
+                {name: 'others', groups: ['others']}
             ],
             title: false,
             allowedContent: true, // DISABLES Advanced Content Filter. This is so templates with classes: allowed through
@@ -553,6 +578,9 @@
                     options.onContentChanged.call(contentArea, e);
                 }
             });
+
+            self.options.skin = editorSkin;
+            self.options.templates_files = [templatesPath];
 
             var editor = componentContent.ckeditor(self.options).editor;
             editor.on('instanceReady', function () {
@@ -611,6 +639,29 @@
          */
         init: function (contentArea, container, component, options) {
             flog('init "video" component', component);
+
+            this.component = component;
+            var img = component.find('img[data-video-src]');
+            if(!img.attr('id')){
+                this.componentId = $.keditor.generateId('component-video');
+                img.attr('id', this.componentId);
+            }else{
+                this.componentId = img.attr('id');
+            }
+
+            if(!img.parent().hasClass('video-wrapper')){
+                img.wrap('<div class="video-wrapper"></div>');
+            }
+            this.src = img.attr('data-video-src');
+            this.aspectratio = img.attr('data-aspectratio');
+            this.repeat = img.attr('data-repeat') === 'true';
+            this.controls = img.attr('data-controls') === 'true';
+            this.autostart = img.attr('data-autostart') === 'true';
+            var instance = this;
+            $.getScript('/static/jwplayer/6.10/jwplayer.js', function () {
+                jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
+                instance.buildJWVideoPlayerPreview();
+            });
         },
 
         /**
@@ -620,12 +671,9 @@
          */
         getContent: function (component, options) {
             flog('getContent "video" component, component');
-
-            var componentContent = component.children('.keditor-component-content');
-            var video = componentContent.find('video');
-            video.unwrap();
-
-            return componentContent.html();
+            var posterHref = this.src + '/alt-640-360.png';
+            var html = '<img id="'+this.componentId+'" class="video-jw" src="'+posterHref+'" data-autostart="'+this.autostart+'" data-aspectratio="'+this.aspectratio+'" data-video-src="'+this.src+'" data-repeat="'+this.repeat+'" data-controls="'+this.controls+'" />';
+            return html;
         },
 
         /**
@@ -641,7 +689,7 @@
         settingEnabled: true,
 
         // Title of setting panel
-        settingTitle: 'Video settings',
+        settingTitle: 'Video Settings',
 
         /**
          * Initialize setting form of this type
@@ -669,7 +717,7 @@
                         '</div>' +
                     '</div>' +
                     '<div class="form-group">' +
-                        '<label for="video-loop" class="col-sm-12">Loop</label>' +
+                        '<label for="video-loop" class="col-sm-12">Repeat</label>' +
                         '<div class="col-sm-12">' +
                         '<input type="checkbox" id="video-loop" />' +
                         '</div>' +
@@ -683,18 +731,18 @@
                     '<div class="form-group">' +
                         '<label for="" class="col-sm-12">Ratio</label>' +
                         '<div class="col-sm-12">' +
-                        '<input type="radio" name="video-radio" class="video-ratio" value="4/3" checked /> 4:3' +
+                        '<input type="radio" name="video-radio" class="video-ratio" value="4:3" checked /> 4:3' +
                         '</div>' +
                         '<div class="col-sm-12">' +
-                        '<input type="radio" name="video-radio" class="video-ratio" value="16/9" /> 16:9' +
+                        '<input type="radio" name="video-radio" class="video-ratio" value="16:9" /> 16:9' +
                         '</div>' +
                     '</div>' +
-                    '<div class="form-group">' +
-                        '<label for="video-width" class="col-sm-12">Width (px)</label>' +
-                        '<div class="col-sm-12">' +
-                        '<input type="number" id="video-width" min="320" max="1920" class="form-control" value="320" />' +
-                        '</div>' +
-                    '</div>' +
+                    //'<div class="form-group">' +
+                    //    '<label for="video-width" class="col-sm-12">Width (px)</label>' +
+                    //    '<div class="col-sm-12">' +
+                    //    '<input type="number" id="video-width" min="320" max="1920" class="form-control" value="320" />' +
+                    //    '</div>' +
+                    //'</div>' +
                 '</form>'
             );
 
@@ -708,80 +756,58 @@
          * @param {Object} options
          */
         showSettingForm: function (form, component, options) {
-            var video = component.find('video');
-            var fileInput = form.find('#videoFileInput');
+            var instance = this;
             var btnVideoFileInput = form.find('.btn-videoFileInput');
-            btnVideoFileInput.on('click', function(e){
-                e.preventDefault();
-
-                fileInput.trigger('click');
-            });
-            fileInput.on('change', function () {
-                var file = this.files[0];
-                if (/video/.test(file.type)) {
-                    // Todo: Upload to your server :)
-
-                    video.attr('src', URL.createObjectURL(file));
-
-                    video.load(function () {
-                        KEditor.showSettingPanel(component, options);
-                    });
-                } else {
-                    alert('Your selected file is not an video file!');
+            btnVideoFileInput.mselect({
+                contentTypes: ['video'],
+                bs3Modal: true,
+                pagePath: window.location.pathname.replace('contenteditor',''),
+                onSelectFile: function(url){
+                    instance.src = url;
+                    instance.refreshVideoPlayerPreview();
                 }
             });
 
             var autoplayToggle = form.find('#video-autoplay');
+            if(this.autostart){
+                autoplayToggle.prop('checked', true);
+            }
             autoplayToggle.on('click', function(e){
-                if(this.checked){
-                    video.prop('autoplay', true);
-                }else{
-                    video.removeProp('autoplay');
-                }
+                instance.autostart = this.checked;
+                instance.buildJWVideoPlayerPreview();
             });
 
+
             var loopToggle = form.find('#video-loop');
+            if(this.repeat){
+                loopToggle.prop('checked', true);
+            }
             loopToggle.on('click', function(e){
-                if(this.checked){
-                    video.prop('loop', true);
-                }else{
-                    video.removeProp('loop');
-                }
+                instance.repeat = this.checked;
+                instance.buildJWVideoPlayerPreview();
             });
 
             var ratio = form.find('.video-ratio');
+            form.find('.video-ratio[value="'+this.aspectratio+'"]').prop('checked', true);
             ratio.on('click', function(e){
                 if(this.checked){
-                    var currentWidth = video.css('width') || video.prop('width');
-                    currentWidth = currentWidth.replace('px','');
-
-                    var currentRatio = this.value==='16/9'? 16/9 : 4/3;
-                    var height = currentWidth/currentRatio;
-                    video.css('width',currentWidth+'px');
-                    video.css('height',height+'px');
-                    video.removeProp('width');
-                    video.removeProp('height');
+                    instance.aspectratio = this.value;
+                    instance.buildJWVideoPlayerPreview();
                 }
             });
 
             var showcontrolsToggle = form.find('#video-showcontrols');
+            if(this.controls){
+                showcontrolsToggle.prop('checked', true);
+            }
             showcontrolsToggle.on('click', function(e){
-                if(this.checked){
-                    video.attr('controls','controls');
-                }else{
-                    video.removeAttr('controls');
-                }
+                instance.controls = this.checked;
+                instance.buildJWVideoPlayerPreview();
             });
 
-            var videoWidth = form.find('#video-width');
-            videoWidth.on('change', function(){
-                video.css('width',this.value+'px');
-                var currentRatio = form.find('.video-ratio:checked').val() === '16/9'? 16/9 : 4/3;
-                var height = this.value / currentRatio;
-                video.css('height',height+'px');
-                video.removeProp('width');
-                video.removeProp('height');
-            });
+            //var videoWidth = form.find('#video-width');
+            //videoWidth.on('change', function(){
+            //});
         },
 
         /**
@@ -790,6 +816,53 @@
          */
         hideSettingForm: function (form) {
 
+        },
+
+        buildJWVideoPlayerPreview: function () {
+            var src = this.src;
+            var autostart = this.autostart;
+            var repeat = this.repeat;
+            var aspectratio = this.aspectratio;
+            var controls = this.controls;
+            var playerInstance = jwplayer(this.componentId);
+            var posterHref = src + '/alt-640-360.png';
+
+            flog("buildJWPlayer", src, "aspectratio=", aspectratio);
+            playerInstance.setup({
+                autostart: autostart,
+                repeat: repeat,
+                controls: controls,
+                aspectratio: aspectratio,
+                flashplayer: "/static/jwplayer/6.10/jwplayer.flash.swf",
+                html5player: "/static/jwplayer/6.10/jwplayer.html5.js",
+                width: "100%",
+                androidhls: true, //enable hls on android 4.1+
+                playlist: [{
+                    image: posterHref,
+                    sources: [{
+                        file: src
+                    }
+                        , {
+                            file: src + "/../alt-640-360.webm"
+                        }, {
+                            file: src + "/../alt-640-360.m4v"
+                        }]
+                }]
+                , primary: "flash"
+            });
+            playerInstance.onReady(function () {
+                flog('jwplayer preview init done');
+
+            });
+        },
+
+        refreshVideoPlayerPreview: function(){
+            var playerInstance = jwplayer(this.componentId);
+            var src = this.src;
+            playerInstance.load([{
+                file: src
+            }]);
+            playerInstance.play();
         }
     };
 })(jQuery);
@@ -825,7 +898,7 @@
 
         settingEnabled: true,
 
-        settingTitle: 'Vimeo Player',
+        settingTitle: 'Vimeo Settings',
 
         initSettingForm: function (form, options) {
             flog('initSettingForm "vimeo" component');
@@ -940,7 +1013,7 @@
 
         settingEnabled: true,
 
-        settingTitle: 'Youtube Player',
+        settingTitle: 'Youtube Settings',
 
         initSettingForm: function (form, options) {
             flog('initSettingForm "youtube" component');

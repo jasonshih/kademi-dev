@@ -96,7 +96,7 @@ body.opened-keditor-sidebar #edm-area {
     transition: all 0.3s;
     font-size: 12px;
     padding: 0;
-    z-index: 1;
+    z-index: 999;
     overflow-y: auto;
     overflow-x: hidden !important;
     width: 235px;
@@ -134,15 +134,15 @@ body.opened-keditor-sidebar #edm-setting.showed {
     padding: 6px 5px;
 }
 
-#edm-setting .row {
+.row.row-sm {
     margin: 0 -2px;
 }
 
-#edm-setting .row > div {
+.row.row-sm > div {
     padding: 0 2px;
 }
 
-#edm-setting .colorpicker {
+.colorpicker {
     top: 50px;
     right: 15px;
     left: auto;
@@ -187,9 +187,13 @@ body.opened-keditor-sidebar div.cke_float[id*="cke_keditor-section-"] {
 /* ==================================================================================== */
 #keditor-sidebar {
     opacity: 1;
-    z-index: 0;
 }
 
 .keditor-container-content {
     height: 50px;
+    vertical-align: top;
+}
+
+#msg {
+    z-index: 99999;
 }

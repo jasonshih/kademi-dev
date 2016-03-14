@@ -10,6 +10,26 @@
     .btn-fullwidth-mobile + button{
         margin-top: 10px;
     }
+
+    .leadActions{
+        position: relative;
+    }
+    #dashLeadsList .media-heading a, #searchResults .media-heading a{
+        display: block;
+    }
+    #dashLeadsList .media-heading small.pull-right, #searchResults .media-heading small.pull-right{
+        display: block;
+        float: none !important;
+    }
+
+    #tasksList .takeTask{
+        position: absolute;
+        bottom: 10px;
+        right: 15px;
+    }
+    #myWizard .actions{
+        position: relative;
+    }
 }
 
 @media (max-width: 991px) {

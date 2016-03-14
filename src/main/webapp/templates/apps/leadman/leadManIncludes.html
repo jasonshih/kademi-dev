@@ -13,7 +13,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label class="control-label col-md-2" for="newUserFirstName">Source</label>
-                        <div id="select-frm-div" class="col-md-4">                            
+                        <div id="select-frm-div" class="col-md-4">
                             <select id="source-frm" data-placeholder="Select a source" name="source" class="form-control select2" style="width: 100%">
                                 <option value="">[None]</option>
                                 #foreach( $source in $page.find("/leads/").funnels.get($request.params.leadName).sources )
@@ -23,7 +23,7 @@
                         </div>
                         <label class="control-label col-md-2" for="newUserNickName">Lead type</label>
                         <div class="col-md-4">
-                            
+
                             <select name="funnel" class="form-control">
                                 #foreach($entry in $leadsPage.funnels.entrySet())
                                 <option value="$entry.key">$entry.value.title</option>
@@ -166,7 +166,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <div class="col-md-12">
-                            <select name="action" class="form-control">
+                            <select name="action" class="form-control required">
                                 <option value="">[Select what the note is for]</option>
                                 <option value="phone-false">Call to customer</option>
                                 <option value="phone-true">Call from customer</option>
@@ -480,7 +480,7 @@
 
 #macro( showLead $lead $hideButtons )
 <div class="media" id="$lead.id">
-    <div class="media-left">
+    <div class="media-left hidden-xs">
         <div class="avatar avatar-away">
             <img alt="..." src="/theme/apps/leadman/user-placeholder.png" class="img img-circle" style="width: 100px" />
             <i class="avatar avatar-busy"></i>
@@ -534,7 +534,7 @@
         #end
         #end
 
-        <div class="lead">
+        <div class="lead-desc">
             <div class="leadInner">
                 $formatter.textToHtml($lead.description)
             </div>
@@ -578,7 +578,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/leads/$lead.id/" class="btn btn-primary createNote" title="Add note or contact">
+                    <a href="/leads/$lead.id/" class="btn btn-primary createNote" title="Add note">
                         <span class="fa fa-lightbulb-o"></span>
                     </a>
                 </li>

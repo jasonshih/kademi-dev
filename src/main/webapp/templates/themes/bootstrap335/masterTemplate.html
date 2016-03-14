@@ -34,6 +34,7 @@
 
     $templater.pushLess("/theme/less/bootstrap.less", "all")
     $templater.pushLess("/theme/theme-params.less", "all")
+    $!bodyContent
 
     #foreach( $lessSource in $templater.lessSources.entrySet())
     <link href="/$templater.getCombinedPath($lessSource.value)" rel="stylesheet" type="text/css" media="$lessSource.key" />
@@ -42,7 +43,7 @@
     <link rel="stylesheet" href="/static/bootstrap-msg/0.3/bootstrap-msg.min.css" type="text/css" />
     <link rel="stylesheet" href="/static/font-awesome/4.4.0/css/font-awesome.min.css"/>
 
-    $!bodyContent
+
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>

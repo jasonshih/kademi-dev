@@ -26,7 +26,7 @@
     .leadInner {
         max-height: 200px;
     }
-    
+
     @media (max-width: 767px) {
         .infoBox{
             height: 140px;
@@ -36,7 +36,7 @@
 
 #set( $kpis = $page.find("/sales").availableKpis )
 
-<div class="fw-boxed">
+<div class="fw-boxed hidden-xs">
     <div class="panel panel-default">
         <div class="row">
             <div class="col-md-4">
@@ -76,12 +76,13 @@
                         <div class="p">
                             <div class="row row-flush text-center">
                                 <div class="col-xs-6">
-                                    <p class="mt-lg">Task completion</p>
-                                    <div data-percent="75" data-line-width="20" class="easypie"><span>75</span></div>
+                                    #set($taskStats = $page.find('/leads/').taskStatus)
+                                    <p class="mt-lg">Task completion </p>
+                                    <div data-percent="$taskStats.completePerc" data-line-width="20" class="easypie"><span>$taskStats.completePerc%</span></div>
                                 </div>
                                 <div class="col-xs-6">
                                     <p class="mt-lg">Conversion rate</p>
-                                    <div data-percent="22" data-line-width="20" class="easypie"><span>22</span></div>
+                                    <div data-percent="$taskStats.convertedPerc" data-line-width="20" class="easypie"><span>$taskStats.convertedPerc%</span></div>
                                 </div>
                             </div>
                         </div>
@@ -135,8 +136,6 @@
 </div>
 
 
-#createModals()
-
 <script src="/static/dotdotdot/1.7.4/jquery.dotdotdot.min.js" type="text/javascript">//</script>
 <script type="text/javascript">
     $(function () {
@@ -153,7 +152,7 @@
         });
 
         var pieOptions = {
-            animate:{
+            animate: {
                 duration: 700,
                 enabled: true
             },

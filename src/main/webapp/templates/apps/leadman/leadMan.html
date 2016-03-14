@@ -39,7 +39,7 @@
                         </ul>
                     </div>
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-3">
                     #if(!$request.params.leadType)
                     #set($request.params.leadType = 'active')
                     #end
@@ -140,7 +140,6 @@
                 </div>
             </div>
         </div>
-        #createModals()
         <script src="/theme/apps/leadman/leadManPage.js" type="text/javascript"></script>
         <script src="/static/moment/2.4.0/moment-2.4.0.js" type="text/javascript"></script>
         <script src="/static/d3/d3.v3.js" type="text/javascript"></script>
