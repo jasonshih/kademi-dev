@@ -26,8 +26,14 @@
     cursor:pointer;
 }
 
-#chart_histogram svg {
-    height: 490px;
+.panel-heading .btn-series {
+    vertical-align: top;
+    position: relative;
+    top: -3px;
+}
+
+#chart_histogram svg, .myPie svg {
+    height: 300px;
 }
 
 .ktile-inner{

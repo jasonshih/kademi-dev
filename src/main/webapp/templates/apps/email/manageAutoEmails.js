@@ -80,6 +80,7 @@ function initReportDateRange() {
 }
 
 function loadAnalytics() {
+    flog("loadAnalytics");
     $('#summaryCsv').attr('href', 'summary.csv?' + $.param(searchData));
     var href = "?triggerHistory&" + $.param(searchData);
     $.ajax({
