@@ -159,13 +159,25 @@
     }
 
     function initSearchField() {
-        $('body').on('change', '#leadQuery', function (e) {
+
+        var txt = $('#leadQuery');
+        txt.on({
+            input: function () {
+                typewatch(function () {
+                    var text = txt.val().trim();
+
+                    searchOptions.query = text;
+                    doSearch();
+
+                }, 500);
+            }
+        });
+
+        var clearBtn = $('#lead-query-clear');
+        clearBtn.on('click', function(e){
             e.preventDefault();
-
-            var inp = $(this);
-
-            searchOptions.query = inp.val();
-
+            txt.val('');
+            searchOptions.query = '';
             doSearch();
         });
     }

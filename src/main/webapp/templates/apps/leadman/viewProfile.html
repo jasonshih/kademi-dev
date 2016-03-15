@@ -170,7 +170,7 @@
                                                 <tr>
                                                     <td>
                                                         <a href="/leads/$lead.id/">
-                                                            $lead.description
+                                                            $!lead.description
                                                         </a>
                                                     </td>
                                                     <td>
@@ -188,10 +188,10 @@
                                                     <td>
                                                         <abbr title="$formatter.formatDateISO8601($lead.createDate)" class="timeago">$lead.createDate</abbr>
                                                     </td>
-                                                    <td>$lead.dealAmount</td>
+                                                    <td>$!lead.dealAmount</td>
                                                     <td>
-                                                        #if( $lead.assignedTo )
-                                                        $lead.assignedTo.formattedName
+                                                        #if( $lead.assignedToProfile )
+                                                        $lead.assignedToProfile.formattedName
                                                         #else
                                                         Not assigned
                                                         #end
