@@ -57,7 +57,7 @@
             }
 
             // Module is completable ?
-            self.self.isCompletable = options.self.isCompletable && !options.isCompleted;
+            self.isCompletable = options.isCompletable && !options.isCompleted;
 
             self.initModuleNav();
             self.initLearningContentStyles();
@@ -247,7 +247,7 @@
                 whenComplete.show();
                 whenNotComplete.hide();
             } else {
-                if (self.self.isCompletable) {
+                if (self.isCompletable) {
                     flog('[jquery.module] Show .when-not-complete');
 
                     whenComplete.hide();
@@ -599,9 +599,8 @@
         },
 
         saveProgress: function (callback) {
-            flog('[jquery.module] saveProgress', 'isCompletable: ' + self.isCompletable + ', userUrl: ' + userUrl);
-
             var self = this;
+            flog('[jquery.module] saveProgress', 'isCompletable: ' + self.isCompletable + ', userUrl: ' + userUrl);
 
             if (userUrl === null) {
                 return;
