@@ -32,7 +32,7 @@
 
         },
         onQuizSubmit: function () {
-
+            return true;
         },
         onQuizSuccess: function () {
 
@@ -112,22 +112,22 @@
                 var btn = $(this);
                 flog('Clicked on .nextBtn', btn);
 
-                if (btn.hasClass('submitQuiz')) {
+                if (!self.checkNext()) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    return false;
+                }
+
+                if (btn.hasClass('quizSubmit')) {
                     if (!self.isQuizCompleted(e)) {
                         e.stopPropagation();
                         e.preventDefault();
                         return false;
                     }
-                } else {
-                    if (!self.checkNext()) {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        return false;
-                    }
+                }
 
-                    if (typeof options.onNextPage === 'function') {
-                        options.onNextPage.call(btn);
-                    }
+                if (typeof options.onNextPage === 'function') {
+                    options.onNextPage.call(btn);
                 }
 
                 if (self.isLastPage()) {
@@ -877,6 +877,8 @@
         getProgressPageIndex: function () {
             flog('[jquery.module] getProgressPageIndex');
 
+            var self = this;
+
             var modLinks = $('.pages a.modPage');
             if (modLinks.length == 0) {
                 return 0;
@@ -1013,7 +1015,7 @@
                 currentTarget = $(e.target).closest('a');
             }
 
-            if (isLastPage() && currentTarget.hasClass('nextBtn')) {
+            if (self.isLastPage() && currentTarget.hasClass('nextBtn')) {
                 self.completeModule();
             } else {
                 $.pjax({
@@ -1097,7 +1099,7 @@
             });
 
             if (hasError) {
-                alert('[jquery.module] Please answer all of the questions');
+                alert('Please answer all of the questions');
                 return false;
             }
 
