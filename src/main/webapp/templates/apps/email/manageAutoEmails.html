@@ -15,8 +15,8 @@
                 top: -3px;
             }
 
-            #chart_histogram svg {
-                height: 490px;
+            #chart_histogram svg, .myPie svg {
+                height: 300px;
             }
         </style>
     </head>
@@ -40,6 +40,25 @@
                             <a id="summaryCsv" class="btn btn-sm btn-info" href="summary.csv"><i class="fa fa-download"></i> Summary CSV</a>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                            <div id="pieDevice" class="myPie">
+                                <svg></svg>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                            <div id="pieClient" class="myPie">
+                                <svg></svg>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                            <div id="pieDomain" class="myPie">
+                                <svg></svg>
+                            </div>
+                        </div>
+
+                    </div>
+
                     <div class="row">
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                             <div id="chart_histogram">
