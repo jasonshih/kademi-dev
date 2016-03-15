@@ -190,7 +190,7 @@
                     flog('[jquery.module] Pjax success!');
 
                     initPrintLink();
-                    initPageNav();
+                    self.initPageNav();
                 },
                 debug: true
             });
@@ -906,7 +906,7 @@
             flog('[jquery.module] isLastPage');
 
             var self = this;
-            var currentPageIndex = getCurrentPageIndex();
+            var currentPageIndex = self.getCurrentPageIndex();
             var numberOfPages = self.getNumberOfPages();
             var result = currentPageIndex >= (numberOfPages - 1);
 
