@@ -6,25 +6,28 @@ function initKChatAdmin() {
 
 function initSidebarToggle() {
     $('.navbar-tools .navbar-right').append(
-        '<li class="fuse-header-item">' +
-        '    <a class="sb-toggle" href="#"><i class="fa fa-outdent"></i></a>' +
-        '</li>'
-    );
+            '<li class="fuse-header-item">' +
+            '    <a class="sb-toggle" href="#"><i class="fa fa-outdent"></i></a>' +
+            '</li>'
+            );
 }
 
 var initKChatWebsocket = function () {
-    flog('initKChatWebsocket', orgId);
-
     var pageSidebar = $('#page-sidebar');
     var orgId = pageSidebar.data('cid').toString();
 
+    flog('initKChatWebsocket', orgId);
+
     var b64ContentId = Base64.encode(orgId);
 
+    var port = parseInt(window.location.port || 80) + 1;
     var proto = 'ws://';
     if (window.location.protocol === 'https:') {
         proto = 'wss://';
+        port = parseInt(window.location.port || 443) + 1;
     }
-    var url = window.location.host + '/ws/' + window.location.host + '/kchatAdmin/' + b64ContentId;
+
+    var url = window.location.hostname + ':' + port + '/ws/' + window.location.hostname + '/kchatAdmin/' + b64ContentId;
     flog(url);
     var kchatSocket = new WebSocket(proto + url);
 

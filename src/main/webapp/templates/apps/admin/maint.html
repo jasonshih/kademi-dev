@@ -227,16 +227,26 @@
                     #set( $caches = $formatter.sortReverse( $formatter.sortByProperty($caches, "size") ) )
 
                     <table class="stacktraces table table-striped">
-                        #foreach($cache in $caches )
-                        <tr>
-                            <td><a href="#$group.name">$cache.name</a></td>
-                            <td>$cache.status</td>
-                            <td>$cache.size</td>
-                            <td>$cache.cacheConfiguration.maxEntriesLocalHeap</td>
-                            <td>$cache.cacheConfiguration.maxEntriesLocalDisk</td>
-                            <td>$cache.statistics</td>
-                        </tr>
-                        #end
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Status</th>
+                                <th>Size</th>
+                                <th>Max Local Heap</th>
+                                <th>Max Local Disk</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            #foreach($cache in $caches )
+                            <tr>
+                                <td>$cache.name</td>
+                                <td>$cache.status</td>
+                                <td>$cache.size</td>
+                                <td>$cache.maxLocalHeap</td>
+                                <td>$cache.maxLocalDisk</td>
+                            </tr>
+                            #end
+                        </tbody>
                     </table>
                 </div>
                 <div id="threads" class="tab-pane">
