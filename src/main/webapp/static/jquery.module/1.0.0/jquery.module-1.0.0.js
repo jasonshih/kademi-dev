@@ -25,21 +25,11 @@
         isCompleted: false,
         isEditable: false,
         isCompletable: false,
-        onPreviousPage: function () {
-
-        },
-        onNextPage: function () {
-
-        },
-        onQuizSubmit: function () {
-            return true;
-        },
-        onQuizSuccess: function () {
-
-        },
-        onQuizError: function () {
-
-        }
+        onPreviousPage: null,
+        onNextPage: null,
+        onQuizSubmit: null,
+        onQuizSuccess: null,
+        onQuizError: null
     };
 
     var Module = {
