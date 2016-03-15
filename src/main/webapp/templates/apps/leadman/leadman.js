@@ -153,8 +153,16 @@ function initTasks() {
         e.preventDefault();
         var name = $(e.target).attr("href");
         var href = $(this).closest('ul').data('href');
-        assignTo(name, href);
+        assignTo(name, href, "assignedBlock");
     });
+
+    $("body").on("click", "#assignToMenuTask a", function (e) {
+        e.preventDefault();
+        var name = $(e.target).attr("href");
+        var href = $(this).closest('ul').data('href');
+        assignTo(name, href, "assignedBlockTask");
+    });
+
     $("body").on("click", ".btnTaskDelete", function (e) {
         e.preventDefault();
         var link = $(e.target).closest("a");
@@ -715,7 +723,7 @@ function initDateTimePikersForModal() {
     });
 }
 
-function assignTo(name, href) {
+function assignTo(name, href, blockId) {
     $.ajax({
         type: 'POST',
         url: href || window.location.pathname,
@@ -726,7 +734,7 @@ function assignTo(name, href) {
         success: function (resp) {
             if (resp && resp.status) {
                 Msg.info("The assignment has been changed!");
-                $("#assignedBlock").reloadFragment({
+                $("#"+blockId).reloadFragment({
                     url: href || window.location.pathname
                 });
             } else {
