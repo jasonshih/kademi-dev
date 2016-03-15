@@ -113,7 +113,7 @@
                 flog('Clicked on .nextBtn', btn);
 
                 if (btn.hasClass('submitQuiz')) {
-                    if (!self.isQuizCompleted()) {
+                    if (!self.isQuizCompleted(e)) {
                         e.stopPropagation();
                         e.preventDefault();
                         return false;
@@ -126,7 +126,7 @@
                     }
 
                     if (typeof options.onNextPage === 'function') {
-                        options.onNextPage.call(link);
+                        options.onNextPage.call(btn);
                     }
                 }
 
@@ -152,7 +152,7 @@
                     return false;
                 }
 
-                var currentIndex = getCurrentPageIndex();
+                var currentIndex = self.getCurrentPageIndex();
                 var clickedIndex = link.index();
                 if (clickedIndex > currentIndex) {
                     if (!self.checkNext()) {
@@ -175,7 +175,7 @@
                     return false;
                 }
 
-                if (!self.isQuizCompleted()) {
+                if (!self.isQuizCompleted(e)) {
                     e.stopPropagation();
                     e.preventDefault();
                     return false;
@@ -600,6 +600,7 @@
 
         saveProgress: function (callback) {
             var self = this;
+            var options = self.getOptions();
             flog('[jquery.module] saveProgress', 'isCompletable: ' + self.isCompletable + ', userUrl: ' + userUrl);
 
             if (userUrl === null) {
@@ -619,7 +620,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: url,
+                url: options.currentUrl,
                 data: data,
                 success: function (response) {
                     flog('[jquery.module] Saving moduleStatus ok', response);
