@@ -132,7 +132,13 @@
         flog("initWebsockets", window.location.host, path);
         var b64ContentId = Base64.encode(path);
         try {
-            wsocket = new WebSocket("ws://" + window.location.host + "/comments/" + window.location.host + "/content/" + b64ContentId);
+            var port = parseInt(window.location.port || 80) + 1;
+            var proto = 'ws://';
+            if (window.location.protocol === 'https:') {
+                proto = 'wss://';
+                port = parseInt(window.location.port || 443) + 1;
+            }
+            wsocket = new WebSocket(proto + window.location.hostname + ':' + port + '/comments/' + window.location.hostname + '/content/' + b64ContentId);
             wsocket.onmessage = function (evt) {
                 var c = $.parseJSON(evt.data);
                 flog("onMessage", c);
