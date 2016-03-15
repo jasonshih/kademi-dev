@@ -1161,7 +1161,7 @@
             return false;
         },
 
-        showApology: function () {
+        showApology: function (operation) {
             alert('Oh, oops. I\'m really, really, sorry, but I couldnt ' + operation + ' because of some computer-not-behaving thing. Perhaps check your internet connection? If it still doesnt work it would be super nice if you could tell us from the contact page and we\'ll sort it out ASAP - thanks!');
         }
     };
