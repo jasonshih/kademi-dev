@@ -31,7 +31,7 @@
         onNextPage: function () {
 
         },
-        onSubmitQuiz: function () {
+        onQuizSubmit: function () {
 
         },
         onQuizSuccess: function () {
@@ -104,6 +104,7 @@
             flog('[jquery.module] initModuleNav');
 
             var self = this;
+            var options = self.getOptions();
             self.initPageNav();
 
             // This needs to be just done once, not on each pjax transition
@@ -122,6 +123,10 @@
                         e.stopPropagation();
                         e.preventDefault();
                         return false;
+                    }
+
+                    if (typeof options.onNextPage === 'function') {
+                        options.onNextPage.call(link);
                     }
                 }
 
@@ -155,6 +160,19 @@
                         e.preventDefault();
                         return false;
                     }
+
+                    if (typeof options.onNextPage === 'function') {
+                        options.onNextPage.call(link);
+                    }
+                } else if (clickedIndex < currentIndex) {
+                    if (typeof options.onPreviousPage === 'function') {
+                        options.onPreviousPage.call(link);
+                    }
+                } else {
+                    flog('[jquery.module] Clicked on current page. Do nothing!');
+                    e.stopPropagation();
+                    e.preventDefault();
+                    return false;
                 }
 
                 if (!self.isQuizCompleted()) {
@@ -1049,6 +1067,13 @@
             var errors = quiz.find('.error');
             flog('[jquery.module] Remove prev errors', errors);
             errors.removeClass('error');
+
+            // Callback onQuizSubmit
+            if (typeof options.onQuizSubmit === 'function') {
+                if (!options.onQuizSubmit.call(quiz)) {
+                    return false;
+                }
+            }
 
             // Check all questions have been answered
             var hasError = false;
