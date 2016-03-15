@@ -10,11 +10,13 @@ function initKChatWS() {
     var cid = chatContainer.data('cid');
     var b64ContentId = Base64.encode(cid.toString());
 
+    var port = parseInt(window.location.port || 80) + 1;
     var proto = 'ws://';
     if (window.location.protocol === 'https:') {
         proto = 'wss://';
+        port = parseInt(window.location.port || 443) + 1;
     }
-    var url = window.location.host + '/ws/' + window.location.host + '/kchat/' + b64ContentId;
+    var url = window.location.hostname + ':' + port + '/ws/' + window.location.hostname + '/kchat/' + b64ContentId;
     var kchatSocket = new WebSocket(proto + url);
 
     kchatSocket.onmessage = function (evt) {
