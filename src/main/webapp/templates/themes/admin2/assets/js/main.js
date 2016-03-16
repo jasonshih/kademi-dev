@@ -20,7 +20,6 @@ var pageArea;
                     func.apply(obj, args);
                 timeout = null;
             }
-            ;
 
             if (timeout)
                 clearTimeout(timeout);
@@ -68,7 +67,7 @@ var Main = function () {
     var updateNiceScroll = function (target) {
         target.getNiceScroll().resize();
     };
-    
+
     // function to adjust the template elements based on the window size
     var runElementsPosition = function () {
         windowWidth = $(window).width();
@@ -255,12 +254,17 @@ var Main = function () {
     // function to activate the 3rd and 4th level menus
     var runNavigationMenu = function () {
         var mainMenu = $('#main-navigation-menu');
-        initNiceScroll(mainMenu);
-        var callback = function () {
-            updateNiceScroll(mainMenu);
-        };
+        var callback = null;
+        if (windowWidth >= 768) {
+            initNiceScroll(mainMenu);
+            callback = function () {
+                updateNiceScroll(mainMenu);
+            };
+        }
+
         mainMenu.find('li.active').addClass('open');
         mainMenu.find('> li a').on('click', function () {
+
             var link = $(this);
             var li = link.parent();
             var ul = li.parent();
@@ -330,7 +334,7 @@ var Main = function () {
 
     // function to activate Less style
     var runActivateLess = function () {
-        $('		.icons-color img').removeClass('active');
+        $('.icons-color img').removeClass('active');
         if ($('#skin_color').attr("rel") == "stylesheet") {
             $('#skin_color').attr("rel", "stylesheet/less").attr("href", "/static/ContentBuilder/assets/less/styles.less");
             less.sheets.push($('link#skin_color')[0]);
@@ -356,16 +360,18 @@ var Main = function () {
         var mainContainer = $('.main-content > .container');
         var mainNavigation = $('.main-navigation');
         var footer = $('.footer');
-        var navbar = $('.navbar');        
+        var navbar = $('.navbar');
         mainContainer.css('min-height', windowHeight - footer.innerHeight() - navbar.innerHeight());
-        
+
         if (windowWidth < 768) {
             mainNavigation.css('min-height', windowHeight - $('body > .navbar').outerHeight());
         }
 
         var sidebarWrapper = $('#page-sidebar .sidebar-wrapper');
         sidebarWrapper.css('height', windowHeight - $('body > .navbar').outerHeight()).scrollTop(0);
-        updateNiceScroll(sidebarWrapper);
+        if (windowWidth >= 768) {
+            updateNiceScroll(sidebarWrapper);
+        }
     };
 
     return {

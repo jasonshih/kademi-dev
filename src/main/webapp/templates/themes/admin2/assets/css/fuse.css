@@ -794,7 +794,7 @@ ul.main-navigation-menu {
     overflow: auto;
 }
 
-@media screen and (max-width: 979px) {
+@media screen and (min-width: 768px) and (max-width: 979px) {
     ul.main-navigation-menu {
         overflow: visible !important;
     }
@@ -802,6 +802,19 @@ ul.main-navigation-menu {
     ul.main-navigation-menu > li:hover > ul.sub-menu {
         max-height: 300px;
         overflow: auto;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .main-navigation {
+        top: 99px;
+        bottom: auto;
+        max-height: calc(100% - 99px)!important;
+        min-height: 0 !important;
+    }
+
+    ul.main-navigation-menu {
+        height: auto;
     }
 }
 

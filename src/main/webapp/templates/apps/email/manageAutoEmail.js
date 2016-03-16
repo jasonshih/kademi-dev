@@ -229,7 +229,7 @@ function handleData(resp) {
 }
 
 function initEmailStats() {
-    initChart($('.emailsMainPie'), {
+    drawPieChart($('.emailsMainPie'), {
         trackColor: 'rgba(255,255,255,0.2)',
         scaleColor: 'rgba(255,255,255,0.5)',
         barColor: 'rgba(255,255,255,0.7)',
@@ -237,7 +237,7 @@ function initEmailStats() {
         lineCap: 'butt'
     }, 90);
 
-    initChart($('.emailsSubPie.bluePie'), {
+    drawPieChart($('.emailsSubPie.bluePie'), {
         trackColor: '#eee',
         scaleColor: '#ccc',
         barColor: '#2196F3',
@@ -245,7 +245,7 @@ function initEmailStats() {
         lineCap: 'butt'
     }, 8);
 
-    initChart($('.emailsSubPie.orangePie'), {
+    drawPieChart($('.emailsSubPie.orangePie'), {
         trackColor: '#eee',
         scaleColor: '#ccc',
         barColor: '#FFC107',
@@ -368,50 +368,6 @@ function initPie(id, aggr) {
                 .call(chart);
 
         return chart;
-    });
-}
-
-function drawChart(chart, options, padding, isFirstTime) {
-    var wrapper = chart.closest('.col-sm-6');
-    var canvas = chart.find('canvas');
-    var sizeChart = wrapper.width() - padding;
-    if (sizeChart < 0) {
-        sizeChart = 100;
-    }
-    var currentSize = +chart.attr('data-size');
-    flog("got size", sizeChart, chart);
-
-    // Hide canvas
-    canvas.hide();
-
-    if (currentSize !== sizeChart || isFirstTime) {
-        flog('Render new chart', sizeChart);
-
-        // Clear data pf easyPieChart
-        if (!isFirstTime) {
-            chart.data('easy-pie-chart', null);
-            chart.data('size', sizeChart);
-        }
-
-        // Remove the chart
-        canvas.remove();
-
-        // Render new chart
-        options.size = sizeChart;
-        flog("chart size", sizeChart);
-        chart.easyPieChart(options);
-    } else {
-        flog('Re-show current chart');
-        canvas.show();
-    }
-
-}
-
-function initChart(target, options, padding) {
-    drawChart(target, options, padding, true);
-
-    $(window).on('resize', function () {
-        drawChart(target, options, padding);
     });
 }
 
