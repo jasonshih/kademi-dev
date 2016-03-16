@@ -20,7 +20,7 @@ $(function () {
     initCancelTaskModal();
     initTopNavSearch();
     initOrgSearch();
-    initProfileSearch();
+    initProfileSearchTable();
     initAudioPlayer();
     initDeleteFile();
     initCreatedDateModal();
@@ -967,6 +967,75 @@ function initOrgSearch() {
         var form = inp.closest('form');
 
         form.find('input[name=newOrgId]').val(sug.orgId);
+    });
+}
+
+function initProfileSearchTable(){
+
+    var txt = $('.contact-finder');
+    txt.on({
+        input: function () {
+            var text = this.value.trim();
+            typewatch(function () {
+                doSearch(text);
+            }, 500);
+        }
+    });
+
+    $(document.body).on('click','#table-result tbody tr', function (e) {
+        e.preventDefault();
+        var jsonString = $(this).attr('data-json');
+        jsonString = jsonString.replace(/&@@&/ig,'"');
+        try {
+            var profile = JSON.parse(jsonString);
+            var form = $(this).closest('form');
+            form.find('input[name=firstName]').val(profile.firstName);
+            form.find('input[name=surName]').val(profile.surName);
+            form.find('input[name=email]').val(profile.email);
+            form.find('input[name=phone]').val(profile.phone);
+        } catch(ex) {
+            flog('json parsing error', ex);
+        }
+    });
+}
+
+function buildTable(resp){
+    var html = '';
+    if(!resp.length){
+        html+='<tr><td class="text-center" colspan="5">No contact found. Please enter new contact info above</td></tr>';
+    }else{
+        for(var i = 0; i < resp.length; i++){
+            var profile = resp[i];
+            var jsonString = JSON.stringify(profile);
+            jsonString = jsonString.replace(/"/ig,'&@@&');
+            html+='<tr title="Click to select this contact" style="cursor: pointer" data-json="'+jsonString+'">';
+            html+='<td>'+profile.name+'</td>';
+            html+='<td>'+profile.email+'</td>';
+            html+='<td>'+profile.phone+'</td>';
+            html+='</tr>';
+        }
+    }
+
+    $('#table-result').find('tbody').html(html);
+    $('#table-result').find('table').removeClass('hide');
+}
+
+function doSearch(query){
+    if(!query){
+        $('#table-result').find('tbody').html('<tr><td class="text-center" colspan="5">No contact found. Please enter new contact info above</td></tr>');
+        return;
+    }
+    $.ajax({
+        url: '/leads?profileSearch='+ encodeURI(query),
+        dataType: 'json',
+        success: function(resp){
+            if(resp){
+                buildTable(resp);
+            }
+        },
+        error: function(err){
+            $('#table-result').find('tbody').html('<tr><td class="text-center" colspan="5">No contact found. Please enter new contact info bellow</td></tr>');
+        }
     });
 }
 
