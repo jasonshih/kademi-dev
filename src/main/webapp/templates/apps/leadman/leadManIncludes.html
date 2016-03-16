@@ -50,54 +50,44 @@
                             <input type="text" name="newOrgTitle" id="newOrgTitle" class="form-control" placeholder="Title"/>
                         </div>
                     </div>
+
+
                     <div class="form-group">
-                        <label class="control-label col-md-2" for="findContact">Find contact</label>
+                        <label class="control-label col-md-2" for="newUserFirstName">Name</label>
                         <div class="col-md-5">
-                            <div class="input-group">
-                                <input type="text" name="findContact" id="findContact" class="form-control" placeholder="Enter user info to search" />
-                                <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                            </div>
+                            <input type="text" name="firstName" id="newUserFirstName" class="form-control contact-finder" placeholder="First name" />
                         </div>
+                        <div class="col-md-5">
+                            <input type="text" name="surName" id="newUserSurName" class="form-control contact-finder" placeholder="Surname" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2" for="newUserEmail">Contact</label>
+                        <div class="col-md-5">
+                            <input type="text" name="email" id="newUserEmail" class="form-control contact-finder" placeholder="Email" />
+                        </div>
+                        <div class="col-md-5">
+                            <input type="text" name="phone" id="phone" class="form-control contact-finder" placeholder="Phone" />
+                        </div>
+
                     </div>
                     <div class="form-group" id="table-result">
                         <div class="col-sm-10 col-sm-offset-2">
                             <div class="table-responsive">
-                                <table class="table table-bordered hide">
+                                <table class="table table-bordered table-hover hide">
                                     <thead>
-                                        <tr>
-                                            <th>First Name</th>
-                                            <th>Surname</th>
-                                            <th>Email</th>
-                                            <th>Phone</th>
-                                            <th>#</th>
-                                        </tr>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                    </tr>
                                     </thead>
                                     <tbody>
 
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="table-error txt-danger hide">There was an error when searching contact. Please contact administrator for more detail.</div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-2" for="newUserFirstName">Name</label>
-                        <div class="col-md-5">
-                            <input type="text" name="firstName" id="newUserFirstName" class="form-control" placeholder="First name" />
-                        </div>
-                        <div class="col-md-5">
-                            <input type="text" name="surName" id="newUserSurName" class="form-control" placeholder="Surname" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-2" for="newUserEmail">Contact</label>
-                        <div class="col-md-5">
-                            <input type="text" name="email" id="newUserEmail" class="form-control" placeholder="Email" />
-                        </div>
-                        <div class="col-md-5">
-                            <input type="text" name="phone" id="phone" class="form-control" placeholder="Phone" />
-                        </div>
-
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-2" for="newUserNickName">Notes</label>

@@ -972,44 +972,46 @@ function initOrgSearch() {
 
 function initProfileSearchTable(){
 
-    var txt = $('#findContact');
+    var txt = $('.contact-finder');
     txt.on({
         input: function () {
+            var text = this.value.trim();
             typewatch(function () {
-                var text = txt.val().trim();
                 doSearch(text);
             }, 500);
         }
     });
 
-    $(document.body).on('click','#table-result button', function (e) {
+    $(document.body).on('click','#table-result tbody tr', function (e) {
         e.preventDefault();
         var jsonString = $(this).attr('data-json');
         jsonString = jsonString.replace(/&@@&/ig,'"');
-        var profile = JSON.parse(jsonString);
-        var form = $(this).closest('form');
-        form.find('input[name=firstName]').val(profile.firstName);
-        form.find('input[name=surName]').val(profile.surName);
-        form.find('input[name=email]').val(profile.email);
-        form.find('input[name=phone]').val(profile.phone);
+        try {
+            var profile = JSON.parse(jsonString);
+            var form = $(this).closest('form');
+            form.find('input[name=firstName]').val(profile.firstName);
+            form.find('input[name=surName]').val(profile.surName);
+            form.find('input[name=email]').val(profile.email);
+            form.find('input[name=phone]').val(profile.phone);
+        } catch(ex) {
+            flog('json parsing error', ex);
+        }
     });
 }
 
 function buildTable(resp){
     var html = '';
     if(!resp.length){
-        html+='<tr><td class="text-center" colspan="5">No contact found. Please enter new contact info bellow</td></tr>';
+        html+='<tr><td class="text-center" colspan="5">No contact found. Please enter new contact info above</td></tr>';
     }else{
         for(var i = 0; i < resp.length; i++){
             var profile = resp[i];
             var jsonString = JSON.stringify(profile);
             jsonString = jsonString.replace(/"/ig,'&@@&');
-            html+='<tr>';
-            html+='<td>'+profile.firstName+'</td>';
-            html+='<td>'+profile.surName+'</td>';
+            html+='<tr title="Click to select this contact" style="cursor: pointer" data-json="'+jsonString+'">';
+            html+='<td>'+profile.name+'</td>';
             html+='<td>'+profile.email+'</td>';
             html+='<td>'+profile.phone+'</td>';
-            html+='<td><button type="button" data-json="'+jsonString+'" class="btn btn-sm btn-primary">Select</button></td>';
             html+='</tr>';
         }
     }
@@ -1020,7 +1022,7 @@ function buildTable(resp){
 
 function doSearch(query){
     if(!query){
-        $('#table-result').find('tbody').html('<tr><td class="text-center" colspan="5">No contact found. Please enter new contact info bellow</td></tr>');
+        $('#table-result').find('tbody').html('<tr><td class="text-center" colspan="5">No contact found. Please enter new contact info above</td></tr>');
         return;
     }
     $.ajax({
