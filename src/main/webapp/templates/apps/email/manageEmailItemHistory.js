@@ -147,7 +147,18 @@ function initMarkIgnored() {
 function loadAnalytics() {
     flog("loadAnalytics");
 
-    var href = "?emailStats&" + $.param(searchData);
+    var href = "?emailHistory&" + $.param(searchData);
+    $.ajax({
+        type: "GET",
+        url: href,
+        dataType: 'json',
+        success: function (json) {
+            flog('response', json);
+            initHistogram(json.aggregations);
+        }
+    });
+
+    href = "?emailStats&" + $.param(searchData);
     $.ajax({
         type: "GET",
         url: href,
@@ -187,6 +198,75 @@ function initPie(id, aggr) {
                 .datum(aggr.buckets)
                 .transition().duration(350)
                 .call(chart);
+
+        return chart;
+    });
+}
+
+function initHistogram(aggr) {
+    $('#chart_histogram svg').empty();
+    nv.addGraph(function () {
+        var chart = nv.models.multiBarChart()
+                .options({
+                    showLegend: true,
+                    showControls: false,
+                    noData: "No Data available for histogram",
+                    margin: {
+                        left: 40,
+                        bottom: 60
+                    }
+                });
+
+        chart.xAxis
+                .axisLabel("Date")
+                .rotateLabels(-45)
+                .tickFormat(function (d) {
+                    return moment(d).format("DD MMM");
+                });
+
+        chart.yAxis
+                .axisLabel("Triggered")
+                .tickFormat(d3.format('d'));
+
+        var myData = [];
+        var completedAgg = {
+            values: [],
+            key: "Sent",
+            color: "#7777ff",
+            area: true
+        };
+
+        var failedAgg = {
+            values: [],
+            key: "Failed",
+            color: "#d9534f",
+            area: true
+        };
+
+        myData.push(completedAgg);
+        myData.push(failedAgg);
+
+        var trueHits = (aggr !== null ? aggr.completed.createdDate.buckets : []);
+        var falseHits = (aggr !== null ? aggr.failed.createdDate.buckets : []);
+
+        for (var i = 0; i < trueHits.length; i++) {
+            var bucket = trueHits[i];
+            completedAgg.values.push(
+                    {x: bucket.key, y: bucket.doc_count});
+        }
+
+        for (var i = 0; i < falseHits.length; i++) {
+            var bucket = falseHits[i];
+            failedAgg.values.push(
+                    {x: bucket.key, y: bucket.doc_count});
+        }
+
+        d3.select('#chart_histogram svg')
+                .datum(myData)
+                .transition().duration(500)
+                .call(chart);
+
+        nv.utils.windowResize(chart.update);
 
         return chart;
     });

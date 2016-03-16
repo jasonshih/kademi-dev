@@ -9,7 +9,7 @@
 
         <style>
             #chart_histogram svg, .myPie svg {
-                height: 300px;
+                height: 220px;
             }
         </style>
     </head>
@@ -34,6 +34,10 @@
                         <div class="input-group date-range">
                             <label for="report-range" class="input-group-addon">Time</label>
                             <input type="text" id="report-range" placeholder="Choose a date range" value="" class="form-control" />
+                        </div>
+
+                        <div id="chart_histogram">
+                            <svg></svg>
                         </div>
                     </div>
                     <div class="col-md-8">

@@ -11,12 +11,8 @@
         <link href="/templates/apps/email/manageAutoEmail.css" rel="stylesheet" type="text/css"/>
     </head>
     <body class="manageAutoEmail">
-        <div class="tabbable">
-            <ul class="nav nav-tabs tab-bricky">
-                <li class="active"><a data-toggle="tab" href="#analytics" aria-expanded="true">Analytics</a></li>
-                <li><a data-toggle="tab" href="#general">Manage</a></li>
-            </ul>
-            <div class="tab-content">
+
+
                 <!-- Start Analytics -->
                 <div id="analytics" class="tab-pane active">
                     <div class="row">
@@ -60,7 +56,10 @@
                 <!-- End Analytics -->
 
                 <!-- Start General -->
-                <div id="general" class="tab-pane">
+                <div id="general" class="">
+
+                    <hr/>
+
                     <p class="clearFix">
                         <a class="btn btn-sm btn-info pull-right" href="timerTriggers.html">View queued triggers</a>
                         <a class="btn btn-sm btn-success btn-add-email" data-toggle="modal" href="#modal-add-trigger"><i class="fa fa-plus"></i> Create a trigger</a>
@@ -202,9 +201,6 @@
                     </div>
                 </div>
                 <!-- End General -->
-
-            </div>
-        </div>
 
         <script type="text/javascript">
             $(function () {
