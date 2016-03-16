@@ -199,7 +199,11 @@
             success: function (data, textStatus, jqXHR) {
                 $('#LeadTotal').html(data.hits.total);
                 $('#LeadSumValue').html(data.aggregations.dealAmountTotal.value || 0);
-                $('#leadAvgValue').html(data.aggregations.dealAmountAvg.value || 0);
+                var avgAmount = data.aggregations.dealAmountAvg.value || 0;
+                if(avgAmount>0){
+                    avgAmount = new Number(avgAmount).toFixed(2);
+                }
+                $('#leadAvgValue').html(avgAmount);
 
                 updateSourcesPie(data.aggregations.sources.buckets);
                 updateStagesPie(data.aggregations.stages.buckets);
