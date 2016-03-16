@@ -721,6 +721,59 @@ function doTopNavSearch(query, suggestionsWrapper, backdrop) {
     });
 }
 
+function drawPieChart(chart, options, padding, isFirstTime) {
+    flog('drawPieChart', chart, options, padding, isFirstTime);
+
+    var wrapper = chart.closest('.col-sm-6');
+    var canvas = chart.find('canvas');
+    var sizeChart = wrapper.width() - padding;
+    if (sizeChart < 0) {
+        sizeChart = 100;
+    }
+    var currentSize = +chart.attr('data-size');
+    flog("got size", sizeChart, chart);
+
+    // Hide canvas
+    canvas.hide();
+
+    if (currentSize !== sizeChart || isFirstTime) {
+        flog('Render new chart', sizeChart);
+
+        // Clear data pf easyPieChart
+        if (!isFirstTime) {
+            chart.data('easy-pie-chart', null);
+            chart.data('size', sizeChart);
+        }
+
+        // Remove the chart
+        canvas.remove();
+
+        // Render new chart
+        options.size = sizeChart;
+        flog("chart size", sizeChart);
+        try {
+            chart.easyPieChart(options);
+        } catch (e) {
+            flog('Error when rendering easyPieChart', e);
+        }
+    } else {
+        flog('Re-show current chart');
+        canvas.show();
+    }
+}
+
+function initPieChart(target, options, padding) {
+    drawPieChart(target, options, padding, true);
+
+    var timer = null;
+    $(window).on('resize', function () {
+        clearTimeout(timer);
+        timer = setTimeout(function () {
+            drawPieChart(target, options, padding);
+        }, 200);
+    });
+}
+
 $(function () {
     flog("Fuse init");
 
