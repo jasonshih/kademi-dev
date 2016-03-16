@@ -985,7 +985,7 @@ function initProfileSearchTable(){
     $(document.body).on('click','#table-result tbody tr', function (e) {
         e.preventDefault();
         var jsonString = $(this).attr('data-json');
-        jsonString = jsonString.replace(/&@@&/ig,'"');
+        jsonString = decodeURI(jsonString);
         try {
             var profile = JSON.parse(jsonString);
             var form = $(this).closest('form');
@@ -1007,7 +1007,7 @@ function buildTable(resp){
         for(var i = 0; i < resp.length; i++){
             var profile = resp[i];
             var jsonString = JSON.stringify(profile);
-            jsonString = jsonString.replace(/"/ig,'&@@&');
+            jsonString = encodeURI(jsonString);
             html+='<tr title="Click to select this contact" style="cursor: pointer" data-json="'+jsonString+'">';
             html+='<td>'+profile.name+'</td>';
             html+='<td>'+profile.email+'</td>';
