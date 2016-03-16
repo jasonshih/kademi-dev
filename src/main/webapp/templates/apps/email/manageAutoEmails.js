@@ -80,6 +80,7 @@ function initReportDateRange() {
 }
 
 function loadAnalytics() {
+    flog("loadAnalytics");
     $('#summaryCsv').attr('href', 'summary.csv?' + $.param(searchData));
     var href = "?triggerHistory&" + $.param(searchData);
     $.ajax({
@@ -97,12 +98,55 @@ function loadAnalytics() {
             handleData(json);
         }
     });
+    href = "?emailStats&" + $.param(searchData);
+    $.ajax({
+        type: "GET",
+        url: href,
+        dataType: 'json',
+        success: function (resp) {
+            flog("emailstats", resp);
+            initPies(resp.aggregations);
+        }
+    });
+
 }
 
 function handleData(resp) {
     var aggr = (resp !== null ? resp.aggregations : null);
 
     initHistogram(aggr);
+}
+
+function initPies(aggr) {
+    initPie("pieDevice", aggr.deviceCategory);
+    initPie("pieClient", aggr.userAgentType);
+    initPie("pieDomain", aggr.domain);
+}
+function initPie(id, aggr) {
+
+    flog("initPie", id, aggr);
+
+    $('#' + id + ' svg').empty();
+    nv.addGraph(function () {
+        var chart = nv.models.pieChart()
+                .x(function (d) {
+                    return d.key
+                })
+                .y(function (d) {
+                    return d.doc_count
+                })
+                .donut(true)
+                .donutRatio(0.35)
+                .showLabels(true);
+
+
+        d3.select("#" + id + " svg")
+                .datum(aggr.buckets)
+                .transition().duration(350)
+                .call(chart);
+
+        return chart;
+    });
 }
 
 function initHistogram(aggr) {
@@ -329,4 +373,42 @@ function categoryAjax(name, data, url, callback) {
             }
         }
     });
+}
+
+
+function exampleData() {
+  return  [
+      {
+        "label": "One",
+        "value" : 29.765957771107
+      } ,
+      {
+        "label": "Two",
+        "value" : 0
+      } ,
+      {
+        "label": "Three",
+        "value" : 32.807804682612
+      } ,
+      {
+        "label": "Four",
+        "value" : 196.45946739256
+      } ,
+      {
+        "label": "Five",
+        "value" : 0.19434030906893
+      } ,
+      {
+        "label": "Six",
+        "value" : 98.079782601442
+      } ,
+      {
+        "label": "Seven",
+        "value" : 13.925743130903
+      } ,
+      {
+        "label": "Eight",
+        "value" : 5.1387322875705
+      }
+    ];
 }

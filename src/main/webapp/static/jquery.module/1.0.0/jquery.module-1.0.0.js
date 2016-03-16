@@ -25,21 +25,11 @@
         isCompleted: false,
         isEditable: false,
         isCompletable: false,
-        onPreviousPage: function () {
-
-        },
-        onNextPage: function () {
-
-        },
-        onQuizSubmit: function () {
-
-        },
-        onQuizSuccess: function () {
-
-        },
-        onQuizError: function () {
-
-        }
+        onPreviousPage: null,
+        onNextPage: null,
+        onQuizSubmit: null,
+        onQuizSuccess: null,
+        onQuizError: null
     };
 
     var Module = {
@@ -112,22 +102,22 @@
                 var btn = $(this);
                 flog('Clicked on .nextBtn', btn);
 
-                if (btn.hasClass('submitQuiz')) {
+                if (!self.checkNext()) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    return false;
+                }
+
+                if (btn.hasClass('quizSubmit')) {
                     if (!self.isQuizCompleted(e)) {
                         e.stopPropagation();
                         e.preventDefault();
                         return false;
                     }
-                } else {
-                    if (!self.checkNext()) {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        return false;
-                    }
+                }
 
-                    if (typeof options.onNextPage === 'function') {
-                        options.onNextPage.call(btn);
-                    }
+                if (typeof options.onNextPage === 'function') {
+                    options.onNextPage.call(btn);
                 }
 
                 if (self.isLastPage()) {
@@ -877,6 +867,8 @@
         getProgressPageIndex: function () {
             flog('[jquery.module] getProgressPageIndex');
 
+            var self = this;
+
             var modLinks = $('.pages a.modPage');
             if (modLinks.length == 0) {
                 return 0;
@@ -1013,7 +1005,7 @@
                 currentTarget = $(e.target).closest('a');
             }
 
-            if (isLastPage() && currentTarget.hasClass('nextBtn')) {
+            if (self.isLastPage() && currentTarget.hasClass('nextBtn')) {
                 self.completeModule();
             } else {
                 $.pjax({
@@ -1097,7 +1089,7 @@
             });
 
             if (hasError) {
-                alert('[jquery.module] Please answer all of the questions');
+                alert('Please answer all of the questions');
                 return false;
             }
 
@@ -1169,7 +1161,7 @@
             return false;
         },
 
-        showApology: function () {
+        showApology: function (operation) {
             alert('Oh, oops. I\'m really, really, sorry, but I couldnt ' + operation + ' because of some computer-not-behaving thing. Perhaps check your internet connection? If it still doesnt work it would be super nice if you could tell us from the contact page and we\'ll sort it out ASAP - thanks!');
         }
     };

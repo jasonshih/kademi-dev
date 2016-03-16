@@ -17,11 +17,7 @@
             <!-- Tab panes -->
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="records">
-                    #set($showingAmount = 100)
-                    #if($page.records.hits.totalHits < 100)
-                        #set($showingAmount = $page.records.hits.totalHits)
-                    #end
-                    <p>Showing $showingAmount of $page.records.hits.totalHits Records</p>
+                    <p>Showing $page.numDisplayed of $page.records.hits.totalHits Records</p>
                     <table class="table">
                         <thead>
                             <tr>
@@ -38,9 +34,6 @@
                                     $hit.sourceAsString
                                 </td>
                             </tr>
-                            #if($foreach.count >= $showingAmount)
-                                #break;
-                            #end
                             #end
                         </tbody>
                     </table>
@@ -73,7 +66,7 @@
                     </textarea>
                     <button class="btn btn-success runQuery">Run query</button>
                     <hr/>
-                    <pre id="queryResults">                       
+                    <pre id="queryResults">
                         #if( $params.query )
                         #set( $resp = $page.query($params.query) )
                         $resp
