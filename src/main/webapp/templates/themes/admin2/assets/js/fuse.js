@@ -62,6 +62,8 @@ $.fn.exist = function (callback_when_exist, callback_when_no_exist) {
 };
 
 function initToggled() {
+    flog('initToggled');
+
     $('[data-toggled=display]').exist(function () {
         this.each(function () {
             var panel = $(this);
@@ -89,6 +91,8 @@ function initToggled() {
 }
 
 function doMasonryPanel() {
+    flog('doMasonryPanel');
+
     $('.masonry-panel').each(function () {
         var panel = $(this);
 
@@ -125,6 +129,8 @@ function initMasonryPanel() {
 }
 
 function initDatePicker() {
+    flog('initDatePicker');
+
     $('.date-picker').exist(function () {
         var datePicker = this;
 
@@ -163,6 +169,8 @@ function initDatePicker() {
 }
 
 function initTabbable() {
+    flog('initTabbable');
+
     $('.tabbable').exist(function () {
         this.each(function () {
             var wrapper = $(this);
@@ -195,6 +203,8 @@ function initTabbable() {
 }
 
 function initChkAll() {
+    flog('initChkAll');
+
     $('.chk-all').exist(function () {
         this.each(function () {
             var chkAll = $(this);
@@ -209,6 +219,8 @@ function initChkAll() {
 }
 
 function initClearer() {
+    flog('initClearer');
+
     var body = $(document.body);
 
     body.on('click', '[data-type=clearer]', function (e) {
@@ -223,6 +235,8 @@ function initClearer() {
 }
 
 function initTable() {
+    flog('initTable');
+
     $('.table.table-data').exist(function () {
         this.each(function () {
             var dataTable = $(this);
@@ -292,6 +306,7 @@ function validateFuseEmail(emailAddress) {
 
 function initFuseModals() {
     flog("initFuseModal");
+
     $('.modal').exist(function () {
         this.each(function () {
             var modal = $(this);
@@ -322,6 +337,8 @@ function initFuseModals() {
 }
 
 function initFuseModal(modal, callback) {
+    flog('initFuseModal', modal, callback);
+
     if (modal.hasClass('modal-fuse-editor')) {
         var id = modal.attr('id');
 

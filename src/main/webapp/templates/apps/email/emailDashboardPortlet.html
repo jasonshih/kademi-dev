@@ -85,7 +85,11 @@
             // Render new chart
             options.size = sizeChart;
             flog("chart size", sizeChart);
-            chart.easyPieChart(options);
+            try {
+                chart.easyPieChart(options);
+            } catch (e) {
+                flog('Error when rendering easyPieChart', e);
+            }
         } else {
             flog('Re-show current chart');
             canvas.show();
@@ -96,8 +100,12 @@
     function initChart(target, options, padding) {
         drawChart(target, options, padding, true);
 
+        var timer = null;
         $(window).on('resize', function () {
-            drawChart(target, options, padding);
+            clearTimeout(timer);
+            timer = setTimeout(function () {
+                drawChart(target, options, padding);
+            }, 200);
         });
     }
 
