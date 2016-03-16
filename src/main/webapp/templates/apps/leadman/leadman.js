@@ -20,7 +20,7 @@ $(function () {
     initCancelTaskModal();
     initTopNavSearch();
     initOrgSearch();
-    initProfileSearch();
+    initProfileSearchTable();
     initAudioPlayer();
     initDeleteFile();
     initCreatedDateModal();
@@ -967,6 +967,73 @@ function initOrgSearch() {
         var form = inp.closest('form');
 
         form.find('input[name=newOrgId]').val(sug.orgId);
+    });
+}
+
+function initProfileSearchTable(){
+
+    var txt = $('#findContact');
+    txt.on({
+        input: function () {
+            typewatch(function () {
+                var text = txt.val().trim();
+                doSearch(text);
+            }, 500);
+        }
+    });
+
+    $(document.body).on('click','#table-result button', function (e) {
+        e.preventDefault();
+        var jsonString = $(this).attr('data-json');
+        jsonString = jsonString.replace(/&@@&/ig,'"');
+        var profile = JSON.parse(jsonString);
+        var form = $(this).closest('form');
+        form.find('input[name=firstName]').val(profile.firstName);
+        form.find('input[name=surName]').val(profile.surName);
+        form.find('input[name=email]').val(profile.email);
+        form.find('input[name=phone]').val(profile.phone);
+    });
+}
+
+function buildTable(resp){
+    var html = '';
+    if(!resp.length){
+        html+='<tr><td class="text-center" colspan="5">No contact found. Please enter new contact info bellow</td></tr>';
+    }else{
+        for(var i = 0; i < resp.length; i++){
+            var profile = resp[i];
+            var jsonString = JSON.stringify(profile);
+            jsonString = jsonString.replace(/"/ig,'&@@&');
+            html+='<tr>';
+            html+='<td>'+profile.firstName+'</td>';
+            html+='<td>'+profile.surName+'</td>';
+            html+='<td>'+profile.email+'</td>';
+            html+='<td>'+profile.phone+'</td>';
+            html+='<td><button type="button" data-json="'+jsonString+'" class="btn btn-sm btn-primary">Select</button></td>';
+            html+='</tr>';
+        }
+    }
+
+    $('#table-result').find('tbody').html(html);
+    $('#table-result').find('table').removeClass('hide');
+}
+
+function doSearch(query){
+    if(!query){
+        $('#table-result').find('tbody').html('<tr><td class="text-center" colspan="5">No contact found. Please enter new contact info bellow</td></tr>');
+        return;
+    }
+    $.ajax({
+        url: '/leads?profileSearch='+ encodeURI(query),
+        dataType: 'json',
+        success: function(resp){
+            if(resp){
+                buildTable(resp);
+            }
+        },
+        error: function(err){
+            $('#table-result').find('tbody').html('<tr><td class="text-center" colspan="5">No contact found. Please enter new contact info bellow</td></tr>');
+        }
     });
 }
 
