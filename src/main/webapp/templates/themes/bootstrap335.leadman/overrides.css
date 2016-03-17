@@ -266,3 +266,9 @@ table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, 
         width: 50px;
     }
 }
+
+@media (min-width: 768px) {
+    .no-scroll-medium{
+        overflow: hidden;
+    }
+}

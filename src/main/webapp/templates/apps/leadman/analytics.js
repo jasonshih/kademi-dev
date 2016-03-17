@@ -71,13 +71,15 @@
     function initHistogram(resp) {
         flog("initHistogram", resp.summary);
         $('#histo svg').empty();
+        var closedSalesColor = $('#histo').attr('data-closedSales') || '#ee145b';
+        var cancelledSalesColor = $('#histo').attr('data-cancelledSales') || '#3e3e3e';
         var closedBuckets = resp.summary.aggregations.closed.bydate.buckets;
         var cancelledBuckets = resp.summary.aggregations.cancelled.bydate.buckets;
 
         var myData = [];
         var closedSales = {
             key: "Closed sales",
-            color: "#4caf50",
+            color: closedSalesColor,
             values: []
         };
         myData.push(closedSales);
@@ -92,7 +94,7 @@
 
         var cancelledSales = {
             key: "Cancelled sales",
-            color: "#ea8b00",
+            color: cancelledSalesColor,
             values: []
         };
         myData.push(cancelledSales);
@@ -155,6 +157,7 @@
         var reasonsAgg = aggs.summary.aggregations.cancelledReasons.buckets;
         var closedByOrgAgg = aggs.summary.aggregations.closedByOrg.orgId.buckets;
         var lostByOrgAgg = aggs.summary.aggregations.lostByOrg.orgId.buckets;
+        var colors = ['#ee145b','#3e3e3e','#4d9acc','#60b87e'];
         flog("initPies", closedByOrgAgg);
         nv.addGraph(function () {
             var chartLost = nv.models.pieChart()
@@ -165,6 +168,7 @@
                         return d.doc_count
                     })
                     .donut(true)
+                    .color(colors)
                     .showLabels(false);                
            
 
@@ -181,6 +185,7 @@
                         return d.doc_count
                     })
                     .donut(true)
+                    .color(colors)
                     .showLabels(false);   
             
             d3.select("#closedByOrgPie svg")
@@ -196,6 +201,7 @@
                         return d.doc_count
                     })
                     .donut(true)
+                    .color(colors)
                     .showLabels(false);   
             
             d3.select("#conversionRatePie svg")
