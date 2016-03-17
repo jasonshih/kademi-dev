@@ -69,11 +69,6 @@ $!bodyContent
 #portlets("header")
 
 <script src="/templates/themes/bootstrap335/js/theme.js">//</script>
-
-<script>
-    //flog("hello world", $);
-    //flog("hello world", $("").easyPieChart );
-</script>
 #end
 
 
@@ -115,7 +110,7 @@ $!bodyContent
                             #if(!$item.items.empty)
                             <ul class="dropdown-menu">
                                 #foreach($entry in $item.items)
-                                <li class="presentation $formatter.ifTrue($item.active, 'active', '')" role="menuitem"><a href="$entry.href">$entry.text</a></li>
+                                <li class="presentation menu-item-$entry.id $formatter.ifTrue($item.active, 'active', '')" role="menuitem"><a href="$entry.href">$entry.text</a></li>
                                 #end
                             </ul>
                             #end
