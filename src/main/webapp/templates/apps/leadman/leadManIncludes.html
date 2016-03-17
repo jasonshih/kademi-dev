@@ -560,14 +560,14 @@
         #if( $lead.profile )
         <div class="text-muted leadContactMethods">
             #if($lead.profile.email)
-            <a href="mailto:$lead.profile.email" class="text-muted">
-                <em aria-hidden="true" class="fa fa-envelope"></em>
-            </a>
+            <!--<a href="mailto:$lead.profile.email" class="text-muted">-->
+                <!--<em aria-hidden="true" class="fa fa-envelope"></em>-->
+            <!--</a>-->
             #end
             #if($lead.profile.phone)
-            <a href="tel:$lead.profile.phone" class="text-muted">
-                <em aria-hidden="true" class="fa fa-mobile"></em>
-            </a>
+            <!--<a href="tel:$lead.profile.phone" class="text-muted">-->
+                <!--<em aria-hidden="true" class="fa fa-mobile"></em>-->
+            <!--</a>-->
             #end
             <!--
             <a href="javascript:void(0)" class="text-muted">
@@ -590,13 +590,18 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/leads/$lead.id?cancel" class="btn btn-danger" title="Deal cancelled" data-target="#modalCancelLead" data-toggle="modal">
+                    <a href="/leads/$lead.id?cancel" class="btn btn-primary" title="Deal cancelled" data-target="#modalCancelLead" data-toggle="modal">
                         <span class="fa fa-remove"></span>
                     </a>
                 </li>
                 <li>
-                    <a href="/leads/$lead.id/" class="btn btn-primary createNote" title="Add note">
-                        <span class="fa fa-lightbulb-o"></span>
+                    <a href="/leads/$lead.id/" class="btn btn-info createNote" title="Add note">
+                        <span class="fa fa-pencil"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="mailto:$!lead.profile.email" class="btn btn-warning" title="Send email">
+                        <span class="fa fa-envelope-o"></span>
                     </a>
                 </li>
             </ul>
