@@ -198,7 +198,9 @@ function initTasks() {
 
 function initOrgSelector() {
     flog("initOrgSelector", $(".selectOrg a"));
-    $.cookie("org", $(".selectOrg a").attr('href'), {path: '/'});
+    if ($.cookie('org') === null || typeof $.cookie('org') === 'undefined') {
+        $.cookie("org", $(".selectOrg a").attr('href'), {path: '/'});
+    }
     $(".selectOrg").on("click", "a", function (e) {
         e.preventDefault();
         var orgId = $(e.target).closest("a").attr("href");
