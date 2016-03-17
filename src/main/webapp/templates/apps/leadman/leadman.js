@@ -198,9 +198,13 @@ function initTasks() {
 
 function initOrgSelector() {
     flog("initOrgSelector", $(".selectOrg a"));
-    if ($.cookie('org') === null || typeof $.cookie('org') === 'undefined') {
-        $.cookie("org", $(".selectOrg a").attr('href'), {path: '/'});
+    if ($.cookie('org') === null || typeof $.cookie('org') === 'undefined' || $(".selectOrg a[href=" + $.cookie('org') + "]").length < 1) {
+        if ($(".selectOrg a").length) {
+            $.cookie("org", $(".selectOrg a").attr('href'), {path: '/'});
+            window.location.reload();
+        }
     }
+
     $(".selectOrg").on("click", "a", function (e) {
         e.preventDefault();
         var orgId = $(e.target).closest("a").attr("href");
