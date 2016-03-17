@@ -1,8 +1,11 @@
 <html>
+    #parse("/theme/masterTemplate.html")
     <head>
-        <title>$page.title</title>
+        #@themeHeader( $page.title )
+        #end
     </head>
     <body class="add-container">
+        #@themeBody()
         <div class="panel panel-default">
             <div class="panel-heading">
                 <i class="clip-info"></i>
@@ -97,5 +100,6 @@
             </div>
             #end
         </div>
+        #end
     </body>
 </html>
