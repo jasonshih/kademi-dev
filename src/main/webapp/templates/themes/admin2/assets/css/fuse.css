@@ -311,6 +311,23 @@ html .modal-lg {
     margin-left: -100px;
 }
 
+.modal-full {
+    width: 100%;
+    margin-left: -50%;
+    border-radius: 0;
+    border: 0;
+    height: 100%;
+}
+
+.modal-full .modal-body {
+    height: calc(100% - 56px - 61px);
+    position: relative;
+}
+
+.modal-overflow.modal.fade.in.modal-full {
+    top: 0;
+}
+
 .modal-fuse.calculating {
     width: auto !important;
     height: auto !important;
