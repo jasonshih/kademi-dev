@@ -172,11 +172,12 @@ function loadAnalytics() {
 }
 
 function initPies(aggr) {
-    initPie("pieDevice", aggr.deviceCategory);
-    initPie("pieClient", aggr.userAgentType);
-    initPie("pieDomain", aggr.domain);
+    initPie("pieDevice", 'Device', aggr.deviceCategory);
+    initPie("pieClient", 'Client', aggr.userAgentType);
+    initPie("pieDomain", 'Domain', aggr.domain);
+    initPie("pieUrl", 'URL', aggr.visitedUrl);
 }
-function initPie(id, aggr) {
+function initPie(id, title, aggr) {
 
     flog("initPie", id, aggr);
 
@@ -184,14 +185,17 @@ function initPie(id, aggr) {
     nv.addGraph(function () {
         var chart = nv.models.pieChart()
                 .x(function (d) {
-                    return d.key
+                    return d.key;
                 })
                 .y(function (d) {
-                    return d.doc_count
+                    return d.doc_count;
                 })
                 .donut(true)
-                .donutRatio(0.35)
-                .showLabels(true);
+                .donutRatio(0.45)
+                .showLabels(true)
+                .showLegend(true)
+                .title(title)
+                .labelType("percent");
 
 
         d3.select("#" + id + " svg")
