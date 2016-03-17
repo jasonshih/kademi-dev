@@ -17,7 +17,7 @@
             histogramLabelFontSize: "10px",
             histogramLabelFontFamily: "sans-serif",
             histogramLabelFontColor: "black",
-            funnelBackgroundColor: "white",
+            funnelBackgroundColor: "#eeeeee",
             funnelBorderColor: "gray",
             funnelBorderThickness: "1px",
             width: 1000,
@@ -101,7 +101,7 @@
                 //var trapBox = new Trapezoidal([[200, 0], [200 + adjustTopWidth, 0], [200 + (adjustTopWidth + adjustButtonWidth) / 2, totalHeight], [200 + (adjustTopWidth - adjustButtonWidth) / 2, totalHeight]]);
                 var trapBox = new Trapezoidal([[0, 0], [adjustTopWidth, 0], [(adjustTopWidth + adjustButtonWidth) / 2, totalHeight], [(adjustTopWidth - adjustButtonWidth) / 2, totalHeight]]);
                 var data_set = [];
-                var name_set = new Set();
+                var name_set = [];
 
                 var color_codes = {};
                 function stringToColorCode(str) {
@@ -145,7 +145,7 @@
                                     "radius": Math.sqrt(json.stages[t].sources[i].count / maxCount) * (levelHeight / 2),
                                     "count": json.stages[t].sources[i].count}
                         );
-                        name_set.add(itemName);
+                        name_set.push(itemName);
                     }
                 }
 
@@ -187,11 +187,11 @@
                         .attr("x", adjustTopWidth + 30)
                         .attr("y", 0)
                         .attr("width", 250)
-                        .attr("height", name_set.size * 60)
+                        .attr("height", name_set.length * 60)
                         .attr("fill", "white")
                         .attr("stroke", "gray")
-                        .attr("stroke-width", 1)
-                        .style("filter", "url(#drop-shadow)");
+                        .attr("stroke-width", 0);
+                        //.style("filter", "url(#drop-shadow)");
 
                 var counter = 0;
                 name_set.forEach(function (value) {
@@ -252,7 +252,9 @@
                             .datum(trap.p);
                     if (t === size - 1)
                     {
-                        polygon.style("fill", "url(#gradient)")
+                        //polygon.style("fill", "url(#gradient)")
+                        polygon
+                            .attr("fill", setting.funnelBackgroundColor)
                                 .attr("stroke", setting.funnelBorderColor)
                                 .attr("stroke-width", setting.funnelBorderThickness);
                     }
@@ -437,7 +439,7 @@
                                             [trapBox.right(idx * totalHeight / size), idx * totalHeight / size],
                                             [trapBox.right((idx + 0.65) * totalHeight / size), (idx + 0.65) * totalHeight / size],
                                             [trapBox.left((idx + 0.65) * totalHeight / size), (idx + 0.65) * totalHeight / size]]);
-                                        return d.y = Math.max(trap.top() + rad + 8, Math.min(trap.button() - rad - 8, d.y));
+                                        return d.y = Math.max(trap.top() + rad + 8, Math.min(trap.button() - rad - 8, d.y)) + 24; // https://github.com/Kademi/kademi-dev/issues/1507
                                     })
                                     .attr("cx", function (d) {
                                         var idx = d.level;
@@ -463,12 +465,28 @@
                     var ctm = text[0][0].getCTM();
                     console.log(bbox);
 
-                    svg.append("rect")
-                            .attr("x", adjustTopWidth / 2 - bbox.width / 2 - 4)
-                            .attr("y", t * totalHeight / size)
-                            .attr("width", bbox.width + 8)
-                            .attr("height", bbox.height * 1.5)
-                            .attr("fill", setting.stageNameBackgroundColor);
+                    //svg.append("rect")
+                    //        .attr("x", adjustTopWidth / 2 - bbox.width / 2 - 4)
+                    //        .attr("y", t * totalHeight / size)
+                    //        .attr("width", bbox.width + 8)
+                    //        .attr("height", bbox.height * 1.5)
+                    //        .attr("fill", setting.stageNameBackgroundColor);
+
+                    // https://github.com/Kademi/kademi-dev/issues/1507
+                    var trap = new Trapezoidal([[trapBox.left(t * totalHeight / size), t * totalHeight / size],
+                        [trapBox.right(t * totalHeight / size), t * totalHeight / size],
+                        [trapBox.right((t + 0.2) * totalHeight / size), (t + 0.2) * totalHeight / size],
+                        [trapBox.left((t + 0.2) * totalHeight / size), (t + 0.2) * totalHeight / size]]);
+                    var polygon = svg.append("g")
+                        .attr("class", "polygon")
+                        .attr('fill',"#3e3e3e")
+                        .datum(trap.p);
+                    polygon.append("path")
+                        .call(function (path) {
+                            path.attr("d", function (d) {
+                                return "M" + d.join("L") + "Z";
+                            });
+                        });
 
                     text.attr("x", adjustTopWidth / 2 - bbox.width / 2)
                             .attr("y", t * totalHeight / size + bbox.height);

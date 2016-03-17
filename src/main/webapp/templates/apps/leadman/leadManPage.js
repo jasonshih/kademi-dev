@@ -159,13 +159,25 @@
     }
 
     function initSearchField() {
-        $('body').on('change', '#leadQuery', function (e) {
+
+        var txt = $('#leadQuery');
+        txt.on({
+            input: function () {
+                typewatch(function () {
+                    var text = txt.val().trim();
+
+                    searchOptions.query = text;
+                    doSearch();
+
+                }, 500);
+            }
+        });
+
+        var clearBtn = $('#lead-query-clear');
+        clearBtn.on('click', function(e){
             e.preventDefault();
-
-            var inp = $(this);
-
-            searchOptions.query = inp.val();
-
+            txt.val('');
+            searchOptions.query = '';
             doSearch();
         });
     }
@@ -187,7 +199,11 @@
             success: function (data, textStatus, jqXHR) {
                 $('#LeadTotal').html(data.hits.total);
                 $('#LeadSumValue').html(data.aggregations.dealAmountTotal.value || 0);
-                $('#leadAvgValue').html(data.aggregations.dealAmountAvg.value || 0);
+                var avgAmount = data.aggregations.dealAmountAvg.value || 0;
+                if(avgAmount>0){
+                    avgAmount = new Number(avgAmount).toFixed(2);
+                }
+                $('#leadAvgValue').html(avgAmount);
 
                 updateSourcesPie(data.aggregations.sources.buckets);
                 updateStagesPie(data.aggregations.stages.buckets);

@@ -21,5 +21,18 @@
 }
 
 body.opened-keditor-sidebar div.cke_float[id*=cke_keditor-component-content-] {
-    margin-right: 477px;
+    margin-right: 400px;
+}
+
+/* Embedded iframe */
+.embedded-iframe {
+    padding: 0;
+}
+
+.embedded-iframe .navbar-fixed-top {
+    display: none;
+}
+
+.embedded-iframe #keditor-sidebar {
+    top: 0;
 }

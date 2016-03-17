@@ -358,34 +358,30 @@
             </div>
         </div>
 
-        <div id="modal-add-page" class="modal modal-lg fade modal-fuse modal-fuse-editor" aria-hidden="true" tabindex="-1">
-            <div class="modal-header">
-                <button aria-hidden="true" data-type="modal-dismiss" class="close" type="button">&times;</button>
-                <h4 class="modal-title">Add/edit module page</h4>
-            </div>
-            <div class="modal-body">
-                <form method="POST" action="." class="form-horizontal">
-                    <input type="hidden" name="pageName" />
-                    <input type="hidden" name="order" />
-                    <input type="hidden" name="template" value="learner/modulePage" />
-                    <div class="form-group">
-                        <label for="pageTitle" class="control-label col-md-3">Enter page title</label>
-                        <div class="col-md-9">
+        <div id="modal-add-page" class="modal modal-full fade" aria-hidden="true" tabindex="-1">
+            <form method="POST" action="." class="form-horizontal" style="height: 100%;">
+                <input type="hidden" name="pageName" />
+                <input type="hidden" name="order" />
+                <input type="hidden" name="template" value="learner/modulePage" />
+                <div class="modal-header">
+                    <div class="row">
+                        <div class="col-sm-11">
                             <input type="text" name="pageTitle" id="pageTitle" class="required form-control" value="" placeholder="A title for the new page" />
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-12">
-                            <textarea name="body" id="body" class="htmleditor toolbar-Full" style="width: 800px"></textarea>
+                        <div class="col-sm-1" style="padding-top: 8px;">
+                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
                         </div>
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-sm btn-default" data-type="modal-dismiss" type="button">Close</button>
-                <button class="btn btn-sm btn-primary btn-img btn-history" type="button">History <img class="ajax-loader" src="/static/common/loading.gif"/></button>
-                <button class="btn btn-sm btn-primary btn-img" data-type="form-submit" type="button">Save <img class="ajax-loader" src="/static/common/loading.gif"/></button>
-            </div>
+                </div>
+                <div class="modal-body embed-responsive" style="height: calc(100% - 65px - 61px);">
+                    <iframe id="editor-frame" class="embed-responsive-item" src=""></iframe>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                    <button class="btn btn-sm btn-primary btn-img btn-history" type="button">History <img class="ajax-loader" src="/static/common/loading.gif"/></button>
+                    <button class="btn btn-sm btn-primary btn-img" data-type="form-submit" type="button">Save <img class="ajax-loader" src="/static/common/loading.gif"/></button>
+                </div>
+            </form>
         </div>
 
         <div id="modal-add-quiz" class="modal modal-lg fade" aria-hidden="true" tabindex="-1">
@@ -471,9 +467,8 @@
         </div>
 
         <script type="text/javascript" >
-            var themePath = "${page.themePath}";
             $(function () {
-                initManageModule("../../..", themePath);
+                initManageModule("../../..");
             });
         </script>
     </body>

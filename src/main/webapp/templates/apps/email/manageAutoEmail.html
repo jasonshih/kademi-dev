@@ -33,7 +33,7 @@
                 <div class="row">
                     <div class="col-md-5">
                         <div class="enabledSwitchContainer">
-                            $formatter.bsswitch("enabled", "enabled", $page.enabled, "true")
+                            <input class='make-switch' type='checkbox' data-on-color='success' data-off-color='danger' checked="$!page.enabled" value="true" id="enabled" />
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -66,9 +66,22 @@
                         <hr/>
                         <div class="form-group">
                             <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12">
-                                <div id="chart_histogram">
-                                    <svg></svg>
+                                <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                                    <div id="pieDevice" class="myPie">
+                                        <svg></svg>
+                                    </div>
                                 </div>
+                                <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                                    <div id="pieClient" class="myPie">
+                                        <svg></svg>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                                    <div id="pieDomain" class="myPie">
+                                        <svg></svg>
+                                    </div>
+                                </div>
+
                             </div>
                             #set($stats = $page.emailStats)
                             <div class="col-md-4">
@@ -166,6 +179,11 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div id="chart_histogram">
+                                <svg></svg>
                             </div>
                         </div>
                     </div>

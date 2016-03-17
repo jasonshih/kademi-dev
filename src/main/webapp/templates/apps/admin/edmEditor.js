@@ -436,7 +436,6 @@ function getEdmContent() {
             '        <center>\n' +
             '{{bodyContent}}\n' +
             '        </center>\n' +
-            '        <img src="http://$page.closest(\'website\').domainName${formatter.portString}/ack?i=$page.emailItem.id" height="1" width="1" alt="" />' +
             '    </body>\n' +
             '</html>';
     var edmContentData = {
@@ -453,7 +452,7 @@ function getEdmContent() {
 }
 
 function initBtns(body, fileName) {
-    flog('initBtns', fileName);
+    flog('initSaving', fileName);
 
     $('.btn-save-file').on('click', function (e) {
         e.preventDefault();

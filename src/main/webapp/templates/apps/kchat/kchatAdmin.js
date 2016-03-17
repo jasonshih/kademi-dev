@@ -13,10 +13,10 @@ function initSidebarToggle() {
 }
 
 var initKChatWebsocket = function () {
-    flog('initKChatWebsocket', orgId);
-
     var pageSidebar = $('#page-sidebar');
     var orgId = pageSidebar.data('cid').toString();
+
+    flog('initKChatWebsocket', orgId);
 
     var b64ContentId = Base64.encode(orgId);
 
@@ -27,7 +27,7 @@ var initKChatWebsocket = function () {
         port = parseInt(window.location.port || 443) + 1;
     }
 
-    var url = window.location.hostname + ':' + port + '/ws/' + window.location.name + '/kchatAdmin/' + b64ContentId;
+    var url = window.location.hostname + ':' + port + '/ws/' + window.location.hostname + '/kchatAdmin/' + b64ContentId;
     flog(url);
     var kchatSocket = new WebSocket(proto + url);
 

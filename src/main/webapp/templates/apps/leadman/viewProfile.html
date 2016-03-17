@@ -112,6 +112,7 @@
                                         <h4 class="page-header">Contact information</h4>
                                         <div class="row">
                                             <form method="post" action="$page.href" class="form-horizontal" id="leadDetails">
+                                                <input type="hidden" name="saveDetails" value="saveDetails"/>
                                                 <div class="modal-body">
                                                     #set( $p = $page.leadProfile )
                                                     <div class="form-group">
@@ -170,7 +171,7 @@
                                                 <tr>
                                                     <td>
                                                         <a href="/leads/$lead.id/">
-                                                            $lead.description
+                                                            $!lead.description
                                                         </a>
                                                     </td>
                                                     <td>
@@ -188,10 +189,10 @@
                                                     <td>
                                                         <abbr title="$formatter.formatDateISO8601($lead.createDate)" class="timeago">$lead.createDate</abbr>
                                                     </td>
-                                                    <td>$lead.dealAmount</td>
+                                                    <td>$!lead.dealAmount</td>
                                                     <td>
-                                                        #if( $lead.assignedTo )
-                                                        $lead.assignedTo.formattedName
+                                                        #if( $lead.assignedToProfile )
+                                                        $lead.assignedToProfile.formattedName
                                                         #else
                                                         Not assigned
                                                         #end

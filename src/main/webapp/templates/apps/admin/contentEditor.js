@@ -1,28 +1,48 @@
 var win = $(window);
 
+function doPostMessage(data, url) {
+    flog('doPostMessage', data);
+
+    var dataStr = JSON.stringify(data);
+    window.parent.postMessage(dataStr, url);
+}
+
 function initContentEditorPage(fileName, snippetsUrl) {
     flog('initContentEditorPage', fileName);
     var body = $(document.body);
-
-    $('#content-area').css('min-height', win.height() - 50);
-    initKEditor(body, snippetsUrl);
-    initBtns(body, fileName);
-
-    win.on({
-        keydown: function (e) {
-            if (e.ctrlKey && e.keyCode === keymap.S) {
-                e.preventDefault();
-                $('.btn-save-file').trigger('click');
-            }
-        }
+    var timer;
+    win.on('resize', function () {
+        clearTimeout(timer);
+        timer = setTimeout(function () {
+            $('#content-area').css('min-height', win.height() - 50);
+        }, 200);
     });
 
-    window.onbeforeunload = function (e) {
-        if (body.hasClass('content-changed')) {
-            e.returnValue = 'Are you sure you would like to leave the editor? You will lose any unsaved changes';
-        }
-    };
+    var url = getParam('url') || '';
+    if (url) {
+        body.addClass('embedded-iframe');
+        doPostMessage({
+            url: window.location.href.split('#')[0]
+        }, url);
+    } else {
+        win.on({
+            keydown: function (e) {
+                if (e.ctrlKey && e.keyCode === keymap.S) {
+                    e.preventDefault();
+                    $('.btn-save-file').trigger('click');
+                }
+            }
+        });
 
+        window.onbeforeunload = function (e) {
+            if (body.hasClass('content-changed')) {
+                e.returnValue = 'Are you sure you would like to leave the editor? You will lose any unsaved changes';
+            }
+        };
+    }
+
+    initKEditor(body, snippetsUrl);
+    initSaving(body, fileName);
     hideLoadingIcon();
 }
 
@@ -62,24 +82,58 @@ function initKEditor(body, snippetsUrl) {
     });
 }
 
-function initBtns(body, fileName) {
-    flog('initBtns', fileName);
+function getParam(name) {
+    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+    var value = regex.exec(window.location.href) || '';
+    value = decodeURIComponent(value[1]);
 
-    $('.btn-save-file').on('click', function (e) {
+    return value;
+}
+
+function initSaving(body, fileName) {
+    flog('initSaving', fileName);
+
+    var isEmbeddedIframe = body.hasClass('embedded-iframe');
+    var btnSaveFile = $('.btn-save-file');
+    var parentUrl;
+    var pageName;
+    if (isEmbeddedIframe) {
+        win.on('message', function (e) {
+            flog('On got message', e, e.originalEvent);
+
+            var data = $.parseJSON(e.originalEvent.data);
+            if (data.triggerSave) {
+                parentUrl = data.url;
+                if (data.pageName) {
+                    pageName = data.pageName;
+                }
+                btnSaveFile.trigger('click');
+            }
+        });
+    }
+
+    btnSaveFile.on('click', function (e) {
         e.preventDefault();
 
-        var fileContent = $('#content-area').keditor('getContent');
-
         showLoadingIcon();
+        var fileContent = $('#content-area').keditor('getContent');
+        var saveUrl = pageName ? pageName : fileName;
 
         $.ajax({
-            url: fileName,
+            url: saveUrl,
             type: 'POST',
             data: {
                 body: fileContent
             },
             success: function () {
-                Msg.success('File is saved!');
+                if (isEmbeddedIframe) {
+                    doPostMessage({
+                        isSaved: true
+                    }, parentUrl);
+                } else {
+                    Msg.success('File is saved!');
+                }
+
                 hideLoadingIcon();
                 body.removeClass('content-changed');
             },

@@ -58,20 +58,20 @@ function initHistorySearch() {
     reportRange.exist(function () {
         flog("init report range");
         reportRange.daterangepicker(
-            {
-                format: 'DD/MM/YYYY', // YYYY-MM-DD
-                ranges: {
-                    'Last 7 Days': [moment().subtract('days', 6), moment()],
-                    'Last 30 Days': [moment().subtract('days', 29), moment()],
-                    'This Month': [moment().startOf('month'), moment().endOf('month')],
-                    'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
-                    'This Year': [moment().startOf('year'), moment()],
-                }
-            },
-            function (start, end) {
-                flog('onChange', start, end);
-                doHistorySearch(start, end);
-            }
+                {
+                    format: 'DD/MM/YYYY', // YYYY-MM-DD
+                    ranges: {
+                        'Last 7 Days': [moment().subtract('days', 6), moment()],
+                        'Last 30 Days': [moment().subtract('days', 29), moment()],
+                        'This Month': [moment().startOf('month'), moment().endOf('month')],
+                        'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
+                        'This Year': [moment().startOf('year'), moment()],
+                    }
+                },
+        function (start, end) {
+            flog('onChange', start, end);
+            doHistorySearch(start, end);
+        }
         );
     });
 }
@@ -115,19 +115,19 @@ function initSmsHistorySearch() {
     smsReportRange.exist(function () {
         flog("init sms report range");
         smsReportRange.daterangepicker({
-                format: 'DD/MM/YYYY', // YYYY-MM-DD
-                ranges: {
-                    'Last 7 Days': [moment().subtract('days', 6), moment()],
-                    'Last 30 Days': [moment().subtract('days', 29), moment()],
-                    'This Month': [moment().startOf('month'), moment().endOf('month')],
-                    'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
-                    'This Year': [moment().startOf('year'), moment()],
-                },
+            format: 'DD/MM/YYYY', // YYYY-MM-DD
+            ranges: {
+                'Last 7 Days': [moment().subtract('days', 6), moment()],
+                'Last 30 Days': [moment().subtract('days', 29), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
+                'This Year': [moment().startOf('year'), moment()],
             },
-            function (start, end) {
-                flog('onChange', start, end);
-                doSMSHistorySearch(start, end);
-            });
+        },
+                function (start, end) {
+                    flog('onChange', start, end);
+                    doSMSHistorySearch(start, end);
+                });
     });
 }
 
@@ -210,6 +210,16 @@ function loadData() {
             handleData(json);
         }
     });
+    href = "?emailStats&" + $.param(options);
+    $.ajax({
+        type: "GET",
+        url: href,
+        dataType: 'json',
+        success: function (resp) {
+            flog("emailstats", resp);
+            initPies(resp.aggregations);
+        }
+    });
 }
 
 function handleData(resp) {
@@ -219,7 +229,7 @@ function handleData(resp) {
 }
 
 function initEmailStats() {
-    initChart($('.emailsMainPie'), {
+    drawPieChart($('.emailsMainPie'), {
         trackColor: 'rgba(255,255,255,0.2)',
         scaleColor: 'rgba(255,255,255,0.5)',
         barColor: 'rgba(255,255,255,0.7)',
@@ -227,7 +237,7 @@ function initEmailStats() {
         lineCap: 'butt'
     }, 90);
 
-    initChart($('.emailsSubPie.bluePie'), {
+    drawPieChart($('.emailsSubPie.bluePie'), {
         trackColor: '#eee',
         scaleColor: '#ccc',
         barColor: '#2196F3',
@@ -235,7 +245,7 @@ function initEmailStats() {
         lineCap: 'butt'
     }, 8);
 
-    initChart($('.emailsSubPie.orangePie'), {
+    drawPieChart($('.emailsSubPie.orangePie'), {
         trackColor: '#eee',
         scaleColor: '#ccc',
         barColor: '#FFC107',
@@ -248,26 +258,26 @@ function initHistogram(aggr) {
     $('#chart_histogram svg').empty();
     nv.addGraph(function () {
         var chart = nv.models.multiBarChart()
-            .options({
-                showLegend: true,
-                showControls: false,
-                noData: "No Data available for histogram",
-                margin: {
-                    left: 40,
-                    bottom: 60
-                }
-            });
+                .options({
+                    showLegend: true,
+                    showControls: false,
+                    noData: "No Data available for histogram",
+                    margin: {
+                        left: 40,
+                        bottom: 60
+                    }
+                });
 
         chart.xAxis
-            .axisLabel("Date")
-            .rotateLabels(-45)
-            .tickFormat(function (d) {
-                return moment(d).format("DD MMM");
-            });
+                .axisLabel("Date")
+                .rotateLabels(-45)
+                .tickFormat(function (d) {
+                    return moment(d).format("DD MMM");
+                });
 
         chart.yAxis
-            .axisLabel("Triggered")
-            .tickFormat(d3.format('d'));
+                .axisLabel("Triggered")
+                .tickFormat(d3.format('d'));
 
         var myData = [];
         var conditionsTrue = {
@@ -302,25 +312,25 @@ function initHistogram(aggr) {
         for (var i = 0; i < trueHits.length; i++) {
             var bucket = trueHits[i];
             conditionsTrue.values.push(
-                {x: bucket.key, y: bucket.doc_count});
+                    {x: bucket.key, y: bucket.doc_count});
         }
 
         for (var i = 0; i < falseHits.length; i++) {
             var bucket = falseHits[i];
             conditionsFalse.values.push(
-                {x: bucket.key, y: bucket.doc_count});
+                    {x: bucket.key, y: bucket.doc_count});
         }
 
         for (var i = 0; i < delayedHits.length; i++) {
             var bucket = delayedHits[i];
             delayedTriggers.values.push(
-                {x: bucket.key, y: bucket.doc_count});
+                    {x: bucket.key, y: bucket.doc_count});
         }
 
         d3.select('#chart_histogram svg')
-            .datum(myData)
-            .transition().duration(500)
-            .call(chart);
+                .datum(myData)
+                .transition().duration(500)
+                .call(chart);
 
         nv.utils.windowResize(chart.update);
 
@@ -328,47 +338,36 @@ function initHistogram(aggr) {
     });
 }
 
-function drawChart(chart, options, padding, isFirstTime) {
-    var wrapper = chart.closest('.col-sm-6');
-    var canvas = chart.find('canvas');
-    var sizeChart = wrapper.width() - padding;
-    if (sizeChart < 0) {
-        sizeChart = 100;
-    }
-    var currentSize = +chart.attr('data-size');
-    flog("got size", sizeChart, chart);
 
-    // Hide canvas
-    canvas.hide();
-
-    if (currentSize !== sizeChart || isFirstTime) {
-        flog('Render new chart', sizeChart);
-
-        // Clear data pf easyPieChart
-        if (!isFirstTime) {
-            chart.data('easy-pie-chart', null);
-            chart.data('size', sizeChart);
-        }
-
-        // Remove the chart
-        canvas.remove();
-
-        // Render new chart
-        options.size = sizeChart;
-        flog("chart size", sizeChart);
-        chart.easyPieChart(options);
-    } else {
-        flog('Re-show current chart');
-        canvas.show();
-    }
-
+function initPies(aggr) {
+    initPie("pieDevice", aggr.deviceCategory);
+    initPie("pieClient", aggr.userAgentType);
+    initPie("pieDomain", aggr.domain);
 }
+function initPie(id, aggr) {
 
-function initChart(target, options, padding) {
-    drawChart(target, options, padding, true);
+    flog("initPie", id, aggr);
 
-    $(window).on('resize', function () {
-        drawChart(target, options, padding);
+    $('#' + id + ' svg').empty();
+    nv.addGraph(function () {
+        var chart = nv.models.pieChart()
+                .x(function (d) {
+                    return d.key
+                })
+                .y(function (d) {
+                    return d.doc_count
+                })
+                .donut(true)
+                .donutRatio(0.35)
+                .showLabels(true);
+
+
+        d3.select("#" + id + " svg")
+                .datum(aggr.buckets)
+                .transition().duration(350)
+                .call(chart);
+
+        return chart;
     });
 }
 
@@ -721,15 +720,15 @@ function showAttachment(data, attachmentsList) {
     var hash = data.result.nextHref;
 
     attachmentsList.append(
-        '<article>' +
-        '   <span class="article-name">' +
-        '       <a target="_blank" href="/_hashes/files/' + hash + '">' + name + '</a>' +
-        '   </span>' +
-        '   <aside class="article-action">' +
-        '       <a class="btn btn-xs btn-danger btn-delete-attachment" href="' + name + '" title="Remove"><i class="clip-minus-circle"></i></a>' +
-        '   </aside>' +
-        '</article>'
-    );
+            '<article>' +
+            '   <span class="article-name">' +
+            '       <a target="_blank" href="/_hashes/files/' + hash + '">' + name + '</a>' +
+            '   </span>' +
+            '   <aside class="article-action">' +
+            '       <a class="btn btn-xs btn-danger btn-delete-attachment" href="' + name + '" title="Remove"><i class="clip-minus-circle"></i></a>' +
+            '   </aside>' +
+            '</article>'
+            );
 }
 
 function doRemoveAttachment(name, callback) {

@@ -8,25 +8,11 @@
         <script src="/static/d3/d3.v3.js" type="text/javascript">//</script>
         <link href="/static/nvd3/nv.d3.css" rel="stylesheet" type="text/css"/>
         <script src="/static/nvd3/nv.d3.js" type="text/javascript">//</script>
-        <style>
-            .panel-heading .btn-series {
-                vertical-align: top;
-                position: relative;
-                top: -3px;
-            }
-
-            #chart_histogram svg {
-                height: 490px;
-            }
-        </style>
+        <link href="/templates/apps/email/manageAutoEmail.css" rel="stylesheet" type="text/css"/>
     </head>
     <body class="manageAutoEmail">
-        <div class="tabbable">
-            <ul class="nav nav-tabs tab-bricky">
-                <li class="active"><a data-toggle="tab" href="#analytics" aria-expanded="true">Analytics</a></li>
-                <li><a data-toggle="tab" href="#general">Manage</a></li>
-            </ul>
-            <div class="tab-content">
+
+
                 <!-- Start Analytics -->
                 <div id="analytics" class="tab-pane active">
                     <div class="row">
@@ -41,23 +27,39 @@
                         </div>
                     </div>
                     <div class="row">
+                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                            <div id="pieDevice" class="myPie">
+                                <svg></svg>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                            <div id="pieClient" class="myPie">
+                                <svg></svg>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                            <div id="pieDomain" class="myPie">
+                                <svg></svg>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                             <div id="chart_histogram">
                                 <svg></svg>
                             </div>
                         </div>
                     </div>
-                    <h1 class="text-center">More Coming Soon!!</h1>
                 </div>
                 <!-- End Analytics -->
 
                 <!-- Start General -->
-                <div id="general" class="tab-pane">
-                    <p class="well">
-                        <a class="close" href="#" data-dismiss="alert">&times;</a>
-                        Here you can create emails that get sent automatically when certain trigger events occur. This
-                        is useful for sending emails when a new module is available, or when users complete all modules, etc
-                    </p>
+                <div id="general" class="">
+
+                    <hr/>
+
                     <p class="clearFix">
                         <a class="btn btn-sm btn-info pull-right" href="timerTriggers.html">View queued triggers</a>
                         <a class="btn btn-sm btn-success btn-add-email" data-toggle="modal" href="#modal-add-trigger"><i class="fa fa-plus"></i> Create a trigger</a>
@@ -199,9 +201,6 @@
                     </div>
                 </div>
                 <!-- End General -->
-
-            </div>
-        </div>
 
         <script type="text/javascript">
             $(function () {

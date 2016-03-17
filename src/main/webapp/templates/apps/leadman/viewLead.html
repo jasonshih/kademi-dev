@@ -4,57 +4,60 @@
         #@themeHeader( "View lead" )
         <link rel="stylesheet" href="/static/timeline/timeline.css">
             #end
-        <style>
-            #lead-cover{
-                background:url(/theme/images/profile.jpg) center center; 
-                background-size:cover; 
-                height: 160px
-            }
-            .btn-task-panel {
-                width: 50px;
-                border-radius: 0;
-                padding: 10px 0;
-                text-align: center;
-            }
-            .btn-task-panel:first-child {
-                border-radius: 5px 5px 0 0;
-            }
-            .btn-task-panel:last-child {
-                border-radius: 0 0 5px 5px;
-            }
-            .btn-task-panel-wrap {
-                width: 50px;
-                margin: 0 0 0 15px;
-            }
-            
-            .lead-note-author{
-                margin-right: 10px;;
-            }
-            .note-item{
-                margin-bottom: 30px;
-            }
-            .note-item > div + div{
-                margin-top: 15px;
-            }
-            @media (max-width: 767px) {
+            <style>
                 #lead-cover{
-                    height: auto;
+                    background:url(/theme/images/profile.jpg) center center;
+                    background-size:cover;
+                    height: 160px
                 }
-                #lead-cover .btn-group .btn{
-                    margin-bottom: 5px;
-                    margin-top: 10px;
+                .btn-task-panel {
+                    width: 50px;
+                    border-radius: 0;
+                    padding: 10px 0;
+                    text-align: center;
                 }
-                #assignedBlock + ul{
-                    left: initial;
-                    right: 0;
+                .btn-task-panel:first-child {
+                    border-radius: 5px 5px 0 0;
                 }
-            }
-            @media (max-width: 991px) {
-                #lead-cover{
-                    height: auto;
+                .btn-task-panel:last-child {
+                    border-radius: 0 0 5px 5px;
                 }
-            }
-        </style>
+                .btn-task-panel-wrap {
+                    width: 50px;
+                    margin: 0 0 0 15px;
+                }
+
+                .lead-note-author{
+                    margin-right: 10px;;
+                }
+                .note-item{
+                    margin-bottom: 30px;
+                }
+                .note-item > div + div{
+                    margin-top: 15px;
+                }
+                .ie-overflow{
+                    overflow-y: hidden;
+                }
+                @media (max-width: 767px) {
+                    #lead-cover{
+                        height: auto;
+                    }
+                    #lead-cover .btn-group .btn{
+                        margin-bottom: 5px;
+                        margin-top: 10px;
+                    }
+                    #assignedBlock + ul{
+                        left: initial;
+                        right: 0;
+                    }
+                }
+                @media (max-width: 991px) {
+                    #lead-cover{
+                        height: auto;
+                    }
+                }
+            </style>
     </head>
     <body class='add-container'>
         #@themeBody()
@@ -93,70 +96,73 @@
                             </div>
                         </div>
                         <div class="col-md-6 col-sm-12 text-right">
-                        #if( $page.completed)
-                        #if( $page.cancelled)
-                        <div class="alert alert-warning">
-                            <p class="lead">
-                                <span class="fa fa-remove"></span>
-                                Lead cancelled <abbr title="$formatter.formatDateISO8601($page.closedDate)" class="timeago">$page.closedDate</abbr>
-                            </p>
-                        </div>
-                        #else
-                        <div class="alert alert-success">
-                            <p class="lead">
-                                <span class="fa fa-check"></span>
-                                Lead closed <abbr title="$formatter.formatDateISO8601($page.closedDate)" class="timeago">$page.closedDate</abbr>
-                            </p>
-                        </div>
-                        #end
-                        #else
+                            #if( $page.completed)
+                            #if( $page.cancelled)
+                            <div class="alert alert-warning">
+                                <p class="lead">
+                                    <span class="fa fa-remove"></span>
+                                    Lead cancelled <abbr title="$formatter.formatDateISO8601($page.closedDate)" class="timeago">$page.closedDate</abbr>
+                                </p>
+                            </div>
+                            #else
+                            <div class="alert alert-success">
+                                <p class="lead">
+                                    <span class="fa fa-check"></span>
+                                    Lead closed <abbr title="$formatter.formatDateISO8601($page.closedDate)" class="timeago">$page.closedDate</abbr>
+                                </p>
+                            </div>
+                            #end
+                            <div class="btn-group">
+                                <button class="btn btn-success btn-reopen" type="button"><i class="fa fa-check"></i> Reopen</button>
+                            </div>
+                            #else
 
-                        <div class="btn-group">
+                            <div class="btn-group">
                                 <button class="btn btn-primary" data-target="#newTaskModal" data-toggle="modal">Add new Task</button>
                                 <a class="btn btn-success createNote" href="$page.href">
-                                Add a new note
-                            </a>
+                                    Add a new note
+                                </a>
                                 <a href="$page.href?cancel" class="btn btn-danger" title="Deal cancelled" data-target="#modalCancelLead" data-toggle="modal">
-                                <span class="fa fa-remove"></span>
-                                Cancel
-                            </a>
+                                    <span class="fa fa-remove"></span>
+                                    Cancel
+                                </a>
 
                                 <button class="btn btn-success" data-toggle="modal" data-target="#closeDealModal">
-                                <span class="fa fa-dollar"></span>
-                                Close deal
-                            </button>
-                        </div>
-
-                        <p></p>
-
-                        <div class="btn-group dropdown">
-                                <button id="assignedBlock" class="btn dropdown-toggle btn-info" data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false" >
-                                <span>
-                                    #if( $page.assignedTo )
-                                    Assigned to: $!page.assignedTo.firstName $!page.assignedTo.surName
-                                    #else
-                                    Not assigned
-                                    #end
-                                </span>
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" id="assignToMenu" role="menu">
-                                <li><a href="$user.name">Assign to me</a></li>
-                                <li><a href="">Clear</a></li>
-                                #if ($page.find("/leads").teamMembers.size() > 0)
-                                <li role="separator" class="divider"></li>
-                                #end
-                                #foreach($user in $page.find("/leads").teamMembers)
-                                <li><a href="$user.name">$!user.firstName $!user.surName</a></li>
-                                #end
-                            </ul>
-                        </div>
-                        #end
-                    </div>
+                                    <span class="fa fa-dollar"></span>
+                                    Close deal
+                                </button>
                             </div>
 
+                            <p></p>
+
+                            <div class="btn-group dropdown">
+                                <button id="assignedBlock" class="btn dropdown-toggle btn-info" data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false" >
+                                    <span>
+                                        #if( $page.assignedTo )
+                                        Assigned to: $!page.assignedTo.firstName $!page.assignedTo.surName
+                                        #else
+                                        Not assigned
+                                        #end
+                                    </span>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" id="assignToMenu" role="menu">
+                                    <li><a href="$user.name">Assign to me</a></li>
+                                    <li><a href="">Clear</a></li>
+                                    #if ($page.find("/leads").teamMembers.size() > 0)
+                                    <li role="separator" class="divider"></li>
+                                    #end
+                                    #foreach($user in $page.find("/leads").teamMembers)
+                                    <li><a href="$user.name">$!user.firstName $!user.surName</a></li>
+                                    #end
+                                </ul>
+                            </div>
+                            #end
                         </div>
                     </div>
+
+                </div>
+            </div>
             <div class="clearfix"></div>
             <div class="container container-lg">
                 <div class="row">
@@ -190,18 +196,18 @@
                                                 <div class="note-item">
                                                     <div>
                                                         <img src="/theme/images/user/05.jpg" alt="Image" class="img-circle thumb32 lead-note-author">
-                                                        <a href="/users/$note.createdBy.name">$note.createdBy.formattedName</a>
-                                                        #if( $note.inbound )
-                                                        <small class="text-muted fa fa-arrow-left"></small>
-                                                        <small class="text-muted fa fa-${note.icon}"></small>
-                                                        #else
-                                                        <small class="text-muted fa fa-${note.icon}"></small>
-                                                        <small class="text-muted fa fa-arrow-right"></small>
-                                                        #end
-                                                        #set($type = $note.actionType +  "-" + $note.inbound)
-                                                        <a class="note-edit" href="$note.id" data-type="$type" data-notes="$!note.notes">
-                                                            <span class="fa fa-pencil"></span>
-                                                        </a>
+                                                            <a href="/users/$note.createdBy.name">$note.createdBy.formattedName</a>
+                                                            #if( $note.inbound )
+                                                            <small class="text-muted fa fa-arrow-left"></small>
+                                                            <small class="text-muted fa fa-${note.icon}"></small>
+                                                            #else
+                                                            <small class="text-muted fa fa-${note.icon}"></small>
+                                                            <small class="text-muted fa fa-arrow-right"></small>
+                                                            #end
+                                                            #set($type = $note.actionType +  "-" + $note.inbound)
+                                                            <a class="note-edit" href="$note.id" data-type="$type" data-notes="$!note.notes">
+                                                                <span class="fa fa-pencil"></span>
+                                                            </a>
                                                     </div>
                                                     <div>
                                                         <pre>$!note.notes</pre>
@@ -435,72 +441,72 @@
                                                 <button type="button" class="btn btn-success upload-files pull-right"><span class="fa fa-upload"></span> Upload</button>
                                             </div>
                                         </div>
-                                        <div class="table-responsive">
-                                        <table class="table table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th class="text-center">Type</th>
-                                                    <th>Name</th>
-                                                    <th>Notes</th>
-                                                    <th>Date Uploaded</th>
-                                                    <th></th>
-                                                    <th>Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="files-body">
-                                                #foreach($file in $page.children.ofType.leadFile)
-                                                <tr>
-                                                    <td class="text-center">
-                                                        #genFileIcon($file)
-                                                    </td>
-                                                    <td>
-                                                        <span #if($file.name.length() > 25)title="$file.name"#end>
-                                                            #if($file.name.length() > 25)
-                                                            $formatter.truncate($file.name, 20)
-                                                            #else
-                                                            $file.name
+                                        <div class="table-responsive ie-overflow">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="text-center">Type</th>
+                                                        <th>Name</th>
+                                                        <th>Notes</th>
+                                                        <th>Date Uploaded</th>
+                                                        <th></th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="files-body">
+                                                    #foreach($file in $page.children.ofType.leadFile)
+                                                    <tr>
+                                                        <td class="text-center">
+                                                            #genFileIcon($file)
+                                                        </td>
+                                                        <td>
+                                                            <span #if($file.name.length() > 25)title="$file.name"#end>
+                                                                #if($file.name.length() > 25)
+                                                                $formatter.truncate($file.name, 20)
+                                                                #else
+                                                                $file.name
+                                                                #end
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <span>$!file.notes</span>
+                                                            <a href="$file.name" class="pull-right edit-file-note"><i class="fa fa-pencil"></i></a>
+                                                        </td>
+                                                        <td><abbr class="timeago" title="$formatter.formatDateISO8601($file.createdDate)">$formatter.formatDateTime($file.createdDate)</abbr></td>
+                                                        <td>
+                                                            #if($file.is('audio/'))
+                                                            <audio class="lead-audio-file" id="audio_$file.hash" src="$file.name"></audio>
+                                                            <button type="button" data-id="audio_$file.hash" class="btn btn-success play-audio">
+                                                                <i class="fa fa-play"></i>
+                                                            </button>
+                                                            <span class="lead-audio-duration"></span>
+                                                            #elseif($file.is('image/'))
+                                                            <a target="_blank" href="$file.name" class="btn btn-success">
+                                                                <i class="fa fa-eye"></i>
+                                                            </a>
+                                                            #if($file.geoLocation)
+                                                            <a target="_blank" href="https://www.google.co.nz/maps/place//@${file.geoLocation.replace(":", ",")},17.25z?hl=en" title="View location on map" class="btn btn-info">
+                                                                <i class="fa fa-map-marker"></i>
+                                                            </a>
                                                             #end
-                                                        </span>
-                                                    </td>
-                                                    <td>
-                                                        <span>$!file.notes</span>
-                                                        <a href="$file.name" class="pull-right edit-file-note"><i class="fa fa-pencil"></i></a>
-                                                    </td>
-                                                    <td><abbr class="timeago" title="$formatter.formatDateISO8601($file.createdDate)">$formatter.formatDateTime($file.createdDate)</abbr></td>
-                                                    <td>
-                                                        #if($file.is('audio/'))
-                                                        <audio class="lead-audio-file" id="audio_$file.hash" src="$file.name"></audio>
-                                                        <button type="button" data-id="audio_$file.hash" class="btn btn-success play-audio">
-                                                            <i class="fa fa-play"></i>
-                                                        </button>
-                                                        <span class="lead-audio-duration"></span>
-                                                        #elseif($file.is('image/'))
-                                                        <a target="_blank" href="$file.name" class="btn btn-success">
-                                                            <i class="fa fa-eye"></i>
-                                                        </a>
-                                                        #if($file.geoLocation)
-                                                        <a target="_blank" href="https://www.google.co.nz/maps/place//@${file.geoLocation.replace(":", ",")},17.25z?hl=en" title="View location on map" class="btn btn-info">
-                                                            <i class="fa fa-map-marker"></i>
-                                                        </a>
-                                                        #end
-                                                        #end
-                                                    </td>
-                                                    <td>
-                                                        <div style="min-width: 125px;" class="btn-group" role="group">
-                                                            <a title="Download" download="$file.name" href="$file.name" class="btn btn-info"><i class="fa fa-download"></i></a>
-                                                            <button title="Delete" type="button" data-fname="$file.name" class="btn btn-danger btn-delete-file"><i class="fa fa-trash"></i></button>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                #end
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                                            #end
+                                                        </td>
+                                                        <td>
+                                                            <div style="min-width: 125px;" class="btn-group" role="group">
+                                                                <a title="Download" download="$file.name" href="$file.name" class="btn btn-info"><i class="fa fa-download"></i></a>
+                                                                <button title="Delete" type="button" data-fname="$file.name" class="btn btn-danger btn-delete-file"><i class="fa fa-trash"></i></button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    #end
+                                                </tbody>
+                                            </table>
+                                        </div>
 
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                     </div>
                     <div class="col-lg-3">
                         <div class="task-item-list">
@@ -825,6 +831,28 @@
 
                 $('#source-select').select2({
                     tags: "true"
+                });
+
+                $('body').on('click', '.btn-reopen', function (e) {
+                    e.preventDefault();
+
+                    if (confirm('Are you sure you want to reopen this lead?')) {
+                        $.ajax({
+                            type: 'POST',
+                            data: {
+                                reopenDeal: true
+                            },
+                            dataType: 'json',
+                            success: function (resp) {
+                                if (resp.status) {
+                                    window.location.reload();
+                                }
+                            },
+                            error: function () {
+                                Msg.error('Oh no! Something went wrong!');
+                            }
+                        });
+                    }
                 });
             });
 
