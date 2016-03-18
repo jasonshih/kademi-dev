@@ -506,10 +506,14 @@
     <div class="media-body" style="padding-left: 20px; position: relative">
         <h3 class="media-heading">
             <a href="/leads/$lead.id/">
-                #if($lead.organisation)
-                $lead.organisation.formattedName
-                #elseif( $lead.profile )
+
+                #if( $lead.profile )
                 $lead.profile.formattedName
+                    #if($lead.organisation)
+                    ($lead.organisation.formattedName)
+                    #end
+                #elseif($lead.organisation)
+                $lead.organisation.formattedName
                 #else
                 No contact information
                 #end
