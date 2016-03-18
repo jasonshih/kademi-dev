@@ -255,7 +255,7 @@
                     // Stage label
                     svg.append("text")
                         .style("fill", "black")
-                        .attr("x", 100)
+                        .attr("x", 70)
                         .attr("y", (counter + 1) * 50 + 4 + 240)
                         .attr("font-size", setting.legendNameFontSize)
                         .attr("font-family", setting.legendNameFontFamily)
@@ -263,7 +263,7 @@
                         .text(value);
                     // Stage color ellipse
                     svg.append("ellipse")
-                        .attr("cx", 70)
+                        .attr("cx", 40)
                         .attr("cy", (counter + 1) * 50 + 240)
                         .attr("rx", 10)
                         .attr("ry", 10)
