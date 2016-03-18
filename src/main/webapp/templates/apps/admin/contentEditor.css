@@ -2,6 +2,10 @@
     padding-top: 50px;
 }
 
+.navbar-fixed-top {
+    background: #222 !important;
+}
+
 .navbar-fixed-top a {
     height: 50px;
 }

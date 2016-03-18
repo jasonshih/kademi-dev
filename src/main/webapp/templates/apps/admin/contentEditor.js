@@ -19,7 +19,7 @@ function initContentEditorPage(fileName, snippetsUrl) {
     });
 
     var url = getParam('url') || '';
-    if (url) {
+    if (url && url !== 'undefined') {
         body.addClass('embedded-iframe');
         doPostMessage({
             url: window.location.href.split('#')[0]
@@ -97,16 +97,13 @@ function initSaving(body, fileName) {
     var btnSaveFile = $('.btn-save-file');
     var parentUrl;
     var pageName;
+    var postMessageData;
     if (isEmbeddedIframe) {
         win.on('message', function (e) {
             flog('On got message', e, e.originalEvent);
 
-            var data = $.parseJSON(e.originalEvent.data);
-            if (data.triggerSave) {
-                parentUrl = data.url;
-                if (data.pageName) {
-                    pageName = data.pageName;
-                }
+            postMessageData = $.parseJSON(e.originalEvent.data);
+            if (postMessageData.triggerSave) {
                 btnSaveFile.trigger('click');
             }
         });
@@ -117,7 +114,7 @@ function initSaving(body, fileName) {
 
         showLoadingIcon();
         var fileContent = $('#content-area').keditor('getContent');
-        var saveUrl = pageName ? pageName : fileName;
+        var saveUrl = postMessageData.pageName ? postMessageData.pageName : fileName;
 
         $.ajax({
             url: saveUrl,
@@ -128,8 +125,9 @@ function initSaving(body, fileName) {
             success: function () {
                 if (isEmbeddedIframe) {
                     doPostMessage({
-                        isSaved: true
-                    }, parentUrl);
+                        isSaved: true,
+                        resp: postMessageData.resp
+                    }, postMessageData.url);
                 } else {
                     Msg.success('File is saved!');
                 }
