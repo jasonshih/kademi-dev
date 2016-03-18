@@ -41,7 +41,11 @@ function initPostMessage() {
         var data = $.parseJSON(e.originalEvent.data);
         if (data.isSaved) {
             iframeUrl = '';
-            $('#modal-add-page').modal('hide');
+
+            Msg.success('Saved!');
+            if (data.willClose) {
+                $('#modal-add-page').modal('hide');
+            }
         } else {
             iframeUrl = data.url;
         }
@@ -250,6 +254,14 @@ function initCRUDModulePages() {
 
     modal.on('hidden.bs.modal', function () {
         $('#editor-frame').attr('src', '');
+    });
+
+    modal.on('click', '.btn-save', function () {
+        modal.removeClass('save-and-close');
+    });
+
+    modal.on('click', '.btn-save-close', function () {
+        modal.addClass('save-and-close');
     });
 
     $('.btn-add-page').click(function (e) {
@@ -709,13 +721,15 @@ function doSavePage(form, pageArticle, isQuiz) {
                     flog(response);
 
                     if (isQuiz) {
+                        Msg.success('Saved!');
                         modal.modal('hide');
                     } else {
                         var editorFrame = $('#editor-frame');
                         var postData = {
                             url: window.location.href.split('#')[0],
                             triggerSave: true,
-                            pageName: getFileName(response.nextHref)
+                            pageName: getFileName(response.nextHref),
+                            willClose: modal.hasClass('save-and-close')
                         };
 
                         editorFrame[0].contentWindow.postMessage(JSON.stringify(postData), iframeUrl);

@@ -14,12 +14,20 @@
             #images-container .thumbnail {
                 min-height: 240px;
             }
+
             #chart_histogram {
                 height: 300px;
+            }
+
+            #editor-frame {
+                border: 1px solid #ddd;
             }
         </style>
     </head>
     <body>
+        #set ($blogSite = $page.article.blog.website)
+        #set ($blogSiteTheme = $blogSite.branch($blogSite.liveBranch).getPublicTheme())
+
         <form action="" method="POST" class="form-horizontal article-form" role="form">
             <div id="manageReward" class="MainContent tabbable">
                 <div class="clearfix">
@@ -198,11 +206,17 @@
 
                     <div class="tab-pane" id="bodyCopy">
                         #if( $page.publishedDate or $page.submittedDate )
-                        <div class='well'>
-                            $!page.body
-                        </div>
+                            <div class='well'>
+                                $!page.body
+                            </div>
                         #else
-                        <textarea class="htmleditor" cols="100" name="body" rows="20" placeholder="">$!page.body</textarea>
+                            #if ($blogSiteTheme == 'bootstrap335')
+                                <div class="embed-responsive embed-responsive-16by9">
+                                    <iframe class="embed-responsive-item" src="" id="editor-frame"></iframe>
+                                </div>
+                            #else
+                                <textarea class="htmleditor" cols="100" name="body" rows="20" placeholder="">$!page.body</textarea>
+                            #end
                         #end
                     </div>
 
@@ -443,154 +457,9 @@
         </div>
 
         <script type="text/javascript">
-            var options = {
-                startDate: null,
-                endDate: null,
-                interval: "day"
-            };
-
             $(function () {
-                initManageBlogArticle();
-                initGraphControls();
-                loadGraphData();
+                initManageBlogArticle('$blogSiteTheme');
             });
-
-            function loadGraphData() {
-                var href = "?activity&" + $.param(options);
-                $.ajax({
-                    type: "GET",
-                    url: href,
-                    dataType: 'html',
-                    success: function (resp) {
-                        var json = null;
-
-                        if (resp !== null && resp.length > 0) {
-                            json = JSON.parse(resp);
-                        }
-
-                        flog('response', json);
-                        handleData(json);
-                    }
-                });
-            }
-
-            function handleData(resp) {
-                var aggr = (resp !== null ? resp.aggregations : null);
-
-                initHistogram(aggr);
-            }
-
-
-            function initGraphControls() {
-                flog("initGraphControls");
-                var reportRange = $('#analytics-range');
-
-                function cb(start, end) {
-                    options.startDate = start.format('DD/MM/YYYY');
-                    options.endDate = end.format('DD/MM/YYYY');
-                    loadGraphData();
-                }
-
-                reportRange.exist(function () {
-                    flog("init analytics range");
-                    reportRange.daterangepicker({
-                        format: 'DD/MM/YYYY',
-                        startDate: moment().subtract('days', 6),
-                        endDate: moment(),
-                        ranges: {
-                            'Today': [
-                                moment().toISOString(),
-                                moment().toISOString()
-                            ],
-                            'Last 7 Days': [
-                                moment().subtract('days', 6).toISOString(),
-                                moment().toISOString()
-                            ],
-                            'Last 30 Days': [
-                                moment().subtract('days', 29).toISOString(),
-                                moment().toISOString()],
-                            'This Month': [
-                                moment().startOf('month').toISOString(),
-                                moment().endOf('month').toISOString()],
-                            'Last Month': [
-                                moment().subtract('month', 1).startOf('month').toISOString(),
-                                moment().subtract('month', 1).endOf('month').toISOString()],
-                            'This Year': [
-                                moment().startOf('year').toISOString(),
-                                moment().toISOString()],
-                        },
-                    }, cb);
-                });
-            }
-
-            function initHistogram(aggr) {
-                flog("initHistogram", aggr);
-
-                $('#chart_histogram svg').empty();
-                nv.addGraph(function () {
-
-                    var myData = [];
-                    var allSeries = [];
-                    $.each(aggr.type.buckets, function (b, typeBucket) {
-                        var series = {
-                            key: typeBucket.key,
-                            values: []
-                        };
-                        myData.push(series);
-                    });
-
-                    $.each(aggr.reqDate.buckets, function (i, dateBucket) {
-                        var typeBuckets = dateBucket.type.buckets;
-                        var map = {};
-                        $.each(typeBuckets, function (ss, typeBucket) {
-                            //flog("add to map",dateBucket.key, typeBucket.doc_count);
-                            map[typeBucket.key] = typeBucket.doc_count;
-                        });
-
-                        $.each(myData, function (s, series) {
-                            var docCount = map[series.key];
-                            //flog("point", docCount, series.key, map);
-                            if (docCount) {
-                                series.values.push({x: dateBucket.key, y: docCount});
-                            } else {
-                                series.values.push({x: dateBucket.key, y: 0});
-                            }
-                        });
-
-                    });
-
-                    flog(myData);
-
-                    var chart = nv.models.stackedAreaChart()
-                            .margin({right: 100})
-                            .x(function (d) {
-                                return d.x;
-                            })   //We can modify the data accessor functions...
-                            .y(function (d) {
-                                return d.y;
-                            })   //...in case your data is formatted differently.
-                            .useInteractiveGuideline(true)    //Tooltips which show all data points. Very nice!
-                            .rightAlignYAxis(true)      //Let's move the y-axis to the right side.
-                            .showControls(true)       //Allow user to choose 'Stacked', 'Stream', 'Expanded' mode.
-                            .clipEdge(true);
-
-                    chart.xAxis
-                            .tickFormat(function (d) {
-                                return d3.time.format('%x')(new Date(d))
-                            });
-
-                    chart.yAxis
-                            .tickFormat(d3.format(',.2f'));
-
-                    d3.select('#chart_histogram svg')
-                            .datum(myData)
-                            .call(chart);
-
-                    nv.utils.windowResize(chart.update);
-
-                    return chart;
-                });
-            }
         </script>
     </body>
 </html>
