@@ -6,7 +6,14 @@
         <link href="/static/nvd3/nv.d3.css" rel="stylesheet" type="text/css"/>
         #end
         <style>
-
+            .funnel-source{
+                position: absolute;
+                left: 10px;
+                top: 10px
+            }
+            #funnel-wrap{
+                position: relative;
+            }
             #pies{
                 margin-top: 30px;
             }
@@ -46,8 +53,8 @@
                     </div>
                 </div>
                 <div class="col-lg-6">
-                    <div class="panel panel-default">
-                        <div class="btn-group pull-right">
+                    <div class="panel panel-default" id="funnel-wrap">
+                        <div class="btn-group funnel-source">
                             <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span>Group by: </span>
                                 <span class="aggr-title">Source</span>
@@ -63,7 +70,7 @@
                             </ul>
                         </div>
                         <div class="table-responsive no-scroll-medium">
-                            <svg id="funnel"></svg>
+                            <svg style="margin-top: 15px" id="funnel"></svg>
                         </div>
                     </div>
 
