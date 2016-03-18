@@ -20,6 +20,11 @@
             funnelBackgroundColor: "#eeeeee",
             funnelBorderColor: "gray",
             funnelBorderThickness: "1px",
+            leadLegendFontFamily: "Roboto",
+            leadLegendValueFontFamily: "Roboto Black",
+            leadLegendColor: "#3E3E3E",
+            leadLegendFontSize: "18px",
+            leadLegendValueFontSize: "28px",
             width: 1000,
             height: 500,
             marginLeft: 450,
@@ -51,11 +56,13 @@
                 .append("div")
                 .style("position", "absolute")
                 .style("text-align", "left")
-                .style("padding", "2px")
+                .style("padding", "10px 8px")
                 .style("font", "12px sans-serif")
-                .style("background", "lightsteelblue")
-                .style("border", "0px")
+                .style("background", "white")
+                .style("border", "1px solid rgba(0,0,0,.2)")
                 .style("border-radius", "8px")
+                .style("-webkit-box-shadow", "0 5px 10px rgba(0,0,0,.2)")
+                .style("box-shadow", "0 5px 10px rgba(0,0,0,.2)")
                 .style("z-index", "10")
                 .style("visibility", "hidden");
 
@@ -183,9 +190,59 @@
                 feMerge.append("feMergeNode")
                     .attr("in", "SourceGraphic");
 
+                // leads count
+                svg.append("rect")
+                    .attr("x", 15)
+                    .attr("y", 50)
+                    .attr("width", 220)
+                    .attr("height", 80)
+                    .attr("fill", setting.funnelBackgroundColor)
+                    .attr("stroke", "gray")
+                    .attr("stroke-width", 0);
+                svg.append("text")
+                    .style("fill", setting.leadLegendColor)
+                    .attr("x", 40)
+                    .attr("y", 85)
+                    .attr("font-size", setting.leadLegendFontSize)
+                    .attr("font-family", setting.leadLegendFontFamily)
+                    .text("Leads");
+                svg.append("text")
+                    .style("fill", setting.leadLegendColor)
+                    .attr("x", 40)
+                    .attr("y", 113)
+                    .attr("font-size", setting.leadLegendValueFontSize)
+                    .attr("font-family", setting.leadLegendValueFontFamily)
+                    .text(resp.summary.hits.total);
+
+                // deal total
+                svg.append("rect")
+                    .attr("x", 15)
+                    .attr("y", 140)
+                    .attr("width", 220)
+                    .attr("height", 80)
+                    .attr("fill", setting.funnelBackgroundColor)
+                    .attr("stroke", "gray")
+                    .attr("stroke-width", 0);
+                svg.append("text")
+                    .style("fill", setting.leadLegendColor)
+                    .attr("x", 40)
+                    .attr("y", 170)
+                    .attr("font-size", setting.leadLegendFontSize)
+                    .attr("font-family", setting.leadLegendFontFamily)
+                    .text("Deal Total");
+                svg.append("text")
+                    .style("fill", setting.leadLegendColor)
+                    .attr("x", 40)
+                    .attr("y", 200)
+                    .attr("font-size", setting.leadLegendValueFontSize)
+                    .attr("font-family", setting.leadLegendValueFontFamily)
+                    .text('$ 15,000,000');
+
+
+                // left stage labels
                 svg.append("rect")
                     .attr("x", 30)
-                    .attr("y", 100)
+                    .attr("y", 240)
                     .attr("width", 250)
                     .attr("height", name_set.length * 60)
                     .attr("fill", "white")
@@ -195,17 +252,19 @@
 
                 var counter = 0;
                 name_set.forEach(function (value) {
+                    // Stage label
                     svg.append("text")
                         .style("fill", "black")
-                        .attr("x", adjustTopWidth + 100)
-                        .attr("y", (counter + 1) * 50 + 4)
+                        .attr("x", 100)
+                        .attr("y", (counter + 1) * 50 + 4 + 240)
                         .attr("font-size", setting.legendNameFontSize)
                         .attr("font-family", setting.legendNameFontFamily)
                         .attr("fill", setting.legendNameFontColor)
                         .text(value);
+                    // Stage color ellipse
                     svg.append("ellipse")
-                        .attr("cx", adjustTopWidth + 70)
-                        .attr("cy", (counter + 1) * 50)
+                        .attr("cx", 70)
+                        .attr("cy", (counter + 1) * 50 + 240)
                         .attr("rx", 10)
                         .attr("ry", 10)
                         .attr("fill", stringToColorCode(value))
@@ -295,7 +354,7 @@
                                 if (i % stride === 0) {
                                     svg.append("text")
                                         .style("fill", setting.histogramLabelFontColor)
-                                        .attr("x", base_x + 5)
+                                        .attr("x", base_x + 5 + setting.marginLeft)
                                         .attr("y", base_y)
                                         .attr("font-size", setting.histogramLabelFontSize)
                                         .attr("font-family", setting.histogramLabelFontFamily)
@@ -306,7 +365,7 @@
                             if (i % stride === 0) {
                                 svg.append("text")
                                     .style("fill", setting.histogramLabelFontColor)
-                                    .attr("x", base_x)
+                                    .attr("x", base_x + + setting.marginLeft)
                                     .attr("y", base_y)
                                     .attr("font-size", setting.histogramLabelFontSize)
                                     .attr("font-family", setting.histogramLabelFontFamily)
@@ -319,7 +378,7 @@
                         for (var j = 0; j < chart_data.leads[i].length; j++) {
                             var l = chart_data.leads[i][j] * chart_height / max_leadsum;
                             svg.append("rect")
-                                .attr("x", base_x)
+                                .attr("x", base_x + + setting.marginLeft)
                                 .attr("y", base_y - l)
                                 .attr("width", chart_div - 1)
                                 .attr("height", l)
@@ -435,7 +494,7 @@
                                     [trapBox.right(idx * totalHeight / size), idx * totalHeight / size],
                                     [trapBox.right((idx + 0.65) * totalHeight / size), (idx + 0.65) * totalHeight / size],
                                     [trapBox.left((idx + 0.65) * totalHeight / size), (idx + 0.65) * totalHeight / size]]);
-                                return d.x = Math.max(trap.left(d.y) + rad + 11, Math.min(trap.right(d.y) - rad - 11, d.x));
+                                return d.x = Math.max(trap.left(d.y) + rad + 11 + setting.marginLeft, Math.min(trap.right(d.y) - rad - 11 + setting.marginLeft, d.x));
                             });
                     })
                     .start();
@@ -474,8 +533,9 @@
                             });
                         });
 
-                    text.attr("x", adjustTopWidth / 2 - bbox.width / 2)
-                        .attr("y", t * totalHeight / size + bbox.height);
+                    //text.attr("x", adjustTopWidth / 2 - bbox.width / 2)
+                    //    .attr("y", t * totalHeight / size + bbox.height);
+                    text.remove();
 
                     svg.append("text")
                         .attr("font-size", setting.stageNameFontSize)
