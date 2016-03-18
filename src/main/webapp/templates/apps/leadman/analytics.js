@@ -16,7 +16,7 @@
             stageHeight: "120px",
             stageNameFontSize: "14px",
             stageNameBackgroundColor: "gray",
-            width: 400,
+            width: 480,
             height: 260,
             onData: function (resp) {
                 initHistogram(resp);
