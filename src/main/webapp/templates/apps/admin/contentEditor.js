@@ -126,7 +126,8 @@ function initSaving(body, fileName) {
                 if (isEmbeddedIframe) {
                     doPostMessage({
                         isSaved: true,
-                        resp: postMessageData.resp
+                        resp: postMessageData.resp,
+                        willClose: postMessageData.willClose
                     }, postMessageData.url);
                 } else {
                     Msg.success('File is saved!');
