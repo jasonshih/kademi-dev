@@ -968,3 +968,11 @@ function checkBackgroundJobStatus(href, div, template, options) {
         }
     });
 }
+
+function getParam(name) {
+    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+    var value = regex.exec(window.location.href) || '';
+    value = decodeURIComponent(value[1]);
+
+    return value;
+}

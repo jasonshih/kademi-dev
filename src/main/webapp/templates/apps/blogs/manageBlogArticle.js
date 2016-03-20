@@ -1,17 +1,76 @@
-function initManageBlogArticle() {
+var iframeUrl;
+var win = $(window);
+
+function initManageBlogArticle(blogTheme) {
     $('.timeago').timeago();
-    initHtmlEditors();
+
+    if (blogTheme === 'bootstrap335') {
+        initEditorFrame();
+        initPostMessage();
+    } else {
+        initHtmlEditors();
+    }
 
     $('.article-form').forms({
         callback: function(resp, form) {
             flog('Done', form, resp);
-            if (resp.nextHref) {
-                window.location = resp.nextHref;
+            if (blogTheme === 'bootstrap335') {
+                var editorFrame = $('#editor-frame');
+                var postData = {
+                    url: window.location.href.split('#')[0],
+                    triggerSave: true,
+                    pageName: getFileName('index.html'),
+                    resp: resp
+                };
+
+                editorFrame[0].contentWindow.postMessage(JSON.stringify(postData), iframeUrl);
+            } else {
+                onArticleSaved(resp);
             }
-            Msg.info('Saved');
         }
     });
 
+
+    initPublish();
+    initGroupEditing();
+    initManageArticleImage();
+    initManageArticleFiles();
+    initGraphControls();
+    loadGraphData();
+}
+
+function onArticleSaved(resp) {
+    if (resp.nextHref) {
+        window.location = resp.nextHref;
+    }
+    Msg.info('Saved');
+}
+
+function initPostMessage() {
+    flog('initPostMessage');
+
+    win.on('message', function (e) {
+        flog('On got message', e, e.originalEvent);
+
+        var data = $.parseJSON(e.originalEvent.data);
+        if (data.isSaved) {
+            var resp = data.resp;
+            iframeUrl = '';
+            onArticleSaved(resp);
+        } else {
+            iframeUrl = data.url;
+        }
+    });
+}
+
+function initEditorFrame() {
+    flog('initEditorFrame');
+
+    var editorFrame = $('#editor-frame');
+    editorFrame.attr('src', 'http://version2.local.loopbackdns.com:8080/blogs/my%20blogs/article-1/contenteditor?fileName=index.html&miltonUserUrl=/users/admin&miltonUserUrlHash=c29fbbac-582b-4c81-a1b6-fba604d07849:LH-DlwymxL9mCPV7uXfCDzv157M&url=' + encodeURIComponent(window.location.href.split('#')[0]));
+}
+
+function initPublish() {
     var rejectModal = $('#rejectModal');
     $('.article-reject').click(function(e) {
         e.preventDefault();
@@ -51,10 +110,148 @@ function initManageBlogArticle() {
             window.location.reload();
         }
     });
+}
 
-    initGroupEditing();
-    initManageArticleImage();
-    initManageArticleFiles();
+var options = {
+    startDate: null,
+    endDate: null,
+    interval: "day"
+};
+
+function loadGraphData() {
+    var href = "?activity&" + $.param(options);
+    $.ajax({
+        type: "GET",
+        url: href,
+        dataType: 'html',
+        success: function (resp) {
+            var json = null;
+
+            if (resp !== null && resp.length > 0) {
+                json = JSON.parse(resp);
+            }
+
+            flog('response', json);
+            handleData(json);
+        }
+    });
+}
+
+function handleData(resp) {
+    var aggr = (resp !== null ? resp.aggregations : null);
+
+    initHistogram(aggr);
+}
+
+
+function initGraphControls() {
+    flog("initGraphControls");
+    var reportRange = $('#analytics-range');
+
+    function cb(start, end) {
+        options.startDate = start.format('DD/MM/YYYY');
+        options.endDate = end.format('DD/MM/YYYY');
+        loadGraphData();
+    }
+
+    reportRange.exist(function () {
+        flog("init analytics range");
+        reportRange.daterangepicker({
+            format: 'DD/MM/YYYY',
+            startDate: moment().subtract('days', 6),
+            endDate: moment(),
+            ranges: {
+                'Today': [
+                    moment().toISOString(),
+                    moment().toISOString()
+                ],
+                'Last 7 Days': [
+                    moment().subtract('days', 6).toISOString(),
+                    moment().toISOString()
+                ],
+                'Last 30 Days': [
+                    moment().subtract('days', 29).toISOString(),
+                    moment().toISOString()],
+                'This Month': [
+                    moment().startOf('month').toISOString(),
+                    moment().endOf('month').toISOString()],
+                'Last Month': [
+                    moment().subtract('month', 1).startOf('month').toISOString(),
+                    moment().subtract('month', 1).endOf('month').toISOString()],
+                'This Year': [
+                    moment().startOf('year').toISOString(),
+                    moment().toISOString()],
+            }
+        }, cb);
+    });
+}
+
+function initHistogram(aggr) {
+    flog("initHistogram", aggr);
+
+    $('#chart_histogram svg').empty();
+    nv.addGraph(function () {
+
+        var myData = [];
+        $.each(aggr.type.buckets, function (b, typeBucket) {
+            var series = {
+                key: typeBucket.key,
+                values: []
+            };
+            myData.push(series);
+        });
+
+        $.each(aggr.reqDate.buckets, function (i, dateBucket) {
+            var typeBuckets = dateBucket.type.buckets;
+            var map = {};
+            $.each(typeBuckets, function (ss, typeBucket) {
+                //flog("add to map",dateBucket.key, typeBucket.doc_count);
+                map[typeBucket.key] = typeBucket.doc_count;
+            });
+
+            $.each(myData, function (s, series) {
+                var docCount = map[series.key];
+                //flog("point", docCount, series.key, map);
+                if (docCount) {
+                    series.values.push({x: dateBucket.key, y: docCount});
+                } else {
+                    series.values.push({x: dateBucket.key, y: 0});
+                }
+            });
+
+        });
+
+        flog(myData);
+
+        var chart = nv.models.stackedAreaChart()
+            .margin({right: 100})
+            .x(function (d) {
+                return d.x;
+            })   //We can modify the data accessor functions...
+            .y(function (d) {
+                return d.y;
+            })   //...in case your data is formatted differently.
+            .useInteractiveGuideline(true)    //Tooltips which show all data points. Very nice!
+            .rightAlignYAxis(true)      //Let's move the y-axis to the right side.
+            .showControls(true)       //Allow user to choose 'Stacked', 'Stream', 'Expanded' mode.
+            .clipEdge(true);
+
+        chart.xAxis
+            .tickFormat(function (d) {
+                return d3.time.format('%x')(new Date(d))
+            });
+
+        chart.yAxis
+            .tickFormat(d3.format(',.2f'));
+
+        d3.select('#chart_histogram svg')
+            .datum(myData)
+            .call(chart);
+
+        nv.utils.windowResize(chart.update);
+
+        return chart;
+    });
 }
 
 function initManageArticleFiles() {

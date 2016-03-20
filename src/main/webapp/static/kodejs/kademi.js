@@ -1,4 +1,4 @@
-/* 
+/*
  *       Copyright FuseLMS
  */
 
@@ -1592,6 +1592,10 @@
                             id = ++xhrId;
 
                     xhr.open(options.type, options.url, options.async, options.username, options.password);
+
+                    if (options.timeout && options.timeout > 0) {
+                        xhr.timeout = options.timeout;
+                    }
 
                     // Apply custom fields if provided
                     if (options.xhrFields) {

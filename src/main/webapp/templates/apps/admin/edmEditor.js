@@ -452,7 +452,7 @@ function getEdmContent() {
 }
 
 function initBtns(body, fileName) {
-    flog('initBtns', fileName);
+    flog('initSaving', fileName);
 
     $('.btn-save-file').on('click', function (e) {
         e.preventDefault();

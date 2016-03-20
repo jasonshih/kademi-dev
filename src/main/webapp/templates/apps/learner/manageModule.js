@@ -1,5 +1,8 @@
-function initManageModule(baseHref, themePath) {
-    flog("initManageModule", baseHref, themePath);
+var win = $(window);
+var iframeUrl;
+
+function initManageModule(baseHref) {
+    flog("initManageModule", baseHref);
     window.request_url = function () {
         var str = '';
         var p = getSelectedProgram();
@@ -15,7 +18,7 @@ function initManageModule(baseHref, themePath) {
         return s;
     };
 
-    initCssForEditor(themePath);
+    initPostMessage();
     initDropdownMix();
     initThumbnail();
     initCRUDModulePages();
@@ -29,41 +32,24 @@ function initManageModule(baseHref, themePath) {
     window.onbeforeunload = isModalOpen;
 }
 
-function initCssForEditor(themePath) {
-    flog('initCssForEditor. Themepath=', themePath);
-    var cssPath;
-    if (themePath !== "/templates/themes/fuse/") {
-        themePath = '/templates/themes/bootstrap320/'; // HACK!! Loading from an actual theme doesnt work when its not a base theme (eg united)
-        flog('initCssForEditor. Using bootstrap', themePath);
-        cssPath = themePath + 'less/bootstrap.less';
-        cssPath += ',';
-        cssPath += evaluateRelativePath(window.location.pathname, '../../../../theme/theme-params.less');
-        flog('initCssForEditor2', cssPath);
-        cssPath = cssPath.replaceAll('/', '--');
-        cssPath = '/' + cssPath + '.compile.less';
-        flog('initCssForEditor3', cssPath);
+function initPostMessage() {
+    flog('initPostMessage');
 
-    } else {
-        // This is the old fuse theme
-        cssPath = "/templates/themes/fuse/theme.less,";
-        cssPath += evaluateRelativePath(window.location.pathname, '../../../../theme/theme-params.less');
-        cssPath += "," + "/static/common/contentStyles.less";
-        cssPath = cssPath.replaceAll('/', '--');
-        cssPath = '/' + cssPath + '.compile.less';
-//        cssPath = ',' + themePath + 'theme.less,/static/common/contentStyles.less';
-        flog('initCssForEditor-non-bs: cssPath=', cssPath);
-    }
+    win.on('message', function (e) {
+        flog('On got message', e, e.originalEvent);
 
+        var data = $.parseJSON(e.originalEvent.data);
+        if (data.isSaved) {
+            iframeUrl = '';
 
-
-    flog('push theme css file for editor', cssPath);
-    themeCssFiles.push(cssPath);
-    themeCssFiles.push('/static/editor/editor.css'); // just to format the editor itself a little
-    themeCssFiles.push('/static/prettify/prettify.css');
-
-    templatesPath = themePath + 'editor-templates.js'; // override default defined in toolbars.js
-    stylesPath = themePath + 'styles.js'; // override default defined in toolbars.js
-    flog('override default templates and styles', templatesPath, stylesPath);
+            Msg.success('Saved!');
+            if (data.willClose) {
+                $('#modal-add-page').modal('hide');
+            }
+        } else {
+            iframeUrl = data.url;
+        }
+    });
 }
 
 function initThumbnail() {
@@ -266,16 +252,23 @@ function initCRUDModulePages() {
     var modal = $('#modal-add-page');
     var form = modal.find('form');
 
-    initFuseModal(modal, function () {
-        modal.find('.modal-body').css('height', getStandardModalEditorHeight());
-        initHtmlEditors(modal.find('.htmleditor'), getStandardEditorHeight(), null, null, standardRemovePlugins + ',autogrow'); // disable autogrow
+    modal.on('hidden.bs.modal', function () {
+        $('#editor-frame').attr('src', '');
+    });
+
+    modal.on('click', '.btn-save', function () {
+        modal.removeClass('save-and-close');
+    });
+
+    modal.on('click', '.btn-save-close', function () {
+        modal.addClass('save-and-close');
     });
 
     $('.btn-add-page').click(function (e) {
         e.preventDefault();
         flog('initAddPageModal: click');
         // Make sure inputs are cleared
-        modal.find('input[type=text], textarea,input[name=pageName]').val('');
+        modal.find('input[type=text], input[name=pageName]').val('');
 
         // Find highest order value and increment for new page
         var lastOrder = $("#pages-list input[type=hidden]").last().val();
@@ -290,15 +283,16 @@ function initCRUDModulePages() {
         flog("newOrderVal", newOrderVal);
         form.find("input[name=order]").val(newOrderVal);
 
-        form.unbind().submit(function (e) {
-            flog('submit clicked', e.target);
-            e.preventDefault();
-            //createPage(modal.find('form'));
-            doSavePage(modal.find('form'), null, false);
-        });
-
-        openFuseModal(modal);
+        modalFormHandle(form, null, false);
+        openEditorFrame('newPage.html');
+        modal.modal('show');
     });
+}
+
+function openEditorFrame(pageName) {
+    var href = window.location.href.split('#')[0];
+
+    $('#editor-frame').attr('src', window.location.pathname + '?contenteditor=' + pageName + '&url=' + encodeURIComponent(href));
 }
 
 function initModuleList() {
@@ -602,12 +596,27 @@ function initAddQuizModal() {
         flog("newOrderVal", newOrderVal);
         form.find("input[name=order]").val(newOrderVal);
 
-        form.unbind().submit(function (e) {
-            e.preventDefault();
-            doSavePage(form, null, true);
-        });
+        modalFormHandle(form, null, true);
 
         modal.modal('show');
+    });
+}
+
+function modalFormHandle(form, pageArticle, isQuiz) {
+    form.unbind().submit(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        var txtTitle = form.find('[name=pageTitle]');
+        var titleWrapper = txtTitle.parent();
+        var title = txtTitle.val() || '';
+        titleWrapper.removeClass('has-error');
+
+        if (title.trim() === '') {
+            titleWrapper.addClass('has-error');
+        } else {
+            doSavePage(form, pageArticle, isQuiz);
+        }
     });
 }
 
@@ -626,14 +635,8 @@ function showEditModal(name, pageArticle) {
     editModal.find('input[name=pageName]').val(name);
     editModal.find('input:text, textarea').val('');
 
-    openFuseModal(editModal);
-
-    form.unbind().submit(function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        flog('edit submit click', e.target);
-        doSavePage(form, pageArticle, isQuiz);
-    });
+    editModal.modal('show');
+    modalFormHandle(form, pageArticle, isQuiz);
 
     editModal.find('.btn-history').unbind().history({
         pageUrl: name,
@@ -642,6 +645,7 @@ function showEditModal(name, pageArticle) {
             loadModalEditorContent(editModal, name, isQuiz);
         }
     });
+
     loadModalEditorContent(editModal, name, isQuiz);
 }
 
@@ -665,9 +669,7 @@ function loadModalEditorContent(modal, name, isQuiz) {
             if (isQuiz) {
                 loadQuizEditor(modal, data);
             } else {
-                //CKEDITOR.instances["body"].setData(data.body)
-                modal.find('textarea').val(data.body);
-                flog("set values", data.title, data.body, CKEDITOR.instances["body"]);
+                openEditorFrame(name);
             }
         },
         error: function (resp) {
@@ -686,53 +688,54 @@ function doSavePage(form, pageArticle, isQuiz) {
         return;
     }
 
-    var $title = form.find('input[name=pageTitle]');
+    var title = form.find('input[name=pageTitle]').val();
     var data;
     if (isQuiz) {
         data = prepareQuizForSave(form);
     } else {
-        flog('check ck editors', CKEDITOR.instances);
-        for (var key in CKEDITOR.instances) {
-            var editor = CKEDITOR.instances[key];
-            var content = editor.getData();
-            flog('got ck content', key, content, editor);
-            var inp = $('textarea[name=' + key + ']', form);
-            if (inp) {
-                inp.html(content);
-                flog('updated', inp);
-            }
-        }
         data = form.serialize();
     }
-    flog('do ajax post', form.attr('action'), data);
+
+    var formAction = form.attr('action');
+    flog('do ajax post', formAction, data);
     try {
-        var orderVal = form.find("input[name=order]").val();
         modal.find('button[data-type=form-submit]').attr('disabled', 'true');
-        flog('set disabled', modal.find('button[data-type=form-submit]'));
         form.addClass('ajax-processing');
+
         $.ajax({
             type: 'POST',
-            url: form.attr('action'),
+            url: formAction,
             data: data,
             dataType: 'json',
-            success: function (data) {
-                flog('set enabled', modal.find('button[data-type=form-submit]'));
+            success: function (response) {
                 form.removeClass('ajax-processing');
                 modal.find('button[data-type=form-submit]').removeAttr('disabled');
-                if (data.status) {
-                    var title = $title.val();
-                    if (pageArticle === null) { // indicated new page
-                        var pageName = getFileName(data.messages[0]);
-                        var href = data.nextHref;
-                        addPageToList(pageName, href, title, isQuiz, orderVal);
+
+                if (response.status) {
+                    if (pageArticle === null) {
+                        $("#pages-list").reloadFragment();
                     } else {
                         pageArticle.find('> span').text(title);
                     }
-                    closeFuseModal(modal);
 
-                    //saveModulePages();
+                    flog(response);
+
+                    if (isQuiz) {
+                        Msg.success('Saved!');
+                        modal.modal('hide');
+                    } else {
+                        var editorFrame = $('#editor-frame');
+                        var postData = {
+                            url: window.location.href.split('#')[0],
+                            triggerSave: true,
+                            pageName: getFileName(response.nextHref),
+                            willClose: modal.hasClass('save-and-close')
+                        };
+
+                        editorFrame[0].contentWindow.postMessage(JSON.stringify(postData), iframeUrl);
+                    }
                 } else {
-                    Msg.error('There was an error saving the page: ' + data.messages);
+                    Msg.error('There was an error saving the page: ' + response.messages);
                 }
             },
             error: function (resp) {
@@ -745,11 +748,6 @@ function doSavePage(form, pageArticle, isQuiz) {
         flog('exception in createJob', e);
     }
     return false;
-}
-
-function addPageToList(pageName, href, title, isQuiz, orderVal) {
-    flog('newRow', title, isQuiz);
-    $("#pages-list").reloadFragment();
 }
 
 function initScormUpload() {
