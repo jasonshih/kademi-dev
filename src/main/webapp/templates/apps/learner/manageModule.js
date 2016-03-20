@@ -1,8 +1,13 @@
 var win = $(window);
 var iframeUrl;
+var isBootstrap335;
 
-function initManageModule(baseHref) {
-    flog("initManageModule", baseHref);
+function initManageModule(baseHref, themePath) {
+    flog("initManageModule", baseHref, themePath);
+
+    isBootstrap335 = themePath.indexOf('bootstrap335') !== -1;
+    flog('Is Bootstrap335: ' + isBootstrap335);
+
     window.request_url = function () {
         var str = '';
         var p = getSelectedProgram();
@@ -18,7 +23,11 @@ function initManageModule(baseHref) {
         return s;
     };
 
-    initPostMessage();
+    if (isBootstrap335) {
+        initPostMessage();
+    } else {
+        initCssForEditor(themePath);
+    }
     initDropdownMix();
     initThumbnail();
     initCRUDModulePages();
@@ -32,6 +41,42 @@ function initManageModule(baseHref) {
     window.onbeforeunload = isModalOpen;
 }
 
+function initCssForEditor(themePath) {
+    flog('initCssForEditor. Themepath=', themePath);
+    var cssPath;
+    if (themePath !== "/templates/themes/fuse/") {
+        themePath = '/templates/themes/bootstrap320/'; // HACK!! Loading from an actual theme doesnt work when its not a base theme (eg united)
+        flog('initCssForEditor. Using bootstrap', themePath);
+        cssPath = themePath + 'less/bootstrap.less';
+        cssPath += ',';
+        cssPath += evaluateRelativePath(window.location.pathname, '../../../../theme/theme-params.less');
+        flog('initCssForEditor2', cssPath);
+        cssPath = cssPath.replaceAll('/', '--');
+        cssPath = '/' + cssPath + '.compile.less';
+        flog('initCssForEditor3', cssPath);
+
+    } else {
+        // This is the old fuse theme
+        cssPath = "/templates/themes/fuse/theme.less,";
+        cssPath += evaluateRelativePath(window.location.pathname, '../../../../theme/theme-params.less');
+        cssPath += "," + "/static/common/contentStyles.less";
+        cssPath = cssPath.replaceAll('/', '--');
+        cssPath = '/' + cssPath + '.compile.less';
+//        cssPath = ',' + themePath + 'theme.less,/static/common/contentStyles.less';
+        flog('initCssForEditor-non-bs: cssPath=', cssPath);
+    }
+
+
+    flog('push theme css file for editor', cssPath);
+    themeCssFiles.push(cssPath);
+    themeCssFiles.push('/static/editor/editor.css'); // just to format the editor itself a little
+    themeCssFiles.push('/static/prettify/prettify.css');
+
+    templatesPath = themePath + 'editor-templates.js'; // override default defined in toolbars.js
+    stylesPath = themePath + 'styles.js'; // override default defined in toolbars.js
+    flog('override default templates and styles', templatesPath, stylesPath);
+}
+
 function initPostMessage() {
     flog('initPostMessage');
 
@@ -40,8 +85,6 @@ function initPostMessage() {
 
         var data = $.parseJSON(e.originalEvent.data);
         if (data.isSaved) {
-            iframeUrl = '';
-
             Msg.success('Saved!');
             if (data.willClose) {
                 $('#modal-add-page').modal('hide');
@@ -252,9 +295,16 @@ function initCRUDModulePages() {
     var modal = $('#modal-add-page');
     var form = modal.find('form');
 
-    modal.on('hidden.bs.modal', function () {
-        $('#editor-frame').attr('src', '');
-    });
+    if (isBootstrap335) {
+        modal.on('hidden.bs.modal', function () {
+            $('#editor-frame').attr('src', '');
+        });
+    } else {
+        initFuseModal(modal, function () {
+            modal.find('.modal-body').css('height', getStandardModalEditorHeight());
+            initHtmlEditors(modal.find('.htmleditor'), getStandardEditorHeight(), null, null, standardRemovePlugins + ',autogrow'); // disable autogrow
+        });
+    }
 
     modal.on('click', '.btn-save', function () {
         modal.removeClass('save-and-close');
@@ -268,7 +318,7 @@ function initCRUDModulePages() {
         e.preventDefault();
         flog('initAddPageModal: click');
         // Make sure inputs are cleared
-        modal.find('input[type=text], input[name=pageName]').val('');
+        modal.find('input[type=text], textarea, input[name=pageName]').val('');
 
         // Find highest order value and increment for new page
         var lastOrder = $("#pages-list input[type=hidden]").last().val();
@@ -284,8 +334,13 @@ function initCRUDModulePages() {
         form.find("input[name=order]").val(newOrderVal);
 
         modalFormHandle(form, null, false);
-        openEditorFrame('newPage.html');
+
+        if (isBootstrap335) {
+            openEditorFrame('newPage.html');
+        }
+
         modal.modal('show');
+        openFuseModal(modal);
     });
 }
 
@@ -635,7 +690,7 @@ function showEditModal(name, pageArticle) {
     editModal.find('input[name=pageName]').val(name);
     editModal.find('input:text, textarea').val('');
 
-    editModal.modal('show');
+    openFuseModal(editModal);
     modalFormHandle(form, pageArticle, isQuiz);
 
     editModal.find('.btn-history').unbind().history({
@@ -669,7 +724,13 @@ function loadModalEditorContent(modal, name, isQuiz) {
             if (isQuiz) {
                 loadQuizEditor(modal, data);
             } else {
-                openEditorFrame(name);
+                if (isBootstrap335) {
+                    openEditorFrame(name);
+                } else {
+                    //CKEDITOR.instances["body"].setData(data.body)
+                    modal.find('textarea').val(data.body);
+                    flog("set values", data.title, data.body, CKEDITOR.instances["body"]);
+                }
             }
         },
         error: function (resp) {
@@ -693,6 +754,22 @@ function doSavePage(form, pageArticle, isQuiz) {
     if (isQuiz) {
         data = prepareQuizForSave(form);
     } else {
+        if (isBootstrap335) {
+            // Do nothing
+        } else {
+            flog('check ck editors', CKEDITOR.instances);
+            for (var key in CKEDITOR.instances) {
+                var editor = CKEDITOR.instances[key];
+                var content = editor.getData();
+                flog('got ck content', key, content, editor);
+                var inp = $('textarea[name=' + key + ']', form);
+                if (inp) {
+                    inp.html(content);
+                    flog('updated', inp);
+                }
+            }
+        }
+
         data = form.serialize();
     }
 
@@ -724,15 +801,20 @@ function doSavePage(form, pageArticle, isQuiz) {
                         Msg.success('Saved!');
                         modal.modal('hide');
                     } else {
-                        var editorFrame = $('#editor-frame');
-                        var postData = {
-                            url: window.location.href.split('#')[0],
-                            triggerSave: true,
-                            pageName: getFileName(response.nextHref),
-                            willClose: modal.hasClass('save-and-close')
-                        };
+                        if (isBootstrap335) {
+                            var editorFrame = $('#editor-frame');
+                            var postData = {
+                                url: window.location.href.split('#')[0],
+                                triggerSave: true,
+                                pageName: getFileName(response.nextHref),
+                                willClose: modal.hasClass('save-and-close')
+                            };
 
-                        editorFrame[0].contentWindow.postMessage(JSON.stringify(postData), iframeUrl);
+                            editorFrame[0].contentWindow.postMessage(JSON.stringify(postData), iframeUrl);
+                        } else {
+                            Msg.show('Saved!');
+                            closeFuseModal(modal);
+                        }
                     }
                 } else {
                     Msg.error('There was an error saving the page: ' + response.messages);
