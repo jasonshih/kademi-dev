@@ -1,4 +1,5 @@
 <div class="" style="min-height: 400px" id="tasksList">
+    #if($userResource.hasRole('TakeLead'))
     #set( $incoming = $leadsPage.unassignedTasks )
     #if( $incoming.size() > 0 )
     <h3>
@@ -42,6 +43,7 @@
         </li>
     </ul>
     <hr/>
+    #end
     #end
     #end
 
