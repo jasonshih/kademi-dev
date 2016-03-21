@@ -983,7 +983,7 @@ function initProfileSearchTable() {
         input: function () {
             var text = this.value.trim();
             typewatch(function () {
-                doSearch(text);
+                doSearchContact(text);
             }, 500);
         }
     });
@@ -1027,7 +1027,7 @@ function buildTable(resp) {
     $('#table-result').find('table').removeClass('hide');
 }
 
-function doSearch(query) {
+function doSearchContact(query) {
     if (!query) {
         $('#table-result').find('tbody').html('<tr><td class="text-center" colspan="5">No contact found. Please enter new contact info above</td></tr>');
         return;

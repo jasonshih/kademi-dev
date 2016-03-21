@@ -72,7 +72,11 @@
                                 <div class="media-body">
                                     <h2 class="mv-lg media-heading">
                                         #if($page.leadOrg)
-                                        <span style="color: white">$page.leadOrg.formattedName</span>
+                                        #if($page.profile)
+                                        <a href="/custs/$page.profile.name" style="color: white">$page.customerDescription ($page.leadOrg.formattedName)</a>
+                                        #else
+                                        <span style="color: white">$page.customerDescription ($page.leadOrg.formattedName)</span>
+                                        #end
                                         #elseif( $page.profile )
                                         <a href="/custs/$page.profile.name" style="color: white">$page.customerDescription</a>
                                         #else
