@@ -216,6 +216,40 @@
     }
 
     function updateSourcesPie(buckets) {
+        $('#sourcesPie svg').empty();
+
+        nv.addGraph(function () {
+            var chart = nv.models.pieChart()
+                    .x(function (d) {
+                        return d.key;
+                    })
+                    .y(function (d) {
+                        return d.doc_count;
+                    })
+                    .showLabels(false)
+                    .showLegend(false)
+                    .margin({
+                        top: 0,
+                        bottom: 0,
+                        left: 0,
+                        right: 0
+                    })
+                    .labelThreshold(.05)  //Configure the minimum slice size for labels to show up
+                    .labelType("value")   //Configure what type of data to show in the label. Can be "key", "value" or "percent"
+                    .donut(true)          //Turn on Donut mode. Makes pie chart look tasty!
+                    .donutRatio(0.35)     //Configure how big you want the donut hole size to be.
+                    ;
+
+            d3.select("#sourcesPie svg")
+                    .datum(buckets)
+                    .transition().duration(350)
+                    .call(chart);
+
+            return chart;
+        });
+    }
+
+    function updateStagesPie(buckets) {
         $('#stagesPie svg').empty();
         //Donut chart
         nv.addGraph(function () {
@@ -241,40 +275,6 @@
                     ;
 
             d3.select("#stagesPie svg")
-                    .datum(buckets)
-                    .transition().duration(350)
-                    .call(chart);
-
-            return chart;
-        });
-    }
-
-    function updateStagesPie(buckets) {
-        $('#sourcesPie svg').empty();
-        //Donut chart
-        nv.addGraph(function () {
-            var chart = nv.models.pieChart()
-                    .x(function (d) {
-                        return d.key;
-                    })
-                    .y(function (d) {
-                        return d.doc_count;
-                    })
-                    .showLabels(false)
-                    .showLegend(false)
-                    .margin({
-                        top: 0,
-                        bottom: 0,
-                        left: 0,
-                        right: 0
-                    })
-                    .labelThreshold(.05)  //Configure the minimum slice size for labels to show up
-                    .labelType("value")   //Configure what type of data to show in the label. Can be "key", "value" or "percent"
-                    .donut(true)          //Turn on Donut mode. Makes pie chart look tasty!
-                    .donutRatio(0.35)     //Configure how big you want the donut hole size to be.
-                    ;
-
-            d3.select("#sourcesPie svg")
                     .datum(buckets)
                     .transition().duration(350)
                     .call(chart);

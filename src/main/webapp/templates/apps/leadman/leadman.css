@@ -1,3 +1,6 @@
+#table-result table tbody tr:first-child td{
+    border-top: none;
+}
 @media (max-width: 767px) {
     .form-group [class^="col-md"] + div{
         margin-top: 10px;
