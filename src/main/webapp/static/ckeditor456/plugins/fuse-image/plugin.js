@@ -227,6 +227,18 @@ CKEDITOR.plugins.add('fuse-image', {
                         });
                     }
 
+                    var imageStyleValue = '';
+                    if (element.hasClass('img-rounded')) {
+                        imageStyleValue = 'img-rounded'
+                    } else if (element.hasClass('img-circle')) {
+                        imageStyleValue = 'img-circle'
+                    } else if (element.hasClass('img-thumbnail')) {
+                        imageStyleValue = 'img-thumbnail'
+                    }
+                    $('#image-style').val(imageStyleValue);
+                    previewImg.removeClass('img-rounded img-circle img-thumbnail');
+                    previewImg.addClass(imageStyleValue);
+
                     setImage(previewImg, src, hash, imgInContent.getAttribute('width'), imgInContent.getAttribute('height'));
 
                     if (!imageInitDone) {
