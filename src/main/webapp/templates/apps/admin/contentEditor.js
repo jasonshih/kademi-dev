@@ -114,7 +114,7 @@ function initSaving(body, fileName) {
 
         showLoadingIcon();
         var fileContent = $('#content-area').keditor('getContent');
-        var saveUrl = postMessageData.pageName ? postMessageData.pageName : fileName;
+        var saveUrl = postMessageData && postMessageData.pageName ? postMessageData.pageName : fileName;
 
         $.ajax({
             url: saveUrl,
