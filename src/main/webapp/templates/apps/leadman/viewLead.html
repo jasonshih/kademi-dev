@@ -380,12 +380,15 @@
                                         <div class="row">
                                             <form method="post" action="$page.href" class="form-horizontal" id="leadOrgDetails">
                                                 <input type="hidden" name="leadOrgDetails" value="leadOrgDetails"/>
+
+
                                                 <div class="modal-body">
                                                     #set( $leadOrg = $page.leadOrg )
+                                                    <input type="hidden" name="leadOrgId" value="$!leadOrg.orgId"/>
                                                     <div class="form-group">
                                                         <label class="control-label col-md-2" for="title">Company</label>
                                                         <div class="col-md-3">
-                                                            <input type="text" name="title" class="form-control" placeholder="Title" value="$!leadOrg.title" />
+                                                            <input type="text" id="orgTitleSearch" name="title" class="form-control" placeholder="Title" value="$!leadOrg.title" />
                                                         </div>
                                                     </div>
 
@@ -774,6 +777,7 @@
                 initFileUploads();
                 initFileNoteEdit();
                 initUpdateUserModal();
+                initOrgSearchTab();
 
                 $("#assignToMenu").on("click", "a", function (e) {
                     e.preventDefault();
@@ -1047,6 +1051,68 @@
                     error: function (resp) {
                         flog('error', resp);
                         Msg.error('Sorry couldnt set the visibility ' + resp);
+                    }
+                });
+            }
+
+            function initOrgSearchTab() {
+                var orgSearch = new Bloodhound({
+                    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+                    queryTokenizer: Bloodhound.tokenizers.whitespace,
+                    remote: {
+                        url: '/leads?orgSearch=%QUERY',
+                        wildcard: '%QUERY'
+                    }
+                });
+
+                $('#orgTitleSearch').typeahead({
+                    highlight: true
+                }, {
+                    display: 'title',
+                    limit: 10,
+                    source: orgSearch,
+                    templates: {
+                        empty: [
+                            '<div class="empty-message">',
+                            'No existing companies were found.',
+                            '</div>'
+                        ].join('\n'),
+                        suggestion: Handlebars.compile(
+                                '<div>'
+                                + '<strong>{{title}}</strong>'
+                                + '</br>'
+                                + '<span>{{phone}}</span>'
+                                + '</br>'
+                                + '<span>{{address}}, {{addressLine2}}, {{addressState}}, {{postcode}}</span>'
+                                + '</div>')
+                    }
+                });
+
+                $('#orgTitleSearch').bind('typeahead:select', function (ev, sug) {
+                    var inp = $(this);
+                    var form = inp.closest('form');
+
+                    form.find('input[name=email]').val(sug.email);
+                    form.find('input[name=phone]').val(sug.phone);
+                    form.find('input[name=address]').val(sug.address);
+                    form.find('input[name=addressLine2]').val(sug.addressLine2);
+                    form.find('input[name=addressState]').val(sug.state);
+                    form.find('input[name=postcode]').val(sug.postcode);
+                    form.find('input[name=leadOrgId]').val(sug.orgId);
+                });
+
+                $('#orgTitleSearch').on({
+                    input: function(){
+                        var form = $(this).closest('form');
+                        if(!this.value){
+                            form.find('input[name=email]').val('');
+                            form.find('input[name=phone]').val('');
+                            form.find('input[name=address]').val('');
+                            form.find('input[name=addressLine2]').val('');
+                            form.find('input[name=addressState]').val('');
+                            form.find('input[name=postcode]').val('');
+                            form.find('input[name=leadOrgId]').val('');
+                        }
                     }
                 });
             }
