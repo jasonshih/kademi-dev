@@ -333,6 +333,25 @@
                                     }, 200);
                                 }
                             }
+                        }, {
+                            type: "checkbox",
+                            id: "chkBordered",
+                            default: 'checked',
+                            label: 'Bordered Table',
+                            setup: function (a) {
+                                this.setValue(a.hasClass("table-bordered") ? "checked" : "");
+                            },
+                            commit: function (a, d) {
+                                if (this.getValue()) {
+                                    setTimeout(function () {
+                                        d.addClass("table-bordered");
+                                    }, 200);
+                                } else {
+                                    setTimeout(function () {
+                                        d.removeClass("table-bordered");
+                                    }, 200);
+                                }
+                            }
                         }]
                     }]
             }, p && p.createAdvancedTab(a, null, "table")]
