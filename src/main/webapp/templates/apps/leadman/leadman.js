@@ -999,6 +999,7 @@ function initProfileSearchTable() {
             form.find('input[name=surName]').val(profile.surName);
             form.find('input[name=email]').val(profile.email);
             form.find('input[name=phone]').val(profile.phone);
+            $('#table-result table').addClass('hide');
         } catch (ex) {
             flog('json parsing error', ex);
         }
