@@ -72,35 +72,39 @@ CKEDITOR.plugins.add('fuse-image', {
                     {
                         id: 'fuse-image',
                         label: 'Insert/Edit Imagae',
-                        elements: [
-                            {
-                                type: 'html',
-                                html: '<div class="row" style="width: 100%; max-width: 900px">'
-                                + '  <div class="col-md-4">'
-                                + '    <div id="imageTree" class="tree"></div>'
-                                + '  </div>'
-                                + '  <div class="col-md-8">'
-                                + '    <div role="tabpanel">'
-                                + '      <ul class="nav nav-tabs" role="tablist" id="imageTabs">'
-                                + '        <li role="presentation" class="active"><a href="#upload" aria-controls="upload" role="tab" data-toggle="tab">Upload</a></li>'
-                                + '        <li role="presentation"><a href="#preview" aria-controls="preview" role="tab" data-toggle="tab">Preview</a></li>'
-                                + '      </ul>'
-                                + '      <div class="tab-content">'
-                                + '        <div role="tabpanel" class="tab-pane fade active in" id="upload">'
-                                + '          <div id="imageUploaded"></div>'
-                                + '        </div>'
-                                + '        <div role="tabpanel" class="tab-pane fade" id="preview">'
-                                + '          <div id="imagePreview"><div class="imageEditor"><div id="imageContainer"></div></div></div>'
-                                + '        </div>'
-                                + '      </div>'
-                                + '    </div>' // end tabpabel
-                                + '  </div>' // end col-md-8
-                                + '</div>', // end row
-                                commit: function (data) {
-                                    log("commit, data=", data);
-                                }
+                        elements: [{
+                            type: 'html',
+                            html: '<div class="row" style="width: 100%; max-width: 900px">' +
+                            '    <div class="col-md-4">' +
+                            '        <div id="imageTree" class="tree"></div>' +
+                            '    </div>' +
+                            '    <div class="col-md-8">' +
+                            '        <div role="tabpanel">' +
+                            '            <ul class="nav nav-tabs" role="tablist" id="imageTabs">' +
+                            '                <li role="presentation" class="active">' +
+                            '                    <a href="#upload" aria-controls="upload" role="tab" data-toggle="tab">Upload</a>' +
+                            '                </li>' +
+                            '                <li role="presentation">' +
+                            '                    <a href="#preview" aria-controls="preview" role="tab" data-toggle="tab">Preview</a>' +
+                            '                </li>' +
+                            '            </ul>' +
+                            '            <div class="tab-content">' +
+                            '                <div role="tabpanel" class="tab-pane fade active in" id="upload">' +
+                            '                    <div id="imageUploaded"></div>' +
+                            '                </div>' +
+                            '                <div role="tabpanel" class="tab-pane fade" id="preview">' +
+                            '                    <div id="imagePreview">' +
+                            '                        <div class="imageEditor"><div id="imageContainer"></div></div>' +
+                            '                    </div>' +
+                            '                </div>' +
+                            '            </div>' +
+                            '        </div>' +
+                            '    </div>' +
+                            '</div>',
+                            commit: function (data) {
+                                log("commit, data=", data);
                             }
-                        ]
+                        }]
                     }
                 ],
                 onShow: function () {
@@ -164,10 +168,29 @@ CKEDITOR.plugins.add('fuse-image', {
 
                         imageFloat.before(
                             '<div id="image-size">' +
-                            'Width: <input type="text" id="image-width" value="" /> ' +
-                            'Height: <input type="text" id="image-height" value="" />' +
+                            '   Width: <input type="text" id="image-width" value="" /> ' +
+                            '   Height: <input type="text" id="image-height" value="" />' +
                             '</div>'
                         );
+
+                        imageFloat.after(
+                            '<select id="image-style">' +
+                            '    <option value="">- Image Style -</option>' +
+                            '    <option value="img-rounded">Rounded Image</option>' +
+                            '    <option value="img-circle">Circle Image</option>' +
+                            '    <option value="img-thumbnail">Thumbnail</option>' +
+                            '</select>'
+                        );
+
+                        $('#image-style').on('change', function () {
+                            var value = this.value;
+                            var img = imageCont.find('img');
+
+                            img.removeClass('img-rounded img-circle img-thumbnail');
+                            if (value) {
+                                img.addClass(value);
+                            }
+                        });
 
                         $('#image-width').on('change', function () {
                             var input = $(this);
@@ -261,9 +284,13 @@ CKEDITOR.plugins.add('fuse-image', {
                             '<span class="cke_dialog_ui_button"><i class="fa fa-sign-in"></i></span>' +
                             '</a>'
                         ).find('.btn-import-image').click(function (e) {
-                                e.preventDefault();
+                            e.preventDefault();
 
-                                var importUrl = prompt('Please enter image url you want to import:');
+                            var importUrl = prompt('Please enter image url you want to import:');
+
+                            if (importUrl) {
+                                alert('Your url is invalid!');
+                            } else {
                                 var fileExtension = importUrl.substr(importUrl.length - 3, 3);
                                 var urlRegex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
                                 var allowedExtensions = '|jpg|gif|png|';
@@ -279,7 +306,8 @@ CKEDITOR.plugins.add('fuse-image', {
                                         alert('Your url is invalid!');
                                     }
                                 }
-                            });
+                            }
+                        });
                     } else {
                         $("#imageTree.tree").mtree("refreshSelected");
                     }
@@ -315,6 +343,7 @@ CKEDITOR.plugins.add('fuse-image', {
                     img.setAttribute('height', previewImage.height());
                     img.setAttribute('data-hash', previewImage.attr("data-hash"));
                     img.setAttribute("data-filename", previewImage.attr("data-filename"));
+                    img.setAttribute("class", previewImage.attr("class"));
 
                     if (this.insertMode) {
                         flog("insert mode", this.insertMode, img);
