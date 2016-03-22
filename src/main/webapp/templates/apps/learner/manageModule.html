@@ -18,6 +18,10 @@
     </head>
     <body class="manageModulePages">
         #set($currentBranch = $page.closest("branch"))
+        #set($isBootstrap335 = false)
+        #if ($page.themePath.indexOf("bootstrap335") != -1)
+            #set($isBootstrap335 = true)
+        #end
         <div class="btn-group publishing pull-right">
             #if( $currentBranch.live )
             <!-- TODO: Should be modified here -->
@@ -210,7 +214,6 @@
 
                         <hr/>
 
-
                         <div class="form-group">
                             <label for="" class="control-label col-md-3">Search fields</label>
                         </div>
@@ -358,7 +361,7 @@
             </div>
         </div>
 
-        <div id="modal-add-page" class="modal modal-full fade" aria-hidden="true" tabindex="-1">
+        <div id="modal-add-page" class="modal #if ($isBootstrap335) modal-full #else modal-lg #end fade" aria-hidden="true" tabindex="-1">
             <form method="POST" action="." class="form-horizontal" style="height: 100%;">
                 <input type="hidden" name="pageName" />
                 <input type="hidden" name="order" />
@@ -373,9 +376,19 @@
                         </div>
                     </div>
                 </div>
+                #if ($isBootstrap335)
                 <div class="modal-body embed-responsive" style="height: calc(100% - 65px - 61px);">
                     <iframe id="editor-frame" class="embed-responsive-item" src=""></iframe>
                 </div>
+                #else
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <textarea name="body" id="body" class="htmleditor toolbar-Full" style="width: 800px"></textarea>
+                        </div>
+                    </div>
+                </div>
+                #end
                 <div class="modal-footer">
                     <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
                     <button class="btn btn-sm btn-primary btn-img btn-history" type="button">History <img class="ajax-loader" src="/static/common/loading.gif"/></button>
@@ -426,7 +439,6 @@
                                 <div id="quiz-questions"></div>
                             </div>
 
-
                             <div id="options" class="tab-pane">
                                 <div class="form-group">
                                     <label for="batchMode" class="control-label col-md-4">Batch mode</label>
@@ -468,6 +480,7 @@
         </div>
 
         <script type="text/javascript" >
+            var isBootstrap335 = $isBootstrap335;
             $(function () {
                 initManageModule("../../..", '$page.themePath');
             });
