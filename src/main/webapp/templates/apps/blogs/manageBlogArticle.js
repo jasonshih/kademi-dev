@@ -1,7 +1,7 @@
 var iframeUrl;
 var win = $(window);
 
-function initManageBlogArticle(blogTheme) {
+function initManageBlogArticle() {
     $('.timeago').timeago();
 
     if (isBootstrap335) {
