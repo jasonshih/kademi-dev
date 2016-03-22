@@ -5,7 +5,11 @@
     .form-group [class^="col-md"] + div{
         margin-top: 10px;
     }
-}  
+}
+
+html{
+    -ms-overflow-style: scrollbar; /* IE11 scrollbar issue */
+}
 
 html body .fa {
     line-height: inherit;

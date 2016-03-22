@@ -6,15 +6,29 @@ function initUploads() {
     $('#importerWizard').on('show.bs.collapse', function () {
         var curStep = $('#myWizard').wizard('selectedItem');
         if(!form.find('input[name=fileHash]').val()){
-            curStep = 1;
+            curStep = {step: 1};
         }
-        $('#myWizard').wizard('selectedItem', { step: curStep });
+        $('#myWizard').wizard('selectedItem', curStep);
+    });
+
+    $('#myWizard').on('changed.fu.wizard', function (evt, data) {
+        if(data.step===1){
+            // IE 11 fix
+            var ul = $('#myWizard').find('ul.steps');
+            if(ul.css('margin-left')!=='0'){
+                ul.css('margin-left','0');
+            }
+        }
     });
 
     $('#myWizard').on('actionclicked.fu.wizard', function (evt, data) {
         if (data.step === 1 && $('#importerWizard').attr('aria-expanded')=='true') {
             if (form.find("input[name=fileHash]").val() == "") {
-                alert("Please select a file to upload");
+                if($('#btn-upload').length){
+                    alert("Please select a file to upload");
+                }else{
+                    alert("Sale Group hasn't been set. Please contact administrator for assistant.");
+                }
                 evt.preventDefault();
             }
         }
@@ -106,11 +120,13 @@ function initUploads() {
 }
 
 function initSearchUser() {
-    $('#user-query').keyup(function () {
-        typewatch(function () {
-            flog('do search');
-            doSearch();
-        }, 500);
+    $('#user-query').on({
+        input: function(){
+            typewatch(function () {
+                flog('do search');
+                doSearch();
+            }, 500);
+        }
     });
     $('#search-group').change(function () {
         doSearch();
@@ -118,7 +134,13 @@ function initSearchUser() {
 }
 
 function doSearch() {
+    var lastQuery = $('#user-query').attr('last-query');
     var query = $('#user-query').val();
+    // fix the issue on IE that fire the search when focusing on input field
+    if(lastQuery===query || (typeof lastQuery === 'undefined' && query==='')){
+        return;
+    }
+    $('#user-query').attr('last-query', query);
     var groupName = $('#search-group').val();
     flog('doSearch', query, groupName);
     var uri = URI(window.location);
@@ -132,7 +154,7 @@ function doSearch() {
         type: 'GET',
         url: newHref,
         success: function (data) {
-            Msg.info('Search complete', 5000);
+            Msg.info('Search complete', 2000);
             flog('success', data);
             var newDom = $(data);
             var $fragment = newDom.find('#searchResults');
