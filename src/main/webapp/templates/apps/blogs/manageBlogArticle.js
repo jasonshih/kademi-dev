@@ -68,7 +68,8 @@ function initEditorFrame() {
 
     var editorFrame = $('#editor-frame');
     // TODO: src is fixed for now. Will update soon
-    editorFrame.attr('src', 'http://version2.local.loopbackdns.com:8080/blogs/my%20blogs/article-1/contenteditor?fileName=index.html&miltonUserUrl=/users/admin&miltonUserUrlHash=c29fbbac-582b-4c81-a1b6-fba604d07849:LH-DlwymxL9mCPV7uXfCDzv157M&url=' + encodeURIComponent(window.location.href.split('#')[0]));
+    editorFrame.attr('src',  window.location.pathname + '?goto=editor' + '&url=' + encodeURIComponent(window.location.href.split('#')[0]));
+    //editorFrame.attr('src', 'http://version2.local.loopbackdns.com:8080/blogs/my%20blogs/article-1/contenteditor?fileName=index.html&miltonUserUrl=/users/admin&miltonUserUrlHash=c29fbbac-582b-4c81-a1b6-fba604d07849:LH-DlwymxL9mCPV7uXfCDzv157M&url=' + encodeURIComponent(window.location.href.split('#')[0]));
 }
 
 function initPublish() {
@@ -273,7 +274,7 @@ function initManageArticleFiles() {
         confirmDelete(href, href, function() {
             filesContainer.reloadFragment();
         });
-    });    
+    });
 }
 
 function initManageArticleImage() {

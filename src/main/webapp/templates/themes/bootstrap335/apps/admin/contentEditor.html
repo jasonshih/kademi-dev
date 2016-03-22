@@ -26,7 +26,11 @@
     </head>
     <body class="contenteditor-page"> <!-- detect contenteditor page -->
         #set($fname = $params.fileName)
+        #if( $fname )
         #set($file = $folder.child($fname))
+        #else
+        #set($file = $page)
+        #end
         #set($useHash = $params.useHash)
 
         <nav class="navbar navbar-default navbar-inverse navbar-fixed-top">
@@ -34,7 +38,17 @@
                 <ul class="nav navbar-nav">
                 </ul>
                 <div class="navbar-header">
-                    <a class="navbar-brand">$params.fileName</a>
+                    <a class="navbar-brand">
+                        #if( $file.title )
+                        $file.title
+                        <small class="pull-right text-muted">
+                            - 
+                            $file.name
+                        </small>
+                        #else
+                        $file.fileName
+                        #end
+                    </a>
                 </div>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="./" title="Back to parent folder"><i class="fa fa-reply"></i></a></li>
@@ -49,7 +63,7 @@
         <script type="text/javascript">
             var useHash = "$!useHash";
             $(function () {
-                initContentEditorPage('$fname', '/_components/web/snippets.html');
+                initContentEditorPage('$!fname', '/_components/web/snippets.html');
             });
         </script>
 
