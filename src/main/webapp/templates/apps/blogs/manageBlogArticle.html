@@ -27,6 +27,10 @@
     <body>
         #set ($blogSite = $page.article.blog.website)
         #set ($blogSiteTheme = $blogSite.branch($blogSite.liveBranch).getPublicTheme())
+        #set ($isBootstrap335 = false)
+        #if ($blogSiteTheme.indexOf('bootstrap335') != -1)
+            #set ($isBootstrap335 = true)
+        #end
 
         <form action="" method="POST" class="form-horizontal article-form" role="form">
             <div id="manageReward" class="MainContent tabbable">
@@ -210,7 +214,7 @@
                                 $!page.body
                             </div>
                         #else
-                            #if ($blogSiteTheme == 'bootstrap335')
+                            #if ($isBootstrap335)
                                 <div class="embed-responsive embed-responsive-16by9">
                                     <iframe class="embed-responsive-item" src="" id="editor-frame"></iframe>
                                 </div>
@@ -457,8 +461,9 @@
         </div>
 
         <script type="text/javascript">
+            var isBootstrap335 = $isBootstrap335;
             $(function () {
-                initManageBlogArticle('$blogSiteTheme');
+                initManageBlogArticle();
             });
         </script>
     </body>

@@ -520,7 +520,8 @@
                             <div id="tasksList" role="tablist" aria-multiselectable="true" class="panel-group">
                                 <div class="panel panel-default">
                                     #foreach($task in $page.children)
-                                    <div id="headingOne" role="tab" class="panel-heading">
+                                    #if(${task.class.simpleName} == "LeadTaskPage")
+                                    <div role="tab" class="panel-heading">
                                         <h4 class="panel-title clearfix task-item">
                                             <div class="pull-left">
                                                 <a data-toggle="collapse" data-parent="#accordion" href="#$task.href.replace('/','_')" aria-expanded="true" aria-controls="collapseOne">
@@ -563,6 +564,7 @@
                                             $!task.taskDescription
                                         </div>
                                     </div>
+                                    #end
                                     #end
                                 </div>
                             </div>
