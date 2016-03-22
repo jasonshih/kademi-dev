@@ -4,7 +4,7 @@ var win = $(window);
 function initManageBlogArticle(blogTheme) {
     $('.timeago').timeago();
 
-    if (blogTheme === 'bootstrap335') {
+    if (isBootstrap335) {
         initEditorFrame();
         initPostMessage();
     } else {
@@ -14,7 +14,7 @@ function initManageBlogArticle(blogTheme) {
     $('.article-form').forms({
         callback: function(resp, form) {
             flog('Done', form, resp);
-            if (blogTheme === 'bootstrap335') {
+            if (isBootstrap335) {
                 var editorFrame = $('#editor-frame');
                 var postData = {
                     url: window.location.href.split('#')[0],
