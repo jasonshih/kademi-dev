@@ -1,6 +1,9 @@
 #table-result table tbody tr:first-child td{
     border-top: none;
 }
+#table-result .table-responsive{
+    max-height: 195px;
+}
 @media (max-width: 767px) {
     .form-group [class^="col-md"] + div{
         margin-top: 10px;
