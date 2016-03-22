@@ -6,9 +6,19 @@ function initUploads() {
     $('#importerWizard').on('show.bs.collapse', function () {
         var curStep = $('#myWizard').wizard('selectedItem');
         if(!form.find('input[name=fileHash]').val()){
-            curStep = 1;
+            curStep = {step: 1};
         }
-        $('#myWizard').wizard('selectedItem', { step: curStep });
+        $('#myWizard').wizard('selectedItem', curStep);
+    });
+
+    $('#myWizard').on('changed.fu.wizard', function (evt, data) {
+        if(data.step===1){
+            // IE 11 fix
+            var ul = $('#myWizard').find('ul.steps');
+            if(ul.css('margin-left')!=='0'){
+                ul.css('margin-left','0');
+            }
+        }
     });
 
     $('#myWizard').on('actionclicked.fu.wizard', function (evt, data) {
