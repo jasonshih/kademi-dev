@@ -1,11 +1,8 @@
 var win = $(window);
 var iframeUrl;
-var isBootstrap335;
 
 function initManageModule(baseHref, themePath) {
     flog("initManageModule", baseHref, themePath);
-
-    isBootstrap335 = themePath.indexOf('bootstrap335') !== -1;
     flog('Is Bootstrap335: ' + isBootstrap335);
 
     window.request_url = function () {
@@ -54,7 +51,6 @@ function initCssForEditor(themePath) {
         cssPath = cssPath.replaceAll('/', '--');
         cssPath = '/' + cssPath + '.compile.less';
         flog('initCssForEditor3', cssPath);
-
     } else {
         // This is the old fuse theme
         cssPath = "/templates/themes/fuse/theme.less,";
@@ -353,7 +349,7 @@ function openEditorFrame(pageName) {
 function initModuleList() {
     var pagesList = $('#pages-list');
 
-    // Dragable row
+    // Draggable row
     var cont = $('div.Content');
     pagesList.sortable({
         items: 'article',
@@ -803,14 +799,23 @@ function doSavePage(form, pageArticle, isQuiz) {
                     } else {
                         if (isBootstrap335) {
                             var editorFrame = $('#editor-frame');
+                            var pageName = modal.find('[name=pageName]').val();
+                            if (!pageName) {
+                                pageName = getFileName(response.nextHref);
+                            }
                             var postData = {
                                 url: window.location.href.split('#')[0],
                                 triggerSave: true,
-                                pageName: getFileName(response.nextHref),
+                                pageName: pageName,
                                 willClose: modal.hasClass('save-and-close')
                             };
 
-                            editorFrame[0].contentWindow.postMessage(JSON.stringify(postData), iframeUrl);
+                            modal.find('[name=pageName]').val(pageName);
+
+                            var postDataStr = JSON.stringify(postData);
+                            flog('Post data: ' + postDataStr);
+
+                            editorFrame[0].contentWindow.postMessage(postDataStr, iframeUrl);
                         } else {
                             Msg.show('Saved!');
                             closeFuseModal(modal);
