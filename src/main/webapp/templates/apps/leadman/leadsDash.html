@@ -198,8 +198,10 @@
             url: '/leads/?asJson&geoloc',
             dataType: 'json',
             success: function (resp, textStatus, jqXHR) {
-                showDonuts(resp.data);
-                $('.map-donutchart').show();
+                if (resp.status) {
+                    showDonuts(resp.data);
+                    $('.map-donutchart').show();
+                }
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 Msg.error("Couldnot load geo-location data");
