@@ -67,9 +67,13 @@
                             <form method="post" action="$page.href">
                                 <div class="step-content">
                                     <div class="step-pane active sample-pane alert" data-step="1">
+                                        #if($page.saleGroup)
                                         <h4>Upload CSV File</h4>
                                         <div id='btn-upload' class="pull-left"></div>
                                         <div class="clearfix"></div>
+                                        #else
+                                        <div class="alert alert-default col-sm-4">Sale Group hasn't been set. Please contact administrator for assistant.</div>
+                                        #end
                                     </div>
                                     <div class="step-pane sample-pane alert" data-step="2">
                                         <h4>Select columns</h4>

@@ -14,7 +14,11 @@ function initUploads() {
     $('#myWizard').on('actionclicked.fu.wizard', function (evt, data) {
         if (data.step === 1 && $('#importerWizard').attr('aria-expanded')=='true') {
             if (form.find("input[name=fileHash]").val() == "") {
-                alert("Please select a file to upload");
+                if($('#btn-upload').length){
+                    alert("Please select a file to upload");
+                }else{
+                    alert("Sale Group hasn't been set. Please contact administrator for assistant.");
+                }
                 evt.preventDefault();
             }
         }
