@@ -335,7 +335,6 @@ function initCRUDModulePages() {
             openEditorFrame('newPage.html');
         }
 
-        modal.modal('show');
         openFuseModal(modal);
     });
 }
