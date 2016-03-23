@@ -15,6 +15,10 @@ html body .fa {
     line-height: inherit;
 }
 
+.app {
+    padding: 25px 15px;
+}
+
 .topnavbar .nav > li > a {
     line-height: 30px;
     height: 81px;
@@ -69,6 +73,7 @@ html body .fa {
     color: #fff;
     border: none;
     box-shadow: none !important;
+    font-size: 20px;
 }
 
 .navbar-header{
@@ -256,6 +261,10 @@ table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, 
     .username{
         width: 200px;
     }
+    .topnavbar > .navbar-header > .navbar-brand{
+        margin-left: 15px;
+        margin-right: 15px;
+    }
 }
 
 @media (min-width: 992px) and (max-width: 1024px){
@@ -274,5 +283,21 @@ table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, 
 @media (min-width: 768px) {
     .no-scroll-medium{
         overflow: hidden;
+    }
+}
+
+@media (min-width: 1025px) {
+    #nav-collapse>ul{
+        padding-left: 40px;
+    }
+    .create-lead-menu{
+        margin-left: 40px;
+    }
+    .topnavbar > .navbar-header > .navbar-brand {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+    .searchbox-wrap{
+        margin-left: 40px;
     }
 }

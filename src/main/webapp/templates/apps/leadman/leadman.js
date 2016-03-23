@@ -1193,5 +1193,7 @@ function initLeadmanModal() {
 }
 
 function initDotdotdot(){
-    $('.lead-desc .leadInner').dotdotdot({height: 80});
+    if($('.lead-desc .leadInner').length){
+        $('.lead-desc .leadInner').dotdotdot({height: 80});
+    }
 }

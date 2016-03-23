@@ -45,7 +45,7 @@
 
 #if($userResource.hasRole('Sales'))
 <div class="fw-boxed hidden-xs">
-    <div class="panel panel-default">
+    <div class="panel panel-default panel-no-shadow">
         <div class="row">
             <div class="col-md-5">
                 <div class="row text-muted m0">
@@ -120,7 +120,7 @@
 
 #if($leadsPage.teamStats)
 <div class="fw-boxed hidden-xs">
-    <div class="panel panel-default">
+    <div class="panel panel-default panel-no-shadow">
         <div class="row">
             <div class="col-md-5">
                 <div class="row text-muted m0">
@@ -190,7 +190,6 @@
 </div>
 
 <div class="">
-    <br/>
     <div role="tabpanel" id="all_contacts" class="tab-pane animation-fade active">
         #set( $leads = $leadsPage.myLeads )
 
@@ -214,6 +213,7 @@
 <script type="text/javascript">
 
     $(function () {
+        $('#maincontentContainer>div').addClass('row');
         initDonuts();
         var primaryColor = $('.btn-primary').first().css('background-color');
 
