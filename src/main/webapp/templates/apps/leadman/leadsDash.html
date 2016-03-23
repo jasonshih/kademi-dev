@@ -156,7 +156,7 @@
                         <div class="p">
                             <div class="row row-flush text-center">
                                 <div class="col-xs-6">
-                                    #set($taskStats = $page.find('/leads/').taskStatus)
+                                    #set($taskStats = $leadsPage.teamTaskStatus)
                                     <p class="mt-lg">Task completion </p>
                                     <div data-percent="$taskStats.completePerc" data-line-width="20" class="easypie"><span>$taskStats.completePerc%</span></div>
                                 </div>
@@ -165,22 +165,6 @@
                                     <div data-percent="$taskStats.convertedPerc" data-line-width="20" class="easypie"><span>$taskStats.convertedPerc%</span></div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-xs-12">
-                        <div class="p">
-                            #foreach( $kpi in $kpis )
-                            #set( $color = "danger" )
-                            #set( $color = $kpi.progressLevel.levelName )
-                            #set( $perc = $kpi.getProgressOfLevelPerc("success") )
-
-                            <span class="pull-right">$formatter.toDecimal($perc,1)%</span>
-                            $kpi.title
-
-                            <div class="progress progress-xs">
-                                <div style="width: ${perc}%" class="progress-bar progress-bar-${color}"></div>
-                            </div>
-                            #end
                         </div>
                     </div>
                 </div>
