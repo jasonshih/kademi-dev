@@ -7,7 +7,7 @@
     };
 
     var dataTable = null;
-    var editor = null;
+    editor = null;
     var stages = [];
 
     function initDataTable(hits) {
@@ -31,14 +31,13 @@
                     label: 'Stage',
                     name: 'stageName',
                     type: 'select'
+                },
+                {
+                    label: 'Source',
+                    name: 'source',
+                    type: 'select'
                 }
             ]
-        });
-
-        $('#leadTable').on('click', 'tbody td', function (e) {
-            editor.inline(this, {
-                submitOnBlur: true
-            });
         });
 
         dataTable = $('#leadTable').DataTable({
@@ -75,7 +74,8 @@
                 },
                 {
                     data: 'source',
-                    defaultContent: ""
+                    defaultContent: "",
+                    className: 'editable'
                 },
                 {
                     data: 'dealAmount',
@@ -116,31 +116,75 @@
             ]
         });
 
-        stages = [];
+        $('#leadTable').on('click', 'tbody td', function (e) {
+            var td = $(this);
+            var field = td.find('select[id^=DTE_Field_]');
+            var fieldName = field.attr('id');
+
+            if (fieldName !== null && typeof fieldName !== 'undefined') {
+                fieldName = field.attr('id').replace('DTE_Field_', '');
+                var row = dataTable.row(this);
+                var leadId = row.data().leadId;
+                switch (fieldName) {
+                    case "stageName":
+                        loadStageNames(leadId);
+                        break;
+                    case "source":
+                        loadSources(leadId);
+                        break;
+                }
+            }
+
+            editor.inline(this, {
+                submitOnBlur: true
+            });
+        });
 
         for (var i in hits.hits) {
             var hit = hits.hits[i];
             var _source = hit._source;
-            $.ajax({
-                url: '/leads/?stageNames=' + hit._source.leadId,
-                dataType: 'json'
-            }).done(function (data) {
-                if (data.status) {
-                    $.each(data.data, function (i, el) {
-                        if ($.inArray(el.name, stages) === -1) {
-                            stages.push(el.name);
-                        }
-                    });
-                    flog('Stages', stages);
-                    editor.field('stageName').update(stages);
-                }
-            });
 
             dataTable.row.add(_source);
         }
         dataTable.draw();
     }
 
+
+    function loadStageNames(leadId) {
+        $.ajax({
+            url: '/leads/?stageNames=' + leadId,
+            dataType: 'json'
+        }).done(function (data) {
+            if (data.status) {
+                var stages = [];
+                $.each(data.data, function (i, el) {
+                    if ($.inArray(el.name, stages) === -1) {
+                        stages.push(el.name);
+                    }
+                });
+                flog('Stages', stages);
+                editor.field('stageName').update(stages);
+            }
+        });
+    }
+
+    function loadSources(leadId) {
+        $.ajax({
+            url: '/leads/?sourceNames=' + leadId,
+            dataType: 'json'
+        }).done(function (data) {
+            if (data.status) {
+                var sources = [];
+                $.each(data.data, function (i, el) {
+                    if ($.inArray(el, stages) === -1) {
+                        sources.push(el);
+                    }
+                });
+                flog('Sources', sources);
+                editor.field('source').update(sources);
+            }
+        });
+    }
 
     function initOrgSelect() {
         $('body').on('click', '.btn-select-org', function (e) {
