@@ -116,6 +116,80 @@
     </div>
 </div>
 
+#if($leadsPage.teamStats)
+<div class="fw-boxed hidden-xs">
+    <div class="panel panel-default">
+        <div class="row">
+            <div class="col-md-5">
+                <div class="row text-muted m0">
+                    <div data-ripple="" class="col-xs-6 col-md-6 bb br pv-xxl infoBox" >
+                        <h1 class="text-strong">$leadsPage.teamStats.leadCount</h1>
+                        <div class="text-right  text-success">Active Leads</div>
+                    </div>
+                    <div data-ripple="" class="col-xs-6 col-md-6 bb br pv-xxl infoBox" >
+                        <h1 class="text-strong">$leadsPage.teamStats.tasksDue</h1>
+                        <div class="text-right  text-success">Tasks due</div>
+                    </div>
+                    <div data-ripple="" class="col-xs-6 col-md-6 bb-lg br pv-xxl infoBox" >
+                        <h1 class="text-strong">
+                            $ $formatter.formatUnits($leadsPage.teamStats.estimatedValue)
+                        </h1>
+                        <div class="text-right  text-success">Pipeline value</div>
+                    </div>
+                    <div data-ripple="" class="col-xs-6 col-md-6 bb-lg br pv-xxl infoBox" >
+                        #if( $leadsPage.teamStats.closedDeals.num > 0 )
+                        <h1 class="text-strong">
+                            $ $formatter.formatUnits($leadsPage.teamStats.closedDeals.value)
+                        </h1>
+                        <div class="text-right  text-success">$leadsPage.teamStats.closedDeals.num closed last 30 days</div>
+                        #else
+                        <h1 class="text-thin">None</h1>
+                        <div class="text-right  text-success">last 30 days</div>
+                        #end
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-7">
+                <div class="row">
+                    <div class="col-sm-6 col-xs-12">
+                        <div class="p">
+                            <div class="row row-flush text-center">
+                                <div class="col-xs-6">
+                                    #set($taskStats = $page.find('/leads/').taskStatus)
+                                    <p class="mt-lg">Task completion </p>
+                                    <div data-percent="$taskStats.completePerc" data-line-width="20" class="easypie"><span>$taskStats.completePerc%</span></div>
+                                </div>
+                                <div class="col-xs-6">
+                                    <p class="mt-lg">Conversion rate</p>
+                                    <div data-percent="$taskStats.convertedPerc" data-line-width="20" class="easypie"><span>$taskStats.convertedPerc%</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xs-12">
+                        <div class="p">
+                            #foreach( $kpi in $kpis )
+                            #set( $color = "danger" )
+                            #set( $color = $kpi.progressLevel.levelName )
+                            #set( $perc = $kpi.getProgressOfLevelPerc("success") )
+
+                            <span class="pull-right">$formatter.toDecimal($perc,1)%</span>
+                            $kpi.title
+
+                            <div class="progress progress-xs">
+                                <div style="width: ${perc}%" class="progress-bar progress-bar-${color}"></div>
+                            </div>
+                            #end
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+#end
+
 <!-- Show teams geographically, but only to uses with the sales manager role -->
 <div class="">
     <!--<link rel="stylesheet" href="/static/jquery-map-donutchart/1.0.0/css/libs.css"/>-->
