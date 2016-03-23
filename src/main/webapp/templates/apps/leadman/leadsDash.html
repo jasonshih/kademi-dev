@@ -43,6 +43,7 @@
 
 #set( $kpis = $page.find("/sales").availableKpis )
 
+#if($userResource.hasRole('Sales'))
 <div class="fw-boxed hidden-xs">
     <div class="panel panel-default">
         <div class="row">
@@ -115,6 +116,7 @@
         </div>
     </div>
 </div>
+#end
 
 #if($leadsPage.teamStats)
 <div class="fw-boxed hidden-xs">
