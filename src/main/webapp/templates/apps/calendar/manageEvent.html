@@ -12,6 +12,10 @@
             .reminder-content {
                 height: 400px;
             }
+
+            #editor-frame {
+                border: 1px solid #ddd;
+            }
         </style>
     </head>
     <body class="calendar-event">
@@ -122,7 +126,10 @@
 
                     <!-- Start content of Description tab -->
                     <div id="description" class="tab-pane">
-                        <textarea class="htmleditor" cols="100" name="description" rows="10" placeholder="">$!page.description</textarea>
+                        <div class="embed-responsive embed-responsive-16by9">
+                            <iframe class="embed-responsive-item" src="" id="editor-frame"></iframe>
+                        </div>
+                        <!--<textarea class="htmleditor" cols="100" name="description" rows="10" placeholder="">$!page.description</textarea>-->
                     </div>
                     <!-- End content of Description tab -->
 

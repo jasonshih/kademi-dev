@@ -81,19 +81,112 @@ function initManageCalendar() {
     initDeletes();
 }
 
+var iframeUrl;
+var win = $(window);
+
 function initManageEvent() {
     flog('initManageEvent');
     useHash = true;
-    initHtmlEditors($('.htmleditor'), getStandardEditorHeight(), null, null, 'autogrow');
 
-    window.onbeforeunload = isManageEventDirty;
+    initEditorFrame();
+    initPostMessage();
+    //initHtmlEditors($('.htmleditor'), getStandardEditorHeight(), null, null, 'autogrow');
+
+    window.onbeforeunload = function () {
+        if ($('.manageEventForm').hasClass('dirty')) {
+            return 'Do you want to save your changes?';
+        }
+    };
+
+    var form = initEventForm();
+    initConfirmationTab();
+    initReminder(form);
+    initReminderModal();
+    initCreateEmail();
+    initDetailsTab();
+}
+
+function initEditorFrame() {
+    flog('initEditorFrame');
+
+    var editorFrame = $('#editor-frame');
+    // TODO: It'll be dynamic url like "goto=editor" or something like that
+    editorFrame.attr('src',  'http://local.loopbackdns.com:8080/Calendars/cal/contenteditor?fileName=yolo&miltonUserUrl=/users/admin&miltonUserUrlHash=c0398f2a-1326-4c36-a7f9-c0f0ce9a6245:3y1-sc08ozoHnf2fMTtbA26STqE' + '&url=' + encodeURIComponent(window.location.href.split('#')[0]));
+}
+
+function initPostMessage() {
+    flog('initPostMessage');
+
+    win.on('message', function (e) {
+        flog('On got message', e, e.originalEvent);
+
+        var data = $.parseJSON(e.originalEvent.data);
+        if (data.isSaved) {
+            Msg.info('Saved!');
+            $('.manageEventForm').removeClass('dirty');
+        } else {
+            iframeUrl = data.url;
+        }
+    });
+}
+
+function initDetailsTab() {
+    flog('initDetailsTab');
+
+    var eventRange = $('#event-range');
+    eventRange.exist(function () {
+        flog('init report range');
+        eventRange.daterangepicker({
+                format: 'DD/MM/YYYY HH:mm',
+                timePicker: true,
+                timePickerIncrement: 15,
+                timePicker12Hour: false
+
+            },
+            function (start, end) {
+                flog('onChange', start, end);
+                $('#startDate').val(formatDateTime(start));
+                $('#endDate').val(formatDateTime(end));
+            }
+        );
+    });
+}
+
+function initCreateEmail() {
+    flog('initCreateEmail');
+
+    $('.create-email').click(function (e) {
+        e.preventDefault();
+        showSendEmail();
+    });
+    $('body').on('click', '.create-email-select-website', function (e) {
+        flog('click select website');
+        e.preventDefault();
+        var websiteName = $(e.target).attr('href');
+        postCreateEmail(websiteName);
+        $('#sendEmailModal').find('ul').html('<li>Please wait...</li>');
+    });
+}
+
+function initConfirmationTab() {
+    flog('initConfirmationTab');
+
+    $('#allowRegistration, #emailConfirm, #allowGuests').click(function () {
+        checkConfirmation();
+    });
+
+    checkConfirmation();
+}
+
+function initEventForm() {
+    flog('initEventForm');
 
     var form = $('.manageEventForm');
-    flog('listen for change')
     form.on('change switchChange', function (e) {
         flog('change', e);
         form.addClass('dirty');
     });
+
     form.forms({
         onValid: function (form) {
             // Renumber reminder inputs
@@ -108,38 +201,29 @@ function initManageEvent() {
             });
         },
         callback: function () {
-            Msg.info('Saved ok');
-            form.removeClass('dirty');
+            var editorFrame = $('#editor-frame');
+            var postData = {
+                url: window.location.href.split('#')[0],
+                triggerSave: true,
+                pageName: 'yolo' // TODO: It'll be index.html or something like that
+            };
+
+            editorFrame[0].contentWindow.postMessage(JSON.stringify(postData), iframeUrl);
+            //Msg.info('Saved!');
+            //form.removeClass('dirty');
         }
     });
 
-    $('#allowRegistration, #emailConfirm, #allowGuests').click(function () {
-        checkConfirmation();
-    });
+    return form;
+}
 
-    checkConfirmation();
-
-    $('.create-email').click(function (e) {
-        e.preventDefault();
-        showSendEmail();
-    });
-    $('body').on('click', '.create-email-select-website', function (e) {
-        flog('click select website');
-        e.preventDefault();
-        var websiteName = $(e.target).attr('href');
-        postCreateEmail(websiteName);
-        $('#sendEmailModal').find('ul').html('<li>Please wait...</li>');
-    });
-
-    $('.timer-units li').click(function (e) {
-        e.preventDefault();
-        var unit = $(e.target).text();
-        $('.timer-unit').text(unit);
-    });
+function initReminder(form) {
+    flog('initReminder', form);
 
     var reminderModal = $('#reminderDetails');
     var reminderForm = reminderModal.find('form');
     var tbody = $('tbody.reminders');
+
     tbody.on('click', 'a.edit', function (e) {
         e.preventDefault();
         form.addClass('dirty');
@@ -166,7 +250,22 @@ function initManageEvent() {
         tr.remove();
     });
 
-    // This is when the user saves the reminder modal
+    // Reset the form when add reminder is clicked
+    $('.add-reminder').click(function (e) {
+        form.addClass('dirty');
+        reminderForm.find('input,select').val('');
+        reminderForm.find('.reminder-content').html('');
+    });
+}
+
+
+// This is when the user saves the reminder modal
+function initReminderModal() {
+    flog('initReminderModal');
+
+    var reminderModal = $('#reminderDetails');
+    var reminderForm = reminderModal.find('form');
+
     reminderForm.submit(function (e) {
         e.preventDefault();
 
@@ -177,7 +276,7 @@ function initManageEvent() {
         var subject = reminderForm.find('input[name=subject]').val();
         var themeSite = reminderForm.find('select[name=themeSite]').val();
         var themeSiteName = reminderForm.find('select[name=themeSite] option:selected').text();
-        //var html = reminderForm.find('.reminder-content').html();        
+        //var html = reminderForm.find('.reminder-content').html();
         var html = reminderForm.find('.reminder-content').val();
 
         if (timerUnit === '') {
@@ -227,37 +326,11 @@ function initManageEvent() {
         reminderModal.modal('hide');
     });
 
-    // Reset the form when add reminder is clicked
-    $('.add-reminder').click(function (e) {
-        form.addClass('dirty');
-        reminderForm.find('input,select').val('');
-        reminderForm.find('.reminder-content').html('');
-
+    $('.timer-units li').click(function (e) {
+        e.preventDefault();
+        var unit = $(e.target).text();
+        $('.timer-unit').text(unit);
     });
-
-    var eventRange = $('#event-range');
-    eventRange.exist(function () {
-        flog('init report range');
-        eventRange.daterangepicker({
-                format: 'DD/MM/YYYY HH:mm',
-                timePicker: true,
-                timePickerIncrement: 15,
-                timePicker12Hour: false
-
-            },
-            function (start, end) {
-                flog('onChange', start, end);
-                $('#startDate').val(formatDateTime(start));
-                $('#endDate').val(formatDateTime(end));
-            }
-        );
-    });
-}
-
-function isManageEventDirty() {
-    if ($('.manageEventForm').hasClass('dirty')) {
-        return 'Do you want to save your changes?';
-    }
 }
 
 function checkConfirmation() {

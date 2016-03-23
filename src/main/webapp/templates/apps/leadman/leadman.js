@@ -25,6 +25,7 @@ $(function () {
     initDeleteFile();
     initCreatedDateModal();
     initLeadmanModal();
+    initDotdotdot();
 
     // init the login form
     $(".login").user({});
@@ -1189,4 +1190,10 @@ function initLeadmanModal() {
             $('.navbar-toggle').trigger('click')
         }
     });
+}
+
+function initDotdotdot(){
+    if($('.lead-desc .leadInner').length){
+        $('.lead-desc .leadInner').dotdotdot({height: 80});
+    }
 }

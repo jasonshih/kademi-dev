@@ -7,6 +7,8 @@
     };
 
     var dataTable = null;
+    var editor = null;
+    var stages = [];
 
     function initDataTable(hits) {
         if (dataTable !== null) {
@@ -15,7 +17,7 @@
 
         $('#leadBody').empty();
 
-        var editor = new $.fn.dataTable.Editor({
+        editor = new $.fn.dataTable.Editor({
             ajax: {
                 url: '/leads/?updateLead&leadId=_id_'
             },
@@ -44,6 +46,7 @@
             searching: false,
             destroy: true,
             info: false,
+            select: true,
             order: [
                 [7, 'desc']
             ],
@@ -113,27 +116,27 @@
             ]
         });
 
-        var stages = [];
+        stages = [];
 
         for (var i in hits.hits) {
             var hit = hits.hits[i];
-            dataTable.row.add(hit._source);
+            var _source = hit._source;
             $.ajax({
                 url: '/leads/?stageNames=' + hit._source.leadId,
-                dataType: 'json',
-                success: function (data, textStatus, jqXHR) {
-                    if (data.status) {
-                        $.each(data.data, function (i, el) {
-                            if ($.inArray(el, stages) === -1)
-                                stages.push(el);
-                        });
-                        editor.field('stageName').update(stages);
-                    }
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-
+                dataType: 'json'
+            }).done(function (data) {
+                if (data.status) {
+                    $.each(data.data, function (i, el) {
+                        if ($.inArray(el.name, stages) === -1) {
+                            stages.push(el.name);
+                        }
+                    });
+                    flog('Stages', stages);
+                    editor.field('stageName').update(stages);
                 }
             });
+
+            dataTable.row.add(_source);
         }
         dataTable.draw();
     }
@@ -174,7 +177,7 @@
         });
 
         var clearBtn = $('#lead-query-clear');
-        clearBtn.on('click', function(e){
+        clearBtn.on('click', function (e) {
             e.preventDefault();
             txt.val('');
             searchOptions.query = '';
@@ -200,7 +203,7 @@
                 $('#LeadTotal').html(data.hits.total);
                 $('#LeadSumValue').html(data.aggregations.dealAmountTotal.value || 0);
                 var avgAmount = data.aggregations.dealAmountAvg.value || 0;
-                if(avgAmount>0){
+                if (avgAmount > 0) {
                     avgAmount = new Number(avgAmount).toFixed(2);
                 }
                 $('#leadAvgValue').html(avgAmount);

@@ -10,6 +10,12 @@ function initUploads() {
         }
         $('#myWizard').wizard('selectedItem', curStep);
     });
+    $('#myWizard').on('finished.fu.wizard', function (evt, data) {
+        $('.importerWizard').trigger('click');
+        $('#myWizard').wizard('selectedItem', {step: 1});
+        $('#myWizard').find('form').trigger('reset');
+        form.find("input[name=fileHash]").val('')
+    });
 
     $('#myWizard').on('changed.fu.wizard', function (evt, data) {
         if(data.step===1){
@@ -133,11 +139,11 @@ function initSearchUser() {
     });
 }
 
-function doSearch() {
+function doSearch(forceSearch) {
     var lastQuery = $('#user-query').attr('last-query');
     var query = $('#user-query').val();
     // fix the issue on IE that fire the search when focusing on input field
-    if(lastQuery===query || (typeof lastQuery === 'undefined' && query==='')){
+    if(!forceSearch && (lastQuery===query || (typeof lastQuery === 'undefined' && query===''))){
         return;
     }
     $('#user-query').attr('last-query', query);
@@ -188,7 +194,7 @@ function checkProcessStatus() {
                         flog("Process Completed", dt);
                         jobTitle.text("Process finished at " + pad2(dt.hours) + ":" + pad2(dt.minutes));
 
-                        doSearch();
+                        doSearch(true);
 
                         $('#myWizard').wizard("next");
 
