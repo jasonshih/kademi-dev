@@ -1,11 +1,6 @@
 .select2-dropdown{
     z-index: 1070 !important;
 }
-@media (max-width: 767px) {
-    .form-group [class^="col-md"] + div{
-        margin-top: 10px;
-    }
-}
 
 html{
     -ms-overflow-style: scrollbar; /* IE11 scrollbar issue */
@@ -18,7 +13,9 @@ html body .fa {
 .app {
     padding: 25px 15px;
 }
-
+.app-container > header{
+    box-shadow: none;
+}
 .topnavbar .nav > li > a {
     line-height: 30px;
     height: 81px;
@@ -31,6 +28,10 @@ html body .fa {
 
 .navbar-form {
     padding-top: 6px;
+}
+
+.panel{
+    box-shadow: none;
 }
 
 /* ============================================================================
@@ -264,6 +265,9 @@ table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, 
     .topnavbar > .navbar-header > .navbar-brand{
         margin-left: 15px;
         margin-right: 15px;
+    }
+    .form-group [class^="col-md"] + div{
+        margin-top: 10px;
     }
 }
 

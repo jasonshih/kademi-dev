@@ -7,9 +7,6 @@
 #dashLeadsList .lead-desc{
     margin-bottom: 45px;
 }
-.panel-no-shadow{
-    box-shadow: none;
-}
 @media (max-width: 767px) {
     .form-group [class^="col-md"] + div{
         margin-top: 10px;
