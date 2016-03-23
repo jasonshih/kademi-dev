@@ -8,15 +8,15 @@
                 display: none;
             }
         </style>
-    </head>    
-    <body class="calendar-event add-container">        
+    </head>
+    <body class="calendar-event add-container">
         <ol class="breadcrumb">
             <li><a href="../">Calendars</a></li>
             <li><a href="$page.parent.href">$page.parent.title</a></li>
         </ol>
-        <div class="row">                       
+        <div class="row">
             <div class="col-md-8">
-                <h3>$page.title</h3>                
+                <h3>$page.title</h3>
 
                 <div class="calendar-event-byline">
                     #if( $page.organisor )
@@ -26,7 +26,7 @@
                     <small class="location">At $page.location</small>
                     #end
                     <small>
-                        Starts $formatter.formatDate( $page.startDate, $page.timezone ) 
+                        Starts $formatter.formatDate( $page.startDate, $page.timezone )
                         (<abbr title="$formatter.formatDateISO8601($page.startDate)" class="timeago">$formatter.formatDateTime($page.startDate, $page.timezone)</abbr>)
                     </small>
                 </div>
@@ -47,18 +47,18 @@
                     <ul class='attendees'>
                         #foreach($profile in $page.attendees)
                         <li>
-                            <a href="$profile.href" class="profilePic">                            
+                            <a href="$profile.href" class="profilePic">
                                 #if( $profile.photoHash )
                                 <img alt="" src="/_hashes/files/$profile.photoHash">
                                 #else
                                 <img alt="" src="/templates/apps/user/profile.png">
                                 #end
                             </a>
-                            <a href="$profile.href" class="user" title="$profile.name">$profile.name</a>                        
+                            <a href="$profile.href" class="user" title="$profile.name">$profile.name</a>
                         </li>
                         #end
                     </ul>
-                </div>                
+                </div>
                 #end
             </div>
 
@@ -67,12 +67,12 @@
                 #if( $page.allowRegistration )
                 <div class="well well-rsvp rsvp-nouser">
                     <button class='btn btn-sm btn-info requiresUser' onclick="showRsvpPanel()">Register now</button>
-                </div>                
+                </div>
 
                 <div class="well well-rsvp rsvp-yes">
                     <h3>You're attending
                         #if( $page.allowGuests )
-                        <span class="num-guests">                        
+                        <span class="num-guests">
                             with <b class="num-guests-count">$page.myGuests.size()</b> guest(s)
                         </span>
                         #end
@@ -88,11 +88,11 @@
                 </div>
 
                 <div class="well well-rsvp rsvp-form">
-                    <form method="POST" action="$page.name" class="form-horizontal rsvp" role="form">                        
-                        <div class="radio">                        
+                    <form method="POST" action="$request.absolutePath" class="form-horizontal rsvp" role="form">
+                        <div class="radio">
                             <label for="rsvp-yes" >
                                 <input type="radio" name="rsvp" value="ACCEPTED" id="rsvp-yes" />
-                                Yes, I'm coming                                
+                                Yes, I'm coming
                             </label>
                         </div>
                         <!--
@@ -108,13 +108,13 @@
                                 #foreach($guest in $page.myGuests)
                                 <li>
                                     <a class='pull-right guests-delete' href='#'><span class="glyphicon glyphicon-remove-circle"></span></a>
-                                    <a href="#" class="guest-edit">$guest.firstName $guest.surname</a> 
+                                    <a href="#" class="guest-edit">$guest.firstName $guest.surname</a>
                                     #if( $guest.orgName )
                                     of $guest.orgName
                                     #end
                                     <input type="hidden" name="guestFirstName" value="$!guest.firstName"/>
                                     <input type="hidden" name="guestSurname" value="$!guest.surname"/>
-                                    <input type="hidden" name="guestEmail" value="$!guest.email"/>                                                                            
+                                    <input type="hidden" name="guestEmail" value="$!guest.email"/>
                                     <input type="hidden" name="guestOrgName" value="$!guest.orgName"/>
                                 </li>
                                 #end
@@ -123,7 +123,7 @@
                         </div>
                         #end
 
-                        <div class="radio">                        
+                        <div class="radio">
                             <label for="rsvp-no" >
                                 <input type="radio" name="rsvp" value="DECLINED" id="rsvp-no" />
                                 No, I will not be attending
@@ -143,8 +143,8 @@
                 </div>
                 #end
 
-                <table class="table">                    
-                    <tbody>                        
+                <table class="table">
+                    <tbody>
                         #if( $page.organisor )
                         <tr>
                             <td>Organiser</td>
@@ -174,7 +174,7 @@
                     </tbody>
                 </table>
 
-            </div>             
+            </div>
         </div>
 
         <div class="modal fade guests-modal">
@@ -201,7 +201,7 @@
                             <div class="form-group">
                                 <label for="newGuestOrg">Organisation</label>
                                 <input type="text" class="form-control" id="newGuestOrg" placeholder="Guest's organisation">
-                            </div>                            
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>

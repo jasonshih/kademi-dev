@@ -78,6 +78,32 @@
                         </div>
                     </div>
                 </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="clip-list"></i>Calendar settings
+                    </div>
+                    <div class="panel-body">
+                        <form action="" method="POST" class="calendarSettings form-horizontal">
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-lg-2" for="website">Website</label>
+                                <div class="col-md-8 col-lg-8">
+                                    <select name="website" class="required form-control">
+                                        <option value="">[Please select]</option>
+                                        #foreach($website in $page.organisation.websites())
+                                        $formatter.option( $website.id, $website.name, $page.calendar.website.id )
+                                        #end
+                                    </select>
+                                    <i>Select a website to limit where the calendar can be viewed.</i>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-offset-3 col-lg-offset-2">
+                                    <button class="btn btn-success" type="submit">Save details</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
             <div class="col-md-6 col-sm-12">
                 <div class="panel panel-default">
@@ -149,12 +175,19 @@
         <script type="text/javascript">
             $(function () {
                 initManageCalendar();
+
+                $(".calendarSettings").forms({
+                    onSuccess : function() {
+                        Msg.info("Saved");
+                    }
+                });
+
                 $(".chosen-select").chosen({
                     search_contains: true
                 });
 
                 var eventRange = $('#event-range');
-                eventRange.exist(function() {
+                eventRange.exist(function () {
                     flog("init report range");
                     eventRange.daterangepicker({
                         format: 'DD/MM/YYYY HH:mm',
@@ -163,7 +196,7 @@
                         timePicker12Hour: false
 
                     },
-                    function(start, end) {
+                    function (start, end) {
                         flog('onChange', start, end);
                         $("#startDate").val(formatDateTime(start));
                         $("#endDate").val(formatDateTime(end));
