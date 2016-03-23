@@ -4,6 +4,9 @@
 #table-result .table-responsive{
     max-height: 195px;
 }
+#dashLeadsList .lead-desc{
+    margin-bottom: 45px;
+}
 @media (max-width: 767px) {
     .form-group [class^="col-md"] + div{
         margin-top: 10px;
@@ -35,6 +38,10 @@
     }
     #myWizard .actions{
         position: relative;
+    }
+
+    #dashLeadsList .lead-desc{
+        margin-bottom: 35px;
     }
 }
 
