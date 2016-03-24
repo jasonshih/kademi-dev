@@ -96,6 +96,21 @@
                                     <i>Select a website to limit where the calendar can be viewed.</i>
                                 </div>
                             </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-lg-2" for="website">New profiles</label>
+                                <div class="col-md-8 col-lg-8">
+                                    <select name="newProfileGroup" class="form-control">
+                                        <option value="">[Please select]</option>
+                                        #foreach($group in $rootFolder.groups )
+                                        $formatter.option( $group.id, $group.name, $page.calendar.newProfileGroup.id )
+                                        #end
+                                    </select>
+                                    <i>If you would like to enable anonymous users to register to events, select a group to add their automatically created profiles to.</i>
+                                </div>
+                            </div>
+
+
                             <div class="form-group">
                                 <div class="col-md-offset-3 col-lg-offset-2">
                                     <button class="btn btn-success" type="submit">Save details</button>
