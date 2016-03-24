@@ -479,7 +479,7 @@
                                                             <span>$!file.notes</span>
                                                             <a href="$file.name" class="pull-right edit-file-note"><i class="fa fa-pencil"></i></a>
                                                         </td>
-                                                        <td><abbr class="timeago" title="$formatter.formatDateISO8601($file.createdDate)">$formatter.formatDateTime($file.createdDate)</abbr></td>
+                                                        <td><abbr class="timeago" title="$formatter.formatDateISO8601($file.createdDate, $page.organisation.timezone)">$formatter.formatDateISO8601($file.createdDate, $page.organisation.timezone)</abbr></td>
                                                         <td>
                                                             #if($file.is('audio/'))
                                                             <audio class="lead-audio-file" id="audio_$file.hash" src="$file.name"></audio>
@@ -1104,9 +1104,9 @@
                 });
 
                 $('#orgTitleSearch').on({
-                    input: function(){
+                    input: function () {
                         var form = $(this).closest('form');
-                        if(!this.value){
+                        if (!this.value) {
                             form.find('input[name=email]').val('');
                             form.find('input[name=phone]').val('');
                             form.find('input[name=address]').val('');
