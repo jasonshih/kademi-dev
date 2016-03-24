@@ -36,6 +36,18 @@
                     label: 'Source',
                     name: 'source',
                     type: 'select'
+                },
+                {
+                    label: 'Assigned To',
+                    name: 'assignedToProfile',
+                    type: 'select',
+                    data: 'assignedToProfile',
+                    placeholder: 'Select an assignment',
+                    optionsPair: {
+                        label: 'name',
+                        value: 'userId'
+                    },
+                    def: 'NONE'
                 }
             ]
         });
@@ -85,14 +97,32 @@
                 {
                     data: 'assignedToProfile',
                     defaultContent: "",
-                    render: function (d) {
-                        flog('Render ', d);
+                    className: 'editable',
+                    render: function (d, type) {
+                        flog('Render Profile', d, type);
                         if (typeof d !== 'undefined' && d !== null) {
-                            var f = d.firstName || '';
-                            var s = d.surName || '';
-                            return (f + ' ' + s).trim();
+                            switch (type) {
+                                case "type":
+                                case "sort":
+                                {
+                                    return d.userId;
+                                    break;
+                                }
+                                case "display":
+                                {
+                                    if (d.firstName && d.firstName.trim().length > 0) {
+                                        var f = d.firstName || '';
+                                        var s = d.surName || '';
+                                        return (f + ' ' + s).trim();
+                                    } else if (d.nickName) {
+                                        return d.nickName.trim();
+                                    }
+                                }
+                                default:
+                                    return d.name;
+                            }
                         }
-                        return '';
+                        return d;
                     }
                 },
                 {
@@ -116,14 +146,14 @@
             ]
         });
 
-        $('#leadTable').on('click', 'tbody td', function (e) {
-            var td = $(this);
-            var field = td.find('select[id^=DTE_Field_]');
+        $('#leadTable').on('focus', 'tbody td select[id^=DTE_Field_]', function () {
+            var field = $(this);
+            var td = field.closest('td');
             var fieldName = field.attr('id');
 
             if (fieldName !== null && typeof fieldName !== 'undefined') {
                 fieldName = field.attr('id').replace('DTE_Field_', '');
-                var row = dataTable.row(this);
+                var row = dataTable.row(td[0]);
                 var leadId = row.data().leadId;
                 switch (fieldName) {
                     case "stageName":
@@ -134,6 +164,9 @@
                         break;
                 }
             }
+        });
+
+        $('#leadTable').on('click', 'tbody td', function (e) {
 
             editor.inline(this, {
                 submitOnBlur: true
@@ -146,6 +179,20 @@
 
             dataTable.row.add(_source);
         }
+
+        $.ajax({
+            url: '/leads/?teamUsers',
+            dataType: 'json'
+        }).done(function (data) {
+            if (data.status) {
+                data.data.push({
+                    name: "Clear assignment",
+                    userId: 0
+                });
+                editor.field('assignedToProfile').update(data.data);
+            }
+        });
+
         dataTable.draw();
     }
 
