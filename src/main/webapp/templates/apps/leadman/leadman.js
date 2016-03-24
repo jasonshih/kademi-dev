@@ -348,11 +348,19 @@ function initNewLeadForm() {
             if (btn.hasClass("btnCreateAndClose")) {
                 Msg.info('Saved new lead');
                 modal.modal("hide");
-                $('#all_contacts').reloadFragment({
-                    whenComplete: function () {
-                        $('abbr.timeago').timeago();
+                if($('#all_contacts').length){
+                    $('#all_contacts').reloadFragment({
+                        whenComplete: function () {
+                            $('abbr.timeago').timeago();
+                        }
+                    });
+                }
+
+                if($('#leadTable').length){
+                    if(typeof doSearchLeadmanPage === 'function'){
+                        doSearchLeadmanPage();
                     }
-                });
+                }
             } else {
                 Msg.info('Saved, going to the new lead');
                 if (resp.nextHref) {

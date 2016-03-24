@@ -398,4 +398,10 @@
         initLeadTypeSelect();
         doSearch();
     };
+
+    w.doSearchLeadmanPage = function(){
+        searchOptions.query = '';
+        doSearch();
+    };
+
 })(this);
