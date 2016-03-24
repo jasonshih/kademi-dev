@@ -11,7 +11,7 @@ html body .fa {
 }
 
 .app {
-    padding: 25px 15px;
+    padding: 23px 23px;
 }
 .app-container > header{
     box-shadow: none;
@@ -78,12 +78,12 @@ html body .fa {
 }
 
 .navbar-header{
-    border-right: 1px solid #f577a0;
+    border-right: 1px solid rgba(255,255,255,0.39);
 }
 
 .searchbox-wrap{
-    border-left: 1px solid #f577a0;
-    border-right: 1px solid #f577a0;
+    border-left: 1px solid rgba(255,255,255,0.39);
+    border-right: 1px solid rgba(255,255,255,0.39);
     height: 80px;
 }
 

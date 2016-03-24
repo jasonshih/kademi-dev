@@ -189,9 +189,11 @@ function showRsvpPanel() {
         if (userUrl) {
             toShow = $(".rsvp-form");
         } else {
-            toShow = $(".rsvp-nouser");
+            toShow = $(".rsvp-form");
+            //toShow = $(".rsvp-nouser");
         }
     }
+    flog("showRsvpPanel: showing", toShow);
     $(".well-rsvp").not(toShow).hide();
     toShow.show(200);
 }
