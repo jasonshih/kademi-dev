@@ -8,11 +8,11 @@
  * @option {Boolean} isCompleted This module is completed or not
  * @option {Boolean} isEditable This module is editable now or not
  * @option {Boolean} isCompletable User has permission for complete this module
- * @option {Function} onPreviousPage Function will be called when click on previous page, include click on Previous button. Context is clicked link
- * @option {Function} onNextPage Function will be called when click on next page, include click on Next button or Submit button of Quiz page. Context is clicked link or button
- * @option {Function} onQuizSubmit Function will be called after clicking on Submit button on Quiz page. Context is Quiz form
- * @option {Function} onQuizSuccess Function will be called after Quiz is submitted successfully. Context is Quiz form
- * @option {Function} onQuizError Function will be called after Quiz is error. Maybe blank or wrong answers, or other errors will be occurred. Context is Quiz form
+ * @option {Function} onPreviousPage Callback will be called when click on previous page, include click on Previous button. Argument is 'clickedElement'
+ * @option {Function} onNextPage Callback will be called when click on next page, include click on Next button or Submit button of Quiz page. Argument is 'clickedElement'
+ * @option {Function} onQuizSubmit Callback will be called after clicking on Submit button on Quiz page. Argument is 'quizForm'
+ * @option {Function} onQuizSuccess Callback will be called after Quiz is submitted successfully. Arguments are 'quizForm' and 'response'
+ * @option {Function} onQuizError Callback will be called after Quiz is error. Maybe blank or wrong answers, or other errors will be occurred. Arguments are 'quizForm' and 'response'
  */
 (function ($) {
     $.module = function (method) {
@@ -126,7 +126,7 @@
                 }
 
                 if (typeof options.onNextPage === 'function') {
-                    options.onNextPage.call(btn);
+                    options.onNextPage.call(btn, btn);
                 }
 
                 if (self.isLastPage()) {
@@ -161,11 +161,11 @@
                     }
 
                     if (typeof options.onNextPage === 'function') {
-                        options.onNextPage.call(link);
+                        options.onNextPage.call(link, link);
                     }
                 } else if (clickedIndex < currentIndex) {
                     if (typeof options.onPreviousPage === 'function') {
-                        options.onPreviousPage.call(link);
+                        options.onPreviousPage.call(link, link);
                     }
                 } else {
                     flog('[jquery.module] Clicked on current page. Do nothing!');
@@ -1071,7 +1071,7 @@
 
             // Callback onQuizSubmit
             if (typeof options.onQuizSubmit === 'function') {
-                if (!options.onQuizSubmit.call(quiz)) {
+                if (!options.onQuizSubmit.call(quiz, quiz)) {
                     return false;
                 }
             }
@@ -1127,7 +1127,7 @@
                             flog('[jquery.module] Validating quiz OK', response);
 
                             if (typeof options.onQuizSuccess === 'function') {
-                                options.onQuizSuccess.call(quiz);
+                                options.onQuizSuccess.call(quiz, quiz, response);
                             }
 
                             self.afterQuizIsCompleted(e);
@@ -1151,7 +1151,7 @@
                                     });
 
                                     if (typeof options.onQuizError === 'function') {
-                                        options.onQuizError.call(quiz);
+                                        options.onQuizError.call(quiz, quiz, response);
                                     }
                                 }
                             }
