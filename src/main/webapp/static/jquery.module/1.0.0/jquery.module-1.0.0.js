@@ -4,6 +4,15 @@
  * @version: 1.0.0
  *
  * Configuration:
+ * @option {String} currentUrl Url address of current module page
+ * @option {Boolean} isCompleted This module is completed or not
+ * @option {Boolean} isEditable This module is editable now or not
+ * @option {Boolean} isCompletable User has permission for complete this module
+ * @option {Function} onPreviousPage Function will be called when click on previous page, include click on Previous button. Context is clicked link
+ * @option {Function} onNextPage Function will be called when click on next page, include click on Next button or Submit button of Quiz page. Context is clicked link or button
+ * @option {Function} onQuizSubmit Function will be called after clicking on Submit button on Quiz page. Context is Quiz form
+ * @option {Function} onQuizSuccess Function will be called after Quiz is submitted successfully. Context is Quiz form
+ * @option {Function} onQuizError Function will be called after Quiz is error. Maybe blank or wrong answers, or other errors will be occurred. Context is Quiz form
  */
 (function ($) {
     $.module = function (method) {

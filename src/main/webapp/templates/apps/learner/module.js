@@ -14,9 +14,7 @@ function initModulePage(pStatUrl, pFinished, pEditMode, pIsCompletable) {
         //initLearningContentStyles();
         initComments(pStatUrl);
     }
-
 }
-
 
 function initModuleNav(pStatUrl, pFinished) {
     flog("initModuleNav");
@@ -25,7 +23,7 @@ function initModuleNav(pStatUrl, pFinished) {
     initPageNav();
 
     // This needs to be just done once, not on each pjax transition
-    $("body").on("click", ".nextBtn", function(e) {
+    $("body").on("click", ".nextBtn", function (e) {
         if (!checkNext()) {
             e.stopPropagation();
             e.preventDefault();
@@ -35,7 +33,7 @@ function initModuleNav(pStatUrl, pFinished) {
         checkSubmit(e);
     });
 
-    $('.pages a').click(function(e) {
+    $('.pages a').click(function (e) {
         var a = $(e.target).closest("a");
         if (a.hasClass("disabled")) {
             flog("preventing click on disabled link", a);
@@ -48,7 +46,7 @@ function initModuleNav(pStatUrl, pFinished) {
     $(document).pjax2('.panelBox', {
         selector: ".pages a",
         fragment: ".panelBox",
-        success: function() {
+        success: function () {
             flog("done!");
             initPrintLink(); // called by init-theme
             initPageNav();
@@ -59,14 +57,14 @@ function initModuleNav(pStatUrl, pFinished) {
 function initPageNav() {
     prettyPrint();
     $(".pages a")
-            .removeClass("active")
-            .closest("li").removeClass("active");
+        .removeClass("active")
+        .closest("li").removeClass("active");
 
     var pageName = getFileName(window.location.pathname);
     pageName = pageName.replaceAll(" ", "%20");
     pageName = decodeURI(pageName);
     flog("initPageNav", pageName);
-    $(".pages a.modPage").each(function(i, n) {
+    $(".pages a.modPage").each(function (i, n) {
         var node = $(n);
         var link = decodeURI(node.attr("href"));
         if (link === pageName) {
@@ -79,7 +77,7 @@ function initPageNav() {
     });
 
     // Hack: Need to hide quiz elements which have quiz editor help text
-    $("ol.quiz li p").each(function(i, n) {
+    $("ol.quiz li p").each(function (i, n) {
         var node = $(n);
         var text = node.text();
         if (text.startsWith("[")) {
@@ -114,7 +112,7 @@ function initPageNav() {
         var p = progressPageIndex();
         if (!p || c > p) { // only save current page if it is the furthest yet visited
             flog("do save progress");
-            window.setTimeout(function() {
+            window.setTimeout(function () {
                 save();
             }, 1000);
         } else {
@@ -125,7 +123,7 @@ function initPageNav() {
     checkProgressPageVisibility();
     // Setup event to save any changes on the fly
     flog("init field saving", $("#body textarea, #body input, #body select"));
-    $("#body textarea, #body input, #body select").change(function(e) {
+    $("#body textarea, #body input, #body select").change(function (e) {
         flog("changed field", e.target);
         var field = $(e.target);
         saveField(field.attr("name"), field.val(), modStatusUrl);
@@ -133,7 +131,7 @@ function initPageNav() {
 
     // Need to delay, because this script might be running before other scripts
     // have had time to register for the event
-    window.setTimeout(function() {
+    window.setTimeout(function () {
         flog("fire modulePageLoad event");
         $("body").trigger("modulePageLoad");
     }, 50);
@@ -144,17 +142,17 @@ function doRestoreFields() {
         type: "GET",
         url: modStatusUrl + "?fields",
         dataType: "json",
-        success: function(response) {
+        success: function (response) {
             restoreFields(response);
         },
-        error: function(event, XMLHttpRequest, ajaxOptions, thrownError) {
+        error: function (event, XMLHttpRequest, ajaxOptions, thrownError) {
             flog('error restoring fields', event, XMLHttpRequest, ajaxOptions, thrownError);
         }
     });
 }
 
 /**
- * Called on page load and expand events, checks to see what progress navigation 
+ * Called on page load and expand events, checks to see what progress navigation
  * elements should be enabled
  */
 function checkProgressPageVisibility() {
@@ -197,7 +195,7 @@ function checkProgressPageVisibility() {
     pages.find("li").removeClass("limit-lower").removeClass("limit-upper").removeClass("limit");
     pages.first().closest("li").addClass("limit-end");
     pages.last().closest("li").addClass("limit-end");
-    pages.each(function(i, n) {
+    pages.each(function (i, n) {
         var a = $(n);
         var away = Math.abs(c - i);
         var limited = away;
@@ -205,7 +203,7 @@ function checkProgressPageVisibility() {
             limited = 10;
         }
         var li = a.closest("li");
-        $.each(li.classes(), function(i, n) {
+        $.each(li.classes(), function (i, n) {
             if (n.startsWith("away")) {
                 li.removeClass(n);
             }
@@ -252,7 +250,7 @@ function checkNext() {
         flog("hidden", first);
         // Check if required inputs prior to this are completed
         var incompleteInput = null;
-        first.prev().find("input.required, select.required, textarea.required").each(function(i, n) {
+        first.prev().find("input.required, select.required, textarea.required").each(function (i, n) {
             var node = $(n);
             var val = node.val().trim();
             if (val == "") {
@@ -289,7 +287,7 @@ function checkNext() {
 function showNextPopup(incompleteInput) {
     var popout = $("div.pages div.popout");
     popout.find("span").html("Please enter <a href='#'>required fields</a>");
-    popout.find("span a").click(function(e) {
+    popout.find("span a").click(function (e) {
         e.preventDefault();
         e.stopPropagation();
         $('html, body').animate({
@@ -304,7 +302,7 @@ function showNextPopup(incompleteInput) {
 }
 
 function findIncompleteInputs() {
-    return $(".panelBox").find("input.required, select.required, textarea.required").not(".no-validate").filter(function(i, n) {
+    return $(".panelBox").find("input.required, select.required, textarea.required").not(".no-validate").filter(function (i, n) {
         var val = $(n).val().trim();
         return (val == "");
     });
@@ -331,7 +329,7 @@ function initLearningContentStyles() {
         //        flog("show hide following", c, p);
         $(".btnHideFollowing").nextAll().hide(); // initially hide everything after it
 
-        $(".btnHideFollowing").click(function() {
+        $(".btnHideFollowing").click(function () {
             $(this).addClass("expanded");
             var toToggle = $(this).nextUntil(".btnHideFollowing").not(".linked-modal");
             flog("btnHideFollowing: toggle:", toToggle);
@@ -346,13 +344,13 @@ function initLearningContentStyles() {
         $(".btnHideFollowing").hide(); // if we're not using continue buttons, hide them
     }
 
-    $("div.dropdown > h3, div.dropdown > h4, div.dropdown > h5,div.dropdown > h6,div.dropdown span.sprite").click(function() {
+    $("div.dropdown > h3, div.dropdown > h4, div.dropdown > h5,div.dropdown > h6,div.dropdown span.sprite").click(function () {
         var dropDownDiv = $(this).parents("div.dropdown");
         if (dropDownDiv.length > 1) {
             dropDownDiv = $(dropDownDiv[0]);
         }
         //        flog("toggle visibility", $("> div", dropDownDiv));
-        $("> div", dropDownDiv).toggle(200, function() {
+        $("> div", dropDownDiv).toggle(200, function () {
             flog("set open class", this, $(":visible", $(this)));
             var vis = $(":visible", $(this)).length > 0;
             if (vis) {
@@ -364,7 +362,7 @@ function initLearningContentStyles() {
         });
         return false;
     });
-    $(".panelBox a").each(function(i, n) {
+    $(".panelBox a").each(function (i, n) {
         var $n = $(n);
         var href = $n.attr("href");
         if (href && href.startsWith("http")) {
@@ -392,7 +390,6 @@ function getMoveHref(count) {
         return href;
     }
 }
-
 
 
 function setReadonly() {
@@ -433,14 +430,14 @@ function save(callback) {
         type: "POST",
         url: url,
         data: data,
-        success: function(response) {
+        success: function (response) {
             flog('saved ok', response);
             restoreFields(response);
             if (callback) {
                 callback();
             }
         },
-        error: function(event, XMLHttpRequest, ajaxOptions, thrownError) {
+        error: function (event, XMLHttpRequest, ajaxOptions, thrownError) {
             flog('error saving moduleStatus', event, XMLHttpRequest, ajaxOptions, thrownError);
             Msg.error("There was an error saving your progress");
         }
@@ -449,7 +446,7 @@ function save(callback) {
 
 function saveFields(callback) {
     var data = {};
-    $("#body textarea, #body input, #body select").not(".no-save").each(function(i, n) {
+    $("#body textarea, #body input, #body select").not(".no-save").each(function (i, n) {
         var inp = $(n);
         var qname = getQualifiedFieldName(inp.attr("name"));
         data[qname] = inp.val();
@@ -460,13 +457,13 @@ function saveFields(callback) {
         type: "POST",
         url: url,
         data: data,
-        success: function(response) {
+        success: function (response) {
             flog('saved ok', response);
             if (callback) {
                 callback();
             }
         },
-        error: function(event, XMLHttpRequest, ajaxOptions, thrownError) {
+        error: function (event, XMLHttpRequest, ajaxOptions, thrownError) {
             flog('error saving moduleStatus', event, XMLHttpRequest, ajaxOptions, thrownError);
             Msg.error("There was an error saving your fields");
         }
@@ -479,7 +476,7 @@ function restoreFields(response) {
         for (qualifiedFieldName in response.data) {
             var fieldName = stripPageName(qualifiedFieldName);
             var fieldValue = response.data[qualifiedFieldName];
-            if( fieldValue !== null ) {
+            if (fieldValue !== null) {
                 fieldValue = fieldValue.trim();
             }
             var isQualified = false;
@@ -491,7 +488,7 @@ function restoreFields(response) {
 
             if (!inp.hasClass("qualified-set")) {
 //                flog("restoreFields: look for text input", fieldName, fieldValue, inp);
-                if( isQualified ) {
+                if (isQualified) {
 //                    flog("set is qualfieid");
                     inp.addClass("qualified-set");
                 }
@@ -515,7 +512,7 @@ function restoreFields(response) {
     }
     $(".qualified-set").removeClass("qualified-set");
     flog("restoreFields: trim text inputs");
-    $("textarea").each(function(i, n) {
+    $("textarea").each(function (i, n) {
         var t = $(n);
         var text = t.val().trim();
         t.val(text);
@@ -546,7 +543,7 @@ function setStatusComplete() {
         type: "POST",
         url: modStatusUrl,
         data: "statusComplete=true",
-        success: function(response) {
+        success: function (response) {
             ajaxLoadingOff();
             flog("setStatusComplete response", response);
             if (response.status) {
@@ -559,7 +556,7 @@ function setStatusComplete() {
                     jQuery.ajax({
                         type: 'GET',
                         url: "/profile/",
-                        success: function(resp) {
+                        success: function (resp) {
                             flog("setStatusComplete: profile get complete");
                             var page = $(resp);
                             var form = page.find("div.details form");
@@ -569,7 +566,7 @@ function setStatusComplete() {
                             form.find("button").hide();
                             form.attr("action", "/profile/");
                             form.forms({
-                                callback: function(resp) {
+                                callback: function (resp) {
                                     if (resp.status) {
                                         closeModals();
                                         setStatusComplete();
@@ -579,7 +576,7 @@ function setStatusComplete() {
                                 }
                             });
                             var modal = $("#userDataModal");
-                            modal.find("button").click(function(e) {
+                            modal.find("button").click(function (e) {
                                 flog("submit form", e);
                                 e.preventDefault();
                                 e.stopPropagation();
@@ -590,7 +587,7 @@ function setStatusComplete() {
                             showModal(modal);
 
                         },
-                        error: function(resp) {
+                        error: function (resp) {
                             ajaxLoadingOff();
                             flog("setStatusComplete: profile get failed");
                             Msg.error("Very sorry, but something went wrong while attempting to complete your module. Could you please refresh the page and try again?");
@@ -603,7 +600,7 @@ function setStatusComplete() {
                 }
             }
         },
-        error: function(response) {
+        error: function (response) {
             ajaxLoadingOff();
             Msg.error("Error!", "There was an error saving your progress. Please try again and if you still have problems contact the site administrator");
         }
@@ -615,13 +612,13 @@ function showCompletedMessage() {
     jQuery.ajax({
         type: 'GET',
         url: "./?completeMessage",
-        success: function(resp) {
+        success: function (resp) {
             var page = $(resp);
             var modal = page.find("#finishedModal");
             $("body").append(modal);
             showModal(modal);
         },
-        error: function(resp) {
+        error: function (resp) {
             Msg.error("Your module has been completed successfully, but there was a problem displaying the congratulations message.");
             window.location = "/dashboard";
         }
@@ -635,7 +632,7 @@ function currentPageIndex() {
     var currentIndex = 0;
     var all = pages;
     currentIndex = all.length - 1; // default to finish, in case not found
-    all.each(function(index) {
+    all.each(function (index) {
         if ($(this).attr("href") === current) {
             currentIndex = index;
         }
@@ -650,7 +647,7 @@ function progressPageIndex() {
     var current = currentPageLink.attr("href");
     var currentIndex = 0;
     var all = pages;
-    all.each(function(index) {
+    all.each(function (index) {
         if ($(this).attr("href") === current) {
             currentIndex = index;
         }
@@ -698,10 +695,10 @@ function saveField(fieldName, fieldValue, statUrl) {
             changedField: qualifiedFieldName,
             changedValue: fieldValue
         },
-        success: function(response) {
+        success: function (response) {
             flog('saved ok', response);
         },
-        error: function(response) {
+        error: function (response) {
             flog('error saving moduleStatus', response);
         }
     });
@@ -728,10 +725,10 @@ function stripPageName(qualifiedFieldName) {
 
 function initModalLinks() {
     flog("init modal popups");
-    $('div.linked-modal').each(function() {
+    $('div.linked-modal').each(function () {
         $(this).append('<a href="#" title="Close" class="close-modal">Close</a>')
     });
-    $("body").on("click", "a.anchor-modal", function(e) {
+    $("body").on("click", "a.anchor-modal", function (e) {
         e.preventDefault();
         var target = $(e.target);
         var id = target.attr("href");
@@ -746,7 +743,7 @@ function initModalLinks() {
         showModal(div, title);
     });
 
-    $('a.close-modal').click(function(e) {
+    $('a.close-modal').click(function (e) {
         flog("close modals");
         e.preventDefault();
         closeModals();
@@ -756,7 +753,7 @@ function initModalLinks() {
 /**
  * Called when the user clicks next, checks to see if there is a quiz on the page
  * , and if so it is checked for correctness
- * 
+ *
  * Also checks to see if this is the last page, in which case a finished dialog is
  * displayed
  */
@@ -810,7 +807,7 @@ function isQuizComplete(e) {
 
     // Check all questions have been answered
     var hasError = false;
-    quiz.find("ol.quiz > li").each(function(i, n) {
+    quiz.find("ol.quiz > li").each(function (i, n) {
         var li = $(n);
         var inp = li.find("textarea, input:radio:checked");
         if (inp.length === 0) {
@@ -848,7 +845,7 @@ function isQuizComplete(e) {
             url: modStatusUrl,
             data: quiz.serialize(),
             dataType: "json",
-            success: function(response) {
+            success: function (response) {
                 quiz.removeClass("processing");
                 if (response.status) {
                     flog('quiz validated ok', response);
@@ -863,13 +860,13 @@ function isQuizComplete(e) {
                 } else {
                     flog('quiz validated returned false', response);
                     Msg.error("Please check your answers");
-                    $.each(response.fieldMessages, function(i, n) {
+                    $.each(response.fieldMessages, function (i, n) {
                         var inp = quiz.find("li." + n.field);
                         inp.addClass("error");
                     });
                 }
             },
-            error: function(response) {
+            error: function (response) {
                 quiz.removeClass("processing");
                 flog("isQuizComplete error response", response);
                 showApology("check your answers");
