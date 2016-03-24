@@ -21,7 +21,7 @@
             'pageUrl': window.location,
             'streamSelector': ".comments-stream",
             'renderCommentFn': function (user, date, comment, commentId) {
-                flog("renderCommentFn-101-standard", user, "container=", container, "commentId=", commentId);
+                flog("renderCommentFn-103-standard", user, "container=", container, "commentId=", commentId);
 
                 var outerDiv = $("#" + commentId);
 
@@ -81,7 +81,7 @@
             },
             itemsPerPage: 10,
             'paginateFn': function (comments, config, container) {
-                flog("paginateFn-101-standard", comments, config, container);
+                flog("paginateFn-103-standard", comments, config, container);
 
                 var totalComments = comments.length;
                 var itemsPerPage = config.itemsPerPage;

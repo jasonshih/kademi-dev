@@ -77,7 +77,7 @@
             // End of DEPRECATED migration
             // ==============================================================================
 
-            flog('[jquery.user] Init logout links')
+            flog('[jquery.user] Init logout links');
             $(config.logoutSelector).on('click', function (e) {
                 e.preventDefault();
                 doLogout();
@@ -169,8 +169,7 @@ function doLogin(userName, password, config, form) {
 
     var chk = form.find('input[name=keepLoggedIn]');
     if (chk) {
-        var keepLoggedIn = chk.prop('checked');
-        data['keepLoggedIn'] = keepLoggedIn;
+        data['keepLoggedIn'] = chk.prop('checked');
     }
 
     flog('[jquery.user] Login data', data);
