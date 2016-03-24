@@ -13,7 +13,7 @@
         #parse("/theme/apps/leadman/leadManIncludes.html")
 
         <div class="">
-            <div style="background:url(/theme/images/profile.jpg) center center; background-size:cover;" class="unwrap">
+            <div style="background:url(/theme/images/profile.jpg) center center; background-size:cover;" class="">
                 <div class="container container-lg p-lg">
                     <div class="pull-right">
 
@@ -33,14 +33,62 @@
                     </div>
                 </div>
             </div>
-            <div class="container container-lg">
+            <div style="margin-top: 20px">
                 <div class="row">
-                    <div class="col-lg-3">
-                        <div class="panel">
+                    <div class="col-lg-6">
+                        <div id="activity" class="panel">
                             <div class="panel-body">
-                                <h6><span><em class="fa fa-twitter mr"></em>@jdoe</span></h6>
-                                <h6><span class="mr"><em class="fa fa-clock-o mr"></em>10:05 PM</span><span class="mr"><em class="fa fa-calendar mr"></em>10/11/15</span><span class="mr"><em class="fa fa-map-marker mr"></em>BA</span></h6>
-                                <h6><span><em class="fa fa-eye mr"></em>10 feb at 10:00 AM</span></h6>
+                                #showTimeline($page.timelineItems)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div id="profile" class="panel">
+                            <div class="panel-body">
+                                <form method="post" action="$page.href" class="form-horizontal" id="leadDetails">
+                                    <input type="hidden" name="saveDetails" value="saveDetails"/>
+                                    <div class="modal-body">
+                                        #set( $p = $page.leadProfile )
+                                        <div class="form-group">
+                                            <label class="control-label col-md-2" for="nickName">Customer</label>
+                                            <div class="col-md-3">
+                                                <input type="text" name="nickName" id="nickName" class="form-control" placeholder="nickName" value="$!p.nickName" />
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="text" name="firstName" id="firstName" class="form-control" placeholder="First name" value="$!p.firstName" />
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input type="text" name="surName" id="surName" class="form-control" placeholder="Surname" value="$!p.surName" />
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label col-md-2" for="newUserEmail">Contact</label>
+                                            <div class="col-md-5">
+                                                <input type="text" name="email" id="email" class="form-control" placeholder="Email" value="$!p.email" />
+                                            </div>
+                                            <div class="col-md-5">
+                                                <input type="text" name="phone" id="phone" class="form-control" placeholder="Phone" value="$!p.phone" />
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label col-md-2" for="notes">Notes</label>
+                                            <div class="col-md-10">
+                                                <textarea name="notes" class="form-control" style="height: 100px">$!page.description</textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="col-md-10 col-md-offset-2">
+                                                <button class="btn btn-sm btn-default" type="reset">Reset</button>
+
+                                                <button class="btn btn-primary" type="submit">Save details</button>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                         <div class="panel">
@@ -91,137 +139,61 @@
                                 #end
                             </div>
                         </div>
-                    </div>
-                    <div class="col-lg-9">
                         <div class="panel">
                             <div class="panel-body">
-                                <ul role="tablist" class="nav nav-tabs">
-                                    <li role="presentation" class="active"><a href="#activity" aria-controls="activity" role="tab" data-toggle="tab">Activity</a></li>
-                                    <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a></li>
-                                    <li role="presentation"><a href="#leads" aria-controls="leads" role="tab" data-toggle="tab">Leads</a></li>
-                                </ul>
-                                <div class="tab-content">
-                                    <div id="activity" role="tabpanel" class="tab-pane fade in active">
-                                        <div class="row">
-                                            <div class="">
-                                                #showTimeline($page.timelineItems)
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div id="profile" role="tabpanel" class="tab-pane fade">
-                                        <h4 class="page-header">Contact information</h4>
-                                        <div class="row">
-                                            <form method="post" action="$page.href" class="form-horizontal" id="leadDetails">
-                                                <input type="hidden" name="saveDetails" value="saveDetails"/>
-                                                <div class="modal-body">
-                                                    #set( $p = $page.leadProfile )
-                                                    <div class="form-group">
-                                                        <label class="control-label col-md-2" for="nickName">Customer</label>
-                                                        <div class="col-md-3">
-                                                            <input type="text" name="nickName" id="nickName" class="form-control" placeholder="nickName" value="$!p.nickName" />
-                                                        </div>
-                                                        <div class="col-md-3">
-                                                            <input type="text" name="firstName" id="firstName" class="form-control" placeholder="First name" value="$!p.firstName" />
-                                                        </div>
-                                                        <div class="col-md-4">
-                                                            <input type="text" name="surName" id="surName" class="form-control" placeholder="Surname" value="$!p.surName" />
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <label class="control-label col-md-2" for="newUserEmail">Contact</label>
-                                                        <div class="col-md-5">
-                                                            <input type="text" name="email" id="email" class="form-control" placeholder="Email" value="$!p.email" />
-                                                        </div>
-                                                        <div class="col-md-5">
-                                                            <input type="text" name="phone" id="phone" class="form-control" placeholder="Phone" value="$!p.phone" />
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <label class="control-label col-md-2" for="notes">Notes</label>
-                                                        <div class="col-md-10">
-                                                            <textarea name="notes" class="form-control" style="height: 100px">$!page.description</textarea>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <div class="col-md-10 col-md-offset-2">
-                                                            <button class="btn btn-sm btn-default" type="reset">Reset</button>
-
-                                                            <button class="btn btn-primary" type="submit">Save details</button>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                    <div id="leads" role="tabpanel" class="tab-pane fade">
-                                        <table class="table table-striped">
-                                            <thead>
-                                                <th>Lead</th>
-                                                <th>Status</th>
-                                                <th>Created</th>
-                                                <th>Amount</th>
-                                                <th>Assigned to</th>
-                                            </thead>
-                                            <tbody>
-                                                #foreach($lead in $page.leads)
-                                                <tr>
-                                                    <td>
-                                                        <a href="/leads/$lead.id/">
-                                                            $!lead.description
-                                                        </a>
-                                                    </td>
-                                                    <td>
-                                                        #if( $lead.cancelled )
-                                                        <span class="fa fa-remove text-danger"></span>
-                                                        Cancelled <abbr title="$formatter.formatDateISO8601($lead.closedDate)" class="timeago">$lead.closedDate</abbr>
-                                                        #elseif( $lead.closedDate )
-                                                        <span class="fa fa-check text-success"></span>
-                                                        Sale completed <abbr title="$formatter.formatDateISO8601($lead.closedDate)" class="timeago">$lead.closedDate</abbr>
-                                                        #else
-                                                        <span class="fa fa-clock-o text-muted"></span>
-                                                        In progress
-                                                        #end
-                                                    </td>
-                                                    <td>
-                                                        <abbr title="$formatter.formatDateISO8601($lead.createDate)" class="timeago">$lead.createDate</abbr>
-                                                    </td>
-                                                    <td>$!lead.dealAmount</td>
-                                                    <td>
-                                                        #if( $lead.assignedToProfile )
-                                                        $lead.assignedToProfile.formattedName
-                                                        #else
-                                                        Not assigned
-                                                        #end
-                                                    </td>
-                                                </tr>
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                        <th>Lead</th>
+                                        <th>Status</th>
+                                        <th>Created</th>
+                                        <th>Amount</th>
+                                        <th>Assigned to</th>
+                                        </thead>
+                                        <tbody>
+                                        #foreach($lead in $page.leads)
+                                        <tr>
+                                            <td>
+                                                <a href="/leads/$lead.id/">
+                                                    $!lead.description
+                                                </a>
+                                            </td>
+                                            <td>
+                                                #if( $lead.cancelled )
+                                                <span class="fa fa-remove text-danger"></span>
+                                                Cancelled <abbr title="$formatter.formatDateISO8601($lead.closedDate)" class="timeago">$lead.closedDate</abbr>
+                                                #elseif( $lead.closedDate )
+                                                <span class="fa fa-check text-success"></span>
+                                                Sale completed <abbr title="$formatter.formatDateISO8601($lead.closedDate)" class="timeago">$lead.closedDate</abbr>
+                                                #else
+                                                <span class="fa fa-clock-o text-muted"></span>
+                                                In progress
                                                 #end
-                                            </tbody>
-                                        </table>
-                                    </div>
-
+                                            </td>
+                                            <td>
+                                                <abbr title="$formatter.formatDateISO8601($lead.createDate)" class="timeago">$lead.createDate</abbr>
+                                            </td>
+                                            <td>$!lead.dealAmount</td>
+                                            <td>
+                                                #if( $lead.assignedToProfile )
+                                                $lead.assignedToProfile.formattedName
+                                                #else
+                                                Not assigned
+                                                #end
+                                            </td>
+                                        </tr>
+                                        #end
+                                        </tbody>
+                                    </table>
                                 </div>
+
                             </div>
+                        </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-
-        <div class="fw-boxed">
-            <div class="panel panel-default">
-
-            </div>
-        </div>
-
-
-        <hr/>
-
-
 
         <div class="modal fade" id="newTaskModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
             <div class="modal-dialog">
