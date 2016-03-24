@@ -144,8 +144,9 @@ $!bodyContent
                                 #end
                             </a>
                             <ul class="dropdown-menu selectOrg">
-                                #foreach( $m in $memberships)
-                                <li><a href="$m.org.orgId">$m.org.title #if($m.org.orgId ==$currentOrg.orgId) <i class="fa fa-check text-success"></i> #end</a></li>
+                                #set($teamOrg = $page.find('/leads/').teamsForUser)
+                                #foreach( $m in $teamOrg)
+                                <li><a href="$m.orgId">$m.title #if($m.orgId ==$currentOrg.orgId) <i class="fa fa-check text-success"></i> #end</a></li>
                                 #end
                             </ul>
                         </li>
