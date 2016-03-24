@@ -7,7 +7,7 @@
     };
 
     var dataTable = null;
-    var editor = null;
+    editor = null;
     var stages = [];
 
     function initDataTable(hits) {
@@ -31,14 +31,25 @@
                     label: 'Stage',
                     name: 'stageName',
                     type: 'select'
+                },
+                {
+                    label: 'Source',
+                    name: 'source',
+                    type: 'select'
+                },
+                {
+                    label: 'Assigned To',
+                    name: 'assignedToProfile',
+                    type: 'select',
+                    data: 'assignedToProfile',
+                    placeholder: 'Select an assignment',
+                    optionsPair: {
+                        label: 'name',
+                        value: 'userId'
+                    },
+                    def: 'NONE'
                 }
             ]
-        });
-
-        $('#leadTable').on('click', 'tbody td', function (e) {
-            editor.inline(this, {
-                submitOnBlur: true
-            });
         });
 
         dataTable = $('#leadTable').DataTable({
@@ -75,7 +86,8 @@
                 },
                 {
                     data: 'source',
-                    defaultContent: ""
+                    defaultContent: "",
+                    className: 'editable'
                 },
                 {
                     data: 'dealAmount',
@@ -85,14 +97,32 @@
                 {
                     data: 'assignedToProfile',
                     defaultContent: "",
-                    render: function (d) {
-                        flog('Render ', d);
+                    className: 'editable',
+                    render: function (d, type) {
+                        flog('Render Profile', d, type);
                         if (typeof d !== 'undefined' && d !== null) {
-                            var f = d.firstName || '';
-                            var s = d.surName || '';
-                            return (f + ' ' + s).trim();
+                            switch (type) {
+                                case "type":
+                                case "sort":
+                                {
+                                    return d.userId;
+                                    break;
+                                }
+                                case "display":
+                                {
+                                    if (d.firstName && d.firstName.trim().length > 0) {
+                                        var f = d.firstName || '';
+                                        var s = d.surName || '';
+                                        return (f + ' ' + s).trim();
+                                    } else if (d.nickName) {
+                                        return d.nickName.trim();
+                                    }
+                                }
+                                default:
+                                    return d.name;
+                            }
                         }
-                        return '';
+                        return d;
                     }
                 },
                 {
@@ -116,31 +146,92 @@
             ]
         });
 
-        stages = [];
+        $('#leadTable').on('focus', 'tbody td select[id^=DTE_Field_]', function () {
+            var field = $(this);
+            var td = field.closest('td');
+            var fieldName = field.attr('id');
+
+            if (fieldName !== null && typeof fieldName !== 'undefined') {
+                fieldName = field.attr('id').replace('DTE_Field_', '');
+                var row = dataTable.row(td[0]);
+                var leadId = row.data().leadId;
+                switch (fieldName) {
+                    case "stageName":
+                        loadStageNames(leadId);
+                        break;
+                    case "source":
+                        loadSources(leadId);
+                        break;
+                }
+            }
+        });
+
+        $('#leadTable').on('click', 'tbody td', function (e) {
+
+            editor.inline(this, {
+                submitOnBlur: true
+            });
+        });
 
         for (var i in hits.hits) {
             var hit = hits.hits[i];
             var _source = hit._source;
-            $.ajax({
-                url: '/leads/?stageNames=' + hit._source.leadId,
-                dataType: 'json'
-            }).done(function (data) {
-                if (data.status) {
-                    $.each(data.data, function (i, el) {
-                        if ($.inArray(el.name, stages) === -1) {
-                            stages.push(el.name);
-                        }
-                    });
-                    flog('Stages', stages);
-                    editor.field('stageName').update(stages);
-                }
-            });
 
             dataTable.row.add(_source);
         }
+
+        $.ajax({
+            url: '/leads/?teamUsers',
+            dataType: 'json'
+        }).done(function (data) {
+            if (data.status) {
+                data.data.push({
+                    name: "Clear assignment",
+                    userId: 0
+                });
+                editor.field('assignedToProfile').update(data.data);
+            }
+        });
+
         dataTable.draw();
     }
 
+
+    function loadStageNames(leadId) {
+        $.ajax({
+            url: '/leads/?stageNames=' + leadId,
+            dataType: 'json'
+        }).done(function (data) {
+            if (data.status) {
+                var stages = [];
+                $.each(data.data, function (i, el) {
+                    if ($.inArray(el.name, stages) === -1) {
+                        stages.push(el.name);
+                    }
+                });
+                flog('Stages', stages);
+                editor.field('stageName').update(stages);
+            }
+        });
+    }
+
+    function loadSources(leadId) {
+        $.ajax({
+            url: '/leads/?sourceNames=' + leadId,
+            dataType: 'json'
+        }).done(function (data) {
+            if (data.status) {
+                var sources = [];
+                $.each(data.data, function (i, el) {
+                    if ($.inArray(el, stages) === -1) {
+                        sources.push(el);
+                    }
+                });
+                flog('Sources', sources);
+                editor.field('source').update(sources);
+            }
+        });
+    }
 
     function initOrgSelect() {
         $('body').on('click', '.btn-select-org', function (e) {
@@ -307,4 +398,10 @@
         initLeadTypeSelect();
         doSearch();
     };
+
+    w.doSearchLeadmanPage = function(){
+        searchOptions.query = '';
+        doSearch();
+    };
+
 })(this);
