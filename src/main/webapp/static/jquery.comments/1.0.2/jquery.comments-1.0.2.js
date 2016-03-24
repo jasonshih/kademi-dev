@@ -211,7 +211,7 @@ function loadComments(config, container) {
     }
     url += "_comments";
 
-    $.getJSON(url,function (response) {
+    $.getJSON(url, function (response) {
         flog("got comments response", response);
         clearContainerFn();
         processComments(response, config, container);

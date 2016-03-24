@@ -21,8 +21,11 @@
             'pageUrl': window.location,
             'streamSelector': ".comments-stream",
             'renderCommentFn': function (user, date, comment, commentId) {
-                flog("renderCommentFn-103-standard", user, "container=", container, "commentId=", commentId);
-
+                flog("renderCommentFn-102-standard", user, "container=", container, "commentId=", commentId);
+                if (user === null) {
+                    flog("no user so dont render");
+                    return;
+                }
                 var outerDiv = $("#" + commentId);
 
                 if (outerDiv.length === 0) {
@@ -32,15 +35,9 @@
                     var commentStream = container.find(config.streamSelector);
                     flog("append to", commentStream, "sel", config.streamSelector);
                     commentStream.append(outerDiv);
-                    var profLink, nameLink;
-                    if (user !== null && typeof user !== 'undefined') {
-                        var profilePic = profileImg(user);
-                        profLink = $("<a class='profilePic' href='" + user.href + "'>" + profilePic + "</a>");
-                        nameLink = $("<a class='user' href='" + user.href + "'>" + user.name + "</a>");
-                    } else {
-                        profLink = $("<span class='profilePic'>" + "<img src='/templates/apps/user/profile.png' alt='' />" + "</span>");
-                        nameLink = $("<span class='user' href=''>Anonymous</span>");
-                    }
+                    var profilePic = profileImg(user);
+                    var profLink = $("<a class='profilePic' href='" + user.href + "'>" + profilePic + "</a>");
+                    var nameLink = $("<a class='user' href='" + user.href + "'>" + user.name + "</a>");
                     var commentPara = $("<p class='cmt'></p>");
                     commentPara.html(comment);
 
@@ -81,15 +78,15 @@
             },
             itemsPerPage: 10,
             'paginateFn': function (comments, config, container) {
-                flog("paginateFn-103-standard", comments, config, container);
+                flog("paginateFn-102-standard", comments, config, container);
 
                 var totalComments = comments.length;
                 var itemsPerPage = config.itemsPerPage;
 
                 if (totalComments > itemsPerPage) {
                     container.prepend(
-                            '<div class="well well-sm text-center"><a href="" class="btn-show-more">Show previous comments</a></div>'
-                            );
+                        '<div class="well well-sm text-center"><a href="" class="btn-show-more">Show previous comments</a></div>'
+                    );
 
                     var commentWrappers = container.find('.forumReply');
 
@@ -159,10 +156,10 @@
 
 function sendNewForumComment(pageUrl, commentInput, renderComment, currentUser) {
     flog("sendNewForumComment", pageUrl, commentInput, currentUser);
-//    if (currentUser.href === null) {
-//        alert("You must be logged in to post comments");
-//        return;
-//    }
+    if (currentUser.href === null) {
+        alert("You must be logged in to post comments");
+        return;
+    }
     var comment = commentInput.val();
     commentInput.removeClass("errorField");
     if (comment.trim().length < 1) {
