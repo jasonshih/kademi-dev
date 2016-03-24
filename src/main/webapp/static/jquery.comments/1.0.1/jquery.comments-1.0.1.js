@@ -6,15 +6,15 @@
      * @version 1.0.1
      * @property {String} [pageUrl=window.location] The url of the resource to add comments to. Must end with a slash
      * @property {String} [streamSelector=.comments-stream] The selector of stream wrapper which wraps all comments
-     * @property {Function} renderCommentFn The callback function to render the markup for a comment. Takes the following arguments user, 
+     * @property {Function} renderCommentFn The callback function to render the markup for a comment. Takes the following arguments user,
      * comment, commentDate, where user is an object containing name, href, photoHref
      * @property {Function} clearContainerFn The callback function to clear the comments container. Takes no arguments
      * @property {Function} ajaxLoadingFn The callback function to show ajax loading. Takes one argument isLoading (true/false)
      * @property {Number} [commentsPerPage=10] The number of comments will be showed per page
      * @property {Function} paginateFn The callback function to render the markeup for pagination
-     * @property {Boolean} [aggregated=false] If true will list all comments under the given page 
+     * @property {Boolean} [aggregated=false] If true will list all comments under the given page
      */
-     var defaultCommentConfig = {
+    var defaultCommentConfig = {
         pageUrl: window.location,
         streamSelector: ".comments-stream",
         renderCommentFn: function (user, date, comment, commentId) {
@@ -95,7 +95,7 @@
             }
         },
         aggregated: false  // if true will list all comments under the given page 
-    }
+    };
 
     /**
      * See (http://jquery.com/).
@@ -227,7 +227,7 @@ function loadComments(config, container) {
     }
     url += "_comments";
 
-    $.getJSON(url,function (response) {
+    $.getJSON(url, function (response) {
         log("got comments response", response);
         clearContainerFn();
         processComments(response, config, container);

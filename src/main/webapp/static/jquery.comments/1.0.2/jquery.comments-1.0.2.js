@@ -21,7 +21,7 @@
             'pageUrl': window.location,
             'streamSelector': ".comments-stream",
             'renderCommentFn': function (user, date, comment, commentId) {
-                flog("renderCommentFn-101-standard", user, "container=", container, "commentId=", commentId);
+                flog("renderCommentFn-102-standard", user, "container=", container, "commentId=", commentId);
                 if (user === null) {
                     flog("no user so dont render");
                     return;
@@ -78,7 +78,7 @@
             },
             itemsPerPage: 10,
             'paginateFn': function (comments, config, container) {
-                flog("paginateFn-101-standard", comments, config, container);
+                flog("paginateFn-102-standard", comments, config, container);
 
                 var totalComments = comments.length;
                 var itemsPerPage = config.itemsPerPage;
@@ -211,7 +211,7 @@ function loadComments(config, container) {
     }
     url += "_comments";
 
-    $.getJSON(url,function (response) {
+    $.getJSON(url, function (response) {
         flog("got comments response", response);
         clearContainerFn();
         processComments(response, config, container);

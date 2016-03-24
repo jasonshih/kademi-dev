@@ -14,7 +14,7 @@
  *
  * Config:
  * urlSuffix: is appended to the current page url to make the url to POST the login request to. Default /.ajax
- * afterLoginUrl: the page to redirect to after login. Default index.html.  3 possibilities
+ * afterLoginUrl: the page to redirect to after login. Default index.html. 4 possibilities
  *      null = do a location.reload()
  *      "none" - literal value "none" means no redirect
  *      "something" or "" = a relative path, will be avaluated relative to the user's url (returned in cookie)
