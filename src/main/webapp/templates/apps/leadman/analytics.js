@@ -151,13 +151,16 @@
         var dataTable = $('#leadTable').DataTable({
             paging: false
         });
+        $("#funnel-lead-query").keyup(function() {
+            dataTable.search(this.value).draw();
+        });
     }
 
     function initPies(aggs) {
         var reasonsAgg = aggs.summary.aggregations.cancelledReasons.buckets;
         var closedByOrgAgg = aggs.summary.aggregations.closedByOrg.orgId.buckets;
         var lostByOrgAgg = aggs.summary.aggregations.lostByOrg.orgId.buckets;
-        var colors = ['#ee145b','#3e3e3e','#4d9acc','#60b87e'];
+        var colors = ['#ee145b','#3e3e3e','#4d9acc','#60b87e','#FF1493','#FF4500','#EE82EE','#ADFF2F','#FFDEAD','#F0FFFF','#FFF0F5','#DC143C','#FFC0CB'];
         flog("initPies", closedByOrgAgg);
         nv.addGraph(function () {
             var chartLost = nv.models.pieChart()
