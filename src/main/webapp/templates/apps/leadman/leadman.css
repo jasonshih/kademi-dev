@@ -7,6 +7,9 @@
 #dashLeadsList .lead-desc{
     margin-bottom: 45px;
 }
+#tasksList abbr.timeago{
+    margin-left: 5px;
+}
 @media (max-width: 767px) {
     .form-group [class^="col-md"] + div{
         margin-top: 10px;
