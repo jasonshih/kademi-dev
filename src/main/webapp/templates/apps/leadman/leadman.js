@@ -82,11 +82,20 @@ $(function () {
 
 function initCloseDealModal() {
     var closeDealModal = $("#closeDealModal");
-    closeDealModal.find("form").forms({
-        callback: function (resp) {
-            Msg.info('Deal marked as closed');
-            closeDealModal.modal('hide');
-        }
+    closeDealModal.on('shown.bs.modal', function(){
+        closeDealModal.find("form").forms({
+            callback: function (resp) {
+                Msg.info('Deal marked as closed');
+                if($('#lead-cover').length){
+                    $('#maincontentContainer').reloadFragment({
+                        whenComplete: function(){
+                            $('abbr.timeago').timeago();
+                        }
+                    });
+                }
+                closeDealModal.modal('hide');
+            }
+        });
     });
 }
 
