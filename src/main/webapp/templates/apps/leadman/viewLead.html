@@ -843,7 +843,7 @@
                     tags: "true"
                 });
 
-                $('body').on('click', '.btn-reopen', function (e) {
+                $(document.body).off('click','.btn-reopen').on('click', '.btn-reopen', function (e) {
                     e.preventDefault();
 
                     if (confirm('Are you sure you want to reopen this lead?')) {
@@ -855,7 +855,11 @@
                             dataType: 'json',
                             success: function (resp) {
                                 if (resp.status) {
-                                    window.location.reload();
+                                    $('#maincontentContainer').reloadFragment({
+                                        whenComplete: function(){
+                                            $('abbr.timeago').timeago();
+                                        }
+                                    });
                                 }
                             },
                             error: function () {

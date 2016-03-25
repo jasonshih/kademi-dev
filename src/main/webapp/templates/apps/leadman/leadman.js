@@ -82,39 +82,59 @@ $(function () {
 
 function initCloseDealModal() {
     var closeDealModal = $("#closeDealModal");
-    closeDealModal.find("form").forms({
-        callback: function (resp) {
-            Msg.info('Deal marked as closed');
-            closeDealModal.modal('hide');
-        }
+    closeDealModal.on('shown.bs.modal', function(){
+        closeDealModal.find("form").forms({
+            callback: function (resp) {
+                Msg.info('Deal marked as closed');
+                if($('#lead-cover').length){
+                    $('#maincontentContainer').reloadFragment({
+                        whenComplete: function(){
+                            $('abbr.timeago').timeago();
+                        }
+                    });
+                }
+                closeDealModal.modal('hide');
+            }
+        });
     });
 }
 
 function initCancelLeadModal() {
-    var cancelDealModal = $("#cancelDealModal");
-    cancelDealModal.find("form").forms({
-        callback: function (resp) {
-            Msg.info('Lead cancelled');
-            reloadTasks();
-            cancelDealModal.modal("hide");
-        }
+    var cancelLeadModal = $("#modalCancelLead");
+
+
+    cancelLeadModal.on('shown.bs.modal', function(){
+        cancelLeadModal.find("form").forms({
+            callback: function (resp) {
+                Msg.info('Lead cancelled');
+                reloadTasks();
+                if($('#lead-cover').length){
+                    $('#maincontentContainer').reloadFragment({
+                        whenComplete: function(){
+                            $('abbr.timeago').timeago();
+                        }
+                    });
+                }
+                cancelLeadModal.modal("hide");
+            }
+        });
     });
 
     $("body").on("click", ".btnLeadCancelLead", function (e) {
         e.preventDefault();
         var href = $(e.target).attr("href");
-        cancelDealModal.find("form").attr("action", href);
-        cancelDealModal.modal("show");
+        cancelLeadModal.find("form").attr("action", href);
+        cancelLeadModal.modal("show");
     });
 }
 
 function initCancelTaskModal() {
-    var cancelDealModal = $("#cancelTaskModal");
-    cancelDealModal.find("form").forms({
+    var cancelTaskModal = $("#cancelTaskModal");
+    cancelTaskModal.find("form").forms({
         callback: function (resp) {
             Msg.info('Task cancelled');
             reloadTasks();
-            cancelDealModal.modal("hide");
+            cancelTaskModal.modal("hide");
         }
     });
 
@@ -122,8 +142,8 @@ function initCancelTaskModal() {
         e.preventDefault();
         var href = $(e.target).closest("a").attr("href");
         flog("set href", href);
-        cancelDealModal.find("form").attr("action", href);
-        cancelDealModal.modal("show");
+        cancelTaskModal.find("form").attr("action", href);
+        cancelTaskModal.modal("show");
     });
 }
 
