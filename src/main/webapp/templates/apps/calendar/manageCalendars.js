@@ -111,7 +111,8 @@ function initEditorFrame() {
 
     var editorFrame = $('#editor-frame');
     // TODO: It'll be dynamic url like "goto=editor" or something like that
-    editorFrame.attr('src',  'http://local.loopbackdns.com:8080/Calendars/cal/contenteditor?fileName=yolo&miltonUserUrl=/users/admin&miltonUserUrlHash=c0398f2a-1326-4c36-a7f9-c0f0ce9a6245:3y1-sc08ozoHnf2fMTtbA26STqE' + '&url=' + encodeURIComponent(window.location.href.split('#')[0]));
+    //editorFrame.attr('src',  'http://local.loopbackdns.com:8080/Calendars/cal/contenteditor?fileName=yolo&miltonUserUrl=/users/admin&miltonUserUrlHash=c0398f2a-1326-4c36-a7f9-c0f0ce9a6245:3y1-sc08ozoHnf2fMTtbA26STqE' + '&url=' + encodeURIComponent(window.location.href.split('#')[0]));
+    editorFrame.attr('src',  window.location.pathname + '?goto=editor' + '&url=' + encodeURIComponent(window.location.href.split('#')[0]));
 }
 
 function initPostMessage() {
@@ -202,10 +203,11 @@ function initEventForm() {
         },
         callback: function () {
             var editorFrame = $('#editor-frame');
+            var pageName = getFileName(window.location.pathname);
             var postData = {
                 url: window.location.href.split('#')[0],
                 triggerSave: true,
-                pageName: 'yolo' // TODO: It'll be index.html or something like that
+                pageName: pageName
             };
 
             editorFrame[0].contentWindow.postMessage(JSON.stringify(postData), iframeUrl);
