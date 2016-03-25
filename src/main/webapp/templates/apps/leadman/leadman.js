@@ -595,7 +595,19 @@ function initNewNoteForm() {
             }
             Msg.info('Created note');
             modal.modal("hide");
-            $('#leadNotesBody').reloadFragment();
+
+            var leadNotesBody = $('#leadNotesBody');
+            var viewProfilePage = $('#view-profile-page');
+            if(leadNotesBody.length){
+                $('#leadNotesBody').reloadFragment();
+            }
+            if(viewProfilePage.length){
+                viewProfilePage.reloadFragment({
+                    whenComplete: function(){
+                        $('abbr.timeago').timeago();
+                    }
+                });
+            }
         }
     });
 
