@@ -375,6 +375,12 @@ function initNewLeadForm() {
                         }
                     });
                 }
+                var leadContacts = $('.lead-contacts-wrap');
+                if(leadContacts.length){
+                    leadContacts.reloadFragment({
+                        whenComplete:function(){}
+                    });
+                }
 
                 if($('#leadTable').length){
                     if(typeof doSearchLeadmanPage === 'function'){
