@@ -45,26 +45,26 @@
         return this.each(function (i, n) {
             var elem = $(n);
             var svg = d3.select(n)
-                .attr("width", 2 * width)
-                .attr("height", 2 * height);
+                    .attr("width", 2 * width)
+                    .attr("height", 2 * height);
 
             var svg_pos = $(svg[0]).position();
 
             $(n.parentElement).find('div').remove();
 
             var tooltip = d3.select(n.parentElement)
-                .append("div")
-                .style("position", "absolute")
-                .style("text-align", "left")
-                .style("padding", "10px 8px")
-                .style("font", "12px sans-serif")
-                .style("background", "white")
-                .style("border", "1px solid rgba(0,0,0,.2)")
-                .style("border-radius", "8px")
-                .style("-webkit-box-shadow", "0 5px 10px rgba(0,0,0,.2)")
-                .style("box-shadow", "0 5px 10px rgba(0,0,0,.2)")
-                .style("z-index", "10")
-                .style("visibility", "hidden");
+                    .append("div")
+                    .style("position", "absolute")
+                    .style("text-align", "left")
+                    .style("padding", "10px 8px")
+                    .style("font", "12px sans-serif")
+                    .style("background", "white")
+                    .style("border", "1px solid rgba(0,0,0,.2)")
+                    .style("border-radius", "8px")
+                    .style("-webkit-box-shadow", "0 5px 10px rgba(0,0,0,.2)")
+                    .style("box-shadow", "0 5px 10px rgba(0,0,0,.2)")
+                    .style("z-index", "10")
+                    .style("visibility", "hidden");
 
             var data_url = setting.url;
 
@@ -144,13 +144,13 @@
                         var itemName = json.stages[t].sources[i].name;
                         flog("item id - ", id_codes[itemName]);
                         data_set.push(
-                            {
-                                "level": t,
-                                "name": itemName,
-                                "id": id_codes[itemName],
-                                "radius": Math.sqrt(json.stages[t].sources[i].count / maxCount) * (levelHeight / 2),
-                                "count": json.stages[t].sources[i].count
-                            }
+                                {
+                                    "level": t,
+                                    "name": itemName,
+                                    "id": id_codes[itemName],
+                                    "radius": Math.sqrt(json.stages[t].sources[i].count / maxCount) * (levelHeight / 2),
+                                    "count": json.stages[t].sources[i].count
+                                }
                         );
                         name_set.push(itemName);
                     }
@@ -169,136 +169,136 @@
 
                 var defs = svg.append("defs");
                 var filter = defs.append("filter")
-                    .attr("id", "drop-shadow")
-                    .attr("height", "130%");
+                        .attr("id", "drop-shadow")
+                        .attr("height", "130%");
 
                 filter.append("feGaussianBlur")
-                    .attr("in", "SourceAlpha")
-                    .attr("stdDeviation", 5)
-                    .attr("result", "blur");
+                        .attr("in", "SourceAlpha")
+                        .attr("stdDeviation", 5)
+                        .attr("result", "blur");
 
                 filter.append("feOffset")
-                    .attr("in", "blur")
-                    .attr("dx", 3)
-                    .attr("dy", 3)
-                    .attr("result", "offsetBlur");
+                        .attr("in", "blur")
+                        .attr("dx", 3)
+                        .attr("dy", 3)
+                        .attr("result", "offsetBlur");
 
                 var feMerge = filter.append("feMerge");
 
                 feMerge.append("feMergeNode")
-                    .attr("in", "offsetBlur");
+                        .attr("in", "offsetBlur");
                 feMerge.append("feMergeNode")
-                    .attr("in", "SourceGraphic");
+                        .attr("in", "SourceGraphic");
 
                 // leads count
                 svg.append("rect")
-                    .attr("x", 15)
-                    .attr("y", 50)
-                    .attr("width", 220)
-                    .attr("height", 80)
-                    .attr("fill", setting.funnelBackgroundColor)
-                    .attr("stroke", "gray")
-                    .attr("stroke-width", 0);
+                        .attr("x", 15)
+                        .attr("y", 50)
+                        .attr("width", 220)
+                        .attr("height", 80)
+                        .attr("fill", setting.funnelBackgroundColor)
+                        .attr("stroke", "gray")
+                        .attr("stroke-width", 0);
                 svg.append("text")
-                    .style("fill", setting.leadLegendColor)
-                    .attr("x", 40)
-                    .attr("y", 85)
-                    .attr("font-size", setting.leadLegendFontSize)
-                    .attr("font-family", setting.leadLegendFontFamily)
-                    .text("Leads");
+                        .style("fill", setting.leadLegendColor)
+                        .attr("x", 40)
+                        .attr("y", 85)
+                        .attr("font-size", setting.leadLegendFontSize)
+                        .attr("font-family", setting.leadLegendFontFamily)
+                        .text("Leads");
                 svg.append("text")
-                    .style("fill", setting.leadLegendColor)
-                    .attr("x", 40)
-                    .attr("y", 113)
-                    .attr("font-size", setting.leadLegendValueFontSize)
-                    .attr("font-family", setting.leadLegendValueFontFamily)
-                    .text(resp.summary.hits.total);
+                        .style("fill", setting.leadLegendColor)
+                        .attr("x", 40)
+                        .attr("y", 113)
+                        .attr("font-size", setting.leadLegendValueFontSize)
+                        .attr("font-family", setting.leadLegendValueFontFamily)
+                        .text(resp.summary.hits.total);
 
                 // deal total
                 svg.append("rect")
-                    .attr("x", 15)
-                    .attr("y", 140)
-                    .attr("width", 220)
-                    .attr("height", 80)
-                    .attr("fill", setting.funnelBackgroundColor)
-                    .attr("stroke", "gray")
-                    .attr("stroke-width", 0);
+                        .attr("x", 15)
+                        .attr("y", 140)
+                        .attr("width", 220)
+                        .attr("height", 80)
+                        .attr("fill", setting.funnelBackgroundColor)
+                        .attr("stroke", "gray")
+                        .attr("stroke-width", 0);
                 svg.append("text")
-                    .style("fill", setting.leadLegendColor)
-                    .attr("x", 40)
-                    .attr("y", 170)
-                    .attr("font-size", setting.leadLegendFontSize)
-                    .attr("font-family", setting.leadLegendFontFamily)
-                    .text("Deal Total");
+                        .style("fill", setting.leadLegendColor)
+                        .attr("x", 40)
+                        .attr("y", 170)
+                        .attr("font-size", setting.leadLegendFontSize)
+                        .attr("font-family", setting.leadLegendFontFamily)
+                        .text("Deal Total");
                 svg.append("text")
-                    .style("fill", setting.leadLegendColor)
-                    .attr("x", 40)
-                    .attr("y", 200)
-                    .attr("font-size", setting.leadLegendValueFontSize)
-                    .attr("font-family", setting.leadLegendValueFontFamily)
-                    .text('$ 15,000,000');
+                        .style("fill", setting.leadLegendColor)
+                        .attr("x", 40)
+                        .attr("y", 200)
+                        .attr("font-size", setting.leadLegendValueFontSize)
+                        .attr("font-family", setting.leadLegendValueFontFamily)
+                        .text('$' + new Number(resp.summary.aggregations.dealTotal.value).toFixed(2));
 
 
                 // left stage labels
                 svg.append("rect")
-                    .attr("x", 30)
-                    .attr("y", 240)
-                    .attr("width", 250)
-                    .attr("height", name_set.length * 60)
-                    .attr("fill", "white")
-                    .attr("stroke", "gray")
-                    .attr("stroke-width", 0);
+                        .attr("x", 30)
+                        .attr("y", 240)
+                        .attr("width", 250)
+                        .attr("height", name_set.length * 60)
+                        .attr("fill", "white")
+                        .attr("stroke", "gray")
+                        .attr("stroke-width", 0);
                 //.style("filter", "url(#drop-shadow)");
 
                 var counter = 0;
                 name_set.forEach(function (value) {
                     // Stage label
                     svg.append("text")
-                        .style("fill", "black")
-                        .attr("x", 70)
-                        .attr("y", (counter + 1) * 50 + 4 + 240)
-                        .attr("font-size", setting.legendNameFontSize)
-                        .attr("font-family", setting.legendNameFontFamily)
-                        .attr("fill", setting.legendNameFontColor)
-                        .text(value);
+                            .style("fill", "black")
+                            .attr("x", 70)
+                            .attr("y", (counter + 1) * 50 + 4 + 240)
+                            .attr("font-size", setting.legendNameFontSize)
+                            .attr("font-family", setting.legendNameFontFamily)
+                            .attr("fill", setting.legendNameFontColor)
+                            .text(value);
                     // Stage color ellipse
                     svg.append("ellipse")
-                        .attr("cx", 40)
-                        .attr("cy", (counter + 1) * 50 + 240)
-                        .attr("rx", 10)
-                        .attr("ry", 10)
-                        .attr("fill", stringToColorCode(value))
-                        .attr("stroke", d3.rgb(stringToColorCode(value)).darker())
-                        .data([{"id": id_codes[value]}])
-                        //.enter()
-                        .on('click', function (d) {
-                            if (typeof setting.onGroupClick === 'function') {
-                                var id = id_codes[value];
-                                //flog("onGroupClick1", value, id, id_codes);
-                                setting.onGroupClick.call(this, {id: id, name: value});
-                            }
-                        });
+                            .attr("cx", 40)
+                            .attr("cy", (counter + 1) * 50 + 240)
+                            .attr("rx", 10)
+                            .attr("ry", 10)
+                            .attr("fill", stringToColorCode(value))
+                            .attr("stroke", d3.rgb(stringToColorCode(value)).darker())
+                            .data([{"id": id_codes[value]}])
+                            //.enter()
+                            .on('click', function (d) {
+                                if (typeof setting.onGroupClick === 'function') {
+                                    var id = id_codes[value];
+                                    //flog("onGroupClick1", value, id, id_codes);
+                                    setting.onGroupClick.call(this, {id: id, name: value});
+                                }
+                            });
                     counter++;
                 });
 
 
                 for (var t = 0; t < size; t++) {
                     var gradient = svg.append("defs")
-                        .append("linearGradient")
-                        .attr("id", "gradient")
-                        .attr("x1", "10%")
-                        .attr("y1", "40%")
-                        .attr("x2", "10%")
-                        .attr("y2", "100%")
-                        .attr("spreadMethod", "pad");
+                            .append("linearGradient")
+                            .attr("id", "gradient")
+                            .attr("x1", "10%")
+                            .attr("y1", "40%")
+                            .attr("x2", "10%")
+                            .attr("y2", "100%")
+                            .attr("spreadMethod", "pad");
                     gradient.append("stop")
-                        .attr("offset", "0%")
-                        .attr("stop-color", "white")
-                        .attr("stop-opacity", 0.5);
+                            .attr("offset", "0%")
+                            .attr("stop-color", "white")
+                            .attr("stop-opacity", 0.5);
                     gradient.append("stop")
-                        .attr("offset", "100%")
-                        .attr("stop-color", "gray")
-                        .attr("stop-opacity", 0.5);
+                            .attr("offset", "100%")
+                            .attr("stop-color", "gray")
+                            .attr("stop-opacity", 0.5);
 
 
                     var trap = new Trapezoidal([[trapBox.left(t * totalHeight / size) + setting.marginLeft, t * totalHeight / size],
@@ -306,28 +306,28 @@
                         [trapBox.right((t + 1) * totalHeight / size) + setting.marginLeft, (t + 1) * totalHeight / size],
                         [trapBox.left((t + 1) * totalHeight / size) + setting.marginLeft, (t + 1) * totalHeight / size]]);
                     var polygon = svg.append("g")
-                        .attr("class", "polygon")
-                        .datum(trap.p);
+                            .attr("class", "polygon")
+                            .datum(trap.p);
                     if (t === size - 1) {
                         //polygon.style("fill", "url(#gradient)")
                         polygon
-                            .attr("fill", setting.funnelBackgroundColor)
-                            .attr("stroke", setting.funnelBorderColor)
-                            .attr("stroke-width", setting.funnelBorderThickness);
+                                .attr("fill", setting.funnelBackgroundColor)
+                                .attr("stroke", setting.funnelBorderColor)
+                                .attr("stroke-width", setting.funnelBorderThickness);
                     }
                     else {
                         polygon
-                            .attr("fill", setting.funnelBackgroundColor)
-                            .attr("stroke", setting.funnelBorderColor)
-                            .attr("stroke-width", setting.funnelBorderThickness);
+                                .attr("fill", setting.funnelBackgroundColor)
+                                .attr("stroke", setting.funnelBorderColor)
+                                .attr("stroke-width", setting.funnelBorderThickness);
                     }
 
                     polygon.append("path")
-                        .call(function (path) {
-                            path.attr("d", function (d) {
-                                return "M" + d.join("L") + "Z";
+                            .call(function (path) {
+                                path.attr("d", function (d) {
+                                    return "M" + d.join("L") + "Z";
+                                });
                             });
-                        });
                 }
 
                 var chart_data_arr = [];
@@ -353,23 +353,23 @@
                             if (stride < 2) {
                                 if (i % stride === 0) {
                                     svg.append("text")
-                                        .style("fill", setting.histogramLabelFontColor)
-                                        .attr("x", base_x + 5 + setting.marginLeft)
-                                        .attr("y", base_y)
-                                        .attr("font-size", setting.histogramLabelFontSize)
-                                        .attr("font-family", setting.histogramLabelFontFamily)
-                                        .text(getDateStr(chart_data.dates[i]));
+                                            .style("fill", setting.histogramLabelFontColor)
+                                            .attr("x", base_x + 5 + setting.marginLeft)
+                                            .attr("y", base_y)
+                                            .attr("font-size", setting.histogramLabelFontSize)
+                                            .attr("font-family", setting.histogramLabelFontFamily)
+                                            .text(getDateStr(chart_data.dates[i]));
                                 }
                             }
                         } else {
                             if (i % stride === 0) {
                                 svg.append("text")
-                                    .style("fill", setting.histogramLabelFontColor)
-                                    .attr("x", base_x + + setting.marginLeft)
-                                    .attr("y", base_y)
-                                    .attr("font-size", setting.histogramLabelFontSize)
-                                    .attr("font-family", setting.histogramLabelFontFamily)
-                                    .text(getDateStr(chart_data.dates[i]));
+                                        .style("fill", setting.histogramLabelFontColor)
+                                        .attr("x", base_x + +setting.marginLeft)
+                                        .attr("y", base_y)
+                                        .attr("font-size", setting.histogramLabelFontSize)
+                                        .attr("font-family", setting.histogramLabelFontFamily)
+                                        .text(getDateStr(chart_data.dates[i]));
                             }
                         }
 
@@ -378,22 +378,22 @@
                         for (var j = 0; j < chart_data.leads[i].length; j++) {
                             var l = chart_data.leads[i][j] * chart_height / max_leadsum;
                             svg.append("rect")
-                                .attr("x", base_x + + setting.marginLeft)
-                                .attr("y", base_y - l)
-                                .attr("width", chart_div - 1)
-                                .attr("height", l)
-                                .attr("fill", stringToColorCode(chart_data.names[j]))
-                                .append("svg:title")
-                                .text(function () {
-                                    info = "";
-                                    info += "date: " + getDateStr(chart_data.dates[i]) + "\n";
-                                    info += "Leads of each source:" + "\n";
-                                    for (var jj = 0; jj < chart_data.leads[i].length; jj++) {
-                                        if (chart_data.leads[i][jj] != 0)
-                                            info += chart_data.names[jj] + ": " + chart_data.leads[i][jj].toString() + "\n";
-                                    }
-                                    return info;
-                                });
+                                    .attr("x", base_x + +setting.marginLeft)
+                                    .attr("y", base_y - l)
+                                    .attr("width", chart_div - 1)
+                                    .attr("height", l)
+                                    .attr("fill", stringToColorCode(chart_data.names[j]))
+                                    .append("svg:title")
+                                    .text(function () {
+                                        info = "";
+                                        info += "date: " + getDateStr(chart_data.dates[i]) + "\n";
+                                        info += "Leads of each source:" + "\n";
+                                        for (var jj = 0; jj < chart_data.leads[i].length; jj++) {
+                                            if (chart_data.leads[i][jj] != 0)
+                                                info += chart_data.names[jj] + ": " + chart_data.leads[i][jj].toString() + "\n";
+                                        }
+                                        return info;
+                                    });
                             base_y = base_y - l;
                         }
                     }
@@ -403,109 +403,109 @@
                 //svg.append("rect").attr("x", 1100).attr("y", 200).attr("width", 100).attr("height", 20);
 
                 var force = d3.layout.force()
-                    .size([width, height]);
+                        .size([width, height]);
 
                 var node = svg.selectAll("circle")
-                    .data(data_set)
-                    .enter().append("svg:circle")
-                    .attr("r", function (d) {
-                        return d.radius;
-                    })
-                    .style("fill", function (d) {
-                        return stringToColorCode(d.name);
-                    })
-                    .style("stroke", function (d) {
-                        return d3.rgb(stringToColorCode(d.name)).darker();
-                    })
-                    .on("mouseover", function () {
-                        return tooltip.style("visibility", "visible");
-                    })
-                    .on('click', function (d) {
-                        if (typeof setting.onBubbleClick === 'function') {
-                            setting.onBubbleClick.call(this, d, json.stages[d.level]);
-                        }
-                    })
-                    .on("mousemove", function (d) {
-                        return tooltip.style("top", ((d.y + svg_pos.top) - (d.radius + 32)) + "px").style("left", ((svg_pos.left + d.x) - d.radius) + "px")
-                            .html(function () {
-                                var tip = "";
-                                tip += "name:  " + d.name.toString() + "<br>";
-                                tip += "count: " + d.count.toString();
-                                return tip;
-                            });
-                    })
-                    .on("mouseout", function () {
-                        return tooltip.style("visibility", "hidden");
-                    })
-                    .call(force.drag);
+                        .data(data_set)
+                        .enter().append("svg:circle")
+                        .attr("r", function (d) {
+                            return d.radius;
+                        })
+                        .style("fill", function (d) {
+                            return stringToColorCode(d.name);
+                        })
+                        .style("stroke", function (d) {
+                            return d3.rgb(stringToColorCode(d.name)).darker();
+                        })
+                        .on("mouseover", function () {
+                            return tooltip.style("visibility", "visible");
+                        })
+                        .on('click', function (d) {
+                            if (typeof setting.onBubbleClick === 'function') {
+                                setting.onBubbleClick.call(this, d, json.stages[d.level]);
+                            }
+                        })
+                        .on("mousemove", function (d) {
+                            return tooltip.style("top", ((d.y + svg_pos.top) - (d.radius + 32)) + "px").style("left", ((svg_pos.left + d.x) - d.radius) + "px")
+                                    .html(function () {
+                                        var tip = "";
+                                        tip += "name:  " + d.name.toString() + "<br>";
+                                        tip += "count: " + d.count.toString();
+                                        return tip;
+                                    });
+                        })
+                        .on("mouseout", function () {
+                            return tooltip.style("visibility", "hidden");
+                        })
+                        .call(force.drag);
                 force
-                    .nodes(data_set)
-                    //.charge(-200)
-                    //.gravity(0.002)
-                    .gravity(-0.0002)
-                    .charge(-200)
-                    .on("tick", function () {
+                        .nodes(data_set)
+                        //.charge(-200)
+                        //.gravity(0.002)
+                        .gravity(-0.0002)
+                        .charge(-200)
+                        .on("tick", function () {
 
-                        var collide = function (node) {
-                            var r = node.radius + 16,
-                                nx1 = node.x - r,
-                                nx2 = node.x + r,
-                                ny1 = node.y - r,
-                                ny2 = node.y + r;
-                            return function (quad, x1, y1, x2, y2) {
-                                if (quad.point && (quad.point !== node)) {
-                                    var x = node.x - quad.point.x,
-                                        y = node.y - quad.point.y,
-                                        l = Math.sqrt(x * x + y * y),
-                                        r = node.radius + quad.point.radius + 10;
-                                    if (l < r) {
-                                        l = (l - r) / l * .5;
-                                        node.x -= x *= l;
-                                        node.y -= y *= l;
-                                        quad.point.x += x;
-                                        quad.point.y += y;
+                            var collide = function (node) {
+                                var r = node.radius + 16,
+                                        nx1 = node.x - r,
+                                        nx2 = node.x + r,
+                                        ny1 = node.y - r,
+                                        ny2 = node.y + r;
+                                return function (quad, x1, y1, x2, y2) {
+                                    if (quad.point && (quad.point !== node)) {
+                                        var x = node.x - quad.point.x,
+                                                y = node.y - quad.point.y,
+                                                l = Math.sqrt(x * x + y * y),
+                                                r = node.radius + quad.point.radius + 10;
+                                        if (l < r) {
+                                            l = (l - r) / l * .5;
+                                            node.x -= x *= l;
+                                            node.y -= y *= l;
+                                            quad.point.x += x;
+                                            quad.point.y += y;
+                                        }
                                     }
-                                }
-                                return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
+                                    return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
+                                };
                             };
-                        };
 
-                        var q = d3.geom.quadtree(data_set),
-                            i = 0,
-                            n = data_set.length;
+                            var q = d3.geom.quadtree(data_set),
+                                    i = 0,
+                                    n = data_set.length;
 
-                        while (++i < n)
-                            q.visit(collide(data_set[i]));
+                            while (++i < n)
+                                q.visit(collide(data_set[i]));
 
-                        node
-                            .attr("cy", function (d) {
-                                var idx = d.level;
-                                var rad = d.radius;
-                                var trap = new Trapezoidal([[trapBox.left(idx * totalHeight / size), idx * totalHeight / size],
-                                    [trapBox.right(idx * totalHeight / size), idx * totalHeight / size],
-                                    [trapBox.right((idx + 0.65) * totalHeight / size), (idx + 0.65) * totalHeight / size],
-                                    [trapBox.left((idx + 0.65) * totalHeight / size), (idx + 0.65) * totalHeight / size]]);
-                                return d.y = Math.max(trap.top() + rad + 8, Math.min(trap.button() - rad - 8, d.y)) + 24; // https://github.com/Kademi/kademi-dev/issues/1507
-                            })
-                            .attr("cx", function (d) {
-                                var idx = d.level;
-                                var rad = d.radius;
-                                var trap = new Trapezoidal([[trapBox.left(idx * totalHeight / size), idx * totalHeight / size],
-                                    [trapBox.right(idx * totalHeight / size), idx * totalHeight / size],
-                                    [trapBox.right((idx + 0.65) * totalHeight / size), (idx + 0.65) * totalHeight / size],
-                                    [trapBox.left((idx + 0.65) * totalHeight / size), (idx + 0.65) * totalHeight / size]]);
-                                return d.x = Math.max(trap.left(d.y) + rad + 11 + setting.marginLeft, Math.min(trap.right(d.y) - rad - 11 + setting.marginLeft, d.x));
-                            });
-                    })
-                    .start();
+                            node
+                                    .attr("cy", function (d) {
+                                        var idx = d.level;
+                                        var rad = d.radius;
+                                        var trap = new Trapezoidal([[trapBox.left(idx * totalHeight / size), idx * totalHeight / size],
+                                            [trapBox.right(idx * totalHeight / size), idx * totalHeight / size],
+                                            [trapBox.right((idx + 0.65) * totalHeight / size), (idx + 0.65) * totalHeight / size],
+                                            [trapBox.left((idx + 0.65) * totalHeight / size), (idx + 0.65) * totalHeight / size]]);
+                                        return d.y = Math.max(trap.top() + rad + 8, Math.min(trap.button() - rad - 8, d.y)) + 24; // https://github.com/Kademi/kademi-dev/issues/1507
+                                    })
+                                    .attr("cx", function (d) {
+                                        var idx = d.level;
+                                        var rad = d.radius;
+                                        var trap = new Trapezoidal([[trapBox.left(idx * totalHeight / size), idx * totalHeight / size],
+                                            [trapBox.right(idx * totalHeight / size), idx * totalHeight / size],
+                                            [trapBox.right((idx + 0.65) * totalHeight / size), (idx + 0.65) * totalHeight / size],
+                                            [trapBox.left((idx + 0.65) * totalHeight / size), (idx + 0.65) * totalHeight / size]]);
+                                        return d.x = Math.max(trap.left(d.y) + rad + 11 + setting.marginLeft, Math.min(trap.right(d.y) - rad - 11 + setting.marginLeft, d.x));
+                                    });
+                        })
+                        .start();
 
                 for (var t = 0; t < size; t++) {
 
                     var text = svg.append("text")
-                        .attr("font-size", setting.stageNameFontSize)
-                        .attr("font-family", setting.stageNameFontFamily)
-                        .attr("fill", setting.stageNameFontColor)
-                        .text(json.stages[t].name);
+                            .attr("font-size", setting.stageNameFontSize)
+                            .attr("font-family", setting.stageNameFontFamily)
+                            .attr("fill", setting.stageNameFontColor)
+                            .text(json.stages[t].name);
                     var bbox = text[0][0].getBBox();
                     var ctm = text[0][0].getCTM();
                     console.log(bbox);
@@ -523,27 +523,27 @@
                         [trapBox.right((t + 0.2) * totalHeight / size) + setting.marginLeft, (t + 0.2) * totalHeight / size],
                         [trapBox.left((t + 0.2) * totalHeight / size) + setting.marginLeft, (t + 0.2) * totalHeight / size]]);
                     var polygon = svg.append("g")
-                        .attr("class", "polygon")
-                        .attr('fill', "#3e3e3e")
-                        .datum(trap.p);
+                            .attr("class", "polygon")
+                            .attr('fill', "#3e3e3e")
+                            .datum(trap.p);
                     polygon.append("path")
-                        .call(function (path) {
-                            path.attr("d", function (d) {
-                                return "M" + d.join("L") + "Z";
+                            .call(function (path) {
+                                path.attr("d", function (d) {
+                                    return "M" + d.join("L") + "Z";
+                                });
                             });
-                        });
 
                     //text.attr("x", adjustTopWidth / 2 - bbox.width / 2)
                     //    .attr("y", t * totalHeight / size + bbox.height);
                     text.remove();
 
                     svg.append("text")
-                        .attr("font-size", setting.stageNameFontSize)
-                        .attr("font-family", setting.stageNameFontFamily)
-                        .attr("fill", setting.stageNameFontColor)
-                        .attr("x", adjustTopWidth / 2 - bbox.width / 2 + setting.marginLeft)
-                        .attr("y", t * totalHeight / size + bbox.height)
-                        .text(json.stages[t].name);
+                            .attr("font-size", setting.stageNameFontSize)
+                            .attr("font-family", setting.stageNameFontFamily)
+                            .attr("fill", setting.stageNameFontColor)
+                            .attr("x", adjustTopWidth / 2 - bbox.width / 2 + setting.marginLeft)
+                            .attr("y", t * totalHeight / size + bbox.height)
+                            .text(json.stages[t].name);
                 }
             }
         });
