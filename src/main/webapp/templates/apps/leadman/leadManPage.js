@@ -295,7 +295,7 @@
                 $('#LeadSumValue').html(data.aggregations.dealAmountTotal.value || 0);
                 var avgAmount = data.aggregations.dealAmountAvg.value || 0;
                 if (avgAmount > 0) {
-                    avgAmount = new Number(avgAmount).toFixed(2);
+                    avgAmount = new Number(avgAmount).toFixed(0);
                 }
                 $('#leadAvgValue').html(avgAmount);
 
@@ -399,7 +399,7 @@
         doSearch();
     };
 
-    w.doSearchLeadmanPage = function(){
+    w.doSearchLeadmanPage = function () {
         searchOptions.query = '';
         doSearch();
     };
