@@ -11,7 +11,7 @@
         <li class="list-group-item" style="padding-bottom: 45px">
             <p>
                 <em>$!task.title -</em>
-                $task.taskDescription
+                $!task.taskDescription
             </p>
             <a href="/tasks/$task.id" class="btn btn-success pull-right takeTask">Take task</a>
             #set( $lead = false )
@@ -63,7 +63,11 @@
                     #if( $task.title )
                     $task.title
                     #else
-                    $task.taskDescription
+                        #if( $task.taskDescription )
+                        $task.taskDescription
+                        #else
+                        No task title
+                        #end
                     #end
                 </em>
                 #if( $task.dueDate )
