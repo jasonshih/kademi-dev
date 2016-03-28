@@ -1082,7 +1082,7 @@ function doSearchContact(query) {
             }
         },
         error: function (err) {
-            $('#table-result').find('tbody').html('<tr><td class="text-center" colspan="5">No contact found. Please enter new contact info bellow</td></tr>');
+            $('#table-result').find('tbody').html('<tr><td class="text-center" colspan="5">No contact found. Please enter new contact info above</td></tr>');
         }
     });
 }
