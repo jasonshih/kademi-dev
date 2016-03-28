@@ -155,11 +155,14 @@
                                     </div>
                                     <div class="media-body" style="padding-left: 20px; position: relative">
                                         <h3 class="media-heading">
+                                            #if($p.fields.firstName.value && $p.fields.surName.value)
                                             <a href="$p.fields.userName.value">
                                                 $formatter.htmlEncode($p.fields.firstName.value)
                                                 $formatter.htmlEncode($p.fields.surName.value)
                                             </a>
-
+                                            #else
+                                            <a href="$p.fields.userName.value">No Name</a>
+                                            #end
                                             <small class="pull-right">Last contact: 2 hours ago</small>
                                         </h3>
                                         <p>
