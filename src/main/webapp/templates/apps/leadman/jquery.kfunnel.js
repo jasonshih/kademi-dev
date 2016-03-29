@@ -47,11 +47,13 @@
             var svgHtmlStructure = [
                 '<div class="row">',
                     '<div class="col-md-4 col-sm-12 funnel-labels">',
-                        '<div class="kfv-svg-container">',
+                        '<div class="lead-labels-wrap">',
+                        '<div class="kfv-svg-container lead-labels">',
                         '<svg id="funnelLead" preserveAspectRatio="xMinYMin meet" class="kfv-svg-content"></svg>',
                         '</div>',
-                        '<div class="kfv-svg-container">',
+                        '<div class="kfv-svg-container lead-labels">',
                         '<svg id="funnelDealTotal" preserveAspectRatio="xMinYMin meet" class="kfv-svg-content"></svg>',
+                        '</div>',
                         '</div>',
                         '<div id="funnelStages"></div>',
                     '</div>',
@@ -327,7 +329,7 @@
 
 
                 /* Svg Funnel Right */
-                var svgFunnelRight = d3.select('#funnelRight').attr('width', 500).attr('height', totalHeight + 100);
+                var svgFunnelRight = d3.select('#funnelRight').attr('width', 500).attr('height', totalHeight + 40);
                 var svg_pos = $(svgFunnelRight[0]).position();
                 for (var t = 0; t < size; t++) {
                     var gradient = svgFunnelRight.append("defs")

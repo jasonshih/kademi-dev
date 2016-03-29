@@ -223,27 +223,10 @@
         div.find('.funnel-labels').prepend(fnSource);
     }
 
-    function calculatePanelHeight(){
-        $(window).on('resize', function(){
-            if(!isMobile.phone && !isMobile.tablet){
-                var rightPanelHeight = $('#funnel-wrap').height();
-                var leftPanelHeight = $('#funnel-wrap').parent('.col-lg-6').siblings('.col-lg-6').find('.panel').height();
-                var height = Math.max(rightPanelHeight, leftPanelHeight);
-                if(rightPanelHeight<height){
-                    $('#funnel-wrap').height(height)
-                }
-                if(leftPanelHeight<height){
-                    $('#funnel-wrap').parent('.col-lg-6').siblings('.col-lg-6').find('.panel').height(height);
-                }
-            }
-        }).trigger('resize');
-    }
-
     w.initLeadManAnalytics = function () {
         loadFunnel();
         initAggrSelect();
         initDataTable();
-        calculatePanelHeight();
         $(w).bind('popstate', function (event) {
             var uri = new URI(w.location.pathname + w.location.search);
             uri.addQuery('asJson');
