@@ -40,17 +40,18 @@
                     <button id="lead-query-clear" class="btn btn-info" title="Clear search value"><i class="fa fa-times"></i></button>
                 </div>
                 <div class="col-sm-2">
+                    #if($page.teamsForUser && $page.teamsForUser.size() > 0)
                     <div class="btn-group" style="margin-bottom: 10px">
                         <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="aggr-title">Assigned to me</span> <i class="fa fa-caret-down"></i>
+                            <span class="aggr-title">$!page.teamOrg.title</span> <i class="fa fa-caret-down"></i>
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a class="btn-select-org" href="#">Assigned to me</a></li>
                             #foreach($o in $page.teamsForUser)
                             <li><a class="btn-select-org" href="$o.orgId">$o.title</a></li>
                             #end
                         </ul>
                     </div>
+                    #end
                 </div>
                 <div class="col-md-3">
                     #if(!$request.params.leadType)
