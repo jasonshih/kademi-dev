@@ -137,7 +137,7 @@ function initPie(id, aggr) {
                 })
                 .donut(true)
                 .donutRatio(0.35)
-                .showLabels(true);
+                .showLabels(false);
 
 
         d3.select("#" + id + " svg")
