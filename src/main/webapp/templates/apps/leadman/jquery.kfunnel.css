@@ -1,0 +1,12 @@
+@media (max-width: 767px) {
+    .kfv-svg-stage{
+        display: inline-block;
+    }
+    .funnel-graph{
+        overflow-x: auto;
+    }
+}
+
+.kfv-svg-container{
+    padding: 5px 0;
+}
