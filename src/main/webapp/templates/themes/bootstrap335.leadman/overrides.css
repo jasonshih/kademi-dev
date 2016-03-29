@@ -30,11 +30,9 @@ html body .fa {
     padding-top: 6px;
 }
 
-/** BM: Not sure why the box-shadow was turned off??
 .panel{
     box-shadow: none;
 }
-**/
 
 /* ============================================================================
    Fix Glyphicon
