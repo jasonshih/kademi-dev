@@ -3,6 +3,7 @@
     #set( $month = "" )
     #set( $lastMonth = "" )
     #foreach( $action in $timelineItems )
+    #if( $action.actionDate )
     #set( $month = $formatter.getMonthName($action.actionDate) )
     #if( $month != $lastMonth )
     <li class="tldateLi"><div class="tldate"><span>$month $formatter.getYear($action.actionDate)</span></div></li>
@@ -31,6 +32,7 @@
             </div>
         </div>
     </li>
+    #end
     #end
 
 </ul>

@@ -59,12 +59,12 @@
                 }
             </style>
     </head>
-    <body class='add-container'>
+    <body class=''>
         #@themeBody()
 
         <div class="">
             <div id="lead-cover" style="" class="unwrap">
-                <div class="container container-lg p-lg">
+                <div class="">
                     <div class="row">
                         <div class="col-md-6 col-sm-6">
                             <div class="media mt-lg">
@@ -74,11 +74,18 @@
                                         #if($page.leadOrg)
                                         #if($page.profile)
                                         <a href="/custs/$page.profile.name" style="color: white">$page.customerDescription ($page.leadOrg.formattedName)</a>
+                                        #if( $page.profile.phone )
+                                        <span>$page.profile.phone</span>
+                                        #end
                                         #else
                                         <span style="color: white">$page.leadOrg.formattedName</span>
                                         #end
                                         #elseif( $page.profile )
                                         <a href="/custs/$page.profile.name" style="color: white">$page.customerDescription</a>
+                                        #if( $page.profile.phone )
+                                        <small class="text-muted">$page.profile.phone</small>
+                                        #end
+
                                         #else
                                         <p style="color: white">$page.customerDescription</p>
                                         #end
@@ -168,352 +175,298 @@
                 </div>
             </div>
             <div class="clearfix"></div>
-            <div class="container container-lg">
+            <div class="">
                 <div class="row">
-                    <div class="col-lg-9">
+                    <div class="col-lg-4">
                         <div class="panel">
                             <div class="panel-body">
-                                <ul role="tablist" class="nav nav-tabs">
-                                    <li role="presentation" class="active"><a href="#activity" aria-controls="activity" role="tab" data-toggle="tab">Activity</a></li>
-                                    <li role="presentation"><a href="#notes" aria-controls="tasks" role="tab" data-toggle="tab">Notes</a></li>
-                                    <li role="presentation"><a href="#details" aria-controls="details" role="tab" data-toggle="tab">Details</a></li>
-                                    <li role="presentation"><a href="#company" aria-controls="company" role="tab" data-toggle="tab">Company</a></li>
-                                    <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a></li>
-                                    <li role="presentation"><a href="#files" aria-controls="files" role="tab" data-toggle="tab">Files</a></li>
-                                </ul>
-                                <div class="tab-content">
-                                    <div id="activity" role="tabpanel" class="tab-pane fade active in">
-                                        #showTimeline($page.timelineItems)
+                                <div id="notes" style="max-height: 300px; overflow-y: scroll">
+                                    <div class="panel-heading no-shadow">
+                                        <a class="btn btn-success createNote pull-right" href="$page.href">
+                                            <span class="fa fa-plus"></span>
+                                        </a>
+                                        Notes
                                     </div>
-                                    <div id="notes" role="tabpanel" class="tab-pane fade">
-                                        <div class="panel-heading no-shadow">
-                                            <a class="btn btn-success createNote pull-right" href="$page.href">
-                                                <span class="fa fa-plus"></span>
-                                            </a>
-                                            Recent contacts
-                                        </div>
-                                        <div class="panel-body" id="leadNotesBody">
-                                            #set( $notes = $page.notes )
-                                            #if( $notes.size() > 0 )
-                                            <div class="list-notes">
-                                                #foreach($note in $notes)
-                                                <div class="note-item">
-                                                    <div>
-                                                        <img src="/theme/images/user/05.jpg" alt="Image" class="img-circle thumb32 lead-note-author">
-                                                            <a href="/users/$note.createdBy.name">$note.createdBy.formattedName</a>
-                                                            #if( $note.inbound )
-                                                            <small class="text-muted fa fa-arrow-left"></small>
-                                                            <small class="text-muted fa fa-${note.icon}"></small>
-                                                            #else
-                                                            <small class="text-muted fa fa-${note.icon}"></small>
-                                                            <small class="text-muted fa fa-arrow-right"></small>
-                                                            #end
-                                                            #set($type = $note.actionType +  "-" + $note.inbound)
-                                                            <a class="note-edit" href="$note.id" data-type="$type" data-notes="$!note.notes">
-                                                                <span class="fa fa-pencil"></span>
-                                                            </a>
-                                                    </div>
-                                                    <div>
-                                                        <pre>$!note.notes</pre>
-                                                    </div>
+                                    <div id="leadNotesBody">
+                                        #set( $notes = $page.notes )
+                                        #if( $notes.size() > 0 )
+                                        <div class="list-notes" >
+                                            #foreach($note in $notes)
+                                            <div class="note-item">
+                                                <div>
+                                                    <img src="/theme/images/user/05.jpg" alt="Image" class="img-circle thumb32 lead-note-author">
+                                                        <a href="/users/$note.createdBy.name">$note.createdBy.formattedName</a>
+                                                        #if( $note.inbound )
+                                                        <small class="text-muted fa fa-arrow-left"></small>
+                                                        <small class="text-muted fa fa-${note.icon}"></small>
+                                                        #else
+                                                        <small class="text-muted fa fa-${note.icon}"></small>
+                                                        <small class="text-muted fa fa-arrow-right"></small>
+                                                        #end
+                                                        #set($type = $note.actionType +  "-" + $note.inbound)
+                                                        <a class="note-edit" href="$note.id" data-type="$type" data-notes="$!note.notes">
+                                                            <span class="fa fa-pencil"></span>
+                                                        </a>
                                                 </div>
-                                                #end
+                                                <div style="white-space: pre-wrap">$!note.notes</div>
                                             </div>
-                                            #else
-                                            <p>
-                                                <span class="label label-warning">No contact with the lead yet</span>
-                                            </p>
                                             #end
                                         </div>
-                                    </div>
-                                    <div id="details" role="tabpanel" class="tab-pane fade">
-                                        <div class="form-horizontal">
-                                            <div class="row">
-                                                <div class="col-sm-6">
-                                                    <div class="form-group">
-                                                        <label class="control-label col-sm-4">Estimated deal value:</label>
-                                                        <div class="col-sm-8">
-                                                            <input type="number" value="$!page.dealAmount" name="dealAmount" class="form-control immediateUpdate"/>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <div class="form-group">
-                                                        <label class="control-label col-sm-4">Funnel:</label>
-                                                        <div class="col-sm-8">
-                                                            <select name="funnel" class="form-control immediateUpdate required">
-                                                                <option value="">[Select a funnel]</option>
-                                                                #foreach( $funnel in $page.allFunnels )
-                                                                $formatter.option($funnel.repo, $funnel.title, $page.funnelId)
-                                                                #end
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-sm-6">
-                                                    <div class="form-group">
-                                                        <label class="control-label col-sm-4">Lead stage:</label>
-                                                        <div class="col-sm-8">
-                                                            <select name="stageName" class="form-control immediateUpdate">
-                                                                <option value="">[None]</option>
-                                                                #foreach( $stage in $page.allStages )
-                                                                #set($a = $formatter.ifNull($stage.desc, $stage.name))
-                                                                $formatter.option($stage.name, $a, $page.stageName)
-                                                                #end
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <div class="form-group">
-                                                        <label class="col-md-4 control-label" for="createDate">Created date</label>
-                                                        <div class="col-md-8">
-                                                            <div class="input-group">
-                                                                <input type="text" name="createDate" id="createDate" class="form-control date-time immediateUpdate" value=" $formatter.formatDateTime( $!page.getCreateDate() )" />
-                                                                <span class="input-group-addon">
-                                                                    <span class="fa fa-calendar"></span>
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-sm-6">
-                                                    <div class="form-group">
-                                                        <label class="control-label col-sm-4">Source</label>
-                                                        <div class="col-sm-8">
-                                                            <select id="source-select" data-placeholder="Select a source" name="source" class="form-control immediateUpdate" style="width: 100%">
-                                                                <option value="">[None]</option>
-                                                                #set($foundSource = false)
-                                                                #foreach( $source in $page.allSources )
-                                                                #if($source == $page.source)
-                                                                #set($foundSource = true)
-                                                                #end
-                                                                $formatter.option($source, $source, $page.source)
-                                                                #end
-                                                                #if(!$foundSource && $page.source)
-                                                                $formatter.option($page.source, $page.source, $page.source)
-                                                                #end
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                #foreach($field in $page.extraFields)
-                                                <div class="col-sm-6">
-                                                    <div class="form-group">
-                                                        <label class="control-label col-sm-4">$field.title:</label>
-                                                        <div class="col-sm-8">
-                                                            <input type="text" value="$!field.value" name="extraField_$field.name" class="form-control immediateUpdate $formatter.ifTrue($field.required, 'required', '')"/>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                #end
-                                            </div>
-
-                                        </div>
-
-                                        <hr/>
-
-                                        <textarea id="description" class="form-control" name="description" style="height: 400px">$!page.description</textarea>
-                                    </div>
-                                    <div id="profile" role="tabpanel" class="tab-pane fade">
-                                        <h4 class="page-header">Contact information
-                                        </h4>
-                                        <div class="row">
-                                            <form method="post" action="$page.href" class="form-horizontal" id="leadDetails">
-                                                <div class="modal-body" id="profile-body">
-                                                    #set( $p = $page.leadProfile )
-                                                    <div class="form-group">
-                                                        <label class="control-label col-md-2" for="nickName">Customer</label>
-                                                        <div class="col-md-3">
-                                                            <input type="text" name="nickName" id="nickName" class="form-control" placeholder="nickName" value="$!page.profile.nickName" />
-                                                        </div>
-                                                        <div class="col-md-3">
-                                                            <input type="text" name="firstName" id="firstName" class="form-control" placeholder="First name" value="$!page.firstName" />
-                                                        </div>
-                                                        <div class="col-md-4">
-                                                            <input type="text" name="surName" id="surName" class="form-control" placeholder="Surname" value="$!page.surName" />
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <label class="control-label col-md-2" for="newUserEmail">Contact</label>
-                                                        <div class="col-md-5">
-                                                            <input type="text" name="email" id="email" class="form-control" placeholder="Email" value="$!p.email" />
-                                                        </div>
-                                                        <div class="col-md-5">
-                                                            <input type="text" name="phone" id="phone" class="form-control" placeholder="Phone" value="$!p.phone" />
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <label class="control-label col-md-2" for="notes">Notes</label>
-                                                        <div class="col-md-10">
-                                                            <textarea name="notes" class="form-control" style="height: 100px">$!page.description</textarea>
-                                                        </div>
-                                                    </div>
-
-
-                                                    #if( $page.completed)
-                                                    #else
-                                                    <div class="form-group">
-                                                        <div class="col-md-10 col-md-offset-2">
-                                                            <button class="btn btn-sm btn-default btn-fullwidth-mobile" type="reset">Reset</button>
-
-                                                            <button class="btn btn-primary btn-fullwidth-mobile" type="submit">Save details</button>
-                                                            #if($page.leadProfile)
-                                                            <button class="btn btn-info btn-fullwidth-mobile" data-toggle="modal" data-target="#modal-change-profile" type="button">Change Profile</button>
-                                                            #end
-                                                        </div>
-                                                    </div>
-                                                    #end
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                    <div id="company" role="tabpanel" class="tab-pane fade">
-                                        <h4 class="page-header">Contact information</h4>
-                                        <div class="row">
-                                            <form method="post" action="$page.href" class="form-horizontal" id="leadOrgDetails">
-                                                <input type="hidden" name="leadOrgDetails" value="leadOrgDetails"/>
-
-
-                                                <div class="modal-body">
-                                                    #set( $leadOrg = $page.leadOrg )
-                                                    <input type="hidden" name="leadOrgId" value="$!leadOrg.orgId"/>
-                                                    <div class="form-group">
-                                                        <label class="control-label col-md-2" for="title">Company</label>
-                                                        <div class="col-md-3">
-                                                            <input type="text" id="orgTitleSearch" name="title" class="form-control" placeholder="Title" value="$!leadOrg.title" />
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <label class="control-label col-md-2" for="newCompanyEmail">Contact</label>
-                                                        <div class="col-md-5">
-                                                            <input type="text" name="email" id="newCompanyEmail" class="form-control email" placeholder="Email" value="$!leadOrg.email" />
-                                                        </div>
-                                                        <div class="col-md-5">
-                                                            <input type="text" name="phone" class="form-control" placeholder="Phone" value="$!leadOrg.phone" />
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <label class="control-label col-md-2" for="newUserEmail">Address</label>
-                                                        <div class="col-md-5">
-                                                            <input type="text" name="address" class="form-control" placeholder="Address" value="$!leadOrg.address" />
-                                                        </div>
-                                                        <div class="col-md-5">
-                                                            <input type="text" name="addressLine2" class="form-control" placeholder="Address 2" value="$!leadOrg.addressLine2" />
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <div class="col-md-offset-2 col-md-5">
-                                                            <input type="text" name="addressState" class="form-control" placeholder="State" value="$!leadOrg.addressState" />
-                                                        </div>
-                                                        <div class="col-md-5">
-                                                            <input type="text" name="postcode" class="form-control" placeholder="Postcode" value="$!leadOrg.postcode" />
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <label class="control-label col-md-2" for="notes">Notes</label>
-                                                        <div class="col-md-10">
-                                                            <textarea name="notes" class="form-control" style="height: 100px">$!page.description</textarea>
-                                                        </div>
-                                                    </div>
-
-
-                                                    #if( $page.completed)
-                                                    #else
-                                                    <div class="form-group">
-                                                        <div class="col-md-10 col-md-offset-2">
-                                                            <button class="btn btn-primary" type="submit">Save details</button>
-
-                                                        </div>
-                                                    </div>
-                                                    #end
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                    <div id="files" role="tabpanel" class="tab-pane fade">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <button type="button" class="btn btn-success upload-files pull-right"><span class="fa fa-upload"></span> Upload</button>
-                                            </div>
-                                        </div>
-                                        <div class="table-responsive ie-overflow">
-                                            <table class="table table-hover">
-                                                <thead>
-                                                    <tr>
-                                                        <th class="text-center">Type</th>
-                                                        <th>Name</th>
-                                                        <th>Notes</th>
-                                                        <th>Date Uploaded</th>
-                                                        <th></th>
-                                                        <th>Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="files-body">
-                                                    #foreach($file in $page.children.ofType.leadFile)
-                                                    <tr>
-                                                        <td class="text-center">
-                                                            #genFileIcon($file)
-                                                        </td>
-                                                        <td>
-                                                            <span #if($file.name.length() > 25)title="$file.name"#end>
-                                                                #if($file.name.length() > 25)
-                                                                $formatter.truncate($file.name, 20)
-                                                                #else
-                                                                $file.name
-                                                                #end
-                                                            </span>
-                                                        </td>
-                                                        <td>
-                                                            <span>$!file.notes</span>
-                                                            <a href="$file.name" class="pull-right edit-file-note"><i class="fa fa-pencil"></i></a>
-                                                        </td>
-                                                        <td><abbr class="timeago" title="$formatter.formatDateISO8601($file.createdDate, $page.organisation.timezone)">$formatter.formatDateISO8601($file.createdDate, $page.organisation.timezone)</abbr></td>
-                                                        <td>
-                                                            #if($file.is('audio/'))
-                                                            <audio class="lead-audio-file" id="audio_$file.hash" src="$file.name"></audio>
-                                                            <button type="button" data-id="audio_$file.hash" class="btn btn-success play-audio">
-                                                                <i class="fa fa-play"></i>
-                                                            </button>
-                                                            <span class="lead-audio-duration"></span>
-                                                            #elseif($file.is('image/'))
-                                                            <a target="_blank" href="$file.name" class="btn btn-success">
-                                                                <i class="fa fa-eye"></i>
-                                                            </a>
-                                                            #if($file.geoLocation)
-                                                            <a target="_blank" href="https://www.google.co.nz/maps/place//@${file.geoLocation.replace(":", ",")},17.25z?hl=en" title="View location on map" class="btn btn-info">
-                                                                <i class="fa fa-map-marker"></i>
-                                                            </a>
-                                                            #end
-                                                            #end
-                                                        </td>
-                                                        <td>
-                                                            <div style="min-width: 125px;" class="btn-group" role="group">
-                                                                <a title="Download" download="$file.name" href="$file.name" class="btn btn-info"><i class="fa fa-download"></i></a>
-                                                                <button title="Delete" type="button" data-fname="$file.name" class="btn btn-danger btn-delete-file"><i class="fa fa-trash"></i></button>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    #end
-                                                </tbody>
-                                            </table>
-                                        </div>
-
+                                        #else
+                                        <p>
+                                            <span class="label label-warning">No contact with the lead yet</span>
+                                        </p>
+                                        #end
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+                        <div class="panel">
+                            <div class="panel-body">
+
+
+                                <div id="activity" >
+                                    #showTimeline($page.timelineItems)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="panel">
+                            <div class="panel-body">
+                                <div id="details">
+                                    <div class="form-horizontal">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-4">Deal value:</label>
+                                                    <div class="col-sm-8">
+                                                        <input type="number" value="$!page.dealAmount" name="dealAmount" class="form-control immediateUpdate"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-4">Funnel:</label>
+                                                    <div class="col-sm-8">
+                                                        <select name="funnel" class="form-control immediateUpdate required">
+                                                            <option value="">[Select a funnel]</option>
+                                                            #foreach( $funnel in $page.allFunnels )
+                                                            $formatter.option($funnel.repo, $funnel.title, $page.funnelId)
+                                                            #end
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-4">Stage:</label>
+                                                    <div class="col-sm-8">
+                                                        <select name="stageName" class="form-control immediateUpdate">
+                                                            <option value="">[None]</option>
+                                                            #foreach( $stage in $page.allStages )
+                                                            #set($a = $formatter.ifNull($stage.desc, $stage.name))
+                                                            $formatter.option($stage.name, $a, $page.stageName)
+                                                            #end
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label class="col-md-4 control-label" for="createDate">Created</label>
+                                                    <div class="col-md-8">
+                                                        <div class="input-group">
+                                                            <input type="text" name="createDate" id="createDate" class="form-control date-time immediateUpdate" value=" $formatter.formatDateTime( $!page.getCreateDate() )" />
+                                                            <span class="input-group-addon">
+                                                                <span class="fa fa-calendar"></span>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-4">Source</label>
+                                                    <div class="col-sm-8">
+                                                        <select id="source-select" data-placeholder="Select a source" name="source" class="form-control immediateUpdate" style="width: 100%">
+                                                            <option value="">[None]</option>
+                                                            #set($foundSource = false)
+                                                            #foreach( $source in $page.allSources )
+                                                            #if($source == $page.source)
+                                                            #set($foundSource = true)
+                                                            #end
+                                                            $formatter.option($source, $source, $page.source)
+                                                            #end
+                                                            #if(!$foundSource && $page.source)
+                                                            $formatter.option($page.source, $page.source, $page.source)
+                                                            #end
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            #foreach($field in $page.extraFields)
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-4">$field.title:</label>
+                                                    <div class="col-sm-8">
+                                                        <input type="text" value="$!field.value" name="extraField_$field.name" class="form-control immediateUpdate $formatter.ifTrue($field.required, 'required', '')"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            #end
+                                        </div>
+
+                                    </div>
+
+                                    <hr/>
+
+                                    <textarea id="description" class="form-control" name="description" style="height: 200px">$!page.description</textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel">
+                            <div class="panel-body">
+
+                                <div id="profile">
+                                    <h4 class="page-header">Contact information
+                                    </h4>
+                                    <div class="row">
+                                        <form method="post" action="$page.href" class="form-horizontal" id="leadDetails">
+                                            <div class="modal-body" id="profile-body">
+                                                #set( $p = $page.leadProfile )
+                                                <div class="form-group">
+                                                    <label class="control-label col-md-2" for="nickName">Customer</label>
+                                                    <div class="col-md-3">
+                                                        <input type="text" name="nickName" id="nickName" class="form-control" placeholder="nickName" value="$!page.profile.nickName" />
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <input type="text" name="firstName" id="firstName" class="form-control" placeholder="First name" value="$!page.firstName" />
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <input type="text" name="surName" id="surName" class="form-control" placeholder="Surname" value="$!page.surName" />
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label class="control-label col-md-2" for="newUserEmail">Contact</label>
+                                                    <div class="col-md-5">
+                                                        <input type="text" name="email" id="email" class="form-control" placeholder="Email" value="$!p.email" />
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <input type="text" name="phone" id="phone" class="form-control" placeholder="Phone" value="$!p.phone" />
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label class="control-label col-md-2" for="notes">Notes</label>
+                                                    <div class="col-md-10">
+                                                        <textarea name="notes" class="form-control" style="height: 100px">$!page.description</textarea>
+                                                    </div>
+                                                </div>
+
+
+                                                #if( $page.completed)
+                                                #else
+                                                <div class="form-group">
+                                                    <div class="col-md-10 col-md-offset-2">
+                                                        <button class="btn btn-sm btn-default btn-fullwidth-mobile" type="reset">Reset</button>
+
+                                                        <button class="btn btn-primary btn-fullwidth-mobile" type="submit">Save details</button>
+                                                        #if($page.leadProfile)
+                                                        <button class="btn btn-info btn-fullwidth-mobile" data-toggle="modal" data-target="#modal-change-profile" type="button">Change Profile</button>
+                                                        #end
+                                                    </div>
+                                                </div>
+                                                #end
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel">
+                            <div class="panel-body">
+                                <div id="company">
+                                    <h4 class="page-header">Company information</h4>
+                                    <div class="row">
+                                        <form method="post" action="$page.href" class="form-horizontal" id="leadOrgDetails">
+                                            <input type="hidden" name="leadOrgDetails" value="leadOrgDetails"/>
+
+
+                                            <div class="modal-body">
+                                                #set( $leadOrg = $page.leadOrg )
+                                                <input type="hidden" name="leadOrgId" value="$!leadOrg.orgId"/>
+                                                <div class="form-group">
+                                                    <label class="control-label col-md-2" for="title">Company</label>
+                                                    <div class="col-md-3">
+                                                        <input type="text" id="orgTitleSearch" name="title" class="form-control" placeholder="Title" value="$!leadOrg.title" />
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label class="control-label col-md-2" for="newCompanyEmail">Contact</label>
+                                                    <div class="col-md-5">
+                                                        <input type="text" name="email" id="newCompanyEmail" class="form-control email" placeholder="Email" value="$!leadOrg.email" />
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <input type="text" name="phone" class="form-control" placeholder="Phone" value="$!leadOrg.phone" />
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label class="control-label col-md-2" for="newUserEmail">Address</label>
+                                                    <div class="col-md-5">
+                                                        <input type="text" name="address" class="form-control" placeholder="Address" value="$!leadOrg.address" />
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <input type="text" name="addressLine2" class="form-control" placeholder="Address 2" value="$!leadOrg.addressLine2" />
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="col-md-offset-2 col-md-5">
+                                                        <input type="text" name="addressState" class="form-control" placeholder="State" value="$!leadOrg.addressState" />
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <input type="text" name="postcode" class="form-control" placeholder="Postcode" value="$!leadOrg.postcode" />
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label class="control-label col-md-2" for="notes">Notes</label>
+                                                    <div class="col-md-10">
+                                                        <textarea name="notes" class="form-control" style="height: 100px">$!page.description</textarea>
+                                                    </div>
+                                                </div>
+
+
+                                                #if( $page.completed)
+                                                #else
+                                                <div class="form-group">
+                                                    <div class="col-md-10 col-md-offset-2">
+                                                        <button class="btn btn-primary" type="submit">Save details</button>
+
+                                                    </div>
+                                                </div>
+                                                #end
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
                     </div>
                     <div class="col-lg-3">
                         <div class="task-item-list">
@@ -569,17 +522,85 @@
                                 #end
                             </div>
                         </div>
+                        <div class="panel">
+                            <div class="panel-body">
+                                <h4 class="page-header">Files</h4>
+                                <div id="files">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <button type="button" class="btn btn-success upload-files pull-right"><span class="fa fa-upload"></span> Upload</button>
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive ie-overflow">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center">Type</th>
+                                                    <th>Name</th>
+                                                    <th>Notes</th>
+                                                    <th>Date Uploaded</th>
+                                                    <th></th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="files-body">
+                                                #foreach($file in $page.children.ofType.leadFile)
+                                                <tr>
+                                                    <td class="text-center">
+                                                        #genFileIcon($file)
+                                                    </td>
+                                                    <td>
+                                                        <span #if($file.name.length() > 25)title="$file.name"#end>
+                                                            #if($file.name.length() > 25)
+                                                            $formatter.truncate($file.name, 20)
+                                                            #else
+                                                            $file.name
+                                                            #end
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <span>$!file.notes</span>
+                                                        <a href="$file.name" class="pull-right edit-file-note"><i class="fa fa-pencil"></i></a>
+                                                    </td>
+                                                    <td><abbr class="timeago" title="$formatter.formatDateISO8601($file.createdDate, $page.organisation.timezone)">$formatter.formatDateISO8601($file.createdDate, $page.organisation.timezone)</abbr></td>
+                                                    <td>
+                                                        #if($file.is('audio/'))
+                                                        <audio class="lead-audio-file" id="audio_$file.hash" src="$file.name"></audio>
+                                                        <button type="button" data-id="audio_$file.hash" class="btn btn-success play-audio">
+                                                            <i class="fa fa-play"></i>
+                                                        </button>
+                                                        <span class="lead-audio-duration"></span>
+                                                        #elseif($file.is('image/'))
+                                                        <a target="_blank" href="$file.name" class="btn btn-success">
+                                                            <i class="fa fa-eye"></i>
+                                                        </a>
+                                                        #if($file.geoLocation)
+                                                        <a target="_blank" href="https://www.google.co.nz/maps/place//@${file.geoLocation.replace(":", ",")},17.25z?hl=en" title="View location on map" class="btn btn-info">
+                                                            <i class="fa fa-map-marker"></i>
+                                                        </a>
+                                                        #end
+                                                        #end
+                                                    </td>
+                                                    <td>
+                                                        <div style="min-width: 125px;" class="btn-group" role="group">
+                                                            <a title="Download" download="$file.name" href="$file.name" class="btn btn-info"><i class="fa fa-download"></i></a>
+                                                            <button title="Delete" type="button" data-fname="$file.name" class="btn btn-danger btn-delete-file"><i class="fa fa-trash"></i></button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                #end
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-
-        <div class="fw-boxed">
-            <div class="panel panel-default">
-
-            </div>
-        </div>
         <hr/>
 
         <div class="modal fade" id="newTaskModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
@@ -843,7 +864,7 @@
                     tags: "true"
                 });
 
-                $(document.body).off('click','.btn-reopen').on('click', '.btn-reopen', function (e) {
+                $(document.body).off('click', '.btn-reopen').on('click', '.btn-reopen', function (e) {
                     e.preventDefault();
 
                     if (confirm('Are you sure you want to reopen this lead?')) {
@@ -856,7 +877,7 @@
                             success: function (resp) {
                                 if (resp.status) {
                                     $('#maincontentContainer').reloadFragment({
-                                        whenComplete: function(){
+                                        whenComplete: function () {
                                             $('abbr.timeago').timeago();
                                         }
                                     });

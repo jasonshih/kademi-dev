@@ -171,7 +171,9 @@
                                                 #end
                                             </td>
                                             <td>
+                                                #if( $lead.createDate )
                                                 <abbr title="$formatter.formatDateISO8601($lead.createDate)" class="timeago">$lead.createDate</abbr>
+                                                #end
                                             </td>
                                             <td>$!lead.dealAmount</td>
                                             <td>
