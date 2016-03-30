@@ -260,13 +260,16 @@
                     .attr("font-size", setting.leadLegendFontSize)
                     .attr("font-family", setting.leadLegendFontFamily)
                     .text("Deal Total");
+
+                var format = d3.format("0,000.00");
+                var formattedX = format(resp.summary.aggregations.dealTotal.value);
                 svgDeal.append("text")
                     .style("fill", setting.leadLegendColor)
                     .attr("x", 25)
                     .attr("y", 60)
                     .attr("font-size", setting.leadLegendValueFontSize)
                     .attr("font-family", setting.leadLegendValueFontFamily)
-                    .text('$' + resp.summary.aggregations.dealTotal.value);
+                    .text('$' + formattedX);
 
                 /*
                  // left stage labels

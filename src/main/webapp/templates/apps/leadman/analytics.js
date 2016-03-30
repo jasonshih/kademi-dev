@@ -15,6 +15,7 @@
             url: data_url,
             stageHeight: "120px",
             stageNameFontSize: "14px",
+            legendNameFontSize: '14px',
             stageNameBackgroundColor: "gray",
             width: 480,
             height: 260,
