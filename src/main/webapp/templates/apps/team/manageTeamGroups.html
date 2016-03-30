@@ -1,0 +1,61 @@
+<html>
+    <head>
+        <title>Team Groups</title>
+    </head>
+    <body>
+        <div class="Content Recipient">
+            <button class="btn btn-sm btn-default AddGroup" data-toggle="modal" data-target="#modalGroup"><i class="fa fa-plus"></i> Add/remove groups</button>
+            <p class="clearfix"></p>
+            <br />
+            <div id="group-list" class="clearfix GroupList">
+                #foreach($g in $page.selectedGroups)
+                <div class="alert alert-info">
+                    <span class="fa fa-users"></span>
+                    <a href="/groups/$g.name/members">$g.name</a>
+                    #if( $g.groupType == "P" )
+                    - Primary group
+                    #elseif( $g.groupType == "M" )
+                    - Mailing list
+                    #elseif( $g.groupType == "S" )
+                    - Subscription
+                    #end
+                    -
+                    #if( $g.registrationMode == "o" )
+                    Open group
+                    #elseif( $g.registrationMode == "c" )
+                    Closed group
+                    #elseif( $g.registrationMode == "a" )
+                    Administrator approval group
+                    #else
+                    No registration mode has been set
+                    #end
+                </div>
+                #end
+            </div>
+        </div>
+
+        <div id="modalGroup" class="modal fade" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Choose groups</h4>
+            </div>
+            <div class="modal-body">
+                <table class="" style="width: 100%">
+                    #foreach($g in $rootFolder.organisation.groups)
+                    <tr>
+                        <td>
+                            <div class="col-sm-offset-3">
+                                <label class="checkbox-inline">
+                                    $formatter.checkbox($g.name, $page.isSelected($g) ) $g.name
+                                </label>
+                            </div>
+                        </td>
+                    </tr>
+                    #end
+                </table>
+            </div>
+        </div>
+
+        <script src="/theme/apps/team/manageTeamGroups.js" type="text/javascript">//</script>
+    </body>
+</html>
