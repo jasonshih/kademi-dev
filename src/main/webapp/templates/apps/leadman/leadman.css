@@ -14,7 +14,7 @@ table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:af
     content: '' !important;
 }
 .funnel-wrap{
-    padding: 15px;
+    padding: 40px 30px 0;
 }
 @media (max-width: 767px) {
     .form-group [class^="col-md"] + div{
