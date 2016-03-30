@@ -6,6 +6,14 @@
     </head>
     <body>
         #@themeBody()
+        <div class="row">
+            <div class="col-md-4">
+                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modal-add-member">Add team member</button>
+            </div>
+        </div>
+
+        <p>&nbsp;</p>
+
         <div class="fw-boxed">
             <div class="panel panel-default">
                 <div class="row">
@@ -50,5 +58,72 @@
             </div>
         </div>
         #end
+
+        <div class="modal fade" id="modal-add-member" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Add a new member</h4>
+                    </div>
+                    <form method="post" action="." class="form-horizontal">
+                        <div class="modal-body">
+                            <p>Create member in $page.teamOrganisation.title</p>
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="newUserNickName">Nick name</label>
+                                <div class="col-md-9">
+                                    <input type="text" name="nickName" id="newUserNickName" class="form-control" placeholder="Nick name"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="newUserFirstName">Name</label>
+                                <div class="col-md-4">
+                                    <input type="text" name="firstName" id="newUserFirstName" class="form-control" placeholder="First name" />
+                                </div>
+                                <div class="col-md-5">
+                                    <input type="text" name="surName" id="newUserSurName" class="form-control" placeholder="Surname" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="newUserEmail">Email</label>
+                                <div class="col-md-9">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <input type="text" name="email" id="newUserEmail" class="form-control required" placeholder="Email" />
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="group">Group</label>
+                                <div class="col-md-9">
+                                    <div class="col-sm-12">
+                                        #foreach($g in $page.selectedGroups)
+                                        <div class="col-sm-4">
+                                            <div class="radio">
+                                                <label>
+                                                    <input type="radio" name="group" value="$g.id">
+                                                    $g.name
+                                                </label>
+                                            </div>
+                                        </div>
+                                        #end
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+
+                            <button class="btn btn-primary" type="submit">Create</button>
+                        </div>
+                    </form>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>
+        <script src="/theme/apps/team/viewTeams.js" type="text/javascript"></script>
     </body>
 </html>
