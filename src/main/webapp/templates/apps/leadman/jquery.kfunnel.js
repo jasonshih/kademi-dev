@@ -12,19 +12,20 @@
             stageNameFontColor: "white",
             stageNameBackgroundColor: "black",
             legendNameFontSize: "20px",
-            legendNameFontFamily: "sans-serif",
+            legendNameFontFamily: "Roboto",
             legendNameFontColor: "black",
             histogramLabelFontSize: "10px",
-            histogramLabelFontFamily: "sans-serif",
+            histogramLabelFontFamily: "Roboto",
             histogramLabelFontColor: "black",
             funnelBackgroundColor: "#eeeeee",
             funnelBorderColor: "gray",
             funnelBorderThickness: "1px",
-            leadLegendFontFamily: "sans-serif",
-            leadLegendValueFontFamily: "sans-serif",
+            leadLegendFontFamily: "Roboto",
+            leadLegendValueFontFamily: "Roboto",
             leadLegendColor: "#3E3E3E",
             leadLegendFontSize: "18px",
             leadLegendValueFontSize: "28px",
+            leadLegendValueFontWeight: "900",
             width: 1000,
             height: 500,
             marginLeft: 450,
@@ -241,6 +242,7 @@
                     .attr("y", 63)
                     .attr("font-size", setting.leadLegendValueFontSize)
                     .attr("font-family", setting.leadLegendValueFontFamily)
+                    .attr("font-weight", setting.leadLegendValueFontWeight)
                     .text(totalLeads);
 
                 /* Svg Deal */
@@ -269,6 +271,7 @@
                     .attr("y", 60)
                     .attr("font-size", setting.leadLegendValueFontSize)
                     .attr("font-family", setting.leadLegendValueFontFamily)
+                    .attr("font-weight", setting.leadLegendValueFontWeight)
                     .text('$' + formattedX);
 
                 /*

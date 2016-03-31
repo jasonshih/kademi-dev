@@ -186,10 +186,12 @@ table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, 
 }
 
 .text-strong{
-    font-family: "Roboto Black";
+    font-family: "Roboto";
+    font-weight: 900;
 }
 .text-thin{
-    font-family: "Roboto Light";
+    font-family: "Roboto";
+    font-weight: 300;
 }
 
 /* Supports collapse menu even on ipad portrait screen */
