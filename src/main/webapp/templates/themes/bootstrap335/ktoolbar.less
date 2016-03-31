@@ -1,0 +1,23 @@
+#ktoolbar{
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 30px;
+  background: #000;
+  z-index: 999999;
+  & + .navbar-fixed-top{
+    top: 30px;
+  }
+  .btn-link{
+    color: #fff;
+  }
+}
+@media (max-width: 767px){
+  #ktoolbar{
+    display: none;
+    & + .navbar-fixed-top{
+      top: 0;
+    }
+  }
+}

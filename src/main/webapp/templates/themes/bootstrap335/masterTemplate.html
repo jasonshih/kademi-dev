@@ -34,6 +34,7 @@
 
 $templater.pushLess("/theme/less/bootstrap.less", "all")
 $templater.pushLess("/theme/theme-params.less", "all")
+$templater.pushLess("/theme/ktoolbar.less", "all")
 $!bodyContent
 
 #foreach( $lessSource in $templater.lessSources.entrySet())
@@ -61,6 +62,19 @@ $!bodyContent
 
 #set($website = $page.closest("website"))
 
+## KToolbar for logged in user with admin or content author role
+#if($user)
+#if($userResource.hasRole("Content author") || $userResource.hasRole("Administrator"))
+<div id="ktoolbar">
+    <a title="Go to Administrator Dashboard" class="btn btn-sm btn-link" href="http://$website.adminDomainName" target="_blank"><i class="fa fa-tachometer"></i> Admin Dashboard</a>
+    <a title="Go to Blogs Management" class="btn btn-sm btn-link" href="http://$website.adminDomainName/blogs/" target="_blank"><i class="fa fa-rss"></i> Blog Posts</a>
+    <a title="Go to Websites Management" class="btn btn-sm btn-link" href="http://$website.adminDomainName/websites/" target="_blank"><i class="fa fa-laptop"></i> Websites</a>
+    <a title="Go to Files Management" class="btn btn-sm btn-link" href="http://$website.adminDomainName/manageRepos/" target="_blank"><i class="fa fa-folder-open-o"></i> Files</a>
+    <a title="Go to Users Management" class="btn btn-sm btn-link" href="http://$website.adminDomainName/manageRepos/" target="_blank"><i class="fa fa-user"></i> Users</a>
+    <a title="Go to Reports Management" class="btn btn-sm btn-link" href="http://$website.adminDomainName/reporting/" target="_blank"><i class="fa fa-bar-chart"></i> Reports</a>
+</div>
+#end
+#end
 <div class="navbar navbar-fixed-top navbar-default" id="nav-top" role="navigation">
     <div class="container-fluid">
         <div class="navbar-header">
