@@ -11,9 +11,7 @@
                 <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modal-add-member">Add team member</button>
             </div>
         </div>
-
         <p>&nbsp;</p>
-
         <div class="fw-boxed">
             <div class="panel panel-default">
                 <div class="row">
@@ -67,6 +65,7 @@
                         <h4 class="modal-title">Add a new member</h4>
                     </div>
                     <form method="post" action="." class="form-horizontal">
+                        <input type="hidden" name="newMember" value="newMember"/>
                         <div class="modal-body">
                             <p>Create member in $page.teamOrganisation.title</p>
                             <div class="form-group">
@@ -89,7 +88,7 @@
                                 <div class="col-md-9">
                                     <div class="col-sm-12">
                                         <div class="form-group">
-                                            <input type="text" name="email" id="newUserEmail" class="form-control required" placeholder="Email" />
+                                            <input type="email" name="email" id="newUserEmail" class="form-control required" placeholder="Email" />
                                         </div>
                                     </div>
 
@@ -104,7 +103,7 @@
                                         <div class="col-sm-4">
                                             <div class="radio">
                                                 <label>
-                                                    <input type="radio" name="group" value="$g.id">
+                                                    <input type="radio" name="group" value="$g.id" class="required"/>
                                                     $g.name
                                                 </label>
                                             </div>
