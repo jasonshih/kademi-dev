@@ -83,12 +83,18 @@
         </div>
 
         <div class="btn-group">
-            <a target='_blank' href='$page.externalUrl' class="btn btn-sm btn-success">
-                <i class="fa fa-arrow-circle-right"></i> View website
-            </a>
-            <a target='_blank' href='$page.href?goto=' class="btn btn-sm btn-success">
-                <i class="fa fa-arrow-circle-right"></i> Login to website
-            </a>
+            <div class="btn-group">
+                <a target='_blank' href='$page.externalUrl' class="btn btn-sm btn-success">
+                    <i class="fa fa-arrow-circle-right"></i> View website
+                </a>                
+                <button type="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a target='_blank' href='$page.href?goto='>Login to home page</a></li>
+                    <li><a target='_blank' href="$page.href?goto=&gotoPath=dashboard">Login to dashboard</a></li>
+                </ul>
+            </div>
 
             <a href='/repositories/$page.closest("website").name/$page.name' class="btn btn-sm btn-info">
                 <i class="fa fa-file"></i> Files
