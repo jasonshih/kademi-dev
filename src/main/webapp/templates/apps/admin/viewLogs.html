@@ -53,22 +53,6 @@
                         <div class="col-date">Date</div>
                     </div>
                     <div id="logsBody">
-                        #foreach($event in $page.recent)
-                            #set($labelType = $event.level.toLowerCase())
-                            #if($labelType == "error")
-                                #set($labelType = "danger")
-                            #elseif($labelType == "warn")
-                                #set($labelType = "warning")
-                            #elseif($labelType == "trace")
-                                #set($labelType = "default")
-                            #end
-                            <div class="$labelType col-row clearfix" style='table-layout:fixed'>
-                                <div class="col-lvl"><span class="label label-$labelType" >$event.level</span></div>
-                                <div class="col-user"><a target="_blank" class="userName" href="$!event.userHref">$!event.userName</a></div>
-                                <div class="col-msg">$event.message</div>
-                                <div class="col-date"><abbr title="$formatter.formatDateISO8601($event.date)" class="timeago">$event.date</abbr></div>
-                            </div>
-                        #end
                         <div class="col-row clearfix no-bordered">
                             <div style="width: 100%">Beginning listening...</div>
                         </div>
@@ -80,7 +64,7 @@
             </div>
         </article>
 
-        <script type="text/javascript" src="/theme/apps/admin/viewLogs.js?v=1.1"></script>
+        <script type="text/javascript" src="/theme/apps/admin/viewLogs.js?v=1.2"></script>
         <script type="text/javascript">
             $(function () {
                 initViewLogs({
