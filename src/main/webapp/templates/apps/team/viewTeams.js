@@ -6,7 +6,13 @@
 
         form.forms({
             onSuccess: function (resp) {
-                modal.modal('hide');
+                if (resp.status) {
+                    modal.modal('hide');
+                    $('#teamTable').reloadFragment();
+                    Msg.success('Member added');
+                } else {
+
+                }
             }
         });
 
