@@ -126,6 +126,7 @@
         var logsBody = $('#logsBody');
         var txtQueryUser = $('#user-query');
         var txtQueryMessage = $('#message-query');
+        var sizeLimit = $('#size-limit');
 
         var logsBodyMaxHeight = $(window).height() - 329;
         if (logsBodyMaxHeight < 300) {
@@ -161,6 +162,27 @@
 
             trimTable(0);
             loadNewLogs();
+        });
+
+        sizeLimit.on('change', function () {
+            var val = sizeLimit.val();
+
+            if (val.trim() == '') {
+                val = 500;
+                sizeLimit.val(500);
+            }
+
+            if (val < 0) {
+                val = 0;
+            }
+            if (val > 5000) {
+                val = 5000;
+            }
+
+
+            maxLimit = val;
+            filterOptions.size = val;
+            trimTable(val);
         });
 
         $('#level-filter').val('').on('change', function () {
