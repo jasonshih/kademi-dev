@@ -101,7 +101,7 @@ function initManageEvent() {
     var form = initEventForm();
     initConfirmationTab();
     initReminder(form);
-    initReminderModal();
+    initReminderModal(form);
     initCreateEmail();
     initDetailsTab();
 }
@@ -262,11 +262,12 @@ function initReminder(form) {
 
 
 // This is when the user saves the reminder modal
-function initReminderModal() {
+function initReminderModal(form) {
     flog('initReminderModal');
 
     var reminderModal = $('#reminderDetails');
     var reminderForm = reminderModal.find('form');
+    var tbody = $('tbody.reminders');
 
     reminderForm.submit(function (e) {
         e.preventDefault();

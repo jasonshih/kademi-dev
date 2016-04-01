@@ -217,6 +217,7 @@
                         </header>
                         <br />
 
+                        <input type="hidden" name="hasReminders" value="true" />
                         <div class="table-responsive">
                             <table class="table table-striped table-hover">
                                 <colgroup>
@@ -251,7 +252,7 @@
                                             <span class="timerMultiple">$reminder.timerMultiple</span> <span class="timerUnit">$reminder.timerUnit</span>
                                         </td>
                                         <td class="subject">$reminder.subject</td>
-                                        <td class="themeSite">$reminder.themeSite.name</td>
+                                        <td class="themeSite">$!reminder.themeSite.name</td>
                                         <td>$!reminder.processedDate</td>
                                         <td class="action last">
                                             <div class="btn-group btn-group-sm">
