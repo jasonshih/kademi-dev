@@ -344,7 +344,7 @@
         settingTitle: 'Photo Settings',
 
         initSettingForm: function (form, options) {
-            flog('initSettingForm "photo" component');
+            flog('initSettingForm "photo" component 6');
             var self = this;
 
             form.append(
@@ -397,10 +397,13 @@
             );
 
             var photoEdit = form.find('#photo-edit');
+            var basePath = window.location.pathname.replace('edmeditor', '');
+            flog("basePath: ", basePath);
             photoEdit.mselect({
                 contentTypes: ['image'],
                 bs3Modal: true,
-                pagePath: window.location.pathname.replace('contenteditor',''),
+                pagePath: basePath,
+                basePath : basePath,
                 onSelectFile: function(url) {
                     var img = KEditor.settingComponent.find('img');
                     img.attr('src', url);
