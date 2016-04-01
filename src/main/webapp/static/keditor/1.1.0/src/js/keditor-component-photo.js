@@ -10,7 +10,7 @@
     var flog = KEditor.log;
 
     KEditor.components['photo'] = {
-        init: function (contentArea, container, component, options) {
+        init: function (contentArea, container, component, keditor) {
             flog('init "photo" component', component);
 
             var componentContent = component.children('.keditor-component-content');
@@ -19,7 +19,7 @@
             img.css('display', 'inline-block');
         },
 
-        getContent: function (component, options) {
+        getContent: function (component, keditor) {
             flog('getContent "photo" component', component);
 
             var componentContent = component.children('.keditor-component-content');
@@ -34,9 +34,11 @@
 
         settingTitle: 'Photo Settings',
 
-        initSettingForm: function (form, options) {
+        initSettingForm: function (form, keditor) {
             flog('initSettingForm "photo" component');
+            
             var self = this;
+            var options = keditor.options;
 
             form.append(
                 '<form class="form-horizontal">' +
@@ -93,26 +95,26 @@
                 bs3Modal: true,
                 pagePath: window.location.pathname.replace('contenteditor',''),
                 onSelectFile: function(url) {
-                    var img = KEditor.settingComponent.find('img');
+                    var img = keditor.getSettingComponent().find('img');
                     img.attr('src', url);
-                    self.showSettingForm(form, KEditor.settingComponent, options);
+                    self.showSettingForm(form, keditor.getSettingComponent(), options);
                 }
             });
 
             var inputAlign = form.find('#photo-align');
             inputAlign.on('change', function () {
-                var panel = KEditor.settingComponent.find('.photo-panel');
+                var panel = keditor.getSettingComponent().find('.photo-panel');
                 panel.css('text-align', this.value);
             });
 
             var inputResponsive = form.find('#photo-responsive');
             inputResponsive.on('click', function () {
-                KEditor.settingComponent.find('img')[this.checked ? 'addClass' : 'removeClass']('img-responsive');
+                keditor.getSettingComponent().find('img')[this.checked ? 'addClass' : 'removeClass']('img-responsive');
             });
 
             var cbbStyle = form.find('#photo-style');
             cbbStyle.on('change', function () {
-                var img = KEditor.settingComponent.find('img');
+                var img = keditor.getSettingComponent().find('img');
                 var val = this.value;
 
                 img.removeClass('img-rounded img-circle img-thumbnail');
@@ -124,7 +126,7 @@
             var inputWidth = form.find('#photo-width');
             var inputHeight = form.find('#photo-height');
             inputWidth.on('change', function () {
-                var img = KEditor.settingComponent.find('img');
+                var img = keditor.getSettingComponent().find('img');
                 var newWidth = +this.value;
                 var newHeight = Math.round(newWidth / self.ratio);
 
@@ -141,7 +143,7 @@
                 inputHeight.val(newHeight);
             });
             inputHeight.on('change', function () {
-                var img = KEditor.settingComponent.find('img');
+                var img = keditor.getSettingComponent().find('img');
                 var newHeight = +this.value;
                 var newWidth = Math.round(newHeight * self.ratio);
 
@@ -159,7 +161,7 @@
             });
         },
 
-        showSettingForm: function (form, component, options) {
+        showSettingForm: function (form, component, keditor) {
             flog('showSettingForm "photo" component', component);
 
             var self = this;
@@ -199,7 +201,7 @@
             });
         },
 
-        hideSettingForm: function (form) {
+        hideSettingForm: function (form, keditor) {
             // Do nothing
         }
     };

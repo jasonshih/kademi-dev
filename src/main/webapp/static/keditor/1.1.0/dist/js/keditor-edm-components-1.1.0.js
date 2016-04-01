@@ -10,18 +10,18 @@
     var flog = KEditor.log;
 
     KEditor.components['button'] = {
-        init: function (contentArea, container, component, options) {
+        init: function (contentArea, container, component, keditor) {
             // Do nothing
         },
 
-        getContent: function (component, options) {
+        getContent: function (component, keditor) {
             flog('getContent "button" component', component);
 
             var componentContent = component.children('.keditor-component-content');
             return componentContent.html();
         },
 
-        destroy: function (component, options) {
+        destroy: function (component, keditor) {
             // Do nothing
         },
 
@@ -29,7 +29,7 @@
 
         settingTitle: 'Button Settings',
 
-        initSettingForm: function (form, options) {
+        initSettingForm: function (form, keditor) {
             flog('initSettingForm "button" component');
             form.append(
                 '<form class="form-horizontal">' +
@@ -132,12 +132,12 @@
             );
 
             form = form.find('form');
-            KEditor.initPaddingControls(form, 'prepend');
-            KEditor.initBgColorControl(form, 'prepend');
+            KEditor.initPaddingControls(keditor, form, 'prepend');
+            KEditor.initBgColorControl(keditor, form, 'prepend');
 
             var buttonColorPicker = form.find('.button-color-picker');
             initColorPicker(buttonColorPicker, function (color) {
-                var buttonWrapper = KEditor.settingComponent.find('.button-wrapper');
+                var buttonWrapper = keditor.getSettingComponent().find('.button-wrapper');
 
                 if (color && color !== 'transparent') {
                     setStyle(buttonWrapper, 'background-color', color);
@@ -151,7 +151,7 @@
 
             var txtBorderRadius = form.find('#button-border-radius');
             txtBorderRadius.on('change', function () {
-                setStyle(KEditor.settingComponent.find('.button-wrapper'), 'border-radius', this.value + 'px');
+                setStyle(keditor.getSettingComponent().find('.button-wrapper'), 'border-radius', this.value + 'px');
             });
 
             var buttonInnerPaddingTop = form.find('.button-inner-padding-top');
@@ -159,16 +159,16 @@
             var buttonInnerPaddingLeft = form.find('.button-inner-padding-left');
             var buttonInnerPaddingRight = form.find('.button-inner-padding-right');
             buttonInnerPaddingTop.on('change', function () {
-                setStyle(KEditor.settingComponent.find('.button-inner'), 'padding-top', (this.value > 0 ? this.value : 0) + 'px');
+                setStyle(keditor.getSettingComponent().find('.button-inner'), 'padding-top', (this.value > 0 ? this.value : 0) + 'px');
             });
             buttonInnerPaddingBottom.on('change', function () {
-                setStyle(KEditor.settingComponent.find('.button-inner'), 'padding-bottom', (this.value > 0 ? this.value : 0) + 'px');
+                setStyle(keditor.getSettingComponent().find('.button-inner'), 'padding-bottom', (this.value > 0 ? this.value : 0) + 'px');
             });
             buttonInnerPaddingLeft.on('change', function () {
-                setStyle(KEditor.settingComponent.find('.button-inner'), 'padding-left', (this.value > 0 ? this.value : 0) + 'px');
+                setStyle(keditor.getSettingComponent().find('.button-inner'), 'padding-left', (this.value > 0 ? this.value : 0) + 'px');
             });
             buttonInnerPaddingRight.on('change', function () {
-                setStyle(KEditor.settingComponent.find('.button-inner'), 'padding-right', (this.value > 0 ? this.value : 0) + 'px');
+                setStyle(keditor.getSettingComponent().find('.button-inner'), 'padding-right', (this.value > 0 ? this.value : 0) + 'px');
             });
 
             var txtText = form.find('#button-text');
@@ -176,12 +176,12 @@
                 var text = this.value || '';
                 text = text.trim();
 
-                KEditor.settingComponent.find('.button-wrapper a').text(text);
+                keditor.getSettingComponent().find('.button-wrapper a').text(text);
             });
 
             var buttonTextColorPicker = form.find('.button-color-text-picker');
             initColorPicker(buttonTextColorPicker, function (color) {
-                var button = KEditor.settingComponent.find('.button-wrapper a');
+                var button = keditor.getSettingComponent().find('.button-wrapper a');
 
                 if (color && color !== 'transparent') {
                     setStyle(button, 'color', color);
@@ -193,12 +193,12 @@
 
             var txtFontSize = form.find('#button-font-size');
             txtFontSize.on('change', function () {
-                setStyle(KEditor.settingComponent.find('.button-wrapper a'), 'font-size', (this.value > 0 ? this.value : 0) + 'px');
+                setStyle(keditor.getSettingComponent().find('.button-wrapper a'), 'font-size', (this.value > 0 ? this.value : 0) + 'px');
             });
 
             var cbbFontFamily = form.find('#button-font-family');
             cbbFontFamily.on('change', function () {
-                setStyle(KEditor.settingComponent.find('.button-wrapper a'), 'font-family', this.value);
+                setStyle(keditor.getSettingComponent().find('.button-wrapper a'), 'font-family', this.value);
             });
 
             var btnBold = form.find('.btn-bold');
@@ -212,7 +212,7 @@
                     btnBold.addClass('active');
                     style = 'bold';
                 }
-                setStyle(KEditor.settingComponent.find('.button-wrapper a'), 'font-weight', style);
+                setStyle(keditor.getSettingComponent().find('.button-wrapper a'), 'font-weight', style);
             });
 
             var btnItalic = form.find('.btn-italic');
@@ -226,7 +226,7 @@
                     btnItalic.addClass('active');
                     style = 'italic';
                 }
-                setStyle(KEditor.settingComponent.find('.button-wrapper a'), 'font-style', style);
+                setStyle(keditor.getSettingComponent().find('.button-wrapper a'), 'font-style', style);
             });
 
             var btnAlignLeft = form.find('.btn-button-left');
@@ -234,7 +234,7 @@
             var btnAlignRight = form.find('.btn-button-right');
             var btnAlignFull = form.find('.btn-button-full');
             var setAlign = function (trigger, align) {
-                var table = KEditor.settingComponent.find('.button-wrapper');
+                var table = keditor.getSettingComponent().find('.button-wrapper');
 
                 btnAlignLeft.removeClass('active');
                 btnAlignCenter.removeClass('active');
@@ -279,11 +279,11 @@
             });
         },
 
-        showSettingForm: function (form, component, options) {
+        showSettingForm: function (form, component, keditor) {
             flog('showSettingForm "button" component', component);
 
-            KEditor.showBgColorControl(form, component);
-            KEditor.showPaddingControls(form, component);
+            KEditor.showBgColorControl(keditor, form, component);
+            KEditor.showPaddingControls(keditor, form, component);
 
             var buttonWrapper = component.find('.button-wrapper');
             var buttonInner = buttonWrapper.find('.button-inner');
@@ -356,7 +356,7 @@
                     case 'right':
                         btnAlignRight.addClass('active');
                         break;
-                };
+                }
             }
         },
 
@@ -379,18 +379,18 @@
     var flog = KEditor.log;
 
     KEditor.components['line'] = {
-        init: function (contentArea, container, component, options) {
+        init: function (contentArea, container, component, keditor) {
             // Do nothing
         },
 
-        getContent: function (component, options) {
+        getContent: function (component, keditor) {
             flog('getContent "line" component', component);
 
             var componentContent = component.children('.keditor-component-content');
             return componentContent.html();
         },
 
-        destroy: function (component, options) {
+        destroy: function (component, keditor) {
             // Do nothing
         },
 
@@ -398,7 +398,7 @@
 
         settingTitle: 'Line Settings',
 
-        initSettingForm: function (form, options) {
+        initSettingForm: function (form, keditor) {
             flog('initSettingForm "line" component');
             form.append(
                 '<form class="form-horizontal">' +
@@ -422,16 +422,16 @@
 
             var lineHeight = form.find('#line-height');
             lineHeight.on('change', function () {
-                setStyle(KEditor.settingComponent.find('.wrapper div'), 'height', this.value);
+                setStyle(keditor.getSettingComponent().find('.wrapper div'), 'height', this.value);
             });
 
             form = form.find('form');
-            KEditor.initPaddingControls(form, 'prepend');
-            KEditor.initBgColorControl(form, 'prepend');
+            KEditor.initPaddingControls(keditor, form, 'prepend');
+            KEditor.initBgColorControl(keditor, form, 'prepend');
 
             var lineColorPicker = form.find('.line-color-picker');
             initColorPicker(lineColorPicker, function (color) {
-                var wrapper = KEditor.settingComponent.find('.wrapper');
+                var wrapper = keditor.getSettingComponent().find('.wrapper');
                 var div = wrapper.children('div');
 
                 if (color && color !== 'transparent') {
@@ -443,15 +443,15 @@
             });
         },
 
-        showSettingForm: function (form, component, options) {
+        showSettingForm: function (form, component, keditor) {
             flog('showSettingForm "line" component', component);
 
             var lineHeight = form.find('#line-height');
             var height = component.find('.wrapper > div').css('height');
             lineHeight.val(height ? height.replace('px', '') : '0');
 
-            KEditor.showBgColorControl(form, component);
-            KEditor.showPaddingControls(form, component);
+            KEditor.showBgColorControl(keditor, form, component);
+            KEditor.showPaddingControls(keditor, form, component);
 
             var wrapper = component.find('.wrapper');
             var div = wrapper.children('div');
@@ -460,7 +460,7 @@
             lineColorPicker.colorpicker('setValue', div.css('background-color') || '');
         },
 
-        hideSettingForm: function (form) {
+        hideSettingForm: function (form, keditor) {
             // Do nothing
         }
     };
@@ -479,18 +479,18 @@
     var flog = KEditor.log;
 
     KEditor.components['photo'] = {
-        init: function (contentArea, container, component, options) {
+        init: function (contentArea, container, component, keditor) {
             // Do nothing
         },
 
-        getContent: function (component, options) {
+        getContent: function (component, keditor) {
             flog('getContent "photo" component', component);
 
             var componentContent = component.children('.keditor-component-content');
             return componentContent.html();
         },
 
-        destroy: function (component, options) {
+        destroy: function (component, keditor) {
             // Do nothing
         },
 
@@ -498,9 +498,11 @@
 
         settingTitle: 'Photo Settings',
 
-        initSettingForm: function (form, options) {
+        initSettingForm: function (form, keditor) {
             flog('initSettingForm "photo" component');
+
             var self = this;
+            var options = keditor.options;
 
             form.append(
                 '<form class="form-horizontal">' +
@@ -525,25 +527,27 @@
             );
 
             var photoEdit = form.find('#photo-edit');
+            var basePath = window.location.pathname.replace('edmeditor', '');
             photoEdit.mselect({
                 contentTypes: ['image'],
                 bs3Modal: true,
-                pagePath: window.location.pathname.replace('contenteditor', ''),
-                onSelectFile: function (url) {
-                    var img = KEditor.settingComponent.find('img');
-                    img.attr('src', url);
-                    self.showSettingForm(form, KEditor.settingComponent, options);
+                pagePath: basePath,
+                basePath: basePath,
+                onSelectFile: function (url, relativeUrl, fileType, hash) {
+                    var img = keditor.getSettingComponent().find('img');
+                    img.attr('src', "http://" + window.location.host + "/_hashes/files/" + hash);
+                    self.showSettingForm(form, keditor.getSettingComponent(), options);
                 }
             });
 
             var inputAlt = form.find('#photo-alt');
             inputAlt.on('change', function () {
-                KEditor.settingComponent.find('img').attr('alt', this.value);
+                keditor.getSettingComponent().find('img').attr('alt', this.value);
             });
 
             var chkFullWidth = form.find('#photo-fullwidth');
             chkFullWidth.on('click', function () {
-                var img = KEditor.settingComponent.find('img');
+                var img = keditor.getSettingComponent().find('img');
                 if (chkFullWidth.is(':checked')) {
                     img.attr({
                         width: '100%',
@@ -558,11 +562,11 @@
             });
 
             form = form.find('form');
-            KEditor.initBgColorControl(form, 'after', '.photo-edit-wrapper');
-            KEditor.initPaddingControls(form, 'before', '.photo-alt-wrapper');
+            KEditor.initBgColorControl(keditor, form, 'after', '.photo-edit-wrapper');
+            KEditor.initPaddingControls(keditor, form, 'before', '.photo-alt-wrapper');
         },
 
-        showSettingForm: function (form, component, options) {
+        showSettingForm: function (form, component, keditor) {
             flog('showSettingForm "photo" component', component);
 
             var self = this;
@@ -571,8 +575,8 @@
             var inputAlt = form.find('#photo-alt');
             inputAlt.val(img.attr('alt') || '');
 
-            KEditor.showBgColorControl(form, component);
-            KEditor.showPaddingControls(form, component);
+            KEditor.showBgColorControl(keditor, form, component);
+            KEditor.showPaddingControls(keditor, form, component);
 
             var chkFullWidth = form.find('#photo-fullwidth');
             chkFullWidth.prop('checked', img.attr('width') === '100%');
@@ -584,7 +588,7 @@
             });
         },
 
-        hideSettingForm: function (form) {
+        hideSettingForm: function (form, keditor) {
             // Do nothing
         }
     };
@@ -603,18 +607,18 @@
     var flog = KEditor.log;
 
     KEditor.components['spacer'] = {
-        init: function (contentArea, container, component, options) {
+        init: function (contentArea, container, component, keditor) {
             // Do nothing
         },
 
-        getContent: function (component, options) {
+        getContent: function (component, keditor) {
             flog('getContent "spacer" component', component);
 
             var componentContent = component.children('.keditor-component-content');
             return componentContent.html();
         },
 
-        destroy: function (component, options) {
+        destroy: function (component, keditor) {
             // Do nothing
         },
 
@@ -622,7 +626,7 @@
 
         settingTitle: 'Spacer Settings',
 
-        initSettingForm: function (form, options) {
+        initSettingForm: function (form, keditor) {
             flog('initSettingForm "spacer" component');
             form.append(
                 '<form class="form-horizontal">' +
@@ -637,23 +641,23 @@
 
             var spacerHeight = form.find('#spacer-height');
             spacerHeight.on('change', function () {
-                KEditor.settingComponent.find('.spacer').attr('height', this.value);
+                keditor.getSettingComponent().find('.spacer').attr('height', this.value);
             });
 
             form = form.find('form');
-            KEditor.initBgColorControl(form, 'prepend');
+            KEditor.initBgColorControl(keditor, form, 'prepend');
         },
 
-        showSettingForm: function (form, component, options) {
+        showSettingForm: function (form, component, keditor) {
             flog('showSettingForm "spacer" component', component);
 
             var spacerHeight = form.find('#spacer-height');
             spacerHeight.val(component.find('.spacer').attr('height'));
 
-            KEditor.showBgColorControl(form, component);
+            KEditor.showBgColorControl(keditor, form, component);
         },
 
-        hideSettingForm: function (form) {
+        hideSettingForm: function (form, keditor) {
             // Do nothing
         }
     };
@@ -709,9 +713,11 @@
             line_height: '1;1.2;1.5;2;2.2;2.5'
         },
 
-        init: function (contentArea, container, component, options) {
+        init: function (contentArea, container, component, keditor) {
             flog('init "text" component', component);
+
             var self = this;
+            var options = keditor.options;
 
             var componentContent = component.children('.keditor-component-content');
             componentContent.prop('contenteditable', true);
@@ -743,7 +749,7 @@
             });
         },
 
-        getContent: function (component, options) {
+        getContent: function (component, keditor) {
             flog('getContent "text" component', component);
 
             var componentContent = component.find('.keditor-component-content');
@@ -756,7 +762,7 @@
             }
         },
 
-        destroy: function (component, options) {
+        destroy: function (component, keditor) {
             flog('destroy "text" component', component);
 
             var id = component.find('.keditor-component-content').attr('id');
@@ -770,7 +776,7 @@
 
         settingTitle: 'Text Settings',
 
-        initSettingForm: function (form, options) {
+        initSettingForm: function (form, keditor) {
             flog('initSettingForm "text" component');
             form.append(
                 '<form class="form-horizontal">' +
@@ -778,18 +784,18 @@
             );
 
             form = form.find('form');
-            KEditor.initBgColorControl(form, 'append');
-            KEditor.initPaddingControls(form, 'append');
+            KEditor.initBgColorControl(keditor, form, 'append');
+            KEditor.initPaddingControls(keditor, form, 'append');
         },
 
-        showSettingForm: function (form, component, options) {
+        showSettingForm: function (form, component, keditor) {
             flog('showSettingForm "text" component', component);
 
-            KEditor.showBgColorControl(form, component);
-            KEditor.showPaddingControls(form, component);
+            KEditor.showBgColorControl(keditor, form, component);
+            KEditor.showPaddingControls(keditor, form, component);
         },
 
-        hideSettingForm: function (form) {
+        hideSettingForm: function (form, keditor) {
             // Do nothing
         }
     };

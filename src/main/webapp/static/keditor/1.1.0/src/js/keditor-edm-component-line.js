@@ -10,18 +10,18 @@
     var flog = KEditor.log;
 
     KEditor.components['line'] = {
-        init: function (contentArea, container, component, options) {
+        init: function (contentArea, container, component, keditor) {
             // Do nothing
         },
 
-        getContent: function (component, options) {
+        getContent: function (component, keditor) {
             flog('getContent "line" component', component);
 
             var componentContent = component.children('.keditor-component-content');
             return componentContent.html();
         },
 
-        destroy: function (component, options) {
+        destroy: function (component, keditor) {
             // Do nothing
         },
 
@@ -29,7 +29,7 @@
 
         settingTitle: 'Line Settings',
 
-        initSettingForm: function (form, options) {
+        initSettingForm: function (form, keditor) {
             flog('initSettingForm "line" component');
             form.append(
                 '<form class="form-horizontal">' +
@@ -53,16 +53,16 @@
 
             var lineHeight = form.find('#line-height');
             lineHeight.on('change', function () {
-                setStyle(KEditor.settingComponent.find('.wrapper div'), 'height', this.value);
+                setStyle(keditor.getSettingComponent().find('.wrapper div'), 'height', this.value);
             });
 
             form = form.find('form');
-            KEditor.initPaddingControls(form, 'prepend');
-            KEditor.initBgColorControl(form, 'prepend');
+            KEditor.initPaddingControls(keditor, form, 'prepend');
+            KEditor.initBgColorControl(keditor, form, 'prepend');
 
             var lineColorPicker = form.find('.line-color-picker');
             initColorPicker(lineColorPicker, function (color) {
-                var wrapper = KEditor.settingComponent.find('.wrapper');
+                var wrapper = keditor.getSettingComponent().find('.wrapper');
                 var div = wrapper.children('div');
 
                 if (color && color !== 'transparent') {
@@ -74,15 +74,15 @@
             });
         },
 
-        showSettingForm: function (form, component, options) {
+        showSettingForm: function (form, component, keditor) {
             flog('showSettingForm "line" component', component);
 
             var lineHeight = form.find('#line-height');
             var height = component.find('.wrapper > div').css('height');
             lineHeight.val(height ? height.replace('px', '') : '0');
 
-            KEditor.showBgColorControl(form, component);
-            KEditor.showPaddingControls(form, component);
+            KEditor.showBgColorControl(keditor, form, component);
+            KEditor.showPaddingControls(keditor, form, component);
 
             var wrapper = component.find('.wrapper');
             var div = wrapper.children('div');
@@ -91,7 +91,7 @@
             lineColorPicker.colorpicker('setValue', div.css('background-color') || '');
         },
 
-        hideSettingForm: function (form) {
+        hideSettingForm: function (form, keditor) {
             // Do nothing
         }
     };

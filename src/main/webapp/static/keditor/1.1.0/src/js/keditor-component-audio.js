@@ -10,15 +10,9 @@
     var flog = KEditor.log;
 
     KEditor.components['audio'] = {
-        /**
-         * Function will be called when initializing a component with this type
-         * @param {jQuery} contentArea
-         * @param {jQuery} container
-         * @param {jQuery} component
-         * @param {Object} options
-         */
-        init: function (contentArea, container, component, options) {
+        init: function (contentArea, container, component, keditor) {
             flog('init "audio" component', component);
+
             this.component = component;
             var img = component.find('img[data-src]');
             var componentId = '';
@@ -36,20 +30,14 @@
             this.autostart = img.attr('data-autostart') === 'true';
             var instance = this;
             $.getScriptOnce('/static/jwplayer/6.10/jwplayer.js', function () {
-                flog('=====================================');
                 jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
                 instance.buildJWAudioPlayerPreview(componentId);
             });
 
         },
 
-        /**
-         * Function will be called for getting content of component from method of KEditor "target.keditor('getContent')"
-         * @param {jQuery} component
-         * @param {Object} options
-         */
-        getContent: function (component, options) {
-            flog('getContent "audio" component, component');
+        getContent: function (component, keditor) {
+            flog('getContent "audio" component', component);
 
             var img = component.find('img[data-src]');
             var componentId = img.attr('id');
@@ -58,28 +46,17 @@
             return html;
         },
 
-        /**
-         * Function will be called when deleting component
-         * @param {jQuery} component
-         * @param {Object} options
-         */
-        destroy: function (component, options) {
-
+        destroy: function (component, keditor) {
+            // Do nothing
         },
 
-        // Enable setting panel for this type or not
         settingEnabled: true,
 
-        // Title of setting panel
         settingTitle: 'Audio settings',
 
-        /**
-         * Initialize setting form of this type
-         * @param {jQuery} form Form contains all setting of this type and is child of div[id="keditor-setting-forms"]
-         * @param {Object} options
-         */
-        initSettingForm: function (form, options) {
+        initSettingForm: function (form, keditor) {
             flog('init "audio" settings', form);
+
             form.append(
                 '<form class="form-horizontal">' +
                 '<div class="form-group">' +
@@ -97,12 +74,6 @@
                 '<input type="checkbox" id="audio-autoplay" />' +
                 '</div>' +
                 '</div>' +
-                    //'<div class="form-group">' +
-                    //    '<label for="audio-showcontrols" class="col-sm-12">Show Controls</label>' +
-                    //    '<div class="col-sm-12">' +
-                    //    '<input type="checkbox" id="audio-showcontrols" checked />' +
-                    //    '</div>' +
-                    //'</div>' +
                 '<div class="form-group">' +
                 '<label for="audio-width" class="col-sm-12">Width (px)</label>' +
                 '<div class="col-sm-12">' +
@@ -111,17 +82,11 @@
                 '</div>' +
                 '</form>'
             );
-
-
         },
 
-        /**
-         * Show setting form for this type. This function will be called when user clicks on setting button of component when setting panel is hidden. You can fulfill form controls in this function.
-         * @param {jQuery} form Form contains all setting of this type and is child of div[id="keditor-setting-forms"]
-         * @param {jQuery} component Component will be applied setting
-         * @param {Object} options
-         */
-        showSettingForm: function (form, component, options) {
+        showSettingForm: function (form, component, keditor) {
+            flog('showSettingForm "audio" component', form, component);
+
             var instance = this;
             var btnAudioFileInput = form.find('.btn-audioFileInput');
             btnAudioFileInput.mselect({
@@ -146,10 +111,6 @@
                 instance.buildJWAudioPlayerPreview(componentId);
             });
 
-            //var showcontrolsToggle = form.find('#audio-showcontrols');
-            //showcontrolsToggle.on('click', function(e){
-            //});
-
             var audioWidth = form.find('#audio-width');
             audioWidth.val(this.width);
             audioWidth.on('change', function () {
@@ -158,16 +119,11 @@
             });
         },
 
-        /**
-         * Hide setting form for this type. This function will be called when user clicks again on setting button of component when setting panel is showed. You can clear setting form in this function
-         * @param {jQuery} form Form contains all setting of this type and is child of div[id="keditor-setting-forms"]
-         */
-        hideSettingForm: function (form) {
+        hideSettingForm: function (form, keditor) {
 
         },
 
         buildJWAudioPlayerPreview: function (componentId) {
-            flog('=======', componentId);
             var width = this.width;
             var src = this.src;
             var autostart = this.autostart;

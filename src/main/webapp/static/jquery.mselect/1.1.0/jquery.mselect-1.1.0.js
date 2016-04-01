@@ -38,9 +38,9 @@
                     e.preventDefault();
                     e.stopPropagation();
 
-                    if(config.bs3Modal){
+                    if (config.bs3Modal) {
                         var modal = getModalBS3(config);
-                    }else{
+                    } else {
                         var modal = getModal(config);
                     }
                     config.showModal(modal);
@@ -87,7 +87,7 @@
         return false;
     }
 
-    function isAudio(filename){
+    function isAudio(filename) {
         var ext = getExtension(filename);
         switch (ext.toLowerCase()) {
             // Since jwplayer supports mp3, aac and Vorbis
@@ -101,8 +101,10 @@
         return false;
     }
 
-    function getAcceptedFiles(contentTypes){
-        return contentTypes.map(function(a){ return a+'/*'}).join(',');
+    function getAcceptedFiles(contentTypes) {
+        return contentTypes.map(function (a) {
+            return a + '/*'
+        }).join(',');
     }
 
     function initSelectContainer(container, config, onOk) {
@@ -118,22 +120,22 @@
             includeContentTypes: config.contentTypes,
             onselectFolder: function (n) {
             },
-            onselectFile: function (n, selectedUrl) {
+            onselectFile: function (n, selectedUrl, hash) {
                 if (isVideo(selectedUrl)) {
-                    previewContainer.html('<div class="jp-video"></div>');
+                    previewContainer.html('<div class="jp-video" data-hash="' + hash + '"></div>');
                     $.getScript('/static/jwplayer/6.10/jwplayer.js', function () {
                         jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
                         buildJWPlayer(previewContainer.find('div.jp-video'), 100, selectedUrl, selectedUrl + '/alt-640-360.png');
                     });
                 } else if (isAudio(selectedUrl)) {
-                    previewContainer.html('<div class="jp-audio" style="padding: 15px"><div id="kaudio-player-100" /></div>');
+                    previewContainer.html('<div class="jp-audio" data-hash="' + hash + '" style="padding: 15px"><div id="kaudio-player-100" /></div>');
                     $.getScript('/static/jwplayer/6.10/jwplayer.js', function () {
                         jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
                         buildJWAudioPlayer(100, selectedUrl, false);
                     });
                 }
                 else if (isImage(selectedUrl)) {
-                    previewContainer.html('<img src="' + selectedUrl + '" />');
+                    previewContainer.html('<img src="' + selectedUrl + '" data-hash="' + hash + '" />');
                 } else {
                     previewContainer.html('<p class="alert alert-warning">Unsupported preview file</p>')
                 }
@@ -161,15 +163,17 @@
                 flog('[jquery.mselect] Selected', url, relUrl);
 
                 if (typeof config.onSelectFile === 'function') {
+                    var hash = previewContainer.children('[data-hash]').attr('data-hash');
                     var fileType = 'other';
                     if (isVideo(url)) {
                         fileType = 'video';
                     } else if (isImage(url)) {
                         fileType = 'image';
-                    }else if(isAudio(url)){
+                    } else if (isAudio(url)) {
                         fileType = 'audio';
                     }
-                    config.onSelectFile.call(this, url, relUrl, fileType);
+
+                    config.onSelectFile.call(this, url, relUrl, fileType, hash);
                 }
 
                 if (typeof onOk === 'function') {
@@ -235,8 +239,8 @@
         if (modal.length === 0) {
             $('body').append(
                 '<div id="modal-milton-file-select" class="modal modal-md fade" aria-hidden="true" tabindex="-1">' +
-                '   <div class="modal-dialog">'+
-                '       <div class="modal-content">'+
+                '   <div class="modal-dialog">' +
+                '       <div class="modal-content">' +
                 '           <div class="modal-header">' +
                 '               <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>' +
                 '               <h4 class="modal-title">' + config.modalTitle + '</h4>' +
