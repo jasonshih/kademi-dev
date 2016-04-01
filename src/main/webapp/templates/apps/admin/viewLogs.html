@@ -43,10 +43,20 @@
                             </span>
                         </div>
                     </div>
+                    <div class="col-md-4 col-lg-3 col-xl-3">
+                        <div class="input-group search-user input-group-sm">
+                            <input type="number" id="size-limit" class="form-control size-limit" min="0" max="5000" placeholder="Max number of records" value="500" />
+                            <span class="input-group-btn">
+                                <button class="btn btn-sm btn-default" type="button" data-type="clearer" data-target="#size-limit">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
                 </div>
                 <br />
                 <div class="panel panel-default" style="margin: 0">
-                    <div class="col-row row-header clearfix" style="overflow-y: scroll;">
+                    <div class="col-row row-header clearfix">
                         <div class="col-lvl">Level</div>
                         <div class="col-user">User</div>
                         <div class="col-msg">Message</div>
@@ -68,7 +78,6 @@
         <script type="text/javascript">
             $(function () {
                 initViewLogs({
-                    orgId: '$page.organisation.id',
                     maxLimit: 500
                 });
             });
