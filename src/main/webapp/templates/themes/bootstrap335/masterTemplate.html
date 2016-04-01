@@ -65,6 +65,7 @@ $!bodyContent
 ## KToolbar for logged in user with admin or content author role
 #if($user)
 #if($userResource.hasRole("Content author") || $userResource.hasRole("Administrator"))
+<script src="/static/ktoolbar/ktoolbar.js">//</script>
 <div id="ktoolbar">
     <a title="Go to Administrator Dashboard" class="btn btn-sm btn-link" href="http://$website.adminDomainName" target="_blank"><i class="fa fa-tachometer"></i> Admin Dashboard</a>
     <a title="Go to Blogs Management" class="btn btn-sm btn-link" href="http://$website.adminDomainName/blogs/" target="_blank"><i class="fa fa-rss"></i> Blog Posts</a>
@@ -72,6 +73,7 @@ $!bodyContent
     <a title="Go to Files Management" class="btn btn-sm btn-link" href="http://$website.adminDomainName/manageRepos/" target="_blank"><i class="fa fa-folder-open-o"></i> Files</a>
     <a title="Go to Users Management" class="btn btn-sm btn-link" href="http://$website.adminDomainName/manageUsers/" target="_blank"><i class="fa fa-user"></i> Users</a>
     <a title="Go to Reports Management" class="btn btn-sm btn-link" href="http://$website.adminDomainName/reporting/" target="_blank"><i class="fa fa-bar-chart"></i> Reports</a>
+    <a href="#" class="pull-right btn btn-sm btn-link"><i class="fa fa-pencil"></i> Edit Page</a>
 </div>
 #end
 #end
