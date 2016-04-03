@@ -19,7 +19,7 @@
     <tbody>
         #foreach($p in $allPoints.get($reward))
         <tr>
-            <td>$p.date</td>
+            <td>$formatter.formatDateTime($p.date, $page.organisation.timezone)</td>
             <td>$p.description</td>
             <td>
                 #if( $p.txType == "C" )

@@ -121,7 +121,7 @@
                             <tr>
                                 <td><a href="/points-buckets/$p.reward.name">$p.reward.title</a></td>
                                 <td><a href="/manageUsers/$p.issuedTo.id">$p.issuedTo.formattedName</a></td>
-                                <td>$formatter.formatDateLong( $p.issuedDate )</td>
+                                <td>$formatter.formatDateTime($p.issuedDate, $page.organisation.timezone)</td>
                                 <td>$p.numPoints</td>
                                 <td>$p.reason</td>
                                 <td>$!p.pointsTag.title</td>
