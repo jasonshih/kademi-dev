@@ -17,7 +17,15 @@
                 </tr>
             </thead>
             <tbody>
-
+                #foreach($unsub in $page.children.ofType.unsub)
+                <tr>
+                    <td>$!unsub.profile.firstName</td>
+                    <td>$!unsub.profile.surName</td>
+                    <td>$!unsub.profile.email</td>
+                    <td>$formatter.formatDateTime($unsub.unsubcribeDate, $page.organisation.timezone)</td>
+                    <td></td>
+                </tr>
+                #end
             </tbody>
         </table>
     </body>
