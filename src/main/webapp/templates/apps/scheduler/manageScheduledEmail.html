@@ -125,7 +125,7 @@
                                 <label class="col-md-2 control-label" for="startDate">Start Date</label>
                                 <div class="col-md-4">
                                     <div class="input-group">
-                                        <input type="text" name="startDate" value="$formatter.formatDate($page.job.startDate)" placeholder="Start date" data-date-format="dd/mm/yyyy" data-date-viewmode="years" class="form-control date-picker required" data-impacted="#endDate" data-impact="startDate" />
+                                        <input type="text" name="startDate" value="$formatter.formatDate($page.job.startDate, $page.organisation.timezone)" placeholder="Start date" data-date-format="dd/mm/yyyy" data-date-viewmode="years" class="form-control date-picker required" data-impacted="#endDate" data-impact="startDate" />
                                         <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
                                     </div>
                                 </div>
@@ -134,7 +134,7 @@
                                 <label class="col-md-2 control-label" for="startDate">End Date (optional)</label>
                                 <div class="col-md-4">
                                     <div class="input-group">
-                                        <input type="text" name="endDate" value="$formatter.formatDate($page.job.endDate)" id="endDate" placeholder="End date" data-date-format="dd/mm/yyyy" data-date-viewmode="years" class="form-control date-picker" />
+                                        <input type="text" name="endDate" value="$formatter.formatDate($page.job.endDate, $page.organisation.timezone)" id="endDate" placeholder="End date" data-date-format="dd/mm/yyyy" data-date-viewmode="years" class="form-control date-picker" />
                                         <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
                                     </div>                                    
                                 </div>
@@ -153,19 +153,19 @@
                             <div class="form-group time-details">
                                 <label class="col-md-2 control-label">Current server time</label>
                                 <div class="col-md-4">
-                                    <label class="control-label">$formatter.formatDateLong($formatter.now)</label>
+                                    <label class="control-label">$formatter.formatDateLong($formatter.now, $page.organisation.timezone)</label>
                                 </div>
                             </div>
                             <div class="form-group time-details">
                                 <label class="col-md-2 control-label">Next run</label>
                                 <div class="col-md-4">
-                                    <label class="control-label">$formatter.formatDateLong($page.nextRunTime)</label>
+                                    <label class="control-label">$formatter.formatDateLong($page.nextRunTime, $page.organisation.timezone)</label>
                                 </div>
                             </div>
                             <div class="form-group time-details">
                                 <label class="col-md-2 control-label">Last run</label>
                                 <div class="col-md-4">
-                                    <label class="control-label">$formatter.formatDateLong($page.lastRunTime)</label>
+                                    <label class="control-label">$formatter.formatDateLong($page.lastRunTime, $page.organisation.timezone)</label>
                                 </div>
                             </div>
                         </div>
@@ -191,7 +191,7 @@
                         </div>
 
                         <div id="history" class="tab-pane in Content Details">
-                            <p class="clearfix">Last run at: <b>$!page.lastRunDate</b></p>
+                            <p class="clearfix">Last run at: <b>$!formatter.formatDateTime($page.lastRunDate, $page.organisation.timezone)</b></p>
                             <table id="emails" class="table table-hover">
                                 <thead>
                                     <tr>
@@ -214,7 +214,7 @@
                                         <td>#if($item.recipient.formattedName) $item.recipient.formattedName #end</td>
                                         <td>#if($item.recipientAddress) $item.recipientAddress #end</td>
                                         <td>#if($item.sendStatus) <span class="label label-info">$item.sendStatus</span> #end</td>
-                                        <td>#if($item.sendStatusDate) $item.sendStatusDate #end</td>
+                                        <td>#if($item.sendStatusDate) $formatter.formatDateTime($item.sendStatusDate, $page.organisation.timezone) #end</td>
                                     </tr>
                                     #end 
                                     #end
