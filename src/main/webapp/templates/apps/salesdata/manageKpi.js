@@ -284,7 +284,41 @@ function xml2string(node) {
     }
 }
 
+function initDelKpiResult() {
+    $('body').on('click', '.btn-del-kpiresult', function (e) {
+        e.preventDefault();
 
+        var checked = $('#results table tr td input[name=sel-kpiResult]:checked');
+        if (checked.length > 0 && confirm('Are you sure you want to delete ' + checked.length + ' result' + (checked.length > 1 ? 's?' : '?'))) {
+            var ids = [];
+
+            $.each(checked, function (i, item) {
+                var tr = $(item).closest('tr');
+                var id = tr.data('id');
+                ids.push(id);
+            });
+
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    removeKpiResults: ids.join(',')
+                },
+                success: function (data) {
+                    if (data.status) {
+                        Msg.success(data.messages);
+                        $('#table-results').reloadFragment();
+                    } else {
+                        Msg.error(data.messages);
+                    }
+                },
+                error: function () {
+                    Msg.error('Oh No! Something went wrong!');
+                }
+            });
+        }
+    });
+}
 
 function initKpiSeriesGraphControls() {
     flog("initKpiSeriesGraphControls");
