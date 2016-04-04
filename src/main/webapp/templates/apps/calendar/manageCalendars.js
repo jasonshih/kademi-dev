@@ -90,7 +90,7 @@ function initManageEvent() {
 
     initEditorFrame();
     initPostMessage();
-    //initHtmlEditors($('.htmleditor'), getStandardEditorHeight(), null, null, 'autogrow');
+    initHtmlEditors($('.htmleditor'), getStandardEditorHeight(), null, null, 'autogrow');
 
     window.onbeforeunload = function () {
         if ($('.manageEventForm').hasClass('dirty')) {
