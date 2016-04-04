@@ -3,7 +3,7 @@
     padding-top: 50px;
 }
 
-.navbar-fixed-top a {
+.edm-editor-page .navbar-fixed-top a {
     height: 50px;
 }
 
@@ -17,7 +17,7 @@
     line-height: inherit;
 }
 
-#keditor-sidebar {
+.edm-editor-page #keditor-sidebar {
     top: 50px;
 }
 

@@ -408,6 +408,8 @@ function toPropFindUrl(path, config) {
 }
 
 function isDisplayable(item, config) {
+    flog('isDisplayable', item, config);
+
     // If includeContentTypes is set, then must be of correct content type, or a collection
     if (!item.iscollection) { // only consider content types for files
         if (config.includeContentTypes.length > 0) {
@@ -433,8 +435,13 @@ function isDisplayable(item, config) {
 }
 
 function isExcluded(href, config) {
-    for (i = 0; i < config.excludedEndPaths.length; i++) {
-        var p = config.excludedEndPaths[i];
+    var excludedEndPaths = [];
+    if (config && config.excludedEndPaths) {
+        excludedEndPaths = config.excludedEndPaths;
+    }
+
+    for (i = 0; i < excludedEndPaths.length; i++) {
+        var p = excludedEndPaths[i];
         if (href.endsWith(p)) {
             return true;
         }
@@ -443,6 +450,8 @@ function isExcluded(href, config) {
 }
 
 function isDisplayableFileHref(href, config) {
+    flog('isDisplayableFileHref', href);
+
     if (href == "Thumbs.db")
         return false;
     if (endsWith(href, "/regs/"))
@@ -451,6 +460,7 @@ function isDisplayableFileHref(href, config) {
         return false;
     if (endsWith(href, ".THM"))
         return false;
+
     return true;
 }
 

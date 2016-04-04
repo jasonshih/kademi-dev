@@ -63,7 +63,11 @@ jQuery.cachedScript = function (url, callback, options) {
 };
 
 function endsWith(str, suffix) {
-    return str.match(suffix + '$') == suffix;
+    if (typeof str === 'string') {
+        return str.indexOf(suffix, str.length - suffix.length) !== -1;
+    } else {
+        return false;
+    }
 }
 
 function startsWith(str, prefix) {
@@ -1193,5 +1197,5 @@ Base64DecodeEnumerator.prototype = {
 };
 
 function round(value, decimals) {
-    return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+    return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
 }
