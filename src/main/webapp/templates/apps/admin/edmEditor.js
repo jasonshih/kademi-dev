@@ -16,13 +16,11 @@ var DEFAULT_FONT_FAMILY = 'Arial, Helvetica, san-serif';
 var DEFAULT_FONT_SIZE = '14px';
 var DEFAULT_LINE_HEIGHT = '1.42857143';
 
-function initEdmEditorPage(fileName, snippets) {
+function initEdmEditorPage(fileName) {
     flog('initEdmEditorPage', fileName);
     var body = $(document.body);
 
-    processFileBody();
-    initKEditor(body, snippets);
-    initSettingPanel();
+    initEdmEditor(body);
     initBtns(body, fileName);
     Msg.iconMode = 'fa';
 
@@ -35,13 +33,21 @@ function initEdmEditorPage(fileName, snippets) {
         }
     });
 
+    hideLoadingIcon();
+}
+
+function initEdmEditor(body) {
+    flog('initEdmEditor');
+
+    processFileBody();
+    initKEditor(body);
+    initSettingPanel();
+
     window.onbeforeunload = function (e) {
         if (body.hasClass('content-changed')) {
             e.returnValue = '\n\nAre you sure you would like to leave the editor? You will lose any unsaved changes\n\n';
         }
     };
-
-    hideLoadingIcon();
 }
 
 function applyInlineCssForTextWrapper(target) {
@@ -113,9 +119,14 @@ function processFileBody() {
     $('#edm-link-color').val(tableContainer.attr('data-link-color') || DEFAULT_LINK_COLOR);
 }
 
-function initKEditor(body, snippets) {
-    $('#edm-header, #edm-body, #edm-footer').keditor({
-        snippetsUrl: snippets,
+function initKEditor(body) {
+    flog('initKEditor');
+
+    var body = $(document.body);
+
+    $('#edm-area').keditor({
+        contentAreasSelector: '#edm-header, #edm-body, #edm-footer',
+        snippetsUrl: '/_components/edm/snippets.html',
         onInitContentArea: function (contentArea) {
             contentArea[contentArea.find('.keditor-container-content').children().length === 0 ? 'addClass' : 'removeClass']('empty');
 
@@ -507,7 +518,7 @@ function showLoadingIcon() {
     $('#editor-loading').removeClass('hide');
 }
 
-$.keditor.initPaddingControls = function (form, addMethod, neighbor) {
+$.keditor.initPaddingControls = function (keditor, form, addMethod, neighbor) {
     var controlsHtml =
         '<div class="form-group">' +
         '   <div class="col-md-12">' +
@@ -548,20 +559,20 @@ $.keditor.initPaddingControls = function (form, addMethod, neighbor) {
     var txtPaddingLeft = form.find('.txt-padding-left');
     var txtPaddingRight = form.find('.txt-padding-right');
     txtPaddingTop.on('change', function () {
-        setStyle($.keditor.settingComponent.find('.wrapper'), 'padding-top', (this.value > 0 ? this.value : 0) + 'px');
+        setStyle(keditor.getSettingComponent().find('.wrapper'), 'padding-top', (this.value > 0 ? this.value : 0) + 'px');
     });
     txtPaddingBottom.on('change', function () {
-        setStyle($.keditor.settingComponent.find('.wrapper'), 'padding-bottom', (this.value > 0 ? this.value : 0) + 'px');
+        setStyle(keditor.getSettingComponent().find('.wrapper'), 'padding-bottom', (this.value > 0 ? this.value : 0) + 'px');
     });
     txtPaddingLeft.on('change', function () {
-        setStyle($.keditor.settingComponent.find('.wrapper'), 'padding-left', (this.value > 0 ? this.value : 0) + 'px');
+        setStyle(keditor.getSettingComponent().find('.wrapper'), 'padding-left', (this.value > 0 ? this.value : 0) + 'px');
     });
     txtPaddingRight.on('change', function () {
-        setStyle($.keditor.settingComponent.find('.wrapper'), 'padding-right', (this.value > 0 ? this.value : 0) + 'px');
+        setStyle(keditor.getSettingComponent().find('.wrapper'), 'padding-right', (this.value > 0 ? this.value : 0) + 'px');
     });
 };
 
-$.keditor.showPaddingControls = function (form, component) {
+$.keditor.showPaddingControls = function (keditor, form, component) {
     var wrapper = component.find('.wrapper');
 
     var txtPaddingTop = form.find('.txt-padding-top');
@@ -581,7 +592,7 @@ $.keditor.showPaddingControls = function (form, component) {
     txtPaddingRight.val(paddingRight ? paddingRight.replace('px', '') : '0');
 };
 
-$.keditor.initBgColorControl = function (form, addMethod, neighbor) {
+$.keditor.initBgColorControl = function (keditor, form, addMethod, neighbor) {
     var controlHtml =
         '<div class="form-group">' +
         '   <div class="col-md-12">' +
@@ -601,7 +612,7 @@ $.keditor.initBgColorControl = function (form, addMethod, neighbor) {
 
     var colorPicker = form.find('.color-picker');
     initColorPicker(colorPicker, function (color) {
-        var wrapper = $.keditor.settingComponent.find('.wrapper');
+        var wrapper = keditor.getSettingComponent().find('.wrapper');
         var table = wrapper.closest('table');
 
         if (color && color !== 'transparent') {
@@ -615,7 +626,7 @@ $.keditor.initBgColorControl = function (form, addMethod, neighbor) {
     });
 };
 
-$.keditor.showBgColorControl = function (form, component) {
+$.keditor.showBgColorControl = function (keditor, form, component) {
     var wrapper = component.find('.wrapper');
     var colorPicker = form.find('.color-picker');
     colorPicker.colorpicker('setValue', wrapper.css('background-color') || '');

@@ -10,18 +10,18 @@
     var flog = KEditor.log;
 
     KEditor.components['button'] = {
-        init: function (contentArea, container, component, options) {
+        init: function (contentArea, container, component, keditor) {
             // Do nothing
         },
 
-        getContent: function (component, options) {
+        getContent: function (component, keditor) {
             flog('getContent "button" component', component);
 
             var componentContent = component.children('.keditor-component-content');
             return componentContent.html();
         },
 
-        destroy: function (component, options) {
+        destroy: function (component, keditor) {
             // Do nothing
         },
 
@@ -29,7 +29,7 @@
 
         settingTitle: 'Button Settings',
 
-        initSettingForm: function (form, options) {
+        initSettingForm: function (form, keditor) {
             flog('initSettingForm "button" component');
             form.append(
                 '<form class="form-horizontal">' +
@@ -132,12 +132,12 @@
             );
 
             form = form.find('form');
-            KEditor.initPaddingControls(form, 'prepend');
-            KEditor.initBgColorControl(form, 'prepend');
+            KEditor.initPaddingControls(keditor, form, 'prepend');
+            KEditor.initBgColorControl(keditor, form, 'prepend');
 
             var buttonColorPicker = form.find('.button-color-picker');
             initColorPicker(buttonColorPicker, function (color) {
-                var buttonWrapper = KEditor.settingComponent.find('.button-wrapper');
+                var buttonWrapper = keditor.getSettingComponent().find('.button-wrapper');
 
                 if (color && color !== 'transparent') {
                     setStyle(buttonWrapper, 'background-color', color);
@@ -151,7 +151,7 @@
 
             var txtBorderRadius = form.find('#button-border-radius');
             txtBorderRadius.on('change', function () {
-                setStyle(KEditor.settingComponent.find('.button-wrapper'), 'border-radius', this.value + 'px');
+                setStyle(keditor.getSettingComponent().find('.button-wrapper'), 'border-radius', this.value + 'px');
             });
 
             var buttonInnerPaddingTop = form.find('.button-inner-padding-top');
@@ -159,16 +159,16 @@
             var buttonInnerPaddingLeft = form.find('.button-inner-padding-left');
             var buttonInnerPaddingRight = form.find('.button-inner-padding-right');
             buttonInnerPaddingTop.on('change', function () {
-                setStyle(KEditor.settingComponent.find('.button-inner'), 'padding-top', (this.value > 0 ? this.value : 0) + 'px');
+                setStyle(keditor.getSettingComponent().find('.button-inner'), 'padding-top', (this.value > 0 ? this.value : 0) + 'px');
             });
             buttonInnerPaddingBottom.on('change', function () {
-                setStyle(KEditor.settingComponent.find('.button-inner'), 'padding-bottom', (this.value > 0 ? this.value : 0) + 'px');
+                setStyle(keditor.getSettingComponent().find('.button-inner'), 'padding-bottom', (this.value > 0 ? this.value : 0) + 'px');
             });
             buttonInnerPaddingLeft.on('change', function () {
-                setStyle(KEditor.settingComponent.find('.button-inner'), 'padding-left', (this.value > 0 ? this.value : 0) + 'px');
+                setStyle(keditor.getSettingComponent().find('.button-inner'), 'padding-left', (this.value > 0 ? this.value : 0) + 'px');
             });
             buttonInnerPaddingRight.on('change', function () {
-                setStyle(KEditor.settingComponent.find('.button-inner'), 'padding-right', (this.value > 0 ? this.value : 0) + 'px');
+                setStyle(keditor.getSettingComponent().find('.button-inner'), 'padding-right', (this.value > 0 ? this.value : 0) + 'px');
             });
 
             var txtText = form.find('#button-text');
@@ -176,12 +176,12 @@
                 var text = this.value || '';
                 text = text.trim();
 
-                KEditor.settingComponent.find('.button-wrapper a').text(text);
+                keditor.getSettingComponent().find('.button-wrapper a').text(text);
             });
 
             var buttonTextColorPicker = form.find('.button-color-text-picker');
             initColorPicker(buttonTextColorPicker, function (color) {
-                var button = KEditor.settingComponent.find('.button-wrapper a');
+                var button = keditor.getSettingComponent().find('.button-wrapper a');
 
                 if (color && color !== 'transparent') {
                     setStyle(button, 'color', color);
@@ -193,12 +193,12 @@
 
             var txtFontSize = form.find('#button-font-size');
             txtFontSize.on('change', function () {
-                setStyle(KEditor.settingComponent.find('.button-wrapper a'), 'font-size', (this.value > 0 ? this.value : 0) + 'px');
+                setStyle(keditor.getSettingComponent().find('.button-wrapper a'), 'font-size', (this.value > 0 ? this.value : 0) + 'px');
             });
 
             var cbbFontFamily = form.find('#button-font-family');
             cbbFontFamily.on('change', function () {
-                setStyle(KEditor.settingComponent.find('.button-wrapper a'), 'font-family', this.value);
+                setStyle(keditor.getSettingComponent().find('.button-wrapper a'), 'font-family', this.value);
             });
 
             var btnBold = form.find('.btn-bold');
@@ -212,7 +212,7 @@
                     btnBold.addClass('active');
                     style = 'bold';
                 }
-                setStyle(KEditor.settingComponent.find('.button-wrapper a'), 'font-weight', style);
+                setStyle(keditor.getSettingComponent().find('.button-wrapper a'), 'font-weight', style);
             });
 
             var btnItalic = form.find('.btn-italic');
@@ -226,7 +226,7 @@
                     btnItalic.addClass('active');
                     style = 'italic';
                 }
-                setStyle(KEditor.settingComponent.find('.button-wrapper a'), 'font-style', style);
+                setStyle(keditor.getSettingComponent().find('.button-wrapper a'), 'font-style', style);
             });
 
             var btnAlignLeft = form.find('.btn-button-left');
@@ -234,7 +234,7 @@
             var btnAlignRight = form.find('.btn-button-right');
             var btnAlignFull = form.find('.btn-button-full');
             var setAlign = function (trigger, align) {
-                var table = KEditor.settingComponent.find('.button-wrapper');
+                var table = keditor.getSettingComponent().find('.button-wrapper');
 
                 btnAlignLeft.removeClass('active');
                 btnAlignCenter.removeClass('active');
@@ -279,11 +279,11 @@
             });
         },
 
-        showSettingForm: function (form, component, options) {
+        showSettingForm: function (form, component, keditor) {
             flog('showSettingForm "button" component', component);
 
-            KEditor.showBgColorControl(form, component);
-            KEditor.showPaddingControls(form, component);
+            KEditor.showBgColorControl(keditor, form, component);
+            KEditor.showPaddingControls(keditor, form, component);
 
             var buttonWrapper = component.find('.button-wrapper');
             var buttonInner = buttonWrapper.find('.button-inner');
@@ -356,7 +356,7 @@
                     case 'right':
                         btnAlignRight.addClass('active');
                         break;
-                };
+                }
             }
         },
 

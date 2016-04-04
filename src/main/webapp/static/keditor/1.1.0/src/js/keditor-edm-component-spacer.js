@@ -10,18 +10,18 @@
     var flog = KEditor.log;
 
     KEditor.components['spacer'] = {
-        init: function (contentArea, container, component, options) {
+        init: function (contentArea, container, component, keditor) {
             // Do nothing
         },
 
-        getContent: function (component, options) {
+        getContent: function (component, keditor) {
             flog('getContent "spacer" component', component);
 
             var componentContent = component.children('.keditor-component-content');
             return componentContent.html();
         },
 
-        destroy: function (component, options) {
+        destroy: function (component, keditor) {
             // Do nothing
         },
 
@@ -29,7 +29,7 @@
 
         settingTitle: 'Spacer Settings',
 
-        initSettingForm: function (form, options) {
+        initSettingForm: function (form, keditor) {
             flog('initSettingForm "spacer" component');
             form.append(
                 '<form class="form-horizontal">' +
@@ -44,23 +44,23 @@
 
             var spacerHeight = form.find('#spacer-height');
             spacerHeight.on('change', function () {
-                KEditor.settingComponent.find('.spacer').attr('height', this.value);
+                keditor.getSettingComponent().find('.spacer').attr('height', this.value);
             });
 
             form = form.find('form');
-            KEditor.initBgColorControl(form, 'prepend');
+            KEditor.initBgColorControl(keditor, form, 'prepend');
         },
 
-        showSettingForm: function (form, component, options) {
+        showSettingForm: function (form, component, keditor) {
             flog('showSettingForm "spacer" component', component);
 
             var spacerHeight = form.find('#spacer-height');
             spacerHeight.val(component.find('.spacer').attr('height'));
 
-            KEditor.showBgColorControl(form, component);
+            KEditor.showBgColorControl(keditor, form, component);
         },
 
-        hideSettingForm: function (form) {
+        hideSettingForm: function (form, keditor) {
             // Do nothing
         }
     };

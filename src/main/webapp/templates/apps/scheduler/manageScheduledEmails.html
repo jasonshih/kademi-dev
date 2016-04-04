@@ -35,8 +35,8 @@
                                 #else
                                 #foreach($email in $page.children)
                                 <tr class="emailStatus$!{email.job.enabled}" data-name="$email.name">
-                                    <td class="Date">$formatter.formatDate($email.job.startDate)</td>
-                                    <td class="Date">$formatter.formatDate($email.job.endDate)</td>
+                                    <td class="Date">$formatter.formatDate($email.job.startDate, $page.organisation.timezone)</td>
+                                    <td class="Date">$formatter.formatDate($email.job.endDate, $page.organisation.timezone)</td>
                                     <td class="Name">$formatter.htmlEncode($email.job.title)</td>
                                     <td><span class="Status">$!email.job.enabled</span></td>
                                     <td>

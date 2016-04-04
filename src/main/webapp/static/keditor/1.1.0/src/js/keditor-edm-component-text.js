@@ -47,9 +47,11 @@
             line_height: '1;1.2;1.5;2;2.2;2.5'
         },
 
-        init: function (contentArea, container, component, options) {
+        init: function (contentArea, container, component, keditor) {
             flog('init "text" component', component);
+
             var self = this;
+            var options = keditor.options;
 
             var componentContent = component.children('.keditor-component-content');
             componentContent.prop('contenteditable', true);
@@ -81,7 +83,7 @@
             });
         },
 
-        getContent: function (component, options) {
+        getContent: function (component, keditor) {
             flog('getContent "text" component', component);
 
             var componentContent = component.find('.keditor-component-content');
@@ -94,7 +96,7 @@
             }
         },
 
-        destroy: function (component, options) {
+        destroy: function (component, keditor) {
             flog('destroy "text" component', component);
 
             var id = component.find('.keditor-component-content').attr('id');
@@ -108,7 +110,7 @@
 
         settingTitle: 'Text Settings',
 
-        initSettingForm: function (form, options) {
+        initSettingForm: function (form, keditor) {
             flog('initSettingForm "text" component');
             form.append(
                 '<form class="form-horizontal">' +
@@ -116,18 +118,18 @@
             );
 
             form = form.find('form');
-            KEditor.initBgColorControl(form, 'append');
-            KEditor.initPaddingControls(form, 'append');
+            KEditor.initBgColorControl(keditor, form, 'append');
+            KEditor.initPaddingControls(keditor, form, 'append');
         },
 
-        showSettingForm: function (form, component, options) {
+        showSettingForm: function (form, component, keditor) {
             flog('showSettingForm "text" component', component);
 
-            KEditor.showBgColorControl(form, component);
-            KEditor.showPaddingControls(form, component);
+            KEditor.showBgColorControl(keditor, form, component);
+            KEditor.showPaddingControls(keditor, form, component);
         },
 
-        hideSettingForm: function (form) {
+        hideSettingForm: function (form, keditor) {
             // Do nothing
         }
     };

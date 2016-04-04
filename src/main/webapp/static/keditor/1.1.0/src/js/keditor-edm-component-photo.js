@@ -10,18 +10,18 @@
     var flog = KEditor.log;
 
     KEditor.components['photo'] = {
-        init: function (contentArea, container, component, options) {
+        init: function (contentArea, container, component, keditor) {
             // Do nothing
         },
 
-        getContent: function (component, options) {
+        getContent: function (component, keditor) {
             flog('getContent "photo" component', component);
 
             var componentContent = component.children('.keditor-component-content');
             return componentContent.html();
         },
 
-        destroy: function (component, options) {
+        destroy: function (component, keditor) {
             // Do nothing
         },
 
@@ -29,9 +29,11 @@
 
         settingTitle: 'Photo Settings',
 
-        initSettingForm: function (form, options) {
+        initSettingForm: function (form, keditor) {
             flog('initSettingForm "photo" component');
+
             var self = this;
+            var options = keditor.options;
 
             form.append(
                 '<form class="form-horizontal">' +
@@ -56,25 +58,27 @@
             );
 
             var photoEdit = form.find('#photo-edit');
+            var basePath = window.location.pathname.replace('edmeditor', '');
             photoEdit.mselect({
                 contentTypes: ['image'],
                 bs3Modal: true,
-                pagePath: window.location.pathname.replace('contenteditor', ''),
-                onSelectFile: function (url) {
-                    var img = KEditor.settingComponent.find('img');
-                    img.attr('src', url);
-                    self.showSettingForm(form, KEditor.settingComponent, options);
+                pagePath: basePath,
+                basePath: basePath,
+                onSelectFile: function (url, relativeUrl, fileType, hash) {
+                    var img = keditor.getSettingComponent().find('img');
+                    img.attr('src', "http://" + window.location.host + "/_hashes/files/" + hash);
+                    self.showSettingForm(form, keditor.getSettingComponent(), options);
                 }
             });
 
             var inputAlt = form.find('#photo-alt');
             inputAlt.on('change', function () {
-                KEditor.settingComponent.find('img').attr('alt', this.value);
+                keditor.getSettingComponent().find('img').attr('alt', this.value);
             });
 
             var chkFullWidth = form.find('#photo-fullwidth');
             chkFullWidth.on('click', function () {
-                var img = KEditor.settingComponent.find('img');
+                var img = keditor.getSettingComponent().find('img');
                 if (chkFullWidth.is(':checked')) {
                     img.attr({
                         width: '100%',
@@ -89,11 +93,11 @@
             });
 
             form = form.find('form');
-            KEditor.initBgColorControl(form, 'after', '.photo-edit-wrapper');
-            KEditor.initPaddingControls(form, 'before', '.photo-alt-wrapper');
+            KEditor.initBgColorControl(keditor, form, 'after', '.photo-edit-wrapper');
+            KEditor.initPaddingControls(keditor, form, 'before', '.photo-alt-wrapper');
         },
 
-        showSettingForm: function (form, component, options) {
+        showSettingForm: function (form, component, keditor) {
             flog('showSettingForm "photo" component', component);
 
             var self = this;
@@ -102,8 +106,8 @@
             var inputAlt = form.find('#photo-alt');
             inputAlt.val(img.attr('alt') || '');
 
-            KEditor.showBgColorControl(form, component);
-            KEditor.showPaddingControls(form, component);
+            KEditor.showBgColorControl(keditor, form, component);
+            KEditor.showPaddingControls(keditor, form, component);
 
             var chkFullWidth = form.find('#photo-fullwidth');
             chkFullWidth.prop('checked', img.attr('width') === '100%');
@@ -115,7 +119,7 @@
             });
         },
 
-        hideSettingForm: function (form) {
+        hideSettingForm: function (form, keditor) {
             // Do nothing
         }
     };
