@@ -20,7 +20,7 @@ function initEdmEditorPage(fileName) {
     flog('initEdmEditorPage', fileName);
     var body = $(document.body);
 
-    initEdmEditor(body);
+    initEdmEditor();
     initBtns(body, fileName);
     Msg.iconMode = 'fa';
 
@@ -36,18 +36,161 @@ function initEdmEditorPage(fileName) {
     hideLoadingIcon();
 }
 
-function initEdmEditor(body) {
+function initEdmEditor(iframeMode) {
     flog('initEdmEditor');
 
-    processFileBody();
-    initKEditor(body);
-    initSettingPanel();
+    var body = $(document.body);
+    createSettingPanel(body);
+    var edmHtml = processFileBody();
+    var keditor = initKEditor(body, iframeMode).data('keditor');
+    if (iframeMode) {
+        keditor.body.append($('#edm-setting'));
+    }
+    initSettingPanel(edmHtml, iframeMode ? keditor.body : body);
 
     window.onbeforeunload = function (e) {
         if (body.hasClass('content-changed')) {
             e.returnValue = '\n\nAre you sure you would like to leave the editor? You will lose any unsaved changes\n\n';
         }
     };
+}
+
+function createSettingPanel(body) {
+    flog('createSettingPanel');
+
+    body.append(
+        '<div id="edm-setting" class="form-horizontal">' +
+        '    <div class="panel panel-default">' +
+        '        <div class="panel-heading">EDM Page</div>' +
+        '        <div class="panel-body">' +
+        '            <div class="form-group form-group-sm">' +
+        '                <div class="col-md-12">' +
+        '                    <label for="edm-background">Background</label>' +
+        '                    <div class="input-group color-picker">' +
+        '                        <span class="input-group-addon"><i></i></span>' +
+        '                        <input type="text" value="" id="edm-background" class="form-control" />' +
+        '                    </div>' +
+        '                </div>' +
+        '            </div>' +
+        '            <div class="form-group form-group-sm">' +
+        '                <div class="col-md-12">' +
+        '                    <label>Padding (in px)</label>' +
+        '                    <div class="row row-sm text-center">' +
+        '                        <div class="col-xs-4 col-xs-offset-4">' +
+        '                            <input type="number" value="" id="edm-padding-top" class="form-control" />' +
+        '                            <small>top</small>' +
+        '                        </div>' +
+        '                    </div>' +
+        '                    <div class="row row-sm text-center">' +
+        '                        <div class="col-xs-4">' +
+        '                            <input type="number" value="" id="edm-padding-left" class="form-control" />' +
+        '                            <small>left</small>' +
+        '                        </div>' +
+        '                        <div class="col-xs-4 col-xs-offset-4">' +
+        '                            <input type="number" value="" id="edm-padding-right" class="form-control" />' +
+        '                            <small>right</small>' +
+        '                        </div>' +
+        '                    </div>' +
+        '                    <div class="row row-sm text-center">' +
+        '                        <div class="col-xs-4 col-xs-offset-4">' +
+        '                            <input type="number" value="" id="edm-padding-bottom" class="form-control" />' +
+        '                            <small>bottom</small>' +
+        '                        </div>' +
+        '                    </div>' +
+        '                </div>' +
+        '            </div>' +
+        '        </div>' +
+        '    </div>' +
+        '    <div class="panel panel-default">' +
+        '        <div class="panel-heading">EDM Body</div>' +
+        '        <div class="panel-body">' +
+        '            <div class="form-group form-group-sm">' +
+        '                <div class="col-md-12">' +
+        '                    <label for="edm-body-background">Width (in px)</label>' +
+        '                    <input type="number" value="" id="edm-body-width" class="form-control" />' +
+        '                </div>' +
+        '            </div>' +
+        '            <div class="form-group form-group-sm">' +
+        '                <div class="col-md-12">' +
+        '                    <label for="edm-body-background">Background</label>' +
+        '                    <div class="input-group color-picker">' +
+        '                        <span class="input-group-addon"><i></i></span>' +
+        '                        <input type="text" value="" id="edm-body-background" class="form-control" />' +
+        '                    </div>' +
+        '                </div>' +
+        '            </div>' +
+        '            <div class="form-group form-group-sm">' +
+        '                <div class="col-md-12">' +
+        '                    <label>Padding (in px)</label>' +
+        '                    <div class="row row-sm text-center">' +
+        '                        <div class="col-xs-4 col-xs-offset-4">' +
+        '                            <input type="number" value="" id="edm-body-padding-top" class="form-control" />' +
+        '                            <small>top</small>' +
+        '                        </div>' +
+        '                    </div>' +
+        '                    <div class="row row-sm text-center">' +
+        '                        <div class="col-xs-4">' +
+        '                            <input type="number" value="" id="edm-body-padding-left" class="form-control" />' +
+        '                            <small>left</small>' +
+        '                        </div>' +
+        '                        <div class="col-xs-4 col-xs-offset-4">' +
+        '                            <input type="number" value="" id="edm-body-padding-right" class="form-control" />' +
+        '                            <small>right</small>' +
+        '                        </div>' +
+        '                    </div>' +
+        '                    <div class="row row-sm text-center">' +
+        '                        <div class="col-xs-4 col-xs-offset-4">' +
+        '                            <input type="number" value="" id="edm-body-padding-bottom" class="form-control" />' +
+        '                            <small>bottom</small>' +
+        '                        </div>' +
+        '                    </div>' +
+        '                </div>' +
+        '            </div>' +
+        '        </div>' +
+        '    </div>' +
+        '    <div class="panel panel-default">' +
+        '        <div class="panel-heading">EDM Default Styles</div>' +
+        '        <div class="panel-body">' +
+        '            <div class="form-group form-group-sm">' +
+        '                <div class="col-md-12">' +
+        '                    <label for="edm-text-color">Text color</label>' +
+        '                    <div class="input-group color-picker">' +
+        '                        <span class="input-group-addon"><i></i></span>' +
+        '                        <input type="text" value="" id="edm-text-color" class="form-control" />' +
+        '                    </div>' +
+        '                </div>' +
+        '            </div>' +
+        '            <div class="form-group form-group-sm">' +
+        '                <div class="col-md-12">' +
+        '                    <label for="edm-text-color">Link color</label>' +
+        '                    <div class="input-group color-picker">' +
+        '                        <span class="input-group-addon"><i></i></span>' +
+        '                        <input type="text" value="" id="edm-link-color" class="form-control" />' +
+        '                    </div>' +
+        '                </div>' +
+        '            </div>' +
+        '            <div class="form-group form-group-sm">' +
+        '                <div class="col-md-12">' +
+        '                    <label for="edm-font-family">Font family</label>' +
+        '                    <input type="text" value="" id="edm-font-family" class="form-control" />' +
+        '                </div>' +
+        '            </div>' +
+        '            <div class="form-group form-group-sm">' +
+        '                <div class="col-md-12">' +
+        '                    <label for="edm-font-size">Font size</label>' +
+        '                    <input type="text" value="" id="edm-font-size" class="form-control" />' +
+        '                </div>' +
+        '            </div>' +
+        '            <div class="form-group form-group-sm">' +
+        '                <div class="col-md-12">' +
+        '                    <label for="edm-line-height">Line height</label>' +
+        '                    <input type="text" value="" id="edm-line-height" class="form-control" />' +
+        '                </div>' +
+        '            </div>' +
+        '        </div>' +
+        '    </div>' +
+        '</div>'
+    );
 }
 
 function applyInlineCssForTextWrapper(target) {
@@ -87,45 +230,17 @@ function processFileBody() {
     edmBody.html(edmHtml.find('td#edm-body-td').html());
     edmFooter.html(edmHtml.find('td#edm-footer-td').html());
 
-    $('#edm-body-width').val(edmHtml.find('#edm-container').attr('width') || DEFAULT_EDM_BODY_WIDTH);
-
-    var tdWrapper = edmHtml.find('td#edm-wrapper-td');
-    $('#edm-background').val(tdWrapper.css('background-color') || DEFAULT_EDM_BACKGROUND);
-    var paddingTop = tdWrapper.css('padding-top');
-    $('#edm-padding-top').val(paddingTop ? paddingTop.replace('px', '') : DEFAULT_EDM_PADDING_TOP);
-    var paddingBottom = tdWrapper.css('padding-bottom');
-    $('#edm-padding-bottom').val(paddingBottom ? paddingBottom.replace('px', '') : DEFAULT_EDM_PADDING_BOTTOM);
-    var paddingLeft = tdWrapper.css('padding-left');
-    $('#edm-padding-left').val(paddingLeft ? paddingLeft.replace('px', '') : DEFAULT_EDM_PADDING_LEFT);
-    var paddingRight = tdWrapper.css('padding-right');
-    $('#edm-padding-right').val(paddingRight ? paddingRight.replace('px', '') : DEFAULT_EDM_PADDING_RIGHT);
-
-    var tdBody = edmHtml.find('td#edm-body-td');
-    $('#edm-body-background').val(tdBody.css('background-color') || DEFAULT_EDM_BODY_BACKGROUND);
-    var paddingBodyTop = tdBody.css('padding-top');
-    $('#edm-body-padding-top').val(paddingBodyTop ? paddingBodyTop.replace('px', '') : DEFAULT_EDM_BODY_PADDING_TOP);
-    var paddingBodyBottom = tdBody.css('padding-bottom');
-    $('#edm-body-padding-bottom').val(paddingBodyBottom ? paddingBodyBottom.replace('px', '') : DEFAULT_EDM_BODY_PADDING_BOTTOM);
-    var paddingBodyLeft = tdBody.css('padding-left');
-    $('#edm-body-padding-left').val(paddingBodyLeft ? paddingBodyLeft.replace('px', '') : DEFAULT_EDM_BODY_PADDING_LEFT);
-    var paddingBodyRight = tdBody.css('padding-right');
-    $('#edm-body-padding-right').val(paddingBodyRight ? paddingBodyRight.replace('px', '') : DEFAULT_EDM_BODY_PADDING_RIGHT);
-
-    var tableContainer = edmHtml.find('table#edm-container');
-    $('#edm-font-family').val(tableContainer.attr('data-font-family') || DEFAULT_FONT_FAMILY);
-    $('#edm-font-size').val(tableContainer.attr('data-font-size') || DEFAULT_FONT_SIZE);
-    $('#edm-line-height').val(tableContainer.attr('data-line-height') || DEFAULT_LINE_HEIGHT);
-    $('#edm-text-color').val(tableContainer.attr('data-text-color') || DEFAULT_TEXT_COLOR);
-    $('#edm-link-color').val(tableContainer.attr('data-link-color') || DEFAULT_LINK_COLOR);
+    return edmHtml;
 }
 
-function initKEditor(body) {
-    flog('initKEditor');
+function initKEditor(body, iframeMode) {
+    flog('initKEditor', iframeMode);
 
-    var body = $(document.body);
-
-    $('#edm-area').keditor({
+    return $('#edm-area').keditor({
+        iframeMode: iframeMode,
+        basePath: iframeMode ? window.location.pathname.substr(0, window.location.pathname.lastIndexOf('/') + 1) : '',
         contentAreasSelector: '#edm-header, #edm-body, #edm-footer',
+        contentAreasWrapper: '<div id="edm-area"></div>',
         snippetsUrl: '/_components/edm/snippets.html',
         onInitContentArea: function (contentArea) {
             contentArea[contentArea.find('.keditor-container-content').children().length === 0 ? 'addClass' : 'removeClass']('empty');
@@ -166,10 +281,10 @@ function initKEditor(body) {
     });
 }
 
-function initSettingPanel() {
+function initSettingPanel(edmHtml, body) {
     flog('initSettingPanel');
 
-    var settingPanel = $('#edm-setting');
+    var settingPanel = body.find('#edm-setting');
     settingPanel.niceScroll({
         cursorcolor: '#999',
         cursorwidth: 6,
@@ -197,39 +312,70 @@ function initSettingPanel() {
 
         input.on('changeColor.colorpicker', function (e) {
             input.val(e.color.toHex());
-            applySetting();
+            applySetting(body);
         });
     });
 
     settingPanel.find('input').not('.colorpicker').on('change', function () {
-        applySetting();
+        applySetting(body);
     });
 
-    applySetting();
+    body.find('#edm-body-width').val(edmHtml.find('#edm-container').attr('width') || DEFAULT_EDM_BODY_WIDTH);
+
+    var tdWrapper = edmHtml.find('td#edm-wrapper-td');
+    body.find('#edm-background').val(tdWrapper.css('background-color') || DEFAULT_EDM_BACKGROUND);
+    var paddingTop = tdWrapper.css('padding-top');
+    body.find('#edm-padding-top').val(paddingTop ? paddingTop.replace('px', '') : DEFAULT_EDM_PADDING_TOP);
+    var paddingBottom = tdWrapper.css('padding-bottom');
+    body.find('#edm-padding-bottom').val(paddingBottom ? paddingBottom.replace('px', '') : DEFAULT_EDM_PADDING_BOTTOM);
+    var paddingLeft = tdWrapper.css('padding-left');
+    body.find('#edm-padding-left').val(paddingLeft ? paddingLeft.replace('px', '') : DEFAULT_EDM_PADDING_LEFT);
+    var paddingRight = tdWrapper.css('padding-right');
+    body.find('#edm-padding-right').val(paddingRight ? paddingRight.replace('px', '') : DEFAULT_EDM_PADDING_RIGHT);
+
+    var tdBody = edmHtml.find('td#edm-body-td');
+    body.find('#edm-body-background').val(tdBody.css('background-color') || DEFAULT_EDM_BODY_BACKGROUND);
+    var paddingBodyTop = tdBody.css('padding-top');
+    body.find('#edm-body-padding-top').val(paddingBodyTop ? paddingBodyTop.replace('px', '') : DEFAULT_EDM_BODY_PADDING_TOP);
+    var paddingBodyBottom = tdBody.css('padding-bottom');
+    body.find('#edm-body-padding-bottom').val(paddingBodyBottom ? paddingBodyBottom.replace('px', '') : DEFAULT_EDM_BODY_PADDING_BOTTOM);
+    var paddingBodyLeft = tdBody.css('padding-left');
+    body.find('#edm-body-padding-left').val(paddingBodyLeft ? paddingBodyLeft.replace('px', '') : DEFAULT_EDM_BODY_PADDING_LEFT);
+    var paddingBodyRight = tdBody.css('padding-right');
+    body.find('#edm-body-padding-right').val(paddingBodyRight ? paddingBodyRight.replace('px', '') : DEFAULT_EDM_BODY_PADDING_RIGHT);
+
+    var tableContainer = edmHtml.find('table#edm-container');
+    body.find('#edm-font-family').val(tableContainer.attr('data-font-family') || DEFAULT_FONT_FAMILY);
+    body.find('#edm-font-size').val(tableContainer.attr('data-font-size') || DEFAULT_FONT_SIZE);
+    body.find('#edm-line-height').val(tableContainer.attr('data-line-height') || DEFAULT_LINE_HEIGHT);
+    body.find('#edm-text-color').val(tableContainer.attr('data-text-color') || DEFAULT_TEXT_COLOR);
+    body.find('#edm-link-color').val(tableContainer.attr('data-link-color') || DEFAULT_LINK_COLOR);
+
+    applySetting(body);
 }
 
-function applySetting() {
-    var edmBackground = $('#edm-background').val();
-    var edmPaddingTop = $('#edm-padding-top').val();
-    var edmPaddingBottom = $('#edm-padding-bottom').val();
-    var edmPaddingLeft = $('#edm-padding-left').val();
-    var edmPaddingRight = $('#edm-padding-right').val();
-    setStyle($('html'), 'background-color', edmBackground);
-    var edmArea = $('#edm-area');
+function applySetting(body) {
+    var edmBackground = body.find('#edm-background').val();
+    var edmPaddingTop = body.find('#edm-padding-top').val();
+    var edmPaddingBottom = body.find('#edm-padding-bottom').val();
+    var edmPaddingLeft = body.find('#edm-padding-left').val();
+    var edmPaddingRight = body.find('#edm-padding-right').val();
+    setStyle(body, 'background-color', edmBackground);
+    var edmArea = body.find('#edm-area');
     setStyle(edmArea, 'padding-top', edmPaddingTop + 'px');
     setStyle(edmArea, 'padding-bottom', edmPaddingBottom + 'px');
     setStyle(edmArea, 'padding-left', edmPaddingLeft + 'px');
     setStyle(edmArea, 'padding-right', edmPaddingRight + 'px');
 
-    var edmHeader = $('#edm-header');
-    var edmBody = $('#edm-body');
-    var edmFooter = $('#edm-footer');
+    var edmHeader = body.find('#edm-header');
+    var edmBody = body.find('#edm-body');
+    var edmFooter = body.find('#edm-footer');
 
-    var edmBodyBackground = $('#edm-body-background').val();
-    var edmBodyPaddingTop = $('#edm-body-padding-top').val();
-    var edmBodyPaddingBottom = $('#edm-body-padding-bottom').val();
-    var edmBodyPaddingLeft = $('#edm-body-padding-left').val();
-    var edmBodyPaddingRight = $('#edm-body-padding-right').val();
+    var edmBodyBackground = body.find('#edm-body-background').val();
+    var edmBodyPaddingTop = body.find('#edm-body-padding-top').val();
+    var edmBodyPaddingBottom = body.find('#edm-body-padding-bottom').val();
+    var edmBodyPaddingLeft = body.find('#edm-body-padding-left').val();
+    var edmBodyPaddingRight = body.find('#edm-body-padding-right').val();
     setStyle(edmBody, 'background-color', edmBodyBackground);
     setStyle(edmBody, 'padding-top', edmBodyPaddingTop + 'px');
     setStyle(edmBody, 'padding-bottom', edmBodyPaddingBottom + 'px');
@@ -240,7 +386,7 @@ function applySetting() {
     applyInlineCssForTextWrapper(edmBody);
     applyInlineCssForTextWrapper(edmFooter);
 
-    var edmBodyWidth = $('#edm-body-width').val();
+    var edmBodyWidth = body.find('#edm-body-width').val();
     edmHeader.innerWidth(edmBodyWidth);
     edmBody.innerWidth(edmBodyWidth);
     edmFooter.innerWidth(edmBodyWidth);
@@ -307,17 +453,18 @@ function setStyle(target, name, value) {
     });
 }
 
-function getEdmBody() {
-    var edmHeader = $('#edm-header').keditor('getContent', false);
-    var edmBody = $('#edm-body').keditor('getContent', false);
-    var edmFooter = $('#edm-footer').keditor('getContent', false);
+function getEdmBody(body) {
+    var edmHtml = $('#edm-area').keditor('getContent', true);
+    var edmHeader = edmHtml[0];
+    var edmBody = edmHtml[1];
+    var edmFooter = edmHtml[2];
 
     // EDM Page
-    var edmBackground = $('#edm-background').val();
-    var edmPaddingTop = $('#edm-padding-top').val();
-    var edmPaddingBottom = $('#edm-padding-bottom').val();
-    var edmPaddingLeft = $('#edm-padding-left').val();
-    var edmPaddingRight = $('#edm-padding-right').val();
+    var edmBackground = body.find('#edm-background').val();
+    var edmPaddingTop = body.find('#edm-padding-top').val();
+    var edmPaddingBottom = body.find('#edm-padding-bottom').val();
+    var edmPaddingLeft = body.find('#edm-padding-left').val();
+    var edmPaddingRight = body.find('#edm-padding-right').val();
     var styleTDWrapper = '';
     var attributeTableWrapper = '';
     if (edmBackground) {
@@ -338,12 +485,12 @@ function getEdmBody() {
     }
 
     // EDM Body
-    var edmBodyWidth = $('#edm-body-width').val();
-    var edmBodyBackground = $('#edm-body-background').val();
-    var edmBodyPaddingTop = $('#edm-body-padding-top').val();
-    var edmBodyPaddingBottom = $('#edm-body-padding-bottom').val();
-    var edmBodyPaddingLeft = $('#edm-body-padding-left').val();
-    var edmBodyPaddingRight = $('#edm-body-padding-right').val();
+    var edmBodyWidth = body.find('#edm-body-width').val();
+    var edmBodyBackground = body.find('#edm-body-background').val();
+    var edmBodyPaddingTop = body.find('#edm-body-padding-top').val();
+    var edmBodyPaddingBottom = body.find('#edm-body-padding-bottom').val();
+    var edmBodyPaddingLeft = body.find('#edm-body-padding-left').val();
+    var edmBodyPaddingRight = body.find('#edm-body-padding-right').val();
     var styleTDBody = '';
     var attributeTableBody = '';
     if (edmBodyBackground) {
@@ -364,11 +511,11 @@ function getEdmBody() {
     }
 
     // EDM Default styles
-    var edmFontFamily = $('#edm-font-family').val();
-    var edmFontSize = $('#edm-font-size').val();
-    var edmLineHeight = $('#edm-line-height').val();
-    var edmTextColor = $('#edm-text-color').val();
-    var edmLinkColor = $('#edm-link-color').val();
+    var edmFontFamily = body.find('#edm-font-family').val();
+    var edmFontSize = body.find('#edm-font-size').val();
+    var edmLineHeight = body.find('#edm-line-height').val();
+    var edmTextColor = body.find('#edm-text-color').val();
+    var edmLinkColor = body.find('#edm-link-color').val();
     var dataEdmStyles = '';
     if (edmFontFamily) {
         dataEdmStyles += ' data-font-family="' + edmFontFamily + '" ';
@@ -434,6 +581,11 @@ function getEdmBody() {
 }
 
 function getEdmContent() {
+    var keditor = $('#edm-area').data('keditor');
+    var body = $(document.body);
+    if (keditor.options.iframeMode) {
+        body = keditor.body;
+    }
     var edmContent =
             '<!DOCTYPE HTML>\n' +
             '<html>\n' +
@@ -451,7 +603,7 @@ function getEdmContent() {
             '</html>';
     var edmContentData = {
         styleContent: $('#edm-style').html().trim(),
-        bodyContent: getEdmBody()
+        bodyContent: getEdmBody(body)
     };
 
     for (var key in edmContentData) {

@@ -1,0 +1,58 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+    </head>
+    <body class="manageUserPages">
+        <h1>Manage dashboards</h1>
+
+        #if( $page.dashboardsRepo )
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Group</th>
+                    <th>Customised</th>
+                </tr>
+            </thead>
+            <tbody>
+                #foreach( $group in $page.groups )
+                <tr>
+                    #set( $fileName = $group.name + ".html" )
+                    #set($file = false )
+                    #set($file = $page.dashboardsRepo.child($fileName) )
+                    <th>$group.name</th>
+                    <th>
+                        #if( $file )
+                        <a target="_blank" href="${page.dashboardsRepo.href}contenteditor?fileName=$file.name" class="btn btn-primary">
+                            <span class="fa fa-dashboard"></span>
+                            Edit
+                        </a>
+                        #else
+                        <a target="_blank" href="$page.href?createDashboard=$fileName" class="btn btn-success btnCreateFile">
+                            <span class="fa fa-dashboard"></span>
+                            Create
+                        </a>
+                        #end
+                    </th>
+                </tr>
+                #end
+            </tbody>
+        </table>
+        #else
+        <form method="POST" action="$page.href" id="createRepoForm">
+            <input type="hidden" name="createRepo" />
+            <button type="submit" class="btn btn-success">Create dashboards repository</button>
+        </form>
+        #end
+
+
+        <script type="text/javascript" >
+            $(function () {
+                $("#createRepoForm").forms({
+                    onSuccess : function() {
+                        window.location.reload();
+                    }
+                });
+            });
+        </script>
+
+    </body>
+</html>

@@ -410,18 +410,21 @@
             snippetsList.find('.keditor-snippet[data-type=container]').draggable({
                 helper: 'clone',
                 revert: 'invalid',
-                connectToSortable: '.keditor-content-area',
+                connectToSortable: body.find('.keditor-content-area'),
                 start: function () {
                     $('[contenteditable]').blur();
                     $('.keditor-container.showed-keditor-toolbar').removeClass('showed-keditor-toolbar');
                     $('.keditor-component.showed-keditor-toolbar').removeClass('showed-keditor-toolbar');
+                },
+                stop: function () {
+                    snippetsList.find('.keditor-snippet[data-type^=component]').draggable('option', 'connectToSortable', body.find('.keditor-container-content'));
                 }
             });
 
             snippetsList.find('.keditor-snippet[data-type^=component]').draggable({
                 helper: 'clone',
                 revert: 'invalid',
-                connectToSortable: '.keditor-container-content',
+                connectToSortable: body.find('.keditor-container-content'),
                 start: function () {
                     body.find('[contenteditable]').blur();
                     body.find('.keditor-container.showed-keditor-toolbar').removeClass('showed-keditor-toolbar');
@@ -630,6 +633,7 @@
 
             var self = this;
             var options = self.options;
+            var body = self.body;
 
             contentArea.addClass('keditor-content-area');
 
@@ -657,7 +661,7 @@
                     var item = ui.item;
 
                     if (item.is('.keditor-snippet')) {
-                        var snippetContent = $(item.attr('data-snippet')).html();
+                        var snippetContent = body.find(item.attr('data-snippet')).html();
                         flog('Snippet content', snippetContent);
 
                         var container = $(
@@ -769,6 +773,7 @@
 
             var self = this;
             var options = self.options;
+            var body = self.body;
             var contentId = self.generateId('container-content');
             containerContent.addClass('keditor-container-content');
 
@@ -799,7 +804,7 @@
                     var container;
 
                     if (item.is('.keditor-snippet')) {
-                        var snippetContent = $(item.attr('data-snippet')).html();
+                        var snippetContent = body.find(item.attr('data-snippet')).html();
                         var componentType = item.attr('data-type');
                         flog('Snippet content', snippetContent);
 

@@ -528,6 +528,9 @@
 
             var photoEdit = form.find('#photo-edit');
             var basePath = window.location.pathname.replace('edmeditor', '');
+            if (keditor.options.basePath) {
+                basePath = keditor.options.basePath;
+            }
             photoEdit.mselect({
                 contentTypes: ['image'],
                 bs3Modal: true,

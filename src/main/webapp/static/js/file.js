@@ -110,7 +110,11 @@ function getParentHref(href) {
     return href;
 }
 
-function isExcluded(href) {
+function isExcluded(href, excludedPaths) {
+    if (!excludedPaths) {
+        excludedPaths = [];
+    }
+
     log("isExcluded", href, excludedPaths);
     for (i = 0; i < excludedPaths.length; i++) {
         var p = accountRootPathNoSlash() + excludedPaths[i];

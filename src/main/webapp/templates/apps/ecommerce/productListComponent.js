@@ -3,18 +3,18 @@
     var flog = KEditor.log;
 
     KEditor.components['productList'] = {
-        init: function (contentArea, container, component, options) {
+        init: function (contentArea, container, component, keditor) {
             // Do nothing
         },
 
-        getContent: function (component, options) {
+        getContent: function (component, keditor) {
             flog('getContent "line" component', component);
 
             var componentContent = component.children('.keditor-component-content');
             return componentContent.html();
         },
 
-        destroy: function (component, options) {
+        destroy: function (component, keditor) {
             // Do nothing
         },
 
@@ -22,7 +22,7 @@
 
         settingTitle: 'Line Settings',
 
-        initSettingForm: function (form, options) {
+        initSettingForm: function (form, keditor) {
             // TODO: settings for product list
             flog('initSettingForm "line" component');
             form.append(
@@ -47,16 +47,16 @@
 
             var lineHeight = form.find('#line-height');
             lineHeight.on('change', function () {
-                setStyle(KEditor.settingComponent.find('.wrapper div'), 'height', this.value);
+                setStyle(keditor.getSettingComponent().find('.wrapper div'), 'height', this.value);
             });
 
             form = form.find('form');
-            KEditor.initPaddingControls(form, 'prepend');
-            KEditor.initBgColorControl(form, 'prepend');
+            KEditor.initPaddingControls(keditor, form, 'prepend');
+            KEditor.initBgColorControl(keditor, form, 'prepend');
 
             var lineColorPicker = form.find('.line-color-picker');
             initColorPicker(lineColorPicker, function (color) {
-                var wrapper = KEditor.settingComponent.find('.wrapper');
+                var wrapper = keditor.getSettingComponent().find('.wrapper');
                 var div = wrapper.children('div');
 
                 if (color && color !== 'transparent') {
@@ -68,7 +68,7 @@
             });
         },
 
-        showSettingForm: function (form, component, options) {
+        showSettingForm: function (form, component, keditor) {
             flog('showSettingForm "line" component', component);
 
             var lineHeight = form.find('#line-height');
@@ -85,7 +85,7 @@
             lineColorPicker.colorpicker('setValue', div.css('background-color') || '');
         },
 
-        hideSettingForm: function (form) {
+        hideSettingForm: function (form, keditor) {
             // Do nothing
         }
     };

@@ -23,7 +23,7 @@
                     <td>$!unsub.profile.surName</td>
                     <td>$!unsub.profile.email</td>
                     <td>$formatter.formatDateTime($unsub.unsubcribeDate, $page.organisation.timezone)</td>
-                    <td></td>
+                    <td>#if($page.lastCommunication) <a href="$!page.lastCommunication.href">$!page.lastCommunication.title</a> #end</td>
                 </tr>
                 #end
             </tbody>
