@@ -285,7 +285,7 @@
         initTotalPlays(totalPlays);
         initTotalViewTime(totalViewTime);
         initAvgViewTime(totalPlays, totalViewTime);
-        initHistogram2(totalPlays.histogram, totalViewTime.histogram);
+        initHistogram2(totalPlays.histogram.buckets, totalViewTime.histogram.buckets);
     }
 
     function loadData() {
