@@ -1,0 +1,40 @@
+<div class="row" style="min-height: 100px">
+    #foreach( $website in $rootFolder.organisation.websites())
+    #if( $website.redirectTo.length() > 0 )
+    #else
+    <div class="col-md-3 col-sm-4 col-lg-4 gallery-img">
+        #if( $website.imageHash )
+        #set( $bgimage = "/_hashes/files/$website.imageHash" )
+        #else
+        #set( $bgimage = "/static/images/website-icon-squared.png" )
+        #end
+        <div class="wrap-image">
+            <a href="/websites/$website.name/$website.liveBranch/?goto=" target="_blank" style="background-image: url($bgimage)" class="dashWebsiteImage">
+
+            </a>
+            <a title="$!website.title" href="/websites/$website.name/$website.liveBranch/?goto=" class="group1 lead tileText cboxElement" target="_blank">
+                $website.name
+                <br/>
+                <small style="font-size: 12px">
+                    #if ($website.domainName && $website.domainName != "")
+                    $website.domainName<br />
+                    #end
+                    <i>
+                        $!website.liveBranch / $!website.trunk.publicTheme
+                    </i>
+                </small>
+            </a>
+            <div class="tools tools-bottom">
+                <a href="/websites/$website.name/$website.liveBranch/">
+                    <span class="glyphicon glyphicon-cog"></span>
+                </a>
+                <a href="/repositories/$website.name/$website.liveBranch/">
+                    <span class="glyphicon glyphicon-folder-close"></span>
+                </a>
+
+            </div>
+        </div>
+    </div>
+    #end
+    #end
+</div>
