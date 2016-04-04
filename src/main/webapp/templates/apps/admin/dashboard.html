@@ -1,285 +1,295 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <title>$view.title</title>
-    <script type="text/javascript" src="/templates/apps/reporting/reports.js">//</script>
-    <script type="text/javascript" src="/static/masonry/3.3.2/masonry.pkgd.min.js">//</script>
-    <script type="text/javascript" src="/static/easy-pie-chart/2.1.7/jquery.easypiechart.min.js">//</script>
-    <script type="text/javascript" src="/static/ktile/1.0.0/ktile.js">//</script>
+    <head>
+        <title>$view.title</title>
+        <script type="text/javascript" src="/templates/apps/reporting/reports.js">//</script>
+        <script type="text/javascript" src="/static/masonry/3.3.2/masonry.pkgd.min.js">//</script>
+        <script type="text/javascript" src="/static/easy-pie-chart/2.1.7/jquery.easypiechart.min.js">//</script>
+        <script type="text/javascript" src="/static/ktile/1.0.0/ktile.js">//</script>
 
-    <link href="/static/nvd3/nv.d3.css" rel="stylesheet" />
-    <link href="dashboard.css?v=6.3.1" rel="stylesheet" type="text/css" />
-    <link href="/static/ktile/1.0.0/ktile.css?v=6.3.1" rel="stylesheet" type="text/css" />
-</head>
-<body class="dashboard">
+        <link href="/static/nvd3/nv.d3.css" rel="stylesheet" />
+        <link href="dashboard.css?v=6.3.1" rel="stylesheet" type="text/css" />
+        <link href="/static/ktile/1.0.0/ktile.css?v=6.3.1" rel="stylesheet" type="text/css" />
+    </head>
+    <body class="dashboard">
 
-<div id="dashboard-wrapper" class="row">
-    #portlets("adminDashboardPrimaryAnnounce")
+        <div id="dashboard-wrapper" class="row">
+            #if( $page.customDashBody )
+            <div class="col-md-12">
+            $page.customDashBody
+            </div>
+            #else
+                #defaultDash()
+            #end
+        </div>
 
-    <div class="col-md-8">
-        <div class="panel-body panel-scroll ps-container ps-active-y" id="websites-wrapper">
-            <div style="overflow: hidden">
-                <div class="row">
-                    #foreach( $website in $page.organisation.websites())
-                    #if( $website.redirectTo.length() > 0 )
-                    #else
-                    <div class="col-md-3 col-sm-4 col-lg-4 gallery-img">
-                        #if( $website.imageHash )
-                        #set( $bgimage = "/_hashes/files/$website.imageHash" )
+        <!-- This is the default dashboard, including js and init, for when there is no custom dash -->
+        #macro( defaultDash )
+        #portlets("adminDashboardPrimaryAnnounce")
+
+        <div class="col-md-8">
+            <div class="panel-body panel-scroll ps-container ps-active-y" id="websites-wrapper">
+                <div style="overflow: hidden">
+                    <div class="row">
+                        #foreach( $website in $page.organisation.websites())
+                        #if( $website.redirectTo.length() > 0 )
                         #else
-                        #set( $bgimage = "/static/images/website-icon-squared.png" )
+                        <div class="col-md-3 col-sm-4 col-lg-4 gallery-img">
+                            #if( $website.imageHash )
+                            #set( $bgimage = "/_hashes/files/$website.imageHash" )
+                            #else
+                            #set( $bgimage = "/static/images/website-icon-squared.png" )
+                            #end
+                            <div class="wrap-image">
+                                <a href="/websites/$website.name/$website.liveBranch/?goto=" target="_blank" style="background-image: url($bgimage)" class="dashWebsiteImage">
+
+                                </a>
+                                <a title="$!website.title" href="/websites/$website.name/$website.liveBranch/?goto=" class="group1 lead tileText cboxElement" target="_blank">
+                                    $website.name
+                                    <br/>
+                                    <small style="font-size: 12px">
+                                        #if ($website.domainName && $website.domainName != "")
+                                        $website.domainName<br />
+                                        #end
+                                        <i>
+                                            $!website.liveBranch / $!website.trunk.publicTheme
+                                        </i>
+                                    </small>
+                                </a>
+                                <div class="tools tools-bottom">
+                                    <a href="/websites/$website.name/$website.liveBranch/">
+                                        <span class="glyphicon glyphicon-cog"></span>
+                                    </a>
+                                    <a href="/repositories/$website.name/$website.liveBranch/">
+                                        <span class="glyphicon glyphicon-folder-close"></span>
+                                    </a>
+
+                                </div>
+                            </div>
+                        </div>
                         #end
-                        <div class="wrap-image">
-                            <a href="/websites/$website.name/$website.liveBranch/?goto=" target="_blank" style="background-image: url($bgimage)" class="dashWebsiteImage">
-
-                            </a>
-                            <a title="$!website.title" href="/websites/$website.name/$website.liveBranch/?goto=" class="group1 lead tileText cboxElement" target="_blank">
-                                $website.name
-                                <br/>
-                                <small style="font-size: 12px">
-                                    #if ($website.domainName && $website.domainName != "")
-                                    $website.domainName<br />
-                                    #end
-                                    <i>
-                                        $!website.liveBranch / $!website.trunk.publicTheme
-                                    </i>
-                                </small>
-                            </a>
-                            <div class="tools tools-bottom">
-                                <a href="/websites/$website.name/$website.liveBranch/">
-                                    <span class="glyphicon glyphicon-cog"></span>
-                                </a>
-                                <a href="/repositories/$website.name/$website.liveBranch/">
-                                    <span class="glyphicon glyphicon-folder-close"></span>
-                                </a>
-
-                            </div>
-                        </div>
+                        #end
                     </div>
-                    #end
-                    #end
                 </div>
             </div>
-        </div>
 
-        <div class="ktile-container row">
-            <div class="ktile-sizer col-md-1 col-lg-1 col-sm-1"></div>
+            <div class="ktile-container row">
+                <div class="ktile-sizer col-md-1 col-lg-1 col-sm-1"></div>
 
-            <div class="ktile-wrapper col-xl-3 col-lg-4 col-md-4 col-sm-3">
-                <div class="ktile">
-                    <div class="ktile-inner">
-                        <div class="ktile-body">
-                            <div class="ktile-front bgm-blue">
-                                <div class="ktile-content">
-                                    <div class="row" style="margin: 0">
-                                        <a href="/manageUsers" class="c-white">
-                                            <div class="col-xs-3">
-                                                <i class="fa fa-user fa-4x"></i>
-                                            </div>
-                                            <div class="col-xs-9 text-right">
-                                                <div class="huge">$rootFolder.numProfiles</div>
-                                                <div>profiles</div>
-                                            </div>
-                                        </a>
+                <div class="ktile-wrapper col-xl-3 col-lg-4 col-md-4 col-sm-3">
+                    <div class="ktile">
+                        <div class="ktile-inner">
+                            <div class="ktile-body">
+                                <div class="ktile-front bgm-blue">
+                                    <div class="ktile-content">
+                                        <div class="row" style="margin: 0">
+                                            <a href="/manageUsers" class="c-white">
+                                                <div class="col-xs-3">
+                                                    <i class="fa fa-user fa-4x"></i>
+                                                </div>
+                                                <div class="col-xs-9 text-right">
+                                                    <div class="huge">$rootFolder.numProfiles</div>
+                                                    <div>profiles</div>
+                                                </div>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="ktile-wrapper col-xl-3 col-lg-4 col-md-4 col-sm-3">
-                <div class="ktile">
-                    <div class="ktile-inner">
-                        <div class="ktile-body">
-                            <div class="ktile-front bgm-blue">
-                                <div class="ktile-content">
-                                    <div class="row" style="margin: 0">
-                                        <a href="/groups" class="c-white">
-                                            <div class="col-xs-3">
-                                                <i class="fa fa-users fa-4x"></i>
-                                            </div>
-                                            <div class="col-xs-9 text-right">
-                                                <div class="huge">$rootFolder.numGroups</div>
-                                                <div>groups</div>
-                                            </div>
-                                        </a>
+                <div class="ktile-wrapper col-xl-3 col-lg-4 col-md-4 col-sm-3">
+                    <div class="ktile">
+                        <div class="ktile-inner">
+                            <div class="ktile-body">
+                                <div class="ktile-front bgm-blue">
+                                    <div class="ktile-content">
+                                        <div class="row" style="margin: 0">
+                                            <a href="/groups" class="c-white">
+                                                <div class="col-xs-3">
+                                                    <i class="fa fa-users fa-4x"></i>
+                                                </div>
+                                                <div class="col-xs-9 text-right">
+                                                    <div class="huge">$rootFolder.numGroups</div>
+                                                    <div>groups</div>
+                                                </div>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="ktile-wrapper col-xl-3 col-lg-4 col-md-4 col-sm-3">
-                <div class="ktile">
-                    <div class="ktile-inner">
-                        <div class="ktile-body">
-                            <div class="ktile-front bgm-blue">
-                                <div class="ktile-content">
-                                    <div class="row" style="margin: 0">
-                                        <a href="/organisations" class="c-white">
-                                            <div class="col-xs-3">
-                                                <i class="fa fa-sitemap fa-4x"></i>
-                                            </div>
-                                            <div class="col-xs-9 text-right">
-                                                <div class="huge">$rootFolder.numOrgs</div>
-                                                <div>orgs</div>
-                                            </div>
-                                        </a>
+                <div class="ktile-wrapper col-xl-3 col-lg-4 col-md-4 col-sm-3">
+                    <div class="ktile">
+                        <div class="ktile-inner">
+                            <div class="ktile-body">
+                                <div class="ktile-front bgm-blue">
+                                    <div class="ktile-content">
+                                        <div class="row" style="margin: 0">
+                                            <a href="/organisations" class="c-white">
+                                                <div class="col-xs-3">
+                                                    <i class="fa fa-sitemap fa-4x"></i>
+                                                </div>
+                                                <div class="col-xs-9 text-right">
+                                                    <div class="huge">$rootFolder.numOrgs</div>
+                                                    <div>orgs</div>
+                                                </div>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                #portlets("adminDashboardQuickLinks")
             </div>
 
-            #portlets("adminDashboardQuickLinks")
-        </div>
-
-        <div class="ktile-container row">
-            <div class="ktile-sizer col-md-1 col-lg-1 col-sm-1"></div>
-            #portlets("adminDashboardPrimaryMasonry")
-        </div>
-    </div>
-
-    <div class="col-md-4" id="stream-wrapper">
-        #portlets("adminDashboardStream")
-    </div>
-
-    <div class="col-md-7">
-        #portlets("adminDashboardSecondary")
-    </div>
-    <div class="col-md-5">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="clip-stack-empty"></i>
-                History
-            </div>
-            <div class="panel-body panel-scroll ps-container ps-active-y" id="recentList" style="height: 400px">
-                <ul class="list" style=""></ul>
+            <div class="ktile-container row">
+                <div class="ktile-sizer col-md-1 col-lg-1 col-sm-1"></div>
+                #portlets("adminDashboardPrimaryMasonry")
             </div>
         </div>
-    </div>
-</div>
 
-<script src="/static/d3/d3.v3.js">//</script>
-<script src="/static/nvd3/nv.d3.js">//</script>
-<script src="/static/sparkleline/2.1.2/jquery.sparkline.min.js">//</script>
-<script type="text/javascript">
-    var win = $(window);
+        <div class="col-md-4" id="stream-wrapper">
+            #portlets("adminDashboardStream")
+        </div>
 
-    function initStreamWrapper() {
-        var streamWrapper = $('#stream-wrapper');
-        var stream = streamWrapper.find('.panel-scroll');
-        var target = streamWrapper.prev();
+        <div class="col-md-7">
+            #portlets("adminDashboardSecondary")
+        </div>
+        <div class="col-md-5">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="clip-stack-empty"></i>
+                    History
+                </div>
+                <div class="panel-body panel-scroll ps-container ps-active-y" id="recentList" style="height: 400px">
+                    <ul class="list" style=""></ul>
+                </div>
+            </div>
+        </div>
 
-        win.on('resize', function () {
-            stream.css('height', '');
+        <script src="/static/d3/d3.v3.js">//</script>
+        <script src="/static/nvd3/nv.d3.js">//</script>
+        <script src="/static/sparkleline/2.1.2/jquery.sparkline.min.js">//</script>
+        <script type="text/javascript">
+            var win = $(window);
 
-            if (win.width() > 768) {
-                setTimeout(function () {
-                    var targetHeight = target.height();
-                    stream.css('height', targetHeight - 78);
-                }, 450);
+            function initStreamWrapper() {
+                var streamWrapper = $('#stream-wrapper');
+                var stream = streamWrapper.find('.panel-scroll');
+                var target = streamWrapper.prev();
+
+                win.on('resize', function () {
+                    stream.css('height', '');
+
+                    if (win.width() > 768) {
+                        setTimeout(function () {
+                            var targetHeight = target.height();
+                            stream.css('height', targetHeight - 78);
+                        }, 450);
+                    }
+                }).trigger('resize');
             }
-        }).trigger('resize');
-    }
 
-    function initMasonryLayout() {
-        var container = $('.ktile-container');
+            function initMasonryLayout() {
+                var container = $('.ktile-container');
 
-        // Bind event listener
-        container.on('layoutComplete', function () {
-            var wrappers = container.find(".ktile-wrapper");
+                // Bind event listener
+                container.on('layoutComplete', function () {
+                    var wrappers = container.find(".ktile-wrapper");
 
-            flog("onlayout", wrappers);
+                    flog("onlayout", wrappers);
 
-            wrappers.animate({
-                opacity: 1,
-            }, 1000, function () {
-                flog("complete");
-            });
-        });
+                    wrappers.animate({
+                        opacity: 1,
+                    }, 1000, function () {
+                        flog("complete");
+                    });
+                });
 
-        container.masonry({
-            columnWidth: ".ktile-sizer",
-            percentPosition: true
-        });
-    }
+                container.masonry({
+                    columnWidth: ".ktile-sizer",
+                    percentPosition: true
+                });
+            }
 
-    $(function () {
-        initMasonryLayout();
-        initStreamWrapper();
+            $(function () {
+                initMasonryLayout();
+                initStreamWrapper();
 
-        var recent = getRecentItems();
-        if (recent !== null) {
-            flog("recent", recent);
-            var list = $("#recentList ul");
-            var seen = new Array();
-            for (var i = recent.length - 1; i > (recent.length - 10) && i > 0; i--) {
-                var item = recent[i];
-                var pos = $.inArray(item.url, seen);
-                if (pos < 0) {
-                    seen.push(item.url);
-                    var li = $("<li class=''><a href='" + item.url + "'>xx</a></li>");
-                    list.append(li)
-                    li.find("a").attr("href", item.url);
-                    li.find("a").text(item.title);
+                var recent = getRecentItems();
+                if (recent !== null) {
+                    flog("recent", recent);
+                    var list = $("#recentList ul");
+                    var seen = new Array();
+                    for (var i = recent.length - 1; i > (recent.length - 10) && i > 0; i--) {
+                        var item = recent[i];
+                        var pos = $.inArray(item.url, seen);
+                        if (pos < 0) {
+                            seen.push(item.url);
+                            var li = $("<li class=''><a href='" + item.url + "'>xx</a></li>");
+                            list.append(li)
+                            li.find("a").attr("href", item.url);
+                            li.find("a").text(item.title);
+                        }
+                    }
+                } else {
+                    flog("no recent list");
                 }
+            });
+
+            function sparklineBar(div, values, width, height, barWidth, barColor, barSpacing) {
+                div.sparkline(values, {
+                    type: 'bar',
+                    height: height,
+                    width: width,
+                    barColor: barColor,
+                    barSpacing: barSpacing
+                })
             }
-        } else {
-            flog("no recent list");
-        }
-    });
 
-    function sparklineBar(div, values, width, height, barWidth, barColor, barSpacing) {
-        div.sparkline(values, {
-            type: 'bar',
-            height: height,
-            width: width,
-            barColor: barColor,
-            barSpacing: barSpacing
-        })
-    }
+            function sparklineLine(div, values, width, height, lineColor, fillColor, lineWidth, maxSpotColor, minSpotColor, spotColor, spotRadius, hSpotColor, hLineColor) {
+                div.sparkline(values, {
+                    type: 'line',
+                    width: width,
+                    height: height,
+                    lineColor: lineColor,
+                    fillColor: fillColor,
+                    lineWidth: lineWidth,
+                    maxSpotColor: maxSpotColor,
+                    minSpotColor: minSpotColor,
+                    spotColor: spotColor,
+                    spotRadius: spotRadius,
+                    highlightSpotColor: hSpotColor,
+                    highlightLineColor: hLineColor
+                });
+            }
 
-    function sparklineLine(div, values, width, height, lineColor, fillColor, lineWidth, maxSpotColor, minSpotColor, spotColor, spotRadius, hSpotColor, hLineColor) {
-        div.sparkline(values, {
-            type: 'line',
-            width: width,
-            height: height,
-            lineColor: lineColor,
-            fillColor: fillColor,
-            lineWidth: lineWidth,
-            maxSpotColor: maxSpotColor,
-            minSpotColor: minSpotColor,
-            spotColor: spotColor,
-            spotRadius: spotRadius,
-            highlightSpotColor: hSpotColor,
-            highlightLineColor: hLineColor
-        });
-    }
+            function sparklinePie(div, values, width, height, sliceColors) {
+                div.sparkline(values, {
+                    type: 'pie',
+                    width: width,
+                    height: height,
+                    sliceColors: sliceColors,
+                    offset: 0,
+                    borderWidth: 0
+                });
+            }
 
-    function sparklinePie(div, values, width, height, sliceColors) {
-        div.sparkline(values, {
-            type: 'pie',
-            width: width,
-            height: height,
-            sliceColors: sliceColors,
-            offset: 0,
-            borderWidth: 0
-        });
-    }
-
-    function formatNumeric(a) {
-        a = a + "";
-        a = a.replace(new RegExp("^(\\d{" + (a.length % 3 ? a.length % 3 : 0) + "})(\\d{3})", "g"), "$1 $2").replace(/(\d{3})+?/gi, "$1 ").trim();
-        return a;
-    }
-</script>
-
-</body>
+            function formatNumeric(a) {
+                a = a + "";
+                a = a.replace(new RegExp("^(\\d{" + (a.length % 3 ? a.length % 3 : 0) + "})(\\d{3})", "g"), "$1 $2").replace(/(\d{3})+?/gi, "$1 ").trim();
+                return a;
+            }
+        </script>
+        #end <!-- end default dash -->
+    </body>
 </html>
 
