@@ -4,6 +4,19 @@
     <body class="manageUserPages">
         <h1>Manage dashboards</h1>
 
+        #if( $page.children.size() > 0 )
+        <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Switch to website <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                #foreach( $website in $page.children)
+                <li><a href="$website.name">$website.name</a></li>
+                #end
+            </ul>
+        </div>
+        #end
+
         #if( $page.dashboardsRepo )
         <table class="table table-striped">
             <thead>
@@ -26,7 +39,7 @@
                             Edit
                         </a>
                         #else
-                        <a target="_blank" href="$page.href?createDashboard=$fileName" class="btn btn-success btnCreateFile">
+                        <a target="_blank" href="$request.absolutePath?createDashboard=$fileName" class="btn btn-success btnCreateFile">
                             <span class="fa fa-dashboard"></span>
                             Create
                         </a>
@@ -37,7 +50,7 @@
             </tbody>
         </table>
         #else
-        <form method="POST" action="$page.href" id="createRepoForm">
+        <form method="POST" action="$request.absolutePath" id="createRepoForm">
             <input type="hidden" name="createRepo" />
             <button type="submit" class="btn btn-success">Create dashboards repository</button>
         </form>
@@ -47,7 +60,7 @@
         <script type="text/javascript" >
             $(function () {
                 $("#createRepoForm").forms({
-                    onSuccess : function() {
+                    onSuccess: function () {
                         window.location.reload();
                     }
                 });
