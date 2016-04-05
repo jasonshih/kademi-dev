@@ -231,6 +231,8 @@
                 plays.values.push(
                         {x: bucket.key, y: bucket.doc_count});
             }
+            
+            plays.values.sort(dynamicSort('x'));
 
             var views = {
                 values: [],
@@ -239,9 +241,12 @@
             };
             for (var i = 0; i < viewHits.length; i++) {
                 var bucket = viewHits[i];
+                var s = bucket.doc_count > 0 ? bucket.doc_count * 3 : 0;
                 views.values.push(
-                        {x: bucket.key, y: (bucket.doc_count * 3)});
+                        {x: bucket.key, y: s});
             }
+            
+            views.values.sort(dynamicSort('x'));
 
             myData.push(plays);
             myData.push(views);
@@ -322,4 +327,16 @@ function msToTime(duration) {
     seconds = (seconds < 10) ? "0" + seconds : seconds;
 
     return minutes + ":" + seconds + "." + milliseconds;
+}
+
+function dynamicSort(property) {
+    var sortOrder = 1;
+    if (property[0] === "-") {
+        sortOrder = -1;
+        property = property.substr(1);
+    }
+    return function (a, b) {
+        var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+        return result * sortOrder;
+    }
 }
