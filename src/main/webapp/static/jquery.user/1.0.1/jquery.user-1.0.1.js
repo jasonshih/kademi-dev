@@ -309,10 +309,9 @@ function showRegisterOrLoginModal(callbackOnLoggedIn) {
             url: "registerOrLogin",
             dataType: "html",
             success: function(resp) {
-                var page = $(resp);
-                var r = page.find(".registerOrLoginCont");
-                //log("content", page, "r", r);
-                modal.find(".modal-body").html(r);
+                var r = $('<div />').html(resp).find('.registerOrLoginCont');
+                modal.find('.modal-body').html(r);
+
                 flog("modal", modal);
                 $(".loginCont").user({
                     afterLoginUrl: "none",
