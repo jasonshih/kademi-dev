@@ -402,6 +402,7 @@ function initColorPicker(target, onChangeHandle) {
             format: 'hex',
             container: colorPicker.parent(),
             component: '.input-group-addon',
+            align: 'left',
             colorSelectors: {
                 'transparent': 'transparent'
             }
@@ -587,20 +588,20 @@ function getEdmContent() {
         body = keditor.body;
     }
     var edmContent =
-            '<!DOCTYPE HTML>\n' +
-            '<html>\n' +
-            '    <head>\n' +
-            '        <title>Kademi EDM Title</title>\n' +
-            '        <style type="text/css">\n' +
-            '            {{styleContent}}\n' +
-            '        </style>\n' +
-            '    </head>\n' +
-            '    <body>\n' +
-            '        <center>\n' +
-            '{{bodyContent}}\n' +
-            '        </center>\n' +
-            '    </body>\n' +
-            '</html>';
+        '<!DOCTYPE HTML>\n' +
+        '<html>\n' +
+        '    <head>\n' +
+        '        <title>Kademi EDM Title</title>\n' +
+        '        <style type="text/css">\n' +
+        '            {{styleContent}}\n' +
+        '        </style>\n' +
+        '    </head>\n' +
+        '    <body>\n' +
+        '        <center>\n' +
+        '{{bodyContent}}\n' +
+        '        </center>\n' +
+        '    </body>\n' +
+        '</html>';
     var edmContentData = {
         styleContent: $('#edm-style').html().trim(),
         bodyContent: getEdmBody(body)
@@ -705,7 +706,7 @@ $.keditor.initPaddingControls = function (keditor, form, addMethod, neighbor) {
     } else {
         form[addMethod](controlsHtml);
     }
-    
+
     var txtPaddingTop = form.find('.txt-padding-top');
     var txtPaddingBottom = form.find('.txt-padding-bottom');
     var txtPaddingLeft = form.find('.txt-padding-left');

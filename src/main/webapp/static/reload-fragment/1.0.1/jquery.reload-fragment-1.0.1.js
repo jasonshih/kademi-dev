@@ -37,7 +37,10 @@
                 }
                 flog('[Reload fragment] Selector=', selector);
 
-                target.load(url + ' ' + selector + ' > *', function(response, status, xhr) {
+                $.get(url, {}, function (response, status, xhr) {
+                    var newDom = $('<div />').html(response);
+                    target.html(newDom.find(selector).html());
+
                     if (typeof config.whenComplete === 'function') {
                         config.whenComplete.call(target, response, status, xhr);
                     }
