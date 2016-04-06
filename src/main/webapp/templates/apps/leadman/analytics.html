@@ -108,10 +108,19 @@
                                 <tr class="text-center">
                                     <td>
                                         #if( $hit.fields.get("organisation.title").value )
-                                        $hit.fields.get("organisation.title").value
+                                        #if($!hit.fields.get("profile.firstName").value || $!hit.fields.get("profile.surName").value)
+                                            $!hit.fields.get("profile.firstName").value
+                                            $!hit.fields.get("profile.surName").value
+                                            ($hit.fields.get("organisation.title").value)
+                                        #else
+                                            $hit.fields.get("organisation.title").value
+                                        #end
                                         #else
                                         $!hit.fields.get("profile.firstName").value
                                         $!hit.fields.get("profile.surName").value
+                                        #end
+                                        #if( $hit.fields.get("profile.phone").value )
+                                        <span>$hit.fields.get("profile.phone").value</span>
                                         #end
                                     </td>
                                     <td>$!hit.fields.get("dealAmount").value</td>
