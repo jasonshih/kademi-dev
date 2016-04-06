@@ -72,7 +72,7 @@ function loadKpiSeriesGraphData(href, opts, container, visType, config) {
         url: href,
         dataType: 'json',
         success: function (resp) {
-            flog("KPI data received", visType);
+            flog("KPI data received", visType, resp);
             if (visType === "dateHistogram" || visType === "sparkline") {
                 showKpiSeriesHistogram(resp, container, visType, config);
             } else if (visType === "kpiLeaderboard") {
@@ -150,6 +150,7 @@ function showKpiSummary(resp, container, visType, config) {
     var aggr = resp.aggregations;
 
     var kpiTitle = resp.kpiTitle;
+    flog("showKpiSummary", kpiTitle, container, container.find(".kpi-title"));
     container.find(".kpi-title").text(kpiTitle);
 
     var dataSeriesUnits = resp.units;
@@ -236,7 +237,8 @@ function showKpiSeriesHistogram(resp, container, visType, config) {
             chart = nv.models.multiBarChart()
                     .margin({right: 50, left: 0, bottom: 30, top: 0})
                     .rightAlignYAxis(true)      //Let's move the y-axis to the right side.
-                    .showControls(true)       //Allow user to choose 'Stacked', 'Stream', 'Expanded' mode.
+                    .showControls(false)       //Allow user to choose 'Stacked', 'Stream', 'Expanded' mode.
+                    .showLegend(false)
                     .clipEdge(true);
 
             chart.xAxis.tickFormat(function (d) {

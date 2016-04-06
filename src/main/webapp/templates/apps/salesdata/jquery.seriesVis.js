@@ -75,7 +75,7 @@ function findVal(arr, key) {
     return val;
 }
 
-function showSeriesHistogram(aggr, svg) {
+function showSeriesHistogram(aggr, svg, visType) {
     flog("showSeriesHistogram", aggr);
 
     svg.empty();

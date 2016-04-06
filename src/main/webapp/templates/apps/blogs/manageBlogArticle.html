@@ -57,8 +57,7 @@
                         </div>
                     </div>
                     <ul class="TabNav nav nav-tabs tab-bricky pull-left">
-                        <li class=""><a href="#activity" data-toggle="tab">Activity</a></li>
-                        <li class=""><a href="#details" data-toggle="tab">Details</a></li>
+                        <li class=""><a href="#activity" data-toggle="tab">General</a></li>
                         <li class=""><a href="#bodyCopy" data-toggle="tab">Content</a></li>
                         <li class=""><a href="#groups" data-toggle="tab">Groups</a></li>
                         <li class=""><a href="#images" data-toggle="tab">Images</a></li>
@@ -120,6 +119,7 @@
                         <div class="clearfix"></div>
                         #end
 
+                        #if( $page.publishedDate )
                         <div class="form-group">
                             <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12">
                                 <div id="chart_histogram">
@@ -139,8 +139,9 @@
 
                             </div>
                         </div>
-                    </div>
-                    <div class="tab-pane" id="details">
+                        <hr/>
+                        #end
+
                         <div class="form-group">
                             <label class="control-label col-md-3" for="title">Title</label>
                             <div class="col-md-8">
@@ -204,8 +205,6 @@
                                 #end
                             </div>
                         </div>
-
-                        <div class="clearfix"></div>
                     </div>
 
                     <div class="tab-pane" id="bodyCopy">
