@@ -155,8 +155,8 @@
                             </label>
                             <div class="col-md-8">
                                 <select name="searchUp" id="searchUp" class="form-control required" >
-                                    $formatter.option("false", "No - search down because less is better", $page.searchUp)
                                     $formatter.option("true", "Yes - search up because more is better", $page.searchUp)
+                                    $formatter.option("false", "No - search down because less is better", $page.searchUp)
                                 </select>
                             </div>
                         </div>
@@ -431,7 +431,12 @@
                                     Rewards have not been allocated yet
                                 </div>
                                 #end
-                                <table class="table table-bordered table-striped">
+                                <div class="clearfix">
+                                    <button type="button" class="btn btn-sm btn-danger pull-right btn-del-kpiresult"><i class="fa fa-trash"></i></button>
+                                    <br/>
+                                    <br/>
+                                </div>
+                                <table id="table-results" class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
                                             <th>Achievement Level</th>
@@ -439,11 +444,14 @@
                                             <th>Points Assessed</th>
                                             <th>Points Awarded</th>
                                             <th>Participant</th>
+                                            <th class="text-center">
+                                                <input type="checkbox" name="sel-kpiResult" class="selectAll"/>
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         #foreach($result in $page.results($selPeriod) )
-                                        <tr>
+                                        <tr data-id="$result.id">
                                             <td>$!result.level.title</td>
                                             <td>$formatter.formatCurrency( $result.amount )</td>
                                             <td>$!result.awardedPoints</td>
@@ -466,6 +474,9 @@
                                                     $result.participant.formattedName ($result.participant.name)
                                                 </a>
 
+                                            </td>
+                                            <td class="text-center">
+                                                <input type="checkbox" name="sel-kpiResult"/>
                                             </td>
                                         </tr>
                                         #end
@@ -596,26 +607,26 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                #foreach($levelName in $page.levelNames)
-                                <tr>
-                                    <th>$levelName</th>
-                                    <td>
-                                        #set( $l = $page.getTargetForLevel( $page.queryProfile, $levelName, $page.queryStart, $page.queryFinish ))
-                                        #if( $l )
-                                        $formatter.formatNumeric($l)
-                                        #else
-                                        Could not locate a target for this level
-                                        #end
+                                    #foreach($levelName in $page.levelNames)
+                                    <tr>
+                                        <th>$levelName</th>
+                                        <td>
+                                            #set( $l = $page.getTargetForLevel( $page.queryProfile, $levelName, $page.queryStart, $page.queryFinish ))
+                                            #if( $l )
+                                            $formatter.formatNumeric($l)
+                                            #else
+                                            Could not locate a target for this level
+                                            #end
 
-                                    </td>
-                                    <td>
-                                        #set( $level = false)
-                                        #set( $level = $page.getProgressOfLevelPerc( $page.queryProfile, $levelName, $page.queryStart, $page.queryFinish ) )
-                                        $formatter.formatNumeric($level) %
-                                    </td>
+                                        </td>
+                                        <td>
+                                            #set( $level = false)
+                                            #set( $level = $page.getProgressOfLevelPerc( $page.queryProfile, $levelName, $page.queryStart, $page.queryFinish ) )
+                                            $formatter.formatNumeric($level) %
+                                        </td>
 
-                                </tr>
-                                #end
+                                    </tr>
+                                    #end
                                 </tbody>
                             </table>
 
@@ -966,7 +977,9 @@
                 initRemovePeriods();
                 initKpiLevelCsv();
                 initQuery();
+                initSelectAll();
                 initLeaderboard();
+                initDelKpiResult();
                 initKpiSeriesGraphControls();
                 loadKpiSeriesGraphData(window.location.pathname, options, $("#seriesHistogram"), "dateHistogram", {});
                 loadKpiSeriesGraphData(window.location.pathname, options, $("#kpiLeaderboard"), "kpiLeaderboard", {});

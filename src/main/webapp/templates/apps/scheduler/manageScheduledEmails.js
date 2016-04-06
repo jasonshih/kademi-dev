@@ -7,6 +7,77 @@ function initManageEmail() {
     initAddJob();
 }
 
+function initManageScheduledEmail() {
+    flog('initManageScheduledEmail');
+
+    initGroupCheckbox();
+    initEnableSwitcher();
+    initTitleEditor();
+
+    $.timeago.settings.allowFuture = true;
+    $('.timeago').timeago();
+
+    $(".show-time-details").click(function (e) {
+        e.preventDefault();
+        $(".time-details").toggle(200);
+    });
+
+    $("form").forms({
+        callback: function () {
+            $('#textual-description').reloadFragment({
+                whenComplete: function () {
+                    flog("Saved Ok!");
+                    Msg.success('Saved Ok!');
+                }
+            });
+        }
+    });
+}
+
+function initTitleEditor() {
+    flog('initTitleEditor');
+
+    $('#emailTitle').editable({
+        url: window.location.pathname,
+        name: 'title',
+        validate: function (value) {
+            if ($.trim(value) == '')
+                return 'This field is required';
+        },
+        success: function (response, newValue) {
+            flog(response, newValue);
+            if (response.status) {
+                Msg.info('Successfully saved title');
+            }
+        },
+        params: function (params) {
+            params.title = params.value;
+            delete params.name;
+
+            return params;
+        }
+    });
+}
+
+function initEnableSwitcher() {
+    flog('initEnableSwitcher');
+
+    $('.enabledSwitchContainer input').on('switchChange.bootstrapSwitch', function (e, state) {
+        flog('enabled', state.value);
+        var v = state.value;
+        flog('enabled', v);
+        $.ajax({
+            type: 'POST',
+            url: window.location.pathname,
+            data: 'enabled=' + v,
+            dataType: 'json',
+            success: function (content) {
+                flog('response', content);
+            }
+        });
+    });
+}
+
 function initEditEmailPage() {
     initRemoveRecipientGroup();        
     addGroupBtn();
