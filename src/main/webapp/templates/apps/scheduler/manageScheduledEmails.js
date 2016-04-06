@@ -17,6 +17,8 @@ function initManageScheduledEmail() {
     $.timeago.settings.allowFuture = true;
     $('.timeago').timeago();
 
+    initHtmlEditors($('.htmleditor'), getStandardEditorHeight(), null, null, 'autogrow');
+
     $(".show-time-details").click(function (e) {
         e.preventDefault();
         $(".time-details").toggle(200);

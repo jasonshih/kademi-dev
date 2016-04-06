@@ -11,11 +11,17 @@
             <h2 class="p-b-20">
                 <a href="#" id="emailTitle" data-type="text" data-pk="1" data-placement="right" data-placeholder="Title" data-original-title="Enter a title">$!page.job.title</a>
             </h2>
-            <p class="lead" id="textual-description">$page.description</p>
+            <p class="lead" id="textual-description">
+                $page.description
+                #if ($page.nextRunTime)
+                <small style="display: block;">
+                    <i class="fa fa-clock-o"></i> Next run: <abbr title="$!formatter.formatDateISO8601($page.nextRunTime, $page.organisation.timezone)" class="timeago">$!formatter.formatDate($page.nextRunTime, $page.organisation.timezone)</abbr>, at $!formatter.formatTime($page.nextRunTime, $page.organisation.timezone)
+                </small>
+                #end
+            </p>
             <form name="frmDetails" action="." method="post" class="form-horizontal">
                 <div class="btn-group pull-right" style="z-index: 2;">
                     <button type="submit" class="btn btn-sm btn-success Draft"><i class="fa fa-floppy-o"></i> Save</button>
-                    <button type="button" class="btn btn-sm btn-success test" name="test" value="test"><i class="fa fa-send"></i> Test</button>
                 </div>
                 <div class="enabledSwitchContainer pull-right" style="z-index: 2; margin-right: 10px; position: relative;">
                     <input class='make-switch' type='checkbox' data-on-color='success' data-off-color='danger' $formatter.ifTrue($page.job.enabled,'checked','') value="true" id="enabled" />
@@ -27,6 +33,8 @@
                     </ul>
                     <div class="tab-content">
                         <div id="configuration" class="tab-pane in active Content Details">
+                            <p class="text-right"><button type="button" class="btn btn-sm btn-success test" name="test" value="test"><i class="fa fa-send"></i> Send Test</button></p>
+                            <hr />
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
@@ -124,12 +132,6 @@
                                         </div>
                                     </div>
                                     <div class="form-group time-details">
-                                        <label class="col-md-3 control-label">Next run</label>
-                                        <div class="col-md-8">
-                                            <label class="control-label"><abbr title="$!formatter.formatDateISO8601($page.nextRunTime, $page.organisation.timezone)" class="timeago">$!formatter.formatDateTime($page.nextRunTime, $page.organisation.timezone)</abbr></label>
-                                        </div>
-                                    </div>
-                                    <div class="form-group time-details">
                                         <label class="col-md-3 control-label">Last run</label>
                                         <div class="col-md-8">
                                             <label class="control-label"><abbr title="$!formatter.formatDateISO8601($page.lastRunTime, $page.organisation.timezone)" class="timeago">$!formatter.formatDateTime($page.lastRunTime, $page.organisation.timezone)</abbr></label>
@@ -155,6 +157,8 @@
                                             </select>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="col-sm-6">
                                     <div class="form-group">
                                         <label class="col-md-3 control-label" for="hrefTemplate">Attachment</label>
                                         <div class="col-md-8">
@@ -167,31 +171,31 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
-                                    <div class="Recipient Content">
-                                        <p class="clearfix">
-                                            <a class="btn btn-sm btn-success Add AddGroup" href="#modalGroup" data-toggle="modal">
-                                                <i class="fa fa-plus"></i>
-                                                Add/Remove groups
-                                            </a>
-                                        </p>
-                                        <div class="GroupList blocks-wrapper">
-                                            #foreach($g in $page.groupRecipients)
-                                                <span class="block $g.name">$g.name
-                                                    #if( $page.status == "Draft" )
-                                                    <a href="$g.name" class="btn btn-xs btn-bricky"><i class="fa fa-times fa fa-white"></i></a>
-                                                    #end
-                                                </span>
+                            </div>
+                            <hr />
+                            <p class="lead">Recipients <small class="text-muted" style="font-size: 14px;">(Select which groups to send to)</small></p>
+                            <div class="Recipient Content">
+                                <p class="clearfix">
+                                    <a class="btn btn-sm btn-success Add AddGroup" href="#modalGroup" data-toggle="modal">
+                                        <i class="fa fa-plus"></i>
+                                        Add/Remove groups
+                                    </a>
+                                </p>
+                                <div class="GroupList blocks-wrapper">
+                                    #foreach($g in $page.groupRecipients)
+                                        <span class="block $g.name">$g.name
+                                            #if( $page.status == "Draft" )
+                                            <a href="$g.name" class="btn btn-xs btn-bricky"><i class="fa fa-times fa fa-white"></i></a>
                                             #end
-                                        </div>
-                                    </div>
+                                        </span>
+                                    #end
                                 </div>
                             </div>
                             <hr />
                             <p class="lead">Message template</p>
                             <div class="form-group">
                                 <div class="col-md-12">
-                                    <textarea cols="100" name="html" rows="10" placeholder="" class="form-control">$!page.job.html</textarea>
+                                    <textarea cols="100" name="html" rows="10" placeholder="" class="form-control htmleditor">$!page.job.html</textarea>
                                 </div>
                             </div>
                         </div>
