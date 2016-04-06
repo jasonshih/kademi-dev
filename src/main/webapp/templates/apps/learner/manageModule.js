@@ -80,13 +80,15 @@ function initPostMessage() {
         flog('On got message', e, e.originalEvent);
 
         var data = $.parseJSON(e.originalEvent.data);
-        if (data.isSaved) {
-            Msg.success('Saved!');
-            if (data.willClose) {
-                $('#modal-add-page').modal('hide');
+        if (data.from === 'keditor') {
+            if (data.isSaved) {
+                Msg.success('Saved!');
+                if (data.willClose) {
+                    $('#modal-add-page').modal('hide');
+                }
+            } else {
+                iframeUrl = data.url;
             }
-        } else {
-            iframeUrl = data.url;
         }
     });
 }

@@ -2,175 +2,179 @@
     <head>
         <title>$view.title</title>
         <link href="manageScheduledEmails.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="/theme/assets/plugins/x-editable/css/bootstrap-editable.css" />
+        <script src="/theme/assets/plugins/x-editable/js/bootstrap-editable.min.js">//</script>
         <script type="text/javascript" src="manageScheduledEmails.js">//</script>
     </head>
     <body>
         <section id="manageEmail" class="MainContent">
+            <h2 class="p-b-20">
+                <a href="#" id="emailTitle" data-type="text" data-pk="1" data-placement="right" data-placeholder="Title" data-original-title="Enter a title">$!page.job.title</a>
+            </h2>
+            <div class="row" id="textual-description">
+                <div class="col-sm-8 col-lg-8"><p class="lead">$page.description</p></div>
+                <div class="col-sm-4 col-lg-4"><p class="lead">
+                        <i class="fa fa-clock-o"></i> Next run: <br class="hidden-lg" /> <abbr title="$!formatter.formatDateISO8601($page.nextRunTime, $page.organisation.timezone)" class="timeago">$!formatter.formatDate($page.nextRunTime, $page.organisation.timezone)</abbr>, at $!formatter.formatTime($page.nextRunTime, $page.organisation.timezone)
+                </p></div>
+            </div>
             <form name="frmDetails" action="." method="post" class="form-horizontal">
-                <div class="btn-group pull-right" style="z-index: 2;">
-                    <button type="submit" class="btn btn-sm btn-success Draft status-tools"><i class="fa fa-floppy-o"> </i> Save </button>
-                    <button type="button" class="btn btn-sm btn-success test" name="test" value="test"><i class="fa fa-send"></i> Test </button>
+                <div class="enabledSwitchContainer pull-right" style="z-index: 2; margin-right: 10px; position: relative;">
+                    <input class='make-switch' type='checkbox' data-on-color='success' data-off-color='danger' $formatter.ifTrue($page.job.enabled,'checked','') value="true" id="enabled" />
                 </div>
                 <div class="tabbable">
                     <ul class="nav nav-tabs tab-bricky">
-                        <li class="active"><a href="#sendInfo" data-toggle="tab">Send information</a></li>
-                        <li class=""><a href="#recips" data-toggle="tab">Recipients</a></li>
-                        <li class=""><a href="#messages" data-toggle="tab">Message</a></li>
-                        <li class=""><a href="#schedule" data-toggle="tab">Schedule</a></li>                        
+                        <li class="active"><a href="#configuration" data-toggle="tab">Configuration</a></li>
                         <li class=""><a href="#history" data-toggle="tab">History</a></li>
                     </ul>
                     <div class="tab-content">
-                        <div id="sendInfo" class="tab-pane in active Content Details">
-                            <div class="form-group">
-                                <label class="col-md-3 control-label" for="title">Title</label>
-                                <div class="col-md-8">
-                                    <input type="text" name="title" value="$!page.job.title" placeholder="" required="true" class="required form-control" />
+                        <div id="configuration" class="tab-pane in active Content Details">
+                            <div class="clearfix">
+                                <div class="btn-group pull-right" style="z-index: 2;">
+                                    <button type="submit" class="btn btn-sm btn-success Draft"><i class="fa fa-floppy-o"></i> Save</button>
+                                    <button type="button" class="btn btn-sm btn-success test" name="test" value="test"><i class="fa fa-send"></i> Send Test</button>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="col-md-3 control-label" for="subject">Email subject</label>
-                                <div class="col-md-8">
-                                    <input type="text" name="subject" value="$!page.subject" placeholder="" required="true" class="required form-control" />
+                            <hr />
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label" for="subject">Email subject</label>
+                                        <div class="col-md-8">
+                                            <input type="text" name="subject" value="$!page.subject" placeholder="" required="true" class="required form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label" for="fromAddress">Email from address</label>
+                                        <div class="col-md-8">
+                                            <input type="text" name="fromAddress" value="$formatter.htmlEncode( $page.fromAddress )" placeholder="" required="true" class="required form-control" />
+                                            <span class="block-help"><em class="small text-muted">Eg "Joe Bloggs" &lt;joe@bloggs.com&gt;</em></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label" for="replyToAddress">Reply to address</label>
+                                        <div class="col-md-8">
+                                            <input type="text" name="replyToAddress" value="$!formatter.htmlEncode( $page.replyToAddress )" placeholder="" class="form-control" />
+                                            <span class="block-help"><em class="small text-muted">Eg "Joe Bloggs" &lt;joe@bloggs.com&gt;</em></span>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3 control-label" for="fromAddress">Email from address <small>Eg "Joe Bloggs" &lt;joe@bloggs.com&gt;</small></label>
-                                <div class="col-md-8">
-                                    <input type="text" name="fromAddress" value="$formatter.htmlEncode( $page.fromAddress )" placeholder="" required="true" class="required form-control" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3 control-label" for="replyToAddress">Reply to address <small>Eg "Joe Bloggs" &lt;joe@bloggs.com&gt;</small></label>
-                                <div class="col-md-8">
-                                    <input type="text" name="replyToAddress" value="$!formatter.htmlEncode( $page.replyToAddress )" placeholder="" class="form-control" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3 control-label" for="notes">Notes <small>These notes are for internal purposes only.</small></label>
-                                <div class="col-md-8">
-                                    <textarea cols="100" name="notes" rows="10" placeholder="" class="form-control">$!page.notes</textarea>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="messages" class="tab-pane in Content Details">
-                            <div class="form-group">
-                                <label class="control-label col-md-2" for="pipeline">Attach Pipeline</label>
-                                <div class="col-md-4">
-                                    <select name="pipeline" id="pipeline" class="form-control">
-                                        <option value="">No Pipeline</option> 
-                                        #foreach($entry in $page.outboundPipelines.entrySet())
-                                        #foreach($pipeline in $entry.value)
-                                        #set($pId = $entry.key.id + '_' + $pipeline.id)
-                                        #set($pName = $entry.key.repository.name + ' - ' + $pipeline.id)
-                                        $formatter.option($pId, $pName, $page.job.pipeline)
-                                        #end
-                                        #end
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-2 control-label" for="hrefTemplate">Attachment</label>
-                                <div class="col-md-4">
-                                    <select name="hrefTemplate" class="form-control">
-                                        <option value="">No attachment</option> 
-                                        #foreach($att in $page.attachmentChoices) 
-                                        $formatter.option($att.path, $att.title, $page.job.hrefTemplate) 
-                                        #end
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-2 control-label" for="html">Message template</label>
-                                <div class="col-md-8">
-                                    <textarea cols="100" name="html" rows="10" placeholder="" class="form-control">$!page.job.html</textarea>
-                                </div>
-                            </div>                            
-                        </div>
-                        <div id="schedule" class="tab-pane in Content Details">
-                            <div class="form-group">
-                                <label class="col-md-2 control-label" for="sFrequency">Frequency</label>
-                                <div class="col-md-4">
-                                    <select name="sFrequency" class="form-control">
-                                        #foreach($f in $page.allFrequencies) 
-                                        $formatter.option($f, $f, $page.job.frequency) 
-                                        #end
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-2 control-label" for="enabled">Enable/Disable</label>
-                                <div class="col-md-4">
-                                    <select name="enabled" class="form-control">
-                                        $formatter.option("true", "Enabled, emails will be sent", $page.job.enabled) 
-                                        $formatter.option("false", "Disabled, will not send emails", $page.job.enabled)
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-2 control-label" for="periodMultiples">Multiples</label>
-                                <div class="col-md-4">
-                                    <input type="text" name="periodMultiples" value="$!page.job.periodMultiples" placeholder="Eg run every 3 days" class="form-control" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-2 control-label" for="runHour">Hour of day to run</label>
-                                <div class="col-md-4">
-                                    <input type="text" name="runHour" value="$!page.job.runHour" placeholder="What hour of the day to run" class="form-control" />
-                                    <p>
-                                        <i>Current hour is $formatter.getHour($formatter.now)</i>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-2 control-label" for="startDate">Start Date</label>
-                                <div class="col-md-4">
-                                    <div class="input-group">
-                                        <input type="text" name="startDate" value="$formatter.formatDate($page.job.startDate, $page.organisation.timezone)" placeholder="Start date" data-date-format="dd/mm/yyyy" data-date-viewmode="years" class="form-control date-picker required" data-impacted="#endDate" data-impact="startDate" />
-                                        <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label" for="notes">Notes</label>
+                                        <div class="col-md-8">
+                                            <textarea name="notes" rows="7" placeholder="" class="form-control">$!page.notes</textarea>
+                                            <span class="block-help"><em class="small text-muted">These notes are for internal purposes only.</em></span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="col-md-2 control-label" for="startDate">End Date (optional)</label>
-                                <div class="col-md-4">
-                                    <div class="input-group">
-                                        <input type="text" name="endDate" value="$formatter.formatDate($page.job.endDate, $page.organisation.timezone)" id="endDate" placeholder="End date" data-date-format="dd/mm/yyyy" data-date-viewmode="years" class="form-control date-picker" />
-                                        <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
-                                    </div>                                    
+                            <hr />
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label">Fire the next event after</label>
+                                        <div class="col-md-8">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" name="periodMultiples" value="$!page.job.periodMultiples" />
+                                                <input type="hidden" name="sFrequency" id="sFrequency" value="$page.job.frequency" />
+                                                <div class="input-group-btn" id="frequency-group">
+                                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="btn-text">$page.job.frequency </span> <span class="caret"></span></button>
+                                                    <ul class="dropdown-menu dropdown-menu-right">
+                                                        #foreach($f in $page.allFrequencies)
+                                                        <li><a href="#" data-value="$f">$f</a></li>
+                                                        #end
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label" for="runHour">Hour of day to run</label>
+                                        <div class="col-md-8">
+                                            <input type="text" name="runHour" value="$!page.job.runHour" placeholder="What hour of the day to run" class="form-control" />
+                                            <em class="help-block text-muted small">Current hour is $formatter.getHour($formatter.now)</em>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label" for="startDate">Start Date</label>
+                                        <div class="col-md-8">
+                                            <div class="input-group">
+                                                <input type="text" name="startDate" value="$formatter.formatDate($page.job.startDate, $page.organisation.timezone)" placeholder="Start date" data-date-format="dd/mm/yyyy" data-date-viewmode="years" class="form-control date-picker required" data-impacted="#endDate" data-impact="startDate" />
+                                                <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label" for="startDate">End Date (optional)</label>
+                                        <div class="col-md-8">
+                                            <div class="input-group">
+                                                <input type="text" name="endDate" value="$formatter.formatDate($page.job.endDate, $page.organisation.timezone)" id="endDate" placeholder="End date" data-date-format="dd/mm/yyyy" data-date-viewmode="years" class="form-control date-picker" />
+                                                <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-md-12 control-label show-time-details" style="text-align: left">
+                                            <a href="#">Date & Time details  <i class="fa fa-arrow-circle-down"></i></a>
+                                        </label>
+                                    </div>
+                                    <div class="form-group time-details">
+                                        <label class="col-md-3 control-label">Job ID</label>
+                                        <div class="col-md-8">
+                                            <label class="control-label">$page.job.id</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group time-details">
+                                        <label class="col-md-3 control-label">Current server time</label>
+                                        <div class="col-md-8">
+                                            <label class="control-label">$formatter.formatDateLong($formatter.now, $page.organisation.timezone)</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group time-details">
+                                        <label class="col-md-3 control-label">Last run</label>
+                                        <div class="col-md-8">
+                                            <label class="control-label"><abbr title="$!formatter.formatDateISO8601($page.lastRunTime, $page.organisation.timezone)" class="timeago">$!formatter.formatDateTime($page.lastRunTime, $page.organisation.timezone)</abbr></label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="col-md-2 control-label show-time-details" for="">
-                                    <a href="#">Date & Time details  <i class="fa fa-arrow-circle-right"></i></a>
-                                </label>
-                            </div>
-                            <div class="form-group time-details">
-                                <label class="col-md-2 control-label">Job ID</label>
-                                <div class="col-md-4">
-                                    <label class="control-label">$page.job.id</label>
+                            <hr />
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3" for="pipeline">Attach Pipeline</label>
+                                        <div class="col-md-8">
+                                            <select name="pipeline" id="pipeline" class="form-control">
+                                                <option value="">No Pipeline</option>
+                                                #foreach($entry in $page.outboundPipelines.entrySet())
+                                                #foreach($pipeline in $entry.value)
+                                                #set($pId = $entry.key.id + '_' + $pipeline.id)
+                                                #set($pName = $entry.key.repository.name + ' - ' + $pipeline.id)
+                                                $formatter.option($pId, $pName, $page.job.pipeline)
+                                                #end
+                                                #end
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label" for="hrefTemplate">Attachment</label>
+                                        <div class="col-md-8">
+                                            <select name="hrefTemplate" class="form-control">
+                                                <option value="">No attachment</option>
+                                                #foreach($att in $page.attachmentChoices)
+                                                $formatter.option($att.path, $att.title, $page.job.hrefTemplate)
+                                                #end
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="form-group time-details">
-                                <label class="col-md-2 control-label">Current server time</label>
-                                <div class="col-md-4">
-                                    <label class="control-label">$formatter.formatDateLong($formatter.now, $page.organisation.timezone)</label>
-                                </div>
-                            </div>
-                            <div class="form-group time-details">
-                                <label class="col-md-2 control-label">Next run</label>
-                                <div class="col-md-4">
-                                    <label class="control-label">$formatter.formatDateLong($page.nextRunTime, $page.organisation.timezone)</label>
-                                </div>
-                            </div>
-                            <div class="form-group time-details">
-                                <label class="col-md-2 control-label">Last run</label>
-                                <div class="col-md-4">
-                                    <label class="control-label">$formatter.formatDateLong($page.lastRunTime, $page.organisation.timezone)</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div id="recips" class="tab-pane in Content Details">
+                            <hr />
+                            <p class="lead">Recipients <small class="text-muted" style="font-size: 14px;">(Select which groups to send to)</small></p>
                             <div class="Recipient Content">
                                 <p class="clearfix">
                                     <a class="btn btn-sm btn-success Add AddGroup" href="#modalGroup" data-toggle="modal">
@@ -180,18 +184,25 @@
                                 </p>
                                 <div class="GroupList blocks-wrapper">
                                     #foreach($g in $page.groupRecipients)
-                                    <span class="block $g.name">$g.name
-                                        #if( $page.status == "Draft" )
-                                        <a href="$g.name" class="btn btn-xs btn-bricky"><i class="fa fa-times fa fa-white"></i></a>
-                                        #end
-                                    </span>
+                                        <span class="block $g.name">$g.name
+                                            #if( $page.status == "Draft" )
+                                            <a href="$g.name" class="btn btn-xs btn-bricky"><i class="fa fa-times fa fa-white"></i></a>
+                                            #end
+                                        </span>
                                     #end
+                                </div>
+                            </div>
+                            <hr />
+                            <p class="lead">Message template</p>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <textarea cols="100" name="html" rows="10" placeholder="" class="form-control htmleditor">$!page.job.html</textarea>
                                 </div>
                             </div>
                         </div>
 
                         <div id="history" class="tab-pane in Content Details">
-                            <p class="clearfix">Last run at: <b>$!formatter.formatDateTime($page.lastRunDate, $page.organisation.timezone)</b></p>
+                            <p class="alert alert-info"><i class="fa fa-info-circle"></i> Last run at: <b title="$!formatter.formatDateISO8601($page.lastRunDate, $page.organisation.timezone)" class="timeago">$!formatter.formatDateTime($page.lastRunDate, $page.organisation.timezone)</b></p>
                             <table id="emails" class="table table-hover">
                                 <thead>
                                     <tr>
@@ -250,17 +261,7 @@
         </div>
         <script type="text/javascript">
             $(function () {
-                initEditEmailPage();
-                $(".show-time-details").click(function (e) {
-                    e.preventDefault();
-                    $(".time-details").toggle(200);
-                });
-                $("form").forms({
-                    callback: function () {
-                        flog("Saved Ok!");
-                        Msg.success('Saved Ok!');
-                    }
-                });
+                initManageScheduledEmail();
             });
         </script>
     </body>

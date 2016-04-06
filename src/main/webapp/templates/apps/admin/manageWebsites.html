@@ -2,7 +2,7 @@
     <head>
         <title>$view.title</title>
         <link href="manageWebsite.css" rel="stylesheet" type="text/css" />
-        <script type="text/javascript" src="manageWebsite.js">//</script>       
+        <script type="text/javascript" src="manageWebsites.js">//</script>
     </head>
     <body>
         <div class="">
@@ -41,6 +41,7 @@
                             <col width="" />
                             <col width="" />
                             <col width="180px" />
+                            <col width="180px" />
                             <col width="150px" />
                             <col width="130px" />
                         </colgroup>
@@ -51,6 +52,7 @@
                                 <th>Redirect To</th>
                                 <th>Alias To</th>
                                 <th>Live branch</th>
+                                <th>Public</th>
                                 <th>Theme</th>
                                 <th class="action"></th>
                             </tr>
@@ -59,13 +61,18 @@
                             #foreach($w in $page.websites)
                             <tr>
                                 <td>
-                                    <a href="http://${page.websiteAddress($w)}${formatter.portString}/" target="_blank" class="btn btn-sm btn-info"><i class="fa fa-eye"></i> $w.name</a>
+                                    <a href="http://${page.websiteAddress($w)}${formatter.portString}/" target="_blank" class="btn btn-sm btn-info repo"><i class="fa fa-eye"></i> $w.name</a>
                                     
                                 </td>
                                 <td>$!w.domainName</td>
                                 <td>$!w.redirectTo</td>
                                 <td>$!w.aliasTo.name</td>
                                 <td>$!w.liveBranch</td>
+                                <td class="public">
+                                    <div data-off="danger" data-on="success" class="make-switch switch-small btn-switch-public" data-link="/repositories/$w.name">
+                                        $formatter.checkbox($w.name, $w.publicContent)
+                                    </div>
+                                </td>
                                 <td>$!w.liveBranch().publicTheme</td>
                                 <td class="action">
                                     <div class="btn-group btn-group-sm">
@@ -92,62 +99,8 @@
         </div>
         <script type="text/javascript">
             $(function () {
-                flog("initManageWebsites");
-                var modal = $("#addWebsiteModal");
-                var form = modal.find(" form");
-
-                form.forms({
-                    callback: function (resp) {
-                        flog("done", resp);
-                        modal.modal('hide');
-                        Msg.success(form.find('[name=newName]').val() + ' is created!');
-                        $('#website-wrapper').reloadFragment();
-                    }
-                });
-
-                $('body').on('click', '.btn-rename-website', function (e) {
-                    e.preventDefault();
-                    var btn = $(this);
-                    var href = btn.attr('href');
-                    var newName = prompt("Please enter a new name for " + href);
-                    if (newName) {
-                        if (newName.length > 0 && newName != href) {
-                            doRename(window.location.pathname + href, newName, function () {
-                                $('#website-wrapper').reloadFragment();
-                            });
-                        }
-                    }
-                });
+                initManageWebsites();
             });
-
-            function doRename(href, newName, callback) {
-                var newUrl = getParentHref(href) + "/" + newName;
-                var targetUrl = href;
-                if (!targetUrl.endsWith("/")) {
-                    targetUrl += "/";
-                }
-                targetUrl += "_DAV/MOVE";
-                flog("renameFile2", newUrl);
-                $.ajax({
-                    type: 'POST',
-                    url: targetUrl,
-                    dataType: 'text',
-                    data: "destination=" + newUrl,
-                    success: function () {
-                        flog('success');
-                        if (callback) {
-                            log("callback1");
-                            callback();
-                        }
-                        Msg.success('Success');
-                    },
-                    error: function (resp) {
-                        flog("failed", resp);
-                        ajaxLoadingOff();
-                        Msg.error("Failed to rename website, a website with that name might already exist.");
-                    }
-                });
-            }
         </script> 
     </body>
 </html>

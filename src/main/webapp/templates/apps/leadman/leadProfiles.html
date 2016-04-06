@@ -1,3 +1,4 @@
+
 <html xmlns="http://www.w3.org/1999/xhtml">
     #parse("/theme/masterTemplate.html")
     <head>
@@ -115,6 +116,7 @@
                                         <h4>Start importing</h4>
                                         <p>Press the button here to begin importing. This process imports at a rate of about 1000 rows per minute,
                                             so may take some time depending on the size of the file</p>
+                                        <p class="beforeImportInfo text-info" style="margin-bottom: 5px"></p>
                                         <button type="submit" class="btn btn-success">Import now</button>
                                     </div>
                                     <div class="step-pane sample-pane alert" data-step="4">
@@ -124,12 +126,14 @@
                                                 <strong>Process Status:</strong>
                                                 <strong id='job-status'></strong>
                                             </p>
+
+                                            <button class="btn btn-danger" name="cancel" type="button" id="btn-cancel-import">Cancel Import</button>
                                         </div>
 
                                     </div>
-                                    <div class="step-pane sample-pane alert" data-step="4">
-                                        <h4>Finished</h4>
-
+                                    <div class="step-pane sample-pane alert" data-step="5">
+                                        <h4>Profiles updated: <span class="updatedProfiles"></span></h4>
+                                        <h4>Profiles created: <span class="createdProfiles"></span></h4>
                                     </div>
 
                                 </div>

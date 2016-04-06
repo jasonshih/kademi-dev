@@ -25,6 +25,35 @@ function initUploads() {
                 ul.css('margin-left','0');
             }
         }
+
+        if(data.step === 3){
+            var fileHash = form.find('[name=fileHash]').val();
+            var startRow = form.find('[name=startRow]').val();
+            var formData = {beforeImport: 'beforeImport', fileHash: fileHash, startRow: startRow};
+            form.find('select').each(function(){
+                if(this.value){
+                    formData[this.name]=this.value;
+                }
+            });
+            form.find('[type=submit]').addClass('hide');
+            $.ajax({
+                url: window.location.pathname,
+                data: formData,
+                type: 'post',
+                dataType: 'json',
+                success: function(resp){
+                    if(resp.status && resp.data){
+                        form.find('[type=submit]').removeClass('hide');
+                        form.find(".beforeImportInfo").text('Data status: New profiles found: '+ resp.data.newProfilesCount+', existing profiles found: '+resp.data.existingProfilesCount );
+                    }else{
+                        form.find(".beforeImportInfo").text('Cannot verify data to import');
+                    }
+                },
+                error: function(err){
+                    form.find(".beforeImportInfo").text('Cannot verify data to import');
+                }
+            });
+        }
     });
 
     $('#myWizard').on('actionclicked.fu.wizard', function (evt, data) {
@@ -53,13 +82,13 @@ function initUploads() {
             var importerHead = $('#importerHead');
             var selectedCols = [];
             importerHead.find('select').each(function(){
-                if(this.value){
+                if(this.value === 'email'){
                     selectedCols.push(this.value);
                 }
             });
 
             if(selectedCols.length<1){
-                alert('Please select at least 1 column data to import');
+                alert('Please select column data that contains email to continue');
                 importerHead.find('select').first().trigger('focus');
                 evt.preventDefault();
             }
@@ -107,21 +136,35 @@ function initUploads() {
             var tbody = $("#importerBody");
             tbody.html("");
             $.each(table.rows, function (i, row) {
-                if (i < 10) {
-                    var tr = $("<tr>");
-                    tbody.append(tr);
-                    var td = $("<td>" + i + "</td>");
+                var tr = $("<tr>");
+                tbody.append(tr);
+                var td = $("<td>" + i + "</td>");
+                tr.append(td);
+                $.each(row, function (i, cell) {
+                    var td = $("<td>");
+                    td.html(cell);
                     tr.append(td);
-                    $.each(row, function (i, cell) {
-                        var td = $("<td>");
-                        td.html(cell);
-                        tr.append(td);
-                    });
-                }
+                });
             });
 
             $('#myWizard').wizard("next");
         }
+    });
+
+    $('#btn-cancel-import').on('click', function(e){
+        e.preventDefault();
+
+        $.ajax({
+            type: 'post',
+            url: '/custs',
+            data: {cancel: 'cancel'},
+            success: function(data){
+                Msg.success('Import task cancelled');
+            },
+            error: function(){
+
+            }
+        });
     });
 }
 
@@ -195,7 +238,12 @@ function checkProcessStatus() {
                         jobTitle.text("Process finished at " + pad2(dt.hours) + ":" + pad2(dt.minutes));
 
                         doSearch(true);
-
+                        if(typeof state.updatedProfiles !== 'undefined'){
+                            $('#myWizard').find('.updatedProfiles').text(state.updatedProfiles)
+                        }
+                        if(typeof state.createdProfiles !== 'undefined'){
+                            $('#myWizard').find('.createdProfiles').text(state.createdProfiles)
+                        }
                         $('#myWizard').wizard("next");
 
                         return; // dont poll again
