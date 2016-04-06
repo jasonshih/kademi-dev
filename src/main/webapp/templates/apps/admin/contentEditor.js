@@ -3,6 +3,7 @@ var win = $(window);
 function doPostMessage(data, url) {
     flog('doPostMessage', data);
 
+    data.from = 'keditor';
     var dataStr = JSON.stringify(data);
     window.parent.postMessage(dataStr, url);
 }
