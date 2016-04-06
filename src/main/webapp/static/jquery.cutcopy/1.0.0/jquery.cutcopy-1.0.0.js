@@ -14,7 +14,7 @@
             msg += ' successfully'
             Msg.success(msg);
         }
-    }
+    };
 
     /**
      * See (http://jquery.com/).
