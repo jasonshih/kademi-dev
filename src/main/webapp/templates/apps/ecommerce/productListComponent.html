@@ -1,0 +1,19 @@
+<div style="min-height: 100px">
+    #set( $cat = $rootFolder.find($store).child($category) )
+    #set( $prods = $cat.myTopProducts.truncate(4) )
+    #if( $prods.size() > 0 )
+    <table>
+        <tr>
+            #foreach( $prod in $cat.myTopProducts.truncate(4) )
+            <td>
+                <a href="http://$website.domainName${prod.href}">
+                    <img src="$prod.primaryImageHref" />
+                </a>
+            </td>
+            #end
+        </tr>
+    </table>
+    #else
+    <p>Sorry, we couldnt find any products for you</p>
+    #end
+</div>
