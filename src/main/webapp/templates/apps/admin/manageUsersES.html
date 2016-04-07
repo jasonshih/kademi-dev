@@ -608,6 +608,11 @@
                         }
                     });
                 });
+
+                $('a[download="users.csv"]').on('click', function(e){
+                    var search = window.location.search;
+                    $(this).attr('href', 'users.csv'+search);
+                });
             });
         </script>
         #portlets("manageUsersBottom")

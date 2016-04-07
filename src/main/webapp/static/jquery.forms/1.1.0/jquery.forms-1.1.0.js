@@ -109,7 +109,7 @@
         passwordErrorMessage: 'Your password must be at least 6 characters and it must contain numbers and letters',
         confirmPasswordErrorMessage: 'Please confirm your password',
         simpleCharsErrorMessage: 'Please use only letters, numbers, underscores, dashes and spaces',
-        reallySimpleCharsErrorMessage: 'Please use only letters and numbers, no punctuation, dots, etc',
+        reallySimpleCharsErrorMessage: 'Please use only letters, numbers and dashes, no punctuation, dots, etc',
         numberErrorMessage: 'Please enter digits',
         hrefErrorMessage: 'Please enter valid website address',
         animationDuration: 150,
@@ -1125,12 +1125,12 @@ function checkSimpleValue(val) {
 }
 
 /**
- * Check value contains only really simple characters or not. Really simple characters are only letters and numbers
+ * Check value contains only really simple characters or not. Really simple characters are only letters, numbers and dashes
  * @param {*} val
  * @returns {Boolean}
  */
 function checkReallySimpleValue(val) {
-    var simpleCharsPattern = new RegExp("^[a-zA-Z0-9]+$");
+    var simpleCharsPattern = new RegExp("^[a-zA-Z0-9-]+$");
     return simpleCharsPattern.test(val);
 }
 
