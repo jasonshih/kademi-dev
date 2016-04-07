@@ -160,8 +160,17 @@ function initCopyCutPaste() {
         flog("courseCookie", courseCookie);
         var oldUrl = courseCookie.cutUrl || courseCookie.pasteUrl;
         var courseId = oldUrl.replace(/^.+\/([a-zA-Z0-9]*)\/$/, '$1');
+        if($(this).attr('newCourseId')){
+            courseId = $(this).attr('newCourseId');
+            flog('new course name exists', courseId);
+            $(this).removeAttr('newCourseId');
+        }
         var oldProgram = getFolderPath(oldUrl);
-        var newProgram = window.location.pathname;
+        var newProgram = getProgramPath();
+        if(!newProgram){
+            alert('Cannot get current program');
+            return false;
+        }
         var newUrl = newProgram + '/' + courseId + '/';
 
         flog("CutCopy", oldUrl, newUrl);
@@ -170,20 +179,31 @@ function initCopyCutPaste() {
         if (courseCookie.cutUrl) {
             isCut = true;
         }
-
-        doAction(oldUrl, newUrl, isCut, function () {
-            removePasteCookie('course');
-            $('#courses-list').reloadFragment({
-                whenComplete: function () {
-                    checkCutAndCopiedCookie();
+        checkExists(newUrl, {
+            exists: function () {
+                flog("course name exists", courseId);
+                var newCousrseId = prompt('There is an existing course with name "'+ courseId +'". Please change course name if you would like to create new course, otherwise it will override the existing course?', courseId);
+                if(newCousrseId && newCousrseId!==courseId){
+                    $('.btn-paste-course').attr('newCourseId', newCousrseId).trigger('click');
                 }
-            });
-            $('#modules-list').reloadFragment();
-            var msg = (isCut ? 'Cut' : 'Copied');
-            msg += ' course <b>' + courseId + '</b> from program <b>' + oldProgram + '</b> to program <b>' + newProgram + '</b> successfully!'
-            Msg.success(msg);
+            },
+            notExists: function(){
+                doAction(oldUrl, newUrl, isCut, function () {
+                    removePasteCookie('course');
+                    $('#courses-list').reloadFragment({
+                        whenComplete: function () {
+                            checkCutAndCopiedCookie();
+                        }
+                    });
+                    $('#modules-list').reloadFragment();
+                    var msg = (isCut ? 'Cut' : 'Copied');
+                    msg += ' course <b>' + courseId + '</b> from program <b>' + oldProgram + '</b> to program <b>' + newProgram + '</b> successfully!'
+                    Msg.success(msg);
 
-        });
+                });
+            }
+        })
+
     });
 
     $('.btn-paste-module').on('click', function (e) {
@@ -192,6 +212,11 @@ function initCopyCutPaste() {
         var moduleCookie = getPasteCookie('module');
         var oldUrl = moduleCookie.cutUrl || moduleCookie.pasteUrl;
         var moduleId = oldUrl.replace(/^.+\/([a-zA-Z0-9]*)\/$/, '$1');
+        if($(this).attr('newModuleId')){
+            moduleId = $(this).attr('newModuleId');
+            flog('new module name exists', moduleId);
+            $(this).removeAttr('newModuleId');
+        }
         var newUrl = $('#courses-list').find('li.active').children('a').attr('href') + moduleId + '/';
 
         var isCut = false;
@@ -199,20 +224,31 @@ function initCopyCutPaste() {
             isCut = true;
         }
 
-        doAction(oldUrl, newUrl, isCut, function () {
-            removePasteCookie('course');
-            $('#courses-list').reloadFragment({
-                whenComplete: function () {
-                    checkCutAndCopiedCookie();
+        checkExists(newUrl, {
+            exists: function () {
+                flog("module name exists", moduleId);
+                var newModuleId = prompt('There is an existing module with name "'+ moduleId +'". Please change module name to continue.', moduleId);
+                if(newModuleId && newModuleId!==moduleId){
+                    $('.btn-paste-module').attr('newModuleId', newModuleId).trigger('click');
                 }
-            });
-            $('#modules-list').reloadFragment();
-            var oldCourseId = getFileName(oldUrl);
-            var newCourseId = getFileName(newUrl);
-            var msg = (isCut ? 'Cut' : 'Copied');
-            msg += ' module <b>' + moduleId + '</b> from course <b>' + oldCourseId + '</b> to course <b>' + newCourseId + '</b> successfully!';
-            Msg.success(msg);
-            checkCutAndCopiedCookie();
+            },
+            notExists: function(){
+                doAction(oldUrl, newUrl, isCut, function () {
+                    removePasteCookie('course');
+                    $('#courses-list').reloadFragment({
+                        whenComplete: function () {
+                            checkCutAndCopiedCookie();
+                        }
+                    });
+                    $('#modules-list').reloadFragment();
+                    var oldCourseId = getFileName(oldUrl);
+                    var newCourseId = getFileName(newUrl);
+                    var msg = (isCut ? 'Cut' : 'Copied');
+                    msg += ' module <b>' + moduleId + '</b> from course <b>' + oldCourseId + '</b> to course <b>' + newCourseId + '</b> successfully!';
+                    Msg.success(msg);
+                    checkCutAndCopiedCookie();
+                });
+            }
         });
     });
 }
@@ -804,4 +840,31 @@ function initActive() {
         return $(this).attr('href') === window.location.pathname;
     });
     active.closest('li').addClass('active');
+}
+
+function checkExists(href, config) {
+    $.ajax({
+        type: 'HEAD',
+        url: href,
+        success: function (resp) {
+            flog("success", resp);
+            config.exists();
+        },
+        error: function (resp) {
+            flog("error", resp);
+            config.notExists();
+        }
+    });
+}
+
+function getProgramPath(){
+    var path = window.location.pathname;
+    var indicator = '/programs/';
+    var arr = path.split(indicator);
+    if(arr.length>1){
+        flog('pathname contains courseId', path);
+        var prgArr = arr[1].split('/');
+        return arr[0] + indicator + prgArr[0];
+    }
+    return '';
 }
