@@ -864,7 +864,9 @@ function getProgramPath(){
     if(arr.length>1){
         flog('pathname contains courseId', path);
         var prgArr = arr[1].split('/');
-        return arr[0] + indicator + prgArr[0];
+        if(prgArr.length>0){
+            return arr[0] + indicator + prgArr[0];
+        }
     }
     return '';
 }
