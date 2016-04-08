@@ -44,7 +44,7 @@
                     This event has no description
                     #end
                 </div>
-                #if($page.isWritable)
+                #if($userResource.hasContentEditorRole())
                 <div class="text-right">
                     <button class="btn btn-edit-event btn-primary"><i class="fa fa-pencil"></i> Edit Description</button>
                 </div>
@@ -266,6 +266,7 @@
         </div>
 
         #portlets("userDataModal")
+        <script src="/static/reload-fragment/1.0.2/jquery.reload-fragment-1.0.2.js">//</script>
         <script src="/theme/apps/calendar/eventEditable.js">//</script>
         <script type="text/javascript">
             var rsvpStatus = "$!page.rsvpStatus";
