@@ -30,29 +30,40 @@
         init: function (options) {
             var config = $.extend({}, $.fn.mselect.DEFAULT, options);
             var target = this;
+            var count = 0;
+            var f = function () {
+                count++;
 
-            flog('[jquery.mselect] Initializing mselect', config, target);
-            if (config.useModal) {
-                flog('[jquery.mselect] Initializing button and modal...', config, target);
-                target.on('click', function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
+                if (count === 3) {
+                    flog('[jquery.mselect] Initializing mselect', config, target);
+                    if (config.useModal) {
+                        flog('[jquery.mselect] Initializing button and modal...', config, target);
+                        target.on('click', function (e) {
+                            e.preventDefault();
+                            e.stopPropagation();
 
-                    if (config.bs3Modal) {
-                        var modal = getModalBS3(config);
+                            var modal;
+                            if (config.bs3Modal) {
+                                modal = getModalBS3(config);
+                            } else {
+                                modal = getModal(config);
+                            }
+                            config.showModal(modal);
+                        });
                     } else {
-                        var modal = getModal(config);
+                        flog('[jquery.mselect] Initializing mselect container only', config, target);
+
+                        target.html(getSelectContainer(config));
+                        initSelectContainer(target, config);
                     }
-                    config.showModal(modal);
-                });
-            } else {
-                flog('[jquery.mselect] Initializing mselect container only', config, target);
 
-                target.html(getSelectContainer(config));
-                initSelectContainer(target, config);
-            }
+                    flog('[jquery.mselect] Initialized mselect');
+                }
+            };
 
-            flog('[jquery.mselect] Initialized mselect');
+            $.getScriptOnce('/static/js/jquery.jstree.js', f);
+            $.getScriptOnce('/static/js/jquery.milton-tree.js', f);
+            $.getScriptOnce('/static/milton-upload/1.0.1/jquery.milton-upload.js', f);
         }
     };
 

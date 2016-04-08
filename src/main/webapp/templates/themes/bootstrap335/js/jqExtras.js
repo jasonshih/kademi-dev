@@ -3,7 +3,24 @@
  *  after jquery
  */
 (function ($) {
-    $.getScriptOnce = function (url, successhandler) {
+    $.cachedScript = function (url, callback, options) {
+        options = $.extend(options || {}, {
+            dataType: 'script',
+            cache: true,
+            url: url,
+            success: function (script, textStatus, jqXHR) {
+                if (callback) {
+                    callback.call(this, url, script, textStatus, jqXHR);
+                }
+            }
+        });
+
+        // Use $.ajax() since it is more flexible than $.getScript
+        // Return the jqXHR object so we can chain callbacks
+        return $.ajax(options);
+    };
+
+    $.getScriptOnce = function (url, callback) {
         var scriptMeta = $.getScriptOnce.loaded[url];
         if (scriptMeta === null || scriptMeta === undefined) {
             scriptMeta = {
@@ -12,59 +29,57 @@
                 callbacks: []
             };
             $.getScriptOnce.loaded[url] = scriptMeta;
-            if (successhandler === undefined) {
+            if (callback === undefined) {
                 return $.cachedScript(url);
             } else {
-                return $.getScript(url, function (script, textStatus, jqXHR) {
-                    //flog('getScriptOnce: Loaded!!', url, 'callback', successhandler);
-                    scriptMeta.loaded = true;
-                    successhandler(script, textStatus, jqXHR);
-                    for (var i = 0; i < scriptMeta.callbacks.length; i++) {
-                        scriptMeta.callbacks[i](script, textStatus, jqXHR);
+                return $.ajax({
+                    dataType: 'script',
+                    cache: true,
+                    url: url,
+                    success: function (script, textStatus, jqXHR) {
+                        scriptMeta.loaded = true;
+
+                        callback.call(this, url, script, textStatus, jqXHR);
+
+                        for (var i = 0; i < scriptMeta.callbacks.length; i++) {
+                            scriptMeta.callbacks[i].call(this, url, script, textStatus, jqXHR);
+                        }
                     }
                 });
             }
         } else {
-            if (successhandler === undefined) {
+            if (callback === undefined) {
                 // do nothing
             } else {
-                //flog('getScriptOnce: Got script meta: ', url, scriptMeta);
                 if (!scriptMeta.loaded) {
-                    //flog('call later');
-                    scriptMeta.callbacks.push(successhandler);
+                    scriptMeta.callbacks.push(callback);
                 } else {
-                    //flog('call immediately');
-                    successhandler(url);
+                    callback.call(this, url)
                 }
             }
             return false;
         }
-
     };
 
     $.getScriptOnce.loaded = [];
 
-    var scripts = document.getElementsByTagName('script');
-    for (i = 0; i < scripts.length; i++) {
-        var scr = scripts[i];
-        var url = $(scr).attr('src');
-        $.getScriptOnce.loaded.push(url);
-    }
-}(jQuery));
+    $(function () {
+        var scripts = document.getElementsByTagName('script');
+        for (var i = 0; i < scripts.length; i++) {
+            var scr = scripts[i];
+            var url = $(scr).attr('src') || '';
 
-jQuery.cachedScript = function (url, callback, options) {
-    options = $.extend(options || {}, {
-        dataType: 'script',
-        cache: true,
-        url: url
+            if (url.trim() !== '') {
+                $.getScriptOnce.loaded.push({
+                    url: url,
+                    loaded: true,
+                    callbacks: []
+                });
+            }
+        }
     });
-    if (callback) {
-        options.success = callback;
-    }
-    // Use $.ajax() since it is more flexible than $.getScript
-    // Return the jqXHR object so we can chain callbacks
-    return jQuery.ajax(options);
-};
+
+}(jQuery));
 
 // Function check/uncheck for checkbox
 $.fn.check = function(is_check) {
