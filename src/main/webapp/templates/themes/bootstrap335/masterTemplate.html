@@ -63,8 +63,7 @@ $!bodyContent
 #set($website = $page.closest("website"))
 
 ## KToolbar for logged in user with admin or content author role
-#if($user)
-#if($userResource.hasRole("Content author") || $userResource.hasRole("Administrator"))
+#if($userResource.hasContentEditorRole())
 <script src="/static/ktoolbar/ktoolbar.js">//</script>
 <div id="ktoolbar">
     <a title="Go to Administrator Dashboard" class="btn btn-sm btn-link" href="http://$website.adminDomainName" target="_blank"><i class="fa fa-tachometer"></i> Admin Dashboard</a>
@@ -75,7 +74,6 @@ $!bodyContent
     <a title="Go to Reports Management" class="btn btn-sm btn-link" href="http://$website.adminDomainName/reporting/" target="_blank"><i class="fa fa-bar-chart"></i> Reports</a>
     <a href="#" class="pull-right btn btn-sm btn-link btn-inline-edit hide"><i class="fa fa-pencil"></i> Edit Page</a>
 </div>
-#end
 #end
 <div class="navbar navbar-fixed-top navbar-default" id="nav-top" role="navigation">
     <div class="container-fluid">
