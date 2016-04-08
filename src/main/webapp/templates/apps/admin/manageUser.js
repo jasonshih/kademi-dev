@@ -69,11 +69,11 @@ function initRemoveOAuthCred() {
 
 function initUploadUsers() {
     var modalUploadCsv = $('#modal-upload-csv');
-    $('.btn-upload-users-csv').click(function (e) {
-        e.preventDefault();
-
-        modalUploadCsv.modal('show');
-    });
+    //$('.btn-upload-users-csv').click(function (e) {
+    //    e.preventDefault();
+    //
+    //    modalUploadCsv.modal('show');
+    //});
 
     var modalMatchOrgsCsv = $('#modal-match-orgs-csv');
     $('.btn-match-orgs').click(function (e) {
