@@ -293,6 +293,13 @@ function initCRUDModulePages() {
     var modal = $('#modal-add-page');
     var form = modal.find('form');
 
+    form.find('[name=pageTitle]').tooltip({
+        title: 'Title is not blank',
+        trigger: 'manual',
+        template: '<div class="tooltip tooltip-error" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>',
+        placement: 'bottom'
+    });
+
     if (isBootstrap335) {
         modal.on('hidden.bs.modal', function () {
             $('#editor-frame').attr('src', '');
@@ -663,9 +670,13 @@ function modalFormHandle(form, pageArticle, isQuiz) {
         var titleWrapper = txtTitle.parent();
         var title = txtTitle.val() || '';
         titleWrapper.removeClass('has-error');
+        txtTitle.tooltip('hide');
 
         if (title.trim() === '') {
             titleWrapper.addClass('has-error');
+            setTimeout(function () {
+                txtTitle.tooltip('show');
+            }, 200);
         } else {
             doSavePage(form, pageArticle, isQuiz);
         }

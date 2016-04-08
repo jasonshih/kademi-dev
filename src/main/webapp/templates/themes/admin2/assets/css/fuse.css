@@ -1601,3 +1601,23 @@ body.ajax-loading .ajaxLoader {
 .tldate span {
 
 }
+
+.tooltip-error .tooltip-inner {
+    background-color: #a94442;
+}
+
+.tooltip.tooltip-error.bottom .tooltip-arrow {
+    border-bottom-color: #a94442;
+}
+
+.tooltip.tooltip-error.top .tooltip-arrow {
+    border-top-color: #a94442;
+}
+
+.tooltip.tooltip-error.left .tooltip-arrow {
+    border-left-color: #a94442;
+}
+
+.tooltip.tooltip-error.right .tooltip-arrow {
+    border-right-color: #a94442;
+}
