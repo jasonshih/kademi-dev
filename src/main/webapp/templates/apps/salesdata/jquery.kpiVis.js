@@ -239,10 +239,11 @@ function showKpiSeriesHistogram(resp, container, visType, config) {
                     .rightAlignYAxis(true)      //Let's move the y-axis to the right side.
                     .showControls(false)       //Allow user to choose 'Stacked', 'Stream', 'Expanded' mode.
                     .showLegend(false)
+                    .showYAxis(false)
                     .clipEdge(true);
 
             chart.xAxis.tickFormat(function (d) {
-                return d3.time.format('%x')(new Date(d))
+                return d3.time.format('%e %b')(new Date(d))
             });
 
             chart.yAxis.tickFormat(d3.format(',.2f'));

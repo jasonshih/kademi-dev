@@ -55,7 +55,7 @@ $templater.pushLess("/theme/theme-params.less", "all")
 <!-- TODO: merge js entries in each group to a single request  -->
 #foreach( $jsEntry in $templater.jsSources.entrySet())
 #foreach( $jsSource in $jsEntry.value)
-<script src="$jsSource">//</script>
+<script src="$jsSource" charset="utf-8" type="text/javascript">//</script>
 #end
 #end
 
@@ -64,8 +64,8 @@ $templater.pushLess("/theme/theme-params.less", "all")
 
 $!bodyContent
 
-#parse("/templates/apps/leadman/includes.html")
-#parse("/templates/apps/leadman/leadManIncludes.html")
+<!-- merged includes and leadManIncludes. Now being called from LeadManApp header portler -->
+<!-- parse("/templates/apps/leadman/leadManIncludes.html") -->
 
 #portlets("header")
 
