@@ -159,7 +159,7 @@ body.highlighted-container-content .keditor-container-content:before {
 #keditor-setting-panel {
   background: #fff;
   position: absolute;
-  z-index: 2;
+  z-index: 1001;
   top: 10px;
   width: calc(100% - 20px);
   right: -100%;

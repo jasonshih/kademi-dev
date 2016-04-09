@@ -8,7 +8,7 @@ function doPostMessage(data, url) {
     window.parent.postMessage(dataStr, url);
 }
 
-function initContentEditorPage(fileName, snippetsUrl) {
+function initContentEditorPage(fileName) {
     flog('initContentEditorPage', fileName);
     var body = $(document.body);
     var timer;
@@ -42,7 +42,7 @@ function initContentEditorPage(fileName, snippetsUrl) {
         };
     }
 
-    initKEditor(body, snippetsUrl);
+    initKEditor(body);
     initSaving(body, fileName);
     hideLoadingIcon();
 }
@@ -72,9 +72,9 @@ $.keditor.components['text'].options = {
     stylesSet: 'myStyles:' + stylesPath
 };
 
-function initKEditor(body, snippetsUrl) {
+function initKEditor(body) {
     $('#content-area').keditor({
-        snippetsUrl: snippetsUrl,
+        snippetsUrl: '/_components/web/snippets.html',
         onContentChanged: function () {
             if (!body.hasClass('content-changed')) {
                 body.addClass('content-changed');

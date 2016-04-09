@@ -294,7 +294,7 @@ function initCRUDModulePages() {
     var form = modal.find('form');
 
     form.find('[name=pageTitle]').tooltip({
-        title: 'Title is not blank',
+        title: 'This field cannot be blank. Please enter a page title',
         trigger: 'manual',
         template: '<div class="tooltip tooltip-error" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>',
         placement: 'bottom'
