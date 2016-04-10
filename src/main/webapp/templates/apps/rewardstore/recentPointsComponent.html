@@ -1,0 +1,23 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="panel-title"> <a href="/points" class="icon-signal fa-lg text-muted pull-right"></a>Recent points</div>
+    </div>
+    <div class="panel-body" style="min-height: 200px">
+        #set( $points = $rootFolder.find("/rewards/").child("sales-rewards").myPointsInfo(1000, $formatter.addDays( $formatter.now, -30), $formatter.now) )
+        #set( $recentPoints = $points.myPoints )
+        #if( $recentPoints.size() > 0 )
+        <p>You have been awarded $recentPoints.size() times in the last 30 days</p>
+        <table class="table table-striped">
+            #foreach( $pt in $recentPoints )
+            <tr>
+                <td>$pt.numPoints</td>
+                <td>$pt.awardedDate</td>
+                <td>$pt.reason</td>
+            </tr>
+            #end
+            #else
+            <i>You have not been awarded any points in the last 30 days</i>
+            #end
+        </table>
+    </div>
+</div>
