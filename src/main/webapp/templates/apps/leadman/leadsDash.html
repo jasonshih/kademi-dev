@@ -1,4 +1,3 @@
-#parse("/theme/apps/leadman/leadManIncludes.html")
 <style>
     .infoBox {
         height: 100px;
@@ -41,6 +40,7 @@
     }
 </style>
 
+#set( $leadsPage = $page.find("/leads") )
 #set( $kpis = $page.find("/sales").availableKpis )
 
 #if($userResource.hasRole('Sales'))
