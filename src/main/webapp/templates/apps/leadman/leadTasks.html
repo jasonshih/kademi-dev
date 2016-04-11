@@ -11,7 +11,7 @@
         #set($sr = $page.searchResult)
         #set($searchResult = $page.searchResult.hits)
         #set($aggr = $sr.aggr)
-        <div class="container">
+        <div class="container" id="lead-tasks-page">
             <div class="fw-boxed">
                 <div class="panel panel-default">
                     <div style="padding: 10px;">
@@ -118,7 +118,7 @@
                                 </div>
                                 #end
                                 #else
-
+                                <p class="text-center">No tasks founds</p>
                                 #end
                             </div>
                         </div>

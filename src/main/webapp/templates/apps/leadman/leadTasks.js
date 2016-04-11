@@ -35,4 +35,8 @@ $(function () {
 
         window.location.search = uri.search();
     });
+
+    window.doReloadTasksPage = function(){
+        $('body').find('#search-tasks-form').trigger('submit');
+    }
 });
