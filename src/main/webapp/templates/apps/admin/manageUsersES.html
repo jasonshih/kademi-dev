@@ -247,7 +247,7 @@
                                         </td>
                                         <td class="text"><a href="mailto:$p.fields.email.value">$p.fields.email.value</a></td>
                                         <td class="text">$!p.fields.phone.value</td>
-                                        <td class="text">
+                                        <td class="text" style="text-overflow: clip;">
                                             #set( $groups = $page.primaryGroups( $p.fields.get("memberships.group").values ) )
                                             #foreach( $group in $groups )
                                             <div class="label label-info" style="margin-right: 5px;">
