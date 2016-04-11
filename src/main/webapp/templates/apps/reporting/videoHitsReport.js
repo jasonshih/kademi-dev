@@ -231,7 +231,7 @@
                 plays.values.push(
                         {x: bucket.key, y: bucket.doc_count});
             }
-            
+
             plays.values.sort(dynamicSort('x'));
 
             var views = {
@@ -245,7 +245,7 @@
                 views.values.push(
                         {x: bucket.key, y: s});
             }
-            
+
             views.values.sort(dynamicSort('x'));
 
             myData.push(plays);
@@ -338,5 +338,5 @@ function dynamicSort(property) {
     return function (a, b) {
         var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
         return result * sortOrder;
-    }
+    };
 }
