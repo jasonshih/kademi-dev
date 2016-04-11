@@ -696,6 +696,9 @@ function reloadTasks() {
             $('abbr.timeago').timeago();
         }
     });
+    if($('#lead-tasks-page').length){
+        window.doReloadTasksPage();
+    }
 }
 
 function takeTask(href) {
