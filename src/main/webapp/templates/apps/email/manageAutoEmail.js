@@ -381,23 +381,28 @@ function initControls() {
         loadData();
     }
 
+    var startDate = moment().subtract('days', 7);
+    var endDate = moment();
+
+    reportRange.val(startDate.format('DD/MM/YYYY') + ' - ' + endDate.format('DD/MM/YYYY'));
+
     reportRange.exist(function () {
         flog("init analytics range");
         reportRange.daterangepicker({
             format: 'DD/MM/YYYY',
-            startDate: moment().subtract('days', 6),
-            endDate: moment(),
+            startDate: startDate,
+            endDate: endDate,
             ranges: {
                 'Today': [
                     moment().toISOString(),
                     moment().toISOString()
                 ],
                 'Last 7 Days': [
-                    moment().subtract('days', 6).toISOString(),
+                    moment().subtract('days', 7).toISOString(),
                     moment().toISOString()
                 ],
                 'Last 30 Days': [
-                    moment().subtract('days', 29).toISOString(),
+                    moment().subtract('days', 30).toISOString(),
                     moment().toISOString()],
                 'This Month': [
                     moment().startOf('month').toISOString(),
