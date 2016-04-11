@@ -17,50 +17,6 @@
                 border: 1px solid #ddd;
             }
         </style>
-
-        <!-- Scripts for KEditor -->
-        <script type="text/javascript" src="/static/js/jquery.jstree.js">//</script>
-        <script type="text/javascript" src="/static/js/jquery.milton-tree.js">//</script>
-        <script type="text/javascript" src="/static/milton-upload/1.0.1/jquery.milton-upload.js">//</script>
-        <script type="text/javascript" src="/static/jquery.mselect/1.1.0/jquery.mselect-1.1.0.js">//</script>
-        <script src="/static/jquery-ui/1.11.4/jquery-ui.min.js">//</script>
-        <script src="/static/bootstrap-colorpicker/2.3.0/js/bootstrap-colorpicker.js">//</script>
-        <script type="text/javascript" src="/static/keditor/1.1.0/dist/js/keditor-1.1.0.js" bottom="true">//</script>
-        <script type="text/javascript" src="/static/keditor/1.1.0/dist/js/keditor-edm-components-1.1.0.js" bottom="true">//</script>
-        <script type="text/javascript" src="/_components/edm/handlers.js" bottom="true">//</script>
-        <script type="text/javascript" src="/theme/apps/admin/edmEditor.js" bottom="true">//</script>
-
-        <!-- -->
-        <script type="text/css" data-type="keditor-style" href="/theme/assets/plugins/bootstrap-3.3.5/css/bootstrap.min.css" ></script>
-        <script type="text/css" data-type="keditor-style" href="/theme/assets/plugins/font-awesome/css/font-awesome.min.css"></script>
-        <link rel="stylesheet" type="text/css" data-type="keditor-style" href="/static/bootstrap-colorpicker/2.3.0/css/bootstrap-colorpicker.css" />
-        <link rel="stylesheet" type="text/css" data-type="keditor-style" href="/static/keditor/1.1.0/dist/css/keditor-1.1.0.css" />
-        <script type="text/css" data-type="keditor-style" href="/static/keditor/1.1.0/dist/css/keditor-edm-components-1.1.0.css"></script>
-        <script type="text/css" data-type="keditor-style" href="/static/jquery.mselect/1.1.0/jquery.mselect-1.1.0.css"></script>
-        <script type="text/css" data-type="keditor-style" href="/theme/apps/admin/edmEditor.css"></script>
-        <script id="edm-style" data-type="keditor-style" type="text/css">
-            #outlook a{padding:0;} /* Force Outlook to provide a "view in browser" message */
-            .ReadMsgBody{width:100%;} .ExternalClass{width:100%;} /* Force Hotmail to display emails at full width */
-            .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div {line-height: 100%;} /* Force Hotmail to display normal line spacing */
-            body, table, td, p, a, li, blockquote{-webkit-text-size-adjust:100%; -ms-text-size-adjust:100%;} /* Prevent WebKit and Windows mobile changing default text sizes */
-            table, td{mso-table-lspace:0pt; mso-table-rspace:0pt;} /* Remove spacing between tables in Outlook 2007 and up */
-            img{-ms-interpolation-mode:bicubic;} /* Allow smoother rendering of resized image in Internet Explorer */
-
-            @media screen and (max-width: 479px) {
-                table.col {
-                    width: 100% !important;
-                }
-
-                #edm-container {
-                    width: 100% !important;
-                }
-
-                img {
-                    max-width: 100% !important;
-                    height: auto !important;
-                }
-            }
-        </script>
     </head>
     <body class="calendar-event">
         <form action="" method="POST" class="manageEventForm form-horizontal">
@@ -226,12 +182,6 @@
                             <div class="col-md-12">
                                 <p class="lead">The message to send when a user registers.</p>
                                 <textarea cols="100" name="emailConfirmTemplate" rows="10" class="htmleditor" placeholder="Enter the details here">$!page.emailConfirmTemplate</textarea>
-                                <!--<script type="text/html" id="edm-html"></script>-->
-                                <!--<div id="edm-area">-->
-                                    <!--<div id="edm-header"></div>-->
-                                    <!--<div id="edm-body"></div>-->
-                                    <!--<div id="edm-footer"></div>-->
-                                <!--</div>-->
                             </div>
                         </div>
                     </div>
@@ -443,7 +393,6 @@
                 $(".chosen-select").chosen({
                     search_contains: true
                 });
-//                initEdmEditor(true);
             });
         </script>
     </body>
