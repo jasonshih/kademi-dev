@@ -272,7 +272,7 @@ function initHistogram(aggr) {
                 .axisLabel("Date")
                 .rotateLabels(-45)
                 .tickFormat(function (d) {
-                    return moment(d).format("DD MMM");
+                    return moment(d).format("DD MMM YY");
                 });
 
         chart.yAxis
@@ -352,14 +352,14 @@ function initPie(id, aggr) {
     nv.addGraph(function () {
         var chart = nv.models.pieChart()
                 .x(function (d) {
-                    return d.key
+                    return d.key;
                 })
                 .y(function (d) {
-                    return d.doc_count
+                    return d.doc_count;
                 })
                 .donut(true)
                 .donutRatio(0.35)
-                .showLabels(true);
+                .showLabels(false);
 
 
         d3.select("#" + id + " svg")
@@ -381,23 +381,28 @@ function initControls() {
         loadData();
     }
 
+    var startDate = moment().subtract('days', 7);
+    var endDate = moment();
+
+    reportRange.val(startDate.format('DD/MM/YYYY') + ' - ' + endDate.format('DD/MM/YYYY'));
+
     reportRange.exist(function () {
         flog("init analytics range");
         reportRange.daterangepicker({
             format: 'DD/MM/YYYY',
-            startDate: moment().subtract('days', 6),
-            endDate: moment(),
+            startDate: startDate,
+            endDate: endDate,
             ranges: {
                 'Today': [
                     moment().toISOString(),
                     moment().toISOString()
                 ],
                 'Last 7 Days': [
-                    moment().subtract('days', 6).toISOString(),
+                    moment().subtract('days', 7).toISOString(),
                     moment().toISOString()
                 ],
                 'Last 30 Days': [
-                    moment().subtract('days', 29).toISOString(),
+                    moment().subtract('days', 30).toISOString(),
                     moment().toISOString()],
                 'This Month': [
                     moment().startOf('month').toISOString(),
