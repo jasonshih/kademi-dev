@@ -44,7 +44,7 @@
                     This event has no description
                     #end
                 </div>
-                #if($userResource.hasContentEditorRole())
+                #if($page.isWritable())
                 <div class="text-right">
                     <button class="btn btn-edit-event btn-primary"><i class="fa fa-pencil"></i> Edit Description</button>
                 </div>
