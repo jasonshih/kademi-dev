@@ -87,17 +87,25 @@
 
             // Use a body class to ensure is only initialized once
             flog('[jquery.user] Init requiresUser links');
-            $(document.body).not('requiresUserDone').addClass('requiresUserDone').on('click', 'a.requiresUser, button.requiresUser', function (e) {
+            $(document.body).not('requiresUserDone').addClass('requiresUserDone').on('click', 'a.registerOrLogin, button.registerOrLogin', function (e) {
                 var btn = $(this);
-//                flog('[jquery.user] Check required user', btn, userUrl);
+                flog('[jquery.user] Check required user', btn, userUrl);
 
                 if (!userUrl) {
                     e.preventDefault();
                     e.stopPropagation();
 
                     showRegisterOrLoginModal(function () {
-                        flog('[jquery.user] Going to', btn.attr('href'));
-                        window.location.href = btn.attr('href');
+                        btn.removeClass('registerOrLogin');
+
+                        if (btn.is('a')) {
+                            flog('[jquery.user] Going to', btn.attr('href'));
+                            window.location.href = btn.attr('href');
+                        } else {
+                            var form = btn.closest('form');
+                            flog('[jquery.user] Submit the form', form);
+                            form.trigger('click');
+                        }
                     });
                 } else {
                     flog('[jquery.user] All good, carry on...');
@@ -116,7 +124,7 @@
 
                 var form = container.find('form');
 
-//                flog('[jquery.user] Init form', form);
+                flog('[jquery.user] Init form', form);
                 form.on('submit', function (e) {
                     flog('[jquery.user] On submit', form);
                     e.stopPropagation();
@@ -236,28 +244,28 @@ function initUser() {
 
     initUserCookie();
 
-    //flog('[jquery.user] initUser');
+    flog('[jquery.user] initUser');
 
     var body = $(document.body);
     if (isEmpty(userUrl)) {
         // no cookie, so authentication hasn't been performed.
-        //flog('[jquery.user] initUser: no userUrl');
+        flog('[jquery.user] initUser: no userUrl');
 
-        $('.requiresuser').hide();
+        $('.requiresUser').hide();
         $('.sansuser').show();
         body.addClass('notLoggedIn');
 
         return false;
     } else {
-        //flog('[jquery.user] userUrl: '+ userUrl);
+        flog('[jquery.user] userUrl: '+ userUrl);
 
         userName = userUrl.substr(0, userUrl.length - 1); // drop trailing slash
         var pos = userUrl.indexOf('users');
         userName = userName.substring(pos + 6);
 
-        //flog('[jquery.user] current userName: ' + userName);
+        flog('[jquery.user] current userName: ' + userName);
 
-        $('.requiresuser').show();
+        $('.requiresUser').show();
         $('.sansuser').hide();
         body.addClass('isLoggedIn');
 
@@ -276,7 +284,7 @@ function initUserCookie() {
     userUrl = $.cookie('miltonUserUrl');
 
     if (userUrl && userUrl.length > 1) {
-        //flog('[jquery.user] initUserCookie', userUrl);
+        flog('[jquery.user] initUserCookie', userUrl);
 
         if (userUrl.startsWith('b64')) {
             userUrl = userUrl.substring(3); // strip b64 ext
