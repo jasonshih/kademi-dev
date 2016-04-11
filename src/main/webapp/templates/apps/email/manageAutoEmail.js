@@ -352,14 +352,14 @@ function initPie(id, aggr) {
     nv.addGraph(function () {
         var chart = nv.models.pieChart()
                 .x(function (d) {
-                    return d.key
+                    return d.key;
                 })
                 .y(function (d) {
-                    return d.doc_count
+                    return d.doc_count;
                 })
                 .donut(true)
                 .donutRatio(0.35)
-                .showLabels(true);
+                .showLabels(false);
 
 
         d3.select("#" + id + " svg")
