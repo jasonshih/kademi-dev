@@ -8,9 +8,6 @@
     </head>
     <body class='add-container'>
         #@themeBody()
-
-        #parse("/theme/apps/leadman/leadManIncludes.html")
-
         <div class="">
             <div style="background:url(/theme/images/profile.jpg) center center; background-size:cover;" class="">
                 <div class="container container-lg p-lg">
@@ -37,7 +34,7 @@
                     <div class="col-lg-6">
                         <div id="activity" class="panel">
                             <div class="panel-body">
-                                #showTimeline($page.timelineItems)
+#parse("/theme/apps/leadman/leadManTimeline.html")
                             </div>
                         </div>
                     </div>
