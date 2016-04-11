@@ -272,7 +272,7 @@ function initHistogram(aggr) {
                 .axisLabel("Date")
                 .rotateLabels(-45)
                 .tickFormat(function (d) {
-                    return moment(d).format("DD MMM");
+                    return moment(d).format("DD MMM YY");
                 });
 
         chart.yAxis
