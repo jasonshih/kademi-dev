@@ -92,7 +92,7 @@ $(function () {
                 }
             },
             error: function(err){
-                flog('inline editing error saving', resp);
+                flog('inline editing error saving', err);
                 Msg.error('Could not save your changes. Please try again');
             }
         })
