@@ -13,12 +13,23 @@
             #table-users {
                 table-layout: fixed;
                 width: 100%;
-                white-space: nowrap;
             }
             #table-users td.text {
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
+            }
+            #table-users td {
+                vertical-align: top;
+            }
+
+            #table-users .group-names .label {
+                display: inline-block;
+                margin-bottom: 3px;
+                max-width: 100%;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
             }
         </style>
     </head>
@@ -247,7 +258,7 @@
                                         </td>
                                         <td class="text"><a href="mailto:$p.fields.email.value">$p.fields.email.value</a></td>
                                         <td class="text">$!p.fields.phone.value</td>
-                                        <td class="text" style="text-overflow: clip;">
+                                        <td class="group-names">
                                             #set( $groups = $page.primaryGroups( $p.fields.get("memberships.group").values ) )
                                             #foreach( $group in $groups )
                                             <div class="label label-info" style="margin-right: 5px;">
