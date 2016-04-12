@@ -78,7 +78,7 @@
                                         #if($page.profile)
                                         <a href="/custs/$page.profile.name" style="color: white">$page.customerDescription ($page.leadOrg.formattedName)</a>
                                         #if( $page.profile.phone )
-                                        <span>$page.profile.phone</span>
+                                        <span class="text-white">$page.profile.phone</span>
                                         #end
                                         #else
                                         <span style="color: white">$page.leadOrg.formattedName</span>
@@ -86,7 +86,7 @@
                                         #elseif( $page.profile )
                                         <a href="/custs/$page.profile.name" style="color: white">$page.customerDescription</a>
                                         #if( $page.profile.phone )
-                                        <small class="text-muted">$page.profile.phone</small>
+                                        <small class="text-white">$page.profile.phone</small>
                                         #end
 
                                         #else
