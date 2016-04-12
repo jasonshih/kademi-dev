@@ -475,8 +475,10 @@
                     <div class="col-lg-3">
                         <div class="task-item-list">
                             <div id="tasksList" class="panel-group">
+                                #set ($taskCount = 0)
                                 #foreach($task in $page.children)
                                 #if(${task.class.simpleName} == "LeadTaskPage")
+                                #set ($taskCount = $taskCount + 1)
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
                                         <h4 class="clearfix task-item">
@@ -523,6 +525,11 @@
                                     </div>
                                 </div>
                                 #end
+                                #end
+                                #if($taskCount<1)
+                                <div class="panel panel-default">
+                                    <div class="panel-body"><p>No tasks found</p></div>
+                                </div>
                                 #end
                             </div>
                         </div>
