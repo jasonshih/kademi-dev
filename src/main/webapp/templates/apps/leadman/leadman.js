@@ -174,14 +174,14 @@ function initTasks() {
         e.preventDefault();
         var name = $(e.target).attr("href");
         var href = $(this).closest('ul').data('href');
-        assignTo(name, href, "assignedBlock");
+        mAssignTo(name, href, "assignedBlock");
     });
 
     $("body").on("click", "#assignToMenuTask a", function (e) {
         e.preventDefault();
         var name = $(e.target).attr("href");
         var href = $(this).closest('ul').data('href');
-        assignTo(name, href, "assignedBlockTask");
+        mAssignTo(name, href, "assignedBlockTask");
     });
 
     $("body").on("click", ".btnTaskDelete", function (e) {
@@ -779,7 +779,7 @@ function initDateTimePikersForModal() {
     });
 }
 
-function assignTo(name, href, blockId) {
+function mAssignTo(name, href, blockId) {
     $.ajax({
         type: 'POST',
         url: href || window.location.pathname,

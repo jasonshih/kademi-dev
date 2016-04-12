@@ -1,9 +1,14 @@
-
+<style>
+    .no-mgt{
+        margin-top: 0;
+    }
+</style>
+#set($leadsPage = $page.find('/leads'))
 <div class="" style="min-height: 400px" id="tasksList">
     #if($userResource.hasRole('TakeLead'))
     #set( $incoming = $leadsPage.unassignedTasks )
     #if( $incoming.size() > 0 )
-    <h3>
+    <h3 class="no-mgt">
         <small class="pull-right"><i style="font-size: 10px">Unassigned tasks</i></small>
         Incoming
     </h3>
@@ -43,14 +48,13 @@
             #end
         </li>
     </ul>
-    <hr/>
     #end
     #end
     #end
 
     #set( $tasks = $leadsPage.myDueTasks )
     #if( $tasks.size() > 0)
-    <h3>
+    <h3 class="no-mgt">
         My Tasks
     </h3>
 
