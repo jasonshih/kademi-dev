@@ -144,7 +144,7 @@
             var title = btn.html();
             searchOptions.aggr = btn.attr('href');
             btn.closest('div').find('.aggr-title').html(title);
-
+            $('#funnel-wrap').attr('aggr-title', title);
             loadFunnel();
         });
     }
@@ -222,6 +222,7 @@
     function initFunnelSource(div){
         var fnSource = t('.funnel-source').clone().removeClass('hide');
         div.find('.funnel-labels').prepend(fnSource);
+        fnSource.find('.aggr-title').text($('#funnel-wrap').attr('aggr-title'));
     }
 
     w.initLeadManAnalytics = function () {
