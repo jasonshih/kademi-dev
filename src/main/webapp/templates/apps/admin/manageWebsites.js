@@ -17,7 +17,11 @@ function initAddWebsite() {
             flog("done", resp);
             modal.modal('hide');
             Msg.success(form.find('[name=newName]').val() + ' is created!');
-            $('#website-wrapper').reloadFragment();
+            $('#website-wrapper').reloadFragment({
+                whenComplete: function () {
+                    initSwitch();
+                }
+            });
         }
     });
 }
@@ -33,7 +37,11 @@ function initRename() {
         if (newName) {
             if (newName.length > 0 && newName != href) {
                 doRename(window.location.pathname + href, newName, function () {
-                    $('#website-wrapper').reloadFragment();
+                    $('#website-wrapper').reloadFragment({
+                        whenComplete: function () {
+                            initSwitch();
+                        }
+                    });
                 });
             }
         }
@@ -43,7 +51,7 @@ function initRename() {
 function initSwitchPublic() {
     flog('initSwitchPublic');
 
-    $('td.public input').on('change switchChange', function(e) {
+    $(document.body).on('change switchChange', 'td.public input', function (e) {
         flog("switch", e.target);
         e.preventDefault();
 
@@ -51,7 +59,7 @@ function initSwitchPublic() {
         var wrapper = label.parents('.make-switch');
         var href = wrapper.attr('data-link');
 
-        setTimeout(function() {
+        setTimeout(function () {
             var isChecked = wrapper.find('input:checked').val() === 'true';
             flog("checked=", isChecked);
             setRepoPublicAccess(href, isChecked);
@@ -64,9 +72,9 @@ function setRepoPublicAccess(href, isPublic) {
         type: 'POST',
         data: {isPublic: isPublic},
         url: href,
-        success: function(data) {
+        success: function (data) {
         },
-        error: function(resp) {
+        error: function (resp) {
             flog("error updating: ", href, resp);
             Msg.error('Sorry, couldnt update public access: ' + resp);
             window.location.reload();
