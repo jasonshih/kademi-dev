@@ -64,7 +64,7 @@ $(function () {
         $.getScriptOnce('/static/ckeditor456/ckeditor.js', function () {
             $.getScriptOnce('/static/ckeditor456/adapters/jquery.js', f);
         });
-        $.getScriptOnce('/static/nicescroll/3.6.6/jquery.nicescroll.min.js', f);
+        $.getScriptOnce('/static/nicescroll/3.6.8/jquery.nicescroll.min.js', f);
     });
 
     btnSave.on('click', function(e){
