@@ -295,7 +295,8 @@ function initSettingPanel(edmHtml, body) {
             bottom: 0
         },
         cursorborder: '',
-        zindex: 9999
+        zindex: 9999,
+        disablemutationobserver: true
     });
 
     // Init nicescroll

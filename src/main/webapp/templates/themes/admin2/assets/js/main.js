@@ -60,7 +60,8 @@ var Main = function () {
                 left: 0,
                 bottom: 0
             },
-            cursorborder: ''
+            cursorborder: '',
+            disablemutationobserver: true
         });
     };
 
