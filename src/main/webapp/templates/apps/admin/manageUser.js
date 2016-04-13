@@ -439,7 +439,7 @@ function initNewUserForm() {
                     break;
 
                 case 'add':
-                    clearForm(form);
+                    $("#newUserEmail, #newUserSurName, #newUserFirstName, #newUserNickName").val("");
                     break;
             }
 

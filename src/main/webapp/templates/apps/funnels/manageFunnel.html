@@ -10,7 +10,7 @@
             <xmp>$page.funnelXml</xmp>
         </div>
 
-        <a href="/repositories/$page.name/" class="btn btn-primary">Edit funnel.xml</a>
+        <a href="/repositories/$page.name/" class="btn btn-primary">Edit funnel</a>
 
         <a class="btn btn-success btn-sm" href="#" data-toggle="modal" data-target="#modalUploadCsv">
             <span class="glyphicon glyphicon-upload"></span>
@@ -32,8 +32,10 @@
                     <th>Awaiting goal</th>
                     <th>Created date</th>
                     <th>Last attained date</th>
+                    <th>Timer</th>
                     <th>Stage</th>
                     <th>Source</th>
+                    <th>Funnel version</th>
                     <th>Team</th>
                     <th>Assigned to</th>
                     <th></th>
@@ -49,8 +51,10 @@
                     <td>$!lead.currentGoal</td>
                     <td>$lead.createDate</td>
                     <td>$lead.lastAttainedDate</td>
+                    <td>$!lead.timerDate</td>
                     <td>$!lead.stageName</td>
                     <td>$!lead.source</td>
+                    <td>$!lead.funnelBranch</td>
                     <td>$!lead.assignedToOrg.formattedName</td>
                     <td>$!lead.assignedToProfile.formattedName</td>
                     <td>
