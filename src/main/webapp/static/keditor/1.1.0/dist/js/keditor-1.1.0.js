@@ -203,7 +203,8 @@
                         left: 0,
                         bottom: 0
                     },
-                    cursorborder: ''
+                    cursorborder: '',
+                    disablemutationobserver: true
                 });
             } else {
                 flog('$.fn.niceScroll does not exist. Use default sidebar.');
