@@ -7,10 +7,14 @@
         <p class="lead">Leads = $page.leads.size()</p>
 
         <div class="well">
-            <xmp>$page.funnelXml</xmp>
+            <xmp id="funnelJson">$page.funnelXml</xmp>
         </div>
 
-        <a href="/repositories/$page.name/" class="btn btn-primary">Edit funnel.xml</a>
+        <div class="well" id="paper" style="height: 600px; width: 800px">
+
+        </div>
+
+        <a href="/repositories/$page.name/" class="btn btn-primary">Edit funnel</a>
 
         <a class="btn btn-success btn-sm" href="#" data-toggle="modal" data-target="#modalUploadCsv">
             <span class="glyphicon glyphicon-upload"></span>
@@ -32,8 +36,10 @@
                     <th>Awaiting goal</th>
                     <th>Created date</th>
                     <th>Last attained date</th>
+                    <th>Timer</th>
                     <th>Stage</th>
                     <th>Source</th>
+                    <th>Funnel version</th>
                     <th>Team</th>
                     <th>Assigned to</th>
                     <th></th>
@@ -49,8 +55,10 @@
                     <td>$!lead.currentGoal</td>
                     <td>$lead.createDate</td>
                     <td>$lead.lastAttainedDate</td>
+                    <td>$!lead.timerDate</td>
                     <td>$!lead.stageName</td>
                     <td>$!lead.source</td>
+                    <td>$!lead.funnelBranch</td>
                     <td>$!lead.assignedToOrg.formattedName</td>
                     <td>$!lead.assignedToProfile.formattedName</td>
                     <td>
@@ -102,7 +110,14 @@
             </div>
         </div>
 
+        <link rel="stylesheet" href="http://www.jointjs.com/css/jointjs/v0.9.5/joint.min.css" />
+        <script src="http://www.jointjs.com/js/vendor/lodash/lodash.min.js"></script>
+        <script src="http://www.jointjs.com/js/vendor/backbone/backbone-min.js"></script>
+        <script src="http://www.jointjs.com/js/jointjs/v0.9.5/joint.min.js"></script>
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
+
+
+
         <script type="text/javascript">
             $(function () {
                 $('body').on('click', '.btn-del-lead', function (e) {
@@ -117,6 +132,7 @@
                 });
 
                 initUpload();
+                initJoint();
             });
             function initUpload() {
                 $("#doUploadCsv").mupload({
@@ -133,6 +149,121 @@
                         Msg.success("Upload completed. Please review any unmatched members below, or refresh the page to see the updated list of members");
                     }
                 });
+            }
+
+            function initJoint() {
+                var graph = new joint.dia.Graph();
+
+                var paper = new joint.dia.Paper({
+                    el: $('#paper'),
+                    width: 800,
+                    height: 600,
+                    gridSize: 1,
+                    model: graph
+                });
+
+
+
+                function state(x, y, label) {
+                    flog("state", x, y, label);
+                    var cell = new joint.shapes.fsa.State({
+                        position: {x: x, y: y},
+                        size: {width: 60, height: 60},
+                        attrs: {
+                            text: {text: label, fill: '#000000', 'font-weight': 'normal'},
+                            'circle': {
+                                fill: '#f6f6f6',
+                                stroke: '#000000',
+                                'stroke-width': 2
+                            }
+                        }
+                    });
+                    graph.addCell(cell);
+                    return cell;
+                }
+
+                function link(source, target, label, vertices) {
+
+                    var cell = new joint.shapes.fsa.Arrow({
+                        source: {id: source.id},
+                        target: {id: target.id},
+                        labels: [{position: 0.5, attrs: {text: {text: label || '', 'font-weight': 'bold'}}}],
+                        vertices: vertices || []
+                    });
+                    graph.addCell(cell);
+                    return cell;
+                }
+
+                var json = $("#funnelJson").text();
+                var funnel = $.parseJSON(json);
+                flog("funnel", funnel);
+                var nodes = {};
+                $.each( funnel.nodes, function(i, n) {
+                    flog("node", n);
+                    var keys = Object.keys(n);
+                    n = n[keys[0]];
+                    var el;
+                    if( keys[0] == "begin" ) {
+                        el = new joint.shapes.fsa.StartState({position: {x: n.x, y: n.y}});
+                        graph.addCell(el);
+                    } else if( keys[0] == "goal" ) {
+                        el = state(n.x, n.y, n.nodeId);
+                    } else {
+                        el = state(n.x, n.y, n.nodeId); // should be an action symbol, or decision
+                    }
+                    nodes[n.nodeId] = el;
+                });
+
+                // Now link them
+                flog("link nodes");
+                $.each( funnel.nodes, function(i, n) {
+                    flog("node", n);
+                    var keys = Object.keys(n);
+                    n = n[keys[0]];
+                    var source = nodes[n.nodeId];
+                    if( keys[0] == "begin" ) {
+                        var dest = nodes[n.transition.nextNodeId];
+                        if( dest != null ) {
+                            link(source, dest, 'Start');
+                        } else {
+                            flog("Could not find node ", n.transition.nextNodeId);
+                        }
+                    } else if( keys[0] == "goal" ) {
+                        var dest = nodes[n.timeoutNode];
+                        if( dest != null ) {
+                            link(source, dest, 'Timeout');
+                        }
+                        // TODO: goals have events to take other transitions
+                    } else {
+                        // an action node
+                        var dest = nodes[n.nextNodeId];
+                        if( dest != null ) {
+                            link(source, dest, 'Next');
+                        }
+                    }
+                });
+
+
+/**
+                var code = state(180, 390, 'code');
+                var slash = state(340, 220, 'slash');
+                var star = state(600, 400, 'star');
+                var line = state(190, 100, 'line');
+                var block = state(560, 140, 'block');
+
+                link(start, code, 'start');
+                link(code, slash, '/');
+                link(slash, code, 'other', [{x: 270, y: 300}]);
+                link(slash, line, '/');
+                link(line, code, 'new\n line');
+                link(slash, block, '*');
+                link(block, star, '*');
+                link(star, block, 'other', [{x: 650, y: 290}]);
+                link(star, code, '/', [{x: 490, y: 310}]);
+                link(line, line, 'other', [{x: 115, y: 100}, {x: 250, y: 50}]);
+                link(block, block, 'other', [{x: 485, y: 140}, {x: 620, y: 90}]);
+                link(code, code, 'other', [{x: 180, y: 500}, {x: 305, y: 450}]);
+**/
             }
         </script>
     </body>
