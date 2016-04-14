@@ -1,40 +1,46 @@
-<div class="row" style="min-height: 100px">
+<div class="row" class="website-list">
     #foreach( $website in $rootFolder.organisation.websites())
-    #if( $website.redirectTo.length() > 0 )
-    #else
-    <div class="col-md-3 col-sm-4 col-lg-4 gallery-img">
-        #if( $website.imageHash )
-        #set( $bgimage = "/_hashes/files/$website.imageHash" )
+        #if( $website.redirectTo.length() > 0 )
         #else
-        #set( $bgimage = "/static/images/website-icon-squared.png" )
-        #end
-        <div class="wrap-image">
-            <a href="/websites/$website.name/$website.liveBranch/?goto=" target="_blank" style="background-image: url($bgimage)" class="dashWebsiteImage">
-
-            </a>
-            <a title="$!website.title" href="/websites/$website.name/$website.liveBranch/?goto=" class="group1 lead tileText cboxElement" target="_blank">
-                $website.name
-                <br/>
-                <small style="font-size: 12px">
-                    #if ($website.domainName && $website.domainName != "")
-                    $website.domainName<br />
-                    #end
-                    <i>
-                        $!website.liveBranch / $!website.trunk.publicTheme
-                    </i>
-                </small>
-            </a>
-            <div class="tools tools-bottom">
-                <a href="/websites/$website.name/$website.liveBranch/">
-                    <span class="glyphicon glyphicon-cog"></span>
-                </a>
-                <a href="/repositories/$website.name/$website.liveBranch/">
-                    <span class="glyphicon glyphicon-folder-close"></span>
-                </a>
-
+            #set ($clsName = "col-md-4")
+            #if ($itemsPerRow == 1)
+                #set ($clsName = "col-md-12")
+            #elseif ($itemsPerRow == 2)
+                #set ($clsName = "col-md-6")
+            #elseif ($itemsPerRow == 3)
+                #set ($clsName = "col-md-4")
+            #elseif ($itemsPerRow == 4)
+                #set ($clsName = "col-md-3")
+            #end
+            <div class="$clsName website">
+                #if( $website.imageHash )
+                #set( $bgimage = "/_hashes/files/$website.imageHash" )
+                #else
+                #set( $bgimage = "/static/images/website-icon-squared.png" )
+                #end
+                <div class="thumbnail">
+                    <div class="embed-responsive embed-responsive-4by3">
+                        <div class="embed-responsive-item" style="background: url($bgimage) no-repeat 50% 50%; background-size: cover"></div>
+                    </div>
+                    <div class="caption">
+                        <h4><a title="$!website.title" href="/websites/$website.name/$website.liveBranch/?goto=" target="_blank">$website.name</a></h4>
+                        <p class="small">
+                            #if ($website.domainName && $website.domainName != "")
+                                $website.domainName<br />
+                            #end
+                            <i>
+                                $!website.liveBranch / $!website.trunk.publicTheme
+                            </i>
+                        </p>
+                        <a href="/websites/$website.name/$website.liveBranch/" class="btn btn-sm btn-primary">
+                            <span class="fa fa-cog"></span>
+                        </a>
+                        <a href="/repositories/$website.name/$website.liveBranch/" class="btn btn-sm btn-info">
+                            <span class="fa fa-folder"></span>
+                        </a>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-    #end
+        #end
     #end
 </div>
