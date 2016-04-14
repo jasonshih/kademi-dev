@@ -48,6 +48,7 @@ function doSearch(startDate, endDate) {
         startDate: formatDate(startDate),
         finishDate: formatDate(endDate)
     };
+    $('#downloadCsv').attr('href', 'emailItems.csv?' + $.param(data))
     $.ajax({
         type: 'GET',
         url: window.location.pathname,
