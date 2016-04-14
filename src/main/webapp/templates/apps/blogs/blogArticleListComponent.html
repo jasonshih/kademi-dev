@@ -1,40 +1,170 @@
-#set( $blog = $rootFolder.find("/blogs") )
-#set( $articles = $blog.articles.truncat(4).sortByDate )
+#set( $blogFolder = $rootFolder.find("/blogs").child($blog) )
+#set( $articles = $blogFolder.articles.sortByDate )
 #if( $articles.size() > 0 )
-#foreach($article in $articles)
-<div class="hero thumbnail col-md-12">
-    #set($image = false)
-    #set($image = $article.bestSquareImageHref)
-    #if( $image )
-    #set($bg = "background-image: url('${image}/alt-300-300.png')")
-    <div class="hero-image hidden-xs hidden-sm" style="$bg"></div>
+    #if ($articles.size() > $numberOfArticles)
+        #set( $articles = $articles.truncate($numberOfArticles) )
     #end
-
-    <div class="hero-body">
-        <h2 class="hero-heading"><a href="$article.href">$article.title</a></h2>
-
-        $!article.brief
-
-        <div class="clearfix">
-            <abbr class="pull-left timeago" title="$formatter.formatDateISO8601($article.articleDate)">$article.articleDate</abbr>
-            <div class="pull-right">
-                #if( $article.category )
-                <span class="label label-primary">$article.category</span>
+    #foreach($article in $articles)
+        <div class="media">
+            <div class="media-left hidden-sm hidden-xs">
+                #set($bg = "/static/images/photo_holder.png")
+                #if( $article.bestSquareImageHref )
+                    #set($bg = "${article.bestSquareImageHref}/alt-300-300.png")
                 #end
-                #foreach($tag in $article.tags)
-                #if( $article.isSelectedTag( $tag ) )
-                <span class="label label-primary">$tag</span>
-                #end
-                #end
-                #if($article.featured)
-                <span class="label label-success">Featured</span>
-                #end
+                <a href="$article.href">
+                    <img class="media-object" alt="$article.title" src="$bg" width="200" height="" />
+                </a>
+            </div>
+            <div class="media-body">
+                <h4 class="media-heading">
+                    <a href="$article.href">$article.title</a>
+                </h4>
+                <div class="media-content clearfix">
+                    $!article.brief
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <i class="fa fa-clock-o"></i> <abbr class="timeago" title="$formatter.formatDateISO8601($article.articleDate)">$article.articleDate</abbr>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="text-right hidden-sm hidden-xs">
+                            #if( $article.category )
+                            <span class="label label-success">$article.category</span>
+                            #end
+                            #foreach($tag in $article.tags)
+                                #if( $article.isSelectedTag( $tag ) )
+                                    <span class="label label-success">$tag</span>
+                                #end
+                            #end
+                            #if($article.featured)
+                                <span class="label label-warning">Featured</span>
+                            #end
+                        </div>
+                        <div class="text-left hidden-md hidden-lg" style="margin-top: 10px;">
+                            #if( $article.category )
+                                <span class="label label-success">$article.category</span>
+                            #end
+                            #foreach($tag in $article.tags)
+                                #if( $article.isSelectedTag( $tag ) )
+                                    <span class="label label-success">$tag</span>
+                                #end
+                            #end
+                            #if($article.featured)
+                                <span class="label label-warning">Featured</span>
+                            #end
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
-<hr style="clear: both" />
-#end
+        <hr />
+        <div class="media">
+            <div class="media-left hidden-sm hidden-xs">
+                #set($bg = "/static/images/photo_holder.png")
+                #if( $article.bestSquareImageHref )
+                    #set($bg = "${article.bestSquareImageHref}/alt-300-300.png")
+                #end
+                <a href="$article.href">
+                    <img class="media-object" alt="$article.title" src="$bg" width="200" height="" />
+                </a>
+            </div>
+            <div class="media-body">
+                <h4 class="media-heading">
+                    <a href="$article.href">$article.title</a>
+                </h4>
+                <div class="media-content clearfix">
+                    $!article.brief
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <i class="fa fa-clock-o"></i> <abbr class="timeago" title="$formatter.formatDateISO8601($article.articleDate)">$article.articleDate</abbr>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="text-right hidden-sm hidden-xs">
+                            #if( $article.category )
+                            <span class="label label-success">$article.category</span>
+                            #end
+                            #foreach($tag in $article.tags)
+                                #if( $article.isSelectedTag( $tag ) )
+                                    <span class="label label-success">$tag</span>
+                                #end
+                            #end
+                            #if($article.featured)
+                                <span class="label label-warning">Featured</span>
+                            #end
+                        </div>
+                        <div class="text-left hidden-md hidden-lg" style="margin-top: 10px;">
+                            #if( $article.category )
+                                <span class="label label-success">$article.category</span>
+                            #end
+                            #foreach($tag in $article.tags)
+                                #if( $article.isSelectedTag( $tag ) )
+                                    <span class="label label-success">$tag</span>
+                                #end
+                            #end
+                            #if($article.featured)
+                                <span class="label label-warning">Featured</span>
+                            #end
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="media">
+            <div class="media-left hidden-sm hidden-xs">
+                #set($bg = "/static/images/photo_holder.png")
+                #if( $article.bestSquareImageHref )
+                    #set($bg = "${article.bestSquareImageHref}/alt-300-300.png")
+                #end
+                <a href="$article.href">
+                    <img class="media-object" alt="$article.title" src="$bg" width="200" height="" />
+                </a>
+            </div>
+            <div class="media-body">
+                <h4 class="media-heading">
+                    <a href="$article.href">$article.title</a>
+                </h4>
+                <div class="media-content clearfix">
+                    $!article.brief
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <i class="fa fa-clock-o"></i> <abbr class="timeago" title="$formatter.formatDateISO8601($article.articleDate)">$article.articleDate</abbr>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="text-right hidden-sm hidden-xs">
+                            #if( $article.category )
+                            <span class="label label-success">$article.category</span>
+                            #end
+                            #foreach($tag in $article.tags)
+                                #if( $article.isSelectedTag( $tag ) )
+                                    <span class="label label-success">$tag</span>
+                                #end
+                            #end
+                            #if($article.featured)
+                                <span class="label label-warning">Featured</span>
+                            #end
+                        </div>
+                        <div class="text-left hidden-md hidden-lg" style="margin-top: 10px;">
+                            #if( $article.category )
+                                <span class="label label-success">$article.category</span>
+                            #end
+                            #foreach($tag in $article.tags)
+                                #if( $article.isSelectedTag( $tag ) )
+                                    <span class="label label-success">$tag</span>
+                                #end
+                            #end
+                            #if($article.featured)
+                                <span class="label label-warning">Featured</span>
+                            #end
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr />
+    #end
 #else
-<p>No blog articles found</p>
+    <p>No blog articles found</p>
 #end
