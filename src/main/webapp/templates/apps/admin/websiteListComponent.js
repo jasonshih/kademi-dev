@@ -51,22 +51,8 @@
         showSettingForm: function (form, component, keditor) {
             flog('showSettingForm "websiteList" component');
 
-            flog(component.find('.website').eq(0));
-
-            var itemsPerPage = '';
-            var website = component.find('.website').eq(0);
-
-            if (website.hasClass('col-md-3')) {
-                itemsPerPage = '4';
-            } else if (website.hasClass('col-md-4')) {
-                itemsPerPage = '3';
-            } else if (website.hasClass('col-md-6')) {
-                itemsPerPage = '2';
-            } else if (website.hasClass('col-md-12')) {
-                itemsPerPage = '1';
-            }
-
-            form.find('.items-per-row').val(itemsPerPage);
+            var dynamicElement = component.find('[data-dynamic-href]');
+            form.find('.items-per-row').val(dynamicElement.attr('data-items-per-row'));
         },
 
         hideSettingForm: function (form, keditor) {
