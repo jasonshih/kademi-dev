@@ -1204,6 +1204,7 @@
             data = $.param(data);
             flog('Dynamic href: ' + dynamicHref, 'Data: ' + data);
 
+            dynamicElement.html('');
             return $.ajax({
                 url: dynamicHref,
                 data: data,
