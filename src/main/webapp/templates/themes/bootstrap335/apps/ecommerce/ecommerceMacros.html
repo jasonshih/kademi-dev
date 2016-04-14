@@ -56,14 +56,14 @@
             <div id="recently-added">
                 <h4><b>Recently Added</b></h4>
                 #foreach($p in $recentlyAdded)
-                    #set($bg = "/theme/img/photo_holder.png")
+                    #set($bg = "/static/images/photo_holder.png")
                     #if( $p.fields.primaryImageId.value )
                         #set($bg = $store.href + "$p.fields.tags.value/$p.fields.product.value/$p.fields.primaryImageId.value")
                     #end
                     <div class="media">
                         <div class="media-left">
                             <a href="/$store.name/$p.fields.tags.value/$p.fields.product.value">
-                                <img class="media-object" src="/theme/img/blank.gif" style="background-image: url($bg)" />
+                                <img class="media-object" src="/static/images/blank.gif" style="background-image: url($bg)" />
                             </a>
                         </div>
                         <div class="media-body">
@@ -77,14 +77,14 @@
             <div id="last-viewed">
                 <h4><b>Last Viewed</b></h4>
                 #foreach($p in $lastViewed)
-                    #set($bg = "/theme/img/photo_holder.png")
+                    #set($bg = "/static/images/photo_holder.png")
                     #if( $p.fields.primaryImageId.value )
                         #set($bg = $store.href + "$p.fields.tags.value/$p.fields.product.value/$p.fields.primaryImageId.value")
                     #end
                     <div class="media">
                         <div class="media-left">
                             <a href="/$store.name/$p.fields.tags.value/$p.fields.product.value">
-                                <img class="media-object" src="/theme/img/blank.gif" style="background-image: url($bg)" />
+                                <img class="media-object" src="/static/images/blank.gif" style="background-image: url($bg)" />
                             </a>
                         </div>
                         <div class="media-body">
@@ -118,7 +118,7 @@
 
             <div class="$cls product-item">
                 <div class="thumbnail product">
-                    #set($bg = "/theme/img/photo_holder.png")
+                    #set($bg = "/static/images/photo_holder.png")
                     #if( $p.fields.primaryImageId.value )
                         #set($bg = "/$store.name/$p.fields.tags.value/$p.fields.product.value/$p.fields.primaryImageId.value")
                     #end

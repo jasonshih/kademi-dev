@@ -110,8 +110,6 @@ function storeCourseCookie(path) {
     });
 }
 
-
-
 function scrollProgress() {
     flog("scrollProgress");
     $(".module-progress").each(function(i, n) {
