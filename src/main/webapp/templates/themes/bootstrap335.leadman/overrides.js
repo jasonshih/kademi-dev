@@ -9,6 +9,9 @@ $(function(){
     if(menuNotify.length){
         var str = menuNotify.find('a').attr('title');
         var count = $('<div>'+str+'</div').find('.badge').text();
+        if(!count){
+            count = '0';
+        }
         menuNotify.find('a').attr('title', 'Notifications('+count+')');
     }
 });

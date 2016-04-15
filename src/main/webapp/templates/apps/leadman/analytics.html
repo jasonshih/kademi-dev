@@ -105,7 +105,7 @@
                             <tbody id="leadsBody">
                                 #set($leads = $page.queryLeads)
                                 #foreach( $hit in $leads.hits.hits )
-                                <tr class="text-center">
+                                <tr>
                                     <td>
                                         #if( $hit.fields.get("organisation.title").value )
                                         #if($!hit.fields.get("profile.firstName").value || $!hit.fields.get("profile.surName").value)
@@ -120,8 +120,12 @@
                                         $!hit.fields.get("profile.surName").value
                                         #end
                                     </td>
-                                    <td>$!hit.fields.get("dealAmount").value</td>
-                                    <td>$!hit.fields.get("assignedToProfile.firstName").value</td>
+                                    <td class="text-right">$!hit.fields.get("dealAmount").value</td>
+                                    <td>
+                                        #if($hit.fields.get("assignedToProfile.nickName")) $!hit.fields.get("assignedToProfile.nickName").value
+                                        #else $!hit.fields.get("assignedToProfile.firstName").value $!hit.fields.get("assignedToProfile.surName").value
+                                        #end
+                                        </td>
                                     <td>
                                         <a href="/leads/$!hit.fields.get('leadId').value">
                                             <i class="fa fa-cog"></i>

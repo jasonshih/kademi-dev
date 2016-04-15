@@ -9,6 +9,9 @@ html{
 html body .fa {
     line-height: inherit;
 }
+[class^="icon-"].fa-2x{
+    font-size: 2em !important;
+}
 
 .app {
     padding: 23px 23px;

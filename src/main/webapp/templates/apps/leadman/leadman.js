@@ -793,6 +793,11 @@ function mAssignTo(name, href, blockId) {
                 $("#" + blockId).reloadFragment({
                     url: href || window.location.pathname
                 });
+
+                var dashboard = $('.dash-secondary');
+                if(dashboard.length){
+                    reloadTasks();
+                }
             } else {
                 Msg.error("Sorry, we couldnt change the assignment");
             }

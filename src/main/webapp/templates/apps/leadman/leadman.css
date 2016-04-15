@@ -29,6 +29,12 @@ table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:af
 .pie-box+div{
     border-left: 1px solid #f0f0f0;
 }
+.deleteTask{
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    font-size: 16px;
+}
 @media (max-width: 767px) {
     .form-group [class^="col-md"] + div{
         margin-top: 10px;
