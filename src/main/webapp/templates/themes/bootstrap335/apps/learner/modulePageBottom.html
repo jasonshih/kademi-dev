@@ -4,7 +4,7 @@
 
 <script type="text/javascript">
     var privs = $formatter.toJson($request.attributes.privs);
-    var completable = $page.parent.completable;
+    var completable = $page.parent.completable && $page.parent.startable;
     var complete = $page.parent.complete;
 
     //            themeCssFiles.push("/templates/apps/learner/moduleLayout.dyn.css");
