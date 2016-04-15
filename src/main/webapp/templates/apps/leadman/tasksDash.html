@@ -20,6 +20,7 @@
                 $!task.taskDescription
             </p>
             <a href="/tasks/$task.id" class="btn btn-success pull-right takeTask">Take task</a>
+            <a href="/tasks/$task.id" title="Cancel this task" class="deleteTask btnCancelTask text-danger"><i class="fa fa-trash"></i></a>
             #set( $lead = false )
             #set( $lead = $task.relatedLead )
             #if( $lead )
