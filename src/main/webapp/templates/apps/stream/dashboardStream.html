@@ -25,37 +25,47 @@
     <script src="/theme/apps/stream/jquery.stream.js"></script>
     <script id="entry-template" type="text/html">
         <ol class="discussion">
-            {{#each hits.hits}}
+            {{#each aggregations.eventDate.buckets }}
+
+                    {{#each userName.buckets }}
+                    {{#each category.buckets }}
+                    {{#each path.buckets }}
+                    {{#each actionIcon.buckets }}
+                    {{#each actionDescNA.buckets }}
             <li class="other">
                 <div class="avatar">
-                    {{#unless fields.fullName}}
+                    {{#unless ../../../../key}}
                         <img class="img img-circle" src="/templates/apps/user/profile.png" alt="" />
                     {{else}}
-                        <img class="img img-circle" src="/users/{{fields.userName}}/pic" alt="" />
+                        <img class="img img-circle" src="/users/{{../../../../../key}}/pic" alt="" />
                     {{/unless}}
                     <br/>
-                    <a href="/manageUsers/{{fields.userId}}/" class="avatar-name" title="{{fields.fullName}}">{{fields.fullName}}</a>
+                    <a href="/manageUsers/{{userId ../../../../key}}/" class="avatar-name" title="{{fullName ../../../../key}}">{{fullName ../../../../key}} - {{../../../../key}}</a>
                 </div>
                 <div class='messages'>
                     <p>
-                        {{fields.actionDesc}} <a href="{{itemHref}}">{{fields.itemTitle}}</a>
+                        {{key}} <a href="{{../../key}}">{{itemTitle ../../key}}</a>
                     </p>
 
                     <p>
-                        <span class="label label-{{lowerCase fields.category}}">
-                            <span class="time timeago" title="{{dateFromLong fields.eventDate}}">{{fields.eventDate}}</span>
+                        <span class="label label-{{lowerCase ../../../key}}">
+                            <span class="time timeago" title="{{dateFromLong ../../../../../key}}">{{../../../../../key}}</span>
                         </span>
                     </p>
                 </div>
             </li>
-
+                    {{/each}}
+                    {{/each}}
+                    {{/each}}
+                    {{/each}}
+                    {{/each}}
             {{/each}}
         </ol>
     </script>
     <script>
         $(function () {
             $("#streamBody").stream();
-            $("#streamBody").stream("load");
+            $("#streamBody").stream("loadAggregated");
         });
     </script>
 </div>
