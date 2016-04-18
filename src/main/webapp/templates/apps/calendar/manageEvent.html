@@ -123,10 +123,13 @@
                         <hr/>
 
                         <p class="lead">Create your calendar invitation content below</p>
-
+                        #if($page.calendar.website)
                         <div class="embed-responsive embed-responsive-16by9">
                             <iframe class="embed-responsive-item" src="" id="editor-frame"></iframe>
                         </div>
+                        #else
+                        <span class="alert alert-danger">Please specify a website on the calendar before creating an invitation</span>
+                        #end
 
                     </div>
                     <!-- End content of Details tab -->
