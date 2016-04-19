@@ -103,7 +103,7 @@
                     },
                     callback: function (resp) {
                         if (resp.status) {
-                            Msg.success(resp.messages.first());
+                            Msg.success(resp.messages[0]);
                             var originalName = $('#originalName').val();
                             var newName = resp.nextHref;
                             if (originalName !== newName) {

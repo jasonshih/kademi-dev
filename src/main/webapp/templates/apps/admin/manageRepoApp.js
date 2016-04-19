@@ -297,7 +297,7 @@ var initCreateMarketItem = function () {
                 marketItemModal.modal('hide');
                 window.location.reload();
             } else {
-                Msg.warning(resp.messages.first());
+                Msg.warning(resp.messages[0]);
             }
         }
     });

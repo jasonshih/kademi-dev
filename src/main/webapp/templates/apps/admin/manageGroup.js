@@ -362,7 +362,7 @@ function initGroupModal() {
     modal.find('form').forms({
         callback: function (resp) {
             reloadGroupFolders();
-            Msg.success(resp.messages.first());
+            Msg.success(resp.messages[0]);
             resetModalControl();
             modal.modal('hide');
         }

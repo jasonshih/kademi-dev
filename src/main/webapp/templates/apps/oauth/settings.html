@@ -148,7 +148,7 @@
                 if (resp.status) {
                     $('#oauthproviders').reloadFragment();
                     addProviderModal.modal('hide');
-                    Msg.success(resp.messages.first());
+                    Msg.success(resp.messages[0]);
                 } else {
 
                 }

@@ -969,7 +969,7 @@
 
                 $('#modal-reprocess').find('form').forms({
                     callback: function (resp) {
-                        Msg.info(resp.messages.first());
+                        Msg.info(resp.messages[0]);
                         $('#modal-reprocess').modal('hide');
                     }
                 });

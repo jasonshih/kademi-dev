@@ -23,7 +23,7 @@ function initForms() {
     $("#mainForm").forms({
         callback: function (resp) {
             flog("done", resp);
-            Msg.success(resp.messages.first());
+            Msg.success(resp.messages[0]);
             if (resp.nextHref && resp.nextHref !== window.location.pathname) {
                 window.location.pathname = resp.nextHref;
             }
