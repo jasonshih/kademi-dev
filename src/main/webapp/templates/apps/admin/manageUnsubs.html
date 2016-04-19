@@ -23,7 +23,29 @@
                     <td>$!unsub.profile.surName</td>
                     <td>$!unsub.profile.email</td>
                     <td>$formatter.formatDateTime($unsub.unsubcribeDate, $page.organisation.timezone)</td>
-                    <td>#if($page.lastCommunication) <a href="$!page.lastCommunication.href">$!page.lastCommunication.title</a> #end</td>
+                    <td>
+                        #if($unsub.lastCommunication)
+                        $unsub.lastCommunication.type: 
+                        #if($unsub.lastCommunication.itemHref)
+                        <a href="$unsub.lastCommunication.itemHref">
+                            #end
+                            $!unsub.lastCommunication.itemTitle
+                            #if($unsub.lastCommunication.itemHref)
+                        </a>
+                        #end
+
+                        #if($unsub.lastCommunication.jobTitle)
+                        Job:
+                        #if($unsub.lastCommunication.jobHref)
+                        <a href="$unsub.lastCommunication.jobHref">
+                            #end
+                            $!unsub.lastCommunication.jobTitle
+                            #if($unsub.lastCommunication.jobHref)
+                        </a>
+                        #end
+                        #end
+                        #end
+                    </td>
                 </tr>
                 #end
             </tbody>

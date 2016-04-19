@@ -11,7 +11,7 @@ function initCreateModal() {
         callback: function (resp) {
             if (resp.status) {
                 modal.modal('hide');
-                Msg.info(resp.messages.first());
+                Msg.info(resp.messages[0]);
                 $('#stores-table').reloadFragment();
             }
         }
