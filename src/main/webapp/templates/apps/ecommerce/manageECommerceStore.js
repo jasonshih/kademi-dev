@@ -14,7 +14,7 @@ function initDetailsForm() {
     detailsForm.forms({
         callback: function (resp) {
             if (resp.status) {
-                Msg.info(resp.messages.first());
+                Msg.info(resp.messages[0]);
             }
         }
     });
