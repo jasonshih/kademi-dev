@@ -23,51 +23,14 @@
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "blogArticleList" component');
 
-            form.append(
-                '<form class="form-horizontal">' +
-                '   <div class="form-group">' +
-                '       <label for="photo-align" class="col-sm-12">KPI</label>' +
-                '       <div class="col-sm-12">' +
-                '           <select class="form-control select-kpi">' +
-                '           </select>' +
-                '       </div>' +
-                '   </div>' +
-                '   <div class="form-group">' +
-                '       <label for="photo-align" class="col-sm-12">Type</label>' +
-                '       <div class="col-sm-12">' +
-                '           <select class="form-control select-type">' +
-                '               <option value="dateHistogram">dateHistogram</option>' +
-                '           </select>' +
-                '       </div>' +
-                '   </div>' +
-                '   <div class="form-group">' +
-                '       <label for="photo-align" class="col-sm-12">Height</label>' +
-                '       <div class="col-sm-12">' +
-                '           <input type="number" class="form-control kpi-height" />' +
-                '           <em class="help-block small text-muted">Minimum is 100</em>' +
-                '       </div>' +
-                '   </div>' +
-                '</form>'
-            );
-
             $.ajax({
-                url: 'http://localhost:8080/sales/_DAV/PROPFIND',
+                url: '/_components/web/kpiVis?settings',
                 type: 'get',
-                dataType: 'JSON',
-                data: {
-                    fields: 'name,milton:title,href,milton:title,title'
-                },
+                dataType: 'HTML',
                 success: function (resp) {
-                    var kpisOptionsStr = '<option value="">- None -</option>';
+                    form.html(resp);
 
-                    for (var i = 0; i < resp.length; i++) {
-                        var kpi = resp[i];
-                        if (kpi.name !== 'sales') {
-                            kpisOptionsStr += '<option value="' + kpi.href + '">' + kpi.name + '</option>';
-                        }
-                    }
-
-                    form.find('.select-kpi').html(kpisOptionsStr).on('change', function () {
+                    form.find('.select-kpi').on('change', function () {
                         var selectedKpi = this.value;
                         var dynamicElement = keditor.getSettingComponent().find('[data-dynamic-href]');
 
@@ -80,30 +43,30 @@
                             dynamicElement.html('<p>Please select KPI</p>');
                         }
                     });
+
+                    form.find('.select-type').on('change', function () {
+                        var dynamicElement = keditor.getSettingComponent().find('[data-dynamic-href]');
+                        var contentArea = dynamicElement.closest('.keditor-content-area');
+
+                        dynamicElement.attr('data-visualisation', this.value);
+                        keditor.initDynamicContent(contentArea, dynamicElement);
+                    });
+
+                    form.find('.kpi-height').on('change', function () {
+                        var number = this.value;
+
+                        if (isNaN(number) || +number <= 99) {
+                            number = 100;
+                            this.value = number;
+                        }
+
+                        var dynamicElement = keditor.getSettingComponent().find('[data-dynamic-href]');
+                        var contentArea = dynamicElement.closest('.keditor-content-area');
+
+                        dynamicElement.attr('data-height', number);
+                        keditor.initDynamicContent(contentArea, dynamicElement);
+                    });
                 }
-            });
-
-            form.find('.select-type').on('change', function () {
-                var dynamicElement = keditor.getSettingComponent().find('[data-dynamic-href]');
-                var contentArea = dynamicElement.closest('.keditor-content-area');
-
-                dynamicElement.attr('data-visualisation', this.value);
-                keditor.initDynamicContent(contentArea, dynamicElement);
-            });
-
-            form.find('.kpi-height').on('change', function () {
-                var number = this.value;
-
-                if (isNaN(number) || +number <= 99) {
-                    number = 100;
-                    this.value = number;
-                }
-
-                var dynamicElement = keditor.getSettingComponent().find('[data-dynamic-href]');
-                var contentArea = dynamicElement.closest('.keditor-content-area');
-
-                dynamicElement.attr('data-height', number);
-                keditor.initDynamicContent(contentArea, dynamicElement);
             });
         },
 

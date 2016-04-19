@@ -28,7 +28,7 @@
                 type: 'get',
                 dataType: 'html',
                 success: function (resp) {
-                    form.append(resp);
+                    form.html(resp);
 
                     form.find('.number-of-articles').on('change', function () {
                         var number = this.value;
