@@ -68,7 +68,6 @@
 
                     for (var i = 0; i < resp.length; i++) {
                         var blog = resp[i];
-                        flog(blog);
                         if (blog.name !== 'blogs') {
                             blogsOptionsStr += '<option value="' + blog.name + '">' + blog.name + '</option>';
                         }
@@ -84,7 +83,7 @@
                             dynamicElement.attr('data-blog', selectedBlog);
                             keditor.initDynamicContent(contentArea, dynamicElement);
                         } else {
-                            dynamicElement.html('');
+                            dynamicElement.html('<p>Please select Blog</p>');
                         }
                     });
                 }

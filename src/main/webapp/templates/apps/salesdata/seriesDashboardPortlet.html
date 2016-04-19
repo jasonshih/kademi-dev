@@ -11,7 +11,7 @@
                                 </div>
                                 #set( $sales = $rootFolder.find("/sales") )
                                 <div class="col-xs-9 text-right">
-                                    #if( $sales.size() > 0 )
+                                    #if( $sales.children.size() > 0 )
                                     <div class="huge">$sales.numSeries</div>
                                     <div>data series</div>
                                     #else
