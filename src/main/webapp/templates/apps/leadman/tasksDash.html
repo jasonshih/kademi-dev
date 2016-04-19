@@ -34,6 +34,10 @@
                         #end
                     </a>
                 </h3>
+                #set ($lastContactRequest = $lead.lastContactRequest())
+                #if($lastContactRequest)
+                $lastContactRequest.message
+                #end
                 #if( $lead.profile )
                 <p>
                     #if( $lead.profile.email )
