@@ -16,14 +16,14 @@ function initViewEvent() {
     $("abbr.timeago").timeago();
     initRsvpForm();
     showRsvpPanel();
-    $(".rsvp-change").click(function(e) {
+    $(".rsvp-change").click(function (e) {
         e.preventDefault();
         $(".well-rsvp").hide();
         $(".rsvp-form").show(200);
     });
 
     var modal = $(".guests-modal");
-    $(".guests-add").click(function(e) {
+    $(".guests-add").click(function (e) {
         e.preventDefault();
         showModal(modal);
     });
@@ -31,12 +31,12 @@ function initViewEvent() {
     var guestLi = null;
     var guestList = $("ul.guests");
     checkGuestList(guestList);
-    guestList.on("click", "a.guest-edit", function(e) {
+    guestList.on("click", "a.guest-edit", function (e) {
         guestLi = $(e.target).closest("li");
         updateModalForGuest(modal, guestLi);
         showModal(modal);
     });
-    guestList.on("click", "a.guests-delete", function(e) {
+    guestList.on("click", "a.guests-delete", function (e) {
         guestLi = $(e.target).closest("li");
         guestLi.remove();
         checkGuestList(guestList);
@@ -50,7 +50,7 @@ function initViewEvent() {
     });
 
     var form = modal.find("form");
-    form.submit(function(e) {
+    form.submit(function (e) {
         e.preventDefault();
         try {
             if (guestLi) {
@@ -63,7 +63,7 @@ function initViewEvent() {
         }
         closeModals();
         checkGuestList(guestList);
-        if( Msg ) {
+        if (Msg) {
             Msg.info("Thank you for registering");
         } else {
             alert("Thank you")
@@ -80,14 +80,14 @@ function initFullCalendar() {
         },
         editable: true,
         allDayDefault: false,
-        events: window.location.pathname,
+        events: window.location.pathname
     });
 }
 
 function initRsvpForm() {
     var rsvpForm = $("form.rsvp");
     rsvpForm.forms({
-        validate: function() {
+        validate: function () {
             // Check they've selected something
             var option = rsvpForm.find("input[type=radio]:checked");
             if (option.length === 0) {
@@ -98,9 +98,9 @@ function initRsvpForm() {
             }
 
             // re-number guestlist inputs
-            rsvpForm.find("ul.guests li").each(function(row, n) {
+            rsvpForm.find("ul.guests li").each(function (row, n) {
                 var li = $(n);
-                li.find("input").each(function(fieldNum, inp) {
+                li.find("input").each(function (fieldNum, inp) {
                     var i = $(inp);
                     var name = i.attr("name");
                     flog("nameA", name);
@@ -114,18 +114,18 @@ function initRsvpForm() {
             });
             return true;
         },
-        callback: function(resp) {
+        callback: function (resp) {
             // only called when resp.status = true
             rsvpStatus = $("form.rsvp input[name=rsvp]:checked").val();
             showRsvpPanel();
         },
-        errorHandler: function(response, form, valiationMessageSelector, errorCallback) {
+        errorHandler: function (response, form, valiationMessageSelector, errorCallback) {
             if (response.fieldMessages.length > 0 && response.fieldMessages[0].field === "userData") {
                 // show modal prompting for name details
                 jQuery.ajax({
                     type: 'GET',
                     url: "/profile/",
-                    success: function(resp) {
+                    success: function (resp) {
                         flog("setStatusComplete: profile get complete");
                         var page = $(resp);
                         var form = page.find("div.details form");
@@ -136,7 +136,7 @@ function initRsvpForm() {
                         form.find("button").hide();
                         form.attr("action", "/profile/");
                         form.forms({
-                            callback: function(resp) {
+                            callback: function (resp) {
                                 if (resp.status) {
                                     closeModals();
                                     rsvpForm.submit();
@@ -146,7 +146,7 @@ function initRsvpForm() {
                             }
                         });
                         var modal = $("#userDataModal");
-                        modal.find("button").click(function(e) {
+                        modal.find("button").click(function (e) {
                             flog("submit form", e);
                             e.preventDefault();
                             e.stopPropagation();
@@ -157,7 +157,7 @@ function initRsvpForm() {
                         showModal(modal);
 
                     },
-                    error: function(resp) {
+                    error: function (resp) {
                         ajaxLoadingOff();
                         flog("setStatusComplete: profile get failed");
                         alert("Very sorry, but something went wrong while attempting to complete your module. Could you please refresh the page and try again?");
@@ -169,7 +169,7 @@ function initRsvpForm() {
                 alert("Sorry, for some reason we couldnt register your attendance. Maybe you could try again, or contact the site administrator for help");
             }
         },
-        error: function() {
+        error: function () {
             var alert = $("<div class='alert alert-danger'><a class='close' data-dismiss='alert' href='#' aria-hidden='true'>&times;</a>Sorry, there was an error submitting your request. Please try again and contact the administrator if you still have problems.</div>");
             rsvpForm.prepend(alert)
         }
@@ -217,13 +217,13 @@ function updateModalForGuest(modal, li) {
 
 function insertGuest(form, guestList) {
     var html = "<li>" +
-            "<a class='pull-right guests-delete' href='#'><span class='glyphicon glyphicon-remove-circle'></span></a>" +
-            "<a href='#' class='guest-edit'>Guest</a> of <b>org</b>" +
-            "<input type='hidden' name='guestFirstName' value=''/>" +
-            "<input type='hidden' name='guestSurname' value=''/>" +
-            "<input type='hidden' name='guestEmail' value=''/>" +
-            "<input type='hidden' name='guestOrgName' value=''/>" +
-            "</li>";
+        "<a class='pull-right guests-delete' href='#'><span class='glyphicon glyphicon-remove-circle'></span></a>" +
+        "<a href='#' class='guest-edit'>Guest</a> of <b>org</b>" +
+        "<input type='hidden' name='guestFirstName' value=''/>" +
+        "<input type='hidden' name='guestSurname' value=''/>" +
+        "<input type='hidden' name='guestEmail' value=''/>" +
+        "<input type='hidden' name='guestOrgName' value=''/>" +
+        "</li>";
     var li = $(html);
     guestList.append(li);
     updateGuest(form, li);

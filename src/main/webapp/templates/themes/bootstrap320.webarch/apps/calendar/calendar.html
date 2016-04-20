@@ -46,9 +46,9 @@
                                 <small>Starts $formatter.formatDate( $event.startDate ) (<abbr title="$formatter.formatDateISO8601($event.startDate)" class="timeago">$!event.startDate</abbr>)</small>
                             </div>
                         </header>
-                        <div class="calendar-event-text">
+                        <div class="calendar-event-text clearfix">
+                            <div class="clearfix">$!event.description</div>
                             <a href="$event.name" class="btn btn-sm btn-success pull-right">Register</a>
-                            $event.description
                         </div>
                     </article>
                     #end
