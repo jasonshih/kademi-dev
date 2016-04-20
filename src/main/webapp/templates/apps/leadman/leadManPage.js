@@ -193,6 +193,10 @@
             }
         });
 
+        editor.on( 'submitComplete', function ( e, json, data ) {
+            doSearch();
+        } );
+
         dataTable.draw();
     }
 
