@@ -15,12 +15,12 @@
 #end
 
 <script type="text/javascript">
-    $(function() {
+    $(function () {
         initPosts("$basePath");
     });
 
     function initPosts(basePath) {
-        $.getJSON(basePath + "_postSearch?a", function(response) {
+        $.getJSON(basePath + "_postSearch?a", function (response) {
             flog("got posts response", response);
             processPosts(response);
         });
@@ -50,16 +50,19 @@
 
     function displayPost(user, date, comment, pageTitle, pagePath, list, template) {
         if (user == null) {
-            log("missing user, ignore");
-            return;
+            log("missing user");
         }
         log("user", user);
         var li = template.clone();
         //var manageUserHref = "manageUsers/" + user.userId;
-        if (user.photoHash) {
+        if (user && user.photoHash) {
             li.find(".messages-item-avatar").attr("href", "/_hashes/files/" + user.photoHash);
         }
-        li.find(".messages-item-from").text(user.name);
+        if (user) {
+            li.find(".messages-item-from").text(user.name);
+        } else {
+            li.find(".messages-item-from").text("Anonymous");
+        }
         var subject = "posted in " + pageTitle;
         li.find(".messages-item-subject").html(subject);
         li.find(".messages-item-preview").text(comment);
@@ -68,7 +71,7 @@
         li.find(".messages-item-time .text").text(formattedDate).attr("title", formattedDate);
 
         list.append(li);
-        li.click(function(e){
+        li.click(function (e) {
             window.open(pagePath, "_blank");
         });
     }
