@@ -1,17 +1,17 @@
 <div class="row" class="website-list">
+    #set ($clsName = "col-md-4")
+    #if ($itemsPerRow == 1)
+        #set ($clsName = "col-md-12")
+    #elseif ($itemsPerRow == 2)
+        #set ($clsName = "col-md-6")
+    #elseif ($itemsPerRow == 3)
+        #set ($clsName = "col-md-4")
+    #elseif ($itemsPerRow == 4)
+        #set ($clsName = "col-md-3")
+    #end
     #foreach( $website in $rootFolder.organisation.websites())
         #if( $website.redirectTo.length() > 0 )
         #else
-            #set ($clsName = "col-md-4")
-            #if ($itemsPerRow == 1)
-                #set ($clsName = "col-md-12")
-            #elseif ($itemsPerRow == 2)
-                #set ($clsName = "col-md-6")
-            #elseif ($itemsPerRow == 3)
-                #set ($clsName = "col-md-4")
-            #elseif ($itemsPerRow == 4)
-                #set ($clsName = "col-md-3")
-            #end
             <div class="$clsName website">
                 #if( $website.imageHash )
                 #set( $bgimage = "/_hashes/files/$website.imageHash" )
