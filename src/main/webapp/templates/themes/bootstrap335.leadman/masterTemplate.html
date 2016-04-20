@@ -64,6 +64,22 @@ $templater.pushLess("/theme/theme-params.less", "all")
 
 $!bodyContent
 
+<!-- Injected CSS sources -->
+#foreach($groupEntry in $templater.cssSources.entrySet())
+#foreach($cssFile in $groupEntry.value)
+<link rel="stylesheet" href="$cssFile"/>
+#end
+#end
+<!-- End injected CSS sources -->
+
+<!-- Injected JS sources -->
+#foreach($groupEntry in $templater.jsSources.entrySet())
+#foreach($jsFile in $groupEntry.value)
+<script src="$jsFile">//</script>>
+#end
+#end
+<!-- End injected CSS sources -->  
+
 <!-- merged includes and leadManIncludes. Now being called from LeadManApp header portler -->
 <!-- parse("/templates/apps/leadman/leadManIncludes.html") -->
 

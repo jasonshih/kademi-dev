@@ -14,6 +14,19 @@
 
         </div>
 
+        <div class="panel panel-default">
+            <div class="panel-body">
+                
+                <ul>
+                    #foreach($node in $page.funnel.nodes)
+                    <li><a href="$node.nodeId">$node.nodeId</a></li>
+                    #end
+                </ul>
+                
+                
+            </div>
+        </div>
+        
         <a href="/repositories/$page.name/" class="btn btn-primary">Edit funnel</a>
 
         <a class="btn btn-success btn-sm" href="#" data-toggle="modal" data-target="#modalUploadCsv">
@@ -109,10 +122,10 @@
             </div>
         </div>
 
-        <link rel="stylesheet" href="http://www.jointjs.com/css/jointjs/v0.9.5/joint.min.css" />
-        <script src="http://www.jointjs.com/js/vendor/lodash/lodash.min.js"></script>
-        <script src="http://www.jointjs.com/js/vendor/backbone/backbone-min.js"></script>
-        <script src="http://www.jointjs.com/js/jointjs/v0.9.5/joint.min.js"></script>
+        <link rel="stylesheet" href="/static/jointjs/0.9.5/joint.min.css" />
+        <script src="/static/jointjs/0.9.5/lodash.min.js"></script>
+        <script src="/static/jointjs/0.9.5/backbone-min.js"></script>
+        <script src="/static/jointjs/0.9.5/joint.min.js"></script>
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
 
 
@@ -148,6 +161,16 @@
                         Msg.success("Upload completed. Please review any unmatched members below, or refresh the page to see the updated list of members");
                     }
                 });
+            }
+
+            function formatMins(i) {
+                if( i < 120) {
+                    return i + " mins";
+                } else if( i < 60 * 24) {
+                    return i / 60 + " hours";
+                } else {
+                    return i / (60*24) + " days";
+                }
             }
 
             function initJoint() {
@@ -230,9 +253,17 @@
                     } else if( keys[0] == "goal" ) {
                         var dest = nodes[n.timeoutNode];
                         if( dest != null ) {
-                            link(source, dest, 'Timeout');
+                            link(source, dest, formatMins(n.timeoutMins));
                         }
-                        // TODO: goals have events to take other transitions
+                        $.each(n.transitions, function(i, tr){
+                            dest = nodes[tr.nextNodeId];
+                            if( dest != null ) {
+                                var props = Object.keys(tr.trigger);
+                                var triggerType = props[0];
+                                
+                                link(source, dest, triggerType);
+                            }
+                        });
                     } else {
                         // an action node
                         var dest = nodes[n.nextNodeId];
