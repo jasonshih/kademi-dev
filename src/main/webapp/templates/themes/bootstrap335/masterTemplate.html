@@ -44,6 +44,21 @@ $!bodyContent
 <link rel="stylesheet" href="/static/bootstrap-msg/0.3/bootstrap-msg.min.css" type="text/css" />
 <link rel="stylesheet" href="/static/font-awesome/4.4.0/css/font-awesome.min.css"/>
 
+<!-- Injected CSS sources -->
+#foreach($groupEntry in $templater.cssSources.entrySet())
+#foreach($cssFile in $groupEntry.value)
+<link rel="stylesheet" href="$cssFile"/>
+#end
+#end
+<!-- End injected CSS sources -->
+
+<!-- Injected JS sources -->
+#foreach($groupEntry in $templater.jsSources.entrySet())
+#foreach($jsFile in $groupEntry.value)
+<script src="$jsFile">//</script>>
+#end
+#end
+<!-- End injected CSS sources -->    
 
 
 <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->

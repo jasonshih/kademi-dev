@@ -1,0 +1,95 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Send Email Funnel Action</title>
+    </head>
+    <body>
+        <form method="POST" action="$page.path" class="form-horizontal">
+            <button class="btn btn-success" type="submit">Save</button>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-4" for="themeSiteId">Website</label>
+                        <div class="col-md-8">
+                            <select name="themeSiteId" id="themeSiteId" class="form-control required-if-shown">
+                                $formatter.option("", "[Please select]", $page.themeSiteId)
+                                #foreach($website in $rootFolder.websites)
+                                $formatter.option($website.id, $website.name, $page.themeSiteId)
+                                #end
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-4" for="subject">Email subject</label>
+                        <div class="col-md-8">
+
+                            <textarea style="height: 70px" name="subject" id="subject" value="" placeholder="Enter the email subject here" class="form-control required-if-shown">$formatter.htmlEncode( $page.node.subject )</textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-4" for="from>Email from address</label>
+                        <div class="col-md-8">
+                            <input type="text" name="from" id="from" value="$!formatter.htmlEncode( $page.from )" placeholder="admin@mybusinessname.com" class="form-control" />
+                            <small class="text-muted help-block">Eg <i>"Joe Bloggs" &lt;joe@bloggs.com&gt;</i>. You can leave this field blank but <b>Reply to address</b> will be required!</small>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-4" for="replyT">Reply to address</label>
+                        <div class="col-md-8">
+                            <input type="text" name="replyTo" id="replyTo" value="$!formatter.htmlEncode( $page.replyTo )" placeholder="admin@mybusinessname.com" class="form-control" />
+                            <small class="text-muted help-block">Eg <i>"Joe Bloggs" &lt;joe@bloggs.com&gt;</i>.</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="pull-right">
+                        <div class="btn-group">
+                            <button class="btn btn-success btn-sent-test" type="button">
+                                <span class="glyphicon glyphicon-send"></span>
+                                Send test
+                            </button>
+                            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" type="button">
+                                <span class="caret"></span>
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu pull-right" role="menu">
+                                <li><a href="#" class="btn-sent-test-choose">Enter recipient address</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div style="clear: both"></div>
+                    <div class="add-attachment btn-upload"></div>
+                    <div class="article-wrapper article-sm showed-action attachments-list">
+                        #foreach($att in $page.job.attachments)
+                        <article>
+                            <span class="article-name">
+                                <a target="_blank" href="/_hashes/files/$att.attachmentHash">$att.attachmentFilename</a>
+                            </span>
+                            <aside class="article-action">
+                                <a class="btn btn-sm btn-xs btn-danger btn-delete-attachment" href="$att.attachmentFilename" title="Remove"><i class="clip-minus-circle"></i></a>
+                            </aside>
+                        </article>
+                        #end
+                    </div>
+                </div>
+            </div>
+            <hr style="clear: both"/>
+            <div class="row">
+                <div class="col-lg-12">
+                    <a href="edmeditor?fileName=index.html&useHash=true" target="_blank" class="btn btn-primary" >
+                        <span class="fa fa-globe"></span> EDM editor
+                        <i class="clip-new" style="color: red"></i>
+                    </a>
+                    <a href="texteditor?fileName=index.html" target="_blank" class="btn btn-primary" >
+                        <span class="fa fa-pencil"></span> Raw text editor
+                    </a>
+                    <a href="http://docs.kademi.co/howtos/getting-started/6-send-emails.html#templating" target="_blank" class="btn btn-info" >
+                        <span class="glyphicon glyphicon-question-sign"></span> Help with templating
+                    </a>
+
+                </div>
+            </div>
+            <iframe id="rawBody" class="well" style="width: 100%; height: 400px; overflow: scroll; margin-top: 15px" src="$page.node.contentFileName" >
+
+            </iframe>
+    </body>
+</html>

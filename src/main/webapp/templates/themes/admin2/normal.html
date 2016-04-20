@@ -135,6 +135,22 @@
         <!-- end: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
     </head>
     <body>
+        <!-- Injected CSS sources -->
+        #foreach($groupEntry in $templater.cssSources.entrySet())
+        #foreach($cssFile in $groupEntry.value)
+        <link rel="stylesheet" href="$cssFile"/>
+        #end
+        #end
+        <!-- End injected CSS sources -->
+        
+        <!-- Injected JS sources -->
+        #foreach($groupEntry in $templater.jsSources.entrySet())
+        #foreach($jsFile in $groupEntry.value)
+        <script src="$jsFile">//</script>>
+        #end
+        #end
+        <!-- End injected CSS sources -->        
+        
         <div id="kademi-container" #if ($request.getCookie("admin-sidebar").value == "collapsed") class="navigation-small" #end >
             <div class="navbar navbar-inverse navbar-fixed-top">
                 <!-- start: TOP NAVIGATION CONTAINER -->
