@@ -4,7 +4,7 @@ function initManageMenu() {
     initCRUDMenu();
 }
 
-var MENU_ITEM_SPLITTER = ',\n';
+var MENU_ITEM_SPLITTER = '\r\n';
 
 function initMenuBuilder() {
     var txtMenu = $('#menu');
