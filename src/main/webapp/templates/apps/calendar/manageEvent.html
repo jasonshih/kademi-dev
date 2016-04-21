@@ -124,11 +124,11 @@
 
                         <p class="lead">Create your calendar event content below</p>
                         #if($page.calendar.website)
-                        <div class="embed-responsive embed-responsive-16by9">
-                            <iframe class="embed-responsive-item" src="" id="editor-frame"></iframe>
-                        </div>
+                            <div class="embed-responsive embed-responsive-16by9">
+                                <iframe class="embed-responsive-item" src="" id="editor-frame"></iframe>
+                            </div>
                         #else
-                        <span class="alert alert-danger">Please specify a website on the calendar before creating an invitation</span>
+                            <p class="alert alert-warning lead"><i class="fa fa-warning"></i> Please specify a website on the calendar at <a href="./" class="text-warning"><b>here</b></a> before creating event content</p>
                         #end
 
                     </div>
