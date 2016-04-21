@@ -348,6 +348,13 @@ function initPie(id, aggr) {
 
     flog("initPie", id, aggr);
 
+    var total = 0;
+
+    for (var i in aggr.buckets) {
+        var b = aggr.buckets[i];
+        total += b.doc_count;
+    }
+
     $('#' + id + ' svg').empty();
     nv.addGraph(function () {
         var chart = nv.models.pieChart()
@@ -356,6 +363,9 @@ function initPie(id, aggr) {
                 })
                 .y(function (d) {
                     return d.doc_count;
+                })
+                .valueFormat(function (val) {
+                    return round((val / total * 100), 2) + "% (" + val + ")";
                 })
                 .donut(true)
                 .donutRatio(0.35)
