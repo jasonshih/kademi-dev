@@ -829,7 +829,7 @@ function doSavePage(form, pageArticle, isQuiz) {
 
                             editorFrame[0].contentWindow.postMessage(postDataStr, iframeUrl);
                         } else {
-                            Msg.show('Saved!');
+                            Msg.success('Saved!');
                             closeFuseModal(modal);
                         }
                     }
