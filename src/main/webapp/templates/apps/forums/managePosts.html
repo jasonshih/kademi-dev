@@ -20,7 +20,7 @@
                         <i class="fa fa-trash"></i> <span id="delete-posts-text">Delete</span>
                     </button>
                     <a href="$page.href?csv" class="btn btn-info pull-right">Export to CSV</a>
-                    
+
                     <div class="table-responsive">
                         <table class="table table-striped table-hover posts-table">
                             <colgroup>
@@ -72,7 +72,7 @@
                                     <td><abbr title="$formatter.formatDateISO8601($post.date)" class="timeago">$post.date</abbr></td>
                                     <td>
                                         #if($post.user)
-                                        <a href="$post.user.href">$post.user.name</a>
+                                        <a href="/manageUsers/$post.user.userId/#commentsTab-tab">$post.user.name</a>
                                         #else
                                         Anonymous
                                         #end
