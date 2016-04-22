@@ -1,0 +1,26 @@
+<div class="row">
+    <div class="col-md-4">
+        <h4>Calendar Events</h4>
+    </div>
+</div>
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Event Date</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody id="commentHistoryBody">
+            #foreach($c in $ar)
+            <tr>
+                <td>$c.attendeeEvent.name</td>
+                <td>$!c.notes</td>
+                <td>$!formatter.formatDateTime($c.postDate, $page.organisation.timezone)</td>
+            </tr>
+            #end
+        </tbody>
+    </table>
+</div>
