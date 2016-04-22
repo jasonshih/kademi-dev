@@ -17,8 +17,9 @@
             #foreach($c in $ar)
             <tr>
                 <td>$c.attendeeEvent.name</td>
-                <td>$!c.notes</td>
-                <td>$!formatter.formatDateTime($c.postDate, $page.organisation.timezone)</td>
+                <td>$!c.participationStatus</td>
+                <td>$!formatter.formatDateTime($c.attendeeEvent.startDate, $page.organisation.timezone)</td>
+                <td>$!formatter.formatDateTime($c.createdDate, $page.organisation.timezone)</td>
             </tr>
             #end
         </tbody>
