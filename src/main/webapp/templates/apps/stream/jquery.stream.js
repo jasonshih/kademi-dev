@@ -34,7 +34,7 @@
             });
             Handlebars.registerHelper('lowerCase', function (s) {
                 if (s) {
-                    if( Array.isArray(s) ) {
+                    if (Array.isArray(s)) {
                         s = s[0];
                     }
                     return s.toLowerCase();
@@ -85,13 +85,14 @@
 
                     $.each(resp.aggregations.userAggr.buckets, function (i, n) {
                         var item = n.user.hits.hits[0].fields;
-
-                        usersMap[n.key] = {};
-                        if (item.fullName) {
-                            usersMap[n.key].fullName = item.fullName;
-                        }
-                        if (item.userId) {
-                            usersMap[n.key].userId = item.userId[0]
+                        if (item) {
+                            usersMap[n.key] = {};
+                            if (item.fullName) {
+                                usersMap[n.key].fullName = item.fullName;
+                            }
+                            if (item.userId) {
+                                usersMap[n.key].userId = item.userId[0]
+                            }
                         }
                     });
 
