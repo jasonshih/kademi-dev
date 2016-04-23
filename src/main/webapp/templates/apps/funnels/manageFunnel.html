@@ -6,27 +6,28 @@
         <h1>$page.title</h1>
         <p class="lead">Leads = $page.leads.size()</p>
 
-        <div class="well">
+        <div class="well" style="display: none">
             <xmp id="funnelJson">$page.funnelJson</xmp>
         </div>
 
-        <div class="well" id="paper" style="height: 600px; width: 1200px">
 
+        <div class="well" id="paper" style="height: 600px; width: 1200px">
+            <button class="btn btn-success pull-right" id="btnSave">Save</button>
         </div>
 
         <div class="panel panel-default">
             <div class="panel-body">
-                
+
                 <ul>
                     #foreach($node in $page.funnel.nodes)
                     <li><a href="$node.nodeId">$node.nodeId</a></li>
                     #end
                 </ul>
-                
-                
+
+
             </div>
         </div>
-        
+
         <a href="/repositories/$page.name/" class="btn btn-primary">Edit funnel</a>
 
         <a class="btn btn-success btn-sm" href="#" data-toggle="modal" data-target="#modalUploadCsv">
@@ -164,16 +165,17 @@
             }
 
             function formatMins(i) {
-                if( i < 120) {
+                if (i < 120) {
                     return i + " mins";
-                } else if( i < 60 * 24) {
+                } else if (i < 60 * 24) {
                     return i / 60 + " hours";
                 } else {
-                    return i / (60*24) + " days";
+                    return i / (60 * 24) + " days";
                 }
             }
 
             function initJoint() {
+                flog("initJoint");
                 var graph = new joint.dia.Graph();
 
                 var paper = new joint.dia.Paper({
@@ -186,114 +188,169 @@
 
 
 
-                function state(x, y, label) {
-                    flog("state", x, y, label);
-                    var cell = new joint.shapes.fsa.State({
-                        position: {x: x, y: y},
-                        size: {width: 60, height: 60},
-                        attrs: {
-                            text: {text: label, fill: '#000000', 'font-weight': 'normal'},
-                            'circle': {
-                                fill: '#f6f6f6',
-                                stroke: '#000000',
-                                'stroke-width': 2
-                            }
+                function state(n, nodeType) {
+                    flog("state", n.nodeId, nodeType, n);
+                    var x = n.x;
+                    var y = n.y;
+                    var label = n.nodeId;
+                    var cell;
+                    if (nodeType === "goal") {
+                        var outPorts = ['timeout'];
+                        if (n.transitions) {
+                            $.each(n.transitions, function (i, tr) {
+                                var keys = Object.keys(tr.trigger);
+                                tr = tr.trigger[keys[0]];
+                                outPorts.push(tr.description);
+                            });
                         }
-                    });
+                        cell = new joint.shapes.devs.Atomic({
+                            position: {x: x, y: y},
+                            size: {width: 150, height: 70},
+                            inPorts: ['in'],
+                            outPorts: outPorts, // add ports for other transitions
+                            attrs: {
+                                text: {text: label, fill: '#000000', 'font-weight': 'normal'},
+                            }
+                        });
+                        
+                        // rounded corners indicate a state
+                        _.each([cell], function (element) {
+                            element.attr({'.body': {'rx': 8, 'ry': 26}});
+                        });
+                    } else {
+                        // action
+                        var outPorts = ['then'];
+                        var props = Object.keys(n);
+                        var action = n[props[0]];
+                        flog("action", action);
+                        cell = new joint.shapes.devs.Atomic({
+                            position: {x: x, y: y},
+                            size: {width: 150, height: 70},
+                            inPorts: ['in'],
+                            outPorts: outPorts, // add ports for other transitions
+                            attrs: {
+                                text: {text: label, fill: '#000000', 'font-weight': 'normal'},
+                            }
+                        });
+                    }
+
                     graph.addCell(cell);
+
+                    cell.on('change:position', function (element) {
+                        var pos = element.get('position');
+                        n.x = pos.x;
+                        n.y = pos.y;
+                    });
+                    flog("added cell", cell);
                     return cell;
                 }
 
-                function link(source, target, label, vertices) {
+                function link(source, target, label, outPort) {
+                    flog("link: ", source, target, label, outPort);
+                    var src = {id: source.id};
+                    if (outPort) {
+                        src.selector = source.getPortSelector(outPort);
+                    }
 
-                    var cell = new joint.shapes.fsa.Arrow({
-                        source: {id: source.id},
-                        target: {id: target.id},
-                        labels: [{position: 0.5, attrs: {text: {text: label || '', 'font-weight': 'bold'}}}],
-                        vertices: vertices || []
+                    var cell = new joint.dia.Link({
+                        source: src,
+                        target: {id: target.id, selector: target.getPortSelector("in")},
+                        router: {name: 'manhattan'},
+                        connector: {name: 'rounded'},
+                        attrs: {
+                            '.connection': {
+                                stroke: '#333333',
+                                'stroke-width': 3
+                            },
+                            '.marker-target': {
+                                fill: '#333333',
+                                d: 'M 10 0 L 0 5 L 10 10 z'
+                            }
+                        }
                     });
+
                     graph.addCell(cell);
                     return cell;
                 }
 
                 var json = $("#funnelJson").text();
                 var funnel = $.parseJSON(json);
+
+                $("#btnSave").click(function (e) {
+                    var source = JSON.stringify(funnel, null, '\t');
+                    doSave("funnel.json", source);
+                });
+
                 flog("funnel", funnel);
                 var nodes = {};
-                $.each( funnel.nodes, function(i, n) {
-                    flog("node", n);
+                $.each(funnel.nodes, function (i, n) {
+                    //flog("node", n);
                     var keys = Object.keys(n);
+                    var nodeType = keys[0];
                     n = n[keys[0]];
                     var el;
-                    if( keys[0] == "begin" ) {
+                    if (nodeType === "begin") {
                         el = new joint.shapes.fsa.StartState({position: {x: n.x, y: n.y}});
                         graph.addCell(el);
-                    } else if( keys[0] == "goal" ) {
-                        el = state(n.x, n.y, n.nodeId);
                     } else {
-                        el = state(n.x, n.y, n.nodeId); // should be an action symbol, or decision
+                        el = state(n, nodeType); // should be an action symbol, or decision
                     }
                     nodes[n.nodeId] = el;
                 });
 
                 // Now link them
                 flog("link nodes");
-                $.each( funnel.nodes, function(i, n) {
+                $.each(funnel.nodes, function (i, n) {
                     flog("node", n);
                     var keys = Object.keys(n);
                     n = n[keys[0]];
                     var source = nodes[n.nodeId];
-                    if( keys[0] == "begin" ) {
+                    if (keys[0] === "begin") {
                         var dest = nodes[n.transition.nextNodeId];
-                        if( dest != null ) {
+                        if (dest !== null) {
                             link(source, dest, 'Start');
                         } else {
                             flog("Could not find node ", n.transition.nextNodeId);
                         }
-                    } else if( keys[0] == "goal" ) {
+                    } else if (keys[0] === "goal") {
+                        flog("link goal timeout source=", source, "dest=", dest);
                         var dest = nodes[n.timeoutNode];
-                        if( dest != null ) {
-                            link(source, dest, formatMins(n.timeoutMins));
+                        if (dest !== null) {
+                            link(source, dest, formatMins(n.timeoutMins), "timeout");
                         }
-                        $.each(n.transitions, function(i, tr){
+                        $.each(n.transitions, function (i, tr) {
                             dest = nodes[tr.nextNodeId];
-                            if( dest != null ) {
+                            if (dest !== null) {
                                 var props = Object.keys(tr.trigger);
                                 var triggerType = props[0];
-                                
-                                link(source, dest, triggerType);
+                                var trigger = tr.trigger[triggerType];
+                                link(source, dest, triggerType, trigger.description);
                             }
                         });
                     } else {
                         // an action node
+                        flog("link action node", n.nextNodeId);
                         var dest = nodes[n.nextNodeId];
-                        if( dest != null ) {
-                            link(source, dest, 'Next');
+                        if (dest !== null) {
+                            link(source, dest, 'then', "then");
                         }
                     }
                 });
+            }
 
-
-/**
-                var code = state(180, 390, 'code');
-                var slash = state(340, 220, 'slash');
-                var star = state(600, 400, 'star');
-                var line = state(190, 100, 'line');
-                var block = state(560, 140, 'block');
-
-                link(start, code, 'start');
-                link(code, slash, '/');
-                link(slash, code, 'other', [{x: 270, y: 300}]);
-                link(slash, line, '/');
-                link(line, code, 'new\n line');
-                link(slash, block, '*');
-                link(block, star, '*');
-                link(star, block, 'other', [{x: 650, y: 290}]);
-                link(star, code, '/', [{x: 490, y: 310}]);
-                link(line, line, 'other', [{x: 115, y: 100}, {x: 250, y: 50}]);
-                link(block, block, 'other', [{x: 485, y: 140}, {x: 620, y: 90}]);
-                link(code, code, 'other', [{x: 180, y: 500}, {x: 305, y: 450}]);
-**/
+            function doSave(href, fileContent) {
+                Msg.info("Saving..");
+                $.ajax({
+                    url: href,
+                    type: 'PUT',
+                    data: fileContent,
+                    success: function () {
+                        Msg.success('File is saved!');
+                    },
+                    error: function (e) {
+                        Msg.error(e.status + ': ' + e.statusText);
+                    }
+                });
             }
         </script>
     </body>
