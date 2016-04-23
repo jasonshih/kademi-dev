@@ -10,15 +10,8 @@ function doPostMessage(data, url) {
 
 function initContentEditorPage(fileName) {
     flog('initContentEditorPage', fileName);
-    var body = $(document.body);
-    var timer;
-    win.on('resize', function () {
-        clearTimeout(timer);
-        timer = setTimeout(function () {
-            $('#content-area').css('min-height', win.height() - 50);
-        }, 200);
-    });
 
+    var body = $(document.body);
     var url = getParam('url') || '';
     if (url && url !== 'undefined') {
         body.addClass('embedded-iframe');
@@ -41,10 +34,20 @@ function initContentEditorPage(fileName) {
             }
         };
     }
+    var timer;
+    win.on('resize', function () {
+        clearTimeout(timer);
+        timer = setTimeout(function () {
+            $('#content-area .keditor-content-area').css('min-height', win.height() - +body.css('padding-top').replace('px', ''));
+        }, 100);
+    }).trigger('resize');
 
     initKEditor(body);
     initSaving(body, fileName);
-    hideLoadingIcon();
+
+    setTimeout(function () {
+        hideLoadingIcon();
+    }, 200);
 }
 
 $.keditor.components['text'].options = {
@@ -73,11 +76,26 @@ $.keditor.components['text'].options = {
 };
 
 function initKEditor(body) {
-    $('#content-area').keditor({
+    var contentArea = $('#content-area');
+
+    contentArea.keditor({
         snippetsUrl: '/_components/web/snippets.html',
         onContentChanged: function () {
+            if (contentArea.keditor('getContent').trim() === '') {
+                contentArea.find('.keditor-content-area').addClass('empty');
+            } else {
+                contentArea.find('.keditor-content-area').removeClass('empty');
+            }
+
             if (!body.hasClass('content-changed')) {
                 body.addClass('content-changed');
+            }
+        },
+        onInitContentArea: function (contentArea) {
+            var content = contentArea.html() || '';
+
+            if (content === '') {
+                contentArea.addClass('empty');
             }
         }
     });

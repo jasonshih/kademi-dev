@@ -1,5 +1,36 @@
 ﻿body {
-    padding-top: 50px;
+    padding-top: 50px !important;
+}
+
+.keditor-content-area {
+    padding-top: 30px;
+}
+
+.keditor-content-area.empty {
+    position: relative;
+}
+
+.keditor-content-area.empty:before {
+    content: "Drag & drop container in here";
+    color: #ccc;
+    font-size: 30px;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, .4);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    padding: 0 15px;
+}
+
+.keditor-content-area.empty:after {
+    content: "";
+    position: absolute;
+    top: 30px;
+    bottom: 30px;
+    left: 50px;
+    right: 50px;
+    border: 3px dashed #eee;
 }
 
 .navbar-fixed-top {
@@ -30,7 +61,7 @@ body.opened-keditor-sidebar div.cke_float[id*=cke_keditor-component-content-] {
 
 /* Embedded iframe */
 .embedded-iframe {
-    padding: 0;
+    padding: 0 !important;
 }
 
 .embedded-iframe .navbar-fixed-top {
