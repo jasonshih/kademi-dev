@@ -52,10 +52,16 @@
                 return "fa fa-info";
             });
             Handlebars.registerHelper('fullName', function (userName) {
-                return usersMap[userName].fullName;
+                if (usersMap[userName]) {
+                    return usersMap[userName].fullName;
+                }
+                return "";
             });
             Handlebars.registerHelper('userId', function (userName) {
-                return usersMap[userName].userId;
+                if (usersMap[userName].userId) {
+                    return usersMap[userName].userId;
+                }
+                return "";
             });
             Handlebars.registerHelper('itemTitle', function (path) {
                 if (itemsMap[path]) {
@@ -97,7 +103,7 @@
                     });
 
                     $.each(resp.aggregations.pathAggr.buckets, function (i, n) {
-                        flog("itemtitle", n);
+                        //flog("itemtitle", n);
                         var item = n.itemTitle.hits.hits[0].fields;
 
                         itemsMap[n.key] = {};
