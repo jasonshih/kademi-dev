@@ -58,7 +58,7 @@
                 return "";
             });
             Handlebars.registerHelper('userId', function (userName) {
-                if (usersMap[userName].userId) {
+                if (usersMap[userName]) {
                     return usersMap[userName].userId;
                 }
                 return "";
