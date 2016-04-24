@@ -212,7 +212,7 @@
                                 text: {text: label, fill: '#000000', 'font-weight': 'normal'},
                             }
                         });
-                        
+
                         // rounded corners indicate a state
                         _.each([cell], function (element) {
                             element.attr({'.body': {'rx': 8, 'ry': 26}});
@@ -315,18 +315,20 @@
                     } else if (keys[0] === "goal") {
                         flog("link goal timeout source=", source, "dest=", dest);
                         var dest = nodes[n.timeoutNode];
-                        if (dest !== null) {
+                        if (dest) {
                             link(source, dest, formatMins(n.timeoutMins), "timeout");
                         }
-                        $.each(n.transitions, function (i, tr) {
-                            dest = nodes[tr.nextNodeId];
-                            if (dest !== null) {
-                                var props = Object.keys(tr.trigger);
-                                var triggerType = props[0];
-                                var trigger = tr.trigger[triggerType];
-                                link(source, dest, triggerType, trigger.description);
-                            }
-                        });
+                        if (n.transitions) {
+                            $.each(n.transitions, function (i, tr) {
+                                dest = nodes[tr.nextNodeId];
+                                if (dest !== null) {
+                                    var props = Object.keys(tr.trigger);
+                                    var triggerType = props[0];
+                                    var trigger = tr.trigger[triggerType];
+                                    link(source, dest, triggerType, trigger.description);
+                                }
+                            });
+                        }
                     } else {
                         // an action node
                         flog("link action node", n.nextNodeId);
