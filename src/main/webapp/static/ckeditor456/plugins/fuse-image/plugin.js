@@ -36,7 +36,7 @@ CKEDITOR.plugins.add('fuse-image', {
             editor.contextMenu.addListener(function (element) {
                 if (element)
                     element = element.getAscendant('img', true);
-                if (element && !element.isReadOnly() && !element.data('cke-realelement') && !element.data('kaudio'))
+                if (element && !element.isReadOnly() && !element.data('cke-realelement') && !element.data('kaudio') && !element.hasClass('video-jw'))
                     return {
                         imageItem: CKEDITOR.TRISTATE_ON
                     };
