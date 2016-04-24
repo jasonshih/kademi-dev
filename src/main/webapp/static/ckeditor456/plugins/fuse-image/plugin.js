@@ -36,7 +36,7 @@ CKEDITOR.plugins.add('fuse-image', {
             editor.contextMenu.addListener(function (element) {
                 if (element)
                     element = element.getAscendant('img', true);
-                if (element && !element.isReadOnly() && !element.data('cke-realelement'))
+                if (element && !element.isReadOnly() && !element.data('cke-realelement') && !element.data('kaudio'))
                     return {
                         imageItem: CKEDITOR.TRISTATE_ON
                     };
@@ -82,17 +82,17 @@ CKEDITOR.plugins.add('fuse-image', {
                             '        <div role="tabpanel">' +
                             '            <ul class="nav nav-tabs" role="tablist" id="imageTabs">' +
                             '                <li role="presentation" class="active">' +
-                            '                    <a href="#upload" aria-controls="upload" role="tab" data-toggle="tab">Upload</a>' +
+                            '                    <a href="#ckimageupload" aria-controls="ckimageupload" role="tab" data-toggle="tab">Upload</a>' +
                             '                </li>' +
                             '                <li role="presentation">' +
-                            '                    <a href="#preview" aria-controls="preview" role="tab" data-toggle="tab">Preview</a>' +
+                            '                    <a href="#ckimagepreview" aria-controls="ckimagepreview" role="tab" data-toggle="tab">Preview</a>' +
                             '                </li>' +
                             '            </ul>' +
                             '            <div class="tab-content">' +
-                            '                <div role="tabpanel" class="tab-pane fade active in" id="upload">' +
+                            '                <div role="tabpanel" class="tab-pane fade active in" id="ckimageupload">' +
                             '                    <div id="imageUploaded"></div>' +
                             '                </div>' +
-                            '                <div role="tabpanel" class="tab-pane fade" id="preview">' +
+                            '                <div role="tabpanel" class="tab-pane fade" id="ckimagepreview">' +
                             '                    <div id="imagePreview">' +
                             '                        <div class="imageEditor"><div id="imageContainer"></div></div>' +
                             '                    </div>' +
@@ -256,7 +256,7 @@ CKEDITOR.plugins.add('fuse-image', {
                                 $("#imageUploaded").mupload("setUrl", selectedVideoUrl);
                             },
                             onselectFile: function (n, selectedVideoUrl, h) {
-                                $('#imageTabs a[href="#preview"]').tab("show");
+                                $('#imageTabs a[href="#ckimagepreview"]').tab("show");
                                 url = selectedVideoUrl;
                                 hash = h;
                                 flog("selected file1", n, url, h);

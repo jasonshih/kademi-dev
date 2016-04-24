@@ -16,7 +16,7 @@
             this.component = component;
             var img = component.find('img[data-video-src]');
             if (!img.attr('id')) {
-                this.componentId = KEditor.generateId('component-video');
+                this.componentId = keditor.generateId('component-video');
                 img.attr('id', this.componentId);
             } else {
                 this.componentId = img.attr('id');
