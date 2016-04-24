@@ -51,18 +51,20 @@ var Main = function () {
     };
 
     var initNiceScroll = function (target) {
-        target.niceScroll({
-            cursorcolor: '#999',
-            cursorwidth: 6,
-            railpadding: {
-                top: 0,
-                right: 0,
-                left: 0,
-                bottom: 0
-            },
-            cursorborder: '',
-            disablemutationobserver: true
-        });
+        if (target.length > 0 && typeof $.fn.niceScroll === 'function') {
+            target.niceScroll({
+                cursorcolor: '#999',
+                cursorwidth: 6,
+                railpadding: {
+                    top: 0,
+                    right: 0,
+                    left: 0,
+                    bottom: 0
+                },
+                cursorborder: '',
+                disablemutationobserver: true
+            });
+        }
     };
 
     var updateNiceScroll = function (target) {

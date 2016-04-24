@@ -1,0 +1,94 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Goal</title>
+    </head>
+    <body>
+        <form method="POST" action="$page.path" class="form-horizontal" id="frmDetails">
+            <button class="btn btn-success" type="submit">Save</button>
+
+            <div class="form-group">
+                <label class="control-label col-md-2" for="from">Timeout (mins)</label>
+                <div class="col-md-4">
+                    <input type="text" name="timeoutMins" id="timeoutMins" value="$!page.node.timeoutMins" class="form-control" />
+                    <small class="text-muted help-block">Enter the timeout period as number of minutes. Eg 1 day is 1440mins, 1 week is 10080mins</small>
+                </div>
+                
+                <label class="control-label col-md-2" for="timerTime">Time</label>
+                <div class="col-md-4">
+                    <input type="text" name="timerTime" id="timerTime" value="$!page.node.timerTime" class="form-control" />
+                    <small class="text-muted help-block">If given, the timeout period will expire at this time of the calculated day</small>
+                </div>
+                
+            </div>
+            
+            <div class="form-group">
+                <label class="control-label col-md-2" for="timeoutNode">Next</label>
+                <div class="col-md-4">
+                    <select class="form-control" name="timeoutNode">
+                        <option value="">[Select next step]</option>
+                        #foreach($node in $page.funnel.nodes)
+                        $formatter.option($node.nodeId, $node.nodeId, $page.node.timeoutNode)
+                        #end
+                    </select>
+                    <small class="text-muted help-block">The step to proceed to when the timeout period expires</small>
+                </div>
+                
+                <label class="control-label col-md-2" for="stageName">Stage</label>
+                <div class="col-md-4">
+                    <input type="text" name="stageName" id="stageName" value="$!page.node.stageName" class="form-control" />
+                    <small class="text-muted help-block">Set the lead stage to this when the goal is entered</small>
+                </div>
+                
+            </div>
+            
+            <div class="form-group">
+                <label class="control-label col-md-2" for="cost">Cost</label>
+                <div class="col-md-4">
+                    <input type="text" name="cost" id="cost" value="$!page.node.cost" class="form-control" />
+                    <small class="text-muted help-block">If there is an expected cost to achieve this goal, enter it here</small>
+                </div>
+                
+                <label class="control-label col-md-2" for="probability">Probability</label>
+                <div class="col-md-4">
+                    <input type="text" name="probability" id="probability" value="$!page.node.probability" class="form-control" />
+                    <small class="text-muted help-block">The likelihood of achieving this goal, between 0 and 1</small>
+                </div>                
+            </div> 
+            
+            <div class="form-group">
+                <label class="control-label col-md-2" for="cost">Source</label>
+                <div class="col-md-4">
+                    <input type="text" name="source" id="source" value="$!page.node.source" class="form-control" />
+                    <small class="text-muted help-block">If this goal identifies a source, such as search or social</small>
+                </div>
+            </div>            
+            
+            <hr/>
+            
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    #foreach( $tr in $page.node.transitions)
+                    <tr>
+                        <td><a href="$tr.nextNodeId">$tr.nextNodeId</a></td>
+                        <td>$tr.trigger.description</td>
+                    </tr>
+                    #end
+                </tbody>
+            </table>
+        </form>
+        <script>
+            $(function() {
+                $("#frmDetails").forms({
+                    onSuccess : function() {
+                        Msg.info("Saved");
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>
