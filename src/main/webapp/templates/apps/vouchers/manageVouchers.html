@@ -183,7 +183,8 @@
                         displayVoucherIds.val("");
                         flog("show data", resp.data);
                         var ids = null;
-                        resp.data.each(function (n, i) {
+
+                        $.each(resp.data, function (i, n) {
                             flog("row", i, n);
                             if (ids === null) {
                                 ids = n.voucherId;
@@ -191,6 +192,7 @@
                                 ids = ids + "," + n.voucherId;
                             }
                         });
+
                         flog("display", displayVoucherIds, ids);
                         displayVoucherIds.val(ids);
                         soldVouchersModal.modal("show");
