@@ -2,7 +2,7 @@ var editorSkin = "bootstrapck";
 
 var toolbarSets = {};
 
-var standardExtraPlugins = "autogrow,embed_video,fuse-image,modal,bspanel,forms,bslayout2col,bslayout3col";
+var standardExtraPlugins = "autogrow,embed_video,embed_audio,fuse-image,modal,bspanel,forms,bslayout2col,bslayout3col";
 var standardRemovePlugins = "resize,image,save,newpage,preview,tliyoutube,image2,pbckcode,googledocs,language"
 var templatesPath =  '/theme/editor-templates.js';
 var stylesPath = "/theme/styles.js";
@@ -165,3 +165,7 @@ toolbarSets["Logo"] = [
 //toolbarSets["Logo"] = [
 //    ['Bold', 'Italic', '-', 'Image', '-', 'Source']
 //];
+$(function(){
+    // https://github.com/Kademi/kademi-dev/issues/1397
+    CKEDITOR.timestamp = '24042016';
+})

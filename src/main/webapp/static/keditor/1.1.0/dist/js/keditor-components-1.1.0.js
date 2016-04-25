@@ -17,7 +17,7 @@
             var img = component.find('img[data-src]');
             var componentId = '';
             if (!img.attr('id')) {
-                componentId = $.keditor.generateId('component-audio');
+                componentId = keditor.generateId('component-audio');
                 img.attr('id', componentId);
             } else {
                 componentId = img.attr('id');
@@ -587,7 +587,7 @@
             this.component = component;
             var img = component.find('img[data-video-src]');
             if (!img.attr('id')) {
-                this.componentId = KEditor.generateId('component-video');
+                this.componentId = keditor.generateId('component-video');
                 img.attr('id', this.componentId);
             } else {
                 this.componentId = img.attr('id');

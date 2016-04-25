@@ -17,7 +17,7 @@
             var img = component.find('img[data-src]');
             var componentId = '';
             if (!img.attr('id')) {
-                componentId = $.keditor.generateId('component-audio');
+                componentId = keditor.generateId('component-audio');
                 img.attr('id', componentId);
             } else {
                 componentId = img.attr('id');
