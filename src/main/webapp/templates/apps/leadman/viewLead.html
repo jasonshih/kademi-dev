@@ -494,6 +494,12 @@
                                     </div>
                                     <div id="$task.href.replace('/','_')" aria-labelledby="" class="panel-collapse collapse in">
                                         <div class="panel-body">
+                                            #if($task.assignedTo)
+                                            Assigned to <strong>$task.assignedTo.formattedName()</strong>
+                                            #else
+                                            Not assigned
+                                            #end
+                                            <br/>
                                             #if( $task.is("open") )
                                             <div class="btn-task-panel-wrap pull-right">
                                                 <a class="btn btn-danger btnCancelTask btn-task-panel" title="Cancel task" href="$task.href">
@@ -1154,7 +1160,6 @@
                     }
                 });
             }
-
         </script>
         #end
     </body>
