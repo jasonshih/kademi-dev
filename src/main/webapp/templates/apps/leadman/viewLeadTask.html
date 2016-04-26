@@ -29,6 +29,8 @@
         &nbsp;-
         <abbr title="$formatter.formatDateISO8601($page.completedDate)" class="timeago"> $page.completedDate</abbr>
         #end
+
+        #set($isNotEditable = !$page.is("open"))
         <div id="view-task-page" style="margin-top: 20px">
             <div class="row">
                 <div class="col-lg-6">
@@ -40,14 +42,14 @@
                                     <div class="form-group">
                                         <label class="control-label col-md-2" for="title">Title</label>
                                         <div class="col-md-10">
-                                            <input type="text" name="title" id="title" class="form-control immediateUpdate" data-href="$page.href" placeholder="Task title" value="$page.title" />
+                                            <input $formatter.ifTrue($isNotEditable, 'disabled="true"', '') type="text" name="title" id="title" class="form-control immediateUpdate" data-href="$page.href" placeholder="Task title" value="$page.title" />
                                         </div>
                                     </div>
 
                                     <div class="form-group">
                                         <label class="control-label col-md-2" for="taskDescription">Description</label>
                                         <div class="col-md-10">
-                                            <textarea name="taskDescription" id="taskDescription" style="height: 100px" class="form-control immediateUpdate" data-href="$page.href" placeholder="Description" >$!page.taskDescription</textarea>
+                                            <textarea $formatter.ifTrue($isNotEditable, 'disabled="true"', '') name="taskDescription" id="taskDescription" style="height: 100px" class="form-control immediateUpdate" data-href="$page.href" placeholder="Description" >$!page.taskDescription</textarea>
                                         </div>
                                     </div>
 
@@ -55,7 +57,7 @@
                                         <label class="control-label col-md-2" for="taskDescription">Task due</label>
                                         <div class="col-md-10">
                                             <div class="input-group">
-                                                <input type="text" name="dueDate" class="form-control date-time immediateUpdate" data-href="$page.href" data-original-value="$formatter.formatDateTime($page.dueDate)" value="$formatter.formatDateTime($page.dueDate)">
+                                                <input $formatter.ifTrue($isNotEditable, 'disabled="true"', '') type="text" name="dueDate" class="form-control date-time immediateUpdate" data-href="$page.href" data-original-value="$formatter.formatDateTime($page.dueDate)" value="$formatter.formatDateTime($page.dueDate)">
                                                 <span class="input-group-addon">
                                                     <span class="fa fa-calendar"></span>
                                                 </span>
