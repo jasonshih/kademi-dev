@@ -107,7 +107,7 @@
                         var item = n.itemTitle.hits.hits[0].fields;
 
                         itemsMap[n.key] = {};
-                        if (item.itemTitle) {
+                        if (item && item.itemTitle) {
                             itemsMap[n.key].itemTitle = item.itemTitle;
                         }
                     });
