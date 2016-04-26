@@ -2,10 +2,33 @@
     #parse("/theme/masterTemplate.html")
     <head>
         #@themeHeader( "View lead task" )
+        <style>
+            .page-header {
+                margin-top: 0;
+            }
+        </style>
         #end
     </head>
     <body class='add-container'>
         #@themeBody()
+        #if($page.is("open"))
+        <div class="btn-group">
+            <a href="$page.href .taskEditModal" class="btn btn-success btn-task-complete" data-target="#modalEditTask" data-toggle="modal"><span class="fa fa-check"></span> Complete task</a>
+            <a href="$page.href" class="btn btn-danger btnCancelTask"><span class="fa fa-remove"></span> Cancel task</a>
+        </div>
+        #elseif($task.is("canceled"))
+        <span class="label label-warning">
+            Canceled
+        </span>
+        &nbsp;-
+        <abbr title="$formatter.formatDateISO8601($page.completedDate)" class="timeago">$page.completedDate</abbr>
+        #else
+        <span class="label label-success">
+            Completed 
+        </span>
+        &nbsp;-
+        <abbr title="$formatter.formatDateISO8601($page.completedDate)" class="timeago"> $page.completedDate</abbr>
+        #end
         <div id="view-task-page" style="margin-top: 20px">
             <div class="row">
                 <div class="col-lg-6">
@@ -44,110 +67,56 @@
                             </form>
                         </div>
                     </div>
-                    <div class="panel">
-                        <div class="panel-heading no-shadow">
-                            <a class="btn btn-success createNote pull-right" href="$page.href">
-                                <span class="fa fa-plus"></span>
-                            </a>
-                            Recent contacts
-                        </div>
-                        <div class="panel-body">
-                            #set( $notes = $page.notes )
-                            #if( $notes.size() > 0 )
-                            <ul class="list-block">
-                                #foreach($note in $page.notes)
-                                <li class="media">
-                                    <div class="pull-left">
-                                        <div class="point-pin"><a href=""><img src="/theme/images/user/05.jpg" alt="Image" class="media-object img-circle thumb32"></a>
-                                            <div class="point point-success point-lg"></div>
-                                        </div>
-                                    </div>
-                                    <div class="media-body">
-                                        <div class="media-heading">
-                                            <p>
-                                                <a href="/users/$note.createdBy.name">$note.createdBy.formattedName</a>
-
-                                                #if( $note.inbound )
-                                                <small class="text-muted fa fa-arrow-left"></small>
-                                                <small class="text-muted fa fa-${note.icon}"></small>
-                                                #else
-                                                <small class="text-muted fa fa-${note.icon}"></small>
-                                                <small class="text-muted fa fa-arrow-right"></small>
-                                                #end
-
-                                            </p>
-
-                                            <p>
-                                                $note.notes
-                                            </p>
-                                        </div>
-                                    </div>
-                                </li>
-                                #end
-                            </ul>
-                            #else
-                            <p>
-                                <span class="label label-warning">No contact with the lead yet</span>
-                            </p>
-                            #end
-                        </div>
-                    </div>
+                </div>
+                <div class="col-md-6">
+                    #if($page.lead)
+                    #set($lead = $page.lead)
                     <div class="panel">
                         <div class="panel-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped">
-                                    <thead>
-                                    <th>Lead</th>
-                                    <th>Status</th>
-                                    <th>Created</th>
-                                    <th>Amount</th>
-                                    <th>Assigned to</th>
-                                    </thead>
-                                    <tbody>
-                                        #foreach($lead in $page.leads)
-                                        <tr>
-                                            <td>
-                                                <a href="/leads/$lead.id/">
-                                                    $!lead.description
-                                                </a>
-                                            </td>
-                                            <td>
-                                                #if( $lead.cancelled )
-                                                <span class="fa fa-remove text-danger"></span>
-                                                Cancelled <abbr title="$formatter.formatDateISO8601($lead.closedDate)" class="timeago">$lead.closedDate</abbr>
-                                                #elseif( $lead.closedDate )
-                                                <span class="fa fa-check text-success"></span>
-                                                Sale completed <abbr title="$formatter.formatDateISO8601($lead.closedDate)" class="timeago">$lead.closedDate</abbr>
-                                                #else
-                                                <span class="fa fa-clock-o text-muted"></span>
-                                                In progress
-                                                #end
-                                            </td>
-                                            <td>
-                                                #if( $lead.createDate )
-                                                <abbr title="$formatter.formatDateISO8601($lead.createDate)" class="timeago">$lead.createDate</abbr>
-                                                #end
-                                            </td>
-                                            <td>$!lead.dealAmount</td>
-                                            <td>
-                                                #if( $lead.assignedToProfile )
-                                                $lead.assignedToProfile.formattedName
-                                                #else
-                                                Not assigned
-                                                #end
-                                            </td>
-                                        </tr>
-                                        #end
-                                    </tbody>
-                                </table>
+                            <h4 class="page-header">Contact information
+                            </h4>
+                            <div class="row">
+                                <form method="post" action="$page.parent.href" class="form-horizontal" id="leadDetails">
+                                    <div class="modal-body" id="profile-body">
+                                        #set( $p = $lead.profile )
+                                        <div class="form-group">
+                                            <label class="control-label col-md-2" for="nickName">Customer</label>
+                                            <div class="col-md-3">
+                                                <input type="text" name="nickName" id="nickName" class="form-control" placeholder="nickName" value="$!p.nickName" />
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="text" name="firstName" id="firstName" class="form-control" placeholder="First name" value="$!p.firstName" />
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input type="text" name="surName" id="surName" class="form-control" placeholder="Surname" value="$!p.surName" />
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label col-md-2" for="newUserEmail">Contact</label>
+                                            <div class="col-md-5">
+                                                <input type="text" name="email" id="email" class="form-control" placeholder="Email" value="$!p.email" />
+                                            </div>
+                                            <div class="col-md-5">
+                                                <input type="text" name="phone" id="phone" class="form-control" placeholder="Phone" value="$!p.phone" />
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label col-md-2" for="notes">Notes</label>
+                                            <div class="col-md-10">
+                                                <textarea name="notes" class="form-control" style="height: 100px">$!page.description</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
-
                         </div>
                     </div>
+                    #end
                 </div>
             </div>
         </div>
-        #end
 
         <div style="display:none">
             <div class="taskEditModal modal-body">
@@ -280,5 +249,14 @@
                 </div>
             </div>
         </div>
+
+        <script type="text/javascript">
+            $('body').on('loaded.bs.modal', '#modalEditTask', function (e) {
+                flog('Modal Loaded');
+                $(".completeTaskDiv").show(300);
+                $(".hideOnComplete").hide(300);
+            });
+        </script>
+        #end
     </body>
 </html>
