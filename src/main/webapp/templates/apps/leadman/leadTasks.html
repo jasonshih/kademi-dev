@@ -20,9 +20,9 @@
                                     <div class="form-group">
                                         <div class="input-group">
                                             <input type="text" class="form-control" placeholder="Search" value="$!request.params.q"/>
-                                        <span class="input-group-btn">
-                                            <button class="btn" type="submit"><i class="fa fa-search"></i></button>
-                                        </span>
+                                            <span class="input-group-btn">
+                                                <button class="btn" type="submit"><i class="fa fa-search"></i></button>
+                                            </span>
                                         </div>
                                     </div>
                                 </form>
@@ -105,7 +105,7 @@
                                         #elseif($hit.source.cancelled)
                                         #set($icon = '<i title="Cancelled" class="fa fa-times-circle-o text-danger"></i>')
                                         #end
-                                        <h4 class="media-heading">$icon <a href="$hit.source.id" data-target="#modalEditTask" data-toggle="modal">$!formatter.ifNull($hit.source.title, $hit.source.taskName)</a></h4>
+                                        <h4 class="media-heading">$icon <a href="$hit.source.id .taskEditModal" data-target="#modalEditTask" data-toggle="modal">$!formatter.ifNull($hit.source.title, $hit.source.taskName)</a></h4>
                                         <p>
                                             &num;$hit.source.id opened
                                             <span title="$formatter.formatDateTime($formatter.parseDate($hit.source.createdDate))">$formatter.formatAge($formatter.parseDate($hit.source.createdDate))</span>

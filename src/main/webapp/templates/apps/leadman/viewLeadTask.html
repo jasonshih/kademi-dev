@@ -4,9 +4,149 @@
         #@themeHeader( "View lead task" )
         #end
     </head>
-    <body>
+    <body class='add-container'>
         #@themeBody()
+        <div id="view-task-page" style="margin-top: 20px">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div id="profile" class="panel">
+                        <div class="panel-body">
+                            <form method="post" action="$page.href" class="form-horizontal" id="leadDetails">
+                                <input type="hidden" name="saveDetails" value="saveDetails"/>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2" for="title">Title</label>
+                                        <div class="col-md-10">
+                                            <input type="text" name="title" id="title" class="form-control immediateUpdate" data-href="$page.href" placeholder="Task title" value="$page.title" />
+                                        </div>
+                                    </div>
 
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2" for="taskDescription">Description</label>
+                                        <div class="col-md-10">
+                                            <textarea name="taskDescription" id="taskDescription" style="height: 100px" class="form-control immediateUpdate" data-href="$page.href" placeholder="Description" >$!page.taskDescription</textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2" for="taskDescription">Task due</label>
+                                        <div class="col-md-10">
+                                            <div class="input-group">
+                                                <input type="text" name="dueDate" class="form-control date-time immediateUpdate" data-href="$page.href" data-original-value="$formatter.formatDateTime($page.dueDate)" value="$formatter.formatDateTime($page.dueDate)">
+                                                <span class="input-group-addon">
+                                                    <span class="fa fa-calendar"></span>
+                                                </span>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-heading no-shadow">
+                            <a class="btn btn-success createNote pull-right" href="$page.href">
+                                <span class="fa fa-plus"></span>
+                            </a>
+                            Recent contacts
+                        </div>
+                        <div class="panel-body">
+                            #set( $notes = $page.notes )
+                            #if( $notes.size() > 0 )
+                            <ul class="list-block">
+                                #foreach($note in $page.notes)
+                                <li class="media">
+                                    <div class="pull-left">
+                                        <div class="point-pin"><a href=""><img src="/theme/images/user/05.jpg" alt="Image" class="media-object img-circle thumb32"></a>
+                                            <div class="point point-success point-lg"></div>
+                                        </div>
+                                    </div>
+                                    <div class="media-body">
+                                        <div class="media-heading">
+                                            <p>
+                                                <a href="/users/$note.createdBy.name">$note.createdBy.formattedName</a>
+
+                                                #if( $note.inbound )
+                                                <small class="text-muted fa fa-arrow-left"></small>
+                                                <small class="text-muted fa fa-${note.icon}"></small>
+                                                #else
+                                                <small class="text-muted fa fa-${note.icon}"></small>
+                                                <small class="text-muted fa fa-arrow-right"></small>
+                                                #end
+
+                                            </p>
+
+                                            <p>
+                                                $note.notes
+                                            </p>
+                                        </div>
+                                    </div>
+                                </li>
+                                #end
+                            </ul>
+                            #else
+                            <p>
+                                <span class="label label-warning">No contact with the lead yet</span>
+                            </p>
+                            #end
+                        </div>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                    <th>Lead</th>
+                                    <th>Status</th>
+                                    <th>Created</th>
+                                    <th>Amount</th>
+                                    <th>Assigned to</th>
+                                    </thead>
+                                    <tbody>
+                                        #foreach($lead in $page.leads)
+                                        <tr>
+                                            <td>
+                                                <a href="/leads/$lead.id/">
+                                                    $!lead.description
+                                                </a>
+                                            </td>
+                                            <td>
+                                                #if( $lead.cancelled )
+                                                <span class="fa fa-remove text-danger"></span>
+                                                Cancelled <abbr title="$formatter.formatDateISO8601($lead.closedDate)" class="timeago">$lead.closedDate</abbr>
+                                                #elseif( $lead.closedDate )
+                                                <span class="fa fa-check text-success"></span>
+                                                Sale completed <abbr title="$formatter.formatDateISO8601($lead.closedDate)" class="timeago">$lead.closedDate</abbr>
+                                                #else
+                                                <span class="fa fa-clock-o text-muted"></span>
+                                                In progress
+                                                #end
+                                            </td>
+                                            <td>
+                                                #if( $lead.createDate )
+                                                <abbr title="$formatter.formatDateISO8601($lead.createDate)" class="timeago">$lead.createDate</abbr>
+                                                #end
+                                            </td>
+                                            <td>$!lead.dealAmount</td>
+                                            <td>
+                                                #if( $lead.assignedToProfile )
+                                                $lead.assignedToProfile.formattedName
+                                                #else
+                                                Not assigned
+                                                #end
+                                            </td>
+                                        </tr>
+                                        #end
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         #end
 
         <div style="display:none">
