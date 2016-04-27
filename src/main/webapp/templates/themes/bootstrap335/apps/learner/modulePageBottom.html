@@ -1,7 +1,6 @@
 #set($editMode = false)
 #set($editMode = $formatter.ifTrue($params.editMode,true, $!page.newPage))
 
-
 <script type="text/javascript">
     var privs = $formatter.toJson($request.attributes.privs);
     var completable = $page.parent.completable && $page.parent.startable;

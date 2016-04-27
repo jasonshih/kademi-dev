@@ -134,8 +134,9 @@ function initPageNav() {
 
     var progressPageIndex = getProgressPageIndex();
     var currentPageIndex = getCurrentPageIndex();
+    var isQuizPassed = $('.quiz.quiz-passed').length > 0;
 
-    var isBeyondCurrent = progressPageIndex > currentPageIndex;
+    var isBeyondCurrent = (progressPageIndex > currentPageIndex) || isQuizPassed;
     if (isBeyondCurrent) {
         flog('Show .when-complete');
 
@@ -238,7 +239,8 @@ function checkProgressPageVisibility() {
     }
 
     var isInputsDone = true;
-    var isBeyondCurrent = progressPageIndex > currentPageIndex;
+    var isQuizPassed = $('.quiz.quiz-passed').length > 0;
+    var isBeyondCurrent = (progressPageIndex > currentPageIndex) || isQuizPassed;
     flog('isBeyondCurrent: ' + isBeyondCurrent);
 
     var onQuiz = false; // figure out if user is on a quiz page
@@ -923,7 +925,8 @@ function isQuizComplete(e) {
         return true;
     }
 
-    var isBeyondQuiz = getProgressPageIndex() > getCurrentPageIndex();
+    var isQuizPassed = $('.quiz.quiz-passed').length > 0;
+    var isBeyondQuiz = (getProgressPageIndex() > getCurrentPageIndex()) || isQuizPassed;
     if (isBeyondQuiz) {
         flog('Is beyond quiz, so quiz is complete');
         return true;
@@ -992,6 +995,7 @@ function isQuizComplete(e) {
                     }
 
                     if (isLastPage() && currentTarget.hasClass('nextBtn')) {
+                        $('ol.quiz input').prop('disabled', true);
                         completed();
                     } else {
                         $.pjax({
@@ -1011,7 +1015,7 @@ function isQuizComplete(e) {
                 } else {
                     flog('Validating quiz is false', response);
                     if (response.data && response.data.nextQuizBatch) {
-                        flog('Looks like we have another batch..', response.data.nextQuizBatch);
+                        flog('Looks like we have another batch...', response.data.nextQuizBatch);
                         quiz.find('ol.quiz').replaceWith(response.data.nextQuizBatch);
                         tidyUpQuiz();
                     } else {
@@ -1024,6 +1028,7 @@ function isQuizComplete(e) {
                                 currentTarget = $(e.target).closest('a');
                             }
                             if (isLastPage() && currentTarget.hasClass('nextBtn')) {
+                                $('ol.quiz input').prop('disabled', true);
                                 completed();
                             } else {
                                 $.pjax({

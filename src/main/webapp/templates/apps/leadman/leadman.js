@@ -82,13 +82,13 @@ $(function () {
 
 function initCloseDealModal() {
     var closeDealModal = $("#closeDealModal");
-    closeDealModal.on('shown.bs.modal', function(){
+    closeDealModal.on('shown.bs.modal', function () {
         closeDealModal.find("form").forms({
             callback: function (resp) {
                 Msg.info('Deal marked as closed');
-                if($('#lead-cover').length){
+                if ($('#lead-cover').length) {
                     $('#maincontentContainer').reloadFragment({
-                        whenComplete: function(){
+                        whenComplete: function () {
                             $('abbr.timeago').timeago();
                         }
                     });
@@ -103,14 +103,14 @@ function initCancelLeadModal() {
     var cancelLeadModal = $("#modalCancelLead");
 
 
-    cancelLeadModal.on('shown.bs.modal', function(){
+    cancelLeadModal.on('shown.bs.modal', function () {
         cancelLeadModal.find("form").forms({
             callback: function (resp) {
                 Msg.info('Lead cancelled');
                 reloadTasks();
-                if($('#lead-cover').length){
+                if ($('#lead-cover').length) {
                     $('#maincontentContainer').reloadFragment({
-                        whenComplete: function(){
+                        whenComplete: function () {
                             $('abbr.timeago').timeago();
                         }
                     });
@@ -154,6 +154,13 @@ function initImmediateUpdate() {
         var target = $(e.target);
         var href = target.data("href");
         var name = target.attr("name");
+        var id = href + ':' + name;
+        if (timers.hasOwnProperty(id)) {
+            var t = timers[id];
+            t = clearTimeout(t);
+            timers[id] = null;
+        }
+
         var value = target.val();
         var form = target.parents('.form-horizontal');
         var oldValue = target.data("original-value");
@@ -161,7 +168,26 @@ function initImmediateUpdate() {
             updateField(href, name, value, form);
         }
     };
+
+    var timers = {};
+
+    $("body").on("keyup", ".immediateUpdate", function (e) {
+        var target = $(e.target);
+        var href = target.data("href");
+        var name = target.attr("name");
+        var id = href + ':' + name;
+        if (timers.hasOwnProperty(id)) {
+            var t = timers[id];
+            t = clearTimeout(t);
+            timers[id] = null;
+        }
+
+        timers[id] = setTimeout(function () {
+            onchange(e);
+        }, 1000);
+    });
     $("body").on("change", ".immediateUpdate", function (e) {
+
         onchange(e);
     });
     $("body").on("dp.change", ".immediateUpdate", function (e) {
@@ -368,7 +394,7 @@ function initNewLeadForm() {
             if (btn.hasClass("btnCreateAndClose")) {
                 Msg.info('Saved new lead');
                 modal.modal("hide");
-                if($('#all_contacts').length){
+                if ($('#all_contacts').length) {
                     $('#all_contacts').reloadFragment({
                         whenComplete: function () {
                             $('abbr.timeago').timeago();
@@ -376,14 +402,15 @@ function initNewLeadForm() {
                     });
                 }
                 var leadContacts = $('.lead-contacts-wrap');
-                if(leadContacts.length){
+                if (leadContacts.length) {
                     leadContacts.reloadFragment({
-                        whenComplete:function(){}
+                        whenComplete: function () {
+                        }
                     });
                 }
 
-                if($('#leadTable').length){
-                    if(typeof doSearchLeadmanPage === 'function'){
+                if ($('#leadTable').length) {
+                    if (typeof doSearchLeadmanPage === 'function') {
                         doSearchLeadmanPage();
                     }
                 }
@@ -624,12 +651,12 @@ function initNewNoteForm() {
 
             var leadNotesBody = $('#leadNotesBody');
             var viewProfilePage = $('#view-profile-page');
-            if(leadNotesBody.length){
+            if (leadNotesBody.length) {
                 $('#leadNotesBody').reloadFragment();
             }
-            if(viewProfilePage.length){
+            if (viewProfilePage.length) {
                 viewProfilePage.reloadFragment({
-                    whenComplete: function(){
+                    whenComplete: function () {
                         $('abbr.timeago').timeago();
                     }
                 });
@@ -696,7 +723,7 @@ function reloadTasks() {
             $('abbr.timeago').timeago();
         }
     });
-    if($('#lead-tasks-page').length){
+    if ($('#lead-tasks-page').length) {
         window.doReloadTasksPage();
     }
 }
@@ -795,7 +822,7 @@ function mAssignTo(name, href, blockId) {
                 });
 
                 var dashboard = $('.dash-secondary');
-                if(dashboard.length){
+                if (dashboard.length) {
                     reloadTasks();
                 }
             } else {
@@ -1246,8 +1273,8 @@ function initLeadmanModal() {
     });
 }
 
-function initDotdotdot(){
-    if($('.lead-desc .leadInner').length){
+function initDotdotdot() {
+    if ($('.lead-desc .leadInner').length) {
         $('.lead-desc .leadInner').dotdotdot({height: 80});
     }
 }
