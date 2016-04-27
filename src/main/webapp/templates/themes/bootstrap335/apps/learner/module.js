@@ -134,8 +134,9 @@ function initPageNav() {
 
     var progressPageIndex = getProgressPageIndex();
     var currentPageIndex = getCurrentPageIndex();
+    var isQuizPassed = $('.quiz.quiz-passed').length > 0;
 
-    var isBeyondCurrent = progressPageIndex > currentPageIndex;
+    var isBeyondCurrent = (progressPageIndex > currentPageIndex) || isQuizPassed;
     if (isBeyondCurrent) {
         flog('Show .when-complete');
 
@@ -238,7 +239,8 @@ function checkProgressPageVisibility() {
     }
 
     var isInputsDone = true;
-    var isBeyondCurrent = progressPageIndex > currentPageIndex;
+    var isQuizPassed = $('.quiz.quiz-passed').length > 0;
+    var isBeyondCurrent = (progressPageIndex > currentPageIndex) || isQuizPassed;
     flog('isBeyondCurrent: ' + isBeyondCurrent);
 
     var onQuiz = false; // figure out if user is on a quiz page
@@ -992,6 +994,7 @@ function isQuizComplete(e) {
                     }
 
                     if (isLastPage() && currentTarget.hasClass('nextBtn')) {
+                        $('ol.quiz input').prop('disabled', true);
                         completed();
                     } else {
                         $.pjax({
@@ -1024,6 +1027,7 @@ function isQuizComplete(e) {
                                 currentTarget = $(e.target).closest('a');
                             }
                             if (isLastPage() && currentTarget.hasClass('nextBtn')) {
+                                $('ol.quiz input').prop('disabled', true);
                                 completed();
                             } else {
                                 $.pjax({
