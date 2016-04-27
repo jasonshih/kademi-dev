@@ -147,6 +147,7 @@ function showKpiLeaderboard(resp, container, visType, config) {
 }
 
 function showKpiSummary(resp, container, visType, config) {
+    flog("showKpiSummary", resp);
     var aggr = resp.aggregations;
 
     var kpiTitle = resp.kpiTitle;
@@ -157,47 +158,51 @@ function showKpiSummary(resp, container, visType, config) {
 
     container.find(".kpi-units").text(dataSeriesUnits);
 
-    var overallMetric = aggr.metric.value;
-    container.find(".kpi-metric").text(round(overallMetric, 0));
+    if (aggr && aggr.metric) {
+        var overallMetric = aggr.metric.value;
+        container.find(".kpi-metric").text(round(overallMetric, 0));
 
-    flog("level pref", container, container.find("*[data-level-class-prefix]"));
-    container.find("*[data-level-class-prefix]").each(function (i, n) {
-        flog("level class prefi", n);
-        var item = $(n);
-        var levelClassPrefix = item.data("level-class-prefix");
-        var levelClass = levelClassPrefix + resp.progressLevelName;
-        flog("add class, ", levelClass);
-        item.addClass(levelClass);
-    });
-
-    container.find("*[data-level-classes]").each(function (i, n) {
-        var item = $(n);
-        var sLevelClasses = item.data("level-classes");
-        var levelClasses = [];
-        var s = sLevelClasses;
-        if (s) {
-            var arr = s.split(",");
-            for (var i = 0; i < arr.length; i++) {
-                var pair = arr[i].split("=");
-                levelClasses[pair[0]] = pair[1];
-            }
-            var c = levelClasses[resp.progressLevelName];
-            item.addClass(c);
-        }
-
-    });
-
-    container.find(".kpi-progress").text(round(resp.progressValue, 2));
-
-    if (resp.levelData && resp.progressLevelName) {
-        var levelTitle = resp.levelData[resp.progressLevelName].title;
-        container.find(".kpi-level").text(levelTitle);
-        container.find(".kpi-target").each(function (i, n) {
-            var s = $(n);
-            var levelName = s.data("level");
-            var levelAmount = resp.levelData[levelName].lowerBound;
-            s.text(round(levelAmount, 0));
+        flog("level pref", container, container.find("*[data-level-class-prefix]"));
+        container.find("*[data-level-class-prefix]").each(function (i, n) {
+            flog("level class prefi", n);
+            var item = $(n);
+            var levelClassPrefix = item.data("level-class-prefix");
+            var levelClass = levelClassPrefix + resp.progressLevelName;
+            flog("add class, ", levelClass);
+            item.addClass(levelClass);
         });
+
+        container.find("*[data-level-classes]").each(function (i, n) {
+            var item = $(n);
+            var sLevelClasses = item.data("level-classes");
+            var levelClasses = [];
+            var s = sLevelClasses;
+            if (s) {
+                var arr = s.split(",");
+                for (var i = 0; i < arr.length; i++) {
+                    var pair = arr[i].split("=");
+                    levelClasses[pair[0]] = pair[1];
+                }
+                var c = levelClasses[resp.progressLevelName];
+                item.addClass(c);
+            }
+
+        });
+
+        container.find(".kpi-progress").text(round(resp.progressValue, 2));
+
+        if (resp.levelData && resp.progressLevelName) {
+            var levelTitle = resp.levelData[resp.progressLevelName].title;
+            container.find(".kpi-level").text(levelTitle);
+            container.find(".kpi-target").each(function (i, n) {
+                var s = $(n);
+                var levelName = s.data("level");
+                var levelAmount = resp.levelData[levelName].lowerBound;
+                s.text(round(levelAmount, 0));
+            });
+        }
+    } else {
+        flog("No aggregation found");
     }
 }
 
