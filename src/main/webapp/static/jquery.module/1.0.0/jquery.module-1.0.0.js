@@ -236,13 +236,14 @@
 
             var progressPageIndex = self.getProgressPageIndex();
             var currentPageIndex = self.getCurrentPageIndex();
-            var isBeyondCurrent = progressPageIndex > currentPageIndex;
+            var isQuizPassed = $('.quiz.quiz-passed').length > 0;
+            var isBeyondCurrent = (progressPageIndex > currentPageIndex) || isQuizPassed;
             var whenComplete = $('.when-complete');
             var whenNotComplete = $('.when-not-complete');
             if (isBeyondCurrent) {
                 flog('[jquery.module]Show .when-complete');
 
-                $('ol.quiz input').prop('disabled', true);
+                self.disableQuiz();
                 whenComplete.show();
                 whenNotComplete.hide();
             } else {
@@ -329,6 +330,15 @@
             });
         },
 
+        disableQuiz: function () {
+            flog('[jquery.module] disableQuiz');
+
+            var quiz = $('ol.quiz');
+            var inputs = quiz.find('input, select, textarea');
+            inputs.prop('disabled', true);
+            $('.submitQuiz').hide();
+        },
+
         /**
          * Called on page load and expand events, checks to see what progress navigation
          * elements should be enabled
@@ -350,16 +360,15 @@
             }
 
             var isInputsDone = true;
-            var isBeyondCurrent = progressPageIndex > currentPageIndex;
+            var isQuizPassed = $('.quiz.quiz-passed').length > 0;
+            var isBeyondCurrent = (progressPageIndex > currentPageIndex) || isQuizPassed;
             flog('[jquery.module] isBeyondCurrent: ' + isBeyondCurrent);
 
             window.onQuiz = false; // figure out if user is on a quiz page
             var quiz = $('ol.quiz');
             if (quiz.length > 0) {
                 if (isBeyondCurrent) {
-                    var inputs = quiz.find('input, select, textarea');
-                    inputs.prop('disabled', true);
-                    $('.submitQuiz').hide();
+                    self.disableQuiz();
                 } else {
                     onQuiz = true; // use is on a quiz page
                 }
@@ -1015,6 +1024,7 @@
             }
 
             if (self.isLastPage() && currentTarget.hasClass('nextBtn')) {
+                self.disableQuiz();
                 self.completeModule();
             } else {
                 $.pjax({
@@ -1058,7 +1068,8 @@
                 return true;
             }
 
-            var isBeyondQuiz = self.getProgressPageIndex() > self.getCurrentPageIndex();
+            var isQuizPassed = $('.quiz.quiz-passed').length > 0;
+            var isBeyondQuiz = (self.getProgressPageIndex() > self.getCurrentPageIndex()) || isQuizPassed;
             if (isBeyondQuiz) {
                 flog('[jquery.module] Is beyond quiz, so quiz is completed');
                 return true;

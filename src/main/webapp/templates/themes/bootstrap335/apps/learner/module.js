@@ -925,7 +925,8 @@ function isQuizComplete(e) {
         return true;
     }
 
-    var isBeyondQuiz = getProgressPageIndex() > getCurrentPageIndex();
+    var isQuizPassed = $('.quiz.quiz-passed').length > 0;
+    var isBeyondQuiz = (getProgressPageIndex() > getCurrentPageIndex()) || isQuizPassed;
     if (isBeyondQuiz) {
         flog('Is beyond quiz, so quiz is complete');
         return true;
@@ -1014,7 +1015,7 @@ function isQuizComplete(e) {
                 } else {
                     flog('Validating quiz is false', response);
                     if (response.data && response.data.nextQuizBatch) {
-                        flog('Looks like we have another batch..', response.data.nextQuizBatch);
+                        flog('Looks like we have another batch...', response.data.nextQuizBatch);
                         quiz.find('ol.quiz').replaceWith(response.data.nextQuizBatch);
                         tidyUpQuiz();
                     } else {
