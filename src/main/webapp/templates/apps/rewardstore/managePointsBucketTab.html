@@ -28,6 +28,11 @@
                 <span class="label label-warning">- $p.numPoints</span>
                 #end
             </td>
+            <td>
+                #if( p.expired )
+                <span class="label label-warning">Expired</span>
+                #end
+            </td>
         </tr>
         #end
         <tr>
