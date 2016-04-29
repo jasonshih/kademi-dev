@@ -11,7 +11,7 @@
         </div>
 
 
-        <div class="well" id="paper" style="height: 600px; width: 1200px">
+        <div class="well" id="paper" style="height: 600px; overflow: scroll">
             <button class="btn btn-success pull-right" id="btnSave">Save</button>
         </div>
 
@@ -223,6 +223,14 @@
                         var props = Object.keys(n);
                         var action = n[props[0]];
                         flog("action", action);
+                        if (nodeType === "decision") {
+                            for (k in n.choices) {
+                                var ch = n.choices[k];
+                                var exprType = Object.keys(ch);
+                                ch = ch[exprType];
+                                outPorts.push(ch.label);
+                            }
+                        }
                         cell = new joint.shapes.devs.Atomic({
                             position: {x: x, y: y},
                             size: {width: 150, height: 70},
@@ -232,6 +240,7 @@
                                 text: {text: label, fill: '#000000', 'font-weight': 'normal'},
                             }
                         });
+
                     }
 
                     graph.addCell(cell);
@@ -331,10 +340,26 @@
                         }
                     } else {
                         // an action node
-                        flog("link action node", n.nextNodeId);
+                        flog("link action node", n, n.nextNodeId);
                         var dest = nodes[n.nextNodeId];
-                        if (dest !== null) {
+                        if (dest != null) {
                             link(source, dest, 'then', "then");
+                        }
+                        if (keys[0] === "decision") {
+                            flog("link decision node", n.choices);
+                            if (n.choices) {
+                                for (k in n.choices) {
+                                    var ch = n.choices[k];
+                                    var exprType = Object.keys(ch);
+                                    ch = ch[exprType];
+
+                                    flog("decision choice1", ch);
+                                    dest = nodes[k]
+                                    if (dest) {
+                                        link(source, dest, ch.label, ch.label);
+                                    }
+                                }
+                            }
                         }
                     }
                 });
