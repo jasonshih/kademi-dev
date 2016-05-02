@@ -4,8 +4,8 @@
         <div class="col-sm-12">
             <select class="form-control select-kpi">
                 <option value="">- None -</option>
-                #foreach ($kpi in $rootFolder.find('/sales/').children)
-                    <option value="$kpi.name">$kpi.title</option>
+                #foreach ($kpi in $rootFolder.find('/sales/').allKPIs)
+                    <option value="$kpi.href">$kpi.title</option>
                 #end
             </select>
         </div>
