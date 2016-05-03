@@ -112,6 +112,11 @@
                                                                     <div class="pie-title">Total Emails Sent</div>
                                                                 </div>
                                                             </div>
+                                                            <div style="bottom: 42.5%; padding: 3px 10px;" class="ktile-footer text-center">
+                                                                Emails Delivered: $formatter.ifNull($stats.deliveredOk, 0)
+                                                                <br/>
+                                                                Emails Failed: $formatter.ifNull($stat.failed, 0)
+                                                            </div>
                                                         </div>
                                                         <div style="height: 38%">
                                                             <div class="row text-center ktile-content ktile-content-relative">
