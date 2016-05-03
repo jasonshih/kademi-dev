@@ -158,7 +158,7 @@
                     var listToDelete = [];
                     amountDeleted = 0;
                     $('body').find(':checkbox.request-check:checked').each(function () {
-                        listToDelete.add($(this));
+                        listToDelete.push($(this));
                     });
                     if (listToDelete.length > 0 && confirm("Are you sure you want to delete " + listToDelete.length + " requests?")) {
                         deleteContactRequests(listToDelete);
