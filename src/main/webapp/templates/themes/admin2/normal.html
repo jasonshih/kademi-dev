@@ -15,7 +15,7 @@
         <!-- end: META -->
         <!-- start: MAIN CSS -->
         <link rel="stylesheet" href="/theme/assets/plugins/bootstrap-3.3.5/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="/static/font-awesome/4.5.0/css/font-awesome.min.css"/>
+        <link rel="stylesheet" href="/static/font-awesome/4.6.1/css/font-awesome.min.css"/>
         <link rel="stylesheet" href="/theme/assets/fonts/style.css"/>
         <link rel="stylesheet" href="/theme/assets/css/main.css"/>
         <link rel="stylesheet" href="/theme/assets/css/main-responsive.css"/>
@@ -142,7 +142,7 @@
         #end
         #end
         <!-- End injected CSS sources -->
-        
+
         <!-- Injected JS sources -->
         #foreach($groupEntry in $templater.jsSources.entrySet())
         #foreach($jsFile in $groupEntry.value)
@@ -150,7 +150,7 @@
         #end
         #end
         <!-- End injected CSS sources -->        
-        
+
         <div id="kademi-container" #if ($request.getCookie("admin-sidebar").value == "collapsed") class="navigation-small" #end >
             <div class="navbar navbar-inverse navbar-fixed-top">
                 <!-- start: TOP NAVIGATION CONTAINER -->
@@ -203,7 +203,7 @@
                             <li class="dropdown current-user fuse-header-item">
                                 <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                     #if( $profile.photoHash )
-                                        <img src="/_hashes/files/$profile.photoHash" class="circle-img" alt="">
+                                    <img src="/_hashes/files/$profile.photoHash" class="circle-img" alt="">
                                     #end
                                     <span class="username">$user.thisProfile.nickName</span>
                                     <i class="clip-chevron-down"></i>
@@ -247,43 +247,43 @@
                     <ul class="main-navigation-menu" id="main-navigation-menu">
                         #foreach($rootItem in $menu.items)
 
-                            <li class="$formatter.ifTrue( $rootItem.active, "active open", "" )">
-                                #set($href = "#")
-                                #set($href = $rootItem.href)
-                                <a href="$href" data-ordering="$rootItem.ordering">
-                                    #if($rootItem.cssClass)
-                                        <i class="menu-item-$rootItem.id $rootItem.cssClass"></i>
-                                    #end
-                                    <span class="title">$rootItem.text</span>
-
-                                    #if( !$rootItem.items.isEmpty() )
-                                        <i class="icon-arrow"></i>
-                                    #end
-
-                                    #if( $rootItem.active )
-                                        <span class="selected"></span>
-                                    #end
-                                </a>
-
-                                #set($subItems = $rootItem.items)
-                                #if ($subItems && $subItems.size() > 0)
-                                    <ul class="sub-menu">
-                                        #foreach($sectionItem in $subItems)
-                                            <li class="$formatter.ifTrue( $sectionItem.active, "active open", "" )" data-ordering="$sectionItem.ordering">
-                                                <a href="$sectionItem.href">
-                                                    #if($sectionItem.cssClass)
-                                                        <i class="menu-item-$sectionItem.id $sectionItem.cssClass"></i>
-                                                    #end
-                                                    <span class="title">$sectionItem.text</span>
-                                                    #if( $sectionItem.active )
-                                                        <span class="selected"></span>
-                                                    #end
-                                                </a>
-                                            </li>
-                                        #end
-                                    </ul>
+                        <li class="$formatter.ifTrue( $rootItem.active, "active open", "" )">
+                            #set($href = "#")
+                            #set($href = $rootItem.href)
+                            <a href="$href" data-ordering="$rootItem.ordering">
+                                #if($rootItem.cssClass)
+                                <i class="menu-item-$rootItem.id $rootItem.cssClass"></i>
                                 #end
-                            </li>
+                                <span class="title">$rootItem.text</span>
+
+                                #if( !$rootItem.items.isEmpty() )
+                                <i class="icon-arrow"></i>
+                                #end
+
+                                #if( $rootItem.active )
+                                <span class="selected"></span>
+                                #end
+                            </a>
+
+                            #set($subItems = $rootItem.items)
+                            #if ($subItems && $subItems.size() > 0)
+                            <ul class="sub-menu">
+                                #foreach($sectionItem in $subItems)
+                                <li class="$formatter.ifTrue( $sectionItem.active, "active open", "" )" data-ordering="$sectionItem.ordering">
+                                    <a href="$sectionItem.href">
+                                        #if($sectionItem.cssClass)
+                                        <i class="menu-item-$sectionItem.id $sectionItem.cssClass"></i>
+                                        #end
+                                        <span class="title">$sectionItem.text</span>
+                                        #if( $sectionItem.active )
+                                        <span class="selected"></span>
+                                        #end
+                                    </a>
+                                </li>
+                                #end
+                            </ul>
+                            #end
+                        </li>
                         #end
                     </ul>
                     <!-- end: MAIN NAVIGATION MENU -->
