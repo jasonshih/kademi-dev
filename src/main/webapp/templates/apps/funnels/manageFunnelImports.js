@@ -46,7 +46,6 @@
                     success: function (resp) {
                         if (resp.status && resp.data) {
                             form.find('[type=submit]').removeClass('hide');
-                            form.find(".beforeImportInfo").text('Data status: New profiles found: ' + resp.data.newProfilesCount + ', existing profiles found: ' + resp.data.existingProfilesCount);
                         } else {
                             form.find(".beforeImportInfo").text('Cannot verify data to import');
                         }
@@ -83,7 +82,7 @@
 
                 var importerHead = $('#importerHead');
                 var selectedCols = [];
-                var requiredFields = ['email', 'groupName'];
+                var requiredFields = [];
                 importerHead.find('select').each(function () {
                     if (requiredFields.indexOf(this.value) !== -1) {
                         selectedCols.push(this.value);
