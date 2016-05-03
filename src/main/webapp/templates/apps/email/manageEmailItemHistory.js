@@ -2,7 +2,7 @@
 var searchData = {
     startDate: null,
     endDate: null
-}
+};
 
 function initManageEmailHistory() {
     $('abbr.timeago').timeago();
@@ -30,7 +30,10 @@ function initManageEmailHistory() {
         },
                 function (start, end) {
                     flog('onChange', start, end);
+                    searchData.startDate = start.format("DD/MM/YYYY");
+                    searchData.endDate = end.format("DD/MM/YYYY");
                     doSearch(start, end);
+                    loadAnalytics();
                 }
         );
     });
@@ -48,7 +51,7 @@ function doSearch(startDate, endDate) {
         startDate: formatDate(startDate),
         finishDate: formatDate(endDate)
     };
-    $('#downloadCsv').attr('href', 'emailItems.csv?' + $.param(data))
+    $('#downloadCsv').attr('href', 'emailItems.csv?' + $.param(data));
     $.ajax({
         type: 'GET',
         url: window.location.pathname,
