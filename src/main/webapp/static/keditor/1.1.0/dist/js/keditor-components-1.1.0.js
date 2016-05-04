@@ -347,11 +347,13 @@
                 '</form>'
             );
 
+            var basePath = window.location.pathname.substr(0, window.location.pathname.lastIndexOf('/') + 1);
             var photoEdit = form.find('#photo-edit');
             photoEdit.mselect({
                 contentTypes: ['image'],
                 bs3Modal: true,
-                pagePath: window.location.pathname.replace('contenteditor',''),
+                pagePath: basePath,
+                basePath: basePath,
                 onSelectFile: function(url) {
                     var img = keditor.getSettingComponent().find('img');
                     img.attr('src', url);
