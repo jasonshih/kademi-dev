@@ -8,8 +8,6 @@
         },
 
         getContent: function (component, keditor) {
-            flog('getContent "line" component', component);
-
             var componentContent = component.children('.keditor-component-content');
             return componentContent.html();
         },
@@ -20,69 +18,79 @@
 
         settingEnabled: true,
 
-        settingTitle: 'Line Settings',
+        settingTitle: 'Product List Settings',
 
         initSettingForm: function (form, keditor) {
-            // TODO: settings for product list
-            flog('initSettingForm "line" component');
-            form.append(
-                '<form class="form-horizontal">' +
-                '    <div class="form-group">' +
-                '       <div class="col-md-12">' +
-                '           <label>Color</label>' +
-                '           <div class="input-group">' +
-                '               <span class="input-group-addon"><i></i></span>' +
-                '               <input type="text" value="" id="line-color" class="form-control" />' +
-                '           </div>' +
-                '       </div>' +
-                '    </div>' +
-                '    <div class="form-group">' +
-                '       <label for="line-height" class="col-sm-12">Height</label>' +
-                '       <div class="col-sm-12">' +
-                '           <input type="number" id="line-height" class="form-control" />' +
-                '       </div>' +
-                '    </div>' +
-                '</form>'
-            );
+            flog('initSettingForm "productList" component', form, keditor);
 
-            var lineHeight = form.find('#line-height');
-            lineHeight.on('change', function () {
-                setStyle(keditor.getSettingComponent().find('.wrapper div'), 'height', this.value);
-            });
+            $.ajax({
+                url: '/_components/web/productList?settings',
+                type: 'get',
+                dataType: 'html',
+                success: function (resp) {
+                    form.html(resp);
 
-            form = form.find('form');
-            KEditor.initPaddingControls(keditor, form, 'prepend');
-            KEditor.initBgColorControl(keditor, form, 'prepend');
+                    form.find('.select-store').on('change', function () {
+                        var selectedStore = this.value;
+                        var dynamicElement = keditor.getSettingComponent().find('[data-dynamic-href]');
 
-            var lineColorPicker = form.find('.line-color-picker');
-            initColorPicker(lineColorPicker, function (color) {
-                var wrapper = keditor.getSettingComponent().find('.wrapper');
-                var div = wrapper.children('div');
+                        if (selectedStore) {
+                            var contentArea = dynamicElement.closest('.keditor-content-area');
+                            var storeHref = $(this).find('option').eq(this.selectedIndex).attr('data-href');
 
-                if (color && color !== 'transparent') {
-                    setStyle(div, 'background-color', color);
-                } else {
-                    setStyle(div, 'background-color', '');
-                    form.find('#line-color').val('');
+                            dynamicElement.attr('data-store', selectedStore);
+                            dynamicElement.attr('data-category', '');
+                            self.loadCategory(form, storeHref);
+                            keditor.initDynamicContent(contentArea, dynamicElement);
+                        } else {
+                            dynamicElement.html('<p>Please select Store</p>');
+                        }
+                    });
+
+                    form.find('.select-category').on('change', function () {
+                        var selectedCategory = this.value;
+                        var dynamicElement = keditor.getSettingComponent().find('[data-dynamic-href]');
+                        var contentArea = dynamicElement.closest('.keditor-content-area');
+
+                        dynamicElement.attr('data-category', selectedCategory);
+                        keditor.initDynamicContent(contentArea, dynamicElement);
+                    });
+
+                    form.find('.number-of-products').on('change', function () {
+                        var number = this.value;
+
+                        if (isNaN(number) || +number <= 0) {
+                            number = 1;
+                            this.value = number;
+                        }
+
+                        var dynamicElement = keditor.getSettingComponent().find('[data-dynamic-href]');
+                        var contentArea = dynamicElement.closest('.keditor-content-area');
+
+                        dynamicElement.attr('data-number-of-products', number);
+                        keditor.initDynamicContent(contentArea, dynamicElement);
+                    });
+
+                    form.find('.products-per-row').on('change', function () {
+                        var number = this.value;
+
+                        if (isNaN(number) || +number <= 0) {
+                            number = 1;
+                            this.value = number;
+                        }
+
+                        var dynamicElement = keditor.getSettingComponent().find('[data-dynamic-href]');
+                        var contentArea = dynamicElement.closest('.keditor-content-area');
+
+                        dynamicElement.attr('data-products-per-row', number);
+                        keditor.initDynamicContent(contentArea, dynamicElement);
+                    });
                 }
             });
         },
 
         showSettingForm: function (form, component, keditor) {
-            flog('showSettingForm "line" component', component);
-
-            var lineHeight = form.find('#line-height');
-            var height = component.find('.wrapper > div').css('height');
-            lineHeight.val(height ? height.replace('px', '') : '0');
-
-            KEditor.showBgColorControl(form, component);
-            KEditor.showPaddingControls(form, component);
-
-            var wrapper = component.find('.wrapper');
-            var div = wrapper.children('div');
-            var lineColorPicker = form.find('.line-color-picker');
-            flog(div.css('background-color'));
-            lineColorPicker.colorpicker('setValue', div.css('background-color') || '');
+            flog('showSettingForm "productList" component', form, component, keditor);
         },
 
         hideSettingForm: function (form, keditor) {
