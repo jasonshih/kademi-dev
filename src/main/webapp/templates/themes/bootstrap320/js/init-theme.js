@@ -340,7 +340,7 @@ function doInitVideos() {
 
 function replaceImagesWithJWPlayer(images) {
     // will not transform images which in /contenteditor page
-    if ($(document.body).hasClass('contenteditor-page'))
+    if ($(document.body).hasClass('content-editor-page'))
         return;
 
     images.each(function (i, n) {
@@ -461,7 +461,7 @@ function initAudios() {
 }
 function replaceImagesWithAudio(images) {
     // will not transform images which in /contenteditor page
-    if ($(document.body).hasClass('contenteditor-page'))
+    if ($(document.body).hasClass('content-editor-page'))
         return;
 
     images.each(function (i, n) {

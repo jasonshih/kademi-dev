@@ -24,7 +24,7 @@
             <script type="text/javascript" src="/theme/apps/admin/contentEditor.js">//</script>
         #end
     </head>
-    <body class="contenteditor-page"> <!-- detect contenteditor page -->
+    <body class="content-editor-page">
         #set($fname = $params.fileName)
         #if( $fname )
         #set($file = $folder.child($fname))
@@ -35,8 +35,6 @@
 
         <nav class="navbar navbar-default navbar-inverse navbar-fixed-top">
             <div class="container-fluid">
-                <ul class="nav navbar-nav">
-                </ul>
                 <div class="navbar-header">
                     <a class="navbar-brand">
                         #if( $file.title )
