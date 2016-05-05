@@ -25,15 +25,13 @@
         <script type="text/javascript" src="/static/js/keymap.js">//</script>
         <script type="text/javascript" src="/theme/apps/admin/contentEditor.js">//</script>
     </head>
-    <body>
+    <body class="content-editor-page">
         #set($fname = $params.fileName)
         #set($file = $folder.child($fname))
         #set($useHash = $params.useHash)
 
         <nav class="navbar navbar-default navbar-inverse navbar-fixed-top">
             <div class="container-fluid">
-                <ul class="nav navbar-nav">
-                </ul>
                 <div class="navbar-header">
                     <a class="navbar-brand">$params.fileName</a>
                 </div>
