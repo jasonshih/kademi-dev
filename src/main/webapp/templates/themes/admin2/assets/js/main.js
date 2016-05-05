@@ -68,7 +68,9 @@ var Main = function () {
     };
 
     var updateNiceScroll = function (target) {
-        target.getNiceScroll().resize();
+        if($.fn.niceScroll){
+            target.getNiceScroll().resize();
+        }
     };
 
     // function to adjust the template elements based on the window size
