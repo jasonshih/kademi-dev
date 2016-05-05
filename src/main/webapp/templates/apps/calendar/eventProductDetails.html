@@ -1,0 +1,12 @@
+<div class="form-group">
+    <label class="col-sm-2 control-label">Calendar event</label>
+    <div class="col-sm-9">
+        <select class="form-control" name="relatedItemId">
+            <option value="">[No event selected]</option>
+            #foreach($event in $applications.calendar.allFutureEvents)
+            $formatter.option($event.id, $event.summary, $page.relatedItemId)
+            #end
+        </select>
+        <span class="text-muted">Select the event this product is for. Then when a user purchases this product they will be added to the event. <a target="_blank" href="/Calendars/">Manage calendars</a></span>
+    </div>
+</div>
