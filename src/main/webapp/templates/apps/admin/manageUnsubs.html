@@ -5,6 +5,24 @@
     <body>
         <a href="unsubscribers.csv" download="unsubscribers.csv" class="btn btn-info">Download CSV</a>
 
+        <br/><br/>
+
+        <table class="table table-bordered">
+            <tr>
+                <td class="text-center"><h2>Total</h2></td>
+                #foreach($gs in $page.groupSummary)
+                <td class="text-center"><h2>$gs.group.title</h2></td>
+                #end
+            </tr>
+            <tr>
+                <td class="text-center"><h2>$page.children.ofType.unsub.size()</h2></td>
+                #foreach($gs in $page.groupSummary)
+                <td class="text-center"><h2>$gs.count</h2></td>
+                #end
+            </tr>
+        </table>
+        <span class="text-muted">Note: Profiles may be in more then one group, so the sum of group counts may not equal the total</span>
+
         <p>&nbsp;</p>
         <table class="table table-hover table-striped">
             <thead>
@@ -25,7 +43,7 @@
                     <td>$formatter.formatDateTime($unsub.unsubcribeDate, $page.organisation.timezone)</td>
                     <td>
                         #if($unsub.lastCommunication)
-                        $unsub.lastCommunication.type: 
+                        $unsub.lastCommunication.type:
                         #if($unsub.lastCommunication.itemHref)
                         <a href="$unsub.lastCommunication.itemHref">
                             #end
