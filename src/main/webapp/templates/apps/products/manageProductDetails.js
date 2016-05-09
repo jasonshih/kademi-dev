@@ -1,6 +1,10 @@
 function initProductDetails() {
     jQuery("form.updateProduct").forms({
         callback: function () {
+            $('#relatedAppWrap').reloadFragment({
+                whenComplete: function(dom){
+                }
+            });
             Msg.success("Successfully updated product!");
         }
     });
