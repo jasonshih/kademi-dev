@@ -4,7 +4,7 @@ var win = $(window);
 function initManageBlogArticle() {
     $('.timeago').timeago();
 
-    if (isBootstrap335) {
+    if (isKEditor) {
         initEditorFrame();
         initPostMessage();
     } else {
@@ -14,7 +14,7 @@ function initManageBlogArticle() {
     $('.article-form').forms({
         callback: function(resp, form) {
             flog('Done', form, resp);
-            if (isBootstrap335) {
+            if (isKEditor) {
                 var editorFrame = $('#editor-frame');
                 var postData = {
                     url: window.location.href.split('#')[0],
