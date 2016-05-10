@@ -116,6 +116,11 @@ String.prototype.endsWith = function (suffix) {
     return this.match(suffix + '$') == suffix;
 };
 
+String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.replace(new RegExp(search, 'g'), replacement);
+};
+
 function ensureObject(target) {
     if (typeof target == 'string') {
         target = $('#' + target);
@@ -797,7 +802,7 @@ function promptRename(sourceHref, callback) {
 }
 
 function move(sourceHref, destHref, callback) {
-    //    ajaxLoadingOn();    
+    //    ajaxLoadingOn();
     var url = '_DAV/MOVE';
     if (sourceHref) {
         var s = sourceHref;
@@ -841,7 +846,7 @@ function moveFolder(sourceHref, destHref, callback) {
 }
 
 function copyFolder(sourceHref, destHref, callback) {
-    //    ajaxLoadingOn();    
+    //    ajaxLoadingOn();
     var url = '_DAV/COPY';
     if (sourceHref) {
         var s = sourceHref;
@@ -1035,7 +1040,7 @@ function stripFragment(href) {
 
 /*
  * http://javascriptbase64.googlecode.com/svn/trunk/base64.js
- * 
+ *
  Copyright (c) 2008 Fred Palmer fred.palmer_at_gmail.com
 
  Permission is hereby granted, free of charge, to any person

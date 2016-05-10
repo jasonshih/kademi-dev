@@ -304,8 +304,12 @@
                                                 <p>You can enter a rule expression below using MVEL syntax, the trigger will only fire if this evaluates to true.</p>
                                                 <textarea name="conditionScriptMvel" id="conditionScriptMvel" class="form-control" rows="5">$!page.job.conditionScriptMvel</textarea>
 
-                                                <h3>Example rule</h3>
+                                                <h3>Example rules</h3>
+                                                <i>For a QuizAttemptEvent event, you can check the number of attempts</i>
                                                 <pre>event.numAttempts < 3</pre>
+
+                                                <i>For a comment event, check the user group and the length of the comment</i>
+                                                <pre>user.isInGroup('Customers') && event.attributes.comment.length()>=150</pre>
                                             </div>
                                         </div>
 
