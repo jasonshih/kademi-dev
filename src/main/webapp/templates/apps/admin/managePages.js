@@ -62,6 +62,18 @@ function initAddPageModal() {
         $('.param-wrapper').html('');
     });
 
+    form.on("input", ".pageTitle", function(e) {
+        var inp = $(e.target);
+        var val = inp.val();
+        var newVal = val.toLowerCase();
+        newVal = newVal.replaceAll("[", "-");
+        newVal = newVal.replaceAll("]", "-");
+        newVal = newVal.replace(/[ `~!@#$%&()-_=+;:'"]/, "-");
+        //val = val.replaceAll("'", "-");
+        flog("on change", val, newVal);
+        form.find(".newFileName").val(newVal);
+    });
+
     form.forms({
         beforePostForm: function (form, config, data) {
             var pageName = form.find('[name=pageName]').val();
@@ -175,6 +187,7 @@ function showEditModal(name, pageArticle) {
             modal.find('input[name=itemType]').val(data.itemType);
             modal.find('input[name=category]').val(data.category);
             modal.find('input[name=tags]').val(data.tags);
+            modal.find('input[name=name]').val(name);
 
             flog(data.metas, data.params);
 

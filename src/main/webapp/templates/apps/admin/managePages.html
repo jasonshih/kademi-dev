@@ -115,11 +115,11 @@
                         <div class="btn-group">
                             <button class="btn btn-info dropdown-toggle" data-toggle="dropdown">
                                 #if( $page.is("branch") )
-                                    <i class="fa fa-globe"></i>
-                                    $page.name
+                                <i class="fa fa-globe"></i>
+                                $page.name
                                 #else
-                                    <i class="fa fa-folder-open"></i>
-                                    $page.name
+                                <i class="fa fa-folder-open"></i>
+                                $page.name
                                 #end
                                 <span class="caret"></span>
                             </button>
@@ -155,20 +155,20 @@
                             </button>
                             <ul role="menu" class="dropdown-menu list" id="subFoldersList">
                                 #foreach($subFolder in $page.subFolders)
-                                    <li class="clearfix list-item">
-                                        <aside class="list-item-controller">
-                                            <a class="btn btn-xs btn-danger btn-delete-folder" href="$subFolder.href">
-                                                <i class="fa fa-times"></i>
-                                            </a>
-                                        </aside>
-                                        <a href="$subFolder.name">
-                                            <i class="fa fa-folder"></i> $subFolder.name
+                                <li class="clearfix list-item">
+                                    <aside class="list-item-controller">
+                                        <a class="btn btn-xs btn-danger btn-delete-folder" href="$subFolder.href">
+                                            <i class="fa fa-times"></i>
                                         </a>
-                                    </li>
+                                    </aside>
+                                    <a href="$subFolder.name">
+                                        <i class="fa fa-folder"></i> $subFolder.name
+                                    </a>
+                                </li>
                                 #end
                             </ul>
                         </div>
-                        
+
                         <a class="btn btn-primary" href="/repositories">File manager</a>
                     </div>
 
@@ -176,6 +176,10 @@
 
                     <form method="POST" action="" class="">
                         <div class="article-wrapper" id="page-list">
+                            #set ($isKEditor = false)
+                            #if ($page.theme.editorName == "keditor")
+                                #set ($isKEditor = true)
+                            #end
 
                             #set($order = 0)
                             #set( $pages = $page.children.ofType.html )
@@ -190,11 +194,16 @@
                                 <span class="article-name">$page.title</span>
                                 <aside class="article-action">
                                     <div class="btn-group btn-group-sm">
+                                        #if ($isKEditor)
+                                        <a href="?contenteditor=${page.name}" target="_blank" class="btn btn-sm btn-info" title="Edit page"><i class="fa fa-edit"></i> Edit</a>
+                                        #else
                                         <a href="?htmleditor=${page.name}" target="_blank" class="btn btn-sm btn-info" title="Edit page"><i class="fa fa-edit"></i> Edit</a>
+                                        #end
                                         <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown"> <span class="caret"></span></button>
                                         <ul class="dropdown-menu pull-right" role="menu">
+                                            <li><a href="?htmleditor=${page.name}" target="_blank" title="Edit page"><i class="fa fa-edit"></i> Edit</a></li>
                                             <li><a href="?contenteditor=${page.name}" target="_blank" title="Edit page"><i class="fa fa-edit"></i> Edit with Content Editor <i class="clip-new" style="color: red;"></i></a></li>
-                                            <li><a href="${page.name}" class="btn-edit-page" title="Edit page"><i class="fa fa-edit"></i> Quick Edit</a></li>
+                                            <li><a href="${page.name}" class="btn-edit-page" title="Edit page"><i class="fa fa-edit"></i> Properties</a></li>
                                             <li><a href="${page.name}?goto" target="_blank" title="View page"><i class="clip-eye"></i> View</a></li>
                                             <li class="divider"></li>
                                             <li><a href="${page.path}" class="btn-delete-page" title="Delete page"><i class="fa fa-times"></i> Delete</a></li>
@@ -217,13 +226,14 @@
                     <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
                     <div class="form-group" style="margin-bottom: 0;">
                         <div class="col-xs-11">
-                            <input type="text" name="title" id="title" class="form-control required" value="" placeholder="A title for the new page" />
+                            <input type="text" name="title" id="title" class="form-control required pageTitle" value="" placeholder="A title for the new page" />
                         </div>
                     </div>
                 </div>
                 <div class="modal-body">
                     <div class="form-message"></div>
                     <input type="hidden" name="pageName" value="" />
+
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs" role="tablist">
                         <li class="active"><a href="#properties" data-toggle="tab">Properties</a></li>
@@ -234,12 +244,19 @@
                     <div class="tab-content">
                         <div class="tab-pane active" id="properties">
                             <div class="form-group">
+                                <label for="template" class="control-label col-md-3">File name</label>
+                                <div class="col-md-9">
+                                    <input type="text" name="name" class="form-control required newFileName" value="" placeholder="The file name to create" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
                                 <label for="template" class="control-label col-md-3">Page template</label>
                                 <div class="col-md-9">
                                     <select name="template" id="template" class="form-control">
                                         <option value="">None</option>
                                         #foreach($templateEntry in $page.closest("branch").getTemplates($page).entrySet() )
-                                            <option value="$templateEntry.key">$templateEntry.value</option>
+                                        <option value="$templateEntry.key">$templateEntry.value</option>
                                         #end
                                     </select>
                                 </div>
