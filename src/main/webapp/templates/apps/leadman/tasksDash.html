@@ -50,7 +50,7 @@
                 <p>
                     #set ($lastContactRequest = $lead.lastContactRequest)
                     #if($lastContactRequest)
-                    $formatter.truncate($lastContactRequest.message, 117)
+                    $!formatter.truncate($lastContactRequest.message, 117)
                     #end
                 </p>
                 #end
