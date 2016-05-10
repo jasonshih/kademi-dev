@@ -37,27 +37,27 @@
         googleAPIKey: null,
         searchUrl: null,
         template:
-            '<form role="form" class="form-horizontal form-search org-finder-search" action="" style="margin-bottom: 15px;">' +
-            '    <div class="input-group input-group-lg">' +
-            '        <input type="text" name="q" class="form-control" placeholder="Enter keyword to search..." value="" />' +
-            '        <span class="input-group-btn">' +
-            '            <button class="btn btn-default" type="submit">Search</button>' +
-            '        </span>' +
-            '    </div>' +
-            '</form>' +
-            '<div class="row" style="margin-bottom: 40px;">' +
-            '    <div class="col-md-4">' +
-            '        <div class="panel panel-default">' +
-            '            <div class="panel-heading">List stores</div>' +
-            '            <div class="list-group org-finder-list" style="overflow-y: auto;"></div>' +
-            '        </div>' +
-            '    </div>' +
-            '    <div class="col-md-8">' +
-            '        <div class="embed-responsive embed-responsive-16by9">' +
-            '            <div class="embed-responsive-item org-finder-map"></div>' +
-            '        </div>' +
-            '    </div>' +
-            '</div>'
+        '<form role="form" class="form-horizontal form-search org-finder-search" action="" style="margin-bottom: 15px;">' +
+        '    <div class="input-group input-group-lg">' +
+        '        <input type="text" name="q" class="form-control" placeholder="Enter keyword to search..." value="" />' +
+        '        <span class="input-group-btn">' +
+        '            <button class="btn btn-default" type="submit">Search</button>' +
+        '        </span>' +
+        '    </div>' +
+        '</form>' +
+        '<div class="row" style="margin-bottom: 40px;">' +
+        '    <div class="col-md-4">' +
+        '        <div class="panel panel-default">' +
+        '            <div class="panel-heading">List stores</div>' +
+        '            <div class="list-group org-finder-list" style="overflow-y: auto;"></div>' +
+        '        </div>' +
+        '    </div>' +
+        '    <div class="col-md-8">' +
+        '        <div class="embed-responsive embed-responsive-16by9">' +
+        '            <div class="embed-responsive-item org-finder-map"></div>' +
+        '        </div>' +
+        '    </div>' +
+        '</div>'
         ,
         onReady: function (formSearch, itemsWrapper, mapDiv) {
         },
@@ -127,7 +127,14 @@
                 }
             };
 
-            $.getScript('https://maps.googleapis.com/maps/api/js?key=' + self.options.googleAPIKey + '&libraries=places&callback=' + googleMapCallback);
+            if (window.google && window.google.maps) {
+                flog('Google Map Api is already in documentation');
+                $.fn.orgFinder[functionName].call(this);
+            } else {
+                var gmapApiUrl = 'https://maps.googleapis.com/maps/api/js?key=' + self.options.googleAPIKey + '&libraries=places&callback=' + googleMapCallback;
+                flog('Load Google Map Api from "' + gmapApiUrl + '"');
+                $.getScript(gmapApiUrl);
+            }
         },
 
         initFormSearch: function () {
