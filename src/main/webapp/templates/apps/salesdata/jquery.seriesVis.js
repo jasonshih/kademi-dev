@@ -7,7 +7,8 @@
         startDate: null,
         endDate: null,
         interval: "day",
-        groupBy: null
+        groupBy: null,
+        dateChangeEvent : "pageDateChange"
     };
 
     $.fn.seriesVis = function (options) {
@@ -28,6 +29,13 @@
         };
 
         loadSeriesGraph(seriesHref, options, container, visType);
+        
+        $("body").on("pageDateChange", function(e, opts) {
+            options.startDate = opts.startDate;
+            options.endDate = opts.endDate;
+            flog("update series graph", options);
+            loadSeriesGraph(seriesHref, options, container, visType);
+        });
     };
 
 })(jQuery);
@@ -40,6 +48,7 @@ function loadSeriesGraph(href, opts, container, visType) {
         svg = $("<svg></svg>");
         container.append(svg);
     }
+    flog("loadSeriesGraph svg=", svg);
 
     $.ajax({
         type: "GET",
@@ -52,7 +61,7 @@ function loadSeriesGraph(href, opts, container, visType) {
                 json = JSON.parse(resp);
             }
 
-            flog('loadSeriesGraph: response', json);
+            flog('loadSeriesGraph: response', json, svg, visType);
             handleSeriesData(json, svg, visType);
 
         }
@@ -61,6 +70,7 @@ function loadSeriesGraph(href, opts, container, visType) {
 
 
 function handleSeriesData(resp, svg, visType) {
+    flog("handleSeriesData", resp, svg, visType);
     var aggr = (resp !== null ? resp.aggregations : null);
     showSeriesHistogram(aggr, svg, visType);
 }
@@ -76,7 +86,7 @@ function findVal(arr, key) {
 }
 
 function showSeriesHistogram(aggr, svg, visType) {
-    flog("showSeriesHistogram", aggr);
+    flog("showSeriesHistogram", aggr,svg, visType);
 
     svg.empty();
     nv.addGraph(function () {
