@@ -60,21 +60,21 @@ function initReportDateRange() {
     reportRange.exist(function () {
         flog("init report range");
         reportRange.daterangepicker({
-            format: 'DD/MM/YYYY', // YYYY-MM-DD
-            ranges: {
-                'Last 7 Days': [moment().subtract('days', 6), moment()],
-                'Last 30 Days': [moment().subtract('days', 29), moment()],
-                'This Month': [moment().startOf('month'), moment().endOf('month')],
-                'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
-                'This Year': [moment().startOf('year'), moment()],
+                format: 'DD/MM/YYYY', // YYYY-MM-DD
+                ranges: {
+                    'Last 7 Days': [moment().subtract('days', 6), moment()],
+                    'Last 30 Days': [moment().subtract('days', 29), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
+                    'This Year': [moment().startOf('year'), moment()],
+                },
             },
-        },
-                function (start, end) {
-                    flog('onChange', start, end);
-                    searchData.startDate = start.format('DD/MM/YYYY');
-                    searchData.endDate = end.format('DD/MM/YYYY');
-                    loadAnalytics();
-                }
+            function (start, end) {
+                flog('onChange', start, end);
+                searchData.startDate = start.format('DD/MM/YYYY');
+                searchData.endDate = end.format('DD/MM/YYYY');
+                loadAnalytics();
+            }
         );
     });
 }
@@ -122,28 +122,29 @@ function initPies(aggr) {
     initPie("pieClient", aggr.userAgentType);
     initPie("pieDomain", aggr.domain);
 }
-function initPie(id, aggr) {
 
+function initPie(id, aggr) {
     flog("initPie", id, aggr);
 
     $('#' + id + ' svg').empty();
     nv.addGraph(function () {
         var chart = nv.models.pieChart()
-                .x(function (d) {
-                    return d.key
-                })
-                .y(function (d) {
-                    return d.doc_count
-                })
-                .donut(true)
-                .donutRatio(0.35)
-                .showLabels(false);
+            .x(function (d) {
+                return d.key
+            })
+            .y(function (d) {
+                return d.doc_count
+            })
+            .donut(true)
+            .donutRatio(0.35)
+            .showLabels(true)
+            .labelType("percent");
 
 
         d3.select("#" + id + " svg")
-                .datum(aggr.buckets)
-                .transition().duration(350)
-                .call(chart);
+            .datum(aggr.buckets)
+            .transition().duration(350)
+            .call(chart);
 
         return chart;
     });
@@ -153,26 +154,26 @@ function initHistogram(aggr) {
     $('#chart_histogram svg').empty();
     nv.addGraph(function () {
         var chart = nv.models.multiBarChart()
-                .options({
-                    showLegend: true,
-                    showControls: false,
-                    noData: "No Data available for histogram",
-                    margin: {
-                        left: 40,
-                        bottom: 60
-                    }
-                });
+            .options({
+                showLegend: true,
+                showControls: false,
+                noData: "No Data available for histogram",
+                margin: {
+                    left: 40,
+                    bottom: 60
+                }
+            });
 
         chart.xAxis
-                .axisLabel("Date")
-                .rotateLabels(-45)
-                .tickFormat(function (d) {
-                    return moment(d).format("DD MMM");
-                });
+            .axisLabel("Date")
+            .rotateLabels(-45)
+            .tickFormat(function (d) {
+                return moment(d).format("DD MMM");
+            });
 
         chart.yAxis
-                .axisLabel("Triggered")
-                .tickFormat(d3.format('d'));
+            .axisLabel("Triggered")
+            .tickFormat(d3.format('d'));
 
         var myData = [];
         var conditionsTrue = {
@@ -207,25 +208,25 @@ function initHistogram(aggr) {
         for (var i = 0; i < trueHits.length; i++) {
             var bucket = trueHits[i];
             conditionsTrue.values.push(
-                    {x: bucket.key, y: bucket.doc_count});
+                {x: bucket.key, y: bucket.doc_count});
         }
 
         for (var i = 0; i < falseHits.length; i++) {
             var bucket = falseHits[i];
             conditionsFalse.values.push(
-                    {x: bucket.key, y: bucket.doc_count});
+                {x: bucket.key, y: bucket.doc_count});
         }
 
         for (var i = 0; i < delayedHits.length; i++) {
             var bucket = delayedHits[i];
             delayedTriggers.values.push(
-                    {x: bucket.key, y: bucket.doc_count});
+                {x: bucket.key, y: bucket.doc_count});
         }
 
         d3.select('#chart_histogram svg')
-                .datum(myData)
-                .transition().duration(500)
-                .call(chart);
+            .datum(myData)
+            .transition().duration(500)
+            .call(chart);
 
         nv.utils.windowResize(chart.update);
 
@@ -377,38 +378,38 @@ function categoryAjax(name, data, url, callback) {
 
 
 function exampleData() {
-  return  [
-      {
-        "label": "One",
-        "value" : 29.765957771107
-      } ,
-      {
-        "label": "Two",
-        "value" : 0
-      } ,
-      {
-        "label": "Three",
-        "value" : 32.807804682612
-      } ,
-      {
-        "label": "Four",
-        "value" : 196.45946739256
-      } ,
-      {
-        "label": "Five",
-        "value" : 0.19434030906893
-      } ,
-      {
-        "label": "Six",
-        "value" : 98.079782601442
-      } ,
-      {
-        "label": "Seven",
-        "value" : 13.925743130903
-      } ,
-      {
-        "label": "Eight",
-        "value" : 5.1387322875705
-      }
+    return [
+        {
+            "label": "One",
+            "value": 29.765957771107
+        },
+        {
+            "label": "Two",
+            "value": 0
+        },
+        {
+            "label": "Three",
+            "value": 32.807804682612
+        },
+        {
+            "label": "Four",
+            "value": 196.45946739256
+        },
+        {
+            "label": "Five",
+            "value": 0.19434030906893
+        },
+        {
+            "label": "Six",
+            "value": 98.079782601442
+        },
+        {
+            "label": "Seven",
+            "value": 13.925743130903
+        },
+        {
+            "label": "Eight",
+            "value": 5.1387322875705
+        }
     ];
 }
