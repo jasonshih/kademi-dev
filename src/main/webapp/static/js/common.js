@@ -91,14 +91,14 @@ function startsWith(str, prefix) {
 
 Date.prototype.formatMMDDYYYY = function () {
     return (this.getMonth() + 1) +
-        '/' + this.getDate() +
-        '/' + this.getFullYear();
+            '/' + this.getDate() +
+            '/' + this.getFullYear();
 }
 
 Date.prototype.formatDDMMYYYY = function () {
     return this.getDate() +
-        '/' + (this.getMonth() + 1) +
-        '/' + this.getFullYear();
+            '/' + (this.getMonth() + 1) +
+            '/' + this.getFullYear();
 }
 
 /**
@@ -116,9 +116,14 @@ String.prototype.endsWith = function (suffix) {
     return this.match(suffix + '$') == suffix;
 };
 
-String.prototype.replaceAll = function(search, replacement) {
+String.prototype.replaceAll = function (search, replacement) {
     var target = this;
-    return target.replace(new RegExp(search, 'g'), replacement);
+    var count = 0;
+    while (target.indexOf(search) > -1 && count < 1000 ){
+        count++;
+        target = target.replace(search, replacement);
+    }
+    return target;
 };
 
 function ensureObject(target) {
@@ -933,22 +938,22 @@ function dec_sort(a, b) {
  */
 String.prototype.replaceAll = function (token, newToken, ignoreCase) {
     var str, i = -1,
-        _token;
+            _token;
     if ((str = this.toString()) && typeof token === 'string') {
         _token = ignoreCase === true ? token.toLowerCase() : undefined;
         while ((i = (
-            _token !== undefined ?
+                _token !== undefined ?
                 str.toLowerCase().indexOf(
-                    _token,
-                    i >= 0 ? i + newToken.length : 0
+                _token,
+                i >= 0 ? i + newToken.length : 0
                 ) : str.indexOf(
                 token,
                 i >= 0 ? i + newToken.length : 0
-            )
-        )) !== -1) {
+                )
+                )) !== -1) {
             str = str.substring(0, i)
-                .concat(newToken)
-                .concat(str.substring(i + token.length));
+                    .concat(newToken)
+                    .concat(str.substring(i + token.length));
         }
     }
     return str;
@@ -1042,7 +1047,7 @@ function stripFragment(href) {
  * http://javascriptbase64.googlecode.com/svn/trunk/base64.js
  *
  Copyright (c) 2008 Fred Palmer fred.palmer_at_gmail.com
-
+ 
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
  files (the 'Software'), to deal in the Software without
@@ -1051,10 +1056,10 @@ function stripFragment(href) {
  copies of the Software, and to permit persons to whom the
  Software is furnished to do so, subject to the following
  conditions:
-
+ 
  The above copyright notice and this permission notice shall be
  included in all copies or substantial portions of the Software.
-
+ 
  THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
  OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND

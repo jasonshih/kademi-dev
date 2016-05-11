@@ -68,8 +68,7 @@ function initAddPageModal() {
         var newVal = val.toLowerCase();
         newVal = newVal.replaceAll("[", "-");
         newVal = newVal.replaceAll("]", "-");
-        newVal = newVal.replace(/[ `~!@#$%&()-_=+;:'"]/, "-");
-        //val = val.replaceAll("'", "-");
+        newVal = newVal.replaceAll(" ", "-");
         flog("on change", val, newVal);
         form.find(".newFileName").val(newVal);
     });
