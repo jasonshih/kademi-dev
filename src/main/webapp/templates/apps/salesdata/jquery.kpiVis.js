@@ -73,11 +73,14 @@ function loadKpiSeriesGraphData(href, opts, container, visType, config) {
         dataType: 'json',
         success: function (resp) {
             flog("KPI data received", visType, resp);
-            if (visType === "dateHistogram" || visType === "sparkline") {
+            flog("is date?", visType == "dateHistogram");
+            
+            if (visType == "dateHistogram" || visType == "sparkline") {
+                flog("show histo");
                 showKpiSeriesHistogram(resp, container, visType, config);
-            } else if (visType === "kpiLeaderboard") {
+            } else if (visType == "kpiLeaderboard") {
                 showKpiLeaderboard(resp, container, visType, config);
-            } else if (visType === "pointsLeaderboard") {
+            } else if (visType == "pointsLeaderboard") {
                 showPointsLeaderboard(resp, container, visType, config);
             } else {
                 showKpiSummary(resp, container, visType, config);
@@ -214,8 +217,7 @@ function showKpiSeriesHistogram(resp, container, visType, config) {
     var svg = container.find("svg");
     svg.empty();
 
-    //flog("initKpiSeriesHistogram", resp, svg);
-
+    flog("initKpiSeriesHistogram", resp, svg);
     nv.addGraph(function () {
 
         var myData = [];
@@ -292,6 +294,7 @@ function showKpiSeriesHistogram(resp, container, visType, config) {
 
         }
     });
+    flog("done show histo");
 }
 
 function round(value, decimals) {
