@@ -256,7 +256,11 @@
                                                 $formatter.htmlEncode($p.fields.surName.value)
                                             </span>
                                         </td>
-                                        <td class="text"><a href="mailto:$p.fields.email.value">$p.fields.email.value</a></td>
+                                        <td class="text">
+                                            #if( $p.fields.email.value )
+                                            <a href="mailto:$p.fields.email.value">$p.fields.email.value</a>
+                                            #end
+                                        </td>
                                         <td class="text">$!p.fields.phone.value</td>
                                         <td class="group-names">
                                             #set( $groups = $page.primaryGroups( $p.fields.get("memberships.group").values ) )
@@ -324,9 +328,9 @@
                 #else
                 <form method="post" action="new" class="form-horizontal">
                     <div class="form-group">
-                        <label class="control-label col-md-3" for="newUserNickName">Nick name</label>
+                        <label class="control-label col-md-3" for="newUserNickName">Display name</label>
                         <div class="col-md-9">
-                            <input type="text" name="nickName" id="newUserNickName" class="required form-control" />
+                            <input type="text" name="nickName" id="newUserNickName" class="form-control" />
                         </div>
                     </div>
                     <div class="form-group">
@@ -344,7 +348,7 @@
                     <div class="form-group">
                         <label class="control-label col-md-3" for="newUserEmail">Email</label>
                         <div class="col-md-9">
-                            <input type="text" name="email" id="newUserEmail" class="required form-control" />
+                            <input type="text" name="email" id="newUserEmail" class="form-control" />
                             <em class="help-block small text-muted">Eg. Joe Blogs &lt;joebloggs@somewhere.com&gt;. Will use <b>Joe Blogs</b> as First name and Surname if <b>First name</b> and <b>Surname</b> are blank</em>
                         </div>
                     </div>
