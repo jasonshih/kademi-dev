@@ -16,7 +16,7 @@
     <tbody>
         #foreach($kpiResult in $entry.value)
         <tr>
-            <td>$!kpiResult.period.startDate</td>
+            <td>$formatter.formatDateTime($kpiResult.period.startDate, $page.organisation.timezone)</td>
             <td>$!kpiResult.level.title</td>
             <td>$!kpiResult.amount</td>
             <td>$!kpiResult.level.awardAmount</td>
