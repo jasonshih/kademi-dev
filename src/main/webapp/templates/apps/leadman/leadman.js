@@ -267,7 +267,7 @@ function initLeadActions() {
     $("body").on("click", ".closeLead", function (e) {
         flog("initLeadActions click - close");
         e.preventDefault();
-        var href = $(e.target).closest("a").attr("href");
+        var href = $(this).attr("href");
         closeLead(href);
     });
 
