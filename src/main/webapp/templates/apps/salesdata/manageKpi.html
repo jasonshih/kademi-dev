@@ -59,6 +59,7 @@
                             #foreach( $group in $page.selectedGroups)
                             <b>$group.name</b>,
                             #end
+                            starting $formatter.formatDateTime($page.kpi.startDate, $page.organisation.timezone)
                             #else
                             <b>This KPI has not been configured yet</b>
                             #end
@@ -370,7 +371,7 @@
                         </div>
                         <br/>
 
-                        <p>Shows KPI periods which have been processed</p>
+                        <p>KPI start date: starting $formatter.formatDateTime($page.kpi.startDate, $page.organisation.timezone) </p>
 
                         <table class="table table-bordered table-striped" id="table-periods">
                             <colgroup>
@@ -392,12 +393,12 @@
                             <tbody>
                                 #foreach($period in $page.periods)
                                 <tr>
-                                    <td>$period.startDate</td>
-                                    <td>$period.endDate</td>
-                                    <td>$period.createdDate</td>
+                                    <td>$formatter.formatDateTime($period.startDate, $page.organisation.timezone)</td>
+                                    <td>$formatter.formatDateTime($period.endDate, $page.organisation.timezone)</td>
+                                    <td>$formatter.formatDateTime($period.createdDate, $page.organisation.timezone)</td>
                                     <td>
-                                        #if( $period.rewardsIssuedDate )
-                                        $period.rewardsIssuedDate
+                                        #if( $period.rewardsIssuedDate )                                        
+                                        $formatter.formatDateTime($period.rewardsIssuedDate, $page.organisation.timezone)
                                         #else
                                         <span class="label label-danger">Rewards not issued</span>
                                         #end
