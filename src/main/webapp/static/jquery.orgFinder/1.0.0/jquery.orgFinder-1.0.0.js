@@ -29,7 +29,7 @@
     };
 
     // Version for jquery.orgFinder
-    $.fn.orgFinder.version = '1.1.0';
+    $.fn.orgFinder.version = '1.0.0';
 
     // Default configuration
     $.fn.orgFinder.DEFAULT = {
