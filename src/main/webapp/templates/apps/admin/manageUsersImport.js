@@ -53,7 +53,7 @@ function initUploads() {
                 success: function(resp){
                     if(resp.status && resp.data){
                         form.find('[type=submit]').removeClass('hide');
-                        form.find(".beforeImportInfo").text('Data status: New profiles found: '+ resp.data.newProfilesCount+', existing profiles found: '+resp.data.existingProfilesCount );
+                        form.find(".beforeImportInfo").text('New profiles found: '+ resp.data.newProfilesCount+', existing profiles found: '+resp.data.existingProfilesCount );
                     }else{
                         form.find(".beforeImportInfo").text('Cannot verify data to import');
                     }
