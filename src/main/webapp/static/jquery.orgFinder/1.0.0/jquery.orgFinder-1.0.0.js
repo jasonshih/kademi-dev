@@ -8,11 +8,13 @@
  * @option {Number} initZoomLevel Initialized zoom level of map
  * @option {String} initQuery Initialized search query
  * @option {String} googleAPIKey Google API key
- * @option {String} searchUrl Search URL
+ * @option {String} searchUrl Search URL. Must be link to signup page of a group or /organisations/ (if you use this plugin in Kademi admin console)
  * @option {String} template Template string for orgFinder. Form search must has 'org-finder-search' class and textbox must be named 'q'. Items list wrapper must has 'org-finder-list' class. Map div must has class 'org-finder-map'
  * @option {Function} onReady Callback will be called when orgFinder is ready. Arguments: 'formSearch', 'itemsWrapper', 'mapDiv'
- * @option {Function} onSelect Callback will be called when click on marker on map or item in org list panel. Arguments: 'orgData'
+ * @option {Function} onSelect Callback will be called when click on marker on map or item in org list panel. Arguments: 'orgData', 'item', 'marker', 'infoWindow'
  * @option {Function} onSearch Callback will be called when when search a keyword. Arguments: 'query'
+ * @option {Function} renderItemContent Method for rendering content of an item in organization list. If you don't want to show this organization, just return null or empty. Arguments: 'orgData'
+ * @option {Function} renderMarkerContent Method for rendering content for InfoWindow of a marker on Google Map. If you don't want to show this organization, just return null or empty. Arguments: 'orgData'
  */
 
 (function ($) {
@@ -61,9 +63,65 @@
         ,
         onReady: function (formSearch, itemsWrapper, mapDiv) {
         },
-        onSelect: function (orgData) {
+        onSelect: function (orgData, item, marker, infoWindow) {
         },
         onSearch: function (query) {
+        },
+        renderItemContent: function (orgData) {
+            var itemContent = '';
+            itemContent += '<h4 class="list-group-item-heading">' + (orgData.orgTypeDisplayName || orgData.title ) + '</h4>';
+
+            if (orgData.phone) {
+                itemContent += '<p class="list-group-item-text"><strong>Phone:</strong> ' + orgData.phone + '</p>';
+            }
+            if (orgData.email) {
+                itemContent += '<p class=list-group-item-text"><strong>Email:</strong> <a href="mailto:' + orgData.email + '">' + orgData.email + '</a></p>';
+            }
+            if (orgData.address) {
+                itemContent += '<p class="list-group-item-text"><strong>Address:</strong> ' + orgData.address + '</p>';
+            }
+            if (orgData.addressLine2) {
+                itemContent += '<p class=list-group-item-text"><strong>Address Line 2:</strong> ' + orgData.addressLine2 + '</p>';
+            }
+            if (orgData.addressState) {
+                itemContent += '<p class="list-group-item-text"><strong>State:</strong> ' + orgData.addressState + '</p>';
+            }
+            if (orgData.country) {
+                itemContent += '<p class="list-group-item-text"><strong>Country:</strong> ' + orgData.country + '</p>';
+            }
+            if (orgData.postcode) {
+                itemContent += '<p class="list-group-item-text"><strong>Postcode:</strong> ' + orgData.postcode + '</p>';
+            }
+
+            return '<div class="list-group-item">' + itemContent + '</div>';
+        },
+        renderMarkerContent: function (orgData) {
+            var markerContent = '';
+            markerContent += '<h1>' + (orgData.orgTypeDisplayName || orgData.title ) + '</h1>';
+
+            if (orgData.phone) {
+                markerContent += '<div><strong>Phone:</strong> ' + orgData.phone + '</div>';
+            }
+            if (orgData.email) {
+                markerContent += '<div><strong>Email:</strong> <a href="mailto:' + orgData.email + '">' + orgData.email + '</a></div>';
+            }
+            if (orgData.address) {
+                markerContent += '<div><strong>Address:</strong> ' + orgData.address + '</div>';
+            }
+            if (orgData.addressLine2) {
+                markerContent += '<div><strong>Address Line 2:</strong> ' + orgData.addressLine2 + '</div>';
+            }
+            if (orgData.addressState) {
+                markerContent += '<div><strong>State:</strong> ' + orgData.addressState + '</div>';
+            }
+            if (orgData.country) {
+                markerContent += '<div><strong>Country:</strong> ' + orgData.country + '</div>';
+            }
+            if (orgData.postcode) {
+                markerContent += '<div><strong>Postcode:</strong> ' + orgData.postcode + '</div>';
+            }
+
+            return '<div>' + markerContent + '</div>';
         }
     };
 
@@ -128,11 +186,11 @@
             };
 
             if (window.google && window.google.maps) {
-                flog('Google Map Api is already in documentation');
+                flog('[jquery.orgFinder] Google Map Api is already in documentation');
                 $.fn.orgFinder[functionName].call(this);
             } else {
                 var gmapApiUrl = 'https://maps.googleapis.com/maps/api/js?key=' + self.options.googleAPIKey + '&libraries=places&callback=' + googleMapCallback;
-                flog('Load Google Map Api from "' + gmapApiUrl + '"');
+                flog('[jquery.orgFinder] Load Google Map Api from "' + gmapApiUrl + '"');
                 $.getScript(gmapApiUrl);
             }
         },
@@ -295,77 +353,66 @@
             });
             marker.setMap(map);
 
-            var contentInfoWinfow = '';
-            var contentItem = '';
-            contentInfoWinfow += '<h1>' + (markerData.orgTypeDisplayName || markerData.title ) + '</h1>';
-            contentItem += '<h4 class="list-group-item-heading">' + (markerData.orgTypeDisplayName || markerData.title ) + '</h4>';
-            if (markerData.phone) {
-                contentInfoWinfow += '<div><strong>Phone:</strong> ' + markerData.phone + '</div>';
-                contentItem += '<p class="list-group-item-text"><strong>Phone:</strong> ' + markerData.phone + '</p>';
-            }
-            if (markerData.email) {
-                contentInfoWinfow += '<div><strong>Email:</strong> <a href="mailto:' + markerData.email + '">' + markerData.email + '</a></div>';
-                contentItem += '<p class=list-group-item-text"><strong>Email:</strong> <a href="mailto:' + markerData.email + '">' + markerData.email + '</a></p>';
-            }
-            if (markerData.address) {
-                contentInfoWinfow += '<div><strong>Address:</strong> ' + markerData.address + '</div>';
-                contentItem += '<p class="list-group-item-text"><strong>Address:</strong> ' + markerData.address + '</p>';
-            }
-            if (markerData.addressLine2) {
-                contentInfoWinfow += '<div><strong>Address Line 2:</strong> ' + markerData.addressLine2 + '</div>';
-                contentItem += '<p class=list-group-item-text"><strong>Address Line 2:</strong> ' + markerData.addressLine2 + '</p>';
-            }
-            if (markerData.addressState) {
-                contentInfoWinfow += '<div><strong>State:</strong> ' + markerData.addressState + '</div>';
-                contentItem += '<p class="list-group-item-text"><strong>State:</strong> ' + markerData.addressState + '</p>';
-            }
-            if (markerData.country) {
-                contentInfoWinfow += '<div><strong>Country:</strong> ' + markerData.country + '</div>';
-                contentItem += '<p class="list-group-item-text"><strong>Country:</strong> ' + markerData.country + '</p>';
-            }
-            if (markerData.postcode) {
-                contentInfoWinfow += '<div><strong>Postcode:</strong> ' + markerData.postcode + '</div>';
-                contentItem += '<p class="list-group-item-text"><strong>Postcode:</strong> ' + markerData.postcode + '</p>';
+            if (typeof options.renderItemContent !== 'function') {
+                $.error('[jquery.orgFinder] renderItemContent is not function. Please correct it!');
             }
 
-            var infoWindow = new google.maps.InfoWindow({
-                content: '<div>' + contentInfoWinfow + '</div>'
-            });
+            if (typeof options.renderMarkerContent !== 'function') {
+                $.error('[jquery.orgFinder] renderMarkerContent is not function. Please correct it!');
+            }
 
-            var item = $('<div class="list-group-item">' + contentItem + '</div>');
-            itemsWrapper.append(item);
+            var itemContent = options.renderItemContent(markerData) || '';
+            var markerContent = options.renderMarkerContent(markerData) || '';
 
-            var clickEventHandler = function (doScroll) {
-                if (self.activeInfoWidow) {
-                    self.activeInfoWidow.close();
-                }
-                itemsWrapper.find('.active').removeClass('active');
-                infoWindow.open(map, marker);
-                openedWindow = infoWindow;
-                item.addClass('active');
+            if (itemContent.length === 0 || markerContent.length === 0) {
+                flog('[jquery.orgFinder] Item content or Marker content is empty. Skipped on creating!');
+            } else {
+                flog('[jquery.orgFinder] Creating marker and item');
 
-                if (doScroll) {
-                    itemsWrapper.scrollTo(item);
-                }
+                var infoWindow = new google.maps.InfoWindow({
+                    content: markerContent
+                });
+                flog('[jquery.orgFinder] Info window', infoWindow);
 
-                if (typeof options.onSelect === 'function') {
-                    options.onSelect.call(self, markerData);
-                }
-            };
+                var item = $(itemContent);
+                itemsWrapper.append(item);
+                flog('[jquery.orgFinder] Item', item);
 
-            marker.addListener('click', function () {
-                clickEventHandler(true);
-            });
+                var clickEventHandler = function (doScroll) {
+                    if (self.activeInfoWidow) {
+                        self.activeInfoWidow.close();
+                    }
+                    itemsWrapper.find('.active').removeClass('active');
+                    infoWindow.open(map, marker);
+                    self.activeInfoWidow = infoWindow;
+                    item.addClass('active');
 
-            item.on('click', function (e) {
-                e.preventDefault();
+                    if (doScroll) {
+                        itemsWrapper.scrollTo(item);
+                    }
 
-                clickEventHandler(false);
-            });
+                    if (typeof options.onSelect === 'function') {
+                        options.onSelect.call(self, markerData, item, marker, infoWindow);
+                    }
+                };
 
-            self.markers.push(marker);
-            self.infoWindows.push(infoWindow);
-            self.listItems.push(item);
+                marker.addListener('click', function () {
+                    flog('[jquery.orgFinder] Clicked on marker', marker);
+
+                    clickEventHandler(true);
+                });
+
+                item.on('click', function (e) {
+                    e.preventDefault();
+                    flog('[jquery.orgFinder] Clicked on item', item);
+
+                    clickEventHandler(false);
+                });
+
+                self.markers.push(marker);
+                self.infoWindows.push(infoWindow);
+                self.listItems.push(item);
+            }
         }
     };
 
