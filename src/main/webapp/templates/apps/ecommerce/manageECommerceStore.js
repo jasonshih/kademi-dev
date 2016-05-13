@@ -175,7 +175,7 @@ function updateProductSelected(productIds, included) {
             if (response.status) {
                 Msg.info(response.messages[0]);
                 var ids = productIds.split(',');
-                ids.each(function (val) {
+                $.each(ids, function (val) {
                     $('.product-toggle[data-pid=' + val + ']').prop('checked', included);
                 });
             } else {

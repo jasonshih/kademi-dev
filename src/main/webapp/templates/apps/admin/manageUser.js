@@ -407,6 +407,11 @@ function initNewUserForm() {
         validate: function () {
             var newUserEmail = $('#newUserEmail');
             var newUserEmailStr = newUserEmail.val();
+            
+            if( newUserEmailStr == null || newUserEmailStr == "" ) {
+                return true; // blank is ok now!
+            }
+            
             var error = 0;
 
             if (!validateFuseEmail(newUserEmailStr)) {
