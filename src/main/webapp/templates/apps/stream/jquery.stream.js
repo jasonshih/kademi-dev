@@ -88,34 +88,39 @@
                 dataType: 'json',
                 success: function (resp) {
                     flog("stream: ", resp);
+                    if (resp.aggregations) {
 
-                    $.each(resp.aggregations.userAggr.buckets, function (i, n) {
-                        var item = n.user.hits.hits[0].fields;
-                        if (item) {
-                            usersMap[n.key] = {};
-                            if (item.fullName) {
-                                usersMap[n.key].fullName = item.fullName;
+                        $.each(resp.aggregations.userAggr.buckets, function (i, n) {
+                            var item = n.user.hits.hits[0].fields;
+                            if (item) {
+                                usersMap[n.key] = {};
+                                if (item.fullName) {
+                                    usersMap[n.key].fullName = item.fullName;
+                                }
+                                if (item.userId) {
+                                    usersMap[n.key].userId = item.userId[0]
+                                }
                             }
-                            if (item.userId) {
-                                usersMap[n.key].userId = item.userId[0]
+                        });
+
+                        $.each(resp.aggregations.pathAggr.buckets, function (i, n) {
+                            //flog("itemtitle", n);
+                            var item = n.itemTitle.hits.hits[0].fields;
+
+                            itemsMap[n.key] = {};
+                            if (item && item.itemTitle) {
+                                itemsMap[n.key].itemTitle = item.itemTitle;
                             }
-                        }
-                    });
+                        });
 
-                    $.each(resp.aggregations.pathAggr.buckets, function (i, n) {
-                        //flog("itemtitle", n);
-                        var item = n.itemTitle.hits.hits[0].fields;
+                        var html = streamTemplate(resp);
+                        flog("html", html);
+                        container.html(html);
+                        $(".timeago", streamBody).timeago();
+                    } else {
+                        container.html("<p>No stream activity yet</p>");
+                    }
 
-                        itemsMap[n.key] = {};
-                        if (item && item.itemTitle) {
-                            itemsMap[n.key].itemTitle = item.itemTitle;
-                        }
-                    });
-
-                    var html = streamTemplate(resp);
-                    flog("html", html);
-                    container.html(html);
-                    $(".timeago", streamBody).timeago();
                 },
                 error: function (resp) {
                     flog('error', resp);
