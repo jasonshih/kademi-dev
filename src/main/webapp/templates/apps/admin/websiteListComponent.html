@@ -1,46 +1,53 @@
 <div class="row" class="website-list">
     #set ($clsName = "col-md-4")
     #if ($itemsPerRow == 1)
-        #set ($clsName = "col-md-12")
+    #set ($clsName = "col-md-12")
     #elseif ($itemsPerRow == 2)
-        #set ($clsName = "col-md-6")
+    #set ($clsName = "col-md-6")
     #elseif ($itemsPerRow == 3)
-        #set ($clsName = "col-md-4")
+    #set ($clsName = "col-md-4")
     #elseif ($itemsPerRow == 4)
-        #set ($clsName = "col-md-3")
+    #set ($clsName = "col-md-3")
     #end
     #foreach( $website in $rootFolder.organisation.websites())
-        #if( $website.redirectTo.length() > 0 )
+    #if( $website.redirectTo.length() > 0 )
+    #else
+    <div class="$clsName website">
+        #if( $website.imageHash )
+        #set( $bgimage = "/_hashes/files/$website.imageHash" )
         #else
-            <div class="$clsName website">
-                #if( $website.imageHash )
-                #set( $bgimage = "/_hashes/files/$website.imageHash" )
-                #else
-                #set( $bgimage = "/static/images/website-icon-squared.png" )
-                #end
-                <div class="thumbnail">
-                    <div class="embed-responsive embed-responsive-4by3">
-                        <div class="embed-responsive-item" style="background: url($bgimage) no-repeat 50% 50%; background-size: cover"></div>
-                    </div>
-                    <div class="caption">
-                        <h4><a title="$!website.title" href="/websites/$website.name/$website.liveBranch/?goto=" target="_blank">$website.name</a></h4>
-                        <p class="small">
-                            #if ($website.domainName && $website.domainName != "")
-                                $website.domainName<br />
-                            #end
-                            <i>
-                                $!website.liveBranch / $!website.trunk.publicTheme
-                            </i>
-                        </p>
-                        <a href="/websites/$website.name/$website.liveBranch/" class="btn btn-sm btn-primary">
-                            <span class="fa fa-cog"></span>
-                        </a>
-                        <a href="/repositories/$website.name/$website.liveBranch/" class="btn btn-sm btn-info">
-                            <span class="fa fa-folder"></span>
-                        </a>
-                    </div>
-                </div>
-            </div>
+        #set( $bgimage = "/static/images/website-icon-squared.png" )
         #end
+        <div class="thumbnail">
+            <div class="embed-responsive gallery-img">
+                <div class="embed-responsive-item" style="background: url($bgimage) no-repeat 50% 50%; background-size: cover;"></div>
+            </div>
+            <div class="caption">
+                <div class="pull-right">
+                    <a href="/websites/$website.name/$website.liveBranch/" class="btn btn-sm btn-info" title="Configure website">
+                        <span class="fa fa-cog"></span>
+                    </a>
+                    <a href="/repositories/$website.name/$website.liveBranch/" class="btn btn-sm btn-info" title="Manage files">
+                        <span class="fa fa-folder"></span>
+                    </a>
+                    <a href="/pages/$website.name/$website.liveBranch/" class="btn btn-sm btn-info" title="Edit pages" >
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    </a>
+                </div>
+
+                <h4><a title="$!website.title" href="/websites/$website.name/$website.liveBranch/?goto=" target="_blank">$website.name</a></h4>
+                <p class="small">
+                    #if ($website.domainName && $website.domainName != "")
+                    $website.domainName<br />
+                    #end
+                    <i>
+                        $!website.liveBranch / $!website.trunk.publicTheme
+                    </i>
+                </p>
+
+            </div>
+        </div>
+    </div>
+    #end
     #end
 </div>
