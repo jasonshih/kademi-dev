@@ -44,7 +44,12 @@
                                 </div>
                                 <div class="col-sm-3 item-title center-content">
                                     <div>
-                                        $item.ItemPage.title
+                                        $item.itemPage.title
+                                        <br/>
+                                        #set( $opts = $item.selectedParameterOptions)
+                                        #if( $opts.size() > 0 )
+                                         $opts <!-- BM: TODO, improve formatting! -->
+                                        #end
                                     </div>
                                 </div>
                                 <div class="col-sm-3 item-quantity center-content">

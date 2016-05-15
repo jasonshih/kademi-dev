@@ -30,6 +30,7 @@ function doAddToCart(href, quantity) {
     if (isNaN(quantity)) {
         quantity = 1;
     }
+    flog("doAddToCart", href, quantity);
 
     $.ajax({
         type: 'POST',

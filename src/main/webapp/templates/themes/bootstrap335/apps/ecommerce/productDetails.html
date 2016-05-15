@@ -2,118 +2,135 @@
     #parse("/theme/masterTemplate.html")
     <head>
         #@themeHeader( "Product Details" )
-            <link rel="stylesheet" type="text/css" href="/static/slick/1.5.7/slick/slick.css" />
-            <link rel="stylesheet" type="text/css" href="/theme/apps/ecommerce/ecommerce-store.css" media="all" />
-            <script type="text/javascript" src="/static/uri/1.15.1/URI.js">//</script>
-            <script type="text/javascript" src="/static/slick/1.5.7/slick/slick.min.js">//</script>
-            <script type="text/javascript" src="/static/jquery.zoom/1.7.14/jquery.zoom.min.js">//</script>
-            <script type="text/javascript" src="/static/reload-fragment/1.0.1/jquery.reload-fragment-1.0.1.js">//</script>
-            <script type="text/javascript" src="/static/dotdotdot/1.6.16/jquery.dotdotdot.min.js">//</script>
-            <script type="text/javascript" src="/theme/apps/ecommerce/ecommerce-store.js">//</script>
+        <link rel="stylesheet" type="text/css" href="/static/slick/1.5.7/slick/slick.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/apps/ecommerce/ecommerce-store.css" media="all" />
+        <script type="text/javascript" src="/static/uri/1.15.1/URI.js">//</script>
+        <script type="text/javascript" src="/static/slick/1.5.7/slick/slick.min.js">//</script>
+        <script type="text/javascript" src="/static/jquery.zoom/1.7.14/jquery.zoom.min.js">//</script>
+        <script type="text/javascript" src="/static/reload-fragment/1.0.1/jquery.reload-fragment-1.0.1.js">//</script>
+        <script type="text/javascript" src="/static/dotdotdot/1.6.16/jquery.dotdotdot.min.js">//</script>
+        <script type="text/javascript" src="/theme/apps/ecommerce/ecommerce-store.js">//</script>
         #end
     </head>
     <body>
         #@themeBody()
-            #parse("/theme/apps/ecommerce/ecommerceMacros.html")
+        #parse("/theme/apps/ecommerce/ecommerceMacros.html")
 
-            <div class="container" style="padding-bottom: 20px">
-                #set ($cate = $page.parent)
-                #set ($store = $cate.parent)
-                <ol class="breadcrumb">
-                    <li><a href="/">Home</a></li>
-                    <li><a href="$store.href">$store.title</a></li>
-                    <li><a href="$cate.href">$cate.title</a></li>
-                    <li class="active">$page.title</li>
-                </ol>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div id="product-image-wrapper">
-                            #if ($page.imageHrefs.size() == 0)
-                                <div id="product-no-image" class="product-image" style="background-image: url(/static/images/photo_holder.png);"></div>
-                            #else
-                            <div class="product-image-main">
-                                <div id="product-image-zoom">
-                                    <div class="product-image"></div>
-                                </div>
+        <div class="container" style="padding-bottom: 20px">
+            #set ($cate = $page.parent)
+            #set ($store = $cate.parent)
+            <ol class="breadcrumb">
+                <li><a href="/">Home</a></li>
+                <li><a href="$store.href">$store.title</a></li>
+                <li><a href="$cate.href">$cate.title</a></li>
+                <li class="active">$page.title</li>
+            </ol>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div id="product-image-wrapper">
+                        #if ($page.imageHrefs.size() == 0)
+                        <div id="product-no-image" class="product-image" style="background-image: url(/static/images/photo_holder.png);"></div>
+                        #else
+                        <div class="product-image-main">
+                            <div id="product-image-zoom">
+                                <div class="product-image"></div>
                             </div>
-                            <div class="row" id="product-images">
-                                #foreach ($img in $page.imageHrefs)
-                                    <div class="col-xs-3">
-                                        <div>
-                                            <a href="$img" class="product-image" style="background-image: url($img)"></a>
-                                        </div>
-                                    </div>
-                                #end
+                        </div>
+                        <div class="row" id="product-images">
+                            #foreach ($img in $page.imageHrefs)
+                            <div class="col-xs-3">
+                                <div>
+                                    <a href="$img" class="product-image" style="background-image: url($img)"></a>
+                                </div>
                             </div>
                             #end
                         </div>
+                        #end
                     </div>
-                    <div class="col-sm-6 product-details">
-                        <div class="row">
-                            <div class="col-xs-4">
-                                <span class="label label-success product-price">
-                                    #set( $opts = $page.selectedParameterOptions )
-                                    #set( $price = $page.getPurchaseAmount($opts) )
-                                    #if( $price )
-                                        $$formatter.formatCurrency($price.amount)
-                                    #end
+                </div>
+                <div class="col-sm-6 product-details">
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <span class="label label-success product-price">
+                                #set( $opts = $page.selectedParameterOptions )
+                                #set( $price = $page.getPurchaseAmount($opts) )
+                                #if( $price )
+                                $$formatter.formatCurrency($price.amount)
+                                #end
+                            </span>
+                        </div>
+                        <div class="col-xs-8 text-right">
+                            <div class="input-group product-quantity">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default btn-decrease-quantity" type="button">-</button>
+                                </span>
+                                <input type="text" value="1" name="" class="form-control txt-quantity text-center" />
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default btn-increase-quantity" type="button">+</button>
+                                    <a class="btn btn-primary btn-add-to-cart" href="$page.href">Add to cart</a>
                                 </span>
                             </div>
-                            <div class="col-xs-8 text-right">
-                                <div class="input-group product-quantity">
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-default btn-decrease-quantity" type="button">-</button>
-                                    </span>
-                                    <input type="text" value="1" name="" class="form-control txt-quantity text-center" />
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-default btn-increase-quantity" type="button">+</button>
-                                        <a class="btn btn-primary btn-add-to-cart" href="$page.href">Add to cart</a>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <hr style="margin: 22px 0;" />
-                        <h2 class="product-title">$page.title</h2>
-                        <div class="product-description">
-                            $!page.productDescription
-                        </div>
-                        <div class="product-share">
-                            <span>Share:</span>
-                            <!-- Go to www.addthis.com/dashboard to customize your tools -->
-                            <div class="addthis_sharing_toolbox"></div>
                         </div>
                     </div>
-                </div>
-
-                <div class="clearfix" id="related-products">
-                    <hr style="margin: 30px 0;" class="hidden-xs" />
-                    <h3 style="margin: 0 0 15px;"><b>Related products</b></h3>
-                    #set( $products = $cate.searchProducts( '', 0, 5, 'product', false))
-
-                    #if( $products.hits.hits.size() == 0 )
-                        <p class="lead">- No related products -</p>
-                    #else
-                        <div class="row" id="products-list">
-                            #set ($countRelated = 0)
-                            #foreach($p in $products.hits.hits)
-                                #if ($page.productInStore.product.id != $p.fields.product.value && $countRelated < 4)
-                                    #renderProductItem($p $store true)
-                                    #set ($countRelated = $countRelated + 1)
-                                #end
-                            #end
+                    <div class="row">
+                        #foreach( $param in $page.parameters)
+                        #if( $param.options.size() > 0 )
+                        <div class='form-group'>
+                            <label for="param-$param.name" class='col-sm-4 control-label'>$param.title</label>
+                            <div class="col-sm-8">
+                                <select name="param-$param.name" class='form-control productParameterSelect'>
+                                    <option value="">[ $param.title ]</option>
+                                    #foreach( $opt in $param.options)
+                                    <option value="$opt.name">$opt.title</option>
+                                    #end
+                                </select>
+                            </div>
                         </div>
+                        #end
+                        #end
+                    </div>
+                    <hr style="margin: 22px 0;" />
+                    <h2 class="product-title">$page.title</h2>
+                    <div class="product-description">
+                        $!page.productDescription
+                    </div>
+                    <div class="product-share">
+                        <span>Share:</span>
+                        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+                        <div class="addthis_sharing_toolbox"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="clearfix" id="related-products">
+                <hr style="margin: 30px 0;" class="hidden-xs" />
+                <h3 style="margin: 0 0 15px;"><b>Related products</b></h3>
+                #set( $products = $cate.searchProducts( '', 0, 5, 'product', false))
+
+                #if( $products.hits.hits.size() == 0 )
+                <p class="lead">- No related products -</p>
+                #else
+                <div class="row" id="products-list">
+                    #set ($countRelated = 0)
+                    #foreach($p in $products.hits.hits)
+                    #if ($page.productInStore.product.id != $p.fields.product.value && $countRelated < 4)
+                    #renderProductItem($p $store true)
+                    #set ($countRelated = $countRelated + 1)
+                    #end
                     #end
                 </div>
-
-                <script src="/theme/apps/ecommerce/productDetails.js" type="text/javascript"></script>
-                <!-- Go to www.addthis.com/dashboard to customize your tools -->
-                <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-55a9fee779c7ab4c" async="async"></script>
-                <script type="text/javascript">
-                    $(function () {
-                        initProductDetails();
-                    });
-                </script>
+                #end
             </div>
+
+            <script src="/theme/apps/ecommerce/productDetails.js" type="text/javascript"></script>
+            <!-- Go to www.addthis.com/dashboard to customize your tools -->
+            <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-55a9fee779c7ab4c" async="async"></script>
+            <script type="text/javascript">
+            $(function () {
+                initProductDetails();
+            });
+            </script>
+        </div>
         #end
     </body>
 </html>

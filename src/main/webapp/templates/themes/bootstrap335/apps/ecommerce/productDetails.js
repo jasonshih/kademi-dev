@@ -124,8 +124,11 @@ function initAddToCart() {
         var target = $(e.target);
         var href = target.closest('a').attr('href');
         var quantity = +$('.txt-quantity').val().trim();
-        
+
         flog('add item', href);
+        var params = target.closest(".product-details").find(".productParameterSelect").serialize();
+        flog("selected params", params);
+        href += "?" + params;
         doAddToCart(href, quantity);
     });
 }
