@@ -2,47 +2,58 @@
     #parse("/theme/masterTemplate.html")
     <head>
         #@themeHeader( "eCommerce Store" )
-            <link rel="stylesheet" type="text/css" href="/theme/apps/ecommerce/ecommerce-store.css" />
-            <script type="text/javascript" src="/static/reload-fragment/1.0.1/jquery.reload-fragment-1.0.1.js">//</script>
-            <script type="text/javascript" src="/static/dotdotdot/1.6.16/jquery.dotdotdot.min.js">//</script>
-            <script type="text/javascript" src="/theme/apps/ecommerce/ecommerce-store.js">//</script>
+        <link rel="stylesheet" type="text/css" href="/theme/apps/ecommerce/ecommerce-store.css" />
+        <script type="text/javascript" src="/static/reload-fragment/1.0.1/jquery.reload-fragment-1.0.1.js">//</script>
+        <script type="text/javascript" src="/static/dotdotdot/1.6.16/jquery.dotdotdot.min.js">//</script>
+        <script type="text/javascript" src="/theme/apps/ecommerce/ecommerce-store.js">//</script>
         #end
     </head>
     <body>
         #@themeBody()
-            #parse("/theme/apps/ecommerce/ecommerceMacros.html")
+        #parse("/theme/apps/ecommerce/ecommerceMacros.html")
 
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-9">
-                        <ol class="breadcrumb">
-                            <li><a href="/">Home</a></li>
-                            <li class="active">$page.title</li>
-                        </ol>
-                        <div class="row" id="products-list">
-                            #foreach($cat in $page.children.ofType.category)
-                            <div class="col-sm-6 col-md-4 product-item">
-                                <a href="$cat.href" class="cate-link">
-                                    <div class="thumbnail product">
-                                        #set($bg = "/static/images/photo_holder.png")
-                                        #if( $cat.imageHref )
-                                        #set($bg = "$cat.imageHref")
-                                        #end
-                                        <span class="product-image-wrapper"><span style="background-image: url($bg)" class="product-image"></span></span>
-                                        <div class="caption">
-                                            <h3 class="cate-title" title="$cat.title">$cat.title</h3>
-                                        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9">
+                    <ol class="breadcrumb">
+                        <li><a href="/">Home</a></li>
+                        <li class="active">$page.title</li>
+                    </ol>
+
+                    #script()
+                    <script>
+                        var productsSearch = page.searchProducts(null, null, 0, 5, 'product', false);
+                        templatingContext.productsSearch = productsSearch;
+                        var catsAgg = productsSearch.aggregations.asMap.categories;
+                        templatingContext.catsAgg = catsAgg;
+                    </script>
+                    #end
+
+
+                    <div class="row" id="products-list">
+                        #foreach($cat in $page.children.ofType.category)
+                        <div class="col-sm-6 col-md-4 product-item">
+                            <a href="$cat.href" class="cate-link">
+                                <div class="thumbnail product">
+                                    #set($bg = "/static/images/photo_holder.png")
+                                    #if( $cat.imageHref )
+                                    #set($bg = "$cat.imageHref")
+                                    #end
+                                    <span class="product-image-wrapper"><span style="background-image: url($bg)" class="product-image"></span></span>
+                                    <div class="caption">
+                                        <h3 class="cate-title" title="$cat.title">$cat.title</h3>
                                     </div>
-                                </a>
-                            </div>
-                            #end
+                                </div>
+                            </a>
                         </div>
-                    </div>
-                    <div class="col-md-3 ecommerce-sidebar">
-                        #rightSidebar($page)
+                        #end
                     </div>
                 </div>
+                <div class="col-md-3 ecommerce-sidebar">
+                    #rightSidebar($page, $catsAgg)
+                </div>
             </div>
+        </div>
         #end
     </body>
 </html>

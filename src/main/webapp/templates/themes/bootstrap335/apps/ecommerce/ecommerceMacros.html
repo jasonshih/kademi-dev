@@ -4,11 +4,11 @@
         <title></title>
     </head>
     <body>
-        #macro(rightSidebar $store)
+        #macro(rightSidebar $store $categories)
             #script()
                 <script>
                     var shopStore = page.find(templatingContext.store.href);
-                    var productsSearch = shopStore.searchProducts(null, null, 0, 100, 'product', false);
+                    var productsSearch = shopStore.searchProducts(null, null, 0, 5, 'product', false);
                     var lastViewedCookie = http.request.getCookie('viewed-products');
                     if (lastViewedCookie) {
                         lastViewedCookie = decodeURIComponent(lastViewedCookie.value);
@@ -48,9 +48,10 @@
                 <a href="#" class="list-group-item active">
                     Categories
                 </a>
-                #set ($categories = $page.find($store.href).children.ofType.category)
-                #foreach($cat in $categories)
-                    <a href="$cat.href" class="list-group-item">$cat.title</a>
+                                                
+                #foreach($cat in $categories.buckets)
+                    #set( $catFolder = $page.closest("store").category( $cat.key ) )
+                    <a href="$catFolder.href" class="list-group-item">$catFolder.categoryTitle ($cat.docCount)</a>
                 #end
             </div>
             <div id="recently-added">
