@@ -50,6 +50,7 @@
                                         #if( $opts.size() > 0 )
                                          $opts <!-- BM: TODO, improve formatting! -->
                                         #end
+                                        $item.class
                                     </div>
                                 </div>
                                 <div class="col-sm-3 item-quantity center-content">
@@ -66,7 +67,7 @@
                                 </div>
                                 <div class="col-sm-2 item-price center-content">
                                     <div>
-                                        <span class="lead">$$formatter.formatCurrency($page.calcSubTotal($item.ItemPage.productSubTotalCost, $item.quantity))</span>
+                                        <span class="lead">$$formatter.formatCurrency($page.calcSubTotal($item.ItemPage.productSubTotalCost($opts), $item.quantity))</span>
                                     </div>
                                 </div>
                                 <div class="col-sm-1 item-action text-right center-content">
@@ -75,7 +76,7 @@
                                     </div>
                                 </div>
                             </div>
-                            #set($subTotal = $subTotal + $page.calcSubTotal($item.ItemPage.productSubTotalCost, $item.quantity))
+                            #set($subTotal = $subTotal + $page.calcSubTotal($item.ItemPage.productSubTotalCost($opts), $item.quantity))
                             #set($totalTax = $totalTax + $page.calcSubTotal($item.ItemPage.taxCost, $item.quantity))
                             #set($totalCost = $totalCost + $page.calcSubTotal($item.ItemPage.productPurchaseCost, $item.quantity))
                             #end
