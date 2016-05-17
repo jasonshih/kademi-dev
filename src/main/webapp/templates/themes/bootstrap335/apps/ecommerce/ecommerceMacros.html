@@ -111,10 +111,16 @@
             </script>
         #end
 
-        #macro (renderProductItem $p $store $isRelated)
+        #macro (renderProductItem $p $store $isRelated $category)
             #set ($cls = "col-sm-6 col-md-4")
             #if ($isRelated)
                 #set ($cls = "col-sm-6 col-md-3")
+            #end
+            
+            #if( $category )
+                #set( $prodHref = $category.href + $p.fields.product.value )
+            #else
+                #set( $prodHref = $store.href + $p.fields.tags.value + "/" + $p.fields.product.value )
             #end
 
             <div class="$cls product-item">
@@ -124,17 +130,17 @@
                         #set($bg = "/$store.name/$p.fields.tags.value/$p.fields.product.value/$p.fields.primaryImageId.value")
                     #end
                     <span class="product-image-wrapper">
-                        <a href="/$store.name/$p.fields.tags.value/$p.fields.product.value">
+                        <a href="$prodHref">
                             <span style="background-image: url($bg)" class="product-image"></span>
                         </a>
                     </span>
                     <div class="caption">
-                        <h3 class="product-title" title="$p.fields.title.value"><a href="/$store.name/$p.fields.tags.value/$p.fields.product.value">$p.fields.title.value</a></h3>
+                        <h3 class="product-title" title="$p.fields.title.value"><a href="$prodHref">$p.fields.title.value</a></h3>
                         <span class="product-price label">$$p.fields.finalCost.value</span>
                         <p class="product-content">$!p.fields.content.value</p>
                         <div class="product-actions">
-                            <a href="/$store.name/$p.fields.tags.value/$p.fields.product.value" class="btn btn-default btn-sm" role="button">View</a>
-                            <a href="/$store.name/$p.fields.tags.value/$p.fields.product.value" class="btn btn-primary btn-sm btn-add-to-cart" role="button">Add to Cart</a>
+                            <a href="$prodHref" class="btn btn-default btn-sm" role="button">View</a>
+                            <a href="$prodHref" class="btn btn-primary btn-sm btn-add-to-cart" role="button">Add to Cart</a>
                         </div>
                     </div>
                 </div>

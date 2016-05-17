@@ -50,7 +50,6 @@
                                         #if( $opts.size() > 0 )
                                          $opts <!-- BM: TODO, improve formatting! -->
                                         #end
-                                        $item.class
                                     </div>
                                 </div>
                                 <div class="col-sm-3 item-quantity center-content">
@@ -107,23 +106,23 @@
                             </div>
                         </div>
                     </div>
-                    <div class="payment-select">
+                    <div class="payment-select">                        
                         #set($firstApp = false)
                         #set($firstPo = false)
                         #set($paymentAps = $page.paymentProviders)
                         #foreach($pApp in $paymentAps)
-                        #set($f1 = $foreach)
-                        #foreach($po in $pApp.paymentOptions)
-                        #if($f1.first && $foreach.first)
-                        #set($firstApp = $pApp)
-                        #set($firstPo = $po)
-                        #end
-                        <a href="#" data-pid="$pApp.instanceId" data-option="$po.id" class="payment-option">
-                            <i class="fa fa-check fa-3x #if($f1.first && $foreach.first)active#end"></i>
-                            <img src="$po.logo" alt="$po.title"/>
-                        </a>
-                        #end
-                        #end
+                            #set($f1 = $foreach)
+                            #foreach($po in $pApp.paymentOptions)
+                                #if($f1.first && $foreach.first)
+                                    #set($firstApp = $pApp)
+                                    #set($firstPo = $po)
+                                #end
+                                <a href="#" data-pid="$pApp.instanceId" data-option="$po.id" class="payment-option">
+                                    <i class="fa fa-check fa-3x #if($f1.first && $foreach.first)active#end"></i>
+                                    <img src="$po.logo" alt="$po.title"/>
+                                </a>
+                            #end
+                        #end                       
                     </div>
                 </div>
 

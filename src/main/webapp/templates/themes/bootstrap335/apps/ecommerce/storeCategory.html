@@ -90,7 +90,7 @@
                             <div class="col-sm-12 text-center lead"><b>No products were found matching the critieria</b></div>
                             #else
                                 #foreach($p in $products.hits.hits)
-                                    #renderProductItem($p $page.parent)
+                                    #renderProductItem($p $page.parent false $page)
                                 #end
                             #end
                         </div>
