@@ -388,6 +388,7 @@ function updateOrgPath(orgId, newPath) {
             updateOrgPath: newPath,
             actualID: orgId
         },
+        dataType: 'json',
         url: window.location.pathname,
         success: function (data) {
             flog("success", data);
