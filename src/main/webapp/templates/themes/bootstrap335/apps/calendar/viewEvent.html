@@ -22,7 +22,9 @@
         </ol>
         <div class="row" id="event-display">
             <div class="col-md-8">
-                <h3>$page.title</h3>
+                <h3>
+                    $formatter.encodeAsHtmlEntities($page.title)                    
+                </h3>
 
                 <div class="calendar-event-byline">
                     #if( $page.organisor )
