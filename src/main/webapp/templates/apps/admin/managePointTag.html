@@ -63,7 +63,7 @@
                             <tbody>
                                 #foreach($points in $page.awardedPoints)
                                 <tr>
-                                    <td><a href="/rewards/${points.reward.name}">$points.reward.title</a></td>
+                                    <td><a href="/points-buckets/${points.reward.name}">$points.reward.title</a></td>
                                     <td>$points.numPoints</td>
                                     <td>$formatter.formatDateTime($points.issuedDate)</td>
                                     <td>$points.issuedTo.formattedName</td>
