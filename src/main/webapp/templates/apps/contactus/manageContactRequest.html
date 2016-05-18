@@ -55,6 +55,10 @@
                                 <th>IP Address</th>
                                 <td>$!page.contactRequest.sourceIp</td>
                             </tr>
+                            <tr>
+                                <th>Message</th>
+                                <td>$!page.contactRequest.message</td>
+                            </tr>
                             #foreach($field in $page.contactRequest.fields )
                             #if( !$field.startsWith("attach.") )
                             <tr>
@@ -63,7 +67,7 @@
                             </tr>
                             #end
                             #end
-                            
+
                             #if( $page.profile )
                             #set($memberships = $page.profile.memberships( $page.organisation ) )
                             #if( $memberships.isEmpty() )
@@ -124,6 +128,6 @@
         </div>
         #end
 
-        
+
     </body>
 </html>

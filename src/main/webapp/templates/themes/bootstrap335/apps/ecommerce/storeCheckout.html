@@ -48,7 +48,18 @@
                                         <br/>
                                         #set( $opts = $item.selectedParameterOptions)
                                         #if( $opts.size() > 0 )
-                                         $opts <!-- BM: TODO, improve formatting! -->
+                                            #set ($prodParams = $item.itemPage.productInStore.product.productParameters)
+                                            #set ($pCount = 0)
+                                            #foreach ($p in $prodParams)
+                                                #if($opts.get($p.name))
+                                                    #set ($pCount = $pCount + 1)
+                                                    #if($pCount>1), #end
+                                                    $p.title:
+                                                    #foreach($o in $p.parameterOptions)
+                                                        #if($opts.get($p.name) == $o.name) $o.title #end
+                                                    #end
+                                                #end
+                                            #end
                                         #end
                                     </div>
                                 </div>

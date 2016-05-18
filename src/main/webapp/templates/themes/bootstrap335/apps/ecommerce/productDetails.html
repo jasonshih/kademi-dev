@@ -50,7 +50,7 @@
                 </div>
                 <div class="col-sm-6 product-details">
                     <div class="row">
-                        <div class="col-xs-4">
+                        <div class="col-xs-4" id="priceWrap">
                             <span class="label label-success product-price">
                                 #set( $opts = $page.selectedParameterOptions )
                                 #set( $price = $page.getPurchaseAmount($opts) )
@@ -127,6 +127,17 @@
             <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-55a9fee779c7ab4c" async="async"></script>
             <script type="text/javascript">
             $(function () {
+                $(".productParameterSelect").change(function (e) {
+                    var optSelect = $(this);
+                    flog("productParameterSelect changed", optSelect);
+                    var uri = URI(window.location);
+                    uri.setSearch(optSelect.attr("name"), optSelect.val());
+                    flog("New uri", uri.toString());
+                    history.pushState(null, null, uri.toString());
+                    $('#priceWrap').reloadFragment({
+                        url: uri.toString()
+                    })
+                }).trigger('change');
                 initProductDetails();
             });
             </script>

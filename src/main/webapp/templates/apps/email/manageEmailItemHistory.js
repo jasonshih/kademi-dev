@@ -197,7 +197,7 @@ function initPie(id, title, aggr) {
                 .donut(true)
                 .donutRatio(0.45)
                 .showLabels(true)
-                .showLegend(true)
+                .showLegend(false)
                 .title(title)
                 .labelType("percent");
 
