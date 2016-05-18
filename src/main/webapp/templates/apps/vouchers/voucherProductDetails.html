@@ -1,0 +1,12 @@
+<div class="form-group">
+    <label class="col-sm-2 control-label">Voucher</label>
+    <div class="col-sm-9">       
+        <select class="form-control" name="relatedItemId">
+            <option value="">[No voucher type selected]</option>
+            #foreach($vt in $applications.vouchersApp.voucherTypes)
+            $formatter.option($vt.id, $vt.title, $page.relatedItemId)
+            #end
+        </select>
+        <span class="text-muted">Select the voucher type this product is for. Then when a user purchases this product they will be allocated this voucher. <a target="_blank" href="/vouchers/">Manage vouchers</a></span>        
+    </div>
+</div>
