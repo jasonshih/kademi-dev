@@ -104,7 +104,7 @@
                             <tbody>
                                 #foreach($debit in $page.DebitPoints)
                                 <tr>
-                                    <td><a href="/rewards/${debit.points.reward.name}">$debit.points.reward.title</a></td>
+                                    <td><a href="/points-buckets/${debit.points.reward.name}">$debit.points.reward.title</a></td>
                                     <td>$debit.numPoints</td>
                                     <td>$!debit.reason</td>
                                     <td>$formatter.formatDateTime($debit.issuedDate)</td>
