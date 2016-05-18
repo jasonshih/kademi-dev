@@ -25,7 +25,7 @@ function initButtons() {
         e.preventDefault();
         var listToDelete = [];
         $('body').find(':checkbox.cart-check:checked').each(function () {
-            listToDelete.add($(this).data("carthref"));
+            listToDelete.push($(this).data("carthref"));
         });
         if (listToDelete.length > 0 && confirm("Are you sure you want to delete " + listToDelete.length + " shopping carts?")) {
             $('body').find('.check-all').check(false).change();
@@ -38,7 +38,7 @@ function initButtons() {
         var listToFulfill = [];
         $('body').find(':checkbox.cart-check:checked').each(function () {
             var href = $(this).data("cartid");
-            listToFulfill.add(href);
+            listToFulfill.push(href);
         });
         if (listToFulfill.length > 0 && confirm("Are you sure you want to mark " + listToFulfill.length + " shopping carts as fulfilled?")) {
             $('body').find('.check-all').check(false).change();
@@ -58,7 +58,7 @@ function initButtons() {
 function deleteCarts(listToDelete) {
     for (var i = 0; i < listToDelete.length; i++) {
         deleteFile(listToDelete[i]);
-        $("input[data-cartid=\"" + listToDelete[i] + "\"]").closest("tr").remove()
+        $("input[data-carthref=\"" + listToDelete[i] + "\"]").closest("tr").remove()
     }
     Msg.info("Successfully deleted " + listToDelete.length + " carts");
 }
