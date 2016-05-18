@@ -87,7 +87,7 @@
                                 </div>
                             </div>
                             #set($subTotal = $subTotal + $page.calcSubTotal($item.ItemPage.productSubTotalCost($opts), $item.quantity))
-                            #set($totalTax = $totalTax + $page.calcSubTotal($item.ItemPage.getTaxCost($opts), $item.quantity))
+                            #set($totalTax = $totalTax + $page.calcSubTotal($item.ItemPage.taxCost($opts), $item.quantity))
                             #set($totalCost = $totalCost + $page.calcSubTotal($item.ItemPage.productPurchaseCost($opts), $item.quantity))
                             #end
                         </div>
@@ -117,7 +117,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="payment-select">                        
+                    <div class="payment-select">
                         #set($firstApp = false)
                         #set($firstPo = false)
                         #set($paymentAps = $page.paymentProviders)
@@ -133,7 +133,7 @@
                                     <img src="$po.logo" alt="$po.title"/>
                                 </a>
                             #end
-                        #end                       
+                        #end
                     </div>
                 </div>
 
