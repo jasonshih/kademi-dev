@@ -22,9 +22,13 @@
         </ol>
         <div class="row" id="event-display">
             <div class="col-md-8">
+                #if( $page.externalUrl )
                 <h3>
-                    $formatter.encodeAsHtmlEntities($page.title)
+                    <a href="$page.externalUrl">$formatter.encodeAsHtmlEntities($page.title)</a>
                 </h3>
+                #else
+                <h3>$formatter.encodeAsHtmlEntities($page.title)</h3>
+                #end
 
                 <div class="calendar-event-byline">
                     #if( $page.organisor )

@@ -19,11 +19,17 @@
                 }
             </style>
         #end
-    </head>    
+    </head>
     <body class="blog-article add-container">
         #@themeBody()
         <div class="blog-article">
-            <h2><a href="$page.href">$page.title</a></h2>
+            <h2>
+                #if( $page.externalUrl )
+                <a href="$page.externalUrl">$page.title</a>
+                #else
+                <a href="$page.href">$page.title</a>
+                #end
+            </h2>
             <div class="clearfix">
                 <span class="pull-left timeago" title="$formatter.formatDateISO8601($page.articleDate)">$page.articleDate</span>
                 <div class="pull-right">
@@ -38,10 +44,10 @@
                     #if($page.featured)
                     <span class="label label-success">Featured</span>
                     #end
-                </div>                
-            </div>    
+                </div>
+            </div>
 
-            <hr/>            
+            <hr/>
 
             #set($horizImage = $page.horizontalImageHref)
             #if($horizImage)
@@ -84,16 +90,16 @@
                                     </a>
                                 </div>
                             </div>
-                            <h4>Questions and answers</h4>                               
+                            <h4>Questions and answers</h4>
                         </div>
                         <div class="panel-body">
-                            <div class="commentArea edifyViewMode">            
+                            <div class="commentArea edifyViewMode">
                                 <div id="comments">
                                     <div class="comments-stream">
                                         <img src="/static/common/ajax-loader.gif" />
-                                    </div>  
+                                    </div>
 
-                                    <div class="clr"></div>            
+                                    <div class="clr"></div>
 
                                     <form action="#" method="post" id="postComment">
                                         <div class="commentContainer">
@@ -102,15 +108,15 @@
                                             <div class="commentControls">
                                                 <button class="btn #if(!$page.allowAnonComments)requiresUser#end btn-primary" type="submit">Post</button>
                                             </div>
-                                        </div>                            
+                                        </div>
                                     </form>
                                 </div>
 
                                 <br/><br/>
-                            </div>                    
+                            </div>
 
                         </div>
-                    </div>                     
+                    </div>
                 </div> <!-- end comments -->
             </div>
         </div>
