@@ -90,7 +90,8 @@ function initUploads() {
 
             var importerHead = $('#importerHead');
             var selectedCols = [];
-            var requiredFields = ['email','groupName'];
+            //var requiredFields = ['email','groupName'];
+            var requiredFields = ['email'];
             importerHead.find('select').each(function(){
                 if(requiredFields.indexOf(this.value) !== -1){
                     selectedCols.push(this.value);
