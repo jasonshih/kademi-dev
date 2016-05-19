@@ -54,7 +54,7 @@ $page.queryJson
                     <button class="btn btn-success runQuery">Run</button>
                     <button class="btn btn-warning resetQuery">Reset</button>
                     <button class="btn btn-primary saveQuery">Save</button>
-                    <hr/>                    
+                    <hr/>
                     <div id="queryResults">
                         #if( $page.queryError )
                         <div class="alert alert-warning">
@@ -86,7 +86,7 @@ $page.queryJson
                         </table>
 
                         <pre id="">
-                        #if( $params.query )                        
+                        #if( $params.query )
                         $resp
                         #end
                         </pre>
@@ -125,21 +125,23 @@ $page.queryJson
                 $("body").on("click", ".saveQuery", function (e) {
                     var json = $("#queryText").val();
                     var name = prompt("Please enter the file name to save as");
-                    $.ajax({
-                        type: 'POST',
-                        data: {
-                            fileName : name,
-                            query : json
-                        },
-                        dataType: "json",
-                        url: "",
-                        success: function (data) {
-                            Msg.info("Saved");
-                        },
-                        error: function (resp) {
-                            Msg.error("err");
-                        }
-                    });
+                    if (name) {
+                        $.ajax({
+                            type: 'POST',
+                            data: {
+                                fileName: name,
+                                query: json
+                            },
+                            dataType: "json",
+                            url: "",
+                            success: function (data) {
+                                Msg.info("Saved");
+                            },
+                            error: function (resp) {
+                                Msg.error("err");
+                            }
+                        });
+                    }
                 });
 
             });
