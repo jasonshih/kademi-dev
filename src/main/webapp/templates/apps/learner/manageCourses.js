@@ -159,7 +159,7 @@ function initCopyCutPaste() {
         var courseCookie = getPasteCookie('course');
         flog("courseCookie", courseCookie);
         var oldUrl = courseCookie.cutUrl || courseCookie.pasteUrl;
-        var courseId = oldUrl.replace(/^.+\/([a-zA-Z0-9]*)\/$/, '$1');
+        var courseId = oldUrl.replace(/^.+\/([^\/]+)\/$/, '$1');
         if($(this).attr('newCourseId')){
             courseId = $(this).attr('newCourseId');
             flog('new course name exists', courseId);
@@ -182,9 +182,11 @@ function initCopyCutPaste() {
         checkExists(newUrl, {
             exists: function () {
                 flog("course name exists", courseId);
-                var newCousrseId = prompt('There is an existing course with name "'+ courseId +'". Please change course name if you would like to create new course, otherwise it will override the existing course?', courseId);
-                if(newCousrseId && newCousrseId!==courseId){
+                var newCousrseId = prompt('There is an existing course with name "'+ courseId +'". Please change course name to contiune?', courseId);
+                if (newCousrseId && newCousrseId!==courseId) {
                     $('.btn-paste-course').attr('newCourseId', newCousrseId).trigger('click');
+                } else {
+                    Msg.warning('Could not paste course: Course name is still remaining the same.');
                 }
             },
             notExists: function(){
@@ -211,7 +213,7 @@ function initCopyCutPaste() {
 
         var moduleCookie = getPasteCookie('module');
         var oldUrl = moduleCookie.cutUrl || moduleCookie.pasteUrl;
-        var moduleId = oldUrl.replace(/^.+\/([a-zA-Z0-9]*)\/$/, '$1');
+        var moduleId = oldUrl.replace(/^.+\/([^\/]+)\/$/, '$1');
         if($(this).attr('newModuleId')){
             moduleId = $(this).attr('newModuleId');
             flog('new module name exists', moduleId);
@@ -228,8 +230,10 @@ function initCopyCutPaste() {
             exists: function () {
                 flog("module name exists", moduleId);
                 var newModuleId = prompt('There is an existing module with name "'+ moduleId +'". Please change module name to continue.', moduleId);
-                if(newModuleId && newModuleId!==moduleId){
+                if (newModuleId && newModuleId!==moduleId) {
                     $('.btn-paste-module').attr('newModuleId', newModuleId).trigger('click');
+                } else {
+                    Msg.warning('Could not paste module: Module name is still remaining the same.');
                 }
             },
             notExists: function(){
