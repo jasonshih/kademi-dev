@@ -124,7 +124,7 @@ $page.queryJson
 
                 $("body").on("click", ".saveQuery", function (e) {
                     var json = $("#queryText").val();
-                    var name = prompt("Please enter the file name to save as");
+                    var name = prompt("Please enter the file name to save as. Should not have a file extension");
                     if (name) {
                         $.ajax({
                             type: 'POST',
