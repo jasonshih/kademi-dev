@@ -32,7 +32,7 @@ function initRegisterForms(afterRegisterHref, callback) {
                     afterLoginUrl: afterRegisterHref,
                     urlSuffix: "/.dologin",
                     loginCallback: callback
-                }, this);
+                }, form);
             }
         }
     });
