@@ -52,7 +52,6 @@ function myPrompt(id, url, title, instructions, caption, buttonName, buttonText,
         e.preventDefault();
         resetValidation(form);
 
-        // from jquery forms 1.1.0, checkRequiredFields(form) will return an object { error: noError, errorFields: noErrorFields }
         var checkResult = validateFormFields(form);
         if(checkResult) {
             var newName = form.find('input').val();
