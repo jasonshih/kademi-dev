@@ -33,7 +33,7 @@ function myPrompt(id, url, title, instructions, caption, buttonName, buttonText,
                 '<div class="form-group">' + 
                     '<label for="' + inputId + '" class="control-label col-md-3">' + caption + '</label>' +
                     '<div class="col-md-8">' +
-                        '<input type="text" class="required form-control ' + inputClass + ' id="' + inputId + '" name="' + buttonName + '" placeholder="' + inputPlaceholder + '" />'+
+                        '<input type="text" class="required form-control ' + inputClass + '" id="' + inputId + '" name="' + buttonName + '" placeholder="' + inputPlaceholder + '" />'+
                     '</div>' +
                 '</div>' +
         '</div>' +
@@ -50,8 +50,10 @@ function myPrompt(id, url, title, instructions, caption, buttonName, buttonText,
         flog("submit");
         e.preventDefault();
         resetValidation(form);
-        
-        if( checkRequiredFields(form)) {
+
+        // from jquery forms 1.1.0, checkRequiredFields(form) will return an object { error: noError, errorFields: noErrorFields }
+        var checkResult = checkRequiredFields(form);
+        if(checkResult && checkResult.error < 1) {
             var newName = form.find('input').val();
             if( callback(newName, form) ) {
                 myPromptModal.modal('hide');
