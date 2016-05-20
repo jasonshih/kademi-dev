@@ -73,16 +73,16 @@
         <li class="list-group-item task">
             <p>
                 #set( $colour = $leadsPage.statusColour($task, 3) )
-                <a href="/tasks/$task.id/" class="mr btn btn-${colour} btn-sm btn-circle" data-target="#modalEditTask" data-toggle="modal">T</a>
+                <a href="/tasks/$task.id/ .taskEditModal" class="mr btn btn-${colour} btn-sm btn-circle" data-target="#modalEditTask" data-toggle="modal">T</a>
                 <em>
                     #if( $task.title )
                     $task.title
                     #else
-                        #if( $task.taskDescription )
-                        $task.taskDescription
-                        #else
-                        No task title
-                        #end
+                    #if( $task.taskDescription )
+                    $task.taskDescription
+                    #else
+                    No task title
+                    #end
                     #end
                 </em>
                 #if( $task.dueDate )

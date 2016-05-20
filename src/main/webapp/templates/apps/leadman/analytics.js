@@ -185,10 +185,10 @@
 
             var chartClosedByOrg = nv.models.pieChart()
                     .x(function (d) {
-                        return d.key;
+                        return d.orgTitle.hits.hits[0]._source.assignedToOrg.title;
                     })
                     .y(function (d) {
-                        return d.doc_count
+                        return d.doc_count;
                     })
                     .donut(true)
                     .color(colors)
@@ -204,7 +204,7 @@
                         return d.key;
                     })
                     .y(function (d) {
-                        return d.doc_count
+                        return d.doc_count;
                     })
                     .donut(true)
                     .color(colors)

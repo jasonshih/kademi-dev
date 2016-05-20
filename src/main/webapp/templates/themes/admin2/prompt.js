@@ -20,11 +20,12 @@ function myPrompt(id, url, title, instructions, caption, buttonName, buttonText,
     var inputId = id + '_';
     
     myPromptModal.html(        
-            '<form method="POST" class="form-horizontal" action="' + url + '">' +            
+
         '<div class="modal-header">' +
            '<button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>' +
            '<h4 class="modal-title">' + title + '</h4>' +
         '</div>' +
+        '<form method="POST" class="form-horizontal" action="' + url + '">' +
         '<div class="modal-body">' +
                 instructions + 
                 '<div class="clearfix"></div>' +
@@ -33,7 +34,7 @@ function myPrompt(id, url, title, instructions, caption, buttonName, buttonText,
                 '<div class="form-group">' + 
                     '<label for="' + inputId + '" class="control-label col-md-3">' + caption + '</label>' +
                     '<div class="col-md-8">' +
-                        '<input type="text" class="required form-control ' + inputClass + ' id="' + inputId + '" name="' + buttonName + '" placeholder="' + inputPlaceholder + '" />'+
+                        '<input type="text" class="required form-control ' + inputClass + '" id="' + inputId + '" name="' + buttonName + '" placeholder="' + inputPlaceholder + '" />'+
                     '</div>' +
                 '</div>' +
         '</div>' +
@@ -50,8 +51,9 @@ function myPrompt(id, url, title, instructions, caption, buttonName, buttonText,
         flog("submit");
         e.preventDefault();
         resetValidation(form);
-        
-        if( checkRequiredFields(form)) {
+
+        var checkResult = validateFormFields(form);
+        if(checkResult) {
             var newName = form.find('input').val();
             if( callback(newName, form) ) {
                 myPromptModal.modal('hide');
