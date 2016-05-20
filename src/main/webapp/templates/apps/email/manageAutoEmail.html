@@ -310,8 +310,25 @@
 
                                                 <i>For a comment event, check the user group and the length of the comment</i>
                                                 <pre>user.isInGroup('Customers') && event.attributes.comment.length()>=150</pre>
+
+                                                <i>To check if a particular product has been purchased</i>
+                                                <pre>foreach( po : event.cart.productOrders ) {
+  if( po.product.name == "transfer" ) {
+    return true;
+  }
+}
+return false;</pre>
+
                                             </div>
                                         </div>
+                                        <div class="well">
+                                            <h3>Event type documentaton</h3>
+                                            <ul class="">
+                                                #foreach($triggerType in $applicationManager.triggerTypes )
+                                                <li><a target="_blank" href="http://docs.kademi.co/ref/templating/${templater.getClassName($triggerType)}.html"> ${templater.getClassName($triggerType)}</a> - $triggerType.eventDescription</li>
+                                                #end
+                                            </ul>
+                                        </div>                                            
 
                                     </div>
                                     <div class="tab-pane" id="condition-xml">

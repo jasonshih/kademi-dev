@@ -1,0 +1,89 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Manage Queries</title>
+    </head>
+    <body>
+        <h2>Query: $page.name</h2>
+        <div id="query">
+            #set( $resp = $page.records )
+
+            <textarea id="queryText" style="width: 100%; height: 200px" name="query">
+$page.queryJson
+            </textarea>
+            <button class="btn btn-success runQuery">Run</button>
+            <button class="btn btn-primary saveQuery">Save</button>
+            <hr/>
+            <div id="queryResults">
+                #if( $page.queryError )
+                <div class="alert alert-warning">
+                    $page.queryError
+                </div>
+                #end
+
+                <table class="table table-responsive">
+                    <thead>
+                        <tr>
+                            <td>Item</td>
+                            <th>Type</th>
+                            #foreach( $field in $page.queryFieldNames )
+                            <th>$field</th>
+                            #end
+                        </tr>
+                    </thead>
+                    <tbody>
+                        #foreach($hit in $page.records.hits.hits)
+                        <tr>
+                            <td>$hit.id</td>
+                            <td>$hit.type</td>
+                            #foreach( $field in $page.queryFieldNames)
+                            <th>$!hit.fields.get($field).value</th>
+                            #end
+                        </tr>
+                        #end
+                    </tbody>
+                </table>
+
+                <pre id="">
+                        #if( $params.query )
+                        $resp
+                        #end
+                </pre>
+            </div>
+        </div>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $("body").on("click", ".runQuery", function (e) {
+                    save(function() {
+                        $("#queryResults").reloadFragment();
+                    });                    
+                });
+
+
+                $("body").on("click", ".saveQuery", function (e) {
+                    save();
+                });
+            });
+            function save(callback) {
+                var json = $("#queryText").val();
+                $.ajax({
+                    type: 'POST',
+                    data: {
+                        query: json
+                    },
+                    dataType: "json",
+                    url: "",
+                    success: function (data) {
+                        Msg.info("Saved");
+                        if( callback ) {
+                            callback();
+                        }
+                    },
+                    error: function (resp) {
+                        Msg.error("An error occured while saving");
+                    }
+                });
+            }
+
+        </script>        
+    </body>
+</html>

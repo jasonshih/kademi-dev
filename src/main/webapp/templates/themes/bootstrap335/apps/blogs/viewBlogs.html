@@ -4,7 +4,7 @@
         #@themeHeader( "Blogs" )
             <script type="text/javascript" src="/static/js/jquery.timeago.js">//</script>
         #end
-    </head>    
+    </head>
     <body class="blogs-home add-container">
         #@themeBody()
             <div class="row">
@@ -57,7 +57,13 @@
                         #end
 
                         <div class="hero-body">
-                            <h2 class="hero-heading"><a href="$article.href">$article.title</a></h2>
+                            <h2 class="hero-heading">
+                                #if( $article.externalUrl )
+                                <a href="$article.externalUrl">$article.title</a>
+                                #else
+                                <a href="$article.href">$article.title</a>
+                                #end
+                            </h2>
 
                             $!article.brief
 
