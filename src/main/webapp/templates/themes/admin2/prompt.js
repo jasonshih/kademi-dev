@@ -20,11 +20,12 @@ function myPrompt(id, url, title, instructions, caption, buttonName, buttonText,
     var inputId = id + '_';
     
     myPromptModal.html(        
-            '<form method="POST" class="form-horizontal" action="' + url + '">' +            
+
         '<div class="modal-header">' +
            '<button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>' +
            '<h4 class="modal-title">' + title + '</h4>' +
         '</div>' +
+        '<form method="POST" class="form-horizontal" action="' + url + '">' +
         '<div class="modal-body">' +
                 instructions + 
                 '<div class="clearfix"></div>' +
@@ -52,8 +53,8 @@ function myPrompt(id, url, title, instructions, caption, buttonName, buttonText,
         resetValidation(form);
 
         // from jquery forms 1.1.0, checkRequiredFields(form) will return an object { error: noError, errorFields: noErrorFields }
-        var checkResult = checkRequiredFields(form);
-        if(checkResult && checkResult.error < 1) {
+        var checkResult = validateFormFields(form);
+        if(checkResult) {
             var newName = form.find('input').val();
             if( callback(newName, form) ) {
                 myPromptModal.modal('hide');
