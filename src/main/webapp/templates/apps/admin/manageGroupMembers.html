@@ -187,7 +187,8 @@
             });
 
             function initRemoveUsers() {
-                $(".removeUsers").click(function (e) {
+                $(document).on('click', '.removeUsers', function (e) {
+                    e.preventDefault();
                     var node = $(e.target);
                     log("removeUsers", node, node.is(":checked"));
                     var checkBoxes = node.closest(".MainContent").find("tbody td input[name=toRemoveId]:checked");
@@ -203,7 +204,7 @@
 
             function initUploadCSV() {
                 var modalUploadCsv = $("#modal-upload-csv");
-                $(".btn-upload-users-csv").click(function (e) {
+                $(document).on('click', '.btn-upload-users-csv', function (e) {
                     e.preventDefault();
 
                     modalUploadCsv.show(500);
