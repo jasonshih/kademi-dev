@@ -325,7 +325,10 @@ return false;</pre>
                                             <h3>Event type documentaton</h3>
                                             <ul class="">
                                                 #foreach($triggerType in $applicationManager.triggerTypes )
-                                                <li><a target="_blank" href="http://docs.kademi.co/ref/templating/${templater.getClassName($triggerType)}.html"> ${templater.getClassName($triggerType)}</a> - $triggerType.eventDescription</li>
+                                                <li><a target="_blank" href="http://docs.kademi.co/ref/templating/${templater.getClassName($triggerType.prototypeEvent)}.html">
+                                                        ${templater.getClassName($triggerType.prototypeEvent)}</a>
+                                                    - $triggerType.eventDescription
+                                                </li>
                                                 #end
                                             </ul>
                                         </div>                                            
