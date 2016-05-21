@@ -494,11 +494,15 @@ function showConfirmMessage(form, config) {
  * @param {jQuery} form
  */
 function showFieldMessages(fieldMessages, form) {
-    if (fieldMessages && fieldMessages.length > 0 && fieldMessages[0].length > 0) {
+    if (fieldMessages && fieldMessages.length > 0) {
         $.each(fieldMessages, function (i, message) {
             flog('[jquery.forms] Show field message', message);
 
             var target = form.find('#' + message.field);
+            if (!target.length){
+                flog('trying to find target by name', target, message.field);
+                target = form.find('[name='+ message.field+']');
+            }
             var parent = target.parent();
 
             var errorMessage = parent.find('.help-block.error-message');
