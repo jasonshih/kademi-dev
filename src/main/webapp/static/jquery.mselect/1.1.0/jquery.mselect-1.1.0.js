@@ -161,7 +161,8 @@
             buttonText: '<i class="fa fa-upload"></i>',
             oncomplete: function (data, name, href) {
                 flog('[jquery.mselect] oncomplete', data);
-                tree.mtree('addFile', name, href);
+                //tree.mtree('addFile', name, href, hash);
+                addFileToTree(name, href, tree);
                 url = href;
             }
         });
@@ -196,6 +197,19 @@
         });
     }
 
+    function addFileToTree(name, href, tree) {
+        var t = "/_DAV/PROPFIND?fields=milton:hash";
+        flog("addFileToTree", href + t);
+        $.ajax({
+            url: href + t,
+            cache: false
+        }).done(function (data) {
+            var hash = data[0].hash;
+            flog("addFileToTree", data, hash);
+            tree.mtree('addFile', name, href, hash);
+        });
+    }
+
     function getSelectContainer(config) {
         var extraElement = '';
 
@@ -204,16 +218,16 @@
         }
 
         return (
-            '<div class="milton-file-select-container">' +
-            '    <div class="row">' +
-            '        <div class="col-xs-4"><div class="milton-tree-wrapper"></div></div>' +
-            '        <div class="col-xs-8">' +
-            '            <div id="milton-btn-upload-file"></div>' + extraElement +
-            '            <div class="milton-preview"></div>' +
-            '        </div>' +
-            '    </div>' +
-            '</div>'
-        );
+                '<div class="milton-file-select-container">' +
+                '    <div class="row">' +
+                '        <div class="col-xs-4"><div class="milton-tree-wrapper"></div></div>' +
+                '        <div class="col-xs-8">' +
+                '            <div id="milton-btn-upload-file"></div>' + extraElement +
+                '            <div class="milton-preview"></div>' +
+                '        </div>' +
+                '    </div>' +
+                '</div>'
+                );
     }
 
     function getModal(config) {
@@ -222,17 +236,17 @@
         var modal = $('#modal-milton-file-select');
         if (modal.length === 0) {
             $('body').append(
-                '<div id="modal-milton-file-select" class="modal modal-md fade" aria-hidden="true" tabindex="-1">' +
-                '   <div class="modal-header">' +
-                '       <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>' +
-                '       <h4 class="modal-title">' + config.modalTitle + '</h4>' +
-                '   </div>' +
-                '   <div class="modal-body">' + getSelectContainer(config) + '</div>' +
-                '   <div class="modal-footer">' +
-                '<button class="' + config.btnOkClass + ' btn-ok" type="button"> OK </button>' +
-                '   </div>' +
-                '</div>'
-            );
+                    '<div id="modal-milton-file-select" class="modal modal-md fade" aria-hidden="true" tabindex="-1">' +
+                    '   <div class="modal-header">' +
+                    '       <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>' +
+                    '       <h4 class="modal-title">' + config.modalTitle + '</h4>' +
+                    '   </div>' +
+                    '   <div class="modal-body">' + getSelectContainer(config) + '</div>' +
+                    '   <div class="modal-footer">' +
+                    '<button class="' + config.btnOkClass + ' btn-ok" type="button"> OK </button>' +
+                    '   </div>' +
+                    '</div>'
+                    );
             modal = $('#modal-milton-file-select');
 
             initSelectContainer(modal, config, function () {
@@ -249,21 +263,21 @@
         var modal = $('#modal-milton-file-select');
         if (modal.length === 0) {
             $('body').append(
-                '<div id="modal-milton-file-select" class="modal modal-md fade" aria-hidden="true" tabindex="-1">' +
-                '   <div class="modal-dialog">' +
-                '       <div class="modal-content">' +
-                '           <div class="modal-header">' +
-                '               <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>' +
-                '               <h4 class="modal-title">' + config.modalTitle + '</h4>' +
-                '           </div>' +
-                '           <div class="modal-body">' + getSelectContainer(config) + '</div>' +
-                '           <div class="modal-footer">' +
-                '               <button class="' + config.btnOkClass + ' btn-ok" type="button"> OK </button>' +
-                '           </div>' +
-                '       </div>' +
-                '   </div>' +
-                '</div>'
-            );
+                    '<div id="modal-milton-file-select" class="modal modal-md fade" aria-hidden="true" tabindex="-1">' +
+                    '   <div class="modal-dialog">' +
+                    '       <div class="modal-content">' +
+                    '           <div class="modal-header">' +
+                    '               <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>' +
+                    '               <h4 class="modal-title">' + config.modalTitle + '</h4>' +
+                    '           </div>' +
+                    '           <div class="modal-body">' + getSelectContainer(config) + '</div>' +
+                    '           <div class="modal-footer">' +
+                    '               <button class="' + config.btnOkClass + ' btn-ok" type="button"> OK </button>' +
+                    '           </div>' +
+                    '       </div>' +
+                    '   </div>' +
+                    '</div>'
+                    );
             modal = $('#modal-milton-file-select');
 
             initSelectContainer(modal, config, function () {
