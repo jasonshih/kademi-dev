@@ -682,7 +682,7 @@ function doTopNavSearch(query, suggestionsWrapper, backdrop) {
         url: '/manageUsers',
         type: 'POST',
         data: {
-            q: query
+            omni: query
         },
         dataType: 'JSON',
         success: function (resp) {
@@ -693,19 +693,31 @@ function doTopNavSearch(query, suggestionsWrapper, backdrop) {
             if (resp && resp.hits && resp.hits.total > 0) {
                 for (var i = 0; i < resp.hits.hits.length; i++) {
                     var suggestion = resp.hits.hits[i];
-                    var userId = suggestion.fields.userId[0];
-                    var userName = suggestion.fields.userName[0];
-                    var email = suggestion.fields.email[0];
-                    var firstName = suggestion.fields.firstName ? suggestion.fields.firstName[0] : '';
-                    var surName = suggestion.fields.surName ? suggestion.fields.surName[0] : '';
-
                     suggestionStr += '<li class="suggestion">';
-                    suggestionStr += '    <a href="/manageUsers/' + userId + '">';
-                    suggestionStr += '        <span>' + userName + '</span> &ndash; <span class="email">' + email + '</span>';
-                    if (firstName || surName) {
-                        suggestionStr += '    <br /><small class="text-muted">' + firstName + ' ' + surName + '</small>';
+                    if( suggestion.fields.userId ) {
+                        var userId = suggestion.fields.userId[0];
+                        var userName = suggestion.fields.userName[0];
+                        var email = suggestion.fields.email[0];
+                        var firstName = suggestion.fields.firstName ? suggestion.fields.firstName[0] : '';
+                        var surName = suggestion.fields.surName ? suggestion.fields.surName[0] : '';
+
+                        suggestionStr += '    <a href="/manageUsers/' + userId + '">';
+                        suggestionStr += '        <span>' + userName + '</span> &ndash; <span class="email">' + email + '</span>';
+                        if (firstName || surName) {
+                            suggestionStr += '    <br /><small class="text-muted">' + firstName + ' ' + surName + '</small>';
+                        }
+                        suggestionStr += '    </a>';                    
+                    } else {
+                        var orgId = suggestion.fields.orgId[0];
+                        var orgTitle = suggestion.fields.title[0];
+
+                        var href = "/organisations/" + orgId + "/edit";
+                        suggestionStr += "    <a href='" + href + "'>";
+                        suggestionStr += '        <span>' + orgTitle + '</span>';
+                        suggestionStr += '    <br /><small class="text-muted">OrgID: ' + orgId + '</small>';
+                        suggestionStr += '    </a>';                    
+                        
                     }
-                    suggestionStr += '    </a>';
                     suggestionStr += '</li>';
                 }
             } else {
