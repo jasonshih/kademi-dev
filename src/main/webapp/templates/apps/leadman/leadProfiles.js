@@ -135,16 +135,20 @@ function initUploads() {
 
             var tbody = $("#importerBody");
             tbody.html("");
+            var numRows = 0;
             $.each(table.rows, function (i, row) {
-                var tr = $("<tr>");
-                tbody.append(tr);
-                var td = $("<td>" + i + "</td>");
-                tr.append(td);
-                $.each(row, function (i, cell) {
-                    var td = $("<td>");
-                    td.html(cell);
+                if (numRows < 50) {
+                    numRows++;
+                    var tr = $("<tr>");
+                    tbody.append(tr);
+                    var td = $("<td>" + i + "</td>");
                     tr.append(td);
-                });
+                    $.each(row, function (i, cell) {
+                        var td = $("<td>");
+                        td.html(cell);
+                        tr.append(td);
+                    });
+                }
             });
 
             $('#myWizard').wizard("next");
