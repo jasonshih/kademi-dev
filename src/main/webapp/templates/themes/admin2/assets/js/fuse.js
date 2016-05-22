@@ -708,10 +708,11 @@ function doTopNavSearch(query, suggestionsWrapper, backdrop) {
                         }
                         suggestionStr += '    </a>';                    
                     } else {
+                        var id = suggestion.fields.entityId[0];
                         var orgId = suggestion.fields.orgId[0];
                         var orgTitle = suggestion.fields.title[0];
 
-                        var href = "/organisations/" + orgId + "/edit";
+                        var href = "/organisations/" + id + "/edit";
                         suggestionStr += "    <a href='" + href + "'>";
                         suggestionStr += '        <span>' + orgTitle + '</span>';
                         suggestionStr += '    <br /><small class="text-muted">OrgID: ' + orgId + '</small>';
