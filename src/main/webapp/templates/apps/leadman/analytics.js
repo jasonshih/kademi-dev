@@ -154,9 +154,17 @@
         var dataTable = $('#leadTable').DataTable({
             paging: false
         });
-        $("#funnel-lead-query").keyup(function() {
-            dataTable.search(this.value).draw();
+
+        $("#funnel-lead-query").on({
+            input: function () {
+                typewatch(function () {
+                    var text = $("#funnel-lead-query").val().trim();
+
+                    dataTable.search(text).draw();
+                }, 500);
+            }
         });
+
     }
 
     function initPies(aggs) {
