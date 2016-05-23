@@ -144,12 +144,11 @@
                                         <div class="clearfix"></div>
                                     </div>
                                     <div class="step-pane sample-pane alert" data-step="2">
-                                        <h4>Select columns</h4>
 
                                         <input type="hidden" name="fileHash" value=""/>
 
                                         <div class="row">
-                                            <div class="col-sm-6">
+                                            <div class="col-sm-4">
                                                 <div class="form-horizontal">
                                                     <div class="form-group">
                                                         <label class="control-label col-md-5" for="startRow" style="text-align: left !important;">Start row</label>
@@ -159,7 +158,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-6">
+                                            <div class="col-sm-4">
                                                 <div class="form-group">
                                                     <label class="control-label col-md-5" for="defaultGroup" style="text-align: left !important;">Default group</label>
                                                     <div class="controls col-md-7">
@@ -169,6 +168,22 @@
                                                             <option value="$group.name">$group.title</option>
                                                             #end
                                                         </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-4">
+                                                <div class="form-horizontal">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-5" for="removalMode" style="text-align: left !important;">Removing</label>
+                                                        <div class="controls col-md-7">
+                                                        <select name="removalMode" class="form-control">
+                                                            <option value="">Only use remove column</option>
+                                                            <option value="remove">Remove all uploaded</option>
+                                                            <option value="unsub">Un-subscribe all uploaded</option>
+
+                                                        </select>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
