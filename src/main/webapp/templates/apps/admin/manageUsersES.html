@@ -56,7 +56,7 @@
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu">
-                                <li class="presentation" role="menuitem"><a href="#importerWizard" data-toggle="collapse" class="btn-upload-users-csv">Import users</a></li>
+                                <li class="presentation" role="menuitem"><a href="#importerWizard" data-toggle="collapse" class="btn-upload-users-csv">Import &amp; remove users</a></li>
                                 <li class="presentation" role="menuitem"><a role="button" href="users.csv" download="users.csv">Export users</a></li>
                                 <li class="presentation" role="menuitem"><a href="#" class="btn-match-orgs">Match orgs</a></li>
                                 #portlets("manageUsersTools")
@@ -711,7 +711,9 @@
         <tr class="agg-row $formatter.paramSelected($termParamName, $b.termName, 'success')">
             <td>
                 <div class="col-md-offset-$indent">
+                    #if( $b.termTitle )
                     <a href="$page.href?$formatter.toggleParamVal( $termParamName, $b.termName )" class="dated term-select">$b.termTitle</a>
+                    #end
                 </div>
             </td>
             <td align="right">$b.count</td>
