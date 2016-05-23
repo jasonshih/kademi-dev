@@ -859,6 +859,35 @@ function initModalLinks() {
     });
 }
 
+function quizSuccessHandle(e) {
+    flog('quizSuccessHandle');
+
+    // Fix https://github.com/Kademi/kademi-dev/issues/1331
+    var currentTarget = $(e.target);
+    if (!currentTarget.is('a')) {
+        currentTarget = $(e.target).closest('a');
+    }
+
+    if (isLastPage() && currentTarget.hasClass('nextBtn')) {
+        $('ol.quiz input').prop('disabled', true);
+        completed();
+    } else {
+        $.pjax({
+            selector: '.pages a',
+            fragment: '.panelBox',
+            container: '.panelBox',
+            url: currentTarget.prop('href'),
+            success: function () {
+                flog('Pjax success!');
+
+                initPrintLink(); // called by init-theme
+                initPageNav();
+            },
+            debug: true
+        });
+    }
+}
+
 /**
  * Called when the user clicks next, checks to see if there is a quiz on the page
  * , and if so it is checked for correctness
@@ -984,75 +1013,18 @@ function isQuizComplete(e) {
             success: function (response) {
                 quiz.removeClass('processing');
 
-                if (response.status) {
+                if (response && response.status) {
                     flog('Validating quiz OK', response);
                     quiz.addClass('validated').trigger('quizSuccess');
 
-                    // Fix https://github.com/Kademi/kademi-dev/issues/1331
-                    var currentTarget = $(e.target);
-                    if (!currentTarget.is('a')) {
-                        currentTarget = $(e.target).closest('a');
-                    }
+                    quizSuccessHandle(e);
+                } else if (response && response.messages && response.messages[0] && response.messages[0].indexOf('The quiz has already been completed') !== -1) {
+                    flog('The quiz has already been completed!');
 
-                    if (isLastPage() && currentTarget.hasClass('nextBtn')) {
-                        $('ol.quiz input').prop('disabled', true);
-                        completed();
-                    } else {
-                        $.pjax({
-                            selector: '.pages a',
-                            fragment: '.panelBox',
-                            container: '.panelBox',
-                            url: currentTarget.prop('href'),
-                            success: function () {
-                                flog('Pjax success!');
-
-                                initPrintLink(); // called by init-theme
-                                initPageNav();
-                            },
-                            debug: true
-                        });
-                    }
+                    quizSuccessHandle(e);
                 } else {
                     flog('Validating quiz is false', response);
-                    if (response.data && response.data.nextQuizBatch) {
-                        flog('Looks like we have another batch...', response.data.nextQuizBatch);
-                        quiz.find('ol.quiz').replaceWith(response.data.nextQuizBatch);
-                        tidyUpQuiz();
-                    } else {
-                        // The quiz has already been completed
-                        if (response && response.messages && response.messages[0] && response.messages[0].indexOf('The quiz has already been completed') !== -1) {
-                            flog('The quiz has already been completed!');
-
-                            var currentTarget = $(e.target);
-                            if (!currentTarget.is('a')) {
-                                currentTarget = $(e.target).closest('a');
-                            }
-                            if (isLastPage() && currentTarget.hasClass('nextBtn')) {
-                                $('ol.quiz input').prop('disabled', true);
-                                completed();
-                            } else {
-                                $.pjax({
-                                    selector: '.pages a',
-                                    fragment: '.panelBox',
-                                    container: '.panelBox',
-                                    url: currentTarget.prop('href'),
-                                    success: function () {
-                                        flog('Pjax success!');
-
-                                        initPrintLink(); // called by init-theme
-                                        initPageNav();
-                                    },
-                                    debug: true
-                                });
-                            }
-                        } else {
-                            alert('Please check your answers');
-                            $.each(response.fieldMessages, function (i, n) {
-                                var inp = quiz.find('li.' + n.field);
-                                inp.addClass('error');
-                            });
-                        }
-                    }
+                    showQuizError(quiz, response);
                 }
             },
             error: function (response) {
@@ -1070,4 +1042,58 @@ function isQuizComplete(e) {
 
 function showApology(operation) {
     alert('Oh, oops. I\'m really, really, sorry, but I couldnt ' + operation + ' because of some computer-not-behaving thing. Perhaps check your internet connection? If it still doesnt work it would be super nice if you could tell us from the contact page and we\'ll sort it out ASAP - thanks!');
+}
+
+function showQuizError(quiz, response) {
+    flog('showQuizError', quiz, response);
+
+    var modal = $('#modal-quiz-error');
+    if (modal.length === 0) {
+        modal = $(
+            '<div id="modal-quiz-error" class="modal fade">' +
+            '   <div class="modal-dialog">' +
+            '       <div class="modal-content panel-danger">' +
+            '           <div class="modal-header panel-heading">' +
+            '               <button type="button" data-dismiss="modal" class="close">&times;</button>' +
+            '               <h3 class="modal-title">You answered quiz incorrectly!</h3>' +
+            '           </div>' +
+            '           <div class="modal-body">' +
+            '               <p class="lead">You have <b id="remaining-attempts"></b> remaming times to attempt this quiz</p>' +
+            '           </div>' +
+            '           <div class="modal-footer">' +
+            '               <button type="button" class="btn btn-primary" data-dismiss="modal">See error answers</button>' +
+            '           </div>' +
+            '       </div>' +
+            '   </div>' +
+            '</div>'
+        );
+
+        modal.appendTo(document.body);
+    }
+
+    modal.off('hide.bs.modal').on('hide.bs.modal', function () {
+        if (response.data && response.data.nextQuizBatch) {
+            flog('Looks like we have another batch...', response.data.nextQuizBatch);
+
+            var btnSubmitQuiz = $('.quizSubmit .nextBtn');
+            var btnReAttempt = $('<button type="button" class="btn-reattempt">Re-attempt Quiz</button>');
+            btnReAttempt.addClass(btnSubmitQuiz.attr('class')).removeClass('nextBtn when-complete when-not-complete');
+
+            quiz.find('ol.quiz li').find('input, textarea').prop('disabled', true);
+
+            btnSubmitQuiz.after(btnReAttempt);
+            btnSubmitQuiz.hide();
+            btnReAttempt.on('click', function (e) {
+                e.preventDefault();
+
+                quiz.find('ol.quiz').replaceWith(response.data.nextQuizBatch);
+                tidyUpQuiz();
+
+                btnReAttempt.remove();
+                btnSubmitQuiz.show();
+            });
+        }
+    });
+    modal.find('#remaining-attempts').html(response.data.maxAttempts - response.data.numAttempts);
+    modal.modal('show');
 }
