@@ -1072,28 +1072,31 @@ function showQuizError(quiz, response) {
     }
 
     modal.off('hide.bs.modal').on('hide.bs.modal', function () {
-        if (response.data && response.data.nextQuizBatch) {
-            flog('Looks like we have another batch...', response.data.nextQuizBatch);
+        var btnSubmitQuiz = $('.quizSubmit .nextBtn');
+        var btnReAttempt = $('<button type="button" class="btn-reattempt">Re-attempt Quiz</button>');
+        btnReAttempt.addClass(btnSubmitQuiz.attr('class')).removeClass('nextBtn when-complete when-not-complete');
+        quiz.find('ol.quiz li').find('input, textarea').prop('disabled', true);
 
-            var btnSubmitQuiz = $('.quizSubmit .nextBtn');
-            var btnReAttempt = $('<button type="button" class="btn-reattempt">Re-attempt Quiz</button>');
-            btnReAttempt.addClass(btnSubmitQuiz.attr('class')).removeClass('nextBtn when-complete when-not-complete');
+        btnSubmitQuiz.after(btnReAttempt);
+        btnSubmitQuiz.hide();
+        btnReAttempt.on('click', function (e) {
+            e.preventDefault();
 
-            quiz.find('ol.quiz li').find('input, textarea').prop('disabled', true);
+            flog('Re-attemp quiz');
 
-            btnSubmitQuiz.after(btnReAttempt);
-            btnSubmitQuiz.hide();
-            btnReAttempt.on('click', function (e) {
-                e.preventDefault();
-
+            if (response.data && response.data.nextQuizBatch) {
+                flog('Looks like we have another batch...', response.data.nextQuizBatch);
                 quiz.find('ol.quiz').replaceWith(response.data.nextQuizBatch);
                 tidyUpQuiz();
+            } else {
+                quiz.find('ol.quiz li').find('input, textarea').prop('disabled', false);
+            }
 
-                btnReAttempt.remove();
-                btnSubmitQuiz.show();
-            });
-        }
+            btnReAttempt.remove();
+            btnSubmitQuiz.show();
+        });
     });
+
     modal.find('#remaining-attempts').html(response.data.maxAttempts - response.data.numAttempts);
     modal.modal('show');
 }
