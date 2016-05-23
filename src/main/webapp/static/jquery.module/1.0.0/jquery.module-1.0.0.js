@@ -109,7 +109,7 @@
             // This needs to be just done once, not on each pjax transition
             $(document.body).on('click', '.nextBtn', function (e) {
                 var btn = $(this);
-                flog('Clicked on .nextBtn', btn);
+                flog('[jquery.module] Clicked on .nextBtn', btn);
 
                 if (!self.checkNext()) {
                     e.stopPropagation();
@@ -241,7 +241,7 @@
             var whenComplete = $('.when-complete');
             var whenNotComplete = $('.when-not-complete');
             if (isBeyondCurrent) {
-                flog('[jquery.module]Show .when-complete');
+                flog('[jquery.module] Show .when-complete');
 
                 self.disableQuiz();
                 whenComplete.show();
@@ -422,7 +422,7 @@
                 // If inputs are not complete, still show next so they user can click it to get validation
                 nextEnabled = nextLink.hasClass('enabled') || hasHidden || !isInputsDone;
 
-                flog('nextEnabled: ' + nextEnabled, 'nextLink: ' + nextLink, 'hasHidden: ' + hasHidden, 'isInputsDone: ' + isInputsDone);
+                flog('[jquery.module] nextEnabled: ' + nextEnabled, 'nextLink: ' + nextLink, 'hasHidden: ' + hasHidden, 'isInputsDone: ' + isInputsDone);
             }
 
             self.setLinkEnabled(pagesList.find('a.nextBtn'), nextEnabled);
@@ -840,7 +840,7 @@
                 },
                 error: function (resp) {
                     ajaxLoadingOff();
-                    flog('setStatusComplete: profile get failed');
+                    flog('[jquery.module] setStatusComplete: profile get failed');
                     alert('Very sorry, but something went wrong while attempting to complete your module. Could you please refresh the page and try again?');
 
                 }
@@ -1012,8 +1012,8 @@
             });
         },
 
-        afterQuizIsCompleted: function (e) {
-            flog('[jquery.module] afterQuizIsCompleted', e);
+        quizSuccessHandler: function (quiz, e) {
+            flog('[jquery.module] quizSuccessHandler', quiz, e);
 
             var self = this;
 
@@ -1040,6 +1040,91 @@
                     },
                     debug: true
                 });
+            }
+        },
+
+        quizErrorHandler: function (quiz, response, e) {
+            flog('[jquery.module] quizErrorHandler', quiz, response, e);
+
+            var self = this;
+            var options = self.options;
+            var modal = $('#modal-quiz-error');
+            if (modal.length === 0) {
+                modal = $(
+                    '<div id="modal-quiz-error" class="modal fade">' +
+                    '   <div class="modal-dialog">' +
+                    '       <div class="modal-content">' +
+                    '           <div class="modal-header panel-heading">' +
+                    '               <button type="button" data-dismiss="modal" class="close">&times;</button>' +
+                    '               <h4 class="modal-title"></h4>' +
+                    '           </div>' +
+                    '           <div class="modal-body">' +
+                    '               <p class="error-text"></p>' +
+                    '           </div>' +
+                    '           <div class="modal-footer">' +
+                    '               <button type="button" class="btn btn-primary" data-dismiss="modal">See error answers</button>' +
+                    '           </div>' +
+                    '       </div>' +
+                    '   </div>' +
+                    '</div>'
+                );
+
+                modal.appendTo(document.body);
+            }
+            var modalContent = modal.find('.modal-content');
+            var modalTitle = modal.find('.modal-title');
+            var errorText = modal.find('.error-text');
+            modalContent.removeClass('panel-danger panel-warning');
+
+            if (response.data.numAttempts >= response.data.maxAttempts) {
+                flog('[jquery.module] Reached maximum attempts');
+
+                modalContent.addClass('panel-warning');
+                modalTitle.html('Reached maximum attempts');
+                errorText.html(response.messages[0]);
+
+                modal.off('hide.bs.modal').on('hide.bs.modal', function () {
+                    self.quizSuccessHandler(quiz, e);
+                });
+            } else {
+                flog('[jquery.module] Have another batch...', response.data.nextQuizBatch);
+
+                modalContent.addClass('panel-danger');
+                modalTitle.html('You answered quiz incorrectly!');
+                errorText.html('You have <b>' + (response.data.maxAttempts - response.data.numAttempts) + '</b> remaming times to attempt this quiz');
+
+                modal.off('hide.bs.modal').on('hide.bs.modal', function () {
+                    var btnSubmitQuiz = $('.quizSubmit .nextBtn');
+                    var btnReAttempt = $('.btn-quiz-reattempt');
+                    if (btnReAttempt.length === 0) {
+                        var btnReAttempt = $('<button type="button" class="btn-quiz-reattempt">Re-attempt Quiz</button>');
+                        btnReAttempt.addClass(btnSubmitQuiz.attr('class')).removeClass('nextBtn when-complete when-not-complete');
+                        btnSubmitQuiz.after(btnReAttempt);
+                    }
+
+                    quiz.find('ol.quiz li').find('input, textarea').prop('disabled', true);
+                    btnSubmitQuiz.hide();
+                    btnReAttempt.off('click').on('click', function (e) {
+                        e.preventDefault();
+
+                        flog('[jquery.module] Re-attempt quiz');
+                        if (response.data && response.data.nextQuizBatch) {
+                            quiz.find('ol.quiz').replaceWith(response.data.nextQuizBatch);
+                            self.tidyUpQuiz();
+                        } else {
+                            quiz.find('ol.quiz li').find('input, textarea').prop('disabled', false);
+                        }
+
+                        btnReAttempt.remove();
+                        btnSubmitQuiz.show();
+                    });
+                });
+            }
+
+            modal.modal('show');
+
+            if (typeof options.onQuizError === 'function') {
+                options.onQuizError.call(quiz, quiz, response);
             }
         },
 
@@ -1134,38 +1219,22 @@
                     success: function (response) {
                         quiz.removeClass('processing');
 
-                        if (response.status) {
+                        if (response && response.status) {
                             flog('[jquery.module] Validating quiz OK', response);
+
+                            self.quizSuccessHandler(quiz, e);
 
                             if (typeof options.onQuizSuccess === 'function') {
                                 options.onQuizSuccess.call(quiz, quiz, response);
                             }
+                        } else if (response && response.messages && response.messages[0] && response.messages[0].indexOf('The quiz has already been completed') !== -1) {
+                            flog('[jquery.module] The quiz has already been completed!');
 
-                            self.afterQuizIsCompleted(e);
-                        } else {
-                            flog('Validating quiz is false', response);
-                            if (response.data && response.data.nextQuizBatch) {
-                                flog('[jquery.module] Looks like we have another batch..', response.data.nextQuizBatch);
-                                quiz.find('ol.quiz').replaceWith(response.data.nextQuizBatch);
-                                self.tidyUpQuiz();
-                            } else {
-                                // The quiz has already been completed
-                                if (response && response.messages && response.messages[0] && response.messages[0].indexOf('The quiz has already been completed') !== -1) {
-                                    flog('[jquery.module] The quiz has already been completed!');
+                            self.quizSuccessHandler(quiz, e);
+                        }  else {
+                            flog('[jquery.module] Validating quiz is false', response);
 
-                                    self.afterQuizIsCompleted(e);
-                                } else {
-                                    alert('Please check your answers');
-                                    $.each(response.fieldMessages, function (i, n) {
-                                        var inp = quiz.find('li.' + n.field);
-                                        inp.addClass('error');
-                                    });
-
-                                    if (typeof options.onQuizError === 'function') {
-                                        options.onQuizError.call(quiz, quiz, response);
-                                    }
-                                }
-                            }
+                            self.quizErrorHandler(quiz, response, e);
                         }
                     },
                     error: function (response) {
