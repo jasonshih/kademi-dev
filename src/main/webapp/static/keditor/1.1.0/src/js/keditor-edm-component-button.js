@@ -81,6 +81,12 @@
                 '           <input type="text" id="button-text" class="form-control" />' +
                 '       </div>' +
                 '    </div>' +
+                '    <div class="form-group button-text">' +
+                '       <label for="button-text" class="col-sm-12">Link</label>' +
+                '       <div class="col-sm-12">' +
+                '           <input type="text" id="button-link" class="form-control" />' +
+                '       </div>' +
+                '    </div>' +
                 '    <div class="form-group">' +
                 '       <div class="col-md-12">' +
                 '           <label>Text color</label>' +
@@ -177,6 +183,15 @@
                 text = text.trim();
 
                 keditor.getSettingComponent().find('.button-wrapper a').text(text);
+            });
+
+
+            var txtLink = form.find('#button-link');
+            txtLink.on('change', function () {
+                var href = this.value || '';
+                href = href.trim();
+
+                keditor.getSettingComponent().find('.button-wrapper a').attr("href", href);
             });
 
             var buttonTextColorPicker = form.find('.button-color-text-picker');
@@ -314,6 +329,9 @@
 
             var txtText = form.find('#button-text');
             txtText.val(button.text());
+
+            var txtLink = form.find('#button-link');
+            txtLink.val(button.attr("href"));
 
             var buttonTextColorPicker = form.find('.button-color-text-picker');
             buttonTextColorPicker.colorpicker('setValue', button.css('color') || '');
