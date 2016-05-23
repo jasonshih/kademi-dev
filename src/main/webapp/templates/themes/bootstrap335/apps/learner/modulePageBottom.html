@@ -6,9 +6,6 @@
     var completable = $page.parent.completable && $page.parent.startable;
     var complete = $page.parent.complete;
 
-    //            themeCssFiles.push("/templates/apps/learner/moduleLayout.dyn.css");
-    //            themeCssFiles.push("/templates/apps/learner/moduleContent.dyn.css");
-
     flog("push init module page");
     pageInitFunctions.push(function() {
         initModulePage("${folder.path}/", complete, $editMode, completable);
@@ -28,7 +25,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h3>End of module</h3>
+                <h3 class="modal-title">End of module</h3>
             </div>
             <div class="modal-body">
                 <h4>This module has previously been completed</h4>
@@ -57,7 +54,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h3>End of module</h3>
+                <h3 class="modal-title">End of module</h3>
             </div>
             <div class="modal-body">
                 <h4>You've reached the end of this module, but cannot complete it</h4>

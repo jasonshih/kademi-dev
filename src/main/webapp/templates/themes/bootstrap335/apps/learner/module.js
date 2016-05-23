@@ -72,6 +72,14 @@ function initModuleNav(pStatUrl, pFinished) {
             return false;
         }
 
+        if (a.hasClass('active')) {
+            flog('Preventing click on activated link', a);
+
+            e.stopPropagation();
+            e.preventDefault();
+            return false;
+        }
+
         var currentIndex = getCurrentPageIndex();
         var clickedIndex = a.index();
         if (clickedIndex > currentIndex) {
@@ -859,35 +867,6 @@ function initModalLinks() {
     });
 }
 
-function quizSuccessHandle(e) {
-    flog('quizSuccessHandle');
-
-    // Fix https://github.com/Kademi/kademi-dev/issues/1331
-    var currentTarget = $(e.target);
-    if (!currentTarget.is('a')) {
-        currentTarget = $(e.target).closest('a');
-    }
-
-    if (isLastPage() && currentTarget.hasClass('nextBtn')) {
-        $('ol.quiz input').prop('disabled', true);
-        completed();
-    } else {
-        $.pjax({
-            selector: '.pages a',
-            fragment: '.panelBox',
-            container: '.panelBox',
-            url: currentTarget.prop('href'),
-            success: function () {
-                flog('Pjax success!');
-
-                initPrintLink(); // called by init-theme
-                initPageNav();
-            },
-            debug: true
-        });
-    }
-}
-
 /**
  * Called when the user clicks next, checks to see if there is a quiz on the page
  * , and if so it is checked for correctness
@@ -929,6 +908,37 @@ function checkSubmit(e, isPageLink) {
 
     // all good, carry on with event processing
     flog('all good, carry on with event processing', e);
+}
+
+function quizSuccessHandle(quiz, e) {
+    flog('quizSuccessHandle');
+
+    quiz.addClass('validated');
+
+    // Fix https://github.com/Kademi/kademi-dev/issues/1331
+    var currentTarget = $(e.target);
+    if (!currentTarget.is('a')) {
+        currentTarget = $(e.target).closest('a');
+    }
+
+    if (isLastPage() && currentTarget.hasClass('nextBtn')) {
+        $('ol.quiz input').prop('disabled', true);
+        completed();
+    } else {
+        $.pjax({
+            selector: '.pages a',
+            fragment: '.panelBox',
+            container: '.panelBox',
+            url: currentTarget.prop('href'),
+            success: function () {
+                flog('Pjax success!');
+
+                initPrintLink(); // called by init-theme
+                initPageNav();
+            },
+            debug: true
+        });
+    }
 }
 
 /**
@@ -1015,16 +1025,16 @@ function isQuizComplete(e) {
 
                 if (response && response.status) {
                     flog('Validating quiz OK', response);
-                    quiz.addClass('validated').trigger('quizSuccess');
+                    quiz.trigger('quizSuccess');
 
-                    quizSuccessHandle(e);
+                    quizSuccessHandle(quiz, e);
                 } else if (response && response.messages && response.messages[0] && response.messages[0].indexOf('The quiz has already been completed') !== -1) {
                     flog('The quiz has already been completed!');
 
                     quizSuccessHandle(e);
                 } else {
                     flog('Validating quiz is false', response);
-                    showQuizError(quiz, response);
+                    showQuizError(quiz, response, e);
                 }
             },
             error: function (response) {
@@ -1044,59 +1054,93 @@ function showApology(operation) {
     alert('Oh, oops. I\'m really, really, sorry, but I couldnt ' + operation + ' because of some computer-not-behaving thing. Perhaps check your internet connection? If it still doesnt work it would be super nice if you could tell us from the contact page and we\'ll sort it out ASAP - thanks!');
 }
 
-function showQuizError(quiz, response) {
+function showQuizError(quiz, response, e) {
     flog('showQuizError', quiz, response);
 
-    var modal = $('#modal-quiz-error');
-    if (modal.length === 0) {
-        modal = $(
-            '<div id="modal-quiz-error" class="modal fade">' +
-            '   <div class="modal-dialog">' +
-            '       <div class="modal-content panel-danger">' +
-            '           <div class="modal-header panel-heading">' +
-            '               <button type="button" data-dismiss="modal" class="close">&times;</button>' +
-            '               <h3 class="modal-title">You answered quiz incorrectly!</h3>' +
-            '           </div>' +
-            '           <div class="modal-body">' +
-            '               <p class="lead">You have <b id="remaining-attempts"></b> remaming times to attempt this quiz</p>' +
-            '           </div>' +
-            '           <div class="modal-footer">' +
-            '               <button type="button" class="btn btn-primary" data-dismiss="modal">See error answers</button>' +
-            '           </div>' +
-            '       </div>' +
-            '   </div>' +
-            '</div>'
-        );
+    if (response.data.numAttempts >= response.data.maxAttempts) {
+        var modal = $('#modal-quiz-max-attempts');
+        if (modal.length === 0) {
+            modal = $(
+                '<div id="modal-quiz-max-attempts" class="modal fade">' +
+                '   <div class="modal-dialog">' +
+                '       <div class="modal-content panel-warning">' +
+                '           <div class="modal-header panel-heading">' +
+                '               <button type="button" data-dismiss="modal" class="close">&times;</button>' +
+                '               <h3 class="modal-title">Reached maximum attempts</h3>' +
+                '           </div>' +
+                '           <div class="modal-body">' +
+                '               <p class="lead">' + response.messages[0] +'</p>' +
+                '           </div>' +
+                '           <div class="modal-footer">' +
+                '               <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>' +
+                '           </div>' +
+                '       </div>' +
+                '   </div>' +
+                '</div>'
+            );
+            modal.appendTo(document.body);
+        }
 
-        modal.appendTo(document.body);
-    }
+        modal.off('hide.bs.modal').on('hide.bs.modal', function () {
+            quizSuccessHandle(quiz, e);
+        });
+        modal.modal('show');
+    } else {
+        var modal = $('#modal-quiz-error');
+        if (modal.length === 0) {
+            modal = $(
+                '<div id="modal-quiz-error" class="modal fade">' +
+                '   <div class="modal-dialog">' +
+                '       <div class="modal-content panel-danger">' +
+                '           <div class="modal-header panel-heading">' +
+                '               <button type="button" data-dismiss="modal" class="close">&times;</button>' +
+                '               <h3 class="modal-title">You answered quiz incorrectly!</h3>' +
+                '           </div>' +
+                '           <div class="modal-body">' +
+                '               <p class="lead">You have <b id="remaining-attempts"></b> remaming times to attempt this quiz</p>' +
+                '           </div>' +
+                '           <div class="modal-footer">' +
+                '               <button type="button" class="btn btn-primary" data-dismiss="modal">See error answers</button>' +
+                '           </div>' +
+                '       </div>' +
+                '   </div>' +
+                '</div>'
+            );
 
-    modal.off('hide.bs.modal').on('hide.bs.modal', function () {
-        var btnSubmitQuiz = $('.quizSubmit .nextBtn');
-        var btnReAttempt = $('<button type="button" class="btn-reattempt">Re-attempt Quiz</button>');
-        btnReAttempt.addClass(btnSubmitQuiz.attr('class')).removeClass('nextBtn when-complete when-not-complete');
-        quiz.find('ol.quiz li').find('input, textarea').prop('disabled', true);
+            modal.appendTo(document.body);
+        }
 
-        btnSubmitQuiz.after(btnReAttempt);
-        btnSubmitQuiz.hide();
-        btnReAttempt.on('click', function (e) {
-            e.preventDefault();
+        modal.off('hide.bs.modal').on('hide.bs.modal', function () {
+            var btnSubmitQuiz = $('.quizSubmit .nextBtn');
+            var btnReAttempt = $('.btn-quiz-reattempt');
+            if (btnReAttempt.length === 0) {
+                var btnReAttempt = $('<button type="button" class="btn-quiz-reattempt">Re-attempt Quiz</button>');
+                btnReAttempt.addClass(btnSubmitQuiz.attr('class')).removeClass('nextBtn when-complete when-not-complete');
+                quiz.find('ol.quiz li').find('input, textarea').prop('disabled', true);
 
-            flog('Re-attemp quiz');
-
-            if (response.data && response.data.nextQuizBatch) {
-                flog('Looks like we have another batch...', response.data.nextQuizBatch);
-                quiz.find('ol.quiz').replaceWith(response.data.nextQuizBatch);
-                tidyUpQuiz();
-            } else {
-                quiz.find('ol.quiz li').find('input, textarea').prop('disabled', false);
+                btnSubmitQuiz.after(btnReAttempt);
             }
 
-            btnReAttempt.remove();
-            btnSubmitQuiz.show();
-        });
-    });
+            btnSubmitQuiz.hide();
+            btnReAttempt.off('click').on('click', function (e) {
+                e.preventDefault();
 
-    modal.find('#remaining-attempts').html(response.data.maxAttempts - response.data.numAttempts);
-    modal.modal('show');
+                flog('Re-attemp quiz');
+
+                if (response.data && response.data.nextQuizBatch) {
+                    flog('Looks like we have another batch...', response.data.nextQuizBatch);
+                    quiz.find('ol.quiz').replaceWith(response.data.nextQuizBatch);
+                    tidyUpQuiz();
+                } else {
+                    quiz.find('ol.quiz li').find('input, textarea').prop('disabled', false);
+                }
+
+                btnReAttempt.remove();
+                btnSubmitQuiz.show();
+            });
+        });
+
+        modal.find('#remaining-attempts').html(response.data.maxAttempts - response.data.numAttempts);
+        modal.modal('show');
+    }
 }
