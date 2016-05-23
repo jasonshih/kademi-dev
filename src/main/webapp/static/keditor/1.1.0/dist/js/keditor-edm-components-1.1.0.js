@@ -9,7 +9,6 @@
     var KEditor = $.keditor;
     var flog = KEditor.log;
 
-
     KEditor.components['button'] = {
         init: function (contentArea, container, component, keditor) {
             // Do nothing
@@ -186,6 +185,7 @@
                 keditor.getSettingComponent().find('.button-wrapper a').text(text);
             });
 
+
             var txtLink = form.find('#button-link');
             txtLink.on('change', function () {
                 var href = this.value || '';
@@ -331,7 +331,7 @@
             txtText.val(button.text());
 
             var txtLink = form.find('#button-link');
-            txtLink.val(button.attr("href") );
+            txtLink.val(button.attr("href"));
 
             var buttonTextColorPicker = form.find('.button-color-text-picker');
             buttonTextColorPicker.colorpicker('setValue', button.css('color') || '');
