@@ -1,16 +1,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>Manage Groups</title>
-        <link href="manageGroup.css" rel="stylesheet" type="text/css" />
+        <link href="manageGroupRegoMode.css" rel="stylesheet" type="text/css" />
         <link href="/templates/apps/learner/groupsAdminPortlet.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="manageGroup.js">//</script>
+        <script type="text/javascript" src="manageGroupRegoMode.js">//</script>
         <script type="text/javascript" src="manageExtraField.js">//</script>
         <script type="text/javascript" src="/templates/apps/learner/groupsAdminPortlet.js">//</script>
-        <style type="text/css">
-            #options-wrapper .option {
-                margin-top: 5px;
-            }
-        </style>
     </head>
     <body>
         <form method="POST" action="$page.href" class="general">
@@ -451,33 +447,10 @@
 
         <script type="text/javascript" >
             $(function () {
-                initManageGroup();
                 initManageExtraField();
+                initManageGroupRegoMode();
                 initGroupAdminPortlet();
-                showHidePanels();
-
-                $("input:radio[name=groupType]").click(function () {
-                    showHidePanels();
-                });
             });
-
-            function showHidePanels() {
-                var panels = $(".panel-fields, .panel-optins, .panel-joinorgs, .panel-regomode");
-
-                panels.hide();
-                // show only appropriate
-                var type = $("input:radio[name=groupType]:checked").val();
-                flog("showHidePanels:", type);
-                if (type == "P") {
-                    // primary
-                    panels.show();
-                } else if (type == "M") {
-                    // mailing list
-                } else if (type == "S") {
-                    // subscription
-                    $(".panel-fields").show();
-                }
-            }
         </script>
     </body>
 </html>
