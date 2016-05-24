@@ -165,7 +165,13 @@
                                                         <select name="defaultGroup" class="form-control">
                                                             <option value="">[No default group]</option>
                                                             #foreach($group in $rootFolder.groups)
-                                                            <option value="$group.name">$group.title</option>
+                                                            <option value="$group.name">
+                                                                #if( $group.title)
+                                                                $group.title
+                                                                #else
+                                                                $group.name
+                                                                #end
+                                                            </option>
                                                             #end
                                                         </select>
                                                     </div>
