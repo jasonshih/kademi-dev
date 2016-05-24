@@ -211,6 +211,17 @@ function checkProcessStatus() {
                         if (typeof state.createdProfiles !== 'undefined') {
                             $('#myWizard').find('.createdProfiles').text(state.createdProfiles)
                         }
+
+                        if (typeof state.removedProfiles !== 'undefined') {
+                            $('#myWizard').find('.removedProfiles').text(state.removedProfiles)
+                        }
+                        if (typeof state.unsubbedProfiles !== 'undefined') {
+                            $('#myWizard').find('.unsubbedProfiles').text(state.unsubbedProfiles)
+                        }
+                        if (typeof state.errorProfiles !== 'undefined') {
+                            $('#myWizard').find('.errorProfiles').text(state.errorProfiles)
+                        }
+
                         $('#myWizard').wizard("next");
                         $('#table-users tbody').reloadFragment({url: '/manageUsers/'});
                         $('#aggregationsContainer').reloadFragment({url: '/manageUsers/'});
