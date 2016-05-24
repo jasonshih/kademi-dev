@@ -22,8 +22,6 @@ function initGroupAdminPortlet() {
             removeGroupProgram(enrolId, elem);
         }
     });
-
-
 }
 
 function saveGroupProgram(groupName, itemHref, radioBtn, modal) {

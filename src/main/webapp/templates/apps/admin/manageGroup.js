@@ -147,11 +147,11 @@ function initCRUDRole() {
             }
             //$('#groups-folders').reloadFragment();
             currentGroupDiv.find('.roles-wrapper').append(
-                    '<span class="block role">' +
-                    '<span>' + roleName + ', on ' + appliesToText + '</span> ' +
-                    '<a class="btn btn-xs btn-danger btn-remove-role" href="' + resp.nextHref + '" title="Remove this role"><i class="fa fa-times"></i></a>' +
-                    '</span>'
-                    );
+                '<span class="block role">' +
+                '<span>' + roleName + ', on ' + appliesToText + '</span> ' +
+                '<a class="btn btn-xs btn-danger btn-remove-role" href="' + resp.nextHref + '" title="Remove this role"><i class="fa fa-times"></i></a>' +
+                '</span>'
+            );
         });
     });
 }
@@ -249,28 +249,28 @@ function addOrderProgramList() {
     var tempControl = $('#modalListController').html();
     $('#modalGroup tr[rel=Program] ul.ListItem li').each(function (i) {
         $(this)
-                .attr('data-program', i)
-                .append(tempControl)
-                .find('label', 'input')
-                .each(function () {
-                    var _this = $(this);
-                    var _randomId = Math.round(Math.random() * 100000);
-                    var _for = _this.attr('for') || null;
-                    var _name = _this.attr('name') || null;
-                    var _id = _this.attr('id') || null;
+            .attr('data-program', i)
+            .append(tempControl)
+            .find('label', 'input')
+            .each(function () {
+                var _this = $(this);
+                var randomId = Math.round(Math.random() * 100000);
+                var _for = _this.attr('for') || null;
+                var _name = _this.attr('name') || null;
+                var _id = _this.attr('id') || null;
 
-                    if (_for) {
-                        _this.attr('for', _for + _randomId);
-                    }
+                if (_for) {
+                    _this.attr('for', _for + randomId);
+                }
 
-                    if (_name) {
-                        _this.attr('name', _name + _randomId);
-                    }
+                if (_name) {
+                    _this.attr('name', _name + randomId);
+                }
 
-                    if (_id) {
-                        _this.attr('id', _id + _randomId);
-                    }
-                });
+                if (_id) {
+                    _this.attr('id', _id + randomId);
+                }
+            });
     });
 }
 
@@ -626,12 +626,12 @@ function initGroupFolder() {
             }
 
             currentFolder.find(".panel-group").append(
-                    ui.draggable.css({
-                        position: "relative",
-                        top: "",
-                        left: ""
-                    })
-                    );
+                ui.draggable.css({
+                    position: "relative",
+                    top: "",
+                    left: ""
+                })
+            );
 
             addGroupFolder(groupName, groupName, "addToFolder=addToFolder&folderName=" + folderName, function (name, resp) {
                 Msg.success("Moved " + groupName + " to " + folderName);
@@ -699,13 +699,13 @@ function initGroupPasswordPolicy() {
             var m = $(form);
 
             if ((m.find('input[name=minLength]').val().length === 0 || m.find('input[name=minLength]').val() < 1)
-                    & (m.find('input[name=minUpperCase]').val().length === 0 || m.find('input[name=minUpperCase]').val() < 1)
-                    & (m.find('input[name=minLowerCase]').val().length === 0 || m.find('input[name=minLowerCase]').val() < 1)
-                    & (m.find('input[name=minAlpha]').val().length === 0 || m.find('input[name=minAlpha]').val() < 1)
-                    & (m.find('input[name=minNumeric]').val().length === 0 || m.find('input[name=minNumeric]').val() < 1)
-                    & (m.find('input[name=maxRepeat]').val().length === 0 || m.find('input[name=maxRepeat]').val() < 1)
-                    & m.find('input[name=badWords]').val().length === 0
-                    & m.find('input[name=customRegex]').val().length === 0) {
+                & (m.find('input[name=minUpperCase]').val().length === 0 || m.find('input[name=minUpperCase]').val() < 1)
+                & (m.find('input[name=minLowerCase]').val().length === 0 || m.find('input[name=minLowerCase]').val() < 1)
+                & (m.find('input[name=minAlpha]').val().length === 0 || m.find('input[name=minAlpha]').val() < 1)
+                & (m.find('input[name=minNumeric]').val().length === 0 || m.find('input[name=minNumeric]').val() < 1)
+                & (m.find('input[name=maxRepeat]').val().length === 0 || m.find('input[name=maxRepeat]').val() < 1)
+                & m.find('input[name=badWords]').val().length === 0
+                & m.find('input[name=customRegex]').val().length === 0) {
                 showValidation(null, "At least one field needs to be filled & greater than 1", form);
                 return false;
             }
