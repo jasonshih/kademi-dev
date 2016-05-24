@@ -2,10 +2,7 @@
     <head>
         <title>Manage Groups</title>
         <link href="manageGroup.css" rel="stylesheet" type="text/css" />
-        <link href="/templates/apps/learner/groupsAdminPortlet.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="manageGroup.js">//</script>
-        <script type="text/javascript" src="/static/js/jquery.forms.js">//</script>
-        <script type="text/javascript" src="/templates/apps/learner/groupsAdminPortlet.js">//</script>
     </head>
     <body class="manageModulePages">
         #parse("/templates/apps/admin/manageGroupsMacros.html")
@@ -42,7 +39,7 @@
                             #set($groupWrapper = "group-${folder.name}-wrapper")
                             <div id="$groupWrapper" class="panel-group" style="margin: 0; min-height: 50px">
                                 #foreach($group in $page.getChildrenInFolder($folder))
-                                #genGroups($group $groupWrapper $folder)
+                                    #genGroups($group $groupWrapper $folder)
                                 #end
                             </div>
                         </div>
@@ -52,56 +49,10 @@
             </div>
             <div id="group-wrapper" class="panel-group">
                 #foreach($group in $page.children)
-                #if(!$group.groupFolder)
-                #genGroups($group "group-wrapper" false)
-                #end
-                #end
-            </div>
-        </div>
-        <div class="modal modal-sm fade" aria-hidden="true" tabindex="-1" id="modal-edit-roles">
-            <div class="modal-header">
-                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                <h4 class="modal-title">Edit roles</h4>
-            </div>
-            <div class="modal-body">
-                <h5>Role applies to:</h5>
-                <div class="applies-to">
-                    <p>
-                        <input type="radio" name="appliesTo" value="ownOrg" id="appliesToOwnOrg" />
-                        <label for="appliesToOwnOrg">Their own organistion</label>
-                    </p>
-                    <p>
-                        <input type="radio" name="appliesTo" value="selectRepo" id="appliesToRepository"/>
-                        <label for="appliesToRepository">A repository</label>
-                        <select class="hide">
-                            <option value="">-- Select a repository --</option>
-                            #foreach($r in $page.organisation.repositories())
-                            <option value="$r.name">$r.name</option>
-                            #end
-                        </select>
-                    </p>
-                    <p>
-                        <input type="radio" name="appliesTo" value="selectOrg" id="appliesToOrg"/>
-                        <label for="appliesToOrg">An organistion</label>
-                        <select class="hide">
-                            <option value="">-- Select an organisation --</option>
-                            <option value="$page.organisation.id">$page.organisation.formattedName (this organisation)</option>
-                            #foreach($org in $page.organisation.childOrgs)
-                            <option value="$org.id">$org.formattedName</option>
-                            #end
-                        </select>
-                    </p>
-                </div>
-                <div class="article-wrapper article-sm showed-action roles">
-                    #foreach($role in $page.allRoles)
-                    <article>
-                        <span class="article-name">$role</span>
-                        <aside class="article-action">
-                            <button class="btn btn-xs btn-success btn-add-role" title="Add role"><i class="clip-plus-circle "></i></button>
-                        </aside>
-                    </article>
+                    #if(!$group.groupFolder)
+                        #genGroups($group "group-wrapper" false)
                     #end
-                </div>
+                #end
             </div>
         </div>
 
@@ -239,7 +190,6 @@
 
         <script type="text/javascript" >
             $(function () {
-                initGroupAdminPortlet();
                 initManageGroup();
             });
         </script>
