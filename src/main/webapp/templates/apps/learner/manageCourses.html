@@ -68,7 +68,13 @@
                 </a>
                 <ul role="menu" class="dropdown-menu list">
                     #foreach($w in $page.closest("website").parent.children)
-                    <li class="list-item"><a href="${w.href}manageCourses">$w.name</a></li>
+                        <li class="list-item">
+                            #if ($applicationManager.isActive($applications.learning, $w.website.liveBranch()))
+                                <a title="Learning app is disabled!" style="color: #bbb;"><i class="fa fa-exclamation fa-fw text-danger"></i> $w.name</a>
+                            #else
+                                <a href="${w.href}manageCourses"><i class="fa fa-fw fa-check text-success"></i> $w.name</a>
+                            #end
+                        </li>
                     #end
                 </ul>
             </div>

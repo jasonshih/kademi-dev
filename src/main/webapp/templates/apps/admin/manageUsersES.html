@@ -165,7 +165,13 @@
                                                         <select name="defaultGroup" class="form-control">
                                                             <option value="">[No default group]</option>
                                                             #foreach($group in $rootFolder.groups)
-                                                            <option value="$group.name">$group.title</option>
+                                                            <option value="$group.name">
+                                                                #if( $group.title)
+                                                                $group.title
+                                                                #else
+                                                                $group.name
+                                                                #end
+                                                            </option>
                                                             #end
                                                         </select>
                                                     </div>
@@ -228,8 +234,29 @@
 
                                     </div>
                                     <div class="step-pane sample-pane alert" data-step="5">
-                                        <h4>Profiles updated: <span class="updatedProfiles"></span></h4>
-                                        <h4>Profiles created: <span class="createdProfiles"></span></h4>
+                                        <table class="table table-bordered">
+                                            <tr>
+                                                <th>Created</th>
+                                                <td class="createdProfiles"></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Updated:</th>
+                                                <td class="updatedProfiles"></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Removed</th>
+                                                <td class="removedProfiles"></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Unsubscribed</th>
+                                                <td class="unsubbedProfiles"></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Error</th>
+                                                <td class="errorProfiles"></td>
+                                            </tr>
+
+                                        </table>
                                     </div>
 
                                 </div>

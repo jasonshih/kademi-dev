@@ -125,17 +125,13 @@ function openExtraFieldModal(key, value) {
 
 function renderOption(optionText) {
     return (
-            '<div class="form-group">' +
-            '<div class="col-md-offset-4 col-md-8">' +
-            '<div class="option input-group input-group-sm">' +
-            '<input type="text" class="form-control required" value="' + (optionText || '') + '" />' +
-            '<span class="input-group-btn">' +
-            '<button class="btn btn-danger btn-delete-option" type="button"><i class="fa fa-times"></i></button>' +
-            '</span>' +
-            '</div>' +
-            '</div>' +
-            '</div>'
-            );
+        '<div class="option input-group input-group-sm">' +
+        '   <input type="text" class="form-control required" value="' + (optionText || '') + '" />' +
+        '   <span class="input-group-btn">' +
+        '       <button class="btn btn-danger btn-delete-option" type="button"><i class="fa fa-times"></i></button>' +
+        '   </span>' +
+        '</div>'
+    );
 }
 
 function initExtraFieldModal() {
@@ -148,13 +144,18 @@ function initExtraFieldModal() {
     var orgSel = $('#org-sel');
     var profId = modal.find('#prof-id');
 
+    modal.on('hidden.bs.modal', function () {
+        modal.find('input').prop('disabled', false);
+        modal.find('button').removeClass('disabled');
+    });
+
     // Add options
     btnAddOption.on('click', function (e) {
         e.preventDefault();
         if (!orgSel.prop('checked')) {
             optionWrapper.append(
-                    renderOption()
-                    );
+                renderOption()
+            );
         }
     });
 
@@ -317,19 +318,19 @@ function buildExtraField(key, value) {
 
     // Action
     string +=
-            '<td class="action">' +
-            '<div class="btn-group btn-group-sm">' +
-            '<a href="" class="btn btn-sm btn-info btn-edit-extra-field">' +
-            '<i class="fa fa-edit"></i> Edit' +
-            '</a>' +
-            '<button class="btn btn-sm btn-info btn-sm dropdown-toggle" data-toggle="dropdown">' +
-            '<span class="caret"></span>' +
-            '</button>' +
-            '<ul class="dropdown-menu pull-right" role="menu">' +
-            '<li><a href="' + key + '" class="btn-delete-extra-field"><i class="fa fa-times"></i> Delete</a></li>' +
-            '</ul>' +
-            '</div>' +
-            '</td>';
+        '<td class="action">' +
+        '   <div class="btn-group btn-group-sm">' +
+        '       <a href="" class="btn btn-sm btn-info btn-edit-extra-field">' +
+        '           <i class="fa fa-edit"></i> Edit' +
+        '       </a>' +
+        '       <button class="btn btn-sm btn-info btn-sm dropdown-toggle" data-toggle="dropdown">' +
+        '           <span class="caret"></span>' +
+        '       </button>' +
+        '       <ul class="dropdown-menu pull-right" role="menu">' +
+        '           <li><a href="' + key + '" class="btn-delete-extra-field"><i class="fa fa-times"></i> Delete</a></li>' +
+        '       </ul>' +
+        '   </div>' +
+        '</td>';
 
     return string;
 }

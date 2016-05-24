@@ -21,15 +21,42 @@
             </p>
         </div>
 
+        #set( $locks = $page.locks )
+        #if( !$locks.isEmpty() )
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-lock"></i>
+                <b>Current Locks</b>
+            </div>
+            <div class="panel-body">
+                <table class="table">
+                    <tr>
+                        <th>
+                            <button class="btn btn-danger btn-sm " id="clearLocks">Remove all locks</button>
+                        </th>
+                        <th>User</th>
+                    </tr>
+                    #foreach( $lock in $locks )
+                    <tr>
+                        <td>$lock.id</td>
+                        <td>$lock.lockedByUser</td>
+                    </tr>
+                    #end
+                </table>
+            </div>
+        </div>
+        #end
+
+
         <div class="panel panel-default">
             <div class="panel-heading">
                 <i class="fa fa-cloud-upload"></i>
                 <b>Commits</b>
                 #if( $page.commits.size() > 0 )
                 - showing $page.commits.size() results
-                    #if( $page.commits.size() >= 1000 )
-                     (limited to 1000)
-                    #end
+                #if( $page.commits.size() >= 1000 )
+                (limited to 1000)
+                #end
                 #end
             </div>
             <div class="panel-body">
@@ -76,15 +103,30 @@
             </div>
         </div>
         <script type="text/javascript">
-            $(function() {
+            $(function () {
                 initManageRepoHistory();
                 initHistorySearch();
+                $("#clearLocks").click(function () {
+                    $.ajax({
+                        type: "POST",
+                        url: window.location.pathname,
+                        data: {
+                            deleteLocks: true
+                        },
+                        dataType: 'json',
+                        success: function () {
+                            Msg.info("Cleared locks. Reloading page..");
+                            window.location.reload();
+                        }
+                    });
+                })
+
             });
 
             function initHistorySearch() {
                 var reportRange = $('#report-range');
 
-                reportRange.exist(function() {
+                reportRange.exist(function () {
                     flog("init report range");
                     reportRange.daterangepicker({
                         format: 'DD/MM/YYYY', // YYYY-MM-DD
@@ -96,7 +138,7 @@
                             'This Year': [moment().startOf('year'), moment()],
                         },
                     },
-                            function(start, end) {
+                            function (start, end) {
                                 flog('onChange', start, end);
                                 doHistorySearch(start, end);
                             }
@@ -124,7 +166,7 @@
                     type: "GET",
                     url: href,
                     dataType: 'html',
-                    success: function(content) {
+                    success: function (content) {
                         flog('response', content);
                         var newBody = $(content).find("#history-table-body");
                         target.replaceWith(newBody);

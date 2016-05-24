@@ -19,15 +19,19 @@
         <div class="clearfix">
             #set($currentBranch = $page.closest("branch"))
             <div class="btn-group publishing pull-right">
-                <a href="${currentBranch.href}commits" class="publish btn btn-sm btn-info">
+                <a href="${currentBranch.href}commits" class="publish btn btn-sm btn-info" title="View repository history and revert changes">
                     <i class="fa fa-clock-o"></i>
-                    History
                 </a>
 
+                #if( !$currentBranch.locks.isEmpty() )
+                <a href="$currentBranch.href/commits" class="btn btn-sm btn-warning" title="This branch has locks">
+                   <i class="fa fa-lock"></i>
+                </a>
+                #end
+
                 #if( $currentBranch.live )
-                <a href="/repositories/$page.closest("repository").name/manageBranches" class="islive btn btn-sm btn-danger">
-                   <i class="fa fa-gear"></i>
-                    LIVE
+                <a href="/repositories/$page.closest('repository').name/manageBranches" class="islive btn btn-sm btn-danger" title="This is the live branch. Manage repository versions">
+                   <i class="fa fa-exclamation-triangle"></i>
                 </a>
                 #else
                 <a href="${currentBranch.href}publish" class="publish btn btn-sm btn-success">
@@ -41,7 +45,7 @@
                 #end
 
                 <a class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
-                    <b>Editing version:</b>
+                    <b>Version:</b>
                     $currentBranch.name
                     <span class="caret"></span>
                 </a>
@@ -97,16 +101,15 @@
                         <col />
                         <col />
                         <col />
-                        <col style="width: 150px;" />
+                        <col style="width: 70px;" />
                     </colgroup>
                     <thead>
                         <tr>
                             <th class="icon">Type</th>
                             <th>Name</th>
                             <th>Modified</th>
-                            <th class="size">Size</th>
-                            <th  class="action">
-                                <div class="btn-group">
+                            <th  class="action" colspan="2">
+                                <div class="btn-group pull-right">
                                     <a title="Create a folder" class="btn btn-success btn-sm btn-create-folder" href=""><i class="clip-folder-plus"></i></a>
                                     <a title="Create text file" class="btn btn-success btn-sm btn-new-text-file" href=""><i class="fa fa-file-text-o"></i></a>
                                     <a title="Paste" href="$page.href" class="btn btn-success btn-sm btn-paste requires-clipboard" data-clipboard="default" href="$page.href"><i class="fa fa-paste"></i></a>
@@ -175,7 +178,9 @@
                                 <a href="$linkToFile" target="_blank" class="$aClass" title="$f.name">$f.name</a>
                             </td>
                             <td><abbr title="$formatter.formatDateISO8601($!f.modifiedDate)" class="timeago">$!f.modifiedDate</abbr></td>
-                            <td class="size">$f.contentLength</td>
+                            <td class="size">
+                                <span title="$f.contentLength bytes">$formatter.formatBytes( $f )</span>
+                            </td>
                             <td class="action">
                                 <div class="btn-group btn-group-sm">
                                     <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cog"></i> <span class="caret"></span></button>
