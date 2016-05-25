@@ -1,15 +1,30 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>Manage Queries</title>
+        <script type="text/javascript" src="/static/ace/1.2.0/src-noconflict/ace.js">//</script>
+        <script type="text/javascript" src="/static/js/keymap.js">//</script>
+        <script type="text/javascript" src="/static/jquery.fullscreen/jquery.fullscreen-0.4.1.min.js">//</script>
+        <script type="text/javascript" src="/theme/apps/admin/textEditor.js">//</script>
+        <link rel="stylesheet" type="text/css" href="/theme/apps/admin/textEditor.css" />
     </head>
     <body>
         <h2>Query: $page.name</h2>
+        <p class="">
+            <b>Indexes: </b>
+            #foreach( $index in $page.indexes)
+            <a href="/manageSearch/$index" class="label label-primary">$index</a>
+            #end
+        </p>
+        <p style="line-height: 30px">
+            <b>Fields: </b>
+            #foreach($field in $page.allFieldNames)
+            <span class="label label-info">$field</span>
+            #end
+        </p>
         <div id="query">
             #set( $resp = $page.records )
 
-            <textarea id="queryText" style="width: 100%; height: 200px" name="query">
-$page.queryJson
-            </textarea>
+            <div id="queryText" style="width: 100%; height: 200px" name="query">$page.queryJson</div>
             <button class="btn btn-success runQuery">Run</button>
             <button class="btn btn-primary saveQuery">Save</button>
             <hr/>
@@ -52,38 +67,72 @@ $page.queryJson
         </div>
         <script type="text/javascript">
             $(document).ready(function () {
+                var editor = ace.edit("queryText");
+                editor.setTheme("ace/theme/monokai");
+                editor.getSession().setMode("ace/mode/javascript");
+
+                function save(callback) {
+                    var json = editor.getValue();
+                    $.ajax({
+                        type: 'POST',
+                        data: {
+                            query: json
+                        },
+                        dataType: "json",
+                        url: "",
+                        success: function (data) {
+                            Msg.info("Saved");
+                            if (callback) {
+                                callback();
+                            }
+                        },
+                        error: function (resp) {
+                            Msg.error("An error occured while saving");
+                        }
+                    });
+                }
+
+
+                var heightUpdateFunction = function () {
+
+                    // http://stackoverflow.com/questions/11584061/
+                    var newHeight =
+                            editor.getSession().getScreenLength()
+                            * editor.renderer.lineHeight
+                            + editor.renderer.scrollBar.getWidth();
+
+                    $('#queryText').height(newHeight.toString() + "px");
+
+                    // This call is required for the editor to fix all of
+                    // its inner structure for adapting to a change in size
+                    editor.resize();
+                };
+
+                // Set initial size to match initial content
+                heightUpdateFunction();
+
+                // Whenever a change happens inside the ACE editor, update
+                // the size again
+                editor.getSession().on('change', heightUpdateFunction);
+
                 $("body").on("click", ".runQuery", function (e) {
-                    save(function() {
-                        $("#queryResults").reloadFragment();
-                    });                    
+                    save(function () {
+                        Msg.info("Running..");
+                        $("#queryResults").reloadFragment({
+                            whenComplete: function () {
+                                Msg.info("Query executed");
+                            }
+                        });
+                    });
                 });
 
 
                 $("body").on("click", ".saveQuery", function (e) {
                     save();
                 });
-            });
-            function save(callback) {
-                var json = $("#queryText").val();
-                $.ajax({
-                    type: 'POST',
-                    data: {
-                        query: json
-                    },
-                    dataType: "json",
-                    url: "",
-                    success: function (data) {
-                        Msg.info("Saved");
-                        if( callback ) {
-                            callback();
-                        }
-                    },
-                    error: function (resp) {
-                        Msg.error("An error occured while saving");
-                    }
-                });
-            }
 
+
+            });
         </script>        
     </body>
 </html>

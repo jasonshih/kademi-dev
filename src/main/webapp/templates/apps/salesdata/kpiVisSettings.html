@@ -5,7 +5,7 @@
             <select class="form-control select-kpi">
                 <option value="">- None -</option>
                 #foreach ($kpi in $rootFolder.find('/sales/').allKpis)
-                    <option value="$kpi.href">$kpi.title</option>
+                    <option value="/sales/${kpi.dataSeries.name}/kpis/${kpi.name}">$kpi.title</option>
                 #end
             </select>
         </div>
