@@ -1621,3 +1621,19 @@ body.ajax-loading .ajaxLoader {
 .tooltip.tooltip-error.right .tooltip-arrow {
     border-right-color: #a94442;
 }
+
+.pageDatePicker li {
+    width: 40px;
+    text-align: center;
+}
+.pageDatePicker li span {
+    border-radius: 11.25px;
+    height: 22.5px;
+    width: 22.5px;
+    display: block;
+    background-color: #dfdfdf
+}
+
+.pageDatePicker li.active span {
+    background-color: #57bda6;
+}

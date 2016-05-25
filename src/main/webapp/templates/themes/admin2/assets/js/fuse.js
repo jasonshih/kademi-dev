@@ -130,6 +130,13 @@ function initMasonryPanel() {
 
 function initDatePicker() {
     flog('initDatePicker');
+    
+    $("body").on("click", ".pageDatePicker", function(e) {
+        e.preventDefault();
+        var s = $(e.target).closest("a").attr("href");
+        // TODO
+    });
+    
 
     $('.date-picker').exist(function () {
         var datePicker = this;
