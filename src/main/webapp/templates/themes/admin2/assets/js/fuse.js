@@ -130,13 +130,20 @@ function initMasonryPanel() {
 
 function initDatePicker() {
     flog('initDatePicker');
-    
+
+    window.setTimeout(function() {
+        var selDate = $.cookie("selectedDate");
+        if( selDate == "") {
+            selDate = "7-days"; // default
+        }
+        selectDate(selDate);
+    }, 500);
+
     $("body").on("click", ".pageDatePicker", function(e) {
         e.preventDefault();
         var s = $(e.target).closest("a").attr("href");
-        // TODO
+        selectDate(s);
     });
-    
 
     $('.date-picker').exist(function () {
         var datePicker = this;
@@ -174,6 +181,31 @@ function initDatePicker() {
         this.datetimepicker();
     });
 }
+
+function selectDate(selDate) {
+    $.cookie("selectedDate", selDate);
+    $(".pageDatePicker li").removeClass("active");
+    $(".pageDatePicker a[href='" + selDate + "']").closest("li").addClass("active");
+    var dateOptions = calcDates(selDate);
+    flog("new date selection", dateOptions);
+    $("body").trigger("pageDateChange", dateOptions);
+}
+
+function calcDates(sel) {
+    var arr = sel.split("-");
+    var num = parseInt(arr[0]);
+    var units = arr[1];
+    var now = moment();
+    var from = moment().subtract(num, units);
+    $(".pageSelectedDate").text(num + " " + units + " before now");
+
+    var opts = {
+        startDate : from.format('DD/MM/YYYY'),
+        endDate :  now.format('DD/MM/YYYY')
+    };
+    return opts;
+}
+
 
 function initTabbable() {
     flog('initTabbable');
@@ -713,7 +745,7 @@ function doTopNavSearch(query, suggestionsWrapper, backdrop) {
                         if (firstName || surName) {
                             suggestionStr += '    <br /><small class="text-muted">' + firstName + ' ' + surName + '</small>';
                         }
-                        suggestionStr += '    </a>';                    
+                        suggestionStr += '    </a>';
                     } else {
                         var id = suggestion.fields.entityId[0];
                         var orgId = suggestion.fields.orgId[0];
@@ -723,8 +755,8 @@ function doTopNavSearch(query, suggestionsWrapper, backdrop) {
                         suggestionStr += "    <a href='" + href + "'>";
                         suggestionStr += '        <span>' + orgTitle + '</span>';
                         suggestionStr += '    <br /><small class="text-muted">OrgID: ' + orgId + '</small>';
-                        suggestionStr += '    </a>';                    
-                        
+                        suggestionStr += '    </a>';
+
                     }
                     suggestionStr += '</li>';
                 }
