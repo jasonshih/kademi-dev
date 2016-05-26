@@ -306,7 +306,9 @@
 </div>
 
 #foreach( $component in $page.components )
-<div data-type="component-$component.componentId" data-preview="$component.previewImageHref">
+<div data-type="component-$component.componentId" data-preview="$component.previewImageHref"
+#foreach( $defaultAtt in $component.defaultAtts) $defaultAtt.key="$!defaultAll.value" #end
+>
     $component.snippetHtml
 </div>
 #end
