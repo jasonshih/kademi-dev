@@ -37,8 +37,8 @@ $(function () {
         }
 
         var styles = [
-            '/static/keditor/1.1.0/dist/css/keditor-1.1.0.min.css',
-            '/static/keditor/1.1.0/dist/css/keditor-components-1.1.0.min.css',
+            '/static/keditor/1.1.2/dist/css/keditor-1.1.2.min.css',
+            '/static/keditor/1.1.2/dist/css/keditor-components-1.1.2.min.css',
             '/static/jquery.mselect/1.1.0/jquery.mselect-1.1.0.css'
         ];
         for (var i = 0; i < styles.length; i++) {
@@ -55,8 +55,8 @@ $(function () {
 
         $.getScriptOnce('/static/jquery.mselect/1.1.0/jquery.mselect-1.1.0.js', f);
         $.getScriptOnce('/static/jquery-ui/1.11.4/jquery-ui.min.js', function () {
-            $.getScriptOnce('/static/keditor/1.1.0/dist/js/keditor-1.1.0.min.js', function () {
-                $.getScriptOnce('/static/keditor/1.1.0/dist/js/keditor-components-1.1.0.min.js', f);
+            $.getScriptOnce('/static/keditor/1.1.2/dist/js/keditor-1.1.2.min.js', function () {
+                $.getScriptOnce('/static/keditor/1.1.2/dist/js/keditor-components-1.1.2.min.js', f);
                 $.getScriptOnce('/_components/web/handlers.js', f);
             });
         });

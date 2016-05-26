@@ -132,8 +132,10 @@ function initDatePicker() {
     flog('initDatePicker');
 
     window.setTimeout(function() {
-        var selDate = $.cookie("selectedDate");
-        if( selDate == "") {
+        var selDate = $.cookie("selectedDate") || '';
+        selDate = selDate.trim();
+
+        if( selDate === null || selDate === undefined || selDate === '') {
             selDate = "7-days"; // default
         }
         selectDate(selDate);

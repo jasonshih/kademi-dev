@@ -2,7 +2,7 @@
  * KEditor Button Component
  * @copyright: Kademi (http://kademi.co)
  * @author: Kademi (http://kademi.co)
- * @version: 1.1.0
+ * @version: 1.1.2
  * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap, FontAwesome (optional)
  */
 (function ($) {
@@ -389,7 +389,7 @@
  * KEditor Line Component
  * @copyright: Kademi (http://kademi.co)
  * @author: Kademi (http://kademi.co)
- * @version: 1.1.0
+ * @version: 1.1.2
  * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap, FontAwesome (optional)
  */
 (function ($) {
@@ -489,7 +489,7 @@
  * KEditor Photo Component
  * @copyright: Kademi (http://kademi.co)
  * @author: Kademi (http://kademi.co)
- * @version: 1.1.0
+ * @version: 1.1.2
  * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap, FontAwesome (optional)
  */
 (function ($) {
@@ -620,7 +620,7 @@
  * KEditor Spacer Component
  * @copyright: Kademi (http://kademi.co)
  * @author: Kademi (http://kademi.co)
- * @version: 1.1.0
+ * @version: 1.1.2
  * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap, FontAwesome (optional)
  */
 (function ($) {
@@ -689,7 +689,7 @@
  * KEditor Text Component
  * @copyright: Kademi (http://kademi.co)
  * @author: Kademi (http://kademi.co)
- * @version: 1.1.0
+ * @version: 1.1.2
  * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap, FontAwesome (optional)
  */
 (function ($) {
@@ -827,7 +827,7 @@
  * KEditor Unsubscribe Component
  * @copyright: Kademi (http://kademi.co)
  * @author: Kademi (http://kademi.co)
- * @version: 1.1.0
+ * @version: 1.1.2
  * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap, FontAwesome (optional)
  */
 (function ($) {

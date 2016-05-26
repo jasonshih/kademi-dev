@@ -2,7 +2,7 @@
  * KEditor - Kademi content editor
  * @copyright: Kademi (http://kademi.co)
  * @author: Kademi (http://kademi.co)
- * @version: 1.1.0
+ * @version: @{version}
  * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap, FontAwesome (optional)
  *
  * Configuration:
@@ -87,7 +87,7 @@
     KEditor.debug = true;
 
     // Version of KEditor
-    KEditor.version = '1.1.0';
+    KEditor.version = '@{version}';
 
     // Default configuration of KEditor
     KEditor.DEFAULTS = {
@@ -165,6 +165,27 @@
                 target = self.initFrame(target);
             } else {
                 self.body = $(document.body);
+
+                if (target.is('textarea')) {
+                    flog('Target is textarea', target);
+
+                    var htmlContent = target.val();
+                    var keditorWrapper = $('<div />');
+                    var keditorWrapperId = self.generateId('wrapper');
+
+                    target.after(keditorWrapper);
+                    keditorWrapper.attr({
+                        id: keditorWrapperId,
+                        class: 'keditor-wrapper'
+                    });
+                    flog('Id for keditor wrapper is: "' + keditorWrapperId + '"');
+
+                    keditorWrapper.html(htmlContent);
+                    target.css('display', 'none');
+                    target.attr('data-keditor-wrapper', '#' + keditorWrapperId);
+
+                    target = keditorWrapper;
+                }
             }
 
             self.initContentAreas(target);
@@ -203,8 +224,7 @@
                         left: 0,
                         bottom: 0
                     },
-                    cursorborder: '',
-                    disablemutationobserver: true
+                    cursorborder: ''
                 });
             } else {
                 flog('$.fn.niceScroll does not exist. Use default sidebar.');
@@ -228,7 +248,7 @@
             flog('Id for keditor frame is: "' + iframeId + '"');
 
             target.css('display', 'none');
-            target.attr('data-iframe', '#' + iframeId);
+            target.attr('data-keditor-frame', '#' + iframeId);
 
             var iframeDoc = iframe.contents();
             var iframeHead = iframeDoc.find('head');
@@ -325,29 +345,37 @@
             }
         },
 
+        toggleSidebar: function (showSidebar) {
+            flog('toggleSidebar', showSidebar);
+
+            var self = this;
+            var options = self.options;
+            var body = self.body;
+            var icon = body.find('#keditor-sidebar-toggler i');
+
+            if (showSidebar) {
+                body.addClass('opened-keditor-sidebar');
+                icon.attr('class', 'fa fa-chevron-right')
+            } else {
+                body.removeClass('opened-keditor-sidebar');
+                icon.attr('class', 'fa fa-chevron-left')
+            }
+
+            if (typeof options.onSidebarToggled === 'function') {
+                options.onSidebarToggled.call(null, showSidebar);
+            }
+        },
+
         initSidebarToggler: function () {
             flog('initSidebarToggler');
 
             var self = this;
-            var options = self.options;
             var body = self.body;
 
             body.find('#keditor-sidebar-toggler').on('click', function (e) {
                 e.preventDefault();
 
-                var icon = $(this).find('i');
-                var isOpened = body.hasClass('opened-keditor-sidebar');
-                if (isOpened) {
-                    body.removeClass('opened-keditor-sidebar');
-                    icon.attr('class', 'fa fa-chevron-left')
-                } else {
-                    body.addClass('opened-keditor-sidebar');
-                    icon.attr('class', 'fa fa-chevron-right')
-                }
-
-                if (typeof options.onSidebarToggled === 'function') {
-                    options.onSidebarToggled.call(null, !isOpened);
-                }
+                self.toggleSidebar(!body.hasClass('opened-keditor-sidebar'));
             });
         },
 
@@ -381,7 +409,8 @@
                     snippetsComponentHtml += snippetHtml;
                 }
 
-                snippetsContentHtml += '<script id="keditor-snippet-' + i + '" type="text/html">' + content + '</script>';
+                var dataAttributes = self.getDataAttributes(snippet, ['data-preview', 'data-type'], true);
+                snippetsContentHtml += '<script id="keditor-snippet-' + i + '" type="text/html" ' + dataAttributes.join(' ') + '>' + content + '</script>';
             });
 
             body.find('#' + options.snippetsListId).html(
@@ -559,10 +588,7 @@
                 error('"showSettingForm" function of component type "' + componentType + '" does not exist!');
             }
 
-            if (!body.hasClass('opened-keditor-sidebar')) {
-                body.addClass('opened-keditor-sidebar');
-            }
-
+            self.toggleSidebar(true);
             body.addClass('opened-keditor-setting');
         },
 
@@ -808,12 +834,14 @@
                     var container;
 
                     if (item.is('.keditor-snippet')) {
-                        var snippetContent = body.find(item.attr('data-snippet')).html();
+                        var snippetContentElement = body.find(item.attr('data-snippet'));
+                        var snippetContent = snippetContentElement.html();
                         var componentType = item.attr('data-type');
                         flog('Snippet content', snippetContent);
 
+                        var dataAttributes = self.getDataAttributes(snippetContentElement, null, true);
                         var component = $(
-                            '<section class="keditor-component" data-type="' + componentType + '">' +
+                            '<section class="keditor-component" data-type="' + componentType + '" ' + dataAttributes.join(' ') + '>' +
                             '   <section class="keditor-component-content">' + snippetContent + '</section>' +
                             '</section>'
                         );
@@ -870,6 +898,27 @@
             }
 
             self.initComponent(contentArea, container, component);
+        },
+
+        getDataAttributes: function (target, ignoreAttributes, isArray) {
+            flog('getDataAttributes', target, ignoreAttributes, isArray);
+
+            var dataAttributes = isArray ? [] : {};
+            if (!ignoreAttributes) {
+                ignoreAttributes = [];
+            }
+
+            $.each(target.get(0).attributes, function (i, attr) {
+                if (attr.name.indexOf('data-') === 0 && $.inArray(attr.name, ignoreAttributes) === -1) {
+                    if (isArray) {
+                        dataAttributes.push(attr.name + '="' + attr.value + '"');
+                    } else {
+                        dataAttributes[attr.name] = attr.value;
+                    }
+                }
+            });
+
+            return dataAttributes;
         },
 
         getComponentType: function (component) {
@@ -1097,7 +1146,7 @@
                 flog('Click on .btn-component-setting', btn);
 
                 var component = btn.closest('.keditor-component');
-                if (body.hasClass('opened-keditor-setting')) {
+                if (body.hasClass('opened-keditor-setting') && body.hasClass('opened-keditor-sidebar')) {
                     if (!component.is(self.getSettingComponent())) {
                         self.showSettingPanel(component);
                     } else {
@@ -1189,22 +1238,12 @@
 
             var self = this;
             var options = self.options;
+            var component = dynamicElement.closest('.keditor-component');
             var dynamicHref = dynamicElement.attr('data-dynamic-href');
-            var data = {};
-
-            $.each(dynamicElement.get(0).attributes, function (i, attr) {
-                if (attr.name.indexOf('data-') === 0 && attr.name !== 'data-dynamic-href' && attr.name !== 'data-type') {
-                    var camelCaseName = attr.name.substr(5).replace(/-(.)/g, function ($0, $1) {
-                        return $1.toUpperCase();
-                    });
-                    data[camelCaseName] = attr.value;
-                }
-            });
-
+            var data = self.getDataAttributes(component, ['data-type', 'data-dynamic-href'], false);
             data = $.param(data);
             flog('Dynamic href: ' + dynamicHref, 'Data: ' + data);
 
-            dynamicElement.html('');
             return $.ajax({
                 url: dynamicHref,
                 data: data,
@@ -1232,11 +1271,9 @@
             flog('getComponentContent', component);
 
             var self = this;
-            var options = self.options;
-
-            var dataType = component.attr('data-type');
             var componentType = self.getComponentType(component);
             var componentData = KEditor.components[componentType];
+            var dataAttrubites = self.getDataAttributes(component, null, true);
             var content;
 
             if (typeof componentData.getContent === 'function') {
@@ -1251,7 +1288,7 @@
             });
             content = tempDiv.html();
 
-            return '<section data-type="' + dataType + '">' + content + '</section>';
+            return '<section ' + dataAttrubites.join(' ') + '>' + content + '</section>';
         },
 
         getContainerContent: function (container) {
@@ -1286,9 +1323,9 @@
                 if (target.data('keditor')) {
                     flog('KEditor is already initialized!');
                 } else {
+                    flog('Initialze KEditor', target, options);
                     var keditor = new KEditor(target, options);
                     target.data('keditor', keditor);
-
                 }
             });
         },

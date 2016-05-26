@@ -27,6 +27,13 @@
 
             var kpiHref = cont.data("href");
             var visType = cont.data("visualisation");
+
+            var component = container.closest('[data-type^="component-"]');
+            if (component.length > 0) {
+                kpiHref = component.data("href");
+                visType = component.data("visualisation");
+            }
+
             if (config.levelClassPrefix === null) {
                 config.levelClassPrefix = cont.data("level-class-prefix");
             }
