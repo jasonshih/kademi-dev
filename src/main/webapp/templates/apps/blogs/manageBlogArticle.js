@@ -451,15 +451,16 @@ function setGroupRecipient(name, isRecip) {
             success: function(data) {
                 if (data.status) {
                     flog('saved ok', data);
-                    if (isRecip) {
-                        $('.GroupList').append("<button class='btn btn-sm btn-default reset-margin-bottom' type='button' style='margin-right: 5px;'>" + name + "</button>");
-                        flog('appended to', $('.GroupList'));
-                    } else {
-                        var toRemove = $('.GroupList button').filter(function() {
-                            return $(this).text() == name;
-                        });
-                        toRemove.remove();
-                    }
+                    $('#groupMemberships').reloadFragment({});
+                    //if (isRecip) {
+                    //    $('.GroupList').append("<button class='btn btn-sm btn-default reset-margin-bottom' type='button' style='margin-right: 5px;'>" + name + "</button>");
+                    //    flog('appended to', $('.GroupList'));
+                    //} else {
+                    //    var toRemove = $('.GroupList button').filter(function() {
+                    //        return $(this).text() == name;
+                    //    });
+                    //    toRemove.remove();
+                    //}
                 } else {
                     flog('error', data);
                     Msg.error('Sorry, couldnt save ' + data);

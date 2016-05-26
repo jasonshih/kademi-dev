@@ -238,11 +238,33 @@
 
                     <div class="tab-pane" id="groups">
                         <button class="btn btn-sm btn-primary Add AddGroup" data-toggle="modal" data-target="#modalGroup"><i class="fa fa-plus"></i> Add/remove groups</button>
-                        <div class="well margin-top-10">Add user groups to limit visibility to the selected groups only. If no groups are selected then everyone has visibility</div>
+                        <div class="well margin-top-10" style="margin-top: 10px">Add user groups to limit visibility to the selected groups only. If no groups are selected then everyone has visibility</div>
                         <div class="GroupList">
-                            #foreach($g in $page.groups)
-                            <button class="btn btn-sm btn-default reset-margin-bottom" type="button">$!g.name</button>
-                            #end
+                            <div id="groupMemberships">
+                                #foreach($m in $page.groups)
+                                #if(!$m.groupType || $m.groupType == "P")
+                                <div class="fluidLabel label label-success" style="margin-right: 5px">
+                                    <i class="clip-users"></i>
+                                    <span class="block-name">
+                                        <a target="_blank" href="/groups/$m.name">$m.name</a> in $m.organisation.title
+                                    </span>
+                                </div>
+                                #elseif( $m.groupType == "S" )
+                                <div class="fluidLabel label label-info" style="margin-right: 5px">
+                                    <i class="fa fa-trophy"></i>
+                                    <span class="block-name" title="$m.groupName in $m.organisation.title"><a target="_blank" href="/groups/$m.name">$m.name</a></span>
+                                </div>
+
+                                #elseif( $m.groupType == "M" )
+                                <div class="fluidLabel label label-info" style="margin-right: 5px">
+                                    <i class="fa fa-envelope"></i>
+                                    <span class="block-name" title="$m.name in $m.organisation.title"><a target="_blank" href="/groups/$m.name">$m.name</a></span>
+                                </div>
+                                #end
+                                #end
+                                <div style="clear: both"></div>
+                            </div>
+
                         </div>
                     </div>
 
