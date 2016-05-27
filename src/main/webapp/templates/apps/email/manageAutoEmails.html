@@ -98,6 +98,7 @@
                                             <col />
                                             <col />
                                             <col />
+                                            <col />
                                             <col style="width: 100px" />
                                         </colgroup>
                                         <thead>
@@ -105,6 +106,7 @@
                                                 <th>Status</th>
                                                 <th>Name</th>
                                                 <th>Description</th>
+                                                <th>Queued</th>
                                                 <th>Sent</th>
                                                 <th><acronym title='Percentage of emails opened, as determined by image loading. Actual rate will be higher.'></acronym>Opened</th>
                                                 <th><acronym title='Percentage of emails which resulted in a click-through to the website'></acronym>CTR</th>
@@ -137,6 +139,7 @@
                                 <col />
                                 <col />
                                 <col />
+                                <col />
                                 <col style="width: 100px" />
                             </colgroup>
                             <thead>
@@ -144,6 +147,7 @@
                                     <th>Status</th>
                                     <th>Name</th>
                                     <th>Description</th>
+                                    <th>Queued</th>
                                     <th>Sent</th>
                                     <th><acronym title='Percentage of emails opened, as determined by image loading. Actual rate will be higher.'></acronym>Opened</th>
                                     <th><acronym title='Percentage of emails which resulted in a click-through to the website'></acronym>CTR</th>
@@ -219,6 +223,11 @@
                 <a href="$email.name/">$!email.job.title</a>
             </td>
             <td>$email.description</td>
+            <td>
+                #if( $email.delayed )
+                $!page.numQueued($email)                
+                #end
+            </td>
             <td>$email.numItems</td>
             <td>$email.openRate</td>
             <td>$email.conversionRate</td>
