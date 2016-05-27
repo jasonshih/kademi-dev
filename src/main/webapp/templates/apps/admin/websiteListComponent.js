@@ -40,10 +40,11 @@
             );
 
             form.find('.items-per-row').on('change', function () {
-                var dynamicElement = keditor.getSettingComponent().find('[data-dynamic-href]');
+                var component = keditor.getSettingComponent();
+                var dynamicElement = component.find('[data-dynamic-href]');
                 var contentArea = dynamicElement.closest('.keditor-content-area');
 
-                dynamicElement.attr('data-items-per-row', this.value);
+                component.attr('data-items-per-row', this.value);
                 keditor.initDynamicContent(contentArea, dynamicElement);
             });
         },
@@ -51,8 +52,8 @@
         showSettingForm: function (form, component, keditor) {
             flog('showSettingForm "websiteList" component');
 
-            var dynamicElement = component.find('[data-dynamic-href]');
-            form.find('.items-per-row').val(dynamicElement.attr('data-items-per-row'));
+            var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
+            form.find('.items-per-row').val(dataAttributes['data-items-per-row']);
         },
 
         hideSettingForm: function (form, keditor) {
