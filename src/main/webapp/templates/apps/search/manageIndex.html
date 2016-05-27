@@ -18,25 +18,27 @@
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="records">
                     <p>Showing $page.numDisplayed of $page.records.hits.totalHits Records</p>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <td>Item</td>
-                                <td>Fields</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            #foreach($hit in $page.records.hits.hits)
-                            <tr>
-                                <td>$hit.id</td>
-                                <td>$hit.type</td>
-                                <td>
-                                    $hit.sourceAsString
-                                </td>
-                            </tr>
-                            #end
-                        </tbody>
-                    </table>
+                    <div class="table-responsive" style="width: 800px">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <td>Item</td>
+                                    <td>Fields</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                #foreach($hit in $page.records.hits.hits)
+                                <tr>
+                                    <td>$hit.id</td>
+                                    <td>$hit.type</td>
+                                    <td>
+                                        $hit.sourceAsString
+                                    </td>
+                                </tr>
+                                #end
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 <div role="tabpanel" class="tab-pane" id="profile">
                     #set( $mappings = $page.mappings )
@@ -55,7 +57,7 @@ $page.queryJson
                     <button class="btn btn-warning resetQuery">Reset</button>
                     <button class="btn btn-primary saveQuery">Save</button>
                     <hr/>
-                    <div id="queryResults">
+                    <div id="queryResults" class="col-lg-12">
                         #if( $page.queryError )
                         <div class="alert alert-warning">
                             $page.queryError
