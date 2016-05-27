@@ -7,20 +7,23 @@
 
         <br/><br/>
 
-        <table class="table table-bordered">
-            <tr>
-                <td class="text-center"><h2>Total</h2></td>
-                #foreach($gs in $page.groupSummary)
-                <td class="text-center"><h2>$gs.group.title</h2></td>
-                #end
-            </tr>
-            <tr>
-                <td class="text-center"><h2>$page.children.ofType.unsub.size()</h2></td>
-                #foreach($gs in $page.groupSummary)
-                <td class="text-center"><h2>$gs.count</h2></td>
-                #end
-            </tr>
-        </table>
+        <div class="table-responsive" style="overflow-x: auto">
+            <table class="table table-bordered">
+                <tr>
+                    <td class="text-center"><h2>Total</h2></td>
+                    #foreach($gs in $page.groupSummary)
+                    <td class="text-center"><h2><a href="/groups/$gs.group.name">#if ($gs.group.title) $gs.group.title #else $gs.group.name #end</a></h2></td>
+                    #end
+                </tr>
+                <tr>
+                    <td class="text-center"><h2>$page.children.ofType.unsub.size()</h2></td>
+                    #foreach($gs in $page.groupSummary)
+                    <td class="text-center"><h2>$gs.count</h2></td>
+                    #end
+                </tr>
+            </table>
+        </div>
+
         <span class="text-muted">Note: Profiles may be in more then one group, so the sum of group counts may not equal the total</span>
 
         <p>&nbsp;</p>
