@@ -3,13 +3,14 @@
     var flog = KEditor.log;
 
     KEditor.components['recentPoints'] = {
-        init: function (contentArea, container, component, options) {
+        init: function (contentArea, container, component, keditor) {
+            // Do nothing
         },
-        getContent: function (component, options) {
+        getContent: function (component, keditor) {
             var componentContent = component.children('.keditor-component-content');
             return componentContent.html();
         },
-        destroy: function (component, options) {
+        destroy: function (component, keditor) {
             // Do nothing
         },
         settingEnabled: true,
@@ -24,12 +25,13 @@
 
                     form.find('.recentPointsBucket').on('change', function () {
                         var selectedBucket = this.value;
-                        var dynamicElement = keditor.getSettingComponent().find('[data-dynamic-href]');
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
 
                         if (selectedBucket) {
                             var contentArea = dynamicElement.closest('.keditor-content-area');
 
-                            dynamicElement.attr('data-bucket', selectedBucket);
+                            component.attr('data-bucket', selectedBucket);
                             keditor.initDynamicContent(contentArea, dynamicElement);
                         } else {
                             dynamicElement.html('<p>Please select a points bucket</p>');
@@ -44,10 +46,11 @@
                             this.value = number;
                         }
 
-                        var dynamicElement = keditor.getSettingComponent().find('[data-dynamic-href]');
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
                         var contentArea = dynamicElement.closest('.keditor-content-area');
 
-                        dynamicElement.attr('data-days', number);
+                        component.attr('data-days', number);
                         keditor.initDynamicContent(contentArea, dynamicElement);
                     });
 
@@ -59,24 +62,25 @@
                             this.value = number;
                         }
 
-                        var dynamicElement = keditor.getSettingComponent().find('[data-dynamic-href]');
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
                         var contentArea = dynamicElement.closest('.keditor-content-area');
 
-                        dynamicElement.attr('data-height', number);
+                        component.attr('data-height', number);
                         keditor.initDynamicContent(contentArea, dynamicElement);
                     });
                 }
             });
         },
-        showSettingForm: function (form, component, options) {
+        showSettingForm: function (form, component, keditor) {
             flog('showSettingForm "recent points" component');
 
-            var dynamicElement = component.find('[data-dynamic-href]');
-            form.find('.recentPointsBucket').val(dynamicElement.attr('data-bucket'));
-            form.find('.recentPointsDays').val(dynamicElement.attr('data-days'));
-            form.find('.recentPointsHeight').val(dynamicElement.attr('data-height'));
+            var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
+            form.find('.recentPointsBucket').val(dataAttributes['data-bucket']);
+            form.find('.recentPointsDays').val(dataAttributes['data-days']);
+            form.find('.recentPointsHeight').val(dataAttributes['data-height']);
         },
-        hideSettingForm: function (form) {
+        hideSettingForm: function (form, keditor) {
             // Do nothing
         }
     };

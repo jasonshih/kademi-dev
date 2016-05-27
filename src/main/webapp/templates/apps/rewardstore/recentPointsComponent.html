@@ -1,25 +1,44 @@
+#if ( !$height )
+    #set ( $height = 100 )
+#end
+
+#set ($pointBucket = $rootFolder.find("/rewards/").child($bucket))
+
 <div class="panel panel-default">
     <div class="panel-heading">
-        <div class="panel-title"> <a href="/points" class="icon-signal fa-lg text-muted pull-right"></a>Recent points </div>
+        <i class="fa fa-table"></i>
+        Recent points in <a href="$pointBucket.href" target="_blank">$pointBucket.title</a>
     </div>
-    <div class="panel-body" style="min-height: 200px">
+    <div class="panel-body" style="height: ${height}px; overflow-y: auto;">
         #set( $minusDays = $formatter.toInteger($days) * -1)
 
-        #set( $points = $rootFolder.find("/rewards/").child($bucket).myPointsInfo(1000, $formatter.addDays( $formatter.now, $minusDays), $formatter.now) )
+        #set( $points = $pointBucket.myPointsInfo(1000, $formatter.addDays( $formatter.now, $minusDays), $formatter.now) )
         #set( $recentPoints = $points.myPoints )
+
         #if( $recentPoints.size() > 0 )
-        <p>You have been awarded $recentPoints.size() times in the last 30 days</p>
-        <table class="table table-striped">
-            #foreach( $pt in $recentPoints )
-            <tr>
-                <td>$pt.numPoints</td>
-                <td>$pt.awardedDate</td>
-                <td>$pt.reason</td>
-            </tr>
-            #end
-            #else
-            <i>You have not been awarded any points in the last 30 days</i>
-            #end
-        </table>
+            <p>You have been awarded $recentPoints.size() times in the last $days days</p>
+            <table class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>No. Points</th>
+                        <th>Awarded date/time</th>
+                        <th>Reason</th>
+                    </tr>
+                </thead>
+                    <tbody>
+                    #foreach( $pt in $recentPoints )
+                        <tr>
+                            <td>$pt.numPoints</td>
+                            <td>$formatter.formatDateTime($pt.awardedDate, $page.organisation.timezone)</td>
+                            <td>$pt.reason</td>
+                        </tr>
+                    #end
+                </tbody>
+            </table>
+        #else
+            <p>
+                <i>You have not been awarded any points in the last $days days</i>
+            </p>
+        #end
     </div>
 </div>
