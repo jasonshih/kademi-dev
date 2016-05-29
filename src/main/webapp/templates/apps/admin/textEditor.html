@@ -245,7 +245,13 @@
                         </select>
                     </div>
                 </div>
-                <h3 class="pull-left">$page.editFile.name</h3>
+                <h3 class="pull-left">
+                    #if( $page.editFile.name )
+                    $page.editFile.name
+                    #else
+                    New file
+                    #end
+                </h3>
             </div>
             #set($text = "")
             #set($text = $page.textContent)
