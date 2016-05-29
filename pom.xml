@@ -83,5 +83,9 @@
             <id>milton-repo</id>
             <url>http://milton.io/maven</url>
         </repository>
+        <repository>
+            <id>milton-bintray-repo</id>
+            <url>http://dl.bintray.com/milton/Milton</url>
+        </repository>        
     </repositories>
 </project>
