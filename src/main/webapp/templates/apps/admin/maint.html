@@ -115,6 +115,56 @@
                             </table>
                         </div>
                     </article>
+                    
+                    <article class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Recent errors</h3>
+                        </div>
+                        <div class="panel-body">
+                            #foreach( $event in $page.mostRecentEvents)                            
+                            <h4>                            
+                                $event.logEvent.level - $event.logEvent.message
+                                #if( $event.request.method )
+                                <a href="http://${event.request.host}${event.request.href}">$event.request.method - ${event.request.host}${event.request.href}</a>
+                                #end
+                            </h4>
+                            
+                            <p class="lead">$event.logEvent.userName - $event.logEvent.userHref</p>                            
+                            
+                            #if( $event.request.headers.size() > 0 )
+                            <h5>Headers</h5>
+                            <table class="table table-striped">
+                                #foreach( $header in $event.request.headers.entrySet() )
+                                <tr>
+                                    <th>$header.key</th>
+                                    <td>$header.value</td>
+                                </tr>
+                                #end
+                            </table>
+                            #end
+                            
+                            #if( $event.request.parameters.size() > 0 )
+                            <h5>Parameters</h5>
+                            <table class="table table-striped">
+                                #foreach( $header in $event.request.parameters.entrySet() )
+                                <tr>
+                                    <th>$header.key</th>
+                                    <td>$header.value</td>
+                                </tr>
+                                #end
+                            </table>
+                            #end
+                            
+                            <ul>
+                            #foreach( $line in $event.logEvent.stackTrace )
+                            <li>$line</li>
+                            #end
+                            </ul>
+                            <hr/>
+                            #end
+                        </div>
+                    </article>
+                    
                 </div>
                 <div id="utils" class="tab-pane">
                     <article class="panel panel-default">
