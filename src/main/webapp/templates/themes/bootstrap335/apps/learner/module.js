@@ -1098,7 +1098,7 @@ function showQuizError(quiz, response, e) {
         flog('Looks like we have another batch...', response.data.nextQuizBatch);
 
         modalContent.addClass('panel-danger');
-        modalTitle.html('You answered quiz incorrectly!');
+        modalTitle.html('Please try again');
         errorText.html('You have <b>' + (response.data.maxAttempts - response.data.numAttempts) + '</b> remaming times to attempt this quiz');
 
         modal.off('hide.bs.modal').on('hide.bs.modal', function () {
