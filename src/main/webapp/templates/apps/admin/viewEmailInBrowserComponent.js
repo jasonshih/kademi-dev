@@ -2,7 +2,7 @@
     var KEditor = $.keditor;
     var flog = KEditor.log;
 
-    KEditor.components['websiteList'] = {
+    KEditor.components['viewEmailInBrowser'] = {
         init: function (contentArea, container, component, keditor) {
             // Do nothing
         },
@@ -18,42 +18,37 @@
 
         settingEnabled: true,
 
-        settingTitle: 'Website List Settings',
+        settingTitle: 'View email in browser Settings',
 
         initSettingForm: function (form, keditor) {
-            flog('initSettingForm "websiteList" component');
+            flog('initSettingForm "viewEmailInBrowser" component');
 
             form.append(
                 '<form class="form-horizontal">' +
                 '   <div class="form-group">' +
-                '       <label for="photo-align" class="col-sm-12">Items per row:</label>' +
+                '       <label for="photo-align" class="col-sm-12">Message:</label>' +
                 '       <div class="col-sm-12">' +
-                '           <select class="form-control items-per-row">' +
-                '               <option value="1">1</option>' +
-                '               <option value="2">2</option>' +
-                '               <option value="3">3</option>' +
-                '               <option value="4">4</option>' +
-                '           </select>' +
+                '           <input class="form-control message" type="text" />' +
                 '       </div>' +
                 '   </div>' +
                 '</form>'
             );
 
-            form.find('.items-per-row').on('change', function () {
+            form.find('.message').on('change', function () {
                 var component = keditor.getSettingComponent();
                 var dynamicElement = component.find('[data-dynamic-href]');
                 var contentArea = dynamicElement.closest('.keditor-content-area');
 
-                component.attr('data-items-per-row', this.value);
+                component.attr('data-message', this.value);
                 keditor.initDynamicContent(contentArea, dynamicElement);
             });
         },
 
         showSettingForm: function (form, component, keditor) {
-            flog('showSettingForm "websiteList" component');
+            flog('showSettingForm "viewEmailInBrowser" component');
 
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
-            form.find('.items-per-row').val(dataAttributes['data-items-per-row']);
+            form.find('.message').val(dataAttributes['data-message']);
         },
 
         hideSettingForm: function (form, keditor) {

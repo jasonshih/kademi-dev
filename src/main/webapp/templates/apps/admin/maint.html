@@ -78,8 +78,110 @@
                             </table>
                         </div>
                     </article>
+                    
+                    <article class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Emails</h3>
+                        </div>
+                        <div class="panel-body">
+                            <table class="table table-striped">
+                                <tr>
+                                    <th>Queued emails</th>
+                                    <td>$page.numQueuedEmails</td>
+                                </tr>
+                                <tr>
+                                    <th>deliveredEmailsToday</th>
+                                    <td>$page.deliveredEmailsToday</td>
+                                </tr>
+                                <tr>
+                                    <th>failedEmailsToday</th>
+                                    <td>$page.failedEmailsToday</td>
+                                </tr>
+                                
+                            </table>
+                        </div>
+                    </article>
+                    
+                    <article class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Web hits</h3>
+                        </div>
+                        <div class="panel-body">
+                            <table class="table table-striped">
+                                <tr>
+                                    <th>Hits last 24hrs</th>
+                                    <td>$page.webHitsToday</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </article>
+                    
+                    <article class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Recent errors</h3>
+                        </div>
+                        <div class="panel-body">
+                            #foreach( $event in $page.mostRecentEvents)                            
+                            <h4>                            
+                                $event.logEvent.level - $event.logEvent.message
+                                #if( $event.request.method )
+                                <a href="http://${event.request.host}${event.request.href}">$event.request.method - ${event.request.host}${event.request.href}</a>
+                                #end
+                            </h4>
+                            
+                            <p class="lead">$event.logEvent.userName - $event.logEvent.userHref</p>                            
+                            
+                            #if( $event.request.headers.size() > 0 )
+                            <h5>Headers</h5>
+                            <table class="table table-striped">
+                                #foreach( $header in $event.request.headers.entrySet() )
+                                <tr>
+                                    <th>$header.key</th>
+                                    <td>$header.value</td>
+                                </tr>
+                                #end
+                            </table>
+                            #end
+                            
+                            #if( $event.request.parameters.size() > 0 )
+                            <h5>Parameters</h5>
+                            <table class="table table-striped">
+                                #foreach( $header in $event.request.parameters.entrySet() )
+                                <tr>
+                                    <th>$header.key</th>
+                                    <td>$header.value</td>
+                                </tr>
+                                #end
+                            </table>
+                            #end
+                            
+                            <ul>
+                            #foreach( $line in $event.logEvent.stackTrace )
+                            <li>$line</li>
+                            #end
+                            </ul>
+                            <hr/>
+                            #end
+                        </div>
+                    </article>
+                    
                 </div>
                 <div id="utils" class="tab-pane">
+                    <article class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Bulk delete group memberships</h3>
+                        </div>
+                        <div class="panel-body">
+                            <p>Enter the physical ID of the organisation with the group(s) to delete from, and the comma seperated list of group membership IDs</p>
+                            <p>You MUT re-index the profiles for the organisation when this is complete</p>
+                            <br/>
+                            <form method="POST" action="maint" class="bulkDeleteMembershipsForm" >
+                                <input type="text" name="rootOrg" value="" placeholder="123123" />
+                                <textarea name="deleteGroupMembershipIds" class="form-control" rows="10"></textarea>
+                                <button class="btn-sm btn btn-warning">Delete memberships</button>
+                            </form>
+                        </div>
+                    </article>
 
                     <article class="panel panel-default">
                         <div class="panel-heading">
@@ -395,6 +497,14 @@
                         $("#findWebsiteResult").text(resp.messages[0]);
                     }
                 });
+                $("form.bulkDeleteMembershipsForm").forms({
+                    callback: function (resp) {
+                        flog("resp", resp);
+                        Msg.info("Done: " + resp.messages);
+                        window.location.reload();
+                    }
+                });
+
             });
         </script>
     </body>
