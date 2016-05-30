@@ -392,13 +392,16 @@
             <!-- end: RIGHT SIDEBAR -->
             #portlets("kchatAdmin")
         </div>
+
+        #set($useHash = $params.useHash)
         <script type="text/javascript">
+            var useHash = "$!useHash";
             $(function () {
                 Main.init('$page.organisation.id');
                 initTheme(); // init the fuse extensions
                 try {
                     // https://github.com/Kademi/kademi-dev/issues/1397
-                    CKEDITOR.timestamp = '24042016';
+                    CKEDITOR.timestamp = '30052016';
                 } catch (e) {
                     flog("ckedior exception");
                 }
