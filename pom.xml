@@ -4,7 +4,7 @@
     <groupId>co.kademi</groupId>
     <artifactId>kademi-dev</artifactId>
     <packaging>war</packaging>
-    <version>8.0.8</version>
+    <version>8.0.9</version>
 
     <build>
         <plugins>
@@ -86,6 +86,6 @@
         <repository>
             <id>milton-bintray-repo</id>
             <url>http://dl.bintray.com/milton/Milton</url>
-        </repository>        
+        </repository>
     </repositories>
 </project>
