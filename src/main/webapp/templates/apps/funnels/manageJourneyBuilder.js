@@ -54,11 +54,14 @@ jsPlumb.ready(function () {
     //
     // initialise element as connection targets and source.
     //
-    function initNode(el) {
+    function initNode(el, type) {
 
         // initialise draggable elements.
         instance.draggable(el);
-
+        var maxConnections = 1;
+        if (type === 'decision'){
+            maxConnections = 2;
+        }
         instance.makeSource(el, {
             filter: ".ep",
             anchor: "Continuous",
@@ -67,7 +70,7 @@ jsPlumb.ready(function () {
             extract:{
                 "action":"the-action"
             },
-            maxConnections: 2,
+            maxConnections: maxConnections,
             onMaxConnections: function (info, e) {
                 alert("Maximum connections (" + info.maxConnections + ") reached");
             }
@@ -76,7 +79,7 @@ jsPlumb.ready(function () {
         instance.makeTarget(el, {
             dropOptions: { hoverClass: "dragHover" },
             anchor: "Continuous",
-            allowLoopback: true
+            allowLoopback: false
         });
 
         // this is not part of the core demo functionality; it is a means for the Toolkit edition's wrapped
@@ -85,20 +88,19 @@ jsPlumb.ready(function () {
         instance.fire("jsPlumbDemoNodeAdded", el);
     }
 
-    function newNode(node) {
+    function newNode(node, type) {
         var d = document.createElement("div");
-        //var id = jsPlumbUtil.uuid();
-        d.className = "w";
+        d.className = "w " + type;
         d.id = node.nodeId;
-        d.innerHTML = node.nodeId + " <div class=\"ep\"></div>";
+        d.innerHTML = '<div class="inner">' + node.nodeId + " <div class=\"ep\"></div></div>";
         d.style.left = node.x + "px";
         d.style.top = node.y + "px";
         instance.getContainer().appendChild(d);
-        initNode(d);
+        initNode(d, type);
         return d;
     }
 
-    function initConnection(node){
+    function initConnection(node, type){
         var nextNodeId;
         var nextNodeIds = [];
         if (node.nextNodeId){
@@ -109,6 +111,10 @@ jsPlumb.ready(function () {
             for(var i = 0; i < node.transitions.length; i++){
                 nextNodeIds.push(node.transitions[i].nextNodeId);
             }
+        }
+
+        if (type === 'goal'){
+
         }
 
         if (nextNodeIds.length){
@@ -135,11 +141,18 @@ jsPlumb.ready(function () {
                 var node = funnel.nodes[i];
                 for (var key in node){
                     if (node.hasOwnProperty(key)){
-                        if (key==='begin'){
-                            beginNode = node[key];
-                        }
                         funnelNodes[node[key].nodeId] = node[key];
-                        newNode(node[key]);
+                        if (key === 'goal'){
+                            newNode(node[key], 'goal');
+                        } else if (key === 'begin') {
+                            newNode(node[key], 'begin');
+                            beginNode = node[key];
+                        } else if (key === 'decision') {
+                            newNode(node[key], 'decision');
+                        } else {
+                            // should be an action
+                            newNode(node[key], 'action');
+                        }
                     }
                 }
             }
