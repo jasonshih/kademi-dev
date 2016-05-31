@@ -86,7 +86,7 @@
                             #set($fileTitle = "Download '$fr.name'")
                         #end
                     <div class="delete-download-container">
-                        <a class="btn btn-sx btn-default" href="$link&profileId=$page.thisProfile.id" target="_blank" title="$fileTitle"><i class="fa fa-cloud-download"></i></a>
+                        <a class="btn btn-sx btn-default" href="$link?profileId=$page.thisProfile.id" target="_blank" title="$fileTitle"><i class="fa fa-cloud-download"></i></a>
                         #if($fr.is('file'))
                         <a class="btn btn-sx btn-default btn-delete-download" href="$link"><i class="clip-close-2"></i></a>
                         #end
