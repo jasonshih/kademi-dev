@@ -48,7 +48,11 @@ function initModalCertificate() {
     modal.find('form').forms({
         callback: function(resp) {
             flog('done');
-            window.location.href = resp.nextHref;        
+            var nextHref = resp.nextHref;
+            if (!nextHref.endsWith('/?useHash=true')){
+                nextHref += '/?useHash=true';
+            }
+            window.location.href = nextHref;
             modal.modal('hide');
         }
     });
