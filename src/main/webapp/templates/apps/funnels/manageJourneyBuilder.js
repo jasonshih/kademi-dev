@@ -14,9 +14,9 @@ jsPlumb.ready(function () {
                 location: 1,
                 id: "arrow",
                 length: 14,
-                foldback: 0.8
+                foldback: 0.5
             } ],
-            [ "Label", { label: "FOO", id: "label", cssClass: "aLabel" }]
+            [ "Label", { label: "", id: "label", cssClass: "aLabel" }]
         ],
         Container: "paper"
     });
@@ -40,7 +40,11 @@ jsPlumb.ready(function () {
     // this listener sets the connection's internal
     // id as the label overlay's text.
     instance.bind("connection", function (info) {
-        info.connection.getOverlay("label").setLabel(info.connection.id);
+        if (info.targetId.indexOf('timeout')!==-1){
+            info.connection.getOverlay("label").setLabel('timeout');
+        } else {
+            info.connection.getOverlay("label").setLabel('then');
+        }
     });
 
     // bind a double click listener to "canvas"; add new node when this occurs.
@@ -82,6 +86,13 @@ jsPlumb.ready(function () {
             allowLoopback: false
         });
 
+        if (type === 'action'){
+            instance.addEndpoint(el, {
+                anchor:[ "Perimeter", { shape:"Diamond" } ]
+            });
+        }
+
+
         // this is not part of the core demo functionality; it is a means for the Toolkit edition's wrapped
         // version of this demo to find out about new nodes being added.
         //
@@ -92,7 +103,9 @@ jsPlumb.ready(function () {
         var d = document.createElement("div");
         d.className = "w " + type;
         d.id = node.nodeId;
-        d.innerHTML = '<div class="inner">' + node.nodeId + " <div class=\"ep\"></div></div>";
+        if (type !=='timeout'){
+            d.innerHTML = '<div class="inner">' + node.nodeId + ' <div class="ep"></div></div>';
+        }
         d.style.left = node.x + "px";
         d.style.top = node.y + "px";
         instance.getContainer().appendChild(d);
@@ -113,9 +126,17 @@ jsPlumb.ready(function () {
             }
         }
 
-        if (type === 'goal'){
-
+        if (node.hasOwnProperty('timeoutNode')){
+            var dest = node.timeoutNode;
+            if (dest) {
+                instance.connect({ source: node.nodeId, target: dest.nodeId, type:"basic" });
+            } else {
+                var timeoutNode = {nodeId: node.nodeId+'-timeout', name: 'timeout', x: node.x + 20, y: node.y + 20};
+                newNode(timeoutNode, 'timeout');
+                instance.connect({ source: node.nodeId, target: timeoutNode.nodeId, type:"basic" });
+            }
         }
+
 
         if (nextNodeIds.length){
             for (var i = 0; i < nextNodeIds.length; i++){
@@ -142,16 +163,13 @@ jsPlumb.ready(function () {
                 for (var key in node){
                     if (node.hasOwnProperty(key)){
                         funnelNodes[node[key].nodeId] = node[key];
-                        if (key === 'goal'){
-                            newNode(node[key], 'goal');
-                        } else if (key === 'begin') {
-                            newNode(node[key], 'begin');
-                            beginNode = node[key];
-                        } else if (key === 'decision') {
-                            newNode(node[key], 'decision');
-                        } else {
-                            // should be an action
-                            newNode(node[key], 'action');
+                        var type = key;
+                        if (['goal', 'decision', 'begin'].indexOf(key)===-1){
+                            type = 'action';
+                        }
+                        newNode(node[key], type);
+                        if (key === 'begin') {
+                           beginNode = node[key];
                         }
                     }
                 }

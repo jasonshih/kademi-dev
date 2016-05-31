@@ -67,6 +67,21 @@
     padding: 0;
     border-radius: 0;
 }
+
+.w.timeout{
+    width: 20px;
+    height: 20px;
+    background: red;
+    border-radius: 50%;
+}
+
+.w.timeout .ep{
+    display: none;
+}
+
+.w .inner{
+    margin-top: 27px;
+}
 .w.action .inner{
     text-align: center;
     margin-top: 44%;
