@@ -17,10 +17,9 @@
         <script type="text/javascript" src="manageModule.js">//</script>
     </head>
     <body class="manageModulePages">
-        #set($currentBranch = $page.closest("branch"))
-        #set($isBootstrap335 = false)
-        #if ($page.themePath.indexOf("bootstrap335") != -1)
-            #set($isBootstrap335 = true)
+        #set ($isKEditor = false)
+        #if ($page.theme.editorName == "keditor")
+            #set ($isKEditor = true)
         #end
         <div class="btn-group publishing pull-right">
             #if( $currentBranch.live )
@@ -361,7 +360,7 @@
             </div>
         </div>
 
-        <div id="modal-add-page" class="modal #if ($isBootstrap335) modal-full #else modal-fuse-editor modal-lg #end fade" aria-hidden="true" tabindex="-1">
+        <div id="modal-add-page" class="modal #if ($isKEditor) modal-full #else modal-fuse-editor modal-lg #end fade" aria-hidden="true" tabindex="-1">
             <form method="POST" action="." class="form-horizontal" style="height: 100%;">
                 <input type="hidden" name="pageName" />
                 <input type="hidden" name="order" />
@@ -376,7 +375,7 @@
                         </div>
                     </div>
                 </div>
-                #if ($isBootstrap335)
+                #if ($isKEditor)
                 <div class="modal-body embed-responsive" style="height: calc(100% - 65px - 61px);">
                     <iframe id="editor-frame" class="embed-responsive-item" src=""></iframe>
                 </div>
@@ -481,7 +480,7 @@
         </div>
 
         <script type="text/javascript" >
-            var isBootstrap335 = $isBootstrap335;
+            var isKEditor = $isKEditor;
             $(function () {
                 initManageModule("../../..", '$page.themePath');
             });
