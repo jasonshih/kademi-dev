@@ -86,7 +86,7 @@
             <div class="btn-group">
                 <a target='_blank' href='$page.externalUrl' class="btn btn-sm btn-success">
                     <i class="fa fa-arrow-circle-right"></i> View website
-                </a>                
+                </a>
                 <button type="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="caret"></span>
                 </button>
@@ -122,6 +122,9 @@
             <div data-off="danger" data-on="success" class="make-switch switch-small btn-switch-public" data-link="/repositories/$page.website.name">
                 $formatter.checkbox($page.website.name, $page.website.publicContent)
             </div>
+        </div>
+        <div class="pull-right" style="line-height: 30px; margin-right: 10px">
+            <b>Public access:</b>
         </div>
         <div class="tabbable">
             <ul class="nav nav-tabs tab-bricky" id="myTab">

@@ -7,32 +7,32 @@
         <div id="$group.name" class="panel panel-default group" data-name="$group.name" data-title="$!group.groupTitle" data-notes="$!group.notes">
             #set( $folderName = "")
             #if($folder)
-                #set( $folderName = "-" + $folder.name.replaceAll('[^A-Za-z0-9]','') )
+            #set( $folderName = "-" + $folder.name.replaceAll('[^A-Za-z0-9]','') )
             #end
             <div class="panel-heading" data-toggle="collapse" data-parent="#${wrapper}" data-target="#group${folderName}-${foreach.count}">
                 #set($typeColour = "btn-info")
 
                 #if( $group.groupType == "P" )
-                    #set($typeColour = "btn-success")
-                    <i class="clip-users"></i>
+                #set($typeColour = "btn-success")
+                <i class="clip-users"></i>
                 #elseif( $group.groupType == "S" )
-                    <i class="fa fa-trophy"></i>
+                <i class="fa fa-trophy"></i>
                 #elseif( $group.groupType == "M" )
-                    <i class="fa fa-envelope"></i>
+                <i class="fa fa-envelope"></i>
                 #else
-                    <i class="clip-users"></i>
+                <i class="clip-users"></i>
                 #end
 
                 <span class="group-name clickable">
                     #set($gName = false)
                     #set($gName = $group.groupTitle)
                     #if(!$gName)
-                        #set($gName = $group.name)
+                    #set($gName = $group.name)
                     #end
                     #if( $group.groupType == "P" )
-                        <b class="text-success">$gName</b>
+                    <b class="text-success">$gName</b>
                     #else
-                        $group.name
+                    $group.name
                     #end
                 </span>
                 <div class="btn-group btn-group-xs">
@@ -54,54 +54,48 @@
                 </div>
                 <div class="panel-tools">
                     <div class="btn-group btn-group-sm">
+                        <a href="$group.name/members"class="btn btn-info">
+                            <i class="clip-users"></i>
+                            $group.numMembers
+                        </a>
+
                         <a href="$group.name" class="btn $typeColour">
-                            <i class="fa fa-cog"></i>
                             #if( $group.groupType == "P" )
-                                $group.regoModeText
+                            $group.regoModeText
                             #end
                             $group.groupTypeText
                         </a>
-                        <a href="$group.name/members"class="btn btn-info">
-                            <i class="clip-users"></i>
-                            $group.numMembers Members
+                        <a href="$group.name" class="btn $typeColour">
+                            <i class="fa fa-cog"></i>
                         </a>
+
                     </div>
                 </div>
             </div>
-            #if($folder)
-                <div id="group-$folder.name.replaceAll('[^A-Za-z0-9]','')-${foreach.count}" class="collapse">
-                    #else
-                    <div id="group-${foreach.count}" class="collapse">
-                        #end
-                        <div class="panel-body">
-                            <h4>Website access</h4>
-                            <hr class="hr-sm" />
-                            <div class="article-wrapper showed-action websites-list">
-                                #set($signups = $group.signupPages)
-                                #if( $signups.isEmpty() )
-                                    <p>This user group does not have access to any websites</p>
-                                #else
-                                    #foreach($p in $signups.keySet())
-                                        <article>
-                                            <span class="article-name">
-                                                <a target="_blank" href="http://${p}${formatter.portString}"><b>$p</b></a>
-                                            </span>
-                                            #if( $group.publicSignup )
-                                                <aside class="article-action">
-                                                    <a target="_blank" href="$signups.get($p)" class="btn btn-sm btn-primary">Signup page</a>
-                                                </aside>
-                                            #else
-                                                <aside class="article-more-infor">
-                                                    No signup page
-                                                </aside>
-                                            #end
-                                        </article>
-                                    #end
+
+            <div id="group-${foreach.count}" class="collapse">
+                <div class="panel-body">
+                    <table class="table">
+                        <tr>
+                            <th>Code</th>
+                            <td>$group.name</td>
+                        </tr>
+                        <tr>
+                            <th>Type</th>
+                            <td>$group.groupTypeText</td>
+                        </tr>
+                        <tr>
+                            <th>Roles</th>
+                            <td>
+                                #foreach($role in $group.children.ofType.role)
+                                <span class="label label-info">$role.title</span>
                                 #end
-                            </div>
-                        </div>
-                    </div>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
-            #end
+            </div>
+        </div>
+        #end
     </body>
 </html>

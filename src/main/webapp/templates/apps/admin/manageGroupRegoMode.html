@@ -228,6 +228,50 @@
                 <!-- START OF RIGHT PANEL -->
                 <div class="col-sm-5">
                     #set ($group = $page)
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-users"></i> Website access
+                        </div>
+                        <div class="panel-body">
+                            <h4>Website access</h4>
+                            <p>
+                                Grant access for this group to webites here on the <a href="/websites/">website manager</a>. If the group
+                                allows registration this will create a registration page for the group in that website, listed below
+                            </p>
+                            <div class="article-wrapper showed-action websites-list">
+                                #set($signups = $group.signupPages)
+                                #if( $signups.isEmpty() )
+                                <p>This user group does not have access to any websites. Grant access from the <a href="/websites/">website manager</a></p>
+                                #else
+                                #foreach($p in $signups.keySet())
+                                <article>
+                                    <span class="article-name">
+                                        <a target="_blank" href="http://${p}${formatter.portString}"><b>$p</b></a>
+                                    </span>
+                                    #if( $group.publicSignup )
+                                    <aside class="article-action">
+                                        <div class="btn-group btn-group-sm">
+                                            <a target="_blank" href="$signups.get($p)" class="btn btn-sm btn-info" title="Visit the signup page">
+                                                <i class="fa fa-wpforms"></i>
+                                            </a>
+                                            <a href="/websites/$group.websiteName($p)/" class="btn btn-sm btn-info" title="Website settings">
+                                                <i class="fa fa-cog"></i>
+                                            </a>
+                                        </div>
+                                    </aside>
+                                    #else
+                                    <aside class="article-more-infor">
+                                        No signup page
+                                    </aside>
+                                    #end
+                                </article>
+                                #end
+                                #end
+                            </div>
+                        </div>
+                    </div>
+
+
                     #portlets("groupDetails")
 
                     <div class="panel panel-default">
@@ -239,10 +283,10 @@
                             <hr class="hr-sm" />
                             <div class="blocks-wrapper roles-wrapper">
                                 #foreach($role in $page.children.ofType.role)
-                                    <span class="block role">
-                                        <span class="block-name">$role.title</span>
-                                        <a class="btn btn-xs btn-danger btn-remove-role" href="$role.href" title="Remove this role"><i class="fa fa-times"></i></a>
-                                    </span>
+                                <span class="block role">
+                                    <span class="block-name">$role.title</span>
+                                    <a class="btn btn-xs btn-danger btn-remove-role" href="$role.href" title="Remove this role"><i class="fa fa-times"></i></a>
+                                </span>
                                 #end
                             </div>
                         </div>
@@ -271,7 +315,7 @@
                         <label for="appliesToRepository">A repository</label>
                         <select class="hide">
                             <option value="">-- Select a repository --</option>
-                                #foreach($r in $page.organisation.repositories())
+                            #foreach($r in $page.organisation.repositories())
                             <option value="$r.name">$r.name</option>
                             #end
                         </select>
@@ -283,7 +327,7 @@
                             <option value="">-- Select an organisation --</option>
                             <option value="$page.organisation.id">$page.organisation.formattedName (this organisation)</option>
                             #foreach($org in $page.organisation.childOrgs)
-                                <option value="$org.id">$org.formattedName</option>
+                            <option value="$org.id">$org.formattedName</option>
                             #end
                         </select>
                     </p>
