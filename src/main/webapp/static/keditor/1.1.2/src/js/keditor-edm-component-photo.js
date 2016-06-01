@@ -11,7 +11,12 @@
 
     KEditor.components['photo'] = {
         init: function (contentArea, container, component, keditor) {
-            // Do nothing
+            flog('init "photo" component', component);
+
+            var options = keditor.options;
+            if (typeof options.onComponentReady === 'function') {
+                options.onComponentReady.call(contentArea, component);
+            }
         },
 
         getContent: function (component, keditor) {
@@ -70,7 +75,7 @@
                 onSelectFile: function (url, relativeUrl, fileType, hash) {
                     var img = keditor.getSettingComponent().find('img');
                     img.attr('src', "http://" + window.location.host + "/_hashes/files/" + hash);
-                    self.showSettingForm(form, keditor.getSettingComponent(), options);
+                    self.adjustWidthForImg(img, true);
                 }
             });
 
@@ -82,17 +87,7 @@
             var chkFullWidth = form.find('#photo-fullwidth');
             chkFullWidth.on('click', function () {
                 var img = keditor.getSettingComponent().find('img');
-                if (chkFullWidth.is(':checked')) {
-                    img.attr({
-                        width: '100%',
-                        height: ''
-                    });
-                } else {
-                    img.attr({
-                        width: self.width,
-                        height: self.height
-                    });
-                }
+                self.adjustWidthForImg(img, chkFullWidth.is(':checked'));
             });
 
             form = form.find('form');
@@ -113,17 +108,27 @@
             KEditor.showPaddingControls(keditor, form, component);
 
             var chkFullWidth = form.find('#photo-fullwidth');
-            chkFullWidth.prop('checked', img.attr('width') === '100%');
-
-            $('<img />').attr('src', img.attr('src')).load(function () {
-                self.ratio = this.width / this.height;
-                self.width = this.width;
-                self.height = this.height;
-            });
+            chkFullWidth.prop('checked', img.hasClass('full-width'));
         },
 
         hideSettingForm: function (form, keditor) {
             // Do nothing
+        },
+
+        adjustWidthForImg: function (img, isFullWidth) {
+            $('<img />').attr('src', img.attr('src')).load(function () {
+                var wrapper = img.parent();
+                img.attr({
+                    width: 1,
+                    height: 1
+                });
+                var wrapperWidth = wrapper.width();
+                img.attr({
+                    width: isFullWidth ? wrapperWidth : this.width,
+                    height: isFullWidth ? (wrapperWidth * this.height) / this.width : this.height
+                });
+                img[isFullWidth ? 'addClass' : 'removeClass']('full-width');
+            });
         }
     };
 
