@@ -3,7 +3,7 @@ var iframeUrl;
 
 function initManageModule(baseHref, themePath) {
     flog("initManageModule", baseHref, themePath);
-    flog('Is Bootstrap335: ' + isBootstrap335);
+    flog('Is Bootstrap335: ' + isKEditor);
 
     window.request_url = function () {
         var str = '';
@@ -20,7 +20,7 @@ function initManageModule(baseHref, themePath) {
         return s;
     };
 
-    if (isBootstrap335) {
+    if (isKEditor) {
         initPostMessage();
     } else {
         initCssForEditor(themePath);
@@ -300,7 +300,7 @@ function initCRUDModulePages() {
         placement: 'bottom'
     });
 
-    if (isBootstrap335) {
+    if (isKEditor) {
         modal.on('hidden.bs.modal', function () {
             $('#editor-frame').attr('src', '');
         });
@@ -340,7 +340,7 @@ function initCRUDModulePages() {
 
         modalFormHandle(form, null, false);
 
-        if (isBootstrap335) {
+        if (isKEditor) {
             openEditorFrame('newPage.html');
         }
 
@@ -732,7 +732,7 @@ function loadModalEditorContent(modal, name, isQuiz) {
             if (isQuiz) {
                 loadQuizEditor(modal, data);
             } else {
-                if (isBootstrap335) {
+                if (isKEditor) {
                     openEditorFrame(name);
                 } else {
                     //CKEDITOR.instances["body"].setData(data.body)
@@ -762,7 +762,7 @@ function doSavePage(form, pageArticle, isQuiz) {
     if (isQuiz) {
         data = prepareQuizForSave(form);
     } else {
-        if (isBootstrap335) {
+        if (isKEditor) {
             // Do nothing
         } else {
             flog('check ck editors', CKEDITOR.instances);
@@ -809,7 +809,7 @@ function doSavePage(form, pageArticle, isQuiz) {
                         Msg.success('Saved!');
                         modal.modal('hide');
                     } else {
-                        if (isBootstrap335) {
+                        if (isKEditor) {
                             var editorFrame = $('#editor-frame');
                             var pageName = modal.find('[name=pageName]').val();
                             if (!pageName) {
