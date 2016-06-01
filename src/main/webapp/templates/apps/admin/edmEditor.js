@@ -269,6 +269,11 @@ function initKEditor(body, iframeMode) {
                     applyInlineCssForLink(component);
                 });
             }
+
+            var img = component.find('img');
+            if (img && img.length > 0) {
+                $.keditor.components['photo'].adjustWidthForImg(img, img.hasClass('full-width'));
+            }
         },
         onContentChanged: function () {
             if (!body.hasClass('content-changed')) {
@@ -318,7 +323,7 @@ function initSettingPanel(edmHtml, body) {
     });
 
     settingPanel.find('input').not('.colorpicker').on('change', function () {
-        applySetting(body);
+        applySetting(body,  $(this));
     });
 
     body.find('#edm-body-width').val(edmHtml.find('#edm-container').attr('width') || DEFAULT_EDM_BODY_WIDTH);
@@ -355,7 +360,7 @@ function initSettingPanel(edmHtml, body) {
     applySetting(body);
 }
 
-function applySetting(body) {
+function applySetting(body, sender) {
     var edmBackground = body.find('#edm-background').val();
     var edmPaddingTop = body.find('#edm-padding-top').val();
     var edmPaddingBottom = body.find('#edm-padding-bottom').val();
@@ -391,6 +396,13 @@ function applySetting(body) {
     edmHeader.innerWidth(edmBodyWidth);
     edmBody.innerWidth(edmBodyWidth);
     edmFooter.innerWidth(edmBodyWidth);
+
+    if (sender && sender.length > 0 && sender.is('#edm-body-width')) {
+        edmHeader.add(edmBody).add(edmFooter).find('img.full-width').each(function () {
+            var img = $(this);
+            $.keditor.components['photo'].adjustWidthForImg(img, true);
+        });
+    }
 }
 
 function initColorPicker(target, onChangeHandle) {
@@ -424,6 +436,8 @@ function initColorPicker(target, onChangeHandle) {
 }
 
 function setStyle(target, name, value) {
+    flog('setStyle', name, value);
+
     target.each(function () {
         var self = $(this);
         var styles = self.attr('style');
@@ -443,11 +457,15 @@ function setStyle(target, name, value) {
                     }
 
                     isExisting = true;
+                } else {
+                    if (style[1].trim() === '') {
+                        styles.splice(i, 1);
+                    }
                 }
             }
         }
 
-        if (!isExisting) {
+        if (!isExisting && value) {
             styles.push(name + ':' + value);
         }
 
