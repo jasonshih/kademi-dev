@@ -35,6 +35,85 @@ function initProfile() {
             });
         }
     });
+
+    $(".memberships-wrapper").on("click", ".addGroup a", function (e) {
+        flog("click", this);
+        e.preventDefault();
+        e.stopPropagation();
+        var groupName = $(e.target).closest("a").attr("href");
+        doAddToGroup(groupName);
+    });
+
+
+    $(".form-unsubscribe").forms({
+        validate: function () {
+            return confirm("Are you sure you want to unsubscribe this user? They will no longer be able to access this site");
+        },
+        callback: function (resp, form) {
+            Msg.info("Unsubscribed. Now going to manage users page");
+            window.location = "/manageUsers";
+        },
+        confirmMessage: "The user has been unsubscribed"
+    });
+
+    jQuery("abbr.timeago").timeago();
+    $('#btn-change-ava').upcropImage({
+        buttonContinueText: 'Save',
+        url: window.location.pathname, // this is actually the default value anyway
+        onCropComplete: function (resp) {
+            flog("onCropComplete:", resp, resp.nextHref);
+            $(".profile-photo img").attr("src", resp.nextHref);
+        },
+        onContinue: function (resp) {
+            flog("onContinue:", resp, resp.result.nextHref);
+            $.ajax({
+                url: window.location.pathname,
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    uploadedHref: resp.result.nextHref,
+                    applyImage: true
+                },
+                success: function (resp) {
+                    if (resp.status) {
+                        $(".profile-photo img").attr("src", resp.nextHref);
+                        $(".main-profile-photo img").attr("src", resp.nextHref);
+                    } else {
+                        alert("Sorry, an error occured updating your profile image");
+                    }
+                },
+                error: function () {
+                    alert('Sorry, we couldn\'t save your profile image.');
+                }
+            });
+        }
+    });
+
+    $('body').on('click', '#btn-remove-ava', function (e) {
+        e.preventDefault();
+
+        if (confirm('Are you sure you want to clear the avatar?')) {
+            $.ajax({
+                url: window.location.pathname,
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    clearAvatar: true
+                },
+                success: function (resp) {
+                    if (resp.status) {
+                        $(".profile-photo img").attr("src", "pic");
+                        $(".main-profile-photo img").attr("src", "pic");
+                    } else {
+                        alert("Sorry, an error occured updating your profile image");
+                    }
+                },
+                error: function () {
+                    alert('Sorry, we couldn\'t save your profile image.');
+                }
+            });
+        }
+    });
 }
 
 function initNewMembershipForm() {
@@ -55,20 +134,7 @@ function initNewMembershipForm() {
 }
 
 function reloadMemberships() {
-    $.ajax({
-        type: 'GET',
-        url: window.location.pathname,
-        success: function (data) {
-            flog("success", data);
-            var $fragment = $(data).find("#user-membership");
-            var orig = $("#user-membership");
-            flog("replace", orig, $fragment);
-            orig.replaceWith($fragment);
-        },
-        error: function (resp) {
-            Msg.error("error: " + resp);
-        }
-    });
+    $("#membershipsContainer").reloadFragment();
 }
 
 
@@ -79,4 +145,26 @@ function initProfileLoginAs() {
         flog("login as");
         showLoginAs(""); // on the current page
     });
+}
+
+function doAddToGroup(groupName) {
+    $.ajax({
+        url: window.location.pathname,
+        type: 'POST',
+        data: {
+            group: groupName
+        },
+        success: function (resp) {
+            if (resp.status) {
+                reloadMemberships();
+            } else {
+                Msg.error("Couldnt add group: " + resp.messages);
+            }
+        },
+        error: function (e) {
+            Msg.error(e.status + ': ' + e.statusText);
+            hideLoadingIcon();
+        }
+    })
+
 }
