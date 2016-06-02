@@ -1,19 +1,28 @@
-<div style="min-height: 100px">
-    #set( $cat = $rootFolder.find($store).child($category) )
-    #set( $prods = $cat.myTopProducts.truncate(4) )
-    #if( $prods.size() > 0 )
-    <table>
-        <tr>
-            #foreach( $prod in $cat.myTopProducts.truncate(4) )
-            <td>
-                <a href="http://$website.domainName${prod.href}">
-                    <img src="$prod.primaryImageHref" />
-                </a>
-            </td>
-            #end
-        </tr>
-    </table>
-    #else
-    <p>Sorry, we couldnt find any products for you</p>
+#set( $cat = $rootFolder.find($store).child($category) )
+#set( $prods = $cat.myTopProducts ) $website
+#if( $prods.size() > 0 )
+    #if ($prods.size() > $numberOfProducts)
+        #set( $prods = $prods.truncate($numberOfProducts))
     #end
-</div>
+
+    <div class="row products-list">
+        #set ($clsName = "col-md-4")
+        #if ($productsPerRow == 1)
+            #set ($clsName = "col-md-12")
+        #elseif ($productsPerRow == 2)
+            #set ($clsName = "col-md-6")
+        #elseif ($productsPerRow == 3)
+            #set ($clsName = "col-md-4")
+        #elseif ($productsPerRow == 4)
+            #set ($clsName = "col-md-3")
+        #end
+
+        #foreach( $prod in $prods )
+            <div class="$clsName product">
+
+            </div>
+        #end
+    </div>
+#else
+    <p>Sorry, we couldnt find any products for you</p>
+#end

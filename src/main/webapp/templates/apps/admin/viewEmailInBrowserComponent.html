@@ -1,8 +1,7 @@
-<a href="http://${rootFolder.domainName}${formatter.portString}/viewEmail?edmid=$page.edmId&$page.model.login">
+<a href="http://${rootFolder.domainName}${formatter.portString}/viewEmail?edmid=${page.edmId}&amp;${page.model.login}">
     #if($message && $message.length() > 0)
         $message
     #else
         Click here to view in your browser
     #end
 </a>
-
