@@ -2,7 +2,7 @@
     var KEditor = $.keditor;
     var flog = KEditor.log;
 
-    KEditor.components['blogArticleList'] = {
+    KEditor.components['blogArticleListEDM'] = {
         init: function (contentArea, container, component, keditor) {
             // Do nothing
         },
@@ -21,10 +21,10 @@
         settingTitle: 'Blog Article List Settings',
 
         initSettingForm: function (form, keditor) {
-            flog('initSettingForm "blogArticleList" component');
+            flog('initSettingForm "blogArticleListEDM" component');
 
             $.ajax({
-                url: '/_components/web/blogArticleList?settings',
+                url: '/_components/edm/blogArticleListEDM?settings',
                 type: 'get',
                 dataType: 'html',
                 success: function (resp) {
@@ -85,7 +85,7 @@
         },
 
         showSettingForm: function (form, component, keditor) {
-            flog('showSettingForm "blogArticleList" component');
+            flog('showSettingForm "blogArticleListEDM" component');
 
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             form.find('.number-of-articles').val(dataAttributes['data-number-of-articles']);
