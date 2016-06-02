@@ -5,67 +5,65 @@
     #set ($articles = $articles.truncate($numberOfArticles))
 
     #if ($layout == "grid")
-        #set ($clsName = "col-sm-4")
+        #set ($tableWidth = "50%")
         #if ($itemsPerRow == 1)
-            #set ($clsName = "col-sm-12")
+            #set ($tableWidth = "100%")
         #elseif ($itemsPerRow == 2)
-            #set ($clsName = "col-sm-6")
+            #set ($tableWidth = "50%")
         #elseif ($itemsPerRow == 3)
-            #set ($clsName = "col-sm-4")
-        #elseif ($itemsPerRow == 4)
-            #set ($clsName = "col-sm-3")
+            #set ($tableWidth = "33.3%")
         #end
 
         #set ($blogListId = $formatter.randomGuid)
-        <div class="blog-articles-list row" id="blog-articlr-list-${blogListId}">
-            #foreach($article in $articles)
-                <div class="blog-article $clsName">
-                    <div class="thumbnail">
-                        <div class="embed-responsive embed-responsive-16by9">
-                            #set($bg = "/static/images/photo_holder.png")
-                            #if( $article.bestSquareImageHref )
-                                #set($bg = "${article.bestSquareImageHref}/alt-300-300.png")
-                            #end
-                            <a title="$article.title" href="$article.href" class="embed-responsive-item" style="background: url($bg) no-repeat 50% 50%; background-size: cover;">
-                                <span class="sr-only">$article.title</span>
-                            </a>
-                            #if($article.featured)
-                            <span class="label label-warning" style="position: absolute; top: 5px; right: 10px;">Featured</span>
-                            #end
-                        </div>
-                        <div class="caption">
-                            <h4><a title="$article.title" href="$article.href">$article.title</a></h4>
-                            <p class="small"><i class="fa fa-clock-o"></i> <abbr class="timeago" title="$formatter.formatDateISO8601($article.articleDate)">$article.articleDate</abbr></p>
-                            <p style="word-wrap: break-word;" class="article-brief">$formatter.toPlain( $!article.brief )</p>
-                        </div>
-                    </div>
-                </div>
-            #end
-        </div>
-
-        <script type="text/javascript">
-            $(function () {
-                var win = $(window);
-                var timer = null;
-
-                win.on('resize', function () {
-                    clearTimeout(timer);
-                    timer = setTimeout(function () {
-                        var brieves = $('#blog-articlr-list-${blogListId}').find('.article-brief');
-                        brieves.css('height', '');
-
-                        if (win.width() > 767) {
-                            var heights = [];
-                            brieves.each(function () {
-                                heights.push($(this).innerHeight());
-                            });
-
-                            brieves.css('height', Math.max.apply(Math, heights));
-                        }
-                    }, 150);
-                }).trigger('resize');
-            });
-        </script>
+        <table cellpadding="0" cellspacing="0" border="0" width="100%">
+            <tbody>
+                <tr>
+                    <td>
+                        #foreach($article in $articles)
+                            <table cellpadding="0" cellspacing="0" border="0" width="$tableWidth" align="left" class="col">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            #set($bg = "http://${rootFolder.domainName}${formatter.portString}/static/images/photo_holder.png/alt-600-400.png")
+                                            #if( $article.bestSquareImageHref )
+                                                #set($bg = "http://${rootFolder.domainName}${formatter.portString}/${article.bestSquareImageHref}/alt-600-400.png")
+                                            #end
+                                            <a title="$article.title" href="http://${rootFolder.domainName}${formatter.portString}/$article.href">
+                                                <img src="$bg" width="100%" height="auto" alt="$article.title" style="display: block; border: 0;" />
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td height="10">&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <h4><a title="$article.title" href="http://${rootFolder.domainName}${formatter.portString}/$article.href">$article.title</a></h4>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td height="10"></td>
+                                    </tr>
+                                    <tr>
+                                        <td height="40" valign="top">
+                                            #set ($brief = $formatter.toPlain( $!article.brief ))
+                                            <p>
+                                                $formatter.truncate( $!brief, 100)
+                                            </p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <p><a title="$article.title" href="http://${rootFolder.domainName}${formatter.portString}/$article.href">Read more</a></p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        #end
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     #else
         <div class="blog-articles-list" id="blog-articlr-list-${formatter.randomGuid}">
             #foreach($article in $articles)
