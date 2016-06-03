@@ -11,7 +11,7 @@ function initManageBlogArticle() {
         initHtmlEditors(null, null, null, null, null, function (editor) {
             editor.addCommand('saveContent', {
                 exec: function () {
-                    $('.article-form').trigger('submit');
+                    $('#article-form').trigger('submit');
                 }
             });
 
