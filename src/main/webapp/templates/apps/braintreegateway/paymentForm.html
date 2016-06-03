@@ -45,11 +45,15 @@
         <input type="text" name="addressState" class="form-control required-if-shown" value="" placeholder="State/Province"/>
     </div>
 </div>
+
+#if( $isMember )
+#else
 <div class="form-group">
     <div class="col-md-12">
         <input type="text" name="email" class="form-control required-if-shown" value="$!user.email" placeholder="Email (Required)" />
     </div>
 </div>
+#end
 
 <script src="https://js.braintreegateway.com/v2/braintree.js"></script>
 <script>
