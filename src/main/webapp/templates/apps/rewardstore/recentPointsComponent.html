@@ -2,19 +2,16 @@
     #set ( $height = 100 )
 #end
 
-#set ($pointBucket = $rootFolder.find("/rewards/").child($bucket))
-
+#set( $pointsBucket = $applications.rewardStore.findPointsBucket($bucket) )
+#if( $pointsBucket )
 <div class="panel panel-default">
     <div class="panel-heading">
         <i class="fa fa-table"></i>
-        Recent points in <a href="$pointBucket.href" target="_blank">$pointBucket.title</a>
+        Recent points in
+        $pointsBucket.title
     </div>
     <div class="panel-body" style="height: ${height}px; overflow-y: auto;">
-        #set( $minusDays = $formatter.toInteger($days) * -1)
-
-        #set( $points = $pointBucket.myPointsInfo(1000, $formatter.addDays( $formatter.now, $minusDays), $formatter.now) )
-        #set( $recentPoints = $points.myPoints )
-
+        #set( $recentPoints = $applications.rewardStore.findPointsByLimit($bucket, 100, $profile) )
         #if( $recentPoints.size() > 0 )
             <p>You have been awarded $recentPoints.size() times in the last $days days</p>
             <table class="table table-hover table-striped">
@@ -42,3 +39,6 @@
         #end
     </div>
 </div>
+#else
+Points bucket not found - $bucket
+#end
