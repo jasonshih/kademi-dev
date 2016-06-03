@@ -1,0 +1,108 @@
+#set( $blogFolder = $rootFolder.find("/blogs").child($blog) )
+#set( $articles = $blogFolder.articles.sortByDate )
+#if( $articles.size() > 0 )
+    #set ($numberOfArticles = $formatter.toInteger($numberOfArticles))
+    #set ($articles = $articles.truncate($numberOfArticles))
+
+    #if ($layout == "grid")
+        #set ($tableWidth = "50%")
+        #if ($itemsPerRow == 1)
+            #set ($tableWidth = "100%")
+        #elseif ($itemsPerRow == 2)
+            #set ($tableWidth = "50%")
+        #elseif ($itemsPerRow == 3)
+            #set ($tableWidth = "33.3%")
+        #end
+
+        #set ($blogListId = $formatter.randomGuid)
+        <table cellpadding="0" cellspacing="0" border="0" width="100%">
+            <tbody>
+                <tr>
+                    <td>
+                        #foreach($article in $articles)
+                            <table cellpadding="0" cellspacing="0" border="0" width="$tableWidth" align="left" class="col">
+                                <tbody>
+                                    <tr>
+                                        <td style="padding-left: 10px; padding-right: 10px;">
+                                            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                                                <tr>
+                                                    <td>
+                                                        #set($bg = "http://${rootFolder.domainName}${formatter.portString}/static/images/photo_holder.png")
+                                                        #if( $article.bestSquareImageHref )
+                                                        #set($bg = "http://${rootFolder.domainName}${formatter.portString}/${article.bestSquareImageHref}/alt-600-400.png")
+                                                        #end
+                                                        <a title="$article.title" href="http://${rootFolder.domainName}${formatter.portString}/$article.href">
+                                                            <img src="$bg" width="100%" height="auto" alt="$article.title" style="display: block; border: 0;" />
+                                                        </a>
+                                                        <h4><a title="$article.title" href="http://${rootFolder.domainName}${formatter.portString}/$article.href">$article.title</a></h4>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td height="40" valign="top">
+                                                        #set ($brief = $formatter.toPlain( $!article.brief ))
+                                                        <p>
+                                                            $formatter.truncate( $!brief, 100)
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <p><a title="$article.title" href="http://${rootFolder.domainName}${formatter.portString}/$article.href">Read more</a></p>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        #end
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    #else
+        <table cellpadding="0" cellspacing="0" border="0" width="100%">
+            <tbody>
+                #foreach($article in $articles)
+                    <tr>
+                        <td valign="top" style="padding-bottom: 15px;">
+                            <table cellpadding="0" cellspacing="0" border="0" width="33.3%" align="left" class="col">
+                                <tr>
+                                    <td class="wrapper" style="padding-right: 15px">
+                                        <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                                            <tr>
+                                                <td>
+                                                    #set($bg = "http://${rootFolder.domainName}${formatter.portString}/static/images/photo_holder.png")
+                                                    #if( $article.bestSquareImageHref )
+                                                        #set($bg = "http://${rootFolder.domainName}${formatter.portString}/${article.bestSquareImageHref}/alt-600-400.png")
+                                                    #end
+                                                    <a title="$article.title" href="http://${rootFolder.domainName}${formatter.portString}/$article.href">
+                                                        <img src="$bg" width="100%" height="auto" alt="$article.title" style="display: block; border: 0;" />
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table cellpadding="0" cellspacing="0" border="0" width="66.7%" align="right" class="col">
+                                <tr>
+                                    <td class="wrapper">
+                                        <h4><a title="$article.title" href="http://${rootFolder.domainName}${formatter.portString}/$article.href">$article.title</a></h4>
+                                        #set ($brief = $formatter.toPlain( $!article.brief ))
+                                        <p>
+                                            $formatter.truncate( $!brief, 300)
+                                        </p>
+                                        <p><a title="$article.title" href="http://${rootFolder.domainName}${formatter.portString}/$article.href">Read more</a></p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                #end
+            </tbody>
+        </table>
+    #end
+#else
+    <p>No blog articles found</p>
+#end
