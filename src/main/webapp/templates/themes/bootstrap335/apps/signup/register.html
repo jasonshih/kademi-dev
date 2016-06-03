@@ -12,11 +12,11 @@
 
             #set($path = "/content/signup/" + $folder.name + ".html")
             $!folder.find($path).getParam("intro")
-                
-                <form method="post" id="registerForm" action="$page.name" class="form-horizontal">                    
+
+                <form method="post" id="registerForm" action="$page.name" class="form-horizontal">
                     <div class="row">
                         <div class="col-md-9">
-                            <h2>Create a new account</h2>                        
+                            <h2>Create a new account</h2>
                             <div class="control-group form-group">
                                 <label class="control-label col-md-3" for="email">Email</label>
                                 <div class="controls col-md-9">
@@ -80,6 +80,18 @@
                             </div>
                             #end
 
+                            #set($product = $page.relatedProduct)
+                            #if( $product )
+                                #if( $page.paymentProvider )
+                                <input type="hidden" name="paymentProvider" value="$page.paymentProvider.instanceId"/>
+                                <hr/>
+                                <h2>Payment details</h2>
+                                <div class="payment-form">
+                                    $page.paymentProvider.memberPaymentForm
+                                </div>
+                                #end
+                            #end
+
                             <div class="control-group form-group">
                                 <div class="controls col-md-9 col-md-offset-3" >
                                     <button type="submit" class="btn btn-primary">Register</button>
@@ -89,12 +101,12 @@
 
                             $!folder.find($path).body
 
-                            <br class="clearfix" />                            
+                            <br class="clearfix" />
                         </div>
                         <div class="col-md-3">
                             #portlets("socialLoginPage")
-                        </div>                        
-                    </div>                    
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
