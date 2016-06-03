@@ -498,7 +498,12 @@
 
     KEditor.components['photo'] = {
         init: function (contentArea, container, component, keditor) {
-            // Do nothing
+            flog('init "photo" component', component);
+
+            var options = keditor.options;
+            if (typeof options.onComponentReady === 'function') {
+                options.onComponentReady.call(contentArea, component);
+            }
         },
 
         getContent: function (component, keditor) {
@@ -557,7 +562,7 @@
                 onSelectFile: function (url, relativeUrl, fileType, hash) {
                     var img = keditor.getSettingComponent().find('img');
                     img.attr('src', "http://" + window.location.host + "/_hashes/files/" + hash);
-                    self.showSettingForm(form, keditor.getSettingComponent(), options);
+                    self.adjustWidthForImg(img, true);
                 }
             });
 
@@ -569,17 +574,7 @@
             var chkFullWidth = form.find('#photo-fullwidth');
             chkFullWidth.on('click', function () {
                 var img = keditor.getSettingComponent().find('img');
-                if (chkFullWidth.is(':checked')) {
-                    img.attr({
-                        width: '100%',
-                        height: ''
-                    });
-                } else {
-                    img.attr({
-                        width: self.width,
-                        height: self.height
-                    });
-                }
+                self.adjustWidthForImg(img, chkFullWidth.is(':checked'));
             });
 
             form = form.find('form');
@@ -600,17 +595,27 @@
             KEditor.showPaddingControls(keditor, form, component);
 
             var chkFullWidth = form.find('#photo-fullwidth');
-            chkFullWidth.prop('checked', img.attr('width') === '100%');
-
-            $('<img />').attr('src', img.attr('src')).load(function () {
-                self.ratio = this.width / this.height;
-                self.width = this.width;
-                self.height = this.height;
-            });
+            chkFullWidth.prop('checked', img.hasClass('full-width'));
         },
 
         hideSettingForm: function (form, keditor) {
             // Do nothing
+        },
+
+        adjustWidthForImg: function (img, isFullWidth) {
+            $('<img />').attr('src', img.attr('src')).load(function () {
+                var wrapper = img.parent();
+                img.attr({
+                    width: 1,
+                    height: 1
+                });
+                var wrapperWidth = wrapper.width();
+                img.attr({
+                    width: isFullWidth ? wrapperWidth : this.width,
+                    height: isFullWidth ? (wrapperWidth * this.height) / this.width : this.height
+                });
+                img[isFullWidth ? 'addClass' : 'removeClass']('full-width');
+            });
         }
     };
 
@@ -820,54 +825,5 @@
             // Do nothing
         }
     };
-
-})(jQuery);
-
-/**
- * KEditor Unsubscribe Component
- * @copyright: Kademi (http://kademi.co)
- * @author: Kademi (http://kademi.co)
- * @version: 1.1.2
- * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap, FontAwesome (optional)
- */
-(function ($) {
-    var KEditor = $.keditor;
-    var flog = KEditor.log;
-
-    // Unsubscribe component
-    // ---------------------------------------------------------------------
-    KEditor.components['unsubscribe'] = $.extend({}, KEditor.components['text'], {
-        options: {
-            title: false,
-            allowedContent: true, // DISABLES Advanced Content Filter. This is so templates with classes are allowed through
-            bodyId: 'editor',
-            templates_replaceContent: false,
-            toolbarGroups: [
-                {name: 'document', groups: ['mode', 'document', 'doctools']},
-                {name: 'editing', groups: ['find', 'selection', 'spellchecker', 'editing']},
-                {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
-                {name: 'paragraph', groups: ['align', 'bidi', 'paragraph']},
-                {name: 'clipboard', groups: ['clipboard', 'undo']},
-                '/',
-                {name: 'styles', groups: ['styles']},
-                {name: 'colors', groups: ['colors']},
-                {name: 'tools', groups: ['tools']},
-                {name: 'others', groups: ['others']},
-                {name: 'about', groups: ['about']}
-            ],
-            extraPlugins: 'lineheight,onchange',
-            removePlugins: 'table,magicline,tabletools',
-            removeButtons: 'Save,NewPage,Preview,Print,Templates,PasteUnsubscribe,PasteFromWord,Find,Replace,SelectAll,Scayt,Form,HiddenField,ImageButton,Button,Select,Unsubscribearea,UnsubscribeField,Radio,Checkbox,Outdent,Indent,Blockquote,CreateDiv,Language,Table,HorizontalRule,Smiley,SpecialChar,PageBreak,Iframe,Styles,BGColor,Maximize,About,ShowBlocks,BidiLtr,BidiRtl,Flash,Image,Subscript,Superscript,Anchor,Styles,Format',
-            enterMode: CKEDITOR.ENTER_DIV,
-            forceEnterMode: true,
-            filebrowserBrowseUrl: '/static/fckfilemanager/browser/default/browser.html?Type=Image&Connector=/fck_connector.html',
-            filebrowserUploadUrl: '/uploader/upload',
-            format_tags: 'p;h1;h2;h3;h4;h5;h6',
-            stylesSet: 'myStyles:' + stylesPath,
-            line_height: '1;1.2;1.5;2;2.2;2.5'
-        },
-
-        settingTitle: 'Unsubscribe Settings'
-    });
 
 })(jQuery);

@@ -28,10 +28,10 @@
 
         #set ($isKEditor = false)
         #if ($page.theme.editorName == "keditor")
-            #set ($isKEditor = true)
+        #set ($isKEditor = true)
         #end
 
-        <form action="" method="POST" class="form-horizontal article-form" role="form">
+        <form id="article-form" action="" method="POST" class="form-horizontal article-form" role="form">
             <div id="manageReward" class="MainContent tabbable">
                 <div class="clearfix">
                     <div class="pull-right">
@@ -222,17 +222,17 @@
 
                     <div class="tab-pane" id="bodyCopy">
                         #if( $page.publishedDate or $page.submittedDate )
-                            <div class='well'>
-                                $!page.body
-                            </div>
+                        <div class='well'>
+                            $!page.body
+                        </div>
                         #else
-                            #if ($isKEditor)
-                                <div class="embed-responsive embed-responsive-16by9">
-                                    <iframe class="embed-responsive-item" src="" id="editor-frame"></iframe>
-                                </div>
-                            #else
-                                <textarea class="htmleditor" cols="100" name="body" rows="20" placeholder="">$!page.body</textarea>
-                            #end
+                        #if ($isKEditor)
+                        <div class="embed-responsive embed-responsive-16by9">
+                            <iframe class="embed-responsive-item" src="" id="editor-frame"></iframe>
+                        </div>
+                        #else
+                        <textarea class="htmleditor" cols="100" name="body" rows="20" placeholder="">$!page.body</textarea>
+                        #end
                         #end
                     </div>
 
@@ -432,14 +432,18 @@
                     <div class="form-group">
                         <div class="errorHandler alert alert-danger no-display pageMessage">.</div>
                     </div>
+                    #if($page.availableServices)
                     <div class="form-group">
                         <label class="col-sm-3 control-label" for="newTagName">Publish to social media</label>
+                        #foreach($sm in $page.availableServices)
                         <div class="checkbox">
                             <label>
-                                <input name="publishTo_facebook" value="true" type="checkbox"/> Facebook
+                                <input name="publishTo_$sm" value="true" type="checkbox"/> $sm
                             </label>
                         </div>
+                        #end
                     </div>
+                    #end
                     <div class="form-group">
                         <label class="col-sm-3 control-label" for="newTagName">Embargo Date</label>
                         <div class="col-sm-8">

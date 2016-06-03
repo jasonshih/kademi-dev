@@ -8,11 +8,19 @@ function initManageBlogArticle() {
         initEditorFrame();
         initPostMessage();
     } else {
-        initHtmlEditors();
+        initHtmlEditors(null, null, null, null, null, function (editor) {
+            editor.addCommand('saveContent', {
+                exec: function () {
+                    $('#article-form').trigger('submit');
+                }
+            });
+
+            editor.keystrokeHandler.keystrokes[CKEDITOR.CTRL + 83 /* S */] = 'saveContent';
+        });
     }
 
     $('.article-form').forms({
-        callback: function(resp, form) {
+        callback: function (resp, form) {
             flog('Done', form, resp);
             if (isKEditor) {
                 var editorFrame = $('#editor-frame');
@@ -66,30 +74,30 @@ function initEditorFrame() {
     flog('initEditorFrame');
 
     var editorFrame = $('#editor-frame');
-    editorFrame.attr('src',  window.location.pathname + '?goto=editor' + '&url=' + encodeURIComponent(window.location.href.split('#')[0]));
+    editorFrame.attr('src', window.location.pathname + '?goto=editor' + '&url=' + encodeURIComponent(window.location.href.split('#')[0]));
 }
 
 function initPublish() {
     var rejectModal = $('#rejectModal');
-    $('.article-reject').click(function(e) {
+    $('.article-reject').click(function (e) {
         e.preventDefault();
         rejectModal.modal('show');
     });
     rejectModal.find('form').forms({
-        callback: function(data) {
+        callback: function (data) {
             Msg.info('Rejected/un-published');
             window.location.reload();
         }
     });
 
-    $('.article-submit').click(function(e) {
+    $('.article-submit').click(function (e) {
         e.preventDefault();
         $.ajax({
             url: window.location.pathname,
             data: {submit: 'doit'},
             method: "POST",
             datatype: "json"
-        }).done(function(data) {
+        }).done(function (data) {
             flog('Done', data);
             Msg.info('Submitted for approval');
             window.location.reload();
@@ -97,13 +105,13 @@ function initPublish() {
     });
 
     var publishModal = $('#publishModal');
-    $('.article-publish').click(function(e) {
+    $('.article-publish').click(function (e) {
         e.preventDefault();
         publishModal.modal('show');
     });
 
     publishModal.find('form').forms({
-        callback: function(data) {
+        callback: function (data) {
             Msg.info('Published');
             flog('done publish', data);
             window.location.reload();
@@ -223,29 +231,29 @@ function initHistogram(aggr) {
         flog(myData);
 
         var chart = nv.models.stackedAreaChart()
-            .margin({right: 100})
-            .x(function (d) {
-                return d.x;
-            })   //We can modify the data accessor functions...
-            .y(function (d) {
-                return d.y;
-            })   //...in case your data is formatted differently.
-            .useInteractiveGuideline(true)    //Tooltips which show all data points. Very nice!
-            .rightAlignYAxis(true)      //Let's move the y-axis to the right side.
-            .showControls(true)       //Allow user to choose 'Stacked', 'Stream', 'Expanded' mode.
-            .clipEdge(true);
+                .margin({right: 100})
+                .x(function (d) {
+                    return d.x;
+                })   //We can modify the data accessor functions...
+                .y(function (d) {
+                    return d.y;
+                })   //...in case your data is formatted differently.
+                .useInteractiveGuideline(true)    //Tooltips which show all data points. Very nice!
+                .rightAlignYAxis(true)      //Let's move the y-axis to the right side.
+                .showControls(true)       //Allow user to choose 'Stacked', 'Stream', 'Expanded' mode.
+                .clipEdge(true);
 
         chart.xAxis
-            .tickFormat(function (d) {
-                return d3.time.format('%x')(new Date(d))
-            });
+                .tickFormat(function (d) {
+                    return d3.time.format('%x')(new Date(d))
+                });
 
         chart.yAxis
-            .tickFormat(d3.format(',.2f'));
+                .tickFormat(d3.format(',.2f'));
 
         d3.select('#chart_histogram svg')
-            .datum(myData)
-            .call(chart);
+                .datum(myData)
+                .call(chart);
 
         nv.utils.windowResize(chart.update);
 
@@ -257,18 +265,18 @@ function initManageArticleFiles() {
     var filesContainer = $('#files-container');
     var addFileModal = $('#modal-add-file');
     addFileModal.find('form.form-horizontal').forms({
-        callback: function(resp, form) {
+        callback: function (resp, form) {
             filesContainer.reloadFragment();
             $(".modal").modal("hide");
             form[0].reset();
         }
     });
-    filesContainer.on('click', '.file-delete', function(e) {
+    filesContainer.on('click', '.file-delete', function (e) {
         e.preventDefault();
         var href = $(e.target).closest('a').attr('href');
         flog('delete image', $(e.target), href);
 
-        confirmDelete(href, href, function() {
+        confirmDelete(href, href, function () {
             filesContainer.reloadFragment();
         });
     });
@@ -278,7 +286,7 @@ function initManageArticleImage() {
     var imageContainer = $('#images-container');
     var addImageModal = $('#modal-add-image');
     addImageModal.find('form.form-horizontal').forms({
-        callback: function() {
+        callback: function () {
             imageContainer.reloadFragment();
             $(".modal").modal("hide");
         }
@@ -293,36 +301,36 @@ function initManageArticleImage() {
         ratio: 0,
         isEmbedded: true,
         embeddedTemplate:
-            '<div class="upcrop-embedded" id="{{upcropId}}">' +
+                '<div class="upcrop-embedded" id="{{upcropId}}">' +
                 '<div class="modal-header">' +
-                    '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
-                    '<h4 class="modal-title">Upload and crop image</h4>' +
+                '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
+                '<h4 class="modal-title">Upload and crop image</h4>' +
                 '</div>' +
                 '<div class="modal-body">' +
-                    '<div class="form-horizontal">' +
-                        '<div class="form-group orientation hide">' +
-                            '<label class="col-sm-3 control-label" for="newTagName">Orientation</label>' +
-                            '<div class="col-sm-9">' +
-                                '<select class="form-control">' +
-                                    '<option value="">Default</option>' +
-                                    '<option value="square">Square</option>' +
-                                    '<option value="vertical">Vertical</option>' +
-                                    '<option value="horizontal">Horizontal</option>' +
-                                '</select>' +
-                            '</div>' +
-                        '</div>' +
-                    '</div>' +
-                    '{{upcropZone}}' +
+                '<div class="form-horizontal">' +
+                '<div class="form-group orientation hide">' +
+                '<label class="col-sm-3 control-label" for="newTagName">Orientation</label>' +
+                '<div class="col-sm-9">' +
+                '<select class="form-control">' +
+                '<option value="">Default</option>' +
+                '<option value="square">Square</option>' +
+                '<option value="vertical">Vertical</option>' +
+                '<option value="horizontal">Horizontal</option>' +
+                '</select>' +
+                '</div>' +
+                '</div>' +
+                '</div>' +
+                '{{upcropZone}}' +
                 '</div>' +
                 '<div class="modal-footer">' +
-                    '<div class="pull-left">' +
-                        '{{buttonUploadOther}}' +
-                    '</div>' +
-                    '<button class="btn btn-default btn-cancel" type="button" data-dismiss="modal">Cancel</button> ' +
-                    '{{buttonCrop}} ' +
-                    '{{buttonContinue}}' +
-                '</div>'+
-            '</div>'
+                '<div class="pull-left">' +
+                '{{buttonUploadOther}}' +
+                '</div>' +
+                '<button class="btn btn-default btn-cancel" type="button" data-dismiss="modal">Cancel</button> ' +
+                '{{buttonCrop}} ' +
+                '{{buttonContinue}}' +
+                '</div>' +
+                '</div>'
         ,
         onUploadComplete: function (data, name, href) {
             flog("manageBlogArticle.js: onUploadComplete");
@@ -352,11 +360,11 @@ function initManageArticleImage() {
                         break;
 
                     case 'vertical':
-                        ratio = 1/2;
+                        ratio = 1 / 2;
                         break;
 
                     case 'horizontal':
-                        ratio = 2/1;
+                        ratio = 2 / 1;
                         break;
 
                     default:
@@ -383,7 +391,7 @@ function initManageArticleImage() {
             data = data.result;
         }
         var hash = data.data;
-        if(typeof hash == "object"){
+        if (typeof hash == "object") {
             hash = hash.file;
         }
         flog("setAddImageFormData: data=", data);
@@ -399,12 +407,12 @@ function initManageArticleImage() {
         editImageZone.removeClass('hide');
     }
 
-    imageContainer.on('click', '.image-delete', function(e) {
+    imageContainer.on('click', '.image-delete', function (e) {
         e.preventDefault();
         var href = $(e.target).closest('a').attr('href');
         flog('delete image', $(e.target), href);
 
-        confirmDelete(href, getFileName(href), function() {
+        confirmDelete(href, getFileName(href), function () {
             imageContainer.reloadFragment();
         });
     });
@@ -429,7 +437,7 @@ function initManageArticleImage() {
 
 
 function initGroupEditing() {
-    $('#modalGroup input[type=checkbox]').click(function() {
+    $('#modalGroup input[type=checkbox]').click(function () {
         var $chk = $(this);
         flog('checkbox click', $chk, $chk.is(':checked'));
         var isRecip = $chk.is(':checked');
@@ -448,7 +456,7 @@ function setGroupRecipient(name, isRecip) {
                 isRecip: isRecip
             },
             dataType: 'json',
-            success: function(data) {
+            success: function (data) {
                 if (data.status) {
                     flog('saved ok', data);
                     $('#groupMemberships').reloadFragment({});
@@ -466,7 +474,7 @@ function setGroupRecipient(name, isRecip) {
                     Msg.error('Sorry, couldnt save ' + data);
                 }
             },
-            error: function(resp) {
+            error: function (resp) {
                 flog('error', resp);
                 Msg.error('Sorry, couldnt save - ' + resp);
             }

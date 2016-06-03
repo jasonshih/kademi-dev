@@ -41,6 +41,14 @@ function initManageScheduledEmail() {
 
         sendTest();
     });
+
+    $('body').on('change', '[name=periodMultiples]', function (e) {
+        var inp = $(this);
+        var val = inp.val();
+        if(val < 1){
+            inp.val(1);
+        }
+    });
 }
 
 function initFrequencyGroup() {
