@@ -1,29 +1,81 @@
 <form class="form-horizontal">
     <div class="form-group">
-        <label class="col-sm-12">Points bucket</label>
+        <label class="col-sm-12">Display</label>
         <div class="col-sm-12">
-            <select class="form-control recentPointsBucket">
-                <option value="">- None -</option>
-                #foreach ($pointsBucket in $applications.rewardStore.pointsBuckets)
-                <option value="$pointsBucket.name">$pointsBucket.title</option>
-                #end
+            <select class="form-control select-display">
+                <option value="text">Text</option>
+                <option value="icon">Icon</option>
+                <option value="icon-text" selected="selected">Icon and Text</option>
             </select>
         </div>
     </div>
 
     <div class="form-group">
-        <label class="col-sm-12">Days</label>
+        <label class="col-sm-12">Align</label>
         <div class="col-sm-12">
-            <input type="number" class="form-control recentPointsDays"/>
-            <em class="help-block small text-muted">Number of days history to show</em>
+            <select class="form-control select-align">
+                <option value="left">Left</option>
+                <option value="center" selected="selected">Center</option>
+                <option value="right">Right</option>
+            </select>
         </div>
     </div>
 
     <div class="form-group">
-        <label class="col-sm-12">Height</label>
+        <label class="col-sm-12">Layout</label>
         <div class="col-sm-12">
-            <input type="number" class="form-control recentPointsHeight"/>
-            <em class="help-block small text-muted">Minimum is 100</em>
+            <select class="form-control select-layout">
+                <option value="horizontal" selected="selected">Horizontal</option>
+                <option value="vertical">Vertical</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-12">Style</label>
+        <div class="col-sm-12">
+            <div class="radio">
+                <label>
+                    <input type="radio" name="social-style" value="circle-color" />
+                    <img src="/static/icons/social-media-icons/circle-color.jpg" class="img-responsive" />
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="social-style" value="square-color" />
+                    <img src="/static/icons/social-media-icons/square-color.jpg" class="img-responsive" />
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="social-style" value="circle-black-white" />
+                    <img src="/static/icons/social-media-icons/circle-black-white.jpg" class="img-responsive" />
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="social-style" value="square-black-white" />
+                    <img src="/static/icons/social-media-icons/square-black-white.jpg" class="img-responsive" />
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="social-style" value="circle-grey" />
+                    <img src="/static/icons/social-media-icons/circle-grey.jpg" class="img-responsive" />
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="social-style" value="square-grey" />
+                    <img src="/static/icons/social-media-icons/square-grey.jpg" class="img-responsive" />
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-12">Social Networks</label>
+        <div class="col-sm-12 social-networks">
         </div>
     </div>
 </form>

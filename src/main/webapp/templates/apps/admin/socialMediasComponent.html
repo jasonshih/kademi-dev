@@ -1,0 +1,13 @@
+$content
+
+#set($facebook = "aaaaa")
+
+#set( $socials = $formatter.split($socials) )
+#set ($d = '$')
+#foreach ($string in $socials)
+    #set ($varName = "${d}${string}")
+    #evaluate($varName) <hr />
+#end
+
+<div></div>
+

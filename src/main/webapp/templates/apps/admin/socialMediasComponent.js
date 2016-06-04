@@ -13,72 +13,49 @@
         destroy: function (component, keditor) {
             // Do nothing
         },
+        socialNetworks: ['facebook', 'twitter', 'googleplus', 'linkedin', 'youtube', 'instagram', 'pinterest', 'github', 'tumblr'],
         settingEnabled: true,
         settingTitle: 'Social Medias Settings',
         initSettingForm: function (form, keditor) {
+            var self = this;
+
             $.ajax({
-                url: '/_components/web/socialMedias?settings',
+                url: '/_components/edm/socialMedias?settings',
                 type: 'get',
                 dataType: 'HTML',
                 success: function (resp) {
                     form.html(resp);
 
-                    form.find('.socialMediasBucket').on('change', function () {
-                        var selectedBucket = this.value;
-                        var component = keditor.getSettingComponent();
-                        var dynamicElement = component.find('[data-dynamic-href]');
+                    var socialNetworksWrapper = form.find('.social-networks');
 
-                        if (selectedBucket) {
-                            var contentArea = dynamicElement.closest('.keditor-content-area');
+                    for (var i = 0, socialNetwork; socialNetwork = self.socialNetworks[i]; i++) {
+                        var str = '';
+                        str += '<div class="checkbox">';
+                        str += '    <div style="padding-left: 20px;">';
+                        str += '        <input type="checkbox" name="' + socialNetwork + '-enable" />';
+                        str += '        <div class="input-group input-group-sm" style="margin-bottom: 5px;">';
+                        str += '            <span class="input-group-addon" style="width: 45px;">Text</span>';
+                        str += '            <input type="text" class="form-control" placeholder="Username" name="' + socialNetwork + '-text" />';
+                        str += '        </div>';
+                        str += '        <div class="input-group input-group-sm">';
+                        str += '            <span class="input-group-addon" style="width: 45px;">Link</span>';
+                        str += '            <input type="text" class="form-control" placeholder="Username" name="' + socialNetwork + '-link" />';
+                        str += '        </div>';
+                        str += '    </div>';
+                        str += '</div>';
 
-                            component.attr('data-bucket', selectedBucket);
-                            keditor.initDynamicContent(contentArea, dynamicElement);
-                        } else {
-                            dynamicElement.html('<p>Please select a points bucket</p>');
-                        }
-                    });
-
-                    form.find('.socialMediasDays').on('change', function () {
-                        var number = this.value;
-
-                        if (isNaN(number) || +number <= 1) {
-                            number = 1;
-                            this.value = number;
-                        }
-
-                        var component = keditor.getSettingComponent();
-                        var dynamicElement = component.find('[data-dynamic-href]');
-                        var contentArea = dynamicElement.closest('.keditor-content-area');
-
-                        component.attr('data-days', number);
-                        keditor.initDynamicContent(contentArea, dynamicElement);
-                    });
-
-                    form.find('.socialMediasHeight').on('change', function () {
-                        var number = this.value;
-
-                        if (isNaN(number) || +number <= 99) {
-                            number = 100;
-                            this.value = number;
-                        }
-
-                        var component = keditor.getSettingComponent();
-                        var dynamicElement = component.find('[data-dynamic-href]');
-                        var contentArea = dynamicElement.closest('.keditor-content-area');
-
-                        component.attr('data-height', number);
-                        keditor.initDynamicContent(contentArea, dynamicElement);
-                    });
+                        socialNetworksWrapper.append(str);
+                    }
                 }
             });
         },
         showSettingForm: function (form, component, keditor) {
             flog('showSettingForm "recent points" component');
 
-            var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
-            form.find('.socialMediasBucket').val(dataAttributes['data-bucket']);
-            form.find('.socialMediasDays').val(dataAttributes['data-days']);
-            form.find('.socialMediasHeight').val(dataAttributes['data-height']);
+            //var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
+            //form.find('.socialMediasBucket').val(dataAttributes['data-bucket']);
+            //form.find('.socialMediasDays').val(dataAttributes['data-days']);
+            //form.find('.socialMediasHeight').val(dataAttributes['data-height']);
         },
         hideSettingForm: function (form, keditor) {
             // Do nothing
