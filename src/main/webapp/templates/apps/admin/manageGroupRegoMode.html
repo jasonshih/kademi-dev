@@ -31,21 +31,22 @@
                                 <div class="clearfix">
                                     <label class="control-label radio-inline" for="groupTypePrimary">
                                         $formatter.radioEq("groupTypePrimary", "groupType", $page.group.groupType, "P")
-                                        Primary group, representing the type of the user. User's should only be a member of one primary group
-                                    </label>
-                                </div>
-                                <div class="clearfix">
-                                    <label class="control-label radio-inline" for="groupTypeMailing">
-                                        $formatter.radioEq("groupTypeMailing", "groupType", $page.group.groupType, "M")
-                                        Mailing list. Users may opt-in or out at any time
+                                        Primary group, representing the type of the user.
                                     </label>
                                 </div>
                                 <div class="clearfix">
                                     <label class="control-label radio-inline" for="groupTypeSubscription">
                                         $formatter.radioEq("groupTypeSubscription", "groupType", $page.group.groupType, "S")
-                                        Subscription group, which can have additional inputs to complete for joining
+                                        Mailing list, which can have additional custom fields <br/><i>Formerly called 'Subscription group'</i>
                                     </label>
                                 </div>
+                                <div class="clearfix">
+                                    <label class="control-label radio-inline" for="groupTypeMailing">
+                                        $formatter.radioEq("groupTypeMailing", "groupType", $page.group.groupType, "M")
+                                        User tag, or opt-in group. Can be added without additional information,. Logged in users can self-manage <br/><i>Formerly called a 'mailing list' group</i>
+                                    </label>
+                                </div>
+
                             </div>
                         </div>
                     </div>
