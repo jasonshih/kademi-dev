@@ -80,7 +80,7 @@
             <!--
             <url>http://repository.kademi.co/maven-private</url>
             -->
-            <url>https://api.bintray.com/maven/kademi/Kademi/kademi/;publish=1</url>
+            <url>http://dl.bintray.com/kademi/Kademi</url>
         </repository>
         <repository>
             <id>milton-repo</id>
