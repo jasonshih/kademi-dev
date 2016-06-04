@@ -97,9 +97,11 @@
                                         Capture -
                                         <a href="mailto:from-lead-$page.leadId@${page.find('/').domainName}"> <em class="fa fa-envelope fa-fw"></em> From</a>
                                         |
-                                        <a href="mailto:to-lead-$page.leadId@${page.find('/').domainName}"> <em class="fa fa-envelope fa-fw"></em> To</a>
+                                        #if( $page.profile.email)
+                                        <a href="mailto:$page.profile.email?bcc=to-lead-$page.leadId@${page.find('/').domainName}"> <em class="fa fa-envelope fa-fw"></em> To</a>
                                         |
                                         <a href="mailto:forward-to-$page.leadId@${page.find('/').domainName}"> <em class="fa fa-envelope fa-fw"></em> Forward</a>
+                                        #end
                                         <!--
                                         <button type="button" class="btn btn-info btn-xs mr-sm"> <em class="fa fa-twitter fa-fw"></em></button>
                                         <button type="button" class="btn btn-primary btn-xs mr-sm"> <em class="fa fa-facebook fa-fw"></em></button>
