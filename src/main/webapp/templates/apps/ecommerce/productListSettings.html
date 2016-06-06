@@ -4,29 +4,19 @@
         <div class="col-sm-12">
             <select class="form-control select-store">
                 <option value="" selected="selected">- None -</option>
-                <optgroup label="E-commerce Store">
-                    #foreach($store in $applications.ecommerce.stores)
-                        <option value="$store.name">$store.title</option>
-                    #end
-                </optgroup>
-                <optgroup label="Reward Store">
-                    #foreach($store in $applications.rewardStore.stores)
-                        <option value="$store.name">$store.title</option>
-                    #end
-                </optgroup>
+                #foreach($store in $applications.ecommerce.stores)
+                    <option value="$store.name">$store.title</option>
+                #end
             </select>
         </div>
     </div>
-    $store in $applications.ecommerce.stores.get(0)
     <div class="form-group">
         <label class="col-sm-12">Category</label>
         <div class="col-sm-12">
             <select class="form-control select-category">
                 <option value="" selected="selected">- None -</option>
-                #foreach($cat in $rootFolder.find("/categories/").children)
-                    #if ($cat.products)
-                        <option value="$cat.name" data-store="$store.name">$cat.title</option>
-                    #end
+                #foreach($cate in $applications.ecommerce.categories)
+                    <option value="$cate.name">$cate.title</option>
                 #end
             </select>
         </div>
@@ -34,13 +24,22 @@
     <div class="form-group">
         <label class="col-sm-12">Number of products</label>
         <div class="col-sm-12">
-            <input type="number" class="form-control number-of-products" />
+            <input type="number" class="form-control number-of-products" value="12" />
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-12">Products per row</label>
+        <label class="col-sm-12">Layout</label>
         <div class="col-sm-12">
-            <input type="number" class="form-control products-per-row" />
+            <select class="form-control select-layout">
+                <option value="grid" selected="selected">Grid</option>
+                <option value="list">List</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group items-per-row-wrapper">
+        <label class="col-sm-12">Items per row</label>
+        <div class="col-sm-12">
+            <input type="number" class="form-control items-per-row" value="4" />
         </div>
     </div>
 </form>

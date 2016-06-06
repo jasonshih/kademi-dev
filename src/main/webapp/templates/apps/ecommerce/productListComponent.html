@@ -1,5 +1,17 @@
+$store
+<br />
+$category
+<br />
+$numberOfProducts
+<br />
+$itemsPerRow
+<br />
+$layout
+<br />
+$rootFolder.find("/").find($store).child($category)
 #set( $cat = $rootFolder.find($store).child($category) )
-#set( $prods = $cat.myTopProducts ) $website
+$page.find($store).child($category)
+#set( $prods = $cat.myTopProducts )
 #if( $prods.size() > 0 )
     #if ($prods.size() > $numberOfProducts)
         #set( $prods = $prods.truncate($numberOfProducts))
