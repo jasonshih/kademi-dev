@@ -1,3 +1,5 @@
+var funnel;
+var funnelNodes = {};
 $(function(){
     initSideBar();
     initContextMenu();
@@ -7,8 +9,7 @@ $(function(){
 jsPlumb.ready(function () {
 
     var json = $("#funnelJson").text();
-    var funnel = $.parseJSON(json);
-    var funnelNodes = {};
+    funnel = $.parseJSON(json);
 
     // setup some defaults for jsPlumb.
     var instance = jsPlumb.getInstance({
@@ -105,15 +106,18 @@ jsPlumb.ready(function () {
         instance.fire("jsPlumbDemoNodeAdded", el);
     }
 
-    function newNode(node, type) {
+    function newNode(node, type, newNode) {
         var d = document.createElement("div");
         d.className = "w " + type;
+        if (newNode) {
+            d.className += ' newNode';
+        }
         d.id = node.nodeId;
         if (type !=='timeout'){
             if (node.name){
-                d.innerHTML = '<div class="inner">' + node.name + ' <div class="ep"></div></div>';
+                d.innerHTML = '<div class="inner"><span>' + node.name + '</span> <div class="ep"></div></div>';
             } else {
-                d.innerHTML = '<div class="inner">' + node.nodeId + ' <div class="ep"></div></div>';
+                d.innerHTML = '<div class="inner"><span>' + node.nodeId + '</span> <div class="ep"></div></div>';
             }
         }
         d.style.left = node.x + "px";
@@ -142,7 +146,7 @@ jsPlumb.ready(function () {
             if (dest) {
                 instance.connect({ source: node.nodeId, target: dest.nodeId, type:"basic" });
             } else {
-                var timeoutNode = {nodeId: node.nodeId+'-timeout', name: 'timeout', x: node.x + 20, y: node.y + 20};
+                var timeoutNode = {nodeId: node.nodeId+'-timeout', name: 'timeout', x: node.x -100, y: node.y +100};
                 newNode(timeoutNode, 'timeout');
                 instance.connect({ source: node.nodeId, target: timeoutNode.nodeId, type:"basic" });
             }
@@ -214,9 +218,16 @@ function initSideBar(){
         drop: function( event, ui ) {
             var type = ui.draggable.attr('data-type');
             var id = jsPlumbUtil.uuid();
-            var node = {nodeId: 'node'+ id, name: 'New '+type, x: ui.offset.left-200, y: ui.offset.top-300};
-            newNode(node, type);
-            console.log('drop',ui);
+            var node = {nodeId: 'node-'+type+'-'+ id, name: 'node-'+type+'-'+ id, x: ui.offset.left-200, y: ui.offset.top-300};
+            newNode(node, type, true);
+            var objToPush = {};
+            if (type === 'action'){
+                objToPush.createTaskAction = node; // default task name
+            } else {
+                objToPush[type] = node;
+            }
+            funnel.nodes.push(objToPush);
+            flog('drop', ui);
         }
     });
 }
@@ -227,14 +238,35 @@ function initContextMenu(){
         selector: ".w",
         // define the elements of the menu
         items: {
-            edit: {name: "Edit", icon: "fa-pencil", callback: function(key, opt){
+            edit: {name: "Edit node id", icon: "fa-pencil", callback: function(key, opt){
                 // Alert the key of the item and the trigger element's id.
-                //alert("Clicked on " + key + " on element " + opt.$trigger.attr("id"));
-                $('#modalEditNode').modal();
+                if (!opt.$trigger.hasClass('newNode')){
+                    alert('Could not edit existing node id');
+                } else {
+                    var id =  opt.$trigger.attr("id");
+                    var p = prompt('Please enter new node id', id);
+                    if (p && p!== id && !nodeExisted(p)){
+                        opt.$trigger.attr('id', p).find('span').text(p);
+                        updateNode(id, p);
+                    } else {
+                        alert('Could not change node id:'+ p);
+                    }
+                }
             }},
-            delete: {name: "Delete", icon: 'fa-trash', callback: function(key, opt){
+            detail: {name: "Node detail", icon: "fa-link", callback: function(key, opt){
+                // Alert the key of the item and the trigger element's id.
+                var id =  opt.$trigger.attr("id");
+                var href = window.location.pathname;
+                if (!href.endsWith('/')){
+                    href += '/';
+                }
+                window.location.pathname = href + id;
+            }},
+            delete: {name: "Delete node", icon: 'fa-trash', callback: function(key, opt){
                 var c = confirm('Are you sure you want to delete this node?');
                 if (c) {
+                    var id =  opt.$trigger.attr("id");
+                    deleteNode(id);
                     opt.$trigger.remove();
                 }
             }}
@@ -243,11 +275,72 @@ function initContextMenu(){
     });
 }
 
+function updateNode(oldNodeId, newNodeId){
+    for (var i = 0; i < funnel.nodes.length; i++) {
+        var node = funnel.nodes[i];
+        for(var key in node){
+            if(node[key].nodeId === oldNodeId){
+                node[key].nodeId = newNodeId;
+                break;
+            }
+        }
+    }
+}
+
+function deleteNode(nodeId){
+    var index = -1;
+    for (var i = 0; i < funnel.nodes.length; i++) {
+        var node = funnel.nodes[i];
+        for(var key in node){
+            if(node[key].nodeId === nodeId){
+                index = i;
+                break;
+            }
+        }
+    }
+
+    if (index>-1){
+        funnel.nodes.splice(index, 1);
+    }
+}
+
+function nodeExisted(nodeId){
+    var filter = funnel.nodes.filter(function(item){
+        for(var key in item){
+            return item[key].nodeId === nodeId;
+        }
+    });
+    return filter.length > 0;
+}
+
 function initSaveButton(){
     $('#btnSave').on('click', function(e){
         e.preventDefault();
 
         var connections = jsPlumpInstance.getAllConnections();
-        console.log(connections);
+
+        Msg.info("Saving..");
+        for (var i = 0; i < funnel.nodes.length; i++){
+            var node = funnel.nodes[i];
+            for (var key in node) {
+                if (node.hasOwnProperty(key)) {
+                    var nodeId = node[key].nodeId;
+                    node[key].x = $('#'+nodeId).css('left').replace('px','');
+                    node[key].y = $('#'+nodeId).css('top').replace('px','');
+                }
+            }
+        }
+
+        $.ajax({
+            url: 'funnel.json',
+            type: 'PUT',
+            data: JSON.stringify(funnel),
+            success: function () {
+                Msg.success('File is saved!');
+            },
+            error: function (e) {
+                Msg.error(e.status + ': ' + e.statusText);
+            }
+        });
     });
 }
