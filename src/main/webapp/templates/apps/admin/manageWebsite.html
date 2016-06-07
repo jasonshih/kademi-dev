@@ -293,6 +293,10 @@
                         <div id="group-list" class="clearfix GroupList">
                             #foreach($g in $page.selectedGroups)
                             <div class="alert alert-info">
+                                <a target="_blank" href="$page.signupHref($g)" class="btn btn-sm btn-info pull-right" title="Visit the signup page">
+                                    <i class="fa fa-wpforms"></i>
+                                </a>
+
                                 <span class="fa fa-users"></span>
                                 <a href="/groups/$g.name/members">$g.name</a>
                                 #if( $g.groupType == "P" )
