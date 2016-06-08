@@ -18,7 +18,7 @@
 
         #set ($blogListId = $formatter.randomGuid)
 
-        <div class="blog-articles-list row" id="blog-articlr-list-${blogListId}">
+        <div class="blog-articles-list row" id="blog-article-list-${blogListId}">
             #foreach($article in $articles)
                 <div class="blog-article $clsName">
                     <div class="thumbnail">
@@ -52,7 +52,7 @@
                 win.on('resize', function () {
                     clearTimeout(timer);
                     timer = setTimeout(function () {
-                        var brieves = $('#blog-articlr-list-${blogListId}').find('.article-brief');
+                        var brieves = $('#blog-article-list-${blogListId}').find('.article-brief');
                         brieves.css('height', '');
 
                         if (win.width() > 767) {
@@ -68,7 +68,7 @@
             });
         </script>
     #else
-        <div class="blog-articles-list" id="blog-articlr-list-${formatter.randomGuid}">
+        <div class="blog-articles-list" id="blog-article-list-${formatter.randomGuid}">
             #foreach($article in $articles)
                 <div class="media blog-article">
                     <div class="media-left hidden-sm hidden-xs">

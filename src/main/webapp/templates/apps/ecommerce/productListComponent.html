@@ -1,28 +1,132 @@
-#set( $cat = $rootFolder.find($store).child($category) )
-#set( $prods = $cat.myTopProducts ) $website
-#if( $prods.size() > 0 )
-    #if ($prods.size() > $numberOfProducts)
-        #set( $prods = $prods.truncate($numberOfProducts))
+#set ($store = $rootFolder.find($store))
+#set ($numberOfProducts = $formatter.toInteger($numberOfProducts))
+#set( $prods = $store.searchProducts(null, $category, 0, $numberOfProducts, 'product', false) )
+
+#if( $prods.hits.hits.size() > 0 )
+    #if ($layout == "grid")
+        #set ($clsName = "col-sm-4")
+        #if ($itemsPerRow == 1)
+            #set ($clsName = "col-sm-12")
+        #elseif ($itemsPerRow == 2)
+            #set ($clsName = "col-sm-6")
+        #elseif ($itemsPerRow == 3)
+            #set ($clsName = "col-sm-4")
+        #elseif ($itemsPerRow == 4)
+            #set ($clsName = "col-sm-3")
+        #end
+
+        #set ($prodsListId = $formatter.randomGuid)
+
+        <div class="row products-list" id="products-list-${prodsListId}">
+            #foreach($p in $prods.hits.hits)
+                <div class="product $clsName">
+                    <div class="thumbnail">
+                        <div class="embed-responsive embed-responsive-16by9">
+                            #set($bg = "/static/images/photo_holder.png")
+                            #if( $p.fields.primaryImageId.value )
+                                #set($bg = "/$store.name/$p.fields.tags.value/$p.fields.product.value/$p.fields.primaryImageId.value")
+                            #end
+                            <a title="$p.fields.title.value" href="/$store.name/$p.fields.tags.value/$p.fields.product.value" class="embed-responsive-item" style="background: url($bg) no-repeat 50% 50%; background-size: cover;">
+                                <span class="sr-only">$p.fields.title.value</span>
+                            </a>
+                            <label class="label label-success" style="position: absolute; top: 5px; right: 5px; font-size: 14px;"><i class="fa fa-usd"></i> $p.fields.finalCost.value</label>
+                        </div>
+                        <div class="caption">
+                            <h4><a title="$p.fields.title.value" href="/$store.name/$p.fields.tags.value/$p.fields.product.value">$p.fields.title.value</a></h4>
+                            <p style="word-wrap: break-word;" class="product-brief">$formatter.truncate( $formatter.toPlain( $!p.fields.content.value ), 100 )</p>
+                            <div class="text-right">
+                                <a href="/$store.name/$p.fields.tags.value/$p.fields.product.value" class="btn btn-default btn-sm" role="button">View</a>
+                                <a href="/$store.name/$p.fields.tags.value/$p.fields.product.value" class="btn btn-primary btn-sm btn-add-to-cart" role="button">Add to Cart</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            #end
+
+            <script type="text/javascript">
+                $(function () {
+                    var win = $(window);
+                    var timer = null;
+
+                    win.on('resize', function () {
+                        clearTimeout(timer);
+                        timer = setTimeout(function () {
+                            var brieves = $('#products-list-${prodsListId}').find('.product-brief');
+                            brieves.css('height', '');
+
+                            if (win.width() > 767) {
+                                var heights = [];
+                                brieves.each(function () {
+                                    heights.push($(this).innerHeight());
+                                });
+
+                                brieves.css('height', Math.max.apply(Math, heights));
+                            }
+                        }, 150);
+                    }).trigger('resize');
+                });
+            </script>
+        </div>
+    #else        
+        <div class="products-list" id="products-list-${prodsListId}">
+            #foreach($p in $prods.hits.hits)
+                <div class="media prod">
+                    <div class="media-left hidden-sm hidden-xs">
+                        #set($bg = "/static/images/photo_holder.png")
+                        #if( $p.fields.primaryImageId.value )
+                            #set($bg = "/$store.name/$p.fields.tags.value/$p.fields.product.value/$p.fields.primaryImageId.value")
+                        #end
+                        <a href="/$store.name/$p.fields.tags.value/$p.fields.product.value">
+                            <img class="media-object" alt="$p.fields.title.value" src="$bg" width="200" height="" />
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading" style="margin-bottom: 10px;">
+                            <a href="/$store.name/$p.fields.tags.value/$p.fields.product.value">$p.fields.title.value</a>
+                        </h4>
+                        <p><label class="label label-success" style="font-size: 14px;"><i class="fa fa-usd"></i> $p.fields.finalCost.value</label></p>
+                        <div class="media-content clearfix">
+                            <p>$formatter.truncate( $formatter.toPlain( $!p.fields.content.value ), 200 )</p>
+                            <div>
+                                <a href="/$store.name/$p.fields.tags.value/$p.fields.product.value" class="btn btn-default btn-sm" role="button">View</a>
+                                <a href="/$store.name/$p.fields.tags.value/$p.fields.product.value" class="btn btn-primary btn-sm btn-add-to-cart" role="button">Add to Cart</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+            #end
+        </div>
     #end
 
-    <div class="row products-list">
-        #set ($clsName = "col-md-4")
-        #if ($productsPerRow == 1)
-            #set ($clsName = "col-md-12")
-        #elseif ($productsPerRow == 2)
-            #set ($clsName = "col-md-6")
-        #elseif ($productsPerRow == 3)
-            #set ($clsName = "col-md-4")
-        #elseif ($productsPerRow == 4)
-            #set ($clsName = "col-md-3")
-        #end
-
-        #foreach( $prod in $prods )
-            <div class="$clsName product">
-
-            </div>
-        #end
-    </div>
+    <script type="text/javascript">
+        $(function () {  
+            $('#products-list-${prodsListId}').find('.btn-add-to-cart').off('click').on('click', function (e) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+            
+                var btn = $(this);
+                var href = btn.attr('href');
+            
+                $.ajax({
+                    type: 'POST',
+                    url: '/storeCheckout',
+                    data: {
+                        addItemHref: href,
+                        addItemQuantity: 1
+                    },
+                    datatype: 'json',
+                    success: function () {
+                        Msg.info('Added item to shopping cart');
+                        $('#cart-link').reloadFragment();
+                    },
+                    error: function () {
+                        Msg.error('An error occured adding the product to your shopping cart. Please check your internet connection and try again');
+                    }
+                });
+            });
+        })
+    </script>
 #else
     <p>Sorry, we couldnt find any products for you</p>
 #end

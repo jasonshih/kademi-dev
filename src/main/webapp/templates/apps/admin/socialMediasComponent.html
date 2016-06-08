@@ -43,9 +43,9 @@
         <tr>
             <td valign="middle">
                 &nbsp;
-                <a href="$link">
+                <a href="$link" style="text-decoration: none;">
                     #if ($display == "icon" || $display == "icon-text")
-                        <img src="http://${rootFolder.domainName}${formatter.portString}/static/icons/social-media-icons/${iconStyle}/${name}.png" width="$size" height="$iconSize" />
+                        <img src="http://${rootFolder.domainName}${formatter.portString}/static/icons/social-media-icons/${iconStyle}/${name}.png" width="$size" height="$iconSize" style="display: inline-block; border: 0; vertical-align: middle;" />
                     #end
                     #if ($display == "text" || $display == "icon-text")
                         $!text
