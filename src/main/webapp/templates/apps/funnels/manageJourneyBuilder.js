@@ -72,6 +72,8 @@ jsPlumb.ready(function () {
         var maxConnections = 1;
         if (type === 'decision'){
             maxConnections = 2;
+        } else if (type === 'goal'){
+            maxConnections=5;
         }
         instance.makeSource(el, {
             filter: ".ep",
@@ -144,11 +146,11 @@ jsPlumb.ready(function () {
         if (node.hasOwnProperty('timeoutNode')){
             var dest = node.timeoutNode;
             if (dest) {
-                instance.connect({ source: node.nodeId, target: dest.nodeId, type:"basic" });
+                instance.connect({ source: node.nodeId, target: dest, type:"basic" });
             } else {
-                var timeoutNode = {nodeId: node.nodeId+'-timeout', name: 'timeout', x: node.x -100, y: node.y +100};
-                newNode(timeoutNode, 'timeout');
-                instance.connect({ source: node.nodeId, target: timeoutNode.nodeId, type:"basic" });
+                //var timeoutNode = {nodeId: node.nodeId+'-timeout', name: 'timeout', x: node.x -100, y: node.y +100};
+                //newNode(timeoutNode, 'timeout');
+                //instance.connect({ source: node.nodeId, target: timeoutNode.nodeId, type:"basic" });
             }
         }
 
@@ -328,8 +330,12 @@ function initSaveButton(){
                     node[key].x = $('#'+nodeId).css('left').replace('px','');
                     node[key].y = $('#'+nodeId).css('top').replace('px','');
                 }
+
+                findNextNodeId(key, node[key], connections);
             }
         }
+
+
 
         $.ajax({
             url: 'funnel.json',
@@ -343,4 +349,20 @@ function initSaveButton(){
             }
         });
     });
+}
+
+function findNextNodeId(type, node, connections){
+    for(var i = 0; i < connections.length; i++){
+        var conn = connections[i];
+        if (conn.sourceId === node.nodeId){
+            if (type === 'goal'){
+
+            } else if (type === 'begin'){
+                node.transition.nextNodeId = conn.targetId;
+            } else {
+                node.nextNodeId = conn.targetId;
+            }
+
+        }
+    }
 }
