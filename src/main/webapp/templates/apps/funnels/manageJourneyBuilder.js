@@ -1,5 +1,6 @@
 var funnel;
 var funnelNodes = {};
+var JBApp = {};
 $(function(){
     initSideBar();
     initContextMenu();
@@ -68,12 +69,12 @@ jsPlumb.ready(function () {
     function initNode(el, type) {
 
         // initialise draggable elements.
-        instance.draggable(el);
+        instance.draggable(el, {containment:true});
         var maxConnections = 1;
         if (type === 'decision'){
             maxConnections = 2;
         } else if (type === 'goal'){
-            maxConnections=5;
+            maxConnections = 5;
         }
         instance.makeSource(el, {
             filter: ".ep",
@@ -115,6 +116,7 @@ jsPlumb.ready(function () {
             d.className += ' newNode';
         }
         d.id = node.nodeId;
+        d.setAttribute('data-type', type);
         if (type !=='timeout'){
             if (node.name){
                 d.innerHTML = '<div class="inner"><span>' + node.name + '</span> <div class="ep"></div></div>';
@@ -128,7 +130,8 @@ jsPlumb.ready(function () {
         initNode(d, type);
         return d;
     }
-    window.newNode = newNode;
+    JBApp.newNode = newNode;
+    JBApp.initNode = initNode;
 
     function initConnection(node, type){
         var nextNodeId;
@@ -200,7 +203,7 @@ jsPlumb.ready(function () {
 
     jsPlumb.fire("jsPlumbDemoLoaded", instance);
 
-    window.jsPlumpInstance = instance;
+    JBApp.jsPlumpInstance = instance;
 });
 
 function initSideBar(){
@@ -221,7 +224,7 @@ function initSideBar(){
             var type = ui.draggable.attr('data-type');
             var id = jsPlumbUtil.uuid();
             var node = {nodeId: 'node-'+type+'-'+ id, name: 'node-'+type+'-'+ id, x: ui.offset.left-200, y: ui.offset.top-300};
-            newNode(node, type, true);
+            JBApp.newNode(node, type, true);
             var objToPush = {};
             if (type === 'action'){
                 objToPush.createTaskAction = node; // default task name
@@ -248,10 +251,12 @@ function initContextMenu(){
                     var id =  opt.$trigger.attr("id");
                     var p = prompt('Please enter new node id', id);
                     if (p && p!== id && !nodeExisted(p)){
-                        opt.$trigger.attr('id', p).find('span').text(p);
-                        updateNode(id, p);
+                        var node = updateNode(id, p);
+                        var type = opt.$trigger.attr('data-type');
+                        JBApp.newNode(node, type, true);
+                        JBApp.jsPlumpInstance.remove(id);
                     } else {
-                        alert('Could not change node id:'+ p);
+                        alert('Could not change node id: '+ p);
                     }
                 }
             }},
@@ -269,7 +274,7 @@ function initContextMenu(){
                 if (c) {
                     var id =  opt.$trigger.attr("id");
                     deleteNode(id);
-                    opt.$trigger.remove();
+                    JBApp.jsPlumpInstance.remove(id);
                 }
             }}
         }
@@ -283,7 +288,8 @@ function updateNode(oldNodeId, newNodeId){
         for(var key in node){
             if(node[key].nodeId === oldNodeId){
                 node[key].nodeId = newNodeId;
-                break;
+                node[key].name = newNodeId;
+                return node[key];
             }
         }
     }
