@@ -4,6 +4,7 @@
 
 .keditor-content-area {
     padding-top: 30px;
+    margin-right: 0 !important;
 }
 
 .keditor-content-area.empty {
@@ -103,4 +104,18 @@ body.opened-keditor-sidebar div.cke_float[id*=cke_keditor-component-content-] {
 .content-editor-page .navbar-fixed-top .fa {
     font-size: 20px !important;
     line-height: 50px !important;
+}
+
+.row.row-sm {
+    margin: 0 -2px;
+}
+
+.row.row-sm > div {
+    padding: 0 2px;
+}
+
+.colorpicker {
+    top: 50px;
+    right: auto;
+    left: 15px;
 }

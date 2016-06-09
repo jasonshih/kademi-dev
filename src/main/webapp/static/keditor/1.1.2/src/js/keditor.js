@@ -1152,6 +1152,8 @@
             var body = self.body;
 
             body.on('click', function (e) {
+                var sidebar = self.getClickedElement(e, '#keditor-sidebar');
+
                 var container = self.getClickedElement(e, '.keditor-container');
                 if (container) {
                     flog('Click on .keditor-container', container, container.hasClass('showed-keditor-toolbar'));
@@ -1167,8 +1169,10 @@
                         }
                     }
                 } else {
-                    body.find('.keditor-container.showed-keditor-toolbar').removeClass('showed-keditor-toolbar');
-                    body.find('.keditor-component.showed-keditor-toolbar').removeClass('showed-keditor-toolbar');
+                    if (!sidebar) {
+                        body.find('.keditor-container.showed-keditor-toolbar').removeClass('showed-keditor-toolbar');
+                        body.find('.keditor-component.showed-keditor-toolbar').removeClass('showed-keditor-toolbar');
+                    }
                 }
 
                 var component = self.getClickedElement(e, '.keditor-component');
@@ -1185,7 +1189,9 @@
                         }
                     }
                 } else {
-                    body.find('.keditor-component.showed-keditor-toolbar').removeClass('showed-keditor-toolbar');
+                    if (!sidebar) {
+                        body.find('.keditor-component.showed-keditor-toolbar').removeClass('showed-keditor-toolbar');
+                    }
                 }
             });
 
@@ -1397,11 +1403,9 @@
             flog('getComponentContent', component);
 
             var self = this;
-            var options = self.options;
-
-            var dataType = component.attr('data-type');
             var componentType = self.getComponentType(component);
             var componentData = KEditor.components[componentType];
+            var dataAttrubites = self.getDataAttributes(component, null, true);
             var content;
 
             if (typeof componentData.getContent === 'function') {
@@ -1416,7 +1420,7 @@
             });
             content = tempDiv.html();
 
-            return '<section data-type="' + dataType + '">' + content + '</section>';
+            return '<section ' + dataAttrubites.join(' ') + '>' + content + '</section>';
         },
 
         getContainerContent: function (container) {
