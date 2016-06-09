@@ -765,7 +765,12 @@
             self.options.skin = editorSkin;
             self.options.templates_files = [templatesPath];
 
-            var editor = componentContent.ckeditor(self.options).editor;
+            var textWrapper = componentContent.find('.text-wrapper');
+            var textHtml = textWrapper.html();
+            var editorDiv = $('<div class="text-editor"></div>').attr('id', keditor.generateId('text-editor')).html(textHtml);
+            textWrapper.html(editorDiv);
+
+            var editor = editorDiv.ckeditor(self.options).editor;
             editor.on('instanceReady', function () {
                 flog('CKEditor is ready', component);
 
@@ -779,19 +784,22 @@
             flog('getContent "text" component', component);
 
             var componentContent = component.find('.keditor-component-content');
-            var id = componentContent.attr('id');
+            var textWrapper = componentContent.find('.text-wrapper');
+            var editorDiv = componentContent.find('.text-editor');
+            var id = editorDiv.attr('id');
             var editor = CKEDITOR.instances[id];
+
             if (editor) {
-                return editor.getData();
-            } else {
-                return componentContent.html();
+                textWrapper.html(editor.getData());
             }
+
+            return componentContent.html();
         },
 
         destroy: function (component, keditor) {
             flog('destroy "text" component', component);
 
-            var id = component.find('.keditor-component-content').attr('id');
+            var id = component.find('.text-editor').attr('id');
             var editor = CKEDITOR.instances[id];
             if (editor) {
                 editor.destroy();

@@ -31,29 +31,32 @@
                     form.html(resp);
 
                     form.find('.select-store').on('change', function () {
-                        var selectedStore = this.value;
-                        var dynamicElement = keditor.getSettingComponent().find('[data-dynamic-href]');
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        var contentArea = dynamicElement.closest('.keditor-content-area');
 
-                        if (selectedStore) {
-                            var contentArea = dynamicElement.closest('.keditor-content-area');
-                            var storeHref = $(this).find('option').eq(this.selectedIndex).attr('data-href');
-
-                            dynamicElement.attr('data-store', selectedStore);
-                            dynamicElement.attr('data-category', '');
-                            self.loadCategory(form, storeHref);
-                            keditor.initDynamicContent(contentArea, dynamicElement);
-                        } else {
-                            dynamicElement.html('<p>Please select Store</p>');
-                        }
+                        component.attr('data-store', this.value);
+                        keditor.initDynamicContent(contentArea, dynamicElement);
                     });
 
                     form.find('.select-category').on('change', function () {
-                        var selectedCategory = this.value;
-                        var dynamicElement = keditor.getSettingComponent().find('[data-dynamic-href]');
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
                         var contentArea = dynamicElement.closest('.keditor-content-area');
 
-                        dynamicElement.attr('data-category', selectedCategory);
+                        component.attr('data-category', this.value);
                         keditor.initDynamicContent(contentArea, dynamicElement);
+                    });
+
+                    form.find('.select-layout').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        var contentArea = dynamicElement.closest('.keditor-content-area');
+
+                        component.attr('data-layout', this.value);
+                        keditor.initDynamicContent(contentArea, dynamicElement);
+
+                        form.find('.items-per-row-wrapper').css('display', this.value === 'grid' ? 'block' : 'none');
                     });
 
                     form.find('.number-of-products').on('change', function () {
@@ -64,14 +67,15 @@
                             this.value = number;
                         }
 
-                        var dynamicElement = keditor.getSettingComponent().find('[data-dynamic-href]');
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
                         var contentArea = dynamicElement.closest('.keditor-content-area');
 
-                        dynamicElement.attr('data-number-of-products', number);
+                        component.attr('data-number-of-products', number);
                         keditor.initDynamicContent(contentArea, dynamicElement);
                     });
 
-                    form.find('.products-per-row').on('change', function () {
+                    form.find('.items-per-row').on('change', function () {
                         var number = this.value;
 
                         if (isNaN(number) || +number <= 0) {
@@ -79,10 +83,11 @@
                             this.value = number;
                         }
 
-                        var dynamicElement = keditor.getSettingComponent().find('[data-dynamic-href]');
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
                         var contentArea = dynamicElement.closest('.keditor-content-area');
 
-                        dynamicElement.attr('data-products-per-row', number);
+                        component.attr('data-items-per-row', number);
                         keditor.initDynamicContent(contentArea, dynamicElement);
                     });
                 }
@@ -91,6 +96,15 @@
 
         showSettingForm: function (form, component, keditor) {
             flog('showSettingForm "productList" component', form, component, keditor);
+
+            var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
+            form.find('.select-store').val(dataAttributes['data-store']);
+            form.find('.select-category').val(dataAttributes['data-category']);
+            form.find('.select-layout').val(dataAttributes['data-layout']);
+            form.find('.number-of-products').val(dataAttributes['data-number-of-products']);
+            form.find('.items-per-row').val(dataAttributes['data-items-per-row']);
+            form.find('.items-per-row-wrapper').css('display', dataAttributes['data-layout'] === 'grid' ? 'block' : 'none');
+
         },
 
         hideSettingForm: function (form, keditor) {

@@ -1,3 +1,9 @@
+$(function(){
+    initSideBar();
+    initContextMenu();
+    initSaveButton();
+});
+
 jsPlumb.ready(function () {
 
     var json = $("#funnelJson").text();
@@ -48,12 +54,12 @@ jsPlumb.ready(function () {
     });
 
     // bind a double click listener to "canvas"; add new node when this occurs.
-    jsPlumb.on(canvas, "dblclick", function(e) {
-        var nodeId = prompt('Enter nodeId');
-        if (nodeId){
-            newNode(nodeId, e.offsetX, e.offsetY);
-        }
-    });
+    //jsPlumb.on(canvas, "dblclick", function(e) {
+    //    var nodeId = prompt('Enter nodeId');
+    //    if (nodeId){
+    //        newNode(nodeId, e.offsetX, e.offsetY);
+    //    }
+    //});
 
     //
     // initialise element as connection targets and source.
@@ -104,7 +110,11 @@ jsPlumb.ready(function () {
         d.className = "w " + type;
         d.id = node.nodeId;
         if (type !=='timeout'){
-            d.innerHTML = '<div class="inner">' + node.nodeId + ' <div class="ep"></div></div>';
+            if (node.name){
+                d.innerHTML = '<div class="inner">' + node.name + ' <div class="ep"></div></div>';
+            } else {
+                d.innerHTML = '<div class="inner">' + node.nodeId + ' <div class="ep"></div></div>';
+            }
         }
         d.style.left = node.x + "px";
         d.style.top = node.y + "px";
@@ -112,6 +122,7 @@ jsPlumb.ready(function () {
         initNode(d, type);
         return d;
     }
+    window.newNode = newNode;
 
     function initConnection(node, type){
         var nextNodeId;
@@ -183,4 +194,60 @@ jsPlumb.ready(function () {
 
     jsPlumb.fire("jsPlumbDemoLoaded", instance);
 
+    window.jsPlumpInstance = instance;
 });
+
+function initSideBar(){
+    $('.right-panel .list-group-item').draggable({
+        revert: 'invalid',
+        tolerance: 'pointer',
+        helper: 'clone',
+        start: function (e, ui) {
+
+        },
+        stop: function (e, ui) {
+            console.log('stop',ui);
+        }
+    });
+
+    $('#paper').droppable({
+        drop: function( event, ui ) {
+            var type = ui.draggable.attr('data-type');
+            var id = jsPlumbUtil.uuid();
+            var node = {nodeId: 'node'+ id, name: 'New '+type, x: ui.offset.left-200, y: ui.offset.top-300};
+            newNode(node, type);
+            console.log('drop',ui);
+        }
+    });
+}
+
+function initContextMenu(){
+    $.contextMenu({
+        // define which elements trigger this menu
+        selector: ".w",
+        // define the elements of the menu
+        items: {
+            edit: {name: "Edit", icon: "fa-pencil", callback: function(key, opt){
+                // Alert the key of the item and the trigger element's id.
+                //alert("Clicked on " + key + " on element " + opt.$trigger.attr("id"));
+                $('#modalEditNode').modal();
+            }},
+            delete: {name: "Delete", icon: 'fa-trash', callback: function(key, opt){
+                var c = confirm('Are you sure you want to delete this node?');
+                if (c) {
+                    opt.$trigger.remove();
+                }
+            }}
+        }
+        // there's more, have a look at the demos and docs...
+    });
+}
+
+function initSaveButton(){
+    $('#btnSave').on('click', function(e){
+        e.preventDefault();
+
+        var connections = jsPlumpInstance.getAllConnections();
+        console.log(connections);
+    });
+}

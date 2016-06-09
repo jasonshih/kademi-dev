@@ -151,7 +151,7 @@
                                             <div class="col-sm-4">
                                                 <div class="form-horizontal">
                                                     <div class="form-group">
-                                                        <label class="control-label col-md-5" for="startRow" style="text-align: left !important;">Start row</label>
+                                                        <label class="control-label col-md-5" for="startRow" style="text-align: right !important;">Start row</label>
                                                         <div class="controls col-md-7">
                                                             <input type="text" name="startRow" id="startRow" class="form-control" value=""/>
                                                         </div>
@@ -160,7 +160,7 @@
                                             </div>
                                             <div class="col-sm-4">
                                                 <div class="form-group">
-                                                    <label class="control-label col-md-5" for="defaultGroup" style="text-align: left !important;">Default group</label>
+                                                    <label class="control-label col-md-5" for="defaultGroup" style="text-align: right !important;">Default group</label>
                                                     <div class="controls col-md-7">
                                                         <select name="defaultGroup" class="form-control">
                                                             <option value="">[No default group]</option>
@@ -181,33 +181,42 @@
                                             <div class="col-sm-4">
                                                 <div class="form-horizontal">
                                                     <div class="form-group">
-                                                        <label class="control-label col-md-5" for="removalMode" style="text-align: left !important;">Removing</label>
+                                                        <label class="control-label col-md-5" for="removalMode" style="text-align: right">Mode</label>
                                                         <div class="controls col-md-7">
-                                                        <select name="removalMode" class="form-control">
-                                                            <option value="">Only use remove column</option>
-                                                            <option value="remove">Remove all uploaded</option>
-                                                            <option value="unsub">Un-subscribe all uploaded</option>
-
-                                                        </select>
+                                                            <select name="removalMode" class="form-control">
+                                                                <option value="">Auto</option>
+                                                                <option value="remove">Remove all uploaded</option>
+                                                                <option value="unsub">Un-subscribe all uploaded</option>
+                                                            </select>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div style="text-align: right">
+                                                <i>
+                                                    Modes:
+                                                    Auto will only remove profiles if you select a removal column. If so it must have a value of unsub or remove, or be left blank to add or update normally.
+                                                    <br/>The "remove all uploaded" mode will remove all profiles in the uploaded file without creating an unsubscribe record
+                                                    <br/>"Un-subscribe all.." will remove all profiles and create unsubscribe records for them
+                                                </i>
+                                            </div>
                                         </div>
+
+                                        <hr/>
 
                                         <p class="lead">Please select which destination field each column should be imported into:</p>
 
                                         <div class="table-responsive" style="max-height: 300px; overflow-y: auto">
                                             <table class="table table-bordered table-striped" id="importerTable" >
                                                 <thead>
-                                                <tr id="importerHead">
-                                                    <th>Please wait...</th>
-                                                </tr>
+                                                    <tr id="importerHead">
+                                                        <th>Please wait...</th>
+                                                    </tr>
                                                 </thead>
                                                 <tbody id="importerBody">
-                                                <tr>
-                                                    <td>Loading...</td>
-                                                </tr>
+                                                    <tr>
+                                                        <td>Loading...</td>
+                                                    </tr>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -796,9 +805,9 @@
                     });
                 });
 
-                $('a[download="users.csv"]').on('click', function(e){
+                $('a[download="users.csv"]').on('click', function (e) {
                     var search = window.location.search;
-                    $(this).attr('href', 'users.csv'+search);
+                    $(this).attr('href', 'users.csv' + search);
                 });
             });
         </script>

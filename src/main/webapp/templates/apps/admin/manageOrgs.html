@@ -22,21 +22,28 @@
     </head>
     <body class="manage-business-unit">
         <div id="manage-business-unit">
-            <header class="clearfix">
-                <p class="pull-left">
-                    <a class="btn btn-sm btn-success btn-add-org" href="#"><i class="fa fa-plus"></i> Add new business units</a>
-                </p>
-                <div class="pull-right">
-                    <p class="btn-group">
-                        <a class="btn btn-sm  btn-warning" href="#modal-upload-csv" data-toggle="modal" data-target="#modal-upload-csv">Upload CSV</a>
-                        <a class="btn btn-sm btn-info" href="orgs.csv">Open CSV</a>
-                    </p>
-                    <p class="btn-group">
-                        <a class="btn btn-sm btn-warning" href="#modal-upload-orgid-csv" data-toggle="modal">Upload OrgIDs CSV</a>
-                        <a class="btn btn-sm btn-info" href="orgIds.csv">Open OrgIDs CSV</a>
-                    </p>
-                </div>
-            </header>
+
+
+            <div class="btn-group">
+                <a class="btn btn-sm btn-success btn-add-org" href="#"><i class="fa fa-plus"></i> Add new business units</a>
+                <a class="btn btn-sm btn-info" href="map"><i class="fa fa-map-marker"></i> Map</a>
+                <a role="button" href="#" class="btn btn-sm btn-info">
+                    <i class="fa fa-list"></i>
+                    Tools
+                </a>
+                <button type="button" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown">
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li class="presentation" role="menuitem"><a class="" href="#modal-upload-csv" data-toggle="modal" data-target="#modal-upload-csv">Import</a></li>
+                    <li class="presentation" role="menuitem"><a class="" href="orgs.csv">Export</a></li>
+                    <li class="presentation" role="menuitem"><a class="" href="#modal-upload-orgid-csv" data-toggle="modal">Upload OrgIDs CSV</a></li>
+                    <li class="presentation" role="menuitem"><a class="" href="orgIds.csv">Open OrgIDs CSV</a></li>
+                </ul>
+            </div>
+
+            <br/>
+            <br/>
 
             <div class="panel panel-default">
                 <div class="panel-heading"><i class="clip-folder"></i> Business Units</div>
