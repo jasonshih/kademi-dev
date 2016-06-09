@@ -17,7 +17,7 @@
             </select>
         </div>
     </div>
-    $store in $applications.ecommerce.stores.get(0)
+    $store in $formatter.safeGet($applications.ecommerce.stores, 0)
     <div class="form-group">
         <label class="col-sm-12">Category</label>
         <div class="col-sm-12">
