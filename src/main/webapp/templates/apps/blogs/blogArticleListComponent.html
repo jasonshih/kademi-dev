@@ -1,5 +1,7 @@
 #set( $blogFolder = $rootFolder.find("/blogs").child($blog) )
 #set( $articles = $blogFolder.articles.sortByDate )
+#set ($blogListId = $formatter.randomGuid)
+
 #if( $articles.size() > 0 )
     #set ($numberOfArticles = $formatter.toInteger($numberOfArticles))
     #set ($articles = $articles.truncate($numberOfArticles))
@@ -16,7 +18,6 @@
             #set ($clsName = "col-sm-3")
         #end
 
-        #set ($blogListId = $formatter.randomGuid)
 
         <div class="blog-articles-list row" id="blog-article-list-${blogListId}">
             #foreach($article in $articles)
@@ -68,7 +69,7 @@
             });
         </script>
     #else
-        <div class="blog-articles-list" id="blog-article-list-${formatter.randomGuid}">
+        <div class="blog-articles-list" id="blog-article-list-${blogListId}">
             #foreach($article in $articles)
                 <div class="media blog-article">
                     <div class="media-left hidden-sm hidden-xs">
