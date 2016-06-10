@@ -249,7 +249,7 @@
                 var orgTypes = cbbOrgType.val();
                 flog('[jquery.orgFinder] OrgTypes: "' + orgTypes + '", last orgTypes: "' + lastOrgTypes + '"');
 
-                if (query !== lastQuery || orgTypes !== lastOrgTypes) {
+                if ((lat && lng) || (query !== lastQuery || orgTypes !== lastOrgTypes)) {
                     self.clear();
                     self.doSearch(query, lat, lng);
                 } else {
@@ -383,6 +383,7 @@
 
             var self = this;
             var options = self.options;
+            var map = self.map;
 
             if (typeof options.onSearch === 'function') {
                 options.onSearch.call(self, query);
@@ -393,18 +394,21 @@
                 $.error('[jquery.orgFinder] Search Url is empty!');
             }
 
-            var data = {
-                jsonQuery: query,
-                lat: lat !== undefined ? lat : '',
-                lng: lng !== undefined ? lng : ''
-            };
+            var data = {};
+
+            if (lat !== undefined && lng !== undefined) {
+                data.lat = lat;
+                data.lng = lng;
+            } else {
+                data.query = query;
+
+                if (options.orgTypes && $.isArray(options.orgTypes) && options.orgTypes.length > 0) {
+                    data.orgTypes = self.formSearch.find('[name=orgType]').val();
+                }
+            }
 
             if (typeof options.beforeSearch === 'function') {
                 data = options.beforeSearch.call(self, query, data);
-            }
-
-            if (options.orgTypes && $.isArray(options.orgTypes) && options.orgTypes.length > 0) {
-                data.orgTypes = self.formSearch.find('[name=orgType]').val();
             }
 
             $.ajax({
@@ -421,6 +425,8 @@
                         self.generateData(resp.data);
                     } else {
                         self.itemsWrapper.html(options.emptyItemText);
+                        map.setCenter(new google.maps.LatLng(lat, lng));
+                        map.setZoom(options.initZoomLevel);
                     }
 
                     if (typeof options.onSearched === 'function') {
