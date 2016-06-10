@@ -55,7 +55,7 @@
             var self = this;
 
             $.ajax({
-                url: '/_components/web/kpiVis?settings',
+                url: '/_components/kpiVis?settings',
                 type: 'get',
                 dataType: 'HTML',
                 success: function (resp) {

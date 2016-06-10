@@ -24,7 +24,7 @@
             flog('initSettingForm "productList" component', form, keditor);
 
             $.ajax({
-                url: '/_components/web/productList?settings',
+                url: '/_components/productList?settings',
                 type: 'get',
                 dataType: 'html',
                 success: function (resp) {

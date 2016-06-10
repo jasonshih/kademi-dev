@@ -5,7 +5,7 @@
             <select class="form-control recentPointsBucket">
                 <option value="">- None -</option>
                 #foreach ($pointsBucket in $applications.rewardStore.pointsBuckets)
-                    <option value="$pointsBucket.name">$pointsBucket.title - $pointsBucket.class</option>
+                    <option value="$pointsBucket.name">$pointsBucket.title</option>
                 #end
             </select>
         </div>
