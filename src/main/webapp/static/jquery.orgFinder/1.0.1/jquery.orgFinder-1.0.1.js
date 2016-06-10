@@ -19,6 +19,9 @@
  * @option {Function} onSearched Callback will be called after searching a keyword. Arguments: 'query', 'resp'
  * @option {Function} renderItemContent Method for rendering content of an item in organization list. If you don't want to show this organization, just return null or empty. Arguments: 'orgData'
  * @option {Function} renderMarkerContent Method for rendering content for InfoWindow of a marker on Google Map. If you don't want to show this organization, just return null or empty. Arguments: 'orgData'
+ * @option {Function} renderSuggestionContent Method for rendering content for suggestions list. If you don't want to show this organization, just return null or empty. Arguments: 'data'
+ * @option {String} emptyItemText Text will be showed when there is no result in organization list
+ * @option {String} emptySuggestionText Text will be showed when there is no suggestion in suggestions list
  */
 
 (function ($) {
