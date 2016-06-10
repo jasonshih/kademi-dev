@@ -11,9 +11,7 @@
  * @option {String} googleAPIKey Google API key
  * @option {String} searchUrl Search URL. Must be link to signup page of a group or /organisations/ (if you use this plugin in Kademi admin console)
  * @option {Array} orgTypes List of organisation types. It's optional
- * @option {Boolean} searchInType Search when typing or not
- * @option {Number} typeDelayTime The delay time which after stopping typing, will do the search
- * @option {String} template Template string for orgFinder. Form search must has 'org-finder-search' class, textbox must be named 'q' and selectbox for organisation types must be named 'orgType'. Items list wrapper must has 'org-finder-list' class. Map div must has class 'org-finder-map'
+ * @option {String} template Template string for orgFinder. Form search must has 'org-finder-search' class, textbox must be named 'q' and selectbox for organisation types must be named 'orgType'. Items list wrapper must has 'org-finder-list' class. Suggestion list wrapper must has 'org-finder-suggestions' class. Map div must has class 'org-finder-map'
  * @option {Function} onReady Callback will be called when orgFinder is ready. Arguments: 'formSearch', 'itemsWrapper', 'mapDiv'
  * @option {Function} onSelect Callback will be called when click on marker on map or item in org list panel. Arguments: 'orgData', 'item', 'marker', 'infoWindow'
  * @option {Function} onSearch Callback will be called when search a keyword. Arguments: 'query'
@@ -45,12 +43,12 @@
         googleAPIKey: null,
         searchUrl: null,
         orgTypes: null,
-        searchInType: false,
-        typeDelayTime: 500,
-        template:
-        '<form role="form" class="form-horizontal form-search org-finder-search" action="" style="margin-bottom: 15px;">' +
+        template: '<form role="form" class="form-horizontal form-search org-finder-search" action="" style="margin-bottom: 15px;">' +
         '    <div class="input-group input-group-lg">' +
-        '        <input type="text" name="q" class="form-control" placeholder="Enter keyword to search..." value="" />' +
+        '        <div class="clearfix dropdown">' +
+        '            <input type="text" name="q" class="form-control" placeholder="Enter keyword to search..." value="" autocomplete="off" />' +
+        '            <div class="dropdown-menu org-finder-suggestions" style="width: 100%;"></div>' +
+        '        </div>' +
         '        <span class="input-group-btn">' +
         '            <select name="orgType" class="selectpicker"></select>' +
         '            <button class="btn btn-default" type="submit">Search</button>' +
@@ -137,12 +135,21 @@
             }
 
             return '<div>' + markerContent + '</div>';
-        }
+        },
+        renderSuggestionContent: function (data) {
+            var suggestionContent = data.formatted_address;
+
+            return '<li><a>' + suggestionContent + '</a></li>';
+        },
+        emptyItemText: '<div class="list-group-item text-muted">No result</li>',
+        emptySuggestionText: '<li class="disabled"><a>No suggestion</a></li>'
     };
 
     var SEARCH_SELECTOR = '.org-finder-search';
     var LIST_SELECTOR = '.org-finder-list';
     var MAP_SELECTOR = '.org-finder-map';
+    var SUGGESTIONS_SELECTOR = '.org-finder-suggestions';
+    var SUGGESTION_SELECTOR = '.org-finder-suggestion';
 
     function Finder(container, options) {
         this.options = options;
@@ -167,6 +174,7 @@
             self.formSearch = container.find(SEARCH_SELECTOR);
             self.itemsWrapper = container.find(LIST_SELECTOR);
             self.mapDiv = container.find(MAP_SELECTOR);
+            self.suggestionWrapper = container.find(SUGGESTIONS_SELECTOR);
 
             self.initMap();
         },
@@ -216,16 +224,37 @@
             var self = this;
             var options = self.options;
             var formSearch = self.formSearch;
+            var suggestionWrapper = self.suggestionWrapper;
+            var map = self.map;
             var cbbOrgType = formSearch.find('[name=orgType]');
             var txtQ = formSearch.find('[name=q]');
             var btn = formSearch.find(':button');
             var initQuery = self.options.initQuery;
             var lastQuery = null;
+            var lastOrgTypes = null;
             var orgTypes = options.orgTypes;
 
             if (initQuery !== null && initQuery !== undefined && initQuery.trim() !== '') {
                 txtQ.val(initQuery);
             }
+
+            var eventHandler = function (lat, lng) {
+                var query = (txtQ.val() || '').trim();
+                query = query === '' ? ' ' : query;
+                flog('[jquery.orgFinder] Query: "' + query + '", last query: "' + lastQuery + '"');
+
+                var orgTypes = cbbOrgType.val();
+                flog('[jquery.orgFinder] OrgTypes: "' + orgTypes + '", last orgTypes: "' + lastOrgTypes + '"');
+
+                if (query !== lastQuery || orgTypes !== lastOrgTypes) {
+                    self.clear();
+                    self.doSearch(query, lat, lng);
+                } else {
+                    flog('[jquery.orgFinder] Query is already searched. Do nothing');
+                }
+                lastQuery = query;
+                lastOrgTypes = orgTypes;
+            };
 
             if (orgTypes && $.isArray(orgTypes) && orgTypes.length > 0) {
                 var optionStr = '';
@@ -235,21 +264,20 @@
                 }
 
                 cbbOrgType.prop('multiple', true).html(optionStr).attr('title', ' - Select Organisation Types - ').addClass('selectpicker');
+                cbbOrgType.on('change', function () {
+                    eventHandler();
+                });
             }
 
-            var eventHandler = function () {
-                var query = (txtQ.val() || '').trim();
-                query = query === '' ? ' ' : query;
-                flog('[jquery.orgFinder] Query: "' + query + '", last query: "' + lastQuery + '"');
+            suggestionWrapper.css('display', 'none').on('click', SUGGESTION_SELECTOR, function (e) {
+                e.preventDefault();
 
-                if (query !== lastQuery) {
-                    self.clear();
-                    self.doSearch(query);
-                } else {
-                    flog('[jquery.orgFinder] Query is already searched. Do nothing');
-                }
-                lastQuery = query;
-            };
+                var clicked = $(this);
+                var query = clicked.text().trim();
+                txtQ.val(query);
+                eventHandler(clicked.attr('data-lat'), clicked.attr('data-lng'));
+                suggestionWrapper.css('display', 'none');
+            });
 
             if (formSearch.is('form')) {
                 formSearch.on('submit', function (e) {
@@ -263,28 +291,66 @@
 
                     eventHandler();
                 });
-
-                txtQ.on('keydown', function (e) {
-                    if (e.keyCode === 13) {
-                        e.preventDefault();
-                        eventHandler();
-                    }
-                });
             }
 
-            if (options.searchInType) {
-                var timer = null;
-                txtQ.on('keydown', function (e) {
-                    if (e.keyCode !== 13 && e.keyCode !== 27) {
-                        clearTimeout(timer);
-                        timer = setTimeout(function () {
-                            eventHandler();
-                        }, options.typeDelayTime);
-                    } else {
-                        e.preventDefault();
-                    }
-                });
-            }
+            $(window).on('keydown', function (e) {
+                if (e.keyCode === 27) {
+                    e.preventDefault();
+                    suggestionWrapper.css('display', 'none');
+                }
+            });
+
+            var timer = null;
+            txtQ.on('keydown', function (e) {
+                if (e.keyCode === 13) {
+                    e.preventDefault();
+                    eventHandler();
+                } else if (e.keyCode === 27) {
+                    e.preventDefault();
+                    suggestionWrapper.css('display', 'none');
+                } else {
+                    clearTimeout(timer);
+                    timer = setTimeout(function () {
+                        var q = txtQ.val() || '';
+                        q = q.trim();
+
+                        if (q !== '') {
+                            flog('[jquery.orgFinder] Searching using GoogleMap PlacesService...');
+                            var service = new google.maps.places.PlacesService(map);
+                            service.textSearch({
+                                query: q
+                            }, function (results, status) {
+                                flog('[jquery.orgFinder] Get results from GoogleMap PlacesService', results, status);
+
+                                if (status === google.maps.places.PlacesServiceStatus.OK) {
+                                    if (typeof options.renderSuggestionContent !== 'function') {
+                                        $.error('[jquery.orgFinder] renderSuggestionContent is not function. Please correct it!');
+                                    }
+
+                                    suggestionWrapper.html('');
+                                    for (var i = 0; i < results.length; i++) {
+                                        var suggestionContent = options.renderSuggestionContent(results[i]) || '';
+                                        suggestionContent = suggestionContent.trim();
+
+                                        if (suggestionContent !== '') {
+                                            $(suggestionContent).addClass(SUGGESTION_SELECTOR.replace('.', '')).attr({
+                                                'data-lat': results[i].geometry.location.lat,
+                                                'data-lng': results[i].geometry.location.lng
+                                            }).appendTo(suggestionWrapper);
+                                        }
+                                    }
+                                } else {
+                                    suggestionWrapper.html(options.emptySuggestionText);
+                                }
+
+                                suggestionWrapper.css('display', 'block');
+                            });
+                        } else {
+                            suggestionWrapper.css('display', 'none');
+                        }
+                    }, 150);
+                }
+            });
         },
 
         clear: function () {
@@ -309,11 +375,10 @@
             this.itemsWrapper.html('');
         },
 
-        doSearch: function (query) {
-            flog('[jquery.orgFinder] doSearch', query);
+        doSearch: function (query, lat, lng) {
+            flog('[jquery.orgFinder] doSearch', query, lat, lng);
 
             var self = this;
-            var map = self.map;
             var options = self.options;
 
             if (typeof options.onSearch === 'function') {
@@ -325,55 +390,44 @@
                 $.error('[jquery.orgFinder] Search Url is empty!');
             }
 
+            var data = {
+                jsonQuery: query,
+                lat: lat !== undefined ? lat : '',
+                lng: lng !== undefined ? lng : ''
+            };
 
-            flog('[jquery.orgFinder] Searching using GoogleMap PlacesService...');
-            var service = new google.maps.places.PlacesService(map);
-            service.textSearch({
-                query: q
-            }, function (results, status) {
-                flog('[jquery.orgFinder] Get results from GoogleMap PlacesService', results, status);
+            if (typeof options.beforeSearch === 'function') {
+                data = options.beforeSearch.call(self, query, data);
+            }
 
-                var data = {
-                    jsonQuery: query
-                };
+            if (options.orgTypes && $.isArray(options.orgTypes) && options.orgTypes.length > 0) {
+                data.orgTypes = self.formSearch.find('[name=orgType]').val();
+            }
 
-                if (status === google.maps.places.PlacesServiceStatus.OK) {
-                    var firstMatched = results[0];
-                    data.lat = firstMatched.geometry.location.lat;
-                    data.lng = firstMatched.geometry.location.lng;
-                }
+            $.ajax({
+                url: options.searchUrl,
+                dataType: 'json',
+                type: 'get',
+                data: data,
+                success: function (resp) {
+                    flog('[jquery.orgFinder] Success in getting data', resp);
 
-                if (typeof options.beforeSearch === 'function') {
-                    data = options.beforeSearch.call(self, query, data);
-                }
+                    self.clear();
 
-                if (options.orgTypes && $.isArray(options.orgTypes) && options.orgTypes.length > 0) {
-                    data.orgTypes = self.formSearch.find('[name=orgType]').val();
-                }
-
-                $.ajax({
-                    url: options.searchUrl,
-                    dataType: 'json',
-                    type: 'get',
-                    data: data,
-                    success: function (resp) {
-                        flog('[jquery.orgFinder] Success in getting data', resp);
-
-                        self.clear();
-
-                        if (resp && resp.status && resp.data && resp.data[0]) {
-                            self.generateData(resp.data);
-                        }
-
-                        if (typeof options.onSearched === 'function') {
-                            options.onSearched.call(self, query, resp);
-                        }
-
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        flog('[jquery.orgFinder] Error when getting data', jqXHR, textStatus, errorThrown);
+                    if (resp && resp.status && resp.data && resp.data[0]) {
+                        self.generateData(resp.data);
+                    } else {
+                        self.itemsWrapper.html(options.emptyItemText);
                     }
-                });
+
+                    if (typeof options.onSearched === 'function') {
+                        options.onSearched.call(self, query, resp);
+                    }
+
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    flog('[jquery.orgFinder] Error when getting data', jqXHR, textStatus, errorThrown);
+                }
             });
         },
 
