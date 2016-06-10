@@ -2,6 +2,7 @@
 #set ($numberOfProducts = $formatter.toInteger($numberOfProducts))
 #set( $prods = $store.searchProducts(null, $category, 0, $numberOfProducts, 'product', false) )
 
+#set ($prodsListId = $formatter.randomGuid)
 #if( $prods.hits.hits.size() > 0 )
     #if ($layout == "grid")
         #set ($clsName = "col-sm-4")
@@ -14,8 +15,6 @@
         #elseif ($itemsPerRow == 4)
             #set ($clsName = "col-sm-3")
         #end
-
-        #set ($prodsListId = $formatter.randomGuid)
 
         <div class="row products-list" id="products-list-${prodsListId}">
             #foreach($p in $prods.hits.hits)

@@ -42,7 +42,7 @@ function initContentEditorPage(fileName) {
         }, 100);
     }).trigger('resize');
 
-    initKEditor(body);
+    initKEditor(body, fileName);
     initSaving(body, fileName);
 
     setTimeout(function () {
@@ -75,11 +75,11 @@ $.keditor.components['text'].options = {
     stylesSet: 'myStyles:' + stylesPath
 };
 
-function initKEditor(body) {
+function initKEditor(body, fileName) {
     var contentArea = $('#content-area');
 
     contentArea.keditor({
-        snippetsUrl: '/_components/web/snippets.html',
+        snippetsUrl: '_components?fileName=' + fileName,
         onContentChanged: function () {
             if (contentArea.keditor('getContent').trim() === '') {
                 contentArea.find('.keditor-content-area').addClass('empty');
@@ -97,6 +97,126 @@ function initKEditor(body) {
             if (content === '') {
                 contentArea.addClass('empty');
             }
+        },
+        containerSettingEnabled: true,
+        containerSettingInitFunction: function (form, keditor) {
+            form.append(
+                '<form class="form-horizontal">' +
+                '   <div class="form-group">' +
+                '       <div class="col-sm-12">' +
+                '           <label>Background Image</label>' +
+                '           <p><img src="/static/images/photo_holder.png" class="img-responsive img-thumbnail" id="background-image-previewer" /></p>' +
+                '           <button type="button" class="btn btn-block btn-primary" id="background-image-edit">Change Background Image</button>' +
+                '       </div>' +
+                '   </div>' +
+                '   <div class="form-group">' +
+                '       <label for="photo-align" class="col-sm-12">Background repeat</label>' +
+                '       <div class="col-sm-12">' +
+                '           <select class="form-control select-bg-repeat">' +
+                '               <option value="repeat">Repeat</option>' +
+                '               <option value="no-repeat" selected="selected">No Repeat</option>' +
+                '               <option value="repeat-x">Repeat horizontal</option>' +
+                '               <option value="repeat-y">Repeat vertical</option>' +
+                '           </select>' +
+                '       </div>' +
+                '   </div>' +
+                '   <div class="form-group">' +
+                '       <label for="photo-align" class="col-sm-12">Background x-position</label>' +
+                '       <div class="col-sm-12">' +
+                '           <input type="number" value="" class="txt-height form-control" />' +
+                '       </div>' +
+                '   </div>' +
+                '   <div class="form-group">' +
+                '       <label for="photo-align" class="col-sm-12">Height</label>' +
+                '       <div class="col-sm-12">' +
+                '           <input type="number" value="" class="txt-height form-control" />' +
+                '       </div>' +
+                '   </div>' +
+                '   <div class="form-group">' +
+                '      <div class="col-md-12">' +
+                '          <label>Background Color</label>' +
+                '          <div class="input-group color-picker">' +
+                '              <span class="input-group-addon"><i></i></span>' +
+                '              <input type="text" value="" class="txt-bg-color form-control" />' +
+                '          </div>' +
+                '      </div>' +
+                '   </div>' +
+                '   <div class="form-group">' +
+                '      <div class="col-md-12">' +
+                '          <label>Padding (in px)</label>' +
+                '          <div class="row row-sm text-center">' +
+                '              <div class="col-xs-4 col-xs-offset-4">' +
+                '                  <input type="number" value="" class="txt-padding-top form-control" />' +
+                '                  <small>top</small>' +
+                '              </div>' +
+                '          </div>' +
+                '          <div class="row row-sm text-center">' +
+                '              <div class="col-xs-4">' +
+                '                  <input type="number" value="" class="txt-padding-left form-control" />' +
+                '                  <small>left</small>' +
+                '              </div>' +
+                '              <div class="col-xs-4 col-xs-offset-4">' +
+                '                  <input type="number" value="" class="txt-padding-right form-control" />' +
+                '                  <small>right</small>' +
+                '              </div>' +
+                '          </div>' +
+                '          <div class="row row-sm text-center">' +
+                '              <div class="col-xs-4 col-xs-offset-4">' +
+                '                  <input type="number" value="" class="txt-padding-bottom form-control" />' +
+                '                  <small>bottom</small>' +
+                '              </div>' +
+                '          </div>' +
+                '      </div>' +
+                '   </div>' +
+                '   <div class="form-group">' +
+                '       <label for="photo-align" class="col-sm-12">Layout</label>' +
+                '       <div class="col-sm-12">' +
+                '           <select class="form-control select-layout">' +
+                '               <option value="">Auto</option>' +
+                '               <option value="container-fluid">Wide</option>' +
+                '               <option value="container">Box</option>' +
+                '           </select>' +
+                '       </div>' +
+                '   </div>' +
+                '   <div class="form-group">' +
+                '       <label for="photo-align" class="col-sm-12">Height</label>' +
+                '       <div class="col-sm-12">' +
+                '           <input type="number" value="" class="txt-height form-control" />' +
+                '       </div>' +
+                '   </div>' +
+                '   <div class="form-group">' +
+                '       <label for="photo-style" class="col-sm-12">Parallax</label>' +
+                '       <div class="col-sm-12">' +
+                '           <div class="checkbox">' +
+                '               <label>' +
+                '                   <input type="checkbox" class="parallax-enabled" />' +
+                '               </label>' +
+                '           </div>' +
+                '           <div class="parallax-options" style="display: none;">' +
+                '           </div>' +
+                '       </div>' +
+                '   </div>' +
+                '</form>'
+            );
+
+            var basePath = window.location.pathname.replace('edmeditor', '');
+            if (keditor.options.basePath) {
+                basePath = keditor.options.basePath;
+            }
+            form.find('#background-image-edit').mselect({
+                contentTypes: ['image'],
+                bs3Modal: true,
+                pagePath: basePath,
+                basePath: basePath,
+                onSelectFile: function (url, relativeUrl, fileType, hash) {
+                    var img = keditor.getSettingComponent().find('img');
+                    img.attr('src', "http://" + window.location.host + "/_hashes/files/" + hash);
+                    self.adjustWidthForImg(img, true);
+                }
+            });
+        },
+        containerSettingShowFunction: function (form, container, keditor) {
+
         }
     });
 }
@@ -114,8 +234,6 @@ function initSaving(body, fileName) {
 
     var isEmbeddedIframe = body.hasClass('embedded-iframe');
     var btnSaveFile = $('.btn-save-file');
-    var parentUrl;
-    var pageName;
     var postMessageData;
     if (isEmbeddedIframe) {
         win.on('message', function (e) {

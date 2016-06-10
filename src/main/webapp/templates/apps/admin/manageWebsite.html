@@ -334,7 +334,7 @@
                     <p>
                         Add a line like this to your DNS records:
                     </p>
-                    <pre class="prettyprint">mydomain.com. 600 IN TXT "v=spf1 include:_spf.olhub.com ~all"</pre>
+                    <pre class="prettyprint">mydomain.com. 600 IN TXT "v=spf1 include:_spf.${page.primaryDomain} ~all"</pre>
 
                     <h4>DKIM</h4>
                     <p class="">DKIM is a way to increase the number of emails which reach your recipients, by
@@ -408,6 +408,8 @@
                 </div>
 
                 <div id="panel_sslserver" class="tab-pane">
+                    #portlets('websiteSSLManager')
+
                     <p>
                         <a href="#" class="btn btn-sm btn-success" data-toggle="modal" data-target="#addWebsiteHttpsModal" ><i class="fa fa-plus"></i> Configure New HTTPS Certificate</a>
                     </p>

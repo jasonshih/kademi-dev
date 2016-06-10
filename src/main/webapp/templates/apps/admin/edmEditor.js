@@ -20,7 +20,7 @@ function initEdmEditorPage(fileName) {
     flog('initEdmEditorPage', fileName);
     var body = $(document.body);
 
-    initEdmEditor();
+    initEdmEditor(false, fileName);
     initBtns(body, fileName);
     Msg.iconMode = 'fa';
 
@@ -36,13 +36,13 @@ function initEdmEditorPage(fileName) {
     hideLoadingIcon();
 }
 
-function initEdmEditor(iframeMode) {
+function initEdmEditor(iframeMode, fileName) {
     flog('initEdmEditor');
 
     var body = $(document.body);
     createSettingPanel(body);
     var edmHtml = processFileBody();
-    var keditor = initKEditor(body, iframeMode).data('keditor');
+    var keditor = initKEditor(body, iframeMode, fileName).data('keditor');
     if (iframeMode) {
         keditor.body.append($('#edm-setting'));
     }
@@ -233,7 +233,7 @@ function processFileBody() {
     return edmHtml;
 }
 
-function initKEditor(body, iframeMode) {
+function initKEditor(body, iframeMode, fileName) {
     flog('initKEditor', iframeMode);
 
     return $('#edm-area').keditor({
@@ -241,7 +241,7 @@ function initKEditor(body, iframeMode) {
         basePath: iframeMode ? window.location.pathname.substr(0, window.location.pathname.lastIndexOf('/') + 1) : '',
         contentAreasSelector: '#edm-header, #edm-body, #edm-footer',
         contentAreasWrapper: '<div id="edm-area"></div>',
-        snippetsUrl: '/_components/edm/snippets.html',
+        snippetsUrl: '_components?fileName=' + fileName,
         onInitContentArea: function (contentArea) {
             contentArea[contentArea.find('.keditor-container-content').children().length === 0 ? 'addClass' : 'removeClass']('empty');
 

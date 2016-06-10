@@ -25,13 +25,13 @@
         <script type="text/javascript" src="/static/js/common.js">//</script>
         <script type="text/javascript" src="/static/bootstrap-msg/0.4.0/dist/js/bootstrap-msg-0.4.0.min.js">//</script>
 
-        <script type="text/javascript" src="/theme/toolbars.js" bottom="true">//</script>
-        <script type="text/javascript" src="/static/ckeditor456/ckeditor.js" bottom="true">//</script>
-        <script type="text/javascript" src="/static/ckeditor456/adapters/jquery.js" bottom="true">//</script>
+        <script type="text/javascript" src="/theme/toolbars.js" >//</script>
+        <script type="text/javascript" src="/static/ckeditor456/ckeditor.js" >//</script>
+        <script type="text/javascript" src="/static/ckeditor456/adapters/jquery.js" >//</script>
         <script type="text/javascript" src="/static/nicescroll/3.6.8/jquery.nicescroll.min.js">//</script>
-        <script type="text/javascript" src="/static/keditor/1.1.2/dist/js/keditor-1.1.2.js" bottom="true">//</script>
-        <script type="text/javascript" src="/static/keditor/1.1.2/dist/js/keditor-edm-components-1.1.2.js" bottom="true">//</script>
-        <script type="text/javascript" src="/_components/edm/handlers.js" bottom="true">//</script>
+        <script type="text/javascript" src="/static/keditor/1.1.2/dist/js/keditor-1.1.2.js" >//</script>
+        <script type="text/javascript" src="/static/keditor/1.1.2/dist/js/keditor-edm-components-1.1.2.js" >//</script>
+        
         <script type="text/javascript" src="/static/js/keymap.js">//</script>
         <script type="text/javascript" src="/static/js/init-theme.js">//</script>
 
@@ -70,6 +70,7 @@
         #set($fname = $params.fileName)
         #set($file = $folder.child($fname))
         #set($useHash = $params.useHash)
+                
 
         <nav class="navbar navbar-default navbar-inverse navbar-fixed-top">
             <div class="container-fluid">
@@ -94,12 +95,13 @@
             <div id="edm-footer"></div>
         </div>
 
+        <script type="text/javascript" src="${page.parent.href}_components?handlers&amp;fileName=${params.fileName}">//</script>
+        
         <script type="text/javascript">
             var useHash = "$!useHash";
             $(function () {
                 initEdmEditorPage('$fname');
             });
         </script>
-
     </body>
 </html>
