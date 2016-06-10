@@ -42,7 +42,7 @@ function initContentEditorPage(fileName) {
         }, 100);
     }).trigger('resize');
 
-    initKEditor(body);
+    initKEditor(body, fileName);
     initSaving(body, fileName);
 
     setTimeout(function () {
@@ -75,11 +75,11 @@ $.keditor.components['text'].options = {
     stylesSet: 'myStyles:' + stylesPath
 };
 
-function initKEditor(body) {
+function initKEditor(body, fileName) {
     var contentArea = $('#content-area');
 
     contentArea.keditor({
-        snippetsUrl: '/_components/web/snippets.html',
+        snippetsUrl: '_components?fileName=' + fileName,
         onContentChanged: function () {
             if (contentArea.keditor('getContent').trim() === '') {
                 contentArea.find('.keditor-content-area').addClass('empty');

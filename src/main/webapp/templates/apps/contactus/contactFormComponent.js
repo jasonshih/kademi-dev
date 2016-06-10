@@ -24,7 +24,7 @@
             flog('initSettingForm "contactForm" component');
 
             $.ajax({
-                url: '/_components/web/contactForm?settings',
+                url: '/_components/contactForm?settings',
                 type: 'get',
                 dataType: 'html',
                 success: function (resp) {

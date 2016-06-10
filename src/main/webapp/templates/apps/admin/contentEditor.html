@@ -19,8 +19,7 @@
         <script type="text/javascript" src="/static/ckeditor456/adapters/jquery.js">//</script>
         <script type="text/javascript" src="/static/nicescroll/3.6.8/jquery.nicescroll.min.js">//</script>
         <script type="text/javascript" src="/static/keditor/1.1.2/dist/js/keditor-1.1.2.min.js">//</script>
-        <script type="text/javascript" src="/static/keditor/1.1.2/dist/js/keditor-components-1.1.2.min.js">//</script>
-        <script type="text/javascript" src="/_components/web/handlers.js">//</script>
+        <script type="text/javascript" src="/static/keditor/1.1.2/dist/js/keditor-components-1.1.2.min.js">//</script>        
         <script src="/theme/assets/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js">//</script>
         <script type="text/javascript" src="/static/js/keymap.js">//</script>
         <script type="text/javascript" src="/theme/apps/admin/contentEditor.js">//</script>
@@ -29,6 +28,8 @@
         #set($fname = $params.fileName)
         #set($file = $folder.child($fname))
         #set($useHash = $params.useHash)
+        
+        <script type="text/javascript" src="${page.parent.href}_components?handlers&amp;fileName=${params.fileName}">//</script>
 
         <nav class="navbar navbar-default navbar-inverse navbar-fixed-top">
             <div class="container-fluid">
