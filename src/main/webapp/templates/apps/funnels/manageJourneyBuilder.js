@@ -1,4 +1,5 @@
 var funnel;
+var availableTriggers;
 var funnelNodes = {};
 var JBApp = {};
 $(function(){
@@ -9,8 +10,34 @@ $(function(){
 
 jsPlumb.ready(function () {
 
-    var json = $("#funnelJson").text();
-    funnel = $.parseJSON(json);
+    try {
+        funnel = $.parseJSON($("#funnelJson").text());
+    } catch (e) {
+        flog('no funnel found');
+        funnel = { nodes: [
+            {
+                "begin" : {
+                    "nodeId" : "beginNode",
+                    "transition" : {
+                        "nextNodeId" : "",
+                        "trigger" : {
+                            "contactFormTrigger" : {
+                                "contactFormPath" : "/contactus",
+                                "websiteName" : "",
+                                "description" : "Contact form: /contactus"
+                            }
+                        }
+                    },
+                    "onePerProfile" : false,
+                    "stageName" : "",
+                    "source" : "",
+                    "x" : 0,
+                    "y" : 0
+                }
+            }
+        ]};
+    }
+    availableTriggers = $.parseJSON($("#triggers").text());
 
     // setup some defaults for jsPlumb.
     var instance = jsPlumb.getInstance({
@@ -228,7 +255,8 @@ function initSideBar(){
             JBApp.newNode(node, type, true);
             var objToPush = {};
             if (type === 'action'){
-                objToPush.createTaskAction = node; // default task name
+                objToPush.createDataSeriesAction = node; // default task name
+                delete objToPush.createDataSeriesAction.name;
             } else {
                 objToPush[type] = node;
             }
@@ -255,6 +283,9 @@ function initContextMenu(){
                     if (p && p!== id && !nodeExisted(p)){
                         var node = updateNode(id, p);
                         var type = opt.$trigger.attr('data-type');
+                        if (type === 'action') {
+                            delete node.name;
+                        }
                         JBApp.newNode(node, type);
                         JBApp.jsPlumpInstance.remove(id);
                     } else {
@@ -344,8 +375,8 @@ function initSaveButton(){
             for (var key in node) {
                 if (node.hasOwnProperty(key)) {
                     var nodeId = node[key].nodeId;
-                    node[key].x = $('#'+nodeId).css('left').replace('px','');
-                    node[key].y = $('#'+nodeId).css('top').replace('px','');
+                    node[key].x = parseInt($('#'+nodeId).css('left').replace('px',''));
+                    node[key].y = parseInt($('#'+nodeId).css('top').replace('px',''));
                 }
 
                 findNextNodeId(key, node[key], connections);
@@ -425,7 +456,13 @@ function showTransitionsModal(nodeId, connections){
     if (currentNode) {
         var title = 'Transitions for ' + currentNode.nodeId;
         modal.find('.modal-title').text(title);
+        var transitions = currentNode.transitions || [];
+        var availableTrans = findTransitions(currentNode.nodeId, connections);
+        for (var i = 0; i < availableTrans.length; i++){
+            if (currentNode.nodeId === availableTrans[i].sourceId) {
 
+            }
+        }
         var transitions = currentNode.transitions || [];
         var html = '';
         for (var i = 0; i < transitions.length; i++){
@@ -459,4 +496,16 @@ function showTransitionsModal(nodeId, connections){
     }
     modal.find('form').html(html);
     modal.modal();
+}
+
+function buildTriggerDropdown(selected){
+    var html = '<select name="trigger">';
+    for(var i = 0; i < availableTriggers.triggers.length; i++) {
+        if (selected === availableTriggers.triggers[i].name) {
+            html+= '<option selected value="'+availableTriggers.triggers[i].type+'">'+availableTriggers.triggers[i].name+'</option>';
+        } else {
+            html+= '<option value="'+availableTriggers.triggers[i].type+'">'+availableTriggers.triggers[i].name+'</option>';
+        }
+    }
+    return html;
 }
