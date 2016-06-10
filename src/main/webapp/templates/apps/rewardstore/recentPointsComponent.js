@@ -17,7 +17,7 @@
         settingTitle: 'Recent Points Settings',
         initSettingForm: function (form, keditor) {
             $.ajax({
-                url: '/_components/web/recentPoints?settings',
+                url: '/_components/recentPoints?settings',
                 type: 'get',
                 dataType: 'HTML',
                 success: function (resp) {
