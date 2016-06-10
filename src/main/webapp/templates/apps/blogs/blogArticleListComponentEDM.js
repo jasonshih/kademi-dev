@@ -24,7 +24,7 @@
             flog('initSettingForm "blogArticleListEDM" component');
 
             $.ajax({
-                url: '/_components/blogArticleListEDM?settings',
+                url: '_components/blogArticleListEDM?settings',
                 type: 'get',
                 dataType: 'html',
                 success: function (resp) {

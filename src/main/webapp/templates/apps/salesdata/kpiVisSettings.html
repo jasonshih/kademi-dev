@@ -5,7 +5,11 @@
             <select class="form-control select-kpi">
                 <option value="">- None -</option>
                 #foreach ($kpi in $rootFolder.find('/sales/').allKpis)
-                    #set ($urlKpi = "/sales/${kpi.dataSeries.name}/kpis/${kpi.name}")
+                    #if( $rootFolder.find("/").is("website") )
+                        #set ($urlKpi = "/sales/${kpi.parent.name}/${kpi.name}")
+                    #else
+                        #set ($urlKpi = "/sales/${kpi.dataSeries.name}/${kpi.name}")
+                    #end
                     <option value="${urlKpi}">$kpi.title</option>
                 #end
             </select>

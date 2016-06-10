@@ -20,7 +20,7 @@
             var self = this;
 
             $.ajax({
-                url: '/_components/socialMedias?settings',
+                url: '_components/socialMedias?settings',
                 type: 'get',
                 dataType: 'HTML',
                 success: function (resp) {
