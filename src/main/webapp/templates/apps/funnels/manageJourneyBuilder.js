@@ -113,7 +113,8 @@ jsPlumb.ready(function () {
         var d = document.createElement("div");
         d.className = "w " + type;
         if (newNode) {
-            d.className += ' newNode';
+            node.nodeId = 'new-'+ node.nodeId;
+            node.name = 'new-'+ node.name;
         }
         d.id = node.nodeId;
         d.setAttribute('data-type', type);
@@ -245,7 +246,8 @@ function initContextMenu(){
         items: {
             edit: {name: "Edit node id", icon: "fa-pencil", callback: function(key, opt){
                 // Alert the key of the item and the trigger element's id.
-                if (!opt.$trigger.hasClass('newNode')){
+                var id =  opt.$trigger.attr("id");
+                if (!id.startsWith('new-') && id.length < 36){
                     alert('Could not edit existing node id');
                 } else {
                     var id =  opt.$trigger.attr("id");
@@ -253,11 +255,20 @@ function initContextMenu(){
                     if (p && p!== id && !nodeExisted(p)){
                         var node = updateNode(id, p);
                         var type = opt.$trigger.attr('data-type');
-                        JBApp.newNode(node, type, true);
+                        JBApp.newNode(node, type);
                         JBApp.jsPlumpInstance.remove(id);
                     } else {
                         alert('Could not change node id: '+ p);
                     }
+                }
+            }},
+            transitions: {name: 'Transitions', icon: 'fa-bus', callback: function(key, opt){
+                if (opt.$trigger.hasClass('goal')){
+                    var id =  opt.$trigger.attr("id");
+                    var connections = JBApp.jsPlumpInstance.getAllConnections();
+                    showTransitionsModal(id, connections);
+                } else {
+                    Msg.warning('Transitions is not available for selected node');
                 }
             }},
             detail: {name: "Node detail", icon: "fa-link", callback: function(key, opt){
@@ -325,7 +336,7 @@ function initSaveButton(){
     $('#btnSave').on('click', function(e){
         e.preventDefault();
 
-        var connections = jsPlumpInstance.getAllConnections();
+        var connections = JBApp.jsPlumpInstance.getAllConnections();
 
         Msg.info("Saving..");
         for (var i = 0; i < funnel.nodes.length; i++){
@@ -371,4 +382,81 @@ function findNextNodeId(type, node, connections){
 
         }
     }
+}
+
+function findTransitions(nodeId, connections) {
+    var arr = [];
+    for(var i = 0; i < connections.length; i++){
+        var conn = connections[i];
+        if (conn.sourceId === nodeId){
+            arr.push(conn.targetId);
+        }
+    }
+    return arr;
+}
+
+function getAvailableTrans(currentNode, connections, currentTransNodeId){
+    var availableTrans = findTransitions(currentNode.nodeId, connections);
+    var availableTransHtml = '';
+    for(var i = 0; i < availableTrans.length; i++){
+        if (currentTransNodeId === availableTrans[i]){
+            availableTransHtml += '<option selected value="'+availableTrans[i]+'">'+availableTrans[i]+'</option>';
+        } else {
+            availableTransHtml += '<option value="'+availableTrans[i]+'">'+availableTrans[i]+'</option>';
+        }
+    }
+    return availableTransHtml;
+}
+
+function showTransitionsModal(nodeId, connections){
+    var modal = $('#modalTransitions');
+    var currentNode;
+    for (var i = 0; i < funnel.nodes.length; i++) {
+        var node = funnel.nodes[i];
+        for (var key in node) {
+            if (node.hasOwnProperty(key)) {
+                if (node[key].nodeId == nodeId){
+                    currentNode = node[key];
+                    break;
+                }
+            }
+        }
+    }
+    if (currentNode) {
+        var title = 'Transitions for ' + currentNode.nodeId;
+        modal.find('.modal-title').text(title);
+
+        var transitions = currentNode.transitions || [];
+        var html = '';
+        for (var i = 0; i < transitions.length; i++){
+            html+=  '<div class="form-group transitionItem">' +
+                        '<label for=""><strong>nextNodeId</strong></label>' +
+                        '<select name="" class="form-control">' +
+                            getAvailableTrans(currentNode, connections, transitions[i].nextNodeId) +
+                        '</select>' +
+                        '<br><label for=""><strong>trigger</strong></label><br>';
+            var count = 0;
+            for(var key in transitions[i].trigger) {
+                var t = transitions[i].trigger[key];
+                if (Object.keys(transitions[i].trigger).length > count + 1){
+                    html += '<hr>';
+                }
+                html+='<p>'+key+'</p>';
+                html+='<ul>';
+                for (j in t){
+                    html += '<li>' + j +': '+ t[j] + '</li>';
+                }
+                html += '</ul>';
+                count++;
+
+            }
+
+            html += '</div><hr>';
+        }
+    }
+    if (!html) {
+        html = '<p>No transition found</p>';
+    }
+    modal.find('form').html(html);
+    modal.modal();
 }
