@@ -1,3 +1,7 @@
+var funnel;
+var availableTriggers;
+var funnelNodes = {};
+var JBApp = {};
 $(function(){
     initSideBar();
     initContextMenu();
@@ -6,9 +10,34 @@ $(function(){
 
 jsPlumb.ready(function () {
 
-    var json = $("#funnelJson").text();
-    var funnel = $.parseJSON(json);
-    var funnelNodes = {};
+    try {
+        funnel = $.parseJSON($("#funnelJson").text());
+    } catch (e) {
+        flog('no funnel found');
+        funnel = { nodes: [
+            {
+                "begin" : {
+                    "nodeId" : "beginNode",
+                    "transition" : {
+                        "nextNodeId" : "",
+                        "trigger" : {
+                            "contactFormTrigger" : {
+                                "contactFormPath" : "/contactus",
+                                "websiteName" : "",
+                                "description" : "Contact form: /contactus"
+                            }
+                        }
+                    },
+                    "onePerProfile" : false,
+                    "stageName" : "",
+                    "source" : "",
+                    "x" : 0,
+                    "y" : 0
+                }
+            }
+        ]};
+    }
+    availableTriggers = $.parseJSON($("#triggers").text());
 
     // setup some defaults for jsPlumb.
     var instance = jsPlumb.getInstance({
@@ -67,10 +96,12 @@ jsPlumb.ready(function () {
     function initNode(el, type) {
 
         // initialise draggable elements.
-        instance.draggable(el);
+        instance.draggable(el, {containment:true});
         var maxConnections = 1;
         if (type === 'decision'){
             maxConnections = 2;
+        } else if (type === 'goal'){
+            maxConnections = 5;
         }
         instance.makeSource(el, {
             filter: ".ep",
@@ -105,15 +136,20 @@ jsPlumb.ready(function () {
         instance.fire("jsPlumbDemoNodeAdded", el);
     }
 
-    function newNode(node, type) {
+    function newNode(node, type, newNode) {
         var d = document.createElement("div");
         d.className = "w " + type;
+        if (newNode) {
+            node.nodeId = 'new-'+ node.nodeId;
+            node.name = 'new-'+ node.name;
+        }
         d.id = node.nodeId;
+        d.setAttribute('data-type', type);
         if (type !=='timeout'){
             if (node.name){
-                d.innerHTML = '<div class="inner">' + node.name + ' <div class="ep"></div></div>';
+                d.innerHTML = '<div class="inner"><span>' + node.name + '</span> <div class="ep"></div></div>';
             } else {
-                d.innerHTML = '<div class="inner">' + node.nodeId + ' <div class="ep"></div></div>';
+                d.innerHTML = '<div class="inner"><span>' + node.nodeId + '</span> <div class="ep"></div></div>';
             }
         }
         d.style.left = node.x + "px";
@@ -122,7 +158,8 @@ jsPlumb.ready(function () {
         initNode(d, type);
         return d;
     }
-    window.newNode = newNode;
+    JBApp.newNode = newNode;
+    JBApp.initNode = initNode;
 
     function initConnection(node, type){
         var nextNodeId;
@@ -140,11 +177,11 @@ jsPlumb.ready(function () {
         if (node.hasOwnProperty('timeoutNode')){
             var dest = node.timeoutNode;
             if (dest) {
-                instance.connect({ source: node.nodeId, target: dest.nodeId, type:"basic" });
+                instance.connect({ source: node.nodeId, target: dest, type:"basic" });
             } else {
-                var timeoutNode = {nodeId: node.nodeId+'-timeout', name: 'timeout', x: node.x + 20, y: node.y + 20};
-                newNode(timeoutNode, 'timeout');
-                instance.connect({ source: node.nodeId, target: timeoutNode.nodeId, type:"basic" });
+                //var timeoutNode = {nodeId: node.nodeId+'-timeout', name: 'timeout', x: node.x -100, y: node.y +100};
+                //newNode(timeoutNode, 'timeout');
+                //instance.connect({ source: node.nodeId, target: timeoutNode.nodeId, type:"basic" });
             }
         }
 
@@ -194,7 +231,7 @@ jsPlumb.ready(function () {
 
     jsPlumb.fire("jsPlumbDemoLoaded", instance);
 
-    window.jsPlumpInstance = instance;
+    JBApp.jsPlumpInstance = instance;
 });
 
 function initSideBar(){
@@ -214,9 +251,17 @@ function initSideBar(){
         drop: function( event, ui ) {
             var type = ui.draggable.attr('data-type');
             var id = jsPlumbUtil.uuid();
-            var node = {nodeId: 'node'+ id, name: 'New '+type, x: ui.offset.left-200, y: ui.offset.top-300};
-            newNode(node, type);
-            console.log('drop',ui);
+            var node = {nodeId: 'node-'+type+'-'+ id, name: 'node-'+type+'-'+ id, x: ui.offset.left-200, y: ui.offset.top-300};
+            JBApp.newNode(node, type, true);
+            var objToPush = {};
+            if (type === 'action'){
+                objToPush.createDataSeriesAction = node; // default task name
+                delete objToPush.createDataSeriesAction.name;
+            } else {
+                objToPush[type] = node;
+            }
+            funnel.nodes.push(objToPush);
+            flog('drop', ui);
         }
     });
 }
@@ -227,15 +272,51 @@ function initContextMenu(){
         selector: ".w",
         // define the elements of the menu
         items: {
-            edit: {name: "Edit", icon: "fa-pencil", callback: function(key, opt){
+            edit: {name: "Edit node id", icon: "fa-pencil", callback: function(key, opt){
                 // Alert the key of the item and the trigger element's id.
-                //alert("Clicked on " + key + " on element " + opt.$trigger.attr("id"));
-                $('#modalEditNode').modal();
+                var id =  opt.$trigger.attr("id");
+                if (!id.startsWith('new-') && id.length < 36){
+                    alert('Could not edit existing node id');
+                } else {
+                    var id =  opt.$trigger.attr("id");
+                    var p = prompt('Please enter new node id', id);
+                    if (p && p!== id && !nodeExisted(p)){
+                        var node = updateNode(id, p);
+                        var type = opt.$trigger.attr('data-type');
+                        if (type === 'action') {
+                            delete node.name;
+                        }
+                        JBApp.newNode(node, type);
+                        JBApp.jsPlumpInstance.remove(id);
+                    } else {
+                        alert('Could not change node id: '+ p);
+                    }
+                }
             }},
-            delete: {name: "Delete", icon: 'fa-trash', callback: function(key, opt){
+            transitions: {name: 'Transitions', icon: 'fa-bus', callback: function(key, opt){
+                if (opt.$trigger.hasClass('goal')){
+                    var id =  opt.$trigger.attr("id");
+                    var connections = JBApp.jsPlumpInstance.getAllConnections();
+                    showTransitionsModal(id, connections);
+                } else {
+                    Msg.warning('Transitions is not available for selected node');
+                }
+            }},
+            detail: {name: "Node detail", icon: "fa-link", callback: function(key, opt){
+                // Alert the key of the item and the trigger element's id.
+                var id =  opt.$trigger.attr("id");
+                var href = window.location.pathname;
+                if (!href.endsWith('/')){
+                    href += '/';
+                }
+                window.location.pathname = href + id;
+            }},
+            delete: {name: "Delete node", icon: 'fa-trash', callback: function(key, opt){
                 var c = confirm('Are you sure you want to delete this node?');
                 if (c) {
-                    opt.$trigger.remove();
+                    var id =  opt.$trigger.attr("id");
+                    deleteNode(id);
+                    JBApp.jsPlumpInstance.remove(id);
                 }
             }}
         }
@@ -243,11 +324,188 @@ function initContextMenu(){
     });
 }
 
+function updateNode(oldNodeId, newNodeId){
+    for (var i = 0; i < funnel.nodes.length; i++) {
+        var node = funnel.nodes[i];
+        for(var key in node){
+            if(node[key].nodeId === oldNodeId){
+                node[key].nodeId = newNodeId;
+                node[key].name = newNodeId;
+                return node[key];
+            }
+        }
+    }
+}
+
+function deleteNode(nodeId){
+    var index = -1;
+    for (var i = 0; i < funnel.nodes.length; i++) {
+        var node = funnel.nodes[i];
+        for(var key in node){
+            if(node[key].nodeId === nodeId){
+                index = i;
+                break;
+            }
+        }
+    }
+
+    if (index>-1){
+        funnel.nodes.splice(index, 1);
+    }
+}
+
+function nodeExisted(nodeId){
+    var filter = funnel.nodes.filter(function(item){
+        for(var key in item){
+            return item[key].nodeId === nodeId;
+        }
+    });
+    return filter.length > 0;
+}
+
 function initSaveButton(){
     $('#btnSave').on('click', function(e){
         e.preventDefault();
 
-        var connections = jsPlumpInstance.getAllConnections();
-        console.log(connections);
+        var connections = JBApp.jsPlumpInstance.getAllConnections();
+
+        Msg.info("Saving..");
+        for (var i = 0; i < funnel.nodes.length; i++){
+            var node = funnel.nodes[i];
+            for (var key in node) {
+                if (node.hasOwnProperty(key)) {
+                    var nodeId = node[key].nodeId;
+                    node[key].x = parseInt($('#'+nodeId).css('left').replace('px',''));
+                    node[key].y = parseInt($('#'+nodeId).css('top').replace('px',''));
+                }
+
+                findNextNodeId(key, node[key], connections);
+            }
+        }
+
+
+
+        $.ajax({
+            url: 'funnel.json',
+            type: 'PUT',
+            data: JSON.stringify(funnel),
+            success: function () {
+                Msg.success('File is saved!');
+            },
+            error: function (e) {
+                Msg.error(e.status + ': ' + e.statusText);
+            }
+        });
     });
+}
+
+function findNextNodeId(type, node, connections){
+    for(var i = 0; i < connections.length; i++){
+        var conn = connections[i];
+        if (conn.sourceId === node.nodeId){
+            if (type === 'goal'){
+
+            } else if (type === 'begin'){
+                node.transition.nextNodeId = conn.targetId;
+            } else {
+                node.nextNodeId = conn.targetId;
+            }
+
+        }
+    }
+}
+
+function findTransitions(nodeId, connections) {
+    var arr = [];
+    for(var i = 0; i < connections.length; i++){
+        var conn = connections[i];
+        if (conn.sourceId === nodeId){
+            arr.push(conn.targetId);
+        }
+    }
+    return arr;
+}
+
+function getAvailableTrans(currentNode, connections, currentTransNodeId){
+    var availableTrans = findTransitions(currentNode.nodeId, connections);
+    var availableTransHtml = '';
+    for(var i = 0; i < availableTrans.length; i++){
+        if (currentTransNodeId === availableTrans[i]){
+            availableTransHtml += '<option selected value="'+availableTrans[i]+'">'+availableTrans[i]+'</option>';
+        } else {
+            availableTransHtml += '<option value="'+availableTrans[i]+'">'+availableTrans[i]+'</option>';
+        }
+    }
+    return availableTransHtml;
+}
+
+function showTransitionsModal(nodeId, connections){
+    var modal = $('#modalTransitions');
+    var currentNode;
+    for (var i = 0; i < funnel.nodes.length; i++) {
+        var node = funnel.nodes[i];
+        for (var key in node) {
+            if (node.hasOwnProperty(key)) {
+                if (node[key].nodeId == nodeId){
+                    currentNode = node[key];
+                    break;
+                }
+            }
+        }
+    }
+    if (currentNode) {
+        var title = 'Transitions for ' + currentNode.nodeId;
+        modal.find('.modal-title').text(title);
+        var transitions = currentNode.transitions || [];
+        var availableTrans = findTransitions(currentNode.nodeId, connections);
+        for (var i = 0; i < availableTrans.length; i++){
+            if (currentNode.nodeId === availableTrans[i].sourceId) {
+
+            }
+        }
+        var transitions = currentNode.transitions || [];
+        var html = '';
+        for (var i = 0; i < transitions.length; i++){
+            html+=  '<div class="form-group transitionItem">' +
+                        '<label for=""><strong>nextNodeId</strong></label>' +
+                        '<select name="" class="form-control">' +
+                            getAvailableTrans(currentNode, connections, transitions[i].nextNodeId) +
+                        '</select>' +
+                        '<br><label for=""><strong>trigger</strong></label><br>';
+            var count = 0;
+            for(var key in transitions[i].trigger) {
+                var t = transitions[i].trigger[key];
+                if (Object.keys(transitions[i].trigger).length > count + 1){
+                    html += '<hr>';
+                }
+                html+='<p>'+key+'</p>';
+                html+='<ul>';
+                for (j in t){
+                    html += '<li>' + j +': '+ t[j] + '</li>';
+                }
+                html += '</ul>';
+                count++;
+
+            }
+
+            html += '</div><hr>';
+        }
+    }
+    if (!html) {
+        html = '<p>No transition found</p>';
+    }
+    modal.find('form').html(html);
+    modal.modal();
+}
+
+function buildTriggerDropdown(selected){
+    var html = '<select name="trigger">';
+    for(var i = 0; i < availableTriggers.triggers.length; i++) {
+        if (selected === availableTriggers.triggers[i].name) {
+            html+= '<option selected value="'+availableTriggers.triggers[i].type+'">'+availableTriggers.triggers[i].name+'</option>';
+        } else {
+            html+= '<option value="'+availableTriggers.triggers[i].type+'">'+availableTriggers.triggers[i].name+'</option>';
+        }
+    }
+    return html;
 }
