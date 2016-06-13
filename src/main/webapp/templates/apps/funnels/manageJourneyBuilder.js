@@ -82,14 +82,6 @@ jsPlumb.ready(function () {
         }
     });
 
-    // bind a double click listener to "canvas"; add new node when this occurs.
-    //jsPlumb.on(canvas, "dblclick", function(e) {
-    //    var nodeId = prompt('Enter nodeId');
-    //    if (nodeId){
-    //        newNode(nodeId, e.offsetX, e.offsetY);
-    //    }
-    //});
-
     //
     // initialise element as connection targets and source.
     //
@@ -145,13 +137,20 @@ jsPlumb.ready(function () {
         }
         d.id = node.nodeId;
         d.setAttribute('data-type', type);
-        if (type !=='timeout'){
+        if (type === 'goal') {
             if (node.name){
-                d.innerHTML = '<div class="inner"><span>' + node.name + '</span> <div class="ep"></div></div>';
+                d.innerHTML = '<div class="inner"><span>' + node.name + ' <i style="font-size: 15px" class="fa fa-cog btnNodeSetting"></i></span> <span class="ep"></span> <span title="Timeout node" class="ep timeout ep-timeout"></span></div>';
             } else {
-                d.innerHTML = '<div class="inner"><span>' + node.nodeId + '</span> <div class="ep"></div></div>';
+                d.innerHTML = '<div class="inner"><span>' + node.nodeId + ' <i style="font-size: 15px" class="fa fa-cog btnNodeSetting"></i></span> <span class="ep"></span> <span title="Timeout node" class="ep timeout ep-timeout"></span></div>';
+            }
+        } else {
+            if (node.name){
+                d.innerHTML = '<div class="inner"><span>' + node.name + ' <i style="font-size: 15px" class="fa fa-cog btnNodeSetting"></i></span> <span class="ep"></span></div>';
+            } else {
+                d.innerHTML = '<div class="inner"><span>' + node.nodeId + ' <i style="font-size: 15px" class="fa fa-cog btnNodeSetting"></i></span> <span class="ep"></span></div>';
             }
         }
+
         d.style.left = node.x + "px";
         d.style.top = node.y + "px";
         instance.getContainer().appendChild(d);
@@ -250,13 +249,14 @@ function initSideBar(){
     $('#paper').droppable({
         drop: function( event, ui ) {
             var type = ui.draggable.attr('data-type');
-            var id = jsPlumbUtil.uuid();
+            var id = uuid();
             var node = {nodeId: 'node-'+type+'-'+ id, name: 'node-'+type+'-'+ id, x: ui.offset.left-200, y: ui.offset.top-300};
             JBApp.newNode(node, type, true);
             var objToPush = {};
             if (type === 'action'){
-                objToPush.createDataSeriesAction = node; // default task name
-                delete objToPush.createDataSeriesAction.name;
+                var action = ui.draggable.attr('data-action');
+                objToPush[action] = node; // default task name
+                delete objToPush[action].name;
             } else {
                 objToPush[type] = node;
             }
@@ -269,58 +269,74 @@ function initSideBar(){
 function initContextMenu(){
     $.contextMenu({
         // define which elements trigger this menu
-        selector: ".w",
-        // define the elements of the menu
-        items: {
-            edit: {name: "Edit node id", icon: "fa-pencil", callback: function(key, opt){
-                // Alert the key of the item and the trigger element's id.
-                var id =  opt.$trigger.attr("id");
-                if (!id.startsWith('new-') && id.length < 36){
-                    alert('Could not edit existing node id');
-                } else {
-                    var id =  opt.$trigger.attr("id");
-                    var p = prompt('Please enter new node id', id);
-                    if (p && p!== id && !nodeExisted(p)){
-                        var node = updateNode(id, p);
-                        var type = opt.$trigger.attr('data-type');
-                        if (type === 'action') {
-                            delete node.name;
-                        }
-                        JBApp.newNode(node, type);
-                        JBApp.jsPlumpInstance.remove(id);
+        selector: ".btnNodeSetting",
+        trigger: 'left',
+        build: function($trigger, e) {
+
+            var items = {
+                edit: {name: "Edit node id", icon: "fa-pencil", callback: function(key, opt){
+                    // Alert the key of the item and the trigger element's id.
+                    var domElement = opt.$trigger.parents('.w');
+                    var id =  domElement.attr("id");
+                    if (!id.startsWith('new-')){
+                        alert('Could not edit existing node id');
                     } else {
-                        alert('Could not change node id: '+ p);
+                        var id =  domElement.attr("id");
+                        var p = prompt('Please enter new node id', id);
+                        if (p && p!== id && !nodeExisted(p)){
+                            var node = updateNode(id, p);
+                            var type = domElement.attr('data-type');
+                            if (type === 'action') {
+                                delete node.name;
+                            }
+                            JBApp.newNode(node, type);
+                            JBApp.jsPlumpInstance.remove(id);
+                        } else {
+                            alert('Could not change node id: '+ p);
+                        }
                     }
-                }
-            }},
-            transitions: {name: 'Transitions', icon: 'fa-bus', callback: function(key, opt){
-                if (opt.$trigger.hasClass('goal')){
-                    var id =  opt.$trigger.attr("id");
-                    var connections = JBApp.jsPlumpInstance.getAllConnections();
-                    showTransitionsModal(id, connections);
-                } else {
-                    Msg.warning('Transitions is not available for selected node');
-                }
-            }},
-            detail: {name: "Node detail", icon: "fa-link", callback: function(key, opt){
-                // Alert the key of the item and the trigger element's id.
-                var id =  opt.$trigger.attr("id");
-                var href = window.location.pathname;
-                if (!href.endsWith('/')){
-                    href += '/';
-                }
-                window.location.pathname = href + id;
-            }},
-            delete: {name: "Delete node", icon: 'fa-trash', callback: function(key, opt){
-                var c = confirm('Are you sure you want to delete this node?');
-                if (c) {
-                    var id =  opt.$trigger.attr("id");
-                    deleteNode(id);
-                    JBApp.jsPlumpInstance.remove(id);
-                }
-            }}
+                }},
+                transitions: {name: 'Transitions', icon: 'fa-bus', callback: function(key, opt){
+                    var domElement = opt.$trigger.parents('.w');
+                    if (domElement.hasClass('goal')){
+                        var id =  opt.$trigger.attr("id");
+                        var connections = JBApp.jsPlumpInstance.getAllConnections();
+                        showTransitionsModal(id, connections);
+                    } else {
+                        Msg.warning('Transitions is not available for selected node');
+                    }
+                }},
+                detail: {name: "Node detail", icon: "fa-link", callback: function(key, opt){
+                    // Alert the key of the item and the trigger element's id.
+                    var domElement = opt.$trigger.parents('.w');
+                    var id =  domElement.attr("id");
+                    var href = window.location.pathname;
+                    if (!href.endsWith('/')){
+                        href += '/';
+                    }
+                    window.location.pathname = href + id;
+                }},
+                delete: {name: "Delete", icon: 'fa-trash', callback: function(key, opt){
+                    var domElement = opt.$trigger.parents('.w');
+                    var c = confirm('Are you sure you want to delete this node?');
+                    if (c) {
+                        var id =  domElement.attr("id");
+                        deleteNode(id);
+                        JBApp.jsPlumpInstance.remove(id);
+                    }
+                }}
+            };
+            var type = $trigger.parents('.w').attr('data-type');
+            if (type !== 'goal') {
+                delete items.transitions;
+            }
+            var id =  $trigger.parents('.w').attr("id");
+            if (!id.startsWith('new-')){
+                delete  items.edit;
+            }
+            return { items: items }
         }
-        // there's more, have a look at the demos and docs...
+
     });
 }
 
@@ -508,4 +524,11 @@ function buildTriggerDropdown(selected){
         }
     }
     return html;
+}
+
+function uuid() {
+    return ('xxxxxx'.replace(/[xy]/g, function (c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    }));
 }

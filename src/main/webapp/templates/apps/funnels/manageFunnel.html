@@ -7,8 +7,8 @@
     <script src="/theme/assets/plugins/jQuery-Smart-Wizard/js/jquery.smartWizard.js">//</script>
 </head>
 <body>
-<h1>$page.title</h1>
-<p class="lead">Leads = $page.leads.size()</p>
+<h1>$page.title <button class="btn btn-success pull-right" id="btnSave">Save</button></h1>
+<p class="lead">Leads = $page.leads.size() </p>
 
 <div class="well" style="display: none">
     <code id="funnelJson">$page.funnelJson</code>
@@ -24,15 +24,18 @@
     </code>
 </div>
 
+<hr>
+<div class="" id="paper">
 
-<div class="well" id="paper">
-    <button class="btn btn-success pull-right" id="btnSave">Save</button>
     <div class="right-panel">
         <ul class="list-group">
-            <li data-type="action" class="list-group-item"><i class="fa fa-bolt" aria-hidden="true"></i> Action</li>
+            <li data-type="action" data-action="emailAction" class="list-group-item"><i class="fa fa-bolt" aria-hidden="true"></i> Send Email</li>
+            <li data-type="action" data-action="createTaskAction" class="list-group-item"><i class="fa fa-bolt" aria-hidden="true"></i> Create Task</li>
+            <li data-type="action" data-action="createDataSeriesAction" class="list-group-item"><i class="fa fa-bolt" aria-hidden="true"></i> Create Data Series</li>
+            <li data-type="action" data-action="calendarEventAction" class="list-group-item"><i class="fa fa-bolt" aria-hidden="true"></i> Create Calendar Event</li>
+            <li data-type="action" data-action="setField" class="list-group-item"><i class="fa fa-bolt" aria-hidden="true"></i> Set Field</li>
             <li data-type="goal" class="list-group-item"><i class="fa fa-trophy" aria-hidden="true"></i> Goal</li>
             <li data-type="decision" class="list-group-item"><i class="fa fa-question-circle" aria-hidden="true"></i> Decision</li>
-            <li data-type="timeout" class="list-group-item"><i class="fa fa-clock-o" aria-hidden="true"></i> Timeout</li>
         </ul>
     </div>
 </div>
