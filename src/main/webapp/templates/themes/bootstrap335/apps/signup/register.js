@@ -1,3 +1,18 @@
+(function (w) {
+    function paymentForm() {
+        var _self = this;
+        _self.callbacks = [];
+
+        _self.beforePostForm = function (callback) {
+            if (typeof callback === 'function') {
+                _self.callbacks.push(callback);
+            }
+        };
+    }
+
+    w.paymentForm = new paymentForm();
+})(window);
+
 function initRegister(afterRegisterHref) {
     log('init labels');
     var form = $('#registerForm');
@@ -48,6 +63,24 @@ function initRegisterForms(afterRegisterHref, callback) {
                     }, registerForm);
                 }
             }
+        },
+        beforePostForm: function (form, config, data) {
+            var newData = {};
+            data = data.split('&');
+
+            for (var i = 0; i < data.length; i++) {
+                var pair = data[i].split('=');
+                var key = pair[0];
+                var value = decodeURIComponent(pair[1]).replace(/\+/g, ' ');
+                newData[key] = value;
+            }
+
+            for (var i = 0; i < paymentForm.callbacks.length; i++) {
+                var cb = paymentForm.callbacks[i];
+                cb.call(form, newData);
+            }
+
+            return $.param(newData);
         }
     });
 
