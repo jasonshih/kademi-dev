@@ -119,7 +119,8 @@ body.opened-keditor-sidebar div.cke_float[id*=cke_keditor-component-content-] {
 }
 
 .colorpicker {
-    top: 50px;
+    top: 60px !important;
     right: auto;
-    left: 15px;
+    left: 15px !important;
+    padding: 5px !important;
 }

@@ -121,15 +121,29 @@ function initKEditor(body, fileName) {
                 '       </div>' +
                 '   </div>' +
                 '   <div class="form-group">' +
-                '       <label for="photo-align" class="col-sm-12">Background x-position</label>' +
+                '       <label for="photo-align" class="col-sm-12">Background position</label>' +
                 '       <div class="col-sm-12">' +
-                '           <input type="number" value="" class="txt-height form-control" />' +
+                '           <select class="form-control select-bg-position">' +
+                '               <option value="0% 0%">Top Left</option>' +
+                '               <option value="50% 0%">Top Ceter</option>' +
+                '               <option value="100% 0%">Top Right</option>' +
+                '               <option value="0% 50%">Middle Left</option>' +
+                '               <option value="50% 50%">Middle Center</option>' +
+                '               <option value="100% 50%">Middle Right</option>' +
+                '               <option value="0% 100%">Bottom Left</option>' +
+                '               <option value="50% 100%">Bottom Center</option>' +
+                '               <option value="100% 100%">Bottom Right</option>' +
+                '           </select>' +
                 '       </div>' +
                 '   </div>' +
                 '   <div class="form-group">' +
-                '       <label for="photo-align" class="col-sm-12">Height</label>' +
+                '       <label for="photo-align" class="col-sm-12">Background size</label>' +
                 '       <div class="col-sm-12">' +
-                '           <input type="number" value="" class="txt-height form-control" />' +
+                '           <select class="form-control select-bg-size">' +
+                '               <option value="auto">Auto</option>' +
+                '               <option value="contain">Contain</option>' +
+                '               <option value="cover">Cover</option>' +
+                '           </select>' +
                 '       </div>' +
                 '   </div>' +
                 '   <div class="form-group">' +
@@ -189,17 +203,19 @@ function initKEditor(body, fileName) {
                 '       <div class="col-sm-12">' +
                 '           <div class="checkbox">' +
                 '               <label>' +
-                '                   <input type="checkbox" class="parallax-enabled" />' +
+                '                   <input type="checkbox" class="parallax-enabled" /> <button type="button" class="btn btn-xs btn-success btn-add-data" style="display: none;">Add data transition</button>' +
                 '               </label>' +
                 '           </div>' +
-                '           <div class="parallax-options" style="display: none;">' +
+                '           <div class="parallax-options-wrapper" style="display: none;">' +
+                '               <div class="parallax-options">' +
+                '               </div>' +
                 '           </div>' +
                 '       </div>' +
                 '   </div>' +
                 '</form>'
             );
 
-            var basePath = window.location.pathname.replace('edmeditor', '');
+            var basePath = window.location.pathname.replace('contenteditor', '');
             if (keditor.options.basePath) {
                 basePath = keditor.options.basePath;
             }
@@ -209,14 +225,295 @@ function initKEditor(body, fileName) {
                 pagePath: basePath,
                 basePath: basePath,
                 onSelectFile: function (url, relativeUrl, fileType, hash) {
-                    var img = keditor.getSettingComponent().find('img');
-                    img.attr('src', "http://" + window.location.host + "/_hashes/files/" + hash);
-                    self.adjustWidthForImg(img, true);
+                    var container = keditor.getSettingContainer();
+                    var containerBg = container.find('.container-bg');
+                    var imageUrl = 'http://' + window.location.host + '/_hashes/files/' + hash;
+                    containerBg.css('background-image', 'url("' + imageUrl + '")');
+                    form.find('#background-image-previewer').attr('src', imageUrl);
+                }
+            });
+
+            var colorPicker = form.find('.color-picker');
+            var input = colorPicker.find('input');
+            var previewer = colorPicker.find('.input-group-addon i');
+            colorPicker.colorpicker({
+                format: 'hex',
+                container: colorPicker.parent(),
+                component: '.input-group-addon',
+                align: 'left',
+                colorSelectors: {
+                    'transparent': 'transparent'
+                }
+            }).on('changeColor.colorpicker', function (e) {
+                var colorHex = e.color.toHex();
+
+                if (!input.val() || input.val().trim().length === 0) {
+                    colorHex = '';
+                    previewer.css('background-color', '');
+                }
+
+                var container = keditor.getSettingContainer();
+                var containerBg = container.find('.container-bg');
+
+                if (colorHex && colorHex !== 'transparent') {
+                    containerBg.css('background-color', colorHex);
+                } else {
+                    containerBg.css('background-color', '');
+                }
+            });
+
+            form.find('.select-bg-repeat').on('change', function () {
+                var container = keditor.getSettingContainer();
+                var containerBg = container.find('.container-bg');
+
+                containerBg.css('background-repeat', this.value);
+            });
+
+            form.find('.select-bg-size').on('change', function () {
+                var container = keditor.getSettingContainer();
+                var containerBg = container.find('.container-bg');
+
+                containerBg.css('background-size', this.value);
+            });
+
+            form.find('.select-bg-position').on('change', function () {
+                var container = keditor.getSettingContainer();
+                var containerBg = container.find('.container-bg');
+
+                containerBg.css('background-position', this.value);
+            });
+
+            form.find('.txt-height').on('change', function () {
+                var height = this.value || '';
+                if (isNaN(height)) {
+                    height = '';
+                }
+
+                var container = keditor.getSettingContainer();
+                var containerBg = container.find('.container-bg');
+
+                containerBg.css('height', height);
+            });
+
+            var txtPaddingTop = form.find('.txt-padding-top');
+            var txtPaddingBottom = form.find('.txt-padding-bottom');
+            var txtPaddingLeft = form.find('.txt-padding-left');
+            var txtPaddingRight = form.find('.txt-padding-right');
+            txtPaddingTop.on('change', function () {
+                var paddingValue = this.value || '';
+                var container = keditor.getSettingContainer();
+                var containerContent = container.find('.container-content');
+
+                if (paddingValue.trim() === '') {
+                    containerContent.css('padding-top', '');
+                } else {
+                    if (isNaN(paddingValue)) {
+                        paddingValue = 0;
+                        this.value = paddingValue;
+                    }
+                    containerContent.css('padding-top', paddingValue + 'px');
+                }
+            });
+            txtPaddingBottom.on('change', function () {
+                var paddingValue = this.value || '';
+                var container = keditor.getSettingContainer();
+                var containerContent = container.find('.container-content');
+
+                if (paddingValue.trim() === '') {
+                    containerContent.css('padding-bottom', '');
+                } else {
+                    if (isNaN(paddingValue)) {
+                        paddingValue = 0;
+                    }
+                    containerContent.css('padding-bottom', paddingValue + 'px');
+                }
+            });
+            txtPaddingLeft.on('change', function () {
+                var paddingValue = this.value || '';
+                var container = keditor.getSettingContainer();
+                var containerContent = container.find('.container-content');
+
+                if (paddingValue.trim() === '') {
+                    containerContent.css('padding-left', '');
+                } else {
+                    if (isNaN(paddingValue)) {
+                        paddingValue = 0;
+                    }
+                    containerContent.css('padding-left', paddingValue + 'px');
+                }
+            });
+            txtPaddingRight.on('change', function () {
+                var paddingValue = this.value || '';
+                var container = keditor.getSettingContainer();
+                var containerContent = container.find('.container-content');
+
+                if (paddingValue.trim() === '') {
+                    containerContent.css('padding-right', '');
+                } else {
+                    if (isNaN(paddingValue)) {
+                        paddingValue = 0;
+                    }
+                    containerContent.css('padding-right', paddingValue + 'px');
+                }
+            });
+
+            form.find('.select-layout').on('change', function (e) {
+                var container = keditor.getSettingContainer();
+                var containerContent = container.find('.container-content');
+
+                containerContent.removeClass('container container-fluid');
+                containerContent.addClass(this.value);
+            });
+
+            form.find('.parallax-enabled').on('click', function () {
+                var container = keditor.getSettingContainer();
+                var containerBg = container.find('.container-bg');
+                var parallaxOptionsWrapper = form.find('.parallax-options-wrapper');
+                var parallaxBtn = form.find('.btn-add-data');
+
+                if (this.checked) {
+                    parallaxOptionsWrapper.css('display', 'block');
+                    parallaxBtn.css('display', 'block');
+                    containerBg.addClass('parallax-skrollr');
+                } else {
+                    parallaxOptionsWrapper.css('display', 'none');
+                    form.find('.parallax-options').html('');
+                    parallaxBtn.css('display', 'none');
+                    containerBg.removeClass('parallax-skrollr');
+                    $.each(containerBg.get(0).attributes, function (index, attr) {
+                        if (attr.name.indexOf('data-') === 0) {
+                            containerBg.removeAttr(attr.name);
+                        }
+                    });
+                }
+            });
+
+            form.find('.btn-add-data').on('click', function (e) {
+                e.preventDefault();
+
+                keditor.options.addDataTransition(form);
+            });
+
+            form.find('.parallax-options-wrapper').on('change', '.txt-data-name, .txt-data-value', function () {
+                var container = keditor.getSettingContainer();
+                var containerBg = container.find('.container-bg');
+                var inputGroup = $(this).closest('.checkbox');
+                var name = inputGroup.find('.txt-data-name').val() || '';
+                name = name.trim();
+                var value = inputGroup.find('.txt-data-value').val() || '';
+                value = value.trim();
+
+                if (name !== '' && value !== '') {
+                    containerBg.attr('data-' + name, value);
+                } else {
+                    containerBg.removeAttr('data-' + name);
                 }
             });
         },
-        containerSettingShowFunction: function (form, container, keditor) {
+        addDataTransition: function (form, name, value) {
+            name = name || '';
+            value = value || '';
 
+            form.find('.parallax-options').append(
+                '<div class="checkbox">' +
+                '    <div class="input-group input-group-sm">' +
+                '        <span class="input-group-addon"><span style="display: inline-block; width: 40px;">Name</span></span>' +
+                '        <input type="text" value="' + name + '" class="txt-data-name form-control" />' +
+                '    </div>' +
+                '    <div class="input-group input-group-sm">' +
+                '        <span class="input-group-addon"><span style="display: inline-block; width: 40px;">Value</span></span>' +
+                '        <input type="text" value="' + value + '" class="txt-data-value form-control" />' +
+                '    </div>' +
+                '</div>'
+            );
+        },
+        containerSettingShowFunction: function (form, container, keditor) {
+            var containerBg = container.find('.container-bg');
+            var containerContent = container.find('.container-content');
+            form.find('.parallax-options').html('');
+
+            if (containerBg.hasClass('parallax-skrollr')) {
+                form.find('.parallax-enabled').prop('checked', true);
+                form.find('.parallax-options-wrapper').css('display', 'block');
+                form.find('.btn-add-data').css('display', 'block');
+
+                var dataAttributes = keditor.getDataAttributes(containerBg, null, false);
+                for (var name in dataAttributes) {
+                    keditor.options.addDataTransition(form, name.replace('data-', ''), dataAttributes[name]);
+                }
+            } else {
+                form.find('.parallax-enabled').prop('checked', false);
+                form.find('.parallax-options-wrapper').css('display', 'none');
+                form.find('.btn-add-data').css('display', 'none');
+            }
+
+            var imageUrl = containerBg.css('background-image');
+            imageUrl = imageUrl.replace(/^url\(['"]+(.+)['"]+\)$/, '$1');
+            form.find('#background-image-previewer').attr('src', imageUrl !== 'none' ? imageUrl : '/static/images/photo_holder.png');
+
+            form.find('.select-bg-repeat').val(containerBg.css('background-repeat') || 'repeat');
+            form.find('.select-bg-position').val(containerBg.css('background-position') || '0% 0%');
+            form.find('.select-bg-size').val(containerBg.css('background-size') || 'auto');
+
+            var colorPicker = form.find('.color-picker');
+            colorPicker.colorpicker('setValue', containerBg.css('background-color') || '');
+
+            var layout = '';
+            if (containerContent.hasClass('container')) {
+                layout = 'container';
+            } else if (containerContent.hasClass('container-fluid')) {
+                layout = 'container-fluid';
+            }
+            form.find('.select-layout').val(layout);
+
+            var styleInline = containerContent.attr('style') || '';
+            var styleRules = styleInline.split(';');
+            var paddingTop = '';
+            var paddingLeft = '';
+            var paddingRight = '';
+            var paddingBottom = '';
+            for (var i = 0; i < styleRules.length; i++) {
+                var rule = styleRules[i];
+                rule = rule.split(':');
+
+                if (rule[0].trim() === 'padding-top') {
+                    paddingTop = rule[1] || '';
+                    paddingTop = paddingTop.replace('px', '').trim();
+                }
+
+                if (rule[0].trim() === 'padding-left') {
+                    paddingLeft = rule[1] || '';
+                    paddingLeft = paddingLeft.replace('px', '').trim();
+                }
+
+                if (rule[0].trim() === 'padding-right') {
+                    paddingRight = rule[1] || '';
+                    paddingRight = paddingRight.replace('px', '').trim();
+                }
+
+                if (rule[0].trim() === 'padding-bottom') {
+                    paddingBottom = rule[1] || '';
+                    paddingBottom = paddingBottom.replace('px', '').trim();
+                }
+            }
+            form.find('.txt-padding-top').val(paddingTop);
+            form.find('.txt-padding-bottom').val(paddingBottom);
+            form.find('.txt-padding-left').val(paddingLeft);
+            form.find('.txt-padding-right').val(paddingRight);
+
+            styleInline = containerBg.attr('style') || '';
+            styleRules = styleInline.split(';');
+            var height = '';
+            for (var i = 0; i < styleRules.length; i++) {
+                var rule = styleRules[i];
+                rule = rule.split(':');
+
+                if (rule[0].trim() === 'height') {
+                    height = rule[1] || '';
+                    height = height.replace('px', '').trim();
+                }
+            }
+            form.find('.txt-height').val(height);
         }
     });
 }
