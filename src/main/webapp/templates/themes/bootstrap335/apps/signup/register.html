@@ -8,10 +8,12 @@
         #@themeBody()
         <div class="container">
             <div class="container">
-            <h1>Registration</h1>
+                <h1>Registration</h1>
 
-            #set($path = "/content/signup/" + $folder.name + ".html")
-            $!folder.find($path).getParam("intro")
+                #set($path = "/content/signup/" + $folder.name + ".html")
+                $!folder.find($path).getParam("intro")
+
+                <form data-eway-encrypt-key="$!page.find('/eway').encryptionKey" style="display: none;"></form>
 
                 <form method="post" id="registerForm" action="$page.name" class="form-horizontal">
                     <div class="row">
@@ -82,14 +84,14 @@
 
                             #set($product = $page.relatedProduct)
                             #if( $product )
-                                #if( $page.paymentProvider )
-                                <input type="hidden" name="paymentProvider" value="$page.paymentProvider.instanceId"/>
-                                <hr/>
-                                <h2>Payment details</h2>
-                                <div class="payment-form">
-                                    $page.paymentProvider.memberPaymentForm
-                                </div>
-                                #end
+                            #if( $page.paymentProvider )
+                            <input type="hidden" name="paymentProvider" value="$page.paymentProvider.instanceId"/>
+                            <hr/>
+                            <h2>Payment details</h2>
+                            <div class="payment-form">
+                                $page.paymentProvider.memberPaymentForm
+                            </div>
+                            #end
                             #end
 
                             <div class="control-group form-group">
