@@ -24,7 +24,7 @@
             flog('initSettingForm "blogArticleList" component');
 
             $.ajax({
-                url: '/_components/web/blogArticleList?settings',
+                url: '_components/blogArticleList?settings',
                 type: 'get',
                 dataType: 'html',
                 success: function (resp) {

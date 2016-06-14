@@ -25,7 +25,13 @@
                 $p.numPoints
                 #end
             </td>
-            <td>$p.description</td>
+            <td>
+                #if( $p.itemHref )
+                <a href="$p.itemHref">$p.description</a>
+                #else
+                $p.description
+                #end
+            </td>
         </tr>
         #end
         <tr>

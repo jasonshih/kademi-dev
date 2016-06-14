@@ -209,7 +209,7 @@ Example:
     Full url for getting dynamic content is "/_components/ecommerce/productList?numProducts=4&store=store1&category=c1"
  -->
 <div data-type="component-products">
-    <div data-dynamic-href='/_components/ecommerce/productList' data-num-products='4' data-store="store1" data-category="c1"></div>
+    <div data-dynamic-href='_components/ecommerce/productList' data-num-products='4' data-store="store1" data-category="c1"></div>
 </div>
 ```
 

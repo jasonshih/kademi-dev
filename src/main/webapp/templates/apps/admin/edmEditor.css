@@ -143,9 +143,9 @@ body.opened-keditor-sidebar #edm-setting.showed {
 }
 
 .colorpicker {
-    top: 50px;
+    top: 50px !important;
     right: auto;
-    left: 15px;
+    left: 15px !important;
 }
 
 /* ====================================================================================

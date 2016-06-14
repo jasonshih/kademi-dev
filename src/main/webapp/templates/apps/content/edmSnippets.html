@@ -847,14 +847,3 @@
         </tbody>
     </table>
 </div>
-
-<!-------------------------------------------------------------------------------------------------->
-<!-- DYNAMIC COMPONENTS -->
-<!-------------------------------------------------------------------------------------------------->
-#foreach( $component in $page.components )
-#if( $component.category == "edm" )
-<div data-type="component-$component.componentId" data-preview="$component.previewImageHref" #foreach( $defaultAtt in $component.defaultAtts.entrySet()) data-${defaultAtt.key}="$!{defaultAtt.value}" #end>
-    $component.snippetHtml
-</div>
-#end
-#end
