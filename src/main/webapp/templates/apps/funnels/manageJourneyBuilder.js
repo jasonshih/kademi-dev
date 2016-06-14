@@ -68,7 +68,7 @@ jsPlumb.ready(function () {
     // just do this: jsPlumb.bind("click", jsPlumb.detach), but I wanted to make it clear what was
     // happening.
     instance.bind("click", function (c) {
-        instance.detach(c);
+        flog('edit connection ', c);
     });
 
     // bind a connection listener. note that the parameter passed to this function contains more than
@@ -156,22 +156,16 @@ jsPlumb.ready(function () {
         d.className = "w " + type;
         if (newNode) {
             node.nodeId = 'new-' + node.nodeId;
-            node.name = 'new-' + node.name;
         }
         d.id = node.nodeId;
         d.setAttribute('data-type', type);
+        var nodeName = node.name? node.name : node.nodeId;
         if (type === 'goal') {
-            if (node.name) {
-                d.innerHTML = '<div class="inner"><span>' + node.name + ' <i style="font-size: 15px" class="fa fa-cog btnNodeSetting"></i></span> <span class="ep"></span> <span title="Timeout node" class="ep timeout ep-timeout"></span></div>';
-            } else {
-                d.innerHTML = '<div class="inner"><span>' + node.nodeId + ' <i style="font-size: 15px" class="fa fa-cog btnNodeSetting"></i></span> <span class="ep"></span> <span title="Timeout node" class="ep timeout ep-timeout"></span></div>';
-            }
+            d.innerHTML = '<div class="inner"><span>' + nodeName + ' <i style="font-size: 15px" class="fa fa-cog btnNodeSetting"></i></span> <span class="ep"></span> <span title="Timeout node" class="ep ep-timeout"></span></div>';
+        } else if(type === 'decision') {
+            d.innerHTML = '<div class="inner"><span>' + nodeName + ' <i style="font-size: 15px" class="fa fa-cog btnNodeSetting"></i></span> <span title="Yes" class="ep ep-green"></span> <span title="No" class="ep ep-red"></span></div>'
         } else {
-            if (node.name) {
-                d.innerHTML = '<div class="inner"><span>' + node.name + ' <i style="font-size: 15px" class="fa fa-cog btnNodeSetting"></i></span> <span class="ep"></span></div>';
-            } else {
-                d.innerHTML = '<div class="inner"><span>' + node.nodeId + ' <i style="font-size: 15px" class="fa fa-cog btnNodeSetting"></i></span> <span class="ep"></span></div>';
-            }
+            d.innerHTML = '<div class="inner"><span>' + nodeName + ' <i style="font-size: 15px" class="fa fa-cog btnNodeSetting"></i></span> <span class="ep"></span></div>';
         }
 
         d.style.left = node.x + "px";
@@ -274,7 +268,7 @@ function initSideBar() {
             var id = uuid();
             var node = {
                 nodeId: type + '-' + id,
-                name: type + '-' + id,
+                //name: type + '-' + id,
                 x: ui.offset.left - 200,
                 y: ui.offset.top - 300
             };
@@ -283,7 +277,6 @@ function initSideBar() {
             if (type === 'action') {
                 var action = ui.draggable.attr('data-action');
                 objToPush[action] = node; // default task name
-                delete objToPush[action].name;
             } else {
                 objToPush[type] = node;
             }
@@ -314,9 +307,6 @@ function initContextMenu() {
                             if (p && p !== id && !nodeExisted(p)) {
                                 var node = updateNode(id, p);
                                 var type = domElement.attr('data-type');
-                                if (type === 'action') {
-                                    delete node.name;
-                                }
                                 JBApp.newNode(node, type);
                                 JBApp.jsPlumpInstance.remove(id);
                             } else {
@@ -416,8 +406,6 @@ function initSaveButton() {
     $('#btnSave').on('click', function (e) {
         e.preventDefault();
 
-        var connections = JBApp.jsPlumpInstance.getAllConnections();
-
         Msg.info("Saving..");
         for (var i = 0; i < funnel.nodes.length; i++) {
             var node = funnel.nodes[i];
@@ -427,11 +415,8 @@ function initSaveButton() {
                     node[key].x = parseInt($('#' + nodeId).css('left').replace('px', ''));
                     node[key].y = parseInt($('#' + nodeId).css('top').replace('px', ''));
                 }
-
-                // findNextNodeId(key, node[key], connections);
             }
         }
-
 
         $.ajax({
             url: 'funnel.json',
@@ -445,22 +430,6 @@ function initSaveButton() {
             }
         });
     });
-}
-
-function findNextNodeId(type, node, connections) {
-    for (var i = 0; i < connections.length; i++) {
-        var conn = connections[i];
-        if (conn.sourceId === node.nodeId) {
-            if (type === 'goal') {
-
-            } else if (type === 'begin') {
-                node.transition.nextNodeId = conn.targetId;
-            } else {
-                node.nextNodeId = conn.targetId;
-            }
-
-        }
-    }
 }
 
 function findTransitions(nodeId, connections) {

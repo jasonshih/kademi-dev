@@ -105,12 +105,19 @@
     -moz-transition: -moz-box-shadow 0.25s ease-in;
     transition: box-shadow 0.25s ease-in;
 }
-.ep.timeout{
+.ep.ep-timeout{
     top: 0;
     right: 45%;
     background-color: #e5910f;
 }
-
+.ep.ep-green{
+    background-color: green;
+}
+.ep.ep-red{
+    top: 0;
+    right: 45%;
+    background-color: red;
+}
 .ep:hover {
     box-shadow: 0 0 6px black;
 }
