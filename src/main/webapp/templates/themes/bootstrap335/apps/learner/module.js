@@ -283,7 +283,7 @@ function checkProgressPageVisibility() {
             limited = 10;
         }
         var li = modeLink.closest('li');
-        $.each(li.classes(), function (i, n) {
+        $.each((li.attr("class") || '').split(' '), function (i, n) {
             if (n.startsWith('away')) {
                 li.removeClass(n);
             }
@@ -715,6 +715,10 @@ function showUserModal() {
     });
 }
 
+function showModal(modal) {
+    modal.modal('show');
+}
+
 function showCompletedMessage() {
     flog('showCompletedMessage');
 
@@ -1061,7 +1065,7 @@ function showQuizError(quiz, response, e) {
         modal = $(
             '<div id="modal-quiz-error" class="modal fade">' +
             '   <div class="modal-dialog">' +
-            '       <div class="modal-content">' +
+            '       <div class="modal-content panel-danger">' +
             '           <div class="modal-header panel-heading">' +
             '               <button type="button" data-dismiss="modal" class="close">&times;</button>' +
             '               <h4 class="modal-title"></h4>' +
@@ -1079,17 +1083,16 @@ function showQuizError(quiz, response, e) {
 
         modal.appendTo(document.body);
     }
-    var modalContent = modal.find('.modal-content');
     var modalTitle = modal.find('.modal-title');
     var errorText = modal.find('.error-text');
-    modalContent.removeClass('panel-danger panel-warning');
+    var btnDissmiss = modal.find('button[data-dismiss=modal]');
 
     if (response.data.numAttempts >= response.data.maxAttempts) {
         flog('Reached maximum attempts');
 
-        modalContent.addClass('panel-warning');
         modalTitle.html('Reached maximum attempts');
-        errorText.html(response.messages[0]);
+        errorText.html('You have answered this quiz incorrectly!<br />' + response.messages[0]);
+        btnDissmiss.html('Close and continue');
 
         modal.off('hide.bs.modal').on('hide.bs.modal', function () {
             quizSuccessHandle(quiz, e);
@@ -1097,9 +1100,9 @@ function showQuizError(quiz, response, e) {
     } else {
         flog('Looks like we have another batch...', response.data.nextQuizBatch);
 
-        modalContent.addClass('panel-danger');
         modalTitle.html('Please try again');
-        errorText.html('You have <b>' + (response.data.maxAttempts - response.data.numAttempts) + '</b> remaming times to attempt this quiz');
+        errorText.html('You have answered this quiz incorrectly!<br />You have <b>' + (response.data.maxAttempts - response.data.numAttempts) + '</b> remaming times to attempt this quiz');
+        btnDissmiss.html('See error answers');
 
         modal.off('hide.bs.modal').on('hide.bs.modal', function () {
             var btnSubmitQuiz = $('.quizSubmit .nextBtn');
@@ -1110,8 +1113,14 @@ function showQuizError(quiz, response, e) {
                 btnSubmitQuiz.after(btnReAttempt);
             }
 
+            $.each(response.fieldMessages, function (i, n) {
+                var inp = quiz.find('li.' + n.field);
+                inp.addClass('error');
+            });
             quiz.find('ol.quiz li').find('input, textarea').prop('disabled', true);
+
             btnSubmitQuiz.hide();
+
             btnReAttempt.off('click').on('click', function (e) {
                 e.preventDefault();
 
