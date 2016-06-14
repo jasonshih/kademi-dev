@@ -277,6 +277,9 @@ function initSideBar() {
             if (type === 'action') {
                 var action = ui.draggable.attr('data-action');
                 objToPush[action] = node; // default task name
+            } else if (type === 'goal') {
+                node.transitions = null;
+                objToPush[type] = node;
             } else {
                 objToPush[type] = node;
             }
@@ -295,7 +298,7 @@ function initContextMenu() {
 
             var items = {
                 edit: {
-                    name: "Edit node id", icon: "fa-pencil", callback: function (key, opt) {
+                    name: "Change Node Id", icon: "fa-pencil", callback: function (key, opt) {
                         // Alert the key of the item and the trigger element's id.
                         var domElement = opt.$trigger.parents('.w');
                         var id = domElement.attr("id");
