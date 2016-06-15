@@ -11,31 +11,33 @@
         $pointsBucket.title
     </div>
     <div class="panel-body" style="height: ${height}px; overflow-y: auto;">
-        #set( $recentPoints = $applications.rewardStore.findPointsByLimit($bucket, 100, $profile) )
-        #if( $recentPoints.size() > 0 )
-            <p>You have been awarded $recentPoints.size() times in the last $days days</p>
+        #set( $topBalances = $applications.rewardStore.findTopBalances($bucket, 10) )
+                
+        #if( $topBalances.size() > 0 )            
             <table class="table table-hover table-striped">
                 <thead>
                     <tr>
-                        <th>No. Points</th>
-                        <th>Awarded date/time</th>
-                        <th>Reason</th>
+                        <th>Balance</th>
+                        <th>User</th>
                     </tr>
                 </thead>
                     <tbody>
-                    #foreach( $pt in $recentPoints )
+                    #foreach( $pt in $topBalances )
                         <tr>
-                            <td>$pt.numPoints</td>
-                            <td>$formatter.formatDateTime($pt.awardedDate, $page.organisation.timezone)</td>
-                            <td>$pt.reason</td>
+                            <td>$pt.balance</td>
+                            <td>
+                                #if( $pt.participant.orgId )
+                                $pt.participant.title
+                                #else
+                                $pt.participant.formattedName()
+                                #end
+                            </td>
                         </tr>
                     #end
                 </tbody>
             </table>
         #else
-            <p>
-                <i>You have not been awarded any points in the last $days days</i>
-            </p>
+            <p>There are no matching participants</p>
         #end
     </div>
 </div>
