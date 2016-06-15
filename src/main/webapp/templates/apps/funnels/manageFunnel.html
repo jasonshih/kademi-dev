@@ -268,60 +268,75 @@
     </div>
 </div>
 
-<div id="modalTransitions" class="modal modal-md fade">
+<div id="modalTransitions" class="modal fade">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title">Transitions for testedDriveBooked</h4>
+        <h4 class="modal-title">Trigger</h4>
     </div>
+    <form action="" class="">
     <div class="modal-body">
-        <form action="" class="">
-            <div class="form-group transitionItem">
-                <label for="">nextNodeId</label>
-                <select name="" class="form-control">
-                    <option value="s">Node a</option>
-                </select>
+        <div class="form-group">
+            <a href="#" class="pull-right btn btn-primary btnAddTrigger hide"><i class="fa fa-plus"></i> Add trigger</a>
+            <br>
+        </div>
+        <div class="form-group placeholderform hide">
+            <select name="triggerType" class="form-control">
+                <option value="automationTrigger">automationTrigger</option>
+                <option value="contactFormTrigger">contactFormTrigger</option>
+                <option value="eventTrigger">eventTrigger</option>
+                <option value="pageViewTrigger">pageViewTrigger</option>
+                <option value="taskCompleteTrigger">taskCompleteTrigger</option>
+                <option value="emailResultTrigger">emailResultTrigger</option>
+            </select>
+
+            <div class="automationTrigger triggerDiv">
                 <br>
-                <label for=""><strong>trigger</strong></label>
-                <br>
-                <p>taskCompleteTrigger</p>
-                <ul>
-                    <li>taskName: arrange-time</li>
-                    <li>description: Task complete: arrange-time</li>
-                </ul>
-                <hr>
-                <p>taskCompleteTriggerTest</p>
-                <ul>
-                    <li>taskName: arrange-timeTest</li>
-                    <li>description: Task complete: arrange-timeTest</li>
-                </ul>
+                <input type="text" class="form-control" name="triggerName" placeholder="triggerName">
             </div>
-            <hr>
-            <div class="form-group transitionItem">
-                <label for="">nextNodeId</label>
-                <select name="" class="form-control" id="">
-                    <option value="s">Node a</option>
-                </select>
+            <div class="contactFormTrigger triggerDiv hide">
                 <br>
-                <label for=""><strong>trigger</strong></label>
+                <input type="text" class="form-control" name="contactFormPath" placeholder="contactFormPath">
                 <br>
-                <p>taskCompleteTrigger</p>
-                <ul>
-                    <li>taskName: arrange-time</li>
-                    <li>description: Task complete: arrange-time</li>
-                </ul>
-                <hr>
-                <p>taskCompleteTriggerTest</p>
-                <ul>
-                    <li>taskName: arrange-timeTest</li>
-                    <li>description: Task complete: arrange-timeTest</li>
-                </ul>
+                <input type="text" class="form-control" name="websiteName" placeholder="websiteName">
             </div>
-            <hr>
-        </form>
+            <div class="eventTrigger triggerDiv hide">
+                <br>
+                <input type="text" class="form-control" name="condition1" placeholder="condition1">
+                <br>
+                <input type="text" class="form-control" name="condition2" placeholder="condition2">
+                <br>
+                <input type="text" class="form-control" name="condition3" placeholder="condition3">
+                <br>
+                <input type="text" class="form-control" name="condition4" placeholder="condition4">
+                <br>
+                <input type="text" class="form-control" name="condition5" placeholder="condition5">
+            </div>
+            <div class="pageViewTrigger triggerDiv hide">
+                <br>
+                <input type="text" class="form-control" name="path" placeholder="path">
+                <br>
+                <input type="text" class="form-control" name="websiteName" placeholder="websiteName">
+            </div>
+            <div class="taskCompleteTrigger triggerDiv hide">
+                <br>
+                <input type="text" class="form-control" name="taskName" placeholder="taskName">
+            </div>
+            <div class="emailResultTrigger triggerDiv hide">
+                <br>
+                <input type="text" class="form-control" name="deliveryAction" placeholder="deliveryAction">
+            </div>
+        </div>
+        <div class="form-group transitionItems">
+
+        </div>
     </div>
     <div class="modal-footer">
+        <input type="hidden" name="sourceId">
+        <input type="hidden" name="targetId">
         <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary btn-sm">Submit</button>
     </div>
+    </form>
 </div>
 
 <link rel="stylesheet" href="/theme/apps/funnels/journeyBuilder.css">

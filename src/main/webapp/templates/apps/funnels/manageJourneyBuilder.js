@@ -6,6 +6,7 @@ $(function () {
     initSideBar();
     initContextMenu();
     initSaveButton();
+    initTranModal();
 });
 
 jsPlumb.ready(function () {
@@ -69,6 +70,25 @@ jsPlumb.ready(function () {
     // happening.
     instance.bind("click", function (c) {
         flog('edit connection ', c);
+        var sourceId = c.sourceId;
+        var targetId = c.targetId;
+        var nodes = funnel.nodes;
+
+        var filtered = nodes.filter(function(item){
+            return item.hasOwnProperty('goal') && item['goal'].nodeId === sourceId;
+        });
+
+        if (filtered.length > 0) {
+            var node = filtered[0]['goal'];
+            if (node.hasOwnProperty('transitions') && node.transitions.length) {
+                var trans = node.transitions.filter(function(item){
+                    return item.nextNodeId === targetId;
+                });
+                if (trans.length){
+                    showTranModal(trans[0], sourceId, targetId);
+                }
+            }
+        }
     });
 
     // bind a connection listener. note that the parameter passed to this function contains more than
@@ -138,11 +158,11 @@ jsPlumb.ready(function () {
             allowLoopback: false
         });
 
-        if (type === 'action') {
-            instance.addEndpoint(el, {
-                anchor: ["Perimeter", {shape: "Diamond"}]
-            });
-        }
+        //if (type === 'action') {
+        //    instance.addEndpoint(el, {
+        //        anchor: ["Perimeter", {shape: "Diamond"}]
+        //    });
+        //}
 
 
         // this is not part of the core demo functionality; it is a means for the Toolkit edition's wrapped
@@ -151,12 +171,9 @@ jsPlumb.ready(function () {
         instance.fire("jsPlumbDemoNodeAdded", el);
     }
 
-    function newNode(node, type, newNode) {
+    function newNode(node, type) {
         var d = document.createElement("div");
         d.className = "w " + type;
-        if (newNode) {
-            node.nodeId = 'new-' + node.nodeId;
-        }
         d.id = node.nodeId;
         d.setAttribute('data-type', type);
         var nodeName = node.name? node.name : node.nodeId;
@@ -272,7 +289,7 @@ function initSideBar() {
                 x: ui.offset.left - 200,
                 y: ui.offset.top - 300
             };
-            JBApp.newNode(node, type, true);
+            JBApp.newNode(node, type);
             var objToPush = {};
             if (type === 'action') {
                 var action = ui.draggable.attr('data-action');
@@ -289,6 +306,83 @@ function initSideBar() {
     });
 }
 
+function initTranModal(){
+    var modal = $('#modalTransitions');
+    modal.on('click', '.btnAddTrigger', function(e){
+        e.preventDefault();
+        var clone = modal.find('.placeholderform').clone();
+        clone.removeClass('hide placeholderform');
+        modal.find('.transitionItems').append(clone);
+        $(this).addClass('hide');
+    });
+
+    modal.on('change', '[name=triggerType]', function(e) {
+        $(this).siblings('.'+this.value).removeClass('hide').siblings('.triggerDiv').addClass('hide');
+    });
+    modal.find('form').on('submit', function(e){
+        e.preventDefault();
+
+        doSaveTrigger($(this));
+        modal.modal('hide');
+    });
+}
+
+function showTranModal(tran, sourceId, targetId){
+    var modal = $('#modalTransitions');
+    modal.find('[name=sourceId]').val(sourceId);
+    modal.find('[name=targetId]').val(targetId);
+    modal.find('.transitionItems').html('');
+    var trigger = tran.trigger;
+    if (!trigger) {
+        modal.find('.btnAddTrigger').removeClass('hide');
+    }
+    for (var key in trigger) {
+        var t = trigger[key];
+        var clone = modal.find('.placeholderform').clone();
+        clone.find('[name=triggerType]').val(key);
+        clone.find('.'+key).removeClass('hide').siblings('.triggerDiv').addClass('hide');
+        for(var k in t){
+            clone.find('[name='+k+']').val(t[k]);
+        }
+        clone.removeClass('hide placeholderform').siblings('.triggerDiv').addClass('hide');
+        modal.find('.transitionItems').append(clone)
+    }
+
+    modal.modal();
+}
+
+function doSaveTrigger(form){
+    var trigger = {};
+    form.find('.transitionItems .form-group').each(function(){
+        var type = $(this).find('[name=triggerType]').val();
+        if (type) {
+            trigger[type] = {};
+            $(this).find('input:visible').each(function(){
+                trigger[type][$(this).attr('name')] = $(this).val();
+            });
+        }
+    });
+
+    var sourceId = form.find('[name=sourceId]').val();
+    var targetId = form.find('[name=targetId]').val();
+    for (var i = 0; i < funnel.nodes.length; i++) {
+        var node = funnel.nodes[i];
+        for (var key in node) {
+            if (node[key].nodeId === sourceId) {
+                var transitions = node[key].transitions;
+                for(var j = 0; j < transitions.length; j++){
+                    if(transitions[j].nextNodeId === targetId){
+                        transitions[j].trigger = trigger;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    Msg.info('Transition trigger updated');
+}
+
 function initContextMenu() {
     $.contextMenu({
         // define which elements trigger this menu
@@ -297,37 +391,6 @@ function initContextMenu() {
         build: function ($trigger, e) {
 
             var items = {
-                edit: {
-                    name: "Change Node Id", icon: "fa-pencil", callback: function (key, opt) {
-                        // Alert the key of the item and the trigger element's id.
-                        var domElement = opt.$trigger.parents('.w');
-                        var id = domElement.attr("id");
-                        if (!id.startsWith('new-')) {
-                            alert('Could not edit existing node id');
-                        } else {
-                            var id = domElement.attr("id");
-                            var p = prompt('Please enter new node id', id);
-                            if (p && p !== id && !nodeExisted(p)) {
-                                var node = updateNode(id, p);
-                                var type = domElement.attr('data-type');
-                                JBApp.newNode(node, type);
-                                JBApp.jsPlumpInstance.remove(id);
-                            } else {
-                                alert('Could not change node id: ' + p);
-                            }
-                        }
-                    }
-                },
-                //transitions: {name: 'Transitions', icon: 'fa-bus', callback: function(key, opt){
-                //    var domElement = opt.$trigger.parents('.w');
-                //    if (domElement.hasClass('goal')){
-                //        var id =  opt.$trigger.attr("id");
-                //        var connections = JBApp.jsPlumpInstance.getAllConnections();
-                //        showTransitionsModal(id, connections);
-                //    } else {
-                //        Msg.warning('Transitions is not available for selected node');
-                //    }
-                //}},
                 detail: {
                     name: "Node detail", icon: "fa-link", callback: function (key, opt) {
                         // Alert the key of the item and the trigger element's id.
@@ -352,28 +415,20 @@ function initContextMenu() {
                     }
                 }
             };
-            var type = $trigger.parents('.w').attr('data-type');
-            if (type !== 'goal') {
-                delete items.transitions;
-            }
-            var id = $trigger.parents('.w').attr("id");
-            if (!id.startsWith('new-')) {
-                delete  items.edit;
-            }
+
             return {items: items}
         }
 
     });
 }
 
-function updateNode(oldNodeId, newNodeId) {
+function updateNode(nodeid, title) {
     for (var i = 0; i < funnel.nodes.length; i++) {
         var node = funnel.nodes[i];
         for (var key in node) {
-            if (node[key].nodeId === oldNodeId) {
-                node[key].nodeId = newNodeId;
-                node[key].name = newNodeId;
-                return node[key];
+            if (node[key].nodeId === nodeid) {
+                node[key].name = title;
+                break;
             }
         }
     }
@@ -394,15 +449,6 @@ function deleteNode(nodeId) {
     if (index > -1) {
         funnel.nodes.splice(index, 1);
     }
-}
-
-function nodeExisted(nodeId) {
-    var filter = funnel.nodes.filter(function (item) {
-        for (var key in item) {
-            return item[key].nodeId === nodeId;
-        }
-    });
-    return filter.length > 0;
 }
 
 function initSaveButton() {
@@ -435,100 +481,7 @@ function initSaveButton() {
     });
 }
 
-function findTransitions(nodeId, connections) {
-    var arr = [];
-    for (var i = 0; i < connections.length; i++) {
-        var conn = connections[i];
-        if (conn.sourceId === nodeId) {
-            arr.push(conn.targetId);
-        }
-    }
-    return arr;
-}
 
-function getAvailableTrans(currentNode, connections, currentTransNodeId) {
-    var availableTrans = findTransitions(currentNode.nodeId, connections);
-    var availableTransHtml = '';
-    for (var i = 0; i < availableTrans.length; i++) {
-        if (currentTransNodeId === availableTrans[i]) {
-            availableTransHtml += '<option selected value="' + availableTrans[i] + '">' + availableTrans[i] + '</option>';
-        } else {
-            availableTransHtml += '<option value="' + availableTrans[i] + '">' + availableTrans[i] + '</option>';
-        }
-    }
-    return availableTransHtml;
-}
-
-function showTransitionsModal(nodeId, connections) {
-    var modal = $('#modalTransitions');
-    var currentNode;
-    for (var i = 0; i < funnel.nodes.length; i++) {
-        var node = funnel.nodes[i];
-        for (var key in node) {
-            if (node.hasOwnProperty(key)) {
-                if (node[key].nodeId == nodeId) {
-                    currentNode = node[key];
-                    break;
-                }
-            }
-        }
-    }
-    if (currentNode) {
-        var title = 'Transitions for ' + currentNode.nodeId;
-        modal.find('.modal-title').text(title);
-        var transitions = currentNode.transitions || [];
-        var availableTrans = findTransitions(currentNode.nodeId, connections);
-        for (var i = 0; i < availableTrans.length; i++) {
-            if (currentNode.nodeId === availableTrans[i].sourceId) {
-
-            }
-        }
-        var transitions = currentNode.transitions || [];
-        var html = '';
-        for (var i = 0; i < transitions.length; i++) {
-            html += '<div class="form-group transitionItem">' +
-                '<label for=""><strong>nextNodeId</strong></label>' +
-                '<select name="" class="form-control">' +
-                getAvailableTrans(currentNode, connections, transitions[i].nextNodeId) +
-                '</select>' +
-                '<br><label for=""><strong>trigger</strong></label><br>';
-            var count = 0;
-            for (var key in transitions[i].trigger) {
-                var t = transitions[i].trigger[key];
-                if (Object.keys(transitions[i].trigger).length > count + 1) {
-                    html += '<hr>';
-                }
-                html += '<p>' + key + '</p>';
-                html += '<ul>';
-                for (j in t) {
-                    html += '<li>' + j + ': ' + t[j] + '</li>';
-                }
-                html += '</ul>';
-                count++;
-
-            }
-
-            html += '</div><hr>';
-        }
-    }
-    if (!html) {
-        html = '<p>No transition found</p>';
-    }
-    modal.find('form').html(html);
-    modal.modal();
-}
-
-function buildTriggerDropdown(selected) {
-    var html = '<select name="trigger">';
-    for (var i = 0; i < availableTriggers.triggers.length; i++) {
-        if (selected === availableTriggers.triggers[i].name) {
-            html += '<option selected value="' + availableTriggers.triggers[i].type + '">' + availableTriggers.triggers[i].name + '</option>';
-        } else {
-            html += '<option value="' + availableTriggers.triggers[i].type + '">' + availableTriggers.triggers[i].name + '</option>';
-        }
-    }
-    return html;
-}
 
 function uuid() {
     return ('xxxxxx'.replace(/[xy]/g, function (c) {
