@@ -1,7 +1,6 @@
 #set ($ecomStore = $rootFolder.find("/ecommerce").child($store))
 #set ($numberOfProducts = $formatter.toInteger($numberOfProducts))
 #set( $prods = $ecomStore.searchProducts(null, $category, 'title', false) )
-
 #if( $prods.size() > 0 )
     #if ($prods.size() > $numberOfProducts)
         #set( $prods =  $prods.subList(0, $numberOfProducts))
