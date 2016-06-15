@@ -22,7 +22,7 @@
                     </tr>
                 </thead>
                 <tbody id="contactRequestsBody">
-                    #foreach($cr in $page.children)
+                    #foreach($cr in $page.contactRequests)
                     <tr>
                         <td>
                             <abbr class="timeago" title="$formatter.formatDateISO8601($cr.createdDate)">$formatter.formatDateTime($cr.createdDate, $page.organisation.timezone)</abbr>

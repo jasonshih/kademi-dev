@@ -67,6 +67,12 @@
                                 <th>IP Address</th>
                                 <td>$!page.contactRequest.sourceIp</td>
                             </tr>
+
+                            <tr>
+                                <th>Message</th>
+                                <td>$!page.contactRequest.message</td>
+                            </tr>
+
                             #foreach($field in $page.contactRequest.fields.entrySet() )
                             #if( !$field.startsWith("attach.") )
                             <tr>
