@@ -23,16 +23,16 @@ function initProfile() {
         flog("click", this);
         e.preventDefault();
         e.stopPropagation();
-        if (confirm("Are you sure you want to delete this group membership? WARNING: If this is the last membership you will not be able to edit the user.")) {
-            var a = $(e.target);
-            if (!a) {
-                a = a.parent();
+        if (confirm("Are you sure you want to delete this group membership?")) {
+            var isLastMembership = $('#user-membership .membership').length === 1;
+
+            if (!isLastMembership || confirm('WARNING!!! \nThis is the last membership, deleting it will remove the profile from your account. Do you want to continue?')) {
+                var a = $(this);
+                var href = a.attr("href");
+                deleteFile(href, function () {
+                    a.closest("span.membership").remove();
+                });
             }
-            flog("do it", a);
-            var href = a.attr("href");
-            deleteFile(href, function () {
-                a.closest("span.membership").remove();
-            });
         }
     });
 
