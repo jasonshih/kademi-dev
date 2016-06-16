@@ -4,11 +4,11 @@
     </head>
     <body>
         #macro(genGroups $group $wrapper $folder)
-        <div id="$group.name" class="panel panel-default group" data-name="$group.name" data-title="$!group.groupTitle" data-notes="$!group.notes">
-            #set( $folderName = "")
-            #if($folder)
+        #set( $folderName = "")
+        #if($folder)
             #set( $folderName = "-" + $folder.name.replaceAll('[^A-Za-z0-9]','') )
-            #end
+        #end
+        <div id="$group.name" class="panel panel-default group" data-name="$group.name" data-title="$!group.groupTitle" data-notes="$!group.notes">
             <div class="panel-heading" data-toggle="collapse" data-parent="#${wrapper}" data-target="#group${folderName}-${foreach.count}">
                 #set($typeColour = "btn-info")
 
@@ -73,7 +73,7 @@
                 </div>
             </div>
 
-            <div id="group-${foreach.count}" class="collapse">
+            <div id="group${folderName}-${foreach.count}" class="collapse">
                 <div class="panel-body">
                     <table class="table">
                         <tr>
