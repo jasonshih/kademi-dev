@@ -1,7 +1,16 @@
 var funnel;
 var availableTriggers;
 var funnelNodes = {};
-var JBApp = {initialized: false};
+var JBApp = {
+    initialized: false,
+    ACTIONS: {
+        'emailAction': '<i class="fa fa-envelope" aria-hidden="true"></i> Send Email',
+        'createTaskAction': '<i class="fa fa-tasks" aria-hidden="true"></i> Create Task',
+        'createDataSeriesAction': '<i class="fa fa-database" aria-hidden="true"></i> Create Data Series',
+        'calendarEventAction': '<i class="fa fa-calendar-check-o" aria-hidden="true"></i> Create Calendar Event',
+        'setField': '<i class="fa fa-pencil-square-o" aria-hidden="true"></i> Set Field'
+    }
+};
 $(function () {
     initSideBar();
     initContextMenu();
@@ -23,9 +32,9 @@ jsPlumb.ready(function () {
                             "nextNodeId": "",
                             "trigger": {
                                 "contactFormTrigger": {
-                                    "contactFormPath": "/contactus",
+                                    "contactFormPath": "",
                                     "websiteName": "",
-                                    "description": "Contact form: /contactus"
+                                    "description": ""
                                 }
                             }
                         },
@@ -59,6 +68,7 @@ jsPlumb.ready(function () {
     });
 
     instance.registerConnectionType("basic", {anchor: "Continuous", connector: "StateMachine"});
+    instance.registerConnectionType("timeout", {anchor: "Continuous", connector: "StateMachine"});
 
     window.jsp = instance;
 
@@ -78,6 +88,10 @@ jsPlumb.ready(function () {
             return item.hasOwnProperty('goal') && item['goal'].nodeId === sourceId;
         });
 
+        var filtered1 = nodes.filter(function(item){
+            return item.hasOwnProperty('begin') && item['begin'].nodeId === sourceId;
+        });
+
         if (filtered.length > 0) {
             var node = filtered[0]['goal'];
             if (node.hasOwnProperty('transitions') && node.transitions.length) {
@@ -88,6 +102,13 @@ jsPlumb.ready(function () {
                     showTranModal(trans[0], sourceId, targetId);
                 }
             }
+        } else if (filtered1.length > 0) {
+            var node = filtered1[0]['begin'];
+            if (node.transition) {
+                showTranModal(node.transition, sourceId, targetId);
+            }
+        } else {
+            Msg.warning('No transition found');
         }
     });
 
@@ -96,7 +117,11 @@ jsPlumb.ready(function () {
     // this listener sets the connection's internal
     // id as the label overlay's text.
     instance.bind("connection", function (info) {
-        info.connection.getOverlay("label").setLabel('then');
+        if (info.connection.hasType('timeout')) {
+            info.connection.getOverlay("label").setLabel('timeout');
+        } else {
+            info.connection.getOverlay("label").setLabel('then');
+        }
         if (JBApp.initialized){
             flog('new connection was made', info.connection);
             var conn = info.connection;
@@ -171,18 +196,25 @@ jsPlumb.ready(function () {
         instance.fire("jsPlumbDemoNodeAdded", el);
     }
 
-    function newNode(node, type) {
+    function newNode(node, type, action) {
         var d = document.createElement("div");
         d.className = "w " + type;
         d.id = node.nodeId;
         d.setAttribute('data-type', type);
         var nodeName = node.name? node.name : node.nodeId;
         if (type === 'goal') {
-            d.innerHTML = '<div class="inner"><span>' + nodeName + ' <i style="font-size: 15px" class="fa fa-cog btnNodeSetting"></i></span> <span class="ep"></span> <span title="Timeout node" class="ep ep-timeout"></span></div>';
+            d.innerHTML = '<div class="title"><i class="fa fa-trophy" aria-hidden="true"></i> Goal</div>';
+            d.innerHTML += '<div class="inner"><span>' + nodeName + ' <i style="font-size: 15px" class="fa fa-cog btnNodeSetting"></i></span> <span title="Connect to transition node" class="ep"></span> <span title="Connect to timeout node" class="ep ep-timeout"></span></div>';
         } else if(type === 'decision') {
-            d.innerHTML = '<div class="inner"><span>' + nodeName + ' <i style="font-size: 15px" class="fa fa-cog btnNodeSetting"></i></span> <span title="Yes" class="ep ep-green"></span> <span title="No" class="ep ep-red"></span></div>'
+            d.innerHTML = '<div class="title"><i class="fa fa-question-circle" aria-hidden="true"></i> Decision</div>';
+            d.innerHTML += '<div class="inner"><span>' + nodeName + ' <i style="font-size: 15px" class="fa fa-cog btnNodeSetting"></i></span> <span title="Yes" class="ep ep-green"></span> <span title="No" class="ep ep-red"></span></div>'
+        } else if (type == 'begin') {
+            d.innerHTML = '<div class="title"><i class="fa fa-play" aria-hidden="true"></i> Begin</div>';
+            d.innerHTML += '<div class="inner"><span>' + nodeName + ' <i style="font-size: 15px" class="fa fa-cog btnNodeSetting"></i></span> <span title="Connect to other node" class="ep"></span></div>';
         } else {
-            d.innerHTML = '<div class="inner"><span>' + nodeName + ' <i style="font-size: 15px" class="fa fa-cog btnNodeSetting"></i></span> <span class="ep"></span></div>';
+            var actionName = JBApp.ACTIONS[action];
+            d.innerHTML = '<div class="title">'+actionName+'</div>';
+            d.innerHTML += '<div class="inner"><span>' + nodeName + ' <i style="font-size: 15px" class="fa fa-cog btnNodeSetting"></i></span> <span title="Connect to other node" class="ep"></span></div>';
         }
 
         d.style.left = node.x + "px";
@@ -212,7 +244,7 @@ jsPlumb.ready(function () {
         if (node.hasOwnProperty('timeoutNode')) {
             var dest = node.timeoutNode;
             if (dest) {
-                instance.connect({source: node.nodeId, target: dest, type: "basic"});
+                instance.connect({source: node.nodeId, target: dest, type: "timeout"});
             }
         }
 
@@ -246,7 +278,7 @@ jsPlumb.ready(function () {
                         if (['goal', 'decision', 'begin'].indexOf(key) === -1) {
                             type = 'action';
                         }
-                        newNode(node[key], type);
+                        newNode(node[key], type, key);
                         if (key === 'begin') {
                             beginNode = node[key];
                         }
@@ -289,10 +321,11 @@ function initSideBar() {
                 x: ui.offset.left - 200,
                 y: ui.offset.top - 300
             };
-            JBApp.newNode(node, type);
+
             var objToPush = {};
+            var action;
             if (type === 'action') {
-                var action = ui.draggable.attr('data-action');
+                action = ui.draggable.attr('data-action');
                 objToPush[action] = node; // default task name
             } else if (type === 'goal') {
                 node.transitions = null;
@@ -300,6 +333,7 @@ function initSideBar() {
             } else {
                 objToPush[type] = node;
             }
+            JBApp.newNode(node, type, action);
             funnel.nodes.push(objToPush);
             flog('drop', ui);
         }
@@ -369,17 +403,22 @@ function doSaveTrigger(form){
         var node = funnel.nodes[i];
         for (var key in node) {
             if (node[key].nodeId === sourceId) {
-                var transitions = node[key].transitions;
-                for(var j = 0; j < transitions.length; j++){
-                    if(transitions[j].nextNodeId === targetId){
-                        transitions[j].trigger = trigger;
-                        break;
+
+                if (node[key].hasOwnProperty('transitions')) {
+                    var transitions = node[key].transitions;
+                    for(var j = 0; j < transitions.length; j++){
+                        if(transitions[j].nextNodeId === targetId){
+                            transitions[j].trigger = trigger;
+                            break;
+                        }
                     }
+                } else if (node[key].hasOwnProperty('transition')) {
+                    var transition = node[key].transition;
+                    transition.trigger = trigger;
                 }
             }
         }
     }
-
     Msg.info('Transition trigger updated');
 }
 

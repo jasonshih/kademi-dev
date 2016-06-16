@@ -48,18 +48,24 @@
 }
 
 .w:hover {
-    background-color: #5c96bc;
-    color: white;
-
+    /*background-color: #5c96bc;*/
+    /*color: white;*/
 }
 
 .w.begin{
-    background: #2e6f9a;
-    color: #fff;
+    /*background: #2e6f9a;*/
+    /*color: #fff;*/
 }
 
 .w .inner{
-    margin-top: 27px;
+    margin-top: 13px;
+}
+.w .title{
+    text-align: left;
+    border-radius: 8px 8px 0 0;
+    padding: 5px;
+    background-color: #f5f5f5;
+    border-color: #ddd;
 }
 .w.action .inner{
     text-align: center;
@@ -67,7 +73,7 @@
 
 .w .inner .btnNodeSetting{
     position: absolute;
-    bottom: 5px;
+    top: 5px;
     right: 5px;
     cursor: pointer;
 }
@@ -79,8 +85,8 @@
 }
 
 .aLabel.jsplumb-hover, .jsplumb-source-hover, .jsplumb-target-hover {
-    background-color: #1e8151;
-    color: white;
+    /*background-color: #1e8151;*/
+    /*color: white;*/
 }
 
 .aLabel {
@@ -94,10 +100,11 @@
 
 .ep {
     position: absolute;
-    bottom: 37%;
-    right: 0;
+    bottom: 3px;
+    left: 3px;
     width: 1em;
     height: 1em;
+    border-radius: 50%;
     background-color: #e50051;
     cursor: pointer;
     box-shadow: 0 0 2px black;
@@ -106,16 +113,18 @@
     transition: box-shadow 0.25s ease-in;
 }
 .ep.ep-timeout{
-    top: 0;
-    right: 45%;
+    bottom: 3px;
+    right: 3px;
+    left: inherit;
     background-color: #e5910f;
 }
 .ep.ep-green{
     background-color: green;
 }
 .ep.ep-red{
-    top: 0;
-    right: 45%;
+    bottom: 3px;
+    right: 3px;
+    left: inherit;
     background-color: red;
 }
 .ep:hover {
