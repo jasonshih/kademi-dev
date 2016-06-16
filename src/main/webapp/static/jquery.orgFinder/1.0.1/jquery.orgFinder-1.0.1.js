@@ -400,7 +400,7 @@
                 data.lat = lat;
                 data.lng = lng;
             } else {
-                data.query = query;
+                data.jsonQuery = query;
 
                 if (options.orgTypes && $.isArray(options.orgTypes) && options.orgTypes.length > 0) {
                     data.orgTypes = self.formSearch.find('[name=orgType]').val();

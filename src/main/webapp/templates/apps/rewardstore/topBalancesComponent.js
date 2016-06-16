@@ -23,7 +23,7 @@
                 success: function (resp) {
                     form.html(resp);
 
-                    form.find('.recentPointsBucket').on('change', function () {
+                    form.find('.top-balances-bucket').on('change', function () {
                         var selectedBucket = this.value;
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
@@ -38,7 +38,7 @@
                         }
                     });
 
-                    form.find('.recentPointsDays').on('change', function () {
+                    form.find('.top-balances-limit').on('change', function () {
                         var number = this.value;
 
                         if (isNaN(number) || +number <= 1) {
@@ -50,11 +50,11 @@
                         var dynamicElement = component.find('[data-dynamic-href]');
                         var contentArea = dynamicElement.closest('.keditor-content-area');
 
-                        component.attr('data-days', number);
+                        component.attr('data-limit', number);
                         keditor.initDynamicContent(contentArea, dynamicElement);
                     });
 
-                    form.find('.recentPointsHeight').on('change', function () {
+                    form.find('.top-balances-height').on('change', function () {
                         var number = this.value;
 
                         if (isNaN(number) || +number <= 99) {
@@ -76,9 +76,9 @@
             flog('showSettingForm "topBalances" component');
 
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
-            form.find('.recentPointsBucket').val(dataAttributes['data-bucket']);
-            form.find('.recentPointsDays').val(dataAttributes['data-days']);
-            form.find('.recentPointsHeight').val(dataAttributes['data-height']);
+            form.find('.top-balances-bucket').val(dataAttributes['data-bucket']);
+            form.find('.top-balances-limit').val(dataAttributes['data-limit']);
+            form.find('.top-balances-height').val(dataAttributes['data-height']);
         },
         hideSettingForm: function (form, keditor) {
             // Do nothing

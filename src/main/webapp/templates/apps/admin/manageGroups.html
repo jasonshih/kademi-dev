@@ -15,7 +15,9 @@
             <div id="folder-wrapper" class="panel-folder">
                 #foreach($folder in $page.groupFolders)
                 <div data-name="$folder.name" class="panel panel-default folder">
-                    <div class="panel-heading" data-toggle="collapse" data-parent="#folder-wrapper" data-target="#folder-${foreach.count}">
+                    #set ($folderId = "folder-${foreach.count}")
+                    #set ($groupWrapperId = "${folderId}-wrapper")
+                    <div class="panel-heading" data-toggle="collapse" data-parent="#folder-wrapper" data-target="#${folderId}">
                         <i class="clip-folder"></i>
                         <span class="folder-name clickable">$folder.name</span>
                         <div class="btn-group btn-group-xs">
@@ -34,12 +36,11 @@
                             </div>
                         </div>
                     </div>
-                    <div id="folder-${foreach.count}" class="collapse">
+                    <div id="${folderId}" class="collapse">
                         <div class="panel-body">
-                            #set($groupWrapper = "group-${folder.name}-wrapper")
-                            <div id="$groupWrapper" class="panel-group" style="margin: 0; min-height: 50px">
+                            <div id="$groupWrapperId" class="panel-group" style="margin: 0; min-height: 50px">
                                 #foreach($group in $page.getChildrenInFolder($folder))
-                                    #genGroups($group $groupWrapper $folder)
+                                    #genGroups($group $groupWrapperId $folder)
                                 #end
                             </div>
                         </div>

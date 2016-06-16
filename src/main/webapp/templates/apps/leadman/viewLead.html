@@ -815,6 +815,10 @@
                     }
                 });
 
+                body.on('hide.bs.modal', '.modal', function () {
+                    $(this).find('input, select, textarea').not(':button, :image, :reset, :submit, :hidden').val('');
+                });
+
                 initNewTaskModal();
                 initFileUploads();
                 initFileNoteEdit();
