@@ -1053,7 +1053,7 @@
                 modal = $(
                     '<div id="modal-quiz-error" class="modal fade">' +
                     '   <div class="modal-dialog">' +
-                    '       <div class="modal-content">' +
+                    '       <div class="modal-content panel-danger">' +
                     '           <div class="modal-header panel-heading">' +
                     '               <button type="button" data-dismiss="modal" class="close">&times;</button>' +
                     '               <h4 class="modal-title"></h4>' +
@@ -1071,17 +1071,17 @@
 
                 modal.appendTo(document.body);
             }
-            var modalContent = modal.find('.modal-content');
+
             var modalTitle = modal.find('.modal-title');
             var errorText = modal.find('.error-text');
-            modalContent.removeClass('panel-danger panel-warning');
+            var btnDismiss = modal.find('.modal-footer button[data-dismiss=modal]');
 
             if (response.data.numAttempts >= response.data.maxAttempts) {
                 flog('[jquery.module] Reached maximum attempts');
 
-                modalContent.addClass('panel-warning');
                 modalTitle.html('Reached maximum attempts');
-                errorText.html(response.messages[0]);
+                errorText.html('You answered quiz incorrectly! <br />' + response.messages[0]);
+                btnDismiss.html('Close and continue');
 
                 modal.off('hide.bs.modal').on('hide.bs.modal', function () {
                     self.quizSuccessHandler(quiz, e);
@@ -1089,9 +1089,9 @@
             } else {
                 flog('[jquery.module] Have another batch...', response.data.nextQuizBatch);
 
-                modalContent.addClass('panel-danger');
-                modalTitle.html('You answered quiz incorrectly!');
-                errorText.html('You have <b>' + (response.data.maxAttempts - response.data.numAttempts) + '</b> remaming times to attempt this quiz');
+                modalTitle.html('Please try again');
+                errorText.html('You answered quiz incorrectly! <br />You have <b>' + (response.data.maxAttempts - response.data.numAttempts) + '</b> remaming times to attempt this quiz');
+                btnDismiss.html('See error answers');
 
                 modal.off('hide.bs.modal').on('hide.bs.modal', function () {
                     var btnSubmitQuiz = $('.quizSubmit .nextBtn');
@@ -1102,8 +1102,14 @@
                         btnSubmitQuiz.after(btnReAttempt);
                     }
 
+                    $.each(response.fieldMessages, function (i, n) {
+                        var inp = quiz.find('li.' + n.field);
+                        inp.addClass('error');
+                    });
                     quiz.find('ol.quiz li').find('input, textarea').prop('disabled', true);
+
                     btnSubmitQuiz.hide();
+
                     btnReAttempt.off('click').on('click', function (e) {
                         e.preventDefault();
 

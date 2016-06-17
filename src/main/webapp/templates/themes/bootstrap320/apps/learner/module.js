@@ -38,7 +38,6 @@ function initModulePage(pStatUrl, pFinished, pEditMode, pIsCompletable) {
     initModuleSearch();
 }
 
-
 function initModuleNav(pStatUrl, pFinished) {
     flog('initModuleNav', pStatUrl, pFinished);
 
@@ -66,6 +65,14 @@ function initModuleNav(pStatUrl, pFinished) {
 
         if (a.hasClass('disabled')) {
             flog('Preventing click on disabled link', a);
+
+            e.stopPropagation();
+            e.preventDefault();
+            return false;
+        }
+
+        if (a.hasClass('active')) {
+            flog('Preventing click on activated link', a);
 
             e.stopPropagation();
             e.preventDefault();
@@ -134,8 +141,9 @@ function initPageNav() {
 
     var progressPageIndex = getProgressPageIndex();
     var currentPageIndex = getCurrentPageIndex();
+    var isQuizPassed = $('.quiz.quiz-passed').length > 0;
 
-    var isBeyondCurrent = progressPageIndex > currentPageIndex;
+    var isBeyondCurrent = (progressPageIndex > currentPageIndex) || isQuizPassed;
     if (isBeyondCurrent) {
         flog('Show .when-complete');
 
@@ -238,7 +246,8 @@ function checkProgressPageVisibility() {
     }
 
     var isInputsDone = true;
-    var isBeyondCurrent = progressPageIndex > currentPageIndex;
+    var isQuizPassed = $('.quiz.quiz-passed').length > 0;
+    var isBeyondCurrent = (progressPageIndex > currentPageIndex) || isQuizPassed;
     flog('isBeyondCurrent: ' + isBeyondCurrent);
 
     var onQuiz = false; // figure out if user is on a quiz page
@@ -274,7 +283,7 @@ function checkProgressPageVisibility() {
             limited = 10;
         }
         var li = modeLink.closest('li');
-        $.each(li.classes(), function (i, n) {
+        $.each((li.attr("class") || '').split(' '), function (i, n) {
             if (n.startsWith('away')) {
                 li.removeClass(n);
             }
@@ -706,6 +715,10 @@ function showUserModal() {
     });
 }
 
+function showModal(modal) {
+    modal.modal('show');
+}
+
 function showCompletedMessage() {
     flog('showCompletedMessage');
 
@@ -900,6 +913,37 @@ function checkSubmit(e, isPageLink) {
     flog('all good, carry on with event processing', e);
 }
 
+function quizSuccessHandle(quiz, e) {
+    flog('quizSuccessHandle');
+
+    quiz.addClass('validated');
+
+    // Fix https://github.com/Kademi/kademi-dev/issues/1331
+    var currentTarget = $(e.target);
+    if (!currentTarget.is('a')) {
+        currentTarget = $(e.target).closest('a');
+    }
+
+    if (isLastPage() && currentTarget.hasClass('nextBtn')) {
+        $('ol.quiz input').prop('disabled', true);
+        completed();
+    } else {
+        $.pjax({
+            selector: '.pages a',
+            fragment: '.panelBox',
+            container: '.panelBox',
+            url: currentTarget.prop('href'),
+            success: function () {
+                flog('Pjax success!');
+
+                initPrintLink(); // called by init-theme
+                initPageNav();
+            },
+            debug: true
+        });
+    }
+}
+
 /**
  * returns true if the quiz is complete, otherwise displays appropriate validation
  * messages
@@ -923,7 +967,8 @@ function isQuizComplete(e) {
         return true;
     }
 
-    var isBeyondQuiz = getProgressPageIndex() > getCurrentPageIndex();
+    var isQuizPassed = $('.quiz.quiz-passed').length > 0;
+    var isBeyondQuiz = (getProgressPageIndex() > getCurrentPageIndex()) || isQuizPassed;
     if (isBeyondQuiz) {
         flog('Is beyond quiz, so quiz is complete');
         return true;
@@ -981,72 +1026,18 @@ function isQuizComplete(e) {
             success: function (response) {
                 quiz.removeClass('processing');
 
-                if (response.status) {
+                if (response && response.status) {
                     flog('Validating quiz OK', response);
-                    quiz.addClass('validated').trigger('quizSuccess');
+                    quiz.trigger('quizSuccess');
 
-                    // Fix https://github.com/Kademi/kademi-dev/issues/1331
-                    var currentTarget = $(e.target);
-                    if (!currentTarget.is('a')) {
-                        currentTarget = $(e.target).closest('a');
-                    }
-                    if (isLastPage() && currentTarget.hasClass('nextBtn')) {
-                        completed();
-                    } else {
-                        $.pjax({
-                            selector: '.pages a',
-                            fragment: '.panelBox',
-                            container: '.panelBox',
-                            url: currentTarget.prop('href'),
-                            success: function () {
-                                flog('Pjax success!');
+                    quizSuccessHandle(quiz, e);
+                } else if (response && response.messages && response.messages[0] && response.messages[0].indexOf('The quiz has already been completed') !== -1) {
+                    flog('The quiz has already been completed!');
 
-                                initPrintLink(); // called by init-theme
-                                initPageNav();
-                            },
-                            debug: true
-                        });
-                    }
+                    quizSuccessHandle(e);
                 } else {
                     flog('Validating quiz is false', response);
-                    if (response.data && response.data.nextQuizBatch) {
-                        flog('Looks like we have another batch..', response.data.nextQuizBatch);
-                        quiz.find('ol.quiz').replaceWith(response.data.nextQuizBatch);
-                        tidyUpQuiz();
-                    } else {
-                        // The quiz has already been completed
-                        if (response && response.messages && response.messages[0] && response.messages[0].indexOf('The quiz has already been completed') !== -1) {
-                            flog('The quiz has already been completed!');
-
-                            var currentTarget = $(e.target);
-                            if (!currentTarget.is('a')) {
-                                currentTarget = $(e.target).closest('a');
-                            }
-                            if (isLastPage() && currentTarget.hasClass('nextBtn')) {
-                                completed();
-                            } else {
-                                $.pjax({
-                                    selector: '.pages a',
-                                    fragment: '.panelBox',
-                                    container: '.panelBox',
-                                    url: currentTarget.prop('href'),
-                                    success: function () {
-                                        flog('Pjax success!');
-
-                                        initPrintLink(); // called by init-theme
-                                        initPageNav();
-                                    },
-                                    debug: true
-                                });
-                            }
-                        } else {
-                            alert('Please check your answers');
-                            $.each(response.fieldMessages, function (i, n) {
-                                var inp = quiz.find('li.' + n.field);
-                                inp.addClass('error');
-                            });
-                        }
-                    }
+                    showQuizError(quiz, response, e);
                 }
             },
             error: function (response) {
@@ -1064,4 +1055,88 @@ function isQuizComplete(e) {
 
 function showApology(operation) {
     alert('Oh, oops. I\'m really, really, sorry, but I couldnt ' + operation + ' because of some computer-not-behaving thing. Perhaps check your internet connection? If it still doesnt work it would be super nice if you could tell us from the contact page and we\'ll sort it out ASAP - thanks!');
+}
+
+function showQuizError(quiz, response, e) {
+    flog('showQuizError', quiz, response);
+
+    var modal = $('#modal-quiz-error');
+    if (modal.length === 0) {
+        modal = $(
+            '<div id="modal-quiz-error" class="modal fade">' +
+            '   <div class="modal-dialog">' +
+            '       <div class="modal-content panel-danger">' +
+            '           <div class="modal-header panel-heading">' +
+            '               <button type="button" data-dismiss="modal" class="close">&times;</button>' +
+            '               <h4 class="modal-title"></h4>' +
+            '           </div>' +
+            '           <div class="modal-body">' +
+            '               <p class="error-text"></p>' +
+            '           </div>' +
+            '           <div class="modal-footer">' +
+            '               <button type="button" class="btn btn-primary" data-dismiss="modal">See error answers</button>' +
+            '           </div>' +
+            '       </div>' +
+            '   </div>' +
+            '</div>'
+        );
+
+        modal.appendTo(document.body);
+    }
+    var modalTitle = modal.find('.modal-title');
+    var errorText = modal.find('.error-text');
+    var btnDismiss = modal.find('.modal-footer button[data-dismiss=modal]');
+
+    if (response.data.numAttempts >= response.data.maxAttempts) {
+        flog('Reached maximum attempts');
+
+        modalTitle.html('Reached maximum attempts');
+        errorText.html('You have answered this quiz incorrectly!<br />' + response.messages[0]);
+        btnDismiss.html('Close and continue');
+
+        modal.off('hide.bs.modal').on('hide.bs.modal', function () {
+            quizSuccessHandle(quiz, e);
+        });
+    } else {
+        flog('Looks like we have another batch...', response.data.nextQuizBatch);
+
+        modalTitle.html('Please try again');
+        errorText.html('You have answered this quiz incorrectly!<br />You have <b>' + (response.data.maxAttempts - response.data.numAttempts) + '</b> remaming times to attempt this quiz');
+        btnDismiss.html('See error answers');
+
+        modal.off('hide.bs.modal').on('hide.bs.modal', function () {
+            var btnSubmitQuiz = $('.quizSubmit .nextBtn');
+            var btnReAttempt = $('.btn-quiz-reattempt');
+            if (btnReAttempt.length === 0) {
+                var btnReAttempt = $('<button type="button" class="btn-quiz-reattempt">Re-attempt Quiz</button>');
+                btnReAttempt.addClass(btnSubmitQuiz.attr('class')).removeClass('nextBtn when-complete when-not-complete');
+                btnSubmitQuiz.after(btnReAttempt);
+            }
+
+            $.each(response.fieldMessages, function (i, n) {
+                var inp = quiz.find('li.' + n.field);
+                inp.addClass('error');
+            });
+            quiz.find('ol.quiz li').find('input, textarea').prop('disabled', true);
+
+            btnSubmitQuiz.hide();
+
+            btnReAttempt.off('click').on('click', function (e) {
+                e.preventDefault();
+
+                flog('Re-attempt quiz');
+                if (response.data && response.data.nextQuizBatch) {
+                    quiz.find('ol.quiz').replaceWith(response.data.nextQuizBatch);
+                    tidyUpQuiz();
+                } else {
+                    quiz.find('ol.quiz li').find('input, textarea').prop('disabled', false);
+                }
+
+                btnReAttempt.remove();
+                btnSubmitQuiz.show();
+            });
+        });
+    }
+
+    modal.modal('show');
 }

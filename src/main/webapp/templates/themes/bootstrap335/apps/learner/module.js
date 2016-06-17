@@ -1085,14 +1085,14 @@ function showQuizError(quiz, response, e) {
     }
     var modalTitle = modal.find('.modal-title');
     var errorText = modal.find('.error-text');
-    var btnDissmiss = modal.find('button[data-dismiss=modal]');
+    var btnDismiss = modal.find('.modal-footer button[data-dismiss=modal]');
 
     if (response.data.numAttempts >= response.data.maxAttempts) {
         flog('Reached maximum attempts');
 
         modalTitle.html('Reached maximum attempts');
         errorText.html('You have answered this quiz incorrectly!<br />' + response.messages[0]);
-        btnDissmiss.html('Close and continue');
+        btnDismiss.html('Close and continue');
 
         modal.off('hide.bs.modal').on('hide.bs.modal', function () {
             quizSuccessHandle(quiz, e);
@@ -1102,7 +1102,7 @@ function showQuizError(quiz, response, e) {
 
         modalTitle.html('Please try again');
         errorText.html('You have answered this quiz incorrectly!<br />You have <b>' + (response.data.maxAttempts - response.data.numAttempts) + '</b> remaming times to attempt this quiz');
-        btnDissmiss.html('See error answers');
+        btnDismiss.html('See error answers');
 
         modal.off('hide.bs.modal').on('hide.bs.modal', function () {
             var btnSubmitQuiz = $('.quizSubmit .nextBtn');
