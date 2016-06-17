@@ -40,157 +40,13 @@ function initEdmEditor(iframeMode, fileName) {
     flog('initEdmEditor');
 
     var body = $(document.body);
-    createSettingPanel(body);
-    var edmHtml = processFileBody();
     var keditor = initKEditor(body, iframeMode, fileName).data('keditor');
-    if (iframeMode) {
-        keditor.body.append($('#edm-setting'));
-    }
-    initSettingPanel(edmHtml, iframeMode ? keditor.body : body);
 
     window.onbeforeunload = function (e) {
         if (body.hasClass('content-changed')) {
             e.returnValue = '\n\nAre you sure you would like to leave the editor? You will lose any unsaved changes\n\n';
         }
     };
-}
-
-function createSettingPanel(body) {
-    flog('createSettingPanel');
-
-    body.append(
-        '<div id="edm-setting" class="form-horizontal">' +
-        '    <div class="panel panel-default">' +
-        '        <div class="panel-heading">EDM Page</div>' +
-        '        <div class="panel-body">' +
-        '            <div class="form-group form-group-sm">' +
-        '                <div class="col-md-12">' +
-        '                    <label for="edm-background">Background</label>' +
-        '                    <div class="input-group color-picker">' +
-        '                        <span class="input-group-addon"><i></i></span>' +
-        '                        <input type="text" value="" id="edm-background" class="form-control" />' +
-        '                    </div>' +
-        '                </div>' +
-        '            </div>' +
-        '            <div class="form-group form-group-sm">' +
-        '                <div class="col-md-12">' +
-        '                    <label>Padding (in px)</label>' +
-        '                    <div class="row row-sm text-center">' +
-        '                        <div class="col-xs-4 col-xs-offset-4">' +
-        '                            <input type="number" value="" id="edm-padding-top" class="form-control" />' +
-        '                            <small>top</small>' +
-        '                        </div>' +
-        '                    </div>' +
-        '                    <div class="row row-sm text-center">' +
-        '                        <div class="col-xs-4">' +
-        '                            <input type="number" value="" id="edm-padding-left" class="form-control" />' +
-        '                            <small>left</small>' +
-        '                        </div>' +
-        '                        <div class="col-xs-4 col-xs-offset-4">' +
-        '                            <input type="number" value="" id="edm-padding-right" class="form-control" />' +
-        '                            <small>right</small>' +
-        '                        </div>' +
-        '                    </div>' +
-        '                    <div class="row row-sm text-center">' +
-        '                        <div class="col-xs-4 col-xs-offset-4">' +
-        '                            <input type="number" value="" id="edm-padding-bottom" class="form-control" />' +
-        '                            <small>bottom</small>' +
-        '                        </div>' +
-        '                    </div>' +
-        '                </div>' +
-        '            </div>' +
-        '        </div>' +
-        '    </div>' +
-        '    <div class="panel panel-default">' +
-        '        <div class="panel-heading">EDM Body</div>' +
-        '        <div class="panel-body">' +
-        '            <div class="form-group form-group-sm">' +
-        '                <div class="col-md-12">' +
-        '                    <label for="edm-body-background">Width (in px)</label>' +
-        '                    <input type="number" value="" id="edm-body-width" class="form-control" />' +
-        '                </div>' +
-        '            </div>' +
-        '            <div class="form-group form-group-sm">' +
-        '                <div class="col-md-12">' +
-        '                    <label for="edm-body-background">Background</label>' +
-        '                    <div class="input-group color-picker">' +
-        '                        <span class="input-group-addon"><i></i></span>' +
-        '                        <input type="text" value="" id="edm-body-background" class="form-control" />' +
-        '                    </div>' +
-        '                </div>' +
-        '            </div>' +
-        '            <div class="form-group form-group-sm">' +
-        '                <div class="col-md-12">' +
-        '                    <label>Padding (in px)</label>' +
-        '                    <div class="row row-sm text-center">' +
-        '                        <div class="col-xs-4 col-xs-offset-4">' +
-        '                            <input type="number" value="" id="edm-body-padding-top" class="form-control" />' +
-        '                            <small>top</small>' +
-        '                        </div>' +
-        '                    </div>' +
-        '                    <div class="row row-sm text-center">' +
-        '                        <div class="col-xs-4">' +
-        '                            <input type="number" value="" id="edm-body-padding-left" class="form-control" />' +
-        '                            <small>left</small>' +
-        '                        </div>' +
-        '                        <div class="col-xs-4 col-xs-offset-4">' +
-        '                            <input type="number" value="" id="edm-body-padding-right" class="form-control" />' +
-        '                            <small>right</small>' +
-        '                        </div>' +
-        '                    </div>' +
-        '                    <div class="row row-sm text-center">' +
-        '                        <div class="col-xs-4 col-xs-offset-4">' +
-        '                            <input type="number" value="" id="edm-body-padding-bottom" class="form-control" />' +
-        '                            <small>bottom</small>' +
-        '                        </div>' +
-        '                    </div>' +
-        '                </div>' +
-        '            </div>' +
-        '        </div>' +
-        '    </div>' +
-        '    <div class="panel panel-default">' +
-        '        <div class="panel-heading">EDM Default Styles</div>' +
-        '        <div class="panel-body">' +
-        '            <div class="form-group form-group-sm">' +
-        '                <div class="col-md-12">' +
-        '                    <label for="edm-text-color">Text color</label>' +
-        '                    <div class="input-group color-picker">' +
-        '                        <span class="input-group-addon"><i></i></span>' +
-        '                        <input type="text" value="" id="edm-text-color" class="form-control" />' +
-        '                    </div>' +
-        '                </div>' +
-        '            </div>' +
-        '            <div class="form-group form-group-sm">' +
-        '                <div class="col-md-12">' +
-        '                    <label for="edm-text-color">Link color</label>' +
-        '                    <div class="input-group color-picker">' +
-        '                        <span class="input-group-addon"><i></i></span>' +
-        '                        <input type="text" value="" id="edm-link-color" class="form-control" />' +
-        '                    </div>' +
-        '                </div>' +
-        '            </div>' +
-        '            <div class="form-group form-group-sm">' +
-        '                <div class="col-md-12">' +
-        '                    <label for="edm-font-family">Font family</label>' +
-        '                    <input type="text" value="" id="edm-font-family" class="form-control" />' +
-        '                </div>' +
-        '            </div>' +
-        '            <div class="form-group form-group-sm">' +
-        '                <div class="col-md-12">' +
-        '                    <label for="edm-font-size">Font size</label>' +
-        '                    <input type="text" value="" id="edm-font-size" class="form-control" />' +
-        '                </div>' +
-        '            </div>' +
-        '            <div class="form-group form-group-sm">' +
-        '                <div class="col-md-12">' +
-        '                    <label for="edm-line-height">Line height</label>' +
-        '                    <input type="text" value="" id="edm-line-height" class="form-control" />' +
-        '                </div>' +
-        '            </div>' +
-        '        </div>' +
-        '    </div>' +
-        '</div>'
-    );
 }
 
 function applyInlineCssForTextWrapper(target) {
@@ -239,26 +95,153 @@ function initKEditor(body, iframeMode, fileName) {
     return $('#edm-area').keditor({
         iframeMode: iframeMode,
         basePath: iframeMode ? window.location.pathname.substr(0, window.location.pathname.lastIndexOf('/') + 1) : '',
+        tabContainersText: '<i class="fa fa-th-list"></i>',
+        tabComponentsText: '<i class="fa fa-file"></i>',
         contentAreasSelector: '#edm-header, #edm-body, #edm-footer',
         contentAreasWrapper: '<div id="edm-area"></div>',
         snippetsUrl: '_components?fileName=' + fileName,
+        extraTabs: {
+            setting: {
+                text: '<i class="fa fa-cog"></i>',
+                title: 'Settings',
+                content:
+                '<div id="edm-setting" class="form-horizontal">' +
+                '    <div class="panel panel-default">' +
+                '        <div class="panel-heading">EDM Page</div>' +
+                '        <div class="panel-body">' +
+                '            <div class="form-group form-group-sm">' +
+                '                <div class="col-md-12">' +
+                '                    <label for="edm-background">Background</label>' +
+                '                    <div class="input-group color-picker">' +
+                '                        <span class="input-group-addon"><i></i></span>' +
+                '                        <input type="text" value="" id="edm-background" class="form-control" />' +
+                '                    </div>' +
+                '                </div>' +
+                '            </div>' +
+                '            <div class="form-group form-group-sm">' +
+                '                <div class="col-md-12">' +
+                '                    <label>Padding (in px)</label>' +
+                '                    <div class="row row-sm text-center">' +
+                '                        <div class="col-xs-4 col-xs-offset-4">' +
+                '                            <input type="number" value="" id="edm-padding-top" class="form-control" />' +
+                '                            <small>top</small>' +
+                '                        </div>' +
+                '                    </div>' +
+                '                    <div class="row row-sm text-center">' +
+                '                        <div class="col-xs-4">' +
+                '                            <input type="number" value="" id="edm-padding-left" class="form-control" />' +
+                '                            <small>left</small>' +
+                '                        </div>' +
+                '                        <div class="col-xs-4 col-xs-offset-4">' +
+                '                            <input type="number" value="" id="edm-padding-right" class="form-control" />' +
+                '                            <small>right</small>' +
+                '                        </div>' +
+                '                    </div>' +
+                '                    <div class="row row-sm text-center">' +
+                '                        <div class="col-xs-4 col-xs-offset-4">' +
+                '                            <input type="number" value="" id="edm-padding-bottom" class="form-control" />' +
+                '                            <small>bottom</small>' +
+                '                        </div>' +
+                '                    </div>' +
+                '                </div>' +
+                '            </div>' +
+                '        </div>' +
+                '    </div>' +
+                '    <div class="panel panel-default">' +
+                '        <div class="panel-heading">EDM Body</div>' +
+                '        <div class="panel-body">' +
+                '            <div class="form-group form-group-sm">' +
+                '                <div class="col-md-12">' +
+                '                    <label for="edm-body-background">Width (in px)</label>' +
+                '                    <input type="number" value="" id="edm-body-width" class="form-control" />' +
+                '                </div>' +
+                '            </div>' +
+                '            <div class="form-group form-group-sm">' +
+                '                <div class="col-md-12">' +
+                '                    <label for="edm-body-background">Background</label>' +
+                '                    <div class="input-group color-picker">' +
+                '                        <span class="input-group-addon"><i></i></span>' +
+                '                        <input type="text" value="" id="edm-body-background" class="form-control" />' +
+                '                    </div>' +
+                '                </div>' +
+                '            </div>' +
+                '            <div class="form-group form-group-sm">' +
+                '                <div class="col-md-12">' +
+                '                    <label>Padding (in px)</label>' +
+                '                    <div class="row row-sm text-center">' +
+                '                        <div class="col-xs-4 col-xs-offset-4">' +
+                '                            <input type="number" value="" id="edm-body-padding-top" class="form-control" />' +
+                '                            <small>top</small>' +
+                '                        </div>' +
+                '                    </div>' +
+                '                    <div class="row row-sm text-center">' +
+                '                        <div class="col-xs-4">' +
+                '                            <input type="number" value="" id="edm-body-padding-left" class="form-control" />' +
+                '                            <small>left</small>' +
+                '                        </div>' +
+                '                        <div class="col-xs-4 col-xs-offset-4">' +
+                '                            <input type="number" value="" id="edm-body-padding-right" class="form-control" />' +
+                '                            <small>right</small>' +
+                '                        </div>' +
+                '                    </div>' +
+                '                    <div class="row row-sm text-center">' +
+                '                        <div class="col-xs-4 col-xs-offset-4">' +
+                '                            <input type="number" value="" id="edm-body-padding-bottom" class="form-control" />' +
+                '                            <small>bottom</small>' +
+                '                        </div>' +
+                '                    </div>' +
+                '                </div>' +
+                '            </div>' +
+                '        </div>' +
+                '    </div>' +
+                '    <div class="panel panel-default">' +
+                '        <div class="panel-heading">EDM Default Styles</div>' +
+                '        <div class="panel-body">' +
+                '            <div class="form-group form-group-sm">' +
+                '                <div class="col-md-12">' +
+                '                    <label for="edm-text-color">Text color</label>' +
+                '                    <div class="input-group color-picker">' +
+                '                        <span class="input-group-addon"><i></i></span>' +
+                '                        <input type="text" value="" id="edm-text-color" class="form-control" />' +
+                '                    </div>' +
+                '                </div>' +
+                '            </div>' +
+                '            <div class="form-group form-group-sm">' +
+                '                <div class="col-md-12">' +
+                '                    <label for="edm-text-color">Link color</label>' +
+                '                    <div class="input-group color-picker">' +
+                '                        <span class="input-group-addon"><i></i></span>' +
+                '                        <input type="text" value="" id="edm-link-color" class="form-control" />' +
+                '                    </div>' +
+                '                </div>' +
+                '            </div>' +
+                '            <div class="form-group form-group-sm">' +
+                '                <div class="col-md-12">' +
+                '                    <label for="edm-font-family">Font family</label>' +
+                '                    <input type="text" value="" id="edm-font-family" class="form-control" />' +
+                '                </div>' +
+                '            </div>' +
+                '            <div class="form-group form-group-sm">' +
+                '                <div class="col-md-12">' +
+                '                    <label for="edm-font-size">Font size</label>' +
+                '                    <input type="text" value="" id="edm-font-size" class="form-control" />' +
+                '                </div>' +
+                '            </div>' +
+                '            <div class="form-group form-group-sm">' +
+                '                <div class="col-md-12">' +
+                '                    <label for="edm-line-height">Line height</label>' +
+                '                    <input type="text" value="" id="edm-line-height" class="form-control" />' +
+                '                </div>' +
+                '            </div>' +
+                '        </div>' +
+                '    </div>' +
+                '</div>'
+            }
+        },
         onInitContentArea: function (contentArea) {
             contentArea[contentArea.find('.keditor-container-content').children().length === 0 ? 'addClass' : 'removeClass']('empty');
 
             return contentArea.find('> table');
-        },
-        onSidebarToggled: function (isOpened) {
-            var settingPanel = $('#edm-setting');
-            if (isOpened) {
-                if ($('.btn-setting').parent().hasClass('active')) {
-                    settingPanel.getNiceScroll().show();
-                    setTimeout(function () {
-                        settingPanel.getNiceScroll().resize();
-                    }, 300);
-                }
-            } else {
-                settingPanel.getNiceScroll().hide();
-            }
         },
         onComponentReady: function (component, editor) {
             if (editor) {
@@ -282,6 +265,10 @@ function initKEditor(body, iframeMode, fileName) {
 
             var contentArea = $(this);
             contentArea[contentArea.children().length === 0 ? 'addClass' : 'removeClass']('empty');
+        },
+        onReady: function () {
+            var edmHtml = processFileBody();
+            initSettingPanel(edmHtml, iframeMode ? this.body : body);
         }
     });
 }
@@ -290,41 +277,6 @@ function initSettingPanel(edmHtml, body) {
     flog('initSettingPanel');
 
     var settingPanel = body.find('#edm-setting');
-    settingPanel.niceScroll({
-        cursorcolor: '#999',
-        cursorwidth: 6,
-        railpadding: {
-            top: 0,
-            right: 0,
-            left: 0,
-            bottom: 0
-        },
-        cursorborder: '',
-        zindex: 9999,
-        disablemutationobserver: true
-    });
-
-    // Init nicescroll
-    settingPanel.getNiceScroll().hide();
-
-    // Init colorpicker
-    settingPanel.find('.color-picker').each(function () {
-        var input = $(this);
-        input.colorpicker({
-            format: 'hex',
-            container: input.parent(),
-            component: '.add-on, .input-group-addon'
-        }).trigger('changeColor.colorpicker');
-
-        input.on('changeColor.colorpicker', function (e) {
-            input.val(e.color.toHex());
-            applySetting(body);
-        });
-    });
-
-    settingPanel.find('input').not('.colorpicker').on('change', function () {
-        applySetting(body,  $(this));
-    });
 
     body.find('#edm-body-width').val(edmHtml.find('#edm-container').attr('width') || DEFAULT_EDM_BODY_WIDTH);
 
@@ -356,6 +308,25 @@ function initSettingPanel(edmHtml, body) {
     body.find('#edm-line-height').val(tableContainer.attr('data-line-height') || DEFAULT_LINE_HEIGHT);
     body.find('#edm-text-color').val(tableContainer.attr('data-text-color') || DEFAULT_TEXT_COLOR);
     body.find('#edm-link-color').val(tableContainer.attr('data-link-color') || DEFAULT_LINK_COLOR);
+
+    // Init colorpicker
+    settingPanel.find('.color-picker').each(function () {
+        var input = $(this);
+        input.colorpicker({
+            format: 'hex',
+            container: input.parent(),
+            component: '.add-on, .input-group-addon'
+        }).trigger('changeColor.colorpicker');
+
+        input.on('changeColor.colorpicker', function (e) {
+            input.val(e.color.toHex());
+            applySetting(body);
+        });
+    });
+
+    settingPanel.find('input').not('.colorpicker').on('change', function () {
+        applySetting(body,  $(this));
+    });
 
     applySetting(body);
 }
@@ -658,27 +629,6 @@ function initBtns(body, fileName) {
                 hideLoadingIcon();
             }
         })
-    });
-
-    var settingPanel = $('#edm-setting');
-    $('.btn-setting').on('click', function (e) {
-        e.preventDefault();
-
-        var btn = $(this);
-        var li = btn.parent();
-
-        if (li.hasClass('active')) {
-            settingPanel.getNiceScroll().hide();
-            settingPanel.removeClass('showed');
-            li.removeClass('active');
-        } else {
-            settingPanel.getNiceScroll().show();
-            setTimeout(function () {
-                settingPanel.getNiceScroll().resize();
-            }, 300);
-            settingPanel.addClass('showed');
-            li.addClass('active');
-        }
     });
 }
 

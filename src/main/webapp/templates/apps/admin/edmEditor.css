@@ -89,49 +89,11 @@ body.opened-keditor-sidebar #edm-area {
    EDM Setting
    ================================================================================== */
 #edm-setting {
-    position: fixed;
-    top: 60px;
-    bottom: 10px;
-    background: #f0f0f0;
-    transition: all 0.3s;
-    font-size: 12px;
-    padding: 0;
-    z-index: 999;
-    overflow-y: auto;
-    overflow-x: hidden !important;
-    width: 235px;
-    right: -255px;
-}
-
-body.opened-keditor-sidebar #edm-setting.showed {
-    right: 10px;
+    margin: 0 5px;
 }
 
 #edm-setting .panel {
-    margin-bottom: 0;
-    overflow: hidden;
-}
-
-#edm-setting .panel + .panel {
-    margin-top: 10px;
-}
-
-#edm-setting .panel-heading,
-#edm-setting .panel-body {
-    padding-left: 10px;
-    padding-right: 10px;
-}
-
-#edm-setting .panel-body .form-group {
-    margin-bottom: 0;
-}
-
-#edm-setting .panel-body .form-group + .form-group {
-    margin-top: 10px;
-}
-
-#edm-setting .form-control {
-    padding: 6px 5px;
+    border-radius: 0;
 }
 
 .row.row-sm {
