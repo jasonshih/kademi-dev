@@ -13,7 +13,17 @@
             <script type="text/javascript" src="/static/js/jquery.milton-tree.js">//</script>
             <script type="text/javascript" src="/static/milton-upload/1.0.1/jquery.milton-upload.js">//</script>
             <script type="text/javascript" src="/static/jquery.mselect/1.1.0/jquery.mselect-1.1.0.js">//</script>
+            <script type="text/javascript">
+                var bsTooltip = $.fn.tooltip;
+                var bsButton = $.fn.button;
+            </script>
             <script type="text/javascript" src="/static/jquery-ui/1.11.4/jquery-ui.min.js">//</script>
+            <script type="text/javascript">
+                $.widget.bridge('uibutton', $.ui.button);
+                $.widget.bridge('uitooltip', $.ui.tooltip);
+                $.fn.tooltip = bsTooltip;
+                $.fn.button = bsButton;
+            </script>
             <script type="text/javascript" src="/theme/toolbars.js">//</script>
             <script type="text/javascript" src="/static/ckeditor456/ckeditor.js">//</script>
             <script type="text/javascript" src="/static/ckeditor456/adapters/jquery.js">//</script>

@@ -95,8 +95,8 @@ function initKEditor(body, iframeMode, fileName) {
     return $('#edm-area').keditor({
         iframeMode: iframeMode,
         basePath: iframeMode ? window.location.pathname.substr(0, window.location.pathname.lastIndexOf('/') + 1) : '',
-        tabContainersText: '<i class="fa fa-th-list"></i>',
-        tabComponentsText: '<i class="fa fa-file"></i>',
+        tabContainersText: '<i class="fa fa-columns"></i>',
+        tabComponentsText: '<i class="fa fa-files-o"></i>',
         contentAreasSelector: '#edm-header, #edm-body, #edm-footer',
         contentAreasWrapper: '<div id="edm-area"></div>',
         snippetsUrl: '_components?fileName=' + fileName,

@@ -79,6 +79,8 @@ function initKEditor(body, fileName) {
     var contentArea = $('#content-area');
 
     contentArea.keditor({
+        tabContainersText: '<i class="fa fa-columns"></i>',
+        tabComponentsText: '<i class="fa fa-files-o"></i>',
         snippetsUrl: '_components?fileName=' + fileName,
         onContentChanged: function () {
             if (contentArea.keditor('getContent').trim() === '') {
