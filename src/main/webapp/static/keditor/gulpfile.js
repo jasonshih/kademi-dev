@@ -16,7 +16,7 @@ var concat = require('gulp-concat-util');
 var clearFolder = function (src) {
     return gulp.src(src)
         .pipe(rimraf()).on('error', gutil.log);
-}
+};
 
 gulp.task('clean-css-dist', function () {
     return clearFolder('./dist/css/*.*');
@@ -166,63 +166,6 @@ gulp.task('build-js-edm-components', function () {
 
 gulp.task('build-js-dist', gulpsync.sync(['clean-js-dist', 'build-js-keditor', 'build-js-components', 'build-js-edm-components']));
 
-gulp.task('clean-snippets-examples', function () {
-    return clearFolder('./examples/snippets');
-});
-
-gulp.task('copy-snippets-src-examples', function () {
-    return gulp.src('./src/snippets/**/*')
-        .pipe(gulp.dest('./examples/snippets'));
-});
-
-gulp.task('build-snippets-examples', gulpsync.sync(['clean-snippets-examples', 'copy-snippets-src-examples']));
-
-gulp.task('clean-css-test', function () {
-    return clearFolder('./test/css/*.*');
-});
-
-gulp.task('compile-less-test', function () {
-    return gulp.src(['./src/less/*.less', '!./src/less/_*.less'])
-        .pipe(plumber())
-        .pipe(less())
-        .pipe(gulp.dest('./test/css/')).on('error', gutil.log);
-});
-
-gulp.task('build-css-test', gulpsync.sync(['clean-css-test', 'compile-less-test']));
-
-gulp.task('clean-js-test', function () {
-    return clearFolder('./test/js/*.*');
-});
-
-gulp.task('copy-js-src-test', function () {
-    return gulp.src(['./src/js/*.js'])
-        .pipe(plumber())
-        .pipe(gulp.dest('./test/js/'), {
-            base: './src/js/'
-        });
-});
-
-gulp.task('build-js-test', gulpsync.sync(['clean-js-test', 'copy-js-src-test']));
-
-gulp.task('clean-snippets-test', function () {
-    return clearFolder('./test/snippets');
-});
-
-gulp.task('copy-snippets-src-test', function () {
-    return gulp.src('./src/snippets/**/*')
-        .pipe(gulp.dest('./test/snippets'));
-});
-
-gulp.task('build-snippets-test', gulpsync.sync(['clean-snippets-test', 'copy-snippets-src-test']));
-
-gulp.task('watch', function () {
-    gulp.watch(['./src/less/*.less'], ['build-css-dist']);
-    gulp.watch(['./src/js/*.js'], ['build-js-dist']);
-});
-
 // Gulp Build
 gulp.task('build', ['build-css-dist', 'build-js-dist']);
-
-// Gulp Dev
-gulp.task('dev', ['build-css-test', 'build-js-test', 'build-snippets-test', 'watch']);
 

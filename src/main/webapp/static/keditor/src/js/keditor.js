@@ -14,12 +14,17 @@
  * @option {String} btnDuplicateComponentText Text content for duplicate button of component
  * @option {String} btnDeleteContainerText Text content for delete button of container
  * @option {String} btnDeleteComponentText Text content for delete button of component
- * @option {String} tabContainersTitle Text content for Containers tab
- * @option {String} tabComponentsTitle Text content for Components tab
- * @option {Object} extraTabs Extra tabs besides Containers and Components tabs in sidebar. Format: { tabName: { title: 'My Extra Tab #1', content: 'Here is content of My Extra Tab #1' } }
+ * @option {String} tabContainersText Text for Containers tab
+ * @option {String} tabContainersTitle Title for Containers tab
+ * @option {String} tabComponentsText Text for Components tab
+ * @option {String} tabComponentsTitle Title for Components tab
+ * @option {Boolean} tabTooltipEnabled Bootstrap Tooltip is enabled for Component and Container tab or not
+ * @option {Object} extraTabs Extra tabs besides Containers and Components tabs in sidebar. Format: { tabName: { text: 'My Extra Tab #1', title: 'My Extra Tab #1', content: 'Here is content of My Extra Tab #1' } }
  * @option {String|Function} defaultComponentType Default component type of component. If type of component does not exist in KEditor.components, will be used 'defaultComponentType' as type of this component. If is function, argument is component - jQuery object of component
  * @option {String} snippetsUrl Url to snippets file
  * @option {String} snippetsListId Id of element which contains snippets. As default, value is "keditor-snippets-list" and KEditor will render snippets sidebar automatically. If you specific other id, only snippets will rendered and put into your element
+ * @option {Boolean} snippetsTooltipEnabled Bootstrap tooltip is enable for snippet or not
+ * @option {String} snippetsTooltipPosition Position of Bootstrap tooltip for snippet. Can be 'left', 'right', 'top' and 'bottom'
  * @option {Boolean} iframeMode KEditor is created inside an iframe or not. Keditor will add all elements which have 'data-type=keditor-style' for iframe stylesheet. These elements can be 'link', 'style' or any tags. If these elements have 'href' attribute, will create link tag with href. If these elements do not have 'href' attribute, will create style tag with css rule is html code inside element
  * @option {String} contentAreasSelector Selector of content areas. If is null or selector does not match any elements, will create default content area and wrap all content inside it.
  * @option {String} contentAreasWrapper The wrapper element for all contents inside iframe. It's just for displaying purpose. If you want all contents inside iframe are appended into body tag
@@ -27,6 +32,7 @@
  * @option {Function} containerSettingInitFunction Method will be called when initializing setting panel for container
  * @option {Function} containerSettingShowFunction Method will be called when setting panel for container is showed
  * @option {Function} containerSettingHideFunction Method will be called when setting panel for container is hidden
+ * @option {Function} onReady Callback will be called after keditor instance is ready
  * @option {Function} onInitFrame Callback will be called after iframe and content areas wrapper inside it are created. Arguments: frame, frameHead, frameBody
  * @option {Function} onSidebarToggled Callback will be called after toggled sidebar. Arguments: isOpened
  * @option {Function} onInitContentArea Callback will be called when initializing content area. It can return array of jQuery objects which will be initialized as container in content area. By default, all first level sections under content area will be initialized. Arguments: contentArea
@@ -106,12 +112,17 @@
         btnDuplicateComponentText: '<i class="fa fa-files-o"></i>',
         btnDeleteContainerText: '<i class="fa fa-times"></i>',
         btnDeleteComponentText: '<i class="fa fa-times"></i>',
+        tabContainersText: 'Containers',
         tabContainersTitle: 'Containers',
+        tabComponentsText: 'Components',
         tabComponentsTitle: 'Components',
+        tabTooltipEnabled: true,
         extraTabs: null,
         defaultComponentType: 'text',
         snippetsUrl: 'snippets/default/snippets.html',
         snippetsListId: 'keditor-snippets-list',
+        snippetsTooltipEnabled: true,
+        snippetsTooltipPosition: 'left',
         iframeMode: false,
         contentAreasSelector: null,
         contentAreasWrapper: '<div class="keditor-content-areas-wrapper container"></div>',
@@ -119,6 +130,8 @@
         containerSettingInitFunction: null,
         containerSettingShowFunction: null,
         containerSettingHideFunction: null,
+        onReady: function () {
+        },
         onInitFrame: function (frame, frameHead, frameBody) {
         },
         onSidebarToggled: function (isOpened) {
@@ -205,10 +218,11 @@
             self.initContentAreas(target);
 
             var body = self.body;
+            var ajaxRequest;
             if (body.hasClass('initialized-snippets-list')) {
                 flog('Snippets list is already initialized!');
             } else {
-                self.initSidebar();
+                ajaxRequest = self.initSidebar();
                 body.addClass('initialized-snippets-list');
             }
             if (body.hasClass('initialized-click-event-handlers')) {
@@ -216,6 +230,10 @@
             } else {
                 self.initKEditorClicks();
                 body.addClass('initialized-click-event-handlers');
+            }
+
+            if (!ajaxRequest && typeof options.onReady === 'function') {
+                options.onReady.call(self);
             }
         },
 
@@ -338,7 +356,7 @@
             if (typeof options.snippetsUrl === 'string' && options.snippetsUrl.length > 0) {
                 flog('Getting snippets form "' + options.snippetsUrl + '"...');
 
-                $.ajax({
+                return $.ajax({
                     type: 'get',
                     dataType: 'html',
                     url: options.snippetsUrl,
@@ -350,6 +368,15 @@
                         self.initTabs();
                         self.initTabsSwitcher();
                         self.initSettingPanel();
+
+                        if (options.snippetsTooltipEnabled || options.tabTooltipEnabled) {
+                            flog('Initialize Bootstrap tooltip plugin');
+                            body.find('#' + options.snippetsListId).find('[data-toggle="tooltip"]').tooltip();
+                        }
+
+                        if (typeof options.onReady === 'function') {
+                            options.onReady.call(self);
+                        }
                     },
                     error: function (jqXHR) {
                         flog('Error when getting snippets', jqXHR);
@@ -410,11 +437,12 @@
                 var content = snippet.html().trim();
                 var previewUrl = snippet.attr('data-preview');
                 var type = snippet.attr('data-type');
+                var title = snippet.attr('data-title');
                 var snippetHtml = '';
 
                 flog('Snippet #' + i + ' type=' + type, previewUrl, content);
 
-                snippetHtml += '<section class="keditor-snippet" data-snippet="#keditor-snippet-' + i + '" data-type="' + type + '">';
+                snippetHtml += '<section class="keditor-snippet" data-snippet="#keditor-snippet-' + i + '" data-type="' + type + '" ' + (options.snippetsTooltipEnabled ? 'data-toggle="tooltip" data-placement="' + options.snippetsTooltipPosition + '" title="' + title + '"' : '') + '>';
                 snippetHtml += '   <img class="keditor-snippet-preview" src="' + previewUrl + '" />';
                 snippetHtml += '</section>';
 
@@ -424,14 +452,14 @@
                     snippetsComponentHtml += snippetHtml;
                 }
 
-                var dataAttributes = self.getDataAttributes(snippet, ['data-preview', 'data-type'], true);
+                var dataAttributes = self.getDataAttributes(snippet, ['data-preview', 'data-type', 'data-title'], true);
                 snippetsContentHtml += '<script id="keditor-snippet-' + i + '" type="text/html" ' + dataAttributes.join(' ') + '>' + content + '</script>';
             });
 
             body.find('#' + options.snippetsListId).html(
                 '<ul id="keditor-snippets-type-switcher" class="nav nav-tabs nav-justified">' +
-                '    <li class="active"><a href="#keditor-container-snippets">' + options.tabContainersTitle + '</a></li>' +
-                '    <li><a href="#keditor-component-snippets">' + options.tabComponentsTitle + '</a></li>' +
+                '    <li class="active"><a href="#keditor-container-snippets"' + (options.tabTooltipEnabled ? 'data-toggle="tooltip" data-placement="bottom" title="' + options.tabContainersTitle + '"' : '') + '>' + options.tabContainersText + '</a></li>' +
+                '    <li><a href="#keditor-component-snippets"' + (options.tabTooltipEnabled ? 'data-toggle="tooltip" data-placement="bottom" title="' + options.tabComponentsTitle + '"' : '') + '>' + options.tabComponentsText + '</a></li>' +
                 '</ul>' +
                 '<div id="keditor-snippets-container" class="tab-content">' +
                 '   <div class="tab-pane keditor-snippets active" id="keditor-container-snippets">' + snippetsContainerHtml + '</div>' +
@@ -495,7 +523,7 @@
                 for (var tabName in options.extraTabs) {
                     var tabData = options.extraTabs[tabName];
 
-                    switcherWrapper.append('<li><a href="#keditor-extra-tab-' + tabName + '">' + tabData.title + '</a></li>');
+                    switcherWrapper.append('<li><a href="#keditor-extra-tab-' + tabName + '"' + (options.tabTooltipEnabled ? 'data-toggle="tooltip" data-placement="bottom" title="' + tabData.title + '"' : '') + '>' + tabData.text + '</a></li>');
                     tabPaneWrapper.append('<div class="tab-pane keditor-snippets" id="keditor-extra-tab-' + tabName + '">' + tabData.content + '</div>');
                 }
             }
@@ -818,6 +846,8 @@
                     if (typeof options.onContentChanged === 'function') {
                         options.onContentChanged.call(contentArea, event);
                     }
+
+                    self.hideSettingPanel();
                 }
             });
 
@@ -1253,6 +1283,18 @@
                         options.onBeforeContainerDeleted.call(contentArea, e, container);
                     }
 
+                    var settingComponent = self.getSettingComponent();
+                    if (settingComponent) {
+                        var settingComponentParent = settingComponent.closest('.keditor-container');
+                        if (settingComponentParent.is(container)) {
+                            flog('Deleting container is container of setting container. Close setting panel for this setting component', settingComponent);
+                            self.hideSettingPanel();
+                        }
+                    } else if (self.getSettingContainer().is(container)) {
+                        flog('Deleting container is setting container. Close setting panel for this container', container);
+                        self.hideSettingPanel();
+                    }
+
                     if (components.length > 0) {
                         components.each(function () {
                             self.deleteComponent($(this));
@@ -1332,6 +1374,10 @@
                         options.onBeforeComponentDeleted.call(contentArea, e, component);
                     }
 
+                    if (self.getSettingComponent().is(component)) {
+                        self.hideSettingPanel();
+                    }
+
                     self.deleteComponent(component);
 
                     if (typeof options.onComponentDeleted === 'function') {
@@ -1405,7 +1451,7 @@
             var self = this;
             var componentType = self.getComponentType(component);
             var componentData = KEditor.components[componentType];
-            var dataAttrubites = self.getDataAttributes(component, null, true);
+            var dataAttributes = self.getDataAttributes(component, null, true);
             var content;
 
             if (typeof componentData.getContent === 'function') {
@@ -1420,7 +1466,7 @@
             });
             content = tempDiv.html();
 
-            return '<section ' + dataAttrubites.join(' ') + '>' + content + '</section>';
+            return '<section ' + dataAttributes.join(' ') + '>' + content + '</section>';
         },
 
         getContainerContent: function (container) {
