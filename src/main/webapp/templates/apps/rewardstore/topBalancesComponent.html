@@ -13,7 +13,13 @@
             <i class="fa fa-table"></i>
             Top $limit balances in $pointsBucket.title
         </div>
+        #set( $heightAtt = "" )
+        #if( $height )
         <div class="panel-body" style="height: ${height}px; overflow-y: auto;">
+        #else
+        <div class="panel-body" style="overflow-y: auto;">
+        #end
+        <div class="panel-body" style="$heightAtt; overflow-y: auto;">
             #set( $topBalances = $applications.rewardStore.findTopBalances($bucket, $limit) )
 
             #if( $topBalances.size() > 0 )

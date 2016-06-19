@@ -57,11 +57,6 @@
                     form.find('.top-balances-height').on('change', function () {
                         var number = this.value;
 
-                        if (isNaN(number) || +number <= 99) {
-                            number = 100;
-                            this.value = number;
-                        }
-
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
                         var contentArea = dynamicElement.closest('.keditor-content-area');
