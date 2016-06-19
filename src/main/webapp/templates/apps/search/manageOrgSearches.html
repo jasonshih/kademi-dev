@@ -47,105 +47,75 @@
 
             <hr/>
 
-            <!-- Nav tabs -->
-            <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Application indexers</a></li>
-                <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Indexes</a></li>
-            </ul>
 
             <!-- Tab panes -->
             <div id="searchInfo">
-                <div class="tab-content">
-                    <div role="tabpanel" class="tab-pane active" id="home">
-                        <h2>App Indexers</h2>
-                        <div class="manage-search">
-                            <form method="post" action="$page.href" class="form-horizontal reindexForm" role="form">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th></th>
-                                            <th>ID</th>
-                                            <th>Index name</th>
-                                            <th>Type</th>
-                                            <th>No. items</th>
-                                            <th style="width:120px"><input class="check-all" type="checkbox"/> Select All</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        #foreach($index in $page.appIndexers)
-                                        <tr>
-                                            <td>
-                                                #if( $page.isTypeMappingExists($index) )
-                                                <span class="label label-success">
-                                                    <span class="fa fa-check"></span>
-                                                </span>                                                
-                                                #else
-                                                <span class="label label-danger">
-                                                    <span class="fa fa-times"></span>
-                                                </span>
-                                                #end
-                                            </td>                                            
-                                            <td>
-                                                $index.id
-                                            </td>
-                                            <td>
-                                                $page.localIndexName($index)
-                                            </td>
-                                            <td>$index.indexItemType</td>
-                                            <td>$!page.numItems( $index )</td>
-                                            <td><input type="checkbox" class="idx-check" name="indexerIds" value="$index.id"/></td>
-                                        </tr>
-                                        #end
-                                    </tbody>
-                                </table>
-                                <p class="pageMessage" style="display: none"></p>
-                                <br/>
-                                <button class="btn btn-warning btn-lg btn-reindex btn-block"><i class="fa fa-arrow-circle-right"></i> <span class="lbl-reindex-action">Re-index selected indexes</span></button>
-                            </form>
-                        </div>
-                    </div>
-                    <div role="tabpanel" class="tab-pane" id="profile">
-                        <h2>Physical Indexes</h2>
-                        <div class="manage-search">
-                            <form method="post" action="$page.href" class="form-horizontal reindexForm" role="form">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th></th>                                            
-                                            <th>Index name</th>
-                                            <th>Types</th>
-                                            <th>No. items</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        #foreach($entry in $page.mapOfIndexers.entrySet())
-                                        <tr>
-                                            <td>
-                                                #if( $page.indexExists($entry.key) )
-                                                <span class="label label-success">
-                                                    <span class="fa fa-check"></span>
-                                                </span>                                                
-                                                #else
-                                                <span class="label label-danger">
-                                                    <span class="fa fa-times"></span>
-                                                </span>
-                                                #end
-                                            </td>
-                                            <td>
-                                                <a href="$entry.key">$entry.key</a>
-                                            </td>                                            
-                                            <td>
-                                                #foreach($i in $entry.value)
-                                                $i.id ,
-                                                #end
-                                            </td>
-                                            <td>$!page.numItems( $entry.key )</td>
-                                        </tr>
-                                        #end
-                                    </tbody>
-                                </table>
-                            </form>
-                        </div>
+                <div role="tabpanel" class="tab-pane active" id="home">
+                    <h2>App Indexers</h2>
+                    <div class="manage-search">
+                        <form method="post" action="$page.href" class="form-horizontal reindexForm" role="form">
+                            <button class="btn btn-warning btn-lg btn-reindex btn-block"><i class="fa fa-arrow-circle-right"></i> <span class="lbl-reindex-action">Re-index selected indexes</span></button>
+                            <br/>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Index</th>
+                                        <th>Indexer</th>
+                                        <th>Type</th>
+                                        <th>No. items</th>
+                                        <th style="width:120px"><input class="check-all" type="checkbox"/> Select All</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    #foreach($entry in $page.mapOfIndexers.entrySet())
+                                    <tr>
+                                        <td>
+                                            #if( $page.indexExists($entry.key) )
+                                            <span class="label label-success">
+                                                <span class="fa fa-check"></span>
+                                            </span>
+                                            #else
+                                            <span class="label label-danger">
+                                                <span class="fa fa-times"></span>
+                                            </span>
+                                            #end
+                                        </td>
+                                        <td colspan="3">
+                                            <a href="$entry.key">$entry.key</a>
+                                        </td>
+                                        <td>$!page.numItems( $entry.key )</td>
+                                        <td><input type="checkbox" class="idx-check" name="indexIds" value="$entry.key"/></td>
+                                    </tr>
+                                    #foreach($i in $entry.value)
+                                    <tr>
+                                        #set( $index = $i )
+                                        <td>
+                                            #if( $page.isTypeMappingExists($index) )
+                                            <span class="label label-success">
+                                                <span class="fa fa-check"></span>
+                                            </span>
+                                            #else
+                                            <span class="label label-danger">
+                                                <span class="fa fa-times"></span>
+                                            </span>
+                                            #end
+                                        </td>
+                                        <td></td>
+                                        <td>
+                                            $index.id
+                                        </td>
+                                        <td>$index.indexItemType</td>
+                                        <td>$!page.numItems( $index )</td>
+                                    </tr>
+                                    #end
+                                    #end
+                                </tbody>
+                            </table>
+                            <p class="pageMessage" style="display: none"></p>
+                            <br/>
+                            <button class="btn btn-warning btn-lg btn-reindex btn-block"><i class="fa fa-arrow-circle-right"></i> <span class="lbl-reindex-action">Re-index selected indexes</span></button>
+                        </form>
                     </div>
                 </div>
             </div>
