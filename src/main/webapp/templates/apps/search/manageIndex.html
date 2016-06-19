@@ -9,37 +9,12 @@
 
         <div>
             <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active"><a href="#records" aria-controls="records" role="tab" data-toggle="tab">Records</a></li>
+                <li role="presentation"  class="active"><a href="#query" aria-controls="query" role="tab" data-toggle="tab">Query</a></li>
                 <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Mappings</a></li>
-                <li role="presentation"><a href="#query" aria-controls="query" role="tab" data-toggle="tab">Query</a></li>
             </ul>
 
             <!-- Tab panes -->
             <div class="tab-content">
-                <div role="tabpanel" class="tab-pane active" id="records">
-                    <p>Showing $page.numDisplayed of $page.records.hits.totalHits Records</p>
-                    <div class="table-responsive" style="width: 800px">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <td>Item</td>
-                                    <td>Fields</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                #foreach($hit in $page.records.hits.hits)
-                                <tr>
-                                    <td>$hit.id</td>
-                                    <td>$hit.type</td>
-                                    <td>
-                                        $hit.sourceAsString
-                                    </td>
-                                </tr>
-                                #end
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
                 <div role="tabpanel" class="tab-pane" id="profile">
                     #set( $mappings = $page.mappings )
                     #foreach( $typeName in $mappings.keySet() )
@@ -47,7 +22,7 @@
                     <pre class="prettyprint">$mappings.get($typeName)</pre>
                     #end
                 </div>
-                <div role="tabpanel" class="tab-pane" id="query">
+                <div role="tabpanel" class="tab-pane active" id="query">
                     #set( $resp = $page.query($params.query) )
 
                     <textarea id="queryText" style="width: 100%; height: 200px" name="query">
@@ -80,7 +55,7 @@ $page.queryJson
                                     <td>$hit.id</td>
                                     <td>$hit.type</td>
                                     #foreach( $field in $page.queryFieldNames)
-                                    <th>$!hit.fields.get($field).value</th>
+                                    <td>$!hit.fields.get($field).value</td>
                                     #end
                                 </tr>
                                 #end
@@ -88,11 +63,10 @@ $page.queryJson
                         </table>
 
                         <pre id="">
-                        #if( $params.query )
                         $resp
-                        #end
                         </pre>
                     </div>
+                    <div class="clearfix"></div>
                 </div>
             </div>
 
@@ -116,7 +90,7 @@ $page.queryJson
                 });
 
                 $("body").on("click", ".resetQuery", function (e) {
-                    var newHref = window.location.pathname;
+                    var newHref = window.location.pathname + "?default";
                     history.pushState(null, null, newHref);
                     $("#query").reloadFragment({
                         url: newHref
