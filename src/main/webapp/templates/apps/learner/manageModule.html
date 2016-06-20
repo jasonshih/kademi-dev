@@ -21,6 +21,7 @@
         #if ($page.theme.editorName == "keditor")
             #set ($isKEditor = true)
         #end
+        #set($currentBranch = $page.closest("branch"))
         <div class="btn-group publishing pull-right">
             #if( $currentBranch.live )
             <!-- TODO: Should be modified here -->
