@@ -17,9 +17,9 @@
         #elseif ($itemsPerRow == 4)
             #set ($clsName = "col-sm-3")
         #end
-K
+
         <div class="row products-list" id="products-list-${prodsListId}">
-            #foreach($p in $prods)K
+            #foreach($p in $prods)
                 #set ($prodUrl = "/$store/$category/$p.name")
                 <div class="product $clsName">
                     <div class="thumbnail">
