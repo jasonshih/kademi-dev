@@ -39,28 +39,30 @@ $page.queryJson
                         </div>
                         #end
 
-                        <table class="table table-responsive">
-                            <thead>
-                                <tr>
-                                    <td>Item</td>
-                                    <th>Type</th>
-                                    #foreach( $field in $page.queryFieldNames )
-                                    <th>$field</th>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <td>Item</td>
+                                        <th>Type</th>
+                                        #foreach( $field in $page.queryFieldNames )
+                                        <th>$field</th>
+                                        #end
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    #foreach($hit in $resp.hits.hits)
+                                    <tr>
+                                        <td>$hit.id</td>
+                                        <td>$hit.type</td>
+                                        #foreach( $field in $page.queryFieldNames)
+                                        <td>$!hit.fields.get($field).value</td>
+                                        #end
+                                    </tr>
                                     #end
-                                </tr>
-                            </thead>
-                            <tbody>
-                                #foreach($hit in $resp.hits.hits)
-                                <tr>
-                                    <td>$hit.id</td>
-                                    <td>$hit.type</td>
-                                    #foreach( $field in $page.queryFieldNames)
-                                    <td>$!hit.fields.get($field).value</td>
-                                    #end
-                                </tr>
-                                #end
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
 
                         <pre id="">
                         $resp
