@@ -93,6 +93,7 @@
                                                     $formatter.option($orgType.name, $orgType.displayName, $page.pointsOrgType)
                                                     #end
                                                 </select>
+                                                <i>You can <a href="/orgTypes/">manage organisation types here</a></i>
                                             </div>
                                         </div>
                                     </td>
@@ -157,7 +158,7 @@
 
                     <div class="tab-pane" id="groups">
                         <button class="btn btn-sm btn-primary Add AddGroup" data-toggle="modal" data-target="#modalGroup"><i class="fa fa-plus"></i> Add/remove groups</button>
-                        <div class="well margin-top-10">Add user groups to rewards to allow these users to directly enter the competition. These users will see the reward on their dashboard when it is active.</div>
+                        <div class="well margin-top-10">Specify which user groups are participants in this reward program.</div>
                         <div class="GroupList">
                             #foreach($g in $page.selectedGroups)
                             #genGroup($g)
