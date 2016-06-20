@@ -385,6 +385,8 @@
             var options = self.options;
             var map = self.map;
 
+            self.suggestionWrapper.css('display', 'none');
+
             if (typeof options.onSearch === 'function') {
                 options.onSearch.call(self, query);
             }
@@ -460,10 +462,10 @@
                 map.setZoom(options.initZoomLevel);
             } else {
                 // Calculate center and zoom level for map when show all markers
-                var minLat = Math.min.apply(this, lats);
-                var maxLat = Math.max.apply(this, lats);
-                var minLng = Math.min.apply(this, lngs);
-                var maxLng = Math.max.apply(this, lngs);
+                var minLat = Math.min.apply(Math, lats);
+                var maxLat = Math.max.apply(Math, lats);
+                var minLng = Math.min.apply(Math, lngs);
+                var maxLng = Math.max.apply(Math, lngs);
 
                 map.fitBounds(new google.maps.LatLngBounds(
                     new google.maps.LatLng(minLat, minLng),
