@@ -2,7 +2,7 @@
     var KEditor = $.keditor;
     var flog = KEditor.log;
 
-    KEditor.components['productList'] = {
+    KEditor.components['storeProductList'] = {
         init: function (contentArea, container, component, keditor) {
             // Do nothing
         },
@@ -21,10 +21,10 @@
         settingTitle: 'Product List Settings',
 
         initSettingForm: function (form, keditor) {
-            flog('initSettingForm "productList" component', form, keditor);
+            flog('initSettingForm "storeProductList" component', form, keditor);
 
             $.ajax({
-                url: '_components/productList?settings',
+                url: '_components/storeProductList?settings',
                 type: 'get',
                 dataType: 'html',
                 success: function (resp) {
@@ -95,7 +95,7 @@
         },
 
         showSettingForm: function (form, component, keditor) {
-            flog('showSettingForm "productList" component', form, component, keditor);
+            flog('showSettingForm "storeProductList" component', form, component, keditor);
 
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             form.find('.select-store').val(dataAttributes['data-store']);
