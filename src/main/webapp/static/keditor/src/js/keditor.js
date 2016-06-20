@@ -442,7 +442,7 @@
 
                 flog('Snippet #' + i + ' type=' + type, previewUrl, content);
 
-                snippetHtml += '<section class="keditor-snippet" data-snippet="#keditor-snippet-' + i + '" data-type="' + type + '" ' + (options.snippetsTooltipEnabled ? 'data-toggle="tooltip" data-placement="' + options.snippetsTooltipPosition + '" title="' + title + '"' : '') + '>';
+                snippetHtml += '<section class="keditor-snippet" data-snippet="#keditor-snippet-' + i + '" data-type="' + type + '" ' + (options.snippetsTooltipEnabled ? 'data-toggle="tooltip" data-placement="' + options.snippetsTooltipPosition + '"' : '') + ' title="' + title + '">';
                 snippetHtml += '   <img class="keditor-snippet-preview" src="' + previewUrl + '" />';
                 snippetHtml += '</section>';
 
@@ -458,8 +458,8 @@
 
             body.find('#' + options.snippetsListId).html(
                 '<ul id="keditor-snippets-type-switcher" class="nav nav-tabs nav-justified">' +
-                '    <li class="active"><a href="#keditor-container-snippets"' + (options.tabTooltipEnabled ? 'data-toggle="tooltip" data-placement="bottom" title="' + options.tabContainersTitle + '"' : '') + '>' + options.tabContainersText + '</a></li>' +
-                '    <li><a href="#keditor-component-snippets"' + (options.tabTooltipEnabled ? 'data-toggle="tooltip" data-placement="bottom" title="' + options.tabComponentsTitle + '"' : '') + '>' + options.tabComponentsText + '</a></li>' +
+                '    <li class="active"><a href="#keditor-container-snippets"' + (options.tabTooltipEnabled ? 'data-toggle="tooltip" data-placement="bottom"' : '') + ' title="' + options.tabContainersTitle + '">' + options.tabContainersText + '</a></li>' +
+                '    <li><a href="#keditor-component-snippets"' + (options.tabTooltipEnabled ? 'data-toggle="tooltip" data-placement="bottom"' : '') + ' title="' + options.tabComponentsTitle + '">' + options.tabComponentsText + '</a></li>' +
                 '</ul>' +
                 '<div id="keditor-snippets-container" class="tab-content">' +
                 '   <div class="tab-pane keditor-snippets active" id="keditor-container-snippets">' + snippetsContainerHtml + '</div>' +
@@ -722,23 +722,25 @@
             body.removeClass('opened-keditor-setting');
 
             var activeForm = body.find('#keditor-setting-forms').children('.active');
+            if (activeForm.length > 0) {
+                if (activeForm.is('#keditor-container-setting')) {
+                    if (typeof options.containerSettingHideFunction === 'function') {
+                        flog('Hide setting form of container');
+                        options.containerSettingHideFunction.call(self, activeForm, self);
+                    }
+                } else {
+                    var activeType = activeForm.attr('data-type');
+                    var componentData = KEditor.components[activeType];
 
-            if (activeForm.is('#keditor-container-setting')) {
-                if (typeof options.containerSettingHideFunction === 'function') {
-                    flog('Hide setting form of container');
-                    options.containerSettingHideFunction.call(self, activeForm, self);
+                    if (typeof componentData.hideSettingForm === 'function') {
+                        flog('Hide setting form of component type "' + activeType + '"');
+                        componentData.hideSettingForm.call(componentData, activeForm, self);
+                    }
                 }
-            } else {
-                var activeType = activeForm.attr('data-type');
-                var componentData = KEditor.components[activeType];
 
-                if (typeof componentData.hideSettingForm === 'function') {
-                    flog('Hide setting form of component type "' + activeType + '"');
-                    componentData.hideSettingForm.call(componentData, activeForm, self);
-                }
+                activeForm.removeClass('active');
             }
 
-            activeForm.removeClass('active');
             body.removeClass('opened-keditor-setting');
             self.setSettingComponent(null);
             self.setSettingContainer(null);
@@ -843,11 +845,11 @@
                         self.initContainer(contentArea, container);
                     }
 
+                    self.hideSettingPanel();
+
                     if (typeof options.onContentChanged === 'function') {
                         options.onContentChanged.call(contentArea, event);
                     }
-
-                    self.hideSettingPanel();
                 }
             });
 

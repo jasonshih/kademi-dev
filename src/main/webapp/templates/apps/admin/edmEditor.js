@@ -40,7 +40,8 @@ function initEdmEditor(iframeMode, fileName) {
     flog('initEdmEditor');
 
     var body = $(document.body);
-    var keditor = initKEditor(body, iframeMode, fileName).data('keditor');
+    var edmHtml = processFileBody();
+    var keditor = initKEditor(body, iframeMode, fileName, edmHtml).data('keditor');
 
     window.onbeforeunload = function (e) {
         if (body.hasClass('content-changed')) {
@@ -89,7 +90,7 @@ function processFileBody() {
     return edmHtml;
 }
 
-function initKEditor(body, iframeMode, fileName) {
+function initKEditor(body, iframeMode, fileName, edmHtml) {
     flog('initKEditor', iframeMode);
 
     return $('#edm-area').keditor({
@@ -97,6 +98,8 @@ function initKEditor(body, iframeMode, fileName) {
         basePath: iframeMode ? window.location.pathname.substr(0, window.location.pathname.lastIndexOf('/') + 1) : '',
         tabContainersText: '<i class="fa fa-columns"></i>',
         tabComponentsText: '<i class="fa fa-files-o"></i>',
+        tabTooltipEnabled: false,
+        snippetsTooltipEnabled: false,
         contentAreasSelector: '#edm-header, #edm-body, #edm-footer',
         contentAreasWrapper: '<div id="edm-area"></div>',
         snippetsUrl: '_components?fileName=' + fileName,
@@ -267,7 +270,6 @@ function initKEditor(body, iframeMode, fileName) {
             contentArea[contentArea.children().length === 0 ? 'addClass' : 'removeClass']('empty');
         },
         onReady: function () {
-            var edmHtml = processFileBody();
             initSettingPanel(edmHtml, iframeMode ? this.body : body);
         }
     });

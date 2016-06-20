@@ -82,6 +82,8 @@ function initKEditor(body, fileName) {
         tabContainersText: '<i class="fa fa-columns"></i>',
         tabComponentsText: '<i class="fa fa-files-o"></i>',
         snippetsUrl: '_components?fileName=' + fileName,
+        tabTooltipEnabled: false,
+        snippetsTooltipEnabled: false,
         onContentChanged: function () {
             if (contentArea.keditor('getContent').trim() === '') {
                 contentArea.find('.keditor-content-area').addClass('empty');
