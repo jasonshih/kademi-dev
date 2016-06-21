@@ -5,7 +5,11 @@
         <script type="text/javascript" src="manageModule.js">//</script>        
     </head>
     <body class="manageModulePages">
+        #if( $page.find("/websites").children.size() == 0 )
         <p class="clearfix">You havent created any websites yet. You can create a website here or from the <a href="websites">manage websites page</a></p>
+        #else
+        <p class="clearfix">There are no websites with elearning enabled.</p>
+        #end
         <br/>
         <a href="websites" class="btn btn-sm btn-info pull-right">Manage websites</a>
         <button class="createWebsite btn btn-sm btn-info">Create a website</button>
