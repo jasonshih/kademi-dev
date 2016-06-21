@@ -1101,7 +1101,7 @@ function showQuizError(quiz, response, e) {
         flog('Answered this quiz incorrectly');
 
         modalTitle.html('Please try again');
-        errorText.html('You have answered this quiz incorrectly<br />You have <b>' + (response.data.maxAttempts - response.data.numAttempts) + '</b> remaming times to attempt this quiz');
+        errorText.html('Your score was ' + response.data.thisAttemptScore + '%. You need ' + response.data.requiredPassmarkPerc + '% for pass this quiz. And you have <b>' + (response.data.maxAttempts - response.data.numAttempts) + '</b> more attempts to answer this quiz');
         btnDismiss.html('See error answers');
 
         var isBatched = quiz.hasClass('batched-quiz');
@@ -1112,8 +1112,8 @@ function showQuizError(quiz, response, e) {
 
                 var btnSubmitQuiz = $('.quizSubmit .nextBtn');
                 var btnReAttempt = $('.btn-quiz-reattempt');
-                quiz.find('ol.quiz li').find('input, textarea').prop('disabled', true);
 
+                quiz.find('ol.quiz li').find('input, textarea').prop('disabled', true);
                 btnReAttempt.show();
                 btnSubmitQuiz.hide();
 
