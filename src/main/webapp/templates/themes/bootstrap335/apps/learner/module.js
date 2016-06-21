@@ -87,9 +87,9 @@ function initModuleNav(pStatUrl, pFinished) {
                 e.preventDefault();
                 return false;
             }
-        }
 
-        checkSubmit(e, true);
+            checkSubmit(e, true);
+        }
     });
 
     flog('Setup pjax', pageLinks);
@@ -1034,7 +1034,7 @@ function isQuizComplete(e) {
                 } else if (response && response.messages && response.messages[0] && response.messages[0].indexOf('The quiz has already been completed') !== -1) {
                     flog('The quiz has already been completed!');
 
-                    quizSuccessHandle(e);
+                    quizSuccessHandle(quiz, e);
                 } else {
                     flog('Validating quiz is false', response);
                     showQuizError(quiz, response, e);
@@ -1098,42 +1098,40 @@ function showQuizError(quiz, response, e) {
             quizSuccessHandle(quiz, e);
         });
     } else {
-        flog('Looks like we have another batch...', response.data.nextQuizBatch);
+        flog('Answered this quiz incorrectly');
 
         modalTitle.html('Please try again');
-        errorText.html('You have answered this quiz incorrectly!<br />You have <b>' + (response.data.maxAttempts - response.data.numAttempts) + '</b> remaming times to attempt this quiz');
+        errorText.html('You have answered this quiz incorrectly<br />You have <b>' + (response.data.maxAttempts - response.data.numAttempts) + '</b> remaming times to attempt this quiz');
         btnDismiss.html('See error answers');
 
+        var isBatched = quiz.hasClass('batched-quiz');
+
         modal.off('hide.bs.modal').on('hide.bs.modal', function () {
-            var btnSubmitQuiz = $('.quizSubmit .nextBtn');
-            var btnReAttempt = $('.btn-quiz-reattempt');
-            if (btnReAttempt.length === 0) {
-                var btnReAttempt = $('<button type="button" class="btn-quiz-reattempt">Re-attempt Quiz</button>');
-                btnReAttempt.addClass(btnSubmitQuiz.attr('class')).removeClass('nextBtn when-complete when-not-complete');
-                btnSubmitQuiz.after(btnReAttempt);
+            if (isBatched) {
+                flog('Looks like we have another batch...', response.data.nextQuizBatch);
+
+                var btnSubmitQuiz = $('.quizSubmit .nextBtn');
+                var btnReAttempt = $('.btn-quiz-reattempt');
+                quiz.find('ol.quiz li').find('input, textarea').prop('disabled', true);
+
+                btnReAttempt.show();
+                btnSubmitQuiz.hide();
+
+                btnReAttempt.off('click').on('click', function (e) {
+                    e.preventDefault();
+
+                    flog('Re-attempt quiz');
+                    quiz.find('ol.quiz').replaceWith(response.data.nextQuizBatch);
+                    tidyUpQuiz();
+
+                    btnReAttempt.hide();
+                    btnSubmitQuiz.show();
+                });
             }
 
             $.each(response.fieldMessages, function (i, n) {
                 var inp = quiz.find('li.' + n.field);
                 inp.addClass('error');
-            });
-            quiz.find('ol.quiz li').find('input, textarea').prop('disabled', true);
-
-            btnSubmitQuiz.hide();
-
-            btnReAttempt.off('click').on('click', function (e) {
-                e.preventDefault();
-
-                flog('Re-attempt quiz');
-                if (response.data && response.data.nextQuizBatch) {
-                    quiz.find('ol.quiz').replaceWith(response.data.nextQuizBatch);
-                    tidyUpQuiz();
-                } else {
-                    quiz.find('ol.quiz li').find('input, textarea').prop('disabled', false);
-                }
-
-                btnReAttempt.remove();
-                btnSubmitQuiz.show();
             });
         });
     }
