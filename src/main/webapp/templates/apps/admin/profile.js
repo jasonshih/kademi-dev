@@ -117,7 +117,7 @@ function initProfile() {
 }
 
 function initNewMembershipForm() {
-    $(".btn-add-group").click(function (e) {
+    $("body").on("click", ".btn-add-group", function (e) {
         e.preventDefault();
         e.stopPropagation();
         $("#modal-membership").modal('show');
