@@ -1,3 +1,11 @@
 #options-wrapper .option {
     margin-top: 5px;
 }
+
+#programs-list .article-name {
+    width: 65%;
+    display: inline-block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}

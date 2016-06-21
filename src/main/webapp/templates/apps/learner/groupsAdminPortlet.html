@@ -10,7 +10,7 @@
                 <article>
                     #set($p = $enrolement.program)
                     #if( $enrolement.isCourse() )
-                        <a href="$p.href" class="article-name">$enrolement.website.name / $enrolement.programCode / $enrolement.courseCode</a>
+                        <a href="$p.href" class="article-name" title="$enrolement.website.name / $enrolement.programCode / $enrolement.courseCode">$enrolement.website.name / $enrolement.programCode / $enrolement.courseCode</a>
                     #else
                         <a href="$p.href" class="article-name">$enrolement.website.name / $enrolement.programCode</a>
                     #end
