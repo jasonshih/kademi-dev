@@ -1101,7 +1101,7 @@ function showQuizError(quiz, response, e) {
         flog('Answered this quiz incorrectly');
 
         modalTitle.html('Please try again');
-        errorText.html('Your score was ' + response.data.thisAttemptScore + '%. You need ' + response.data.requiredPassmarkPerc + '% for pass this quiz. And you have <b>' + (response.data.maxAttempts - response.data.numAttempts) + '</b> more attempts to answer this quiz');
+        errorText.html('Your score was <b>' + response.data.thisAttemptScore + '</b>%. You need <b>' + response.data.requiredPassmarkPerc + '</b>% <to></to> pass this quiz. And you have <b>' + (response.data.maxAttempts - response.data.numAttempts) + '</b> more attempts to answer this quiz');
         btnDismiss.html('See error answers');
 
         var isBatched = quiz.hasClass('batched-quiz');
