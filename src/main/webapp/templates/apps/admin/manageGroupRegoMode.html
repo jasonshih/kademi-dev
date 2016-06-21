@@ -132,13 +132,13 @@
                                 <div class="optins form-group col-sm-12 col-md-6 col-lg-4">
                                     <div class="clearfix">
                                         #set($groupId = "optin" + $group.name)
-                                        <label for="$groupId" class="checkbox-inline control-label">
+                                        <label for="$groupId" class="control-label" style="display: block">
 
                                             #set($optin = "")
                                             #set($optin = $page.optin($group))
                                             $formatter.checkbox($groupId, "optinGroup", $formatter.isNotNull($optin), $group.name)
                                             $group.name
-                                            <input type="text" name="${groupId}_Desc" class="form-control" placeholder="Invitation message to users" value="$!optin.message" />
+                                            <input type="text" name="${groupId}_Desc" class="form-control" title="Invitation message to users" placeholder="Invitation message to users" value="$!optin.message" />
                                         </label>
                                     </div>
                                 </div>
@@ -201,17 +201,17 @@
                             <p>
                                 <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-add-policy"><i class="fa fa-plus"></i> Add new policy</button>
                             </p>
-                            <div id="policy-list" class="article-wrapper showed-action policy-list" data-group="$page.group.name">
+                            <div id="policy-list" class="showed-action policy-list" data-group="$page.group.name">
                                 #set($policies = false)
                                 #set($policies = $page.passwordPolicies)
                                 #if(!$policies || $policies.empty)
                                 <p>This group does not have any password policies</p>
                                 #else
                                 #foreach($pp in $policies)
-                                <article data-ppid="$pp.id" data-current="$formatter.htmlEncode($formatter.toJson($pp))">
-                                    <span class="article-name">
+                                <article class="well" data-ppid="$pp.id" data-current="$formatter.htmlEncode($formatter.toJson($pp))">
+                                    <p class="article-name">
                                         $page.getPasswordPolicyDescription($pp)
-                                    </span>
+                                    </p>
                                     <aside class="article-action">
                                         <a href="#" class="btn btn-sm btn-info btn-edit-policy"><i class="fa fa-edit"></i></a>
                                         <a href="#" class="btn btn-sm btn-danger btn-del-policy"><i class="fa fa-trash"></i></a>

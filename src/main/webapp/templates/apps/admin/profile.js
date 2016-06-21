@@ -6,6 +6,7 @@ function initProfile() {
     $(".initProfileForm").forms({
         callback: function (resp, form) {
             Msg.info("Done");
+            $('#pwdState').reloadFragment();
         }
     });
 
