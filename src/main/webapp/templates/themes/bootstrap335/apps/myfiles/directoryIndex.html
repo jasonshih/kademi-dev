@@ -1,18 +1,17 @@
 <html>
     #parse("/theme/masterTemplate.html")
     <head>
-        <title>My files</title>
         #@themeHeader( "My Files" )
-        #end
-        <link href="/theme/apps/myfiles/directoryIndex.css" rel="stylesheet" type="text/css" />
-        <link href="/static/css/jquery.lightbox-0.5.css" rel="stylesheet" type="text/css" media="screen" />
-        <link rel="stylesheet" href="/static/dropzone/v3.10.2/css/dropzone.css"/>
+            <link href="/theme/apps/myfiles/directoryIndex.css" rel="stylesheet" type="text/css" />
+            <link href="/static/css/jquery.lightbox-0.5.css" rel="stylesheet" type="text/css" media="screen" />
+            <link rel="stylesheet" href="/static/dropzone/v3.10.2/css/dropzone.css"/>
 
-        <style>
-            table tbody tr td.cell-lg {
-                padding: 16px 8px;
-            }
-        </style>
+            <style>
+                table tbody tr td.cell-lg {
+                    padding: 16px 8px;
+                }
+            </style>
+        #end
     </head>    
     <body class="directory">
         #@themeBody()
