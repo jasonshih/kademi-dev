@@ -61,7 +61,7 @@
         '<div class="row" style="margin-bottom: 40px;">' +
         '    <div class="col-md-4">' +
         '        <div class="panel panel-default">' +
-        '            <div class="panel-heading">List stores</div>' +
+        '            <div class="panel-heading"><i class="fa fa-list"></i> List Organisations</div>' +
         '            <div class="list-group org-finder-list" style="overflow-y: auto;"></div>' +
         '        </div>' +
         '    </div>' +

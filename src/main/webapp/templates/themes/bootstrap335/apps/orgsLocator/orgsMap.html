@@ -1,0 +1,98 @@
+<html>
+    #parse("/theme/masterTemplate.html")
+    <head>
+        #@themeHeader( "Organisations map" )
+            <link rel="stylesheet" type="text/css" href="/static/bootstrap-select/1.10.0/dist/css/bootstrap-select.min.css" />
+        #end
+    </head>
+    <body class="viewOrg add-container">
+        #@themeBody()
+            <div id="org-map"></div>
+
+            <script type="text/javascript" src="/static/jquery.scrollTo/2.1.2/jquery.scrollTo.min.js"></script>
+            <script type="text/javascript" src="/static/jquery.orgFinder/1.0.1/jquery.orgFinder-1.0.1.js"></script>
+            <script type="text/javascript" src="/static/bootstrap-select/1.10.0/dist/js/bootstrap-select.min.js"></script>
+            <script type="text/javascript">
+                var orgTypes = [];
+                #foreach($orgType in $page.find("/orgTypes/").children)
+                orgTypes.push({
+                    title: '$orgType.title',
+                    value: '$orgType.name'
+                });
+                #end
+            </script>
+            <script type="text/javascript">
+                $(function () {
+                    var win = $(window);
+
+                    $('#org-map').orgFinder({
+                        searchUrl: '/orgsLocator/',
+                        googleAPIKey: 'AIzaSyDS53FPtVGJPvZvrzh2sLcfPUQYS3gsh0c',
+                        initQuery: '$!params.q',
+                        initLatLng: [-33.867, 151.195],
+                        initZoomLevel: 15,
+                        orgTypes: orgTypes,
+                        searchInType: true,
+                        typeDelayTime: 500,
+                        template:
+                        '<form role="form" class="form-horizontal form-search org-finder-search" action="" style="margin-bottom: 15px;">' +
+                        '    <div class="input-group">' +
+                        '        <div class="clearfix dropdown">' +
+                        '            <input type="text" name="q" class="form-control" placeholder="Enter keyword to search..." id="q" value="" autocomplete="off" />' +
+                        '            <div class="dropdown-menu org-finder-suggestions" style="width: 100%;"></div>' +
+                        '        </div>' +
+                        '        <span class="input-group-btn">' +
+                        '            <select name="orgType" class="selectpicker"></select>' +
+                        '            <button class="btn btn-default" type="submit">Search</button>' +
+                        '            <button class="btn btn-default" type="button" data-type="clearer" data-target="#q">' +
+                        '                <i class="fa fa-times"></i>' +
+                        '            </button>' +
+                        '        </span>' +
+                        '    </div>' +
+                        '</form>' +
+                        '<div class="row" style="margin-bottom: 40px;">' +
+                        '    <div class="col-md-4">' +
+                        '        <div class="panel panel-default">' +
+                        '            <div class="panel-heading"><i class="fa fa-list"></i> List Organisations</div>' +
+                        '            <div class="list-group org-finder-list" style="overflow-y: auto;"></div>' +
+                        '        </div>' +
+                        '    </div>' +
+                        '    <div class="col-md-8">' +
+                        '        <div class="embed-responsive embed-responsive-16by9">' +
+                        '            <div class="embed-responsive-item org-finder-map"></div>' +
+                        '        </div>' +
+                        '    </div>' +
+                        '</div>',
+                        onSearch: function (query) {
+                            history.pushState(null, 'Organisations map', window.location.pathname + '?q=' + encodeURIComponent(query.trim()));
+                        },
+                        onReady: function (formSearch, itemsWrapper, mapDiv) {
+                            var orgFinder = this;
+                            orgFinder.doSearch('$!params.q');
+
+                            win.on('resize', function () {
+                                var mapWrapper = mapDiv.parent();
+                                var winWidth = win.width();
+
+                                itemsWrapper.css('height', '');
+                                itemsWrapper.css('max-height', '');
+                                mapWrapper.css('padding-bottom', '');
+
+                                if (winWidth < 768) {
+                                    mapWrapper.css('padding-bottom', '120%');
+                                    itemsWrapper.css('max-height', 200);
+                                } else if (winWidth < 992) {
+                                    itemsWrapper.css('max-height', 300);
+                                } else {
+                                    itemsWrapper.css('height', mapWrapper.innerHeight() - 39);
+                                }
+                            }).trigger('resize');
+                        }
+                    });
+                });
+            </script>
+        #end
+    </body>
+</html>
+
+

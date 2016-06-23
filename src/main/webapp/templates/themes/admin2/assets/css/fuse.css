@@ -1341,8 +1341,11 @@ body.ajax-loading .ajaxLoader {
 }
 
 .table-responsive {
-    min-height: 220px;
+    min-height: 220px;    
+    /**
+    BM: Removed because messing up resp table layouts, eg on manage search index. Not sure why i ever put this in
     overflow-x: visible;
+    */
 }
 
 .summary-panel {
