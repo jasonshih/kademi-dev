@@ -134,6 +134,7 @@
                 <li class=""><a data-toggle="tab" href="#panel_mailserver"><i class="green fa fa-home"></i> Mail server</a></li>
                 <li class=""><a data-toggle="tab" href="#panel_sslserver"><i class="green fa fa-home"></i> HTTPS server</a></li>
                 <li class=""><a data-toggle="tab" href="#panel_apps"><i class="green fa fa-home"></i> Apps</a></li>
+                <li class=""><a data-toggle="tab" href="#panel_templates"><i class="green fa fa-home"></i> Templates</a></li>
             </ul>
 
             <div class="tab-content">
@@ -654,6 +655,20 @@
                     #end
                     #end
                 </div> <!-- End apps -->
+                <div id="panel_templates" class="tab-pane">
+                    <ul class="list">
+                        #foreach($template in $page.allTemplates.entrySet() )
+                        <li>
+                            #set( $templatePath = $formatter.toPath($template.key) )
+                            #set( $templateName = $templatePath.name )
+                            #if( !$templateName.endsWith(".html") )
+                            #set( $templateName = $templateName + ".html" )
+                            #end
+                            <a href="${templatePath.parent}/contenteditor?fileName=$templateName" target="_blank">Edit $templatePath.name</a>
+                        </li>
+                        #end
+                    </ul>
+                </div>
             </div>
         </div>
 
