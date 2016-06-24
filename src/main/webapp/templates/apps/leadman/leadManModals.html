@@ -37,9 +37,10 @@
                         <div id="select-frm-div" class="col-md-4">
                             <select id="newLeadStage" data-placeholder="Select a stage" name="stage" class="form-control" style="width: 100%">
                                 <option value="">[None]</option>
-                                #foreach( $stage in $page.find("/leads/").funnels.get($request.params.leadName).stages )
+                                #set ($stages = $page.find("/leads/").funnels.get($request.params.leadName).stages)
+                                #foreach( $stage in $stages )
                                 #set($a = $formatter.ifNull($stage.desc, $stage.name))
-                                $formatter.option($stage.name, $a, null)
+                                $formatter.option($stage.name, $a, $stages[0].name)
                                 #end
                             </select>
                         </div>
