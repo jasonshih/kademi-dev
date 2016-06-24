@@ -254,8 +254,6 @@
                         </div>
                         <br/>
 
-                        <p>Shows debits allocated with this tag</p>
-
                         <table class="table table-bordered table-striped" id="table-debits">
                             <colgroup>
                                 <col />
@@ -273,18 +271,33 @@
                                     <th><input type="checkbox" name="removeDebitsId" class="chk-all" value="" /></th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                #foreach($debit in $page.debitPoints)
+                            <tbody class="debitsTableBody">
+                                #set( $paginator = $formatter.paginator().pageSize(10) )                                
+
+                                #foreach($debit in $paginator.records($page.debitPoints($paginator.start, $paginator.pageSize) ) )
                                 <tr>
                                     <td>$debit.numPoints</td>
                                     <td>$formatter.formatDateTime($debit.issuedDate)</td>
-                                    <td>$debit.points.issuedTo.formattedName</td>
+                                    <td>
+                                        #if( $debit.issuedTo )
+                                        #if( $debit.issuedTo.asProfile() )
+                                        <a href="/manageUsers/$debit.issuedTo.id">$debit.issuedTo.formattedName</a>
+                                        #else
+                                        <a href="/organisations/$debit.issuedTo.id/edit">$debit.issuedTo.formattedName</a>
+                                        #end
+                                        #else
+                                        $debit.points.issuedTo.formattedName
+                                        #end
+                                    </td>
                                     <td>$!debit.reason</td>
                                     <td><input type="checkbox" name="removeDebitsId" value="$debit.id" /></td>
                                 </tr>
                                 #end
                             </tbody>
                         </table>
+                        <nav class="debitsPaginator">
+                            $paginator.html
+                        </nav>
                     </div>
 
                     <div class="tab-pane" id="leaderboard">
@@ -439,7 +452,20 @@
                     flog(searchQ);
                     doHistorySearch();
                 });
+                initDebitsPjax();
             });
+
+            function initDebitsPjax() {
+                $(document).pjax2('.debitsTableBody', {
+                    selector: '.debitsPaginator a',
+                    fragment: '.debitsTableBody',
+                    success: function () {
+                        flog('Pjax success!');
+                        $(".debitsPaginator li").removeClass("active");
+                    },
+                    debug: true
+                });
+            }
 
             function showHidePointsOrgType() {
                 if ($("select.pointsType").val() == "POINTS_ORG") {
