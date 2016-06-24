@@ -11,9 +11,9 @@
         <script type="text/javascript" src="/static/bootstrap-select/1.10.0/dist/js/bootstrap-select.min.js"></script>
         <script type="text/javascript">
             var orgTypes = [];
-            #foreach($orgType in $page.find("/orgTypes/").children)
+            #foreach($orgType in $page.find("/").orgTypes)
             orgTypes.push({
-                title: '$orgType.title',
+                title: '$orgType.displayName',
                 value: '$orgType.name'
             });
             #end
@@ -41,9 +41,7 @@
                     '        <span class="input-group-btn">' +
                     '            <select name="orgType" class="selectpicker"></select>' +
                     '            <button class="btn btn-default" type="submit">Search</button>' +
-                    '            <button class="btn btn-default" type="button" data-type="clearer" data-target="#q">' +
-                    '                <i class="fa fa-times"></i>' +
-                    '            </button>' +
+                    '            <button class="btn btn-default" type="button" data-type="clearer" data-target="#q">&nbsp;<i class="fa fa-times"></i>&nbsp;</button>' +
                     '        </span>' +
                     '    </div>' +
                     '</form>' +
