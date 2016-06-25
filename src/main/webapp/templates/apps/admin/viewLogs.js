@@ -20,22 +20,29 @@
 
         flog(filterOptions);
 
+        var doTail = $("#doTail").prop("checked");
+        if( !doTail ) {
+            ajaxTimer = window.setTimeout(loadNewLogs, 1000);
+            return;
+        }
+
         $.ajax({
             type: 'GET',
             url: window.location.pathname,
             dataType: 'json',
             data: filterOptions,
             success: function (data) {
-                flog('success. items=', data.hits.hits.length);
+                //flog('success. items=', data.hits.hits.length);
                 if (data.hits.hits.length > 0) {
                     filterOptions.since = data.hits.hits[0].fields.date[0];
                 }
-                flog("lastLogDate", filterOptions.since);
+                //flog("lastLogDate", filterOptions.since);
                 $.each(data.hits.hits, function (i, n) {
                     processReceivedLog(n.fields);
                 });
                 appendItems();
-                ajaxTimer = window.setTimeout(loadNewLogs, 5000);
+                $("#logsBody").animate({ scrollTop: $('#logsBody').prop("scrollHeight")}, 1000);
+                ajaxTimer = window.setTimeout(loadNewLogs, 1000);
             },
             error: function (resp) {
                 flog(arguments);
@@ -47,7 +54,6 @@
 
     function appendItems() {
         $('#logsBody').append(itemsToAppend);
-        initTimeAgo();
         trimTable(maxLimit);
 
         while (itemsToAppend.length > 0) {
@@ -73,7 +79,7 @@
                 '    <div class="col-lvl"><span class="label label-' + labelType + '" >' + c.level + '</span></div>' +
                 '    <div class="col-user"><a target="_blank" class="userName" href="' + c.userHref + '">' + c.userName + '</a></div>' +
                 '    <div class="col-msg"></div>' +
-                '    <div class="col-date"><abbr title="' + dt.format(moment.ISO_8601) + '" class="timeago">' + dt.format() + '</abbr></div>' +
+                '    <div class="col-date">' + dt.format("HH:mm:ss") + '</div>' +
                 '</div>'
                 );
         row.find('.col-msg').text(c.message);
@@ -113,10 +119,6 @@
         flog('New Table Size', logTable.length, 'Limit', limit)
     }
 
-    function initTimeAgo() {
-        $('abbr.timeago').timeago();
-    }
-
     window.initViewLogs = function (options) {
         clearTimeout(ajaxTimer);
         ajaxTimer = null;
@@ -134,7 +136,7 @@
         }
         logsBody.css('max-height', logsBodyMaxHeight);
 
-        initTimeAgo();
+        //initTimeAgo();
 
         $('.logs-clear').click(function (e) {
             e.preventDefault();

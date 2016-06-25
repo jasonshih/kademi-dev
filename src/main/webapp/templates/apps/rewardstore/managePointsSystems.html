@@ -70,8 +70,8 @@
                                     #end
                                         #end
                                     </td>
-                                    <td>$r.totalPoints points</td>
-                                    <td>$r.totalDebits points</td>
+                                    <td>$formatter.formatUnits($r.totalPoints) points</td>
+                                    <td>$formatter.formatUnits($r.totalDebits) points</td>
                                     <td class="action">
                                         <div class="btn-group btn-group-sm">
                                             <a href="$r.name" class="btn btn-sm btn-primary btn-sm"> <i class="fa fa-edit"></i> Edit

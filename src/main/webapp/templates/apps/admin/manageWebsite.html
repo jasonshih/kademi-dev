@@ -134,7 +134,6 @@
                 <li class=""><a data-toggle="tab" href="#panel_mailserver"><i class="green fa fa-home"></i> Mail server</a></li>
                 <li class=""><a data-toggle="tab" href="#panel_sslserver"><i class="green fa fa-home"></i> HTTPS server</a></li>
                 <li class=""><a data-toggle="tab" href="#panel_apps"><i class="green fa fa-home"></i> Apps</a></li>
-                <li class=""><a data-toggle="tab" href="#panel_templates"><i class="green fa fa-home"></i> Templates</a></li>
             </ul>
 
             <div class="tab-content">
@@ -284,6 +283,32 @@
                             </div>
                         </div>
                     </form>
+                    <hr/>
+                    <div class="alert alert-info">Below is a list of templates provided by applications currently enabled for this website. Click the link
+                        to override and customise the template. <b>Not all applications are integrated with template management</b>, and might not appear here</div>
+                    <table class="table">
+                        <tbody>
+                            #foreach($templateList in $page.allTemplates.entrySet() )
+                            <tr>
+                                <th colspan="2">$page.appTitle($templateList.key)</th>
+                            </tr>
+                            #foreach($template in $templateList.value)
+                            <tr>
+                                <td>
+                                    <a href="$page.href?editTemplate=$template.path" target="_blank">$template.fileName</a>
+                                </td>                            
+                                <td>$template.description</td>
+                                <td>
+                                    #if( $page.isCustomised($template) )
+                                    Customised
+                                    #end
+                                </td>
+                            </tr>
+                            #end
+                            #end
+                        </tbody>
+                    </table>
+
                 </div> <!-- End theme -->
 
                 <div id="panel_groups" class="tab-pane">
@@ -655,20 +680,6 @@
                     #end
                     #end
                 </div> <!-- End apps -->
-                <div id="panel_templates" class="tab-pane">
-                    <ul class="list">
-                        #foreach($template in $page.allTemplates.entrySet() )
-                        <li>
-                            #set( $templatePath = $formatter.toPath($template.key) )
-                            #set( $templateName = $templatePath.name )
-                            #if( !$templateName.endsWith(".html") )
-                            #set( $templateName = $templateName + ".html" )
-                            #end
-                            <a href="${templatePath.parent}/contenteditor?fileName=$templateName" target="_blank">Edit $templatePath.name</a>
-                        </li>
-                        #end
-                    </ul>
-                </div>
             </div>
         </div>
 
