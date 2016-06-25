@@ -51,7 +51,7 @@
                             <thead>
                                 <tr>
                                     <th class="title" rel="asc">Title</th>
-                                    <th>Groups</th>
+                                    <th>Groups/Org types</th>
                                     <th>Total points</th>
                                     <th>Total debits</th>
                                     <th class="action"></th>
@@ -62,9 +62,13 @@
                                 <tr>
                                     <td><a href="$r.name">$r.rewardTitle</a></td>
                                     <td>
+                                        #if( $r.pointsType == "POINTS_ORG" )
+                                        $r.pointsOrgType
+                                        #else
                                     #foreach($g in $r.selectedGroups)
                                         #genGroup($g)
                                     #end
+                                        #end
                                     </td>
                                     <td>$r.totalPoints points</td>
                                     <td>$r.totalDebits points</td>
