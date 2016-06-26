@@ -332,6 +332,11 @@
                     #set( $caches = $page.caches )
                     #set( $caches = $formatter.sortReverse( $formatter.sortByProperty($caches, "size") ) )
 
+                    <form action="$page.href" method="POST">
+                        <input type="hidden" name="flushCache" value="true"/>
+                        <button class="btn btn-danger">Flush cache</button>
+                    </form>
+                    
                     <table class="stacktraces table table-striped">
                         <thead>
                             <tr>
