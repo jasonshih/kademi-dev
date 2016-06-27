@@ -2,20 +2,7 @@
     <head>
     </head>
     <body class="manageUserPages">
-        <h1>Manage dashboards</h1>
-
-        #if( $page.children.size() > 0 )
-        <div class="btn-group">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Switch to website <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu">
-                #foreach( $website in $page.children)
-                <li><a href="$website.name">$website.name</a></li>
-                #end
-            </ul>
-        </div>
-        #end
+        <h1>Manage admin dashboards</h1>
 
         #if( $page.dashboardsRepo )
         <table class="table table-striped">
