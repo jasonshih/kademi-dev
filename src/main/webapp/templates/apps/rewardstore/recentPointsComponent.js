@@ -29,10 +29,8 @@
                         var dynamicElement = component.find('[data-dynamic-href]');
 
                         if (selectedBucket) {
-                            var contentArea = dynamicElement.closest('.keditor-content-area');
-
                             component.attr('data-bucket', selectedBucket);
-                            keditor.initDynamicContent(contentArea, dynamicElement);
+                            keditor.initDynamicContent(dynamicElement);
                         } else {
                             dynamicElement.html('<p>Please select a points bucket</p>');
                         }
@@ -48,10 +46,9 @@
 
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-                        var contentArea = dynamicElement.closest('.keditor-content-area');
 
                         component.attr('data-days', number);
-                        keditor.initDynamicContent(contentArea, dynamicElement);
+                        keditor.initDynamicContent(dynamicElement);
                     });
 
                     form.find('.recentPointsHeight').on('change', function () {
@@ -64,10 +61,9 @@
 
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-                        var contentArea = dynamicElement.closest('.keditor-content-area');
 
                         component.attr('data-height', number);
-                        keditor.initDynamicContent(contentArea, dynamicElement);
+                        keditor.initDynamicContent(dynamicElement);
                     });
                 }
             });

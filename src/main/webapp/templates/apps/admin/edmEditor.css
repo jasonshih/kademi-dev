@@ -156,6 +156,16 @@ body.opened-keditor-sidebar div.cke_float[id*="cke_keditor-section-"] {
     vertical-align: top;
 }
 
+.keditor-container-content .keditor-component-content h1,
+.keditor-container-content .keditor-component-content h2,
+.keditor-container-content .keditor-component-content h3,
+.keditor-container-content .keditor-component-content h4,
+.keditor-container-content .keditor-component-content h5,
+.keditor-container-content .keditor-component-content h6,
+.keditor-container-content .keditor-component-content p {
+    margin: 0;
+}
+
 #msg {
     z-index: 99999;
 }

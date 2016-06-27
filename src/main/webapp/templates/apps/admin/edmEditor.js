@@ -4,7 +4,7 @@ var DEFAULT_EDM_PADDING_TOP = '20';
 var DEFAULT_EDM_PADDING_BOTTOM = '20';
 var DEFAULT_EDM_PADDING_LEFT = '20';
 var DEFAULT_EDM_PADDING_RIGHT = '20';
-var DEFAULT_EDM_BODY_WIDTH = '650';
+var DEFAULT_EDM_BODY_WIDTH = '600';
 var DEFAULT_EDM_BODY_BACKGROUND = '#ffffff';
 var DEFAULT_EDM_BODY_PADDING_TOP = '10';
 var DEFAULT_EDM_BODY_PADDING_BOTTOM = '10';
@@ -307,7 +307,47 @@ function initKEditor(fileName, stylesData) {
                 keditor.initDynamicContent($(this));
             });
 
+            adjustColWidth($('.keditor-container'));
+
             hideLoadingIcon();
+        },
+        onContainerSnippetDropped: function (event, newContainer, droppedContainer) {
+            adjustColWidth(newContainer);
+        }
+    });
+}
+
+function adjustColWidth(target) {
+    flog('adjustColWidth', target);
+
+    target.find('.keditor-container-inner').each(function () {
+        var cols = $(this).find('table.col');
+        var isDynamicContent = cols.closest('[data-dynamic-href]').length > 0;
+
+        if (!isDynamicContent) {
+            var colsNumber = cols.length;
+            var td = cols.closest('td');
+            var width = td.width();
+            var adjustedWidth = 0;
+
+            flog('Cols number: ' + colsNumber + ', width: ' + width);
+
+            cols.each(function (i) {
+                var col = $(this);
+                var dataWidth = col.attr('data-width');
+                var colWidth = 0;
+
+                if (i === colsNumber - 1) {
+                    colWidth = width - adjustedWidth;
+                } else {
+                    colWidth = Math.round(eval(width + '*' + dataWidth));
+                    adjustedWidth += colWidth;
+                }
+
+                col.attr('width', colWidth);
+            });
+        } else {
+            flog('Is dynamic content. Ignored!');
         }
     });
 }
@@ -376,6 +416,10 @@ function applySetting(sender) {
     edmFooter.innerWidth(edmBodyWidth);
 
     if (sender && sender.length > 0 && sender.is('#edm-body-width')) {
+        adjustColWidth(edmHeader);
+        adjustColWidth(edmBody);
+        adjustColWidth(edmFooter);
+
         edmHeader.add(edmBody).add(edmFooter).find('img.full-width').each(function () {
             $.keditor.components['photo'].adjustWidthForImg($(this), true);
         });
@@ -383,15 +427,7 @@ function applySetting(sender) {
         edmHeader.add(edmBody).add(edmFooter).find('[data-dynamic-href]').each(function () {
             keditor.initDynamicContent($(this));
         });
-
-        edmHeader.add(edmBody).add(edmFooter).find('table.col').each(function () {
-            adjustColWidth($(this));
-        });
     }
-}
-
-function adjustColWidth(target) {
-
 }
 
 function initColorPicker(target, onChangeHandle) {
