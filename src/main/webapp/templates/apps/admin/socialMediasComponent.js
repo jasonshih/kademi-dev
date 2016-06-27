@@ -56,28 +56,25 @@
 
                             var component = keditor.getSettingComponent();
                             var dynamicElement = component.find('[data-dynamic-href]');
-                            var contentArea = dynamicElement.closest('.keditor-content-area');
 
                             component.attr('data-' + socialNetwork + '-enable', this.checked);
-                            keditor.initDynamicContent(contentArea, dynamicElement);
+                            keditor.initDynamicContent(dynamicElement);
                         });
 
                         txtText.on('change', function () {
                             var component = keditor.getSettingComponent();
                             var dynamicElement = component.find('[data-dynamic-href]');
-                            var contentArea = dynamicElement.closest('.keditor-content-area');
 
                             component.attr('data-' + socialNetwork + '-text', this.value);
-                            keditor.initDynamicContent(contentArea, dynamicElement);
+                            keditor.initDynamicContent(dynamicElement);
                         });
 
                         txtLink.on('change', function () {
                             var component = keditor.getSettingComponent();
                             var dynamicElement = component.find('[data-dynamic-href]');
-                            var contentArea = dynamicElement.closest('.keditor-content-area');
 
                             component.attr('data-' + socialNetwork + '-link', this.value);
-                            keditor.initDynamicContent(contentArea, dynamicElement);
+                            keditor.initDynamicContent(dynamicElement);
                         });
 
                         socialNetworksWrapper.append(socialNetworkEl);
@@ -86,10 +83,9 @@
                     form.find('.select-display').on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-                        var contentArea = dynamicElement.closest('.keditor-content-area');
 
                         component.attr('data-display', this.value);
-                        keditor.initDynamicContent(contentArea, dynamicElement);
+                        keditor.initDynamicContent(dynamicElement);
 
                         form.find('.icon-size-wrapper').css('display', this.value === 'text' ? 'none' : 'block');
                     });
@@ -97,28 +93,25 @@
                     form.find('.select-align').on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-                        var contentArea = dynamicElement.closest('.keditor-content-area');
 
                         component.attr('data-align', this.value);
-                        keditor.initDynamicContent(contentArea, dynamicElement);
+                        keditor.initDynamicContent(dynamicElement);
                     });
 
                     form.find('.select-layout').on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-                        var contentArea = dynamicElement.closest('.keditor-content-area');
 
                         component.attr('data-layout', this.value);
-                        keditor.initDynamicContent(contentArea, dynamicElement);
+                        keditor.initDynamicContent(dynamicElement);
                     });
 
                     form.find('[name=icon-style]').on('click', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-                        var contentArea = dynamicElement.closest('.keditor-content-area');
 
                         component.attr('data-icon-style', this.value);
-                        keditor.initDynamicContent(contentArea, dynamicElement);
+                        keditor.initDynamicContent(dynamicElement);
                     });
 
                     form.find('.icon-size').on('change', function () {
@@ -131,10 +124,9 @@
 
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-                        var contentArea = dynamicElement.closest('.keditor-content-area');
 
                         component.attr('data-icon-size', number);
-                        keditor.initDynamicContent(contentArea, dynamicElement);
+                        keditor.initDynamicContent(dynamicElement);
                     });
                 }
             });
