@@ -65,12 +65,16 @@ function initAddPageModal() {
     form.on("input", ".pageTitle", function(e) {
         var inp = $(e.target);
         var val = inp.val();
-        var newVal = val.toLowerCase();
-        newVal = newVal.replaceAll("[", "-");
-        newVal = newVal.replaceAll("]", "-");
-        newVal = newVal.replaceAll(" ", "-");
-        flog("on change", val, newVal);
-        form.find(".newFileName").val(newVal);
+        var pageName = form.find('[type=hidden][name=pageName]');
+        if (!pageName.val()){
+            // new page
+            var newVal = val.toLowerCase();
+            newVal = newVal.replaceAll("[", "-");
+            newVal = newVal.replaceAll("]", "-");
+            newVal = newVal.replaceAll(" ", "-");
+            flog("on change", val, newVal);
+            form.find(".newFileName").val(newVal);
+        }
     });
 
     form.forms({
