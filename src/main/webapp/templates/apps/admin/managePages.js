@@ -72,6 +72,10 @@ function initAddPageModal() {
             newVal = newVal.replaceAll("[", "-");
             newVal = newVal.replaceAll("]", "-");
             newVal = newVal.replaceAll(" ", "-");
+            newVal = newVal.replaceAll("{", "-");
+            newVal = newVal.replaceAll("}", "-");
+            newVal = newVal.replaceAll("(", "-");
+            newVal = newVal.replaceAll(")", "-");
             flog("on change", val, newVal);
             form.find(".newFileName").val(newVal);
         }
