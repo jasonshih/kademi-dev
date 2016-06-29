@@ -1,19 +1,11 @@
 function initManageGroup() {
     initCRUDGroup();
     addOrderGroup();
-//    addOrderProgramList();
-//    addOrderPermissionList();
     initGroupModal();
-//    initPermissionCheckboxes();
-//    initRegoMode();
     initCopyMembers();
-//    initOptInGroups();
     initPanelHeader();
-    //initGroupFolderModal();
-    //initAddToFolder();
-    //initRemoveFromFolder();
     initGroupFolder();
-    //initGroupPasswordPolicy();
+    initDnD();
 }
 
 function initPanelHeader() {
@@ -267,30 +259,8 @@ function initGroupModal() {
 
 function reloadGroupFolders() {
     $('#groups-folders').reloadFragment({
-        onComplete: function () {
-            var startFolder;
-            $('.group').draggable({
-                revert: "invalid",
-                axis: "y",
-                handle: '.btn-order',
-                start: function (event, ui) {
-                    flog("draggable start", event, ui);
-                    drapEventStart = event;
-                    startFolder = $(event.currentTarget.closest(".folder"));
-                    if (startFolder != null) {
-                        startFolder.find(".group-count").text(startFolder.find(".group").size());
-                    }
-                    clearTimeout(checkTimer);
-                    checkTimer = null;
-                },
-                stop: function (event, ui) {
-                    flog("draggable stop", event, ui);
-                    //var folder = $(event.currentTarget.closest(".folder"));
-                    if (startFolder != null) {
-                        startFolder.find(".group-count").text(startFolder.find(".group").size());
-                    }
-                }
-            });
+        whenComplete: function () {
+            initDnD();
         }
     });
 }
@@ -460,7 +430,9 @@ function initGroupFolder() {
         var folderName = $(e.target.closest(".folder")).data("name");
         showGroupFolderModal('Folder', 'Update folder name', 'Update', "renameFolder", {oldFolderName: folderName});
     });
+}
 
+function initDnD(){
     var startFolder;
     $('.group').draggable({
         revert: "invalid",
