@@ -1,0 +1,13 @@
+#if( !$height )
+    #set( $height = 200 )
+#end
+<div class="panel panel-default panel-kpi-visualisation">
+    <div class="panel-heading">
+        <i class="fa fa-bar-chart"></i> Date Histogram
+    </div>
+    <div class="panel-body">
+        <div style="height: $!{height}px">
+            <svg></svg>
+        </div>
+    </div>
+</div>
