@@ -806,7 +806,116 @@ function promptRename(sourceHref, callback) {
     }
 }
 
-function move(sourceHref, destHref, callback) {
+/**
+ * prompt to rename file or folder
+ *
+ * @param id
+ * @param url
+ * @param title
+ * @param instructions
+ * @param caption
+ * @param buttonName
+ * @param buttonText
+ * @param inputClass
+ * @param inputPlaceholder
+ * @param inputValue
+ * @param callback
+ */
+
+function promptRenameModal(id, url, title, instructions, caption, buttonName, buttonText, inputClass, inputPlaceholder, sourceHref, callback) {
+    flog('myPromptRename');
+    var currentName = getFileName(sourceHref);
+    var existing = $('#' + id);
+    if(existing ) {
+        existing.remove();
+    }
+
+    var modalString = '<div id="' + id + '" class="modal modal-sm fade" tabindex="-1" role="dialog" aria-labelledby="promptModalLabel" aria-hidden="true"></div>';
+    myPromptModal = $(modalString);
+
+    var inputId = id + '_';
+
+    myPromptModal.html(
+
+        '<div class="modal-header">' +
+        '<button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>' +
+        '<h4 class="modal-title">' + title + '</h4>' +
+        '</div>' +
+        '<form method="POST" class="form-horizontal" action="' + url + '">' +
+        '<div class="modal-body">' +
+        instructions +
+        '<div class="clearfix"></div>' +
+        '<br /><br />' +
+        '<p class="alert alert-danger modal-alert"></p>' +
+        '<div class="form-group">' +
+        '<label for="' + inputId + '" class="control-label col-md-3">' + caption + '</label>' +
+        '<div class="col-md-8">' +
+        '<input type="text" class="required form-control ' + inputClass + '" id="' + inputId + '" name="' + buttonName + '" placeholder="' + inputPlaceholder + '" value="'+currentName+'" />'+
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '<div class="modal-footer">' +
+        '<button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>' +
+        '<button class="btn btn-sm btn-primary" data-type="form-submit" type="submit">' + buttonText + '</button>' +
+        '</div>' +
+        '</form>'
+    );
+
+    var form = myPromptModal.find('form');
+
+    form.submit(function(e) {
+        flog("submit");
+        e.preventDefault();
+        resetValidation(form);
+
+        var checkResult = validateFormFields(form);
+        if(checkResult) {
+            var newName = form.find('input').val();
+            if (currentName === newName) {
+                showErrorMessage(form, null, 'New name must be different from current name');
+                return false;
+            }
+            var currentFolder = getFolderPath(sourceHref);
+            flog('promptRename: currentFolder', currentFolder);
+            var dest = currentFolder;
+            if (!dest.endsWith('/')) {
+                dest += '/';
+            }
+            dest += newName;
+            checkExists(dest, {
+                exists: function () {
+                    showErrorMessage(form, null, 'A folder/file with name <strong>'+newName+'</strong> is existed. Please choose a new name.');
+                    return false;
+                },
+                notExists: function () {
+                    log('promptRename: dest', dest);
+                    move(sourceHref, dest,
+                        function (resp, sourceHref, destHref){
+                            // success
+                            myPromptModal.modal('hide');
+                            callback(sourceHref, destHref);
+                        },
+                        function () {
+                            // error
+                            showErrorMessage(form, null, 'There was an error when renaming file/folder');
+                        }
+                    );
+                }
+            });
+
+        }
+    });
+
+    $('body').append(myPromptModal);
+    myPromptModal.on('shown.bs.modal', function(){
+        myPromptModal.find('[name='+buttonName+']').trigger('focus');
+        document.execCommand("selectall",null,false);
+    });
+
+    showModal(myPromptModal);
+}
+
+function move(sourceHref, destHref, callback, errorCallback) {
     //    ajaxLoadingOn();
     var url = '_DAV/MOVE';
     if (sourceHref) {
@@ -840,7 +949,12 @@ function move(sourceHref, destHref, callback) {
             $('body').trigger('ajaxLoading', {
                 loading: false
             });
-            alert('There was a problem creating the folder');
+            if (typeof errorCallback === 'undefined') {
+                // fire default error message
+                alert('There was a problem creating the folder');
+            } else {
+                errorCallback();
+            }
         }
     });
 }

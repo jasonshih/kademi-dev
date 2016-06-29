@@ -170,7 +170,8 @@ function initFiles() {
 
         var target = $(this);
         var href = target.attr('href');
-        promptRename(href, function (resp, sourceHref, destHref) {
+
+        promptRenameModal("renameFileFolder", "", "Rename file or folder", "", "Enter new name", "newName", "Rename", "simpleChars", "Enter file or folder name", href,  function(sourceHref, destHref) {
             var sourceName = getFileName(sourceHref);
             var destName = getFileName(destHref);
             reloadFileList();
