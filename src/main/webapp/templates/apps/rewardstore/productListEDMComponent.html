@@ -1,5 +1,6 @@
 #set ($numberOfProducts = $formatter.toInteger($numberOfProducts))
 #set( $prods = $applications.rewardStore.searchProducts($store, null, $category, 'title', false) )
+#set ($width = $formatter.toInteger($width))
 
 #if( $prods.size() > 0 )
     #if ($prods.size() > $numberOfProducts)
@@ -7,13 +8,13 @@
     #end
 
     #if ($layout == "grid")
-        #set ($tableWidth = "50%")
+        #set ($tableWidth = $width / 2)
         #if ($itemsPerRow == 1)
             #set ($tableWidth = "100%")
         #elseif ($itemsPerRow == 2)
-            #set ($tableWidth = "50%")
+            #set ($tableWidth = $width / 2)
         #elseif ($itemsPerRow == 3)
-            #set ($tableWidth = "33.3%")
+            #set ($tableWidth = $width / 3)
         #end
 
         <table cellpadding="0" cellspacing="0" border="0" width="100%">
@@ -66,12 +67,15 @@
     #else
         <table cellpadding="0" cellspacing="0" border="0" width="100%">
             <tbody>
+                #set ($leftWidth = $width / 3)
+                #set ($rightWidth = $width - $leftWidth)
+
                 #foreach($p in $prods)
                     #set ($prodPath = "/products/" + $p.productId)
                     #set ($prodUrl = "http://${rootFolder.domainName}${formatter.portString}/$store/$category/$p.name")
                     <tr>
                         <td valign="top" style="padding-bottom: 15px;">
-                            <table cellpadding="0" cellspacing="0" border="0" width="33.3%" align="left" class="col">
+                            <table cellpadding="0" cellspacing="0" border="0" width="$leftWidth" align="left" class="col">
                                 <tr>
                                     <td class="wrapper" style="padding-right: 15px">
                                         <table cellpadding="0" cellspacing="0" border="0" width="100%">
@@ -90,7 +94,7 @@
                                     </td>
                                 </tr>
                             </table>
-                            <table cellpadding="0" cellspacing="0" border="0" width="66.7%" align="right" class="col">
+                            <table cellpadding="0" cellspacing="0" border="0" width="$rightWidth" align="right" class="col">
                                 <tr>
                                     <td class="wrapper">
                                         <h4><a title="$p.title" href="${prodUrl}">$p.title</a></h4>
