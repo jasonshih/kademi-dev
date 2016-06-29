@@ -46,7 +46,7 @@
             </td>
         </tr>
         #set( $avail = $rs.availableBalance($page.profile) )
-        #if($current == $avail)
+        #if($current != $avail)
         <tr>
             <td></td>
             <td class="text-right">
