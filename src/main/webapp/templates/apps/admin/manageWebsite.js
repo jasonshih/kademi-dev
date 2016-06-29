@@ -481,6 +481,21 @@ function initGroupCheckbox() {
         var isRecip = $chk.is(":checked");
         setGroupRecipient($chk.attr("name"), isRecip);
     });
+
+    $("#group-list").on("click", ".btnRemoveGroup", function (e) {
+        flog("click btnRemoveGroup", this);
+        e.preventDefault();
+        e.stopPropagation();
+        var groupName = $(this).attr("href");
+        setGroupRecipient(groupName, false);
+    });
+
+    $("#addGroupDropdown").on("click", ".addGroup a", function (e) {
+        flog("click addGroup", this);
+        e.preventDefault();
+        var groupName = $(this).attr("href");
+        setGroupRecipient(groupName, true);
+    });
 }
 
 function setGroupRecipient(name, isRecip) {

@@ -313,12 +313,27 @@
 
                 <div id="panel_groups" class="tab-pane">
                     <div class="Content Recipient">
-                        <button class="btn btn-sm btn-default AddGroup" data-toggle="modal" data-target="#modalGroup"><i class="fa fa-plus"></i> Add/remove groups</button>
+                        <!--<button class="btn btn-sm btn-default AddGroup" data-toggle="modal" data-target="#modalGroup"><i class="fa fa-plus"></i> Add/remove groups</button>-->
+                        <div class="dropdown pull-left" id="addGroupDropdown" style="margin-right: 15px">
+                            <a data-toggle="dropdown" class="dropdown-toggle btn btn-info" href="#">
+                                <i class="clip-plus-circle"></i> Add group
+                            </a>
+                            <ul class="dropdown-menu">
+                                #foreach($group in $page.allGroups)
+                                <li class="addGroup">
+                                    <a href="$group.name">
+                                        <i class="fa fa-users"></i> $formatter.firstNotNull($group.title, $group.name)
+                                    </a>
+                                </li>
+                                #end
+                            </ul>
+                        </div>
                         <p class="clearfix"></p>
                         <br />
                         <div id="group-list" class="clearfix GroupList">
                             #foreach($g in $page.selectedGroups)
                             <div class="alert alert-info">
+                                <a style="margin-left: 5px" href="$g.name" title="Remove group" class="btn btn-sm btn-danger pull-right btnRemoveGroup"><i class="fa fa-trash"></i></a>
                                 <a target="_blank" href="$page.signupHref($g)" class="btn btn-sm btn-info pull-right" title="Visit the signup page">
                                     <i class="fa fa-wpforms"></i>
                                 </a>
