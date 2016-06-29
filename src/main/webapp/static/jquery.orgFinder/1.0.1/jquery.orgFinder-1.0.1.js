@@ -85,59 +85,37 @@
         },
         renderItemContent: function (orgData) {
             var itemContent = '';
-            itemContent += '<h4 class="list-group-item-heading">' + (orgData.orgTypeDisplayName || orgData.title ) + '</h4>';
+            itemContent += '<h4 class="list-group-item-heading">' + orgData.title + '</h4>';
 
             if (orgData.phone) {
-                itemContent += '<p class="list-group-item-text"><strong>Phone:</strong> ' + orgData.phone + '</p>';
+                itemContent += '<p class="list-group-item-text"><i class="fa fa-phone"></i> ' + orgData.phone + '</p>';
             }
             if (orgData.email) {
-                itemContent += '<p class=list-group-item-text"><strong>Email:</strong> <a href="mailto:' + orgData.email + '">' + orgData.email + '</a></p>';
+                itemContent += '<p class=list-group-item-text" style="word-break: break-all;"><i class="fa fa-envelope-o"></i> <a href="mailto:' + orgData.email + '">' + orgData.email + '</a></p>';
             }
+
+            var address = '';
             if (orgData.address) {
-                itemContent += '<p class="list-group-item-text"><strong>Address:</strong> ' + orgData.address + '</p>';
+                address += orgData.address + '<br />';
             }
             if (orgData.addressLine2) {
-                itemContent += '<p class=list-group-item-text"><strong>Address Line 2:</strong> ' + orgData.addressLine2 + '</p>';
+                address += orgData.addressLine2 + '<br />';
             }
             if (orgData.addressState) {
-                itemContent += '<p class="list-group-item-text"><strong>State:</strong> ' + orgData.addressState + '</p>';
-            }
-            if (orgData.country) {
-                itemContent += '<p class="list-group-item-text"><strong>Country:</strong> ' + orgData.country + '</p>';
+                address += orgData.addressState
             }
             if (orgData.postcode) {
-                itemContent += '<p class="list-group-item-text"><strong>Postcode:</strong> ' + orgData.postcode + '</p>';
+                address += ' ' + orgData.postcode;
             }
+            if (orgData.country) {
+                address += ', ' + orgData.country;
+            }
+            itemContent += '<p class=list-group-item-text"><i class="fa fa-map-marker"></i> ' + address + '</p>';
 
             return '<div class="list-group-item">' + itemContent + '</div>';
         },
         renderMarkerContent: function (orgData) {
-            var markerContent = '';
-            markerContent += '<h1>' + (orgData.orgTypeDisplayName || orgData.title ) + '</h1>';
-
-            if (orgData.phone) {
-                markerContent += '<div><strong>Phone:</strong> ' + orgData.phone + '</div>';
-            }
-            if (orgData.email) {
-                markerContent += '<div><strong>Email:</strong> <a href="mailto:' + orgData.email + '">' + orgData.email + '</a></div>';
-            }
-            if (orgData.address) {
-                markerContent += '<div><strong>Address:</strong> ' + orgData.address + '</div>';
-            }
-            if (orgData.addressLine2) {
-                markerContent += '<div><strong>Address Line 2:</strong> ' + orgData.addressLine2 + '</div>';
-            }
-            if (orgData.addressState) {
-                markerContent += '<div><strong>State:</strong> ' + orgData.addressState + '</div>';
-            }
-            if (orgData.country) {
-                markerContent += '<div><strong>Country:</strong> ' + orgData.country + '</div>';
-            }
-            if (orgData.postcode) {
-                markerContent += '<div><strong>Postcode:</strong> ' + orgData.postcode + '</div>';
-            }
-
-            return '<div>' + markerContent + '</div>';
+            return '<div><h3>' + orgData.title + '</h3></div>';
         },
         renderSuggestionContent: function (data) {
             var suggestionContent = data.formatted_address;
