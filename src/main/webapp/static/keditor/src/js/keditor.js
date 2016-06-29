@@ -52,6 +52,7 @@
  * @option {Function} onComponentDuplicated Callback will be called when a component is duplicated. Arguments: event, originalComponent, newComponent
  * @option {Function} onComponentSelected Callback will be called when a component is selected. Arguments: event, selectedComponent
  * @option {Function} onComponentSnippetDropped Callback will be called after a component snippet is dropped into a container. Arguments: event, newComponent, droppedComponent
+ * @option {Function} onBeforeDynamicContentLoad Callback will be called before loading dynamic content. Arguments: dynamicElement, component
  * @option {Function} onDynamicContentLoaded Callback will be called after dynamic content is loaded. Arguments: dynamicElement, response, status, xhr
  * @option {Function} onDynamicContentError Callback will be called if loading dynamic content is error, abort or timeout. Arguments: dynamicElement, response, status, xhr
  */
@@ -169,6 +170,8 @@
         onComponentSelected: function (event, selectedComponent) {
         },
         onComponentSnippetDropped: function (event, newComponent, droppedComponent) {
+        },
+        onBeforeDynamicContentLoad: function (dynamicElement, component) {
         },
         onDynamicContentLoaded: function (dynamicElement, response, status, xhr) {
         },
@@ -1134,7 +1137,7 @@
                 component.find('[data-dynamic-href]').each(function () {
                     var dynamicElement = $(this);
 
-                    dynamicContentRequests.push(self.initDynamicContent(contentArea, dynamicElement));
+                    dynamicContentRequests.push(self.initDynamicContent(dynamicElement));
                 });
 
                 $.when.apply(null, dynamicContentRequests).then(function () {
@@ -1413,12 +1416,18 @@
             component.remove();
         },
 
-        initDynamicContent: function (contentArea, dynamicElement) {
-            flog('initDynamicContent', contentArea, dynamicElement);
+        initDynamicContent: function (dynamicElement) {
+            flog('initDynamicContent', dynamicElement);
 
             var self = this;
             var options = self.options;
             var component = dynamicElement.closest('.keditor-component');
+            var contentArea = dynamicElement.closest('.keditor-content-area');
+
+            if (typeof options.onBeforeDynamicContentLoad === 'function') {
+                options.onBeforeDynamicContentLoad.call(contentArea, dynamicElement, component);
+            }
+
             var dynamicHref = dynamicElement.attr('data-dynamic-href');
             var data = self.getDataAttributes(component, ['data-type', 'data-dynamic-href'], false);
             data = $.param(data);

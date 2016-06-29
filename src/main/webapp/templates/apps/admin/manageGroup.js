@@ -71,6 +71,24 @@ function initCRUDGroup() {
             group: selectGroup.attr('id')
         });
     });
+
+    body.on('input', '#modal-group [name=title]', function(){
+        var titleInput = body.find('#modal-group [name=title]');
+        var nameInput = body.find('#modal-group [name=name]');
+        var group = body.find('#modal-group [name=group]');
+        if (!group.val()) {
+            var newVal = titleInput.val().toLowerCase();
+            newVal = newVal.replaceAll("[", "-");
+            newVal = newVal.replaceAll("]", "-");
+            newVal = newVal.replaceAll(" ", "-");
+            newVal = newVal.replaceAll("{", "-");
+            newVal = newVal.replaceAll("}", "-");
+            newVal = newVal.replaceAll("(", "-");
+            newVal = newVal.replaceAll(")", "-");
+            flog("on change", group, newVal);
+            nameInput.val(newVal);
+        }
+    });
 }
 
 function initPermissionCheckboxes() {
@@ -190,6 +208,9 @@ function showGroupModal(name, title, type, data) {
             modal.attr('data-group', data.group);
             modal.find('input[name=group]').val(data.group);
         }
+    } else {
+        // Need to reset fields
+        modal.find('input[type=hidden][name=group]').val('');
     }
 
     modal.modal('show');

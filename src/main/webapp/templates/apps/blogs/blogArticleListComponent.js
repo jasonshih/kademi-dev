@@ -40,10 +40,9 @@
 
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-                        var contentArea = dynamicElement.closest('.keditor-content-area');
 
                         component.attr('data-number-of-articles', number);
-                        keditor.initDynamicContent(contentArea, dynamicElement);
+                        keditor.initDynamicContent(dynamicElement);
                     });
 
                     form.find('.select-blog').on('change', function () {
@@ -52,10 +51,8 @@
                         var dynamicElement = component.find('[data-dynamic-href]');
 
                         if (selectedBlog) {
-                            var contentArea = dynamicElement.closest('.keditor-content-area');
-
                             component.attr('data-blog', selectedBlog);
-                            keditor.initDynamicContent(contentArea, dynamicElement);
+                            keditor.initDynamicContent(dynamicElement);
                         } else {
                             dynamicElement.html('<p>Please select Blog</p>');
                         }
@@ -64,10 +61,9 @@
                     form.find('.select-layout').on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-                        var contentArea = dynamicElement.closest('.keditor-content-area');
 
                         component.attr('data-layout', this.value);
-                        keditor.initDynamicContent(contentArea, dynamicElement);
+                        keditor.initDynamicContent(dynamicElement);
 
                         form.find('.items-per-row-wrapper').css('display', this.value === 'grid' ? 'block' : 'none');
                     });
@@ -75,10 +71,9 @@
                     form.find('.items-per-row').on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-                        var contentArea = dynamicElement.closest('.keditor-content-area');
 
                         component.attr('data-items-per-row', this.value);
-                        keditor.initDynamicContent(contentArea, dynamicElement);
+                        keditor.initDynamicContent(dynamicElement);
                     });
                 }
             });

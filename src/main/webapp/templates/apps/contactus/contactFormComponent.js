@@ -33,91 +33,81 @@
                     form.find('#chkFirstName').on('click', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-                        var contentArea = dynamicElement.closest('.keditor-content-area');
                         
                         component.attr('data-first-name', this.checked);                        
-                        keditor.initDynamicContent(contentArea, dynamicElement);
+                        keditor.initDynamicContent(dynamicElement);
                     });
                     
                     form.find('#chkSurname').on('click', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-                        var contentArea = dynamicElement.closest('.keditor-content-area');
                         
                         component.attr('data-sur-name', this.checked);                        
-                        keditor.initDynamicContent(contentArea, dynamicElement);
+                        keditor.initDynamicContent(dynamicElement);
                     });
                     
                     form.find('#chkEmail').on('click', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-                        var contentArea = dynamicElement.closest('.keditor-content-area');
                         
                         component.attr('data-email', this.checked);                        
-                        keditor.initDynamicContent(contentArea, dynamicElement);
+                        keditor.initDynamicContent(dynamicElement);
                     });
                     
                     form.find('#chkCompany').on('click', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-                        var contentArea = dynamicElement.closest('.keditor-content-area');
                         
                         component.attr('data-company', this.checked);                        
-                        keditor.initDynamicContent(contentArea, dynamicElement);
+                        keditor.initDynamicContent(dynamicElement);
                     });
                     
                     form.find('#chkPhone').on('click', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-                        var contentArea = dynamicElement.closest('.keditor-content-area');
                         
                         component.attr('data-phone', this.checked);                        
-                        keditor.initDynamicContent(contentArea, dynamicElement);
+                        keditor.initDynamicContent(dynamicElement);
                     });
                     
                     form.find('#chkMessage').on('click', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-                        var contentArea = dynamicElement.closest('.keditor-content-area');
                         
                         component.attr('data-message', this.checked);                        
-                        keditor.initDynamicContent(contentArea, dynamicElement);
+                        keditor.initDynamicContent(dynamicElement);
                     });
 
                     form.find('#txtSubmitText').on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-                        var contentArea = dynamicElement.closest('.keditor-content-area');
 
                         component.attr('data-submit-text', this.value || 'Send message');
-                        keditor.initDynamicContent(contentArea, dynamicElement);
+                        keditor.initDynamicContent(dynamicElement);
                     });
 
                     form.find('#cbbSubmitSize').on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-                        var contentArea = dynamicElement.closest('.keditor-content-area');
 
                         component.attr('data-submit-size', this.value);
-                        keditor.initDynamicContent(contentArea, dynamicElement);
+                        keditor.initDynamicContent(dynamicElement);
                     });
 
                     form.find('#cbbSubmitColor').on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-                        var contentArea = dynamicElement.closest('.keditor-content-area');
 
                         component.attr('data-submit-color', this.value);
-                        keditor.initDynamicContent(contentArea, dynamicElement);
+                        keditor.initDynamicContent(dynamicElement);
                     });
 
                     form.find('#txtSubmitClass').on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-                        var contentArea = dynamicElement.closest('.keditor-content-area');
 
                         component.attr('data-submit-class', this.value);
-                        keditor.initDynamicContent(contentArea, dynamicElement);
+                        keditor.initDynamicContent(dynamicElement);
                     });
                 }
             });

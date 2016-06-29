@@ -42,10 +42,9 @@
             form.find('.items-per-row').on('change', function () {
                 var component = keditor.getSettingComponent();
                 var dynamicElement = component.find('[data-dynamic-href]');
-                var contentArea = dynamicElement.closest('.keditor-content-area');
 
                 component.attr('data-items-per-row', this.value);
-                keditor.initDynamicContent(contentArea, dynamicElement);
+                keditor.initDynamicContent(dynamicElement);
             });
         },
 

@@ -4,7 +4,7 @@ var DEFAULT_EDM_PADDING_TOP = '20';
 var DEFAULT_EDM_PADDING_BOTTOM = '20';
 var DEFAULT_EDM_PADDING_LEFT = '20';
 var DEFAULT_EDM_PADDING_RIGHT = '20';
-var DEFAULT_EDM_BODY_WIDTH = '650';
+var DEFAULT_EDM_BODY_WIDTH = '600';
 var DEFAULT_EDM_BODY_BACKGROUND = '#ffffff';
 var DEFAULT_EDM_BODY_PADDING_TOP = '10';
 var DEFAULT_EDM_BODY_PADDING_BOTTOM = '10';
@@ -15,39 +15,16 @@ var DEFAULT_LINK_COLOR = '#337ab7';
 var DEFAULT_FONT_FAMILY = 'Arial, Helvetica, san-serif';
 var DEFAULT_FONT_SIZE = '14px';
 var DEFAULT_LINE_HEIGHT = '1.42857143';
+var keditor;
+var body;
 
 function initEdmEditorPage(fileName) {
     flog('initEdmEditorPage', fileName);
-    var body = $(document.body);
 
-    initEdmEditor(false, fileName);
-    initBtns(body, fileName);
+    body = $(document.body);
     Msg.iconMode = 'fa';
-
-    win.on({
-        keydown: function (e) {
-            if (e.ctrlKey && e.keyCode === keymap.S) {
-                e.preventDefault();
-                $('.btn-save-file').trigger('click');
-            }
-        }
-    });
-
-    hideLoadingIcon();
-}
-
-function initEdmEditor(iframeMode, fileName) {
-    flog('initEdmEditor');
-
-    var body = $(document.body);
-    var edmHtml = processFileBody();
-    var keditor = initKEditor(body, iframeMode, fileName, edmHtml).data('keditor');
-
-    window.onbeforeunload = function (e) {
-        if (body.hasClass('content-changed')) {
-            e.returnValue = '\n\nAre you sure you would like to leave the editor? You will lose any unsaved changes\n\n';
-        }
-    };
+    keditor = initKEditor(fileName, processFileBody()).data('keditor');
+    initSaveFile(fileName);
 }
 
 function applyInlineCssForTextWrapper(target) {
@@ -87,15 +64,63 @@ function processFileBody() {
     edmBody.html(edmHtml.find('td#edm-body-td').html());
     edmFooter.html(edmHtml.find('td#edm-footer-td').html());
 
-    return edmHtml;
+    // Getting styles
+    var edmWidth = edmHtml.find('#edm-container').attr('width') || DEFAULT_EDM_BODY_WIDTH;
+
+    var tdWrapper = edmHtml.find('td#edm-wrapper-td');
+    var edmBg = tdWrapper.css('background-color') || DEFAULT_EDM_BACKGROUND;
+    var paddingTop = tdWrapper.css('padding-top') || '';
+    paddingTop = paddingTop.replace('px', '') || DEFAULT_EDM_PADDING_TOP;
+    var paddingBottom = tdWrapper.css('padding-bottom') || '';
+    paddingBottom = paddingBottom.replace('px', '') || DEFAULT_EDM_PADDING_BOTTOM;
+    var paddingLeft = tdWrapper.css('padding-left') || '';
+    paddingLeft = paddingLeft.replace('px', '') || DEFAULT_EDM_PADDING_LEFT;
+    var paddingRight = tdWrapper.css('padding-right') || '';
+    paddingRight = paddingRight.replace('px', '') || DEFAULT_EDM_PADDING_RIGHT;
+
+    var tdBody = edmHtml.find('td#edm-body-td');
+    var bodyBg = tdBody.css('background-color') || DEFAULT_EDM_BODY_BACKGROUND;
+    var paddingBodyTop = tdBody.css('padding-top') || '';
+    paddingBodyTop = paddingBodyTop.replace('px', '') || DEFAULT_EDM_BODY_PADDING_TOP;
+    var paddingBodyBottom = tdBody.css('padding-bottom') || '';
+    paddingBodyBottom = paddingBodyBottom.replace('px', '') || DEFAULT_EDM_BODY_PADDING_BOTTOM;
+    var paddingBodyLeft = tdBody.css('padding-left') || '';
+    paddingBodyLeft = paddingBodyLeft.replace('px', '') || DEFAULT_EDM_BODY_PADDING_LEFT;
+    var paddingBodyRight = tdBody.css('padding-right') || '';
+    paddingBodyRight = paddingBodyRight.replace('px', '') || DEFAULT_EDM_BODY_PADDING_RIGHT;
+
+    var tableContainer = edmHtml.find('table#edm-container');
+    var fontFamily = tableContainer.attr('data-font-family') || DEFAULT_FONT_FAMILY;
+    var fontSize = tableContainer.attr('data-font-size') || DEFAULT_FONT_SIZE;
+    var lineHeight = tableContainer.attr('data-line-height') || DEFAULT_LINE_HEIGHT;
+    var textColor = tableContainer.attr('data-text-color') || DEFAULT_TEXT_COLOR;
+    var linkColor = tableContainer.attr('data-link-color') || DEFAULT_LINK_COLOR;
+
+    return {
+        edmWidth: edmWidth,
+        edmBg: edmBg,
+        paddingTop: paddingTop,
+        paddingBottom: paddingBottom,
+        paddingLeft: paddingLeft,
+        paddingRight: paddingRight,
+        bodyBg: bodyBg,
+        paddingBodyTop: paddingBodyTop,
+        paddingBodyBottom: paddingBodyBottom,
+        paddingBodyLeft: paddingBodyLeft,
+        paddingBodyRight: paddingBodyRight,
+        fontFamily: fontFamily,
+        fontSize: fontSize,
+        lineHeight: lineHeight,
+        textColor: textColor,
+        linkColor: linkColor
+    };
 }
 
-function initKEditor(body, iframeMode, fileName, edmHtml) {
-    flog('initKEditor', iframeMode);
+function initKEditor(fileName, stylesData) {
+    flog('initKEditor', fileName, stylesData);
 
     return $('#edm-area').keditor({
-        iframeMode: iframeMode,
-        basePath: iframeMode ? window.location.pathname.substr(0, window.location.pathname.lastIndexOf('/') + 1) : '',
+        basePath: '',
         tabContainersText: '<i class="fa fa-columns"></i>',
         tabComponentsText: '<i class="fa fa-files-o"></i>',
         tabTooltipEnabled: false,
@@ -107,8 +132,7 @@ function initKEditor(body, iframeMode, fileName, edmHtml) {
             setting: {
                 text: '<i class="fa fa-cog"></i>',
                 title: 'Settings',
-                content:
-                '<div id="edm-setting" class="form-horizontal">' +
+                content: '<div id="edm-setting" class="form-horizontal">' +
                 '    <div class="panel panel-default">' +
                 '        <div class="panel-heading">EDM Page</div>' +
                 '        <div class="panel-body">' +
@@ -117,7 +141,7 @@ function initKEditor(body, iframeMode, fileName, edmHtml) {
                 '                    <label for="edm-background">Background</label>' +
                 '                    <div class="input-group color-picker">' +
                 '                        <span class="input-group-addon"><i></i></span>' +
-                '                        <input type="text" value="" id="edm-background" class="form-control" />' +
+                '                        <input type="text" value="' + stylesData.edmBg + '" id="edm-background" class="form-control" />' +
                 '                    </div>' +
                 '                </div>' +
                 '            </div>' +
@@ -126,23 +150,23 @@ function initKEditor(body, iframeMode, fileName, edmHtml) {
                 '                    <label>Padding (in px)</label>' +
                 '                    <div class="row row-sm text-center">' +
                 '                        <div class="col-xs-4 col-xs-offset-4">' +
-                '                            <input type="number" value="" id="edm-padding-top" class="form-control" />' +
+                '                            <input type="number" value="' + stylesData.paddingTop + '" id="edm-padding-top" class="form-control" />' +
                 '                            <small>top</small>' +
                 '                        </div>' +
                 '                    </div>' +
                 '                    <div class="row row-sm text-center">' +
                 '                        <div class="col-xs-4">' +
-                '                            <input type="number" value="" id="edm-padding-left" class="form-control" />' +
+                '                            <input type="number" value="' + stylesData.paddingLeft + '" id="edm-padding-left" class="form-control" />' +
                 '                            <small>left</small>' +
                 '                        </div>' +
                 '                        <div class="col-xs-4 col-xs-offset-4">' +
-                '                            <input type="number" value="" id="edm-padding-right" class="form-control" />' +
+                '                            <input type="number" value="' + stylesData.paddingRight + '" id="edm-padding-right" class="form-control" />' +
                 '                            <small>right</small>' +
                 '                        </div>' +
                 '                    </div>' +
                 '                    <div class="row row-sm text-center">' +
                 '                        <div class="col-xs-4 col-xs-offset-4">' +
-                '                            <input type="number" value="" id="edm-padding-bottom" class="form-control" />' +
+                '                            <input type="number" value="' + stylesData.paddingBottom + '" id="edm-padding-bottom" class="form-control" />' +
                 '                            <small>bottom</small>' +
                 '                        </div>' +
                 '                    </div>' +
@@ -156,7 +180,7 @@ function initKEditor(body, iframeMode, fileName, edmHtml) {
                 '            <div class="form-group form-group-sm">' +
                 '                <div class="col-md-12">' +
                 '                    <label for="edm-body-background">Width (in px)</label>' +
-                '                    <input type="number" value="" id="edm-body-width" class="form-control" />' +
+                '                    <input type="number" value="' + stylesData.edmWidth + '" id="edm-body-width" class="form-control" />' +
                 '                </div>' +
                 '            </div>' +
                 '            <div class="form-group form-group-sm">' +
@@ -164,7 +188,7 @@ function initKEditor(body, iframeMode, fileName, edmHtml) {
                 '                    <label for="edm-body-background">Background</label>' +
                 '                    <div class="input-group color-picker">' +
                 '                        <span class="input-group-addon"><i></i></span>' +
-                '                        <input type="text" value="" id="edm-body-background" class="form-control" />' +
+                '                        <input type="text" value="' + stylesData.bodyBg + '" id="edm-body-background" class="form-control" />' +
                 '                    </div>' +
                 '                </div>' +
                 '            </div>' +
@@ -173,23 +197,23 @@ function initKEditor(body, iframeMode, fileName, edmHtml) {
                 '                    <label>Padding (in px)</label>' +
                 '                    <div class="row row-sm text-center">' +
                 '                        <div class="col-xs-4 col-xs-offset-4">' +
-                '                            <input type="number" value="" id="edm-body-padding-top" class="form-control" />' +
+                '                            <input type="number" value="' + stylesData.paddingBodyTop + '" id="edm-body-padding-top" class="form-control" />' +
                 '                            <small>top</small>' +
                 '                        </div>' +
                 '                    </div>' +
                 '                    <div class="row row-sm text-center">' +
                 '                        <div class="col-xs-4">' +
-                '                            <input type="number" value="" id="edm-body-padding-left" class="form-control" />' +
+                '                            <input type="number" value="' + stylesData.paddingBodyLeft + '" id="edm-body-padding-left" class="form-control" />' +
                 '                            <small>left</small>' +
                 '                        </div>' +
                 '                        <div class="col-xs-4 col-xs-offset-4">' +
-                '                            <input type="number" value="" id="edm-body-padding-right" class="form-control" />' +
+                '                            <input type="number" value="' + stylesData.paddingBodyRight + '" id="edm-body-padding-right" class="form-control" />' +
                 '                            <small>right</small>' +
                 '                        </div>' +
                 '                    </div>' +
                 '                    <div class="row row-sm text-center">' +
                 '                        <div class="col-xs-4 col-xs-offset-4">' +
-                '                            <input type="number" value="" id="edm-body-padding-bottom" class="form-control" />' +
+                '                            <input type="number" value="' + stylesData.paddingBodyBottom + '" id="edm-body-padding-bottom" class="form-control" />' +
                 '                            <small>bottom</small>' +
                 '                        </div>' +
                 '                    </div>' +
@@ -205,7 +229,7 @@ function initKEditor(body, iframeMode, fileName, edmHtml) {
                 '                    <label for="edm-text-color">Text color</label>' +
                 '                    <div class="input-group color-picker">' +
                 '                        <span class="input-group-addon"><i></i></span>' +
-                '                        <input type="text" value="" id="edm-text-color" class="form-control" />' +
+                '                        <input type="text" value="' + stylesData.textColor + '" id="edm-text-color" class="form-control" />' +
                 '                    </div>' +
                 '                </div>' +
                 '            </div>' +
@@ -214,26 +238,26 @@ function initKEditor(body, iframeMode, fileName, edmHtml) {
                 '                    <label for="edm-text-color">Link color</label>' +
                 '                    <div class="input-group color-picker">' +
                 '                        <span class="input-group-addon"><i></i></span>' +
-                '                        <input type="text" value="" id="edm-link-color" class="form-control" />' +
+                '                        <input type="text" value="' + stylesData.linkColor + '" id="edm-link-color" class="form-control" />' +
                 '                    </div>' +
                 '                </div>' +
                 '            </div>' +
                 '            <div class="form-group form-group-sm">' +
                 '                <div class="col-md-12">' +
                 '                    <label for="edm-font-family">Font family</label>' +
-                '                    <input type="text" value="" id="edm-font-family" class="form-control" />' +
+                '                    <input type="text" value="' + stylesData.fontFamily + '" id="edm-font-family" class="form-control" />' +
                 '                </div>' +
                 '            </div>' +
                 '            <div class="form-group form-group-sm">' +
                 '                <div class="col-md-12">' +
                 '                    <label for="edm-font-size">Font size</label>' +
-                '                    <input type="text" value="" id="edm-font-size" class="form-control" />' +
+                '                    <input type="text" value="' + stylesData.fontSize + '" id="edm-font-size" class="form-control" />' +
                 '                </div>' +
                 '            </div>' +
                 '            <div class="form-group form-group-sm">' +
                 '                <div class="col-md-12">' +
                 '                    <label for="edm-line-height">Line height</label>' +
-                '                    <input type="text" value="" id="edm-line-height" class="form-control" />' +
+                '                    <input type="text" value="' + stylesData.lineHeight + '" id="edm-line-height" class="form-control" />' +
                 '                </div>' +
                 '            </div>' +
                 '        </div>' +
@@ -241,8 +265,15 @@ function initKEditor(body, iframeMode, fileName, edmHtml) {
                 '</div>'
             }
         },
+        onBeforeDynamicContentLoad: function (dynamicElement, component) {
+            var width = dynamicElement.closest('.keditor-container-inner').width();
+
+            component.attr({
+                'data-width': width
+            });
+        },
         onInitContentArea: function (contentArea) {
-            contentArea[contentArea.find('.keditor-container-content').children().length === 0 ? 'addClass' : 'removeClass']('empty');
+            contentArea[contentArea.children().length === 0 ? 'addClass' : 'removeClass']('empty');
 
             return contentArea.find('> table');
         },
@@ -270,47 +301,61 @@ function initKEditor(body, iframeMode, fileName, edmHtml) {
             contentArea[contentArea.children().length === 0 ? 'addClass' : 'removeClass']('empty');
         },
         onReady: function () {
-            initSettingPanel(edmHtml, iframeMode ? this.body : body);
+            initSettingPanel();
+
+            $('[data-dynamic-href]').each(function () {
+                keditor.initDynamicContent($(this));
+            });
+
+            adjustColWidth($('.keditor-container'));
+
+            hideLoadingIcon();
+        },
+        onContainerSnippetDropped: function (event, newContainer, droppedContainer) {
+            adjustColWidth(newContainer);
         }
     });
 }
 
-function initSettingPanel(edmHtml, body) {
+function adjustColWidth(target) {
+    flog('adjustColWidth', target);
+
+    target.find('.keditor-container-inner').each(function () {
+        var cols = $(this).find('table.col');
+        var isDynamicContent = cols.closest('[data-dynamic-href]').length > 0;
+
+        if (!isDynamicContent) {
+            var colsNumber = cols.length;
+            var td = cols.closest('td');
+            var width = td.width();
+            var adjustedWidth = 0;
+
+            flog('Cols number: ' + colsNumber + ', width: ' + width);
+
+            cols.each(function (i) {
+                var col = $(this);
+                var dataWidth = col.attr('data-width');
+                var colWidth = 0;
+
+                if (i === colsNumber - 1) {
+                    colWidth = width - adjustedWidth;
+                } else {
+                    colWidth = Math.round(eval(width + '*' + dataWidth));
+                    adjustedWidth += colWidth;
+                }
+
+                col.attr('width', colWidth);
+            });
+        } else {
+            flog('Is dynamic content. Ignored!');
+        }
+    });
+}
+
+function initSettingPanel() {
     flog('initSettingPanel');
 
     var settingPanel = body.find('#edm-setting');
-
-    body.find('#edm-body-width').val(edmHtml.find('#edm-container').attr('width') || DEFAULT_EDM_BODY_WIDTH);
-
-    var tdWrapper = edmHtml.find('td#edm-wrapper-td');
-    body.find('#edm-background').val(tdWrapper.css('background-color') || DEFAULT_EDM_BACKGROUND);
-    var paddingTop = tdWrapper.css('padding-top');
-    body.find('#edm-padding-top').val(paddingTop ? paddingTop.replace('px', '') : DEFAULT_EDM_PADDING_TOP);
-    var paddingBottom = tdWrapper.css('padding-bottom');
-    body.find('#edm-padding-bottom').val(paddingBottom ? paddingBottom.replace('px', '') : DEFAULT_EDM_PADDING_BOTTOM);
-    var paddingLeft = tdWrapper.css('padding-left');
-    body.find('#edm-padding-left').val(paddingLeft ? paddingLeft.replace('px', '') : DEFAULT_EDM_PADDING_LEFT);
-    var paddingRight = tdWrapper.css('padding-right');
-    body.find('#edm-padding-right').val(paddingRight ? paddingRight.replace('px', '') : DEFAULT_EDM_PADDING_RIGHT);
-
-    var tdBody = edmHtml.find('td#edm-body-td');
-    body.find('#edm-body-background').val(tdBody.css('background-color') || DEFAULT_EDM_BODY_BACKGROUND);
-    var paddingBodyTop = tdBody.css('padding-top');
-    body.find('#edm-body-padding-top').val(paddingBodyTop ? paddingBodyTop.replace('px', '') : DEFAULT_EDM_BODY_PADDING_TOP);
-    var paddingBodyBottom = tdBody.css('padding-bottom');
-    body.find('#edm-body-padding-bottom').val(paddingBodyBottom ? paddingBodyBottom.replace('px', '') : DEFAULT_EDM_BODY_PADDING_BOTTOM);
-    var paddingBodyLeft = tdBody.css('padding-left');
-    body.find('#edm-body-padding-left').val(paddingBodyLeft ? paddingBodyLeft.replace('px', '') : DEFAULT_EDM_BODY_PADDING_LEFT);
-    var paddingBodyRight = tdBody.css('padding-right');
-    body.find('#edm-body-padding-right').val(paddingBodyRight ? paddingBodyRight.replace('px', '') : DEFAULT_EDM_BODY_PADDING_RIGHT);
-
-    var tableContainer = edmHtml.find('table#edm-container');
-    body.find('#edm-font-family').val(tableContainer.attr('data-font-family') || DEFAULT_FONT_FAMILY);
-    body.find('#edm-font-size').val(tableContainer.attr('data-font-size') || DEFAULT_FONT_SIZE);
-    body.find('#edm-line-height').val(tableContainer.attr('data-line-height') || DEFAULT_LINE_HEIGHT);
-    body.find('#edm-text-color').val(tableContainer.attr('data-text-color') || DEFAULT_TEXT_COLOR);
-    body.find('#edm-link-color').val(tableContainer.attr('data-link-color') || DEFAULT_LINK_COLOR);
-
     // Init colorpicker
     settingPanel.find('.color-picker').each(function () {
         var input = $(this);
@@ -322,18 +367,18 @@ function initSettingPanel(edmHtml, body) {
 
         input.on('changeColor.colorpicker', function (e) {
             input.val(e.color.toHex());
-            applySetting(body);
+            applySetting();
         });
     });
 
     settingPanel.find('input').not('.colorpicker').on('change', function () {
-        applySetting(body,  $(this));
+        applySetting($(this));
     });
 
-    applySetting(body);
+    applySetting();
 }
 
-function applySetting(body, sender) {
+function applySetting(sender) {
     var edmBackground = body.find('#edm-background').val();
     var edmPaddingTop = body.find('#edm-padding-top').val();
     var edmPaddingBottom = body.find('#edm-padding-bottom').val();
@@ -371,9 +416,16 @@ function applySetting(body, sender) {
     edmFooter.innerWidth(edmBodyWidth);
 
     if (sender && sender.length > 0 && sender.is('#edm-body-width')) {
+        adjustColWidth(edmHeader);
+        adjustColWidth(edmBody);
+        adjustColWidth(edmFooter);
+
         edmHeader.add(edmBody).add(edmFooter).find('img.full-width').each(function () {
-            var img = $(this);
-            $.keditor.components['photo'].adjustWidthForImg(img, true);
+            $.keditor.components['photo'].adjustWidthForImg($(this), true);
+        });
+
+        edmHeader.add(edmBody).add(edmFooter).find('[data-dynamic-href]').each(function () {
+            keditor.initDynamicContent($(this));
         });
     }
 }
@@ -446,7 +498,8 @@ function setStyle(target, name, value) {
     });
 }
 
-function getEdmBody(body) {
+function getEdmContent() {
+    var body = $(document.body);
     var edmHtml = $('#edm-area').keditor('getContent', true);
     var edmHeader = edmHtml[0];
     var edmBody = edmHtml[1];
@@ -527,90 +580,70 @@ function getEdmBody(body) {
     }
 
     return (
-        '<table cellpadding="0" cellspacing="0" border="0" width="100%" id="edm-wrapper" ' + attributeTableWrapper + '>\n' +
-        '    <tbody>\n' +
-        '        <tr>\n' +
-        '            <td id="edm-wrapper-td" style="' + styleTDWrapper + '" align="center">\n' +
-        '                <table cellpadding="0" cellspacing="0" border="0" width="' + edmBodyWidth + '" id="edm-container" ' + dataEdmStyles + '>\n' +
-        '                    <tbody>\n' +
-        '                        <tr>\n' +
-        '                            <td>\n' +
-        '                                <table cellpadding="0" cellspacing="0" border="0" width="100%" id="edm-header" align="center">\n' +
-        '                                    <tbody>\n' +
-        '                                        <tr>\n' +
-        '                                            <td id="edm-header-td">\n' +
-        edmHeader +
-        '                                            </td>\n' +
-        '                                        </tr>\n' +
-        '                                    </tbody>\n' +
-        '                                </table>\n' +
-        '                                <table cellpadding="0" cellspacing="0" border="0" width="100%" id="edm-body" ' + attributeTableBody + ' align="center">\n' +
-        '                                    <tbody>\n' +
-        '                                        <tr>\n' +
-        '                                            <td id="edm-body-td" style="' + styleTDBody + '" >\n' +
-        edmBody +
-        '                                            </td>\n' +
-        '                                        </tr>\n' +
-        '                                    </tbody>\n' +
-        '                                </table>\n' +
-        '                                <table cellpadding="0" cellspacing="0" border="0" width="100%" id="edm-footer" align="center">\n' +
-        '                                    <tbody>\n' +
-        '                                        <tr>\n' +
-        '                                            <td id="edm-footer-td">\n' +
-        edmFooter +
-        '                                            </td>\n' +
-        '                                        </tr>\n' +
-        '                                    </tbody>\n' +
-        '                                </table>\n' +
-        '                            </td>\n' +
-        '                        </tr>\n' +
-        '                    </tbody>\n' +
-        '                </table>\n' +
-        '            </td>\n' +
-        '        </tr>\n' +
-        '    </tbody>\n' +
-        '</table>\n'
-    );
-}
-
-function getEdmContent() {
-    var keditor = $('#edm-area').data('keditor');
-    var body = $(document.body);
-    if (keditor.options.iframeMode) {
-        body = keditor.body;
-    }
-    var edmContent =
         '<!DOCTYPE HTML>\n' +
         '<html>\n' +
         '    <head>\n' +
         '        <title>Kademi EDM Title</title>\n' +
         '        <style type="text/css">\n' +
-        '            {{styleContent}}\n' +
+        '            ' + $('#edm-style').html().trim() + '\n' +
         '        </style>\n' +
         '    </head>\n' +
         '    <body>\n' +
         '        <center>\n' +
-        '{{bodyContent}}\n' +
+        '            <table cellpadding="0" cellspacing="0" border="0" width="100%" id="edm-wrapper" ' + attributeTableWrapper + '>\n' +
+        '                <tbody>\n' +
+        '                    <tr>\n' +
+        '                        <td id="edm-wrapper-td" style="' + styleTDWrapper + '" align="center">\n' +
+        '                            <table cellpadding="0" cellspacing="0" border="0" width="' + edmBodyWidth + '" id="edm-container" ' + dataEdmStyles + '>\n' +
+        '                                <tbody>\n' +
+        '                                    <tr>\n' +
+        '                                        <td>\n' +
+        '                                            <table cellpadding="0" cellspacing="0" border="0" width="100%" id="edm-header" align="center">\n' +
+        '                                                <tbody>\n' +
+        '                                                    <tr>\n' +
+        '                                                        <td id="edm-header-td">\n' +
+        edmHeader +
+        '                                                        </td>\n' +
+        '                                                    </tr>\n' +
+        '                                                </tbody>\n' +
+        '                                            </table>\n' +
+        '                                            <table cellpadding="0" cellspacing="0" border="0" width="100%" id="edm-body" ' + attributeTableBody + ' align="center">\n' +
+        '                                                <tbody>\n' +
+        '                                                    <tr>\n' +
+        '                                                        <td id="edm-body-td" style="' + styleTDBody + '" >\n' +
+        edmBody +
+        '                                                        </td>\n' +
+        '                                                    </tr>\n' +
+        '                                                </tbody>\n' +
+        '                                            </table>\n' +
+        '                                            <table cellpadding="0" cellspacing="0" border="0" width="100%" id="edm-footer" align="center">\n' +
+        '                                                <tbody>\n' +
+        '                                                    <tr>\n' +
+        '                                                        <td id="edm-footer-td">\n' +
+        edmFooter +
+        '                                                        </td>\n' +
+        '                                                    </tr>\n' +
+        '                                                </tbody>\n' +
+        '                                            </table>\n' +
+        '                                        </td>\n' +
+        '                                    </tr>\n' +
+        '                                </tbody>\n' +
+        '                            </table>\n' +
+        '                        </td>\n' +
+        '                    </tr>\n' +
+        '                </tbody>\n' +
+        '            </table>\n' +
         '        </center>\n' +
         '    </body>\n' +
-        '</html>';
-    var edmContentData = {
-        styleContent: $('#edm-style').html().trim(),
-        bodyContent: getEdmBody(body)
-    };
-
-    for (var key in edmContentData) {
-        var regex = new RegExp('{{' + key + '}}', 'gi');
-        edmContent = edmContent.replace(regex, edmContentData[key]);
-    }
-
-    return edmContent;
+        '</html>'
+    );
 }
 
-function initBtns(body, fileName) {
-    flog('initSaving', fileName);
+function initSaveFile(fileName) {
+    flog('initSaveFile', fileName);
 
-    $('.btn-save-file').on('click', function (e) {
+    var btnSave = $('.btn-save-file');
+    btnSave.on('click', function (e) {
         e.preventDefault();
 
         showLoadingIcon();
@@ -631,6 +664,20 @@ function initBtns(body, fileName) {
                 hideLoadingIcon();
             }
         })
+    });
+
+    win.on({
+        keydown: function (e) {
+            if (e.ctrlKey && e.keyCode === keymap.S) {
+                e.preventDefault();
+                btnSave.trigger('click');
+            }
+        },
+        beforeunload: function () {
+            if (body.hasClass('content-changed')) {
+                return '\n\nAre you sure you would like to leave the editor? You will lose any unsaved changes\n\n';
+            }
+        }
     });
 }
 

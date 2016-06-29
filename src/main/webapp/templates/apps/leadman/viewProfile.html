@@ -121,7 +121,7 @@
                                                 </p>
 
                                                 <p>
-                                                    $note.notes
+                                                    $!note.notes
                                                 </p>
                                             </div>
                                         </div>
@@ -240,7 +240,14 @@
                     }
                 });
                 initNewProfileLeadForm();
+
+                $('.modal').on('hidden.bs.modal', function () {
+                    var form = $(this).find('form');
+                    form.trigger('reset');
+                    $('input[name=newOrgId]', form).val('');
+                });
             });
+
             function reloadTable() {
                 $("#tasksTableBody").reloadFragment({
                     whenComplete: function () {

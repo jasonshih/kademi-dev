@@ -67,10 +67,8 @@
                         var dynamicElement = component.find('[data-dynamic-href]');
 
                         if (selectedKpi) {
-                            var contentArea = dynamicElement.closest('.keditor-content-area');
-
                             component.attr('data-href', selectedKpi);
-                            keditor.initDynamicContent(contentArea, dynamicElement);
+                            keditor.initDynamicContent(dynamicElement);
                             dynamicElement.removeClass('initialized-kpiVis');
                             self.initKpiVis();
                         } else {
@@ -81,10 +79,9 @@
                     form.find('.select-type').on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-                        var contentArea = dynamicElement.closest('.keditor-content-area');
 
                         component.attr('data-visualisation', this.value);
-                        keditor.initDynamicContent(contentArea, dynamicElement);
+                        keditor.initDynamicContent(dynamicElement);
                         dynamicElement.removeClass('initialized-kpiVis');
                         self.initKpiVis();
                     });
@@ -99,10 +96,9 @@
 
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-                        var contentArea = dynamicElement.closest('.keditor-content-area');
 
                         component.attr('data-height', number);
-                        keditor.initDynamicContent(contentArea, dynamicElement);
+                        keditor.initDynamicContent(dynamicElement);
                         dynamicElement.removeClass('initialized-kpiVis');
                         self.initKpiVis();
                     });
