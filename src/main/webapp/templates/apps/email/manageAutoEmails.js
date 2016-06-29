@@ -356,6 +356,7 @@ function categoryAjax(name, data, url, callback) {
         type: 'POST',
         url: window.location.pathname + (url || ''),
         data: data,
+        dataType: 'json',
         success: function (resp) {
             body.trigger('ajaxLoading', {
                 loading: false
