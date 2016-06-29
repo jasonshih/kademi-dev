@@ -119,34 +119,7 @@
                         </div>
                     </div>
 
-                    <div class="panel panel-default panel-optins">
-                        <div class="panel-heading">
-                            <i class="clip-question"></i> Can users opt-in to other mailing lists and groups?
-                        </div>
-                        <div class="panel-body optins">
-                            <div class="row">
-                                #foreach($group in $page.groups)
-                                #if( $group == $page.group )
 
-                                #else
-                                <div class="optins form-group col-sm-12 col-md-6 col-lg-4">
-                                    <div class="clearfix">
-                                        #set($groupId = "optin" + $group.name)
-                                        <label for="$groupId" class="control-label" style="display: block">
-
-                                            #set($optin = "")
-                                            #set($optin = $page.optin($group))
-                                            $formatter.checkbox($groupId, "optinGroup", $formatter.isNotNull($optin), $group.name)
-                                            $group.name
-                                            <input type="text" name="${groupId}_Desc" class="form-control" title="Invitation message to users" placeholder="Invitation message to users" value="$!optin.message" />
-                                        </label>
-                                    </div>
-                                </div>
-                                #end
-                                #end
-                            </div>
-                        </div>
-                    </div>
 
                     <div class="panel panel-default panel-fields">
                         <div class="panel-heading">
@@ -295,6 +268,59 @@
                 </div>
                 <!-- END OF RIGHT PANEL -->
 
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="panel panel-default panel-optins">
+                        <div class="panel-heading">
+                            <i class="clip-question"></i> Can users opt-in to other mailing lists and groups?
+                        </div>
+                        <div class="panel-body optins">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" id="optinsCheckAll"> Select all groups
+                                        </label>
+                                    </div>
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                #foreach($group in $page.groups)
+                                #if( $group == $page.group )
+
+                                #elseif ($group.mailingList)
+
+                                <div class="optins col-sm-12 col-md-6 col-lg-4">
+                                    #set($groupId = "optin" + $group.name)
+                                    <div class="checkbox">
+                                        <label for="$groupId">
+
+                                            #set($optin = "")
+                                            #set($optin = $page.optin($group))
+                                            $formatter.checkbox($groupId, "optinGroup", $formatter.isNotNull($optin), $group.name)
+                                            <strong><i class="fa fa-envelope-o"></i> $group.name</strong>
+
+                                        </label>
+                                    </div>
+
+                                    <input type="text" name="${groupId}_Desc" class="form-control" title="Invitation message to users" placeholder="Invitation message to users" value="$!optin.message" />
+                                </div>
+                                #end
+                                #end
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 text-right">
+                    <button type="submit" class="btn btn-sm btn-success">
+                        <span class="glyphicon glyphicon-floppy-disk"></span>
+                        Save
+                    </button>
+                </div>
             </div>
         </form>
 

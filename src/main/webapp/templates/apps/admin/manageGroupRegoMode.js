@@ -5,6 +5,18 @@ function initManageGroupRegoMode() {
     initCRUDRole();
     initGroupPasswordPolicy();
     initRegoMode();
+    initOptins();
+}
+
+function initOptins(){
+    $('#optinsCheckAll').on('click', function(e){
+        $('[name=optinGroup][type=checkbox]').prop('checked', this.checked);
+    });
+    var allChecked = true;
+    $('[name=optinGroup][type=checkbox]').each(function(){
+        allChecked = this.checked;
+    });
+    $('#optinsCheckAll').prop('checked', allChecked);
 }
 
 function initCRUDRole() {
