@@ -277,8 +277,11 @@ function initDefaultDragDrop() {
             categoryAjax(seriesName, 'changeCategory=changeCategory', seriesName, function (name, resp) {
                 //window.location.reload();
             });
-            $(this).find('tbody').append(row);
-
+            var folder = row.parents('.category');
+            var dtFolder = row.parents('table').DataTable();
+            dtFolder.row(row).remove().draw();
+            folder.find('.series-count').text(dtFolder.page.info().recordsTotal);
+            $(this).DataTable().rows.add(row).draw();
             $(c.helper).remove();
         }
     });
@@ -293,10 +296,14 @@ function initFolderDragDrop() {
             var seriesName = row.data('seriesname');
             var categoryID = $(this).attr('id');
             categoryAjax(seriesName, 'changeCategory=changeCategory&categoryID=' + categoryID, seriesName, function (name, resp) {
-                //window.location.reload();
-            });
-            $(this).find('tbody').append(row);
 
+            });
+            var dtFolder = row.parents('table').DataTable();
+            dtFolder.row(row).remove().draw();
+
+            var dt = $(this).find('table').DataTable();
+            dt.rows.add(row).draw();
+            $(this).find('.series-count').text(dt.page.info().recordsTotal);
             $(c.helper).remove();
         }
     });
