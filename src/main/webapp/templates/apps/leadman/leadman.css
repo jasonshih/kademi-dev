@@ -49,8 +49,13 @@ table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:af
     }
 
     .leadActions{
-        position: relative;
+        position: relative !important;
     }
+
+    .leadActions .btn{
+        margin-bottom: 5px;
+    }
+
     #dashLeadsList .media-heading a, #searchResults .media-heading a{
         display: block;
     }
