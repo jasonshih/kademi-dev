@@ -264,7 +264,8 @@ function initDefaultDragDrop() {
         revert: 'invalid',
         axis: 'y',
         start: function (event, ui) {
-            c.helper = ui.helper;
+            ui.helper.css('background','#f9f9f9');
+            ui.helper.css('z-index','999');
         }
     });
 
@@ -282,7 +283,6 @@ function initDefaultDragDrop() {
             dtFolder.row(row).remove().draw();
             folder.find('.series-count').text(dtFolder.page.info().recordsTotal);
             $(this).DataTable().rows.add(row).draw();
-            $(c.helper).remove();
         }
     });
 }
@@ -304,7 +304,6 @@ function initFolderDragDrop() {
             var dt = $(this).find('table').DataTable();
             dt.rows.add(row).draw();
             $(this).find('.series-count').text(dt.page.info().recordsTotal);
-            $(c.helper).remove();
         }
     });
 
@@ -313,7 +312,8 @@ function initFolderDragDrop() {
         revert: 'invalid',
         axis: 'y',
         start: function (event, ui) {
-            c.helper = ui.helper;
+            ui.helper.css('background','#f9f9f9');
+            ui.helper.css('z-index','999');
         }
     });
 }
