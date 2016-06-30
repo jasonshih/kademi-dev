@@ -33,11 +33,11 @@ function initApps() {
 
     initSettingsForms();
 
-    $(document.body).on('hidden.bs.modal', '.modal', function () {
-        var modal = $(this);
-        var form = modal.find('form');
-        resetForm(form);
-    });
+    //$(document.body).on('hidden.bs.modal', '.modal', function () {
+    //    var modal = $(this);
+    //    var form = modal.find('form');
+    //    resetForm(form);
+    //});
 }
 
 function initSettingsForms() {
