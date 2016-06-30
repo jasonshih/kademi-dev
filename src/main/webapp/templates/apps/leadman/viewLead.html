@@ -515,12 +515,22 @@
                                             Due in <abbr title="$formatter.formatDateISO8601($task.dueDate)" class="timeago">$task.dueDate</abbr>
                                             #end
                                             #elseif( $task.is("canceled") )
+                                            <div class="btn-task-panel-wrap pull-right">
+                                                <button class="btn btn-success btn-reopen-task" data-taskid="$task.name" title="Re-open task">
+                                                    <span class="fa fa-refresh"></span>
+                                                </button>
+                                            </div>
                                             <span class="label label-warning">
                                                 Canceled
                                             </span>
                                             -
                                             <abbr title="$formatter.formatDateISO8601($task.completedDate)" class="timeago">$task.completedDate</abbr>
                                             #else
+                                            <div class="btn-task-panel-wrap pull-right">
+                                                <button class="btn btn-success btn-reopen-task" data-taskid="$task.name" title="Re-open task">
+                                                    <span class="fa fa-refresh"></span>
+                                                </button>
+                                            </div>
                                             <span class="label label-success">
                                                 Completed
                                             </span>
@@ -824,6 +834,7 @@
                 initFileNoteEdit();
                 initUpdateUserModal();
                 initOrgSearchTab();
+                initReopenTask();
 
                 $("#assignToMenu").on("click", "a", function (e) {
                     e.preventDefault();
@@ -1164,6 +1175,25 @@
                             form.find('input[name=leadOrgId]').val('');
                         }
                     }
+                });
+            }
+
+            function initReopenTask() {
+                $('body').on('click', '.btn-reopen-task', function (e) {
+                    e.preventDefault();
+
+                    var btn = $(this);
+                    var taskId = btn.data('taskid');
+
+                    $.ajax({
+                        type: 'POST',
+                        data: {
+                            reopenTask: taskId
+                        },
+                        success: function () {
+                            reloadTasks();
+                        }
+                    });
                 });
             }
         </script>
