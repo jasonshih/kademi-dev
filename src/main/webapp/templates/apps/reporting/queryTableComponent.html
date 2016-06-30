@@ -6,16 +6,26 @@
         <i class="fa fa-bar-chart"></i> Query Table
         #set( $queryBean = $applications.Reporting.getQuery($query) )
         #set( $results = $applications.Reporting.runQuery($queryBean) )
+        #set( $fields = $applications.Reporting.getQueryFieldNames($queryBean) )
 
     </div>
     <div class="panel-body">
         <div style="height: $!{height}px">
             <div class="table-responsive">
                 <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            #foreach( $field in $fields)
+                            <th>$field</th>
+                            #end
+                        </tr>
+                    </thead>
                     <tbody>
                         #foreach($row in $results.hits.hits)
                         <tr>
-                            <td>$row</td>
+                            #foreach( $field in $fields)
+                            <th>$!row.fields.get($field).value</th>
+                            #end
                         </tr>
                         #end
                     </tbody>
