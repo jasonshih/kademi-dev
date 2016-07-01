@@ -808,6 +808,8 @@ function setLead(href, status, actionDescription) {
 
 
 function initDateTimePickers() {
+    flog('initDateTimePickers');
+
     var pickers = $('.date-time');
     flog("pickers", pickers);
     pickers.datetimepicker({
@@ -816,7 +818,9 @@ function initDateTimePickers() {
 }
 
 function initDateTimePikersForModal() {
-    $('.modal').on('shown.bs.modal', function () {
+    flog('initDateTimePikersForModal');
+
+    $('.modal').on('shown.bs.modal loaded.bs.modal', function (e) {
         var pickers = $(this).find('.date-time');
         flog("pickers", pickers);
         pickers.datetimepicker({
