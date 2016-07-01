@@ -425,6 +425,12 @@ function initNewLeadForm() {
                         doSearchLeadmanPage();
                     }
                 }
+
+                if ($('#leadAnalyticsPage').length){
+                    if (typeof loadFunnel === 'function'){
+                        loadFunnel();
+                    }
+                }
             } else {
                 Msg.info('Saved, going to the new lead');
                 if (resp.nextHref) {
