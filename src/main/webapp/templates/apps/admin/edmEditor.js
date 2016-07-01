@@ -300,6 +300,11 @@ function initKEditor(fileName, stylesData) {
             var contentArea = $(this);
             contentArea[contentArea.children().length === 0 ? 'addClass' : 'removeClass']('empty');
         },
+        onContainerChanged: function (e, changedContainer) {
+            changedContainer.find('[data-dynamic-href]').each(function () {
+                keditor.initDynamicContent($(this));
+            });
+        },
         onReady: function () {
             initSettingPanel();
 
@@ -335,16 +340,18 @@ function adjustColWidth(target) {
             cols.each(function (i) {
                 var col = $(this);
                 var dataWidth = col.attr('data-width');
-                var colWidth = 0;
 
-                if (i === colsNumber - 1) {
-                    colWidth = width - adjustedWidth;
-                } else {
-                    colWidth = Math.round(eval(width + '*' + dataWidth));
-                    adjustedWidth += colWidth;
+                if (dataWidth) {
+                    var colWidth = 0;
+                    if (i === colsNumber - 1) {
+                        colWidth = width - adjustedWidth;
+                    } else {
+                        colWidth = Math.round(eval(width + '*' + dataWidth));
+                        adjustedWidth += colWidth;
+                    }
+
+                    col.attr('width', colWidth);
                 }
-
-                col.attr('width', colWidth);
             });
         } else {
             flog('Is dynamic content. Ignored!');

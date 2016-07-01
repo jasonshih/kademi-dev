@@ -41,8 +41,8 @@
             <td class="text-right">
                 <span>Total Points:</span>
             </td>
-            <td>
-                <strong>$current</strong>
+            <td colspan="2">
+                <strong>$current pts</strong>
             </td>
         </tr>
         #set( $avail = $rs.availableBalance($page.profile) )
@@ -52,8 +52,8 @@
             <td class="text-right">
                 <span>Available Points:</span>
             </td>
-            <td>
-                <strong>$avail</strong>
+            <td colspan="2">
+                <strong>$avail pts</strong>
             </td>
         </tr>
         #end
@@ -107,7 +107,7 @@ as when team points are being used.</p>
                 <td>$p.numPoints</td>
                 <td>$p.reason</td>
                 <td>
-                    <abbr class="pull-right timeago" title="$formatter.formatDateISO8601($p.issuedDate)">$p.issuedDate</abbr>
+                    <abbr class="timeago" title="$formatter.formatDateISO8601($p.issuedDate)">$p.issuedDate</abbr>
                 </td>
             </tr>
             #end

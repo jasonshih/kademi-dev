@@ -62,7 +62,15 @@
 
         <div class="lead-desc">
             <div class="leadInner">
+                #set ($leadUri = '/leads/'+ $lead.id)
+                #set ($leadPage = $page.find($leadUri))
+                #set ($notes = $leadPage.notes)
+                #if ($notes.size() > 0)
+                <strong>Summary: </strong>$formatter.textToHtml($notes[0].summary)
+                <strong>Notes: </strong>$formatter.textToHtml($notes[0].notes)
+                #else
                 $formatter.textToHtml($lead.description)
+                #end
             </div>
         </div>
 

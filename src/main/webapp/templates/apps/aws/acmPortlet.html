@@ -1,0 +1,130 @@
+<div id="aws-certificate-manager" class="well">
+    <h3>Amazon Certificate Manager (Beta)</h3>
+
+    <p>AWS Certificate Manager removes many of the time-consuming and error-prone steps to acquire an SSL/TLS certificate for your website.
+        There is no need to generate a key pair or certificate signing request (CSR), submit a CSR to a Certificate Authority,
+        or upload and install the certificate once received. With a few clicks, you can quickly request a trusted SSL/TLS certificate from AWS.
+        Once the certificate is approved, AWS Certificate Manager takes care of deploying certificates, to help you enable SSL/TLS for your website.</p>
+    <p>For more information see <a href="https://aws.amazon.com/certificate-manager/" target="_blank">AWS Certificate Manager</a></p>
+
+    #if($domainName)
+    #if($certificate)
+    <div>
+        <p>
+            <strong>Status:</strong> $certificate.status<br/>
+            #if($certificate.status == "PENDING_VALIDATION")
+            <strong>Validation Emails:</strong>
+            <br/>
+            #foreach($dvo in $certificate.domainValidationOptions)
+            <strong>$dvo.validationDomain: </strong> $formatter.toCsv($dvo.validationEmails)<br/>
+            #end
+            #elseif($certificate.status == "ISSUED")
+            <strong>In Use:</strong> #if($certificate.inUseBy.size() > 0) True #else False #end
+            #end
+        </p>
+    </div>
+    #if($certificate.status == "PENDING_VALIDATION")
+    <a href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#resendValidationEmailModal"><i class="fa fa-plus"></i> Resend validation email</a>
+    #elseif($certificate.status == "ISSUED" && $certificate.inUseBy.size() == 0)
+    <a href="#" class="btn btn-sm btn-primary btn-acm-usecert"><i class="fa fa-check"></i> Use Certificate</a>
+    #end
+    #else
+    <a href="#" class="btn btn-sm btn-primary btn-acm-newcert"><i class="fa fa-plus"></i> Request a certificate</a>
+    #end
+    #else
+    <p><strong>Please specify a domain name on the Details tab to use this feature.</strong></p>
+    #end
+
+    <div class="modal fade" id="resendValidationEmailModal" tabindex="-1" role="dialog" aria-labelledby="resendValidationTitle" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="resendValidationTitle">Resend Validation Email</h4>
+        </div>
+        <div class="modal-body">
+            <div class="alert alert-info">Click Resend to send new validation email.
+                The registered owner or an authorized representative can validate control of the domain name and
+                approve the certificate by following the instructions in the body of the email.</div>
+            <form class="form-horizontal" method="POST" action="/awsAcm/">
+                <input type="hidden" name="resendValidationEmail" value="true" />
+                <input type="hidden" name="websiteId" value="$website.id" />
+                <div id="certificate-body">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Validation Domain</label>
+                        <div class="col-sm-8">
+                            #foreach($dn in $domainNames)
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="validationDomain" value="$dn" #if($foreach.first)checked#end>
+                                    $dn
+                                </label>
+                            </div>
+                            #end
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Resend</button>
+        </div>
+    </div><!-- /.modal -->
+</div>
+
+<script>
+    $(function () {
+        $('body').on('click', '.btn-acm-newcert', function (e) {
+            e.preventDefault();
+
+            if (confirm('Are you sure you want to request an SSL/TLS Certificate from AWS Certificate Manager?')) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/awsAcm/',
+                    dataType: 'json',
+                    data: {
+                        requestNewCert: true,
+                        websiteId: $website.id
+                    },
+                    success: function (data) {
+                        $('#aws-certificate-manager').reloadFragment();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        flog('Error!', jqXHR, textStatus, errorThrown);
+                    }
+                });
+            }
+        });
+
+        $('body').on('click', '.btn-acm-usecert', function (e) {
+            e.preventDefault();
+
+            if (confirm('Are you sure you want to set this certificate as active?')) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/awsAcm/',
+                    dataType: 'json',
+                    data: {
+                        setCertActive: true,
+                        websiteId: $website.id
+                    },
+                    success: function (data) {
+                        $('#aws-certificate-manager').reloadFragment();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        flog('Error!', jqXHR, textStatus, errorThrown);
+                    }
+                });
+            }
+        });
+
+        var modal = $('#resendValidationEmailModal');
+        var modalForm = modal.find('form');
+
+        modalForm.forms({
+            onSuccess: function (resp) {
+                modal.modal('hide');
+                Msg.success('Resent validation email');
+            }
+        });
+    });
+</script>

@@ -264,7 +264,8 @@ function initDefaultDragDrop() {
         revert: 'invalid',
         axis: 'y',
         start: function (event, ui) {
-            c.helper = ui.helper;
+            ui.helper.css('background','#f9f9f9');
+            ui.helper.css('z-index','999');
         }
     });
 
@@ -277,9 +278,11 @@ function initDefaultDragDrop() {
             categoryAjax(seriesName, 'changeCategory=changeCategory', seriesName, function (name, resp) {
                 //window.location.reload();
             });
-            $(this).find('tbody').append(row);
-
-            $(c.helper).remove();
+            var folder = row.parents('.category');
+            var dtFolder = row.parents('table').DataTable();
+            dtFolder.row(row).remove().draw();
+            folder.find('.series-count').text(dtFolder.page.info().recordsTotal);
+            $(this).DataTable().rows.add(row).draw();
         }
     });
 }
@@ -293,11 +296,14 @@ function initFolderDragDrop() {
             var seriesName = row.data('seriesname');
             var categoryID = $(this).attr('id');
             categoryAjax(seriesName, 'changeCategory=changeCategory&categoryID=' + categoryID, seriesName, function (name, resp) {
-                //window.location.reload();
-            });
-            $(this).find('tbody').append(row);
 
-            $(c.helper).remove();
+            });
+            var dtFolder = row.parents('table').DataTable();
+            dtFolder.row(row).remove().draw();
+
+            var dt = $(this).find('table').DataTable();
+            dt.rows.add(row).draw();
+            $(this).find('.series-count').text(dt.page.info().recordsTotal);
         }
     });
 
@@ -306,7 +312,8 @@ function initFolderDragDrop() {
         revert: 'invalid',
         axis: 'y',
         start: function (event, ui) {
-            c.helper = ui.helper;
+            ui.helper.css('background','#f9f9f9');
+            ui.helper.css('z-index','999');
         }
     });
 }
@@ -356,6 +363,7 @@ function categoryAjax(name, data, url, callback) {
         type: 'POST',
         url: window.location.pathname + (url || ''),
         data: data,
+        dataType: 'json',
         success: function (resp) {
             body.trigger('ajaxLoading', {
                 loading: false

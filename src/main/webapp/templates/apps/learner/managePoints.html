@@ -194,17 +194,18 @@
         <div id="modal-new-points" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
             <div class="modal-header">
                 <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                <h4 class="modal-title">Assign points to user</h4>
+                <h4 class="modal-title">Assign points to</h4>
             </div>
             <form method="post" action="$page.href" class="form-horizontal" id="new-points-form">
                 <div class="modal-body">
                     <p class="alert alert-danger">Please note that any applicable allocation rules will also be processed.</p>
-                    <p>Please specify a users email or userId to assign points to.</p>
+
+                    <p>Please specify a users email, userId or orgId to assign points to.</p>
 
                     <div class="form-group">
-                        <label class="control-label col-md-3" for="newUserEmail">Email or UserID</label>
+                        <label class="control-label col-md-3" for="newUserEmail">Participant ID</label>
                         <div class="col-md-9">
-                            <input type="text" name="awardToEmail" required="true" id="awardToEmail" class="required form-control" />
+                            <input type="text" name="awardToEmail" required="true" id="awardToEmail" class="required form-control" placeholder="email, userid or orgId" />
                         </div>
                     </div>
 
