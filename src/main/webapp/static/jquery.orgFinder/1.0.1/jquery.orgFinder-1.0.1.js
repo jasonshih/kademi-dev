@@ -110,7 +110,9 @@
             if (orgData.country) {
                 address += ', ' + orgData.country;
             }
-            itemContent += '<p class=list-group-item-text"><i class="fa fa-map-marker"></i> ' + address + '</p>';
+            if (address.trim() !== '') {
+                itemContent += '<p class=list-group-item-text"><i class="fa fa-map-marker"></i> ' + address + '</p>';
+            }
 
             return '<div class="list-group-item">' + itemContent + '</div>';
         },
