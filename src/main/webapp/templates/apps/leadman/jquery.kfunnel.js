@@ -288,6 +288,7 @@
                  */
 
                 var counter = 0;
+                name_set = name_set.unique();
                 name_set.forEach(function (value) {
                     var svgElem,
                         svgElemId = 'funnelStage' + counter;
@@ -701,3 +702,15 @@
             return false;
     };
 }(jQuery));
+
+Array.prototype.unique = function(){
+    var u = {}, a = [];
+    for(var i = 0, l = this.length; i < l; ++i){
+        if(u.hasOwnProperty(this[i])) {
+            continue;
+        }
+        a.push(this[i]);
+        u[this[i]] = 1;
+    }
+    return a;
+}
