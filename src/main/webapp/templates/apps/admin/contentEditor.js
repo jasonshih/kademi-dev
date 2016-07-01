@@ -108,9 +108,17 @@ function initKEditor(body, fileName) {
                 '<form class="form-horizontal">' +
                 '   <div class="form-group">' +
                 '       <div class="col-sm-12">' +
+                '           <label>Available for groups</label>' +
+                '           <select class="form-control select-groups selectpicker" multiple="multiple" title=" - Select Groups - ">' +
+                '           </select>' +
+                '       </div>' +
+                '   </div>' +
+                '   <div class="form-group">' +
+                '       <div class="col-sm-12">' +
                 '           <label>Background Image</label>' +
                 '           <p><img src="/static/images/photo_holder.png" class="img-responsive img-thumbnail" id="background-image-previewer" /></p>' +
                 '           <button type="button" class="btn btn-block btn-primary" id="background-image-edit">Change Background Image</button>' +
+                '           <button type="button" class="btn btn-block btn-xs btn-danger" id="background-image-delete">Remove Background Image</button>' +
                 '       </div>' +
                 '   </div>' +
                 '   <div class="form-group">' +
@@ -219,6 +227,18 @@ function initKEditor(body, fileName) {
                 '</form>'
             );
 
+            var groupsOptions = '';
+            for (var name in allGroups) {
+                groupsOptions += '<option value="' + name + '">' + allGroups[name] + '</option>';
+            }
+
+            form.find('.select-groups').html(groupsOptions).selectpicker().on('changed.bs.select', function () {
+                var container = keditor.getSettingContainer();
+                var containerBg = container.find('.container-bg');
+
+                containerBg.attr('data-groups', $(this).selectpicker('val').join(','));
+            });
+
             var basePath = window.location.pathname.replace('contenteditor', '');
             if (keditor.options.basePath) {
                 basePath = keditor.options.basePath;
@@ -235,6 +255,14 @@ function initKEditor(body, fileName) {
                     containerBg.css('background-image', 'url("' + imageUrl + '")');
                     form.find('#background-image-previewer').attr('src', imageUrl);
                 }
+            });
+            form.find('#background-image-delete').on('click', function (e) {
+                e.preventDefault();
+
+                var container = keditor.getSettingContainer();
+                var containerBg = container.find('.container-bg');
+                containerBg.css('background-image', '');
+                form.find('#background-image-previewer').attr('src', '/static/images/photo_holder.png');
             });
 
             var colorPicker = form.find('.color-picker');
@@ -518,6 +546,8 @@ function initKEditor(body, fileName) {
                 }
             }
             form.find('.txt-height').val(height);
+
+            form.find('.select-groups').selectpicker('val', (containerBg.attr('data-groups') || '').split(','));
         }
     });
 }

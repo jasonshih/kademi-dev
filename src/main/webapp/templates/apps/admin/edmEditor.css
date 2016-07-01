@@ -156,6 +156,10 @@ body.opened-keditor-sidebar div.cke_float[id*="cke_keditor-section-"] {
     vertical-align: top;
 }
 
+.keditor-setting-form {
+    min-height: 150px;
+}
+
 .keditor-container-content .keditor-component-content h1,
 .keditor-container-content .keditor-component-content h2,
 .keditor-container-content .keditor-component-content h3,

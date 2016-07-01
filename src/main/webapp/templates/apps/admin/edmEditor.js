@@ -318,6 +318,38 @@ function initKEditor(fileName, stylesData) {
         },
         onContainerSnippetDropped: function (event, newContainer, droppedContainer) {
             adjustColWidth(newContainer);
+        },
+
+        containerSettingEnabled: true,
+        containerSettingInitFunction: function (form, keditor) {
+            form.append(
+                '<form class="form-horizontal">' +
+                '   <div class="form-group">' +
+                '       <div class="col-sm-12">' +
+                '           <label>Available for groups</label>' +
+                '           <select class="form-control select-groups selectpicker" multiple="multiple" title=" - Select Groups - ">' +
+                '           </select>' +
+                '       </div>' +
+                '   </div>' +
+                '</form>'
+            );
+
+            var groupsOptions = '';
+            for (var name in allGroups) {
+                groupsOptions += '<option value="' + name + '">' + allGroups[name] + '</option>';
+            }
+
+            form.find('.select-groups').html(groupsOptions).selectpicker().on('changed.bs.select', function () {
+                var container = keditor.getSettingContainer();
+                var table = container.find('.keditor-container-inner > table');
+
+                table.attr('data-groups', $(this).selectpicker('val').join(','));
+            });
+        },
+        containerSettingShowFunction: function (form, container, keditor) {
+            var table = container.find('.keditor-container-inner > table');
+
+            form.find('.select-groups').selectpicker('val', (table.attr('data-groups') || '').split(','));
         }
     });
 }
