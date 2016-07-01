@@ -93,6 +93,13 @@ function initCloseDealModal() {
                         }
                     });
                 }
+                if ($('#dashLeadsList').length){
+                    $('#dashLeadsList').reloadFragment({
+                        whenComplete: function () {
+                            $('abbr.timeago').timeago();
+                        }
+                    });
+                }
                 closeDealModal.modal('hide');
             }
         });
@@ -267,8 +274,12 @@ function initLeadActions() {
     $("body").on("click", ".closeLead", function (e) {
         flog("initLeadActions click - close");
         e.preventDefault();
-        var href = $(this).attr("href");
-        closeLead(href);
+        var href = $(this).attr('href');
+        var closeDealModal = $("#closeDealModal");
+        closeDealModal.find('form').attr('action', href);
+        closeDealModal.modal();
+        //var href = $(this).attr("href");
+        //closeLead(href);
     });
 
     $("body").on("click", ".updateCreatedDate", function (e) {
