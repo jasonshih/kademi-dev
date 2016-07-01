@@ -32,7 +32,8 @@
                 margin-right: 10px;;
             }
             .note-item{
-                margin-bottom: 30px;
+                margin-bottom: 10px;
+                padding-top: 10px;
             }
             .note-item > div + div{
                 margin-top: 15px;
@@ -42,6 +43,9 @@
             }
             .page-header{
                 margin-top: 0;
+            }
+            .note-item + .note-item{
+                border-top: 1px solid #eee;
             }
             @media (max-width: 767px) {
                 #lead-cover{
@@ -201,18 +205,19 @@
                                                 <div class="note-item">
                                                     <div>
                                                         <img src="/theme/images/user/05.jpg" alt="Image" class="img-circle thumb32 lead-note-author">
-                                                            <a href="/users/$note.createdBy.name">$note.createdBy.formattedName</a>
-                                                            #if( $note.inbound )
-                                                            <small class="text-muted fa fa-arrow-left"></small>
-                                                            <small class="text-muted fa fa-${note.icon}"></small>
-                                                            #else
-                                                            <small class="text-muted fa fa-${note.icon}"></small>
-                                                            <small class="text-muted fa fa-arrow-right"></small>
-                                                            #end
-                                                            #set($type = $note.actionType +  "-" + $note.inbound)
-                                                            <a class="note-edit" href="$note.id" data-type="$type" data-notes="$!note.notes">
-                                                                <span class="fa fa-pencil"></span>
-                                                            </a>
+                                                        <a href="/users/$note.createdBy.name">$note.createdBy.formattedName</a>
+                                                        #if( $note.inbound )
+                                                        <small class="text-muted fa fa-arrow-left"></small>
+                                                        <small class="text-muted fa fa-${note.icon}"></small>
+                                                        #else
+                                                        <small class="text-muted fa fa-${note.icon}"></small>
+                                                        <small class="text-muted fa fa-arrow-right"></small>
+                                                        #end
+                                                        #set($type = $note.actionType +  "-" + $note.inbound)
+                                                        <a class="note-edit" href="$note.id" data-type="$type" data-notes="$!note.notes">
+                                                            <span class="fa fa-pencil"></span>
+                                                        </a>
+                                                        <abbr title="$formatter.formatDateISO8601($note.createDate)" class="timeago pull-right" style="margin-right: 10px">$note.createDate</abbr>
                                                     </div>
                                                     <div style="white-space: pre-wrap">$!note.notes</div>
                                                 </div>
