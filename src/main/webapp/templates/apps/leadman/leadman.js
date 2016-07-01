@@ -619,12 +619,21 @@ function initNewContactForm() {
 
     form.forms({
         callback: function (resp) {
-            if (resp.nextHref) {
-                window.location.href = resp.nextHref;
+            var btn = form.find('.clicked');
+            if (!btn.hasClass('btnCreateClose')){
+                if (resp.nextHref) {
+                    window.location.href = resp.nextHref;
+                }
             }
+
             Msg.info('Created contact');
             modal.modal("hide");
         }
+    });
+
+    form.find("button").on('click', function (e) {
+        form.find(".clicked").removeClass("clicked");
+        $(this).addClass("clicked");
     });
 }
 

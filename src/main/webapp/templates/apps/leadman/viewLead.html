@@ -730,7 +730,7 @@
                         <input type="hidden" name="assignNewProfile" value="assignNewProfile"/>
                         <input type="hidden" name="userId"/>
                         <div class="modal-body">
-                            <div class="form-group">
+                            <div class="form-group hide">
                                 <label class="control-label col-md-2" for="nickName">Nick Name</label>
                                 <div class="col-md-8">
                                     <input type="text" name="nickName" id="nickName" class="form-control" placeholder="Nick name" />
@@ -738,11 +738,9 @@
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-md-2" for="updateUserFirstName">Name</label>
-                                <div class="col-md-5">
-                                    <div class="input-group">
-                                        <input type="text" name="firstName" id="updateUserFirstName" class="form-control" placeholder="First name" />
-                                        <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                                    </div>
+                                <div class="col-md-5" id="searchbox-wrap">
+                                    <i class="fa fa-search"></i>
+                                    <input type="text" name="firstName" id="updateUserFirstName" class="form-control" placeholder="First name" />
                                 </div>
                                 <div class="col-md-5">
                                     <input type="text" name="surName" id="newUserSurName" class="form-control" placeholder="Surname" />
@@ -1046,12 +1044,10 @@
                         ].join('\n'),
                         suggestion: Handlebars.compile(
                                 '<div>'
-                                + '<strong>{{name}}</strong>'
-                                + '</br>'
-                                + '<span>{{phone}}</span>'
-                                + '</br>'
-                                + '<span>{{email}}</span>'
-                                + '</div>')
+                                + '<div>{{name}}</div>'
+                                + '<div>{{phone}}</div>'
+                                + '<div>{{email}}</div>'
+                                + '</div><hr>')
                     }
                 });
 
