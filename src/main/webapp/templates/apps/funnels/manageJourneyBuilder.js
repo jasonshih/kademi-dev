@@ -7,7 +7,7 @@ var JBApp = {
         'emailAction': '<i class="fa fa-envelope" aria-hidden="true"></i> Send Email',
         'createTaskAction': '<i class="fa fa-tasks" aria-hidden="true"></i> Create Task',
         'createDataSeriesAction': '<i class="fa fa-database" aria-hidden="true"></i> Create Data Series',
-        'calendarEventAction': '<i class="fa fa-calendar-check-o" aria-hidden="true"></i> Create Calendar Event',
+        'calendarEventAction': '<i class="fa fa-calendar-check-o" aria-hidden="true"></i> Calendar Event',
         'setField': '<i class="fa fa-pencil-square-o" aria-hidden="true"></i> Set Field'
     }
 };
@@ -68,12 +68,12 @@ jsPlumb.ready(function () {
     });
 
     instance.registerConnectionType("basic", {anchor: "Continuous", connector: "StateMachine"});
+    instance.registerConnectionType("transition", {anchor: "Continuous", connector: "StateMachine"});
+    instance.registerConnectionType("decisionDefault", {anchor: "Continuous", connector: "StateMachine"});
+    instance.registerConnectionType("decisionChoices", {anchor: "Continuous", connector: "StateMachine"});
     instance.registerConnectionType("timeout", {anchor: "Continuous", connector: "StateMachine"});
 
     window.jsp = instance;
-
-    var canvas = document.getElementById("paper");
-    var windows = jsPlumb.getSelector("#paper .w");
 
     // bind a click listener to each connection; the connection is deleted. you could of course
     // just do this: jsPlumb.bind("click", jsPlumb.detach), but I wanted to make it clear what was
@@ -117,11 +117,19 @@ jsPlumb.ready(function () {
     // this listener sets the connection's internal
     // id as the label overlay's text.
     instance.bind("connection", function (info) {
+        var label = 'then';
         if (info.connection.hasType('timeout')) {
-            info.connection.getOverlay("label").setLabel('timeout');
-        } else {
-            info.connection.getOverlay("label").setLabel('then');
+            label = 'timeout';
+        } else if (info.connection.hasType('decisionDefault')) {
+            label = 'default';
+        } else if (info.connection.hasType('decisionChoices')) {
+            label = 'choice';
+        } else if (info.connection.hasType('transition')) {
+            label = 'transition';
         }
+
+        info.connection.getOverlay("label").setLabel(label);
+
         if (JBApp.initialized){
             flog('new connection was made', info.connection);
             var conn = info.connection;
@@ -131,16 +139,31 @@ jsPlumb.ready(function () {
                 for (var key in node) {
                     if (node[key].nodeId === conn.sourceId){
                         if (node[key].hasOwnProperty('transition')) {
-                            flog('found a begin node');
+                            flog('started from a begin node');
                             node[key].transition.nextNodeId = conn.targetId;
                         } else if (node[key].hasOwnProperty('transitions')){
-                            flog('found a goal node');
-                            if (!node[key].transitions) {
-                                node[key].transitions = [];
+                            flog('started from a goal node');
+                            if (info.connection.hasType('timeout')) {
+                                node[key].timeoutNode = conn.targetId;
+                            } else {
+                                if (!node[key].transitions) {
+                                    node[key].transitions = [];
+                                }
+                                node[key].transitions.push({nextNodeId: conn.targetId});
                             }
-                            node[key].transitions.push({nextNodeId: conn.targetId});
+                        } else if (node[key].hasOwnProperty('choices')){
+                            flog('started from a decision node');
+                            if (info.connection.hasType('decisionDefault')) {
+                                node[key].nextNodeId = conn.targetId;
+                            } else if (info.connection.hasType('decisionChoices')) {
+                                // decision choices
+                                if (!node[key].choices) {
+                                    node[key].choices = {};
+                                }
+                                node[key].choices[conn.targetId] = {constant: {}};
+                            }
                         } else {
-                            flog('found a action or decision node');
+                            flog('started from an action node');
                             node[key].nextNodeId = conn.targetId;
                         }
                         break;
@@ -157,38 +180,82 @@ jsPlumb.ready(function () {
 
         // initialise draggable elements.
         instance.draggable(el, {containment: true});
-        var maxConnections = 1;
-        if (type === 'decision') {
-            maxConnections = 2;
-        } else if (type === 'goal') {
-            maxConnections = -1;
+        
+        if (type === 'goal') {
+            instance.makeSource(el, {
+                filter: ".ep-timeout",
+                anchor: "Continuous",
+                connectorStyle: {strokeStyle: "#e5910f", lineWidth: 2, outlineColor: "transparent", outlineWidth: 4},
+                connectionType: "timeout",
+                extract: {
+                    "action": "timeout-action"
+                },
+                maxConnections: 1,
+                onMaxConnections: function (info, e) {
+                    Msg.warning("Timeout node exists. Please delete it and add new one");
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+            });
+
+            instance.makeSource(el, {
+                filter: ".ep-transition",
+                anchor: "Continuous",
+                connectorStyle: {strokeStyle: "#00f", lineWidth: 2, outlineColor: "transparent", outlineWidth: 4},
+                connectionType: "transition",
+                extract: {
+                    "action": "transition-action"
+                },
+                maxConnections: -1
+            });
+        } else if (type === 'decision') {
+            instance.makeSource(el, {
+                filter: ".ep-red",
+                anchor: "Continuous",
+                connectorStyle: {strokeStyle: "#f00", lineWidth: 2, outlineColor: "transparent", outlineWidth: 4},
+                connectionType: "decisionDefault",
+                extract: {
+                    "action": "decisionDefault-action"
+                },
+                maxConnections: 1,
+                onMaxConnections: function (info, e) {
+                    Msg.warning("Default action node exists. Please delete it and add new one");
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+            });
+
+            instance.makeSource(el, {
+                filter: ".ep-green",
+                anchor: "Continuous",
+                connectorStyle: {strokeStyle: "#0f0", lineWidth: 2, outlineColor: "transparent", outlineWidth: 4},
+                connectionType: "decisionChoices",
+                extract: {
+                    "action": "decisionChoices-action"
+                },
+                maxConnections: -1
+            });
+        } else {
+            instance.makeSource(el, {
+                filter: ".ep-basic",
+                anchor: "Continuous",
+                connectorStyle: {strokeStyle: "#e50051", lineWidth: 2, outlineColor: "transparent", outlineWidth: 4},
+                connectionType: "basic",
+                extract: {
+                    "action": "basic-action"
+                },
+                maxConnections: 1,
+                onMaxConnections: function (info, e) {
+                    Msg.info("Maximum connections (" + info.maxConnections + ") reached");
+                }
+            });
         }
-        instance.makeSource(el, {
-            filter: ".ep",
-            anchor: "Continuous",
-            connectorStyle: {strokeStyle: "#5c96bc", lineWidth: 2, outlineColor: "transparent", outlineWidth: 4},
-            connectionType: "basic",
-            extract: {
-                "action": "the-action"
-            },
-            maxConnections: maxConnections,
-            onMaxConnections: function (info, e) {
-                alert("Maximum connections (" + info.maxConnections + ") reached");
-            }
-        });
 
         instance.makeTarget(el, {
             dropOptions: {hoverClass: "dragHover"},
             anchor: "Continuous",
             allowLoopback: false
         });
-
-        //if (type === 'action') {
-        //    instance.addEndpoint(el, {
-        //        anchor: ["Perimeter", {shape: "Diamond"}]
-        //    });
-        //}
-
 
         // this is not part of the core demo functionality; it is a means for the Toolkit edition's wrapped
         // version of this demo to find out about new nodes being added.
@@ -204,17 +271,17 @@ jsPlumb.ready(function () {
         var nodeName = node.name? node.name : node.nodeId;
         if (type === 'goal') {
             d.innerHTML = '<div class="title"><i class="fa fa-trophy" aria-hidden="true"></i> Goal</div>';
-            d.innerHTML += '<div class="inner"><span>' + nodeName + ' <i style="font-size: 15px" class="fa fa-cog btnNodeSetting"></i></span> <span title="Connect to transition node" class="ep"></span> <span title="Connect to timeout node" class="ep ep-timeout"></span></div>';
+            d.innerHTML += '<div class="inner"><span>' + nodeName + ' <i style="font-size: 15px" class="fa fa-cog btnNodeSetting"></i></span> <span title="Connect to transition node" class="ep ep-transition"></span> <span title="Connect to timeout node" class="ep ep-timeout"></span></div>';
         } else if(type === 'decision') {
             d.innerHTML = '<div class="title"><i class="fa fa-question-circle" aria-hidden="true"></i> Decision</div>';
-            d.innerHTML += '<div class="inner"><span>' + nodeName + ' <i style="font-size: 15px" class="fa fa-cog btnNodeSetting"></i></span> <span title="Yes" class="ep ep-green"></span> <span title="No" class="ep ep-red"></span></div>'
+            d.innerHTML += '<div class="inner"><span>' + nodeName + ' <i style="font-size: 15px" class="fa fa-cog btnNodeSetting"></i></span> <span title="Make new choice" class="ep ep-green"></span> <span title="Default next action" class="ep ep-red"></span></div>'
         } else if (type == 'begin') {
             d.innerHTML = '<div class="title"><i class="fa fa-play" aria-hidden="true"></i> Begin</div>';
-            d.innerHTML += '<div class="inner"><span>' + nodeName + ' <i style="font-size: 15px" class="fa fa-cog btnNodeSetting"></i></span> <span title="Connect to other node" class="ep"></span></div>';
+            d.innerHTML += '<div class="inner"><span>' + nodeName + ' <i style="font-size: 15px" class="fa fa-cog btnNodeSetting"></i></span> <span title="Connect to other node" class="ep ep-basic"></span></div>';
         } else {
             var actionName = JBApp.ACTIONS[action];
             d.innerHTML = '<div class="title">'+actionName+'</div>';
-            d.innerHTML += '<div class="inner"><span>' + nodeName + ' <i style="font-size: 15px" class="fa fa-cog btnNodeSetting"></i></span> <span title="Connect to other node" class="ep"></span></div>';
+            d.innerHTML += '<div class="inner"><span>' + nodeName + ' <i style="font-size: 15px" class="fa fa-cog btnNodeSetting"></i></span> <span title="Connect to other node" class="ep ep-basic"></span></div>';
         }
 
         d.style.left = node.x + "px";
@@ -228,38 +295,61 @@ jsPlumb.ready(function () {
     JBApp.initNode = initNode;
     JBApp.connectionInitilized = false;
 
-    function initConnection(node, type) {
+    function initConnection(node) {
         var nextNodeId;
         var nextNodeIds = [];
-        if (node.nextNodeId) {
-            nextNodeId = node.nextNodeId;
-        } else if (node.transition && node.transition.nextNodeId) {
-            nextNodeId = node.transition.nextNodeId;
-        } else if (node.transitions && node.transitions.length) {
-            for (var i = 0; i < node.transitions.length; i++) {
-                nextNodeIds.push(node.transitions[i].nextNodeId);
-            }
-        }
-
-        if (node.hasOwnProperty('timeoutNode')) {
-            var dest = node.timeoutNode;
-            if (dest) {
-                instance.connect({source: node.nodeId, target: dest, type: "timeout"});
-            }
-        }
-
-
-        if (nextNodeIds.length) {
-            for (var i = 0; i < nextNodeIds.length; i++) {
-                instance.connect({source: node.nodeId, target: nextNodeIds[i], type: "basic"});
-                if (funnelNodes[nextNodeIds[i]]) {
-                    initConnection(funnelNodes[nextNodeIds[i]]);
+        if (node.hasOwnProperty('choices')){
+            // a decision node
+            if (node.nextNodeId) {
+                instance.connect({source: node.nodeId, target: node.nextNodeId, type: "decisionDefault"});
+                if (funnelNodes[node.nextNodeId]) {
+                    initConnection(funnelNodes[node.nextNodeId]);
                 }
             }
-        } else if (nextNodeId) {
-            instance.connect({source: node.nodeId, target: nextNodeId, type: "basic"});
-            if (funnelNodes[nextNodeId]) {
-                initConnection(funnelNodes[nextNodeId]);
+
+            if (node.choices) {
+                for (var key in node.choices) {
+                    instance.connect({source: node.nodeId, target: key, type: "decisionChoices"});
+                    if (funnelNodes[key]) {
+                        initConnection(funnelNodes[key]);
+                    }
+                }
+            }
+        } else {
+            if (node.nextNodeId) {
+                // action node
+                nextNodeId = node.nextNodeId;
+            } else if (node.transition && node.transition.nextNodeId) {
+                // begin node
+                nextNodeId = node.transition.nextNodeId;
+            } else if (node.transitions && node.transitions.length) {
+                // goal node
+                for (var i = 0; i < node.transitions.length; i++) {
+                    nextNodeIds.push(node.transitions[i].nextNodeId);
+                }
+            }
+
+
+            if (node.hasOwnProperty('timeoutNode')) {
+                // goal node with timeout
+                var dest = node.timeoutNode;
+                if (dest) {
+                    instance.connect({source: node.nodeId, target: dest, type: "timeout"});
+                }
+            }
+
+            if (nextNodeIds.length) {
+                for (var i = 0; i < nextNodeIds.length; i++) {
+                    instance.connect({source: node.nodeId, target: nextNodeIds[i], type: "transition"});
+                    if (funnelNodes[nextNodeIds[i]]) {
+                        initConnection(funnelNodes[nextNodeIds[i]]);
+                    }
+                }
+            } else if (nextNodeId) {
+                instance.connect({source: node.nodeId, target: nextNodeId, type: "basic"});
+                if (funnelNodes[nextNodeId]) {
+                    initConnection(funnelNodes[nextNodeId]);
+                }
             }
         }
     }
@@ -317,7 +407,6 @@ function initSideBar() {
             var id = uuid();
             var node = {
                 nodeId: type + '-' + id,
-                //name: type + '-' + id,
                 x: ui.offset.left - 200,
                 y: ui.offset.top - 300
             };

@@ -98,7 +98,7 @@
     cursor: pointer;
 }
 
-.ep {
+.ep, .ep-basic{
     position: absolute;
     bottom: 3px;
     left: 3px;
@@ -120,6 +120,9 @@
 }
 .ep.ep-green{
     background-color: green;
+}
+.ep.ep-transition{
+    background-color: blue;
 }
 .ep.ep-red{
     bottom: 3px;
