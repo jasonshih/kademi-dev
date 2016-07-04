@@ -65,7 +65,6 @@
                             self.initSelect(aggsSelect, selectedQuery, null);
 
                             keditor.initDynamicContent(dynamicElement).done(function () {
-                                dynamicElement.removeClass('initialized-dateAgg');
                                 self.initDateAgg();
                             });
                         } else {
@@ -81,7 +80,6 @@
                         if (selectedAgg) {
                             component.attr('data-agg', selectedAgg);
                             keditor.initDynamicContent(dynamicElement).done(function () {
-                                dynamicElement.removeClass('initialized-dateAgg');
                                 self.initDateAgg();
                             });
                         } else {
@@ -101,7 +99,6 @@
 
                         component.attr('data-height', number);
                         keditor.initDynamicContent(dynamicElement).done(function () {
-                            dynamicElement.removeClass('initialized-dateAgg');
                             self.initDateAgg();
                         });
                     });

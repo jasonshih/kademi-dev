@@ -68,9 +68,9 @@
 
                         if (selectedKpi) {
                             component.attr('data-href', selectedKpi);
-                            keditor.initDynamicContent(dynamicElement);
-                            dynamicElement.removeClass('initialized-kpiVis');
-                            self.initKpiVis();
+                            keditor.initDynamicContent(dynamicElement).done(function () {
+                                self.initKpiVis();
+                            });
                         } else {
                             dynamicElement.html('<p>Please select KPI</p>');
                         }
@@ -81,9 +81,9 @@
                         var dynamicElement = component.find('[data-dynamic-href]');
 
                         component.attr('data-visualisation', this.value);
-                        keditor.initDynamicContent(dynamicElement);
-                        dynamicElement.removeClass('initialized-kpiVis');
-                        self.initKpiVis();
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            self.initKpiVis();
+                        });
                     });
 
                     form.find('.kpi-height').on('change', function () {
@@ -98,9 +98,9 @@
                         var dynamicElement = component.find('[data-dynamic-href]');
 
                         component.attr('data-height', number);
-                        keditor.initDynamicContent(dynamicElement);
-                        dynamicElement.removeClass('initialized-kpiVis');
-                        self.initKpiVis();
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            self.initKpiVis();
+                        });
                     });
                 }
             });
