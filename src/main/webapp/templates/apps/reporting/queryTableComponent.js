@@ -29,8 +29,6 @@
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "queryTable" component');
 
-            var self = this;
-
             $.ajax({
                 url: '_components/queryTable?settings',
                 type: 'get',
@@ -43,20 +41,25 @@
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
 
-                        if (selectedQuery) {
-                            var contentArea = dynamicElement.closest('.keditor-content-area');
-
-                            component.attr('data-query', selectedQuery);
-                            keditor.initDynamicContent(contentArea, dynamicElement);
-                        } else {
-                            dynamicElement.html('<p>Please select KPI</p>');
-                        }
+                        component.attr('data-query', selectedQuery);
+                        keditor.initDynamicContent(dynamicElement);
                     });
 
+                    form.find('.query-height').on('change', function () {
+                        var number = this.value;
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        if (isNaN(number) || number < 200) {
+                            number = 200;
+                            this.value = number;
+                        }
+
+                        component.attr('data-height', number);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
                 }
             });
-
-
         },
 
         showSettingForm: function (form, component, keditor) {
@@ -64,8 +67,7 @@
 
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             form.find('.select-query').val(dataAttributes['data-query']);
-//            form.find('.select-type').val(dataAttributes['data-visualisation']);
-//            form.find('.kpi-height').val(dataAttributes['data-height']);
+            form.find('.query-height').val(dataAttributes['data-height']);
         },
 
         hideSettingForm: function (form, keditor) {
