@@ -7,6 +7,30 @@
             flog('init "dateHistogram component', contentArea, container, component, keditor);
 
             var self = this;
+
+            if ($('[href="/static/nvd3/1.8.2/nv.d3.min.css"]').length === 0) {
+                $('head').append('<link href="/static/nvd3/1.8.2/nv.d3.min.css" rel="stylesheet" type="text/css" />');
+            }
+
+            $.getScriptOnce('/static/nvd3/1.8.2/d3.min.js', function () {
+                $.getScriptOnce('/static/nvd3/1.8.2/nv.d3.min.js', function () {
+                    $.getScriptOnce('/theme/apps/reporting/jquery.dateAgg.js', function () {
+                        self.initDateAgg();
+                    });
+                });
+            });
+        },
+        initDateAgg: function () {
+            flog('initDateAgg');
+
+            $('.panel-date-histogram').each(function () {
+                var queryData = $(this);
+
+                if (!queryData.hasClass('initialized-dateAgg')) {
+                    queryData.addClass('initialized-dateAgg');
+                    queryData.dateAgg();
+                }
+            });
         },
         getContent: function (component, keditor) {
             var componentContent = component.children('.keditor-component-content');
@@ -17,9 +41,6 @@
         },
         settingEnabled: true,
         settingTitle: 'Date Histogram Settings',
-        initKpiVis: function () {
-            flog('dateHistogram');
-        },
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "dateHistogram" component');
 
@@ -43,11 +64,15 @@
                             var aggsSelect = form.find(".select-agg");
                             self.initSelect(aggsSelect, selectedQuery, null);
 
-                            keditor.initDynamicContent(dynamicElement);
+                            keditor.initDynamicContent(dynamicElement).done(function () {
+                                dynamicElement.removeClass('initialized-dateAgg');
+                                self.initDateAgg();
+                            });
                         } else {
                             dynamicElement.html('<p>Please select Query</p>');
                         }
                     });
+                    
                     form.find('.select-agg').on('change', function () {
                         var selectedAgg = this.value;
                         var component = keditor.getSettingComponent();
@@ -55,10 +80,30 @@
 
                         if (selectedAgg) {
                             component.attr('data-agg', selectedAgg);
-                            keditor.initDynamicContent(dynamicElement);
+                            keditor.initDynamicContent(dynamicElement).done(function () {
+                                dynamicElement.removeClass('initialized-dateAgg');
+                                self.initDateAgg();
+                            });
                         } else {
                             dynamicElement.html('<p>Please select a data histogram aggregation</p>');
                         }
+                    });
+
+                    form.find('.query-height').on('change', function () {
+                        var number = this.value;
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        if (isNaN(number) || number < 200) {
+                            number = 200;
+                            this.value = number;
+                        }
+
+                        component.attr('data-height', number);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            dynamicElement.removeClass('initialized-dateAgg');
+                            self.initDateAgg();
+                        });
                     });
                 }
             });
