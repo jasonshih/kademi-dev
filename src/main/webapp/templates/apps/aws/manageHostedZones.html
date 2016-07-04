@@ -1,0 +1,53 @@
+<html>
+    <head>
+        <title>Hosted Zones</title>
+    </head>
+    <body>
+        <button class="btn btn-success btn-create-hz" type="button"><i class="fa fa-plus"></i> Create Hosted Zone</button>
+
+        <table class="table table-striped table-hover">
+            <colgroup>
+                <col style="width: 35%"/>
+                <col style="width: 80px;"/>
+                <col/>
+                <col style="width: 102px;"/>
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>Domain Name</th>
+                    <th>Records</th>
+                    <th>Comment</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody id="zone-tbody">
+                #foreach($hz in $page.hostedZones)
+                <tr>
+                    <td>
+                        <a href="$hz.id">$hz.name</a>
+                    </td>
+                    <td>$hz.resourceRecordSetCount</td>
+                    <td>$!hz.config.comment</td>
+                    <td>
+                        <div class="btn-group btn-group-sm" role="group">
+                            <a href="$hz.id" class="btn btn-primary"><i class="fa fa-pencil"></i> Edit</a>
+
+                            <div class="btn-group btn-group-sm" role="group">
+                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu pull-right">
+                                    <li><a href="$hz.id" data-name="$hz.name" class="btn-delete-hz"><i class="fa fa-trash"></i> Delete</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                #end
+            </tbody>
+        </table>
+
+        <script type="text/javascript" src="/theme/apps/aws/manageHostedZones.js"></script>
+    </body>
+</html>
