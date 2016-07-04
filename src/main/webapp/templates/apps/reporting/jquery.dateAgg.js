@@ -1,5 +1,5 @@
 /**
- *  
+ *
  */
 
 (function ($) {
@@ -52,7 +52,6 @@
     }
 
 
-
     function showHistogram(resp, container, aggName, config) {
 
         var aggr = resp.aggregations[aggName];
@@ -78,12 +77,12 @@
             });
 
             var chart = nv.models.multiBarChart()
-                    .margin({right: 50, left: 0, bottom: 30, top: 0})
-                    .rightAlignYAxis(true)      //Let's move the y-axis to the right side.
-                    .showControls(false)       //Allow user to choose 'Stacked', 'Stream', 'Expanded' mode.
-                    .showLegend(false)
-                    .showYAxis(false)
-                    .clipEdge(true);
+                .margin({right: 50, left: 0, bottom: 30, top: 0})
+                .rightAlignYAxis(true)      //Let's move the y-axis to the right side.
+                .showControls(false)       //Allow user to choose 'Stacked', 'Stream', 'Expanded' mode.
+                .showLegend(false)
+                .showYAxis(false)
+                .clipEdge(true);
 
             chart.xAxis.tickFormat(function (d) {
                 return d3.time.format('%e %b')(new Date(d))
@@ -93,7 +92,7 @@
 
             chart.x(function (d) {
                 return d.x;
-            })
+            });
             chart.y(function (d) {
                 return d.y;
             });
@@ -101,8 +100,8 @@
 
             flog("select data", myData, chart, svg.get(0));
             d3.select(svg.get(0))
-                    .datum(myData)
-                    .call(chart);
+                .datum(myData)
+                .call(chart);
 
             nv.utils.windowResize(chart.update);
 
