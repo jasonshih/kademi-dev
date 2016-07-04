@@ -1,5 +1,14 @@
-<div class="panel panel-default">
-    <div class="panel-body" style="min-height: 200px">
+<style type="text/css">
+    .panel-tasks-list .list-group .list-group-item:first-child {
+        border-top: 1px solid #f1f2f3;
+    }
+
+    .panel-tasks-list .no-mgt {
+        margin-top: 0;
+    }
+</style>
+<div class="panel panel-default panel-tasks-list">
+    <div class="panel-body" #if ($height) style="height: ${height}px; overflow-y: auto;" #end>
         #if( !$leadsPage )
             #set( $leadsPage = $rootFolder.find("/leads") )
         #end

@@ -99,7 +99,6 @@
             form.find('.number-of-products').val(dataAttributes['data-number-of-products']);
             form.find('.items-per-row').val(dataAttributes['data-items-per-row']);
             form.find('.items-per-row-wrapper').css('display', dataAttributes['data-layout'] === 'grid' ? 'block' : 'none');
-
         },
 
         hideSettingForm: function (form, keditor) {
