@@ -2,9 +2,9 @@
     var KEditor = $.keditor;
     var flog = KEditor.log;
 
-    KEditor.components['dateHistogram'] = {
+    KEditor.components['pieChart'] = {
         init: function (contentArea, container, component, keditor) {
-            flog('init "dateHistogram component', contentArea, container, component, keditor);
+            flog('init "pieChart component', contentArea, container, component, keditor);
 
             var self = this;
 
@@ -12,23 +12,25 @@
                 $('head').append('<link href="/static/nvd3/1.8.2/nv.d3.min.css" rel="stylesheet" type="text/css" />');
             }
 
-            $.getScriptOnce('/static/nvd3/1.8.2/d3.min.js', function () {
-                $.getScriptOnce('/static/nvd3/1.8.2/nv.d3.min.js', function () {
-                    $.getScriptOnce('/theme/apps/reporting/jquery.dateAgg.js', function () {
-                        self.initDateAgg();
+            $.getScriptOnce('/static/moment/2.11.2/moment-with-locales.js', function () {
+                $.getScriptOnce('/static/nvd3/1.8.2/d3.min.js', function () {
+                    $.getScriptOnce('/static/nvd3/1.8.2/nv.d3.min.js', function () {
+                        $.getScriptOnce('/theme/apps/reporting/jquery.pieChartAgg.js', function () {
+                            self.initPieChart();
+                        });
                     });
                 });
             });
         },
-        initDateAgg: function () {
-            flog('initDateAgg');
+        initPieChart: function () {
+            flog('initPieChart');
 
-            $('.panel-date-histogram').each(function () {
+            $('.panel-pie-chart').each(function () {
                 var queryData = $(this);
 
-                if (!queryData.hasClass('initialized-dateAgg')) {
-                    queryData.addClass('initialized-dateAgg');
-                    queryData.dateAgg();
+                if (!queryData.hasClass('initialized-pieChart')) {
+                    queryData.addClass('initialized-pieChart');
+                    queryData.pieChartAgg();
                 }
             });
         },
@@ -40,14 +42,14 @@
             // Do nothing
         },
         settingEnabled: true,
-        settingTitle: 'Date Histogram Settings',
+        settingTitle: 'Pie Chart Settings',
         initSettingForm: function (form, keditor) {
-            flog('initSettingForm "dateHistogram" component');
+            flog('initSettingForm "pieChart" component');
 
             var self = this;
 
             $.ajax({
-                url: '_components/dateHistogram?settings',
+                url: '_components/pieChart?settings',
                 type: 'get',
                 dataType: 'HTML',
                 success: function (resp) {
@@ -65,7 +67,7 @@
                             self.initSelect(aggsSelect, selectedQuery, null);
 
                             keditor.initDynamicContent(dynamicElement).done(function () {
-                                self.initDateAgg();
+                                self.initPieChart();
                             });
                         } else {
                             dynamicElement.html('<p>Please select Query</p>');
@@ -80,11 +82,21 @@
                         if (selectedAgg) {
                             component.attr('data-agg', selectedAgg);
                             keditor.initDynamicContent(dynamicElement).done(function () {
-                                self.initDateAgg();
+                                self.initPieChart();
                             });
                         } else {
                             dynamicElement.html('<p>Please select a data histogram aggregation</p>');
                         }
+                    });
+
+                    form.find('.select-position').on('change', function () {
+                        var selectedAgg = this.value;
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        component.attr('data-legend-position', selectedAgg);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            self.initPieChart();
+                        });
                     });
 
                     form.find('.query-height').on('change', function () {
@@ -99,7 +111,7 @@
 
                         component.attr('data-height', number);
                         keditor.initDynamicContent(dynamicElement).done(function () {
-                            self.initDateAgg();
+                            self.initPieChart();
                         });
                     });
                 }
@@ -132,7 +144,7 @@
             });
         },
         showSettingForm: function (form, component, keditor) {
-            flog('showSettingForm "dateHistogram" component');
+            flog('showSettingForm "pieChart" component');
 
             var self = this;
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
@@ -141,6 +153,7 @@
 
             form.find('.select-query').val(selectedQuery);
             form.find('.select-agg').val(dataAttributes['data-agg']);
+            form.find('.select-position').val(dataAttributes['data-legend-position']);
             form.find('.query-height').val(dataAttributes['data-height']);
             
             var aggsSelect = form.find(".select-agg");
