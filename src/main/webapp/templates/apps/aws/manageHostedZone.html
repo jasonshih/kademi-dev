@@ -25,7 +25,7 @@
             </thead>
             <tbody id="records-tbody">
                 #foreach($r in $page.hostedZoneRecordSet)
-                <tr data-type="$r.type" data-name="$r.name">
+                <tr data-type="$r.type" data-name="$r.name" data-record="$formatter.htmlEncode($formatter.toJson($r))">
                     <td>$!r.name</td>
                     <td>$!r.type #if($r.aliasTarget)(Alias)#end</td>
                     <td>
@@ -41,7 +41,7 @@
                     <td>$!r.tTL</td>
                     <td>
                         <div class="btn-group btn-group-sm" role="group">
-                            <a href="#" class="btn btn-primary" title="Edit"><i class="fa fa-pencil"></i></a>
+                            <a href="#" class="btn btn-primary btn-update-record" title="Edit"><i class="fa fa-pencil"></i></a>
                             #if($r.type != "NS" && $!r.type != "SOA")
                             <div class="btn-group btn-group-sm" role="group">
                                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -59,6 +59,7 @@
             </tbody>
         </table>
 
+        <!-- modal -->
         <div id="addRecordModal" class="modal fade">
             <form action="$page.href" method="POST" class="">
                 <input type="hidden" name="createRecord" value="true"/>
@@ -122,6 +123,60 @@
                 </div>
             </form>
         </div>
+        <!-- end modal -->
+
+        <!-- modal -->
+        <div id="updateRecordModal" class="modal fade">
+            <form action="$page.href" method="POST" class="">
+                <input type="hidden" name="updateRecord" value="true"/>
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Update record</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <div class="errorHandler alert alert-danger no-display pageMessage">.</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" for="name">Name</label>
+                            <div class="col-sm-9">
+                                <input type="text" name="name" id="name" class="form-control" disabled="disabled"/>
+                                <input type="hidden" name="origName" id="origName" class="form-control"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" for="record-type">Type</label>
+                            <div class="col-sm-9">
+                                <input type="text" name="type" id="record-type" class="form-control" disabled="disabled"/>
+                                <input type="hidden" name="origType" id="origType" class="form-control"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" for="ttl">TTL (Seconds)</label>
+                            <div class="col-sm-9">
+                                <input type="number" min="0" name="ttl" id="ttl" value="300" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" for="value">Value</label>
+                            <div class="col-sm-9">
+                                <textarea rows="4" type="text" name="value" id="value" class="form-control required" ></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary btn-sm">Update record</button>
+                </div>
+            </form>
+        </div>
+        <!-- end modal -->
 
         <script src="/theme/apps/aws/manageHostedZone.js" type="text/javascript"></script>
     </body>
