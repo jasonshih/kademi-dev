@@ -1,34 +1,35 @@
 #if( !$height )
     #set( $height = 200 )
 #end
+
 <div class="panel panel-default">
     <div class="panel-heading">
-        <i class="fa fa-bar-chart"></i> Query Table
+        <i class="fa fa-table"></i> Query Table
         #set( $queryBean = $applications.Reporting.getQuery($query) )
         #set( $results = $applications.Reporting.runQuery($queryBean) )
         #set( $fields = $applications.Reporting.getQueryFieldNames($queryBean) )
 
     </div>
     <div class="panel-body">
-            <div class="table-responsive" style="height: $!{height}px">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            #foreach( $field in $fields)
-                            <th>$field</th>
-                            #end
-                        </tr>
-                    </thead>
-                    <tbody>
-                        #foreach($row in $results.hits.hits)
-                        <tr>
-                            #foreach( $field in $fields)
-                            <th>$!row.fields.get($field).value</th>
-                            #end
-                        </tr>
+        <div class="table-responsive" style="height: $!{height}px">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        #foreach( $field in $fields)
+                        <th>$field</th>
                         #end
-                    </tbody>
-                </table>
-            </div>
+                    </tr>
+                </thead>
+                <tbody>
+                    #foreach($row in $results.hits.hits)
+                    <tr>
+                        #foreach( $field in $fields)
+                        <th>$!row.fields.get($field).value</th>
+                        #end
+                    </tr>
+                    #end
+                </tbody>
+            </table>
         </div>
+    </div>
 </div>

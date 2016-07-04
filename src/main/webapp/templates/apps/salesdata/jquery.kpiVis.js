@@ -1,5 +1,5 @@
 /**
- *  
+ *
  */
 
 (function ($) {
@@ -107,13 +107,6 @@ function showPointsLeaderboard(resp, container, visType, config) {
     flog("showPointsLeaderboard", tbody, resp.data);
     tbody.html("");
 
-//                                    <tr>
-//                                        <td class="text-bold">#1</td>
-//                                        <td>Joe Bloggs</td>
-//                                        <td>1395 pts</td>
-//                                        <td>$ 15,480.00</td>
-//                                    </tr>
-
 
     $.each(resp.data, function (i, leader) {
         flog("leader", leader);
@@ -137,7 +130,7 @@ function showPointsLeaderboard(resp, container, visType, config) {
 
 function showKpiLeaderboard(resp, container, visType, config) {
     var aggr = resp.aggregations;
-    leaderboardAgg = aggr.leaders;
+    var leaderboardAgg = aggr.leaders;
     //flog("showLeaderboard", leaderboardAgg, leaderboardAgg.buckets);
     var tbody = container.find("tbody");
     flog("showLeaderboard", tbody, leaderboardAgg.buckets);
@@ -244,17 +237,16 @@ function showKpiSeriesHistogram(resp, container, visType, config) {
         });
 
 
-
         var chart;
         //flog("myData", kpiTitle, myData);
         if (visType === "dateHistogram") {
             chart = nv.models.multiBarChart()
-                    .margin({right: 50, left: 0, bottom: 30, top: 0})
-                    .rightAlignYAxis(true)      //Let's move the y-axis to the right side.
-                    .showControls(false)       //Allow user to choose 'Stacked', 'Stream', 'Expanded' mode.
-                    .showLegend(false)
-                    .showYAxis(false)
-                    .clipEdge(true);
+                .margin({right: 50, left: 0, bottom: 30, top: 0})
+                .rightAlignYAxis(true)      //Let's move the y-axis to the right side.
+                .showControls(false)       //Allow user to choose 'Stacked', 'Stream', 'Expanded' mode.
+                .showLegend(false)
+                .showYAxis(false)
+                .clipEdge(true);
 
             chart.xAxis.tickFormat(function (d) {
                 return d3.time.format('%e %b')(new Date(d))
@@ -264,15 +256,15 @@ function showKpiSeriesHistogram(resp, container, visType, config) {
 
             chart.x(function (d) {
                 return d.x;
-            })
+            });
             chart.y(function (d) {
                 return d.y;
             });
 
 
             d3.select(svg.get(0))
-                    .datum(myData)
-                    .call(chart);
+                .datum(myData)
+                .call(chart);
 
             nv.utils.windowResize(chart.update);
 
@@ -285,15 +277,15 @@ function showKpiSeriesHistogram(resp, container, visType, config) {
             myData = myData[0].values;
             chart.x(function (d) {
                 return d.x;
-            })
+            });
             chart.y(function (d) {
                 return d.y;
             });
 
 
             d3.select(svg.get(0))
-                    .datum(myData)
-                    .call(chart);
+                .datum(myData)
+                .call(chart);
 
             nv.utils.windowResize(chart.update);
 
