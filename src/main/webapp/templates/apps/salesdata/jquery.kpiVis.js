@@ -1,5 +1,5 @@
 /**
- *  jquery.comments-1.0.4.js
+ *  
  */
 
 (function ($) {
