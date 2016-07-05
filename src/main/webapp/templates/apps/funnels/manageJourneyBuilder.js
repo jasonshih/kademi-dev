@@ -1,9 +1,11 @@
-var funnel;
-var availableTriggers;
-var funnelNodes = {};
-var connectionMapping = [];
+'use strict';
+
 var JBApp = {
+    funnel: null,
+    funnelNodes: {},
     initialized: false,
+    availableTriggers: null,
+    isDirty: false,
     ACTIONS: {
         'emailAction': '<i class="fa fa-envelope" aria-hidden="true"></i> Send Email',
         'createTaskAction': '<i class="fa fa-tasks" aria-hidden="true"></i> Create Task',
@@ -17,14 +19,21 @@ $(function () {
     initContextMenu();
     initSaveButton();
     initTranModal();
+    initChoiceModal();
 });
+
+window.onbeforeunload = function(e){
+    if (JBApp.isDirty){
+        return 'Changes you made may not be saved.';
+    }
+}
 
 jsPlumb.ready(function () {
     try {
-        funnel = $.parseJSON($("#funnelJson").text());
+        JBApp.funnel = $.parseJSON($("#funnelJson").text());
     } catch (e) {
         flog('no funnel found');
-        funnel = {
+        JBApp.funnel = {
             nodes: [
                 {
                     "begin": {
@@ -49,7 +58,7 @@ jsPlumb.ready(function () {
             ]
         };
     }
-    availableTriggers = $.parseJSON($("#triggers").text());
+    JBApp.availableTriggers = $.parseJSON($("#triggers").text());
 
     // setup some defaults for jsPlumb.
     var instance = jsPlumb.getInstance({
@@ -83,7 +92,7 @@ jsPlumb.ready(function () {
         flog('edit connection ', c);
         var sourceId = c.sourceId;
         var targetId = c.targetId;
-        var nodes = funnel.nodes;
+        var nodes = JBApp.funnel.nodes;
 
         var filtered = nodes.filter(function(item){
             return item.hasOwnProperty('goal') && item['goal'].nodeId === sourceId;
@@ -91,6 +100,10 @@ jsPlumb.ready(function () {
 
         var filtered1 = nodes.filter(function(item){
             return item.hasOwnProperty('begin') && item['begin'].nodeId === sourceId;
+        });
+
+        var filtered2 = nodes.filter(function(item){
+            return item.hasOwnProperty('decision') && item['decision'].nodeId === sourceId;
         });
 
         if (filtered.length > 0) {
@@ -108,8 +121,12 @@ jsPlumb.ready(function () {
             if (node.transition) {
                 showTranModal(node.transition, sourceId, targetId);
             }
-        } else {
-            Msg.warning('No transition found');
+        } else if (filtered2.length > 0){
+            var node = filtered2[0]['decision'];
+            var choice = node.choices[targetId];
+            if (choice){
+                showChoiceModal(choice, sourceId, targetId);
+            }
         }
     });
 
@@ -140,10 +157,10 @@ jsPlumb.ready(function () {
 
         info.connection.getOverlay("label").setLabel(label);
 
-        if (JBApp.initialized){
+        if (JBApp.initialized) {
             flog('new connection was made', info.connection);
             var conn = info.connection;
-            var nodes = funnel.nodes;
+            var nodes = JBApp.funnel.nodes;
             for(var i = 0; i < nodes.length; i ++){
                 var node = nodes[i];
                 for (var key in node) {
@@ -180,6 +197,7 @@ jsPlumb.ready(function () {
                     }
                 }
             }
+            JBApp.isDirty = true;
         }
     });
 
@@ -303,7 +321,6 @@ jsPlumb.ready(function () {
 
     JBApp.newNode = newNode;
     JBApp.initNode = initNode;
-    JBApp.connectionInitilized = false;
 
     function initConnection(node) {
         var nextNodeId;
@@ -312,16 +329,16 @@ jsPlumb.ready(function () {
             // a decision node
             if (node.nextNodeId) {
                 instance.connect({source: node.nodeId, target: node.nextNodeId, type: "decisionDefault"});
-                if (funnelNodes[node.nextNodeId]) {
-                    initConnection(funnelNodes[node.nextNodeId]);
+                if (JBApp.funnelNodes[node.nextNodeId]) {
+                    initConnection(JBApp.funnelNodes[node.nextNodeId]);
                 }
             }
 
             if (node.choices) {
                 for (var key in node.choices) {
                     instance.connect({source: node.nodeId, target: key, type: "decisionChoices"});
-                    if (funnelNodes[key]) {
-                        initConnection(funnelNodes[key]);
+                    if (JBApp.funnelNodes[key]) {
+                        initConnection(JBApp.funnelNodes[key]);
                     }
                 }
             }
@@ -345,8 +362,8 @@ jsPlumb.ready(function () {
                 var timeoutNode = node.timeoutNode;
                 if (timeoutNode) {
                     instance.connect({source: node.nodeId, target: timeoutNode, type: "timeout"});
-                    if (funnelNodes[timeoutNode]) {
-                        initConnection(funnelNodes[timeoutNode]);
+                    if (JBApp.funnelNodes[timeoutNode]) {
+                        initConnection(JBApp.funnelNodes[timeoutNode]);
                     }
                 }
             }
@@ -354,14 +371,14 @@ jsPlumb.ready(function () {
             if (nextNodeIds.length) {
                 for (var i = 0; i < nextNodeIds.length; i++) {
                     instance.connect({source: node.nodeId, target: nextNodeIds[i], type: "transition"});
-                    if (funnelNodes[nextNodeIds[i]]) {
-                        initConnection(funnelNodes[nextNodeIds[i]]);
+                    if (JBApp.funnelNodes[nextNodeIds[i]]) {
+                        initConnection(JBApp.funnelNodes[nextNodeIds[i]]);
                     }
                 }
             } else if (nextNodeId) {
                 instance.connect({source: node.nodeId, target: nextNodeId, type: "basic"});
-                if (funnelNodes[nextNodeId]) {
-                    initConnection(funnelNodes[nextNodeId]);
+                if (JBApp.funnelNodes[nextNodeId]) {
+                    initConnection(JBApp.funnelNodes[nextNodeId]);
                 }
             }
         }
@@ -369,14 +386,14 @@ jsPlumb.ready(function () {
 
     // suspend drawing and initialise.
     instance.batch(function () {
-        if (funnel && funnel.nodes && funnel.nodes.length) {
+        if (JBApp.funnel && JBApp.funnel.nodes && JBApp.funnel.nodes.length) {
             // Finding begin node
             var beginNode;
-            for (var i = 0; i < funnel.nodes.length; i++) {
-                var node = funnel.nodes[i];
+            for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
+                var node = JBApp.funnel.nodes[i];
                 for (var key in node) {
                     if (node.hasOwnProperty(key)) {
-                        funnelNodes[node[key].nodeId] = node[key];
+                        JBApp.funnelNodes[node[key].nodeId] = node[key];
                         var type = key;
                         if (['goal', 'decision', 'begin'].indexOf(key) === -1) {
                             type = 'action';
@@ -436,7 +453,8 @@ function initSideBar() {
                 objToPush[type] = node;
             }
             JBApp.newNode(node, type, action);
-            funnel.nodes.push(objToPush);
+            JBApp.funnel.nodes.push(objToPush);
+            JBApp.isDirty = true;
             flog('drop', ui);
         }
     });
@@ -463,14 +481,6 @@ function initTranModal(){
     });
 }
 
-function addConnToMap(source, target){
-    connectionMapping.push([source, target].join('--'));
-}
-
-function connectionExist(source, target){
-    return connectionMapping.indexOf([source, target].join('--')) !== -1;
-}
-
 function showTranModal(tran, sourceId, targetId){
     var modal = $('#modalTransitions');
     modal.find('[name=sourceId]').val(sourceId);
@@ -495,6 +505,75 @@ function showTranModal(tran, sourceId, targetId){
     modal.modal();
 }
 
+function showChoiceModal(choice, sourceId, targetId){
+    var modal = $('#modalChoice');
+    modal.find('[name=sourceId]').val(sourceId);
+    modal.find('[name=targetId]').val(targetId);
+    modal.find('.choiceItems').html('');
+    if (!Object.keys(choice.constant).length) {
+        choice.constant = {
+            value: '',
+            label: ''
+        };
+    }
+    for (var key in choice.constant) {
+        var value = choice.constant[key];
+        var clone = modal.find('.placeholderform').clone();
+        clone.find('[name=constKey]').val(key);
+        clone.find('[name=constValue]').val(value);
+        clone.removeClass('hide placeholderform');
+        modal.find('.choiceItems').append(clone)
+    }
+
+    modal.modal();
+}
+
+function initChoiceModal(){
+    var modal = $('#modalChoice');
+    modal.on('click', '.btnAddChoice', function(e){
+        e.preventDefault();
+        var clone = modal.find('.placeholderform').clone();
+        clone.removeClass('hide placeholderform');
+        modal.find('.choiceItems').append(clone);
+    });
+
+    modal.find('form').on('submit', function(e){
+        e.preventDefault();
+
+        doSaveChoice($(this));
+        modal.modal('hide');
+    });
+}
+
+function doSaveChoice(form){
+    var constant = {};
+    form.find('.choiceItems .form-group').each(function(){
+        var key = $(this).find('[name=constKey]').val();
+        var value = $(this).find('[name=constValue]').val();
+        constant[key] = value;
+    });
+    var sourceId = form.find('[name=sourceId]').val();
+    var targetId = form.find('[name=targetId]').val();
+    for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
+        var node = JBApp.funnel.nodes[i];
+        for (var key in node) {
+            if (node[key].nodeId === sourceId) {
+                if (node[key].hasOwnProperty('choices')) {
+                    var choices = node[key].choices;
+                    if (!choices) {
+                        choices = {};
+                    }
+                    choices[targetId] = { constant: constant };
+                    node[key].choices = choices;
+                    break;
+                }
+            }
+        }
+    }
+    JBApp.isDirty = true;
+    Msg.info('Decision choices updated');
+}
+
 function doSaveTrigger(form){
     var trigger = {};
     form.find('.transitionItems .form-group').each(function(){
@@ -509,8 +588,8 @@ function doSaveTrigger(form){
 
     var sourceId = form.find('[name=sourceId]').val();
     var targetId = form.find('[name=targetId]').val();
-    for (var i = 0; i < funnel.nodes.length; i++) {
-        var node = funnel.nodes[i];
+    for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
+        var node = JBApp.funnel.nodes[i];
         for (var key in node) {
             if (node[key].nodeId === sourceId) {
 
@@ -529,6 +608,7 @@ function doSaveTrigger(form){
             }
         }
     }
+    JBApp.isDirty = true;
     Msg.info('Transition trigger updated');
 }
 
@@ -572,11 +652,12 @@ function initContextMenu() {
 }
 
 function updateNode(nodeid, title) {
-    for (var i = 0; i < funnel.nodes.length; i++) {
-        var node = funnel.nodes[i];
+    for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
+        var node = JBApp.funnel.nodes[i];
         for (var key in node) {
             if (node[key].nodeId === nodeid) {
                 node[key].name = title;
+                JBApp.isDirty = true;
                 break;
             }
         }
@@ -585,8 +666,8 @@ function updateNode(nodeid, title) {
 
 function deleteNode(nodeId) {
     var index = -1;
-    for (var i = 0; i < funnel.nodes.length; i++) {
-        var node = funnel.nodes[i];
+    for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
+        var node = JBApp.funnel.nodes[i];
         for (var key in node) {
             if (node[key].nodeId === nodeId) {
                 index = i;
@@ -596,7 +677,8 @@ function deleteNode(nodeId) {
     }
 
     if (index > -1) {
-        funnel.nodes.splice(index, 1);
+        JBApp.isDirty = true;
+        JBApp.funnel.nodes.splice(index, 1);
     }
 }
 
@@ -605,8 +687,8 @@ function initSaveButton() {
         e.preventDefault();
 
         Msg.info("Saving..");
-        for (var i = 0; i < funnel.nodes.length; i++) {
-            var node = funnel.nodes[i];
+        for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
+            var node = JBApp.funnel.nodes[i];
             for (var key in node) {
                 if (node.hasOwnProperty(key)) {
                     var nodeId = node[key].nodeId;
@@ -619,9 +701,10 @@ function initSaveButton() {
         $.ajax({
             url: 'funnel.json',
             type: 'PUT',
-            data: JSON.stringify(funnel),
+            data: JSON.stringify(JBApp.funnel),
             success: function () {
                 Msg.success('File is saved!');
+                JBApp.isDirty = false;
             },
             error: function (e) {
                 Msg.error(e.status + ': ' + e.statusText);
@@ -637,4 +720,14 @@ function uuid() {
         var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
         return v.toString(16);
     }));
+}
+
+function formatMins(i) {
+    if (i < 120) {
+        return i + " mins";
+    } else if (i < 60 * 24) {
+        return i / 60 + " hours";
+    } else {
+        return i / (60 * 24) + " days";
+    }
 }
