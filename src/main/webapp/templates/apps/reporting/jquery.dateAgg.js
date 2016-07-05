@@ -26,10 +26,15 @@
             var aggName = null;
             var component = container.closest('[data-type^="component-"]');
             if (component.length > 0) {
-                queryHref = "/queries/" + component.data("query");
-                aggName = component.data("agg");
+                queryHref = "/queries/" + component.attr("data-query");
+                aggName = component.attr("data-agg");
                 flog("date histo params", queryHref, aggName, component);
             }
+
+            $(document).on('pageDateChange', function (e, selectedOpts) {
+                flog("dateagg date change", e, selectedOpts);
+                loadGraphData(queryHref, aggName, selectedOpts, cont, config);
+            });            
 
 
             loadGraphData(queryHref, aggName, opts, cont, config);
