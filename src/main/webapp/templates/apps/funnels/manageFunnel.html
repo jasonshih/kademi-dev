@@ -40,7 +40,7 @@
     </div>
 </div>
 
-<div class="panel panel-default">
+<div class="panel panel-default hide">
     <div class="panel-body">
 
         <ul>
@@ -339,6 +339,46 @@
     </form>
 </div>
 
+<div id="modalChoice" class="modal fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Decision choice constant</h4>
+    </div>
+    <form action="" class="">
+        <div class="modal-body">
+            <div class="form-group hide">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <a href="#" class="pull-right btn btn-primary btnAddChoice"><i class="fa fa-plus"></i> Add key/value</a>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group placeholderform hide">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" name="constKey" placeholder="Key" readonly>
+                    </div>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" name="constValue" placeholder="Value">
+                    </div>
+                    <div class="col-sm-2 hide">
+                        <a title="Delete this key/value" href="javascript:void(0)" class="btn btn-link"><i class="fa fa-trash"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="choiceItems">
+
+            </div>
+        </div>
+        <div class="modal-footer">
+            <input type="hidden" name="sourceId">
+            <input type="hidden" name="targetId">
+            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+        </div>
+    </form>
+</div>
+
 <link rel="stylesheet" href="/theme/apps/funnels/journeybuilder.css">
 <link rel="stylesheet" href="/static/jquery-contextmenu/jquery.contextMenu.css">
 <script src="/static/jquery-contextmenu/jquery.contextMenu.js">//</script>
@@ -360,225 +400,7 @@
                 tr.remove();
             });
         });
-
-        // initJoint();
     });
-
-    function formatMins(i) {
-        if (i < 120) {
-            return i + " mins";
-        } else if (i < 60 * 24) {
-            return i / 60 + " hours";
-        } else {
-            return i / (60 * 24) + " days";
-        }
-    }
-
-    function initJoint() {
-        flog("initJoint");
-        var graph = new joint.dia.Graph();
-
-        var paper = new joint.dia.Paper({
-            el: $('#paper'),
-            width: 1200,
-            height: 600,
-            gridSize: 1,
-            model: graph
-        });
-
-
-
-        function state(n, nodeType) {
-            flog("state", n.nodeId, nodeType, n);
-            var x = n.x;
-            var y = n.y;
-            var label = n.nodeId;
-            var cell;
-            if (nodeType === "goal") {
-                var outPorts = ['timeout'];
-                if (n.transitions) {
-                    $.each(n.transitions, function (i, tr) {
-                        var keys = Object.keys(tr.trigger);
-                        tr = tr.trigger[keys[0]];
-                        outPorts.push(tr.description);
-                    });
-                }
-                cell = new joint.shapes.devs.Atomic({
-                    position: {x: x, y: y},
-                    size: {width: 150, height: 70},
-                    inPorts: ['in'],
-                    outPorts: outPorts, // add ports for other transitions
-                    attrs: {
-                        text: {text: label, fill: '#000000', 'font-weight': 'normal'},
-                    }
-                });
-
-                // rounded corners indicate a state
-                _.each([cell], function (element) {
-                    element.attr({'.body': {'rx': 8, 'ry': 26}});
-                });
-            } else {
-                // action
-                var outPorts = ['then'];
-                var props = Object.keys(n);
-                var action = n[props[0]];
-                flog("action", action);
-                if (nodeType === "decision") {
-                    for (k in n.choices) {
-                        var ch = n.choices[k];
-                        var exprType = Object.keys(ch);
-                        ch = ch[exprType];
-                        outPorts.push(ch.label);
-                    }
-                }
-                cell = new joint.shapes.devs.Atomic({
-                    position: {x: x, y: y},
-                    size: {width: 150, height: 70},
-                    inPorts: ['in'],
-                    outPorts: outPorts, // add ports for other transitions
-                    attrs: {
-                        text: {text: label, fill: '#000000', 'font-weight': 'normal'},
-                    }
-                });
-
-            }
-
-            graph.addCell(cell);
-
-            cell.on('change:position', function (element) {
-                var pos = element.get('position');
-                n.x = pos.x;
-                n.y = pos.y;
-            });
-            flog("added cell", cell);
-            return cell;
-        }
-
-        function link(source, target, label, outPort) {
-            flog("link: ", source, target, label, outPort);
-            var src = {id: source.id};
-            if (outPort) {
-                src.selector = source.getPortSelector(outPort);
-            }
-
-            var cell = new joint.dia.Link({
-                source: src,
-                target: {id: target.id, selector: target.getPortSelector("in")},
-                router: {name: 'manhattan'},
-                connector: {name: 'rounded'},
-                attrs: {
-                    '.connection': {
-                        stroke: '#333333',
-                        'stroke-width': 3
-                    },
-                    '.marker-target': {
-                        fill: '#333333',
-                        d: 'M 10 0 L 0 5 L 10 10 z'
-                    }
-                }
-            });
-
-            graph.addCell(cell);
-            return cell;
-        }
-
-        var json = $("#funnelJson").text();
-        var funnel = $.parseJSON(json);
-
-        $("#btnSave").click(function (e) {
-            var source = JSON.stringify(funnel, null, '\t');
-            doSave("funnel.json", source);
-        });
-
-        flog("funnel", funnel);
-        var nodes = {};
-        $.each(funnel.nodes, function (i, n) {
-            //flog("node", n);
-            var keys = Object.keys(n);
-            var nodeType = keys[0];
-            n = n[keys[0]];
-            var el;
-            if (nodeType === "begin") {
-                el = new joint.shapes.fsa.StartState({position: {x: n.x, y: n.y}});
-                graph.addCell(el);
-            } else {
-                el = state(n, nodeType); // should be an action symbol, or decision
-            }
-            nodes[n.nodeId] = el;
-        });
-
-        // Now link them
-        flog("link nodes");
-        $.each(funnel.nodes, function (i, n) {
-            flog("node", n);
-            var keys = Object.keys(n);
-            n = n[keys[0]];
-            var source = nodes[n.nodeId];
-            if (keys[0] === "begin") {
-                var dest = nodes[n.transition.nextNodeId];
-                if (dest !== null) {
-                    link(source, dest, 'Start');
-                } else {
-                    flog("Could not find node ", n.transition.nextNodeId);
-                }
-            } else if (keys[0] === "goal") {
-                flog("link goal timeout source=", source, "dest=", dest);
-                var dest = nodes[n.timeoutNode];
-                if (dest) {
-                    link(source, dest, formatMins(n.timeoutMins), "timeout");
-                }
-                if (n.transitions) {
-                    $.each(n.transitions, function (i, tr) {
-                        dest = nodes[tr.nextNodeId];
-                        if (dest !== null) {
-                            var props = Object.keys(tr.trigger);
-                            var triggerType = props[0];
-                            var trigger = tr.trigger[triggerType];
-                            link(source, dest, triggerType, trigger.description);
-                        }
-                    });
-                }
-            } else {
-                // an action node
-                flog("link action node", n, n.nextNodeId);
-                var dest = nodes[n.nextNodeId];
-                if (dest != null) {
-                    link(source, dest, 'then', "then");
-                }
-                if (keys[0] === "decision") {
-                    flog("link decision node", n.choices);
-                    if (n.choices) {
-                        for (k in n.choices) {
-                            var ch = n.choices[k];
-                            var exprType = Object.keys(ch);
-                            ch = ch[exprType];
-
-                            flog("decision choice1", ch);
-                            dest = nodes[k]
-                            if (dest) {
-                                link(source, dest, ch.label, ch.label);
-                            }
-                        }
-                    }
-                }
-            }
-        });
-    }
-
-    function doSave(href, fileContent) {
-        Msg.info("Saving..");
-        $.ajax({
-            url: href,
-            type: 'PUT',
-            data: fileContent,
-            success: function () {
-                Msg.success('File is saved!');
-            },
-            error: function (e) {
-                Msg.error(e.status + ': ' + e.statusText);
-            }
-        });
-    }
 </script>
 </body>
 </html>

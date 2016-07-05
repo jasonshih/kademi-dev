@@ -17,6 +17,7 @@ $(function () {
     initContextMenu();
     initSaveButton();
     initTranModal();
+    initChoiceModal();
 });
 
 jsPlumb.ready(function () {
@@ -93,6 +94,10 @@ jsPlumb.ready(function () {
             return item.hasOwnProperty('begin') && item['begin'].nodeId === sourceId;
         });
 
+        var filtered2 = nodes.filter(function(item){
+            return item.hasOwnProperty('decision') && item['decision'].nodeId === sourceId;
+        });
+
         if (filtered.length > 0) {
             var node = filtered[0]['goal'];
             if (node.hasOwnProperty('transitions') && node.transitions.length) {
@@ -108,8 +113,12 @@ jsPlumb.ready(function () {
             if (node.transition) {
                 showTranModal(node.transition, sourceId, targetId);
             }
-        } else {
-            Msg.warning('No transition found');
+        } else if (filtered2.length > 0){
+            var node = filtered2[0]['decision'];
+            var choice = node.choices[targetId];
+            if (choice){
+                showChoiceModal(choice, sourceId, targetId);
+            }
         }
     });
 
@@ -495,6 +504,75 @@ function showTranModal(tran, sourceId, targetId){
     modal.modal();
 }
 
+function showChoiceModal(choice, sourceId, targetId){
+    var modal = $('#modalChoice');
+    modal.find('[name=sourceId]').val(sourceId);
+    modal.find('[name=targetId]').val(targetId);
+    modal.find('.choiceItems').html('');
+    if (!Object.keys(choice.constant).length) {
+        choice.constant = {
+            value: '',
+            label: ''
+        };
+    }
+    for (var key in choice.constant) {
+        var value = choice.constant[key];
+        var clone = modal.find('.placeholderform').clone();
+        clone.find('[name=constKey]').val(key);
+        clone.find('[name=constValue]').val(value);
+        clone.removeClass('hide placeholderform');
+        modal.find('.choiceItems').append(clone)
+    }
+
+    modal.modal();
+}
+
+function initChoiceModal(){
+    var modal = $('#modalChoice');
+    modal.on('click', '.btnAddChoice', function(e){
+        e.preventDefault();
+        var clone = modal.find('.placeholderform').clone();
+        clone.removeClass('hide placeholderform');
+        modal.find('.choiceItems').append(clone);
+    });
+
+    modal.find('form').on('submit', function(e){
+        e.preventDefault();
+
+        doSaveChoice($(this));
+        modal.modal('hide');
+    });
+}
+
+function doSaveChoice(form){
+    var constant = {};
+    form.find('.choiceItems .form-group').each(function(){
+        var key = $(this).find('[name=constKey]').val();
+        var value = $(this).find('[name=constValue]').val();
+        constant[key] = value;
+    });
+    var sourceId = form.find('[name=sourceId]').val();
+    var targetId = form.find('[name=targetId]').val();
+    for (var i = 0; i < funnel.nodes.length; i++) {
+        var node = funnel.nodes[i];
+        for (var key in node) {
+            if (node[key].nodeId === sourceId) {
+                if (node[key].hasOwnProperty('choices')) {
+                    var choices = node[key].choices;
+                    if (!choices) {
+                        choices = {};
+                    }
+                    choices[targetId] = { constant: constant };
+                    node[key].choices = choices;
+                    break;
+                }
+            }
+        }
+    }
+
+    Msg.info('Decision choices updated');
+}
+
 function doSaveTrigger(form){
     var trigger = {};
     form.find('.transitionItems .form-group').each(function(){
@@ -637,4 +715,14 @@ function uuid() {
         var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
         return v.toString(16);
     }));
+}
+
+function formatMins(i) {
+    if (i < 120) {
+        return i + " mins";
+    } else if (i < 60 * 24) {
+        return i / 60 + " hours";
+    } else {
+        return i / (60 * 24) + " days";
+    }
 }
