@@ -1,6 +1,7 @@
 var funnel;
 var availableTriggers;
 var funnelNodes = {};
+var connectionMapping = [];
 var JBApp = {
     initialized: false,
     ACTIONS: {
@@ -117,6 +118,15 @@ jsPlumb.ready(function () {
     // this listener sets the connection's internal
     // id as the label overlay's text.
     instance.bind("connection", function (info) {
+
+        // Validate connection, we just allow only one connection between 2 endpoint within a direction
+        var con = info.connection;
+        var arr = instance.select({source: con.sourceId, target: con.targetId});
+        if (arr.length > 1) {
+            instance.detach(con);
+            return;
+        }
+
         var label = 'then';
         if (info.connection.hasType('timeout')) {
             label = 'timeout';
@@ -180,7 +190,7 @@ jsPlumb.ready(function () {
 
         // initialise draggable elements.
         instance.draggable(el, {containment: true});
-        
+
         if (type === 'goal') {
             instance.makeSource(el, {
                 filter: ".ep-timeout",
@@ -332,9 +342,12 @@ jsPlumb.ready(function () {
 
             if (node.hasOwnProperty('timeoutNode')) {
                 // goal node with timeout
-                var dest = node.timeoutNode;
-                if (dest) {
-                    instance.connect({source: node.nodeId, target: dest, type: "timeout"});
+                var timeoutNode = node.timeoutNode;
+                if (timeoutNode) {
+                    instance.connect({source: node.nodeId, target: timeoutNode, type: "timeout"});
+                    if (funnelNodes[timeoutNode]) {
+                        initConnection(funnelNodes[timeoutNode]);
+                    }
                 }
             }
 
@@ -448,6 +461,14 @@ function initTranModal(){
         doSaveTrigger($(this));
         modal.modal('hide');
     });
+}
+
+function addConnToMap(source, target){
+    connectionMapping.push([source, target].join('--'));
+}
+
+function connectionExist(source, target){
+    return connectionMapping.indexOf([source, target].join('--')) !== -1;
 }
 
 function showTranModal(tran, sourceId, targetId){
