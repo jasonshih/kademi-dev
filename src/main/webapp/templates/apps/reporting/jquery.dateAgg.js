@@ -31,8 +31,13 @@
                 flog("date histo params", queryHref, aggName, component);
             }
 
+            $(document).on('pageDateChange', function (e, selectedOpts) {
+                flog("dateagg date change", e, selectedOpts);
+                loadGraphData(queryHref, aggName, selectedOpts, cont, config);
+            });            
 
-            loadGraphData(queryHref, aggName, opts, cont, config);
+            // Wait for event to be triggered
+            //loadGraphData(queryHref, aggName, opts, cont, config);
         });
     };
 
