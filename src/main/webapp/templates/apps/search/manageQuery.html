@@ -25,6 +25,7 @@
             #set( $resp = $page.records )
 
             <div id="queryText" style="width: 100%; height: 200px" name="query">$page.queryJson</div>
+            <p class="pull-right">Use <b>$startDate</b> and <b>$endDate</b> for standard date range parameters</p>
             <button class="btn btn-success runQuery">Run</button>
             <button class="btn btn-primary saveQuery">Save</button>
             <hr/>
@@ -116,14 +117,28 @@
 
                 $("body").on("click", ".runQuery", function (e) {
                     save(function () {
-                        Msg.info("Running..");
+                        var newHref = window.location.pathname + "?" + $.param(dateOptions); // from queryComponents.js, injected by ReportingApp
+                        Msg.info("Running..", newHref);
                         $("#queryResults").reloadFragment({
+                            url: newHref,
                             whenComplete: function () {
                                 Msg.info("Query executed");
                             }
                         });
                     });
                 });
+
+                $(document).on('pageDateChange', function (e, selectedOpts) {
+                    var newHref = window.location.pathname + "?" + $.param(dateOptions); // from queryComponents.js, injected by ReportingApp
+                    Msg.info("Running..", newHref);
+                    $("#queryResults").reloadFragment({
+                        url: newHref,
+                        whenComplete: function () {
+                            Msg.info("Query executed");
+                        }
+                    });
+                });
+
 
 
                 $("body").on("click", ".saveQuery", function (e) {

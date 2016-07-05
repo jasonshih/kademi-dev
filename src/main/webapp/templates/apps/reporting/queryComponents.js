@@ -1,3 +1,5 @@
+var dateOptions;
+
 $(function () {
     flog("init query components", $(".query-data-histogram, .query-pie-chart"));
 
@@ -26,7 +28,7 @@ $(function () {
         $.cookie("selectedDate", selDate);
         $(".pageDatePicker li").removeClass("active");
         $(".pageDatePicker a[href='" + selDate + "']").closest("li").addClass("active");
-        var dateOptions = calcDates(selDate);        
+        dateOptions = calcDates(selDate);        
         $(document).trigger("pageDateChange", dateOptions);
         flog("new date selection", dateOptions);
     }
