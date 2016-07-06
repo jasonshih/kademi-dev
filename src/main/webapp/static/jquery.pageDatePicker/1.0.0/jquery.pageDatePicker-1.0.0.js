@@ -159,12 +159,13 @@
                 var startDate = dates[0].format(options.dateFormat);
                 var endDate = dates[1].format(options.dateFormat);
 
-                rangeHtml += '<a href="#" data-start-date="' + startDate + '" data-end-date="' + endDate +'" class="pageDatePicker-range">' + rangeText + '</a>';
+                rangeHtml += '<a href="#" data-start-date="' + startDate + '" data-end-date="' + endDate +'" class="pageDatePicker-range"><span>' + rangeText + '</span></a>';
             }
             rangeWrapper.html(rangeHtml);
 
             var rangeItems = self.rangeItems = rangeWrapper.find('.pageDatePicker-range');
-            rangeItems.on('click', function () {
+            var totalItems = rangeItems.length;
+            rangeItems.css('width', 'calc(100% / ' + totalItems + ')').on('click', function () {
                 var item = $(this);
                 var text = item.text().trim();
 
@@ -198,7 +199,6 @@
             customDateTab.append(
                 '<hr />' +
                 '<div class="pageDatePicker-daterange-wrapper">' +
-                //'    <input class="pageDatePicker-daterange" type="text" value="' + originStartDate + '-' + originEndDate + '" />' +
                 '    <div class="pageDatePicker-daterange"></div>' +
                 '</div>'
             );
@@ -209,7 +209,8 @@
                 startDate: originStartDate,
                 endDate: originEndDate,
                 autoApply: true,
-                opens: 'left'
+                opens: 'left',
+                maxDate: moment()
             });
 
             dateRange.on('apply.daterangepicker', function (ev, picker) {
@@ -257,7 +258,7 @@
                 options.onSelect.call(self, startDate, endDate);
             }
 
-            $(document.body).trigger('pageDateChanged', startDate, endDate);
+            $(document.body).trigger('pageDateChanged', startDate, endDate, self.container);
         },
 
         initOriginRange: function () {

@@ -34,7 +34,7 @@
 }
 
 .pageDatePicker-daterange {
-    /*display: none;*/
+    display: none;
 }
 
 .pageDatePicker-ranges {
@@ -43,12 +43,19 @@
 }
 
 .pageDatePicker-range {
-    display: table-cell;
-    width: 1%;
+    float: left;
     text-decoration: none !important;
+    position: relative;
 }
 
-.pageDatePicker-range:before {
+.pageDatePicker-range span {
+    padding: 0 5px;
+    display: block;
+    position: relative;
+    z-index: 2;
+}
+
+.pageDatePicker-range span:before {
     display: block;
     content: "";
     border-radius: 50%;
@@ -60,10 +67,39 @@
 
 .pageDatePicker-range:hover,
 .pageDatePicker-range.active {
-    color: #364F6A;
+    color: #357ebd;
 }
 
-.pageDatePicker-range:hover:before,
-.pageDatePicker-range.active:before {
-    background: #364F6A;
+.pageDatePicker-range:hover span:before,
+.pageDatePicker-range.active span:before {
+    background: #357ebd;
+}
+
+.pageDatePicker-range:before,
+.pageDatePicker-range:after {
+    position: absolute;
+    content: "";
+    top: 9px;
+    height: 2px;
+    background: #ddd;
+    z-index: 1;
+    width: 50%;
+}
+
+.pageDatePicker-range:before {
+    left: 0;
+    right: 50%;
+}
+
+.pageDatePicker-range:after {
+    left: 50%;
+    right: 100%;
+}
+
+.pageDatePicker-range:first-child:before {
+    display: none;
+}
+
+.pageDatePicker-range:last-child:after {
+    display: none;
 }
