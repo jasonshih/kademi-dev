@@ -1,0 +1,69 @@
+.pageDatePicker {
+    display: inline-block;
+}
+
+.pageDatePicker-dropdown {
+    padding: 10px;
+    width: 496px;
+    display: none !important;
+}
+
+.pageDatePicker-dropdown.showed {
+    display: block !important;
+}
+
+.pageDatePicker-dropdown-trigger {
+    cursor: pointer;
+}
+
+.pageDatePicker-daterange-wrapper .daterangepicker {
+    position: static;
+    border: 0;
+    display: block !important;
+    box-shadow: none;
+    padding: 0;
+}
+
+.pageDatePicker-daterange-wrapper .daterangepicker .calendar {
+    margin: 0 !important;
+}
+
+.pageDatePicker-daterange-wrapper .daterangepicker:before,
+.pageDatePicker-daterange-wrapper .daterangepicker:after {
+    display: none;
+}
+
+.pageDatePicker-daterange {
+    /*display: none;*/
+}
+
+.pageDatePicker-ranges {
+    text-align: center;
+    padding: 20px 0 0;
+}
+
+.pageDatePicker-range {
+    display: table-cell;
+    width: 1%;
+    text-decoration: none !important;
+}
+
+.pageDatePicker-range:before {
+    display: block;
+    content: "";
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    background: #ddd;
+    margin: 0 auto 5px;
+}
+
+.pageDatePicker-range:hover,
+.pageDatePicker-range.active {
+    color: #364F6A;
+}
+
+.pageDatePicker-range:hover:before,
+.pageDatePicker-range.active:before {
+    background: #364F6A;
+}
