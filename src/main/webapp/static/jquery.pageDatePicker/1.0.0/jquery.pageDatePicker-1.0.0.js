@@ -49,6 +49,7 @@
 
             var self = this;
             var container = self.container;
+            var randomId = (new Date()).getTime();
 
             container.append(
                 '<div class="dropdown pageDatePicker">' +
@@ -57,12 +58,15 @@
                 '       <span class="caret"></span>' +
                 '   </a>' +
                 '   <div class="dropdown-menu dropdown-menu-right pageDatePicker-dropdown">' +
-                '       <ul class="nav nav-tabs pageDatePicker-tab-trigger tab-blue">' +
-                '           <li class="active"><a href="#pageDatePicker-endingNowTab">Ending Now</a></li>' +
-                '           <li><a href="#pageDatePicker-customDateTab">Custom Date</a></li>' +
+                '       <button type="button" class="close pageDatePicker-dropdown-closer">&times;</button>' +
+                '       <ul class="nav nav-tabs tab-blue">' +
+                '           <li class="active"><a href="#pageDatePicker-endingNowTab' + randomId + '" data-toggle="tab">Ending Now</a></li>' +
+                '           <li><a href="#pageDatePicker-customDateTab' + randomId + '" data-toggle="tab">Custom Date</a></li>' +
                 '       </ul>' +
-                '       <div class="pageDatePicker-tab pageDatePicker-endingNowTab"></div>' +
-                '       <div class="pageDatePicker-tab pageDatePicker-customDateTab" style="display: none;"></div>' +
+                '       <div class="tab-content">' +
+                '           <div class="tab-pane fade in active pageDatePicker-endingNowTab" id="pageDatePicker-endingNowTab' + randomId + '"></div>' +
+                '           <div class="tab-pane fade pageDatePicker-customDateTab" id="pageDatePicker-customDateTab' + randomId + '"></div>' +
+                '       </div>' +
                 '   </div>' +
                 '</div>'
             );
@@ -100,12 +104,10 @@
                 }
             });
 
-            $(document.body).on('click', function (e) {
-                var target = $(e.target);
+            self.container.find('.pageDatePicker-dropdown-closer').on('click', function (e) {
+                e.preventDefault();
 
-                if (!target.is('.pageDatePicker') && target.closest('.pageDatePicker').length === 0) {
-                    dropDown.css('display', 'none');
-                }
+                dropDown.removeClass('showed');
             });
         },
 
@@ -114,28 +116,14 @@
 
             var self = this;
             var tabTriggers = self.tabTriggers;
-            var customDateTab = self.customDateTab;
 
             tabTriggers.each(function () {
                 var trigger = $(this);
-                var href = trigger.find('a').attr('href');
 
                 trigger.on('click', function (e) {
                     e.preventDefault();
-                    tabTriggers.filter('.active').removeClass('active');
-                    trigger.addClass('active');
 
-                    if (href === '#pageDatePicker-customDateTab') {
-                        customDateTab.stop().animate({
-                            height: 'show',
-                            opacity: 1
-                        }, 200);
-                    } else {
-                        customDateTab.stop().animate({
-                            height: 'hide',
-                            opacity: 0
-                        }, 200);
-                    }
+                    trigger.find('a').tab('show');
                 });
             });
         },
@@ -193,12 +181,9 @@
             var self = this;
             var options = self.options;
             var customDateTab = self.customDateTab;
-            var originStartDate = moment().format(options.dateFormat);
-            var originEndDate = moment().format(options.dateFormat);
 
             customDateTab.append(
-                '<hr />' +
-                '<div class="pageDatePicker-daterange-wrapper">' +
+                '<div class="pageDatePicker-daterange-wrapper clearfix">' +
                 '    <div class="pageDatePicker-daterange"></div>' +
                 '</div>'
             );
@@ -206,8 +191,6 @@
             var dateRange = self.dateRange = customDateTab.find('.pageDatePicker-daterange');
             dateRange.daterangepicker({
                 parentEl: '.pageDatePicker-daterange-wrapper',
-                startDate: originStartDate,
-                endDate: originEndDate,
                 autoApply: true,
                 opens: 'left',
                 maxDate: moment()
