@@ -60,7 +60,7 @@ var searchData = {
 function initReportDateRange() {
     var reportRange = $('#report-range');
     reportRange.exist(function () {
-        flog("init report range");
+        flog("initReportDateRange", reportRange);
         reportRange.daterangepicker({
                 format: 'DD/MM/YYYY', // YYYY-MM-DD
                 ranges: {
@@ -78,6 +78,7 @@ function initReportDateRange() {
                 loadAnalytics();
             }
         );
+        flog("done init");
     });
 }
 
