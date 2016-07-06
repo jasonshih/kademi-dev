@@ -233,6 +233,7 @@
                 previewText.text('from ' + startDate + ' to ' + endDate);
             }
 
+            // See QueryService.java
             $.cookie('pageDatePicker-startDate', startDate, {
                 path: '/',
                 expires: 999
@@ -247,6 +248,7 @@
                 options.onSelect.call(self, startDate, endDate);
             }
 
+            flog("fire event");
             $(document.body).trigger('pageDateChanged', [startDate, endDate, self.container]);
         },
 

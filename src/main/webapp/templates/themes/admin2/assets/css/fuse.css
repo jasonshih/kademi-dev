@@ -1640,3 +1640,8 @@ body.ajax-loading .ajaxLoader {
 /*.pageDatePicker li.active span {*/
     /*background-color: #57bda6;*/
 /*}*/
+
+/* BM: This is so it appears in the breadcrumb row nicely */
+.breadcrumb .pageDatePicker-wrapper {    
+    display: inline;
+}
