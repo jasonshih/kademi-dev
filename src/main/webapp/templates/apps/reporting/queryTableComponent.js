@@ -4,9 +4,7 @@
 
     KEditor.components['queryTable'] = {
         init: function (contentArea, container, component, keditor) {
-            flog('init "queryTable component', contentArea, container, component, keditor);
-
-            var self = this;
+            // Do nothing
         },
 
         getContent: function (component, keditor) {

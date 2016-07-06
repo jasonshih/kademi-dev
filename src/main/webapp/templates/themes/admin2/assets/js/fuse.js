@@ -788,6 +788,12 @@ function initPieChart(target, options, padding) {
     });
 }
 
+function initPageDatePicker() {
+    flog('initPageDatePicker');
+
+    $('#commonControlsRange').pageDatePicker();
+}
+
 $(function () {
     flog("Fuse init");
 
@@ -803,6 +809,7 @@ $(function () {
     initTable();
     initAjaxStatus();
     initMasonryPanel();
+    initPageDatePicker();
 
     $('.main-navigation-menu').children('li').children('a[href=#]').on('click', function (e) {
         e.preventDefault();

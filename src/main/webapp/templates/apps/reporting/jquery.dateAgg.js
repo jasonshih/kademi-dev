@@ -16,12 +16,6 @@
             var cont = $(n);
             var config = $.extend({}, DEFAULT_KPI_OPTIONS, options);
 
-            var opts = {
-                startDate: config.startDate,
-                endDate: config.endDate,
-                interval: config.interval
-            };
-
             var queryHref = null;
             var aggName = null;
             var component = container.closest('[data-type^="component-"]');
@@ -31,10 +25,14 @@
                 flog("date histo params", queryHref, aggName, component);
             }
 
-            $(document).on('pageDateChange', function (e, selectedOpts) {
-                flog("dateagg date change", e, selectedOpts);
-                loadGraphData(queryHref, aggName, selectedOpts, cont, config);
-            });            
+            $(document).on('pageDateChanged', function (e, startDate, endDate) {
+                flog("dateagg date change", e, startDate, endDate);
+
+                loadGraphData(queryHref, aggName, {
+                    startDate: startDate,
+                    endDate: endDate
+                }, cont, config);
+            });
 
             // Wait for event to be triggered
             //loadGraphData(queryHref, aggName, opts, cont, config);
