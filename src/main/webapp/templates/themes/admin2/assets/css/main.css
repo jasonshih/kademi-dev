@@ -1406,19 +1406,12 @@ ul.main-navigation-menu > li > ul.sub-menu > li > ul.sub-menu > li > ul.sub-menu
     border-bottom: 1px solid #C8C7CC;
     position: relative;
     height: 51px;
+    line-height: 20px;
 }
 .breadcrumb i {
     color: #cccccc;
     font-size: 16px;
     display: inline-block;
-}
-.breadcrumb {
-    margin: 0 -15px;
-    border-radius: 0;
-    padding: 15px 45px 15px 15px;;
-    border-bottom: 1px solid #C8C7CC;
-    position: relative;
-    height: 51px;
 }
 /* ---------------------------------------------------------------------- */
 /*	Rating
