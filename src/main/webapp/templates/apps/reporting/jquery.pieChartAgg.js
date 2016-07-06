@@ -19,7 +19,7 @@
         legendPosition: 'top'
     };
 
-    $.fn.pieChartAgg = function (options) {        
+    $.fn.pieChartAgg = function (options) {
         var container = this;
 
         flog("pieChartAgg", container);
@@ -35,7 +35,7 @@
 
             $(document).on('pageDateChange', function () {
                 flog("piechart date change");
-            });            
+            });
 
             var queryHref = null;
             var aggName = null;
@@ -47,10 +47,17 @@
 
                 config.legendPosition = component.attr("data-legend-position") || config.legendPosition;
             }
-            loadGraphData(queryHref, aggName, opts, cont, config);
+
+            $(document).on('pageDateChanged', function (e, startDate, endDate) {
+                flog("piechart date change", e, startDate, endDate);
+
+                loadGraphData(queryHref, aggName, {
+                    startDate: startDate,
+                    endDate: endDate
+                }, cont, config);
+            });
         });
     };
-
 
     function loadGraphData(href, aggName, opts, container, config) {
         href = href + "?run&" + $.param(opts);
@@ -80,27 +87,27 @@
             }
 
             var chart = nv.models.pieChart()
-                    .x(function (d) {
-                        return config.xLabel(d, aggName);
-                    })
-                    .y(function (d) {
-                        return d.doc_count;
-                    })
-                    .valueFormat(function (val) {
-                        return round((val / total * 100), 2) + "% (" + val + ")";
-                    })
-                    .donut(true)
-                    .labelType("percent")
-                    .donutRatio(0.35)
-                    .showLabels(true)
-                    .showLegend(true)
-                    .legendPosition(config.legendPosition);
+                .x(function (d) {
+                    return config.xLabel(d, aggName);
+                })
+                .y(function (d) {
+                    return d.doc_count;
+                })
+                .valueFormat(function (val) {
+                    return round((val / total * 100), 2) + "% (" + val + ")";
+                })
+                .donut(true)
+                .labelType("percent")
+                .donutRatio(0.35)
+                .showLabels(true)
+                .showLegend(true)
+                .legendPosition(config.legendPosition);
 
             flog("select data", chart, svg.get(0));
             d3.select(svg.get(0))
-                    .datum(aggr.buckets)
-                    .transition().duration(350)
-                    .call(chart);
+                .datum(aggr.buckets)
+                .transition().duration(350)
+                .call(chart);
 
 
             nv.utils.windowResize(chart.update);
