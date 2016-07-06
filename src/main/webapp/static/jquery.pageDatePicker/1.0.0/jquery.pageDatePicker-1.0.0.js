@@ -184,16 +184,17 @@
             var self = this;
             var options = self.options;
             var customDateTab = self.customDateTab;
+            var randomId = 'pageDatePicker-daterange-wrapper-' + (new Date()).getTime();
 
             customDateTab.append(
-                '<div class="pageDatePicker-daterange-wrapper clearfix">' +
+                '<div class="pageDatePicker-daterange-wrapper clearfix" id="' + randomId + '">' +
                 '    <div class="pageDatePicker-daterange"></div>' +
                 '</div>'
             );
 
             var dateRange = self.dateRange = customDateTab.find('.pageDatePicker-daterange');
             dateRange.daterangepicker({
-                parentEl: '.pageDatePicker-daterange-wrapper',
+                parentEl: '#' + randomId,
                 autoApply: true,
                 opens: 'left',
                 maxDate: moment()
