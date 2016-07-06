@@ -791,7 +791,10 @@ function initPieChart(target, options, padding) {
 function initPageDatePicker() {
     flog('initPageDatePicker');
 
-    $('#commonControlsRange').pageDatePicker();
+    var range = $('#commonControlsRange');
+    if( range.length > 0 ) {
+        range.pageDatePicker();
+    }
 }
 
 $(function () {
