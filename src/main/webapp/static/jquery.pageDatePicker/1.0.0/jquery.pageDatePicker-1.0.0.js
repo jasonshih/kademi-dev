@@ -34,7 +34,9 @@
         dateFormat: 'DD/MM/YYYY',
         onSelect: function (text, startDate, endDate) {
         },
-        default: '7-day'
+        default: '7-day',
+        extraClass: '',
+        position: 'right'
     };
 
     function PageDatePicker(container, options) {
@@ -48,16 +50,17 @@
             flog('[jquery.pageDatePicker] init');
 
             var self = this;
+            var options = self.options;
             var container = self.container;
             var randomId = (new Date()).getTime();
 
             container.append(
-                '<div class="dropdown pageDatePicker">' +
-                '   <a class="dropdown-toggle pageDatePicker-dropdown-trigger">' +
+                '<div class="dropdown pageDatePicker-wrapper">' +
+                '   <a class="dropdown-toggle pageDatePicker-dropdown-trigger ' + options.extraClass + '">' +
                 '       <span class="pageDatePicker-text"></span>' +
                 '       <span class="caret"></span>' +
                 '   </a>' +
-                '   <div class="dropdown-menu dropdown-menu-right pageDatePicker-dropdown">' +
+                '   <div class="dropdown-menu ' + (options.position === 'right' ? 'dropdown-menu-right' : '') + ' pageDatePicker-dropdown">' +
                 '       <button type="button" class="close pageDatePicker-dropdown-closer">&times;</button>' +
                 '       <ul class="nav nav-tabs tab-blue">' +
                 '           <li class="active"><a href="#pageDatePicker-endingNowTab' + randomId + '" data-toggle="tab">Ending Now</a></li>' +
