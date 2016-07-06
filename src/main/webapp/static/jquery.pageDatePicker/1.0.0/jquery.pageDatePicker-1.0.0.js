@@ -156,15 +156,17 @@
 
             var rangeItems = self.rangeItems = rangeWrapper.find('.pageDatePicker-range');
             var totalItems = rangeItems.length;
-            rangeItems.css('width', 'calc(100% / ' + totalItems + ')').on('click', function () {
+            rangeItems.css('width', 'calc(100% / ' + totalItems + ')').on('click', function (e) {
+                e.preventDefault();
+
                 var item = $(this);
                 var text = item.text().trim();
 
-                flog('[jquery.pageDatePicker] Range item is clicked', text, startDate, endDate);
+                flog('[jquery.pageDatePicker] Range item is clicked', text);
 
                 if (!item.hasClass('active')) {
-                    var startDate = item.attr('data-startDate');
-                    var endDate = item.attr('data-endDate');
+                    var startDate = item.attr('data-start-date');
+                    var endDate = item.attr('data-end-date');
 
                     self.selectRange(startDate, endDate, text, item);
                 }
@@ -245,7 +247,7 @@
                 options.onSelect.call(self, startDate, endDate);
             }
 
-            $(document.body).trigger('pageDateChanged', startDate, endDate, self.container);
+            $(document.body).trigger('pageDateChanged', [startDate, endDate, self.container]);
         },
 
         initOriginRange: function () {
