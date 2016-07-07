@@ -1,9 +1,3 @@
-
-var searchData = {
-    startDate: null,
-    endDate: null
-};
-
 function initManageEmailHistory() {
     $('abbr.timeago').timeago();
     flog("Init email history");
@@ -14,44 +8,19 @@ function initManageEmailHistory() {
         }, 500);
     });
 
-    var reportRange = $('#report-range');
-
-    reportRange.exist(function () {
-        flog("init report range");
-        reportRange.daterangepicker({
-            format: 'DD/MM/YYYY', // YYYY-MM-DD
-            ranges: {
-                'Last 7 Days': [moment().subtract('days', 6), moment()],
-                'Last 30 Days': [moment().subtract('days', 29), moment()],
-                'This Month': [moment().startOf('month'), moment().endOf('month')],
-                'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
-                'This Year': [moment().startOf('year'), moment()],
-            },
-        },
-                function (start, end) {
-                    flog('onChange', start, end);
-                    searchData.startDate = start.format("DD/MM/YYYY");
-                    searchData.endDate = end.format("DD/MM/YYYY");
-                    doSearch(start, end);
-                    loadAnalytics();
-                }
-        );
-    });
-
     $(document).on('pageDateChanged', function (e, startDate, endDate) {
         flog("page date changed", startDate, endDate);
-        searchData.startDate = startDate;
-        searchData.endDate = endDate;
-        var start = moment(startDate);
-        var end = moment(endDate);
-        doSearch(start, end);
-        loadAnalytics();
+
+        doSearch(startDate, endDate);
+        loadAnalytics({
+            startDate: startDate,
+            endDate: endDate
+        });
     });
 
 
     initSelectAll();
     initMarkIgnored();
-    loadAnalytics();
 }
 
 function doSearch(startDate, endDate) {
@@ -59,8 +28,8 @@ function doSearch(startDate, endDate) {
     flog("doSearch", query);
     var data = {
         q: query,
-        startDate: formatDate(startDate),
-        finishDate: formatDate(endDate)
+        startDate: startDate,
+        finishDate: endDate
     };
     $('#downloadCsv').attr('href', 'emailItems.csv?' + $.param(data));
     $.ajax({
@@ -159,13 +128,14 @@ function initMarkIgnored() {
 }
 
 
-function loadAnalytics() {
+function loadAnalytics(searchData) {
     flog("loadAnalytics");
 
-    var href = "?emailHistory&" + $.param(searchData);
+    var extraParams = $.param(searchData);
+
     $.ajax({
         type: "GET",
-        url: href,
+        url: "?emailHistory&" + extraParams,
         dataType: 'json',
         success: function (json) {
             flog('response', json);
@@ -173,10 +143,9 @@ function loadAnalytics() {
         }
     });
 
-    href = "?emailStats&" + $.param(searchData);
     $.ajax({
         type: "GET",
-        url: href,
+        url: "?emailStats&" + extraParams,
         dataType: 'json',
         success: function (resp) {
             flog("emailstats", resp);
