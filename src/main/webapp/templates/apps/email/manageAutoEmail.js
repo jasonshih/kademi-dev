@@ -344,6 +344,7 @@ function initEmailStats() {
 
 function initHistogram(aggr) {
     $('#chart_histogram svg').empty();
+
     nv.addGraph(function () {
         var chart = nv.models.multiBarChart()
             .options({
@@ -422,10 +423,13 @@ function initHistogram(aggr) {
 
         nv.utils.windowResize(chart.update);
 
+        $('[href=#general]').on('shown.bs.tab', function () {
+            chart.update();
+        });
+
         return chart;
     });
 }
-
 
 function initPies(aggr) {
     initPie("pieDevice", aggr.deviceCategory);
