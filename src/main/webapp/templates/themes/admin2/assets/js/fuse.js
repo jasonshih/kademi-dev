@@ -695,7 +695,7 @@ function doTopNavSearch(query, suggestionsWrapper, backdrop) {
                 for (var i = 0; i < resp.hits.hits.length; i++) {
                     var suggestion = resp.hits.hits[i];
                     suggestionStr += '<li class="suggestion">';
-                    if( suggestion.fields.userId ) {
+                    if (suggestion.fields.userId) {
                         var userId = suggestion.fields.userId[0];
                         var userName = suggestion.fields.userName[0];
                         var email = suggestion.fields.email[0];
@@ -792,8 +792,14 @@ function initPageDatePicker() {
     flog('initPageDatePicker');
 
     var range = $('#commonControlsRange');
-    if( range.length > 0 ) {
-        range.pageDatePicker();
+    if (range.length > 0) {
+        var extraClass = range.attr('data-class') || '';
+        var position = range.attr('data-position') || 'right';
+
+        range.pageDatePicker({
+            extraClass: extraClass,
+            position: position
+        });
     }
 }
 
@@ -812,7 +818,6 @@ $(function () {
     initTable();
     initAjaxStatus();
     initMasonryPanel();
-    initPageDatePicker();
 
     $('.main-navigation-menu').children('li').children('a[href=#]').on('click', function (e) {
         e.preventDefault();

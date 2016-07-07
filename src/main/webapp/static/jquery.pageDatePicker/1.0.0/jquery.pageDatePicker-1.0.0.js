@@ -261,11 +261,11 @@
             flog('[jquery.pageDatePicker] Default value: ' + options.default);
 
             var defaultValue = options.default.split('-');
-            if (moment(defaultValue[0]).isValid() && moment(defaultValue[1]).isValid()) {
+            if (moment(defaultValue[0], options.dateFormat).isValid() && moment(defaultValue[1], options.dateFormat).isValid()) {
                 self.selectRange(defaultValue[0], defaultValue[1]);
             } else {
                 var now = moment();
-                var from = moment().subtract(defaultValue[0] - 1, defaultValue[1]);
+                var from = moment().subtract(+defaultValue[0] - 1, defaultValue[1]);
                 var startDate = from.format(options.dateFormat);
                 var endDate = now.format(options.dateFormat);
                 var rangeItems = self.rangeItems;
