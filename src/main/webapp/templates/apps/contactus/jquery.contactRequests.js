@@ -51,7 +51,7 @@
     $.fn.contactRequests = function (method) {
         flog("contactrequests", this);
         if (methods[method]) {
-            return methods[ method ].apply(this, Array.prototype.slice.call(arguments, 1));
+            return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
         } else if (typeof method === 'object' || !method) {
             return methods.init.apply(this, arguments);
         } else {
@@ -81,19 +81,19 @@ function initHistogram(hits) {
                 .showLegend(false)
                 .showYAxis(true)
                 .showXAxis(true)
-                ;
+            ;
 
         chart.xAxis     //Chart x-axis settings
-                .axisLabel('Date')
-                .tickFormat(d3.format(',r'));
+            .axisLabel('Date')
+            .tickFormat(d3.format(',r'));
 
         chart.yAxis     //Chart y-axis settings
-                .axisLabel('Hits');
+            .axisLabel('Hits');
 
         chart.xAxis
-                .tickFormat(function (d) {
-                    return d3.time.format('%x')(new Date(d))
-                });
+            .tickFormat(function (d) {
+                return d3.time.format('%x')(new Date(d))
+            });
 
         var myData = [];
         var series = {
@@ -111,8 +111,8 @@ function initHistogram(hits) {
         flog("mydate", myData);
 
         d3.select('#visualisation')    //Select the <svg> element you want to render the chart in.
-                .datum(myData)         //Populate the <svg> element with chart data...
-                .call(chart);          //Finally, render the chart!
+            .datum(myData)         //Populate the <svg> element with chart data...
+            .call(chart);          //Finally, render the chart!
 
         //Update the chart when window resizes.
         nv.utils.windowResize(function () {
@@ -140,12 +140,12 @@ function initFormsDonut(total, osBuckets) {
                 .donut(true)          //Turn on Donut mode. Makes pie chart look tasty!
                 .title(total + "")
                 .donutRatio(0.50)     //Configure how big you want the donut hole size to be.
-                ;
+            ;
 
         d3.select("#donutChart")
-                .datum(osBuckets)
-                .transition().duration(1500)
-                .call(chart);
+            .datum(osBuckets)
+            .transition().duration(1500)
+            .call(chart);
 
         return chart;
     });
