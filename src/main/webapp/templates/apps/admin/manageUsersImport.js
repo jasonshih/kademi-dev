@@ -141,6 +141,7 @@ function initUploads() {
         url: usersImportUrl,
         useJsonPut: false,
         buttonText: '<i class="clip-folder"></i> Upload CSV',
+        acceptedFiles: '.csv,.xlsx,.xls,.txt',
         oncomplete: function (resp, name, href) {
             flog("oncomplete", resp, name, href);
 
@@ -149,6 +150,7 @@ function initUploads() {
             var table = data.table;
             form.find("input[name=fileHash]").val(table.hash);
             var fields = data.destFields;
+            fields = sortObjectByValue(fields);
             var thead = $("#importerHead");
             thead.html("");
             flog("headers:", data.numCols);
@@ -246,7 +248,7 @@ function checkProcessStatus() {
                         }
 
                         $('#myWizard').wizard("next");
-                        $('#table-users tbody').reloadFragment({url: '/manageUsers/'});
+                        $('#table-users-body').reloadFragment({url: '/manageUsers/'});
                         $('#aggregationsContainer').reloadFragment({url: '/manageUsers/'});
                         importWizardStarted = false;
                         return; // dont poll again
@@ -275,4 +277,29 @@ function checkProcessStatus() {
 
 function doCheckProcessStatus() {
     checkProcessStatus();
+}
+
+function sortObjectByValue(obj) {
+    var sorted = {};
+    var prop;
+    var arr = [];
+
+    for (prop in obj) {
+        if (obj.hasOwnProperty(prop)) {
+            var o = {key: prop, value: obj[prop]};
+            arr.push(o);
+        }
+    }
+
+    arr.sort(function(a,b){
+        if (a.value > b.value) return 1;
+        if (a.value < b.value) return -1;
+        return 0;
+    });
+
+    for (i = 0; i < arr.length; i++) {
+        sorted[arr[i].key] = arr[i].value;
+    }
+
+    return sorted;
 }
