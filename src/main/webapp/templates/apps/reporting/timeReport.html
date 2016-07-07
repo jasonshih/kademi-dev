@@ -2,8 +2,8 @@
     <head>
         <title>Report</title>
         <link href="reports.css" rel="stylesheet" type="text/css" />
-        <script type="text/javascript" src="reports.js">//</script>
         <script type="text/javascript" src="/static/uri/1.15.1/URI.js">//</script>
+        <script type="text/javascript" src="reports.js">//</script>
     </head>
     <body class="report reportsPage">
 
@@ -21,14 +21,13 @@
                 </div>
                 #end
 
-                <i class="fa fa-bar-chart-o"></i>
-                Reporting
+                <i class="fa fa-bar-chart-o"></i> Reporting
             </div>
             <div class="panel-body">
-                <div class="">
+                <div class="clearfix">
                     <div class="pull-right">
                         <div class="dropdown">
-                            <button class="btn btn-default dropdown-toggle flush-left" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
                                 Report entity: $page.entity
                                 <span class="caret"></span>
                             </button>
@@ -53,19 +52,13 @@
                         </div>
                     </div>
 
-                    <div class="input-group date-range pull-right">
-                        <label for="report-range" class="input-group-addon">Time</label>
-                        <input type="text" id="report-range" placeholder="Choose a date range" value="" class="form-control" />
-                    </div>
-
-                        <p class="btn-group pull-left">
-                            <a class="btn btn-orange dated" href="${page.name}.csv$formatter.queryString">Export as CSV</a>
-                            <!--
-                            <a class="btn btn-success dated" target="_blank" href="${page.name}.png">View as image</a>
-                            -->
-                        </p>
+                    <p class="btn-group pull-left">
+                        <a class="btn btn-orange dated" href="${page.name}.csv$formatter.queryString">Export as CSV</a>
+                        <!--
+                        <a class="btn btn-success dated" target="_blank" href="${page.name}.png">View as image</a>
+                        -->
+                    </p>
                 </div>
-                <div class="clearfix"></div>
 
 
                 <div class="pageMessage alert alert-danger"></div>
@@ -106,6 +99,7 @@
             <div class="modal-body">
                 <p>The fields below are used for CSV generation. The first is the column label at the top of the CSV, and the second is the
                     expression used to calculate the value</p>
+
                 <p>
                     <button class="btn btn-success columns-add">
                         <span class="glyphicon glyphicon-plus"></span>
@@ -139,7 +133,7 @@
                                 <span class="glyphicon glyphicon-sort handle"></span>
                             </span>
 
-                            <button class="btn btn-sm btn-danger columns-remove" type="button" >
+                            <button class="btn btn-sm btn-danger columns-remove" type="button">
                                 <span class="glyphicon glyphicon-remove"></span>
                             </button>
                         </div>
@@ -164,14 +158,14 @@
                 <span class="btn btn-default">
                     <span class="glyphicon glyphicon-sort handle"></span>
                 </span>
-                <button class="btn btn-sm btn-danger columns-remove" type="button" >
+                <button class="btn btn-sm btn-danger columns-remove" type="button">
                     <span class="glyphicon glyphicon-remove"></span>
                 </button>
             </div>
         </div>
 
         #macro( showAggregation $agg )
-        	<tbody id="agg-$agg.name">
+        <tbody id="agg-$agg.name">
             <tr>
                 <td colspan="2">$agg.title&nbsp;<span style="float: right">
                 #if ( $agg.name != "action" && $agg.buckets.size() > 5 )
@@ -187,35 +181,35 @@
             #foreach($b in $agg.buckets )
             #showFacetBucket($b, 0)
             #end
-            </tbody>
+        </tbody>
         #end
 
         #macro( showFacetBucket $b $indent )
-            #set($termParamName = "term-" + $b.aggName)
-            <tr class="agg-row $formatter.paramSelected($termParamName, $b.termName, 'success')">
-                <td>
-                    <div class="col-md-offset-$indent">
-                        <a href="$page.href?$formatter.toggleParamVal( $termParamName, $b.termName )" class="dated term-select">$b.termTitle</a>
-                    </div>
-                </td>
-                <td align="right">$b.count</td>
-            </tr>
-            #foreach($sub in $b.buckets)
-                #showFacetBucket($sub, $formatter.addNum($indent, 1) )
-            #end
+        #set($termParamName = "term-" + $b.aggName)
+        <tr class="agg-row $formatter.paramSelected($termParamName, $b.termName, 'success')">
+            <td>
+                <div class="col-md-offset-$indent">
+                    <a href="$page.href?$formatter.toggleParamVal( $termParamName, $b.termName )" class="dated term-select">$b.termTitle</a>
+                </div>
+            </td>
+            <td align="right">$b.count</td>
+        </tr>
+        #foreach($sub in $b.buckets)
+        #showFacetBucket($sub, $formatter.addNum($indent, 1) )
+        #end
         #end
 
         <div id="proto" style="position: absolute; visibility: hidden">
-          <table>
-            <tr class="agg-row">
-                <td>
-                    <div class="">
-                        <a href="" class="dated term-select"></a>
-                    </div>
-                </td>
-                <td align="right">0</td>
-            </tr>
-           </table>
+            <table>
+                <tr class="agg-row">
+                    <td>
+                        <div class="">
+                            <a href="" class="dated term-select"></a>
+                        </div>
+                    </td>
+                    <td align="right">0</td>
+                </tr>
+            </table>
         </div>
 
         <script src="/templates/themes/admin2/assets/plugins/jQuery-File-Upload/js/vendor/jquery.ui.widget.js"></script>
@@ -278,8 +272,6 @@
                     }
                 });
             });
-
-            runReportsFirst();
         </script>
     </body>
 </html>

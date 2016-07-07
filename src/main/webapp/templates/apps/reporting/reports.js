@@ -2,32 +2,17 @@ $(function () {
     flog("Init reports");
     var reportContainer = $('#annual');
     var itemsContainer = $('#items');
-    var reportRange = $('#report-range');
 
-    reportRange.exist(function () {
-        flog("init report range");
-        reportRange.daterangepicker({
-            format: 'DD/MM/YYYY', // YYYY-MM-DD
-            ranges: {
-                'Last 7 Days': [moment().subtract('days', 6), moment()],
-                'Last 30 Days': [moment().subtract('days', 29), moment()],
-                'This Month': [moment().startOf('month'), moment().endOf('month')],
-                'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
-                'This Year': [moment().startOf('year'), moment()],
-            },
-        },
-        function (start, end) {
-            flog('onChange', start, end);
-            updateHref();
-            flog("relod results", window.location);
-            $("#reportResult").reloadFragment({
-                url: window.location, // need to give explicitly, becuse otherwise querystring gets stripped
-                whenComplete: function() {
-                    runReportWithDateRange( reportContainer, itemsContainer);
-                }
-            });
-        }
-        );
+    $(document.body).on('pageDateChanged', function (e, startDate, endDate) {
+        updateHref(startDate, endDate);
+        flog("relod results", window.location);
+
+        $("#reportResult").reloadFragment({
+            url: window.location, // need to give explicitly, because otherwise querystring gets stripped
+            whenComplete: function () {
+                runReportWithDateRange(reportContainer, itemsContainer);
+            }
+        });
     });
 
     $(".report").on("click", ".term-select", function (e) {
@@ -35,12 +20,13 @@ $(function () {
         e.preventDefault();
         var target = $(e.target).closest("a");
         var newHref = target.attr("href");
-        history.pushState(null, null, newHref );
+        history.pushState(null, null, newHref);
         updateLinksWithParameters();
+
         $("#reportResult").reloadFragment({
-            url: window.location, // need to give explicitly, becuse otherwise querystring gets stripped
-            whenComplete: function() {
-                runReportWithDateRange( reportContainer, itemsContainer);
+            url: window.location, // need to give explicitly, because otherwise querystring gets stripped
+            whenComplete: function () {
+                runReportWithDateRange(reportContainer, itemsContainer);
             }
         });
     });
@@ -50,51 +36,35 @@ $(function () {
         return false;
     });
 
-    $(".report").on("change", ".agg-filter", function(e) {
-    	e.preventDefault();
-    	var input = $(e.target);
-    	var tbody = input.closest("tbody");
-    	var name = input.attr("name");
-    	var value = input.val();
-    	var uri = URI(window.location);
-    	uri.setSearch("filter-".concat(name), value);
+    $(".report").on("change", ".agg-filter", function (e) {
+        e.preventDefault();
+        var input = $(e.target);
+        var tbody = input.closest("tbody");
+        var name = input.attr("name");
+        var value = input.val();
+        var uri = URI(window.location);
+        uri.setSearch("filter-".concat(name), value);
 
-        history.pushState(null, null, uri.toString() );
+        history.pushState(null, null, uri.toString());
         updateLinksWithParameters();
 
         $("#reportResult").reloadFragment({
             url: window.location,
-            whenComplete: function() {
-                runReportWithDateRange( reportContainer, itemsContainer);
+            whenComplete: function () {
+                runReportWithDateRange(reportContainer, itemsContainer);
             }
         });
     });
 });
 
-function runReportsFirst() {
-    var reportContainer = $('#annual');
-    var itemsContainer = $('#items');
-    runReportWithDateRange( reportContainer, itemsContainer);
-}
-
-function updateHref() {
+function updateHref(startDate, endDate) {
     var uri = URI(window.location);
-    var reportRange = $('#report-range');
-    var arr = reportRange.val().split('-');
-    var startDate = '';
-    var finishDate = '';
-    if (arr.length > 0) {
-        startDate = arr[0].trim();
-    }
-    if (arr.length > 1) {
-        finishDate = arr[1];
-    }
 
     uri.setSearch("startDate", startDate);
-    uri.setSearch("finishDate", finishDate);
+    uri.setSearch("finishDate", endDate);
 
     flog("New dated uri", uri.toString());
-    history.pushState(null, null, uri.toString() );
+    history.pushState(null, null, uri.toString());
     updateLinksWithParameters();
 }
 
@@ -104,7 +74,7 @@ function updateLinksWithParameters() {
         var target = $(n);
         var href = target.attr('href');
         var datedUri = URI(href);
-        var newDatedHref = datedUri.search( uri.search() ).toString();
+        var newDatedHref = datedUri.search(uri.search()).toString();
         flog('new href', href, newDatedHref, target);
         target.attr('href', newDatedHref);
     });
