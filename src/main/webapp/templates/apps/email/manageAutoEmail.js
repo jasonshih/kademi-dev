@@ -1,9 +1,148 @@
-var c = {};
 var options = {
     startDate: null,
     endDate: null,
     interval: "day"
 };
+
+function initManageAutoEmail(emailEnabled, smsEnabled) {
+    flog('initManageAutoEmail', emailEnabled, smsEnabled);
+    initHtmlEditors($('.htmleditor'), getStandardEditorHeight(), null, null, 'autogrow');
+    initAttachment();
+    initFormDetailEmail();
+    initIncludeUser();
+    initEventType();
+    initAdvanceRecipients();
+    initSendTest();
+    initChooseGroup();
+    initEnableSwitcher();
+    setRecentItem(document.title, window.location.pathname);
+    initSmsField();
+    initEmailStats();
+    initTitleEditor();
+    initRefresher();
+    initJavascriptEditor();
+    initAddGroup();
+    initSelectAll();
+    initMarkIgnored();
+    initTimerExpressionEditor();
+    initLoadData();
+
+    $('#action .toggler').on({
+        'checked.toggled': function (e, panel) {
+            $(panel).find('.required-if-shown').not(':hidden').addClass('required');
+        },
+        'unchecked.toggled': function (e, panel) {
+            $(panel).find('.required-if-shown').removeClass('required');
+        }
+    });
+
+    var toggledPanel = $('.panel-toggled');
+    toggledPanel.each(function () {
+        var panel = $(this);
+        if (panel.is(':hidden')) {
+            panel.find('.required-if-shown').not(':hidden').removeClass('required');
+        } else {
+            panel.find('.required-if-shown').not(':hidden').addClass('required');
+        }
+    });
+
+    $('.timer-units li').click(function (e) {
+        e.preventDefault();
+        var unit = $(e.target).text();
+        $('.timer-unit').text(unit).val(unit).change();
+    });
+
+    $('abbr.timeago').timeago();
+    var body = $(document.body);
+
+    body.on('click', '.email-item', function (e) {
+        e.preventDefault();
+
+        var item = $(this);
+        var row = item.closest('tr');
+        var href = row.attr('href')
+        var win = window.open(href, '_blank');
+
+        if (win) {
+            // Browser has allowed it to be opened
+            win.focus();
+        } else {
+            // Browser has blocked it
+            alert('Please allow popups for this site');
+        }
+    });
+
+    body.on('click', '.sms-item', function (e) {
+        e.preventDefault();
+
+        var item = $(this);
+        var href = item.attr('href')
+        var win = window.open(href, '_blank');
+
+        if (win) {
+            // Browser has allowed it to be opened
+            win.focus();
+        } else {
+            // Browser has blocked it
+            alert('Please allow popups for this site');
+        }
+    });
+
+    body.on('change', '#smsEnabled', function (e) {
+        e.preventDefault();
+
+        var chk = $(this);
+        smsEnabled = chk.is(':checked');
+
+        if (emailEnabled && smsEnabled) {
+            $('#send-preference').show();
+        } else {
+            $('#send-preference').hide();
+        }
+    });
+
+    body.on('change', '#emailEnabled', function (e) {
+        e.preventDefault();
+
+        var chk = $(this);
+        emailEnabled = chk.is(':checked');
+
+        if (emailEnabled && smsEnabled) {
+            $('#send-preference').show();
+        } else {
+            $('#send-preference').hide();
+        }
+    });
+
+    $('.time-picker').timepicker();
+    body.on('change', '#useTimerTime', function (e) {
+
+        var btn = $(this);
+        var isChecked = btn.is(':checked');
+
+        flog(isChecked);
+        if (isChecked) {
+            $('#fireAtTime').show();
+        } else {
+            $('#fireAtTime').hide();
+            $('input[name=timerTime]').val('');
+        }
+    });
+
+    flog("initManageAutoEmail - DONE");
+}
+
+function initLoadData() {
+    flog('initLoadData');
+
+    $(document.body).on('pageDateChanged', function (e, startDate, endDate) {
+        options.startDate = startDate;
+        options.endDate = endDate;
+        doHistorySearch(startDate, endDate);
+        doSMSHistorySearch(startDate, endDate);
+        loadData();
+    });
+}
 
 function initEnableSwitcher() {
     flog('initEnableSwitcher');
@@ -52,43 +191,19 @@ function initSmsField() {
     });
 }
 
-function initHistorySearch() {
-    var reportRange = $('#report-range');
-
-    reportRange.exist(function () {
-        flog("init report range");
-        reportRange.daterangepicker(
-                {
-                    format: 'DD/MM/YYYY', // YYYY-MM-DD
-                    ranges: {
-                        'Last 7 Days': [moment().subtract('days', 6), moment()],
-                        'Last 30 Days': [moment().subtract('days', 29), moment()],
-                        'This Month': [moment().startOf('month'), moment().endOf('month')],
-                        'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
-                        'This Year': [moment().startOf('year'), moment()],
-                    }
-                },
-        function (start, end) {
-            flog('onChange', start, end);
-            doHistorySearch(start, end);
-        }
-        );
-    });
-}
-
 function doHistorySearch(startDate, endDate) {
     flog('doHistorySearch', startDate, endDate);
 
     var data = {
-        startDate: formatDate(startDate),
-        finishDate: formatDate(endDate)
+        startDate: startDate,
+        finishDate: endDate
     };
     flog("data", data);
 
     var target = $("#history-table-body");
     //target.load();
 
-    var dates = "startDate=" + formatDate(startDate) + "&finishDate=" + formatDate(endDate);
+    var dates = "startDate=" + startDate + "&finishDate=" + endDate;
     var baseHref = window.location.pathname + "?" + dates;
     var href = baseHref + "#history-tab";
     $("a.history-csv").attr("href", "email-history.csv?" + dates);
@@ -109,40 +224,18 @@ function doHistorySearch(startDate, endDate) {
 
 }
 
-function initSmsHistorySearch() {
-    var smsReportRange = $('#sms-report-range');
-
-    smsReportRange.exist(function () {
-        flog("init sms report range");
-        smsReportRange.daterangepicker({
-            format: 'DD/MM/YYYY', // YYYY-MM-DD
-            ranges: {
-                'Last 7 Days': [moment().subtract('days', 6), moment()],
-                'Last 30 Days': [moment().subtract('days', 29), moment()],
-                'This Month': [moment().startOf('month'), moment().endOf('month')],
-                'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
-                'This Year': [moment().startOf('year'), moment()],
-            },
-        },
-                function (start, end) {
-                    flog('onChange', start, end);
-                    doSMSHistorySearch(start, end);
-                });
-    });
-}
-
 function doSMSHistorySearch(startDate, endDate) {
     flog('doSMSHistorySearch', startDate, endDate);
 
     var data = {
-        startDate: formatDate(startDate),
-        finishDate: formatDate(endDate)
+        startDate: startDate,
+        finishDate: endDate
     };
     flog("data", data);
 
     var target = $("#sms-history-table-body");
 
-    var dates = "smsStartDate=" + formatDate(startDate) + "&smsFinishDate=" + formatDate(endDate);
+    var dates = "smsStartDate=" + startDate + "&smsFinishDate=" + endDate;
     var baseHref = window.location.pathname + "?" + dates;
     var href = baseHref + "#history-tab";
     $("a.sms-history-csv").attr("href", "sms-history.csv?" + dates);
@@ -194,10 +287,9 @@ function initRefresher() {
 }
 
 function loadData() {
-    var href = "?triggerHistory&" + $.param(options);
     $.ajax({
         type: "GET",
-        url: href,
+        url: "?triggerHistory&" + $.param(options),
         dataType: 'html',
         success: function (resp) {
             var json = null;
@@ -207,25 +299,21 @@ function loadData() {
             }
 
             flog('response', json);
-            handleData(json);
+            var aggr = (json !== null ? json.aggregations : null);
+
+            initHistogram(aggr);
         }
     });
-    href = "?emailStats&" + $.param(options);
+
     $.ajax({
         type: "GET",
-        url: href,
+        url: "?emailStats&" + $.param(options),
         dataType: 'json',
         success: function (resp) {
             flog("emailstats", resp);
             initPies(resp.aggregations);
         }
     });
-}
-
-function handleData(resp) {
-    var aggr = (resp !== null ? resp.aggregations : null);
-
-    initHistogram(aggr);
 }
 
 function initEmailStats() {
@@ -258,26 +346,26 @@ function initHistogram(aggr) {
     $('#chart_histogram svg').empty();
     nv.addGraph(function () {
         var chart = nv.models.multiBarChart()
-                .options({
-                    showLegend: true,
-                    showControls: false,
-                    noData: "No Data available for histogram",
-                    margin: {
-                        left: 40,
-                        bottom: 60
-                    }
-                });
+            .options({
+                showLegend: true,
+                showControls: false,
+                noData: "No Data available for histogram",
+                margin: {
+                    left: 40,
+                    bottom: 60
+                }
+            });
 
         chart.xAxis
-                .axisLabel("Date")
-                .rotateLabels(-45)
-                .tickFormat(function (d) {
-                    return moment(d).format("DD MMM YY");
-                });
+            .axisLabel("Date")
+            .rotateLabels(-45)
+            .tickFormat(function (d) {
+                return moment(d).format("DD MMM YY");
+            });
 
         chart.yAxis
-                .axisLabel("Triggered")
-                .tickFormat(d3.format('d'));
+            .axisLabel("Triggered")
+            .tickFormat(d3.format('d'));
 
         var myData = [];
         var conditionsTrue = {
@@ -312,25 +400,25 @@ function initHistogram(aggr) {
         for (var i = 0; i < trueHits.length; i++) {
             var bucket = trueHits[i];
             conditionsTrue.values.push(
-                    {x: bucket.key, y: bucket.doc_count});
+                {x: bucket.key, y: bucket.doc_count});
         }
 
         for (var i = 0; i < falseHits.length; i++) {
             var bucket = falseHits[i];
             conditionsFalse.values.push(
-                    {x: bucket.key, y: bucket.doc_count});
+                {x: bucket.key, y: bucket.doc_count});
         }
 
         for (var i = 0; i < delayedHits.length; i++) {
             var bucket = delayedHits[i];
             delayedTriggers.values.push(
-                    {x: bucket.key, y: bucket.doc_count});
+                {x: bucket.key, y: bucket.doc_count});
         }
 
         d3.select('#chart_histogram svg')
-                .datum(myData)
-                .transition().duration(500)
-                .call(chart);
+            .datum(myData)
+            .transition().duration(500)
+            .call(chart);
 
         nv.utils.windowResize(chart.update);
 
@@ -358,73 +446,26 @@ function initPie(id, aggr) {
     $('#' + id + ' svg').empty();
     nv.addGraph(function () {
         var chart = nv.models.pieChart()
-                .x(function (d) {
-                    return d.key;
-                })
-                .y(function (d) {
-                    return d.doc_count;
-                })
-                .valueFormat(function (val) {
-                    return round((val / total * 100), 2) + "% (" + val + ")";
-                })
-                .donut(true)
-                .donutRatio(0.35)
-                .showLabels(false);
+            .x(function (d) {
+                return d.key;
+            })
+            .y(function (d) {
+                return d.doc_count;
+            })
+            .valueFormat(function (val) {
+                return round((val / total * 100), 2) + "% (" + val + ")";
+            })
+            .donut(true)
+            .donutRatio(0.35)
+            .showLabels(false);
 
 
         d3.select("#" + id + " svg")
-                .datum(aggr.buckets)
-                .transition().duration(350)
-                .call(chart);
+            .datum(aggr.buckets)
+            .transition().duration(350)
+            .call(chart);
 
         return chart;
-    });
-}
-
-function initControls() {
-    flog("initControls");
-    var reportRange = $('#analytics-range');
-
-    function cb(start, end) {
-        options.startDate = start.format('DD/MM/YYYY');
-        options.endDate = end.format('DD/MM/YYYY');
-        loadData();
-    }
-
-    var startDate = moment().subtract('days', 7);
-    var endDate = moment();
-
-    reportRange.val(startDate.format('DD/MM/YYYY') + ' - ' + endDate.format('DD/MM/YYYY'));
-
-    reportRange.exist(function () {
-        flog("init analytics range");
-        reportRange.daterangepicker({
-            format: 'DD/MM/YYYY',
-            startDate: startDate,
-            endDate: endDate,
-            ranges: {
-                'Today': [
-                    moment().toISOString(),
-                    moment().toISOString()
-                ],
-                'Last 7 Days': [
-                    moment().subtract('days', 7).toISOString(),
-                    moment().toISOString()
-                ],
-                'Last 30 Days': [
-                    moment().subtract('days', 30).toISOString(),
-                    moment().toISOString()],
-                'This Month': [
-                    moment().startOf('month').toISOString(),
-                    moment().endOf('month').toISOString()],
-                'Last Month': [
-                    moment().subtract('month', 1).startOf('month').toISOString(),
-                    moment().subtract('month', 1).endOf('month').toISOString()],
-                'This Year': [
-                    moment().startOf('year').toISOString(),
-                    moment().toISOString()],
-            },
-        }, cb);
     });
 }
 
@@ -535,138 +576,6 @@ function initTimerExpressionEditor() {
     $('#timerExpressionEditor').show();
 }
 
-var p;
-function initManageAutoEmail(emailEnabled, smsEnabled) {
-    flog('initManageAutoEmail', emailEnabled, smsEnabled);
-    initHtmlEditors($('.htmleditor'), getStandardEditorHeight(), null, null, 'autogrow');
-    initAttachment();
-    initFormDetailEmail();
-    initIncludeUser();
-    initEventType();
-    initAdvanceRecipients();
-    initSendTest();
-    initChooseGroup();
-    initEnableSwitcher();
-    setRecentItem(document.title, window.location.pathname);
-    initSmsField();
-    initEmailStats();
-    initControls();
-    initTitleEditor();
-    initHistorySearch();
-    initSmsHistorySearch();
-    initRefresher();
-    loadData();
-    initJavascriptEditor();
-    initAddGroup();
-    initSelectAll();
-    initMarkIgnored();
-    initTimerExpressionEditor();
-
-    $('#action .toggler').on({
-        'checked.toggled': function (e, panel) {
-            $(panel).find('.required-if-shown').not(':hidden').addClass('required');
-        },
-        'unchecked.toggled': function (e, panel) {
-            $(panel).find('.required-if-shown').removeClass('required');
-        }
-    });
-
-    var toggledPanel = $('.panel-toggled');
-    toggledPanel.each(function () {
-        var panel = $(this);
-        if (panel.is(':hidden')) {
-            panel.find('.required-if-shown').not(':hidden').removeClass('required');
-        } else {
-            panel.find('.required-if-shown').not(':hidden').addClass('required');
-        }
-    });
-
-    $('.timer-units li').click(function (e) {
-        e.preventDefault();
-        var unit = $(e.target).text();
-        $('.timer-unit').text(unit).val(unit).change();
-    });
-
-    $('abbr.timeago').timeago();
-    var body = $(document.body);
-
-    body.on('click', '.email-item', function (e) {
-        e.preventDefault();
-
-        var item = $(this);
-        var row = item.closest('tr');
-        var href = row.attr('href')
-        var win = window.open(href, '_blank');
-
-        if (win) {
-            // Browser has allowed it to be opened
-            win.focus();
-        } else {
-            // Browser has blocked it
-            alert('Please allow popups for this site');
-        }
-    });
-
-    body.on('click', '.sms-item', function (e) {
-        e.preventDefault();
-
-        var item = $(this);
-        var href = item.attr('href')
-        var win = window.open(href, '_blank');
-
-        if (win) {
-            // Browser has allowed it to be opened
-            win.focus();
-        } else {
-            // Browser has blocked it
-            alert('Please allow popups for this site');
-        }
-    });
-
-    body.on('change', '#smsEnabled', function (e) {
-        e.preventDefault();
-
-        var chk = $(this);
-        smsEnabled = chk.is(':checked');
-
-        if (emailEnabled && smsEnabled) {
-            $('#send-preference').show();
-        } else {
-            $('#send-preference').hide();
-        }
-    });
-
-    body.on('change', '#emailEnabled', function (e) {
-        e.preventDefault();
-
-        var chk = $(this);
-        emailEnabled = chk.is(':checked');
-
-        if (emailEnabled && smsEnabled) {
-            $('#send-preference').show();
-        } else {
-            $('#send-preference').hide();
-        }
-    });
-
-    $('.time-picker').timepicker();
-    body.on('change', '#useTimerTime', function (e) {
-
-        var btn = $(this);
-        var isChecked = btn.is(':checked');
-
-        flog(isChecked);
-        if (isChecked) {
-            $('#fireAtTime').show();
-        } else {
-            $('#fireAtTime').hide();
-            $('input[name=timerTime]').val('');
-        }
-    });
-
-    flog("initManageAutoEmail - DONE");
-}
-
 function initEventType() {
     var eventType = $('.event-type');
     var chkEventId = $('#eventId');
@@ -735,15 +644,15 @@ function showAttachment(data, attachmentsList) {
     var hash = data.result.nextHref;
 
     attachmentsList.append(
-            '<article>' +
-            '   <span class="article-name">' +
-            '       <a target="_blank" href="/_hashes/files/' + hash + '">' + name + '</a>' +
-            '   </span>' +
-            '   <aside class="article-action">' +
-            '       <a class="btn btn-xs btn-danger btn-delete-attachment" href="' + name + '" title="Remove"><i class="clip-minus-circle"></i></a>' +
-            '   </aside>' +
-            '</article>'
-            );
+        '<article>' +
+        '   <span class="article-name">' +
+        '       <a target="_blank" href="/_hashes/files/' + hash + '">' + name + '</a>' +
+        '   </span>' +
+        '   <aside class="article-action">' +
+        '       <a class="btn btn-xs btn-danger btn-delete-attachment" href="' + name + '" title="Remove"><i class="clip-minus-circle"></i></a>' +
+        '   </aside>' +
+        '</article>'
+    );
 }
 
 function doRemoveAttachment(name, callback) {

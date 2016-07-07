@@ -308,7 +308,6 @@
                             </li>
 
                             <li class="pull-right" id="commonControlsRange"></li>
-
                         </ol>
 
                         <div style="padding-top: 15px">
@@ -372,11 +371,15 @@
             $(function () {
                 Main.init('$page.organisation.id');
                 initTheme(); // init the fuse extensions
+
+                // Init page date picker at the end for make sure that when first time it triggers pageDateChanged event, all other js stuffs could listen!
+                initPageDatePicker();
+
                 try {
                     // https://github.com/Kademi/kademi-dev/issues/1397
                     CKEDITOR.timestamp = '30052016';
                 } catch (e) {
-                    flog("ckedior exception");
+                    flog("Ckedior exception");
                 }
             });
         </script>

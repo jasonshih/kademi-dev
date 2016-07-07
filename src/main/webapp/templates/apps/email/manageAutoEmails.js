@@ -58,27 +58,10 @@ var searchData = {
 }
 
 function initReportDateRange() {
-    var reportRange = $('#report-range');
-    reportRange.exist(function () {
-        flog("initReportDateRange", reportRange);
-        reportRange.daterangepicker({
-                format: 'DD/MM/YYYY', // YYYY-MM-DD
-                ranges: {
-                    'Last 7 Days': [moment().subtract('days', 6), moment()],
-                    'Last 30 Days': [moment().subtract('days', 29), moment()],
-                    'This Month': [moment().startOf('month'), moment().endOf('month')],
-                    'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
-                    'This Year': [moment().startOf('year'), moment()],
-                },
-            },
-            function (start, end) {
-                flog('onChange', start, end);
-                searchData.startDate = start.format('DD/MM/YYYY');
-                searchData.endDate = end.format('DD/MM/YYYY');
-                loadAnalytics();
-            }
-        );
-        flog("done init");
+    $(document.body).on('pageDateChanged', function (e, startDate, endDate) {
+        searchData.startDate = startDate;
+        searchData.endDate = endDate;
+        loadAnalytics();
     });
 }
 
@@ -265,8 +248,8 @@ function initDefaultDragDrop() {
         revert: 'invalid',
         axis: 'y',
         start: function (event, ui) {
-            ui.helper.css('background','#f9f9f9');
-            ui.helper.css('z-index','999');
+            ui.helper.css('background', '#f9f9f9');
+            ui.helper.css('z-index', '999');
         }
     });
 
@@ -313,8 +296,8 @@ function initFolderDragDrop() {
         revert: 'invalid',
         axis: 'y',
         start: function (event, ui) {
-            ui.helper.css('background','#f9f9f9');
-            ui.helper.css('z-index','999');
+            ui.helper.css('background', '#f9f9f9');
+            ui.helper.css('z-index', '999');
         }
     });
 }

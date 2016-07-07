@@ -85,14 +85,6 @@
                             </div>
                             #set($stats = $page.emailStats)
                             <div class="col-md-4">
-                                <div class="row p-b-20">
-                                    <div class="col-md-12">
-                                        <div class="input-group date-range">
-                                            <label for="analytics-range" class="input-group-addon">Date</label>
-                                            <input type="text" id="analytics-range" placeholder="Choose a date range" value="" class="form-control" />
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="ktile-wrapper col-sm-4 col-md-6">
                                     <div class="ktile ktile-lg-v">
                                         <div class="ktile-inner">
@@ -986,26 +978,23 @@ return false;</pre>
 
                     <!-- Start content of History tab -->
                     <div id="history" class="tab-pane">
-                        <div class="btn-group pull-right">
-                            <a class="btn btn-info history-csv" href="email-history.csv?startDate=$!request.params.startDate&finishDate=$!request.params.finishDate">
-                                Export to CSV
-                                <span class="glyphicon glyphicon-cloud-download"></span>
-                            </a>
-                            <button type="button" class="refresh-history btn btn-success">
-                                Refresh
-                                <span class="glyphicon glyphicon-refresh"></span>
-                            </button>
-                            <button type="button" class="btn-mark-ignored btn btn-warning">
-                                Mark Ignored
-                                <span class="fa fa-ban"></span>
-                            </button>
+                        <div class="text-right">
+                            <div class="btn-group">
+                                <a class="btn btn-info history-csv" href="email-history.csv?startDate=$!request.params.startDate&finishDate=$!request.params.finishDate">
+                                    Export to CSV
+                                    <span class="glyphicon glyphicon-cloud-download"></span>
+                                </a>
+                                <button type="button" class="refresh-history btn btn-success">
+                                    Refresh
+                                    <span class="glyphicon glyphicon-refresh"></span>
+                                </button>
+                                <button type="button" class="btn-mark-ignored btn btn-warning">
+                                    Mark Ignored
+                                    <span class="fa fa-ban"></span>
+                                </button>
+                            </div>
                         </div>
 
-                        <div class="input-group date-range col-md-4">
-                            <label for="report-range" class="input-group-addon">Time</label>
-                            <input type="text" id="report-range" placeholder="Choose a date range" value="" class="form-control" />
-                        </div>
-                        <div class="clearfix"></div>
                         <hr/>
 
                         <div class="table-responsive" id="history-table">
@@ -1070,22 +1059,18 @@ return false;</pre>
 
                     <!-- Start content of SMS History tab -->
                     <div id="smsHistory" class="tab-pane">
-                        <div class="btn-group pull-right">
-                            <a class="btn btn-info sms-history-csv" href="sms-history.csv?smsStartDate=$!request.params.smsStartDate&smsFinishDate=$!request.params.smsFinishDate">
-                                Export to CSV
-                                <span class="glyphicon glyphicon-cloud-download"></span>
-                            </a>
-                            <button type="button" class="refresh-sms-history btn btn-success">
-                                Refresh
-                                <span class="glyphicon glyphicon-refresh"></span>
-                            </button>
+                        <div class="text-right">
+                            <div class="btn-group">
+                                <a class="btn btn-info sms-history-csv" href="sms-history.csv?smsStartDate=$!request.params.smsStartDate&smsFinishDate=$!request.params.smsFinishDate">
+                                    Export to CSV
+                                    <span class="glyphicon glyphicon-cloud-download"></span>
+                                </a>
+                                <button type="button" class="refresh-sms-history btn btn-success">
+                                    Refresh
+                                    <span class="glyphicon glyphicon-refresh"></span>
+                                </button>
+                            </div>
                         </div>
-
-                        <div class="input-group date-range col-md-4">
-                            <label for="sms-report-range" class="input-group-addon">Time</label>
-                            <input type="text" id="sms-report-range" placeholder="Choose a date range" value="" class="form-control" />
-                        </div>
-                        <div class="clearfix"></div>
                         <hr/>
 
                         <div class="table-responsive" id="sms-history-table">
