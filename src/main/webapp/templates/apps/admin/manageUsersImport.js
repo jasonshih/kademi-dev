@@ -115,7 +115,7 @@ function initUploads() {
             }
         }
 
-        if (data.step === 4) {
+        if (data.step === 3) {
             if (!importWizardStarted) {
                 Msg.error('Importing process hasnt been started yet');
                 evt.preventDefault();
