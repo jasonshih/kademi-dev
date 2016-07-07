@@ -69,9 +69,9 @@ function initUploads() {
         if (data.step === 1 && $('#importerWizard').attr('aria-expanded') == 'true') {
             if (form.find("input[name=fileHash]").val() == "") {
                 if ($('#btn-upload').length) {
-                    alert("Please select a file to upload");
+                    Msg.error("Please select a file to upload");
                 } else {
-                    alert("Sale Group hasn't been set. Please contact administrator for assistant.");
+                    Msg.error("Sale Group hasn't been set. Please contact administrator for assistant.");
                 }
                 evt.preventDefault();
             }
@@ -80,7 +80,7 @@ function initUploads() {
         if (data.step === 2) {
             var startRow = $('#startRow').val();
             if (!startRow) {
-                alert('Please enter start row value');
+                Msg.error('Please enter start row value');
                 $('#startRow').trigger('focus').parents('.form-group').addClass('has-error');
                 evt.preventDefault();
                 return false;
@@ -99,7 +99,7 @@ function initUploads() {
             });
 
             if (selectedCols.length !== requiredFields.length) {
-                alert('Import data must contain Email and Group column. Please try again!');
+                Msg.error('Import data must contain Email and Group column. Please try again!');
                 importerHead.find('select').first().trigger('focus');
                 evt.preventDefault();
             }
