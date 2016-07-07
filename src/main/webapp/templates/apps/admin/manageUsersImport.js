@@ -3,6 +3,7 @@
  */
 
 var usersImportUrl = '/manageUsers/userFile';
+var importWizardStarted = false;
 function initManageUsersImport() {
     initUploads();
 }
@@ -90,18 +91,35 @@ function initUploads() {
 
             var importerHead = $('#importerHead');
             var selectedCols = [];
-            //var requiredFields = ['email','groupName'];
-            var requiredFields = ['email'];
+            var requiredField = 'groupName';
             importerHead.find('select').each(function () {
-                if (requiredFields.indexOf(this.value) !== -1) {
+                if (this.value) {
                     selectedCols.push(this.value);
                 }
             });
 
-            if (selectedCols.length !== requiredFields.length) {
-                Msg.error('Import data must contain Email and Group column. Please try again!');
+            var defaultGroup = $('#defaultGroup').val();
+
+            if (!selectedCols.length){
+                Msg.error('Please select at least 1 destination field to continue.');
                 importerHead.find('select').first().trigger('focus');
                 evt.preventDefault();
+                return false;
+            }
+
+            if (!defaultGroup && selectedCols.indexOf(requiredField) === -1) {
+                Msg.error('Please select default group or indicate group field in data table');
+                importerHead.find('select').first().trigger('focus');
+                evt.preventDefault();
+                return false;
+            }
+        }
+
+        if (data.step === 4) {
+            if (!importWizardStarted) {
+                Msg.error('Importing process hasnt been started yet');
+                evt.preventDefault();
+                return false;
             }
         }
     });
@@ -109,6 +127,10 @@ function initUploads() {
     flog("Init importer form", form);
     form.forms({
         postUrl: usersImportUrl,
+        beforePostForm: function(form, config, data){
+            importWizardStarted = true;
+            return data;
+        },
         onSuccess: function (resp, form, config) {
             $('#myWizard').wizard("next");
             doCheckProcessStatus(usersImportUrl);
@@ -226,6 +248,7 @@ function checkProcessStatus() {
                         $('#myWizard').wizard("next");
                         $('#table-users tbody').reloadFragment({url: '/manageUsers/'});
                         $('#aggregationsContainer').reloadFragment({url: '/manageUsers/'});
+                        importWizardStarted = false;
                         return; // dont poll again
                     } else {
                         // running
