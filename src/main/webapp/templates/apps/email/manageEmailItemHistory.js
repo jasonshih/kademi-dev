@@ -38,6 +38,17 @@ function initManageEmailHistory() {
         );
     });
 
+    $(document).on('pageDateChanged', function (e, startDate, endDate) {
+        flog("page date changed", startDate, endDate);
+        searchData.startDate = startDate;
+        searchData.endDate = endDate;
+        var start = moment(startDate);
+        var end = moment(endDate);
+        doSearch(start, end);
+        loadAnalytics();
+    });
+
+
     initSelectAll();
     initMarkIgnored();
     loadAnalytics();
