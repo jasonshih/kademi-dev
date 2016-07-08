@@ -295,16 +295,20 @@ jsPlumb.ready(function () {
                 },
                 maxConnections: 1,
                 onMaxConnections: function (info, e) {
-                    Msg.info("Maximum connections (" + info.maxConnections + ") reached");
+                    Msg.warning("Maximum connections (" + info.maxConnections + ") reached. Please delete current connection and make a new one");
+                    e.preventDefault();
+                    e.stopPropagation();
                 }
             });
         }
 
-        instance.makeTarget(el, {
-            dropOptions: {hoverClass: "dragHover"},
-            anchor: "Continuous",
-            allowLoopback: false
-        });
+        if (type !== 'begin') {
+            instance.makeTarget(el, {
+                dropOptions: {hoverClass: "dragHover"},
+                anchor: "Continuous",
+                allowLoopback: false
+            });
+        }
 
         // this is not part of the core demo functionality; it is a means for the Toolkit edition's wrapped
         // version of this demo to find out about new nodes being added.
