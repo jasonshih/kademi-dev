@@ -154,10 +154,10 @@ function initUploads() {
             var thead = $("#importerHead");
             thead.html("");
             flog("headers:", data.numCols);
-            $('#importerTable').css({width: (data.numCols * 200) + 'px', maxWidth: 'none'});
+            $('#importerTable').css({width: (data.numCols * 200) + 'px', maxWidth: 'none', minWidth: '100%'});
             thead.append("<th>#</th>");
             for (var col = 0; col < data.numCols; col++) {
-                var td = $('<th style="width: 200px">');
+                var td = $('<th style="min-width: 200px">');
                 thead.append(td);
                 var select = $("<select class='form-control' name='col" + col + "'>");
                 select.append("<option value=''>[Do not import]</option>");
