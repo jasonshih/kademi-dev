@@ -34,28 +34,7 @@ jsPlumb.ready(function () {
     } catch (e) {
         flog('no funnel found');
         JBApp.funnel = {
-            nodes: [
-                {
-                    "begin": {
-                        "nodeId": "beginNode",
-                        "transition": {
-                            "nextNodeId": "",
-                            "trigger": {
-                                "contactFormTrigger": {
-                                    "contactFormPath": "",
-                                    "websiteName": "",
-                                    "description": ""
-                                }
-                            }
-                        },
-                        "onePerProfile": false,
-                        "stageName": "",
-                        "source": "",
-                        "x": 0,
-                        "y": 0
-                    }
-                }
-            ]
+            nodes: []
         };
     }
     JBApp.availableTriggers = $.parseJSON($("#triggers").text());
@@ -94,20 +73,20 @@ jsPlumb.ready(function () {
         var targetId = c.targetId;
         var nodes = JBApp.funnel.nodes;
 
-        var filtered = nodes.filter(function(item){
+        var filteredGoal = nodes.filter(function(item){
             return item.hasOwnProperty('goal') && item['goal'].nodeId === sourceId;
         });
 
-        var filtered1 = nodes.filter(function(item){
+        var filteredBegin = nodes.filter(function(item){
             return item.hasOwnProperty('begin') && item['begin'].nodeId === sourceId;
         });
 
-        var filtered2 = nodes.filter(function(item){
+        var filteredDecision = nodes.filter(function(item){
             return item.hasOwnProperty('decision') && item['decision'].nodeId === sourceId;
         });
 
-        if (filtered.length > 0) {
-            var node = filtered[0]['goal'];
+        if (filteredGoal.length > 0) {
+            var node = filteredGoal[0]['goal'];
             if (node.hasOwnProperty('transitions') && node.transitions.length) {
                 var trans = node.transitions.filter(function(item){
                     return item.nextNodeId === targetId;
@@ -116,13 +95,13 @@ jsPlumb.ready(function () {
                     showTranModal(trans[0], sourceId, targetId);
                 }
             }
-        } else if (filtered1.length > 0) {
-            var node = filtered1[0]['begin'];
+        } else if (filteredBegin.length > 0) {
+            var node = filteredBegin[0]['begin'];
             if (node.transition) {
                 showTranModal(node.transition, sourceId, targetId);
             }
-        } else if (filtered2.length > 0){
-            var node = filtered2[0]['decision'];
+        } else if (filteredDecision.length > 0){
+            var node = filteredDecision[0]['decision'];
             var choice = node.choices[targetId];
             if (choice){
                 showChoiceModal(choice, sourceId, targetId);
@@ -388,7 +367,7 @@ jsPlumb.ready(function () {
     instance.batch(function () {
         if (JBApp.funnel && JBApp.funnel.nodes && JBApp.funnel.nodes.length) {
             // Finding begin node
-            var beginNode;
+            var beginNodes = [];
             for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
                 var node = JBApp.funnel.nodes[i];
                 for (var key in node) {
@@ -400,15 +379,17 @@ jsPlumb.ready(function () {
                         }
                         newNode(node[key], type, key);
                         if (key === 'begin') {
-                            beginNode = node[key];
+                            beginNodes.push(node[key]);
                         }
                     }
                 }
             }
         }
         // and finally, make first connection start from begin node
-        if (beginNode) {
-            initConnection(beginNode);
+        if (beginNodes.length) {
+            beginNodes.forEach(function(item){
+                initConnection(item);
+            });
         }
     });
 
@@ -448,8 +429,14 @@ function initSideBar() {
                 objToPush[action] = node; // default task name
             } else if (type === 'goal') {
                 node.transitions = null;
-                objToPush[type] = node;
-            } else {
+            } else if (type === 'begin') {
+                node.transition = {
+                    nextNodeId: '',
+                    trigger: null
+                };
+            }
+
+            if (type !== 'action') {
                 objToPush[type] = node;
             }
             JBApp.newNode(node, type, action);
