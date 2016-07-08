@@ -246,7 +246,10 @@
                     optionStr += '<option value="' + orgTypes[i].value + '">' + orgTypes[i].title + '</option>';
                 }
 
-                cbbOrgType.prop('multiple', true).html(optionStr).attr('title', ' - Select Organisation Types - ').addClass('selectpicker');
+                cbbOrgType.prop('multiple', true).html(optionStr).addClass('selectpicker');
+                if (!cbbOrgType.attr('title')) {
+                    cbbOrgType.attr('title', ' - Select Organisation Types - ')
+                }
                 cbbOrgType.on('change', function () {
                     eventHandler();
                 });
