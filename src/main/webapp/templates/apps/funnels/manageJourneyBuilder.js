@@ -499,11 +499,11 @@ function showChoiceModal(choice, sourceId, targetId){
     modal.find('.choiceItems').html('');
     if (!Object.keys(choice.constant).length) {
         choice.constant = {
-            value: '',
-            label: ''
+            value: ''
         };
     }
     for (var key in choice.constant) {
+        if (key === 'label') continue;
         var value = choice.constant[key];
         var clone = modal.find('.placeholderform').clone();
         clone.find('[name=constKey]').val(key);
