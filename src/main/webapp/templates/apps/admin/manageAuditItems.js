@@ -1,8 +1,18 @@
+var options = {
+    startDate: null,
+    endDate: null
+};
+
 function initAuditItems(canUndoCount) {
     initRestoreAudit();
-    initDateRangeSelector();
     initUndo(canUndoCount);
     initRestorePoint();
+
+    $(document.body).on('pageDateChanged',function (e, startDate, endDate) {
+        options.startDate = startDate;
+        options.endDate = endDate;
+        doSearch();
+    });
 }
 
 function initRestoreAudit() {
@@ -31,54 +41,6 @@ function initRestoreAudit() {
                 }
             });
         }
-    });
-}
-
-var options = {
-    startDate: null,
-    endDate: null
-};
-
-function initDateRangeSelector() {
-    var reportRange = $('#report-range');
-
-    function cb(start, end) {
-        options.startDate = start.toISOString();
-        options.endDate = end.toISOString();
-        doSearch();
-    }
-
-    reportRange.exist(function () {
-        flog("init report range");
-        reportRange.daterangepicker({
-            format: 'DD/MM/YYYY HH:mm',
-            timePicker: true,
-            timePickerIncrement: 5,
-            startDate: moment().subtract('days', 6).startOf('day'),
-            endDate: moment().endOf('day'),
-            ranges: {
-                'Today': [
-                    moment().startOf('day').toISOString(),
-                    moment().endOf('day').toISOString()
-                ],
-                'Last 7 Days': [
-                    moment().subtract(6, 'days').startOf('day').toISOString(),
-                    moment().toISOString()
-                ],
-                'Last 30 Days': [
-                    moment().subtract('days', 29).startOf('day').toISOString(),
-                    moment().toISOString()],
-                'This Month': [
-                    moment().startOf('month').startOf('day').toISOString(),
-                    moment().endOf('month').toISOString()],
-                'Last Month': [
-                    moment().subtract('month', 1).startOf('month').startOf('day').toISOString(),
-                    moment().subtract('month', 1).endOf('month').toISOString()],
-                'This Year': [
-                    moment().startOf('year').startOf('day').toISOString(),
-                    moment().toISOString()],
-            },
-        }, cb);
     });
 }
 
