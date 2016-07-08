@@ -1,6 +1,8 @@
-var searchFulfillment = null;
-var startDate = null;
-var endDate = null;
+var searchOptions = {
+    searchFulfillment: null,
+    startDate: null,
+    endDate: null
+};
 
 function initManageShoppingCarts() {
     initHistorySearch();
@@ -9,44 +11,44 @@ function initManageShoppingCarts() {
 }
 
 function initButtons() {
-    $('body').on('click', '.cartLink', function (e) {
+    $(document.body).on('click', '.cartLink', function (e) {
         e.preventDefault();
     });
-    $('body').on('click', '.clickable', function (e) {
+    $(document.body).on('click', '.clickable', function (e) {
         var btn = $(this);
         var href = btn.data('href');
         window.location = href;
     });
-    $('body').on('change', '.check-all', function (e) {
+    $(document.body).on('change', '.check-all', function (e) {
         var checkedStatus = this.checked;
-        $('body').find(':checkbox.cart-check').prop('checked', checkedStatus);
+        $(document.body).find(':checkbox.cart-check').prop('checked', checkedStatus);
     });
-    $('body').on('click', '.deleteCart', function (e) {
+    $(document.body).on('click', '.deleteCart', function (e) {
         e.preventDefault();
         var listToDelete = [];
-        $('body').find(':checkbox.cart-check:checked').each(function () {
+        $(document.body).find(':checkbox.cart-check:checked').each(function () {
             listToDelete.push($(this).data("carthref"));
         });
         if (listToDelete.length > 0 && confirm("Are you sure you want to delete " + listToDelete.length + " shopping carts?")) {
-            $('body').find('.check-all').check(false).change();
+            $(document.body).find('.check-all').check(false).change();
             flog(listToDelete.join(','));
             deleteCarts(listToDelete);
         }
     });
-    $('body').on('click', '.markFulfilled', function (e) {
+    $(document.body).on('click', '.markFulfilled', function (e) {
         e.preventDefault();
         var listToFulfill = [];
-        $('body').find(':checkbox.cart-check:checked').each(function () {
+        $(document.body).find(':checkbox.cart-check:checked').each(function () {
             var href = $(this).data("cartid");
             listToFulfill.push(href);
         });
         if (listToFulfill.length > 0 && confirm("Are you sure you want to mark " + listToFulfill.length + " shopping carts as fulfilled?")) {
-            $('body').find('.check-all').check(false).change();
+            $(document.body).find('.check-all').check(false).change();
             flog(listToFulfill.join(','));
             markFulfilled(listToFulfill.join(','));
         }
     });
-    $('body').on('change', '.searchGroup', function (e) {
+    $(document.body).on('change', '.searchGroup', function (e) {
         e.preventDefault();
         var btn = $(this);
         flog(btn.val());
@@ -78,26 +80,11 @@ function markFulfilled(listToFulfill) {
 }
 
 function initHistorySearch() {
-    var reportRange = $('#report-range');
-    reportRange.exist(function () {
-        flog("init report range");
-        reportRange.daterangepicker({
-            format: 'DD/MM/YYYY', // YYYY-MM-DD
-            ranges: {
-                'Last 7 Days': [moment().subtract('days', 6), moment()],
-                'Last 30 Days': [moment().subtract('days', 29), moment()],
-                'This Month': [moment().startOf('month'), moment().endOf('month')],
-                'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
-                'This Year': [moment().startOf('year'), moment()],
-            },
-        },
-                function (start, end) {
-                    flog('onChange', start, end);
-                    startDate = start;
-                    endDate = end;
-                    doSearch()
-                }
-        );
+    $(document.body).on('pageDateChanged', function (e, startDate, endDate) {
+        searchOptions.startDate = startDate;
+        searchOptions.endDate = endDate;
+
+        doSearch();
     });
 }
 
@@ -127,16 +114,16 @@ function doHistorySearch(startDate, endDate, searchFulfillment) {
 
 function doSearch() {
     var href = "?";
-    if (searchFulfillment !== null && searchFulfillment !== "") {
-        href = href + "fulfillment=" + searchFulfillment;
+    if (searchOptions.searchFulfillment !== null && searchOptions.searchFulfillment !== "") {
+        href = href + "fulfillment=" + searchOptions.searchFulfillment;
     }
-    if (startDate !== null && startDate !== "") {
-        href = href + "&startDate=" + formatDate(startDate);
+    if (searchOptions.startDate !== null && searchOptions.startDate !== "") {
+        href = href + "&startDate=" + searchOptions.startDate;
     }
-    if (endDate !== null && endDate !== "") {
-        href = href + "&finishDate=" + formatDate(endDate);
+    if (searchOptions.endDate !== null && searchOptions.endDate !== "") {
+        href = href + "&finishDate=" + searchOptions.endDate;
     }
     $("#cartCSV").attr("href", "carts.csv" + href);
     history.pushState(null, null, window.location.pathname + href);
-    doHistorySearch(startDate, endDate, searchFulfillment);
+    doHistorySearch(searchOptions.startDate, searchOptions.endDate, searchOptions.searchFulfillment);
 }

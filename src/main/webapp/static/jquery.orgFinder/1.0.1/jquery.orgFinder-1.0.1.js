@@ -87,11 +87,20 @@
             var itemContent = '';
             itemContent += '<h4 class="list-group-item-heading">' + orgData.title + '</h4>';
 
+            if (orgData.orgTypes && orgData.orgTypes.length > 0) {
+                var orgTypesHtml = '';
+                for (var i = 0; i < orgData.orgTypes.length; i++) {
+                    orgTypesHtml += '<span class="label label-info">' + orgData.orgTypes[i].dispayName + '</span> ';
+                }
+
+                itemContent += '<p>' + orgTypesHtml + '</p>';
+            }
+
             if (orgData.phone) {
-                itemContent += '<p class="list-group-item-text"><i class="fa fa-phone"></i> ' + orgData.phone + '</p>';
+                itemContent += '<p class="list-group-item-text"><i class="fa fa-phone fa-fw"></i> ' + orgData.phone + '</p>';
             }
             if (orgData.email) {
-                itemContent += '<p class=list-group-item-text" style="word-break: break-all;"><i class="fa fa-envelope-o"></i> <a href="mailto:' + orgData.email + '">' + orgData.email + '</a></p>';
+                itemContent += '<p class="list-group-item-text" style="word-break: break-all;"><i class="fa fa-envelope-o fa-fw"></i> <a href="mailto:' + orgData.email + '">' + orgData.email + '</a></p>';
             }
 
             var address = '';
@@ -111,7 +120,7 @@
                 address += ', ' + orgData.country;
             }
             if (address.trim() !== '') {
-                itemContent += '<p class=list-group-item-text"><i class="fa fa-map-marker"></i> ' + address + '</p>';
+                itemContent += '<p class="list-group-item-text"><i class="fa fa-map-marker fa-fw"></i> ' + address + '</p>';
             }
 
             return '<div class="list-group-item">' + itemContent + '</div>';
@@ -221,7 +230,9 @@
                 txtQ.val(initQuery);
             }
 
-            var eventHandler = function (lat, lng) {
+            var eventHandler = function () {
+                var lat = txtQ.attr('data-lat');
+                var lng = txtQ.attr('data-lng');
                 var query = (txtQ.val() || '').trim();
                 query = query === '' ? ' ' : query;
                 flog('[jquery.orgFinder] Query: "' + query + '", last query: "' + lastQuery + '"');
@@ -248,7 +259,7 @@
 
                 cbbOrgType.prop('multiple', true).html(optionStr).addClass('selectpicker');
                 if (!cbbOrgType.attr('title')) {
-                    cbbOrgType.attr('title', ' - Select Organisation Types - ')
+                    cbbOrgType.attr('title', ' - Select Types - ')
                 }
                 cbbOrgType.on('change', function () {
                     eventHandler();
@@ -260,8 +271,14 @@
 
                 var clicked = $(this);
                 var query = clicked.text().trim();
-                txtQ.val(query);
-                eventHandler(clicked.attr('data-lat'), clicked.attr('data-lng'));
+                var lat = clicked.attr('data-lat');
+                var lng = clicked.attr('data-lng');
+
+                txtQ.val(query).attr({
+                    'data-lat': lat,
+                    'data-lng': lng
+                });
+                eventHandler();
                 suggestionWrapper.css('display', 'none');
             });
 
@@ -297,6 +314,9 @@
                 } else {
                     clearTimeout(timer);
                     timer = setTimeout(function () {
+                        txtQ.removeAttr('data-lat');
+                        txtQ.removeAttr('data-lng');
+
                         var q = txtQ.val() || '';
                         q = q.trim();
 
