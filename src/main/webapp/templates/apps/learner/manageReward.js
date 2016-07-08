@@ -72,15 +72,16 @@ function initManagePoints() {
     });
 
     $("#new-points-form").forms({
-        callback: function (resp) {
-            if (resp.status) {
-                Msg.info("Assigned points OK");
-                $('#modal-new-points').modal('hide');
-                $('#pointsBody').reloadFragment();
-            } else {
-                alert("An error occured and the points may not have been assigned. Please refresh the page and try again");
+            callback: function (resp) {
+                if (resp.status) {
+                    Msg.info("Assigned points OK");
+                    $('#modal-new-points').modal('hide');
+                    $('#pointsBody').reloadFragment();
+                } else {
+                    alert("An error occured and the points may not have been assigned. Please refresh the page and try again");
+                }
             }
-        }}
+        }
     );
 
     $("#doUploadCsv").mupload({
@@ -118,7 +119,7 @@ function initManagePoints() {
 
     initHistorySearch();
 
-    $('body').on('click', '.btn-refresh-pb', function (e) {
+    $(document.body).on('click', '.btn-refresh-pb', function (e) {
         e.preventDefault();
         if (confirm('Are you sure you want to refresh the points balance for all rewards?')) {
             $.ajax({
@@ -377,9 +378,9 @@ function sortBy(type, asc) {
     var _list = {};
     var sortObject = function (obj) {
         var sorted = {},
-                array = [],
-                key,
-                l;
+            array = [],
+            key,
+            l;
 
         for (key in obj) {
             if (obj.hasOwnProperty(key)) {
@@ -519,74 +520,51 @@ function showUnmatched(unmatched) {
     unmatchedTable.show();
 }
 
-
-var startDate = null;
-var endDate = null;
+var searchOptions = {
+    startDate: null,
+    endDate: null
+};
 
 function initHistorySearch() {
-    var reportRange = $('#report-range');
-
-    reportRange.exist(function () {
-        flog("init report range");
-        reportRange.daterangepicker({
-            format: 'DD/MM/YYYY', // YYYY-MM-DD
-            startDate: moment().startOf('year').format("DD/MM/YYYY"),
-            ranges: {
-                'Today': [moment(), moment()],
-                'Last 7 Days': [moment().subtract('days', 6), moment()],
-                'Last 30 Days': [moment().subtract('days', 29), moment()],
-                'This Month': [moment().startOf('month'), moment().endOf('month')],
-                'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
-                'This Year': [moment().startOf('year'), moment()],
-            },
-        },
-                function (start, end) {
-                    flog('onChange', start, end);
-                    startDate = start;
-                    endDate = end;
-                    doHistorySearch();
-                }
-        );
+    $(document.body).on('pageDateChanged', function (e, startDate, endDate) {
+        searchOptions.startDate = startDate;
+        searchOptions.endDate = endDate;
+        doHistorySearch();
     });
 
-
-    $('body').on('keypress', '#data-query', function (e) {
+    $(document.body).on('keypress', '#data-query', function (e) {
         var code = e.keyCode || e.which;
         if (code == 13) {
             e.preventDefault();
-            $(this).change();
+            doHistorySearch();
             return false;
         }
     });
 
-    $('body').on('change', '#data-query', function (e) {
+    $(document.body).on('change', '#data-query', function (e) {
         e.preventDefault();
-        var inp = $(this);
-        searchQ = inp.val();
-        flog(searchQ);
+
         doHistorySearch();
     });
 
-    $('body').on('change', '#searchGroup', function (e) {
+    $(document.body).on('change', '#searchGroup', function (e) {
         e.preventDefault();
         doHistorySearch();
     });
 
-    $('body').on('change', '#searchReward', function (e) {
+    $(document.body).on('change', '#searchReward', function (e) {
         e.preventDefault();
         doHistorySearch();
     });
 }
 
 function doHistorySearch() {
-    flog('doHistorySearch', startDate, endDate, searchQ);
+    flog('doHistorySearch');
     Msg.info("Doing search...", 2000);
 
-    var searchQ = $("#data-query").val();
-    var searchGroup = $("#searchGroup").val();
     var data = {
-        startDate: formatDate(startDate),
-        finishDate: formatDate(endDate),
+        startDate: searchOptions.startDate,
+        finishDate: searchOptions.endDate,
         dataQuery: $("#data-query").val(),
         searchGroup: $("#searchGroup").val(),
         searchReward: $("#searchReward").val(),

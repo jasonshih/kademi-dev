@@ -12,13 +12,7 @@
             <div class="clearfix">
                 <button class="btn btn-primary removeEntries">Remove Selected</button>
                 <button class="btn btn-success pull-right refresh-history">Refresh</button>
-                <div class="input-group date-range col-md-3 pull-right" style="margin-right: 5px">
-                    <label for="report-range" class="input-group-addon">Time</label>
-                    <input type="text" id="report-range" placeholder="Choose a date range" value="" class="form-control" />
-                </div>
             </div>
-
-            <div class="clearfix"></div>
             <hr/>
             <div class="Content Details">
                 <div class="table-responsive">
@@ -111,33 +105,16 @@
             }
 
             function initHistorySearch() {
-                var reportRange = $('#report-range');
-
-                reportRange.exist(function() {
-                    flog("init report range");
-                    reportRange.daterangepicker({
-                        format: 'DD/MM/YYYY', // YYYY-MM-DD
-                        ranges: {
-                            'Last 7 Days': [moment().subtract('days', 6), moment()],
-                            'Last 30 Days': [moment().subtract('days', 29), moment()],
-                            'This Month': [moment().startOf('month'), moment().endOf('month')],
-                            'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
-                            'This Year': [moment().startOf('year'), moment()],
-                        },
-                    },
-                            function(start, end) {
-                                flog('onChange', start, end);
-                                doHistorySearch(start, end);
-                            }
-                    );
+                $(document.body).on('pageDateChanged', function (e, startDate, endDate) {
+                    doHistorySearch(startDate, endDate);
                 });
 
                 function doHistorySearch(startDate, endDate) {
                     flog('doHistorySearch', startDate, endDate);
 
                     var data = {
-                        startDate: formatDate(startDate),
-                        finishDate: formatDate(endDate)
+                        startDate: startDate,
+                        finishDate: endDate
                     };
                     flog("data", data);
 
