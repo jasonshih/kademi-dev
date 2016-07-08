@@ -91,38 +91,38 @@
 
         nv.addGraph(function () {
             var chart = nv.models.pieChart()
-                            .x(function (d) {
-                                if (d.key == "404") {
-                                    return "Not found";
-                                } else if (d.key == "400" || d.key == "401" || d.key == "403") {
-                                    return "Permissions";
-                                } else if (d.key == "500") {
-                                    return "Server error";
-                                }
-                                return d;
-                            })
-                            .y(function (d) {
-                                return d.doc_count;
-                            })
-                            .color(function (d) {
-                                var i = parseInt(d.key);
-                                if (i >= 500) {
-                                    return "red";
-                                } else if (i == 404) {
-                                    return "#FF9900";
-                                } else if (i == 401 || i == 403) {
-                                    return "#FF3300";
-                                }
-                                return "green";
-                            })
-                            .valueFormat(d3.format(".0f"))
-                            .margin({"left": 0, "right": 0, "top": 0, "bottom": 0})
-                            .showLabels(false)     //Display pie labels
-                            .showLegend(false)
-                            .labelThreshold(.10)  //Configure the minimum slice size for labels to show up
-                            .labelType("value") //Configure what type of data to show in the label. Can be "key", "value" or "percent"
-                            .donut(true)          //Turn on Donut mode. Makes pie chart look tasty!
-                            .donutRatio(0.40)     //Configure how big you want the donut hole size to be.
+                .x(function (d) {
+                    if (d.key == "404") {
+                        return "Not found";
+                    } else if (d.key == "400" || d.key == "401" || d.key == "403") {
+                        return "Permissions";
+                    } else if (d.key == "500") {
+                        return "Server error";
+                    }
+                    return d;
+                })
+                .y(function (d) {
+                    return d.doc_count;
+                })
+                .color(function (d) {
+                    var i = parseInt(d.key);
+                    if (i >= 500) {
+                        return "red";
+                    } else if (i == 404) {
+                        return "#FF9900";
+                    } else if (i == 401 || i == 403) {
+                        return "#FF3300";
+                    }
+                    return "green";
+                })
+                .valueFormat(d3.format(".0f"))
+                .margin({"left": 0, "right": 0, "top": 0, "bottom": 0})
+                .showLabels(false)     //Display pie labels
+                .showLegend(false)
+                .labelThreshold(.10)  //Configure the minimum slice size for labels to show up
+                .labelType("value") //Configure what type of data to show in the label. Can be "key", "value" or "percent"
+                .donut(true)          //Turn on Donut mode. Makes pie chart look tasty!
+                .donutRatio(0.40)     //Configure how big you want the donut hole size to be.
                     ;
             d3.select("#resultCodesChart")
                     .datum(resultCodeBuckets)
