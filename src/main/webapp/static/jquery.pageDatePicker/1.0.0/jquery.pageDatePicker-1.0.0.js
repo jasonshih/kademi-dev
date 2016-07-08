@@ -34,7 +34,7 @@
         dateFormat: 'DD/MM/YYYY',
         onSelect: function (text, startDate, endDate) {
         },
-        default: '7-day',
+        default: ($.cookie('pageDatePicker-startDate') && $.cookie('pageDatePicker-endDate')) ? $.cookie('pageDatePicker-startDate') + '-' + $.cookie('pageDatePicker-endDate') : '7-day',
         extraClass: '',
         position: 'right'
     };
@@ -257,25 +257,32 @@
 
             var self = this;
             var options = self.options;
+            var rangeItems = self.rangeItems;
+            var startDate;
+            var endDate;
 
             flog('[jquery.pageDatePicker] Default value: ' + options.default);
 
             var defaultValue = options.default.split('-');
             if (moment(defaultValue[0], options.dateFormat).isValid() && moment(defaultValue[1], options.dateFormat).isValid()) {
-                self.selectRange(defaultValue[0], defaultValue[1]);
+                flog('[jquery.pageDatePicker] Default is range');
+
+                startDate = defaultValue[0];
+                endDate = defaultValue[1];
             } else {
+                flog('[jquery.pageDatePicker] Default is time ago');
+
                 var now = moment();
                 var from = moment().subtract(+defaultValue[0] - 1, defaultValue[1]);
-                var startDate = from.format(options.dateFormat);
-                var endDate = now.format(options.dateFormat);
-                var rangeItems = self.rangeItems;
-                var trigger = rangeItems.filter('[data-start-date="' + startDate + '"][data-end-date="' + endDate + '"]');
+                startDate = from.format(options.dateFormat);
+                endDate = now.format(options.dateFormat);
+            }
 
-                if (trigger.length > 0) {
-                    trigger.trigger('click');
-                } else {
-                    self.selectRange(startDate, endDate, options.default.replace('-', ' '));
-                }
+            var trigger = rangeItems.filter('[data-start-date="' + startDate + '"][data-end-date="' + endDate + '"]');
+            if (trigger.length > 0) {
+                trigger.trigger('click');
+            } else {
+                self.selectRange(startDate, endDate);
             }
         }
     };
