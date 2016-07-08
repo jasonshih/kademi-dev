@@ -23,83 +23,81 @@
 
 <script>
     $(function () {
-
-        function initActivityChart(resp) {
-            nv.addGraph(function () {
-                var chart = nv.models.lineChart()
-                        .margin({top: 0, right: 0, bottom: 0, left: 0})
-                        .useInteractiveGuideline(true)
-                        .showLegend(false)
-                        .showYAxis(false)
-                        .showXAxis(false);
-
-                chart.interactiveLayer.tooltip.fixedTop(100);
-
-                chart.xAxis     //Chart x-axis settings
-                        .axisLabel('Date')
-                        .tickFormat(function (d) {
-                            return moment(d).format("DD MMM");
-                        });
-
-                chart.yAxis     //Chart y-axis settings
-                        .axisLabel('Count')
-                        .tickFormat(d3.format('.02f'));
-
-                /* Generate data*/
-                var debits = [];
-                var myData = [
-                    {
-                        values: debits,
-                        key: 'Debits',
-                        color: '#332AC8'
-                    }
-                ];
-
-                if (resp.status) {
-                    var d = resp.data.data;
-
-                    /* generate valid stats */
-                    for (var i in d) {
-                        var b = d[i];
-                        debits.push({
-                            x: b.date,
-                            y: b.value || 0
-                        });
-                    }
-                }
-
-                debits.sort(dynamicSort('x'));
-
-                d3.select('#rewardPointsDebitChart svg')    //Select the <svg> element you want to render the chart in.
-                        .datum(myData)         //Populate the <svg> element with chart data...
-                        .call(chart);          //Finally, render the chart!
-
-                //Update the chart when window resizes.
-                nv.utils.windowResize(function () {
-                    chart.update();
-                });
-                return chart;
-            });
-        }
-
-        function dynamicSort(property) {
-            var sortOrder = 1;
-            if (property[0] === "-") {
-                sortOrder = -1;
-                property = property.substr(1);
-            }
-            return function (a, b) {
-                var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
-                return result * sortOrder;
-            };
-        }
-
-        var start = moment().subtract('days', 7).format('DD/MM/YYYY');
-        var finish = moment().format('DD/MM/YYYY');
-
-        $.get("/reporting/pointsDebit?startDate=" + start + "&finishDate=" + finish, function (data) {
-            flog("pointsDebitActivityStats", data);
-            initActivityChart(data);
-        }, "json");
+        $(document.body).on('pageDateChanged', function (e, startDate, endDate) {
+            $.get("/reporting/pointsDebit?startDate=" + startDate + '&finishDate=' + endDate, function (data) {
+                flog("pointsDebitActivityStats", data);
+                initActivityChart(data);
+            }, "json");
+        });
     });
+
+    function initActivityChart(resp) {
+        nv.addGraph(function () {
+            var chart = nv.models.lineChart()
+                    .margin({top: 0, right: 0, bottom: 0, left: 0})
+                    .useInteractiveGuideline(true)
+                    .showLegend(false)
+                    .showYAxis(false)
+                    .showXAxis(false);
+
+            chart.interactiveLayer.tooltip.fixedTop(100);
+
+            chart.xAxis     //Chart x-axis settings
+                    .axisLabel('Date')
+                    .tickFormat(function (d) {
+                        return moment(d).format("DD MMM");
+                    });
+
+            chart.yAxis     //Chart y-axis settings
+                    .axisLabel('Count')
+                    .tickFormat(d3.format('.02f'));
+
+            /* Generate data*/
+            var debits = [];
+            var myData = [
+                {
+                    values: debits,
+                    key: 'Debits',
+                    color: '#332AC8'
+                }
+            ];
+
+            if (resp.status) {
+                var d = resp.data.data;
+
+                /* generate valid stats */
+                for (var i in d) {
+                    var b = d[i];
+                    debits.push({
+                        x: b.date,
+                        y: b.value || 0
+                    });
+                }
+            }
+
+            debits.sort(dynamicSort('x'));
+
+            d3.select('#rewardPointsDebitChart svg')    //Select the <svg> element you want to render the chart in.
+                    .datum(myData)         //Populate the <svg> element with chart data...
+                    .call(chart);          //Finally, render the chart!
+
+            //Update the chart when window resizes.
+            nv.utils.windowResize(function () {
+                chart.update();
+            });
+            return chart;
+        });
+    }
+
+    function dynamicSort(property) {
+        var sortOrder = 1;
+        if (property[0] === "-") {
+            sortOrder = -1;
+            property = property.substr(1);
+        }
+        return function (a, b) {
+            var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+            return result * sortOrder;
+        };
+    }
 </script>
