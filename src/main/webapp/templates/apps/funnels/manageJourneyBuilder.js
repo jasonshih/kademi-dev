@@ -750,7 +750,7 @@ function initSaveButton() {
     $('#btnSave').on('click', function (e) {
         e.preventDefault();
 
-        Msg.info("Saving..");
+        var valid = true;
         for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
             var node = JBApp.funnel.nodes[i];
             for (var key in node) {
@@ -758,22 +758,31 @@ function initSaveButton() {
                     var nodeId = node[key].nodeId;
                     node[key].x = parseInt($('#' + nodeId).css('left').replace('px', ''));
                     node[key].y = parseInt($('#' + nodeId).css('top').replace('px', ''));
+                    if (key === 'begin'){
+                        if (!node[key].transition.nextNodeId){
+                            valid = false;
+                        }
+                    }
                 }
             }
         }
-
-        $.ajax({
-            url: 'funnel.json',
-            type: 'PUT',
-            data: JSON.stringify(JBApp.funnel),
-            success: function () {
-                Msg.success('File is saved!');
-                JBApp.isDirty = false;
-            },
-            error: function (e) {
-                Msg.error(e.status + ': ' + e.statusText);
-            }
-        });
+        // validating
+        if (JBApp.funnel.nodes.length > 1 && !valid) {
+            Msg.error('Begin node MUST connect to other one.');
+        } else {
+            $.ajax({
+                url: 'funnel.json',
+                type: 'PUT',
+                data: JSON.stringify(JBApp.funnel),
+                success: function () {
+                    Msg.success('File is saved!');
+                    JBApp.isDirty = false;
+                },
+                error: function (e) {
+                    Msg.error(e.status + ': ' + e.statusText);
+                }
+            });
+        }
     });
 }
 
