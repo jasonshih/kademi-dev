@@ -212,3 +212,14 @@ path, .jsplumb-endpoint { cursor:pointer; }
 #keditor-sidebar-toggler > i.fa {
     line-height: inherit;
 }
+.buttonX{
+    color: #f00 !important;
+    background: #fff;
+    display: block;
+    width: 20px;
+    line-height: 20px;
+    height: 20px;
+    border-radius: 50%;
+    text-align: center;
+    border: 1px solid red;
+}
