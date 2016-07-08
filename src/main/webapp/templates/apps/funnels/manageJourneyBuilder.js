@@ -34,28 +34,7 @@ jsPlumb.ready(function () {
     } catch (e) {
         flog('no funnel found');
         JBApp.funnel = {
-            nodes: [
-                {
-                    "begin": {
-                        "nodeId": "beginNode",
-                        "transition": {
-                            "nextNodeId": "",
-                            "trigger": {
-                                "contactFormTrigger": {
-                                    "contactFormPath": "",
-                                    "websiteName": "",
-                                    "description": ""
-                                }
-                            }
-                        },
-                        "onePerProfile": false,
-                        "stageName": "",
-                        "source": "",
-                        "x": 0,
-                        "y": 0
-                    }
-                }
-            ]
+            nodes: []
         };
     }
     JBApp.availableTriggers = $.parseJSON($("#triggers").text());
@@ -72,7 +51,28 @@ jsPlumb.ready(function () {
                 length: 14,
                 foldback: 0.5
             }],
-            ["Label", {label: "", id: "label", cssClass: "aLabel"}]
+            ["Label", {label: "", id: "label", cssClass: "aLabel"}],
+            ["Custom", {
+                create: function(component) {
+                    return $('<div><a href="#" title="Click to delete connection" class="buttonX"><i class="fa fa-times"></i></a></div>');
+                },
+                events:{
+                    click: function(labelOverlay, originalEvent) {
+                        flog("click on label overlay",labelOverlay,  labelOverlay.component);
+                        originalEvent.preventDefault();
+                        labelOverlay.component.setParameter('clickedButtonX', true);
+                        var c = confirm('Are you sure you want to delete this connection?');
+                        if (c) {
+                            JBApp.isDirty = true;
+                            deleteConnection(labelOverlay.component);
+                            instance.detach(labelOverlay.component);
+                        }
+                    }
+                },
+                location: 0.7,
+                id:"buttonX",
+                visible: false
+            }]
         ],
         Container: "paper"
     });
@@ -89,44 +89,66 @@ jsPlumb.ready(function () {
     // just do this: jsPlumb.bind("click", jsPlumb.detach), but I wanted to make it clear what was
     // happening.
     instance.bind("click", function (c) {
-        flog('edit connection ', c);
+        //var clickedButtonX = c.getParameter('clickedButtonX');
+        //if (clickedButtonX) {
+        //    c.setParameter('clickedButtonX', false);
+        //    return false;
+        //}
+
         var sourceId = c.sourceId;
         var targetId = c.targetId;
-        var nodes = JBApp.funnel.nodes;
+        if (c && sourceId && targetId){
+            flog('edit connection ', c);
+            var nodes = JBApp.funnel.nodes;
 
-        var filtered = nodes.filter(function(item){
-            return item.hasOwnProperty('goal') && item['goal'].nodeId === sourceId;
-        });
+            var filteredGoal = nodes.filter(function(item){
+                return item.hasOwnProperty('goal') && item['goal'].nodeId === sourceId;
+            });
 
-        var filtered1 = nodes.filter(function(item){
-            return item.hasOwnProperty('begin') && item['begin'].nodeId === sourceId;
-        });
+            var filteredBegin = nodes.filter(function(item){
+                return item.hasOwnProperty('begin') && item['begin'].nodeId === sourceId;
+            });
 
-        var filtered2 = nodes.filter(function(item){
-            return item.hasOwnProperty('decision') && item['decision'].nodeId === sourceId;
-        });
+            var filteredDecision = nodes.filter(function(item){
+                return item.hasOwnProperty('decision') && item['decision'].nodeId === sourceId;
+            });
 
-        if (filtered.length > 0) {
-            var node = filtered[0]['goal'];
-            if (node.hasOwnProperty('transitions') && node.transitions.length) {
-                var trans = node.transitions.filter(function(item){
-                    return item.nextNodeId === targetId;
-                });
-                if (trans.length){
-                    showTranModal(trans[0], sourceId, targetId);
+            if (filteredGoal.length > 0) {
+                var node = filteredGoal[0]['goal'];
+                if (node.hasOwnProperty('transitions') && node.transitions.length) {
+                    var trans = node.transitions.filter(function(item){
+                        return item.nextNodeId === targetId;
+                    });
+                    if (trans.length){
+                        showTranModal(trans[0], sourceId, targetId);
+                    }
+                }
+            } else if (filteredBegin.length > 0) {
+                var node = filteredBegin[0]['begin'];
+                if (node.transition) {
+                    showTranModal(node.transition, sourceId, targetId);
+                }
+            } else if (filteredDecision.length > 0){
+                var node = filteredDecision[0]['decision'];
+                var choice = node.choices[targetId];
+                if (choice){
+                    showChoiceModal(choice, sourceId, targetId);
                 }
             }
-        } else if (filtered1.length > 0) {
-            var node = filtered1[0]['begin'];
-            if (node.transition) {
-                showTranModal(node.transition, sourceId, targetId);
-            }
-        } else if (filtered2.length > 0){
-            var node = filtered2[0]['decision'];
-            var choice = node.choices[targetId];
-            if (choice){
-                showChoiceModal(choice, sourceId, targetId);
-            }
+        } else {
+            flog('clicked to non-connection ', c);
+        }
+    });
+
+    instance.bind("mouseover", function (connection, originalEvent) {
+        if (connection.getOverlay("buttonX")) {
+            connection.getOverlay("buttonX").show();
+        }
+    });
+
+    instance.bind("mouseout", function (connection, originalEvent) {
+        if (connection.getOverlay("buttonX")) {
+            connection.getOverlay("buttonX").hide();
         }
     });
 
@@ -137,29 +159,28 @@ jsPlumb.ready(function () {
     instance.bind("connection", function (info) {
 
         // Validate connection, we just allow only one connection between 2 endpoint within a direction
-        var con = info.connection;
-        var arr = instance.select({source: con.sourceId, target: con.targetId});
+        var conn = info.connection;
+        var arr = instance.select({source: conn.sourceId, target: conn.targetId});
         if (arr.length > 1) {
-            instance.detach(con);
+            instance.detach(conn);
             return;
         }
 
         var label = 'then';
-        if (info.connection.hasType('timeout')) {
+        if (conn.hasType('timeout')) {
             label = 'timeout';
-        } else if (info.connection.hasType('decisionDefault')) {
+        } else if (conn.hasType('decisionDefault')) {
             label = 'default';
-        } else if (info.connection.hasType('decisionChoices')) {
+        } else if (conn.hasType('decisionChoices')) {
             label = 'choice';
-        } else if (info.connection.hasType('transition')) {
+        } else if (conn.hasType('transition')) {
             label = 'transition';
         }
 
-        info.connection.getOverlay("label").setLabel(label);
+        conn.getOverlay("label").setLabel(label);
 
         if (JBApp.initialized) {
             flog('new connection was made', info.connection);
-            var conn = info.connection;
             var nodes = JBApp.funnel.nodes;
             for(var i = 0; i < nodes.length; i ++){
                 var node = nodes[i];
@@ -180,9 +201,9 @@ jsPlumb.ready(function () {
                             }
                         } else if (node[key].hasOwnProperty('choices')){
                             flog('started from a decision node');
-                            if (info.connection.hasType('decisionDefault')) {
+                            if (conn.hasType('decisionDefault')) {
                                 node[key].nextNodeId = conn.targetId;
-                            } else if (info.connection.hasType('decisionChoices')) {
+                            } else if (conn.hasType('decisionChoices')) {
                                 // decision choices
                                 if (!node[key].choices) {
                                     node[key].choices = {};
@@ -220,7 +241,7 @@ jsPlumb.ready(function () {
                 },
                 maxConnections: 1,
                 onMaxConnections: function (info, e) {
-                    Msg.warning("Timeout node exists. Please delete it and add new one");
+                    Msg.warning("Timeout connection exists. Please delete it and add new one");
                     e.preventDefault();
                     e.stopPropagation();
                 }
@@ -388,7 +409,7 @@ jsPlumb.ready(function () {
     instance.batch(function () {
         if (JBApp.funnel && JBApp.funnel.nodes && JBApp.funnel.nodes.length) {
             // Finding begin node
-            var beginNode;
+            var beginNodes = [];
             for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
                 var node = JBApp.funnel.nodes[i];
                 for (var key in node) {
@@ -400,15 +421,17 @@ jsPlumb.ready(function () {
                         }
                         newNode(node[key], type, key);
                         if (key === 'begin') {
-                            beginNode = node[key];
+                            beginNodes.push(node[key]);
                         }
                     }
                 }
             }
         }
         // and finally, make first connection start from begin node
-        if (beginNode) {
-            initConnection(beginNode);
+        if (beginNodes.length) {
+            beginNodes.forEach(function(item){
+                initConnection(item);
+            });
         }
     });
 
@@ -448,8 +471,14 @@ function initSideBar() {
                 objToPush[action] = node; // default task name
             } else if (type === 'goal') {
                 node.transitions = null;
-                objToPush[type] = node;
-            } else {
+            } else if (type === 'begin') {
+                node.transition = {
+                    nextNodeId: '',
+                    trigger: null
+                };
+            }
+
+            if (type !== 'action') {
                 objToPush[type] = node;
             }
             JBApp.newNode(node, type, action);
@@ -512,11 +541,11 @@ function showChoiceModal(choice, sourceId, targetId){
     modal.find('.choiceItems').html('');
     if (!Object.keys(choice.constant).length) {
         choice.constant = {
-            value: '',
-            label: ''
+            value: ''
         };
     }
     for (var key in choice.constant) {
+        if (key === 'label') continue;
         var value = choice.constant[key];
         var clone = modal.find('.placeholderform').clone();
         clone.find('[name=constKey]').val(key);
@@ -679,6 +708,41 @@ function deleteNode(nodeId) {
     if (index > -1) {
         JBApp.isDirty = true;
         JBApp.funnel.nodes.splice(index, 1);
+    }
+}
+
+function deleteConnection(connection){
+    for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
+        var node = JBApp.funnel.nodes[i];
+        for (var key in node) {
+            if (node[key].nodeId === connection.sourceId) {
+                if (key === 'begin') {
+                    node[key].transition.nextNodeId = '';
+                } else if (key === 'goal') {
+                    if (connection.hasType('timeout')){
+                        node[key].timeoutNode = '';
+                    } else {
+                        node[key].transitions.forEach(function(item, index){
+                            if (item.nextNodeId === connection.targetId){
+                                node[key].transitions.splice(index, 1);
+                                return;
+                            }
+                        });
+                    }
+                } else if (key === 'decision'){
+                    if (connection.hasType('decisionDefault')){
+                        node[key].nextNodeId = '';
+                    } else if (connection.hasType('decisionChoices')){
+                        if (node[key].choices.hasOwnProperty(connection.targetId)){
+                            delete node[key].choices[connection.targetId];
+                        }
+                    }
+                } else {
+                    node[key].nextNodeId = '';
+                }
+                break;
+            }
+        }
     }
 }
 
