@@ -12,84 +12,74 @@
     <body>
         <section id="manageReward" class="MainContent">
             <div class="Content">
-                <div class="btn-group pull-right" style="margin-bottom: 15px">
-                    <a href="/rewards" class="btn btn-sm btn-primary">
-                        <span class="glyphicon glyphicon-star"></span>
-                        Manage Rewards
-                    </a>
-                    <a href="#" class="btn btn-sm btn-info btn-refresh-pb">
-                        <span class="fa fa-refresh"></span>
-                        Refresh Points Balance
-                    </a>
-                </div>
+                <div class="clearfix">
+                    <div class="btn-group pull-right" style="margin-bottom: 15px">
+                        <a href="/rewards" class="btn btn-sm btn-primary">
+                            <span class="glyphicon glyphicon-star"></span>
+                            Manage Rewards
+                        </a>
+                        <a href="#" class="btn btn-sm btn-info btn-refresh-pb">
+                            <span class="fa fa-refresh"></span>
+                            Refresh Points Balance
+                        </a>
+                    </div>
 
-                <div class="btn-group" style="margin-bottom: 15px">
-                    <a class="btn btn-success btn-sm" href="#" data-toggle="modal" data-target="#modal-new-points">
-                        <span class="glyphicon glyphicon-plus"></span>
-                        Award points
-                    </a>
-                    <a class="btn btn-danger btn-sm" href="#" data-toggle="modal" data-target="#modal-debit-points">
-                        <span class="glyphicon glyphicon-minus"></span>
-                        Debit points
-                    </a>
-                    <a class="btn btn-success btn-sm" href="#" data-toggle="modal" data-target="#modalUploadCsv">
-                        <span class="glyphicon glyphicon-upload"></span>
-                        Upload CSV
-                    </a>
-                    <a class="btn btn-info btn-sm btn-export-points" href="points.csv">
-                        <span class="glyphicon glyphicon-download"></span>
-                        Export to CSV
-                    </a>
-                    <a class="btn btn-danger btn-sm removeUsers">
-                        <span class="glyphicon glyphicon-remove"></span>
-                        Remove points
-                    </a>
-                </div>
-                <br/>
-
-                <div class="">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="input-group date-range">
-                                <label for="report-range" class="input-group-addon">Time</label>
-                                <input type="text" id="report-range" placeholder="Choose a date range" value="" class="form-control" />
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="input-group">
-                                <label for="data-query" class="input-group-addon">Search</label>
-                                <input type="text" id="data-query" placeholder="Search" value="" class="form-control" />
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="input-group">
-                                <label for="searchGroup" class="input-group-addon">Group</label>
-                                <select name="searchGroup" id="searchGroup" class="form-control">
-                                    <option value="">&nbsp;</option>
-                                    #foreach($group in $rootFolder.groups)
-                                    <option value="$group.name">$group.name</option>
-                                    #end
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="input-group">
-                                <label for="searchReward" class="input-group-addon">Reward</label>
-                                <select name="searchReward" id="searchReward" class="form-control">
-                                    <option value="">&nbsp;</option>
-                                    #foreach($r in $page.rewards)
-                                    <option value="$r.name">$r.title</option>
-                                    #end
-                                </select>
-                            </div>
-                        </div>
-
+                    <div class="btn-group" style="margin-bottom: 15px">
+                        <a class="btn btn-success btn-sm" href="#" data-toggle="modal" data-target="#modal-new-points">
+                            <span class="glyphicon glyphicon-plus"></span>
+                            Award points
+                        </a>
+                        <a class="btn btn-danger btn-sm" href="#" data-toggle="modal" data-target="#modal-debit-points">
+                            <span class="glyphicon glyphicon-minus"></span>
+                            Debit points
+                        </a>
+                        <a class="btn btn-success btn-sm" href="#" data-toggle="modal" data-target="#modalUploadCsv">
+                            <span class="glyphicon glyphicon-upload"></span>
+                            Upload CSV
+                        </a>
+                        <a class="btn btn-info btn-sm btn-export-points" href="points.csv">
+                            <span class="glyphicon glyphicon-download"></span>
+                            Export to CSV
+                        </a>
+                        <a class="btn btn-danger btn-sm removeUsers">
+                            <span class="glyphicon glyphicon-remove"></span>
+                            Remove points
+                        </a>
                     </div>
                 </div>
 
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <label for="data-query" class="input-group-addon">Search</label>
+                            <input type="text" id="data-query" placeholder="Search" value="" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <label for="searchGroup" class="input-group-addon">Group</label>
+                            <select name="searchGroup" id="searchGroup" class="form-control">
+                                <option value="">&nbsp;</option>
+                                #foreach($group in $rootFolder.groups)
+                                <option value="$group.name">$group.name</option>
+                                #end
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <label for="searchReward" class="input-group-addon">Reward</label>
+                            <select name="searchReward" id="searchReward" class="form-control">
+                                <option value="">&nbsp;</option>
+                                #foreach($r in $page.rewards)
+                                <option value="$r.name">$r.title</option>
+                                #end
+                            </select>
+                        </div>
+                    </div>
 
+                </div>
 
-                <div class="clearfix"></div>
                 <hr/>
 
                 <div class="table-responsive">
