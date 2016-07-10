@@ -40,11 +40,12 @@
 
 <script type="text/javascript">
     $(function () {
-        var params = window.location.search;
-        $.get("/reporting/hits" + params, function (data) {
-            flog("resp", data);
-            initHitsChart(data);
-        }, "json");
+        $(document.body).on('pageDateChanged', function (e, startDate, endDate) {
+            $.get("/reporting/hits?startDate=" + startDate + '&endDate=' + endDate, function (data) {
+                flog("resp", data);
+                initHitsChart(data);
+            }, "json");
+        });
     });
 
     function initHitsChart(resp) {
