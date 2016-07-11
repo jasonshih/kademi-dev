@@ -45,22 +45,9 @@
             });
         },
 
-        getContent: function (component, keditor) {
-            var componentContent = component.children('.keditor-component-content');
-            return componentContent.html();
-        },
-
-        destroy: function (component, keditor) {
-            // Do nothing
-        },
-
         settingEnabled: true,
 
         settingTitle: 'Date Range Settings',
-
-        initKpiVis: function () {
-            flog('dateRange');
-        },
 
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "dateRange" component');
@@ -125,10 +112,6 @@
             form.find('#cbbPickerSize').val(dataAttributes['data-picker-size']);
             form.find('#cbbPickerColor').val(dataAttributes['data-picker-color']);
             form.find('#txtPickerClass').val(dataAttributes['data-picker-class']);
-        },
-
-        hideSettingForm: function (form, keditor) {
-            // Do nothing
         }
     };
 

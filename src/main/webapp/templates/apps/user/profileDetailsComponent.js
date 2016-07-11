@@ -3,18 +3,8 @@
     var flog = KEditor.log;
 
     KEditor.components['pageBody'] = {
-        init: function (contentArea, container, component, keditor) {
-            var self = this;
-        },
         initDateAgg: function () {
             flog('pageBody');
-        },
-        getContent: function (component, keditor) {
-            var componentContent = component.children('.keditor-component-content');
-            return componentContent.html();
-        },
-        destroy: function (component, keditor) {
-            // Do nothing
         },
         settingEnabled: true,
         settingTitle: 'Page Body Settings',
@@ -38,9 +28,6 @@
             flog('showSettingForm "pageBody" component');
 
             var self = this;
-        },
-        hideSettingForm: function (form, keditor) {
-            // Do nothing
         }
     };
 

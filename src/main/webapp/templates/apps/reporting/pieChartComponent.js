@@ -34,13 +34,6 @@
                 }
             });
         },
-        getContent: function (component, keditor) {
-            var componentContent = component.children('.keditor-component-content');
-            return componentContent.html();
-        },
-        destroy: function (component, keditor) {
-            // Do nothing
-        },
         settingEnabled: true,
         settingTitle: 'Pie Chart Settings',
         initSettingForm: function (form, keditor) {
@@ -160,9 +153,6 @@
                 var aggsSelect = form.find(".select-agg");
                 self.initSelect(aggsSelect, selectedQuery, selectedAgg);
             }
-        },
-        hideSettingForm: function (form, keditor) {
-            // Do nothing
         }
     };
 

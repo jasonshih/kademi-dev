@@ -3,16 +3,6 @@
     var flog = KEditor.log;
 
     KEditor.components['topBalances'] = {
-        init: function (contentArea, container, component, keditor) {
-            // Do nothing
-        },
-        getContent: function (component, keditor) {
-            var componentContent = component.children('.keditor-component-content');
-            return componentContent.html();
-        },
-        destroy: function (component, keditor) {
-            // Do nothing
-        },
         settingEnabled: true,
         settingTitle: 'Top Balances Settings',
         initSettingForm: function (form, keditor) {
@@ -70,9 +60,6 @@
             form.find('.top-balances-bucket').val(dataAttributes['data-bucket']);
             form.find('.top-balances-limit').val(dataAttributes['data-limit']);
             form.find('.top-balances-height').val(dataAttributes['data-height']);
-        },
-        hideSettingForm: function (form, keditor) {
-            // Do nothing
         }
     };
 

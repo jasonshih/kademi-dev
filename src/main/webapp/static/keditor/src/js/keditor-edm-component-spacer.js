@@ -10,21 +10,6 @@
     var flog = KEditor.log;
 
     KEditor.components['spacer'] = {
-        init: function (contentArea, container, component, keditor) {
-            // Do nothing
-        },
-
-        getContent: function (component, keditor) {
-            flog('getContent "spacer" component', component);
-
-            var componentContent = component.children('.keditor-component-content');
-            return componentContent.html();
-        },
-
-        destroy: function (component, keditor) {
-            // Do nothing
-        },
-
         settingEnabled: true,
 
         settingTitle: 'Spacer Settings',
@@ -58,10 +43,6 @@
             spacerHeight.val(component.find('.spacer').attr('height'));
 
             KEditor.showBgColorControl(keditor, form, component);
-        },
-
-        hideSettingForm: function (form, keditor) {
-            // Do nothing
         }
     };
 

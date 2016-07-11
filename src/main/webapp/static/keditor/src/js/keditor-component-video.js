@@ -44,10 +44,6 @@
             return html;
         },
 
-        destroy: function (component, keditor) {
-            // Do nothing
-        },
-
         settingEnabled: true,
 
         settingTitle: 'Video Settings',
@@ -148,10 +144,6 @@
                 instance.controls = this.checked;
                 instance.buildJWVideoPlayerPreview();
             });
-        },
-
-        hideSettingForm: function (form, keditor) {
-            // Do nothing
         },
 
         buildJWVideoPlayerPreview: function () {

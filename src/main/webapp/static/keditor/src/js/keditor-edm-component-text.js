@@ -135,10 +135,6 @@
 
             KEditor.showBgColorControl(keditor, form, component);
             KEditor.showPaddingControls(keditor, form, component);
-        },
-
-        hideSettingForm: function (form, keditor) {
-            // Do nothing
         }
     };
 
