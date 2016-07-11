@@ -68,6 +68,8 @@ jsPlumb.ready(function () {
                             JBApp.isDirty = true;
                             deleteConnection(labelOverlay.component);
                             instance.detach(labelOverlay.component);
+                        } else {
+                            labelOverlay.component.setParameter('clickedButtonXCancelled', true);
                         }
                     }
                 },
@@ -91,6 +93,15 @@ jsPlumb.ready(function () {
     // just do this: jsPlumb.bind("click", jsPlumb.detach), but I wanted to make it clear what was
     // happening.
     instance.bind("click", function (c) {
+        if (c) {
+            var clickedButtonXCancelled = c.getParameter('clickedButtonXCancelled');
+            if (clickedButtonXCancelled) {
+                c.setParameter('clickedButtonXCancelled', false);
+                return false;
+            }
+        }
+
+
         var sourceId = c.sourceId;
         var targetId = c.targetId;
         if (c && sourceId && targetId){
