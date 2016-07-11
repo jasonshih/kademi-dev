@@ -19,17 +19,6 @@
             }
         },
 
-        getContent: function (component, keditor) {
-            flog('getContent "photo" component', component);
-
-            var componentContent = component.children('.keditor-component-content');
-            return componentContent.html();
-        },
-
-        destroy: function (component, keditor) {
-            // Do nothing
-        },
-
         settingEnabled: true,
 
         settingTitle: 'Photo Settings',
@@ -109,10 +98,6 @@
 
             var chkFullWidth = form.find('#photo-fullwidth');
             chkFullWidth.prop('checked', img.hasClass('full-width'));
-        },
-
-        hideSettingForm: function (form, keditor) {
-            // Do nothing
         },
 
         adjustWidthForImg: function (img, isFullWidth) {

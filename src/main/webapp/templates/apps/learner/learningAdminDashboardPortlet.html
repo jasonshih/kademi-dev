@@ -14,7 +14,7 @@
                             <div class="dash-widget-title text-center">
                                 <small id="moduleStatsText"></small>
                                 <br />
-                                Module activity past 7 days
+                                Module activity <span class="selected-range"></span>
                             </div>
                         </div>
                         <!--</a>-->
@@ -31,7 +31,8 @@
 </style>
 <script type="text/javascript">
     $(function () {
-        $(document.body).on('pageDateChanged', function (e, startDate, endDate) {
+        $(document.body).on('pageDateChanged', function (e, startDate, endDate, text) {
+            $('.selected-range').text(text);
             $.get("/moduleActivityStats?startDate=" + startDate + '&finishDate=' + endDate, function (data) {
                 flog("moduleActivityStats", data);
                 initActivityChart(data);

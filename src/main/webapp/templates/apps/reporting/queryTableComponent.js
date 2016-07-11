@@ -3,19 +3,6 @@
     var flog = KEditor.log;
 
     KEditor.components['queryTable'] = {
-        init: function (contentArea, container, component, keditor) {
-            // Do nothing
-        },
-
-        getContent: function (component, keditor) {
-            var componentContent = component.children('.keditor-component-content');
-            return componentContent.html();
-        },
-
-        destroy: function (component, keditor) {
-            // Do nothing
-        },
-
         settingEnabled: true,
 
         settingTitle: 'Query Table Settings',
@@ -66,10 +53,6 @@
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             form.find('.select-query').val(dataAttributes['data-query']);
             form.find('.query-height').val(dataAttributes['data-height']);
-        },
-
-        hideSettingForm: function (form, keditor) {
-            // Do nothing
         }
     };
 

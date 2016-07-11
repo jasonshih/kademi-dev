@@ -3,16 +3,6 @@
     var flog = KEditor.log;
 
     KEditor.components['recentPoints'] = {
-        init: function (contentArea, container, component, keditor) {
-            // Do nothing
-        },
-        getContent: function (component, keditor) {
-            var componentContent = component.children('.keditor-component-content');
-            return componentContent.html();
-        },
-        destroy: function (component, keditor) {
-            // Do nothing
-        },
         settingEnabled: true,
         settingTitle: 'Recent Points Settings',
         initSettingForm: function (form, keditor) {
@@ -75,9 +65,6 @@
             form.find('.recentPointsBucket').val(dataAttributes['data-bucket']);
             form.find('.recentPointsDays').val(dataAttributes['data-days']);
             form.find('.recentPointsHeight').val(dataAttributes['data-height']);
-        },
-        hideSettingForm: function (form, keditor) {
-            // Do nothing
         }
     };
 

@@ -10,21 +10,6 @@
     var flog = KEditor.log;
 
     KEditor.components['button'] = {
-        init: function (contentArea, container, component, keditor) {
-            // Do nothing
-        },
-
-        getContent: function (component, keditor) {
-            flog('getContent "button" component', component);
-
-            var componentContent = component.children('.keditor-component-content');
-            return componentContent.html();
-        },
-
-        destroy: function (component, keditor) {
-            // Do nothing
-        },
-
         settingEnabled: true,
 
         settingTitle: 'Button Settings',
@@ -376,10 +361,6 @@
                         break;
                 }
             }
-        },
-
-        hideSettingForm: function (form) {
-            // Do nothing
         }
     };
 

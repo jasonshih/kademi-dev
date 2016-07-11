@@ -10,21 +10,6 @@
     var flog = KEditor.log;
 
     KEditor.components['button'] = {
-        init: function (contentArea, container, component, keditor) {
-            // Do nothing
-        },
-
-        getContent: function (component, keditor) {
-            flog('getContent "button" component', component);
-
-            var componentContent = component.children('.keditor-component-content');
-            return componentContent.html();
-        },
-
-        destroy: function (component, keditor) {
-            // Do nothing
-        },
-
         settingEnabled: true,
 
         settingTitle: 'Button Settings',
@@ -376,10 +361,6 @@
                         break;
                 }
             }
-        },
-
-        hideSettingForm: function (form) {
-            // Do nothing
         }
     };
 
@@ -397,21 +378,6 @@
     var flog = KEditor.log;
 
     KEditor.components['line'] = {
-        init: function (contentArea, container, component, keditor) {
-            // Do nothing
-        },
-
-        getContent: function (component, keditor) {
-            flog('getContent "line" component', component);
-
-            var componentContent = component.children('.keditor-component-content');
-            return componentContent.html();
-        },
-
-        destroy: function (component, keditor) {
-            // Do nothing
-        },
-
         settingEnabled: true,
 
         settingTitle: 'Line Settings',
@@ -476,10 +442,6 @@
             var lineColorPicker = form.find('.line-color-picker');
             flog(div.css('background-color'));
             lineColorPicker.colorpicker('setValue', div.css('background-color') || '');
-        },
-
-        hideSettingForm: function (form, keditor) {
-            // Do nothing
         }
     };
 
@@ -504,17 +466,6 @@
             if (typeof options.onComponentReady === 'function') {
                 options.onComponentReady.call(contentArea, component);
             }
-        },
-
-        getContent: function (component, keditor) {
-            flog('getContent "photo" component', component);
-
-            var componentContent = component.children('.keditor-component-content');
-            return componentContent.html();
-        },
-
-        destroy: function (component, keditor) {
-            // Do nothing
         },
 
         settingEnabled: true,
@@ -598,10 +549,6 @@
             chkFullWidth.prop('checked', img.hasClass('full-width'));
         },
 
-        hideSettingForm: function (form, keditor) {
-            // Do nothing
-        },
-
         adjustWidthForImg: function (img, isFullWidth) {
             $('<img />').attr('src', img.attr('src')).load(function () {
                 var wrapper = img.parent();
@@ -633,21 +580,6 @@
     var flog = KEditor.log;
 
     KEditor.components['spacer'] = {
-        init: function (contentArea, container, component, keditor) {
-            // Do nothing
-        },
-
-        getContent: function (component, keditor) {
-            flog('getContent "spacer" component', component);
-
-            var componentContent = component.children('.keditor-component-content');
-            return componentContent.html();
-        },
-
-        destroy: function (component, keditor) {
-            // Do nothing
-        },
-
         settingEnabled: true,
 
         settingTitle: 'Spacer Settings',
@@ -681,10 +613,6 @@
             spacerHeight.val(component.find('.spacer').attr('height'));
 
             KEditor.showBgColorControl(keditor, form, component);
-        },
-
-        hideSettingForm: function (form, keditor) {
-            // Do nothing
         }
     };
 
@@ -827,10 +755,6 @@
 
             KEditor.showBgColorControl(keditor, form, component);
             KEditor.showPaddingControls(keditor, form, component);
-        },
-
-        hideSettingForm: function (form, keditor) {
-            // Do nothing
         }
     };
 

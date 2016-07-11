@@ -46,10 +46,6 @@
             return html;
         },
 
-        destroy: function (component, keditor) {
-            // Do nothing
-        },
-
         settingEnabled: true,
 
         settingTitle: 'Audio settings',
@@ -117,10 +113,6 @@
                 instance.width = this.value;
                 instance.resizeAudioPlayerPreview();
             });
-        },
-
-        hideSettingForm: function (form, keditor) {
-
         },
 
         buildJWAudioPlayerPreview: function (componentId) {

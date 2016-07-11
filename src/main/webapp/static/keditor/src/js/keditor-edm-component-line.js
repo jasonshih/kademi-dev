@@ -10,21 +10,6 @@
     var flog = KEditor.log;
 
     KEditor.components['line'] = {
-        init: function (contentArea, container, component, keditor) {
-            // Do nothing
-        },
-
-        getContent: function (component, keditor) {
-            flog('getContent "line" component', component);
-
-            var componentContent = component.children('.keditor-component-content');
-            return componentContent.html();
-        },
-
-        destroy: function (component, keditor) {
-            // Do nothing
-        },
-
         settingEnabled: true,
 
         settingTitle: 'Line Settings',
@@ -89,10 +74,6 @@
             var lineColorPicker = form.find('.line-color-picker');
             flog(div.css('background-color'));
             lineColorPicker.colorpicker('setValue', div.css('background-color') || '');
-        },
-
-        hideSettingForm: function (form, keditor) {
-            // Do nothing
         }
     };
 

@@ -2,12 +2,12 @@
     var KEditor = $.keditor;
     var flog = KEditor.log;
 
-    KEditor.components['pageBody'] = {
+    KEditor.components['profileAvatar'] = {
         init: function (contentArea, container, component, keditor) {
             var self = this;
         },
         initDateAgg: function () {
-            flog('pageBody');
+            flog('profileAvatar');
         },
         getContent: function (component, keditor) {
             var componentContent = component.children('.keditor-component-content');
@@ -17,14 +17,14 @@
             // Do nothing
         },
         settingEnabled: true,
-        settingTitle: 'Page Body Settings',
+        settingTitle: 'Profile Avatar Settings',
         initSettingForm: function (form, keditor) {
-            flog('initSettingForm "pageBody" component');
+            flog('initSettingForm "profileAvatar" component');
 
             var self = this;
 
             $.ajax({
-                url: '_components/pageBody?settings',
+                url: '_components/profileAvatar?settings',
                 type: 'get',
                 dataType: 'HTML',
                 success: function (resp) {
@@ -35,7 +35,7 @@
         initSelect: function (aggsSelect, selectedQuery, selectedAgg) {
         },
         showSettingForm: function (form, component, keditor) {
-            flog('showSettingForm "pageBody" component');
+            flog('showSettingForm "profileAvatar" component');
 
             var self = this;
         },

@@ -20,7 +20,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="dash-widget-title text-center">Page views past 7 days</div>
+                                    <div class="dash-widget-title text-center">Page views <span class="selected-range"></span></div>
                                 </div>
                                 <div class="col-sm-12" style="height: 50%" id="total-error">
                                     <div id="error-chart">
@@ -40,8 +40,9 @@
 
 <script type="text/javascript">
     $(function () {
-        $(document.body).on('pageDateChanged', function (e, startDate, endDate) {
-            $.get("/reporting/hits?startDate=" + startDate + '&endDate=' + endDate, function (data) {
+        $(document.body).on('pageDateChanged', function (e, startDate, endDate, text) {
+            $('.selected-range').text(text);
+            $.get("/reporting/hits?startDate=" + startDate + '&finishDate=' + endDate, function (data) {
                 flog("resp", data);
                 initHitsChart(data);
             }, "json");

@@ -28,10 +28,6 @@
             return componentContent.html();
         },
 
-        destroy: function (component, keditor) {
-            // Do nothing
-        },
-
         settingEnabled: true,
 
         settingTitle: 'KPI Visualisation Settings',
@@ -113,10 +109,6 @@
             form.find('.select-kpi').val(dataAttributes['data-href']);
             form.find('.select-type').val(dataAttributes['data-visualisation']);
             form.find('.kpi-height').val(dataAttributes['data-height']);
-        },
-
-        hideSettingForm: function (form, keditor) {
-            // Do nothing
         }
     };
 
