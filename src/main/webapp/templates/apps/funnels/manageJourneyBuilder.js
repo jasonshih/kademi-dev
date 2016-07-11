@@ -20,6 +20,8 @@ $(function () {
     initSaveButton();
     initTranModal();
     initChoiceModal();
+    initTimeoutModal();
+    initEditTitle();
 });
 
 window.onbeforeunload = function(e){
@@ -66,6 +68,8 @@ jsPlumb.ready(function () {
                             JBApp.isDirty = true;
                             deleteConnection(labelOverlay.component);
                             instance.detach(labelOverlay.component);
+                        } else {
+                            labelOverlay.component.setParameter('clickedButtonXCancelled', true);
                         }
                     }
                 },
@@ -89,11 +93,14 @@ jsPlumb.ready(function () {
     // just do this: jsPlumb.bind("click", jsPlumb.detach), but I wanted to make it clear what was
     // happening.
     instance.bind("click", function (c) {
-        //var clickedButtonX = c.getParameter('clickedButtonX');
-        //if (clickedButtonX) {
-        //    c.setParameter('clickedButtonX', false);
-        //    return false;
-        //}
+        if (c) {
+            var clickedButtonXCancelled = c.getParameter('clickedButtonXCancelled');
+            if (clickedButtonXCancelled) {
+                c.setParameter('clickedButtonXCancelled', false);
+                return false;
+            }
+        }
+
 
         var sourceId = c.sourceId;
         var targetId = c.targetId;
@@ -113,14 +120,23 @@ jsPlumb.ready(function () {
                 return item.hasOwnProperty('decision') && item['decision'].nodeId === sourceId;
             });
 
+            var filteredTimeout = filteredGoal.filter(function(item){
+                return item['goal'].timeoutNode === targetId;
+            });
+
             if (filteredGoal.length > 0) {
                 var node = filteredGoal[0]['goal'];
-                if (node.hasOwnProperty('transitions') && node.transitions.length) {
-                    var trans = node.transitions.filter(function(item){
-                        return item.nextNodeId === targetId;
-                    });
-                    if (trans.length){
-                        showTranModal(trans[0], sourceId, targetId);
+                if (filteredTimeout.length > 0){
+                    // timeout node
+                    showTimeoutModal(node, sourceId, targetId);
+                } else {
+                    if (node.hasOwnProperty('transitions') && node.transitions.length) {
+                        var trans = node.transitions.filter(function(item){
+                            return item.nextNodeId === targetId;
+                        });
+                        if (trans.length){
+                            showTranModal(trans[0], sourceId, targetId);
+                        }
                     }
                 }
             } else if (filteredBegin.length > 0) {
@@ -321,20 +337,20 @@ jsPlumb.ready(function () {
         d.className = "w " + type;
         d.id = node.nodeId;
         d.setAttribute('data-type', type);
-        var nodeName = node.name? node.name : node.nodeId;
+        var nodeName = node.title? node.title : node.nodeId;
         if (type === 'goal') {
-            d.innerHTML = '<div class="title"><i class="fa fa-trophy" aria-hidden="true"></i> Goal</div>';
-            d.innerHTML += '<div class="inner"><span>' + nodeName + ' <i style="font-size: 15px" class="fa fa-cog btnNodeSetting"></i></span> <span title="Connect to transition node" class="ep ep-transition"></span> <span title="Connect to timeout node" class="ep ep-timeout"></span></div>';
+            d.innerHTML = '<div class="title"><i class="fa fa-trophy" aria-hidden="true"></i> Goal <i style="font-size: 15px" class="fa fa-cog btnNodeSetting"></i></div>';
+            d.innerHTML += '<div class="inner"><span class="nodeTitle">' + nodeName + ' <i class="fa fa-pencil"></i></span> <span title="Connect to transition node" class="ep ep-transition"></span> <span title="Connect to timeout node" class="ep ep-timeout"></span></div>';
         } else if(type === 'decision') {
-            d.innerHTML = '<div class="title"><i class="fa fa-question-circle" aria-hidden="true"></i> Decision</div>';
-            d.innerHTML += '<div class="inner"><span>' + nodeName + ' <i style="font-size: 15px" class="fa fa-cog btnNodeSetting"></i></span> <span title="Make new choice" class="ep ep-green"></span> <span title="Default next action" class="ep ep-red"></span></div>'
+            d.innerHTML = '<div class="title"><i class="fa fa-question-circle" aria-hidden="true"></i> Decision <i style="font-size: 15px" class="fa fa-cog btnNodeSetting"></i></span></div>';
+            d.innerHTML += '<div class="inner"><span class="nodeTitle">' + nodeName + ' <i class="fa fa-pencil"></i></span>  <span title="Make new choice" class="ep ep-green"></span> <span title="Default next action" class="ep ep-red"></span></div>'
         } else if (type == 'begin') {
-            d.innerHTML = '<div class="title"><i class="fa fa-play" aria-hidden="true"></i> Begin</div>';
-            d.innerHTML += '<div class="inner"><span>' + nodeName + ' <i style="font-size: 15px" class="fa fa-cog btnNodeSetting"></i></span> <span title="Connect to other node" class="ep ep-basic"></span></div>';
+            d.innerHTML = '<div class="title"><i class="fa fa-play" aria-hidden="true"></i> Begin <i style="font-size: 15px" class="fa fa-cog btnNodeSetting"></i></div>';
+            d.innerHTML += '<div class="inner"><span class="nodeTitle">' + nodeName + ' <i class="fa fa-pencil"></i></span> <span title="Connect to other node" class="ep ep-basic"></span></div>';
         } else {
             var actionName = JBApp.ACTIONS[action];
-            d.innerHTML = '<div class="title">'+actionName+'</div>';
-            d.innerHTML += '<div class="inner"><span>' + nodeName + ' <i style="font-size: 15px" class="fa fa-cog btnNodeSetting"></i></span> <span title="Connect to other node" class="ep ep-basic"></span></div>';
+            d.innerHTML = '<div class="title">'+actionName+' <i style="font-size: 15px" class="fa fa-cog btnNodeSetting"></i></div>';
+            d.innerHTML += '<div class="inner"><span class="nodeTitle">' + nodeName + ' <i class="fa fa-pencil"></i></span> <span title="Connect to other node" class="ep ep-basic"></span></div>';
         }
 
         d.style.left = node.x + "px";
@@ -561,6 +577,43 @@ function showChoiceModal(choice, sourceId, targetId){
     modal.modal();
 }
 
+function showTimeoutModal(node, sourceId, targetId){
+    var modal = $('#modalTimeoutNode');
+    modal.find('[name=sourceId]').val(sourceId);
+    modal.find('[name=targetId]').val(targetId);
+    modal.find('[name=timeoutMins]').val(node.timeoutMins);
+    modal.modal();
+}
+
+function initTimeoutModal(){
+    var modal = $('#modalTimeoutNode');
+    modal.find('form').on('submit', function(e){
+        e.preventDefault();
+
+        doSaveTimeout($(this));
+        modal.modal('hide');
+    });
+}
+
+function doSaveTimeout(form){
+    var sourceId = form.find('[name=sourceId]').val();
+    var targetId = form.find('[name=targetId]').val();
+    var timeoutMins = form.find('[name=timeoutMins]').val();
+    for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
+        var node = JBApp.funnel.nodes[i];
+        for (var key in node) {
+            if (node[key].nodeId === sourceId && node[key].hasOwnProperty('timeoutNode')) {
+                if (node[key].timeoutNode === targetId){
+                    node[key].timeoutMins = timeoutMins;
+                    break;
+                }
+            }
+        }
+    }
+    JBApp.isDirty = true;
+    Msg.info('timeoutMins updated');
+}
+
 function initChoiceModal(){
     var modal = $('#modalChoice');
     modal.on('click', '.btnAddChoice', function(e){
@@ -684,17 +737,56 @@ function initContextMenu() {
     });
 }
 
-function updateNode(nodeid, title) {
+function showModalTitle(node){
+    var title = node.title;
+    if (!title){
+        title = node.nodeId;
+    }
+    var modal = $('#modalNodeTitle');
+    modal.find('[name=title]').val(title);
+    modal.find('[name=sourceId]').val(node.nodeId);
+    modal.modal();
+}
+
+function initEditTitle(){
+    $(document.body).on('click', '.nodeTitle', function(e){
+        e.preventDefault();
+        var nodeId = $(this).parents('.w').attr('id');
+        for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
+            var node = JBApp.funnel.nodes[i];
+            for (var key in node) {
+                if (node[key].nodeId === nodeId) {
+                    showModalTitle(node[key]);
+                    break;
+                }
+            }
+        }
+    });
+    var modal = $('#modalNodeTitle');
+    modal.find('form').on('submit', function(e){
+        e.preventDefault();
+
+        updateNode($(this));
+        modal.modal('hide');
+    });
+}
+
+function updateNode(form) {
+    var sourceId = form.find('[name=sourceId]').val();
+    var title = form.find('[name=title]').val();
     for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
         var node = JBApp.funnel.nodes[i];
         for (var key in node) {
-            if (node[key].nodeId === nodeid) {
-                node[key].name = title;
+            if (node[key].nodeId === sourceId) {
+                node[key].title = title;
                 JBApp.isDirty = true;
+                $('#' + sourceId).find('.nodeTitle').html(title + ' <i class="fa fa-pencil"></i>');
+                Msg.info('Title updated');
                 break;
             }
         }
     }
+
 }
 
 function deleteNode(nodeId) {

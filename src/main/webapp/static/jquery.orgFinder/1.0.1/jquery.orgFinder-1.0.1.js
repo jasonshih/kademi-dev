@@ -406,10 +406,10 @@
                 data.lng = lng;
             } else {
                 data.jsonQuery = query;
+            }
 
-                if (options.orgTypes && $.isArray(options.orgTypes) && options.orgTypes.length > 0) {
-                    data.orgTypes = self.formSearch.find('[name=orgType]').val();
-                }
+            if (options.orgTypes && $.isArray(options.orgTypes) && options.orgTypes.length > 0) {
+                data.orgTypes = self.formSearch.find('[name=orgType]').val();
             }
 
             if (typeof options.beforeSearch === 'function') {
@@ -429,9 +429,13 @@
                     if (resp && resp.status && resp.data && resp.data[0]) {
                         self.generateData(resp.data);
                     } else {
+                        flog('[jquery.orgFinder] No organisation match');
                         self.itemsWrapper.html(options.emptyItemText);
-                        map.setCenter(new google.maps.LatLng(lat, lng));
-                        map.setZoom(options.initZoomLevel);
+
+                        if (lat && lng) {
+                            map.setCenter(new google.maps.LatLng(lat, lng));
+                            map.setZoom(options.initZoomLevel);
+                        }
                     }
 
                     if (typeof options.onSearched === 'function') {
@@ -446,7 +450,7 @@
         },
 
         generateData: function (data) {
-            flog('[jquery.orgFinder] doSearch', data);
+            flog('[jquery.orgFinder] generateData', data);
 
             var self = this;
             var options = self.options;
@@ -455,7 +459,7 @@
             var lngs = [];
 
             for (var i = 0; i < data.length; i++) {
-                self.createDataItem(data[i], i);
+                self.createDataItem(data[i]);
                 lats.push(data[i].lat);
                 lngs.push(data[i].lng);
             }
@@ -477,13 +481,14 @@
             }
         },
 
-        createDataItem: function (markerData, index) {
-            flog('[jquery.orgFinder] createDataItem', markerData, index);
+        createDataItem: function (markerData) {
+            flog('[jquery.orgFinder] createDataItem', markerData);
 
             var self = this;
             var options = self.options;
             var map = self.map;
             var itemsWrapper = self.itemsWrapper;
+
             var latlng = new google.maps.LatLng(markerData.lat, markerData.lng);
             var marker = new google.maps.Marker({
                 position: latlng,
@@ -491,6 +496,7 @@
                 title: markerData.orgTypeDisplayName || markerData.title
             });
             marker.setMap(map);
+            flog('[jquery.orgFinder] Marker', marker);
 
             if (typeof options.renderItemContent !== 'function') {
                 $.error('[jquery.orgFinder] renderItemContent is not function. Please correct it!');
@@ -506,7 +512,7 @@
             if (itemContent.length === 0 || markerContent.length === 0) {
                 flog('[jquery.orgFinder] Item content or Marker content is empty. Skipped on creating!');
             } else {
-                flog('[jquery.orgFinder] Creating marker and item');
+                flog('[jquery.orgFinder] Creating infoWindow and item');
 
                 var infoWindow = new google.maps.InfoWindow({
                     content: markerContent

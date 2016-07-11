@@ -228,10 +228,11 @@
             }
 
             if (text) {
-                previewText.text(text + ' ago');
+                text = text + ' ago';
             } else {
-                previewText.text('from ' + startDate + ' to ' + endDate);
+                text = 'from ' + startDate + ' to ' + endDate;
             }
+            previewText.text(text);
 
             // See QueryService.java
             $.cookie('pageDatePicker-startDate', startDate, {
@@ -249,7 +250,7 @@
             }
 
             flog("fire event");
-            $(document.body).trigger('pageDateChanged', [startDate, endDate, self.container]);
+            $(document.body).trigger('pageDateChanged', [startDate, endDate, text, self.container]);
         },
 
         initOriginRange: function () {

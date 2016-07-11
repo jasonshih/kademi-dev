@@ -380,13 +380,61 @@
     </form>
 </div>
 
+<div id="modalTimeoutNode" class="modal fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Timeout</h4>
+    </div>
+    <form action="" class="">
+        <div class="modal-body">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label>timeoutMins</label>
+                        <input type="number" min="0" class="form-control" name="timeoutMins" placeholder="timeoutMins">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <input type="hidden" name="sourceId">
+            <input type="hidden" name="targetId">
+            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+        </div>
+    </form>
+</div>
+<div id="modalNodeTitle" class="modal fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Node Title</h4>
+    </div>
+    <form action="" class="">
+        <div class="modal-body">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <input type="text" class="form-control" name="title" placeholder="Title">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <input type="hidden" name="sourceId">
+            <input type="hidden" name="targetId">
+            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+        </div>
+    </form>
+</div>
+
 <link rel="stylesheet" href="/theme/apps/funnels/journeybuilder.css">
 <link rel="stylesheet" href="/static/jquery-contextmenu/jquery.contextMenu.css">
 <script src="/static/jquery-contextmenu/jquery.contextMenu.js">//</script>
 <script src="/static/jsplump/2.1.2/jsPlumb-2.1.2.js">//</script>
 <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
 <script src="/theme/apps/funnels/manageFunnelImports.js" type="text/javascript">//</script>
-<script src="/theme/apps/funnels/manageJourneyBuilder.js" type="text/javascript">//</script>
+<script src="/theme/apps/funnels/manageJourneyBuilder.js?v=11072016" type="text/javascript">//</script>
 
 
 <script type="text/javascript">

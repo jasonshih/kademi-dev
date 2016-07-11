@@ -259,7 +259,8 @@
                         left: 0,
                         bottom: 0
                     },
-                    cursorborder: ''
+                    cursorborder: '',
+                    disablemutationobserver: true
                 });
             } else {
                 flog('$.fn.niceScroll does not exist. Use default sidebar.');
@@ -1165,8 +1166,6 @@
         },
 
         getClickedElement: function (event, selector) {
-            flog('getClickedElement', event, selector);
-
             var target = $(event.target);
             var closest = target.closest(selector);
 
@@ -1261,6 +1260,11 @@
 
                 container.after(newContainer);
                 self.convertToContainer(contentArea, newContainer);
+
+                var snippetsList = body.find('#' + options.snippetsListId);
+                var componentSnippets = snippetsList.find('.keditor-snippet[data-type^=component]');
+                var currentLinkedContainerContents = componentSnippets.draggable('option', 'connectToSortable');
+                componentSnippets.draggable('option', 'connectToSortable', currentLinkedContainerContents.add(newContainer.find('.keditor-container-content')));
 
                 flog('Container is duplicated');
 

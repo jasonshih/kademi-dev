@@ -11,7 +11,7 @@
                                 </div>
                             </div>
                             <div class="dash-widget-title text-center">
-                                Points activity past 7 days
+                                Points activity <span class="selected-range"></span>
                             </div>
                         </div>
                     </div>
@@ -29,7 +29,8 @@
 
 <script>
     $(function () {
-        $(document.body).on('pageDateChanged', function (e, startDate, endDate) {
+        $(document.body).on('pageDateChanged', function (e, startDate, endDate, text) {
+            $('.selected-range').text(text);
             $.get("/pointsActivityStats?startDate=" + startDate + '&finishDate=' + endDate, function (data) {
                 flog("pointsActivityStats", data);
                 initActivityChart(data);
