@@ -26,6 +26,7 @@ $(function () {
     initCreatedDateModal();
     initLeadmanModal();
     initDotdotdot();
+    initSearchFilter();
 
     // init the login form
     $(".login").user({});
@@ -1306,4 +1307,12 @@ function initDotdotdot() {
     if ($('.lead-desc .leadInner').length) {
         $('.lead-desc .leadInner').dotdotdot({height: 80});
     }
+}
+
+function initSearchFilter(){
+    $('#leadSearchFilterButton').siblings('ul').find('a').on('click', function(e){
+        e.preventDefault();
+
+        $('#leadSearchFilterButton').find('span').text(this.innerText);
+    });
 }
