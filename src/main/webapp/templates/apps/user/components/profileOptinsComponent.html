@@ -1,0 +1,19 @@
+#if( $page.optins.size() gt 0 )
+<div class="well">
+    <form action="." method="POST" class="form-inline optins">
+        <img class='ajax-loader' src='/static/common/loading.gif'/>
+        <h4>Optional Mailing Lists</h4>
+        <ul class='list memberships'>
+            #foreach($optin in $page.optins)
+            <li>
+                #set($id = "optins_" + $optin.optinGroup.name)
+                <label for="$id" class="optin">
+                    $formatter.checkbox($id, "optins", $user.isInGroup($optin.optinGroup) , $optin.optinGroup.name)
+                    $optin.message
+                </label>
+            </li>
+            #end
+        </ul>
+    </form>
+</div>
+#end
