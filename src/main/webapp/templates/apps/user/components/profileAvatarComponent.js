@@ -3,19 +3,6 @@
     var flog = KEditor.log;
 
     KEditor.components['profileAvatar'] = {
-        init: function (contentArea, container, component, keditor) {
-            var self = this;
-        },
-        initDateAgg: function () {
-            flog('profileAvatar');
-        },
-        getContent: function (component, keditor) {
-            var componentContent = component.children('.keditor-component-content');
-            return componentContent.html();
-        },
-        destroy: function (component, keditor) {
-            // Do nothing
-        },
         settingEnabled: true,
         settingTitle: 'Profile Avatar Settings',
         initSettingForm: function (form, keditor) {
@@ -38,9 +25,6 @@
             flog('showSettingForm "profileAvatar" component');
 
             var self = this;
-        },
-        hideSettingForm: function (form, keditor) {
-            // Do nothing
         }
     };
 

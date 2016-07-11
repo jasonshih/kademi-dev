@@ -3,19 +3,6 @@
     var flog = KEditor.log;
 
     KEditor.components['websiteList'] = {
-        init: function (contentArea, container, component, keditor) {
-            // Do nothing
-        },
-
-        getContent: function (component, keditor) {
-            var componentContent = component.children('.keditor-component-content');
-            return componentContent.html();
-        },
-
-        destroy: function (component, keditor) {
-            // Do nothing
-        },
-
         settingEnabled: true,
 
         settingTitle: 'Website List Settings',
@@ -53,10 +40,6 @@
 
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             form.find('.items-per-row').val(dataAttributes['data-items-per-row']);
-        },
-
-        hideSettingForm: function (form, keditor) {
-            // Do nothing
         }
     };
 

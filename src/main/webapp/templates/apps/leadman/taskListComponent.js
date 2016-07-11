@@ -3,19 +3,6 @@
     var flog = KEditor.log;
 
     KEditor.components['taskList'] = {
-        init: function (contentArea, container, component, keditor) {
-            // Do nothing
-        },
-
-        getContent: function (component, keditor) {
-            var componentContent = component.children('.keditor-component-content');
-            return componentContent.html();
-        },
-
-        destroy: function (component, keditor) {
-            // Do nothing
-        },
-
         settingEnabled: true,
 
         settingTitle: 'Task List Settings',
@@ -58,10 +45,6 @@
 
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             form.find('#task-list-height').val(dataAttributes['data-height']);
-        },
-
-        hideSettingForm: function (form, keditor) {
-            // Do nothing
         }
     };
 

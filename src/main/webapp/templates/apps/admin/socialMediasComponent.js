@@ -3,16 +3,6 @@
     var flog = KEditor.log;
 
     KEditor.components['socialMedias'] = {
-        init: function (contentArea, container, component, keditor) {
-            // Do nothing
-        },
-        getContent: function (component, keditor) {
-            var componentContent = component.children('.keditor-component-content');
-            return componentContent.html();
-        },
-        destroy: function (component, keditor) {
-            // Do nothing
-        },
         socialNetworks: ['facebook', 'twitter', 'googleplus', 'linkedin', 'youtube', 'instagram', 'pinterest', 'github', 'tumblr'],
         settingEnabled: true,
         settingTitle: 'Social Medias Settings',
@@ -148,9 +138,6 @@
                 form.find('[name=' + socialNetwork + '-text]').val(dataAttributes['data-' + socialNetwork + '-text']).prop('disabled', dataAttributes['data-' + socialNetwork + '-enable'] !== 'true');
                 form.find('[name=' + socialNetwork + '-link]').val(dataAttributes['data-' + socialNetwork + '-link']).prop('disabled', dataAttributes['data-' + socialNetwork + '-enable'] !== 'true');
             }
-        },
-        hideSettingForm: function (form, keditor) {
-            // Do nothing
         }
     };
 

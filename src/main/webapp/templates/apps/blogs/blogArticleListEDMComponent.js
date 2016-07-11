@@ -3,19 +3,6 @@
     var flog = KEditor.log;
 
     KEditor.components['blogArticleListEDM'] = {
-        init: function (contentArea, container, component, keditor) {
-            // Do nothing
-        },
-
-        getContent: function (component, keditor) {
-            var componentContent = component.children('.keditor-component-content');
-            return componentContent.html();
-        },
-
-        destroy: function (component, keditor) {
-            // Do nothing
-        },
-
         settingEnabled: true,
 
         settingTitle: 'Blog Article List Settings',
@@ -87,10 +74,6 @@
             form.find('.select-blog').val(dataAttributes['data-blog']);
             form.find('.select-layout').val(dataAttributes['data-layout']).trigger('change');
             form.find('.items-per-row').val(dataAttributes['data-items-per-row'] || 3);
-        },
-
-        hideSettingForm: function (form, keditor) {
-            // Do nothing
         }
     };
 

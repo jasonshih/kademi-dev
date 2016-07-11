@@ -3,19 +3,6 @@
     var flog = KEditor.log;
 
     KEditor.components['contactForm'] = {
-        init: function (contentArea, container, component, keditor) {
-            // Do nothing
-        },
-
-        getContent: function (component, keditor) {
-            var componentContent = component.children('.keditor-component-content');
-            return componentContent.html();
-        },
-
-        destroy: function (component, keditor) {
-            // Do nothing
-        },
-
         settingEnabled: true,
 
         settingTitle: 'Contact Form Settings',
@@ -127,10 +114,6 @@
             form.find('#cbbSubmitSize').val(dataAttributes['data-submit-size']);
             form.find('#cbbSubmitColor').val(dataAttributes['data-submit-color']);
             form.find('#txtSubmitClass').val(dataAttributes['data-submit-class']);
-        },
-
-        hideSettingForm: function (form, keditor) {
-            // Do nothing
         }
     };
 

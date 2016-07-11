@@ -3,19 +3,6 @@
     var flog = KEditor.log;
 
     KEditor.components['storeProductList'] = {
-        init: function (contentArea, container, component, keditor) {
-            // Do nothing
-        },
-
-        getContent: function (component, keditor) {
-            var componentContent = component.children('.keditor-component-content');
-            return componentContent.html();
-        },
-
-        destroy: function (component, keditor) {
-            // Do nothing
-        },
-
         settingEnabled: true,
 
         settingTitle: 'Product List Settings',
@@ -99,10 +86,6 @@
             form.find('.number-of-products').val(dataAttributes['data-number-of-products']);
             form.find('.items-per-row').val(dataAttributes['data-items-per-row']);
             form.find('.items-per-row-wrapper').css('display', dataAttributes['data-layout'] === 'grid' ? 'block' : 'none');
-        },
-
-        hideSettingForm: function (form, keditor) {
-            // Do nothing
         }
     };
 
