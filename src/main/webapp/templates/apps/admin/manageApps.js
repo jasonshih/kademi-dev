@@ -73,7 +73,11 @@ function setEnabled(appId, isEnabled, success, chk) {
                 return;
             }
             success(data);
-            $('#settings_' + appId).reloadFragment();
+            $('#settings_' + appId).reloadFragment({
+                whenComplete: function(){
+                    initSettingsForms();
+                }
+            });
         },
         error: function (resp) {
             chk.prop('disabled', false);
