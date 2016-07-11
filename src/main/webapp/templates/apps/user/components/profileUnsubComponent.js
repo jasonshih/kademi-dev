@@ -3,18 +3,8 @@
     var flog = KEditor.log;
 
     KEditor.components['profileUnsub'] = {
-        init: function (contentArea, container, component, keditor) {
-            var self = this;
-        },
         initDateAgg: function () {
             flog('profileUnsub');
-        },
-        getContent: function (component, keditor) {
-            var componentContent = component.children('.keditor-component-content');
-            return componentContent.html();
-        },
-        destroy: function (component, keditor) {
-            // Do nothing
         },
         settingEnabled: true,
         settingTitle: 'Profile Unsubscribe Settings',
@@ -38,9 +28,6 @@
             flog('showSettingForm "profileUnsub" component');
 
             var self = this;
-        },
-        hideSettingForm: function (form, keditor) {
-            // Do nothing
         }
     };
 
