@@ -29,8 +29,8 @@
                 var queryData = $(this);
 
                 if (!queryData.hasClass('initialized-pieChart')) {
-                    queryData.addClass('initialized-pieChart');
                     queryData.pieChartAgg();
+                    queryData.addClass('initialized-pieChart');
                 }
             });
         },
@@ -155,9 +155,11 @@
             form.find('.select-agg').val(dataAttributes['data-agg']);
             form.find('.select-position').val(dataAttributes['data-legend-position']);
             form.find('.query-height').val(dataAttributes['data-height']);
-            
-            var aggsSelect = form.find(".select-agg");
-            self.initSelect(aggsSelect, selectedQuery, selectedAgg);
+
+            if (selectedQuery) {
+                var aggsSelect = form.find(".select-agg");
+                self.initSelect(aggsSelect, selectedQuery, selectedAgg);
+            }
         },
         hideSettingForm: function (form, keditor) {
             // Do nothing
