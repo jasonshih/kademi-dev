@@ -858,13 +858,16 @@ function initSaveButton() {
                         if (!node[key].transition.nextNodeId){
                             valid = false;
                         }
+                        if (!node[key].transition.trigger) {
+                            valid = false;
+                        }
                     }
                 }
             }
         }
         // validating
         if (JBApp.funnel.nodes.length > 1 && !valid) {
-            Msg.error('Begin node MUST connect to other one.');
+            Msg.error('Could not save funnel. Begin node must have transition which connected to other node and had a trigger');
         } else {
             $.ajax({
                 url: 'funnel.json',
