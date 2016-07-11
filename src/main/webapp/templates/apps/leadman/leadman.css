@@ -76,6 +76,13 @@ table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:af
     #dashLeadsList .lead-desc{
         margin-bottom: 35px;
     }
+
+    #leadSearchFilter{
+        padding-left: 17px !important;
+        border-left: none !important;
+        width: 100% !important;
+        text-align: right;
+    }
 }
 
 @media (max-width: 991px) {
@@ -102,4 +109,24 @@ table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:af
 }
 #searchbox-wrap .tt-suggestion.tt-selectable + .tt-suggestion.tt-selectable{
     border-top: 1px solid #eee;
+}
+#leadSearchFilter{
+    display: inline-block;
+    list-style: none;
+    width: 100px;
+    margin-left: 0;
+    padding-left: 10px;
+    border-left: 1px solid rgba(255,255,255,0.39);
+}
+#lead-search-input{
+    display: inline-block;
+
+}
+#leadSearchFilterButton{
+    color: #fff;
+    font-size: 15px;
+    display: block;
+    height: 37px;
+    line-height: 37px;
+
 }
