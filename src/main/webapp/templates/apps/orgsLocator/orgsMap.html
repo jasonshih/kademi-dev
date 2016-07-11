@@ -29,33 +29,6 @@
                     initLatLng: [-33.867, 151.195],
                     initZoomLevel: 15,
                     orgTypes: orgTypes,
-                    template:
-                    '<form role="form" class="form-horizontal form-search org-finder-search" action="" style="margin-bottom: 15px;">' +
-                    '    <div class="input-group">' +
-                    '        <div class="clearfix dropdown">' +
-                    '            <input type="text" name="q" class="form-control" placeholder="Enter keyword to search..." id="q" value="" autocomplete="off" />' +
-                    '            <div class="dropdown-menu org-finder-suggestions" style="width: 100%;"></div>' +
-                    '        </div>' +
-                    '        <span class="input-group-btn">' +
-                    '            <select name="orgType" class="selectpicker"></select>' +
-                    '            <button class="btn btn-default" type="submit">Search</button>' +
-                    '            <button class="btn btn-default" type="button" data-type="clearer" data-target="#q">&nbsp;<i class="fa fa-times"></i>&nbsp;</button>' +
-                    '        </span>' +
-                    '    </div>' +
-                    '</form>' +
-                    '<div class="row" style="margin-bottom: 40px;">' +
-                    '    <div class="col-md-4">' +
-                    '        <div class="panel panel-default">' +
-                    '            <div class="panel-heading"><i class="fa fa-list"></i> List Organisations</div>' +
-                    '            <div class="list-group org-finder-list" style="overflow-y: auto;"></div>' +
-                    '        </div>' +
-                    '    </div>' +
-                    '    <div class="col-md-8">' +
-                    '        <div class="embed-responsive embed-responsive-16by9">' +
-                    '            <div class="embed-responsive-item org-finder-map"></div>' +
-                    '        </div>' +
-                    '    </div>' +
-                    '</div>',
                     onSearch: function (query) {
                         history.pushState(null, 'Organisations map', window.location.pathname + '?q=' + encodeURIComponent(query.trim()));
                     },

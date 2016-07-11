@@ -46,10 +46,11 @@
         googleAPIKey: null,
         searchUrl: null,
         orgTypes: null,
-        template: '<form role="form" class="form-horizontal form-search org-finder-search" action="" style="margin-bottom: 15px;">' +
-        '    <div class="input-group input-group-lg">' +
+        template:
+        '<form role="form" class="form-horizontal form-search org-finder-search" action="" style="margin-bottom: 15px;">' +
+        '    <div class="input-group">' +
         '        <div class="clearfix dropdown">' +
-        '            <input type="text" name="q" class="form-control" placeholder="Enter keyword to search..." value="" autocomplete="off" />' +
+        '            <input type="text" name="q" class="form-control" placeholder="Enter your address" id="q" value="" autocomplete="off" />' +
         '            <div class="dropdown-menu org-finder-suggestions" style="width: 100%;"></div>' +
         '        </div>' +
         '        <span class="input-group-btn">' +
