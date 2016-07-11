@@ -58,7 +58,7 @@
 }
 
 .w .inner{
-    margin-top: 13px;
+    margin-top: 9px;
 }
 .w .title{
     text-align: left;
@@ -71,7 +71,7 @@
     text-align: center;
 }
 
-.w .inner .btnNodeSetting{
+.w .title .btnNodeSetting{
     position: absolute;
     top: 5px;
     right: 5px;
@@ -223,3 +223,13 @@ path, .jsplumb-endpoint { cursor:pointer; }
     text-align: center;
     border: 1px solid red;
 }
+
+.nodeTitle{
+    cursor: pointer;
+}
+/*.nodeTitle .fa-pencil{*/
+    /*display: none;*/
+/*}*/
+/*.nodeTitle:hover .fa-pencil{*/
+    /*display: inline;*/
+/*}*/
