@@ -20,6 +20,7 @@ $(function () {
     initSaveButton();
     initTranModal();
     initChoiceModal();
+    initTimeoutModal();
 });
 
 window.onbeforeunload = function(e){
@@ -89,12 +90,6 @@ jsPlumb.ready(function () {
     // just do this: jsPlumb.bind("click", jsPlumb.detach), but I wanted to make it clear what was
     // happening.
     instance.bind("click", function (c) {
-        //var clickedButtonX = c.getParameter('clickedButtonX');
-        //if (clickedButtonX) {
-        //    c.setParameter('clickedButtonX', false);
-        //    return false;
-        //}
-
         var sourceId = c.sourceId;
         var targetId = c.targetId;
         if (c && sourceId && targetId){
@@ -113,14 +108,23 @@ jsPlumb.ready(function () {
                 return item.hasOwnProperty('decision') && item['decision'].nodeId === sourceId;
             });
 
+            var filteredTimeout = filteredGoal.filter(function(item){
+                return item['goal'].timeoutNode === targetId;
+            });
+
             if (filteredGoal.length > 0) {
                 var node = filteredGoal[0]['goal'];
-                if (node.hasOwnProperty('transitions') && node.transitions.length) {
-                    var trans = node.transitions.filter(function(item){
-                        return item.nextNodeId === targetId;
-                    });
-                    if (trans.length){
-                        showTranModal(trans[0], sourceId, targetId);
+                if (filteredTimeout.length > 0){
+                    // timeout node
+                    showTimeoutModal(node, sourceId, targetId);
+                } else {
+                    if (node.hasOwnProperty('transitions') && node.transitions.length) {
+                        var trans = node.transitions.filter(function(item){
+                            return item.nextNodeId === targetId;
+                        });
+                        if (trans.length){
+                            showTranModal(trans[0], sourceId, targetId);
+                        }
                     }
                 }
             } else if (filteredBegin.length > 0) {
@@ -559,6 +563,43 @@ function showChoiceModal(choice, sourceId, targetId){
     }
 
     modal.modal();
+}
+
+function showTimeoutModal(node, sourceId, targetId){
+    var modal = $('#modalTimeoutNode');
+    modal.find('[name=sourceId]').val(sourceId);
+    modal.find('[name=targetId]').val(targetId);
+    modal.find('[name=timeoutMins]').val(node.timeoutMins);
+    modal.modal();
+}
+
+function initTimeoutModal(){
+    var modal = $('#modalTimeoutNode');
+    modal.find('form').on('submit', function(e){
+        e.preventDefault();
+
+        doSaveTimeout($(this));
+        modal.modal('hide');
+    });
+}
+
+function doSaveTimeout(form){
+    var sourceId = form.find('[name=sourceId]').val();
+    var targetId = form.find('[name=targetId]').val();
+    var timeoutMins = form.find('[name=timeoutMins]').val();
+    for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
+        var node = JBApp.funnel.nodes[i];
+        for (var key in node) {
+            if (node[key].nodeId === sourceId && node[key].hasOwnProperty('timeoutNode')) {
+                if (node[key].timeoutNode === targetId){
+                    node[key].timeoutMins = timeoutMins;
+                    break;
+                }
+            }
+        }
+    }
+    JBApp.isDirty = true;
+    Msg.info('timeoutMins updated');
 }
 
 function initChoiceModal(){
