@@ -16,7 +16,7 @@
                     <br class="Clear" />
                 </div>
                 <div class="commentArea edifyViewMode">
-                        <div class="hideBtn"><a href="#" class="">Hide comments</a></div>
+                    <div class="hideBtn"><a href="#" class="">Hide comments</a></div>
                     <div id="comments">
                         <div class="fBox">
                             <form action="#" method="post" id="postComment">
@@ -42,7 +42,7 @@
         </div>
         <script>
             var privs = $formatter.toJson($request.attributes.privs);
-            pageInitFunctions.push(function() {
+            pageInitFunctions.push(function () {
                 initComments(window.location.pathname);
             });
         </script>
