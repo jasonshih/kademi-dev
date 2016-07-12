@@ -136,7 +136,7 @@ function initDatePicker() {
 
         datePicker.datepicker({
             autoclose: true,
-            format: 'dd/mm/yyyy'
+            format: 'DD/MM/YYYY'
         });
 
         var impactedTargetSelector = datePicker.attr('data-impacted');
