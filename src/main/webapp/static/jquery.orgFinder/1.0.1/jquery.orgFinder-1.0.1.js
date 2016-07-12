@@ -46,6 +46,7 @@
         googleAPIKey: null,
         searchUrl: null,
         orgTypes: null,
+        maxResults: 1000,
         template:
         '<form role="form" class="form-horizontal form-search org-finder-search" action="" style="margin-bottom: 15px;">' +
         '    <div class="input-group">' +
@@ -400,7 +401,9 @@
                 $.error('[jquery.orgFinder] Search Url is empty!');
             }
 
-            var data = {};
+            var data = {
+                maxResults: options.maxResults
+            };
 
             if (lat !== undefined && lng !== undefined) {
                 data.lat = lat;
