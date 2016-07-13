@@ -1,0 +1,11 @@
+<div class="productPrice">
+    <div id="addToCartSection">
+        <span class="label label-success priceLabel">
+            #set( $opts = $page.selectedParameterOptions )
+            #set( $price = $page.getPurchaseAmount($opts) )
+            #if( $price )
+            $price.amount Points
+            #end
+        </span>
+    </div>
+</div>

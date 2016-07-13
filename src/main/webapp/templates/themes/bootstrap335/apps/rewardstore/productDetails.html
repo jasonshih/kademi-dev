@@ -2,7 +2,7 @@
     #parse("/theme/masterTemplate.html")
     <head>
         #@themeHeader( "Product Details" )
-        <link rel="stylesheet" type="text/css" href="reward-store.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/apps/rewardstore/reward-store.css" />
         <script src="/static/reload-fragment/1.0.1/jquery.reload-fragment-1.0.1.js" >//</script>
         <script type="text/javascript" src="/static/uri/1.15.1/URI.js">//</script>
         #end
@@ -26,7 +26,7 @@
                             </a>
                             #elseif( $page.primaryImageHref )
                             <a onclick="" href="#">
-                                <img style="width:100%" src="$page.primaryImageHref/alt-400-600.png" />
+                                <img style="width:100%" src="$page.primaryImageHref" />
                             </a>
                             #end
                             <span class="label label-success priceLabel">
