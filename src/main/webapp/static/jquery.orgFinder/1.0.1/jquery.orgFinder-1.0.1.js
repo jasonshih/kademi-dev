@@ -248,12 +248,13 @@
             var allowedCountries = options.allowedCountries;
 
             if (initQuery !== null && initQuery !== undefined && initQuery.trim() !== '') {
+                flog('[jquery.orgFinder] Init query is: ' + initQuery);
                 txtQ.val(initQuery);
             }
 
+            flog('[jquery.orgFinder] Initialize Google Map Autocomplete', txtQ);
             var autocomplete = self.autocomplete = new google.maps.places.Autocomplete(txtQ.get(0), {
-                types: ['(cities)'],
-                componentRestrictions: []
+                types: ['(cities)']
             });
 
             var eventHandler = function () {
@@ -274,6 +275,7 @@
             };
 
             if (orgTypes && $.isArray(orgTypes) && orgTypes.length > 0) {
+                flog('[jquery.orgFinder] Initialize "Types" select box', cbbOrgType, orgTypes);
                 var optionStr = '';
 
                 for (var i = 0; i < orgTypes.length; i++) {
@@ -288,10 +290,12 @@
                     eventHandler();
                 });
             } else {
+                flog('[jquery.orgFinder] Remove "Types" select box', cbbOrgType, orgTypes);
                 cbbOrgType.remove();
             }
 
             if (allowedCountries && $.isArray(allowedCountries) && allowedCountries.length > 0) {
+                flog('[jquery.orgFinder] Initialize "Country" select box', cbbCountry, allowedCountries);
                 var optionStr = '';
 
                 optionStr += '<option value="" selected="selected"> - Select Country - </option>';
@@ -310,16 +314,19 @@
                     txtQ.val('');
                 });
             } else {
+                flog('[jquery.orgFinder] Remove "Country" select box', cbbCountry, allowedCountries);
                 cbbCountry.remove();
             }
 
             if (formSearch.is('form')) {
+                flog('[jquery.orgFinder] Form search is form tag', formSearch);
                 formSearch.on('submit', function (e) {
                     e.preventDefault();
 
                     eventHandler();
                 });
             } else {
+                flog('[jquery.orgFinder] Form search is not form tag', formSearch);
                 btn.on('click', function (e) {
                     e.preventDefault();
 
