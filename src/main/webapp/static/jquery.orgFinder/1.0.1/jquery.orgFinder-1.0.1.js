@@ -47,26 +47,24 @@
         orgTypes: null,
         allowedCountries: null,
         maxResults: 1000,
-        template: '<form role="form" class="form-horizontal form-search org-finder-search" action="" style="margin-bottom: 15px;">' +
+        template:
+        '<form role="form" class="form-horizontal form-search org-finder-search" action="" style="margin-bottom: 0;">' +
         '    <div class="input-group">' +
-        '        <div class="clearfix dropdown">' +
-        '            <input type="text" name="q" class="form-control" placeholder="Enter your address" id="q" value="" autocomplete="off" />' +
-        '        </div>' +
+        '        <input type="text" name="q" class="form-control" placeholder="Enter your address" id="q" value="" autocomplete="off" />' +
         '        <span class="input-group-btn">' +
-        '            <select name="country" class="selectpicker"></select>' +
-        '            <select name="orgType" class="selectpicker"></select>' +
-        '            <button class="btn btn-default" type="submit">Search</button>' +
+        '            <select name="country" class="selectpicker hidden-xs"></select>' +
+        '            <select name="orgType" class="selectpicker clearfix"></select>' +
+        '            <button class="btn btn-default btn-clear-query" type="button">&nbsp;<i class="fa fa-remove"></i>&nbsp;</button>' +
         '        </span>' +
         '    </div>' +
         '</form>' +
-        '<div class="row" style="margin-bottom: 40px;">' +
-        '    <div class="col-md-4">' +
-        '        <div class="panel panel-default">' +
-        '            <div class="panel-heading"><i class="fa fa-list"></i> List Organisations</div>' +
+        '<div class="row" style="margin: 0 0 40px;">' +
+        '    <div class="col-md-4" style="padding: 0;">' +
+        '        <div class="panel panel-default" style="margin: 0;">' +
         '            <div class="list-group org-finder-list" style="overflow-y: auto;"></div>' +
         '        </div>' +
         '    </div>' +
-        '    <div class="col-md-8">' +
+        '    <div class="col-md-8" style="padding: 0;">' +
         '        <div class="embed-responsive embed-responsive-16by9">' +
         '            <div class="embed-responsive-item org-finder-map"></div>' +
         '        </div>' +
@@ -207,7 +205,7 @@
 
             var self = this;
             var map = self.map;
-            
+
             if (navigator.geolocation) {
                 flog('[jquery.orgFinder] Geolocation is supported');
                 navigator.geolocation.getCurrentPosition(function (position) {
@@ -296,7 +294,7 @@
                 flog('[jquery.orgFinder] Initialize "Country" select box', cbbCountry, allowedCountries);
                 var optionStr = '';
 
-                optionStr += '<option value="" selected="selected"> - Select Country - </option>';
+                optionStr += '<option value="" selected="selected"> - All Countries - </option>';
                 for (var i = 0; i < allowedCountries.length; i++) {
                     optionStr += '<option value="' + allowedCountries[i].value + '">' + allowedCountries[i].title + '</option>';
                 }
@@ -316,21 +314,23 @@
                 cbbCountry.remove();
             }
 
-            if (formSearch.is('form')) {
-                flog('[jquery.orgFinder] Form search is form tag', formSearch);
-                formSearch.on('submit', function (e) {
-                    e.preventDefault();
+            formSearch.find('.btn-clear-query').on('click', function (e) {
+                e.preventDefault();
 
-                    eventHandler();
-                });
-            } else {
-                flog('[jquery.orgFinder] Form search is not form tag', formSearch);
-                btn.on('click', function (e) {
-                    e.preventDefault();
+                flog('[jquery.orgFinder] Clear all search options');
 
-                    eventHandler();
-                });
-            }
+                txtQ.val('');
+                self.doSearch('');
+                cbbCountry.selectpicker('val', '');
+                cbbOrgType.selectpicker('deselectAll');
+            });
+
+            txtQ.on('keydown', function (e) {
+                if (e.keyCode === 13) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
 
             autocomplete.addListener('place_changed', function () {
                 eventHandler();
