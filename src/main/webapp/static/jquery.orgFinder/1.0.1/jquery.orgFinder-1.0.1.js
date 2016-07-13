@@ -253,9 +253,7 @@
             }
 
             flog('[jquery.orgFinder] Initialize Google Map Autocomplete', txtQ);
-            var autocomplete = self.autocomplete = new google.maps.places.Autocomplete(txtQ.get(0), {
-                types: ['(cities)']
-            });
+            var autocomplete = self.autocomplete = new google.maps.places.Autocomplete(txtQ.get(0));
 
             var eventHandler = function () {
                 var selectedPlace = autocomplete.getPlace();
