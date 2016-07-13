@@ -7,65 +7,40 @@
         display: none;
     }
 </style>
-<div>
-    <div style='position: relative'>
+#set($fromRange = 0)
+#if($params.fromRange)
+#set($fromRange = $formatter.toInteger($params.fromRange))
+#end
 
+#set($toRange = 100)
+#if($params.toRange)
+#set($toRange = $formatter.toInteger($params.toRange))
+#end
 
+#set( $products = $page.searchProducts( $request.params.q, $fromRange, $toRange, 'title', null ) )
+<div id='products-list'>
+    #if( $products.hits.hits.size() == 0 )
+    <b class=''>No products were found matching the critieria</b>
+    #else
+    <div class='row'>
+        #foreach($p in $products.hits.hits )
+        #set($bg = "")
+        #if( $p.fields.primaryImageId.value )
+        #set($bg = "url($p.fields.product.value/$p.fields.primaryImageId.value/alt-300-300.png)")
+        #end
 
-    </div>
-
-    <hr/>
-    <div class="row">
-        #foreach($cat in $page.children.ofType.category)
-        <div class="col-sm-3">
-            #set($bg = "")
-            #if( $cat.imageHref )
-            #set($bg = "url($cat.imageHref/alt-300-300.png)")
-            #end
-            <a class="product-tile product-tile2" href="$cat.href">
+        <div class="col-md-2 product-item">
+            <a class="product-tile" href="$p.fields.product.value">
                 <div style="background-image: $bg;" class="bg-img"></div>
                 <div class="product-tile-inner">
-                    <span>$cat.title</span>
+                    <span>$p.fields.title.value</span>
                 </div>
+                <span class="label priceLabel">$p.fields.finalPoints.value points</span>
             </a>
         </div>
         #end
     </div>
-    #set($fromRange = 0)
-    #if($params.fromRange)
-    #set($fromRange = $formatter.toInteger($params.fromRange))
     #end
-
-    #set($toRange = 100)
-    #if($params.toRange)
-    #set($toRange = $formatter.toInteger($params.toRange))
-    #end
-
-    #set( $products = $page.searchProducts( $request.params.q, $fromRange, $toRange, 'title', null ) )
-    <div id='products-list'>
-        #if( $products.hits.hits.size() == 0 )
-        <b class=''>No products were found matching the critieria</b>
-        #else
-        <div class='row'>
-            #foreach($p in $products.hits.hits )
-            #set($bg = "")
-            #if( $p.fields.primaryImageId.value )
-            #set($bg = "url($p.fields.product.value/$p.fields.primaryImageId.value/alt-300-300.png)")
-            #end
-
-            <div class="col-md-2 product-item">
-                <a class="product-tile" href="$p.fields.product.value">
-                    <div style="background-image: $bg;" class="bg-img"></div>
-                    <div class="product-tile-inner">
-                        <span>$p.fields.title.value</span>
-                    </div>
-                    <span class="label priceLabel">$p.fields.finalPoints.value points</span>
-                </a>
-            </div>
-            #end
-        </div>
-        #end
-    </div>
 </div>
 <div id="inifiniteLoader">
     <span class="alert alert-success">
@@ -135,3 +110,6 @@
         });
     }
 </script>
+
+
+
