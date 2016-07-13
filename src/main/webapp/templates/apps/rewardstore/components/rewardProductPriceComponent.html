@@ -1,10 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
-
-</body>
-</html>
+<div class="productPrice">
+    <div id="addToCartSection">
+        <span class="label label-success priceLabel">
+            #set( $opts = $page.selectedParameterOptions )
+            #set( $price = $page.getPurchaseAmount($opts) )
+            #if( $price )
+            $price.amount Points
+            #end
+        </span>
+    </div>
+</div>

@@ -1,10 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
-
-</body>
-</html>
+<div class="productImages">
+    #if($page.variantImageHref)
+    <a href="javascript:void (0)">
+        <img style="width:100%" src="$page.variantImageHref/alt-400-600.png" />
+    </a>
+    #elseif( $page.primaryImageHref )
+    <a href="javascript:void (0)">
+        <img style="width:100%" src="$page.primaryImageHref/alt-400-600.png" />
+    </a>
+    #end
+</div>
