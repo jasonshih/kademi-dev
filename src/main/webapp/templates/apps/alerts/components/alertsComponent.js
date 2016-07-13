@@ -2,16 +2,16 @@
     var KEditor = $.keditor;
     var flog = KEditor.log;
 
-    KEditor.components['pageBody'] = {
+    KEditor.components['alerts'] = {
         settingEnabled: true,
-        settingTitle: 'Page Body Settings',
+        settingTitle: 'Alerts Settings',
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "pageBody" component');
 
             var self = this;
 
             $.ajax({
-                url: '_components/pageBody?settings',
+                url: '_components/alerts?settings',
                 type: 'get',
                 dataType: 'HTML',
                 success: function (resp) {
@@ -20,7 +20,7 @@
             });
         },
         showSettingForm: function (form, component, keditor) {
-            flog('showSettingForm "pageBody" component');
+            flog('showSettingForm "alerts" component');
 
             var self = this;
         }
