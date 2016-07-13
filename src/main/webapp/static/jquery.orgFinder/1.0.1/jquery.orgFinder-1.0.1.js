@@ -11,7 +11,8 @@
  * @option {String} googleAPIKey Google API key
  * @option {String} searchUrl Search URL. Must be link to signup page of a group or /organisations/ (if you use this plugin in Kademi admin console)
  * @option {Array} orgTypes List of organisation types. It's optional
- * @option {String} template Template string for orgFinder. Form search must has 'org-finder-search' class, textbox must be named 'q' and selectbox for organisation types must be named 'orgType'. Items list wrapper must has 'org-finder-list' class. Suggestion list wrapper must has 'org-finder-suggestions' class. Map div must has class 'org-finder-map'
+ * @option {Array} allowedCountries List of countries which will available for searching. It's optional
+ * @option {String} template Template string for orgFinder. Form search must has 'org-finder-search' class, textbox must be named 'q' and selectbox for organisation types must be named 'orgType'. Items list wrapper must has 'org-finder-list' class. Map div must has class 'org-finder-map'
  * @option {Function} onReady Callback will be called when orgFinder is ready. Arguments: 'formSearch', 'itemsWrapper', 'mapDiv'
  * @option {Function} onSelect Callback will be called when click on marker on map or item in org list panel. Arguments: 'orgData', 'item', 'marker', 'infoWindow'
  * @option {Function} onSearch Callback will be called when search a keyword. Arguments: 'query'
@@ -19,9 +20,7 @@
  * @option {Function} onSearched Callback will be called after searching a keyword. Arguments: 'query', 'resp'
  * @option {Function} renderItemContent Method for rendering content of an item in organization list. If you don't want to show this organization, just return null or empty. Arguments: 'orgData'
  * @option {Function} renderMarkerContent Method for rendering content for InfoWindow of a marker on Google Map. If you don't want to show this organization, just return null or empty. Arguments: 'orgData'
- * @option {Function} renderSuggestionContent Method for rendering content for suggestions list. If you don't want to show this organization, just return null or empty. Arguments: 'data'
  * @option {String} emptyItemText Text will be showed when there is no result in organization list
- * @option {String} emptySuggestionText Text will be showed when there is no suggestion in suggestions list
  */
 
 (function ($) {
@@ -46,15 +45,15 @@
         googleAPIKey: null,
         searchUrl: null,
         orgTypes: null,
+        allowedCountries: null,
         maxResults: 1000,
-        template:
-        '<form role="form" class="form-horizontal form-search org-finder-search" action="" style="margin-bottom: 15px;">' +
+        template: '<form role="form" class="form-horizontal form-search org-finder-search" action="" style="margin-bottom: 15px;">' +
         '    <div class="input-group">' +
         '        <div class="clearfix dropdown">' +
         '            <input type="text" name="q" class="form-control" placeholder="Enter your address" id="q" value="" autocomplete="off" />' +
-        '            <div class="dropdown-menu org-finder-suggestions" style="width: 100%;"></div>' +
         '        </div>' +
         '        <span class="input-group-btn">' +
+        '            <select name="country" class="selectpicker"></select>' +
         '            <select name="orgType" class="selectpicker"></select>' +
         '            <button class="btn btn-default" type="submit">Search</button>' +
         '        </span>' +
@@ -130,20 +129,12 @@
         renderMarkerContent: function (orgData) {
             return '<div><h3>' + orgData.title + '</h3></div>';
         },
-        renderSuggestionContent: function (data) {
-            var suggestionContent = data.formatted_address;
-
-            return '<li><a>' + suggestionContent + '</a></li>';
-        },
-        emptyItemText: '<div class="list-group-item text-muted">No result</li>',
-        emptySuggestionText: '<li class="disabled"><a>No suggestion</a></li>'
+        emptyItemText: '<div class="list-group-item text-muted">No result</li>'
     };
 
     var SEARCH_SELECTOR = '.org-finder-search';
     var LIST_SELECTOR = '.org-finder-list';
     var MAP_SELECTOR = '.org-finder-map';
-    var SUGGESTIONS_SELECTOR = '.org-finder-suggestions';
-    var SUGGESTION_SELECTOR = '.org-finder-suggestion';
 
     function Finder(container, options) {
         this.options = options;
@@ -168,8 +159,6 @@
             self.formSearch = container.find(SEARCH_SELECTOR);
             self.itemsWrapper = container.find(LIST_SELECTOR);
             self.mapDiv = container.find(MAP_SELECTOR);
-            self.suggestionWrapper = container.find(SUGGESTIONS_SELECTOR);
-
             self.initMap();
         },
 
@@ -195,6 +184,7 @@
                 }
 
                 self.map = new google.maps.Map(self.mapDiv.get(0), mapOptions);
+                self.initCurrentLocation();
                 self.initFormSearch();
 
                 if (typeof options.onReady === 'function') {
@@ -212,47 +202,78 @@
             }
         },
 
+        initCurrentLocation: function () {
+            flog('[jquery.orgFinder] initCurrentLocation');
+
+            var self = this;
+            var map = self.map;
+            
+            if (navigator.geolocation) {
+                flog('[jquery.orgFinder] Geolocation is supported');
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    var lat = position.coords.latitude;
+                    var lng = position.coords.longitude;
+
+                    flog('[jquery.orgFinder] Add market for current location of user', lat, lng);
+                    var latlng = new google.maps.LatLng(lat, lng);
+                    var marker = new google.maps.Marker({
+                        position: latlng,
+                        title: 'Your location',
+                        icon: 'https://maps.gstatic.com/intl/en_us/mapfiles/marker_yellow.png'
+                    });
+                    marker.setMap(map);
+                    var infoWindow = new google.maps.InfoWindow({
+                        content: '<i class="fa fa-marker"></i> Your location',
+                        disableAutoPan: true
+                    });
+                    infoWindow.open(map, marker);
+                });
+            } else {
+                flog('[jquery.orgFinder] Geolocation is not supported');
+            }
+        },
+
         initFormSearch: function () {
             flog('[jquery.orgFinder] initFormSearch');
 
             var self = this;
             var options = self.options;
             var formSearch = self.formSearch;
-            var suggestionWrapper = self.suggestionWrapper;
-            var map = self.map;
+            var cbbCountry = formSearch.find('[name=country]');
             var cbbOrgType = formSearch.find('[name=orgType]');
             var txtQ = formSearch.find('[name=q]');
             var btn = formSearch.find(':button');
             var initQuery = self.options.initQuery;
-            var lastQuery = null;
-            var lastOrgTypes = null;
             var orgTypes = options.orgTypes;
+            var allowedCountries = options.allowedCountries;
 
             if (initQuery !== null && initQuery !== undefined && initQuery.trim() !== '') {
+                flog('[jquery.orgFinder] Init query is: ' + initQuery);
                 txtQ.val(initQuery);
             }
 
+            flog('[jquery.orgFinder] Initialize Google Map Autocomplete', txtQ);
+            var autocomplete = self.autocomplete = new google.maps.places.Autocomplete(txtQ.get(0));
+
             var eventHandler = function () {
-                var lat = txtQ.attr('data-lat');
-                var lng = txtQ.attr('data-lng');
-                var query = (txtQ.val() || '').trim();
-                query = query === '' ? ' ' : query;
-                flog('[jquery.orgFinder] Query: "' + query + '", last query: "' + lastQuery + '"');
+                var selectedPlace = autocomplete.getPlace();
+                flog('[jquery.orgFinder] Selected place', selectedPlace);
 
-                var orgTypes = cbbOrgType.val();
-                flog('[jquery.orgFinder] OrgTypes: "' + orgTypes + '", last orgTypes: "' + lastOrgTypes + '"');
+                if (selectedPlace && selectedPlace.place_id) {
+                    var lat = selectedPlace.geometry.location.lat();
+                    var lng = selectedPlace.geometry.location.lng();
+                    var query = (txtQ.val() || '').trim();
+                    query = query === '' ? ' ' : query;
 
-                if ((lat && lng) || (query !== lastQuery || orgTypes !== lastOrgTypes)) {
                     self.clear();
                     self.doSearch(query, lat, lng);
                 } else {
-                    flog('[jquery.orgFinder] Query is already searched. Do nothing');
+                    flog('[jquery.orgFinder] No place is selected!');
                 }
-                lastQuery = query;
-                lastOrgTypes = orgTypes;
             };
 
             if (orgTypes && $.isArray(orgTypes) && orgTypes.length > 0) {
+                flog('[jquery.orgFinder] Initialize "Types" select box', cbbOrgType, orgTypes);
                 var optionStr = '';
 
                 for (var i = 0; i < orgTypes.length; i++) {
@@ -263,34 +284,47 @@
                 if (!cbbOrgType.attr('title')) {
                     cbbOrgType.attr('title', ' - Select Types - ')
                 }
-                cbbOrgType.on('change', function () {
+                cbbOrgType.selectpicker().on('change', function () {
                     eventHandler();
                 });
+            } else {
+                flog('[jquery.orgFinder] Remove "Types" select box', cbbOrgType, orgTypes);
+                cbbOrgType.remove();
             }
 
-            suggestionWrapper.css('display', 'none').on('click', SUGGESTION_SELECTOR, function (e) {
-                e.preventDefault();
+            if (allowedCountries && $.isArray(allowedCountries) && allowedCountries.length > 0) {
+                flog('[jquery.orgFinder] Initialize "Country" select box', cbbCountry, allowedCountries);
+                var optionStr = '';
 
-                var clicked = $(this);
-                var query = clicked.text().trim();
-                var lat = clicked.attr('data-lat');
-                var lng = clicked.attr('data-lng');
+                optionStr += '<option value="" selected="selected"> - Select Country - </option>';
+                for (var i = 0; i < allowedCountries.length; i++) {
+                    optionStr += '<option value="' + allowedCountries[i].value + '">' + allowedCountries[i].title + '</option>';
+                }
 
-                txtQ.val(query).attr({
-                    'data-lat': lat,
-                    'data-lng': lng
+                cbbCountry.html(optionStr).addClass('selectpicker');
+                if (!cbbCountry.attr('title')) {
+                    cbbCountry.attr('title', ' - Select Country - ')
+                }
+                cbbCountry.selectpicker().on('change', function () {
+                    autocomplete.setComponentRestrictions(this.value ? {
+                        country: this.value
+                    } : []);
+                    txtQ.val('');
                 });
-                eventHandler();
-                suggestionWrapper.css('display', 'none');
-            });
+            } else {
+                flog('[jquery.orgFinder] Remove "Country" select box', cbbCountry, allowedCountries);
+                cbbCountry.remove();
+            }
 
             if (formSearch.is('form')) {
+                flog('[jquery.orgFinder] Form search is form tag', formSearch);
                 formSearch.on('submit', function (e) {
                     e.preventDefault();
 
                     eventHandler();
                 });
             } else {
+                flog('[jquery.orgFinder] Form search is not form tag', formSearch);
                 btn.on('click', function (e) {
                     e.preventDefault();
 
@@ -298,66 +332,8 @@
                 });
             }
 
-            $(window).on('keydown', function (e) {
-                if (e.keyCode === 27) {
-                    e.preventDefault();
-                    suggestionWrapper.css('display', 'none');
-                }
-            });
-
-            var timer = null;
-            txtQ.on('keydown', function (e) {
-                if (e.keyCode === 13) {
-                    e.preventDefault();
-                    eventHandler();
-                } else if (e.keyCode === 27) {
-                    e.preventDefault();
-                    suggestionWrapper.css('display', 'none');
-                } else {
-                    clearTimeout(timer);
-                    timer = setTimeout(function () {
-                        txtQ.removeAttr('data-lat');
-                        txtQ.removeAttr('data-lng');
-
-                        var q = txtQ.val() || '';
-                        q = q.trim();
-
-                        if (q !== '') {
-                            flog('[jquery.orgFinder] Searching using GoogleMap PlacesService...');
-                            var service = new google.maps.places.PlacesService(map);
-                            service.textSearch({
-                                query: q
-                            }, function (results, status) {
-                                flog('[jquery.orgFinder] Get results from GoogleMap PlacesService', results, status);
-
-                                if (status === google.maps.places.PlacesServiceStatus.OK) {
-                                    if (typeof options.renderSuggestionContent !== 'function') {
-                                        $.error('[jquery.orgFinder] renderSuggestionContent is not function. Please correct it!');
-                                    }
-
-                                    suggestionWrapper.html('');
-                                    for (var i = 0; i < results.length; i++) {
-                                        var suggestionContent = options.renderSuggestionContent(results[i]) || '';
-                                        suggestionContent = suggestionContent.trim();
-
-                                        if (suggestionContent !== '') {
-                                            $(suggestionContent).addClass(SUGGESTION_SELECTOR.replace('.', '')).attr({
-                                                'data-lat': results[i].geometry.location.lat,
-                                                'data-lng': results[i].geometry.location.lng
-                                            }).appendTo(suggestionWrapper);
-                                        }
-                                    }
-                                } else {
-                                    suggestionWrapper.html(options.emptySuggestionText);
-                                }
-
-                                suggestionWrapper.css('display', 'block');
-                            });
-                        } else {
-                            suggestionWrapper.css('display', 'none');
-                        }
-                    }, 150);
-                }
+            autocomplete.addListener('place_changed', function () {
+                eventHandler();
             });
         },
 
@@ -389,8 +365,6 @@
             var self = this;
             var options = self.options;
             var map = self.map;
-
-            self.suggestionWrapper.css('display', 'none');
 
             if (typeof options.onSearch === 'function') {
                 options.onSearch.call(self, query);
@@ -430,8 +404,26 @@
 
                     self.clear();
 
+                    if (lat && lng) {
+                        flog('[jquery.orgFinder] Add market for selected place', lat, lng);
+                        var latlng = new google.maps.LatLng(lat, lng);
+                        var marker = new google.maps.Marker({
+                            position: latlng,
+                            title: query,
+                            icon: 'https://maps.gstatic.com/intl/en_us/mapfiles/marker_green.png'
+                        });
+                        marker.setMap(map);
+                        var infoWindow = new google.maps.InfoWindow({
+                            content: query,
+                            disableAutoPan: true
+                        });
+                        infoWindow.open(map, marker);
+                        self.markers.push(marker);
+                        self.infoWindows.push(infoWindow);
+                    }
+
                     if (resp && resp.status && resp.data && resp.data[0]) {
-                        self.generateData(resp.data);
+                        self.generateData(resp.data, lat, lng);
                     } else {
                         flog('[jquery.orgFinder] No organisation match');
                         self.itemsWrapper.html(options.emptyItemText);
@@ -453,14 +445,18 @@
             });
         },
 
-        generateData: function (data) {
-            flog('[jquery.orgFinder] generateData', data);
+        generateData: function (data, lat, lng) {
+            flog('[jquery.orgFinder] generateData', data, lat, lng);
 
             var self = this;
-            var options = self.options;
             var map = self.map;
             var lats = [];
             var lngs = [];
+
+            if (lat && lng) {
+                lats.push(lat);
+                lngs.push(lng);
+            }
 
             for (var i = 0; i < data.length; i++) {
                 self.createDataItem(data[i]);
@@ -468,21 +464,16 @@
                 lngs.push(data[i].lng);
             }
 
-            if (data.length === 1) {
-                map.setCenter(new google.maps.LatLng(data[0].lat, data[0].lng));
-                map.setZoom(options.initZoomLevel);
-            } else {
-                // Calculate center and zoom level for map when show all markers
-                var minLat = Math.min.apply(Math, lats);
-                var maxLat = Math.max.apply(Math, lats);
-                var minLng = Math.min.apply(Math, lngs);
-                var maxLng = Math.max.apply(Math, lngs);
+            // Calculate center and zoom level for map when show all markers
+            var minLat = Math.min.apply(Math, lats);
+            var maxLat = Math.max.apply(Math, lats);
+            var minLng = Math.min.apply(Math, lngs);
+            var maxLng = Math.max.apply(Math, lngs);
 
-                map.fitBounds(new google.maps.LatLngBounds(
-                    new google.maps.LatLng(minLat, minLng),
-                    new google.maps.LatLng(maxLat, maxLng)
-                ));
-            }
+            map.fitBounds(new google.maps.LatLngBounds(
+                new google.maps.LatLng(minLat, minLng),
+                new google.maps.LatLng(maxLat, maxLng)
+            ));
         },
 
         createDataItem: function (markerData) {
