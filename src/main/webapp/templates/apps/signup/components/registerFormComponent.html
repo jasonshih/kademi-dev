@@ -1,6 +1,14 @@
+#set ($displayPwd = $formatter.toBool($displayPwd))
+#set ($showOrgs = $formatter.toBool($showOrgs))
+#set ($showOptins = $formatter.toBool($showOptins))
+#set ($successTitle = $formatter.toString($successTitle))
+#set ($successBody = $formatter.toString($successBody))
+
 <h1>Registration</h1>
 #set($path = "/content/signup/" + $folder.name + ".html")
 $!folder.find($path).getParam("intro")
+
+<form data-eway-encrypt-key="$!page.find('/eway').encryptionKey" style="display: none;"></form>
 
 <form method="post" id="registerForm" action="$page.name" class="form-horizontal">
     <div class="row">
@@ -25,7 +33,6 @@ $!folder.find($path).getParam("intro")
                     <input class="required form-control" type="password" name="password" id="password" placeholder="Your preferred password" />
                 </div>
             </div>
-
             <div class="control-group form-group">
                 <label class="control-label col-md-3" for="confirmPassword">Confirm</label>
                 <div class="controls col-md-9">
@@ -43,7 +50,7 @@ $!folder.find($path).getParam("intro")
             </div>
             #end
 
-            #if( $page.hasOrgs && $showOrgs)
+            #if( $page.hasOrgs )
             #if( $groupRegoPage.regoOrgType )
             #set($orgType = $groupRegoPage.regoOrgType)
             #else
@@ -59,7 +66,7 @@ $!folder.find($path).getParam("intro")
             </div>
             #end
 
-            #if( $page.hasOptins() && $showOptins)
+            #if( $page.hasOptins() )
             <div class="control-group form-group">
                 <div class="controls col-md-9 col-md-offset-3">
                     #foreach($optin in $page.optins)
@@ -71,6 +78,18 @@ $!folder.find($path).getParam("intro")
 
                 </div>
             </div>
+            #end
+
+            #set($product = $page.relatedProduct)
+            #if( $product )
+            #if( $page.paymentProvider )
+            <input type="hidden" name="paymentProvider" value="$page.paymentProvider.instanceId"/>
+            <hr/>
+            <h2>Payment details</h2>
+            <div class="payment-form">
+                $page.paymentProvider.memberPaymentForm
+            </div>
+            #end
             #end
 
             <div class="control-group form-group">
@@ -85,7 +104,7 @@ $!folder.find($path).getParam("intro")
             <br class="clearfix" />
         </div>
         <div class="col-md-3">
-            #portlets("socialLoginPage")
+            ##portlets("socialLoginPage")
         </div>
     </div>
 </form>

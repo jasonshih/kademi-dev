@@ -5,91 +5,69 @@
     var KEditor = $.keditor;
     var flog = KEditor.log;
 
-    KEditor.components['signupForm'] = {
+    KEditor.components['registerForm'] = {
         settingEnabled: true,
 
         settingTitle: 'Signup Form Settings',
 
         initSettingForm: function (form, keditor) {
-            flog('initSettingForm "signupForm" component', form, keditor);
+            flog('initSettingForm "registerForm" component', form, keditor);
 
             $.ajax({
-                url: '_components/signupForm?settings',
+                url: '_components/registerForm?settings',
                 type: 'get',
                 dataType: 'html',
                 success: function (resp) {
                     form.html(resp);
 
-                    form.find('.select-store').on('change', function () {
+                    form.find('[name=displayPwd]').on('click', function(e){
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-
-                        component.attr('data-store', this.value);
+                        component.attr('data-display-pwd', this.value === 'true');
                         keditor.initDynamicContent(dynamicElement);
                     });
 
-                    form.find('.select-category').on('change', function () {
+                    form.find('[name=showOptins]').on('click', function(e){
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-
-                        component.attr('data-category', this.value);
+                        component.attr('data-show-optins', this.value === 'true');
                         keditor.initDynamicContent(dynamicElement);
                     });
 
-                    form.find('.select-layout').on('change', function () {
+                    form.find('[name=showOrgs]').on('click', function(e){
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-
-                        component.attr('data-layout', this.value);
-                        keditor.initDynamicContent(dynamicElement);
-
-                        form.find('.items-per-row-wrapper').css('display', this.value === 'grid' ? 'block' : 'none');
-                    });
-
-                    form.find('.number-of-products').on('change', function () {
-                        var number = this.value;
-
-                        if (isNaN(number) || +number <= 0) {
-                            number = 1;
-                            this.value = number;
-                        }
-
-                        var component = keditor.getSettingComponent();
-                        var dynamicElement = component.find('[data-dynamic-href]');
-
-                        component.attr('data-number-of-products', number);
+                        component.attr('data-show-orgs', this.value === 'true');
                         keditor.initDynamicContent(dynamicElement);
                     });
 
-                    form.find('.items-per-row').on('change', function () {
-                        var number = this.value;
-
-                        if (isNaN(number) || +number <= 0) {
-                            number = 1;
-                            this.value = number;
-                        }
-
+                    form.find('[name=successTitle]').on('change', function(e){
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-
-                        component.attr('data-items-per-row', number);
+                        component.attr('data-success-title', this.value);
                         keditor.initDynamicContent(dynamicElement);
                     });
+
+                    form.find('[name=successBody]').on('change', function(e){
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        component.attr('data-success-body', this.value);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+
                 }
             });
         },
 
         showSettingForm: function (form, component, keditor) {
-            flog('showSettingForm "signupForm" component', form, component, keditor);
+            flog('showSettingForm "registerForm" component', form, component, keditor);
 
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
-            form.find('.select-store').val(dataAttributes['data-store']);
-            form.find('.select-category').val(dataAttributes['data-category']);
-            form.find('.select-layout').val(dataAttributes['data-layout']);
-            form.find('.number-of-products').val(dataAttributes['data-number-of-products']);
-            form.find('.items-per-row').val(dataAttributes['data-items-per-row']);
-            form.find('.items-per-row-wrapper').css('display', dataAttributes['data-layout'] === 'grid' ? 'block' : 'none');
-
+            form.find('[name=displayPwd][value='+dataAttributes['data-display-pwd']+']').prop('checked', true);
+            form.find('[name=showOptins][value='+dataAttributes['data-show-optins']+']').prop('checked', true);
+            form.find('[name=showOrgs][value='+dataAttributes['data-show-orgs']+']').prop('checked', true);
+            form.find('[name=successTitle]').val(dataAttributes['data-success-title']);
+            form.find('[name=successBody]').val(dataAttributes['data-success-body']);
         }
     };
 
