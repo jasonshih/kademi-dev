@@ -25,17 +25,10 @@
                 $('#org-map').orgFinder({
                     searchUrl: '/orgsLocator/',
                     googleAPIKey: 'AIzaSyDS53FPtVGJPvZvrzh2sLcfPUQYS3gsh0c',
-                    initQuery: '$!params.q',
                     initLatLng: [-33.867, 151.195],
                     initZoomLevel: 15,
                     orgTypes: orgTypes,
-                    onSearch: function (query) {
-                        history.pushState(null, 'Organisations map', window.location.pathname + '?q=' + encodeURIComponent(query.trim()));
-                    },
                     onReady: function (formSearch, itemsWrapper, mapDiv) {
-                        var orgFinder = this;
-                        orgFinder.doSearch('$!params.q');
-
                         win.on('resize', function () {
                             var mapWrapper = mapDiv.parent();
                             var winWidth = win.width();
