@@ -1,0 +1,28 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Add To Group Action</title>
+    </head>
+    <body>
+        <form method="POST" action="$page.path" class="form-horizontal">
+            <button class="btn btn-success" type="submit">Save</button>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-4" for="groupName">Group</label>
+                        <div class="col-md-8">
+                            <select name="groupName" id="groupName" class="form-control required-if-shown">
+                                $formatter.option("", "[Please select]", $page.groupName)
+                                #foreach($group in $rootFolder.groups)
+                                $formatter.option($group.name, $group.name, $page.groupName)
+                                #end
+                            </select>
+                        </div>
+                    </div>                    
+                </div>
+                <div class="col-md-6">
+                    
+                </div>
+            </div>
+            
+    </body>
+</html>
