@@ -1,16 +1,27 @@
 #set ($displayPwd = $formatter.toBool($displayPwd))
 #set ($showOrgs = $formatter.toBool($showOrgs))
 #set ($showOptins = $formatter.toBool($showOptins))
+#set ($showXtraFields = $formatter.toBool($showXtraFields))
 #set ($successTitle = $formatter.toString($successTitle))
 #set ($successBody = $formatter.toString($successBody))
+#set ($formUrl = $page.href)
+#set ($pageOptins = $page.optins)
+#set ($pageExtraFields = $page.extraFields)
+
+#if ($formatter.isNotNull($group))
+#set ($formUrl = "/$group/signup")
+#set ($groupSignupPage = $page.find($formUrl))
+#set ($pageOptins = $groupSignupPage.optins)
+#set ($pageExtraFields = $groupSignupPage.extraFields)
+#set ($pageRelatedProduct = $groupSignupPage.relatedProduct)
+#set ($pagePaymentProvider = $groupSignupPage.paymentProvider)
+#end
 
 <h1>Registration</h1>
 #set($path = "/content/signup/" + $folder.name + ".html")
 $!folder.find($path).getParam("intro")
-
 <form data-eway-encrypt-key="$!page.find('/eway').encryptionKey" style="display: none;"></form>
-
-<form method="post" id="registerForm" action="$page.name" class="form-horizontal">
+<form method="post" id="registerForm" action="$formUrl" class="form-horizontal">
     <div class="row">
         <div class="col-md-9">
             <h2>Create a new account</h2>
@@ -41,7 +52,8 @@ $!folder.find($path).getParam("intro")
             </div>
             #end
 
-            #foreach($field in $page.extraFields)
+            #if ($showXtraFields)
+            #foreach($field in $pageExtraFields)
             <div class="control-group form-group">
                 <label class="control-label col-md-3" for="confirmPassword">$field.text</label>
                 <div class="controls col-md-9">
@@ -49,8 +61,9 @@ $!folder.find($path).getParam("intro")
                 </div>
             </div>
             #end
+            #end
 
-            #if( $page.hasOrgs )
+            #if( ($page.hasOrgs || $groupSignupPage.hasOrgs) && $showOrgs)
             #if( $groupRegoPage.regoOrgType )
             #set($orgType = $groupRegoPage.regoOrgType)
             #else
@@ -66,10 +79,10 @@ $!folder.find($path).getParam("intro")
             </div>
             #end
 
-            #if( $page.hasOptins() )
+            #if( ($page.hasOptins() || $groupSignupPage.hasOptins()) && $showOptins)
             <div class="control-group form-group">
                 <div class="controls col-md-9 col-md-offset-3">
-                    #foreach($optin in $page.optins)
+                    #foreach($optin in $pageOptins)
                     <label for="optins_${optin.optinGroup.name}">
                         <input type="checkbox" name="optins" value="$optin.optinGroup.name" id="optins_${optin.optinGroup.name}" />
                         $optin.message
@@ -80,14 +93,14 @@ $!folder.find($path).getParam("intro")
             </div>
             #end
 
-            #set($product = $page.relatedProduct)
+            #set($product = $pageRelatedProduct)
             #if( $product )
-            #if( $page.paymentProvider )
+            #if( $pagePaymentProvider )
             <input type="hidden" name="paymentProvider" value="$page.paymentProvider.instanceId"/>
             <hr/>
             <h2>Payment details</h2>
             <div class="payment-form">
-                $page.paymentProvider.memberPaymentForm
+                $pagePaymentProvider.memberPaymentForm
             </div>
             #end
             #end

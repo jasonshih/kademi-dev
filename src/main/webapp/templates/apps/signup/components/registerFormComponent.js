@@ -41,6 +41,13 @@
                         keditor.initDynamicContent(dynamicElement);
                     });
 
+                    form.find('[name=showXtraFields]').on('click', function(e){
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        component.attr('data-show-xtra-fields', this.value === 'true');
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+
                     form.find('[name=successTitle]').on('change', function(e){
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
@@ -55,19 +62,27 @@
                         keditor.initDynamicContent(dynamicElement);
                     });
 
+                    form.find('[name=group]').on('change', function(e){
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        component.attr('data-group', this.value);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+
                 }
             });
         },
 
         showSettingForm: function (form, component, keditor) {
             flog('showSettingForm "registerForm" component', form, component, keditor);
-
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             form.find('[name=displayPwd][value='+dataAttributes['data-display-pwd']+']').prop('checked', true);
             form.find('[name=showOptins][value='+dataAttributes['data-show-optins']+']').prop('checked', true);
             form.find('[name=showOrgs][value='+dataAttributes['data-show-orgs']+']').prop('checked', true);
+            form.find('[name=showXtraFields][value='+dataAttributes['data-show-xtra-fields']+']').prop('checked', true);
             form.find('[name=successTitle]').val(dataAttributes['data-success-title']);
             form.find('[name=successBody]').val(dataAttributes['data-success-body']);
+            form.find('[name=group]').val(dataAttributes['data-group']);
         }
     };
 
