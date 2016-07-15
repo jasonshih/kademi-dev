@@ -44,7 +44,7 @@ jsPlumb.ready(function () {
     // setup some defaults for jsPlumb.
     var instance = jsPlumb.getInstance({
         Endpoint: ["Dot", {radius: 2}],
-        Connector: "StateMachine",
+        Connector: ["Flowchart", { cornerRadius: 5 } ],
         HoverPaintStyle: {strokeStyle: "#1e8151", lineWidth: 2},
         ConnectionOverlays: [
             ["Arrow", {
