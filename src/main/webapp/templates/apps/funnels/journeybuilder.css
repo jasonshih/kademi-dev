@@ -1,6 +1,6 @@
 .demo {
     /* for IE10+ touch devices */
-    touch-action:none;
+    touch-action: none;
 }
 
 #builder {
@@ -14,15 +14,15 @@
 #paper-wrapper {
     padding: 15px;
     margin: 0 199px 15px 0;
-}
-
-#paper{
-    height: 600px;
-    position: relative;
     overflow: auto;
 }
 
-#builder .right-panel{
+#paper {
+    height: 600px;
+    position: relative;
+}
+
+#builder .right-panel {
     position: absolute;
     right: 0;
     top: 0;
@@ -30,11 +30,11 @@
     z-index: 10;
 }
 
-#builder .right-panel .list-group{
+#builder .right-panel .list-group {
     margin-bottom: 0;
 }
 
-#builder .right-panel li{
+#builder .right-panel li {
     cursor: move;
 
 }
@@ -66,26 +66,28 @@
     /*color: white;*/
 }
 
-.w.begin{
+.w.begin {
     /*background: #2e6f9a;*/
     /*color: #fff;*/
 }
 
-.w .inner{
+.w .inner {
     margin-top: 9px;
 }
-.w .title{
+
+.w .title {
     text-align: left;
     border-radius: 8px 8px 0 0;
     padding: 5px;
     background-color: #f5f5f5;
     border-color: #ddd;
 }
-.w.action .inner{
+
+.w.action .inner {
     text-align: center;
 }
 
-.w .title .btnNodeSetting{
+.w .title .btnNodeSetting {
     position: absolute;
     top: 5px;
     right: 5px;
@@ -112,7 +114,7 @@
     cursor: pointer;
 }
 
-.ep, .ep-basic{
+.ep, .ep-basic {
     position: absolute;
     bottom: 3px;
     left: 3px;
@@ -126,24 +128,29 @@
     -moz-transition: -moz-box-shadow 0.25s ease-in;
     transition: box-shadow 0.25s ease-in;
 }
-.ep.ep-timeout{
+
+.ep.ep-timeout {
     bottom: 3px;
     right: 3px;
     left: inherit;
     background-color: #e5910f;
 }
-.ep.ep-green{
+
+.ep.ep-green {
     background-color: green;
 }
-.ep.ep-transition{
+
+.ep.ep-transition {
     background-color: blue;
 }
-.ep.ep-red{
+
+.ep.ep-red {
     bottom: 3px;
     right: 3px;
     left: inherit;
     background-color: red;
 }
+
 .ep:hover {
     box-shadow: 0 0 6px black;
 }
@@ -182,9 +189,11 @@
     border: 2px solid orange;
 }
 
-path, .jsplumb-endpoint { cursor:pointer; }
+path, .jsplumb-endpoint {
+    cursor: pointer;
+}
 
-.transitionItem{
+.transitionItem {
     padding: 0 15px 0 20px;
 }
 
@@ -205,9 +214,11 @@ path, .jsplumb-endpoint { cursor:pointer; }
     transition: all 0.3s;
     font: 14px/1.42857143 "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
+
 #keditor-sidebar:hover {
     opacity: 1;
 }
+
 #keditor-sidebar-toggler {
     position: absolute;
     top: 100px;
@@ -223,10 +234,12 @@ path, .jsplumb-endpoint { cursor:pointer; }
     border-radius: 3px 0 0 3px;
     color: #666;
 }
+
 #keditor-sidebar-toggler > i.fa {
     line-height: inherit;
 }
-.buttonX{
+
+.buttonX {
     color: #f00 !important;
     background: #fff;
     display: block;
@@ -238,12 +251,13 @@ path, .jsplumb-endpoint { cursor:pointer; }
     border: 1px solid red;
 }
 
-.nodeTitle{
+.nodeTitle {
     cursor: pointer;
 }
+
 /*.nodeTitle .fa-pencil{*/
-    /*display: none;*/
+/*display: none;*/
 /*}*/
 /*.nodeTitle:hover .fa-pencil{*/
-    /*display: inline;*/
+/*display: inline;*/
 /*}*/

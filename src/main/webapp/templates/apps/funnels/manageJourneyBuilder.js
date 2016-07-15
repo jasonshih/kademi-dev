@@ -246,7 +246,7 @@ jsPlumb.ready(function () {
     function initNode(el, type) {
 
         // initialise draggable elements.
-        instance.draggable(el, {containment: true});
+        instance.draggable(el, {containment: false});
 
         if (type === 'goal') {
             instance.makeSource(el, {
