@@ -2,13 +2,14 @@
     #set( $height = 200 )
 #end
 
-<div class="panel panel-default">
+#set ($queryTableId = "query-component-" + $formatter.randomGuid)
+
+<div class="panel panel-default panel-query-table">
     <div class="panel-heading">
         <i class="fa fa-table"></i> Query Table
         #set( $queryBean = $applications.Reporting.getQuery($query) )
         #set( $results = $applications.Reporting.runQuery($queryBean) )
         #set( $fields = $applications.Reporting.getQueryFieldNames($queryBean) )
-
     </div>
     <div class="panel-body">
         <div class="table-responsive" style="height: $!{height}px; min-height: 0;">
@@ -20,7 +21,7 @@
                         #end
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="${queryTableId}">
                     #foreach($row in $results.hits.hits)
                     <tr>
                         #foreach( $field in $fields)
