@@ -45,7 +45,7 @@
 
     <div class="lead">
         $!curCourse.body
-        #if ($curCourse.body)
+        #if (!$curCourse.body)
         <p>No description for current course</p>
         #end
     </div>
