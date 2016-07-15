@@ -5,16 +5,16 @@
     var KEditor = $.keditor;
     var flog = KEditor.log;
 
-    KEditor.components['myLearningModules'] = {
+    KEditor.components['modulePage'] = {
         settingEnabled: true,
 
-        settingTitle: 'My Learning Modules',
+        settingTitle: 'Module Page Settings',
 
         initSettingForm: function (form, keditor) {
-            flog('initSettingForm "myLearningModules" component', form, keditor);
+            flog('initSettingForm "modulePage" component', form, keditor);
 
             $.ajax({
-                url: '_components/myLearningModules?settings',
+                url: '_components/modulePage?settings',
                 type: 'get',
                 dataType: 'html',
                 success: function (resp) {
@@ -31,7 +31,7 @@
         },
 
         showSettingForm: function (form, component, keditor) {
-            flog('showSettingForm "myLearningModules" component', form, component, keditor);
+            flog('showSettingForm "modulePage" component', form, component, keditor);
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             form.find('[name=showCourseBody][value='+dataAttributes['data-show-course-body']+']').prop('checked', true);
         }

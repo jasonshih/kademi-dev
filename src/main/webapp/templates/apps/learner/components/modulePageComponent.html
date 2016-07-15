@@ -1,0 +1,77 @@
+<link rel="stylesheet" media="print" href="/templates/apps/learner/modulePagePrint.css" type="text/css"/>
+<div class=''>
+    <div class="module-container">
+        <div class="contentForm panelBox">
+            <div class="module-labels">
+                #if( $folder.complete )
+                <div class="alert alert-success">
+                    <span class="glyphicon glyphicon-ok"></span>
+                    You have completed this module.
+                </div>
+                #elseif ( $folder.percentComplete )
+
+                #else
+                #if( $folder.completable )
+                #if( $folder.startable )
+
+                #else
+                <acronym title="You have not completed prequisites">
+                    <div class="alert alert-warning">
+                        <span class="glyphicon glyphicon-lock"></span>
+                        This module is locked because you have not completed the pre-requisites:
+                        <ul>
+                            #foreach($module in $folder.unmetPrerequisites)
+                            <li>
+                                <a href="$module.href">$module.title</a>
+                                -
+                                #if( $module.inProgress )
+                                #if( $module.percentComplete == 100 )
+                                on last page
+                                #else
+                                $module.percentComplete
+                                #end
+                                #else
+                                not started
+                                #end
+                            </li>
+                            #end
+                        </ul>
+                    </div>
+                </acronym>
+                #end
+                #else
+                <acronym title="You do not have an enrolement for this module">
+                    <div class="alert alert-warning">
+                        <span class="glyphicon glyphicon-lock"></span>
+                        This module is view-only. You do not have an enrolement for this module.
+                    </div>
+                </acronym>
+                #end
+                #end
+            </div>
+
+            <div class="htmleditor" id="body">
+                $!page.body
+            </div>
+            <script type="text/javascript">
+                progressPage = "$!{formatter.percentEncode($page.parent.currentPage)}";
+            </script>
+        </div>
+        #set($viewMode = !$rc.child.editMode && !$request.params.print )
+        #if($viewMode)
+        #portlets("modulePageToolbar")
+        #end
+    </div>
+    #if($viewMode)
+
+    #portlets("modulePagePagination")
+
+    #end
+
+</div>
+
+#if($viewMode)
+#portlets("userDataModal")
+
+#portlets("modulePageBottom")
+#end
