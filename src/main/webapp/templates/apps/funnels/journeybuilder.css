@@ -3,24 +3,38 @@
     touch-action:none;
 }
 
-#paper{
-    height: 600px;
+#builder {
     position: relative;
 }
 
-#paper .right-panel{
+#builder .list-group-item {
+    border-radius: 0;
+}
+
+#paper-wrapper {
+    padding: 15px;
+    margin: 0 199px 15px 0;
+}
+
+#paper{
+    height: 600px;
+    position: relative;
+    overflow: auto;
+}
+
+#builder .right-panel{
     position: absolute;
     right: 0;
     top: 0;
-    width: 180px;
+    width: 200px;
     z-index: 10;
 }
 
-#paper .right-panel .list-group{
+#builder .right-panel .list-group{
     margin-bottom: 0;
 }
 
-#paper .right-panel li{
+#builder .right-panel li{
     cursor: move;
 
 }
