@@ -5,16 +5,16 @@
     var KEditor = $.keditor;
     var flog = KEditor.log;
 
-    KEditor.components['modulePage'] = {
+    KEditor.components['modulePageComment'] = {
         settingEnabled: true,
 
-        settingTitle: 'Module Page Settings',
+        settingTitle: 'Module Comments',
 
         initSettingForm: function (form, keditor) {
-            flog('initSettingForm "modulePage" component', form, keditor);
+            flog('initSettingForm "modulePageComment" component', form, keditor);
 
             $.ajax({
-                url: '_components/modulePage?settings',
+                url: '_components/modulePageComment?settings',
                 type: 'get',
                 dataType: 'html',
                 success: function (resp) {
@@ -31,7 +31,7 @@
         },
 
         showSettingForm: function (form, component, keditor) {
-            flog('showSettingForm "modulePage" component', form, component, keditor);
+            flog('showSettingForm "modulePageComment" component', form, component, keditor);
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             //form.find('[name=showCourseBody][value='+dataAttributes['data-show-course-body']+']').prop('checked', true);
         }

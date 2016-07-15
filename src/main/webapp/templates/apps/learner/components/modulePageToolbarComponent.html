@@ -1,0 +1,26 @@
+#set($viewMode = !$rc.child.editMode && !$request.params.print )
+#if($viewMode)
+<div class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header pull-right">
+            <a class="print2 btn navbar-btn" href="#" >
+                <span class="icon glyphicon glyphicon-print"></span>
+                <span>Print</span>
+            </a>
+
+            <div class="btn-group pages">
+                <a class="prevBtn btn navbar-btn" href=""  data-pjax-dir="right">
+                    <i class="glyphicon glyphicon-backward"></i>
+                    Previous
+                </a>
+
+                <a class="nextBtn btn navbar-btn" href="" data-pjax-dir="left">
+                    <span>Next</span>
+                    <i class="glyphicon glyphicon-forward"></i>
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+#end

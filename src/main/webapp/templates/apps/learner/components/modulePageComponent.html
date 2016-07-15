@@ -57,21 +57,11 @@
                 progressPage = "$!{formatter.percentEncode($page.parent.currentPage)}";
             </script>
         </div>
-        #set($viewMode = !$rc.child.editMode && !$request.params.print )
-        #if($viewMode)
-        #portlets("modulePageToolbar")
-        #end
     </div>
-    #if($viewMode)
-
-    #portlets("modulePagePagination")
-
-    #end
-
 </div>
 
+#set($viewMode = !$rc.child.editMode && !$request.params.print )
 #if($viewMode)
 #portlets("userDataModal")
-
 #portlets("modulePageBottom")
 #end
