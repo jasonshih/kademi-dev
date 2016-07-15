@@ -334,7 +334,7 @@ function initKEditor(body, fileName) {
             txtPaddingTop.on('change', function () {
                 var paddingValue = this.value || '';
                 var container = keditor.getSettingContainer();
-                var containerContent = container.find('.container-content');
+                var containerContent = container.find('.container-content-wrapper');
 
                 if (paddingValue.trim() === '') {
                     containerContent.css('padding-top', '');
@@ -349,7 +349,7 @@ function initKEditor(body, fileName) {
             txtPaddingBottom.on('change', function () {
                 var paddingValue = this.value || '';
                 var container = keditor.getSettingContainer();
-                var containerContent = container.find('.container-content');
+                var containerContent = container.find('.container-content-wrapper');
 
                 if (paddingValue.trim() === '') {
                     containerContent.css('padding-bottom', '');
@@ -363,7 +363,7 @@ function initKEditor(body, fileName) {
             txtPaddingLeft.on('change', function () {
                 var paddingValue = this.value || '';
                 var container = keditor.getSettingContainer();
-                var containerContent = container.find('.container-content');
+                var containerContent = container.find('.container-content-wrapper');
 
                 if (paddingValue.trim() === '') {
                     containerContent.css('padding-left', '');
@@ -377,7 +377,7 @@ function initKEditor(body, fileName) {
             txtPaddingRight.on('change', function () {
                 var paddingValue = this.value || '';
                 var container = keditor.getSettingContainer();
-                var containerContent = container.find('.container-content');
+                var containerContent = container.find('.container-content-wrapper');
 
                 if (paddingValue.trim() === '') {
                     containerContent.css('padding-right', '');
@@ -391,7 +391,7 @@ function initKEditor(body, fileName) {
 
             form.find('.select-layout').on('change', function (e) {
                 var container = keditor.getSettingContainer();
-                var containerContent = container.find('.container-content');
+                var containerContent = container.find('.container-content-wrapper');
 
                 containerContent.removeClass('container container-fluid');
                 containerContent.addClass(this.value);
@@ -461,7 +461,7 @@ function initKEditor(body, fileName) {
         },
         containerSettingShowFunction: function (form, container, keditor) {
             var containerBg = container.find('.container-bg');
-            var containerContent = container.find('.container-content');
+            var containerContent = container.find('.container-content-wrapper');
             form.find('.parallax-options').html('');
 
             if (containerBg.hasClass('parallax-skrollr')) {
