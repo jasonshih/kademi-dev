@@ -80,6 +80,7 @@
                     ## /websites/test/version1/programs/p1/c1/m1/
                     #set($pUrl = '/websites/' + $ms.website.name + '/' + $ms.website.liveBranch().name  + '/programs/' +  $ms.programCode + '/' + $ms.courseCode + '/' + $ms.moduleCode)
                     #foreach($link in $page.find($pUrl).certificateHrefs($page.userResource))
+                        #set( $fr = false )
                         #set($fr = $page.find($link))
                         #set($fileTitle = "Generate Certificate")
                         #if($fr.is('file'))
