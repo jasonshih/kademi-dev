@@ -11,7 +11,9 @@ var JBApp = {
         'createTaskAction': '<i class="fa fa-tasks" aria-hidden="true"></i> Create Task',
         'createDataSeriesAction': '<i class="fa fa-database" aria-hidden="true"></i> Create Data Series',
         'calendarEventAction': '<i class="fa fa-calendar-check-o" aria-hidden="true"></i> Calendar Event',
-        'setField': '<i class="fa fa-pencil-square-o" aria-hidden="true"></i> Set Field'
+        'setField': '<i class="fa fa-pencil-square-o" aria-hidden="true"></i> Set Field',
+        'addToGroup': '<i class="fa fa-pencil-square-o" aria-hidden="true"></i> Add to group',
+        'removeProfile': '<i class="fa fa-pencil-square-o" aria-hidden="true"></i> Remove profile'
     }
 };
 $(function () {
