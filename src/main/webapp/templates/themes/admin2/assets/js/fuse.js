@@ -708,7 +708,7 @@ function doTopNavSearch(query, suggestionsWrapper, backdrop) {
                             suggestionStr += '    <br /><small class="text-muted">' + firstName + ' ' + surName + '</small>';
                         }
                         suggestionStr += '    </a>';
-                    } else {
+                    } else if( suggestion.fields.entityId ) {
                         var id = suggestion.fields.entityId[0];
                         var orgId = suggestion.fields.orgId[0];
                         var orgTitle = suggestion.fields.title[0];
