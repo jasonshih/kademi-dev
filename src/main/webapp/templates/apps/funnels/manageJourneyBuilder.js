@@ -83,11 +83,11 @@ jsPlumb.ready(function () {
         Container: "paper"
     });
     
-    instance.registerConnectionType("basic", {anchors: ["RightMiddle", "LeftMiddle"], connector: "StateMachine"});
-    instance.registerConnectionType("transition", {anchors: ["RightMiddle", "LeftMiddle"], connector: "StateMachine"});
-    instance.registerConnectionType("decisionDefault", {anchors: ["RightMiddle", "LeftMiddle"], connector: "StateMachine"});
-    instance.registerConnectionType("decisionChoices", {anchors: ["RightMiddle", "LeftMiddle"], connector: "StateMachine"});
-    instance.registerConnectionType("timeout", {anchors: ["RightMiddle", "LeftMiddle"], connector: "StateMachine"});
+    instance.registerConnectionType("basic", {anchors: ["RightMiddle", ["LeftMiddle", "TopCenter", "BottomCenter"]], connector: "StateMachine"});
+    instance.registerConnectionType("transition", {anchors: ["RightMiddle", ["LeftMiddle", "TopCenter", "BottomCenter"]], connector: "StateMachine"});
+    instance.registerConnectionType("decisionDefault", {anchors: ["RightMiddle", ["LeftMiddle", "TopCenter", "BottomCenter"]], connector: "StateMachine"});
+    instance.registerConnectionType("decisionChoices", {anchors: ["RightMiddle", ["LeftMiddle", "TopCenter", "BottomCenter"]], connector: "StateMachine"});
+    instance.registerConnectionType("timeout", {anchors: ["RightMiddle", ["LeftMiddle", "TopCenter", "BottomCenter"]], connector: "StateMachine"});
     
     window.jsp = instance;
     
@@ -243,14 +243,14 @@ jsPlumb.ready(function () {
     // initialise element as connection targets and source.
     //
     function initNode(el, type) {
-        
         // initialise draggable elements.
-        instance.draggable(el, {containment: false});
+        instance.draggable(el, {
+            grid: [10, 10]
+        });
         
         if (type === 'goal') {
             instance.makeSource(el, {
                 filter: ".ep-timeout",
-                anchors: ["RightMiddle", "LeftMiddle"],
                 connectorStyle: {strokeStyle: "#e5910f", lineWidth: 2, outlineColor: "transparent", outlineWidth: 4},
                 connectionType: "timeout",
                 extract: {
@@ -266,7 +266,6 @@ jsPlumb.ready(function () {
             
             instance.makeSource(el, {
                 filter: ".ep-transition",
-                anchors: ["RightMiddle", "LeftMiddle"],
                 connectorStyle: {strokeStyle: "#00f", lineWidth: 2, outlineColor: "transparent", outlineWidth: 4},
                 connectionType: "transition",
                 extract: {
@@ -277,7 +276,6 @@ jsPlumb.ready(function () {
         } else if (type === 'decision') {
             instance.makeSource(el, {
                 filter: ".ep-red",
-                anchors: ["RightMiddle", "LeftMiddle"],
                 connectorStyle: {strokeStyle: "#f00", lineWidth: 2, outlineColor: "transparent", outlineWidth: 4},
                 connectionType: "decisionDefault",
                 extract: {
@@ -293,7 +291,6 @@ jsPlumb.ready(function () {
             
             instance.makeSource(el, {
                 filter: ".ep-green",
-                anchors: ["RightMiddle", "LeftMiddle"],
                 connectorStyle: {strokeStyle: "#0f0", lineWidth: 2, outlineColor: "transparent", outlineWidth: 4},
                 connectionType: "decisionChoices",
                 extract: {
@@ -304,7 +301,6 @@ jsPlumb.ready(function () {
         } else {
             instance.makeSource(el, {
                 filter: ".ep-basic",
-                anchors: ["RightMiddle", "LeftMiddle"],
                 connectorStyle: {strokeStyle: "#e50051", lineWidth: 2, outlineColor: "transparent", outlineWidth: 4},
                 connectionType: "basic",
                 extract: {
@@ -322,7 +318,6 @@ jsPlumb.ready(function () {
         if (type !== 'begin') {
             instance.makeTarget(el, {
                 dropOptions: {hoverClass: "dragHover"},
-                anchors: ["RightMiddle", "LeftMiddle"],
                 allowLoopback: false
             });
         }
@@ -482,6 +477,19 @@ jsPlumb.ready(function () {
 });
 
 function initSideBar() {
+    $('.right-panel .list-group').niceScroll({
+        cursorcolor: '#999',
+        cursorwidth: 6,
+        railpadding: {
+            top: 0,
+            right: 0,
+            left: 0,
+            bottom: 0
+        },
+        cursorborder: '',
+        disablemutationobserver: true
+    });
+
     $('.right-panel .list-group-item').draggable({
         revert: 'invalid',
         tolerance: 'pointer',
