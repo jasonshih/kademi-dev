@@ -141,6 +141,7 @@
                 </button>
                 -->
             </div>
+            <div class="clearfix"></div>
             <div class="table-responsive">
                 <table id="trigger-wrapper" class="table table-striped table-hover">
                     <thead>
@@ -191,10 +192,10 @@
 
         #macro( showTimers )
         #set($timers = $page.timers)
-        <div class="input-group date-range col-md-4">
-            <label for="report-range" class="input-group-addon">Time</label>
-            <input type="text" id="report-range" placeholder="Choose a date range" value="" class="form-control" />
-        </div>
+        <!--<div class="input-group date-range col-md-4">-->
+            <!--<label for="report-range" class="input-group-addon">Time</label>-->
+            <!--<input type="text" id="report-range" placeholder="Choose a date range" value="" class="form-control" />-->
+        <!--</div>-->
         <div class="clearfix"></div>
         <hr/>
         <p class="lead">Showing $timers.size() of $page.rowCount matching results</p>
