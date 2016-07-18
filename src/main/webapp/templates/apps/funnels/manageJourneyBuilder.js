@@ -12,8 +12,8 @@ var JBApp = {
         'createDataSeriesAction': '<i class="fa fa-database" aria-hidden="true"></i> Create Data Series',
         'calendarEventAction': '<i class="fa fa-calendar-check-o" aria-hidden="true"></i> Calendar Event',
         'setField': '<i class="fa fa-pencil-square-o" aria-hidden="true"></i> Set Field',
-        'addToGroup': '<i class="fa fa-pencil-square-o" aria-hidden="true"></i> Add to group',
-        'removeProfile': '<i class="fa fa-pencil-square-o" aria-hidden="true"></i> Remove profile'
+        'addToGroup': '<i class="fa fa-users" aria-hidden="true"></i> Add to group',
+        'removeProfile': '<i class="fa fa-cross" aria-hidden="true"></i> Remove profile'
     }
 };
 $(function () {
@@ -42,7 +42,7 @@ jsPlumb.ready(function () {
         };
     }
     JBApp.availableTriggers = $.parseJSON($("#triggers").text());
-    
+
     // setup some defaults for jsPlumb.
     var instance = jsPlumb.getInstance({
         Endpoint: ["Dot", {radius: 2}],
@@ -82,15 +82,15 @@ jsPlumb.ready(function () {
         ],
         Container: "paper"
     });
-    
+
     instance.registerConnectionType("basic", {anchors: ["RightMiddle", "LeftMiddle"], connector: "StateMachine"});
     instance.registerConnectionType("transition", {anchors: ["RightMiddle", "LeftMiddle"], connector: "StateMachine"});
     instance.registerConnectionType("decisionDefault", {anchors: ["RightMiddle", "LeftMiddle"], connector: "StateMachine"});
     instance.registerConnectionType("decisionChoices", {anchors: ["RightMiddle", "LeftMiddle"], connector: "StateMachine"});
     instance.registerConnectionType("timeout", {anchors: ["RightMiddle", "LeftMiddle"], connector: "StateMachine"});
-    
+
     window.jsp = instance;
-    
+
     // bind a click listener to each connection; the connection is deleted. you could of course
     // just do this: jsPlumb.bind("click", jsPlumb.detach), but I wanted to make it clear what was
     // happening.
@@ -102,29 +102,29 @@ jsPlumb.ready(function () {
                 return false;
             }
         }
-        
+
         var sourceId = c.sourceId;
         var targetId = c.targetId;
         if (c && sourceId && targetId) {
             flog('edit connection ', c);
             var nodes = JBApp.funnel.nodes;
-            
+
             var filteredGoal = nodes.filter(function (item) {
                 return item.hasOwnProperty('goal') && item['goal'].nodeId === sourceId;
             });
-            
+
             var filteredBegin = nodes.filter(function (item) {
                 return item.hasOwnProperty('begin') && item['begin'].nodeId === sourceId;
             });
-            
+
             var filteredDecision = nodes.filter(function (item) {
                 return item.hasOwnProperty('decision') && item['decision'].nodeId === sourceId;
             });
-            
+
             var filteredTimeout = filteredGoal.filter(function (item) {
                 return item['goal'].timeoutNode === targetId;
             });
-            
+
             if (filteredGoal.length > 0) {
                 var node = filteredGoal[0]['goal'];
                 if (filteredTimeout.length > 0) {
@@ -156,25 +156,25 @@ jsPlumb.ready(function () {
             flog('clicked to non-connection ', c);
         }
     });
-    
+
     instance.bind("mouseover", function (connection, originalEvent) {
         if (connection.getOverlay("buttonX")) {
             connection.getOverlay("buttonX").show();
         }
     });
-    
+
     instance.bind("mouseout", function (connection, originalEvent) {
         if (connection.getOverlay("buttonX")) {
             connection.getOverlay("buttonX").hide();
         }
     });
-    
+
     // bind a connection listener. note that the parameter passed to this function contains more than
     // just the new connection - see the documentation for a full list of what is included in 'info'.
     // this listener sets the connection's internal
     // id as the label overlay's text.
     instance.bind("connection", function (info) {
-        
+
         // Validate connection, we just allow only one connection between 2 endpoint within a direction
         var conn = info.connection;
         var arr = instance.select({source: conn.sourceId, target: conn.targetId});
@@ -182,7 +182,7 @@ jsPlumb.ready(function () {
             instance.detach(conn);
             return;
         }
-        
+
         var label = 'then';
         if (conn.hasType('timeout')) {
             label = 'timeout';
@@ -193,9 +193,9 @@ jsPlumb.ready(function () {
         } else if (conn.hasType('transition')) {
             label = 'transition';
         }
-        
+
         conn.getOverlay("label").setLabel(label);
-        
+
         if (JBApp.initialized) {
             flog('new connection was made', info.connection);
             var nodes = JBApp.funnel.nodes;
@@ -238,15 +238,15 @@ jsPlumb.ready(function () {
             JBApp.isDirty = true;
         }
     });
-    
+
     //
     // initialise element as connection targets and source.
     //
     function initNode(el, type) {
-        
+
         // initialise draggable elements.
         instance.draggable(el, {containment: false});
-        
+
         if (type === 'goal') {
             instance.makeSource(el, {
                 filter: ".ep-timeout",
@@ -263,7 +263,7 @@ jsPlumb.ready(function () {
                     e.stopPropagation();
                 }
             });
-            
+
             instance.makeSource(el, {
                 filter: ".ep-transition",
                 anchors: ["RightMiddle", "LeftMiddle"],
@@ -290,7 +290,7 @@ jsPlumb.ready(function () {
                     e.stopPropagation();
                 }
             });
-            
+
             instance.makeSource(el, {
                 filter: ".ep-green",
                 anchors: ["RightMiddle", "LeftMiddle"],
@@ -318,7 +318,7 @@ jsPlumb.ready(function () {
                 }
             });
         }
-        
+
         if (type !== 'begin') {
             instance.makeTarget(el, {
                 dropOptions: {hoverClass: "dragHover"},
@@ -326,13 +326,13 @@ jsPlumb.ready(function () {
                 allowLoopback: false
             });
         }
-        
+
         // this is not part of the core demo functionality; it is a means for the Toolkit edition's wrapped
         // version of this demo to find out about new nodes being added.
         //
         instance.fire("jsPlumbDemoNodeAdded", el);
     }
-    
+
     function newNode(node, type, action) {
         var d = document.createElement("div");
         d.className = "w " + type;
@@ -353,17 +353,17 @@ jsPlumb.ready(function () {
             d.innerHTML = '<div class="title">' + actionName + ' <i style="font-size: 15px" class="fa fa-cog btnNodeSetting"></i></div>';
             d.innerHTML += '<div class="inner"><span class="nodeTitle">' + nodeName + ' <i class="fa fa-pencil"></i></span> <span title="Connect to other node" class="ep ep-basic"></span></div>';
         }
-        
+
         d.style.left = node.x + "px";
         d.style.top = node.y + "px";
         instance.getContainer().appendChild(d);
         initNode(d, type);
         return d;
     }
-    
+
     JBApp.newNode = newNode;
     JBApp.initNode = initNode;
-    
+
     function initConnection(node) {
         var nextNodeId;
         var nextNodeIds = [];
@@ -379,7 +379,7 @@ jsPlumb.ready(function () {
                     initConnection(JBApp.funnelNodes[node.nextNodeId]);
                 }
             }
-            
+
             if (node.choices) {
                 for (var key in node.choices) {
                     instance.connect({
@@ -405,7 +405,7 @@ jsPlumb.ready(function () {
                     nextNodeIds.push(node.transitions[i].nextNodeId);
                 }
             }
-            
+
             if (node.hasOwnProperty('timeoutNode')) {
                 // goal node with timeout
                 var timeoutNode = node.timeoutNode;
@@ -420,7 +420,7 @@ jsPlumb.ready(function () {
                     }
                 }
             }
-            
+
             if (nextNodeIds.length) {
                 for (var i = 0; i < nextNodeIds.length; i++) {
                     instance.connect({
@@ -444,7 +444,7 @@ jsPlumb.ready(function () {
             }
         }
     }
-    
+
     // suspend drawing and initialise.
     instance.batch(function () {
         if (JBApp.funnel && JBApp.funnel.nodes && JBApp.funnel.nodes.length) {
@@ -474,7 +474,7 @@ jsPlumb.ready(function () {
             });
         }
     });
-    
+
     jsPlumb.fire("jsPlumbDemoLoaded", instance);
     JBApp.jsPlumpInstance = instance;
     JBApp.initialized = true;
@@ -487,13 +487,13 @@ function initSideBar() {
         tolerance: 'pointer',
         helper: 'clone',
         start: function (e, ui) {
-            
+
         },
         stop: function (e, ui) {
             console.log('stop', ui);
         }
     });
-    
+
     $('#paper').droppable({
         drop: function (event, ui) {
             var type = ui.draggable.attr('data-type');
@@ -503,7 +503,7 @@ function initSideBar() {
                 x: ui.offset.left - 200,
                 y: ui.offset.top - 300
             };
-            
+
             var objToPush = {};
             var action;
             if (type === 'action') {
@@ -517,7 +517,7 @@ function initSideBar() {
                     trigger: null
                 };
             }
-            
+
             if (type !== 'action') {
                 objToPush[type] = node;
             }
@@ -538,13 +538,13 @@ function initTranModal() {
         modal.find('.transitionItems').append(clone);
         $(this).addClass('hide');
     });
-    
+
     modal.on('change', '[name=triggerType]', function (e) {
         $(this).siblings('.' + this.value).removeClass('hide').siblings('.triggerDiv').addClass('hide');
     });
     modal.find('form').on('submit', function (e) {
         e.preventDefault();
-        
+
         doSaveTrigger($(this));
         modal.modal('hide');
     });
@@ -570,7 +570,7 @@ function showTranModal(tran, sourceId, targetId) {
         clone.removeClass('hide placeholderform').siblings('.triggerDiv').addClass('hide');
         modal.find('.transitionItems').append(clone)
     }
-    
+
     modal.modal();
 }
 
@@ -593,7 +593,7 @@ function showChoiceModal(choice, sourceId, targetId) {
         clone.removeClass('hide placeholderform');
         modal.find('.choiceItems').append(clone)
     }
-    
+
     modal.modal();
 }
 
@@ -609,7 +609,7 @@ function initTimeoutModal() {
     var modal = $('#modalTimeoutNode');
     modal.find('form').on('submit', function (e) {
         e.preventDefault();
-        
+
         doSaveTimeout($(this));
         modal.modal('hide');
     });
@@ -642,10 +642,10 @@ function initChoiceModal() {
         clone.removeClass('hide placeholderform');
         modal.find('.choiceItems').append(clone);
     });
-    
+
     modal.find('form').on('submit', function (e) {
         e.preventDefault();
-        
+
         doSaveChoice($(this));
         modal.modal('hide');
     });
@@ -691,14 +691,14 @@ function doSaveTrigger(form) {
             });
         }
     });
-    
+
     var sourceId = form.find('[name=sourceId]').val();
     var targetId = form.find('[name=targetId]').val();
     for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
         var node = JBApp.funnel.nodes[i];
         for (var key in node) {
             if (node[key].nodeId === sourceId) {
-                
+
                 if (node[key].hasOwnProperty('transitions')) {
                     var transitions = node[key].transitions;
                     for (var j = 0; j < transitions.length; j++) {
@@ -724,7 +724,7 @@ function initContextMenu() {
         selector: ".btnNodeSetting",
         trigger: 'left',
         build: function ($trigger, e) {
-            
+
             var items = {
                 detail: {
                     name: "Node detail", icon: "fa-link", callback: function (key, opt) {
@@ -750,10 +750,10 @@ function initContextMenu() {
                     }
                 }
             };
-            
+
             return {items: items}
         }
-        
+
     });
 }
 
@@ -785,7 +785,7 @@ function initEditTitle() {
     var modal = $('#modalNodeTitle');
     modal.find('form').on('submit', function (e) {
         e.preventDefault();
-        
+
         updateNode($(this));
         modal.modal('hide');
     });
@@ -806,7 +806,7 @@ function updateNode(form) {
             }
         }
     }
-    
+
 }
 
 function deleteNode(nodeId) {
@@ -820,7 +820,7 @@ function deleteNode(nodeId) {
             }
         }
     }
-    
+
     if (index > -1) {
         JBApp.isDirty = true;
         JBApp.funnel.nodes.splice(index, 1);
@@ -865,7 +865,7 @@ function deleteConnection(connection) {
 function initSaveButton() {
     $('#btnSave').on('click', function (e) {
         e.preventDefault();
-        
+
         var valid = true;
         for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
             var node = JBApp.funnel.nodes[i];
