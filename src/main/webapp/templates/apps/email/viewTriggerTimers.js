@@ -1,7 +1,9 @@
 
 $(function () {
-    initHistorySearch();
-
+    //initHistorySearch();
+    $(document.body).on('pageDateChanged', function (e, startDate, endDate) {
+        doHistorySearch(startDate, endDate);
+    });
     var createTimersModal = $("#createTimersModal");
     var createTimersForm= createTimersModal.find("form");
     createTimersForm.forms({

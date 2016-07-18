@@ -235,26 +235,40 @@ function initFormDetailEmail() {
             var replyToAddress = $('#replyToAddress');
             var replyToAddressStr = replyToAddress.val().trim();
             var emailEnabled = $('#emailEnabled');
+            var subject = $('#subject');
+            var subjectStr = subject.val();
             var isEmailEnabled = emailEnabled.length > 0 ? emailEnabled.is(':checked') : true;
 
             flog('isEmailEnabled: ' + isEmailEnabled);
 
             if (isEmailEnabled) {
                 if (fromAddressStr) {
+                    var errorEmail = 0;
                     if (!validateFuseEmail(fromAddressStr)) {
-                        error++;
+                        errorEmail++;
                         showErrorField(fromAddress);
                     }
 
                     if (replyToAddressStr && (!/@{.*}/.test(replyToAddressStr) && !validateFuseEmail(replyToAddressStr))) {
-                        error++;
+                        errorEmail++;
                         showErrorField(replyToAddress);
+                    }
+
+                    if (errorEmail > 0) {
+                        error++;
+                        showMessage('Email address is invalid!', form);
                     }
                 } else {
                     if (!/@{.*}/.test(replyToAddressStr) && !validateFuseEmail(replyToAddressStr)) {
                         error++;
                         showErrorField(replyToAddress);
                     }
+                }
+
+                if (subjectStr.indexOf('\n') !== -1) {
+                    error++;
+                    showErrorField(subject);
+                    showMessage('Subject should not contain newline', form);
                 }
             }
 
@@ -266,8 +280,6 @@ function initFormDetailEmail() {
             if (error === 0) {
                 return true;
             } else {
-                showMessage('Email address is invalid!', form);
-
                 return false;
             }
         },
