@@ -114,6 +114,22 @@ function initKEditor(body, fileName) {
                 '       </div>' +
                 '   </div>' +
                 '   <div class="form-group">' +
+                '       <label for="photo-align" class="col-sm-12">Layout</label>' +
+                '       <div class="col-sm-12">' +
+                '           <select class="form-control select-layout">' +
+                '               <option value="">Auto</option>' +
+                '               <option value="container-fluid">Wide</option>' +
+                '               <option value="container">Box</option>' +
+                '           </select>' +
+                '       </div>' +
+                '   </div>' +
+                '   <div class="form-group">' +
+                '       <label for="photo-align" class="col-sm-12">Height</label>' +
+                '       <div class="col-sm-12">' +
+                '           <input type="number" value="" class="txt-height form-control" />' +
+                '       </div>' +
+                '   </div>' +
+                '   <div class="form-group">' +
                 '       <div class="col-sm-12">' +
                 '           <label>Background Image</label>' +
                 '           <p><img src="/static/images/photo_holder.png" class="img-responsive img-thumbnail" id="background-image-previewer" /></p>' +
@@ -193,22 +209,6 @@ function initKEditor(body, fileName) {
                 '              </div>' +
                 '          </div>' +
                 '      </div>' +
-                '   </div>' +
-                '   <div class="form-group">' +
-                '       <label for="photo-align" class="col-sm-12">Layout</label>' +
-                '       <div class="col-sm-12">' +
-                '           <select class="form-control select-layout">' +
-                '               <option value="">Auto</option>' +
-                '               <option value="container-fluid">Wide</option>' +
-                '               <option value="container">Box</option>' +
-                '           </select>' +
-                '       </div>' +
-                '   </div>' +
-                '   <div class="form-group">' +
-                '       <label for="photo-align" class="col-sm-12">Height</label>' +
-                '       <div class="col-sm-12">' +
-                '           <input type="number" value="" class="txt-height form-control" />' +
-                '       </div>' +
                 '   </div>' +
                 '   <div class="form-group">' +
                 '       <label for="photo-style" class="col-sm-12">Parallax</label>' +
@@ -461,7 +461,8 @@ function initKEditor(body, fileName) {
         },
         containerSettingShowFunction: function (form, container, keditor) {
             var containerBg = container.find('.container-bg');
-            var containerContent = container.find('.container-content-wrapper');
+            var containerContent = container.find('.container-content-wrapper' +
+                '');
             form.find('.parallax-options').html('');
 
             if (containerBg.hasClass('parallax-skrollr')) {
