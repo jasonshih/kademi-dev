@@ -243,9 +243,10 @@ jsPlumb.ready(function () {
     // initialise element as connection targets and source.
     //
     function initNode(el, type) {
-        
         // initialise draggable elements.
-        instance.draggable(el, {containment: false});
+        instance.draggable(el, {
+            grid: [10, 10]
+        });
         
         if (type === 'goal') {
             instance.makeSource(el, {
@@ -476,6 +477,19 @@ jsPlumb.ready(function () {
 });
 
 function initSideBar() {
+    $('.right-panel .list-group').niceScroll({
+        cursorcolor: '#999',
+        cursorwidth: 6,
+        railpadding: {
+            top: 0,
+            right: 0,
+            left: 0,
+            bottom: 0
+        },
+        cursorborder: '',
+        disablemutationobserver: true
+    });
+
     $('.right-panel .list-group-item').draggable({
         revert: 'invalid',
         tolerance: 'pointer',
