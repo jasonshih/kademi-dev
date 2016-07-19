@@ -53,9 +53,7 @@ function initAddPageModal() {
     var modal = $('#modal-save-page');
     var form = modal.find('form');
 
-    modal.on('hidden.bs.modal', function () {
-        flog('a');
-
+    $(document.body).on('hidden.bs.modal', '#modal-save-page', function () {
         modal.find('.btn-history-page').addClass('hidden');
         clearForm(form);
         $('.meta-wrapper').html('');
