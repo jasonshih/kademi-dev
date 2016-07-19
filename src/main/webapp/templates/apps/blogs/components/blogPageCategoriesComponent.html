@@ -1,10 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
-
-</body>
-</html>
+#set ($currentCate = $!params.cat)
+#set ($currentTag = $!params.tag)
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="panel-title">Categories</div>
+    </div>
+    <div class="list-group list-unstyled">
+        #foreach($categoryCount in $page.categoryCounts)
+        #set ($cls = "")
+        #set ($href = "cat=" + $formatter.percentEncode( $categoryCount.item ) )
+        #if($currentTag)
+        #set ($href = $href + "&tag=" + $currentTag)
+        #end
+        #if ($currentCate == $categoryCount.item)
+        #set ($cls = "active")
+        #set ($href = $formatter.toggleParamVal("cat", $categoryCount.item))
+        #end
+        <a class="list-group-item $cls" href="$page.href?$href">
+            <span class="badge">$categoryCount.count</span>
+            $categoryCount.item
+        </a>
+        #end
+    </div>
+</div>
