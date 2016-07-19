@@ -18,12 +18,13 @@ var JBApp = {
 };
 $(function () {
     initSideBar();
-    initContextMenu();
+    //initContextMenu();
     initSaveButton();
     initTranModal();
     initChoiceModal();
     initTimeoutModal();
-    initEditTitle();
+    initNodeActions();
+    //initEditTitle();
 });
 
 window.onbeforeunload = function (e) {
@@ -333,22 +334,67 @@ jsPlumb.ready(function () {
         d.className = "w " + type;
         d.id = node.nodeId;
         d.setAttribute('data-type', type);
+
         var nodeName = node.title ? node.title : node.nodeId;
+        var nodeHtml = '';
+
         if (type === 'goal') {
-            d.innerHTML = '<div class="title"><i class="fa fa-trophy" aria-hidden="true"></i> Goal <i style="font-size: 15px" class="fa fa-cog btnNodeSetting"></i></div>';
-            d.innerHTML += '<div class="inner"><span class="nodeTitle">' + nodeName + ' <i class="fa fa-pencil"></i></span> <span title="Connect to transition node" class="ep ep-transition"></span> <span title="Connect to timeout node" class="ep ep-timeout"></span></div>';
+            nodeHtml += '<div class="title">';
+            nodeHtml += '   <i class="fa fa-trophy" aria-hidden="true"></i> Goal';
+            nodeHtml += '   <span class="node-buttons clearfix">';
+            nodeHtml += '       <span class="btnNodeEdit" title="Edit name"><i class="fa fa-fw fa-pencil"></i></span>';
+            nodeHtml += '       <span class="btnNodeSetting" title="Edit details"><i class="fa fa-fw fa-cog"></i></span>';
+            nodeHtml += '       <span class="btnNodeDelete" title="Delete this node"><i class="fa fa-fw fa-trash"></i></span>';
+            nodeHtml += '   </span>';
+            nodeHtml += '</div>';
+            nodeHtml += '<div class="inner">';
+            nodeHtml += '   <span class="nodeTitle">' + nodeName + '</span>';
+            nodeHtml += '   <span title="Connect to transition node" class="ep ep-transition"></span>';
+            nodeHtml += '   <span title="Connect to timeout node" class="ep ep-timeout"></span>';
+            nodeHtml += '</div>';
         } else if (type === 'decision') {
-            d.innerHTML = '<div class="title"><i class="fa fa-question-circle" aria-hidden="true"></i> Decision <i style="font-size: 15px" class="fa fa-cog btnNodeSetting"></i></span></div>';
-            d.innerHTML += '<div class="inner"><span class="nodeTitle">' + nodeName + ' <i class="fa fa-pencil"></i></span>  <span title="Make new choice" class="ep ep-green"></span> <span title="Default next action" class="ep ep-red"></span></div>'
+            nodeHtml += '<div class="title">';
+            nodeHtml += '   <i class="fa fa-question-circle" aria-hidden="true"></i> Decision';
+            nodeHtml += '   <span class="node-buttons clearfix">';
+            nodeHtml += '       <span class="btnNodeEdit" title="Edit name"><i class="fa fa-fw fa-pencil"></i></span>';
+            nodeHtml += '       <span class="btnNodeSetting" title="Edit details"><i class="fa fa-fw fa-cog"></i></span>';
+            nodeHtml += '       <span class="btnNodeDelete" title="Delete this node"><i class="fa fa-fw fa-trash"></i></span>';
+            nodeHtml += '   </span>';
+            nodeHtml += '</div>';
+            nodeHtml += '<div class="inner">';
+            nodeHtml += '   <span class="nodeTitle">' + nodeName + '</span>';
+            nodeHtml += '   <span title="Make new choice" class="ep ep-green"></span> ';
+            nodeHtml += '   <span title="Default next action" class="ep ep-red"></span>';
+            nodeHtml += '</div>'
         } else if (type == 'begin') {
-            d.innerHTML = '<div class="title"><i class="fa fa-play" aria-hidden="true"></i> Begin <i style="font-size: 15px" class="fa fa-cog btnNodeSetting"></i></div>';
-            d.innerHTML += '<div class="inner"><span class="nodeTitle">' + nodeName + ' <i class="fa fa-pencil"></i></span> <span title="Connect to other node" class="ep ep-basic"></span></div>';
+            nodeHtml += '<div class="title">';
+            nodeHtml += '   <i class="fa fa-play" aria-hidden="true"></i> Begin';
+            nodeHtml += '   <span class="node-buttons clearfix">';
+            nodeHtml += '       <span class="btnNodeEdit" title="Edit name"><i class="fa fa-fw fa-pencil"></i></span>';
+            nodeHtml += '       <span class="btnNodeSetting" title="Edit details"><i class="fa fa-fw fa-cog"></i></span>';
+            nodeHtml += '       <span class="btnNodeDelete" title="Delete this node"><i class="fa fa-fw fa-trash"></i></span>';
+            nodeHtml += '   </span>';
+            nodeHtml += '</div>';
+            nodeHtml += '<div class="inner">';
+            nodeHtml += '   <span class="nodeTitle">' + nodeName + '</span>';
+            nodeHtml += '   <span title="Connect to other node" class="ep ep-basic"></span>';
+            nodeHtml += '</div>';
         } else {
             var actionName = JBApp.ACTIONS[action];
-            d.innerHTML = '<div class="title">' + actionName + ' <i style="font-size: 15px" class="fa fa-cog btnNodeSetting"></i></div>';
-            d.innerHTML += '<div class="inner"><span class="nodeTitle">' + nodeName + ' <i class="fa fa-pencil"></i></span> <span title="Connect to other node" class="ep ep-basic"></span></div>';
+            nodeHtml += '<div class="title">' + actionName;
+            nodeHtml += '   <span class="node-buttons clearfix">';
+            nodeHtml += '       <span class="btnNodeEdit" title="Edit name"><i class="fa fa-fw fa-pencil"></i></span>';
+            nodeHtml += '       <span class="btnNodeSetting" title="Edit details"><i class="fa fa-fw fa-cog"></i></span>';
+            nodeHtml += '       <span class="btnNodeDelete" title="Delete this node"><i class="fa fa-fw fa-trash"></i></span>';
+            nodeHtml += '   </span>';
+            nodeHtml += '</div>';
+            nodeHtml += '<div class="inner">';
+            nodeHtml += '   <span class="nodeTitle">' + nodeName + '</span>';
+            nodeHtml += '   <span title="Connect to other node" class="ep ep-basic"></span>';
+            nodeHtml += '</div>';
         }
-        
+
+        d.innerHTML = nodeHtml;
         d.style.left = node.x + "px";
         d.style.top = node.y + "px";
         instance.getContainer().appendChild(d);
@@ -477,7 +523,9 @@ jsPlumb.ready(function () {
 });
 
 function initSideBar() {
-    $('.right-panel .list-group').niceScroll({
+    var rightPanel = $('.right-panel');
+
+    rightPanel.find('.list-group').niceScroll({
         cursorcolor: '#999',
         cursorwidth: 6,
         railpadding: {
@@ -490,7 +538,7 @@ function initSideBar() {
         disablemutationobserver: true
     });
 
-    $('.right-panel .list-group-item').draggable({
+    rightPanel.find('.list-group-item').draggable({
         revert: 'invalid',
         tolerance: 'pointer',
         helper: 'clone',
@@ -501,15 +549,16 @@ function initSideBar() {
             console.log('stop', ui);
         }
     });
-    
-    $('#paper').droppable({
+
+    var paper = $('#paper');
+    paper.droppable({
         drop: function (event, ui) {
             var type = ui.draggable.attr('data-type');
             var id = uuid();
             var node = {
                 nodeId: type + '-' + id,
-                x: ui.offset.left - 200,
-                y: ui.offset.top - 300
+                x: ui.offset.left - paper.offset().left,
+                y: ui.offset.top - paper.offset().top
             };
             
             var objToPush = {};
@@ -726,45 +775,6 @@ function doSaveTrigger(form) {
     Msg.info('Transition trigger updated');
 }
 
-function initContextMenu() {
-    $.contextMenu({
-        // define which elements trigger this menu
-        selector: ".btnNodeSetting",
-        trigger: 'left',
-        build: function ($trigger, e) {
-            
-            var items = {
-                detail: {
-                    name: "Node detail", icon: "fa-link", callback: function (key, opt) {
-                        // Alert the key of the item and the trigger element's id.
-                        var domElement = opt.$trigger.parents('.w');
-                        var id = domElement.attr("id");
-                        var href = window.location.pathname;
-                        if (!href.endsWith('/')) {
-                            href += '/';
-                        }
-                        window.location.pathname = href + id;
-                    }
-                },
-                delete: {
-                    name: "Delete", icon: 'fa-trash', callback: function (key, opt) {
-                        var domElement = opt.$trigger.parents('.w');
-                        var c = confirm('Are you sure you want to delete this node?');
-                        if (c) {
-                            var id = domElement.attr("id");
-                            deleteNode(id);
-                            JBApp.jsPlumpInstance.remove(id);
-                        }
-                    }
-                }
-            };
-            
-            return {items: items}
-        }
-        
-    });
-}
-
 function showModalTitle(node) {
     var title = node.title;
     if (!title) {
@@ -776,8 +786,10 @@ function showModalTitle(node) {
     modal.modal();
 }
 
-function initEditTitle() {
-    $(document.body).on('click', '.nodeTitle', function (e) {
+function initNodeActions() {
+    flog('initNodeActions');
+
+    $(document.body).on('click', '.btnNodeEdit', function (e) {
         e.preventDefault();
         var nodeId = $(this).parents('.w').attr('id');
         for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
@@ -790,6 +802,30 @@ function initEditTitle() {
             }
         }
     });
+
+    $(document.body).on('click', '.btnNodeSetting', function (e) {
+        e.preventDefault();
+
+        var domElement = $(this).closest('.w');
+        var id = domElement.attr("id");
+        var href = window.location.pathname;
+        if (!href.endsWith('/')) {
+            href += '/';
+        }
+        window.location.pathname = href + id;
+    });
+
+    $(document.body).on('click', '.btnNodeDelete', function (e) {
+        e.preventDefault();
+
+        var domElement = $(this).closest('.w');
+        if (confirm('Are you sure you want to delete this node?')) {
+            var id = domElement.attr("id");
+            deleteNode(id);
+            JBApp.jsPlumpInstance.remove(id);
+        }
+    });
+
     var modal = $('#modalNodeTitle');
     modal.find('form').on('submit', function (e) {
         e.preventDefault();
