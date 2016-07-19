@@ -1,0 +1,22 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="panel-title">Tags</div>
+    </div>
+    <div class="list-group">
+        #foreach($tagCount in $page.tagCounts)
+        #set ($cls = "")
+        #set ($href = "tag=" + $formatter.percentEncode( $tagCount.item ) )
+        #if($currentCate)
+        #set ($href = $href + "&cat=" + $currentCate)
+        #end
+        #if ($currentTag == $tagCount.item)
+        #set ($cls = "active")
+        #set ($href = $formatter.toggleParamVal("tag", $tagCount.item))
+        #end
+        <a class="list-group-item $cls" href="$page.href?$href">
+            <span class="badge pull-right">$tagCount.count</span>
+            $tagCount.item
+        </a>
+        #end
+    </div>
+</div>
