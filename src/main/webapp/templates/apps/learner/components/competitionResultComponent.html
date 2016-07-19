@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
-
-</body>
-</html>
+<div class="competitionResult">
+    #if( !$page.entriesForUser.isEmpty() )
+    <div class="well">
+        <h2>You've entered</h2>
+        <p>Thanks for entering! You have $page.entriesForUser.size() entries</p>
+    </div>
+    #end
+</div>
