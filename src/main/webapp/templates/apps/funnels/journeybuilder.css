@@ -26,11 +26,23 @@
     width: 214px;
     z-index: 10;
     border: 1px solid #ddd;
+    height: 600px;
+}
+
+#builder .right-panel .nodes-list {
+    border: 0;
+    border-radius: 0;
+    margin: 0;
+    height: 100%;
+}
+
+#builder .right-panel .nodes-list .panel-heading {
+    border-radius: 0;
 }
 
 #builder .right-panel .list-group {
     margin-bottom: 0;
-    height: 598px;
+    height: calc(100% - 36px);
     padding: 8px 0 4px;
 }
 
@@ -39,7 +51,6 @@
     border: 0 !important;
     padding: 5px 10px;
 }
-
 
 #builder .right-panel li.ui-draggable-dragging {
     padding: 0 !important;
@@ -87,12 +98,26 @@
     text-align: center;
 }
 
-.w .title .btnNodeSetting {
+.w .title .node-buttons {
     position: absolute;
     top: 5px;
     right: 5px;
     cursor: pointer;
 }
+
+.w .title .node-buttons span {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    float: left;
+}
+
+.w .title .node-buttons span:hover {
+    background-color: #ddd;
+}
+
 
 .aLabel {
     -webkit-transition: background-color 0.25s ease-in;
@@ -208,14 +233,3 @@ path, .jsplumb-endpoint {
     text-align: center;
     border: 1px solid red;
 }
-
-.nodeTitle {
-    cursor: pointer;
-}
-
-/*.nodeTitle .fa-pencil{*/
-/*display: none;*/
-/*}*/
-/*.nodeTitle:hover .fa-pencil{*/
-/*display: inline;*/
-/*}*/
