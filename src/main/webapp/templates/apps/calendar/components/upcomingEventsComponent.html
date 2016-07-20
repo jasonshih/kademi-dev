@@ -1,10 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
-
-</body>
-</html>
+<h3>Upcoming events</h3>
+<div class="calendar-events col-lg-6">
+    #set($upcoming = $page.upcomingEvents)
+    #foreach($event in $upcoming )
+    <article class="calendar-events-item">
+        <header class="calendar-events-header">
+            <h3><a href="$event.name">$event.summary</a></h3>
+            <div class="calendar-event-byline">
+                #if( $event.organisor )
+                <small class="author">By <a href="/users/$event.organisor.name/public">$event.organisor.formattedName</a></small>
+                #end
+                #if( $event.location )
+                <small class="location">At $event.location</small>
+                #end
+                <small>Starts $formatter.formatDate( $event.startDate ) (<abbr title="$formatter.formatDateISO8601($event.startDate)" class="timeago">$!event.startDate</abbr>)</small>
+            </div>
+        </header>
+        <div class="calendar-event-text clearfix">
+            <div class="clearfix">$!event.description</div>
+            <a href="$event.name" class="btn btn-sm btn-success pull-right">Register</a>
+        </div>m
+    </article>
+    #end
