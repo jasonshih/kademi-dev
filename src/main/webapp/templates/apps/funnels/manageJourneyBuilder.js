@@ -18,13 +18,11 @@ var JBApp = {
 };
 $(function () {
     initSideBar();
-    //initContextMenu();
     initSaveButton();
     initTranModal();
     initChoiceModal();
     initTimeoutModal();
     initNodeActions();
-    //initEditTitle();
 });
 
 window.onbeforeunload = function (e) {
@@ -181,10 +179,12 @@ jsPlumb.ready(function () {
     // this listener sets the connection's internal
     // id as the label overlay's text.
     instance.bind("connection", function (info) {
-        
         // Validate connection, we just allow only one connection between 2 endpoint within a direction
         var conn = info.connection;
-        var arr = instance.select({source: conn.sourceId, target: conn.targetId});
+        var arr = instance.select({
+            source: conn.sourceId,
+            target: conn.targetId
+        });
         if (arr.length > 1) {
             instance.detach(conn);
             return;
@@ -251,9 +251,7 @@ jsPlumb.ready(function () {
     //
     function initNode(el, type) {
         // initialise draggable elements.
-        instance.draggable(el, {
-            grid: [10, 10]
-        });
+        instance.draggable(el, {});
         
         if (type === 'goal') {
             instance.makeSource(el, {
@@ -418,9 +416,9 @@ jsPlumb.ready(function () {
                     target: node.nextNodeId,
                     type: "decisionDefault"
                 });
-                if (JBApp.funnelNodes[node.nextNodeId]) {
-                    initConnection(JBApp.funnelNodes[node.nextNodeId]);
-                }
+                //if (JBApp.funnelNodes[node.nextNodeId]) {
+                //    initConnection(JBApp.funnelNodes[node.nextNodeId]);
+                //}
             }
             
             if (node.choices) {
@@ -430,9 +428,9 @@ jsPlumb.ready(function () {
                         target: key,
                         type: "decisionChoices"
                     });
-                    if (JBApp.funnelNodes[key]) {
-                        initConnection(JBApp.funnelNodes[key]);
-                    }
+                    //if (JBApp.funnelNodes[key]) {
+                    //    initConnection(JBApp.funnelNodes[key]);
+                    //}
                 }
             }
         } else {
@@ -458,9 +456,9 @@ jsPlumb.ready(function () {
                         target: timeoutNode,
                         type: "timeout"
                     });
-                    if (JBApp.funnelNodes[timeoutNode]) {
-                        initConnection(JBApp.funnelNodes[timeoutNode]);
-                    }
+                    //if (JBApp.funnelNodes[timeoutNode]) {
+                    //    initConnection(JBApp.funnelNodes[timeoutNode]);
+                    //}
                 }
             }
             
@@ -471,9 +469,9 @@ jsPlumb.ready(function () {
                         target: nextNodeIds[i],
                         type: "transition"
                     });
-                    if (JBApp.funnelNodes[nextNodeIds[i]]) {
-                        initConnection(JBApp.funnelNodes[nextNodeIds[i]]);
-                    }
+                    //if (JBApp.funnelNodes[nextNodeIds[i]]) {
+                    //    initConnection(JBApp.funnelNodes[nextNodeIds[i]]);
+                    //}
                 }
             } else if (nextNodeId) {
                 instance.connect({
@@ -481,9 +479,9 @@ jsPlumb.ready(function () {
                     target: nextNodeId,
                     type: "basic"
                 });
-                if (JBApp.funnelNodes[nextNodeId]) {
-                    initConnection(JBApp.funnelNodes[nextNodeId]);
-                }
+                //if (JBApp.funnelNodes[nextNodeId]) {
+                //    initConnection(JBApp.funnelNodes[nextNodeId]);
+                //}
             }
         }
     }
@@ -492,30 +490,46 @@ jsPlumb.ready(function () {
     instance.batch(function () {
         if (JBApp.funnel && JBApp.funnel.nodes && JBApp.funnel.nodes.length) {
             // Finding begin node
-            var beginNodes = [];
+            //var beginNodes = [];
+
             for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
                 var node = JBApp.funnel.nodes[i];
+
                 for (var key in node) {
                     if (node.hasOwnProperty(key)) {
-                        JBApp.funnelNodes[node[key].nodeId] = node[key];
+                        var nodeData = node[key];
                         var type = key;
                         if (['goal', 'decision', 'begin'].indexOf(key) === -1) {
                             type = 'action';
                         }
-                        newNode(node[key], type, key);
-                        if (key === 'begin') {
-                            beginNodes.push(node[key]);
-                        }
+                        //if (key === 'begin') {
+                        //    beginNodes.push(nodeData);
+                        //}
+
+                        JBApp.funnelNodes[nodeData.nodeId] = nodeData;
+                        newNode(nodeData, type, key);
+                    }
+                }
+            }
+
+            for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
+                var node = JBApp.funnel.nodes[i];
+
+                for (var key in node) {
+                    if (node.hasOwnProperty(key)) {
+                        var nodeData = node[key];
+                        initConnection(nodeData);
                     }
                 }
             }
         }
+
         // and finally, make first connection start from begin node
-        if (beginNodes.length) {
-            beginNodes.forEach(function (item) {
-                initConnection(item);
-            });
-        }
+        //if (beginNodes.length) {
+        //    beginNodes.forEach(function (item) {
+        //        initConnection(item);
+        //    });
+        //}
     });
     
     jsPlumb.fire("jsPlumbDemoLoaded", instance);
@@ -525,6 +539,8 @@ jsPlumb.ready(function () {
 });
 
 function initSideBar() {
+    flog('initSideBar');
+
     var rightPanel = $('.right-panel');
 
     rightPanel.find('.list-group, .panel-body').niceScroll({
@@ -583,12 +599,13 @@ function initSideBar() {
             JBApp.newNode(node, type, action);
             JBApp.funnel.nodes.push(objToPush);
             JBApp.isDirty = true;
-            saveBuilder();
         }
     });
 }
 
 function initTranModal() {
+    flog('initTranModal');
+
     var modal = $('#modalTransitions');
     modal.on('click', '.btnAddTrigger', function (e) {
         e.preventDefault();
@@ -610,6 +627,8 @@ function initTranModal() {
 }
 
 function showTranModal(tran, sourceId, targetId) {
+    flog('showTranModal', tran, sourceId, targetId);
+
     var modal = $('#modalTransitions');
     modal.find('[name=sourceId]').val(sourceId);
     modal.find('[name=targetId]').val(targetId);
@@ -634,6 +653,8 @@ function showTranModal(tran, sourceId, targetId) {
 }
 
 function showChoiceModal(choice, sourceId, targetId) {
+    flog('showChoiceModal', choice, sourceId, targetId);
+
     var modal = $('#modalChoice');
     modal.find('[name=sourceId]').val(sourceId);
     modal.find('[name=targetId]').val(targetId);
@@ -657,6 +678,8 @@ function showChoiceModal(choice, sourceId, targetId) {
 }
 
 function showTimeoutModal(node, sourceId, targetId) {
+    flog('showTimeoutModal', node, sourceId, targetId);
+
     var modal = $('#modalTimeoutNode');
     modal.find('[name=sourceId]').val(sourceId);
     modal.find('[name=targetId]').val(targetId);
@@ -665,6 +688,8 @@ function showTimeoutModal(node, sourceId, targetId) {
 }
 
 function initTimeoutModal() {
+    flog('initTimeoutModal');
+
     var modal = $('#modalTimeoutNode');
     modal.find('form').on('submit', function (e) {
         e.preventDefault();
@@ -675,6 +700,8 @@ function initTimeoutModal() {
 }
 
 function doSaveTimeout(form) {
+    flog('doSaveTimeout', form);
+
     var sourceId = form.find('[name=sourceId]').val();
     var targetId = form.find('[name=targetId]').val();
     var timeoutMins = form.find('[name=timeoutMins]').val();
@@ -694,6 +721,8 @@ function doSaveTimeout(form) {
 }
 
 function initChoiceModal() {
+    flog('initChoiceModal')
+
     var modal = $('#modalChoice');
     modal.on('click', '.btnAddChoice', function (e) {
         e.preventDefault();
@@ -711,6 +740,8 @@ function initChoiceModal() {
 }
 
 function doSaveChoice(form) {
+    flog('doSaveChoice', form);
+
     var constant = {};
     form.find('.choiceItems .form-group').each(function () {
         var key = $(this).find('[name=constKey]').val();
@@ -740,6 +771,8 @@ function doSaveChoice(form) {
 }
 
 function doSaveTrigger(form) {
+    flog('doSaveTrigger', form);
+
     var trigger = {};
     form.find('.transitionItems .form-group').each(function () {
         var type = $(this).find('[name=triggerType]').val();
@@ -778,6 +811,8 @@ function doSaveTrigger(form) {
 }
 
 function showModalTitle(node) {
+    flog('showModalTitle', node);
+
     var title = node.title;
     if (!title) {
         title = node.nodeId;
@@ -838,6 +873,8 @@ function initNodeActions() {
 }
 
 function updateNode(form) {
+    flog('updateNode', form);
+
     var sourceId = form.find('[name=sourceId]').val();
     var title = form.find('[name=title]').val();
     for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
@@ -856,6 +893,8 @@ function updateNode(form) {
 }
 
 function deleteNode(nodeId) {
+    flog('deleteNode', nodeId);
+
     var index = -1;
     for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
         var node = JBApp.funnel.nodes[i];
@@ -874,6 +913,8 @@ function deleteNode(nodeId) {
 }
 
 function deleteConnection(connection) {
+    flog('deleteConnection', connection);
+
     for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
         var node = JBApp.funnel.nodes[i];
         for (var key in node) {
@@ -909,6 +950,8 @@ function deleteConnection(connection) {
 }
 
 function initSaveButton() {
+    flog('initSaveButton');
+
     $('#btnSave').on('click', function (e) {
         e.preventDefault();
 
@@ -957,14 +1000,4 @@ function uuid() {
         var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
         return v.toString(16);
     }));
-}
-
-function formatMins(i) {
-    if (i < 120) {
-        return i + " mins";
-    } else if (i < 60 * 24) {
-        return i / 60 + " hours";
-    } else {
-        return i / (60 * 24) + " days";
-    }
 }
