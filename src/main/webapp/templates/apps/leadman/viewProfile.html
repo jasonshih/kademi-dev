@@ -34,7 +34,7 @@
                     <div class="col-lg-6">
                         <div id="activity" class="panel">
                             <div class="panel-body">
-#parse("/theme/apps/leadman/leadManTimeline.html")
+                                #parse("/theme/apps/leadman/leadManTimeline.html")
                             </div>
                         </div>
                     </div>
@@ -140,54 +140,96 @@
                                 <div class="table-responsive">
                                     <table class="table table-striped">
                                         <thead>
-                                        <th>Lead</th>
-                                        <th>Status</th>
-                                        <th>Created</th>
-                                        <th>Amount</th>
-                                        <th>Assigned to</th>
+                                            <th>Lead</th>
+                                            <th>Status</th>
+                                            <th>Created</th>
+                                            <th>Amount</th>
+                                            <th>Assigned to</th>
                                         </thead>
                                         <tbody>
-                                        #foreach($lead in $page.leads)
-                                        <tr>
-                                            <td>
-                                                <a href="/leads/$lead.id/">
-                                                    $!lead.description
-                                                </a>
-                                            </td>
-                                            <td>
-                                                #if( $lead.cancelled )
-                                                <span class="fa fa-remove text-danger"></span>
-                                                Cancelled <abbr title="$formatter.formatDateISO8601($lead.closedDate)" class="timeago">$lead.closedDate</abbr>
-                                                #elseif( $lead.closedDate )
-                                                <span class="fa fa-check text-success"></span>
-                                                Sale completed <abbr title="$formatter.formatDateISO8601($lead.closedDate)" class="timeago">$lead.closedDate</abbr>
-                                                #else
-                                                <span class="fa fa-clock-o text-muted"></span>
-                                                In progress
-                                                #end
-                                            </td>
-                                            <td>
-                                                #if( $lead.createDate )
-                                                <abbr title="$formatter.formatDateISO8601($lead.createDate)" class="timeago">$lead.createDate</abbr>
-                                                #end
-                                            </td>
-                                            <td>$!lead.dealAmount</td>
-                                            <td>
-                                                #if( $lead.assignedToProfile )
-                                                $lead.assignedToProfile.formattedName
-                                                #else
-                                                Not assigned
-                                                #end
-                                            </td>
-                                        </tr>
-                                        #end
+                                            #foreach($lead in $page.leads)
+                                            <tr>
+                                                <td>
+                                                    <a href="/leads/$lead.id/">
+                                                        $!lead.description
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    #if( $lead.cancelled )
+                                                    <span class="fa fa-remove text-danger"></span>
+                                                    Cancelled <abbr title="$formatter.formatDateISO8601($lead.closedDate)" class="timeago">$lead.closedDate</abbr>
+                                                    #elseif( $lead.closedDate )
+                                                    <span class="fa fa-check text-success"></span>
+                                                    Sale completed <abbr title="$formatter.formatDateISO8601($lead.closedDate)" class="timeago">$lead.closedDate</abbr>
+                                                    #else
+                                                    <span class="fa fa-clock-o text-muted"></span>
+                                                    In progress
+                                                    #end
+                                                </td>
+                                                <td>
+                                                    #if( $lead.createDate )
+                                                    <abbr title="$formatter.formatDateISO8601($lead.createDate)" class="timeago">$lead.createDate</abbr>
+                                                    #end
+                                                </td>
+                                                <td>$!lead.dealAmount</td>
+                                                <td>
+                                                    #if( $lead.assignedToProfile )
+                                                    $lead.assignedToProfile.formattedName
+                                                    #else
+                                                    Not assigned
+                                                    #end
+                                                </td>
+                                            </tr>
+                                            #end
                                         </tbody>
                                     </table>
                                 </div>
-
                             </div>
                         </div>
+
+                        <div class="panel">
+                            <div class="panel-heading no-shadow">
+                                <a class="btn btn-success addCompany pull-right" href="$page.href">
+                                    <span class="fa fa-plus"></span>
+                                </a>
+                                Companies
+                            </div>
+                            <div class="panel-body">
+                                #if($page.companies.size() > 0)
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <th>Title</th>
+                                            <th>Email</th>
+                                            <th>Phone</th>
+                                            <th>Address</th>
+                                            <th>Address 2</th>
+                                            <th>State</th>
+                                            <th>Country</th>
+                                        </thead>
+                                        <tbody>
+                                            #foreach($company in $page.companies)
+                                            <tr>
+                                                <td>$!company.formattedName</td>
+                                                <td>$!company.email</td>
+                                                <td>$!company.phone</td>
+                                                <td>$!company.address</td>
+                                                <td>$!company.addressLine2</td>
+                                                <td>$!company.addressState</td>
+                                                <td>$!company.country</td>
+                                            </tr>
+                                            #end
+                                        </tbody>
+                                    </table>
+                                </div>
+                                #else
+                                <p>
+                                    <span class="label label-warning">No companies</span>
+                                </p>
+                                #end
+                            </div>
                         </div>
+
                     </div>
                 </div>
             </div>
