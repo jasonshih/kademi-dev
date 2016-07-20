@@ -1316,5 +1316,16 @@ function initSearchFilter() {
         e.preventDefault();
 
         $('#leadSearchFilterButton').find('span').text(this.innerText);
+        var status = this.innerText;
+        var txt = $('#lead-search-input');
+        var suggestionsWrapper = $('#lead-search-suggestions');
+        var backdrop = $('#lead-search-backdrop');
+        var text = txt.val().trim();
+        if (text.length > 0) {
+            doTopNavSearch(text, status, suggestionsWrapper, backdrop);
+        } else {
+            suggestionsWrapper.addClass('hide');
+            backdrop.addClass('hide');
+        }
     });
 }
