@@ -18,13 +18,11 @@ var JBApp = {
 };
 $(function () {
     initSideBar();
-    //initContextMenu();
     initSaveButton();
     initTranModal();
     initChoiceModal();
     initTimeoutModal();
     initNodeActions();
-    //initEditTitle();
 });
 
 window.onbeforeunload = function (e) {
@@ -106,6 +104,9 @@ jsPlumb.ready(function () {
         
         var sourceId = c.sourceId;
         var targetId = c.targetId;
+
+        flog('click on jsplump', c, sourceId, targetId);
+
         if (c && sourceId && targetId) {
             flog('edit connection ', c);
             var nodes = JBApp.funnel.nodes;
@@ -117,14 +118,17 @@ jsPlumb.ready(function () {
             var filteredBegin = nodes.filter(function (item) {
                 return item.hasOwnProperty('begin') && item['begin'].nodeId === sourceId;
             });
+            flog('filteredBegin', filteredBegin);
             
             var filteredDecision = nodes.filter(function (item) {
                 return item.hasOwnProperty('decision') && item['decision'].nodeId === sourceId;
             });
+            flog('filteredDecision', filteredDecision);
             
             var filteredTimeout = filteredGoal.filter(function (item) {
                 return item['goal'].timeoutNode === targetId;
             });
+            flog('filteredDecision', filteredDecision);
             
             if (filteredGoal.length > 0) {
                 var node = filteredGoal[0]['goal'];
@@ -175,10 +179,12 @@ jsPlumb.ready(function () {
     // this listener sets the connection's internal
     // id as the label overlay's text.
     instance.bind("connection", function (info) {
-        
         // Validate connection, we just allow only one connection between 2 endpoint within a direction
         var conn = info.connection;
-        var arr = instance.select({source: conn.sourceId, target: conn.targetId});
+        var arr = instance.select({
+            source: conn.sourceId,
+            target: conn.targetId
+        });
         if (arr.length > 1) {
             instance.detach(conn);
             return;
@@ -245,9 +251,7 @@ jsPlumb.ready(function () {
     //
     function initNode(el, type) {
         // initialise draggable elements.
-        instance.draggable(el, {
-            grid: [10, 10]
-        });
+        instance.draggable(el, {});
         
         if (type === 'goal') {
             instance.makeSource(el, {
@@ -342,13 +346,12 @@ jsPlumb.ready(function () {
             nodeHtml += '<div class="title">';
             nodeHtml += '   <i class="fa fa-trophy" aria-hidden="true"></i> Goal';
             nodeHtml += '   <span class="node-buttons clearfix">';
-            nodeHtml += '       <span class="btnNodeEdit" title="Edit name"><i class="fa fa-fw fa-pencil"></i></span>';
             nodeHtml += '       <span class="btnNodeSetting" title="Edit details"><i class="fa fa-fw fa-cog"></i></span>';
             nodeHtml += '       <span class="btnNodeDelete" title="Delete this node"><i class="fa fa-fw fa-trash"></i></span>';
             nodeHtml += '   </span>';
             nodeHtml += '</div>';
             nodeHtml += '<div class="inner">';
-            nodeHtml += '   <span class="nodeTitle">' + nodeName + '</span>';
+            nodeHtml += '   <span class="nodeTitle btnNodeEdit">' + nodeName + ' <i class="fa fa-pencil"></i></span>';
             nodeHtml += '   <span title="Connect to transition node" class="ep ep-transition"></span>';
             nodeHtml += '   <span title="Connect to timeout node" class="ep ep-timeout"></span>';
             nodeHtml += '</div>';
@@ -356,13 +359,12 @@ jsPlumb.ready(function () {
             nodeHtml += '<div class="title">';
             nodeHtml += '   <i class="fa fa-question-circle" aria-hidden="true"></i> Decision';
             nodeHtml += '   <span class="node-buttons clearfix">';
-            nodeHtml += '       <span class="btnNodeEdit" title="Edit name"><i class="fa fa-fw fa-pencil"></i></span>';
             nodeHtml += '       <span class="btnNodeSetting" title="Edit details"><i class="fa fa-fw fa-cog"></i></span>';
             nodeHtml += '       <span class="btnNodeDelete" title="Delete this node"><i class="fa fa-fw fa-trash"></i></span>';
             nodeHtml += '   </span>';
             nodeHtml += '</div>';
             nodeHtml += '<div class="inner">';
-            nodeHtml += '   <span class="nodeTitle">' + nodeName + '</span>';
+            nodeHtml += '   <span class="nodeTitle btnNodeEdit">' + nodeName + ' <i class="fa fa-pencil"></i></span>';
             nodeHtml += '   <span title="Make new choice" class="ep ep-green"></span> ';
             nodeHtml += '   <span title="Default next action" class="ep ep-red"></span>';
             nodeHtml += '</div>'
@@ -370,26 +372,24 @@ jsPlumb.ready(function () {
             nodeHtml += '<div class="title">';
             nodeHtml += '   <i class="fa fa-play" aria-hidden="true"></i> Begin';
             nodeHtml += '   <span class="node-buttons clearfix">';
-            nodeHtml += '       <span class="btnNodeEdit" title="Edit name"><i class="fa fa-fw fa-pencil"></i></span>';
             nodeHtml += '       <span class="btnNodeSetting" title="Edit details"><i class="fa fa-fw fa-cog"></i></span>';
             nodeHtml += '       <span class="btnNodeDelete" title="Delete this node"><i class="fa fa-fw fa-trash"></i></span>';
             nodeHtml += '   </span>';
             nodeHtml += '</div>';
             nodeHtml += '<div class="inner">';
-            nodeHtml += '   <span class="nodeTitle">' + nodeName + '</span>';
+            nodeHtml += '   <span class="nodeTitle btnNodeEdit">' + nodeName + ' <i class="fa fa-pencil"></i></span>';
             nodeHtml += '   <span title="Connect to other node" class="ep ep-basic"></span>';
             nodeHtml += '</div>';
         } else {
             var actionName = JBApp.ACTIONS[action];
             nodeHtml += '<div class="title">' + actionName;
             nodeHtml += '   <span class="node-buttons clearfix">';
-            nodeHtml += '       <span class="btnNodeEdit" title="Edit name"><i class="fa fa-fw fa-pencil"></i></span>';
             nodeHtml += '       <span class="btnNodeSetting" title="Edit details"><i class="fa fa-fw fa-cog"></i></span>';
             nodeHtml += '       <span class="btnNodeDelete" title="Delete this node"><i class="fa fa-fw fa-trash"></i></span>';
             nodeHtml += '   </span>';
             nodeHtml += '</div>';
             nodeHtml += '<div class="inner">';
-            nodeHtml += '   <span class="nodeTitle">' + nodeName + '</span>';
+            nodeHtml += '   <span class="nodeTitle btnNodeEdit">' + nodeName + ' <i class="fa fa-pencil"></i></span>';
             nodeHtml += '   <span title="Connect to other node" class="ep ep-basic"></span>';
             nodeHtml += '</div>';
         }
@@ -416,9 +416,9 @@ jsPlumb.ready(function () {
                     target: node.nextNodeId,
                     type: "decisionDefault"
                 });
-                if (JBApp.funnelNodes[node.nextNodeId]) {
-                    initConnection(JBApp.funnelNodes[node.nextNodeId]);
-                }
+                //if (JBApp.funnelNodes[node.nextNodeId]) {
+                //    initConnection(JBApp.funnelNodes[node.nextNodeId]);
+                //}
             }
             
             if (node.choices) {
@@ -428,9 +428,9 @@ jsPlumb.ready(function () {
                         target: key,
                         type: "decisionChoices"
                     });
-                    if (JBApp.funnelNodes[key]) {
-                        initConnection(JBApp.funnelNodes[key]);
-                    }
+                    //if (JBApp.funnelNodes[key]) {
+                    //    initConnection(JBApp.funnelNodes[key]);
+                    //}
                 }
             }
         } else {
@@ -456,9 +456,9 @@ jsPlumb.ready(function () {
                         target: timeoutNode,
                         type: "timeout"
                     });
-                    if (JBApp.funnelNodes[timeoutNode]) {
-                        initConnection(JBApp.funnelNodes[timeoutNode]);
-                    }
+                    //if (JBApp.funnelNodes[timeoutNode]) {
+                    //    initConnection(JBApp.funnelNodes[timeoutNode]);
+                    //}
                 }
             }
             
@@ -469,9 +469,9 @@ jsPlumb.ready(function () {
                         target: nextNodeIds[i],
                         type: "transition"
                     });
-                    if (JBApp.funnelNodes[nextNodeIds[i]]) {
-                        initConnection(JBApp.funnelNodes[nextNodeIds[i]]);
-                    }
+                    //if (JBApp.funnelNodes[nextNodeIds[i]]) {
+                    //    initConnection(JBApp.funnelNodes[nextNodeIds[i]]);
+                    //}
                 }
             } else if (nextNodeId) {
                 instance.connect({
@@ -479,9 +479,9 @@ jsPlumb.ready(function () {
                     target: nextNodeId,
                     type: "basic"
                 });
-                if (JBApp.funnelNodes[nextNodeId]) {
-                    initConnection(JBApp.funnelNodes[nextNodeId]);
-                }
+                //if (JBApp.funnelNodes[nextNodeId]) {
+                //    initConnection(JBApp.funnelNodes[nextNodeId]);
+                //}
             }
         }
     }
@@ -490,30 +490,46 @@ jsPlumb.ready(function () {
     instance.batch(function () {
         if (JBApp.funnel && JBApp.funnel.nodes && JBApp.funnel.nodes.length) {
             // Finding begin node
-            var beginNodes = [];
+            //var beginNodes = [];
+
             for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
                 var node = JBApp.funnel.nodes[i];
+
                 for (var key in node) {
                     if (node.hasOwnProperty(key)) {
-                        JBApp.funnelNodes[node[key].nodeId] = node[key];
+                        var nodeData = node[key];
                         var type = key;
                         if (['goal', 'decision', 'begin'].indexOf(key) === -1) {
                             type = 'action';
                         }
-                        newNode(node[key], type, key);
-                        if (key === 'begin') {
-                            beginNodes.push(node[key]);
-                        }
+                        //if (key === 'begin') {
+                        //    beginNodes.push(nodeData);
+                        //}
+
+                        JBApp.funnelNodes[nodeData.nodeId] = nodeData;
+                        newNode(nodeData, type, key);
+                    }
+                }
+            }
+
+            for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
+                var node = JBApp.funnel.nodes[i];
+
+                for (var key in node) {
+                    if (node.hasOwnProperty(key)) {
+                        var nodeData = node[key];
+                        initConnection(nodeData);
                     }
                 }
             }
         }
+
         // and finally, make first connection start from begin node
-        if (beginNodes.length) {
-            beginNodes.forEach(function (item) {
-                initConnection(item);
-            });
-        }
+        //if (beginNodes.length) {
+        //    beginNodes.forEach(function (item) {
+        //        initConnection(item);
+        //    });
+        //}
     });
     
     jsPlumb.fire("jsPlumbDemoLoaded", instance);
@@ -523,9 +539,11 @@ jsPlumb.ready(function () {
 });
 
 function initSideBar() {
+    flog('initSideBar');
+
     var rightPanel = $('.right-panel');
 
-    rightPanel.find('.list-group').niceScroll({
+    rightPanel.find('.list-group, .panel-body').niceScroll({
         cursorcolor: '#999',
         cursorwidth: 6,
         railpadding: {
@@ -581,12 +599,13 @@ function initSideBar() {
             JBApp.newNode(node, type, action);
             JBApp.funnel.nodes.push(objToPush);
             JBApp.isDirty = true;
-            flog('drop', ui);
         }
     });
 }
 
 function initTranModal() {
+    flog('initTranModal');
+
     var modal = $('#modalTransitions');
     modal.on('click', '.btnAddTrigger', function (e) {
         e.preventDefault();
@@ -608,6 +627,8 @@ function initTranModal() {
 }
 
 function showTranModal(tran, sourceId, targetId) {
+    flog('showTranModal', tran, sourceId, targetId);
+
     var modal = $('#modalTransitions');
     modal.find('[name=sourceId]').val(sourceId);
     modal.find('[name=targetId]').val(targetId);
@@ -632,6 +653,8 @@ function showTranModal(tran, sourceId, targetId) {
 }
 
 function showChoiceModal(choice, sourceId, targetId) {
+    flog('showChoiceModal', choice, sourceId, targetId);
+
     var modal = $('#modalChoice');
     modal.find('[name=sourceId]').val(sourceId);
     modal.find('[name=targetId]').val(targetId);
@@ -655,6 +678,8 @@ function showChoiceModal(choice, sourceId, targetId) {
 }
 
 function showTimeoutModal(node, sourceId, targetId) {
+    flog('showTimeoutModal', node, sourceId, targetId);
+
     var modal = $('#modalTimeoutNode');
     modal.find('[name=sourceId]').val(sourceId);
     modal.find('[name=targetId]').val(targetId);
@@ -663,6 +688,8 @@ function showTimeoutModal(node, sourceId, targetId) {
 }
 
 function initTimeoutModal() {
+    flog('initTimeoutModal');
+
     var modal = $('#modalTimeoutNode');
     modal.find('form').on('submit', function (e) {
         e.preventDefault();
@@ -673,6 +700,8 @@ function initTimeoutModal() {
 }
 
 function doSaveTimeout(form) {
+    flog('doSaveTimeout', form);
+
     var sourceId = form.find('[name=sourceId]').val();
     var targetId = form.find('[name=targetId]').val();
     var timeoutMins = form.find('[name=timeoutMins]').val();
@@ -692,6 +721,8 @@ function doSaveTimeout(form) {
 }
 
 function initChoiceModal() {
+    flog('initChoiceModal')
+
     var modal = $('#modalChoice');
     modal.on('click', '.btnAddChoice', function (e) {
         e.preventDefault();
@@ -709,6 +740,8 @@ function initChoiceModal() {
 }
 
 function doSaveChoice(form) {
+    flog('doSaveChoice', form);
+
     var constant = {};
     form.find('.choiceItems .form-group').each(function () {
         var key = $(this).find('[name=constKey]').val();
@@ -738,6 +771,8 @@ function doSaveChoice(form) {
 }
 
 function doSaveTrigger(form) {
+    flog('doSaveTrigger', form);
+
     var trigger = {};
     form.find('.transitionItems .form-group').each(function () {
         var type = $(this).find('[name=triggerType]').val();
@@ -776,6 +811,8 @@ function doSaveTrigger(form) {
 }
 
 function showModalTitle(node) {
+    flog('showModalTitle', node);
+
     var title = node.title;
     if (!title) {
         title = node.nodeId;
@@ -836,6 +873,8 @@ function initNodeActions() {
 }
 
 function updateNode(form) {
+    flog('updateNode', form);
+
     var sourceId = form.find('[name=sourceId]').val();
     var title = form.find('[name=title]').val();
     for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
@@ -854,6 +893,8 @@ function updateNode(form) {
 }
 
 function deleteNode(nodeId) {
+    flog('deleteNode', nodeId);
+
     var index = -1;
     for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
         var node = JBApp.funnel.nodes[i];
@@ -872,6 +913,8 @@ function deleteNode(nodeId) {
 }
 
 function deleteConnection(connection) {
+    flog('deleteConnection', connection);
+
     for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
         var node = JBApp.funnel.nodes[i];
         for (var key in node) {
@@ -907,9 +950,11 @@ function deleteConnection(connection) {
 }
 
 function initSaveButton() {
+    flog('initSaveButton');
+
     $('#btnSave').on('click', function (e) {
         e.preventDefault();
-        
+
         var valid = true;
         for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
             var node = JBApp.funnel.nodes[i];
@@ -955,14 +1000,4 @@ function uuid() {
         var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
         return v.toString(16);
     }));
-}
-
-function formatMins(i) {
-    if (i < 120) {
-        return i + " mins";
-    } else if (i < 60 * 24) {
-        return i / 60 + " hours";
-    } else {
-        return i / (60 * 24) + " days";
-    }
 }
