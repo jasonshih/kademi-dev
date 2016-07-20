@@ -106,6 +106,9 @@ jsPlumb.ready(function () {
         
         var sourceId = c.sourceId;
         var targetId = c.targetId;
+
+        flog('click on jsplump', c, sourceId, targetId);
+
         if (c && sourceId && targetId) {
             flog('edit connection ', c);
             var nodes = JBApp.funnel.nodes;
@@ -117,14 +120,17 @@ jsPlumb.ready(function () {
             var filteredBegin = nodes.filter(function (item) {
                 return item.hasOwnProperty('begin') && item['begin'].nodeId === sourceId;
             });
+            flog('filteredBegin', filteredBegin);
             
             var filteredDecision = nodes.filter(function (item) {
                 return item.hasOwnProperty('decision') && item['decision'].nodeId === sourceId;
             });
+            flog('filteredDecision', filteredDecision);
             
             var filteredTimeout = filteredGoal.filter(function (item) {
                 return item['goal'].timeoutNode === targetId;
             });
+            flog('filteredDecision', filteredDecision);
             
             if (filteredGoal.length > 0) {
                 var node = filteredGoal[0]['goal'];
@@ -342,13 +348,12 @@ jsPlumb.ready(function () {
             nodeHtml += '<div class="title">';
             nodeHtml += '   <i class="fa fa-trophy" aria-hidden="true"></i> Goal';
             nodeHtml += '   <span class="node-buttons clearfix">';
-            nodeHtml += '       <span class="btnNodeEdit" title="Edit name"><i class="fa fa-fw fa-pencil"></i></span>';
             nodeHtml += '       <span class="btnNodeSetting" title="Edit details"><i class="fa fa-fw fa-cog"></i></span>';
             nodeHtml += '       <span class="btnNodeDelete" title="Delete this node"><i class="fa fa-fw fa-trash"></i></span>';
             nodeHtml += '   </span>';
             nodeHtml += '</div>';
             nodeHtml += '<div class="inner">';
-            nodeHtml += '   <span class="nodeTitle">' + nodeName + '</span>';
+            nodeHtml += '   <span class="nodeTitle btnNodeEdit">' + nodeName + ' <i class="fa fa-pencil"></i></span>';
             nodeHtml += '   <span title="Connect to transition node" class="ep ep-transition"></span>';
             nodeHtml += '   <span title="Connect to timeout node" class="ep ep-timeout"></span>';
             nodeHtml += '</div>';
@@ -356,13 +361,12 @@ jsPlumb.ready(function () {
             nodeHtml += '<div class="title">';
             nodeHtml += '   <i class="fa fa-question-circle" aria-hidden="true"></i> Decision';
             nodeHtml += '   <span class="node-buttons clearfix">';
-            nodeHtml += '       <span class="btnNodeEdit" title="Edit name"><i class="fa fa-fw fa-pencil"></i></span>';
             nodeHtml += '       <span class="btnNodeSetting" title="Edit details"><i class="fa fa-fw fa-cog"></i></span>';
             nodeHtml += '       <span class="btnNodeDelete" title="Delete this node"><i class="fa fa-fw fa-trash"></i></span>';
             nodeHtml += '   </span>';
             nodeHtml += '</div>';
             nodeHtml += '<div class="inner">';
-            nodeHtml += '   <span class="nodeTitle">' + nodeName + '</span>';
+            nodeHtml += '   <span class="nodeTitle btnNodeEdit">' + nodeName + ' <i class="fa fa-pencil"></i></span>';
             nodeHtml += '   <span title="Make new choice" class="ep ep-green"></span> ';
             nodeHtml += '   <span title="Default next action" class="ep ep-red"></span>';
             nodeHtml += '</div>'
@@ -370,26 +374,24 @@ jsPlumb.ready(function () {
             nodeHtml += '<div class="title">';
             nodeHtml += '   <i class="fa fa-play" aria-hidden="true"></i> Begin';
             nodeHtml += '   <span class="node-buttons clearfix">';
-            nodeHtml += '       <span class="btnNodeEdit" title="Edit name"><i class="fa fa-fw fa-pencil"></i></span>';
             nodeHtml += '       <span class="btnNodeSetting" title="Edit details"><i class="fa fa-fw fa-cog"></i></span>';
             nodeHtml += '       <span class="btnNodeDelete" title="Delete this node"><i class="fa fa-fw fa-trash"></i></span>';
             nodeHtml += '   </span>';
             nodeHtml += '</div>';
             nodeHtml += '<div class="inner">';
-            nodeHtml += '   <span class="nodeTitle">' + nodeName + '</span>';
+            nodeHtml += '   <span class="nodeTitle btnNodeEdit">' + nodeName + ' <i class="fa fa-pencil"></i></span>';
             nodeHtml += '   <span title="Connect to other node" class="ep ep-basic"></span>';
             nodeHtml += '</div>';
         } else {
             var actionName = JBApp.ACTIONS[action];
             nodeHtml += '<div class="title">' + actionName;
             nodeHtml += '   <span class="node-buttons clearfix">';
-            nodeHtml += '       <span class="btnNodeEdit" title="Edit name"><i class="fa fa-fw fa-pencil"></i></span>';
             nodeHtml += '       <span class="btnNodeSetting" title="Edit details"><i class="fa fa-fw fa-cog"></i></span>';
             nodeHtml += '       <span class="btnNodeDelete" title="Delete this node"><i class="fa fa-fw fa-trash"></i></span>';
             nodeHtml += '   </span>';
             nodeHtml += '</div>';
             nodeHtml += '<div class="inner">';
-            nodeHtml += '   <span class="nodeTitle">' + nodeName + '</span>';
+            nodeHtml += '   <span class="nodeTitle btnNodeEdit">' + nodeName + ' <i class="fa fa-pencil"></i></span>';
             nodeHtml += '   <span title="Connect to other node" class="ep ep-basic"></span>';
             nodeHtml += '</div>';
         }
@@ -525,7 +527,7 @@ jsPlumb.ready(function () {
 function initSideBar() {
     var rightPanel = $('.right-panel');
 
-    rightPanel.find('.list-group').niceScroll({
+    rightPanel.find('.list-group, .panel-body').niceScroll({
         cursorcolor: '#999',
         cursorwidth: 6,
         railpadding: {
@@ -581,7 +583,7 @@ function initSideBar() {
             JBApp.newNode(node, type, action);
             JBApp.funnel.nodes.push(objToPush);
             JBApp.isDirty = true;
-            flog('drop', ui);
+            saveBuilder();
         }
     });
 }
@@ -909,7 +911,7 @@ function deleteConnection(connection) {
 function initSaveButton() {
     $('#btnSave').on('click', function (e) {
         e.preventDefault();
-        
+
         var valid = true;
         for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
             var node = JBApp.funnel.nodes[i];
