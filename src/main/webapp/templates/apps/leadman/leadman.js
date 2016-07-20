@@ -908,10 +908,10 @@ function initTopNavSearch() {
         input: function () {
             typewatch(function () {
                 var text = txt.val().trim();
-                var filter = $('#leadSearchFilterButton').find('span').text();
+                var status = $('#leadSearchFilterButton').find('span').text();
 
                 if (text.length > 0) {
-                    doTopNavSearch(text, filter, suggestionsWrapper, backdrop);
+                    doTopNavSearch(text, status, suggestionsWrapper, backdrop);
                 } else {
                     suggestionsWrapper.addClass('hide');
                     backdrop.addClass('hide');
@@ -997,15 +997,15 @@ function initTopNavSearch() {
     }, '.suggestion');
 }
 
-function doTopNavSearch(query, filter, suggestionsWrapper, backdrop) {
-    flog('doTopNavSearch', query, filter, suggestionsWrapper, backdrop);
+function doTopNavSearch(query, status, suggestionsWrapper, backdrop) {
+    flog('doTopNavSearch', query, status, suggestionsWrapper, backdrop);
 
     $.ajax({
         url: '/leads',
         type: 'GET',
         data: {
             q: query,
-            filter: filter
+            status: status
         },
         dataType: 'JSON',
         success: function (resp) {
