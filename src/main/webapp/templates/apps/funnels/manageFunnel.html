@@ -68,16 +68,18 @@
                 </div>
                 <div class="panel panel-default panel-setting">
                     <div class="panel-heading">
-                        <i class="fa fa-pencil panel-edit-name"></i> <span class="panel-edit-name">Edit name</span>
+                        <i class="fa fa-pencil panel-edit-title"></i> <span class="panel-edit-title">Edit title</span>
                         <i class="fa fa-edit panel-edit-details"></i> <span class="panel-edit-details">Edit details</span>
                         <i class="fa fa-cogs panel-transition"></i> <span class="panel-transition">Trigger</span>
                         <i class="fa fa-question-circle panel-decision"></i> <span class="panel-decision">Decision choice constant</span>
                         <i class="fa fa-clock-o panel-timeout"></i> <span class="panel-timeout">Timeout</span>
                     </div>
                     <div class="panel-body form-horizontal">
-                        <form class="panel-edit-name">
-                            <label for="node-name">Node name</label>
-                            <input type="text" id="node-name" value="" class="form-control" />
+                        <form class="panel-edit-title">
+                            <label>Node title</label>
+                            <input type="text" value="" name="title" class="form-control" />
+                            <input type="hidden" name="sourceId">
+                            <input type="hidden" name="targetId">
                         </form>
                         <form class="panel-edit-details">
 
@@ -90,7 +92,6 @@
                             </div>
                             <div class="form-group placeholderform hide">
                                 <div class="col-sm-12">
-
                                     <select name="triggerType" class="form-control">
                                         <option value="automationTrigger">automationTrigger</option>
                                         <option value="contactFormTrigger">contactFormTrigger</option>
@@ -170,7 +171,7 @@
                         <form class="panel-timeout">
                             <div class="form-group">
                                 <div class="col-sm-12">
-                                    <label>timeoutMins</label>
+                                    <label>Timeout (in ms)</label>
                                     <input type="number" min="0" class="form-control" name="timeoutMins" placeholder="timeoutMins">
                                 </div>
                             </div>
