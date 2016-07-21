@@ -46,16 +46,20 @@ function initModalForm() {
 function initDateTimePicker() {
     var date = new Date();
     date.setDate(date.getDate() - 1);
-    $('#auctionStartDate').datetimepicker().on('dp.change', function(e){
+    var opts = {
+        widgetPositioning: {
+            vertical: 'bottom'
+        },
+        format: "DD/MM/YYYY HH:mm"
+    };
+    $('#auctionStartDate').datetimepicker(opts).on('dp.change', function(e){
         var d = $('#auctionEndDate').data("DateTimePicker").date();
         if (!d || d.isBefore(e.date, 'day')){
             var n = e.date.add(1, 'd');
             $('#auctionEndDate').data("DateTimePicker").date(n);
         }
     });
-    $('#auctionStartDate').data("DateTimePicker").format = "DD/MM/YYYY HH:mm";
-    $('#auctionEndDate').datetimepicker();
-    $('#auctionEndDate').data("DateTimePicker").format = "DD/MM/YYYY HH:mm";
+    $('#auctionEndDate').datetimepicker(opts);
 }
 
 function initAuctionDelete() {
