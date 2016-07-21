@@ -4,7 +4,6 @@ var JBApp = {
     funnel: null,
     initialized: false,
     availableTriggers: null,
-    isDirty: false,
     ACTIONS: {
         'emailAction': '<i class="fa fa-envelope" aria-hidden="true"></i> Send Email',
         'createTaskAction': '<i class="fa fa-tasks" aria-hidden="true"></i> Create Task',
@@ -22,12 +21,6 @@ $(function () {
     initNodeActions();
     initSettingPanel();
 });
-
-window.onbeforeunload = function (e) {
-    if (JBApp.isDirty) {
-        return 'Changes you made may not be saved.';
-    }
-};
 
 jsPlumb.ready(function () {
     try {
@@ -80,9 +73,9 @@ jsPlumb.ready(function () {
                         labelOverlay.component.setParameter('clickedButtonX', true);
                         var c = confirm('Are you sure you want to delete this connection?');
                         if (c) {
-                            JBApp.isDirty = true;
                             deleteConnection(labelOverlay.component);
                             instance.detach(labelOverlay.component);
+                            saveFunnel('Connection is deleted!');
                         } else {
                             labelOverlay.component.setParameter('clickedButtonXCancelled', true);
                         }
@@ -256,7 +249,8 @@ jsPlumb.ready(function () {
                     }
                 }
             }
-            JBApp.isDirty = true;
+
+            saveFunnel();
         }
     });
     
@@ -265,7 +259,11 @@ jsPlumb.ready(function () {
     //
     function initNode(el, type) {
         // initialise draggable elements.
-        instance.draggable(el, {});
+        instance.draggable(el, {
+            stop: function () {
+                saveFunnel();
+            }
+        });
         
         if (type === 'goal') {
             instance.makeSource(el, {
@@ -360,7 +358,7 @@ jsPlumb.ready(function () {
             nodeHtml += '<div class="title">';
             nodeHtml += '   <i class="fa fa-trophy" aria-hidden="true"></i> Goal';
             nodeHtml += '   <span class="node-buttons clearfix">';
-            nodeHtml += '       <span class="btnNodeSetting" title="Edit details"><i class="fa fa-fw fa-cog"></i></span>';
+            nodeHtml += '       <span class="btnNodeDetails" title="Edit details"><i class="fa fa-fw fa-cog"></i></span>';
             nodeHtml += '       <span class="btnNodeDelete" title="Delete this node"><i class="fa fa-fw fa-trash"></i></span>';
             nodeHtml += '   </span>';
             nodeHtml += '</div>';
@@ -373,7 +371,7 @@ jsPlumb.ready(function () {
             nodeHtml += '<div class="title">';
             nodeHtml += '   <i class="fa fa-question-circle" aria-hidden="true"></i> Decision';
             nodeHtml += '   <span class="node-buttons clearfix">';
-            nodeHtml += '       <span class="btnNodeSetting" title="Edit details"><i class="fa fa-fw fa-cog"></i></span>';
+            nodeHtml += '       <span class="btnNodeDetails" title="Edit details"><i class="fa fa-fw fa-cog"></i></span>';
             nodeHtml += '       <span class="btnNodeDelete" title="Delete this node"><i class="fa fa-fw fa-trash"></i></span>';
             nodeHtml += '   </span>';
             nodeHtml += '</div>';
@@ -386,7 +384,7 @@ jsPlumb.ready(function () {
             nodeHtml += '<div class="title">';
             nodeHtml += '   <i class="fa fa-play" aria-hidden="true"></i> Begin';
             nodeHtml += '   <span class="node-buttons clearfix">';
-            nodeHtml += '       <span class="btnNodeSetting" title="Edit details"><i class="fa fa-fw fa-cog"></i></span>';
+            nodeHtml += '       <span class="btnNodeDetails" title="Edit details"><i class="fa fa-fw fa-cog"></i></span>';
             nodeHtml += '       <span class="btnNodeDelete" title="Delete this node"><i class="fa fa-fw fa-trash"></i></span>';
             nodeHtml += '   </span>';
             nodeHtml += '</div>';
@@ -398,7 +396,7 @@ jsPlumb.ready(function () {
             var actionName = JBApp.ACTIONS[action];
             nodeHtml += '<div class="title">' + actionName;
             nodeHtml += '   <span class="node-buttons clearfix">';
-            nodeHtml += '       <span class="btnNodeSetting" title="Edit details"><i class="fa fa-fw fa-cog"></i></span>';
+            nodeHtml += '       <span class="btnNodeDetails" title="Edit details"><i class="fa fa-fw fa-cog"></i></span>';
             nodeHtml += '       <span class="btnNodeDelete" title="Delete this node"><i class="fa fa-fw fa-trash"></i></span>';
             nodeHtml += '   </span>';
             nodeHtml += '</div>';
@@ -567,10 +565,10 @@ function updateNode(form) {
         for (var key in node) {
             if (node[key].nodeId === sourceId) {
                 node[key].title = title;
-                JBApp.isDirty = true;
                 $('#' + sourceId).find('.nodeTitle').html(title + ' <i class="fa fa-pencil"></i>');
-                Msg.info('Title updated');
-                hideSettingPanel();
+                saveFunnel('Title is updated', function () {
+                    hideSettingPanel();
+                });
                 break;
             }
         }
@@ -616,13 +614,7 @@ function initSideBar() {
     rightPanel.find('.list-group-item').draggable({
         revert: 'invalid',
         tolerance: 'pointer',
-        helper: 'clone',
-        start: function (e, ui) {
-            
-        },
-        stop: function (e, ui) {
-            console.log('stop', ui);
-        }
+        helper: 'clone'
     });
 
     var paper = $('#paper');
@@ -655,7 +647,7 @@ function initSideBar() {
             }
             JBApp.newNode(node, type, action);
             JBApp.funnel.nodes.push(objToPush);
-            JBApp.isDirty = true;
+            saveFunnel('New node is added!');
         }
     });
 }
@@ -772,9 +764,10 @@ function doSaveTimeout(form) {
             }
         }
     }
-    JBApp.isDirty = true;
-    Msg.info('timeoutMins updated');
-    hideSettingPanel();
+
+    saveFunnel('Timeout is updated', function () {
+        hideSettingPanel();
+    });
 }
 
 function initDecisionForm() {
@@ -822,9 +815,10 @@ function doSaveChoice(form) {
             }
         }
     }
-    JBApp.isDirty = true;
-    hideSettingPanel();
-    Msg.info('Decision choices updated');
+
+    saveFunnel('Decision choices updated', function () {
+        hideSettingPanel();
+    });
 }
 
 function doSaveTrigger(form) {
@@ -863,9 +857,10 @@ function doSaveTrigger(form) {
             }
         }
     }
-    JBApp.isDirty = true;
-    hideSettingPanel();
-    Msg.info('Transition trigger updated');
+
+    saveFunnel('Transition trigger updated', function () {
+        hideSettingPanel();
+    });
 }
 
 function showTitleForm(node) {
@@ -899,7 +894,7 @@ function initNodeActions() {
         }
     });
 
-    $(document.body).on('click', '.btnNodeSetting', function (e) {
+    $(document.body).on('click', '.btnNodeDetails', function (e) {
         e.preventDefault();
 
         var domElement = $(this).closest('.w');
@@ -919,6 +914,7 @@ function initNodeActions() {
             var id = domElement.attr("id");
             deleteNode(id);
             JBApp.jsPlumpInstance.remove(id);
+            saveFunnel('Node is deleted!');
         }
     });
 }
@@ -938,7 +934,6 @@ function deleteNode(nodeId) {
     }
     
     if (index > -1) {
-        JBApp.isDirty = true;
         JBApp.funnel.nodes.splice(index, 1);
     }
 }
@@ -986,41 +981,37 @@ function initSaveButton() {
     $('#btnSave').on('click', function (e) {
         e.preventDefault();
 
-        var valid = true;
-        for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
-            var node = JBApp.funnel.nodes[i];
-            for (var key in node) {
-                if (node.hasOwnProperty(key)) {
-                    var nodeId = node[key].nodeId;
-                    node[key].x = parseInt($('#' + nodeId).css('left').replace('px', ''));
-                    node[key].y = parseInt($('#' + nodeId).css('top').replace('px', ''));
-                    if (key === 'begin') {
-                        if (!node[key].transition.nextNodeId) {
-                            valid = false;
-                        }
-                        if (!node[key].transition.trigger) {
-                            valid = false;
-                        }
-                    }
-                }
+        saveFunnel();
+    });
+}
+
+function saveFunnel(message, callback) {
+    flog('saveFunnel');
+
+    for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
+        var node = JBApp.funnel.nodes[i];
+        for (var key in node) {
+            if (node.hasOwnProperty(key)) {
+                var nodeId = node[key].nodeId;
+                node[key].x = parseInt($('#' + nodeId).css('left').replace('px', ''));
+                node[key].y = parseInt($('#' + nodeId).css('top').replace('px', ''));
             }
         }
-        // validating
-        if (JBApp.funnel.nodes.length > 1 && !valid) {
-            Msg.error('Could not save funnel. Begin node must have transition which connected to other node and had a trigger');
-        } else {
-            $.ajax({
-                url: 'funnel.json',
-                type: 'PUT',
-                data: JSON.stringify(JBApp.funnel),
-                success: function () {
-                    Msg.success('File is saved!');
-                    JBApp.isDirty = false;
-                },
-                error: function (e) {
-                    Msg.error(e.status + ': ' + e.statusText);
-                }
-            });
+    }
+
+    $.ajax({
+        url: 'funnel.json',
+        type: 'PUT',
+        data: JSON.stringify(JBApp.funnel),
+        success: function () {
+            Msg.success(message || 'Funnel is saved!');
+
+            if (typeof callback === 'function') {
+                callback();
+            }
+        },
+        error: function (e) {
+            Msg.error(e.status + ': ' + e.statusText);
         }
     });
 }
