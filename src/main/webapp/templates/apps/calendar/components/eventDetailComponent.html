@@ -1,0 +1,45 @@
+<h3>$page.title</h3>
+
+<div class="calendar-event-byline">
+    #if( $page.organisor )
+    <small class="author">By <a href="/users/$page.organisor.name/public">$page.organisor.formattedName</a></small>
+    #end
+    #if( $event.location )
+    <small class="location">At $page.location</small>
+    #end
+    <small>
+        Starts $formatter.formatDate( $page.startDate, $page.timezone )
+        (<abbr title="$formatter.formatDateISO8601($page.startDate)" class="timeago">$formatter.formatDateTime($page.startDate, $page.timezone)</abbr>)
+    </small>
+</div>
+
+<div class='calendar-event-content'>
+    #if( $page.description )
+    $page.description
+    #else
+    This event has no description
+    #end
+</div>
+#if($page.isWritable())
+<div class="text-right">
+    <button class="btn btn-edit-event btn-primary"><i class="fa fa-pencil"></i> Edit Description</button>
+</div>
+#end
+
+<hr/>
+<div class="row hide" id="event-editor">
+    <form action="" method="post" class="event-editor-form">
+        <div class="col-sm-8">
+            <h3>Edit $page.parent.title</h3>
+        </div>
+        <div class="col-sm-4">
+            <button class="btn btn-done-editing btn-success pull-right hide"><i class="fa fa-check-circle"></i> Done</button>
+            <button style="margin-right: 5px" class="btn btn-save-event btn-primary pull-right hide" type="submit"><i class="fa fa-save"></i> Save</button>
+        </div>
+        <div class="col-md-12">
+            <div class="embed-responsive embed-responsive-16by9">
+                <iframe class="embed-responsive-item" src="" id="editor-frame"></iframe>
+            </div>
+        </div>
+    </form>
+</div>

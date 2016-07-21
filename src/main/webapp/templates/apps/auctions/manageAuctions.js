@@ -46,18 +46,16 @@ function initModalForm() {
 function initDateTimePicker() {
     var date = new Date();
     date.setDate(date.getDate() - 1);
-    $('#auctionStartDate').datetimepicker({startDate: date});
-    $('#auctionStartDate').data("DateTimePicker").format = "DD/MM/YYYY HH:mm";
-    $('#auctionEndDate').datetimepicker({startDate: date});
-    $('#auctionEndDate').data("DateTimePicker").format = "DD/MM/YYYY HH:mm";
-
-    $('#auctionStartDate').change(function (e) {
-        $('#auctionEndDate').data("DateTimePicker").setStartDate(new Date($('#auctionStartDate').data("DateTimePicker").getDate()));
-        var d = new Date($('#auctionStartDate').data("DateTimePicker").getDate());
-        d.setDate(d.getDate() + 1);
-        $('#auctionEndDate').data("DateTimePicker").setDate(d);
-        $('#auctionEndDate').focus();
+    $('#auctionStartDate').datetimepicker().on('dp.change', function(e){
+        var d = $('#auctionEndDate').data("DateTimePicker").date();
+        if (!d || d.isBefore(e.date, 'day')){
+            var n = e.date.add(1, 'd');
+            $('#auctionEndDate').data("DateTimePicker").date(n);
+        }
     });
+    $('#auctionStartDate').data("DateTimePicker").format = "DD/MM/YYYY HH:mm";
+    $('#auctionEndDate').datetimepicker();
+    $('#auctionEndDate').data("DateTimePicker").format = "DD/MM/YYYY HH:mm";
 }
 
 function initAuctionDelete() {

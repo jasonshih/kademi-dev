@@ -1,0 +1,83 @@
+#if( $page.writable )
+<button class="btn btn-success add-event" data-toggle="modal" data-target="#add-event-modal">
+    <span class="glyphicon glyphicon-plus"></span>
+    Create event
+</button>
+<br> <br>
+#end
+<div id="add-event-modal" class="modal fade">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3>Create a new event</h3>
+            </div>
+            <form method="POST" action="$page.href" class="form-horizontal" id="new-event">
+                <input type="hidden" name="comment"/>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label col-md-2" for="newQuestion">Title</label>
+                        <div class="col-md-10">
+                            <input type="text" placeholder="A title for the event" id="summary" name="summary" class="form-control required" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-2" for="description">Description</label>
+                        <div class="col-md-10">
+                            <textarea name="description" id="description" class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-2" for="description">Attendees</label>
+                        <div class="col-md-10">
+                            <textarea name="attendees" id="attendees" class="form-control" rows="1"></textarea>
+                            <i>Enter user names or email addresses</i>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="control-label col-md-2" for="location">Timezone</label>
+                        <div class="col-md-4">
+                            <select name="timezone" class="chosen-select required form-control">
+                                <option value="">[Please select]</option>
+                                #foreach($tzId in $page.timezoneIdList)
+                                $formatter.option( $tzId, $tzId, $page.timezone )
+                                #end
+                            </select>
+                        </div>
+
+                        <label class="control-label col-md-2" for="startDate">Dates & times</label>
+                        <div class="col-md-4">
+                            <input type="text" id="event-range" placeholder="Choose start and end dates" value="$formatter.formatDateTime(  $page.startDate, $page.timezone ) - $formatter.formatDateTime( $page.endDate, $page.timezone )" class="form-control" />
+                            <input type="hidden" id="startDate" name="startDate" value="$formatter.formatDateTime(  $page.startDate, $page.timezone )"  />
+                            <input type="hidden" id="endDate" name="endDate" value="$formatter.formatDateTime( $page.endDate, $page.timezone )"  />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-2" for="location">Location</label>
+                        <div class="col-md-4"><input type="text" id="location" name="location" placeholder="38 Boulevarde Ave" class="form-control" /></div>
+                        <label class="control-label col-md-2" for="Organisor">Organisor</label>
+                        <div class="col-md-4">
+                            <input type="text" name="organisor" id="Organisor" placeholder="Email address or user id" value="$!user.email" class="required form-control" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn" data-dismiss="modal">Close</a>
+                    <button class="btn btn-success" type="submit">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                        Create event
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+</script>

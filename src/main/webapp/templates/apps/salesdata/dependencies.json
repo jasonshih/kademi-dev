@@ -1,0 +1,18 @@
+{
+    "dependencies": [{
+            "css": {
+                "path": "/theme/variables.css",
+                "cssMedia": "all"
+            }
+        }, {
+            "less": {
+                "lessMedia": "all",
+                "path": "/theme/variables.less"
+            }
+        }, {
+            "js": {
+                "group": "main",
+                "path": "/theme/something.js"
+            }
+        }]
+}
