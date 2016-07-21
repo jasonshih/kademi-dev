@@ -7,7 +7,7 @@
     position: relative;
     overflow: hidden;
     height: 600px;
-    margin: 0 0 0 15px;
+    margin: 0 0 15px;
 }
 
 #builder .list-group-item {
@@ -40,28 +40,11 @@
     height: 100%;
 }
 
-#builder .right-panel .panel-setting {
-    z-index: 0;
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-}
-
 #builder .right-panel .panel .panel-heading {
     border-radius: 0;
 }
 
-#builder .right-panel .panel-setting .panel {
-    position: absolute;
-    top: 0;
-    width: 212px;
-    transition: 0.2s all;
-}
-
-.nodes-list {
+#builder .right-panel .nodes-list {
     z-index: 1;
     right: 0;
     position: absolute;
@@ -69,21 +52,18 @@
     width: 100%;
 }
 
-#builder .right-panel .panel-setting .panel-edit-name,
-#builder .right-panel .panel-setting .panel-edit-details {
+#builder .right-panel .panel-setting {
+    z-index: 0;
+    position: absolute;
+    top: 0;
     right: -214px;
+    width: 212px;
+    height: 100%;
+    transition: 0.2s all;
 }
 
-#builder .right-panel .panel-setting.showed-edit-name,
-#builder .right-panel .panel-setting.panel-edit-details {
+#builder .right-panel .panel-setting.showed {
     z-index: 2;
-}
-
-#builder .right-panel .panel-setting.showed-edit-name .panel-edit-name {
-    right: 0;
-}
-
-#builder .right-panel .panel-setting.showed-edit-details .panel-edit-details {
     right: 0;
 }
 
@@ -117,16 +97,6 @@
     background-color: white;
     font-size: 14px;
     transition: background-color 0.25s ease-in;
-}
-
-.w:hover {
-    /*background-color: #5c96bc;*/
-    /*color: white;*/
-}
-
-.w.begin {
-    /*background: #2e6f9a;*/
-    /*color: #fff;*/
 }
 
 .w .inner {
@@ -166,22 +136,9 @@
 }
 
 .aLabel {
-    -webkit-transition: background-color 0.25s ease-in;
-    -moz-transition: background-color 0.25s ease-in;
     transition: background-color 0.25s ease-in;
-}
-
-.aLabel.jsplumb-hover, .jsplumb-source-hover, .jsplumb-target-hover {
-    /*background-color: #1e8151;*/
-    /*color: white;*/
-}
-
-.aLabel {
     background-color: white;
-    opacity: 0.8;
     padding: 0.3em;
-    border-radius: 0.5em;
-    border: 1px solid #346789;
     cursor: pointer;
 }
 

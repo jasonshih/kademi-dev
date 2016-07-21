@@ -2,7 +2,6 @@
 
 var JBApp = {
     funnel: null,
-    funnelNodes: {},
     initialized: false,
     availableTriggers: null,
     isDirty: false,
@@ -44,17 +43,33 @@ jsPlumb.ready(function () {
     
     // setup some defaults for jsPlumb.
     var instance = jsPlumb.getInstance({
-        Endpoint: ["Dot", {radius: 2}],
-        Connector: ["Flowchart", {cornerRadius: 5}],
-        HoverPaintStyle: {strokeStyle: "#1e8151", lineWidth: 2},
+        Endpoint: ["Dot", {
+            radius: 2
+        }],
+        Connector: ["Flowchart", {
+            cornerRadius: 5,
+            gap: 1,
+            stub: 15,
+            alwaysRespectStubs: true,
+            midpoint: 1
+        }],
+        HoverPaintStyle: {
+            strokeStyle: "#1e8151",
+            lineWidth: 2
+        },
         ConnectionOverlays: [
             ["Arrow", {
                 location: 1,
                 id: "arrow",
-                length: 14,
+                length: 10,
+                width: 10,
                 foldback: 0.5
             }],
-            ["Label", {label: "", id: "label", cssClass: "aLabel"}],
+            ["Label", {
+                label: "",
+                id: "label",
+                cssClass: "aLabel"
+            }],
             ["Custom", {
                 create: function (component) {
                     return $('<div><a href="#" title="Click to delete connection" class="buttonX"><i class="fa fa-times"></i></a></div>');
@@ -296,7 +311,7 @@ jsPlumb.ready(function () {
             
             instance.makeSource(el, {
                 filter: ".ep-green",
-                connectorStyle: {strokeStyle: "#0f0", lineWidth: 2, outlineColor: "transparent", outlineWidth: 4},
+                connectorStyle: {strokeStyle: "#008000", lineWidth: 2, outlineColor: "transparent", outlineWidth: 4},
                 connectionType: "decisionChoices",
                 extract: {
                     "action": "decisionChoices-action"
@@ -416,9 +431,6 @@ jsPlumb.ready(function () {
                     target: node.nextNodeId,
                     type: "decisionDefault"
                 });
-                //if (JBApp.funnelNodes[node.nextNodeId]) {
-                //    initConnection(JBApp.funnelNodes[node.nextNodeId]);
-                //}
             }
             
             if (node.choices) {
@@ -428,9 +440,6 @@ jsPlumb.ready(function () {
                         target: key,
                         type: "decisionChoices"
                     });
-                    //if (JBApp.funnelNodes[key]) {
-                    //    initConnection(JBApp.funnelNodes[key]);
-                    //}
                 }
             }
         } else {
@@ -456,9 +465,6 @@ jsPlumb.ready(function () {
                         target: timeoutNode,
                         type: "timeout"
                     });
-                    //if (JBApp.funnelNodes[timeoutNode]) {
-                    //    initConnection(JBApp.funnelNodes[timeoutNode]);
-                    //}
                 }
             }
             
@@ -469,9 +475,6 @@ jsPlumb.ready(function () {
                         target: nextNodeIds[i],
                         type: "transition"
                     });
-                    //if (JBApp.funnelNodes[nextNodeIds[i]]) {
-                    //    initConnection(JBApp.funnelNodes[nextNodeIds[i]]);
-                    //}
                 }
             } else if (nextNodeId) {
                 instance.connect({
@@ -479,9 +482,6 @@ jsPlumb.ready(function () {
                     target: nextNodeId,
                     type: "basic"
                 });
-                //if (JBApp.funnelNodes[nextNodeId]) {
-                //    initConnection(JBApp.funnelNodes[nextNodeId]);
-                //}
             }
         }
     }
@@ -489,9 +489,6 @@ jsPlumb.ready(function () {
     // suspend drawing and initialise.
     instance.batch(function () {
         if (JBApp.funnel && JBApp.funnel.nodes && JBApp.funnel.nodes.length) {
-            // Finding begin node
-            //var beginNodes = [];
-
             for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
                 var node = JBApp.funnel.nodes[i];
 
@@ -502,11 +499,7 @@ jsPlumb.ready(function () {
                         if (['goal', 'decision', 'begin'].indexOf(key) === -1) {
                             type = 'action';
                         }
-                        //if (key === 'begin') {
-                        //    beginNodes.push(nodeData);
-                        //}
 
-                        JBApp.funnelNodes[nodeData.nodeId] = nodeData;
                         newNode(nodeData, type, key);
                     }
                 }
@@ -523,13 +516,6 @@ jsPlumb.ready(function () {
                 }
             }
         }
-
-        // and finally, make first connection start from begin node
-        //if (beginNodes.length) {
-        //    beginNodes.forEach(function (item) {
-        //        initConnection(item);
-        //    });
-        //}
     });
     
     jsPlumb.fire("jsPlumbDemoLoaded", instance);
