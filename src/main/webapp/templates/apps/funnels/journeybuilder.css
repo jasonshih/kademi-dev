@@ -67,6 +67,35 @@
     right: 0;
 }
 
+#builder .right-panel .panel-setting .panel-body {
+    height: calc(100% - 36px - 51px);
+}
+
+#builder .right-panel .panel-setting .panel-heading > *,
+#builder .right-panel .panel-setting .panel-body > * {
+    display: none;
+}
+
+#builder .right-panel .panel-setting.panel-edit-name .panel-edit-name {
+    display: block !important;
+}
+
+#builder .right-panel .panel-setting.panel-edit-details .panel-edit-details {
+    display: block !important;
+}
+
+#builder .right-panel .panel-setting.panel-transition .panel-transition {
+    display: block !important;
+}
+
+#builder .right-panel .panel-setting.panel-decision .panel-decision {
+    display: block !important;
+}
+
+#builder .right-panel .panel-setting.panel-timeout .panel-timeout {
+    display: block !important;
+}
+
 #builder .right-panel .list-group {
     margin-bottom: 0;
     height: calc(100% - 36px);

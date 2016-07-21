@@ -15,13 +15,12 @@ var JBApp = {
         'removeProfile': '<i class="fa fa-pencil-square-o" aria-hidden="true"></i> Remove profile'
     }
 };
+
 $(function () {
     initSideBar();
     initSaveButton();
-    initTranModal();
-    initChoiceModal();
-    initTimeoutModal();
     initNodeActions();
+    initSettingPanel();
 });
 
 window.onbeforeunload = function (e) {
@@ -156,20 +155,20 @@ jsPlumb.ready(function () {
                             return item.nextNodeId === targetId;
                         });
                         if (trans.length) {
-                            showTranModal(trans[0], sourceId, targetId);
+                            showTransitionForm(trans[0], sourceId, targetId);
                         }
                     }
                 }
             } else if (filteredBegin.length > 0) {
                 var node = filteredBegin[0]['begin'];
                 if (node.transition) {
-                    showTranModal(node.transition, sourceId, targetId);
+                    showTransitionForm(node.transition, sourceId, targetId);
                 }
             } else if (filteredDecision.length > 0) {
                 var node = filteredDecision[0]['decision'];
                 var choice = node.choices[targetId];
                 if (choice) {
-                    showChoiceModal(choice, sourceId, targetId);
+                    showDecisionForm(choice, sourceId, targetId);
                 }
             }
         } else {
@@ -524,6 +523,46 @@ jsPlumb.ready(function () {
     flog('JBApp init done');
 });
 
+function initSettingPanel() {
+    flog('initSettingPanel');
+
+    var settingPanel = $('.panel-setting');
+
+    settingPanel.find('.btn-close-setting').on('click', function (e) {
+        e.preventDefault();
+
+        hideSettingPanel();
+    });
+
+    settingPanel.find('.btn-save-setting').on('click', function (e) {
+        e.preventDefault();
+
+        settingPanel.find('.panel-body form.active').trigger('submit');
+    });
+
+    initTransitionForm();
+    initDecisionForm();
+    initTimeoutForm();
+}
+
+function hideSettingPanel() {
+    flog('hideSettingPanel');
+
+    var settingPanel = $('.panel-setting');
+    settingPanel.attr('class', 'panel panel-default panel-setting');
+    settingPanel.find('.panel-body .active').removeClass('active');
+}
+
+function showSettingPanel(formName) {
+    flog('showSettingPanel', formName);
+
+    var settingPanel = $('.panel-setting');
+    var settingPanelBody = settingPanel.find('.panel-body');
+    settingPanel.attr('class', 'panel panel-default panel-setting showed panel-' + formName);
+    settingPanelBody.find('.active').removeClass('active');
+    settingPanelBody.find('.panel-' + formName).addClass('active');
+}
+
 function initSideBar() {
     flog('initSideBar');
 
@@ -589,62 +628,61 @@ function initSideBar() {
     });
 }
 
-function initTranModal() {
-    flog('initTranModal');
+function initTransitionForm() {
+    flog('initTransitionForm');
 
-    var modal = $('#modalTransitions');
-    modal.on('click', '.btnAddTrigger', function (e) {
+    var form = $('.panel-transition');
+    form.on('click', '.btnAddTrigger', function (e) {
         e.preventDefault();
-        var clone = modal.find('.placeholderform').clone();
+        var clone = form.find('.placeholderform').clone();
         clone.removeClass('hide placeholderform');
-        modal.find('.transitionItems').append(clone);
+        form.find('.transitionItems').append(clone);
         $(this).addClass('hide');
     });
     
-    modal.on('change', '[name=triggerType]', function (e) {
+    form.on('change', '[name=triggerType]', function (e) {
         $(this).siblings('.' + this.value).removeClass('hide').siblings('.triggerDiv').addClass('hide');
     });
-    modal.find('form').on('submit', function (e) {
+    form.on('submit', function (e) {
         e.preventDefault();
         
-        doSaveTrigger($(this));
-        modal.modal('hide');
+        doSaveTrigger(form);
     });
 }
 
-function showTranModal(tran, sourceId, targetId) {
-    flog('showTranModal', tran, sourceId, targetId);
+function showTransitionForm(tran, sourceId, targetId) {
+    flog('showTransitionForm', tran, sourceId, targetId);
 
-    var modal = $('#modalTransitions');
-    modal.find('[name=sourceId]').val(sourceId);
-    modal.find('[name=targetId]').val(targetId);
-    modal.find('.transitionItems').html('');
+    var form = $('.panel-transition');
+    form.find('[name=sourceId]').val(sourceId);
+    form.find('[name=targetId]').val(targetId);
+    form.find('.transitionItems').html('');
     var trigger = tran.trigger;
     if (!trigger) {
-        modal.find('.btnAddTrigger').removeClass('hide');
+        form.find('.btnAddTrigger').removeClass('hide');
     }
     for (var key in trigger) {
         var t = trigger[key];
-        var clone = modal.find('.placeholderform').clone();
+        var clone = form.find('.placeholderform').clone();
         clone.find('[name=triggerType]').val(key);
         clone.find('.' + key).removeClass('hide').siblings('.triggerDiv').addClass('hide');
         for (var k in t) {
             clone.find('[name=' + k + ']').val(t[k]);
         }
         clone.removeClass('hide placeholderform').siblings('.triggerDiv').addClass('hide');
-        modal.find('.transitionItems').append(clone)
+        form.find('.transitionItems').append(clone)
     }
-    
-    modal.modal();
+
+    showSettingPanel('transition');
 }
 
-function showChoiceModal(choice, sourceId, targetId) {
-    flog('showChoiceModal', choice, sourceId, targetId);
+function showDecisionForm(choice, sourceId, targetId) {
+    flog('showDecisionForm', choice, sourceId, targetId);
 
-    var modal = $('#modalChoice');
-    modal.find('[name=sourceId]').val(sourceId);
-    modal.find('[name=targetId]').val(targetId);
-    modal.find('.choiceItems').html('');
+    var form = $('.panel-decision');
+    form.find('[name=sourceId]').val(sourceId);
+    form.find('[name=targetId]').val(targetId);
+    form.find('.choiceItems').html('');
     if (!Object.keys(choice.constant).length) {
         choice.constant = {
             value: ''
@@ -653,35 +691,35 @@ function showChoiceModal(choice, sourceId, targetId) {
     for (var key in choice.constant) {
         if (key === 'label') continue;
         var value = choice.constant[key];
-        var clone = modal.find('.placeholderform').clone();
+        var clone = form.find('.placeholderform').clone();
         clone.find('[name=constKey]').val(key);
         clone.find('[name=constValue]').val(value);
         clone.removeClass('hide placeholderform');
-        modal.find('.choiceItems').append(clone)
+        form.find('.choiceItems').append(clone);
     }
     
-    modal.modal();
+    showSettingPanel('decision');
 }
 
 function showTimeoutModal(node, sourceId, targetId) {
     flog('showTimeoutModal', node, sourceId, targetId);
 
-    var modal = $('#modalTimeoutNode');
-    modal.find('[name=sourceId]').val(sourceId);
-    modal.find('[name=targetId]').val(targetId);
-    modal.find('[name=timeoutMins]').val(node.timeoutMins);
-    modal.modal();
+    var form = $('.panel-timeout');
+    form.find('[name=sourceId]').val(sourceId);
+    form.find('[name=targetId]').val(targetId);
+    form.find('[name=timeoutMins]').val(node.timeoutMins);
+
+    showSettingPanel('timeout');
 }
 
-function initTimeoutModal() {
-    flog('initTimeoutModal');
+function initTimeoutForm() {
+    flog('initTimeoutForm');
 
-    var modal = $('#modalTimeoutNode');
-    modal.find('form').on('submit', function (e) {
+    var form = $('.panel-timeout');
+    form.on('submit', function (e) {
         e.preventDefault();
         
-        doSaveTimeout($(this));
-        modal.modal('hide');
+        doSaveTimeout(form);
     });
 }
 
@@ -704,24 +742,24 @@ function doSaveTimeout(form) {
     }
     JBApp.isDirty = true;
     Msg.info('timeoutMins updated');
+    hideSettingPanel();
 }
 
-function initChoiceModal() {
-    flog('initChoiceModal')
+function initDecisionForm() {
+    flog('initDecisionForm');
 
-    var modal = $('#modalChoice');
-    modal.on('click', '.btnAddChoice', function (e) {
+    var form = $('.panel-decision');
+    form.on('click', '.btnAddChoice', function (e) {
         e.preventDefault();
-        var clone = modal.find('.placeholderform').clone();
+        var clone = form.find('.placeholderform').clone();
         clone.removeClass('hide placeholderform');
-        modal.find('.choiceItems').append(clone);
+        form.find('.choiceItems').append(clone);
     });
     
-    modal.find('form').on('submit', function (e) {
+    form.on('submit', function (e) {
         e.preventDefault();
         
-        doSaveChoice($(this));
-        modal.modal('hide');
+        doSaveChoice(form);
     });
 }
 
@@ -753,6 +791,7 @@ function doSaveChoice(form) {
         }
     }
     JBApp.isDirty = true;
+    hideSettingPanel();
     Msg.info('Decision choices updated');
 }
 
@@ -793,6 +832,7 @@ function doSaveTrigger(form) {
         }
     }
     JBApp.isDirty = true;
+    hideSettingPanel();
     Msg.info('Transition trigger updated');
 }
 
@@ -875,7 +915,6 @@ function updateNode(form) {
             }
         }
     }
-    
 }
 
 function deleteNode(nodeId) {
@@ -979,7 +1018,6 @@ function initSaveButton() {
         }
     });
 }
-
 
 function uuid() {
     return ('xxxxxx'.replace(/[xy]/g, function (c) {
