@@ -50,6 +50,7 @@ function initDateTimePicker() {
     var opts = {
         widgetParent: 'body',
         format: "DD/MM/YYYY HH:mm",
+        minDate: moment()
     };
     $('#auctionStartDate').datetimepicker(opts).on('dp.change', function(e){
         var d = $('#auctionEndDate').data("DateTimePicker").date();
