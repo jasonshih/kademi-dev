@@ -655,7 +655,7 @@ function initSideBar() {
 function initTransitionForm() {
     flog('initTransitionForm');
 
-    var form = $('.panel-transition');
+    var form = $('form.panel-transition');
     form.on('click', '.btnAddTrigger', function (e) {
         e.preventDefault();
         var clone = form.find('.placeholderform').clone();
@@ -677,7 +677,7 @@ function initTransitionForm() {
 function showTransitionForm(tran, sourceId, targetId) {
     flog('showTransitionForm', tran, sourceId, targetId);
 
-    var form = $('.panel-transition');
+    var form = $('form.panel-transition');
     form.find('[name=sourceId]').val(sourceId);
     form.find('[name=targetId]').val(targetId);
     form.find('.transitionItems').html('');
@@ -703,7 +703,7 @@ function showTransitionForm(tran, sourceId, targetId) {
 function showDecisionForm(choice, sourceId, targetId) {
     flog('showDecisionForm', choice, sourceId, targetId);
 
-    var form = $('.panel-decision');
+    var form = $('form.panel-decision');
     form.find('[name=sourceId]').val(sourceId);
     form.find('[name=targetId]').val(targetId);
     form.find('.choiceItems').html('');
@@ -728,7 +728,7 @@ function showDecisionForm(choice, sourceId, targetId) {
 function showTimeoutModal(node, sourceId, targetId) {
     flog('showTimeoutModal', node, sourceId, targetId);
 
-    var form = $('.panel-timeout');
+    var form = $('form.panel-timeout');
     form.find('[name=sourceId]').val(sourceId);
     form.find('[name=targetId]').val(targetId);
     form.find('[name=timeoutMins]').val(node.timeoutMins);
@@ -739,7 +739,7 @@ function showTimeoutModal(node, sourceId, targetId) {
 function initTimeoutForm() {
     flog('initTimeoutForm');
 
-    var form = $('.panel-timeout');
+    var form = $('form.panel-timeout');
     form.on('submit', function (e) {
         e.preventDefault();
         
@@ -773,7 +773,7 @@ function doSaveTimeout(form) {
 function initDecisionForm() {
     flog('initDecisionForm');
 
-    var form = $('.panel-decision');
+    var form = $('form.panel-decision');
     form.on('click', '.btnAddChoice', function (e) {
         e.preventDefault();
         var clone = form.find('.placeholderform').clone();
@@ -870,7 +870,7 @@ function showTitleForm(node) {
     if (!title) {
         title = node.nodeId;
     }
-    var form = $('.panel-edit-title');
+    var form = $('form.panel-edit-title');
     form.find('[name=title]').val(title);
     form.find('[name=sourceId]').val(node.nodeId);
     showSettingPanel('edit-title');
@@ -894,6 +894,13 @@ function initNodeActions() {
         }
     });
 
+    var formDetails = $('form.panel-edit-details');
+    formDetails.forms({
+        onSuccess: function () {
+            hideSettingPanel();
+        }
+    });
+
     $(document.body).on('click', '.btnNodeDetails', function (e) {
         e.preventDefault();
 
@@ -903,7 +910,12 @@ function initNodeActions() {
         if (!href.endsWith('/')) {
             href += '/';
         }
-        window.location.pathname = href + id;
+
+        formDetails.load(href + id + ' #frmDetails > *', function () {
+            formDetails.attr('action', href + id);
+
+            showSettingPanel('edit-details');
+        });
     });
 
     $(document.body).on('click', '.btnNodeDelete', function (e) {
