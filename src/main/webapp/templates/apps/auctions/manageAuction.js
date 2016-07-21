@@ -52,12 +52,8 @@ function initGroupDelete() {
 }
 
 function initDateTimePickers() {
-    var date = new Date();
-    date.setDate(date.getDate() - 1);
-
     $('.date-time').datetimepicker({
-        format: "DD/MM/YYYY HH:mm",
-        startDate: date
+        format: "DD/MM/YYYY HH:mm"
     });
 }
 
