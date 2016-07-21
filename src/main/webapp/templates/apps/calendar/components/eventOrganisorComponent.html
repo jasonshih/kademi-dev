@@ -1,0 +1,30 @@
+<table class="table">
+    <tbody>
+    #if( $page.organisor )
+    <tr>
+        <td>Organiser</td>
+        <td>$page.organisor.formattedName</td>
+    </tr>
+    #end
+
+    #if( $page.location )
+    <tr>
+        <td>Location</td>
+        <td>$page.location</td>
+    </tr>
+    #end
+
+    <tr>
+        <td>Start</td>
+        <td>
+            $formatter.formatDateTime(  $page.startDate, $page.timezone )
+        </td>
+    </tr>
+    <tr>
+        <td>Finish</td>
+        <td>$formatter.formatDateTime( $page.endDate, $page.timezone )</td>
+    </tr>
+
+
+    </tbody>
+</table>
