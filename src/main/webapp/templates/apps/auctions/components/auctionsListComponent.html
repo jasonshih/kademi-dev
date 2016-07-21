@@ -1,10 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
+<div class="row">
+#foreach($auction in $page.childrenWithPermission)
+<div class="col-md-4">
+    <div class="hero">
+        <h2 class="hero-heading" style="padding-left: 30px"><a href="$auction.href">$auction.title</a></h2>
+        <div class="hero-body">
+            #if( $auction.bestSquareImageHref )
+            <a href="$auction.href" class="auction-image" style="background-image: url($auction.bestSquareImageHref); background-size: cover; background-position: center">
+            </a>
+            #else
+            <a href="$auction.href" class="auction-image" style="background-color: #eee; color: #ddd; text-decoration: none; text-align: center; padding-top: 37%">
+                <span>No Image</span>
+            </a>
+            #end
 
-</body>
-</html>
+            $!auction.description
+        </div>
+        <div class="clearfix" style="padding-left: 30px">
+            <abbr class="pull-left timeago" title="$formatter.formatDateISO8601($auction.auctionEndDate)">$auction.auctionEndDate</abbr>
+        </div>
+    </div>
+</div>
+#end
+</div>
+<script type="text/javascript">
+    jQuery.timeago.settings.allowFuture = true;
+    jQuery(document).ready(function () {
+        $(".timeago").timeago();
+    });
+</script>
+<style>
+    .auction-image {
+        width: 300px;
+        height: 300px;
+        display: block;
+        border: 1px solid #eee;
+    }
+</style>

@@ -1,18 +1,22 @@
 {
-    "dependencies": [{
-            "css": {
-                "path": "/theme/variables.css",
-                "cssMedia": "all"
-            }
-        }, {
-            "less": {
-                "lessMedia": "all",
-                "path": "/theme/variables.less"
-            }
-        }, {
+    "dependencies": [
+        {
             "js": {
                 "group": "main",
-                "path": "/theme/something.js"
+                "path": "/static/js/jquery.timeago.js"
             }
-        }]
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/reload-fragment/1.0.1/jquery.reload-fragment-1.0.1.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/auctions/viewAuction.js"
+            }
+        }
+    ]
 }

@@ -1,10 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
-
-</body>
-</html>
+<div id="BidInfo">
+    #if(!$page.auctionClosed)
+    <div id="bidFromDiv" class="details well">
+        <h4>Current Bid</h4>
+        <form id="bidForm" method="POST" action=".">
+            <div class="row">
+                <div class="col-sm-4">
+                    <input class="regex required form-control" type="text" size="5" name="auctionBidValue" value="$!page.currentBidValue"data-regex="^[0-9-.]+$"/>
+                </div>
+                <div class="col-sm-4">
+                    <button data-type="form-submit" class="btn btn-md btn-primary">
+                        Place Bid
+                    </button>
+                </div>
+            </div>
+        </form>
+        <div>
+            #if($page.currentBidValue)
+            Current Bid: $<span id="bidCurrentValue">$page.currentBidValue</span>
+            #else
+            Current Bid: $<span id="bidCurrentValue">$page.auctionStartValue</span>
+            #end
+            <br/>
+            Bid Count: <span id="bidCount">$page.auctionBidCount</span>
+            <br/>
+            End Date: <span>$formatter.formatDateTime($page.auctionEndDate)</span>
+        </div>
+    </div>
+    #end
+    <div class="details well">
+        <h4>Bid History</h4>
+        <table id="bidHistory" class="table">
+            <tbody>
+            #foreach($c in $page.bidHistory)
+            <tr>
+                <td>$c.bidValue</td>
+                <td><abbr title="$formatter.formatDateISO8601($c.changeDate)" class="timeago">$c.changeDate</abbr></td>
+                <td><a href="$c.changeBy.href">$c.changedBy.name</a></td>
+            </tr>
+            #end
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    $(function () {
+        initViewAuction("$page.wSUri");
+    });
+</script>
