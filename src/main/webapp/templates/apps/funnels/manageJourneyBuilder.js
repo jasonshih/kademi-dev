@@ -540,9 +540,41 @@ function initSettingPanel() {
         settingPanel.find('.panel-body form.active').trigger('submit');
     });
 
+    initTitleForm();
     initTransitionForm();
     initDecisionForm();
     initTimeoutForm();
+}
+
+function initTitleForm() {
+    flog('initTitleForm');
+
+    var form = $('form.panel-edit-title');
+    form.on('submit', function (e) {
+        e.preventDefault();
+
+        updateNode(form);
+    });
+}
+
+function updateNode(form) {
+    flog('updateNode', form);
+
+    var sourceId = form.find('[name=sourceId]').val();
+    var title = form.find('[name=title]').val();
+    for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
+        var node = JBApp.funnel.nodes[i];
+        for (var key in node) {
+            if (node[key].nodeId === sourceId) {
+                node[key].title = title;
+                JBApp.isDirty = true;
+                $('#' + sourceId).find('.nodeTitle').html(title + ' <i class="fa fa-pencil"></i>');
+                Msg.info('Title updated');
+                hideSettingPanel();
+                break;
+            }
+        }
+    }
 }
 
 function hideSettingPanel() {
@@ -836,17 +868,17 @@ function doSaveTrigger(form) {
     Msg.info('Transition trigger updated');
 }
 
-function showModalTitle(node) {
-    flog('showModalTitle', node);
+function showTitleForm(node) {
+    flog('showTitleForm', node);
 
     var title = node.title;
     if (!title) {
         title = node.nodeId;
     }
-    var modal = $('#modalNodeTitle');
-    modal.find('[name=title]').val(title);
-    modal.find('[name=sourceId]').val(node.nodeId);
-    modal.modal();
+    var form = $('.panel-edit-title');
+    form.find('[name=title]').val(title);
+    form.find('[name=sourceId]').val(node.nodeId);
+    showSettingPanel('edit-title');
 }
 
 function initNodeActions() {
@@ -854,12 +886,13 @@ function initNodeActions() {
 
     $(document.body).on('click', '.btnNodeEdit', function (e) {
         e.preventDefault();
-        var nodeId = $(this).parents('.w').attr('id');
+
+        var nodeId = $(this).closest('.w').attr('id');
         for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
             var node = JBApp.funnel.nodes[i];
             for (var key in node) {
                 if (node[key].nodeId === nodeId) {
-                    showModalTitle(node[key]);
+                    showTitleForm(node[key]);
                     break;
                 }
             }
@@ -888,33 +921,6 @@ function initNodeActions() {
             JBApp.jsPlumpInstance.remove(id);
         }
     });
-
-    var modal = $('#modalNodeTitle');
-    modal.find('form').on('submit', function (e) {
-        e.preventDefault();
-        
-        updateNode($(this));
-        modal.modal('hide');
-    });
-}
-
-function updateNode(form) {
-    flog('updateNode', form);
-
-    var sourceId = form.find('[name=sourceId]').val();
-    var title = form.find('[name=title]').val();
-    for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
-        var node = JBApp.funnel.nodes[i];
-        for (var key in node) {
-            if (node[key].nodeId === sourceId) {
-                node[key].title = title;
-                JBApp.isDirty = true;
-                $('#' + sourceId).find('.nodeTitle').html(title + ' <i class="fa fa-pencil"></i>');
-                Msg.info('Title updated');
-                break;
-            }
-        }
-    }
 }
 
 function deleteNode(nodeId) {
