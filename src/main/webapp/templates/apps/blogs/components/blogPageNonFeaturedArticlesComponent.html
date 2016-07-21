@@ -1,0 +1,39 @@
+#foreach($article in $page.articles.notFeatured.sortByDate)
+<div class="hero thumbnail col-md-12">
+
+    #set($image = false)
+    #set($image = $article.bestSquareImageHref)
+    #if( $image )
+    #set($bg = "background-image: url('${image}/alt-300-300.png')")
+    <div class="hero-image hidden-xs hidden-sm" style="$bg"></div>
+    #end
+
+    <div class="hero-body">
+        <h2 class="hero-heading"><a href="$article.href">$article.title</a></h2>
+
+        $!article.brief
+
+        <div class="clearfix">
+            <abbr class="pull-left timeago" title="$formatter.formatDateISO8601($article.articleDate)">$article.articleDate</abbr>
+            <div class="pull-right">
+                #if( $article.category )
+                <span class="label label-primary">$article.category</span>
+                #end
+                #foreach($tag in $article.tags)
+                #if( $article.isSelectedTag( $tag ) )
+                <span class="label label-primary">$tag</span>
+                #end
+                #end
+                #if($article.featured)
+                <span class="label label-success">Featured</span>
+                #end
+            </div>
+        </div>
+    </div>
+</div>
+#end
+<script type="text/javascript">
+    $(function() {
+        $(".timeago").timeago();
+    });
+</script>
