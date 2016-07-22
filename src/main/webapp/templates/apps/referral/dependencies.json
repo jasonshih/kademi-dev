@@ -1,22 +1,4 @@
 {
     "dependencies": [
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/js/jquery.timeago.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/reload-fragment/1.0.1/jquery.reload-fragment-1.0.1.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/theme/apps/auctions/viewAuction.js"
-            }
-        }
     ]
 }
