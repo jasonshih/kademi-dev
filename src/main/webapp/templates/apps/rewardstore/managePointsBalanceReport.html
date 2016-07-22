@@ -64,14 +64,7 @@
                             </div>
                         </div>
 
-                        <div class="col-lg-3">
-                            #if( $page.aggregations )
-                            <table class="table">
-                                #foreach($agg in $page.aggregations )
-                                #showAggregation($agg)
-                                #end
-                            </table>
-                            #end
+                        <div class="col-lg-3" id="aggregations">
                         </div>
                     </div>
 
