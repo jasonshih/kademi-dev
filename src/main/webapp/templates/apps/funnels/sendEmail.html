@@ -2,32 +2,40 @@
     <head>
         <title>Send Email Funnel Action</title>
     </head>
-    <body>        
+    <body>
         #if( $params.mode == "settings" )
         <form method="POST" action="$page.path" class="" id="frmDetails" style="">
-            <div class="">
-                <label for="exampleInputEmail1">Website</label>
-                <select name="themeSiteId" class="form-control">
-                    $formatter.option("", "[Website]", $page.themeSiteId)
-                    #foreach($website in $rootFolder.websites)
-                    $formatter.option($website.id, $website.name, $page.themeSiteId)
-                    #end
-                </select>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <label for="themeSiteId">Website</label>
+                    <select name="themeSiteId" id="themeSiteId" class="form-control">
+                        $formatter.option("", "[Website]", $page.themeSiteId)
+                        #foreach($website in $rootFolder.websites)
+                        $formatter.option($website.id, $website.name, $page.themeSiteId)
+                        #end
+                    </select>
+                </div>
             </div>
-            <div class="">
-                <label>Subject</label>
-                <textarea style="height: 70px" name="subject" value="" placeholder="Enter the email subject here" class="form-control required-if-shown">$formatter.htmlEncode( $page.node.subject )</textarea>                
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <label for="subject">Subject</label>
+                    <textarea style="height: 70px" id="subject" name="subject" value="" placeholder="Enter the email subject here" class="form-control required-if-shown">$formatter.htmlEncode( $page.node.subject )</textarea>
+                </div>
             </div>
-            <div class="">
-                <label>From</label>
-                <input type="text" name="from" value="$!formatter.htmlEncode( $page.from )" placeholder="admin@mybusinessname.com" class="form-control" />
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <label for="form">From</label>
+                    <input type="text" id="form" name="from" value="$!formatter.htmlEncode( $page.from )" placeholder="admin@mybusinessname.com" class="form-control" />
+                </div>
             </div>
-            <div class="">
-                <label class="" for="replyT">Reply to</label>
-                <input type="text" name="replyTo" value="$!formatter.htmlEncode( $page.replyTo )" placeholder="admin@mybusinessname.com" class="form-control" />
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <label for="replyTo">Reply to</label>
+                    <input type="text" name="replyTo" id="replyTo" value="$!formatter.htmlEncode( $page.replyTo )" placeholder="admin@mybusinessname.com" class="form-control" />
+                </div>
             </div>
         </form>
-        #else        
+        #else
         <form method="POST" action="$page.path" class="form-horizontal" id="frmDetails">
             <button class="btn btn-success" type="submit">Save</button>
             <div class="row">
