@@ -2,47 +2,38 @@
     <head>
         <title>Send Email Funnel Action</title>
     </head>
-    <body>
+    <body>        
         #if( $params.mode == "settings" )
         <form method="POST" action="$page.path" class="" id="frmDetails" style="">
-            <div class="form-group">
-                <div class="col-sm-12">
-                    <label for="themeSiteId">Website</label>
-                    <select name="themeSiteId" id="themeSiteId" class="form-control">
-                        $formatter.option("", "[Website]", $page.themeSiteId)
-                        #foreach($website in $rootFolder.websites)
-                        $formatter.option($website.id, $website.name, $page.themeSiteId)
-                        #end
-                    </select>
-                </div>
+            <div class="">
+                <label for="exampleInputEmail1">Website</label>
+                <select name="themeSiteId" class="form-control">
+                    $formatter.option("", "[Website]", $page.themeSiteId)
+                    #foreach($website in $rootFolder.websites)
+                    $formatter.option($website.id, $website.name, $page.themeSiteId)
+                    #end
+                </select>
             </div>
-            <div class="form-group">
-                <div class="col-sm-12">
-                    <label for="subject">Subject</label>
-                    <textarea style="height: 70px" id="subject" name="subject" value="" placeholder="Enter the email subject here" class="form-control required-if-shown">$formatter.htmlEncode( $page.node.subject )</textarea>
-                </div>
+            <div class="">
+                <label>Subject</label>
+                <textarea style="height: 70px" name="subject" value="" placeholder="Enter the email subject here" class="form-control required-if-shown">$formatter.htmlEncode( $page.node.subject )</textarea>                
             </div>
-            <div class="form-group">
-                <div class="col-sm-12">
-                    <label for="form">From</label>
-                    <input type="text" id="form" name="from" value="$!formatter.htmlEncode( $page.from )" placeholder="admin@mybusinessname.com" class="form-control" />
-                </div>
+            <div class="">
+                <label>From</label>
+                <input type="text" name="from" value="$!formatter.htmlEncode( $page.from )" placeholder="admin@mybusinessname.com" class="form-control" />
             </div>
-            <div class="form-group">
-                <div class="col-sm-12">
-                    <label for="replyTo">Reply to</label>
-                    <input type="text" name="replyTo" id="replyTo" value="$!formatter.htmlEncode( $page.replyTo )" placeholder="admin@mybusinessname.com" class="form-control" />
-                </div>
+            <div class="">
+                <label class="" for="replyT">Reply to</label>
+                <input type="text" name="replyTo" value="$!formatter.htmlEncode( $page.replyTo )" placeholder="admin@mybusinessname.com" class="form-control" />
             </div>
         </form>
-        #else
+        #else        
         <form method="POST" action="$page.path" class="form-horizontal" id="frmDetails">
             <button class="btn btn-success" type="submit">Save</button>
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
                         <label class="control-label col-md-4" for="themeSiteId">Website</label>
-
                         <div class="col-md-8">
                             <select name="themeSiteId" id="themeSiteId" class="form-control required-if-shown">
                                 $formatter.option("", "[Please select]", $page.themeSiteId)
@@ -54,7 +45,6 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-4" for="subject">Email subject</label>
-
                         <div class="col-md-8">
 
                             <textarea style="height: 70px" name="subject" id="subject" value="" placeholder="Enter the email subject here" class="form-control required-if-shown">$formatter.htmlEncode( $page.node.subject )</textarea>
@@ -62,17 +52,13 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-4" for="from">Email from address</label>
-
                         <div class="col-md-8">
                             <input type="text" name="from" id="from" value="$!formatter.htmlEncode( $page.from )" placeholder="admin@mybusinessname.com" class="form-control" />
-                            <small class="text-muted help-block">Eg <i>"Joe Bloggs" &lt;joe@bloggs.com&gt;</i>. You can leave this field blank but
-                                <b>Reply to address</b> will be required!
-                            </small>
+                            <small class="text-muted help-block">Eg <i>"Joe Bloggs" &lt;joe@bloggs.com&gt;</i>. You can leave this field blank but <b>Reply to address</b> will be required!</small>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-4" for="replyT">Reply to address</label>
-
                         <div class="col-md-8">
                             <input type="text" name="replyTo" id="replyTo" value="$!formatter.htmlEncode( $page.replyTo )" placeholder="admin@mybusinessname.com" class="form-control" />
                             <small class="text-muted help-block">Eg <i>"Joe Bloggs" &lt;joe@bloggs.com&gt;</i>.</small>
@@ -96,41 +82,62 @@
                         </div>
                     </div>
                     <div style="clear: both"></div>
-                    <div class="add-attachment btn-upload"></div>
-                    <div class="article-wrapper article-sm showed-action attachments-list">
-                        #foreach($att in $page.job.attachments)
-                        <article>
-                            <span class="article-name">
-                                <a target="_blank" href="/_hashes/files/$att.attachmentHash">$att.attachmentFilename</a>
-                            </span>
-                            <aside class="article-action">
-                                <a class="btn btn-sm btn-xs btn-danger btn-delete-attachment" href="$att.attachmentFilename" title="Remove"><i class="clip-minus-circle"></i></a>
-                            </aside>
-                        </article>
-                        #end
+                    <div>
                     </div>
                 </div>
-            </div>
+            </div>   
         </form>
-        <hr style="clear: both" />
-        <div class="row">
-            <div class="col-lg-12">
-                <a href="edmeditor?fileName=$page.node.contentFileName&useHash=true" target="_blank" class="btn btn-primary">
-                    <span class="fa fa-globe"></span> EDM editor
-                    <i class="clip-new" style="color: red"></i>
-                </a>
-                <a href="texteditor?fileName=$page.node.contentFileName" target="_blank" class="btn btn-primary">
-                    <span class="fa fa-pencil"></span> Raw text editor
-                </a>
-                <a href="http://docs.kademi.co/howtos/getting-started/6-send-emails.html#templating" target="_blank" class="btn btn-info">
-                    <span class="glyphicon glyphicon-question-sign"></span> Help with templating
-                </a>
-
-            </div>
-        </div>
-        <iframe id="rawBody" class="well" style="width: 100%; height: 400px; overflow: scroll; margin-top: 15px" src="$page.node.contentFileName">
+        <hr style="clear: both"/>
+        <iframe id="rawBody" class="" style="width: 100%; height: 1200px; overflow-y: auto" src="edmeditor?fileName=${page.node.contentFileName}&useHash=true" >
 
         </iframe>
-        #end
+
+        <div id="modal-send-test" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                <h4 class="modal-title">Send test</h4>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="$page.path" class="form-horizontal">
+                    <input type="hidden" name="sendTest" value="true"/>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="name">Recipient</label>
+                        <div class="col-md-8">
+                            <input type="text" name="recipient" value="" placeholder="An email address" class="required email form-control" />
+                            <p>A single email will be sent to this address</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="name">Target</label>
+                        <div class="col-md-8">
+                            <input type="text" name="targetProfile" value="" placeholder="Email address of user to generate email for" class="required email form-control" />
+                            <p>This profile will be used to generate the content of the email, ie for any dynamic templating</p>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                <button class="btn btn-sm btn-success" data-type="form-submit" type="button"><i class="glyphicon glyphicon-send"></i> Send</button>
+            </div>
+        </div>
+
+        <div id="modal-send-test-progress" class="modal modal-lg fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                <h4 class="modal-title">Test send progress</h4>
+            </div>
+            <div class="modal-body" id="send-test-body">
+            </div>
+        </div>
+        
+        <script type="text/javascript" src="/theme/apps/email/manageEmail.js">//</script>
+        <script type="text/javascript">
+            $(function () {
+                initSendTest();
+            });
+        </script>        
+        #end                
     </body>
 </html>
