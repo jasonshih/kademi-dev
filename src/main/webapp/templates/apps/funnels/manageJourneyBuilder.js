@@ -91,9 +91,9 @@ jsPlumb.ready(function () {
     
     instance.registerConnectionType("basic", {anchors: ["RightMiddle", ["LeftMiddle", "TopCenter", "BottomCenter"]], connector: "StateMachine"});
     instance.registerConnectionType("transition", {anchors: ["RightMiddle", ["LeftMiddle", "TopCenter", "BottomCenter"]], connector: "StateMachine"});
-    instance.registerConnectionType("decisionDefault", {anchors: [[1, 0.9, 1, 0], ["LeftMiddle", "TopCenter", "BottomCenter"]], connector: "StateMachine"});
+    instance.registerConnectionType("decisionDefault", {anchors: [[1, 0.88, 1, 0], ["LeftMiddle", "TopCenter", "BottomCenter"]], connector: "StateMachine"});
     instance.registerConnectionType("decisionChoices", {anchors: ["RightMiddle", ["LeftMiddle", "TopCenter", "BottomCenter"]], connector: "StateMachine"});
-    instance.registerConnectionType("timeout", {anchors: [[1, 0.9, 1, 0], ["LeftMiddle", "TopCenter", "BottomCenter"]], connector: "StateMachine"});
+    instance.registerConnectionType("timeout", {anchors: [[1, 0.88, 1, 0], ["LeftMiddle", "TopCenter", "BottomCenter"]], connector: "StateMachine"});
     
     window.jsp = instance;
     

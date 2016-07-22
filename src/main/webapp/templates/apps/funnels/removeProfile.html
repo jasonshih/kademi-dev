@@ -3,6 +3,21 @@
         <title>Remove Profile Action</title>
     </head>
     <body>
+        #if( $params.mode == "settings" )
+        <form method="POST" action="$page.path" class="form-horizontal" id="frmDetails">
+            <div class="form-group">
+                <div class="col-md-12">
+                    <label for="groupName">Group</label>
+                    <select name="groupName" id="groupName" class="form-control required-if-shown">
+                        $formatter.option("", "Completely remove", $page.groupName)
+                        #foreach($group in $rootFolder.groups)
+                        $formatter.option($group.name, $group.name, $page.groupName)
+                        #end
+                    </select>
+                </div>
+            </div>
+        </form>
+        #else
         <form method="POST" action="$page.path" class="form-horizontal" id="frmDetails">
             <button class="btn btn-success" type="submit">Save</button>
             <div class="row">
@@ -23,6 +38,7 @@
                     
                 </div>
             </div>
-            
+        </form>
+        #end
     </body>
 </html>

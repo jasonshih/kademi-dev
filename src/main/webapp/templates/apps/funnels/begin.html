@@ -3,7 +3,42 @@
         <title>Goal</title>
     </head>
     <body>
+        #if( $params.mode == "settings" )
         <form method="POST" action="$page.path" class="form-horizontal" id="frmDetails">
+            <p class="lead">$!page.node.transition.trigger.description</p>
+
+            <div class="form-group">
+                <div class="col-md-12">
+                    <label for="timeoutNode">Next</label>
+                    <select class="form-control" id="timeoutNode" name="timeoutNode">
+                        <option value="">[Select next step]</option>
+                        #foreach($node in $page.funnel.nodes)
+                        $formatter.option($node.nodeId, $node.nodeId, $page.node.transition.nextNodeId)
+                        #end
+                    </select>
+                    <small class="text-muted help-block">The step to proceed to when the timeout period expires</small>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-12">
+                    <label for="stageName">Stage</label>
+                    <input type="text" name="stageName" id="stageName" value="$!page.node.stageName" class="form-control" />
+                    <small class="text-muted help-block">Set the lead stage to this when the goal is entered</small>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-12">
+                    <label for="source">Source</label>
+                    <input type="text" name="source" id="source" value="$!page.node.source" class="form-control" />
+                    <small class="text-muted help-block">If this goal identifies a source, such as search or social</small>
+                </div>
+            </div>
+        </form>
+        #else
+        <form method="POST" action="$page.path" class="form-horizontal" id="frmDetails">
+            <button class="btn btn-success" type="submit">Save</button>
             <p class="lead">$!page.node.transition.trigger.description</p>
             
             <div class="form-group">
@@ -42,5 +77,6 @@
                 });
             });
         </script>
+        #end
     </body>
 </html>
