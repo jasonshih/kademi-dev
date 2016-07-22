@@ -2,7 +2,32 @@
     <head>
         <title>Send Email Funnel Action</title>
     </head>
-    <body>
+    <body>        
+        #if( $params.mode == "settings" )
+        <form method="POST" action="$page.path" class="" id="frmDetails" style="">
+            <div class="">
+                <label for="exampleInputEmail1">Website</label>
+                <select name="themeSiteId" class="form-control">
+                    $formatter.option("", "[Website]", $page.themeSiteId)
+                    #foreach($website in $rootFolder.websites)
+                    $formatter.option($website.id, $website.name, $page.themeSiteId)
+                    #end
+                </select>
+            </div>
+            <div class="">
+                <label>Subject</label>
+                <textarea style="height: 70px" name="subject" value="" placeholder="Enter the email subject here" class="form-control required-if-shown">$formatter.htmlEncode( $page.node.subject )</textarea>                
+            </div>
+            <div class="">
+                <label>From</label>
+                <input type="text" name="from" value="$!formatter.htmlEncode( $page.from )" placeholder="admin@mybusinessname.com" class="form-control" />
+            </div>
+            <div class="">
+                <label class="" for="replyT">Reply to</label>
+                <input type="text" name="replyTo" value="$!formatter.htmlEncode( $page.replyTo )" placeholder="admin@mybusinessname.com" class="form-control" />
+            </div>
+        </form>
+        #else        
         <form method="POST" action="$page.path" class="form-horizontal" id="frmDetails">
             <button class="btn btn-success" type="submit">Save</button>
             <div class="row">
@@ -71,25 +96,27 @@
                         #end
                     </div>
                 </div>
-            </div>
-            <hr style="clear: both"/>
-            <div class="row">
-                <div class="col-lg-12">
-                    <a href="edmeditor?fileName=$page.node.contentFileName&useHash=true" target="_blank" class="btn btn-primary" >
-                        <span class="fa fa-globe"></span> EDM editor
-                        <i class="clip-new" style="color: red"></i>
-                    </a>
-                    <a href="texteditor?fileName=$page.node.contentFileName" target="_blank" class="btn btn-primary" >
-                        <span class="fa fa-pencil"></span> Raw text editor
-                    </a>
-                    <a href="http://docs.kademi.co/howtos/getting-started/6-send-emails.html#templating" target="_blank" class="btn btn-info" >
-                        <span class="glyphicon glyphicon-question-sign"></span> Help with templating
-                    </a>
+            </div>   
+        </form>
+        <hr style="clear: both"/>
+        <div class="row">
+            <div class="col-lg-12">
+                <a href="edmeditor?fileName=$page.node.contentFileName&useHash=true" target="_blank" class="btn btn-primary" >
+                    <span class="fa fa-globe"></span> EDM editor
+                    <i class="clip-new" style="color: red"></i>
+                </a>
+                <a href="texteditor?fileName=$page.node.contentFileName" target="_blank" class="btn btn-primary" >
+                    <span class="fa fa-pencil"></span> Raw text editor
+                </a>
+                <a href="http://docs.kademi.co/howtos/getting-started/6-send-emails.html#templating" target="_blank" class="btn btn-info" >
+                    <span class="glyphicon glyphicon-question-sign"></span> Help with templating
+                </a>
 
-                </div>
             </div>
-            <iframe id="rawBody" class="well" style="width: 100%; height: 400px; overflow: scroll; margin-top: 15px" src="$page.node.contentFileName" >
+        </div>
+        <iframe id="rawBody" class="well" style="width: 100%; height: 400px; overflow: scroll; margin-top: 15px" src="$page.node.contentFileName" >
 
-            </iframe>
+        </iframe>            
+        #end        
     </body>
 </html>
