@@ -910,9 +910,10 @@ function initNodeActions() {
         if (!href.endsWith('/')) {
             href += '/';
         }
+        href = href + id + "?mode=settings";
 
-        formDetails.load(href + id + ' #frmDetails > *', function () {
-            formDetails.attr('action', href + id);
+        formDetails.load(href + ' #frmDetails > *', function () {
+            formDetails.attr('action', href);
 
             showSettingPanel('edit-details');
         });
