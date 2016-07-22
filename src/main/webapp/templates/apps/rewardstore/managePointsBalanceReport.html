@@ -1,6 +1,11 @@
 <html>
     <head>
         <title>$page.title</title>
+        <style>
+            #histogram {
+                height: 250px;
+            }
+        </style>
     </head>
     <body>
         <div style="padding-top: 15px">
@@ -18,8 +23,22 @@
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                    <li role="presentation" class="odd"><a role="menuitem" tabindex="-1" href="/reporting/groupSignups">This organisation - rootorg</a></li>
-                                    <li role="presentation" class="divider even"></li>
+                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="/reporting/$page.name">This organisation - $page.organisation.formattedName</a></li>
+                                    <li role="presentation" class="divider"></li>
+                                    #foreach( $website in $page.websites)
+                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="/reporting/$website.name/$page.name">website - $website.name</a></li>
+                                    #end
+                                    #if( $page.orgSelection )
+                                    <li role="presentation" class="divider"></li>
+                                    #foreach( $org in $page.find("/organisations").children.ofType.organisation )
+                                    <li role="presentation">
+                                        <a role="menuitem" class="toggle-select-org" tabindex="-1" href="$org.thisId">
+                                            <span class="fa fa-play-circle"></span>
+                                            $org.title
+                                        </a>
+                                    </li>
+                                    #end
+                                    #end
                                 </ul>
                             </div>
                         </div>
@@ -29,123 +48,61 @@
                         </p>
                     </div>
 
-
-                    <div class="pageMessage alert alert-danger" style="display: block;">No data was found for the given criteria</div>
-
+                    <div class="no-data alert alert-danger" style="display: none;">No data was found for the given criteria</div>
 
                     <div id="reportResult" class="row">
+
                         <div class="col-lg-9">
-                            <div id="annual"></div>
+                            <div id="histogram">
+                                <svg></svg>
+                            </div>
 
                             <div class="details-items-wrapper" style="display: none">
                                 <h4>Detailed items</h4>
-                                <hr class="hr-sm">
+                                <hr class="hr-sm" />
                                 <div id="items"></div>
                             </div>
-
                         </div>
-                        <div class="col-lg-3">
+
+                        <div class="col-lg-3" id="aggregations">
                         </div>
                     </div>
 
                     <div class="clearfix"></div>
                 </div>
             </div>
-
-
-            <div class="hide column-row-template">
-                <div class="form-group">
-                    <div class="col-md-4">
-                        <input type="text" class="form-control required column-title" value="" placeholder="Column label">
-                    </div>
-                    <div class="col-md-4">
-                        <input type="text" class="form-control required column-expr" value="" placeholder="Column expression">
-                    </div>
-                    <span class="btn btn-default">
-                        <span class="glyphicon glyphicon-sort handle"></span>
-                    </span>
-                    <button class="btn btn-sm btn-danger columns-remove" type="button">
-                        <span class="glyphicon glyphicon-remove"></span>
-                    </button>
-                </div>
-            </div>
-
-
-
-            <div id="proto" style="position: absolute; visibility: hidden">
-                <table>
-                    <tbody><tr class="agg-row odd">
-                            <td class="first">
-                                <div class="">
-                                    <a href="?startDate=12%2F07%2F2016&amp;finishDate=14%2F07%2F2016" class="dated term-select"></a>
-                                </div>
-                            </td>
-                            <td align="right" class="last">0</td>
-                        </tr>
-                    </tbody></table>
-            </div>
-
-            <script src="/templates/themes/admin2/assets/plugins/jQuery-File-Upload/js/vendor/jquery.ui.widget.js"></script>
-            <script src="/templates/themes/admin2/assets/plugins/jQuery-File-Upload/js/jquery.iframe-transport.js"></script>
-            <script src="/templates/themes/admin2/assets/plugins/jQuery-File-Upload/js/jquery.fileupload.js"></script>
-            <script>
-                $(function () {
-                    $("#reportSettingsModal form").forms({
-                        validate: function (form) {
-                            // renumber inputs
-                            form.find(".columns-rows > div").each(function (i, n) {
-                                var div = $(n);
-                                flog("div", div);
-                                div.find(".column-title").attr("name", "columnTitle." + (i + 1));
-                                div.find(".column-expr").attr("name", "columnExpression." + (i + 1));
-                            });
-                            return true;
-                        },
-                        callback: function () {
-                            Msg.info("Saved fields");
-                        }
-                    });
-                    $("#reportSettingsModal").on("click", ".columns-remove", function () {
-                        flog("remove", this);
-                        $(this).closest(".form-group").remove();
-                    });
-                    $(".columns-add").click(function (e) {
-                        e.preventDefault();
-                        var newRow = $(".column-row-template > div").clone();
-                        var id = Math.floor(Math.random() * 1000000);
-                        newRow.find("input").each(function (i, n) {
-                            var inp = $(n);
-                            var origName = inp.attr("name");
-                            inp.attr("name", origName + id);
-                        });
-                        $(".columns-rows").append(newRow);
-                    });
-
-                    $(".delete-report").click(function (e) {
-                        e.preventDefault();
-                        var link = $(e.target).closest("a");
-                        var href = link.attr("href");
-                        flog("href", href, link);
-                        var name = getFileName(href);
-                        confirmDelete(href, name, function () {
-                            window.location = "/reporting/";
-                        });
-                    });
-
-                    $("#fields-csv-upload").fileupload({
-                        dataType: 'json',
-                        url: "groupSignups-fields.csv",
-                        progressall: function (e, data) {
-                            flog("prog", data.loaded, data.total);
-                            if (data.loaded == data.total) {
-                                flog("finished");
-                                Msg.info("Uploaded CSV file ok");
-                                $("#fields-container").reloadFragment();
-                            }
-                        }
-                    });
-                });
-            </script>
         </div>
+
+        <script id="item-template" type="text/html">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Title</th>
+                        <th>Email</th>
+                        <th>Points Balance</th>
+                    </tr>
+                </thead>
+
+                <tbody id="items-tbody">
+                    {{#each .}}
+                    <tr>
+                        <td>{{_type}}</td>
+                        <td>
+                            {{\#if _source.title}}
+                            {{_source.title}}
+                            {{else}}
+                            {{_source.nickName}}
+                            {{/if}}
+                        </td>
+                        <td>{{_source.email}}</td>
+                        <td>{{generatePb _source.points}}</td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </script>
+
+        <script src="/theme/apps/rewardstore/managePointsBalanceReport.js" type="text/javascript"></script>
     </body>
 </html>
