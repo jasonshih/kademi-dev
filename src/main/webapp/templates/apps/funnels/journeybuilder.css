@@ -173,8 +173,8 @@
 
 .ep, .ep-basic {
     position: absolute;
-    bottom: 3px;
-    left: 3px;
+    top: 37px;
+    right: 3px;
     width: 1em;
     height: 1em;
     border-radius: 50%;
@@ -189,6 +189,7 @@
 .ep.ep-timeout {
     bottom: 3px;
     right: 3px;
+    top: auto;
     left: inherit;
     background-color: #e5910f;
 }
@@ -204,6 +205,7 @@
 .ep.ep-red {
     bottom: 3px;
     right: 3px;
+    top: auto;
     left: inherit;
     background-color: red;
 }
