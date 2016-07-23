@@ -7,353 +7,375 @@
         <script src="/theme/assets/plugins/jQuery-Smart-Wizard/js/jquery.smartWizard.js">//</script>
     </head>
     <body>
-        <h1>$page.title
-            <button class="btn btn-success pull-right" id="btnSave">Save</button>
-        </h1>
+        <h1>$page.title</h1>
         <p class="lead">Leads = $page.leads.size() </p>
 
-        <div class="well" style="display: none">
-            <code id="funnelJson">$page.funnelJson</code>
-            <code id="triggers">{
-                "triggers": [
-                {"type": "automationTrigger", "triggerName": "", "description": "desc here" },
-                {"type": "contactFormTrigger", "contactFormPath": "", "websiteName": ""},
-                {"type": "eventTrigger", "condition1": "", "condition2": "", "condition3": "", "condition4": "", "condition5": "", "description": ""},
-                {"type": "pageViewTrigger", "path": "", "websiteName": "" },
-                {"type": "taskCompleteTrigger", "taskName": "", "description": ""},
-                {"type": "emailResultTrigger", "deliveryAction": "", "description": ""}
-                ]}
-            </code>
-        </div>
-
-        <hr>
-
-        <div id="builder">
-            <div class="list-group-item" id="paper"></div>
-            <div class="right-panel">
-                <div class="nodes-list panel panel-default">
-                    <div class="panel-heading"><i class="fa fa-list"></i> Nodes List</div>
-                    <ul class="list-group">
-                        <li data-type="begin" class="list-group-item">
-                            <img src="/theme/apps/funnels/img/node_begin.jpg" class="img-responsive" />
-                        </li>
-                        <li data-type="action" data-action="emailAction" class="list-group-item">
-                            <img src="/theme/apps/funnels/img/node_sendEmail.jpg" class="img-responsive" />
-                        </li>
-                        <li data-type="action" data-action="createTaskAction" class="list-group-item">
-                            <img src="/theme/apps/funnels/img/node_createTask.jpg" class="img-responsive" />
-                        </li>
-                        <li data-type="action" data-action="createDataSeriesAction" class="list-group-item">
-                            <img src="/theme/apps/funnels/img/node_createDataSeries.jpg" class="img-responsive" />
-                        </li>
-                        <li data-type="action" data-action="calendarEventAction" class="list-group-item">
-                            <img src="/theme/apps/funnels/img/node_calendarEvent.jpg" class="img-responsive" />
-                        </li>
-                        <li data-type="action" data-action="addToGroup" class="list-group-item">
-                            <img src="/theme/apps/funnels/img/node_addToGroup.jpg" class="img-responsive" />
-                        </li>
-                        <li data-type="action" data-action="removeProfile" class="list-group-item">
-                            <img src="/theme/apps/funnels/img/node_removeProfile.jpg" class="img-responsive" />
-                        </li>
-                        <li data-type="action" data-action="setField" class="list-group-item">
-                            <img src="/theme/apps/funnels/img/node_setField.jpg" class="img-responsive" />
-                        </li>
-                        <li data-type="goal" class="list-group-item">
-                            <img src="/theme/apps/funnels/img/node_goal.jpg" class="img-responsive" />
-                        </li>
-                        <li data-type="decision" class="list-group-item">
-                            <img src="/theme/apps/funnels/img/node_decision.jpg" class="img-responsive" />
-                        </li>
-                    </ul>
-                </div>
-                <div class="panel panel-default panel-setting">
-                    <div class="panel-heading">
-                        <i class="fa fa-pencil panel-edit-title"></i> <span class="panel-edit-title">Edit title</span>
-                        <i class="fa fa-edit panel-edit-details"></i> <span class="panel-edit-details">Edit details</span>
-                        <i class="fa fa-cogs panel-transition"></i> <span class="panel-transition">Trigger</span>
-                        <i class="fa fa-question-circle panel-decision"></i> <span class="panel-decision">Decision choice constant</span>
-                        <i class="fa fa-clock-o panel-timeout"></i> <span class="panel-timeout">Timeout</span>
+        <div class="tabbable clearfix">
+            <button class="btn btn-primary pull-right" id="btnSave" style="position: relative; z-index: 1;">Save</button>
+            <ul class="nav nav-tabs tab-bricky">
+                <li><a data-toggle="tab" href="#journeyBuilder">Journey Builder</a></li>
+                <li><a data-toggle="tab" href="#properties">Properties</a></li>
+                <li><a data-toggle="tab" href="#lead">Leads</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="journeyBuilder" class="tab-pane">
+                    <div class="well" style="display: none">
+                        <code id="funnelJson">$page.funnelJson</code>
+                        <code id="triggers">{
+                            "triggers": [
+                            {"type": "automationTrigger", "triggerName": "", "description": "desc here" },
+                            {"type": "contactFormTrigger", "contactFormPath": "", "websiteName": ""},
+                            {"type": "eventTrigger", "condition1": "", "condition2": "", "condition3": "", "condition4": "", "condition5": "", "description": ""},
+                            {"type": "pageViewTrigger", "path": "", "websiteName": "" },
+                            {"type": "taskCompleteTrigger", "taskName": "", "description": ""},
+                            {"type": "emailResultTrigger", "deliveryAction": "", "description": ""}
+                            ]}
+                        </code>
                     </div>
-                    <div class="panel-body form-horizontal">
-                        <form class="panel-edit-title">
-                            <label>Node title</label>
-                            <input type="text" value="" name="title" class="form-control" />
-                            <input type="hidden" name="sourceId">
-                            <input type="hidden" name="targetId">
-                        </form>
-                        <form class="panel-edit-details">
-
-                        </form>
-                        <form class="panel-transition">
-                            <div class="form-group">
-                                <div class="col-sm-12">
-                                    <a href="#" class="btn btn-sm btn-primary btnAddTrigger hide"><i class="fa fa-plus"></i> Add trigger</a>
-                                </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <p><a href="/repositories/$page.name/" class="btn btn-sm btn-success">Edit funnel as Text editor</a></p>
+                        </div>
+                        <div class="col-xs-6 text-right">
+                            <span class="text-muted" id="builder-status"></span>
+                            <div class="btn-group btn-group-sm">
+                                <button type="button" class="btn btn-default btn-increase-height" title="Increase builder's height"><i class="fa fa-plus"></i></button>
+                                <button type="button" class="btn btn-default btn-decrease-height" title="Decrease builder's height"><i class="fa fa-minus"></i></button>
                             </div>
-                            <div class="form-group placeholderform hide">
-                                <div class="col-sm-12">
-                                    <select name="triggerType" class="form-control">
-                                        <option value="automationTrigger">automationTrigger</option>
-                                        <option value="contactFormTrigger">contactFormTrigger</option>
-                                        <option value="eventTrigger">eventTrigger</option>
-                                        <option value="pageViewTrigger">pageViewTrigger</option>
-                                        <option value="taskCompleteTrigger">taskCompleteTrigger</option>
-                                        <option value="emailResultTrigger">emailResultTrigger</option>
-                                    </select>
-
-                                    <div class="automationTrigger triggerDiv">
-                                        <br>
-                                        <input type="text" class="form-control" name="triggerName" placeholder="triggerName">
-                                    </div>
-                                    <div class="contactFormTrigger triggerDiv hide">
-                                        <br>
-                                        <input type="text" class="form-control" name="contactFormPath" placeholder="contactFormPath">
-                                        <br>
-                                        <input type="text" class="form-control" name="websiteName" placeholder="websiteName">
-                                    </div>
-                                    <div class="eventTrigger triggerDiv hide">
-                                        <br>
-                                        <input type="text" class="form-control" name="condition1" placeholder="condition1">
-                                        <br>
-                                        <input type="text" class="form-control" name="condition2" placeholder="condition2">
-                                        <br>
-                                        <input type="text" class="form-control" name="condition3" placeholder="condition3">
-                                        <br>
-                                        <input type="text" class="form-control" name="condition4" placeholder="condition4">
-                                        <br>
-                                        <input type="text" class="form-control" name="condition5" placeholder="condition5">
-                                    </div>
-                                    <div class="pageViewTrigger triggerDiv hide">
-                                        <br>
-                                        <input type="text" class="form-control" name="path" placeholder="path">
-                                        <br>
-                                        <input type="text" class="form-control" name="websiteName" placeholder="websiteName">
-                                    </div>
-                                    <div class="taskCompleteTrigger triggerDiv hide">
-                                        <br>
-                                        <input type="text" class="form-control" name="taskName" placeholder="taskName">
-                                    </div>
-                                    <div class="emailResultTrigger triggerDiv hide">
-                                        <br>
-                                        <input type="text" class="form-control" name="deliveryAction" placeholder="deliveryAction">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-sm-12 transitionItems"></div>
-                            </div>
-                            <input type="hidden" name="sourceId">
-                            <input type="hidden" name="targetId">
-                        </form>
-                        <form class="panel-decision">
-                            <div class="form-group hide">
-                                <div class="col-sm-12">
-                                    <a href="#" class="pull-right btn btn-primary btnAddChoice"><i class="fa fa-plus"></i> Add key/value</a>
-                                </div>
-                            </div>
-                            <div class="form-group placeholderform hide">
-                                <div class="col-sm-6">
-                                    <input type="text" class="form-control" name="constKey" placeholder="Key" readonly>
-                                </div>
-                                <div class="col-sm-6">
-                                    <input type="text" class="form-control" name="constValue" placeholder="Value">
-                                </div>
-                                <div class="col-sm-2 hide">
-                                    <a title="Delete this key/value" href="javascript:void(0)" class="btn btn-link"><i class="fa fa-trash"></i></a>
-                                </div>
-                            </div>
-                            <div class="choiceItems">
-
-                            </div>
-                            <input type="hidden" name="sourceId">
-                            <input type="hidden" name="targetId">
-                        </form>
-                        <form class="panel-timeout">
-                            <div class="form-group">
-                                <div class="col-sm-12">
-                                    <label>Timeout (in ms)</label>
-                                    <input type="number" min="0" class="form-control" name="timeoutMins" placeholder="timeoutMins">
-                                </div>
-                            </div>
-                            <input type="hidden" name="sourceId">
-                            <input type="hidden" name="targetId">
-                        </form>
+                        </div>
                     </div>
-                    <div class="panel-footer">
-                        <button type="button" class="btn btn-sm btn-primary btn-save-setting">Save</button>
-                        <button type="button" class="btn btn-sm btn-default btn-close-setting">Cancel</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <p>
-            <a href="/repositories/$page.name/" class="btn btn-primary">Edit funnel</a>
-
-            <a class="btn btn-success btn-sm" href="#importerWizard" data-toggle="collapse">
-                <span class="glyphicon glyphicon-upload"></span>
-                Upload CSV
-            </a>
-            <a class="btn btn-info btn-sm btn-export-points" href="export-leads.csv">
-                <span class="glyphicon glyphicon-download"></span>
-                Export to CSV
-            </a>
-        </p>
-
-        <div class="row fuelux collapse" id="importerWizard" style="margin-bottom:30px; margin-top: 10px;">
-            <div class="col-lg-12">
-                <div class="wizard" id="myWizard">
-                    <div class="steps-container">
-                        <ul class="steps">
-                            <li data-step="1" data-name="upload" class="active">
-                                <span class="badge">1</span>Upload
-                                <span class="chevron"></span>
-                            </li>
-                            <li data-step="2">
-                                <span class="badge">2</span>Select columns
-                                <span class="chevron"></span>
-                            </li>
-                            <li data-step="3" data-name="import">
-                                <span class="badge">3</span>Import
-                                <span class="chevron"></span>
-                            </li>
-                            <li data-step="4" data-name="processing">
-                                <span class="badge">4</span>Processing
-                                <span class="chevron"></span>
-                            </li>
-                            <li data-step="5" data-name="complete">
-                                <span class="badge">5</span>Complete
-                                <span class="chevron"></span>
-                            </li>
-
-                        </ul>
-                    </div>
-                    <div class="actions">
-                        <button type="button" class="btn btn-default btn-prev">
-                            <span class="glyphicon glyphicon-arrow-left"></span>Prev
-                        </button>
-                        <button type="button" class="btn btn-primary btn-next" data-last="Complete">Next
-                            <span class="glyphicon glyphicon-arrow-right"></span>
-                        </button>
-                    </div>
-                    <form method="post" action="">
-                        <div class="step-content">
-                            <div class="step-pane active sample-pane alert" data-step="1">
-                                <h4>Upload CSV File</h4>
-
-                                <div id='btn-upload' class="pull-left"></div>
-                                <div class="clearfix"></div>
+                    <div id="builder">
+                        <div class="list-group-item" id="paper"></div>
+                        <div class="right-panel">
+                            <div class="nodes-list panel panel-default">
+                                <div class="panel-heading"><i class="fa fa-list"></i> Nodes List</div>
+                                <ul class="list-group">
+                                    <li data-type="begin" class="list-group-item">
+                                        <img src="/theme/apps/funnels/img/node_begin.jpg" class="img-responsive" />
+                                    </li>
+                                    <li data-type="action" data-action="emailAction" class="list-group-item">
+                                        <img src="/theme/apps/funnels/img/node_sendEmail.jpg" class="img-responsive" />
+                                    </li>
+                                    <li data-type="action" data-action="createTaskAction" class="list-group-item">
+                                        <img src="/theme/apps/funnels/img/node_createTask.jpg" class="img-responsive" />
+                                    </li>
+                                    <li data-type="action" data-action="createDataSeriesAction" class="list-group-item">
+                                        <img src="/theme/apps/funnels/img/node_createDataSeries.jpg" class="img-responsive" />
+                                    </li>
+                                    <li data-type="action" data-action="calendarEventAction" class="list-group-item">
+                                        <img src="/theme/apps/funnels/img/node_calendarEvent.jpg" class="img-responsive" />
+                                    </li>
+                                    <li data-type="action" data-action="addToGroup" class="list-group-item">
+                                        <img src="/theme/apps/funnels/img/node_addToGroup.jpg" class="img-responsive" />
+                                    </li>
+                                    <li data-type="action" data-action="removeProfile" class="list-group-item">
+                                        <img src="/theme/apps/funnels/img/node_removeProfile.jpg" class="img-responsive" />
+                                    </li>
+                                    <li data-type="action" data-action="setField" class="list-group-item">
+                                        <img src="/theme/apps/funnels/img/node_setField.jpg" class="img-responsive" />
+                                    </li>
+                                    <li data-type="goal" class="list-group-item">
+                                        <img src="/theme/apps/funnels/img/node_goal.jpg" class="img-responsive" />
+                                    </li>
+                                    <li data-type="decision" class="list-group-item">
+                                        <img src="/theme/apps/funnels/img/node_decision.jpg" class="img-responsive" />
+                                    </li>
+                                </ul>
                             </div>
-                            <div class="step-pane sample-pane alert" data-step="2">
-                                <h4>Select columns</h4>
+                            <div class="panel panel-default panel-setting">
+                                <div class="panel-heading">
+                                    <i class="fa fa-pencil panel-edit-title"></i> <span class="panel-edit-title">Edit title</span>
+                                    <i class="fa fa-edit panel-edit-details"></i> <span class="panel-edit-details">Edit details</span>
+                                    <i class="fa fa-cogs panel-transition"></i> <span class="panel-transition">Trigger</span>
+                                    <i class="fa fa-question-circle panel-decision"></i> <span class="panel-decision">Decision choice constant</span>
+                                    <i class="fa fa-clock-o panel-timeout"></i> <span class="panel-timeout">Timeout</span>
+                                </div>
+                                <div class="panel-body form-horizontal">
+                                    <form class="panel-edit-title">
+                                        <label>Node title</label>
+                                        <input type="text" value="" name="title" class="form-control" />
+                                        <input type="hidden" name="sourceId">
+                                        <input type="hidden" name="targetId">
+                                    </form>
+                                    <form class="panel-edit-details">
 
-                                <input type="hidden" name="fileHash" value="" />
+                                    </form>
+                                    <form class="panel-transition">
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <a href="#" class="btn btn-sm btn-primary btnAddTrigger hide"><i class="fa fa-plus"></i> Add trigger</a>
+                                            </div>
+                                        </div>
+                                        <div class="form-group placeholderform hide">
+                                            <div class="col-sm-12">
+                                                <select name="triggerType" class="form-control">
+                                                    <option value="automationTrigger">automationTrigger</option>
+                                                    <option value="contactFormTrigger">contactFormTrigger</option>
+                                                    <option value="eventTrigger">eventTrigger</option>
+                                                    <option value="pageViewTrigger">pageViewTrigger</option>
+                                                    <option value="taskCompleteTrigger">taskCompleteTrigger</option>
+                                                    <option value="emailResultTrigger">emailResultTrigger</option>
+                                                </select>
 
-                                <p>Please select which destination field each column should be imported into:</p>
-
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <div class="form-horizontal">
-                                            <div class="form-group">
-                                                <label class="control-label col-md-2" for="startRow" style="text-align: left !important;">Start row</label>
-
-                                                <div class="controls col-md-3">
-                                                    <input type="text" name="startRow" id="startRow" class="form-control" value="" />
+                                                <div class="automationTrigger triggerDiv">
+                                                    <br>
+                                                    <input type="text" class="form-control" name="triggerName" placeholder="triggerName">
+                                                </div>
+                                                <div class="contactFormTrigger triggerDiv hide">
+                                                    <br>
+                                                    <input type="text" class="form-control" name="contactFormPath" placeholder="contactFormPath">
+                                                    <br>
+                                                    <input type="text" class="form-control" name="websiteName" placeholder="websiteName">
+                                                </div>
+                                                <div class="eventTrigger triggerDiv hide">
+                                                    <br>
+                                                    <input type="text" class="form-control" name="condition1" placeholder="condition1">
+                                                    <br>
+                                                    <input type="text" class="form-control" name="condition2" placeholder="condition2">
+                                                    <br>
+                                                    <input type="text" class="form-control" name="condition3" placeholder="condition3">
+                                                    <br>
+                                                    <input type="text" class="form-control" name="condition4" placeholder="condition4">
+                                                    <br>
+                                                    <input type="text" class="form-control" name="condition5" placeholder="condition5">
+                                                </div>
+                                                <div class="pageViewTrigger triggerDiv hide">
+                                                    <br>
+                                                    <input type="text" class="form-control" name="path" placeholder="path">
+                                                    <br>
+                                                    <input type="text" class="form-control" name="websiteName" placeholder="websiteName">
+                                                </div>
+                                                <div class="taskCompleteTrigger triggerDiv hide">
+                                                    <br>
+                                                    <input type="text" class="form-control" name="taskName" placeholder="taskName">
+                                                </div>
+                                                <div class="emailResultTrigger triggerDiv hide">
+                                                    <br>
+                                                    <input type="text" class="form-control" name="deliveryAction" placeholder="deliveryAction">
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-12 transitionItems"></div>
+                                        </div>
+                                        <input type="hidden" name="sourceId">
+                                        <input type="hidden" name="targetId">
+                                    </form>
+                                    <form class="panel-decision">
+                                        <div class="form-group hide">
+                                            <div class="col-sm-12">
+                                                <a href="#" class="pull-right btn btn-primary btnAddChoice"><i class="fa fa-plus"></i> Add key/value</a>
+                                            </div>
+                                        </div>
+                                        <div class="form-group placeholderform hide">
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control" name="constKey" placeholder="Key" readonly>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control" name="constValue" placeholder="Value">
+                                            </div>
+                                            <div class="col-sm-2 hide">
+                                                <a title="Delete this key/value" href="javascript:void(0)" class="btn btn-link"><i class="fa fa-trash"></i></a>
+                                            </div>
+                                        </div>
+                                        <div class="choiceItems">
 
+                                        </div>
+                                        <input type="hidden" name="sourceId">
+                                        <input type="hidden" name="targetId">
+                                    </form>
+                                    <form class="panel-timeout">
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <label>Timeout (in ms)</label>
+                                                <input type="number" min="0" class="form-control" name="timeoutMins" placeholder="timeoutMins">
+                                            </div>
+                                        </div>
+                                        <input type="hidden" name="sourceId">
+                                        <input type="hidden" name="targetId">
+                                    </form>
                                 </div>
-
-                                <div class="table-responsive" style="max-height: 300px; overflow-y: auto">
-                                    <table class="table table-bordered table-striped" id="importerTable">
-                                        <thead>
-                                            <tr id="importerHead">
-                                                <th>Please wait...</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="importerBody">
-                                            <tr>
-                                                <td>Loading...</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                <div class="panel-footer">
+                                    <button type="button" class="btn btn-sm btn-primary btn-save-setting">Save</button>
+                                    <button type="button" class="btn btn-sm btn-default btn-close-setting">Cancel</button>
                                 </div>
                             </div>
-                            <div class="step-pane sample-pane alert" data-step="3">
-                                <h4>Start importing</h4>
-
-                                <p>Press the button here to begin importing. This process imports at a rate of about 1000 rows per minute,
-                                    so may take some time depending on the size of the file</p>
-
-                                <p class="beforeImportInfo text-info" style="margin-bottom: 5px"></p>
-                                <button type="submit" class="btn btn-success">Import now</button>
-                            </div>
-                            <div class="step-pane sample-pane alert" data-step="4">
-                                <h4>Import running</h4>
-
-                                <div class="process-results">
-                                    <p>
-                                        <strong>Process Status:</strong>
-                                        <strong id='job-status'></strong>
-                                    </p>
-
-                                    <button class="btn btn-danger" name="cancel" type="button" id="btn-cancel-import">Cancel Import</button>
-                                </div>
-
-                            </div>
-                            <div class="step-pane sample-pane alert" data-step="5">
-                                <h4>Leads updated: <span class="updatedProfiles"></span></h4>
-                                <h4>Leads created: <span class="createdProfiles"></span></h4>
-                            </div>
-
                         </div>
-                    </form>
+                    </div>
+                </div>
+                <div id="properties" class="tab-pane">
+                </div>
+                <div id="lead" class="tab-pane">
+                    <p>
+                        <a class="btn btn-success btn-sm" href="#importerWizard" data-toggle="collapse">
+                            <span class="glyphicon glyphicon-upload"></span>
+                            Upload CSV
+                        </a>
+                        <a class="btn btn-info btn-sm btn-export-points" href="export-leads.csv">
+                            <span class="glyphicon glyphicon-download"></span>
+                            Export to CSV
+                        </a>
+                    </p>
+                    <hr />
+                    <div class="row fuelux collapse" id="importerWizard" style="margin-bottom:30px; margin-top: 10px;">
+                        <div class="col-lg-12">
+                            <div class="wizard" id="myWizard">
+                                <div class="steps-container">
+                                    <ul class="steps">
+                                        <li data-step="1" data-name="upload" class="active">
+                                            <span class="badge">1</span>Upload
+                                            <span class="chevron"></span>
+                                        </li>
+                                        <li data-step="2">
+                                            <span class="badge">2</span>Select columns
+                                            <span class="chevron"></span>
+                                        </li>
+                                        <li data-step="3" data-name="import">
+                                            <span class="badge">3</span>Import
+                                            <span class="chevron"></span>
+                                        </li>
+                                        <li data-step="4" data-name="processing">
+                                            <span class="badge">4</span>Processing
+                                            <span class="chevron"></span>
+                                        </li>
+                                        <li data-step="5" data-name="complete">
+                                            <span class="badge">5</span>Complete
+                                            <span class="chevron"></span>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                                <div class="actions">
+                                    <button type="button" class="btn btn-default btn-prev">
+                                        <span class="glyphicon glyphicon-arrow-left"></span>Prev
+                                    </button>
+                                    <button type="button" class="btn btn-primary btn-next" data-last="Complete">Next
+                                        <span class="glyphicon glyphicon-arrow-right"></span>
+                                    </button>
+                                </div>
+                                <form method="post" action="">
+                                    <div class="step-content">
+                                        <div class="step-pane active sample-pane alert" data-step="1">
+                                            <h4>Upload CSV File</h4>
+
+                                            <div id='btn-upload' class="pull-left"></div>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                        <div class="step-pane sample-pane alert" data-step="2">
+                                            <h4>Select columns</h4>
+
+                                            <input type="hidden" name="fileHash" value="" />
+
+                                            <p>Please select which destination field each column should be imported into:</p>
+
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <div class="form-horizontal">
+                                                        <div class="form-group">
+                                                            <label class="control-label col-md-2" for="startRow" style="text-align: left !important;">Start row</label>
+
+                                                            <div class="controls col-md-3">
+                                                                <input type="text" name="startRow" id="startRow" class="form-control" value="" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="table-responsive" style="max-height: 300px; overflow-y: auto">
+                                                <table class="table table-bordered table-striped" id="importerTable">
+                                                    <thead>
+                                                        <tr id="importerHead">
+                                                            <th>Please wait...</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="importerBody">
+                                                        <tr>
+                                                            <td>Loading...</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="step-pane sample-pane alert" data-step="3">
+                                            <h4>Start importing</h4>
+
+                                            <p>Press the button here to begin importing. This process imports at a rate of about 1000 rows per minute,
+                                                so may take some time depending on the size of the file</p>
+
+                                            <p class="beforeImportInfo text-info" style="margin-bottom: 5px"></p>
+                                            <button type="submit" class="btn btn-success">Import now</button>
+                                        </div>
+                                        <div class="step-pane sample-pane alert" data-step="4">
+                                            <h4>Import running</h4>
+
+                                            <div class="process-results">
+                                                <p>
+                                                    <strong>Process Status:</strong>
+                                                    <strong id='job-status'></strong>
+                                                </p>
+
+                                                <button class="btn btn-danger" name="cancel" type="button" id="btn-cancel-import">Cancel Import</button>
+                                            </div>
+
+                                        </div>
+                                        <div class="step-pane sample-pane alert" data-step="5">
+                                            <h4>Leads updated: <span class="updatedProfiles"></span></h4>
+                                            <h4>Leads created: <span class="createdProfiles"></span></h4>
+                                        </div>
+
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table">
+                        <thead>
+                            <tr>
+                                <th>TrackingID</th>
+                                <th>Email</th>
+                                <th>Last attained</th>
+                                <th>Awaiting goal</th>
+                                <th>Created date</th>
+                                <th>Last attained date</th>
+                                <th>Timer</th>
+                                <th>Stage</th>
+                                <th>Source</th>
+                                <th>Funnel version</th>
+                                <th>Team</th>
+                                <th>Assigned to</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="lead-tbody">
+                            #foreach( $lead in $page.leads )
+                            <tr>
+                                <td>$!lead.trackingId</td>
+                                <td>$!lead.profile.email</td>
+                                <td>$!lead.lastAttainedGoal</td>
+                                <td>$!lead.currentGoal</td>
+                                <td><abbr class="timeago" title="$lead.createDate">$formatter.formatDate( $lead.createDate )</abbr></td>
+                                <td><abbr class="timeago" title="$lead.lastAttainedDate">$formatter.formatDate( $lead.lastAttainedDate )</abbr></td>
+                                <td>$!lead.timerDate</td>
+                                <td>$!lead.stageName</td>
+                                <td>$!lead.source</td>
+                                <td>$!lead.funnelBranch</td>
+                                <td>$!lead.assignedToOrg.formattedName</td>
+                                <td>$!lead.assignedToProfile.formattedName</td>
+                                <td>
+                                    <button data-leadid="$lead.id" type="button" class="btn btn-danger btn-del-lead"><i class="fa fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            #end
+                        </tbody>
+                    </table>
+                    </div>
                 </div>
             </div>
         </div>
-
-        <table class="table table-responsive">
-            <thead>
-                <tr>
-                    <th>TrackingID</th>
-                    <th>Email</th>
-                    <th>Last attained</th>
-                    <th>Awaiting goal</th>
-                    <th>Created date</th>
-                    <th>Last attained date</th>
-                    <th>Timer</th>
-                    <th>Stage</th>
-                    <th>Source</th>
-                    <th>Funnel version</th>
-                    <th>Team</th>
-                    <th>Assigned to</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody id="lead-tbody">
-                #foreach( $lead in $page.leads )
-                <tr>
-                    <td>$!lead.trackingId</td>
-                    <td>$!lead.profile.email</td>
-                    <td>$!lead.lastAttainedGoal</td>
-                    <td>$!lead.currentGoal</td>
-                    <td>$lead.createDate</td>
-                    <td>$lead.lastAttainedDate</td>
-                    <td>$!lead.timerDate</td>
-                    <td>$!lead.stageName</td>
-                    <td>$!lead.source</td>
-                    <td>$!lead.funnelBranch</td>
-                    <td>$!lead.assignedToOrg.formattedName</td>
-                    <td>$!lead.assignedToProfile.formattedName</td>
-                    <td>
-                        <button data-leadid="$lead.id" type="button" class="btn btn-danger btn-del-lead"><i class="fa fa-trash"></i></button>
-                    </td>
-                </tr>
-                #end
-            </tbody>
-        </table>
 
         <div id="modalUploadCsv" class="modal fade">
             <div class="modal-header">
@@ -406,6 +428,8 @@
 
         <script type="text/javascript">
             $(function () {
+                $('.timeago').timeago();
+
                 $('body').on('click', '.btn-del-lead', function (e) {
                     e.preventDefault();
 
