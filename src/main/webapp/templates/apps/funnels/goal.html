@@ -23,19 +23,6 @@
 
             <div class="form-group">
                 <div class="col-md-12">
-                    <label for="timeoutNode">Next</label>
-                    <select class="form-control" name="timeoutNode" id="timeoutNode">
-                        <option value="">[Select next step]</option>
-                        #foreach($node in $page.funnel.nodes)
-                        $formatter.option($node.nodeId, $node.nodeId, $page.node.timeoutNode)
-                        #end
-                    </select>
-                    <small class="text-muted help-block">The step to proceed to when the timeout period expires</small>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="col-md-12">
                     <label for="stageName">Stage</label>
                     <input type="text" name="stageName" id="stageName" value="$!page.node.stageName" class="form-control" />
                     <small class="text-muted help-block">Set the lead stage to this when the goal is entered</small>
@@ -65,19 +52,6 @@
                     <small class="text-muted help-block">If this goal identifies a source, such as search or social</small>
                 </div>
             </div>
-
-            <hr />
-
-            <table class="table table-bordered table-striped">
-                <tbody>
-                    #foreach( $tr in $page.node.transitions)
-                    <tr>
-                        <td><a href="$tr.nextNodeId">$tr.nextNodeId</a></td>
-                        <td>$!tr.trigger.description</td>
-                    </tr>
-                    #end
-                </tbody>
-            </table>
         </form>
         #else
         <form method="POST" action="$page.path" class="form-horizontal" id="frmDetails">
@@ -98,18 +72,7 @@
 
             </div>
             
-            <div class="form-group">
-                <label class="control-label col-md-2" for="timeoutNode">Next</label>
-                <div class="col-md-4">
-                    <select class="form-control" name="timeoutNode" id="timeoutNode">
-                        <option value="">[Select next step]</option>
-                        #foreach($node in $page.funnel.nodes)
-                        $formatter.option($node.nodeId, $node.nodeId, $page.node.timeoutNode)
-                        #end
-                    </select>
-                    <small class="text-muted help-block">The step to proceed to when the timeout period expires</small>
-                </div>
-                
+            <div class="form-group">                
                 <label class="control-label col-md-2" for="stageName">Stage</label>
                 <div class="col-md-4">
                     <input type="text" name="stageName" id="stageName" value="$!page.node.stageName" class="form-control" />
