@@ -7,9 +7,6 @@
         <script src="/theme/assets/plugins/jQuery-Smart-Wizard/js/jquery.smartWizard.js">//</script>
     </head>
     <body>
-        <h1>$page.title</h1>
-        <p class="lead">Leads = $page.leads.size() </p>
-
         <div class="tabbable clearfix">
             <ul class="nav nav-tabs tab-bricky">
                 <li><a data-toggle="tab" href="#journeyBuilder">Journey Builder</a></li>
@@ -211,6 +208,7 @@
                     </form>
                 </div>
                 <div id="lead" class="tab-pane">
+                    <p class="lead">$page.leads.size() leads</p>
                     <p>
                         <a class="btn btn-success btn-sm" href="#importerWizard" data-toggle="collapse">
                             <span class="glyphicon glyphicon-upload"></span>
