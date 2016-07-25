@@ -15,6 +15,12 @@
         {
             "css": {
                 "cssMedia": "all",
+                "path": "/theme/apps/ecommerce/storeCheckout.css"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
                 "path": "/static/slick/1.5.7/slick/slick.css"
             }
         },
@@ -27,7 +33,7 @@
         {
             "js": {
                 "group": "main",
-                "path": "/static/reload-fragment/1.0.1/jquery.reload-fragment-1.0.1.js"
+                "path": "/static/reload-fragment/1.0.2/jquery.reload-fragment-1.0.2.js"
             }
         },
         {
