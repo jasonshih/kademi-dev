@@ -114,10 +114,22 @@ function initAddPageModal() {
         addMetaTag('', '');
     });
 
+    $(document.body).on('click', '.btn-remove-meta', function (e) {
+        e.preventDefault();
+
+        $(this).closest('.meta').remove();
+    });
+
     $('.btn-add-param').on('click', function (e) {
         e.preventDefault();
 
         addParam('', '');
+    });
+
+    $(document.body).on('click', '.btn-remove-param', function (e) {
+        e.preventDefault();
+
+        $(this).closest('.param').remove();
     });
 }
 
