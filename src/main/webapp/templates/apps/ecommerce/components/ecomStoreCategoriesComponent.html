@@ -1,0 +1,19 @@
+#parse("/theme/apps/ecommerce/ecommerceMacros.html")
+<div class="row" id="products-list">
+    #foreach($cat in $page.children.ofType.category)
+    <div class="col-sm-6 col-md-4 product-item">
+        <a href="$cat.href" class="cate-link">
+            <div class="thumbnail product">
+                #set($bg = "/static/images/photo_holder.png")
+                #if( $cat.imageHref )
+                #set($bg = "$cat.imageHref")
+                #end
+                <span class="product-image-wrapper"><span style="background-image: url($bg)" class="product-image"></span></span>
+                <div class="caption">
+                    <h3 class="cate-title" title="$cat.title">$cat.title</h3>
+                </div>
+            </div>
+        </a>
+    </div>
+    #end
+</div>
