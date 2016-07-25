@@ -1,7 +1,7 @@
 (function () {
     function doQuery() {
         $.ajax({
-            url: '/reporting/_pointsBalanceQuery',
+            url: '/reporting/_pointsBalanceQuery' + window.location.search,
             dataType: 'json',
             success: function (resp) {
                 flog(resp);

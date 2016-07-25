@@ -6,8 +6,12 @@
 #builder {
     position: relative;
     overflow: hidden;
-    height: 600px;
+    min-height: 500px;
     margin: 0 0 15px;
+}
+
+#builder-status {
+    margin-right: 10px;
 }
 
 #builder .list-group-item {

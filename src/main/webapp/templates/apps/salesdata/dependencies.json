@@ -1,18 +1,40 @@
 {
-    "dependencies": [{
+    "dependencies": [
+        {
             "css": {
-                "path": "/theme/variables.css",
+                "path": "/static/nvd3/nv.d3.css",
                 "cssMedia": "all"
             }
-        }, {
-            "less": {
-                "lessMedia": "all",
-                "path": "/theme/variables.less"
-            }
-        }, {
+        },
+        {
             "js": {
                 "group": "main",
-                "path": "/theme/something.js"
+                "path": "/theme/apps/salesdata/jquery.kpiVis.js"
             }
-        }]
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/salesdata/jquery.seriesVis.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/salesdata/salesdata-dashboard.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/d3/d3.min.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/nvd3/nv.d3.js"
+            }
+        }
+    ]
 }

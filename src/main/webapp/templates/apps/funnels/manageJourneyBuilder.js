@@ -20,6 +20,7 @@ $(function () {
     initSaveButton();
     initNodeActions();
     initSettingPanel();
+    initBuilderHeightAdjuster();
 });
 
 jsPlumb.ready(function () {
@@ -575,6 +576,27 @@ function updateNode(form) {
     }
 }
 
+function initBuilderHeightAdjuster() {
+    flog('initBuilderHeightAdjuster');
+
+    var builder = $('#builder');
+
+    $('.btn-increase-height').on('click', function (e) {
+        e.preventDefault();
+
+        builder.css('height', (builder.height() + 50) + 'px');
+    });
+
+    $('.btn-decrease-height').on('click', function (e) {
+        e.preventDefault();
+
+        var currentHeight = builder.height();
+        var newHeight = currentHeight - 50;
+
+        builder.css('height', (newHeight <= 500 ? 500 : newHeight) + 'px');
+    });
+}
+
 function hideSettingPanel() {
     flog('hideSettingPanel');
 
@@ -999,7 +1021,10 @@ function initSaveButton() {
 }
 
 function saveFunnel(message, callback) {
-    flog('saveFunnel');
+    flog('saveFunnel', message);
+
+    var builderStatus = $('#builder-status');
+    builderStatus.show().html('Saving...');
 
     for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
         var node = JBApp.funnel.nodes[i];
@@ -1017,7 +1042,7 @@ function saveFunnel(message, callback) {
         type: 'PUT',
         data: JSON.stringify(JBApp.funnel),
         success: function () {
-            Msg.success(message || 'Funnel is saved!');
+            builderStatus.html(message || 'Funnel is saved!').delay(500).fadeOut(2000);
 
             if (typeof callback === 'function') {
                 callback();
