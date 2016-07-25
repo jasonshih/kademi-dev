@@ -3,31 +3,25 @@
         {
             "css": {
                 "cssMedia": "all",
-                "path": "/static/css/jquery.lightbox-0.5.css"
+                "path": "/theme/apps/ecommerce/ecommerce-store.css"
             }
         },
         {
             "css": {
                 "cssMedia": "all",
-                "path": "/static/dropzone/v3.10.2/css/dropzone.css"
+                "path": "/theme/apps/ecommerce/storeCategory.css"
             }
         },
         {
             "css": {
                 "cssMedia": "all",
-                "path": "/theme/apps/myfiles/directoryIndex.css"
+                "path": "/static/slick/1.5.7/slick/slick.css"
             }
         },
         {
             "js": {
                 "group": "main",
-                "path": "/static/js/jquery.lightbox-0.5.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/dropzone/v3.10.2/dropzone.min.js"
+                "path": "/static/dotdotdot/1.6.16/jquery.dotdotdot.min.js"
             }
         },
         {
@@ -39,7 +33,37 @@
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/myfiles/files.js"
+                "path": "/static/uri/1.15.1/URI.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/slick/1.5.7/slick/slick.min.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/jquery.zoom/1.7.14/jquery.zoom.min.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/ecommerce/ecommerce-store.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/ecommerce/productDetails.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/ecommerce/storeCheckout.js"
             }
         }
     ]
