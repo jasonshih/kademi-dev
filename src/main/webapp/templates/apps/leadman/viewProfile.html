@@ -195,7 +195,7 @@
                                 Companies
                             </div>
                             <div class="panel-body" id="company-body">
-                                #if($page.companies.size() > 0)
+                                #if($page.companyMemberships.size() > 0)
                                 <div class="table-responsive">
                                     <table class="table table-striped">
                                         <thead>
@@ -206,17 +206,21 @@
                                             <th>Address 2</th>
                                             <th>State</th>
                                             <th>Country</th>
+                                            <th></th>
                                         </thead>
                                         <tbody>
-                                            #foreach($company in $page.companies)
+                                            #foreach($company in $page.companyMemberships)
                                             <tr>
-                                                <td>$!company.formattedName</td>
-                                                <td>$!company.email</td>
-                                                <td>$!company.phone</td>
-                                                <td>$!company.address</td>
-                                                <td>$!company.addressLine2</td>
-                                                <td>$!company.addressState</td>
-                                                <td>$!company.country</td>
+                                                <td>$!company.org.formattedName</td>
+                                                <td>$!company.org.email</td>
+                                                <td>$!company.org.phone</td>
+                                                <td>$!company.org.address</td>
+                                                <td>$!company.org.addressLine2</td>
+                                                <td>$!company.org.addressState</td>
+                                                <td>$!company.org.country</td>
+                                                <td>
+                                                    <button type="button" class="btn btn-sm btn-danger removeMembership" data-mid="$company.id"><i class="fa fa-trash"></i></button>
+                                                </td>
                                             </tr>
                                             #end
                                         </tbody>
@@ -478,6 +482,26 @@
                             form.find('input[name=postcode]').val('');
                             form.find('input[name=orgId]').val('');
                         }
+                    }
+                });
+
+                $('body').on('click', '.removeMembership', function (e) {
+                    e.preventDefault();
+
+                    var btn = $(this);
+                    var mId = btn.data('mid');
+
+                    if (confirm('Are you sure you want to remove this company?')) {
+                        $.ajax({
+                            type: 'POST',
+                            data: {
+                                removeMembership: true,
+                                mId: mId
+                            },
+                            success: function (data, textStatus, jqXHR) {
+                                $('#company-body').reloadFragment();
+                            }
+                        });
                     }
                 });
             }
