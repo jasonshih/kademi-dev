@@ -14,7 +14,7 @@
                 <li><a data-toggle="tab" href="#lead">Leads</a></li>
             </ul>
             <div class="tab-content">
-                <div id="journeyBuilder" class="tab-pane">
+                <div id="journeyBuilder" class="tab-pane active">
                     <div class="well" style="display: none">
                         <code id="funnelJson">$page.funnelJson</code>
                         <code id="triggers">{
@@ -47,34 +47,34 @@
                                 <div class="panel-heading"><i class="fa fa-list"></i> Nodes List</div>
                                 <ul class="list-group">
                                     <li data-type="begin" class="list-group-item">
-                                        <img src="/theme/apps/funnels/img/node_begin.jpg" class="img-responsive" />
+                                        <img src="/theme/apps/funnels/img/node_begin.png" class="img-responsive" />
                                     </li>
                                     <li data-type="action" data-action="emailAction" class="list-group-item">
-                                        <img src="/theme/apps/funnels/img/node_sendEmail.jpg" class="img-responsive" />
+                                        <img src="/theme/apps/funnels/img/node_sendEmail.png" class="img-responsive" />
                                     </li>
                                     <li data-type="action" data-action="createTaskAction" class="list-group-item">
-                                        <img src="/theme/apps/funnels/img/node_createTask.jpg" class="img-responsive" />
+                                        <img src="/theme/apps/funnels/img/node_createTask.png" class="img-responsive" />
                                     </li>
                                     <li data-type="action" data-action="createDataSeriesAction" class="list-group-item">
-                                        <img src="/theme/apps/funnels/img/node_createDataSeries.jpg" class="img-responsive" />
+                                        <img src="/theme/apps/funnels/img/node_createDataSeries.png" class="img-responsive" />
                                     </li>
                                     <li data-type="action" data-action="calendarEventAction" class="list-group-item">
-                                        <img src="/theme/apps/funnels/img/node_calendarEvent.jpg" class="img-responsive" />
+                                        <img src="/theme/apps/funnels/img/node_calendarEvent.png" class="img-responsive" />
                                     </li>
                                     <li data-type="action" data-action="addToGroup" class="list-group-item">
-                                        <img src="/theme/apps/funnels/img/node_addToGroup.jpg" class="img-responsive" />
+                                        <img src="/theme/apps/funnels/img/node_addToGroup.png" class="img-responsive" />
                                     </li>
                                     <li data-type="action" data-action="removeProfile" class="list-group-item">
-                                        <img src="/theme/apps/funnels/img/node_removeProfile.jpg" class="img-responsive" />
+                                        <img src="/theme/apps/funnels/img/node_removeProfile.png" class="img-responsive" />
                                     </li>
                                     <li data-type="action" data-action="setField" class="list-group-item">
-                                        <img src="/theme/apps/funnels/img/node_setField.jpg" class="img-responsive" />
+                                        <img src="/theme/apps/funnels/img/node_setField.png" class="img-responsive" />
                                     </li>
                                     <li data-type="goal" class="list-group-item">
-                                        <img src="/theme/apps/funnels/img/node_goal.jpg" class="img-responsive" />
+                                        <img src="/theme/apps/funnels/img/node_goal.png" class="img-responsive" />
                                     </li>
                                     <li data-type="decision" class="list-group-item">
-                                        <img src="/theme/apps/funnels/img/node_decision.jpg" class="img-responsive" />
+                                        <img src="/theme/apps/funnels/img/node_decision.png" class="img-responsive" />
                                     </li>
                                 </ul>
                             </div>
@@ -205,6 +205,48 @@
                             <button class="btn btn-primary">Save</button>
                         </p>
                         <hr />
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Title</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control required" name="title" required="required" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4"></label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control required" required="required" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4"></label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control required" required="required" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4"></label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control required" required="required" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4"></label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control required" required="required" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4"></label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control required" required="required" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4"></label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control required" required="required" />
+                            </div>
+                        </div>
                     </form>
                 </div>
                 <div id="lead" class="tab-pane">
@@ -423,7 +465,7 @@
         </div>
 
         <link rel="stylesheet" href="/theme/apps/funnels/journeybuilder.css?v=110720162">
-        <script src="/static/jsplump/2.1.2/jsPlumb-2.1.2.js">//</script>
+        <script src="/static/jsplump/2.1.4/jsPlumb-2.1.4.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
         <script src="/theme/apps/funnels/manageFunnelImports.js" type="text/javascript">//</script>
         <script src="/theme/apps/funnels/manageJourneyBuilder.js?v=110720162" type="text/javascript">//</script>

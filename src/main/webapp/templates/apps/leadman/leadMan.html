@@ -22,6 +22,10 @@
                     padding-top: 15px !important;
                 }
             }
+            .checkIcon{
+                width: 15px;
+                display: inline-block;
+            }
         </style>
     </head>
     <body class='add-container'>
@@ -29,7 +33,7 @@
 
         <div class="">
             <div class="row">
-                <div class="col-md-5">
+                <div class="col-md-4">
                     <div class="input-group" id="lead-query-container">
                         <input type="text" id="leadQuery" name="q" class="form-control" placeholder="Search for a lead" />
                         <span class="input-group-addon"><i class="fa fa-search"></i></span>
@@ -37,6 +41,21 @@
                 </div>
                 <div class="col-sm-1">
                     <button id="lead-query-clear" class="btn btn-info" title="Clear search value"><i class="fa fa-times"></i></button>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group" id="tagsDropWrap">
+                        <div class="dropdown">
+                            <button class="btn btn-success dropdown-toggle" type="button" id="tagsDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                Tags
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="tagsDrop">
+                                #foreach($tag in $page.availableTags)
+                                <li><a href="$tag.id"><span class="checkIcon"><i class="fa fa-check hide"></i></span> $formatter.firstNotNull($tag.title, $tag.name)</a></li>
+                                #end
+                            </ul>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-sm-2">
                     #if($page.teamsForUser && $page.teamsForUser.size() > 0)
