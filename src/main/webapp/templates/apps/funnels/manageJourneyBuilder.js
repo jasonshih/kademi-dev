@@ -263,7 +263,8 @@ jsPlumb.ready(function () {
         instance.draggable(el, {
             stop: function () {
                 saveFunnel();
-            }
+            },
+            grid: [10, 10]
         });
         
         if (type === 'goal') {
@@ -349,7 +350,7 @@ jsPlumb.ready(function () {
         d.id = node.nodeId;
         d.setAttribute('data-type', type);
 
-        var nodeName = node.title ? node.title : node.nodeId;
+        var nodeName = node.title ? '<span class="node-title-inner">' + node.title + '</span>' : '<span class="node-title-inner text-muted">Enter title</span>';
         var nodeHtml = '';
 
         if (type === 'goal') {
@@ -565,10 +566,17 @@ function updateNode(form) {
         for (var key in node) {
             if (node[key].nodeId === sourceId) {
                 node[key].title = title;
-                $('#' + sourceId).find('.nodeTitle').html(title + ' <i class="fa fa-pencil"></i>');
+
                 saveFunnel('Title is updated', function () {
+                    var nodeTitleInner = $('#' + sourceId).find('.nodeTitle .node-title-inner');
+                    if (nodeTitleInner.hasClass('text-muted')) {
+                        nodeTitleInner.removeClass('text-muted')
+                    }
+                    nodeTitleInner.html(title);
+
                     hideSettingPanel();
                 });
+
                 break;
             }
         }
@@ -887,10 +895,7 @@ function doSaveTrigger(form) {
 function showTitleForm(node) {
     flog('showTitleForm', node);
 
-    var title = node.title;
-    if (!title) {
-        title = node.nodeId;
-    }
+    var title = node.title || '';
     var form = $('form.panel-edit-title');
     form.find('[name=title]').val(title);
     form.find('[name=sourceId]').val(node.nodeId);
