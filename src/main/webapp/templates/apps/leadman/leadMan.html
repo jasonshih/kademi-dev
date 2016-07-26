@@ -23,13 +23,15 @@
                 }
             }
         </style>
+        <link rel="stylesheet" href="http://davidstutz.github.io/bootstrap-multiselect/dist/css/bootstrap-multiselect.css" type="text/css"/>
+        <script type="text/javascript" src="http://davidstutz.github.io/bootstrap-multiselect/dist/js/bootstrap-multiselect.js"></script>
     </head>
     <body class='add-container'>
         #@themeBody()
 
         <div class="">
             <div class="row">
-                <div class="col-md-5">
+                <div class="col-md-4">
                     <div class="input-group" id="lead-query-container">
                         <input type="text" id="leadQuery" name="q" class="form-control" placeholder="Search for a lead" />
                         <span class="input-group-addon"><i class="fa fa-search"></i></span>
@@ -37,6 +39,18 @@
                 </div>
                 <div class="col-sm-1">
                     <button id="lead-query-clear" class="btn btn-info" title="Clear search value"><i class="fa fa-times"></i></button>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="col-xs-1 control-label">Tags</label>
+                        <div class="col-xs-5">
+                            <select class="form-control" name="tags" id="tags-selector" multiple="multiple">
+                                #foreach($tag in $page.availableTags)
+                                <option value="$tag.id">$formatter.firstNotNull($tag.title, $tag.name)</option>
+                                #end
+                            </select>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-sm-2">
                     #if($page.teamsForUser && $page.teamsForUser.size() > 0)

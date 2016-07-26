@@ -3,7 +3,8 @@
     var searchOptions = {
         team: null,
         query: '',
-        leadType: null
+        leadType: null,
+        tags: []
     };
 
     var dataTable = null;
@@ -193,9 +194,9 @@
             }
         });
 
-        editor.on( 'submitComplete', function ( e, json, data ) {
+        editor.on('submitComplete', function (e, json, data) {
             doSearch();
-        } );
+        });
 
         dataTable.draw();
     }
@@ -253,6 +254,27 @@
             }
 
             doSearch();
+        });
+    }
+
+    function initTagsSelect() {
+        $('#tags-selector').multiselect({
+            onChange: function (option, checked) {
+                var groupId = $(option).val();
+                if (checked) { // Add tag
+                    if (searchOptions.tags.indexOf(groupId) < 0) {
+                        searchOptions.tags.push(groupId);
+                    }
+                } else { // Remove tag
+                    while (searchOptions.tags.indexOf(groupId) > -1) {
+                        var index = searchOptions.tags.indexOf(groupId);
+                        if (index > -1) {
+                            searchOptions.tags.splice(index, 1);
+                        }
+                    }
+                }
+                doSearch();
+            }
         });
     }
 
@@ -400,6 +422,7 @@
         initOrgSelect();
         initSearchField();
         initLeadTypeSelect();
+        initTagsSelect();
         doSearch();
     };
 
