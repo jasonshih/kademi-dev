@@ -339,14 +339,11 @@ jsPlumb.ready(function () {
                 allowLoopback: false
             });
         }
-        
-        // this is not part of the core demo functionality; it is a means for the Toolkit edition's wrapped
-        // version of this demo to find out about new nodes being added.
-        //
-        instance.fire("jsPlumbDemoNodeAdded", el);
     }
     
     function newNode(node, type, action) {
+        flog('newNode', node, type, action);
+
         var d = document.createElement("div");
         d.className = "w " + type;
         d.id = node.nodeId;
@@ -419,6 +416,8 @@ jsPlumb.ready(function () {
     JBApp.initNode = initNode;
     
     function initConnection(node) {
+        flog('initConnection', node);
+
         var nextNodeId;
         var nextNodeIds = [];
         if (node.hasOwnProperty('choices')) {
