@@ -271,7 +271,7 @@
                 }
             } else {
                 if (index !== -1) {
-                    searchOptions.tags.slice(index, 1);
+                    searchOptions.tags.splice(index, 1);
                 }
             }
             doSearch();
