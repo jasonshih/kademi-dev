@@ -22,6 +22,10 @@
                     padding-top: 15px !important;
                 }
             }
+            .checkIcon{
+                width: 15px;
+                display: inline-block;
+            }
         </style>
         <link rel="stylesheet" href="http://davidstutz.github.io/bootstrap-multiselect/dist/css/bootstrap-multiselect.css" type="text/css"/>
         <script type="text/javascript" src="http://davidstutz.github.io/bootstrap-multiselect/dist/js/bootstrap-multiselect.js"></script>
@@ -40,16 +44,27 @@
                 <div class="col-sm-1">
                     <button id="lead-query-clear" class="btn btn-info" title="Clear search value"><i class="fa fa-times"></i></button>
                 </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label class="col-xs-1 control-label">Tags</label>
-                        <div class="col-xs-5">
-                            <select class="form-control" name="tags" id="tags-selector" multiple="multiple">
+                <div class="col-md-2">
+                    <div class="form-group" id="tagsDropWrap">
+                        <div class="dropdown">
+                            <button class="btn btn-success dropdown-toggle" type="button" id="tagsDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                Tags
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="tagsDrop">
                                 #foreach($tag in $page.availableTags)
-                                <option value="$tag.id">$formatter.firstNotNull($tag.title, $tag.name)</option>
+                                <li><a href="$tag.id"><span class="checkIcon"><i class="fa fa-check hide"></i></span> $formatter.firstNotNull($tag.title, $tag.name)</a></li>
                                 #end
-                            </select>
+                            </ul>
                         </div>
+                        <!--<label class="col-xs-1 control-label">Tags</label>-->
+                        <!--<div class="col-xs-5">-->
+                            <!--<select class="form-control" name="tags" id="tags-selector" multiple="multiple">-->
+                                <!--#foreach($tag in $page.availableTags)-->
+                                <!--<option value="$tag.id">$formatter.firstNotNull($tag.title, $tag.name)</option>-->
+                                <!--#end-->
+                            <!--</select>-->
+                        <!--</div>-->
                     </div>
                 </div>
                 <div class="col-sm-2">

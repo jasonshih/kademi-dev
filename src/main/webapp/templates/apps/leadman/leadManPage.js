@@ -258,24 +258,43 @@
     }
 
     function initTagsSelect() {
-        $('#tags-selector').multiselect({
-            onChange: function (option, checked) {
-                var groupId = $(option).val();
-                if (checked) { // Add tag
-                    if (searchOptions.tags.indexOf(groupId) < 0) {
-                        searchOptions.tags.push(groupId);
-                    }
-                } else { // Remove tag
-                    while (searchOptions.tags.indexOf(groupId) > -1) {
-                        var index = searchOptions.tags.indexOf(groupId);
-                        if (index > -1) {
-                            searchOptions.tags.splice(index, 1);
-                        }
-                    }
+        $('#tagsDropWrap ul li').on('click', function(e){
+            e.preventDefault();
+
+            $(this).toggleClass('tagSelected');
+            $(this).find('i').toggleClass('hide');
+            var groupId = $(this).find('a').attr('href');
+            var index = searchOptions.tags.indexOf(groupId);
+            if ($(this).hasClass('tagSelected')){
+                if (index === -1) {
+                    searchOptions.tags.push(groupId);
                 }
-                doSearch();
+            } else {
+                if (index !== -1) {
+                    searchOptions.tags.slice(index, 1);
+                }
             }
+            doSearch();
         });
+
+        //$('#tags-selector').multiselect({
+        //    onChange: function (option, checked) {
+        //        var groupId = $(option).val();
+        //        if (checked) { // Add tag
+        //            if (searchOptions.tags.indexOf(groupId) < 0) {
+        //                searchOptions.tags.push(groupId);
+        //            }
+        //        } else { // Remove tag
+        //            while (searchOptions.tags.indexOf(groupId) > -1) {
+        //                var index = searchOptions.tags.indexOf(groupId);
+        //                if (index > -1) {
+        //                    searchOptions.tags.splice(index, 1);
+        //                }
+        //            }
+        //        }
+        //        doSearch();
+        //    }
+        //});
     }
 
     function initSearchField() {
