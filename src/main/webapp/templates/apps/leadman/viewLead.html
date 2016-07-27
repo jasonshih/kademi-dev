@@ -47,6 +47,11 @@
             .note-item + .note-item{
                 border-top: 1px solid #eee;
             }
+            #user-membership .membership{
+                display: inline-block;
+                margin-bottom: 0;
+                margin-top: 5px;
+            }
             @media (max-width: 767px) {
                 #lead-cover{
                     height: auto;
@@ -185,30 +190,39 @@
             </div>
             #if($page.profile)
             <div class="memberships-wrapper" id="membershipsContainer">
-                <div class="dropdown" style="margin-right: 15px">
-                    <a data-toggle="dropdown" class="dropdown-toggle" href="#" >
-                        <i class="fa fa-plus-circle fa-2x"></i>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li style="padding: 3px 15px"><strong>Quick add</strong></li>
-                        #foreach($group in $page.tags)
-                        <li class="addTag">
-                            <a href="$group.name">
-                                <i class="fa fa-tag"></i> $formatter.firstNotNull($group.title, $group.name)
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="dropdown">
+                            <a data-toggle="dropdown" class="dropdown-toggle btn btn-primary" href="#" >
+                                <i class="fa fa-plus-circle"></i> Tags
                             </a>
-                        </li>
-                        #end
-                    </ul>
+                            <ul class="dropdown-menu">
+                                <li style="padding: 3px 15px"><strong>Quick add</strong></li>
+                                #foreach($group in $page.tags)
+                                <li class="addTag">
+                                    <a href="$group.name">
+                                        <i class="fa fa-tag"></i> $formatter.firstNotNull($group.title, $group.name)
+                                    </a>
+                                </li>
+                                #end
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-                <div id="user-membership" class="blocks-wrapper memberships-list membershipsDiv">
-                    #foreach($m in $page.assignedTags)
-                    #showGroupTag( $m )
-                    #end
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="user-membership" class="blocks-wrapper memberships-list membershipsDiv">
+                            #foreach($m in $page.assignedTags)
+                            #showGroupTag( $m )
+                            #end
+                        </div>
+                    </div>
                 </div>
-                <div style="clear: both"></div>
             </div>
+            <br>
             #end
-            <div class="clearfix"></div>
+
             <div class="">
                 <div class="row">
                     <div class="col-lg-4">
@@ -824,7 +838,7 @@
         </div>
 
         #macro( showGroupTag $g )
-        <span class="block membership alert alert-info">
+        <span class="membership alert alert-info">
             <i class="fa fa-tag"></i>
             <span class="block-name" title="$g.name">
                 $g.name
