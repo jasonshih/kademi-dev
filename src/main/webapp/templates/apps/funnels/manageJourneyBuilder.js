@@ -617,9 +617,13 @@ function showSettingPanel(formName) {
 
     var settingPanel = $('.panel-setting');
     var settingPanelBody = settingPanel.find('.panel-body');
+    var formPanel = settingPanelBody.find('.panel-' + formName);
     settingPanel.attr('class', 'panel panel-default panel-setting showed panel-' + formName);
     settingPanelBody.find('.active').removeClass('active');
-    settingPanelBody.find('.panel-' + formName).addClass('active');
+    formPanel.addClass('active');
+    setTimeout(function () {
+        formPanel.find('input:text').first().trigger('focus');
+    }, 250);
 }
 
 function initSideBar() {
