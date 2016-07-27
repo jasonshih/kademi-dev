@@ -69,7 +69,7 @@
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="tagsDrop">
                                     #foreach($tag in $page.availableTags)
-                                    <li><a href="$tag.id"><span class="checkIcon"><i class="fa fa-check hide"></i></span> $formatter.firstNotNull($tag.title, $tag.name)</a></li>
+                                    <li><a data-filter="tags" href="$tag.id"><span class="checkIcon"><i class="fa fa-check hide"></i></span> $formatter.firstNotNull($tag.title, $tag.name)</a></li>
                                     #end
                                 </ul>
                             </div>
@@ -83,7 +83,7 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     #foreach($o in $page.teamsForUser)
-                                    <li><a class="btn-select-org" href="$o.orgId"><span class="checkIcon"><i class="fa fa-check hide"></i></span> $o.title</a></li>
+                                    <li><a data-filter="team" class="btn-select-org" href="$o.orgId"><span class="checkIcon"><i class="fa fa-check hide"></i></span> $o.title</a></li>
                                     #end
                                 </ul>
                             </div>
@@ -98,7 +98,7 @@
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="assingedToDrop">
                                     #foreach($user in $page.find("/leads").teamMembers)
-                                    <li><a href="$user.name"><span class="checkIcon"><i class="fa fa-check hide"></i></span> $!user.firstName $!user.surName</a></li>
+                                    <li><a data-filter="assingedTo" href="$user.name"><span class="checkIcon"><i class="fa fa-check hide"></i></span> $!user.firstName $!user.surName</a></li>
                                     #end
                                 </ul>
                             </div>
@@ -112,7 +112,7 @@
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="sourcesDrop">
                                     #foreach( $source in $page.find("/leads/").funnels.get("test").sources)
-                                    <li><a href="$source"><span class="checkIcon"><i class="fa fa-check hide"></i></span> $source</a></li>
+                                    <li><a data-filter="sources" href="$source"><span class="checkIcon"><i class="fa fa-check hide"></i></span> $source</a></li>
                                     #end
                                 </ul>
                             </div>

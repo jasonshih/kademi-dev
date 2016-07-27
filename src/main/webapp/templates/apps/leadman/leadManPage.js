@@ -1,10 +1,12 @@
 (function (w) {
 
     var searchOptions = {
-        team: null,
+        team: [],
         query: '',
         leadType: null,
-        tags: []
+        tags: [],
+        assignedTo: [],
+        sources: []
     };
 
     var dataTable = null;
@@ -257,25 +259,28 @@
         });
     }
 
-    function initTagsSelect() {
-        $('#tagsDropWrap ul li').on('click', function(e){
+    function initDropdownFilter() {
+        $('.leadDropFilter ul li').on('click', function(e){
             e.preventDefault();
             e.stopPropagation();
-
-            $(this).toggleClass('tagSelected');
+            var filterName = $(this).find('a').attr('data-filter');
+            $(this).toggleClass('filterSelected');
             $(this).find('i').toggleClass('hide');
             var groupId = $(this).find('a').attr('href');
-            var index = searchOptions.tags.indexOf(groupId);
-            if ($(this).hasClass('tagSelected')){
-                if (index === -1) {
-                    searchOptions.tags.push(groupId);
+            if (searchOptions.hasOwnProperty(filterName) && Array.isArray(searchOptions[filterName])){
+                var index = searchOptions[filterName].indexOf(groupId);
+                if ($(this).hasClass('filterSelected')){
+                    if (index === -1) {
+                        searchOptions[filterName].push(groupId);
+                    }
+                } else {
+                    if (index !== -1) {
+                        searchOptions[filterName].splice(index, 1);
+                    }
                 }
-            } else {
-                if (index !== -1) {
-                    searchOptions.tags.splice(index, 1);
-                }
+                doSearch();
             }
-            doSearch();
+
         });
 
         //$('#tags-selector').multiselect({
@@ -440,10 +445,10 @@
             return d.format('MMMM Do YYYY, h:mm:ss a');
         });
 
-        initOrgSelect();
+        //initOrgSelect();
         initSearchField();
         initLeadTypeSelect();
-        initTagsSelect();
+        initDropdownFilter();
         doSearch();
     };
 
