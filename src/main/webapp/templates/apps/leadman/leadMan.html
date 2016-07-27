@@ -30,7 +30,18 @@
                 padding-left: 10px;
             }
         </style>
+        <script>
+            var searchOptions = {
+                team: '$!params.team',
+                query: "$!params.query",
+                leadType: "$!params.leadType",
+                tags: "$!params.tags",
+                assignedTo: '$!params.assignedTo',
+                sources: '$!params.sources'
+            }
+        </script>
     </head>
+
     <body class='add-container'>
         #@themeBody()
 
@@ -38,7 +49,7 @@
             <div class="row">
                 <div class="col-md-3">
                     <div class="input-group" id="lead-query-container">
-                        <input type="text" id="leadQuery" name="q" class="form-control" placeholder="Search for a lead" />
+                        <input type="text" id="leadQuery" name="q" class="form-control" placeholder="Search for a lead" value="$!params.query" />
                         <span class="input-group-addon"><i class="fa fa-search"></i></span>
                     </div>
                 </div>
@@ -56,7 +67,7 @@
                                     <input type="radio" name="leadType" id="active" autocomplete="off" $formatter.ifEqual('checked="checked"', '', $request.params.leadType, 'active')/> <span id="activeLeadTotal"></span> Active
                                 </label>
                                 <label class="btn btn-warning $formatter.ifEqual('active', '', $request.params.leadType, 'closed')">
-                                    <input type="radio" name="leadType" id="closed" autocomplete="off" $formatter.ifEqual('checked="checked"', '', $request.params.leadType, 'closed')/> Closed
+                                    <input type="radio" name="leadType" id="closed" autocomplete="off" $formatter.ifEqual('checked="checked"', '', $request.params.leadType, 'closed')/> <span id="closedLeadTotal"></span> Closed
                                 </label>
                             </div>
                         </div>
@@ -69,7 +80,7 @@
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="tagsDrop">
                                     #foreach($tag in $page.availableTags)
-                                    <li><a data-filter="tags" href="$tag.id"><span class="checkIcon"><i class="fa fa-check hide"></i></span> $formatter.firstNotNull($tag.title, $tag.name)</a></li>
+                                    <li><a data-filter="tags" class="$formatter.ifTrue($params.tags.contains($tag.id.toString()), 'filterSelected', '')" href="$tag.id"><span class="checkIcon"><i class="fa fa-check $formatter.ifTrue($params.tags.contains($tag.id.toString()), '', 'hide')"></i></span> $formatter.firstNotNull($tag.title, $tag.name)</a></li>
                                     #end
                                 </ul>
                             </div>
@@ -83,7 +94,7 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     #foreach($o in $page.teamsForUser)
-                                    <li><a data-filter="team" class="btn-select-org" href="$o.orgId"><span class="checkIcon"><i class="fa fa-check hide"></i></span> $o.title</a></li>
+                                    <li><a data-filter="team" class="btn-select-org $formatter.ifTrue($params.tags.contains($o.orgId.toString()), 'filterSelected', '')" href="$o.orgId"><span class="checkIcon"><i class="fa fa-check $formatter.ifTrue($params.tags.contains($o.orgId.toString()), '', 'hide')"></i></span> $o.title</a></li>
                                     #end
                                 </ul>
                             </div>
@@ -97,8 +108,8 @@
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="assingedToDrop">
-                                    #foreach($user in $page.find("/leads").teamMembers)
-                                    <li><a data-filter="assingedTo" href="$user.name"><span class="checkIcon"><i class="fa fa-check hide"></i></span> $!user.firstName $!user.surName</a></li>
+                                    #foreach($t in $page.find("/leads").teamMembers)
+                                    <li><a data-filter="assignedTo" class="$formatter.ifTrue($params.assignedTo.contains($t.name), 'filterSelected', '')" href="$t.name"><span class="checkIcon"><i class="fa fa-check $formatter.ifTrue($params.assignedTo.contains($t.name), '', 'hide')"></i></span> $!t.firstName $!t.surName</a></li>
                                     #end
                                 </ul>
                             </div>
@@ -112,7 +123,7 @@
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="sourcesDrop">
                                     #foreach( $source in $page.find("/leads/").funnels.get("test").sources)
-                                    <li><a data-filter="sources" href="$source"><span class="checkIcon"><i class="fa fa-check hide"></i></span> $source</a></li>
+                                    <li><a data-filter="sources" class="$formatter.ifTrue($params.sources.contains($source), 'filterSelected', '')" href="$source"><span class="checkIcon"><i class="fa fa-check $formatter.ifTrue($params.sources.contains($source), '', 'hide')"></i></span> $source</a></li>
                                     #end
                                 </ul>
                             </div>
@@ -120,7 +131,11 @@
                     </div>
                 </div>
             </div>
-
+            <div class="row">
+                <div class="col-md-12">
+                    <a href="#" class="btn btn-link"><i class="fa fa-times"></i> Clear current search query, filters, and sorts</a>
+                </div>
+            </div>
             <br/>
             <div class="fw-boxed">
                 <div class="panel panel-default ">
@@ -168,6 +183,7 @@
         <script src="/static/d3/d3.v3.js" type="text/javascript"></script>
         <link href="/static/nvd3/nv.d3.css" rel="stylesheet" type="text/css"/>
         <script src="/static/nvd3/nv.d3.js" type="text/javascript"></script>
+        <script src="/static/uri/1.15.1/URI.js" type="text/javascript"></script>
         <script src="/static/reload-fragment/1.0.1/jquery.reload-fragment-1.0.1.js" type="text/javascript" >//</script>
         <script src="/static/DataTables/datatables.js" type="text/javascript"></script>
         <script type="text/javascript">
