@@ -26,6 +26,9 @@
                 width: 15px;
                 display: inline-block;
             }
+            .leadDropFilter .dropdown-menu > li > a{
+                padding-left: 10px;
+            }
         </style>
     </head>
     <body class='add-container'>
@@ -33,103 +36,91 @@
 
         <div class="">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="input-group" id="lead-query-container">
                         <input type="text" id="leadQuery" name="q" class="form-control" placeholder="Search for a lead" />
                         <span class="input-group-addon"><i class="fa fa-search"></i></span>
                     </div>
                 </div>
-                <div class="col-sm-1">
-                    <button id="lead-query-clear" class="btn btn-info" title="Clear search value"><i class="fa fa-times"></i></button>
-                </div>
-                <div class="col-md-2">
-                    <div class="form-group" id="tagsDropWrap">
-                        <div class="dropdown">
-                            <button class="btn btn-success dropdown-toggle" type="button" id="tagsDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                Tags
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="tagsDrop">
-                                #foreach($tag in $page.availableTags)
-                                <li><a href="$tag.id"><span class="checkIcon"><i class="fa fa-check hide"></i></span> $formatter.firstNotNull($tag.title, $tag.name)</a></li>
-                                #end
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-2">
-                    #if($page.teamsForUser && $page.teamsForUser.size() > 0)
-                    <div class="btn-group" style="margin-bottom: 10px">
-                        <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="aggr-title">$!page.teamOrg.title</span> <i class="fa fa-caret-down"></i>
-                        </button>
-                        <ul class="dropdown-menu">
-                            #foreach($o in $page.teamsForUser)
-                            <li><a class="btn-select-org" href="$o.orgId">$o.title</a></li>
+                <!--<div class="col-sm-1">-->
+                    <!--<button id="lead-query-clear" class="btn btn-info" title="Clear search value"><i class="fa fa-times"></i></button>-->
+                <!--</div>-->
+                <div class="col-md-9">
+                    <div class="form-inline">
+                        <div class="form-group leadDropFilter">
+                            #if(!$request.params.leadType)
+                            #set($request.params.leadType = 'active')
                             #end
-                        </ul>
-                    </div>
-                    #end
-                </div>
-                <div class="col-md-3">
-                    #if(!$request.params.leadType)
-                    #set($request.params.leadType = 'active')
-                    #end
-                    <div class="btn-group" data-toggle="buttons">
-                        <label class="btn btn-success $formatter.ifEqual('active', '', $request.params.leadType, 'active')">
-                            <input type="radio" name="leadType" id="active" autocomplete="off" $formatter.ifEqual('checked="checked"', '', $request.params.leadType, 'active')/> Active
-                        </label>
-                        <label class="btn btn-warning $formatter.ifEqual('active', '', $request.params.leadType, 'closed')">
-                            <input type="radio" name="leadType" id="closed" autocomplete="off" $formatter.ifEqual('checked="checked"', '', $request.params.leadType, 'closed')/> Closed
-                        </label>
+                            <div class="btn-group" data-toggle="buttons">
+                                <label class="btn btn-success $formatter.ifEqual('active', '', $request.params.leadType, 'active')">
+                                    <input type="radio" name="leadType" id="active" autocomplete="off" $formatter.ifEqual('checked="checked"', '', $request.params.leadType, 'active')/> <span id="activeLeadTotal"></span> Active
+                                </label>
+                                <label class="btn btn-warning $formatter.ifEqual('active', '', $request.params.leadType, 'closed')">
+                                    <input type="radio" name="leadType" id="closed" autocomplete="off" $formatter.ifEqual('checked="checked"', '', $request.params.leadType, 'closed')/> Closed
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group leadDropFilter" id="tagsDropWrap">
+                            <div class="dropdown">
+                                <button class="btn btn-success dropdown-toggle" type="button" id="tagsDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    Tags
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="tagsDrop">
+                                    #foreach($tag in $page.availableTags)
+                                    <li><a href="$tag.id"><span class="checkIcon"><i class="fa fa-check hide"></i></span> $formatter.firstNotNull($tag.title, $tag.name)</a></li>
+                                    #end
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="form-group leadDropFilter">
+                            #if($page.teamsForUser && $page.teamsForUser.size() > 0)
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="aggr-title">Team </span> <i class="fa fa-caret-down"></i>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    #foreach($o in $page.teamsForUser)
+                                    <li><a class="btn-select-org" href="$o.orgId"><span class="checkIcon"><i class="fa fa-check hide"></i></span> $o.title</a></li>
+                                    #end
+                                </ul>
+                            </div>
+                            #end
+                        </div>
+
+                        <div class="form-group leadDropFilter" id="assingedToDropWrap">
+                            <div class="dropdown">
+                                <button class="btn btn-success dropdown-toggle" type="button" id="assingedToDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    Assigned to
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="assingedToDrop">
+                                    #foreach($user in $page.find("/leads").teamMembers)
+                                    <li><a href="$user.name"><span class="checkIcon"><i class="fa fa-check hide"></i></span> $!user.firstName $!user.surName</a></li>
+                                    #end
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="form-group leadDropFilter" id="sourcesDropWrap">
+                            <div class="dropdown">
+                                <button class="btn btn-success dropdown-toggle" type="button" id="sourcesDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    Sources
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="sourcesDrop">
+                                    #foreach( $source in $page.find("/leads/").funnels.get("test").sources)
+                                    <li><a href="$source"><span class="checkIcon"><i class="fa fa-check hide"></i></span> $source</a></li>
+                                    #end
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <br/>
-            <div class="fw-boxed">
-                <div class="panel panel-default ">
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="row text-muted m0">
-                                <div data-ripple="" class="col-xs-6 col-sm-3 col-md-3 bb-lg br pv-xxxxl infoBox" >
-                                    <h1 class="text-thin" id="LeadTotal">Loading...</h1>
-                                    <div class="text-right text-sm text-muted">Leads</div>
-                                </div>
-                                <div data-ripple="" class="col-xs-6 col-sm-3 col-md-3 bb-lg br pv-xxxxl infoBox" >
-                                    <h1 class="text-thin" id="LeadSumValue">Loading...</h1>
-                                    <div class="text-right text-sm text-muted">Total Value</div>
-                                </div>
-                                <div data-ripple="" class="col-xs-6 col-sm-3 col-md-3 bb-lg br pv-xxxxl infoBox" >
-                                    <h1 class="text-thin" id="leadAvgValue">Loading...</h1>
-                                    <div class="text-right text-sm text-muted">Average Value</div>
-                                </div>
-                                <div data-ripple="" class="col-xs-6 col-sm-3 col-md-3 bb-lg br pv-xxxxl infoBox" >
-                                    <h1 class="text-thin">$formatter.ifNull($leadsPage.myDueTasks.size(), 0)</h1>
-                                    <div class="text-right text-sm text-muted">Tasks due</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="row">
-                                <div class="col-sm-12 col-xs-12">
-                                    <div class="p">
-                                        <div class="row row-flush text-center">
-                                            <div class="col-xs-6" id="sourcesPie">
-                                                <p class="mt-lg">Sources</p>
-                                                <svg style="width: 100%; height: 139px;"> </svg>
-                                            </div>
-                                            <div class="col-xs-6" id="stagesPie">
-                                                <p class="mt-lg">Stages</p>
-                                                <svg style="width: 100%; height: 139px;"> </svg>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
             <br/>
             <div class="fw-boxed">
                 <div class="panel panel-default ">

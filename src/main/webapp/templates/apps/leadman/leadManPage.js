@@ -260,6 +260,7 @@
     function initTagsSelect() {
         $('#tagsDropWrap ul li').on('click', function(e){
             e.preventDefault();
+            e.stopPropagation();
 
             $(this).toggleClass('tagSelected');
             $(this).find('i').toggleClass('hide');
@@ -336,7 +337,8 @@
             url: window.location.pathname + '?sLead&' + $.param(searchOptions),
             dataType: 'JSON',
             success: function (data, textStatus, jqXHR) {
-                $('#LeadTotal').html(data.hits.total);
+                $('#activeLeadTotal').html(data.hits.total);
+                $('#closedLeadTotal').html(data.hits.total);
                 $('#LeadSumValue').html(data.aggregations.dealAmountTotal.value || 0);
                 var avgAmount = data.aggregations.dealAmountAvg.value || 0;
                 if (avgAmount > 0) {
