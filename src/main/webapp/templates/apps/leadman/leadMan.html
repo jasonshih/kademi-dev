@@ -38,7 +38,10 @@
                 tags: "$!params.tags",
                 assignedTo: '$!params.assignedTo',
                 sources: '$!params.sources'
-            }
+            };
+            #if (!$params.leadType)
+            searchOptions.leadType = 'active';
+            #end
         </script>
     </head>
 

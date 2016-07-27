@@ -299,6 +299,11 @@
             if (w.searchOptions.assignedTo){
                 searchOptions.assignedTo = w.searchOptions.assignedTo.split(',');
             }
+            if (w.searchOptions.leadType) {
+                searchOptions.leadType = w.searchOptions.leadType;
+            } else {
+                searchOptions.leadType = 'active';
+            }
         }
     }
 
@@ -349,9 +354,9 @@
         $.ajax({
             url: window.location.pathname + '?sLead&' + $.param(searchOptions),
             dataType: 'JSON',
-            success: function (data, textStatus, jqXHR) {
-                if (data.aggregations.states.buckets){
-                    var states = data.aggregations.states.buckets;
+            success: function (resp, textStatus, jqXHR) {
+                if (resp.data.aggrs && resp.data.aggrs.aggregations.states.buckets){
+                    var states = resp.data.aggrs.aggregations.states.buckets;
                     var activeCount = 0;
                     var closedCount = 0;
                     for(var i = 0; i < states.length; i++){
@@ -372,10 +377,9 @@
                 //}
                 //$('#leadAvgValue').html(avgAmount);
 
-                updateSourcesPie(data.aggregations.sources.buckets);
-                updateStagesPie(data.aggregations.stages.buckets);
-                initDataTable(data.hits);
-
+                //updateSourcesPie(data.aggregations.sources.buckets);
+                //updateStagesPie(data.aggregations.stages.buckets);
+                initDataTable(resp.data.results.hits);
                 updateUrl();
             },
             error: function (jqXHR, textStatus, errorThrown) {
