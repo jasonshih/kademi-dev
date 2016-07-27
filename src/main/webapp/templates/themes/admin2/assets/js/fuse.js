@@ -179,10 +179,6 @@ function initTabbable() {
             var links = tabHeader.find('a');
             var hash = window.location.hash;
 
-            if (hash === '') {
-                links.eq(0).trigger('click');
-            }
-
             links.each(function () {
                 var link = $(this);
                 link.on('click', function (e) {
@@ -191,13 +187,17 @@ function initTabbable() {
                     window.location.hash = $(this).attr('href') + '-tab';
                 });
             });
+
+            if (hash === '') {
+                links.eq(0).trigger('click');
+            }
         });
 
         $(window).on('hashchange', function () {
             var hash = window.location.hash.replace('-tab', '');
             flog('hashchanged', hash);
 
-            var tabbable = $('.tabbable .nav-tabs a[href=' + hash + ']');
+            var tabbable = $('.tabbable .nav-tabs a[href="' + hash + '"]');
             tabbable.trigger('click');
         }).trigger('hashchange');
     });
