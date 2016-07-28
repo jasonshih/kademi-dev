@@ -399,7 +399,11 @@
                             #foreach( $lead in $page.leads )
                             <tr>
                                 <td>$!lead.trackingId</td>
-                                <td>$!lead.profile.email</td>
+                                <td>
+                                    #if( $lead.profile )
+                                    <a href="/manageUsers/$lead.profile.id">$lead.profile.email</a>                                    
+                                    #end
+                                </td>
                                 <td>
                                     $!page.nodeTitle($lead.lastAttainedGoal)                                    
                                 </td>
