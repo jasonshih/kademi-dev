@@ -72,7 +72,7 @@ function initPropertiesForm() {
             });
 
             var stages = [];
-            $('.stages-wrapper').find('.stage').each(function () {
+            $('.stage-wrapper').find('.stage').each(function () {
                 var stage = $(this);
 
                 stages.push({
@@ -123,8 +123,7 @@ function initPropertiesForm() {
             });
 
             JBApp.funnel.title = form.find('[name=title]').val().trim();
-            JBApp.funnel.leadsGroup = form.find('[name=leadsGroup]').val().trim();
-            JBApp.funnel.defaultInitialGoal = form.find('[name=defaultInitialGoal]').val().trim();
+            JBApp.funnel.leadsGroup = form.find('[name=leadsGroup]').val();
             JBApp.funnel.sources = sources;
             JBApp.funnel.stages = stages;
             JBApp.funnel.extraFields = extraFields;

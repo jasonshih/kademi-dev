@@ -208,19 +208,24 @@
                         <div class="form-group">
                             <label class="control-label col-sm-3">Title</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control required" name="title" value="$!page.title" />
+                                <input type="text" class="form-control required" name="title" value="$!page.funnel.title" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-3">Leads Group</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control required" name="leadsGroup" value="$!page.funnel.leadsGroup" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-3">Default Initial Goal</label>
-                            <div class="col-sm-6">
-                                <input type="text" class="form-control required" name="defaultInitialGoal" value="$!page.funnel.defaultInitialGoal" />
+                                <select class="form-control required" name="leadsGroup">
+                                    <option value="">[No group selected]</option>
+                                    #foreach ($g in $page.find("/groups").children)
+                                        <option #if ($g.name == $page.funnel.leadsGroup) selected #end value="$g.name">
+                                            #if ($g.groupTitle)
+                                                $g.groupTitle
+                                            #else
+                                                $g.name
+                                            #end
+                                        </option>
+                                    #end
+                                </select>
                             </div>
                         </div>
                         <div class="form-group">
@@ -614,11 +619,11 @@
             </div>
         </div>
 
-        <link rel="stylesheet" href="/theme/apps/funnels/journey-Builder.css?v=110720162">
+        <link rel="stylesheet" href="/theme/apps/funnels/journeyBuilder.css?v=28072016">
         <script src="/static/jsplump/2.1.4/jsPlumb-2.1.4.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
         <script src="/theme/apps/funnels/manageFunnelImports.js" type="text/javascript">//</script>
-        <script src="/theme/apps/funnels/journeyBuilder.js?v=110720162" type="text/javascript">//</script>
+        <script src="/theme/apps/funnels/journeyBuilder.js?v=28072016" type="text/javascript">//</script>
         <script src="/theme/apps/funnels/manageFunnel.js" type="text/javascript">//</script>
 
 
