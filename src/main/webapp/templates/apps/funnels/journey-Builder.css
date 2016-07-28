@@ -3,6 +3,11 @@
     touch-action: none;
 }
 
+.input-group-sm.form-group {
+    margin-left: 0;
+    margin-right: 0;
+}
+
 #builder {
     position: relative;
     overflow: hidden;

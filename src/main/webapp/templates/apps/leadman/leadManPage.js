@@ -1,10 +1,12 @@
 (function (w) {
 
     var searchOptions = {
-        team: null,
+        team: [],
         query: '',
         leadType: null,
-        tags: []
+        tags: [],
+        assignedTo: [],
+        sources: []
     };
 
     var dataTable = null;
@@ -257,44 +259,61 @@
         });
     }
 
-    function initTagsSelect() {
-        $('#tagsDropWrap ul li').on('click', function(e){
+    function initDropdownFilter() {
+        $('.leadDropFilter ul li').on('click', function(e){
             e.preventDefault();
-
-            $(this).toggleClass('tagSelected');
+            e.stopPropagation();
+            var filterName = $(this).find('a').attr('data-filter');
+            $(this).find('a').toggleClass('filterSelected');
             $(this).find('i').toggleClass('hide');
             var groupId = $(this).find('a').attr('href');
-            var index = searchOptions.tags.indexOf(groupId);
-            if ($(this).hasClass('tagSelected')){
-                if (index === -1) {
-                    searchOptions.tags.push(groupId);
+            if (searchOptions.hasOwnProperty(filterName) && Array.isArray(searchOptions[filterName])){
+                var index = searchOptions[filterName].indexOf(groupId);
+                if ($(this).find('a').hasClass('filterSelected')){
+                    if (index === -1) {
+                        searchOptions[filterName].push(groupId);
+                    }
+                } else {
+                    if (index !== -1) {
+                        searchOptions[filterName].splice(index, 1);
+                    }
                 }
-            } else {
-                if (index !== -1) {
-                    searchOptions.tags.splice(index, 1);
-                }
+                doSearch();
             }
-            doSearch();
-        });
 
-        //$('#tags-selector').multiselect({
-        //    onChange: function (option, checked) {
-        //        var groupId = $(option).val();
-        //        if (checked) { // Add tag
-        //            if (searchOptions.tags.indexOf(groupId) < 0) {
-        //                searchOptions.tags.push(groupId);
-        //            }
-        //        } else { // Remove tag
-        //            while (searchOptions.tags.indexOf(groupId) > -1) {
-        //                var index = searchOptions.tags.indexOf(groupId);
-        //                if (index > -1) {
-        //                    searchOptions.tags.splice(index, 1);
-        //                }
-        //            }
-        //        }
-        //        doSearch();
-        //    }
-        //});
+        });
+    }
+
+    function initSearchFromQuery(){
+        if (w.searchOptions){
+            searchOptions.query = w.searchOptions.query;
+            if (w.searchOptions.tags){
+                searchOptions.tags = w.searchOptions.tags.split(',');
+            }
+            if (w.searchOptions.sources){
+                searchOptions.sources = w.searchOptions.sources.split(',');
+            }
+            if (w.searchOptions.team){
+                searchOptions.team = w.searchOptions.team.split(',');
+            }
+            if (w.searchOptions.assignedTo){
+                searchOptions.assignedTo = w.searchOptions.assignedTo.split(',');
+            }
+            if (w.searchOptions.leadType) {
+                searchOptions.leadType = w.searchOptions.leadType;
+            } else {
+                searchOptions.leadType = 'active';
+            }
+        }
+    }
+
+    function updateUrl(){
+        var uri = URI(w.location);
+        for(var key in searchOptions){
+            uri.setSearch(key, searchOptions[key]);
+        }
+
+        history.pushState(null, null, uri.toString());
     }
 
     function initSearchField() {
@@ -335,18 +354,33 @@
         $.ajax({
             url: window.location.pathname + '?sLead&' + $.param(searchOptions),
             dataType: 'JSON',
-            success: function (data, textStatus, jqXHR) {
-                $('#LeadTotal').html(data.hits.total);
-                $('#LeadSumValue').html(data.aggregations.dealAmountTotal.value || 0);
-                var avgAmount = data.aggregations.dealAmountAvg.value || 0;
-                if (avgAmount > 0) {
-                    avgAmount = new Number(avgAmount).toFixed(0);
+            success: function (resp, textStatus, jqXHR) {
+                if (resp.data.aggrs && resp.data.aggrs.aggregations.states.buckets){
+                    var states = resp.data.aggrs.aggregations.states.buckets;
+                    var activeCount = 0;
+                    var closedCount = 0;
+                    for(var i = 0; i < states.length; i++){
+                        if (states[i].key === 'Active'){
+                            activeCount = states[i].doc_count;
+                        }
+                        if (states[i].key === 'Closed'){
+                            closedCount = states[i].doc_count;
+                        }
+                    }
+                    $('#closedLeadTotal').html(closedCount);
+                    $('#activeLeadTotal').html(activeCount);
                 }
-                $('#leadAvgValue').html(avgAmount);
+                //$('#LeadSumValue').html(data.aggregations.dealAmountTotal.value || 0);
+                //var avgAmount = data.aggregations.dealAmountAvg.value || 0;
+                //if (avgAmount > 0) {
+                //    avgAmount = new Number(avgAmount).toFixed(0);
+                //}
+                //$('#leadAvgValue').html(avgAmount);
 
-                updateSourcesPie(data.aggregations.sources.buckets);
-                updateStagesPie(data.aggregations.stages.buckets);
-                initDataTable(data.hits);
+                //updateSourcesPie(data.aggregations.sources.buckets);
+                //updateStagesPie(data.aggregations.stages.buckets);
+                initDataTable(resp.data.results.hits);
+                updateUrl();
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 flog('error', jqXHR, textStatus, errorThrown);
@@ -438,10 +472,10 @@
             return d.format('MMMM Do YYYY, h:mm:ss a');
         });
 
-        initOrgSelect();
         initSearchField();
         initLeadTypeSelect();
-        initTagsSelect();
+        initDropdownFilter();
+        initSearchFromQuery();
         doSearch();
     };
 
