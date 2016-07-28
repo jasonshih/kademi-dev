@@ -9,12 +9,6 @@
         {
             "css": {
                 "cssMedia": "all",
-                "path": "/theme/apps/ecommerce/storeCategory.css"
-            }
-        },
-        {
-            "css": {
-                "cssMedia": "all",
                 "path": "/theme/apps/ecommerce/storeCheckout.css"
             }
         },
@@ -52,12 +46,6 @@
             "js": {
                 "group": "main",
                 "path": "/static/jquery.zoom/1.7.14/jquery.zoom.min.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/theme/apps/ecommerce/ecommerce-store.js"
             }
         },
         {

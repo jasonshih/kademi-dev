@@ -554,9 +554,17 @@
                             #foreach( $lead in $page.leads )
                             <tr>
                                 <td>$!lead.trackingId</td>
-                                <td>$!lead.profile.email</td>
-                                <td>$!lead.lastAttainedGoal</td>
-                                <td>$!lead.currentGoal</td>
+                                <td>
+                                    #if( $lead.profile )
+                                    <a href="/manageUsers/$lead.profile.id">$lead.profile.email</a>                                    
+                                    #end
+                                </td>
+                                <td>
+                                    $!page.nodeTitle($lead.lastAttainedGoal)                                    
+                                </td>
+                                <td>
+                                    $!page.nodeTitle($lead.currentGoal)                                    
+                                </td>
                                 <td><abbr class="timeago" title="$lead.createDate">$formatter.formatDate( $lead.createDate )</abbr></td>
                                 <td><abbr class="timeago" title="$lead.lastAttainedDate">$formatter.formatDate( $lead.lastAttainedDate )</abbr></td>
                                 <td>$!lead.timerDate</td>
