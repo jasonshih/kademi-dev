@@ -1,0 +1,38 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Decision</title>
+    </head>
+    <body>
+        #if( $params.mode == "settings" )
+        <form method="POST" action="$page.path" class="form-horizontal" id="frmDetails">
+            <div class="form-group">
+                <div class="col-md-12">
+                    <label for="expression">Expression</label>
+                    <textarea name="expression" id="expression" class="form-control" rows="5">$!page.node.expression</textarea>
+                    <small class="text-muted help-block">Enter the expression using MVEL syntax</small>
+                </div>
+            </div>
+        </form>
+        #else
+        <form method="POST" action="$page.path" class="form-horizontal" id="frmDetails">
+            <button class="btn btn-success" type="submit">Save</button>
+            <div class="form-group">
+                <label class="control-label col-md-2" for="expression">Expression</label>
+                <div class="col-md-4">
+                    <textarea name="expression" id="expression" class="form-control" rows="5">$!page.node.expression</textarea>
+                    <small class="text-muted help-block">Enter the expression using MVEL syntax</small>
+                </div>
+            </div>
+        </form>
+        <script>
+            $(function() {
+                $("#frmDetails").forms({
+                    onSuccess : function() {
+                        Msg.info("Saved");
+                    }
+                });
+            });
+        </script>
+        #end
+    </body>
+</html>

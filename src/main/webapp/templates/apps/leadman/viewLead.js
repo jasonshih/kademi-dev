@@ -284,12 +284,6 @@
             $(this).find('input, select, textarea').not(':button, :image, :reset, :submit, :hidden').val('');
         });
 
-        $("#assignToMenu").on("click", "a", function (e) {
-            e.preventDefault();
-            var name = $(e.target).attr("href");
-            assignTo(name);
-        });
-
         body.on("change", ".dealValue", function (e) {
             var val = $(e.target).val();
             setDealAmount(val);

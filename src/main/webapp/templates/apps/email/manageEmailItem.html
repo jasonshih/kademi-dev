@@ -6,12 +6,24 @@
     </head>
     <body>
         <div id="email-item-info">
-            <p>
-                <a class="btn btn-primary pull-right" href="$page.href" target="_blank">
+
+            <div class="pull-right">
+                <div class="btn-group simulateEvent">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Simulate event <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href="Delivered">Delivered</a></li>
+                        <li><a href="Failed">Failed</a></li>
+                        <li><a href="Opened">Opened</a></li>
+                        <li><a href="Converted">Converted</a></li>
+                    </ul>
+                </div>
+                <a class="btn btn-primary" href="$page.href" target="_blank">
                     Open in new window
                     <span class="glyphicon glyphicon-arrow-right"></span>
                 </a>
-            </p>
+            </div>
             <table class="table status-$page.sendStatus">
                 <tr>
                     <td>Status</td>
@@ -121,6 +133,11 @@
         <br/>
         <br/>
 
+        <script>
+            $(function() {
+                $(".simulateEvent").on("click", "a", function() {});
+            });
+        </script>
 
     </body>
 </html>

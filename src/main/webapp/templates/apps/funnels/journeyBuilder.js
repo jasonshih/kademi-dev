@@ -15,15 +15,19 @@ var JBApp = {
     }
 };
 
-$(function () {
+function initJourneyBuilder() {
+    flog('initJourneyBuilder');
+
     initSideBar();
     initSaveButton();
     initNodeActions();
     initSettingPanel();
     initBuilderHeightAdjuster();
-});
+}
 
-jsPlumb.ready(function () {
+function parseFunnel() {
+    flog('parseFunnel');
+
     try {
         JBApp.funnel = $.parseJSON($("#funnelJson").text());
     } catch (e) {
@@ -32,6 +36,10 @@ jsPlumb.ready(function () {
             nodes: []
         };
     }
+}
+
+jsPlumb.ready(function () {
+    parseFunnel();
     JBApp.availableTriggers = $.parseJSON($("#triggers").text());
     
     // setup some defaults for jsPlumb.
@@ -487,32 +495,41 @@ jsPlumb.ready(function () {
     // suspend drawing and initialise.
     instance.batch(function () {
         if (JBApp.funnel && JBApp.funnel.nodes && JBApp.funnel.nodes.length) {
-            for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
-                var node = JBApp.funnel.nodes[i];
+            var journeyBuilder = $('#journeyBuilder');
+            $('a[href="#journeyBuilder"]').on('click', function () {
+                if (!journeyBuilder.hasClass('initialized')) {
+                    JBApp.initialized = false;
+                    for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
+                        var node = JBApp.funnel.nodes[i];
 
-                for (var key in node) {
-                    if (node.hasOwnProperty(key)) {
-                        var nodeData = node[key];
-                        var type = key;
-                        if (['goal', 'decision', 'begin'].indexOf(key) === -1) {
-                            type = 'action';
+                        for (var key in node) {
+                            if (node.hasOwnProperty(key)) {
+                                var nodeData = node[key];
+                                var type = key;
+                                if (['goal', 'decision', 'begin'].indexOf(key) === -1) {
+                                    type = 'action';
+                                }
+
+                                newNode(nodeData, type, key);
+                            }
                         }
-
-                        newNode(nodeData, type, key);
                     }
-                }
-            }
 
-            for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
-                var node = JBApp.funnel.nodes[i];
+                    for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
+                        var node = JBApp.funnel.nodes[i];
 
-                for (var key in node) {
-                    if (node.hasOwnProperty(key)) {
-                        var nodeData = node[key];
-                        initConnection(nodeData);
+                        for (var key in node) {
+                            if (node.hasOwnProperty(key)) {
+                                var nodeData = node[key];
+                                initConnection(nodeData);
+                            }
+                        }
                     }
+
+                    JBApp.initialized = true;
+                    journeyBuilder.addClass('initialized')
                 }
-            }
+            }).trigger('click');
         }
     });
     
@@ -1050,7 +1067,7 @@ function saveFunnel(message, callback) {
         type: 'PUT',
         data: JSON.stringify(JBApp.funnel),
         success: function () {
-            builderStatus.html(message || 'Funnel is saved!').delay(500).fadeOut(2000);
+            builderStatus.html(message || 'Funnel is saved!').delay(2000).fadeOut(2000);
 
             if (typeof callback === 'function') {
                 callback();
