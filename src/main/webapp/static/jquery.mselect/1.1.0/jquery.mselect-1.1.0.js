@@ -23,6 +23,9 @@
         },
         onSelectFile: function (selectedUrl, selectedRelUrl) {
         },
+        onSelectFolder: function(selectedUrl, selectedRelUrl){
+
+        },
         useModal: true
     };
 
@@ -129,7 +132,11 @@
             pagePath: config.pagePath,
             excludedEndPaths: config.excludedEndPaths,
             includeContentTypes: config.contentTypes,
-            onselectFolder: function (n) {
+            onselectFolder: function (n, selectedUrl, hash) {
+                flog('selected folder', selectedUrl, hash);
+                previewContainer.html('<p class="alert alert-warning">Unsupported preview folder</p>')
+                previewContainer.attr('data-url', selectedUrl);
+                previewContainer.attr('data-hash', hash);
             },
             onselectFile: function (n, selectedUrl, hash) {
                 if (isVideo(selectedUrl)) {
@@ -171,10 +178,9 @@
             var url = previewContainer.attr('data-url');
 
             if (url) {
-                var relUrl = url.substring(config.basePath.length, url.length);
-                flog('[jquery.mselect] Selected', url, relUrl);
-
                 if (typeof config.onSelectFile === 'function') {
+                    var relUrl = url.substring(config.basePath.length, url.length);
+                    flog('[jquery.mselect] Selected', url, relUrl);
                     var hash = previewContainer.children('[data-hash]').attr('data-hash');
                     var fileType = 'other';
                     if (isVideo(url)) {
@@ -186,6 +192,11 @@
                     }
 
                     config.onSelectFile.call(this, url, relUrl, fileType, hash);
+                }
+
+                if (typeof config.onSelectFolder === 'function'){
+                    var hash = previewContainer.attr('data-hash');
+                    config.onSelectFolder.call(this, url, hash);
                 }
 
                 if (typeof onOk === 'function') {
