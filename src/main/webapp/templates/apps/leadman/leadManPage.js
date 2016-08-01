@@ -357,18 +357,23 @@
             success: function (resp, textStatus, jqXHR) {
                 if (resp.data.aggrs && resp.data.aggrs.aggregations.states.buckets){
                     var states = resp.data.aggrs.aggregations.states.buckets;
-                    var activeCount = 0;
-                    var closedCount = 0;
+                    var activeCount = 0; // Active
+                    var closedCount = 0; // Won
+                    var cancelledCount = 0; // Lost
                     for(var i = 0; i < states.length; i++){
                         if (states[i].key === 'Active'){
                             activeCount = states[i].doc_count;
                         }
-                        if (states[i].key === 'Closed'){
+                        if (states[i].key === 'Won'){
                             closedCount = states[i].doc_count;
+                        }
+                        if (states[i].key === 'Lost'){
+                            cancelledCount = states[i].doc_count;
                         }
                     }
                     $('#closedLeadTotal').html(closedCount);
                     $('#activeLeadTotal').html(activeCount);
+                    $('#cancelledLeadTotal').html(cancelledCount);
                 }
                 //$('#LeadSumValue').html(data.aggregations.dealAmountTotal.value || 0);
                 //var avgAmount = data.aggregations.dealAmountAvg.value || 0;

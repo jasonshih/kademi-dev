@@ -66,18 +66,21 @@
                             #set($request.params.leadType = 'active')
                             #end
                             <div class="btn-group" data-toggle="buttons">
-                                <label class="btn btn-success $formatter.ifEqual('active', '', $request.params.leadType, 'active')">
+                                <label class="btn btn-info $formatter.ifEqual('active', '', $request.params.leadType, 'active')">
                                     <input type="radio" name="leadType" id="active" autocomplete="off" $formatter.ifEqual('checked="checked"', '', $request.params.leadType, 'active')/> <span id="activeLeadTotal"></span> Active
                                 </label>
-                                <label class="btn btn-warning $formatter.ifEqual('active', '', $request.params.leadType, 'closed')">
+                                <label class="btn btn-success $formatter.ifEqual('active', '', $request.params.leadType, 'closed')">
                                     <input type="radio" name="leadType" id="closed" autocomplete="off" $formatter.ifEqual('checked="checked"', '', $request.params.leadType, 'closed')/> <span id="closedLeadTotal"></span> Closed
+                                </label>
+                                <label class="btn btn-warning $formatter.ifEqual('active', '', $request.params.leadType, 'cancelled')">
+                                    <input type="radio" name="leadType" id="cancelled" autocomplete="off" $formatter.ifEqual('checked="checked"', '', $request.params.leadType, 'cancelled')/> <span id="cancelledLeadTotal"></span> Cancelled
                                 </label>
                             </div>
                         </div>
 
                         <div class="form-group leadDropFilter" id="tagsDropWrap">
                             <div class="dropdown">
-                                <button class="btn btn-success dropdown-toggle" type="button" id="tagsDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                <button class="btn btn-primary dropdown-toggle" type="button" id="tagsDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                     Tags
                                     <span class="caret"></span>
                                 </button>
@@ -92,7 +95,7 @@
                         <div class="form-group leadDropFilter">
                             #if($page.teamsForUser && $page.teamsForUser.size() > 0)
                             <div class="btn-group">
-                                <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <span class="aggr-title">Team </span> <i class="fa fa-caret-down"></i>
                                 </button>
                                 <ul class="dropdown-menu">
@@ -106,7 +109,7 @@
 
                         <div class="form-group leadDropFilter" id="assingedToDropWrap">
                             <div class="dropdown">
-                                <button class="btn btn-success dropdown-toggle" type="button" id="assingedToDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                <button class="btn btn-primary dropdown-toggle" type="button" id="assingedToDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                     Assigned to
                                     <span class="caret"></span>
                                 </button>
@@ -120,7 +123,7 @@
 
                         <div class="form-group leadDropFilter" id="sourcesDropWrap">
                             <div class="dropdown">
-                                <button class="btn btn-success dropdown-toggle" type="button" id="sourcesDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                <button class="btn btn-primary dropdown-toggle" type="button" id="sourcesDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                     Sources
                                     <span class="caret"></span>
                                 </button>
