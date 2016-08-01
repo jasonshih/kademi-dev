@@ -75,6 +75,7 @@
 
 
 #macro( themeBody )
+    #set ($googleMapKey = "")
 
     #set( $memberships = $userResource.primaryMemberships )
     #set( $currentOrgId = $request.getCookie("org").value )
