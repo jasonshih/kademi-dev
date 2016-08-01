@@ -25,6 +25,16 @@ function initJourneyBuilder() {
     initBuilderHeightAdjuster();
 }
 
+function reloadFunnelJson() {
+    flog('reloadFunnelJson');
+
+    $('#funnelJson').reloadFragment({
+        whenComplete: function () {
+            parseFunnel();
+        }
+    });
+}
+
 function parseFunnel() {
     flog('parseFunnel');
 
@@ -944,6 +954,7 @@ function initNodeActions() {
     var formDetails = $('form.panel-edit-details');
     formDetails.forms({
         onSuccess: function () {
+            reloadFunnelJson();
             hideSettingPanel();
         }
     });
