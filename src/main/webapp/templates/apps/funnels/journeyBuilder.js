@@ -83,7 +83,7 @@ jsPlumb.ready(function () {
             }],
             ["Custom", {
                 create: function (component) {
-                    return $('<div><a href="#" title="Click to delete connection" class="buttonX"><i class="fa fa-times"></i></a></div>');
+                    return $('<div><a href="#" title="Click to delete connection" class="buttonX"><i class="fa fa-times-circle"></i></a></div>');
                 },
                 events: {
                     click: function (labelOverlay, originalEvent) {
@@ -180,7 +180,7 @@ jsPlumb.ready(function () {
                 var node = filteredDecision[0]['decision'];
                 var choice = node.choices[targetId];
                 if (choice) {
-                    showDecisionForm(choice, sourceId, targetId);
+                    showChoiceForm(choice, sourceId, targetId);
                 }
             }
         } else {
@@ -568,7 +568,7 @@ function initSettingPanel() {
 
     initTitleForm();
     initTransitionForm();
-    initDecisionForm();
+    initChoiceForm();
     initTimeoutForm();
 }
 
@@ -760,28 +760,13 @@ function showTransitionForm(tran, sourceId, targetId) {
     showSettingPanel('transition');
 }
 
-function showDecisionForm(choice, sourceId, targetId) {
-    flog('showDecisionForm', choice, sourceId, targetId);
+function showChoiceForm(choice, sourceId, targetId) {
+    flog('showChoiceForm', choice, sourceId, targetId);
 
     var form = $('form.panel-decision');
     form.find('[name=sourceId]').val(sourceId);
     form.find('[name=targetId]').val(targetId);
-    form.find('.choiceItems').html('');
-    if (!Object.keys(choice.constant).length) {
-        choice.constant = {
-            value: ''
-        };
-    }
-    for (var key in choice.constant) {
-        if (key === 'label') continue;
-        var value = choice.constant[key];
-        var clone = form.find('.placeholderform').clone();
-        clone.find('[name=constKey]').val(key);
-        clone.find('[name=constValue]').val(value);
-        clone.removeClass('hide placeholderform');
-        form.find('.choiceItems').append(clone);
-    }
-    
+    form.find('[name=constValue]').val(choice.constant.value || '');
     showSettingPanel('decision');
 }
 
@@ -830,17 +815,10 @@ function doSaveTimeout(form) {
     });
 }
 
-function initDecisionForm() {
-    flog('initDecisionForm');
+function initChoiceForm() {
+    flog('initChoiceForm');
 
     var form = $('form.panel-decision');
-    form.on('click', '.btnAddChoice', function (e) {
-        e.preventDefault();
-        var clone = form.find('.placeholderform').clone();
-        clone.removeClass('hide placeholderform');
-        form.find('.choiceItems').append(clone);
-    });
-    
     form.on('submit', function (e) {
         e.preventDefault();
         
@@ -851,14 +829,10 @@ function initDecisionForm() {
 function doSaveChoice(form) {
     flog('doSaveChoice', form);
 
-    var constant = {};
-    form.find('.choiceItems .form-group').each(function () {
-        var key = $(this).find('[name=constKey]').val();
-        var value = $(this).find('[name=constValue]').val();
-        constant[key] = value;
-    });
     var sourceId = form.find('[name=sourceId]').val();
     var targetId = form.find('[name=targetId]').val();
+    var constValue = form.find('[name=constValue]').val();
+
     for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
         var node = JBApp.funnel.nodes[i];
         for (var key in node) {
@@ -868,7 +842,17 @@ function doSaveChoice(form) {
                     if (!choices) {
                         choices = {};
                     }
-                    choices[targetId] = {constant: constant};
+
+                    if (targetId in choices) {
+                        var constant = choices[targetId].constant || {
+                            value: '',
+                            label: 'empty'
+                        };
+                        constant.value = constValue;
+
+                        choices[targetId].constant = constant;
+                    }
+
                     node[key].choices = choices;
                     break;
                 }
