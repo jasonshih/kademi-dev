@@ -90,6 +90,16 @@
                             google.maps.event.trigger(comp.find('.kgooglemap').data('map'), "resize");
                         } else {
                             self.initAutocomplete(comp, form);
+                            var input = form.find('[name=mapAddress]')[0];
+                            var i = setInterval(function(){
+                                if (comp.find('.kgooglemap').data('map')){
+                                    clearInterval(i);
+                                    google.maps.event.trigger(input, 'focus')
+                                    google.maps.event.trigger(input, 'keydown', {
+                                        keyCode: 13
+                                    });
+                                }
+                            },100);
                         }
                     } else {
                         comp.find('iframe').removeClass('hide');
@@ -111,9 +121,12 @@
 
 
             var btn169 = form.find('.btn-googlemap-169');
+            var btn43 = form.find('.btn-googlemap-43');
+
             btn169.on('click', function (e) {
                 e.preventDefault();
-
+                $(this).addClass('btn-primary').removeClass('btn-default');
+                btn43.removeClass('btn-primary').addClass('btn-default');
                 keditor.getSettingComponent().find('.embed-responsive').removeClass('embed-responsive-4by3').addClass('embed-responsive-16by9');
                 var comp = keditor.getSettingComponent();
                 if (comp.attr('maptype') === 'manually') {
@@ -123,9 +136,10 @@
                 }
             });
 
-            var btn43 = form.find('.btn-googlemap-43');
             btn43.on('click', function (e) {
                 e.preventDefault();
+                $(this).addClass('btn-primary').removeClass('btn-default');
+                btn169.removeClass('btn-primary').addClass('btn-default');
                 keditor.getSettingComponent().find('.embed-responsive').removeClass('embed-responsive-16by9').addClass('embed-responsive-4by3');
                 var comp = keditor.getSettingComponent();
                 if (comp.attr('maptype') === 'manually') {
@@ -139,16 +153,27 @@
             var self = this;
             var maptype = component.attr('data-maptype');
             var place = component.attr('data-place');
+            var ratio169 = component.find('.embed-responsive').hasClass('embed-responsive-16by9');
+            var ratio43 = component.find('.embed-responsive').hasClass('embed-responsive-4by3');
+            if (ratio43){
+                form.find('.btn-googlemap-43').addClass('btn-primary').removeClass('btn-default');
+            }
+            if (ratio169){
+                form.find('.btn-googlemap-169').addClass('btn-primary').removeClass('btn-default');
+            }
             form.find('.mapType[value=' + maptype + ']').prop('checked', true);
             var src = component.find('iframe').attr('src');
             var iframe = '<iframe class="embed-responsive-item" src="' + src + '"></iframe>';
+            if (!place){
+                place = 'Hanoi, Vietnam';
+            }
             form.find('[name=mapAddress]').val(place);
             form.find('[name=mapEmbedCode]').val(iframe);
             var firstLoad = component.attr('data-firstLoad');
-            if (place && maptype === 'manually') {
+            if (maptype === 'manually') {
                 form.find('.manually').removeClass('hide').siblings('.embed').addClass('hide');
 
-                if (!firstLoad) {
+                if (!firstLoad && place) {
                     var i = setInterval(function () {
                         if (window.googleMapInitialized) {
                             clearInterval(i);
