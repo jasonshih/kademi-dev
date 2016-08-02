@@ -47,8 +47,7 @@
         orgTypes: null,
         allowedCountries: null,
         maxResults: 1000,
-        template:
-        '<div class="form-horizontal form-search org-finder-search" style="margin-bottom: 0;">' +
+        template: '<div class="form-horizontal form-search org-finder-search" style="margin-bottom: 0;">' +
         '    <div class="input-group">' +
         '        <input type="text" name="q" class="form-control" placeholder="Enter your address" id="q" value="" autocomplete="off" />' +
         '        <span class="input-group-btn">' +
@@ -318,17 +317,17 @@
                 flog('[jquery.orgFinder] Initialize "Country" select box', cbbCountry, allowedCountries);
                 var optionStr = '';
                 
-                optionStr += '<option value="" selected="selected"> - All Countries - </option>';
+                optionStr += '<option value="all" selected="selected"> - All Countries - </option>';
                 for (var i = 0; i < allowedCountries.length; i++) {
                     optionStr += '<option value="' + allowedCountries[i].value + '">' + allowedCountries[i].title + '</option>';
                 }
                 
                 cbbCountry.html(optionStr).addClass('selectpicker');
                 if (!cbbCountry.attr('title')) {
-                    cbbCountry.attr('title', ' - Select Country - ')
+                    cbbCountry.attr('title', ' - All Countries - ')
                 }
                 cbbCountry.selectpicker().on('change', function () {
-                    autocomplete.setComponentRestrictions(this.value ? {
+                    autocomplete.setComponentRestrictions(this.value !== 'all' ? {
                         country: this.value
                     } : []);
                     txtQ.val('');
@@ -344,9 +343,8 @@
                 flog('[jquery.orgFinder] Clear all search options');
                 
                 txtQ.val('');
+                cbbCountry.selectpicker('val', 'all');
                 self.doSearch('');
-                cbbCountry.selectpicker('val', '');
-                cbbOrgType.selectpicker('deselectAll');
             });
             
             txtQ.on('keydown', function (e) {
@@ -381,6 +379,9 @@
             this.activeInfoWidow = null;
             this.activeListItem = null;
             this.itemsWrapper.html('');
+            this.currentLat = null;
+            this.currentLng = null;
+            this.autocomplete.set('place', '');
         },
         
         doSearch: function (query, lat, lng) {
