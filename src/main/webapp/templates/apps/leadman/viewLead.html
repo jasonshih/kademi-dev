@@ -60,10 +60,14 @@
                 border-top: 1px solid #eee;
             }
 
+            #membershipsContainer > * {
+                display: inline-block;
+                vertical-align: top;
+            }
+
             #user-membership .membership {
                 display: inline-block;
-                margin-bottom: 0;
-                margin-top: 5px;
+                margin-bottom: 5px;
             }
 
             @media (max-width: 767px) {
@@ -207,34 +211,25 @@
             </div>
             #if($page.profile)
             <div class="memberships-wrapper" id="membershipsContainer">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="dropdown">
-                            <a data-toggle="dropdown" class="dropdown-toggle btn btn-primary" href="#" >
-                                <i class="fa fa-plus-circle"></i> Tags
+                <div class="dropdown">
+                    <a data-toggle="dropdown" class="dropdown-toggle btn btn-primary" href="#">
+                        <i class="fa fa-plus-circle"></i> Tags
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li style="padding: 3px 15px"><strong>Quick add</strong></li>
+                        #foreach($group in $page.tags)
+                        <li class="addTag">
+                            <a href="$group.name">
+                                <i class="fa fa-tag"></i> $formatter.firstNotNull($group.title, $group.name)
                             </a>
-                            <ul class="dropdown-menu">
-                                <li style="padding: 3px 15px"><strong>Quick add</strong></li>
-                                #foreach($group in $page.tags)
-                                <li class="addTag">
-                                    <a href="$group.name">
-                                        <i class="fa fa-tag"></i> $formatter.firstNotNull($group.title, $group.name)
-                                    </a>
-                                </li>
-                                #end
-                            </ul>
-                        </div>
-                    </div>
+                        </li>
+                        #end
+                    </ul>
                 </div>
-
-                <div class="row">
-                    <div class="col-md-12">
-                        <div id="user-membership" class="blocks-wrapper memberships-list membershipsDiv">
-                            #foreach($m in $page.assignedTags)
-                            #showGroupTag( $m )
-                            #end
-                        </div>
-                    </div>
+                <div id="user-membership" class="blocks-wrapper memberships-list membershipsDiv">
+                    #foreach($m in $page.assignedTags)
+                        #showGroupTag( $m )
+                    #end
                 </div>
             </div>
             <br>
@@ -860,7 +855,7 @@
             <span class="block-name" title="$g.name">
                 $g.name
             </span>
-            <a href="$m.name" class="btn btn-xs text-muted btn-delete-tag" title="Delete tag"><i class="fa fa-times"></i></a>
+            &nbsp;<a href="$m.name" class="close btn-delete-tag" title="Delete tag">&times;</a>
         </span>
         #end
 
