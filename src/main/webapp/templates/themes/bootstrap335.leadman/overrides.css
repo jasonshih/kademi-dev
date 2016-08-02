@@ -1,24 +1,27 @@
-.select2-dropdown{
+.select2-dropdown {
     z-index: 1070 !important;
 }
 
-html{
+html {
     -ms-overflow-style: scrollbar; /* IE11 scrollbar issue */
 }
 
 html body .fa {
     line-height: inherit;
 }
-[class^="icon-"].fa-2x{
+
+[class^="icon-"].fa-2x {
     font-size: 2em !important;
 }
 
 .app {
     padding: 23px 23px;
 }
-.app-container > header{
+
+.app-container > header {
     box-shadow: none;
 }
+
 .topnavbar .nav > li > a {
     line-height: 30px;
     height: 81px;
@@ -33,7 +36,7 @@ html body .fa {
     padding-top: 6px;
 }
 
-.panel{
+.panel {
     box-shadow: none;
 }
 
@@ -80,28 +83,31 @@ html body .fa {
     font-size: 20px;
 }
 
-.navbar-header{
-    border-right: 1px solid rgba(255,255,255,0.39);
+.navbar-header {
+    border-right: 1px solid rgba(255, 255, 255, 0.39);
 }
 
-.searchbox-wrap{
-    border-left: 1px solid rgba(255,255,255,0.39);
-    border-right: 1px solid rgba(255,255,255,0.39);
+.searchbox-wrap {
+    border-left: 1px solid rgba(255, 255, 255, 0.39);
+    border-right: 1px solid rgba(255, 255, 255, 0.39);
     height: 80px;
 }
 
-#lead-search-input:focus{
+#lead-search-input:focus {
     border: none;
 }
+
 #lead-search-input::-webkit-input-placeholder {
     color: #fff;
 }
 
-#lead-search-input:-moz-placeholder { /* Firefox 18- */
+#lead-search-input:-moz-placeholder {
+    /* Firefox 18- */
     color: #fff;
 }
 
-#lead-search-input::-moz-placeholder {  /* Firefox 19+ */
+#lead-search-input::-moz-placeholder {
+    /* Firefox 19+ */
     color: #fff;
 }
 
@@ -154,11 +160,12 @@ html body .fa {
 }
 
 .navbar .navbar-toggle {
-    border-color: #c5cae9;
+    border-color: #fff;
+    margin-top: 23px;
 }
 
 .navbar-toggle .icon-bar {
-    background-color: #c5cae9;
+    background-color: #fff;
 }
 
 li.current-user a .dropdown-toggle {
@@ -170,12 +177,13 @@ li.current-user a > img {
     vertical-align: top;
 }
 
-.profilePic .sidebar{
+.profilePic .sidebar {
     height: auto;
     overflow: auto;
     padding-bottom: 0;
 }
-.username{
+
+.username {
     width: 70px;
     -ms-text-overflow: ellipsis;
     white-space: nowrap;
@@ -183,16 +191,18 @@ li.current-user a > img {
     text-overflow: ellipsis;
     display: inline-block;
 }
-table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:after, table.dataTable thead .sorting_asc_disabled:after, table.dataTable thead .sorting_desc_disabled:after{
+
+table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:after, table.dataTable thead .sorting_asc_disabled:after, table.dataTable thead .sorting_desc_disabled:after {
     bottom: 17px !important;
     right: 15px !important;
 }
 
-.text-strong{
+.text-strong {
     font-family: "Roboto";
     font-weight: 900;
 }
-.text-thin{
+
+.text-thin {
     font-family: "Roboto";
     font-weight: 300;
 }
@@ -202,47 +212,56 @@ table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, 
     .navbar-header {
         float: none;
     }
+
     .navbar-toggle {
         display: block;
     }
+
     .navbar-collapse {
         border-top: 1px solid transparent;
-        box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
     }
+
     .navbar-collapse.collapse {
-        display: none!important;
+        display: none !important;
     }
+
     .navbar-nav {
-        float: none!important;
+        float: none !important;
         margin: 7.5px -15px;
     }
-    .navbar-nav>li {
+
+    .navbar-nav > li {
         float: none;
     }
-    .navbar-nav>li>a {
+
+    .navbar-nav > li > a {
         padding-top: 10px;
         padding-bottom: 10px;
     }
+
     .navbar-text {
         float: none;
         margin: 15px 0;
     }
+
     .navbar-collapse.collapse.in {
-        display: block!important;
+        display: block !important;
     }
+
     .collapsing {
-        overflow: hidden!important;
+        overflow: hidden !important;
     }
 
-
-    .navbar-brand{
+    .navbar-brand {
         display: inline-block !important;
     }
+
     .topnavbar .nav > li > a {
         height: auto;
     }
 
-    .searchbox-wrap{
+    .searchbox-wrap {
         height: auto;
     }
 }
@@ -250,63 +269,90 @@ table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, 
 /* End ipad support */
 
 @media (max-width: 767px) {
-    .btn-fullwidth-mobile{
+    .btn-fullwidth-mobile {
         width: 100%;
         margin-left: 0 !important;
     }
-    .btn-fullwidth-mobile + button{
+
+    .btn-fullwidth-mobile + button {
         margin-top: 10px;
     }
+
     #lead-search-input {
         width: 100%;
     }
-    #nav-collapse .navbar-form{
+
+    #nav-collapse .navbar-form {
         margin-left: 0;
         margin-right: 0;
     }
-    .username{
+
+    .username {
         width: 200px;
     }
-    .topnavbar > .navbar-header > .navbar-brand{
+
+    .topnavbar > .navbar-header > .navbar-brand {
         margin-left: 15px;
         margin-right: 15px;
     }
-    .form-group [class^="col-md"] + div{
+
+    .form-group [class^="col-md"] + div {
         margin-top: 10px;
     }
 }
 
-@media (min-width: 992px) and (max-width: 1024px){
-    #lead-search-input{
+@media (min-width: 992px) and (max-width: 1024px) {
+    #lead-search-input {
         width: 200px;
     }
-    .logged-in-title{
+
+    .logged-in-title {
         display: none;
     }
 
-    .username{
+    .username {
         width: 50px;
     }
 }
 
 @media (min-width: 768px) {
-    .no-scroll-medium{
+    .no-scroll-medium {
         overflow: hidden;
     }
 }
 
-@media (min-width: 1025px) {
-    #nav-collapse>ul{
+@media (min-width: 1300px) {
+    #nav-collapse > ul {
         padding-left: 40px;
     }
-    .create-lead-menu{
-        margin-left: 40px;
+
+    .create-lead-menu {
+        margin-left: 20px;
     }
+
     .topnavbar > .navbar-header > .navbar-brand {
         padding-left: 20px;
         padding-right: 20px;
     }
-    .searchbox-wrap{
+
+    .searchbox-wrap {
         margin-left: 40px;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+    .topnavbar .fa-2x {
+        font-size: 22px !important;
+    }
+
+    .topnavbar > .navbar-header > .navbar-brand {
+        margin: 0 5px;
+    }
+
+    #lead-search-input {
+        padding-left: 0;
+        padding-right: 0;
+        width: 170px;
+        font-size: 16px;
     }
 }
