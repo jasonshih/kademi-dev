@@ -20,6 +20,14 @@
                     value: '$orgType.name'
                 });
                 #end
+
+                var allowedCountries = [];
+                #foreach($cc in $formatter.countryCodes.list)
+                allowedCountries.push({
+                    value: '$cc.alpha2Code',
+                    title: '$cc.englishShortName'
+                });
+                #end
             </script>
             <script type="text/javascript">
                 $(function () {
