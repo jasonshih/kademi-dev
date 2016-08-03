@@ -6,6 +6,7 @@
  *
  * Configuration:
  * @option {Array<Number>} initLatLng Initialized latitude and longitude of map
+ * @option {Boolean} showAllOrgs Show all organisations when initializing or not
  * @option {Number} initZoomLevel Initialized zoom level of map
  * @option {String} initQuery Initialized search query
  * @option {String} googleAPIKey Google API key
@@ -40,6 +41,7 @@
     // Default configuration
     $.fn.orgFinder.DEFAULT = {
         initLatLng: [],
+        showAllOrgs: true,
         initZoomLevel: 15,
         initQuery: null,
         googleAPIKey: null,
@@ -183,7 +185,11 @@
                 self.map = new google.maps.Map(self.mapDiv.get(0), mapOptions);
                 self.initCurrentLocation();
                 self.initFormSearch();
-                self.doSearch('');
+                
+                if (options.showAllOrgs) {
+                    flog('[jquery.orgFinder] Show all organisations');
+                    self.doSearch('');
+                }
                 
                 if (typeof options.onReady === 'function') {
                     options.onReady.call(self, self.formSearch, self.itemsWrapper, self.mapDiv);
