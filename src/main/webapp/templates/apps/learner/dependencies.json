@@ -8,8 +8,20 @@
         },
         {
             "css": {
+                "cssMedia": "print",
+                "path": "/templates/apps/learner/modulePagePrint.css"
+            }
+        },
+        {
+            "less": {
                 "cssMedia": "all",
-                "path": "/static/dropzone/v3.10.2/css/dropzone.css"
+                "path": "/theme/apps/learner/modulePage.less"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/static/quiz/quiz.css"
             }
         },
         {
@@ -21,13 +33,43 @@
         {
             "js": {
                 "group": "main",
-                "path": "/static/dropzone/v3.10.2/dropzone.min.js"
+                "path": "/static/js/jquery.pjax.js"
             }
         },
         {
             "js": {
                 "group": "main",
-                "path": "/static/reload-fragment/1.0.2/jquery.reload-fragment-1.0.2.js"
+                "path": "/static/js/jquery.animate-shadow.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/js/jquery.fileupload.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/js/jquery.milton-upload.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/learner/competitionPage.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/learner/moduleSearch.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/jquery.module/1.0.0/jquery.module-1.0.0.js"
             }
         }
     ]
