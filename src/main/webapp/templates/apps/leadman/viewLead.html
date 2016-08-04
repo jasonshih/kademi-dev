@@ -405,9 +405,15 @@
                                             <div class="modal-body" id="profile-body">
                                                 #set( $p = $page.leadProfile )
                                                 <div class="form-group">
+                                                    <label class="control-label col-md-2" for="jobTitle">Job Title</label>
+                                                    <div class="col-md-3">
+                                                        <input type="text" name="jobTitle" id="jobTitle" class="form-control" placeholder="Job Title" value="$!page.jobTitle" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
                                                     <label class="control-label col-md-2" for="nickName">Customer</label>
                                                     <div class="col-md-3">
-                                                        <input type="text" name="nickName" id="nickName" class="form-control" placeholder="nickName" value="$!page.profile.nickName" />
+                                                        <input type="text" name="nickName" id="nickName" class="form-control" placeholder="Nick Name" value="$!page.profile.nickName" />
                                                     </div>
                                                     <div class="col-md-3">
                                                         <input type="text" name="firstName" id="firstName" class="form-control" placeholder="First name" value="$!page.firstName" />
