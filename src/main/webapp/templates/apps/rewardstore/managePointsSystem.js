@@ -111,12 +111,12 @@ function initFormPointsSystem() {
 
 
 function initDebitsPjax() {
-    $(document).pjax2('.debitsTableBody', {
+    $(document).pjax2('.debitsTableWrap', {
         selector: '.debitsPaginator a',
-        fragment: '.debitsTableBody',
+        fragment: '.debitsTableWrap',
         success: function () {
             flog('Pjax success!');
-            $(".debitsPaginator li").removeClass("active");
+            window.location.hash = '#debits-tab';
         },
         debug: true
     });
