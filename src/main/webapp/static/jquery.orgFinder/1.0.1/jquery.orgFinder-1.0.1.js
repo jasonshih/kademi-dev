@@ -13,7 +13,7 @@
  * @option {String} searchUrl Search URL. Must be link to signup page of a group or /organisations/ (if you use this plugin in Kademi admin console)
  * @option {Array} orgTypes List of organisation types. It's optional
  * @option {Array} allowedCountries List of countries which will available for searching. It's optional
- * @option {String} template Template string for orgFinder. Form search must has 'org-finder-search' class, textbox must be named 'q' and selectbox for organisation types must be named 'orgType'. Items list wrapper must has 'org-finder-list' class. Map div must has class 'org-finder-map'
+ * @option {String} template Template string for orgFinder. Form search must has 'org-finder-search' class, query textbox must has 'org-finder-query', selectbox for organisation types must has 'org-finder-orgType' class and selectbox for allowed countries must has 'org-finder-allowedCountries' classs. Items list wrapper must has 'org-finder-list' class. Map div must has class 'org-finder-map'
  * @option {Function} onReady Callback will be called when orgFinder is ready. Arguments: 'formSearch', 'itemsWrapper', 'mapDiv'
  * @option {Function} onSelect Callback will be called when click on marker on map or item in org list panel. Arguments: 'orgData', 'item', 'marker', 'infoWindow'
  * @option {Function} onSearch Callback will be called when search a keyword. Arguments: 'query'
@@ -51,10 +51,10 @@
         maxResults: 1000,
         template: '<div class="form-horizontal form-search org-finder-search" style="margin-bottom: 0;">' +
         '    <div class="input-group">' +
-        '        <input type="text" name="q" class="form-control" placeholder="Enter your address" id="q" value="" autocomplete="off" />' +
+        '        <input type="text" class="form-control org-finder-query" placeholder="Enter your address" id="q" value="" autocomplete="off" />' +
         '        <span class="input-group-btn">' +
-        '            <select name="country" class="selectpicker hidden-xs"></select>' +
-        '            <select name="orgType" class="selectpicker clearfix"></select>' +
+        '            <select class="selectpicker hidden-xs org-finder-allowedCountries"></select>' +
+        '            <select class="selectpicker clearfix org-finder-orgType"></select>' +
         '            <button class="btn btn-default btn-clear-query" type="button">&nbsp;<i class="fa fa-remove"></i>&nbsp;</button>' +
         '        </span>' +
         '    </div>' +
@@ -259,9 +259,9 @@
             var self = this;
             var options = self.options;
             var formSearch = self.formSearch;
-            var cbbCountry = formSearch.find('[name=country]');
-            var cbbOrgType = formSearch.find('[name=orgType]');
-            var txtQ = formSearch.find('[name=q]');
+            var cbbCountry = formSearch.find('.org-finder-allowedCountries');
+            var cbbOrgType = formSearch.find('.org-finder-orgType');
+            var txtQ = formSearch.find('.org-finder-query');
             var btn = formSearch.find(':button');
             var initQuery = self.options.initQuery;
             var orgTypes = options.orgTypes;
@@ -418,7 +418,7 @@
             }
             
             if (options.orgTypes && $.isArray(options.orgTypes) && options.orgTypes.length > 0) {
-                data.orgTypes = self.formSearch.find('[name=orgType]').val();
+                data.orgTypes = self.formSearch.find('.org-finder-orgType').val();
             }
             
             if (typeof options.beforeSearch === 'function') {
