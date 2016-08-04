@@ -9,15 +9,20 @@
         }
     };
 
+    // since there's jquery.milton-image-select is using the same shorthand $().mselect, just create alias for this
+    $.fn.mselectAll = $.fn.mselect;
+    flog('mselectAll loaded');
     $.fn.mselect.DEFAULT = {
         btnClass: 'btn btn-success',
         btnOkClass: 'btn btn-sm btn-primary',
         modalTitle: 'Select file',
         contentTypes: ['image', 'video', 'audio'],
+        mselectAll: false, // when true, all file types are allowed so contentTypes is ignored
         excludedEndPaths: ['.mil/'],
         basePath: '/',
         pagePath: window.location.pathname,
         bs3Modal: false,
+        zIndex: '',
         showModal: function (modal) {
             modal.modal('show');
         },
@@ -33,40 +38,47 @@
         init: function (options) {
             var config = $.extend({}, $.fn.mselect.DEFAULT, options);
             var target = this;
-            var count = 0;
             var f = function () {
-                count++;
+                flog('[jquery.mselect] Initializing mselect', config, target);
+                if (config.useModal) {
+                    flog('[jquery.mselect] Initializing button and modal...', config, target);
+                    target.on('click', function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
 
-                if (count === 3) {
-                    flog('[jquery.mselect] Initializing mselect', config, target);
-                    if (config.useModal) {
-                        flog('[jquery.mselect] Initializing button and modal...', config, target);
-                        target.on('click', function (e) {
-                            e.preventDefault();
-                            e.stopPropagation();
+                        var modal;
+                        if (config.bs3Modal) {
+                            modal = getModalBS3(config);
+                        } else {
+                            modal = getModal(config);
+                        }
+                        config.showModal(modal);
+                        if (config.zIndex){
+                            modal.parent('.modal-scrollable').css('z-index', config.zIndex + 1).siblings('.modal-backdrop').css('z-index', config.zIndex);
+                        }
+                    });
+                } else {
+                    flog('[jquery.mselect] Initializing mselect container only', config, target);
 
-                            var modal;
-                            if (config.bs3Modal) {
-                                modal = getModalBS3(config);
-                            } else {
-                                modal = getModal(config);
-                            }
-                            config.showModal(modal);
-                        });
-                    } else {
-                        flog('[jquery.mselect] Initializing mselect container only', config, target);
-
-                        target.html(getSelectContainer(config));
-                        initSelectContainer(target, config);
-                    }
-
-                    flog('[jquery.mselect] Initialized mselect');
+                    target.html(getSelectContainer(config));
+                    initSelectContainer(target, config);
                 }
+
+                flog('[jquery.mselect] Initialized mselect');
             };
 
-            $.getScriptOnce('/static/js/jquery.jstree.js', f);
-            $.getScriptOnce('/static/js/jquery.milton-tree.js', f);
-            $.getScriptOnce('/static/milton-upload/1.0.1/jquery.milton-upload.js', f);
+            var deps = ['/static/js/jquery.jstree.js', '/static/js/jquery.milton-tree.js', '/static/milton-upload/1.0.1/jquery.milton-upload.js'];
+            var i = setInterval(function(){
+                if ($.getScriptOnce.loaded[deps[0]]
+                    && $.getScriptOnce.loaded[deps[1]]
+                    && $.getScriptOnce.loaded[deps[2]]) {
+                    clearInterval(i);
+                    f();
+                }
+            },100);
+            $.getScriptOnce(deps[0]);
+            $.getScriptOnce(deps[1]);
+            $.getScriptOnce(deps[2]);
         }
     };
 
@@ -126,12 +138,10 @@
 
         var tree = container.find('div.milton-tree-wrapper');
         var previewContainer = container.find('.milton-preview');
-
-        tree.mtree({
+        var mtreeOptions = {
             basePath: config.basePath,
             pagePath: config.pagePath,
             excludedEndPaths: config.excludedEndPaths,
-            includeContentTypes: config.contentTypes,
             onselectFolder: function (n, selectedUrl, hash) {
                 flog('selected folder', selectedUrl, hash);
                 previewContainer.html('<p class="alert alert-warning">Unsupported preview folder</p>')
@@ -153,18 +163,21 @@
                     });
                 }
                 else if (isImage(selectedUrl)) {
-                    previewContainer.html('<img src="' + selectedUrl + '" data-hash="' + hash + '" />');
+                    previewContainer.html('<img class="img-responsive" src="' + selectedUrl + '" data-hash="' + hash + '" />');
                 } else {
                     previewContainer.html('<p class="alert alert-warning">Unsupported preview file</p>')
                 }
 
                 previewContainer.attr('data-url', selectedUrl);
             }
-        });
+        };
+        if (!config.mselectAll){
+            mtreeOptions.includeContentTypes = config.contentTypes;
+        }
+        tree.mtree(mtreeOptions);
 
-        $('#milton-btn-upload-file').mupload({
+        var muploadOptions = {
             url: config.basePath,
-            acceptedFiles: getAcceptedFiles(config.contentTypes),
             buttonText: '<i class="fa fa-upload"></i>',
             oncomplete: function (data, name, href) {
                 flog('[jquery.mselect] oncomplete', data);
@@ -172,7 +185,11 @@
                 addFileToTree(name, href, tree);
                 url = href;
             }
-        });
+        };
+        if (!config.mselectAll){
+            muploadOptions.acceptedFiles = getAcceptedFiles(config.contentTypes);
+        }
+        $('#milton-btn-upload-file').mupload(muploadOptions);
 
         container.find('.btn-ok').click(function () {
             var url = previewContainer.attr('data-url');

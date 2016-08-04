@@ -270,6 +270,34 @@
         });
     }
 
+    function initJobTitleSearch(){
+        var jobTitleSearch = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: {
+                url: window.location.pathname + '?jobTitle&q=%QUERY',
+                wildcard: '%QUERY',
+                transform: function(resp){
+                    return resp.data;
+                }
+            }
+        });
+
+        $('#jobTitle').typeahead({
+            highlight: true
+        }, {
+            limit: 10,
+            source: jobTitleSearch,
+            templates: {
+                empty: [
+                    '<div class="empty-message">',
+                    'No existing job title were found.',
+                    '</div>'
+                ].join('\n')
+            }
+        });
+    }
+
     function initBodyForm() {
         var form = $("#leadDetails");
         var body = $(document.body);
@@ -443,5 +471,6 @@
         initBodyForm();
         initAddTag();
         initDeleteTag();
+        initJobTitleSearch();
     });
 })();

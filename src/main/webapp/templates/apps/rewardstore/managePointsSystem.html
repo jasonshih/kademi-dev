@@ -249,6 +249,7 @@
                         </div>
                         <hr />
 
+                        <div class="debitsTableWrap">
                         <table class="table table-bordered table-striped" id="table-debits">
                             <colgroup>
                                 <col />
@@ -267,8 +268,7 @@
                                 </tr>
                             </thead>
                             <tbody class="debitsTableBody">
-                                #set( $paginator = $formatter.paginator().pageSize(10) )                                
-
+                                #set( $paginator = $formatter.paginator().pageSize(10).totalRecords($page.debitPointsCount).skipToStart(false))
                                 #foreach($debit in $paginator.records($page.debitPoints($paginator.start, $paginator.pageSize) ) )
                                 <tr>
                                     <td>$debit.numPoints</td>
@@ -293,6 +293,7 @@
                         <nav class="debitsPaginator">
                             $!paginator.html
                         </nav>
+                        </div>
                     </div>
 
                     <div class="tab-pane" id="leaderboard">

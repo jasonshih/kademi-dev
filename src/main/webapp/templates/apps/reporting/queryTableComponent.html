@@ -30,15 +30,14 @@
                     </tr>
                 </thead>
                 <tbody id="${queryTableId}">
-                    #set( $paginator = $formatter.paginator().pageSize($itemsPerPage) )
-                    #set( $results = $applications.Reporting.runQuery($queryBean, $paginator.start, $paginator.pageSize) )
-                    #set ($r = $paginator.setTotalRecords($formatter.toInteger($results.hits.totalHits)))
+                #set( $paginator = $formatter.paginator().pageSize($itemsPerPage).skipToStart(false) )
+                #set( $results = $applications.Reporting.runQuery($queryBean, $paginator.start, $paginator.pageSize) )
+                    #set ($r = $paginator.totalRecords($formatter.toInteger($results.hits.totalHits)))
                     #set ($hitList = $formatter.newArrayList())
                     #foreach($row in $results.hits.hits )
                         #set ($r = $hitList.add($row))
                     #end
-                    #set ($r = $paginator.records($hitList))
-                    #foreach($row in $results.hits.hits)
+                    #foreach($row in $paginator.records($hitList))
                     <tr>
                         #foreach( $field in $fields)
                         <td>$!row.fields.get($field).value</td>
