@@ -160,7 +160,7 @@ function initUploads() {
     $('#btn-upload').mupload({
         url: usersImportUrl,
         useJsonPut: false,
-        buttonText: '<i class="clip-folder"></i> Upload CSV',
+        buttonText: '<i class="clip-folder"></i> Upload CSV, XLS, XLSX',
         acceptedFiles: '.csv,.xlsx,.xls,.txt',
         oncomplete: function (resp, name, href) {
             flog("oncomplete", resp, name, href);
