@@ -99,6 +99,7 @@ function initUploads() {
             });
 
             var defaultGroup = $('#defaultGroup').val();
+            var removalMode = $('#removalMode').val();
 
             if (!selectedCols.length){
                 Msg.error('Please select at least 1 destination field to continue.');
@@ -108,16 +109,35 @@ function initUploads() {
             }
 
             if (!defaultGroup && selectedCols.indexOf(requiredField) === -1) {
-                Msg.error('Please select default group or indicate group field in data table');
-                importerHead.find('select').first().trigger('focus');
-                evt.preventDefault();
-                return false;
+                if (!removalMode){
+                    Msg.error('Please select default group or indicate group field in data table');
+                    importerHead.find('select').first().trigger('focus');
+                    evt.preventDefault();
+                    return false;
+                }
+            }
+
+            var uniqueFields = ['email', 'userId', 'phone'];
+            if (removalMode) {
+                // remove/unsubscribe mode enable
+                var canRemove = false;
+                for(var i = 0; i < uniqueFields.length; i++){
+                    if (selectedCols.indexOf(uniqueFields[i]) !== -1){
+                        canRemove = true;
+                        break;
+                    }
+                }
+                if (!canRemove){
+                    Msg.error('Please select either Email, UserId or Phone field to identify the profiles to unsubscribe/remove');
+                    evt.preventDefault();
+                    return false;
+                }
             }
         }
 
         if (data.step === 3) {
             if (!importWizardStarted) {
-                Msg.error('Importing process hasnt been started yet');
+                Msg.error("Importing process hasn't been started yet");
                 evt.preventDefault();
                 return false;
             }
