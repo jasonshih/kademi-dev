@@ -1,9 +1,45 @@
 {
     "dependencies": [
         {
+          "css": {
+              "cssMedia": "all",
+              "path": "/static/css/fullcalendar-1.6.4.css"
+          }
+        },
+        {
+          "css": {
+              "cssMedia": "all",
+              "path": "/theme/apps/calendar/calendars.css"
+          }
+        },
+        {
+          "css": {
+              "cssMedia": "all",
+              "path": "/static/daterangepicker/1.3.3/daterangepicker-bs3.css"
+          }
+        },
+        {
             "js": {
                 "group": "main",
-                "path": "/static/js/jquery.timeago.js"
+                "path": "/static/js/fullcalendar-1.6.4.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/moment/2.4.0/moment-2.4.0.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/daterangepicker/1.3.3/daterangepicker.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/calendar/calendars.js"
             }
         },
         {
@@ -15,7 +51,7 @@
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/auctions/viewAuction.js"
+                "path": "/theme/apps/calendar/eventEditable.js"
             }
         }
     ]
