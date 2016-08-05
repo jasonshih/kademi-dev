@@ -3,7 +3,7 @@
         <title>Calendar</title>
         <link href="manageCalendars.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="calendars.js">//</script>
-        <script type="text/javascript" src="manageCalendars.js">//</script>
+        <script type="text/javascript" src="manageEvent.js">//</script>
         <script type="text/javascript" src="cal-utils.js">//</script>
         <script type="text/javascript" src="/static/chosen/1.1.0/chosen.jquery.js">//</script>
         <link rel="stylesheet" href="/static/chosen/1.1.0/chosen.css"/>
@@ -19,6 +19,11 @@
         </style>
     </head>
     <body class="calendar-event">
+        #set ($isKEditor = false)
+        #if ($page.theme.editorName == "keditor")
+            #set ($isKEditor = true)
+        #end
+
         <form action="" method="POST" class="manageEventForm form-horizontal">
             <div class="pull-right page-action">
                 <button class="btn btn-sm btn-success" type="submit">
@@ -128,16 +133,20 @@
                             </div>
                         </div>
 
-
                         <hr/>
 
                         <p class="lead">Create your calendar event content below</p>
 
                         #if($page.calendar.website)
                             #if ($applicationManager.isActive($applications.calendar, $page.calendar.website.liveBranch()))
-                                <div class="embed-responsive embed-responsive-16by9">
-                                    <iframe class="embed-responsive-item" src="" id="editor-frame"></iframe>
-                                </div>
+
+                                #if ($isKEditor)
+                                    <div class="embed-responsive embed-responsive-16by9">
+                                        <iframe class="embed-responsive-item" src="" id="editor-frame"></iframe>
+                                    </div>
+                                #else
+                                    <textarea class="htmleditor" cols="100" name="description" rows="10" placeholder="">$!page.description</textarea>
+                                #end
                             #else
                                 <p class="alert alert-warning lead"><i class="fa fa-warning"></i> Calendar App of <b>$page.calendar.website.name</b> website is disabled. Please enable it at <a href="/websites/${page.calendar.website.name}/${page.calendar.website.liveBranch}/#panel_apps-tab" class="text-warning"><b>here</b></a>.</p>
                             #end
@@ -405,11 +414,9 @@
         </table>
 
         <script type="text/javascript">
+            var isKEditor = $isKEditor;
             $(function () {
                 initManageEvent();
-                $(".chosen-select").chosen({
-                    search_contains: true
-                });
             });
         </script>
     </body>
