@@ -125,3 +125,32 @@ body.opened-keditor-sidebar div.cke_float[id*=cke_keditor-component-content-] {
     left: 15px !important;
     padding: 5px !important;
 }
+
+.carouselImageWrap {
+    max-height: 400px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    direction: rtl;
+}
+
+.carouselImageItem {
+    position: relative;
+    padding: 5px;
+    border: 1px solid #eee8d5;
+    background: #fff;
+}
+
+.carouselImageItem + .carouselImageItem {
+    margin-top: 5px;
+}
+
+.carouselImageItem img {
+    width: 100%;
+    height: auto;
+}
+
+.carouselImageItem .btn-group {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+}
