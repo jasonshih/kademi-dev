@@ -3,7 +3,11 @@
         {
             "appId": "nvd3-lib",
             "branch": "1.8.1"
-        }
+        },
+        {
+            "appId": "d3-lib",
+            "branch": "3.4.1"
+        }        
     ],
     "dependencies": [
         {
