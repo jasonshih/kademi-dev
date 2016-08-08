@@ -3,10 +3,6 @@
         {
             "appId": "nvd3-lib",
             "branch": "1.8.1"
-        },
-        {
-            "appId": "d3-lib",
-            "branch": "3.4.1"
         }        
     ],
     "dependencies": [
@@ -26,12 +22,6 @@
             "js": {
                 "group": "main",
                 "path": "/theme/apps/salesdata/salesdata-dashboard.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/d3/d3.min.js"
             }
         }
     ]
