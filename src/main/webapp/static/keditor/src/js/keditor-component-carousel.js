@@ -16,33 +16,13 @@
         init: function (contentArea, container, component, keditor) {
             flog('init "carousel" component', component);
             var componentContent = component.children('.keditor-component-content');
-            if (!componentContent.find('.carousel').length) {
+            var carousel = componentContent.find('.carousel');
+
+            if (!carousel.attr('id')) {
                 var id = keditor.generateId('component-carousel');
-                var html = '<div id="' + id + '" class="carousel slide" data-ride="carousel" data-wrap="true" data-interval="5000">' +
-                    '<ol class="carousel-indicators">' +
-                    '   <li data-target="'+id+'" data-slide-to="0" class="active"></li>' +
-                    '   <li data-target="'+id+'" data-slide-to="1" class=""></li>' +
-                    '</ol>' +
-                    '<div class="carousel-inner" role="listbox">' +
-                    '   <div data-hash="hash-static-images-ballon-flight-jpg" class="item active">' +
-                    '       <img src="/static/images/ballon_flight.jpg" alt="">' +
-                    '       <div class="carousel-caption"></div>' +
-                    '   </div>' +
-                    '   <div data-hash="hash-static-images-beach-house-jpg" class="item">' +
-                    '       <img src="/static/images/beach_house.jpg" alt="">' +
-                    '       <div class="carousel-caption"></div>' +
-                    '   </div>' +
-                    '</div>' +
-                    '<a class="left carousel-control" href="#' + id + '" role="button" data-slide="prev">' +
-                    '   <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>' +
-                    '   <span class="sr-only">Previous</span>' +
-                    '</a>' +
-                    '<a class="right carousel-control" href="#' + id + '" role="button" data-slide="next">' +
-                    '   <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>' +
-                    '   <span class="sr-only">Next</span>' +
-                    '</a>' +
-                    '</div>';
-                componentContent.html(html);
+                carousel.attr('id', id);
+                carousel.find('.carousel-indicators li').attr('data-target', id);
+                carousel.find('.carousel-control').attr('href', '#' + id);
             }
 
         },
@@ -56,11 +36,10 @@
 
         initSettingForm: function (form, keditor) {
             form.append(
-                '<style>.carouselImageItem{position: relative; margin-top: 5px; padding: 5px; border: 1px solid #eee8d5} .carouselImageItem a{position: absolute; bottom: 5px; right: 5px;}</style>' +
                 '<form class="form-horizontal">' +
                 '   <div class="form-group">' +
                 '       <div class="col-sm-12">' +
-                '           <div class="carouselImageWrap" style="max-height: 250px; overflow-y: auto; overflow-x: hidden;"></div>' +
+                '           <div class="carouselImageWrap"></div>' +
                 '       </div>' +
                 '   </div>' +
                 '   <div class="form-group">' +
@@ -94,6 +73,7 @@
 
             var basePath = window.location.pathname.substr(0, window.location.pathname.lastIndexOf('/') + 1);
             var carouselAddImage = form.find('.carouselAddImage');
+            var carouselImageWrap = form.find('.carouselImageWrap');
             var self = this;
 
             carouselAddImage.mselect({
@@ -107,39 +87,53 @@
                     self.addImageToCarousel(keditor.getSettingComponent(), url, hash);
                 }
             });
-            $(document.body).on('click', '.carouselImageItem a', function(e){
+
+            carouselImageWrap.sortable({
+                handle: '.btn-sort-image',
+                items: '> .carouselImageItem',
+                axis: 'y',
+                tolerance: 'pointer',
+                sort: function () {
+                    $(this).removeClass('ui-state-default');
+                },
+                update: function () {
+                    self.rearrangeItems(keditor.getSettingComponent(),form);
+                }
+            });
+
+            $(document.body).on('click', '.carouselImageItem a', function (e) {
                 e.preventDefault();
                 var hash = $(this).siblings('[data-hash]').attr('data-hash');
                 self.refreshCarousel(keditor.getSettingComponent(), hash);
                 $(this).parent().remove();
             });
 
-            form.find('.carouselPause').on('change', function(e){
+            form.find('.carouselPause').on('change', function (e) {
                 e.preventDefault();
                 var comp = keditor.getSettingComponent().find('.carousel');
                 comp.attr('data-pause', this.value);
             });
 
-            form.find('.carouselInterval').on('change', function(e){
+            form.find('.carouselInterval').on('change', function (e) {
                 e.preventDefault();
                 var comp = keditor.getSettingComponent().find('.carousel');
                 comp.attr('data-interval', this.value);
             });
 
-            form.find('.carouselWrap').on('click', function(e){
+            form.find('.carouselWrap').on('click', function (e) {
                 var comp = keditor.getSettingComponent().find('.carousel');
-                if (this.checked){
+                if (this.checked) {
                     comp.attr('data-wrap', 'true');
                 } else {
                     comp.attr('data-wrap', 'false');
                 }
             });
         },
+
         showSettingForm: function (form, component, keditor) {
-            // init
             var self = this;
             form.find('.carouselImageWrap').html('');
-            component.find('.carousel-inner > .item').each(function(index, item){
+            component.find('.carousel-inner > .item').each(function (index, item) {
                 var url = $(item).find('img').attr('src');
                 var hash = $(item).attr('data-hash');
                 self.addImageToList(form, url, hash);
@@ -151,34 +145,55 @@
 
             form.find('.carouselPause').val(pause);
             form.find('.carouselInterval').val(interval);
-            form.find('.carouselWrap').prop('checked', isWrap==='true');
+            form.find('.carouselWrap').prop('checked', isWrap === 'true');
         },
+
         addImageToCarousel: function (component, url, hash) {
             var carousel = component.find('.carousel');
             var index = carousel.find('.carousel-indicators').children().length;
             var cls = index === 0 ? 'active' : '';
             carousel.find('.carousel-indicators').append('<li data-target="' + carousel.attr('id') + '" data-slide-to="' + index + '" class="' + cls + '"></li>');
 
-            var html = '<div data-hash="' + hash + '" class="item ' + cls + '">' +
-                '<img src="' + url + '" alt="">' +
-                '<div class="carousel-caption">' +
-                '</div>' +
-                '</div>';
-            carousel.find('.carousel-inner').append(html);
+            carousel.find('.carousel-inner').append(
+                '<div data-hash="' + hash + '" class="item ' + cls + '">' +
+                '   <img src="' + url + '" alt="" width="100%" height="" />' +
+                '   <div class="carousel-caption"></div>' +
+                '</div>'
+            );
         },
+
         addImageToList: function (form, src, hash) {
-            var image = $('<img class="img-responsive" />').attr('src', src).attr('data-hash', hash);
-            var div = $('<div class="carouselImageItem"></div>');
-            div.append(image);
-            div.append('<a title="Delete this image" class="btn btn-sm btn-danger" href="#"><i class="fa fa-trash"></i> </a>');
-            div.appendTo(form.find('.carouselImageWrap'));
+            form.find('.carouselImageWrap').append(
+                '<div class="carouselImageItem">' +
+                '   <img class="img-responsive" src="' + src + '" data-hash="' + hash + '" />' +
+                '   <div class="btn-group btn-group-sm">' +
+                '       <a class="btn btn-info btn-sort-image" href="#"><i class="fa fa-sort"></i></a>' +
+                '       <a title="Delete this image" class="btn btn-danger" href="#"><i class="fa fa-trash"></i></a>' +
+                '   </div>' +
+                '</div>'
+            );
         },
-        refreshCarousel: function(component, hash){
-            component.find('[data-hash='+hash+']').remove();
-            if (!component.find('.carousel-inner .item.active').length){
+
+        refreshCarousel: function (component, hash) {
+            component.find('[data-hash=' + hash + ']').remove();
+            if (!component.find('.carousel-inner .item.active').length) {
                 component.find('.carousel-inner .item:first-child').addClass('active');
             }
             component.find('.carousel-indicators li:last-child').remove();
+        },
+
+        rearrangeItems: function (component, form) {
+            var self = this;
+            var carousel = component.find('.carousel');
+            carousel.find('.carousel-inner').html('');
+            carousel.find('.carousel-indicators').html('');
+
+            form.find('.carouselImageWrap').find('.carouselImageItem').each(function () {
+                var carouselImageItem = $(this);
+                var img = carouselImageItem.find('img');
+
+                self.addImageToCarousel(component, img.attr('src'), img.attr('data-hash'));
+            });
         }
     }
 })(jQuery);
