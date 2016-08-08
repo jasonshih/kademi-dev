@@ -1,4 +1,4 @@
-{ 
+{
     "dependencies": [
         {
             "css": {
@@ -8,7 +8,7 @@
         },
         {
             "css": {
-                "cssMedia": "print",
+                "lessMedia": "print",
                 "path": "/templates/apps/learner/modulePagePrint.css"
             }
         },
