@@ -1,7 +1,7 @@
 #parse("/theme/masterTemplate.html")
 <html xmlns="http://www.w3.org/1999/xhtml">    
     <head>
-        #set($title = "Edit: " + $params.fileName)
+        #set($title = "Edit: $params.fileName" ) 
         #@themeHeader( $title )
             <link href="/static/keditor/dist/css/keditor-0.0.0.min.css" rel="stylesheet" type="text/css" />
             <link href="/static/keditor/dist/css/keditor-components-0.0.0.min.css" rel="stylesheet" type="text/css" />
