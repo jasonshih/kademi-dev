@@ -141,11 +141,12 @@
 
                 <div class="row">
                     <div class="col-lg-12 lead-contacts-wrap" id="searchResults">
-                        #if( $page.searchResults.isEmpty() )
+                        #set($searchResults = $page.searchResults)
+                        #if( $searchResults.isEmpty() )
                         <p class="lead">No results matched the search</p>
                         #else
                         <ul class="list-group">
-                            #foreach($p in $page.searchResults)
+                            #foreach($p in $searchResults)
                             <li class="list-group-item">
                                 <div class="media">
                                     <div class="media-left hidden-xs">
@@ -183,6 +184,11 @@
                                         <p>
                                             <i>No leads in progress</i>
                                         </p>
+                                        #end
+
+                                        #if( $page.getLastContactDate($p.fields.userName.value) )
+                                        #set($cd = $page.getLastContactDate($p.fields.userName.value))
+                                        <small class="pull-right">Last contact: <abbr class="timeago" title="$formatter.formatDateISO8601($cd, $page.organisation.timezone)">$formatter.formatDateISO8601($cd, $page.organisation.timezone)</abbr></small>
                                         #end
 
                                         <div class="text-muted leadContactMethods">
