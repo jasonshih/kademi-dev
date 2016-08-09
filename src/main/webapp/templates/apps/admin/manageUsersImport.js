@@ -5,7 +5,6 @@
 var usersImportUrl = '/manageUsers/userFile';
 var importWizardStarted = false;
 var userImportTotalCount = 0;
-var lastProccessStatusMessage = '';
 function initManageUsersImport() {
     initUploads();
 }
@@ -279,24 +278,16 @@ function checkProcessStatus() {
                         $('#aggregationsContainer').reloadFragment({url: '/manageUsers/'});
                         importWizardStarted = false;
                         $('#importProgressbar .progress-bar').attr('aria-valuenow', 0).css('width','0%');
-                        lastProccessStatusMessage = '';
                         userImportTotalCount = 0;
                         return; // dont poll again
                     } else {
                         // running
                         flog("Message", result.messages[0]);
-                        if (!lastProccessStatusMessage){
-                            lastProccessStatusMessage = result.messages[0];
-                            resultStatus.text(result.messages[0]);
-                        } else {
-                            if (lastProccessStatusMessage === result.messages[0] && result.messages[0].indexOf('Processing line') !== 1){
-                                resultStatus.text('Reindexing profiles...');
-                            } else {
-                                lastProccessStatusMessage = result.messages[0];
-                                resultStatus.text(result.messages[0]);
-                            }
-                        }
+                        resultStatus.text(result.messages[0]);
                         var percentComplete = result.messages[0].split(' ').reverse()[0] / userImportTotalCount * 100;
+                        if (percentComplete > 90){
+                            percentComplete = 90;
+                        }
                         $('#importProgressbar .progress-bar').attr('aria-valuenow', percentComplete).css('width',percentComplete+'%');
                         jobTitle.text("Process running...");
                     }
