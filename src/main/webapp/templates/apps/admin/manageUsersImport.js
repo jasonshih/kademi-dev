@@ -285,6 +285,9 @@ function checkProcessStatus() {
                         flog("Message", result.messages[0]);
                         resultStatus.text(result.messages[0]);
                         var percentComplete = result.messages[0].split(' ').reverse()[0] / userImportTotalCount * 100;
+                        if (isNaN(percentComplete)){
+                            percentComplete = 0;
+                        }
                         if (percentComplete > 90){
                             percentComplete = 90;
                         }
