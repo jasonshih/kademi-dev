@@ -305,6 +305,13 @@ function initModuleEditing(courseUrl) {
 
     moduleWrapper.on('click', '.btn-add-module', function (e) {
         e.preventDefault();
+
+        if ($('#courses-list').children().length === 0) {
+            Msg.error('Please create your first course before creating any modules', 5000);
+
+            return false;
+        }
+
         showNewModule(form, modal);
     });
 
