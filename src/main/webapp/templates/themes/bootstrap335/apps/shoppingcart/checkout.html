@@ -36,45 +36,51 @@
                                 #set($totalCost = 0)
                                 #set( $items = $formatter.sortByProperty( $page.shoppingCartItemBeans, "itemPage.title" ) )
                                 #foreach($item in $items )
-                                    <div class="row item-row">
-                                        <div class="col-sm-3 item-photo">
-                                            #set ($photo = "/theme/apps/ecommerce/img/no_photo.png")
-                                            #if( $item.itemPage.productImageHref )
-                                                #set ($photo = $item.itemPage.productImageHref)
+                                <div class="row item-row">
+                                    <div class="col-sm-3 item-photo">
+                                        #set ($photo = "/theme/apps/ecommerce/img/no_photo.png")
+                                        #if( $item.itemPage.productImageHref )
+                                        #set ($photo = $item.itemPage.productImageHref)
+                                        #end
+                                        <div style="background-image: url($photo)"></div>
+                                    </div>
+                                    <div class="col-sm-3 item-title center-content">
+                                        <div>
+                                            $item.ItemPage.title
+                                            #foreach( $opt in $item.itemPage.selectedOptions( $item.itemPage.selectedParameterOptions ) )
+                                            <br/>
+                                            <small>
+                                                $opt.productParameter.title: $opt.title
+                                            </small>
                                             #end
-                                            <div style="background-image: url($photo)"></div>
-                                        </div>
-                                        <div class="col-sm-3 item-title center-content">
-                                            <div>
-                                                $item.ItemPage.title
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-3 item-quantity center-content">
-                                            <div class="input-group input-group-sm">
-                                                <span class="input-group-btn">
-                                                    <button class="btn btn-default btn-decrease-quantity" type="button">-</button>
-                                                </span>
-                                                <input type="text" value="$item.quantity" name="quantity.${foreach.count}" class="form-control txt-quantity text-center" />
-                                                <span class="input-group-btn">
-                                                    <button class="btn btn-default btn-increase-quantity" type="button">+</button>
-                                                </span>
-                                            </div>
-                                            <input type="hidden" class="itemHref" name="item.${foreach.count}" value="$item.href" />
-                                        </div>
-                                        <div class="col-sm-2 item-price center-content">
-                                            <div>
-                                                <span class="lead">
-                                                    $$formatter.formatCurrency($page.calcSubTotal($item.ItemPage.productPurchaseCost, $item.quantity))
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-1 item-action text-right center-content">
-                                            <div>
-                                                <a href="#" class="btn-remove-item"><i class="fa fa-times-circle fa-2x"></i></a>
-                                            </div>
                                         </div>
                                     </div>
-                                    #set($totalCost = $totalCost + $page.calcSubTotal($item.ItemPage.productPurchaseCost, $item.quantity))
+                                    <div class="col-sm-3 item-quantity center-content">
+                                        <div class="input-group input-group-sm">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-default btn-decrease-quantity" type="button">-</button>
+                                            </span>
+                                            <input type="text" value="$item.quantity" name="quantity.${foreach.count}" class="form-control txt-quantity text-center" />
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-default btn-increase-quantity" type="button">+</button>
+                                            </span>
+                                        </div>
+                                        <input type="hidden" class="itemHref" name="item.${foreach.count}" value="$item.href" />
+                                    </div>
+                                    <div class="col-sm-2 item-price center-content">
+                                        <div>
+                                            <span class="lead">
+                                                $$formatter.formatCurrency($page.calcSubTotal($item.ItemPage.productPurchaseCost, $item.quantity))
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-1 item-action text-right center-content">
+                                        <div>
+                                            <a href="#" class="btn-remove-item"><i class="fa fa-times-circle fa-2x"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                #set($totalCost = $totalCost + $page.calcSubTotal($item.ItemPage.productPurchaseCost, $item.quantity))
                                 #end
                             </div>
                             <div class="panel-footer cart-total">
