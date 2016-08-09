@@ -4,6 +4,7 @@
 
 var usersImportUrl = '/manageUsers/userFile';
 var importWizardStarted = false;
+var userImportTotalCount = 0;
 function initManageUsersImport() {
     initUploads();
 }
@@ -24,7 +25,11 @@ function initUploads() {
         $('.btn-upload-users-csv').trigger('click');
         $('#myWizard').wizard('selectedItem', {step: 1});
         $('#myWizard').find('form').trigger('reset');
-        form.find("input[name=fileHash]").val('')
+        form.find("input[name=fileHash]").val('');
+        $('#importProgressbar .progress-bar').attr('aria-valuenow', 0).css('width','0%');
+        userImportTotalCount = 0;
+        var resultStatus = $('#job-status');
+        resultStatus.text('');
     });
 
     $('#myWizard').on('changed.fu.wizard', function (evt, data) {
@@ -55,6 +60,7 @@ function initUploads() {
                     if (resp.status && resp.data) {
                         form.find('[type=submit]').removeClass('hide');
                         form.find(".beforeImportInfo").text('New profiles found: ' + resp.data.newProfilesCount + ', existing profiles found: ' + resp.data.existingProfilesCount);
+                        userImportTotalCount = resp.data.newProfilesCount + resp.data.existingProfilesCount;
                     } else {
                         form.find(".beforeImportInfo").text('Cannot verify data to import');
                     }
@@ -153,7 +159,7 @@ function initUploads() {
         },
         onSuccess: function (resp, form, config) {
             $('#myWizard').wizard("next");
-            doCheckProcessStatus(usersImportUrl);
+            checkProcessStatus();
         }
     });
 
@@ -271,19 +277,28 @@ function checkProcessStatus() {
                         $('#table-users-body').reloadFragment({url: '/manageUsers/'});
                         $('#aggregationsContainer').reloadFragment({url: '/manageUsers/'});
                         importWizardStarted = false;
+                        $('#importProgressbar .progress-bar').attr('aria-valuenow', 0).css('width','0%');
+                        userImportTotalCount = 0;
                         return; // dont poll again
                     } else {
                         // running
                         flog("Message", result.messages[0]);
                         resultStatus.text(result.messages[0]);
+                        var percentComplete = result.messages[0].split(' ').reverse()[0] / userImportTotalCount * 100;
+                        if (isNaN(percentComplete)){
+                            percentComplete = 0;
+                        }
+                        if (percentComplete > 90){
+                            percentComplete = 90;
+                        }
+                        $('#importProgressbar .progress-bar').attr('aria-valuenow', percentComplete).css('width',percentComplete+'%');
                         jobTitle.text("Process running...");
                     }
-
                 } else {
                     // waiting to start
                     jobTitle.text("Waiting for process job to start ...");
                 }
-                window.setTimeout(doCheckProcessStatus, 2500);
+                window.setTimeout(checkProcessStatus, 2500);
 
             } else {
                 flog("No task");
@@ -293,10 +308,6 @@ function checkProcessStatus() {
             flog("weird..", resp);
         }
     });
-}
-
-function doCheckProcessStatus() {
-    checkProcessStatus();
 }
 
 function sortObjectByValue(obj) {

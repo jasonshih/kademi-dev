@@ -217,6 +217,10 @@
                                     </div>
                                     <div class="step-pane sample-pane alert" data-step="4">
                                         <h4>Import running</h4>
+                                        <div class="progress" id="importProgressbar">
+                                            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                            </div>
+                                        </div>
                                         <div class="process-results">
                                             <p>
                                                 <strong>Process Status:</strong>
@@ -359,12 +363,7 @@
                 </table>
                 #end
             </div> <!-- end aggregations -->
-
         </div>
-
-
-
-
 
         <div id="modal-new-user" class="modal modal-lg fade" aria-hidden="true">
             <div class="modal-header">
