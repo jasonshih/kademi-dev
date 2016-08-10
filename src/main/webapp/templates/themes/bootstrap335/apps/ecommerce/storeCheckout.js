@@ -32,7 +32,7 @@ function initCartForm() {
             icon.show();
 
             var cvv = form.find('[name=cardcvn]');
-            if(cvv.val() && isNaN(cvv.val())){
+            if (cvv.val() && isNaN(cvv.val())) {
                 icon.hide();
                 return {
                     error: 1,
@@ -41,7 +41,7 @@ function initCartForm() {
                 };
             }
 
-            if(cvv.val() && cvv.val().length<3){
+            if (cvv.val() && cvv.val().length < 3) {
                 icon.hide();
                 return {
                     error: 1,
@@ -52,10 +52,10 @@ function initCartForm() {
 
             var phone = form.find('[name=phone]');
             var phoneValue = phone.val();
-            if(phoneValue){
+            if (phoneValue) {
                 var regex = /-|\+|\s|\(|\)|x|ext|,|\.|\//ig;
                 var phoneValue = phoneValue.replace(regex, '');
-                if(isNaN(phoneValue)){
+                if (isNaN(phoneValue)) {
                     icon.hide();
                     return {
                         error: 1,
@@ -87,12 +87,16 @@ function initCartForm() {
         },
         onSuccess: function (resp) {
             if (resp.status) {
-                $('#cart-form, #cart-link').reloadFragment({
-                    whenComplete: function () {
-                        $('#cart-form').hide('fast');
-                        $('#successfull-div').show('slow');
-                    }
-                });
+                if (resp.nextHref) {
+                    window.location = resp.nextHref;
+                } else {
+                    $('#cart-form, #cart-link').reloadFragment({
+                        whenComplete: function () {
+                            $('#cart-form').hide('fast');
+                            $('#successfull-div').show('slow');
+                        }
+                    });
+                }
             } else {
                 Msg.warning(resp.messages[0])
             }

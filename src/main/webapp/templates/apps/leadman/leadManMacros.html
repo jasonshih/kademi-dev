@@ -28,22 +28,29 @@
             #end
         </h3>
         #if($lead.organisation)
+        #set($addressStr = "")
+        #if($lead.organisation.address)
+            #set($addressStr = $lead.organisation.address)
+        #end
+
+        #if($lead.organisation.addressLine2)
+            #set($addressStr = $addressStr + ", " + $lead.organisation.addressLine2)
+        #end
+
+        #if($lead.organisation.AddressState)
+        #set($addressStr = $addressStr + ", " + $lead.organisation.AddressState)
+        #end
+
+        #if($lead.organisation.postcode)
+        #set($addressStr = $addressStr + ", " + $lead.organisation.postcode)
+        #end
+
+        #if ("$addressStr" != "")
         <p>
             <i aria-hidden="true" class="fa fa-map-marker"></i>
-            #if($lead.organisation.address)
-            $lead.organisation.address
-            #end
-
-            #if($lead.organisation.addressLine2)
-            , $lead.organisation.addressLine2
-            #end
-            #if($lead.organisation.AddressState)
-            , $lead.organisation.AddressState
-            #end
-            #if($lead.organisation.postcode)
-            , $lead.organisation.postcode
-            #end
+            $addressStr
         </p>
+        #end
         #end
         #if( $lead.profile )
         #if( $lead.profile.email )
