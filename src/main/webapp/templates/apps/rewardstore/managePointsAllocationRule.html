@@ -30,7 +30,7 @@
                                 <input type="hidden" disabled="disabled" value="$page.rule.name" id="originalName"/>
                                 <input type="text" name="name" id="name" value="$page.rule.name" placeholder="Name" class="required simpleChars form-control" required="required" />
                             </div>
-                        </div>  
+                        </div>
                         <div class="form-group">
                             <label class="control-label col-md-3" for="title">Title</label>
                             <div class="col-md-8">
@@ -46,6 +46,18 @@
                                     $formatter.option($p.name, $p.title, $page.rule.rewardDest.name)
                                     #end
                                 </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="startDate">Start Date</label>
+                            <div class="col-md-8">
+                                <input type="text" name="startDate" id="startDate" value="$!formatter.formatJodaDate($page.rule.startDate, 'dd/MM/YYYY HH:mm')" placeholder="Start Date" data-date-format="DD/MM/YYYY HH:mm" class="form-control date-time-picker" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="endDate">End Date</label>
+                            <div class="col-md-8">
+                                <input type="text" name="endDate" id="endDate" value="$!formatter.formatJodaDate($page.rule.endDate, 'dd/MM/YYYY HH:mm')" placeholder="End Date" data-date-format="DD/MM/YYYY HH:mm" class="form-control date-time-picker" />
                             </div>
                         </div>
                         <div class="form-group">
