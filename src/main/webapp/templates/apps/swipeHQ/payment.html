@@ -1,0 +1,27 @@
+<html>
+    #parse("/theme/masterTemplate.html")
+    <head>
+        #@themeHeader( "Payment Result" )
+        #end
+    </head>
+    <body class="add-container">
+        #@themeBody()
+        <div>
+            <div class="well well-lg text-center">
+                #if($page.results.success)
+                <h2><i class="fa fa fa-check-circle"></i> Your payment has been successful</h2>
+                #else
+                <h2><i class="fa fa fa-times-circle"></i> An Error occurd while processing your payment</h2>
+                <p>
+                    <strong>Message:</strong> $page.results.msg
+                    #if($page.ptx.responseCode)
+                    <br/>
+                    Error Code: $page.ptx.responseCode
+                    #end
+                </p>
+                #end
+            </div>
+        </div>
+        #end
+    </body>
+</html>
