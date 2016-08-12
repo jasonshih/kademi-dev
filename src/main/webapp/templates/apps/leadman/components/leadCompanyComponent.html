@@ -1,10 +1,71 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
+<div class="panel">
+    <div class="panel-body">
+        <div id="company">
+            <h4 class="page-header">Company information</h4>
+            <div class="row">
+                <form method="post" action="$page.href" class="form-horizontal" id="leadOrgDetails">
+                    <input type="hidden" name="leadOrgDetails" value="leadOrgDetails"/>
 
-</body>
-</html>
+
+                    <div class="modal-body">
+                        #set( $leadOrg = $page.leadOrg )
+                        <input type="hidden" name="leadOrgId" value="$!leadOrg.orgId"/>
+                        <div class="form-group">
+                            <label class="control-label col-md-2" for="title">Company</label>
+                            <div class="col-md-3">
+                                <input type="text" id="orgTitleSearch" name="title" class="form-control" placeholder="Title" value="$!leadOrg.title" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-2" for="newCompanyEmail">Contact</label>
+                            <div class="col-md-5">
+                                <input type="text" name="email" id="newCompanyEmail" class="form-control email" placeholder="Email" value="$!leadOrg.email" />
+                            </div>
+                            <div class="col-md-5">
+                                <input type="text" name="phone" class="form-control" placeholder="Phone" value="$!leadOrg.phone" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-2" for="newUserEmail">Address</label>
+                            <div class="col-md-5">
+                                <input type="text" name="address" class="form-control" placeholder="Address" value="$!leadOrg.address" />
+                            </div>
+                            <div class="col-md-5">
+                                <input type="text" name="addressLine2" class="form-control" placeholder="Address 2" value="$!leadOrg.addressLine2" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-5">
+                                <input type="text" name="addressState" class="form-control" placeholder="State" value="$!leadOrg.addressState" />
+                            </div>
+                            <div class="col-md-5">
+                                <input type="text" name="postcode" class="form-control" placeholder="Postcode" value="$!leadOrg.postcode" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-2" for="notes">Notes</label>
+                            <div class="col-md-10">
+                                <textarea name="notes" class="form-control" style="height: 100px">$!leadOrg.notes</textarea>
+                            </div>
+                        </div>
+
+
+                        #if( $page.completed)
+                        #else
+                        <div class="form-group">
+                            <div class="col-md-10 col-md-offset-2">
+                                <button class="btn btn-primary" type="submit">Save details</button>
+
+                            </div>
+                        </div>
+                        #end
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

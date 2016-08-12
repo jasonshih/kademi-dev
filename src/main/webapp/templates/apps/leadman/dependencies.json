@@ -1,5 +1,5 @@
 {
-    "appDependencies": [        
+    "appDependencies": [
         {
             "appId": "leadman-lib",
             "branch": "1.0.0"
@@ -120,6 +120,12 @@
             "css": {
                 "cssMedia": "all",
                 "path": "/static/bootstrap-datetimepicker/4.17.37/bootstrap-datetimepicker.css"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/static/timeline/timeline.css"
             }
         },
         {
