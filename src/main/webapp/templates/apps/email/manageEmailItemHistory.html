@@ -86,7 +86,10 @@
                             </tr>
                         </thead>
                         <tbody id="history-table-body">
-                            #foreach($e in $page.searchResults)
+                            #set($paginator = $formatter.paginator())
+                            #set($results = $page.getSearchResults($paginator.start, $paginator.pageSize))
+                            #set($paginator = $paginator.totalRecords($results.totalHits))
+                            #foreach($e in $results.beans)
                             <tr>
                                 <td><a href='$e.id'>$e.recipientAddress</a></td>
                                 <td>$e.subject</td>
@@ -130,6 +133,7 @@
                             #end
                         </tbody>
                     </table>
+                    $!paginator.html
                 </div>
                 #if( $page.searchResults.size() >= 1000 )
                 <p class="label label-warning">Displaying maximum results</p>

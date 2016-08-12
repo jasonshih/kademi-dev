@@ -1,7 +1,14 @@
 #foreach($lead in $applications.funnels.getLeadsForProfile($page.thisProfile) )
 <div class="panel panel-default">
     #set( $funnel = $applications.funnels.funnel($lead) )
-    <div class="panel-heading"><a href="/funnels/$funnel.name">$funnel.title</a></div>
+    <div class="panel-heading">
+        #if( $funnel )
+        <a href="/funnels/$funnel.name">$funnel.title</a>
+        #else
+        COULD NOT FIND FUNNEL -$lead.funnel
+        #end
+        $funnel - $funnel.name
+    </div>
     <div class="panel-body">
         <table class="table table-striped">
             <tr>
@@ -10,7 +17,7 @@
             </tr>
             <tr>
                 <td>Stage</td>
-                <td>$lead.stageName</td>
+                <td>$!lead.stageName</td>
             </tr>
             <tr>
                 <td>Assigned to group</td>
@@ -34,16 +41,16 @@
             <tr>
                 <td>Timer</td>
                 <td>$!lead.timerDate</td>
-            </tr>            
+            </tr>
         </table>
-        
-        <h3>Emails</h3>
+
+        <h3>EDMs</h3>
         <table class="table">
         #foreach($funnelEdm in $lead.funnelEdms)
         <tr>
             <td>
                 #if( $funnelEdm.emailItem )
-                    Email $funnelEdm.emailItem.subject
+                    <a href="/emails/$funnelEdm.emailItem.id">$funnelEdm.emailItem.subject</a>
                 #else if( $funnelEdm.smsItem )
                     SMS
                 #end
