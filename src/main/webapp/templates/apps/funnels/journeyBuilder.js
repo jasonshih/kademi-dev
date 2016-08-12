@@ -5,13 +5,56 @@ var JBApp = {
     initialized: false,
     availableTriggers: null,
     ACTIONS: {
-        'emailAction': '<i class="fa fa-envelope" aria-hidden="true"></i> Send Email',
-        'createTaskAction': '<i class="fa fa-tasks" aria-hidden="true"></i> Create Task',
-        'createDataSeriesAction': '<i class="fa fa-database" aria-hidden="true"></i> Create Data Series',
-        'calendarEventAction': '<i class="fa fa-calendar-check-o" aria-hidden="true"></i> Calendar Event',
-        'setField': '<i class="fa fa-pencil-square-o" aria-hidden="true"></i> Set Field',
-        'addToGroup': '<i class="fa fa-pencil-square-o" aria-hidden="true"></i> Add to group',
-        'removeProfile': '<i class="fa fa-pencil-square-o" aria-hidden="true"></i> Remove profile'
+        'emailAction': '<i class="fa fa-envelope" aria-hidden="true"></i> <span class="node-type">Send Email</span>',
+        'createTaskAction': '<i class="fa fa-tasks" aria-hidden="true"></i> <span class="node-type">Create Task</span>',
+        'createDataSeriesAction': '<i class="fa fa-database" aria-hidden="true"></i> <span class="node-type">Create Data Series</span>',
+        'calendarEventAction': '<i class="fa fa-calendar-check-o" aria-hidden="true"></i> <span class="node-type">Calendar Event</span>',
+        'setField': '<i class="fa fa-pencil-square-o" aria-hidden="true"></i> <span class="node-type">Set Field</span>',
+        'addToGroup': '<i class="fa fa-pencil-square-o" aria-hidden="true"></i> <span class="node-type">Add to group</span>',
+        'removeProfile': '<i class="fa fa-pencil-square-o" aria-hidden="true"></i> <span class="node-type">Remove profile</span>'
+
+
+    },
+    GOALS: {
+        'automationGoal': 'Automation Goal',
+        'contactFormGoal': 'Contact Form Goal',
+        'eventGoal': 'Event Goal',
+        'pageViewGoal': 'Page View Goal',
+        'taskCompleteGoal': 'Task Complete Goal',
+        'emailResultGoal': 'Email Result Goal',
+        'timerGoal': 'Timer Goal'
+    },
+    PORTS: {
+        'automationGoal': {
+            nextNodeId: 'When completed',
+            timeoutNode: 'When timeout'
+        },
+        'contactFormGoal': {
+            nextNodeId: 'When completed',
+            timeoutNode: 'When timeout'
+        },
+        'eventGoal': {
+            nextNodeId: 'When completed',
+            timeoutNode: 'When timeout'
+        },
+        'pageViewGoal': {
+            nextNodeId: 'When completed',
+            timeoutNode: 'When timeout'
+        },
+        'taskCompleteGoal': {
+            nextNodeId: 'When completed',
+            timeoutNode: 'When timeout'
+        },
+        'emailResultGoal': {
+            nodeIdDelivered: 'When delivered',
+            nodeIdFailed: 'When failed',
+            nodeIdOpened: 'When opened',
+            nodeIdConverted: 'When converted',
+            timeoutNode: 'When timeout'
+        },
+        'timerGoal': {
+            timeoutNode: 'When timeout'
+        }
     }
 };
 
@@ -23,6 +66,14 @@ function initJourneyBuilder() {
     initNodeActions();
     initSettingPanel();
     initBuilderHeightAdjuster();
+}
+
+function getNodeData(node) {
+    for (var key in node) {
+        if (node.hasOwnProperty(key)) {
+            return [key, node[key]];
+        }
+    }
 }
 
 function reloadFunnelJson() {
@@ -39,7 +90,7 @@ function parseFunnel() {
     flog('parseFunnel');
 
     try {
-        JBApp.funnel = $.parseJSON($("#funnelJson").text());
+        JBApp.funnel = $.parseJSON($('#funnelJson').text());
     } catch (e) {
         flog('no funnel found');
         JBApp.funnel = {
@@ -50,14 +101,14 @@ function parseFunnel() {
 
 jsPlumb.ready(function () {
     parseFunnel();
-    JBApp.availableTriggers = $.parseJSON($("#triggers").text());
+    JBApp.availableTriggers = $.parseJSON($('#triggers').text());
     
     // setup some defaults for jsPlumb.
     var instance = jsPlumb.getInstance({
-        Endpoint: ["Dot", {
+        Endpoint: ['Dot', {
             radius: 2
         }],
-        Connector: ["Flowchart", {
+        Connector: ['Flowchart', {
             cornerRadius: 5,
             gap: 1,
             stub: 15,
@@ -65,33 +116,33 @@ jsPlumb.ready(function () {
             midpoint: 1
         }],
         HoverPaintStyle: {
-            strokeStyle: "#1e8151",
+            strokeStyle: '#1e8151',
             lineWidth: 2
         },
         ConnectionOverlays: [
-            ["Arrow", {
+            ['Arrow', {
                 location: 1,
-                id: "arrow",
+                id: 'arrow',
                 length: 10,
                 width: 10,
                 foldback: 0.5
             }],
-            ["Label", {
-                label: "",
-                id: "label",
-                cssClass: "aLabel"
+            ['Label', {
+                label: '',
+                id: 'label',
+                cssClass: 'aLabel'
             }],
-            ["Custom", {
+            ['Custom', {
                 create: function (component) {
                     return $('<div><a href="#" title="Click to delete connection" class="buttonX"><i class="fa fa-times-circle"></i></a></div>');
                 },
                 events: {
-                    click: function (labelOverlay, originalEvent) {
-                        flog("click on label overlay", labelOverlay, labelOverlay.component);
-                        originalEvent.preventDefault();
+                    click: function (labelOverlay, e) {
+                        flog('click on label overlay', labelOverlay, labelOverlay.component);
+                        e.preventDefault();
                         labelOverlay.component.setParameter('clickedButtonX', true);
-                        var c = confirm('Are you sure you want to delete this connection?');
-                        if (c) {
+
+                        if (confirm('Are you sure you want to delete this connection?')) {
                             deleteConnection(labelOverlay.component);
                             instance.detach(labelOverlay.component);
                             saveFunnel('Connection is deleted!');
@@ -101,25 +152,52 @@ jsPlumb.ready(function () {
                     }
                 },
                 location: 0.7,
-                id: "buttonX",
+                id: 'buttonX',
                 visible: false
             }]
         ],
-        Container: "paper"
+        Container: 'paper'
     });
     
-    instance.registerConnectionType("basic", {anchors: ["RightMiddle", ["LeftMiddle", "TopCenter", "BottomCenter"]], connector: "StateMachine"});
-    instance.registerConnectionType("transition", {anchors: ["RightMiddle", ["LeftMiddle", "TopCenter", "BottomCenter"]], connector: "StateMachine"});
-    instance.registerConnectionType("decisionDefault", {anchors: [[1, 0.88, 1, 0], ["LeftMiddle", "TopCenter", "BottomCenter"]], connector: "StateMachine"});
-    instance.registerConnectionType("decisionChoices", {anchors: ["RightMiddle", ["LeftMiddle", "TopCenter", "BottomCenter"]], connector: "StateMachine"});
-    instance.registerConnectionType("timeout", {anchors: [[1, 0.88, 1, 0], ["LeftMiddle", "TopCenter", "BottomCenter"]], connector: "StateMachine"});
+    instance.registerConnectionType('basic', {
+        anchors: [[1, 0.775, 1, 0], ['LeftMiddle', 'TopCenter', 'BottomCenter']],
+        connector: 'StateMachine'
+    });
+    instance.registerConnectionType('nodeIdDelivered', {
+        anchors: [[1, 0.775, 1, 0], ['LeftMiddle', 'TopCenter', 'BottomCenter']],
+        connector: 'StateMachine'
+    });
+    instance.registerConnectionType('nodeIdFailed', {
+        anchors: [[1, 0.63, 1, 0], ['LeftMiddle', 'TopCenter', 'BottomCenter']],
+        connector: 'StateMachine'
+    });
+    instance.registerConnectionType('nodeIdOpened', {
+        anchors: [[1, 0.475, 1, 0], ['LeftMiddle', 'TopCenter', 'BottomCenter']],
+        connector: 'StateMachine'
+    });
+    instance.registerConnectionType('nodeIdConverted', {
+        anchors: [[1, 0.325, 1, 0], ['LeftMiddle', 'TopCenter', 'BottomCenter']],
+        connector: 'StateMachine'
+    });
+    instance.registerConnectionType('decisionChoices', {
+        anchors: [[1, 0.775, 1, 0], ['LeftMiddle', 'TopCenter', 'BottomCenter']],
+        connector: 'StateMachine'
+    });
+    instance.registerConnectionType('decisionDefault', {
+        anchors: [[1, 0.925, 1, 0], ['LeftMiddle', 'TopCenter', 'BottomCenter']],
+        connector: 'StateMachine'
+    });
+    instance.registerConnectionType('timeout', {
+        anchors: [[1, 0.925, 1, 0], ['LeftMiddle', 'TopCenter', 'BottomCenter']],
+        connector: 'StateMachine'
+    });
     
     window.jsp = instance;
     
     // bind a click listener to each connection; the connection is deleted. you could of course
-    // just do this: jsPlumb.bind("click", jsPlumb.detach), but I wanted to make it clear what was
+    // just do this: jsPlumb.bind('click', jsPlumb.detach), but I wanted to make it clear what was
     // happening.
-    instance.bind("click", function (c) {
+    instance.bind('click', function (c) {
         if (c) {
             var clickedButtonXCancelled = c.getParameter('clickedButtonXCancelled');
             if (clickedButtonXCancelled) {
@@ -127,7 +205,7 @@ jsPlumb.ready(function () {
                 return false;
             }
         }
-        
+
         var sourceId = c.sourceId;
         var targetId = c.targetId;
 
@@ -136,45 +214,27 @@ jsPlumb.ready(function () {
         if (c && sourceId && targetId) {
             flog('edit connection ', c);
             var nodes = JBApp.funnel.nodes;
-            
+
             var filteredGoal = nodes.filter(function (item) {
-                return item.hasOwnProperty('goal') && item['goal'].nodeId === sourceId;
+                var type = getNodeData(item)[0];
+                return type.indexOf('Goal') !== -1 && item[type].nodeId === sourceId;
             });
-            
-            var filteredBegin = nodes.filter(function (item) {
-                return item.hasOwnProperty('begin') && item['begin'].nodeId === sourceId;
-            });
-            flog('filteredBegin', filteredBegin);
-            
+
             var filteredDecision = nodes.filter(function (item) {
                 return item.hasOwnProperty('decision') && item['decision'].nodeId === sourceId;
             });
             flog('filteredDecision', filteredDecision);
-            
+
             var filteredTimeout = filteredGoal.filter(function (item) {
                 return item['goal'].timeoutNode === targetId;
             });
             flog('filteredDecision', filteredDecision);
-            
+
             if (filteredGoal.length > 0) {
                 var node = filteredGoal[0]['goal'];
                 if (filteredTimeout.length > 0) {
                     // timeout node
                     showTimeoutModal(node, sourceId, targetId);
-                } else {
-                    if (node.hasOwnProperty('transitions') && node.transitions.length) {
-                        var trans = node.transitions.filter(function (item) {
-                            return item.nextNodeId === targetId;
-                        });
-                        if (trans.length) {
-                            showTransitionForm(trans[0], sourceId, targetId);
-                        }
-                    }
-                }
-            } else if (filteredBegin.length > 0) {
-                var node = filteredBegin[0]['begin'];
-                if (node.transition) {
-                    showTransitionForm(node.transition, sourceId, targetId);
                 }
             } else if (filteredDecision.length > 0) {
                 var node = filteredDecision[0]['decision'];
@@ -188,15 +248,15 @@ jsPlumb.ready(function () {
         }
     });
     
-    instance.bind("mouseover", function (connection, originalEvent) {
-        if (connection.getOverlay("buttonX")) {
-            connection.getOverlay("buttonX").show();
+    instance.bind('mouseover', function (connection, originalEvent) {
+        if (connection.getOverlay('buttonX')) {
+            connection.getOverlay('buttonX').show();
         }
     });
     
-    instance.bind("mouseout", function (connection, originalEvent) {
-        if (connection.getOverlay("buttonX")) {
-            connection.getOverlay("buttonX").hide();
+    instance.bind('mouseout', function (connection, originalEvent) {
+        if (connection.getOverlay('buttonX')) {
+            connection.getOverlay('buttonX').hide();
         }
     });
     
@@ -204,30 +264,93 @@ jsPlumb.ready(function () {
     // just the new connection - see the documentation for a full list of what is included in 'info'.
     // this listener sets the connection's internal
     // id as the label overlay's text.
-    instance.bind("connection", function (info) {
+    instance.bind('connection', function (info) {
         // Validate connection, we just allow only one connection between 2 endpoint within a direction
         var conn = info.connection;
-        var arr = instance.select({
-            source: conn.sourceId,
-            target: conn.targetId
-        });
-        if (arr.length > 1) {
-            instance.detach(conn);
-            return;
-        }
-        
-        var label = 'then';
-        if (conn.hasType('timeout')) {
+        var label = '';
+        var currentType = '';
+        var connectionName = '';
+        var nextNodeIdPropName = 'nextNodeId';
+
+        if (conn.hasType('basic')) {
+            label = 'then';
+            currentType = 'basic';
+            connectionName = 'Then';
+
+        } else if (conn.hasType('timeout')) {
             label = 'timeout';
+            currentType = 'timeout';
+            connectionName = 'Timeout';
+            nextNodeIdPropName = 'timeoutNode';
+
         } else if (conn.hasType('decisionDefault')) {
             label = 'default';
+            currentType = 'decisionDefault';
+            connectionName = 'Decision Default';
+
         } else if (conn.hasType('decisionChoices')) {
             label = 'choice';
-        } else if (conn.hasType('transition')) {
-            label = 'transition';
+
+        } else if (conn.hasType('nodeIdDelivered')) {
+            label = 'delivered';
+            currentType = 'nodeIdDelivered';
+            connectionName = 'Email Delivered';
+            nextNodeIdPropName = 'nodeIdDelivered';
+
+        } else if (conn.hasType('nodeIdFailed')) {
+            label = 'failed';
+            currentType = 'nodeIdFailed';
+            connectionName = 'Email Failed';
+            nextNodeIdPropName = 'nodeIdFailed';
+
+        } else if (conn.hasType('nodeIdOpened')) {
+            label = 'opened';
+            currentType = 'nodeIdOpened';
+            connectionName = 'Email Opened';
+            nextNodeIdPropName = 'nodeIdOpened';
+
+        } else if (conn.hasType('nodeIdConverted')) {
+            label = 'converted';
+            currentType = 'nodeIdConverted';
+            connectionName = 'Email Converted';
+            nextNodeIdPropName = 'nodeIdConverted';
         }
-        
-        conn.getOverlay("label").setLabel(label);
+
+        if (currentType === 'decisionDefault') {
+            var arr = instance.select({
+                source: conn.sourceId,
+                target: conn.targetId
+            });
+
+            if (arr.length > 1) {
+                Msg.warning('Connection between these nodes exists');
+                instance.detach(conn);
+                return;
+            }
+        }
+
+        if (currentType) {
+            var existingConnections = 0;
+            instance.select({
+                source: conn.sourceId
+            }).each(function (item) {
+                if (item.endpoints.length !== 0) {
+                    if (item.endpoints[0].connectionType === currentType && item.endpoints[0].connections && item.endpoints[0].connections.length !== 0) {
+                        existingConnections++;
+                    }
+                    return;
+                }
+            });
+
+            if (existingConnections > 1) {
+                Msg.warning(connectionName + ' connection exists. Please delete it and add new one');
+                instance.detach(conn);
+                return;
+            }
+        }
+
+        // Set label
+        conn.getOverlay('label').setLabel(label);
         
         if (JBApp.initialized) {
             flog('new connection was made', info.connection);
@@ -236,20 +359,7 @@ jsPlumb.ready(function () {
                 var node = nodes[i];
                 for (var key in node) {
                     if (node[key].nodeId === conn.sourceId) {
-                        if (node[key].hasOwnProperty('transition')) {
-                            flog('started from a begin node');
-                            node[key].transition.nextNodeId = conn.targetId;
-                        } else if (node[key].hasOwnProperty('transitions')) {
-                            flog('started from a goal node');
-                            if (info.connection.hasType('timeout')) {
-                                node[key].timeoutNode = conn.targetId;
-                            } else {
-                                if (!node[key].transitions) {
-                                    node[key].transitions = [];
-                                }
-                                node[key].transitions.push({nextNodeId: conn.targetId});
-                            }
-                        } else if (node[key].hasOwnProperty('choices')) {
+                        if (node[key].hasOwnProperty('choices')) {
                             flog('started from a decision node');
                             if (conn.hasType('decisionDefault')) {
                                 node[key].nextNodeId = conn.targetId;
@@ -261,8 +371,7 @@ jsPlumb.ready(function () {
                                 node[key].choices[conn.targetId] = {constant: {}};
                             }
                         } else {
-                            flog('started from an action node');
-                            node[key].nextNodeId = conn.targetId;
+                            node[key][nextNodeIdPropName] = conn.targetId;
                         }
                         break;
                     }
@@ -285,108 +394,147 @@ jsPlumb.ready(function () {
             grid: [10, 10]
         });
         
-        if (type === 'goal') {
+        if (type.indexOf('Goal') !== -1) {
             instance.makeSource(el, {
-                filter: ".ep-timeout",
-                connectorStyle: {strokeStyle: "#e5910f", lineWidth: 2, outlineColor: "transparent", outlineWidth: 4},
-                connectionType: "timeout",
+                filter: '.ep-timeout',
+                connectorStyle: {strokeStyle: '#e5910f', lineWidth: 2, outlineColor: 'transparent', outlineWidth: 4},
+                connectionType: 'timeout',
                 extract: {
-                    "action": "timeout-action"
-                },
-                maxConnections: 1,
-                onMaxConnections: function (info, e) {
-                    Msg.warning("Timeout connection exists. Please delete it and add new one");
-                    e.preventDefault();
-                    e.stopPropagation();
-                }
-            });
-            
-            instance.makeSource(el, {
-                filter: ".ep-transition",
-                connectorStyle: {strokeStyle: "#00f", lineWidth: 2, outlineColor: "transparent", outlineWidth: 4},
-                connectionType: "transition",
-                extract: {
-                    "action": "transition-action"
+                    'action': 'timeout-action'
                 },
                 maxConnections: -1
             });
+
+            if (type === 'emailResultGoal') {
+                instance.makeSource(el, {
+                    filter: '.ep-basic[data-name=nodeIdDelivered]',
+                    connectorStyle: {strokeStyle: '#e50051', lineWidth: 2, outlineColor: 'transparent', outlineWidth: 4},
+                    connectionType: 'nodeIdDelivered',
+                    extract: {
+                        'action': 'basic-action'
+                    },
+                    maxConnections: -1
+                });
+
+                instance.makeSource(el, {
+                    filter: '.ep-basic[data-name=nodeIdFailed]',
+                    connectorStyle: {strokeStyle: '#e50051', lineWidth: 2, outlineColor: 'transparent', outlineWidth: 4},
+                    connectionType: 'nodeIdFailed',
+                    extract: {
+                        'action': 'basic-action'
+                    },
+                    maxConnections: -1
+                });
+
+                instance.makeSource(el, {
+                    filter: '.ep-basic[data-name=nodeIdOpened]',
+                    connectorStyle: {strokeStyle: '#e50051', lineWidth: 2, outlineColor: 'transparent', outlineWidth: 4},
+                    connectionType: 'nodeIdOpened',
+                    extract: {
+                        'action': 'basic-action'
+                    },
+                    maxConnections: -1
+                });
+
+                instance.makeSource(el, {
+                    filter: '.ep-basic[data-name=nodeIdConverted]',
+                    connectorStyle: {strokeStyle: '#e50051', lineWidth: 2, outlineColor: 'transparent', outlineWidth: 4},
+                    connectionType: 'nodeIdConverted',
+                    extract: {
+                        'action': 'basic-action'
+                    },
+                    maxConnections: -1
+                });
+            } else {
+                instance.makeSource(el, {
+                    filter: '.ep-basic',
+                    connectorStyle: {strokeStyle: '#e50051', lineWidth: 2, outlineColor: 'transparent', outlineWidth: 4},
+                    connectionType: 'basic',
+                    extract: {
+                        'action': 'basic-action'
+                    },
+                    maxConnections: -1
+                });
+            }
         } else if (type === 'decision') {
             instance.makeSource(el, {
-                filter: ".ep-red",
-                connectorStyle: {strokeStyle: "#f00", lineWidth: 2, outlineColor: "transparent", outlineWidth: 4},
-                connectionType: "decisionDefault",
+                filter: '.ep-red',
+                connectorStyle: {strokeStyle: '#f00', lineWidth: 2, outlineColor: 'transparent', outlineWidth: 4},
+                connectionType: 'decisionDefault',
                 extract: {
-                    "action": "decisionDefault-action"
+                    'action': 'decisionDefault-action'
                 },
-                maxConnections: 1,
-                onMaxConnections: function (info, e) {
-                    Msg.warning("Default action node exists. Please delete it and add new one");
-                    e.preventDefault();
-                    e.stopPropagation();
-                }
+                maxConnections: -1
             });
             
             instance.makeSource(el, {
-                filter: ".ep-green",
-                connectorStyle: {strokeStyle: "#008000", lineWidth: 2, outlineColor: "transparent", outlineWidth: 4},
-                connectionType: "decisionChoices",
+                filter: '.ep-green',
+                connectorStyle: {strokeStyle: '#008000', lineWidth: 2, outlineColor: 'transparent', outlineWidth: 4},
+                connectionType: 'decisionChoices',
                 extract: {
-                    "action": "decisionChoices-action"
+                    'action': 'decisionChoices-action'
                 },
                 maxConnections: -1
             });
         } else {
             instance.makeSource(el, {
-                filter: ".ep-basic",
-                connectorStyle: {strokeStyle: "#e50051", lineWidth: 2, outlineColor: "transparent", outlineWidth: 4},
-                connectionType: "basic",
+                filter: '.ep-basic',
+                connectorStyle: {strokeStyle: '#e50051', lineWidth: 2, outlineColor: 'transparent', outlineWidth: 4},
+                connectionType: 'basic',
                 extract: {
-                    "action": "basic-action"
+                    'action': 'basic-action'
                 },
-                maxConnections: 1,
-                onMaxConnections: function (info, e) {
-                    Msg.warning("Maximum connections (" + info.maxConnections + ") reached. Please delete current connection and make a new one");
-                    e.preventDefault();
-                    e.stopPropagation();
-                }
+                maxConnections: -1
             });
         }
-        
-        if (type !== 'begin') {
-            instance.makeTarget(el, {
-                dropOptions: {hoverClass: "dragHover"},
-                allowLoopback: false
-            });
-        }
+
+        instance.makeTarget(el, {
+            dropOptions: {
+                hoverClass: 'dragHover'
+            },
+            allowLoopback: false
+        });
     }
     
     function newNode(node, type, action) {
         flog('newNode', node, type, action);
 
-        var d = document.createElement("div");
-        d.className = "w " + type;
+        var d = document.createElement('div');
+        d.className = 'w ' + type;
         d.id = node.nodeId;
         d.setAttribute('data-type', type);
 
         var nodeName = node.title ? '<span class="node-title-inner">' + node.title + '</span>' : '<span class="node-title-inner text-muted">Enter title</span>';
         var nodeHtml = '';
 
-        if (type === 'goal') {
+        if (type.indexOf('Goal') !== -1) {
+            var portsString = '';
+            var portsData = JBApp.PORTS[type];
+            for (var portName in portsData) {
+                var portData = portsData[portName];
+
+                if (portName === 'timeoutNode') {
+                    portsString += '<span title="' + portData + '" class="ep ep-timeout" data-name="' + portName + '"></span>';
+                } else {
+                    portsString += '<span title="' + portData + '" class="ep ep-basic" data-name="' + portName + '"></span>';
+                }
+            }
+
             nodeHtml += '<div class="title">';
-            nodeHtml += '   <i class="fa fa-trophy" aria-hidden="true"></i> Goal';
+            nodeHtml += '   <i class="fa fa-trophy" aria-hidden="true"></i>';
+            nodeHtml += '   <span class="node-type">' + JBApp.GOALS[type] + '</span>';
             nodeHtml += '   <span class="node-buttons clearfix">';
             nodeHtml += '       <span class="btnNodeDetails" title="Edit details"><i class="fa fa-fw fa-cog"></i></span>';
             nodeHtml += '       <span class="btnNodeDelete" title="Delete this node"><i class="fa fa-fw fa-trash"></i></span>';
             nodeHtml += '   </span>';
             nodeHtml += '</div>';
             nodeHtml += '<div class="inner">';
-            nodeHtml += '   <span class="nodeTitle btnNodeEdit">' + nodeName + ' <i class="fa fa-pencil"></i></span>';
-            nodeHtml += '   <span title="Connect to transition node" class="ep ep-transition"></span>';
-            nodeHtml += '   <span title="Connect to timeout node" class="ep ep-timeout"></span>';
+            nodeHtml += '   <span class="nodeTitle btnNodeEdit">' + nodeName + ' <i class="fa fa-pencil"></i></span>' + portsString;
             nodeHtml += '</div>';
         } else if (type === 'decision') {
             nodeHtml += '<div class="title">';
-            nodeHtml += '   <i class="fa fa-question-circle" aria-hidden="true"></i> Decision';
+            nodeHtml += '   <i class="fa fa-question-circle" aria-hidden="true"></i>';
+            nodeHtml += '   <span class="node-type">Decision</span>';
             nodeHtml += '   <span class="node-buttons clearfix">';
             nodeHtml += '       <span class="btnNodeDetails" title="Edit details"><i class="fa fa-fw fa-cog"></i></span>';
             nodeHtml += '       <span class="btnNodeDelete" title="Delete this node"><i class="fa fa-fw fa-trash"></i></span>';
@@ -397,21 +545,8 @@ jsPlumb.ready(function () {
             nodeHtml += '   <span title="Make new choice" class="ep ep-green"></span> ';
             nodeHtml += '   <span title="Default next action" class="ep ep-red"></span>';
             nodeHtml += '</div>'
-        } else if (type == 'begin') {
-            nodeHtml += '<div class="title">';
-            nodeHtml += '   <i class="fa fa-play" aria-hidden="true"></i> Begin';
-            nodeHtml += '   <span class="node-buttons clearfix">';
-            nodeHtml += '       <span class="btnNodeDetails" title="Edit details"><i class="fa fa-fw fa-cog"></i></span>';
-            nodeHtml += '       <span class="btnNodeDelete" title="Delete this node"><i class="fa fa-fw fa-trash"></i></span>';
-            nodeHtml += '   </span>';
-            nodeHtml += '</div>';
-            nodeHtml += '<div class="inner">';
-            nodeHtml += '   <span class="nodeTitle btnNodeEdit">' + nodeName + ' <i class="fa fa-pencil"></i></span>';
-            nodeHtml += '   <span title="Connect to other node" class="ep ep-basic"></span>';
-            nodeHtml += '</div>';
         } else {
-            var actionName = JBApp.ACTIONS[action];
-            nodeHtml += '<div class="title">' + actionName;
+            nodeHtml += '<div class="title">' + JBApp.ACTIONS[action];
             nodeHtml += '   <span class="node-buttons clearfix">';
             nodeHtml += '       <span class="btnNodeDetails" title="Edit details"><i class="fa fa-fw fa-cog"></i></span>';
             nodeHtml += '       <span class="btnNodeDelete" title="Delete this node"><i class="fa fa-fw fa-trash"></i></span>';
@@ -419,13 +554,13 @@ jsPlumb.ready(function () {
             nodeHtml += '</div>';
             nodeHtml += '<div class="inner">';
             nodeHtml += '   <span class="nodeTitle btnNodeEdit">' + nodeName + ' <i class="fa fa-pencil"></i></span>';
-            nodeHtml += '   <span title="Connect to other node" class="ep ep-basic"></span>';
+            nodeHtml += '   <span title="When completed" class="ep ep-basic"></span>';
             nodeHtml += '</div>';
         }
 
         d.innerHTML = nodeHtml;
-        d.style.left = node.x + "px";
-        d.style.top = node.y + "px";
+        d.style.left = node.x + 'px';
+        d.style.top = node.y + 'px';
         instance.getContainer().appendChild(d);
         initNode(d, type);
         return d;
@@ -438,14 +573,12 @@ jsPlumb.ready(function () {
         flog('initConnection', node);
 
         var nextNodeId;
-        var nextNodeIds = [];
         if (node.hasOwnProperty('choices')) {
-            // a decision node
             if (node.nextNodeId) {
                 instance.connect({
                     source: node.nodeId,
                     target: node.nextNodeId,
-                    type: "decisionDefault"
+                    type: 'decisionDefault'
                 });
             }
             
@@ -454,49 +587,54 @@ jsPlumb.ready(function () {
                     instance.connect({
                         source: node.nodeId,
                         target: key,
-                        type: "decisionChoices"
+                        type: 'decisionChoices'
                     });
                 }
             }
         } else {
             if (node.nextNodeId) {
-                // action node
-                nextNodeId = node.nextNodeId;
-            } else if (node.transition && node.transition.nextNodeId) {
-                // begin node
-                nextNodeId = node.transition.nextNodeId;
-            } else if (node.transitions && node.transitions.length) {
-                // goal node
-                for (var i = 0; i < node.transitions.length; i++) {
-                    nextNodeIds.push(node.transitions[i].nextNodeId);
-                }
-            }
-            
-            if (node.hasOwnProperty('timeoutNode')) {
-                // goal node with timeout
-                var timeoutNode = node.timeoutNode;
-                if (timeoutNode) {
-                    instance.connect({
-                        source: node.nodeId,
-                        target: timeoutNode,
-                        type: "timeout"
-                    });
-                }
-            }
-            
-            if (nextNodeIds.length) {
-                for (var i = 0; i < nextNodeIds.length; i++) {
-                    instance.connect({
-                        source: node.nodeId,
-                        target: nextNodeIds[i],
-                        type: "transition"
-                    });
-                }
-            } else if (nextNodeId) {
                 instance.connect({
                     source: node.nodeId,
-                    target: nextNodeId,
-                    type: "basic"
+                    target: node.nextNodeId,
+                    type: 'basic'
+                });
+            }
+
+            if (node.timeoutNode) {
+                instance.connect({
+                    source: node.nodeId,
+                    target: node.timeoutNode,
+                    type: 'timeout'
+                });
+            }
+
+            // Email Result Goal
+            if (node.nodeIdDelivered) {
+                instance.connect({
+                    source: node.nodeId,
+                    target: node.nodeIdDelivered,
+                    type: 'nodeIdDelivered'
+                });
+            }
+            if (node.nodeIdFailed) {
+                instance.connect({
+                    source: node.nodeId,
+                    target: node.nodeIdFailed,
+                    type: 'nodeIdFailed'
+                });
+            }
+            if (node.nodeIdOpened) {
+                instance.connect({
+                    source: node.nodeId,
+                    target: node.nodeIdOpened,
+                    type: 'nodeIdOpened'
+                });
+            }
+            if (node.nodeIdConverted) {
+                instance.connect({
+                    source: node.nodeId,
+                    target: node.nodeIdConverted,
+                    type: 'nodeIdConverted'
                 });
             }
         }
@@ -506,7 +644,7 @@ jsPlumb.ready(function () {
     instance.batch(function () {
         if (JBApp.funnel && JBApp.funnel.nodes && JBApp.funnel.nodes.length) {
             var journeyBuilder = $('#journeyBuilder');
-            $('a[href="#journeyBuilder"]').on('click', function () {
+            $('a[href=#journeyBuilder]').on('click', function () {
                 if (!journeyBuilder.hasClass('initialized')) {
                     JBApp.initialized = false;
                     for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
@@ -516,7 +654,7 @@ jsPlumb.ready(function () {
                             if (node.hasOwnProperty(key)) {
                                 var nodeData = node[key];
                                 var type = key;
-                                if (['goal', 'decision', 'begin'].indexOf(key) === -1) {
+                                if (key !== 'decision' && key.indexOf('Goal') === -1) {
                                     type = 'action';
                                 }
 
@@ -543,7 +681,7 @@ jsPlumb.ready(function () {
         }
     });
     
-    jsPlumb.fire("jsPlumbDemoLoaded", instance);
+    jsPlumb.fire('jsPlumbDemoLoaded', instance);
     JBApp.jsPlumpInstance = instance;
     JBApp.initialized = true;
     flog('JBApp init done');
@@ -567,7 +705,6 @@ function initSettingPanel() {
     });
 
     initTitleForm();
-    initTransitionForm();
     initChoiceForm();
     initTimeoutForm();
 }
@@ -693,13 +830,6 @@ function initSideBar() {
             if (type === 'action') {
                 action = ui.draggable.attr('data-action');
                 objToPush[action] = node; // default task name
-            } else if (type === 'goal') {
-                node.transitions = null;
-            } else if (type === 'begin') {
-                node.transition = {
-                    nextNodeId: '',
-                    trigger: null
-                };
             }
             
             if (type !== 'action') {
@@ -710,54 +840,6 @@ function initSideBar() {
             saveFunnel('New node is added!');
         }
     });
-}
-
-function initTransitionForm() {
-    flog('initTransitionForm');
-
-    var form = $('form.panel-transition');
-    form.on('click', '.btnAddTrigger', function (e) {
-        e.preventDefault();
-        var clone = form.find('.placeholderform').clone();
-        clone.removeClass('hide placeholderform');
-        form.find('.transitionItems').append(clone);
-        $(this).addClass('hide');
-    });
-    
-    form.on('change', '[name=triggerType]', function (e) {
-        $(this).siblings('.' + this.value).removeClass('hide').siblings('.triggerDiv').addClass('hide');
-    });
-    form.on('submit', function (e) {
-        e.preventDefault();
-        
-        doSaveTrigger(form);
-    });
-}
-
-function showTransitionForm(tran, sourceId, targetId) {
-    flog('showTransitionForm', tran, sourceId, targetId);
-
-    var form = $('form.panel-transition');
-    form.find('[name=sourceId]').val(sourceId);
-    form.find('[name=targetId]').val(targetId);
-    form.find('.transitionItems').html('');
-    var trigger = tran.trigger;
-    if (!trigger) {
-        form.find('.btnAddTrigger').removeClass('hide');
-    }
-    for (var key in trigger) {
-        var t = trigger[key];
-        var clone = form.find('.placeholderform').clone();
-        clone.find('[name=triggerType]').val(key);
-        clone.find('.' + key).removeClass('hide').siblings('.triggerDiv').addClass('hide');
-        for (var k in t) {
-            clone.find('[name=' + k + ']').val(t[k]);
-        }
-        clone.removeClass('hide placeholderform').siblings('.triggerDiv').addClass('hide');
-        form.find('.transitionItems').append(clone)
-    }
-
-    showSettingPanel('transition');
 }
 
 function showChoiceForm(choice, sourceId, targetId) {
@@ -845,9 +927,9 @@ function doSaveChoice(form) {
 
                     if (targetId in choices) {
                         var constant = choices[targetId].constant || {
-                            value: '',
-                            label: 'empty'
-                        };
+                                value: '',
+                                label: 'empty'
+                            };
                         constant.value = constValue;
 
                         choices[targetId].constant = constant;
@@ -861,48 +943,6 @@ function doSaveChoice(form) {
     }
 
     saveFunnel('Decision choices updated', function () {
-        hideSettingPanel();
-    });
-}
-
-function doSaveTrigger(form) {
-    flog('doSaveTrigger', form);
-
-    var trigger = {};
-    form.find('.transitionItems .form-group').each(function () {
-        var type = $(this).find('[name=triggerType]').val();
-        if (type) {
-            trigger[type] = {};
-            $(this).find('input:visible').each(function () {
-                trigger[type][$(this).attr('name')] = $(this).val();
-            });
-        }
-    });
-    
-    var sourceId = form.find('[name=sourceId]').val();
-    var targetId = form.find('[name=targetId]').val();
-    for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
-        var node = JBApp.funnel.nodes[i];
-        for (var key in node) {
-            if (node[key].nodeId === sourceId) {
-                
-                if (node[key].hasOwnProperty('transitions')) {
-                    var transitions = node[key].transitions;
-                    for (var j = 0; j < transitions.length; j++) {
-                        if (transitions[j].nextNodeId === targetId) {
-                            transitions[j].trigger = trigger;
-                            break;
-                        }
-                    }
-                } else if (node[key].hasOwnProperty('transition')) {
-                    var transition = node[key].transition;
-                    transition.trigger = trigger;
-                }
-            }
-        }
-    }
-
-    saveFunnel('Transition trigger updated', function () {
         hideSettingPanel();
     });
 }
@@ -947,12 +987,12 @@ function initNodeActions() {
         e.preventDefault();
 
         var domElement = $(this).closest('.w');
-        var id = domElement.attr("id");
+        var id = domElement.attr('id');
         var href = window.location.pathname;
         if (!href.endsWith('/')) {
             href += '/';
         }
-        href = href + id + "?mode=settings";
+        href = href + id + '?mode=settings';
 
         formDetails.load(href + ' #frmDetails > *', function () {
             formDetails.attr('action', href);
@@ -966,7 +1006,7 @@ function initNodeActions() {
 
         var domElement = $(this).closest('.w');
         if (confirm('Are you sure you want to delete this node?')) {
-            var id = domElement.attr("id");
+            var id = domElement.attr('id');
             deleteNode(id);
             JBApp.jsPlumpInstance.remove(id);
             saveFunnel('Node is deleted!');
@@ -1000,18 +1040,22 @@ function deleteConnection(connection) {
         var node = JBApp.funnel.nodes[i];
         for (var key in node) {
             if (node[key].nodeId === connection.sourceId) {
-                if (key === 'begin') {
-                    node[key].transition.nextNodeId = '';
-                } else if (key === 'goal') {
+                if (key.indexOf('Goal') !== -1) {
                     if (connection.hasType('timeout')) {
                         node[key].timeoutNode = '';
                     } else {
-                        node[key].transitions.forEach(function (item, index) {
-                            if (item.nextNodeId === connection.targetId) {
-                                node[key].transitions.splice(index, 1);
-                                return;
-                            }
-                        });
+                        if (connection.hasType('nodeIdDelivered')) {
+                            node[key].nodeIdDelivered = '';
+                        }
+                        if (connection.hasType('nodeIdFailed')) {
+                            node[key].nodeIdFailed = '';
+                        }
+                        if (connection.hasType('nodeIdOpened')) {
+                            node[key].nodeIdOpened = '';
+                        }
+                        if (connection.hasType('nodeIdConverted')) {
+                            node[key].nodeIdConverted = '';
+                        }
                     }
                 } else if (key === 'decision') {
                     if (connection.hasType('decisionDefault')) {

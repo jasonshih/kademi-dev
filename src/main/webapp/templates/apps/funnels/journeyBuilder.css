@@ -122,8 +122,8 @@
 }
 
 .w {
-    width: 190px;
-    height: 90px;
+    width: 200px;
+    height: 120px;
     text-align: center;
     position: absolute;
     z-index: 4;
@@ -151,6 +151,7 @@
 
 .w.action .inner {
     text-align: center;
+    padding: 0 20px;
 }
 
 .w .title .node-buttons {
@@ -182,10 +183,10 @@
 
 .ep, .ep-basic {
     position: absolute;
-    top: 37px;
-    right: 3px;
-    width: 1em;
-    height: 1em;
+    bottom: 21px;
+    right: -5px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
     background-color: #e50051;
     cursor: pointer;
@@ -195,11 +196,21 @@
     transition: box-shadow 0.25s ease-in;
 }
 
+.ep-basic + .ep-basic {
+    bottom: 39px;
+}
+
+.ep-basic + .ep-basic  + .ep-basic {
+    bottom: 57px;
+}
+
+.ep-basic + .ep-basic + .ep-basic + .ep-basic {
+    bottom: 75px;
+}
+
 .ep.ep-timeout {
     bottom: 3px;
-    right: 3px;
     top: auto;
-    left: inherit;
     background-color: #e5910f;
 }
 
@@ -207,16 +218,10 @@
     background-color: green;
 }
 
-.ep.ep-transition {
-    background-color: blue;
-}
-
 .ep.ep-red {
-    bottom: 3px;
-    right: 3px;
-    top: auto;
-    left: inherit;
     background-color: red;
+    bottom: 3px;
+    top: auto;
 }
 
 .ep:hover {
