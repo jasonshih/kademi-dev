@@ -20,7 +20,7 @@
             cmd: cmd,
             param: param || {}
         };
-        var pUrl = 'http://jdeere-tracking.kademi.com.au/ktrack.png?data=' + encodeURIComponent(JSON.stringify(d));
+        var pUrl = 'https://$host/ktrack.png?data=' + encodeURIComponent(JSON.stringify(d));
         var img = d.getElementById("ktrack");
         if (img == null) {
             img = document.createElement("img");
