@@ -72,3 +72,22 @@
         </div>
     </div>
 </div>
+
+#macro(genFileIcon $file)
+#set($fIcon = "fa-file")
+
+#if($file.is('audio/'))
+#set($fIcon = "fa-file-audio-o")
+#elseif($file.is('image/'))
+#set($fIcon = "fa-file-image-o")
+#elseif($file.name.endsWith('.xlsx') || $file.name.endsWith('.xls'))
+#set($fIcon = "fa-file-excel-o")
+#elseif($file.name.endsWith('.doc') || $file.name.endsWith('.docx') || $file.name.endsWith('.docm'))
+#set($fIcon = "fa-file-word-o")
+#elseif($file.name.endsWith('.pdf'))
+#set($fIcon = "fa-file-pdf-o")
+#else
+#set($fIcon = "fa-file-o")
+#end
+<span title="$file.contentType"><i class="fa fa-2x $fIcon"></i></span>
+#end
