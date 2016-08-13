@@ -30,14 +30,14 @@
     overflow: auto;
     top: 0;
     left: 0;
-    right: 223px;
+    right: 233px;
 }
 
 #builder .right-panel {
     position: absolute;
     right: 0;
     top: 0;
-    width: 224px;
+    width: 234px;
     z-index: 10;
     border: 1px solid #ddd;
     height: 100%;
@@ -65,8 +65,8 @@
     z-index: 0;
     position: absolute;
     top: 0;
-    right: -224px;
-    width: 222px;
+    right: -234px;
+    width: 232px;
     height: 100%;
     transition: 0.2s all;
 }
