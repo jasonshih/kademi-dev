@@ -133,19 +133,21 @@ jsPlumb.ready(function () {
                 cssClass: 'aLabel'
             }],
             ['Custom', {
-                create: function (component) {
+                create: function () {
                     return $('<div><a href="#" title="Click to delete connection" class="buttonX"><i class="fa fa-times-circle"></i></a></div>');
                 },
                 events: {
                     click: function (labelOverlay, e) {
-                        flog('click on label overlay', labelOverlay, labelOverlay.component);
+                        flog('Click on label overlay', labelOverlay, labelOverlay.component);
+
                         e.preventDefault();
+                        e.stopPropagation();
+                        e.stopImmediatePropagation();
+
                         labelOverlay.component.setParameter('clickedButtonX', true);
 
                         if (confirm('Are you sure you want to delete this connection?')) {
-                            deleteConnection(labelOverlay.component);
-                            instance.detach(labelOverlay.component);
-                            saveFunnel('Connection is deleted!');
+                            labelOverlay.component.setParameter('clickedButtonXCancelled', false);
                         } else {
                             labelOverlay.component.setParameter('clickedButtonXCancelled', true);
                         }
@@ -199,10 +201,15 @@ jsPlumb.ready(function () {
     // happening.
     instance.bind('click', function (c) {
         if (c) {
-            var clickedButtonXCancelled = c.getParameter('clickedButtonXCancelled');
-            if (clickedButtonXCancelled) {
-                c.setParameter('clickedButtonXCancelled', false);
-                return false;
+            if (c.getParameter('clickedButtonX') === true) {
+                var clickedButtonXCancelled = c.getParameter('clickedButtonXCancelled');
+                if (clickedButtonXCancelled === false) {
+                    deleteConnection(c);
+                    instance.detach(c);
+                    saveFunnel('Connection is deleted!');
+
+                    return false;
+                }
             }
         }
 
