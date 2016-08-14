@@ -46,7 +46,7 @@
                                     <div>
                                         $item.itemPage.title
                                         <br/>
-                                        #set( $opts = $item.selectedParameterOptions)
+                                        #set( $opts = $item.itemPage.selectedParameterOptions)
                                         #if( $opts.size() > 0 )
                                             #set ($prodParams = $item.itemPage.productInStore.product.productParameters)
                                             #set ($pCount = 0)
@@ -77,7 +77,7 @@
                                 </div>
                                 <div class="col-sm-2 item-price center-content">
                                     <div>
-                                        <span class="lead">$$formatter.formatCurrency($page.calcSubTotal($item.ItemPage.productSubTotalCost($opts), $item.quantity))</span>
+                                        <span class="lead">$$formatter.formatCurrency($page.calcSubTotal($item.ItemPage.productSubTotalCost, $item.quantity))</span>
                                     </div>
                                 </div>
                                 <div class="col-sm-1 item-action text-right center-content">
