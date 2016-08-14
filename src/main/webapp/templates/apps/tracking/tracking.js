@@ -16,11 +16,11 @@
     }
 
     function send(cmd, param) {
-        var d = {
+        var data = {
             cmd: cmd,
             param: param || {}
         };
-        var pUrl = 'https://$host/ktrack.png?data=' + encodeURIComponent(JSON.stringify(d));
+        var pUrl = 'https://$host/ktrack.png?data=' + encodeURIComponent(JSON.stringify(data));
         var img = d.getElementById("ktrack");
         if (img == null) {
             img = document.createElement("img");
