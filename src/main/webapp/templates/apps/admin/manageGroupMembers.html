@@ -125,6 +125,7 @@
                             <th>Phone</th>
                             <th>Email</th>
                             <th>Password set</th>
+                            <th></th>
                             <th><input type="checkbox" name="toRemoveId" class="users selectAll"/></th>
                         </tr>
                     </thead>
@@ -151,6 +152,11 @@
                                 #if( $pwdDate )
                                 <abbr title="$formatter.formatDateISO8601($pwdDate)" class="info timeago">$!pwdDate</abbr>
                                 #end
+                            </td>
+                            <td>
+                                <a href="/manageUsers/$member.thisUser.id" class="btn btn-info">
+                                    <span class="fa fa-pencil"></span>
+                                </a>
                             </td>
                             <td><input type="checkbox" name="toRemoveId" value="$member.thisUser.id" /></td>
                         </tr>
