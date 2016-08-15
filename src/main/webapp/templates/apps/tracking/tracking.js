@@ -1,6 +1,7 @@
 (function (w, d) {
-    w.$trackingKey = "$trackingId";
+    w.$trackingKey = "$!trackingId";
     d.cookie = "$cookie";
+    d.cookie = "$domainCookie";
     var checkLS = function () {
         var s = "kdm";
         try {
@@ -18,12 +19,14 @@
     function send(cmd, param) {
         var data = {
             cmd: cmd,
-            param: param || {}
+            params: param || {},
+            trackingId: '$!trackingId'
         };
-        var pUrl = 'https://$host/ktrack.png?data=' + encodeURIComponent(JSON.stringify(data));
+        var t = (new Date()).getTime();
+        var pUrl = w.location.protocol + '//$host/ktrack.png?_t=' + t + '&data=' + encodeURIComponent(JSON.stringify(data));
         var img = d.getElementById("ktrack");
         if (img == null) {
-            img = document.createElement("img");
+            img = d.createElement("img");
             img.src = pUrl;
             img.id = 'ktrack';
             d.body.appendChild(img);
