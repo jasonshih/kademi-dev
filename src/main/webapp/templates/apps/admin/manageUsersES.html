@@ -137,30 +137,23 @@
                             <form method="post" action="">
                                 <div class="step-content">
                                     <div class="step-pane active sample-pane alert" data-step="1">
-                                        <h4>Upload CSV File</h4>
+                                        <h4>Upload Users Data</h4>
                                         <div id='btn-upload' class="pull-left"></div>
                                         <div class="clearfix"></div>
                                     </div>
                                     <div class="step-pane sample-pane alert" data-step="2">
 
                                         <input type="hidden" name="fileHash" value=""/>
-
                                         <div class="row">
-                                            <div class="col-sm-4">
-                                                <div class="form-horizontal">
-                                                    <div class="form-group">
-                                                        <label class="control-label col-md-5" for="startRow" style="text-align: right !important;">Start row</label>
-                                                        <div class="controls col-md-7">
-                                                            <input type="text" name="startRow" id="startRow" class="form-control" value=""/>
-                                                        </div>
+                                            <div class="col-sm-12">
+                                                <div class="form-inline text-right">
+                                                    <div class="form-group" style="margin-right: 20px">
+                                                        <label for="startRow" >Start row: </label>
+                                                        <input style="width: 100px" type="number" min="1" name="startRow" id="startRow" class="form-control" value="1"/>
                                                     </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <div class="form-group">
-                                                    <label class="control-label col-md-5" for="defaultGroup" style="text-align: right !important;">Default group</label>
-                                                    <div class="controls col-md-7">
-                                                        <select name="defaultGroup" class="form-control">
+                                                    <div class="form-group" style="margin-right: 20px">
+                                                        <label for="defaultGroup">Default group: </label>
+                                                        <select id="defaultGroup" name="defaultGroup" class="form-control">
                                                             <option value="">[No default group]</option>
                                                             #foreach($group in $rootFolder.groups)
                                                             <option value="$group.name">
@@ -173,24 +166,19 @@
                                                             #end
                                                         </select>
                                                     </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-sm-4">
-                                                <div class="form-horizontal">
                                                     <div class="form-group">
-                                                        <label class="control-label col-md-5" for="removalMode" style="text-align: right">Mode</label>
-                                                        <div class="controls col-md-7">
-                                                            <select name="removalMode" class="form-control">
-                                                                <option value="">Auto</option>
-                                                                <option value="remove">Remove all uploaded</option>
+                                                        <label for="removalMode">Mode: </label>
+                                                        <select id="removalMode" name="removalMode" class="form-control">
+                                                            <option value="">Auto</option>
+                                                            <option value="remove">Remove all uploaded</option>
                                                                 <option value="unsub">Un-subscribe all uploaded</option>
                                                             </select>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div style="text-align: right">
+                                        <br>
+                                            <div class="text-right">
                                                 <i>
                                                     Modes:
                                                     Auto will only remove profiles if you select a removal column. If so it must have a value of unsub or remove, or be left blank to add or update normally.
@@ -198,7 +186,6 @@
                                                     <br/>"Un-subscribe all.." will remove all profiles and create unsubscribe records for them
                                                 </i>
                                             </div>
-                                        </div>
 
                                         <hr/>
 
@@ -230,6 +217,10 @@
                                     </div>
                                     <div class="step-pane sample-pane alert" data-step="4">
                                         <h4>Import running</h4>
+                                        <div class="progress" id="importProgressbar">
+                                            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                            </div>
+                                        </div>
                                         <div class="process-results">
                                             <p>
                                                 <strong>Process Status:</strong>
@@ -372,12 +363,7 @@
                 </table>
                 #end
             </div> <!-- end aggregations -->
-
         </div>
-
-
-
-
 
         <div id="modal-new-user" class="modal modal-lg fade" aria-hidden="true">
             <div class="modal-header">

@@ -3,6 +3,8 @@
  */
 
 var usersImportUrl = '/manageUsers/userFile';
+var importWizardStarted = false;
+var userImportTotalCount = 0;
 function initManageUsersImport() {
     initUploads();
 }
@@ -23,7 +25,11 @@ function initUploads() {
         $('.btn-upload-users-csv').trigger('click');
         $('#myWizard').wizard('selectedItem', {step: 1});
         $('#myWizard').find('form').trigger('reset');
-        form.find("input[name=fileHash]").val('')
+        form.find("input[name=fileHash]").val('');
+        $('#importProgressbar .progress-bar').attr('aria-valuenow', 0).css('width', '0%');
+        userImportTotalCount = 0;
+        var resultStatus = $('#job-status');
+        resultStatus.text('');
     });
 
     $('#myWizard').on('changed.fu.wizard', function (evt, data) {
@@ -54,6 +60,7 @@ function initUploads() {
                     if (resp.status && resp.data) {
                         form.find('[type=submit]').removeClass('hide');
                         form.find(".beforeImportInfo").text('New profiles found: ' + resp.data.newProfilesCount + ', existing profiles found: ' + resp.data.existingProfilesCount);
+                        userImportTotalCount = resp.data.newProfilesCount + resp.data.existingProfilesCount;
                     } else {
                         form.find(".beforeImportInfo").text('Cannot verify data to import');
                     }
@@ -69,9 +76,9 @@ function initUploads() {
         if (data.step === 1 && $('#importerWizard').attr('aria-expanded') == 'true') {
             if (form.find("input[name=fileHash]").val() == "") {
                 if ($('#btn-upload').length) {
-                    alert("Please select a file to upload");
+                    Msg.error("Please select a file to upload");
                 } else {
-                    alert("Sale Group hasn't been set. Please contact administrator for assistant.");
+                    Msg.error("Sale Group hasn't been set. Please contact administrator for assistant.");
                 }
                 evt.preventDefault();
             }
@@ -80,7 +87,7 @@ function initUploads() {
         if (data.step === 2) {
             var startRow = $('#startRow').val();
             if (!startRow) {
-                alert('Please enter start row value');
+                Msg.error('Please enter start row value');
                 $('#startRow').trigger('focus').parents('.form-group').addClass('has-error');
                 evt.preventDefault();
                 return false;
@@ -90,18 +97,55 @@ function initUploads() {
 
             var importerHead = $('#importerHead');
             var selectedCols = [];
-            //var requiredFields = ['email','groupName'];
-            var requiredFields = ['email'];
+            var requiredField = 'groupName';
             importerHead.find('select').each(function () {
-                if (requiredFields.indexOf(this.value) !== -1) {
+                if (this.value) {
                     selectedCols.push(this.value);
                 }
             });
 
-            if (selectedCols.length !== requiredFields.length) {
-                alert('Import data must contain Email and Group column. Please try again!');
+            var defaultGroup = $('#defaultGroup').val();
+            var removalMode = $('#removalMode').val();
+
+            if (!selectedCols.length) {
+                Msg.error('Please select at least 1 destination field to continue.');
                 importerHead.find('select').first().trigger('focus');
                 evt.preventDefault();
+                return false;
+            }
+
+            if (!defaultGroup && selectedCols.indexOf(requiredField) === -1) {
+                if (!removalMode) {
+                    Msg.error('Please select default group or indicate group field in data table');
+                    importerHead.find('select').first().trigger('focus');
+                    evt.preventDefault();
+                    return false;
+                }
+            }
+
+            var uniqueFields = ['email', 'userId', 'phone'];
+            if (removalMode) {
+                // remove/unsubscribe mode enable
+                var canRemove = false;
+                for (var i = 0; i < uniqueFields.length; i++) {
+                    if (selectedCols.indexOf(uniqueFields[i]) !== -1) {
+                        canRemove = true;
+                        break;
+                    }
+                }
+                if (!canRemove) {
+                    Msg.error('Please select either Email, UserId or Phone field to identify the profiles to unsubscribe/remove');
+                    evt.preventDefault();
+                    return false;
+                }
+            }
+        }
+
+        if (data.step === 3) {
+            if (!importWizardStarted) {
+                Msg.error("Importing process hasn't been started yet");
+                evt.preventDefault();
+                return false;
             }
         }
     });
@@ -109,16 +153,21 @@ function initUploads() {
     flog("Init importer form", form);
     form.forms({
         postUrl: usersImportUrl,
+        beforePostForm: function (form, config, data) {
+            importWizardStarted = true;
+            return data;
+        },
         onSuccess: function (resp, form, config) {
             $('#myWizard').wizard("next");
-            doCheckProcessStatus(usersImportUrl);
+            checkProcessStatus();
         }
     });
 
     $('#btn-upload').mupload({
         url: usersImportUrl,
         useJsonPut: false,
-        buttonText: '<i class="clip-folder"></i> Upload CSV',
+        buttonText: '<i class="clip-folder"></i> Upload CSV, XLS, XLSX',
+        acceptedFiles: '.csv,.xlsx,.xls,.txt',
         oncomplete: function (resp, name, href) {
             flog("oncomplete", resp, name, href);
 
@@ -127,12 +176,14 @@ function initUploads() {
             var table = data.table;
             form.find("input[name=fileHash]").val(table.hash);
             var fields = data.destFields;
+            fields = sortObjectByValue(fields);
             var thead = $("#importerHead");
             thead.html("");
             flog("headers:", data.numCols);
+            $('#importerTable').css({width: (data.numCols * 200) + 'px', maxWidth: 'none', minWidth: '100%'});
             thead.append("<th>#</th>");
             for (var col = 0; col < data.numCols; col++) {
-                var td = $("<th>");
+                var td = $('<th style="min-width: 200px">');
                 thead.append(td);
                 var select = $("<select class='form-control' name='col" + col + "'>");
                 select.append("<option value=''>[Do not import]</option>");
@@ -223,21 +274,31 @@ function checkProcessStatus() {
                         }
 
                         $('#myWizard').wizard("next");
-                        $('#table-users tbody').reloadFragment({url: '/manageUsers/'});
+                        $('#table-users-body').reloadFragment({url: '/manageUsers/'});
                         $('#aggregationsContainer').reloadFragment({url: '/manageUsers/'});
+                        importWizardStarted = false;
+                        $('#importProgressbar .progress-bar').attr('aria-valuenow', 0).css('width', '0%');
+                        userImportTotalCount = 0;
                         return; // dont poll again
                     } else {
                         // running
                         flog("Message", result.messages[0]);
                         resultStatus.text(result.messages[0]);
+                        var percentComplete = result.messages[0].split(' ').reverse()[0] / userImportTotalCount * 100;
+                        if (isNaN(percentComplete)) {
+                            percentComplete = 0;
+                        }
+                        if (percentComplete > 90) {
+                            percentComplete = 90;
+                        }
+                        $('#importProgressbar .progress-bar').attr('aria-valuenow', percentComplete).css('width', percentComplete + '%');
                         jobTitle.text("Process running...");
                     }
-
                 } else {
                     // waiting to start
                     jobTitle.text("Waiting for process job to start ...");
                 }
-                window.setTimeout(doCheckProcessStatus, 2500);
+                window.setTimeout(checkProcessStatus, 2500);
 
             } else {
                 flog("No task");
@@ -249,6 +310,29 @@ function checkProcessStatus() {
     });
 }
 
-function doCheckProcessStatus() {
-    checkProcessStatus();
+function sortObjectByValue(obj) {
+    var sorted = {};
+    var prop;
+    var arr = [];
+
+    for (prop in obj) {
+        if (obj.hasOwnProperty(prop)) {
+            var o = {key: prop, value: obj[prop]};
+            arr.push(o);
+        }
+    }
+
+    arr.sort(function (a, b) {
+        if (a.value > b.value)
+            return 1;
+        if (a.value < b.value)
+            return -1;
+        return 0;
+    });
+
+    for (i = 0; i < arr.length; i++) {
+        sorted[arr[i].key] = arr[i].value;
+    }
+
+    return sorted;
 }
