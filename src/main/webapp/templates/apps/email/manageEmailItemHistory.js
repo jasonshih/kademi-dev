@@ -52,7 +52,15 @@ function doSearch(startDate, endDate) {
         finishDate: formatDate(endDate)
     };
     $('#downloadCsv').attr('href', 'emailItems.csv?' + $.param(data));
-    $.ajax({
+
+    $('#email-table').reloadFragment({
+        whenComplete: function () {
+            $('abbr.timeago').timeago();
+        }
+    });
+
+    /**
+     $.ajax({
         type: 'GET',
         url: window.location.pathname,
         data: data,
@@ -66,6 +74,7 @@ function doSearch(startDate, endDate) {
             Msg.error("An error occured doing the user search. Please check your internet connection and try again");
         }
     });
+     **/
 }
 
 function initMarkIgnored() {
