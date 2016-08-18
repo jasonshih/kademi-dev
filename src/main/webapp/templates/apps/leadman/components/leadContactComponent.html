@@ -6,24 +6,28 @@
             </h4>
             <div class="row">
                 <form method="post" action="$page.href" class="form-horizontal" id="leadDetails">
+                    <input type="hidden" name="saveDetails" value="saveDetails"/>
                     <div class="modal-body" id="profile-body">
                         #set( $p = $page.leadProfile )
+                        #set( $profile = $page.profile )
+                        #if (!$page.href.contains("cust"))
                         <div class="form-group">
                             <label class="control-label col-md-2" for="jobTitle">Job Title</label>
                             <div class="col-md-6">
                                 <input type="text" name="jobTitle" id="jobTitle" class="form-control" placeholder="Job Title" value="$!page.jobTitle" />
                             </div>
                         </div>
+                        #end
                         <div class="form-group">
                             <label class="control-label col-md-2" for="nickName">Customer</label>
                             <div class="col-md-3">
-                                <input type="text" name="nickName" id="nickName" class="form-control" placeholder="Nick Name" value="$!page.profile.nickName" />
+                                <input type="text" name="nickName" id="nickName" class="form-control" placeholder="Nick Name" value="$!profile.nickName" />
                             </div>
                             <div class="col-md-3">
-                                <input type="text" name="firstName" id="firstName" class="form-control" placeholder="First name" value="$!page.firstName" />
+                                <input type="text" name="firstName" id="firstName" class="form-control" placeholder="First name" value="$!profile.firstName" />
                             </div>
                             <div class="col-md-4">
-                                <input type="text" name="surName" id="surName" class="form-control" placeholder="Surname" value="$!page.surName" />
+                                <input type="text" name="surName" id="surName" class="form-control" placeholder="Surname" value="$!profile.surName" />
                             </div>
                         </div>
 
@@ -52,7 +56,7 @@
                                 <button class="btn btn-sm btn-default btn-fullwidth-mobile" type="reset">Reset</button>
 
                                 <button class="btn btn-primary btn-fullwidth-mobile" type="submit">Save details</button>
-                                #if($page.leadProfile)
+                                #if(!$page.href.contains("cust") && $page.leadProfile)
                                 <button class="btn btn-info btn-fullwidth-mobile" data-toggle="modal" data-target="#modal-change-profile" type="button">Change Profile</button>
                                 #end
                             </div>

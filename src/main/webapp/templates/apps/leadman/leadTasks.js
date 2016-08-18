@@ -1,5 +1,6 @@
 $(function () {
-    $('input[name=taskType]').on('change', function (e) {
+
+    $('#lead-tasks-page input[name=taskType]').on('change', function (e) {
         var t = $(this);
         var uri = new URI(window.location.search);
         uri.removeSearch('type');
@@ -8,7 +9,7 @@ $(function () {
         window.location.search = uri.search();
     });
 
-    $('body').on('click', '.filter', function (e) {
+    $('body').on('click', '#lead-tasks-page .filter', function (e) {
         e.preventDefault();
 
         var btn = $(this);
