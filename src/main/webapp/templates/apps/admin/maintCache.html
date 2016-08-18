@@ -145,6 +145,7 @@
                         </tr>
                         <tr>
                             <th  colspan="7">High volume query cache</th>
+                            #set( $secondLevelStats = false )                            
                             #set( $secondLevelStats = $page.cacheStats.getSecondLevelCacheStatistics("hibernate.query.highvolume") )                            
                             
                             #if( $secondLevelStats )
@@ -158,6 +159,7 @@
                         </tr>
                         <tr>
                             <th  colspan="7">Standard query cache</th>
+                            #set( $secondLevelStats = false )                            
                             #set( $secondLevelStats = $page.cacheStats.getSecondLevelCacheStatistics("hibernate.org.hibernate.cache.internal.StandardQueryCache") )                            
                             
                             #if( $secondLevelStats )
