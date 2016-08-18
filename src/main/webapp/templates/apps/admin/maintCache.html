@@ -116,8 +116,56 @@
                                 <th>CollectionFetchCount</th>
                                 <td>$page.cacheStats.CollectionFetchCount</td>
                             </tr>
+                            <tr>
+                                <th>PrepareStatementCount</th>
+                                <td>$page.cacheStats.PrepareStatementCount</td>
+                            </tr>
+                            
+                            
                             
                         </tbody>
+                    </table>
+                    
+                    <h2>Query cache</h2>
+                    <table class="table table-striped">
+                        <tr>
+                            <th>Entity</th>
+                            <th>Loads</th>                            
+                            <th>Fetches</th>
+                            
+                            <th>Deletes</th>
+                            <th>Inserts</th>
+                            <th>Updates</th>
+                            <th>OptimisticFailures</th>
+                            
+                            <th>Hits</th>
+                            <th>Misses</th>
+                            <th>Puts</th>
+                            <th>Size</th>
+                        </tr>
+                        #foreach($entityName in $page.cacheStats.EntityNames)
+                        #set( $entityStats =  $page.cacheStats.getEntityStatistics($entityName) )
+                        #set( $secondLevelStats = $page.cacheStats.getSecondLevelCacheStatistics("hibernate.$entityName") )
+                        <tr>
+                            <td>$entityName</td>
+                            <td>$entityStats.LoadCount</td>                            
+                            <td>$entityStats.FetchCount</td>
+                            
+                            <td>$entityStats.DeleteCount</td>
+                            <td>$entityStats.InsertCount</td>
+                            <td>$entityStats.UpdateCount</td>
+                            <td>$entityStats.OptimisticFailureCount</td>
+                            
+                            #if( $secondLevelStats )
+                            <td>$secondLevelStats.HitCount</td>
+                            <td>$secondLevelStats.MissCount</td>
+                            <td>$secondLevelStats.PutCount</td>
+                            <td>$secondLevelStats.ElementCountInMemory</td>
+                            #else
+                            <td colspan="4">No second level cache</td>
+                            #end
+                        </tr>
+                        #end
                     </table>
                 </div>
                 <div id="cache" class="tab-pane">
