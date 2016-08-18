@@ -32,20 +32,29 @@ function doSearch(startDate, endDate) {
         finishDate: endDate
     };
     $('#downloadCsv').attr('href', 'emailItems.csv?' + $.param(data));
-    $.ajax({
-        type: 'GET',
-        url: window.location.pathname,
-        data: data,
-        success: function (data) {
-            flog("success", data);
-            var $fragment = $(data).find("#table-users");
-            $("#table-users").replaceWith($fragment);
+
+    $('#email-table').reloadFragment({
+        whenComplete: function () {
             $('abbr.timeago').timeago();
-        },
-        error: function (resp) {
-            Msg.error("An error occured doing the user search. Please check your internet connection and try again");
         }
     });
+
+    /**
+     $.ajax({
+     type: 'GET',
+     url: window.location.pathname,
+     data: data,
+     success: function (data) {
+     flog("success", data);
+     var $fragment = $(data).find("#table-users");
+     $("#table-users").replaceWith($fragment);
+     $('abbr.timeago').timeago();
+     },
+     error: function (resp) {
+     Msg.error("An error occured doing the user search. Please check your internet connection and try again");
+     }
+     });
+     **/
 }
 
 function initMarkIgnored() {
