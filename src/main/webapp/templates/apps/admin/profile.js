@@ -3,6 +3,7 @@ function initProfile() {
     initProfileLoginAs();
     initOrgSearch();
     initNewMembershipForm();
+    initEnableDisable();
     $(".initProfileForm").forms({
         callback: function (resp, form) {
             Msg.info("Done");
@@ -115,6 +116,45 @@ function initProfile() {
             });
         }
     });
+}
+
+function initEnableDisable() {
+    $("body").on("click", ".profileDisable", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if( confirm("Are you sure you want to disable this profile? This will remove the profile from user lists, but it can be re-enabled later") ) {
+            setProfileEnabled(window.location.href, false);
+        }
+    });
+    $("body").on("click", ".profileEnable", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if( confirm("Are you sure you want to enable this profile? This will include the profile in user lists") ) {
+            setProfileEnabled(window.location.href, true);
+        }
+    });
+
+}
+
+function setProfileEnabled(profileHref, enabled) {
+    $.ajax({
+        url: profileHref,
+        type: 'POST',
+        data: {
+            enabled: enabled
+        },
+        success: function (resp) {
+            if (resp.status) {
+                window.location.reload();
+            } else {
+                Msg.error("Couldnt change enabled status: " + resp.messages);
+            }
+        },
+        error: function (e) {
+            Msg.error(e.status + ': ' + e.statusText);
+            hideLoadingIcon();
+        }
+    })
 }
 
 function initNewMembershipForm() {
