@@ -143,11 +143,38 @@
                             <th>Puts</th>
                             <th>Size</th>
                         </tr>
+                        <tr>
+                            <th  colspan="7">High volume query cache</th>
+                            #set( $secondLevelStats = $page.cacheStats.getSecondLevelCacheStatistics("hibernate.query.highvolume") )                            
+                            
+                            #if( $secondLevelStats )
+                            <td>$secondLevelStats.HitCount</td>
+                            <td>$secondLevelStats.MissCount</td>
+                            <td>$secondLevelStats.PutCount</td>
+                            <td>$secondLevelStats.ElementCountInMemory</td>
+                            #else
+                            <td colspan="4">No second level cache</td>
+                            #end                            
+                        </tr>
+                        <tr>
+                            <th  colspan="7">Standard query cache</th>
+                            #set( $secondLevelStats = $page.cacheStats.getSecondLevelCacheStatistics("hibernate.org.hibernate.cache.internal.StandardQueryCache") )                            
+                            
+                            #if( $secondLevelStats )
+                            <td>$secondLevelStats.HitCount</td>
+                            <td>$secondLevelStats.MissCount</td>
+                            <td>$secondLevelStats.PutCount</td>
+                            <td>$secondLevelStats.ElementCountInMemory</td>
+                            #else
+                            <td colspan="4">No second level cache</td>
+                            #end                            
+                        </tr>                        
                         #foreach($entityName in $page.cacheStats.EntityNames)
                         #set( $entityStats =  $page.cacheStats.getEntityStatistics($entityName) )
+                                                
                         #set( $secondLevelStats = $page.cacheStats.getSecondLevelCacheStatistics("hibernate.$entityName") )
                         <tr>
-                            <td>$entityName</td>
+                            <th>$entityName</th>
                             <td>$entityStats.LoadCount</td>                            
                             <td>$entityStats.FetchCount</td>
                             
@@ -166,6 +193,8 @@
                             #end
                         </tr>
                         #end
+
+                        
                     </table>
                 </div>
                 <div id="cache" class="tab-pane">
