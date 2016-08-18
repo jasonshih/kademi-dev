@@ -1,0 +1,153 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Maintenance</title>
+        <style>
+            .stacktraces {
+                min-width: 700px;
+                margin-bottom: 20px;
+            }
+            .stacktraces th {
+                text-align: left;
+                padding: 5px;
+                border-bottom: solid gray 1px;
+            }
+            .stacktraces td {
+                vertical-align: top;
+                border-bottom: solid lightgray 1px;
+                padding: 5px;
+            }
+            .state-BLOCKED td, .state-WAITING td {
+                background: mistyrose;
+            }
+            .state-RUNNABLE td {
+                background: lightgreen;
+            }
+            .trace {
+                max-height: 200px;
+                overflow-y: scroll;
+            }
+        </style>
+    </head>
+    <body class="manageApplications appsContainer">
+        <div class="tabbable">
+            <ul class="nav nav-tabs tab-bricky">
+                <li><a data-toggle="tab" href="#hibernate">Hibernate cache</a></li>
+                <li><a data-toggle="tab" href="#cache">Provider caches</a></li>
+            </ul>
+            <div class="tab-content">
+                
+                <div id="hibernate" class="tab-pane">
+                    <table class="table table-striped">
+                        <tbody>
+                            <tr>
+                                <th>EntityDeleteCount</th>
+                                <td>$page.cacheStats.entityDeleteCount</td>
+                            </tr>
+                            <tr>
+                                <th>EntityInsertCount</th>
+                                <td>$page.cacheStats.entityInsertCount</td>
+                            </tr>
+                            <tr>
+                                <th>EntityLoadCount</th>
+                                <td>$page.cacheStats.entityLoadCount</td>
+                            </tr>
+                            <tr>
+                                <th>EntityFetchCount</th>
+                                <td>$page.cacheStats.entityFetchCount</td>
+                            </tr>
+                            <tr>
+                                <th>EntityUpdateCount</th>
+                                <td>$page.cacheStats.entityUpdateCount</td>
+                            </tr>
+                            <tr>
+                                <th>QueryExecutionCount</th>
+                                <td>$page.cacheStats.queryExecutionCount</td>
+                            </tr>
+                            <tr>
+                                <th>QueryExecutionMaxTimeQueryString</th>
+                                <td>$!page.cacheStats.queryExecutionMaxTimeQueryString</td>
+                            </tr>
+                            <tr>
+                                <th>QueryCacheHitCount</th>
+                                <td>$page.cacheStats.QueryCacheHitCount</td>
+                            </tr>
+                            <tr>
+                                <th>QueryCacheMissCount</th>
+                                <td>$page.cacheStats.QueryCacheMissCount</td>
+                            </tr>
+                            <tr>
+                                <th>QueryCachePutCount</th>
+                                <td>$page.cacheStats.QueryCachePutCount</td>
+                            </tr>
+                            <tr>
+                                <th>FlushCount</th>
+                                <td>$page.cacheStats.FlushCount</td>
+                            </tr>
+                            <tr>
+                                <th>ConnectCount</th>
+                                <td>$page.cacheStats.ConnectCount</td>
+                            </tr>
+                            <tr>
+                                <th>SecondLevelCacheHitCount</th>
+                                <td>$page.cacheStats.SecondLevelCacheHitCount</td>
+                            </tr>
+                            <tr>
+                                <th>SecondLevelCacheMissCount</th>
+                                <td>$page.cacheStats.SecondLevelCacheMissCount</td>
+                            </tr>
+                            <tr>
+                                <th>SecondLevelCachePutCount</th>
+                                <td>$page.cacheStats.SecondLevelCachePutCount</td>
+                            </tr>
+                            <tr>
+                                <th>SessionCloseCount</th>
+                                <td>$page.cacheStats.SessionCloseCount</td>
+                            </tr>
+                            
+                            <tr>
+                                <th>SessionOpenCount</th>
+                                <td>$page.cacheStats.SessionOpenCount</td>
+                            </tr>
+                            <tr>
+                                <th>CollectionLoadCount</th>
+                                <td>$page.cacheStats.CollectionLoadCount</td>
+                            </tr>
+                            <tr>
+                                <th>CollectionFetchCount</th>
+                                <td>$page.cacheStats.CollectionFetchCount</td>
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+                </div>
+                <div id="cache" class="tab-pane">
+                    #set( $caches = $page.caches )
+                    
+                    <form action="$page.href" method="POST">
+                        <input type="hidden" name="flushCache" value="true"/>
+                        <button class="btn btn-danger">Flush cache</button>
+                    </form>
+                    
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Status</th>
+                                <th>Size</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            #foreach($cache in $caches )
+                            <tr>
+                                <td>$cache.name</td>
+                                <td>$cache.status</td>
+                                <td>$cache.size</td>
+                            </tr>
+                            #end
+                        </tbody>
+                    </table>
+                </div>                
+            </div>
+        </div>
+    </body>
+</html>
