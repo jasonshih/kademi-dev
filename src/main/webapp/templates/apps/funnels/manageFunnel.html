@@ -17,16 +17,6 @@
                 <div id="journeyBuilder" class="tab-pane">
                     <div class="well" style="display: none">
                         <code id="funnelJson">$page.funnelJson</code>
-                        <code id="triggers">{
-                            "triggers": [
-                            {"type": "automationTrigger", "triggerName": "", "description": "desc here" },
-                            {"type": "contactFormTrigger", "contactFormPath": "", "websiteName": ""},
-                            {"type": "eventTrigger", "condition1": "", "condition2": "", "condition3": "", "condition4": "", "condition5": "", "description": ""},
-                            {"type": "pageViewTrigger", "path": "", "websiteName": "" },
-                            {"type": "taskCompleteTrigger", "taskName": "", "description": ""},
-                            {"type": "emailResultTrigger", "deliveryAction": "", "description": ""}
-                            ]}
-                        </code>
                     </div>
                     <div class="row">
                         <div class="col-xs-6">
@@ -46,63 +36,61 @@
                             <div class="nodes-list panel panel-default">
                                 <div class="panel-heading"><i class="fa fa-list"></i> Nodes List</div>
                                 <ul class="list-group">
-                                    <!-- START of Goals -->
-                                    <li data-type="automationGoal" class="list-group-item">
-                                        <img src="/theme/apps/funnels/img/node_automationGoal.png" class="img-responsive" />
-                                    </li>
-                                    <li data-type="contactFormGoal" class="list-group-item">
-                                        <img src="/theme/apps/funnels/img/node_contactFormGoal.png" class="img-responsive" />
-                                    </li>
-                                    <li data-type="eventGoal" class="list-group-item">
-                                        <img src="/theme/apps/funnels/img/node_eventGoal.png" class="img-responsive" />
-                                    </li>
-                                    <li data-type="pageViewGoal" class="list-group-item">
-                                        <img src="/theme/apps/funnels/img/node_pageViewGoal.png" class="img-responsive" />
-                                    </li>
-                                    <li data-type="taskCompleteGoal" class="list-group-item">
-                                        <img src="/theme/apps/funnels/img/node_taskCompleteGoal.png" class="img-responsive" />
-                                    </li>
-                                    <li data-type="emailResultGoal" class="list-group-item">
-                                        <img src="/theme/apps/funnels/img/node_emailResultGoal.png" class="img-responsive" />
-                                    </li>
-                                    <li data-type="timerGoal" class="list-group-item">
-                                        <img src="/theme/apps/funnels/img/node_timerGoal.png" class="img-responsive" />
-                                    </li>
-                                    <!-- END of Goals -->
+                                    <!--&lt;!&ndash; START of Goals &ndash;&gt;-->
+                                    <!--<li data-type="automationGoal" class="list-group-item">-->
+                                        <!--<img src="/theme/apps/funnels/img/node_automationGoal.png" class="img-responsive" />-->
+                                    <!--</li>-->
+                                    <!--<li data-type="contactFormGoal" class="list-group-item">-->
+                                        <!--<img src="/theme/apps/funnels/img/node_contactFormGoal.png" class="img-responsive" />-->
+                                    <!--</li>-->
+                                    <!--<li data-type="eventGoal" class="list-group-item">-->
+                                        <!--<img src="/theme/apps/funnels/img/node_eventGoal.png" class="img-responsive" />-->
+                                    <!--</li>-->
+                                    <!--<li data-type="pageViewGoal" class="list-group-item">-->
+                                        <!--<img src="/theme/apps/funnels/img/node_pageViewGoal.png" class="img-responsive" />-->
+                                    <!--</li>-->
+                                    <!--<li data-type="taskCompleteGoal" class="list-group-item">-->
+                                        <!--<img src="/theme/apps/funnels/img/node_taskCompleteGoal.png" class="img-responsive" />-->
+                                    <!--</li>-->
+                                    <!--<li data-type="emailResultGoal" class="list-group-item">-->
+                                        <!--<img src="/theme/apps/funnels/img/node_emailResultGoal.png" class="img-responsive" />-->
+                                    <!--</li>-->
+                                    <!--<li data-type="timerGoal" class="list-group-item">-->
+                                        <!--<img src="/theme/apps/funnels/img/node_timerGoal.png" class="img-responsive" />-->
+                                    <!--</li>-->
+                                    <!--&lt;!&ndash; END of Goals &ndash;&gt;-->
 
-                                    <li data-type="action" data-action="emailAction" class="list-group-item">
-                                        <img src="/theme/apps/funnels/img/node_sendEmail.png" class="img-responsive" />
-                                    </li>
-                                    <li data-type="action" data-action="createTaskAction" class="list-group-item">
-                                        <img src="/theme/apps/funnels/img/node_createTask.png" class="img-responsive" />
-                                    </li>
-                                    <li data-type="action" data-action="createDataSeriesAction" class="list-group-item">
-                                        <img src="/theme/apps/funnels/img/node_createDataSeries.png" class="img-responsive" />
-                                    </li>
-                                    <li data-type="action" data-action="calendarEventAction" class="list-group-item">
-                                        <img src="/theme/apps/funnels/img/node_calendarEvent.png" class="img-responsive" />
-                                    </li>
-                                    <li data-type="action" data-action="addToGroup" class="list-group-item">
-                                        <img src="/theme/apps/funnels/img/node_addToGroup.png" class="img-responsive" />
-                                    </li>
-                                    <li data-type="action" data-action="removeProfile" class="list-group-item">
-                                        <img src="/theme/apps/funnels/img/node_removeProfile.png" class="img-responsive" />
-                                    </li>
-                                    <li data-type="action" data-action="setField" class="list-group-item">
-                                        <img src="/theme/apps/funnels/img/node_setField.png" class="img-responsive" />
-                                    </li>
-                                    <li data-type="decision" class="list-group-item">
-                                        <img src="/theme/apps/funnels/img/node_decision.png" class="img-responsive" />
-                                    </li>
+                                    <!--<li data-type="action" data-action="emailAction" class="list-group-item">-->
+                                        <!--<img src="/theme/apps/funnels/img/node_sendEmail.png" class="img-responsive" />-->
+                                    <!--</li>-->
+                                    <!--<li data-type="action" data-action="createTaskAction" class="list-group-item">-->
+                                        <!--<img src="/theme/apps/funnels/img/node_createTask.png" class="img-responsive" />-->
+                                    <!--</li>-->
+                                    <!--<li data-type="action" data-action="createDataSeriesAction" class="list-group-item">-->
+                                        <!--<img src="/theme/apps/funnels/img/node_createDataSeries.png" class="img-responsive" />-->
+                                    <!--</li>-->
+                                    <!--<li data-type="action" data-action="calendarEventAction" class="list-group-item">-->
+                                        <!--<img src="/theme/apps/funnels/img/node_calendarEvent.png" class="img-responsive" />-->
+                                    <!--</li>-->
+                                    <!--<li data-type="action" data-action="addToGroup" class="list-group-item">-->
+                                        <!--<img src="/theme/apps/funnels/img/node_addToGroup.png" class="img-responsive" />-->
+                                    <!--</li>-->
+                                    <!--<li data-type="action" data-action="removeProfile" class="list-group-item">-->
+                                        <!--<img src="/theme/apps/funnels/img/node_removeProfile.png" class="img-responsive" />-->
+                                    <!--</li>-->
+                                    <!--<li data-type="action" data-action="setField" class="list-group-item">-->
+                                        <!--<img src="/theme/apps/funnels/img/node_setField.png" class="img-responsive" />-->
+                                    <!--</li>-->
+                                    <!--<li data-type="decision" class="list-group-item">-->
+                                        <!--<img src="/theme/apps/funnels/img/node_decision.png" class="img-responsive" />-->
+                                    <!--</li>-->
                                 </ul>
                             </div>
                             <div class="panel panel-default panel-setting">
                                 <div class="panel-heading">
                                     <i class="fa fa-pencil panel-edit-title"></i> <span class="panel-edit-title">Edit title</span>
                                     <i class="fa fa-edit panel-edit-details"></i> <span class="panel-edit-details">Edit details</span>
-                                    <i class="fa fa-cogs panel-transition"></i> <span class="panel-transition">Trigger</span>
                                     <i class="fa fa-question-circle panel-decision"></i> <span class="panel-decision">Decision choice constant</span>
-                                    <i class="fa fa-clock-o panel-timeout"></i> <span class="panel-timeout">Timeout</span>
                                 </div>
                                 <div class="panel-body form-horizontal">
                                     <form class="panel-edit-title">
@@ -111,85 +99,11 @@
                                         <input type="hidden" name="sourceId"/>
                                         <input type="hidden" name="targetId"/>
                                     </form>
-                                    <form class="panel-edit-details">
-
-                                    </form>
-                                    <form class="panel-transition">
-                                        <div class="form-group">
-                                            <div class="col-sm-12">
-                                                <a href="#" class="btn btn-sm btn-primary btnAddTrigger hide"><i class="fa fa-plus"></i> Add trigger</a>
-                                            </div>
-                                        </div>
-                                        <div class="form-group placeholderform hide">
-                                            <div class="col-sm-12">
-                                                <select name="triggerType" class="form-control">
-                                                    <option value="automationTrigger">automationTrigger</option>
-                                                    <option value="contactFormTrigger">contactFormTrigger</option>
-                                                    <option value="eventTrigger">eventTrigger</option>
-                                                    <option value="pageViewTrigger">pageViewTrigger</option>
-                                                    <option value="taskCompleteTrigger">taskCompleteTrigger</option>
-                                                    <option value="emailResultTrigger">emailResultTrigger</option>
-                                                </select>
-
-                                                <div class="automationTrigger triggerDiv">
-                                                    <br/>
-                                                    <input type="text" class="form-control" name="triggerName" placeholder="triggerName"/>
-                                                </div>
-                                                <div class="contactFormTrigger triggerDiv hide">
-                                                    <br/>
-                                                    <input type="text" class="form-control" name="contactFormPath" placeholder="contactFormPath"/>
-                                                    <br/>
-                                                    <input type="text" class="form-control" name="websiteName" placeholder="websiteName"/>
-                                                </div>
-                                                <div class="eventTrigger triggerDiv hide">
-                                                    <br/>
-                                                    <input type="text" class="form-control" name="condition1" placeholder="condition1"/>
-                                                    <br/>
-                                                    <input type="text" class="form-control" name="condition2" placeholder="condition2"/>
-                                                    <br/>
-                                                    <input type="text" class="form-control" name="condition3" placeholder="condition3"/>
-                                                    <br/>
-                                                    <input type="text" class="form-control" name="condition4" placeholder="condition4"/>
-                                                    <br/>
-                                                    <input type="text" class="form-control" name="condition5" placeholder="condition5"/>
-                                                </div>
-                                                <div class="pageViewTrigger triggerDiv hide">
-                                                    <br/>
-                                                    <input type="text" class="form-control" name="path" placeholder="path"/>
-                                                    <br/>
-                                                    <input type="text" class="form-control" name="websiteName" placeholder="websiteName"/>
-                                                </div>
-                                                <div class="taskCompleteTrigger triggerDiv hide">
-                                                    <br/>
-                                                    <input type="text" class="form-control" name="taskName" placeholder="taskName"/>
-                                                </div>
-                                                <div class="emailResultTrigger triggerDiv hide">
-                                                    <br/>
-                                                    <input type="text" class="form-control" name="deliveryAction" placeholder="deliveryAction"/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-sm-12 transitionItems"></div>
-                                        </div>
-                                        <input type="hidden" name="sourceId"/>
-                                        <input type="hidden" name="targetId"/>
-                                    </form>
                                     <form class="panel-decision">
                                         <div class="form-group">
                                             <div class="col-sm-12">
                                                 <label>Constant value</label>
                                                 <input type="text" class="form-control" name="constValue" placeholder="Value"/>
-                                            </div>
-                                        </div>
-                                        <input type="hidden" name="sourceId"/>
-                                        <input type="hidden" name="targetId"/>
-                                    </form>
-                                    <form class="panel-timeout">
-                                        <div class="form-group">
-                                            <div class="col-sm-12">
-                                                <label>Timeout (in ms)</label>
-                                                <input type="number" min="0" class="form-control" name="timeoutMins" placeholder="timeoutMins"/>
                                             </div>
                                         </div>
                                         <input type="hidden" name="sourceId"/>
@@ -636,6 +550,7 @@
         <script src="/static/jsplump/2.1.4/jsPlumb-2.1.4.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
         <script src="/theme/apps/funnels/manageFunnelImports.js" type="text/javascript">//</script>
+        <script src="jb-handlers.js?v=28072016" type="text/javascript">//</script>
         <script src="/theme/apps/funnels/journeyBuilder.js?v=28072016" type="text/javascript">//</script>
         <script src="/theme/apps/funnels/manageFunnel.js" type="text/javascript">//</script>
 

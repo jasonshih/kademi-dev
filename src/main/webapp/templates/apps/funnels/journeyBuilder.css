@@ -93,15 +93,7 @@
     display: block !important;
 }
 
-#builder .right-panel .panel-setting.panel-transition .panel-transition {
-    display: block !important;
-}
-
 #builder .right-panel .panel-setting.panel-decision .panel-decision {
-    display: block !important;
-}
-
-#builder .right-panel .panel-setting.panel-timeout .panel-timeout {
     display: block !important;
 }
 
@@ -179,6 +171,11 @@
     background-color: white;
     padding: 0.3em;
     cursor: pointer;
+    display: none;
+}
+
+.aLabel.showed {
+    display: block;
 }
 
 .ep, .ep-basic {

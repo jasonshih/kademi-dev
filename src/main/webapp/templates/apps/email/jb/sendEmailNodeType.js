@@ -1,1 +1,0 @@
-alert("hello world! my name is $nodeType.name");
