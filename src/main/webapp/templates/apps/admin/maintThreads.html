@@ -1,0 +1,131 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Maintenance</title>
+        <style>
+            .stacktraces {
+                min-width: 700px;
+                margin-bottom: 20px;
+            }
+            .stacktraces th {
+                text-align: left;
+                padding: 5px;
+                border-bottom: solid gray 1px;
+            }
+            .stacktraces td {
+                vertical-align: top;
+                border-bottom: solid lightgray 1px;
+                padding: 5px;
+            }
+            .state-BLOCKED td, .state-WAITING td {
+                background: mistyrose;
+            }
+            .state-RUNNABLE td {
+                background: lightgreen;
+            }
+            .trace {
+                max-height: 200px;
+                overflow-y: scroll;
+            }
+        </style>
+    </head>
+    <body class="manageApplications appsContainer">
+        <div class="tabbable">
+            <ul class="nav nav-tabs tab-bricky">
+                <li><a data-toggle="tab" href="#threads">Threads</a></li>
+            </ul>
+            <div class="tab-content">
+                                
+                
+                <div id="threads" class="tab-pane">
+
+                    <table class="stacktraces table table-striped">
+                        #foreach($groupEntry in $page.threadStacks.entrySet())
+                        #set($group = $groupEntry.key)
+                        #set($list = $groupEntry.value)
+                        <tr>
+                            <td><a href="#$group.name">$group.name</a></td>
+                            <td>$list.size() threads</td>
+                        </tr>
+                        #end
+                    </table>
+
+                    <br/>
+                    <br/>
+                    #foreach($groupEntry in $page.threadStacks.entrySet())
+                    #set($group = $groupEntry.key)
+                    #set($list = $groupEntry.value)
+
+                    <table class="stacktraces">
+                        <thead>
+                            <tr>
+                                <th colspan="3"><a id="$group.name">Thread group: $group.name - $list.size() threads</a></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            #foreach($entry in $list)
+                            #if( $entry.requestData )
+                            <tr class="state-$entry.key.state">
+                                <td>
+                                    $entry.thread.name
+
+                                    <p>
+                                        <br/>
+                                        <b>Request Data</b>
+                                        <br/>
+                                        $entry.requestData.method
+                                        <br/>
+                                        <a href="$entry.requestData.url" parent="_blank">$entry.requestData.url</a>
+                                        <br/>
+                                        <acronym title="$entry.requestData.started">$entry.requestData.durationMillis ms</acronym>
+                                    </p>
+                                </td>
+                                <td>
+                                    $entry.thread.state
+                                    <br/>
+                                    $entry.threadCpuTimeSecs secs cpu
+                                </td>
+                                <td>
+                                    <div class="trace">
+                                        <ul>
+                                            #foreach($item in $entry.trace)
+                                            <li>$item.className :: $item.methodName ( $item.lineNumber )</li>
+                                            #end
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            #end
+                            #end
+
+                            #foreach($entry in $list)
+                            #if( !$entry.requestData )
+                            <tr class="state-$entry.key.state">
+                                <td>
+                                    $entry.thread.name
+
+                                </td>
+                                <td>
+                                    $entry.thread.state
+                                    <br/>
+                                    $entry.threadCpuTimeSecs secs cpu
+                                </td>
+                                <td>
+                                    <div class="trace">
+                                        <ul>
+                                            #foreach($item in $entry.trace)
+                                            <li>$item.className :: $item.methodName ( $item.lineNumber )</li>
+                                            #end
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            #end
+                            #end
+                        </tbody>
+                    </table>
+                    #end
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

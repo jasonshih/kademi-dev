@@ -33,8 +33,6 @@
             <ul class="nav nav-tabs tab-bricky">
                 <li><a data-toggle="tab" href="#summary">Summary</a></li>
                 <li><a data-toggle="tab" href="#utils">Utils</a></li>
-                <li><a data-toggle="tab" href="#cache">Cache</a></li>
-                <li><a data-toggle="tab" href="#threads">Threads</a></li>
             </ul>
             <div class="tab-content">
                 <div id="summary" class="tab-pane">
@@ -339,128 +337,7 @@
                             </form>
                         </div>
                     </article>
-                </div>
-                <div id="cache" class="tab-pane">
-                    #set( $caches = $page.caches )
-                    #set( $caches = $formatter.sortReverse( $formatter.sortByProperty($caches, "size") ) )
-
-                    <form action="$page.href" method="POST">
-                        <input type="hidden" name="flushCache" value="true"/>
-                        <button class="btn btn-danger">Flush cache</button>
-                    </form>
-                    
-                    <table class="stacktraces table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Status</th>
-                                <th>Size</th>
-                                <th>Max Local Heap</th>
-                                <th>Max Local Disk</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            #foreach($cache in $caches )
-                            <tr>
-                                <td>$cache.name</td>
-                                <td>$cache.status</td>
-                                <td>$cache.size</td>
-                                <td>$cache.maxLocalHeap</td>
-                                <td>$cache.maxLocalDisk</td>
-                            </tr>
-                            #end
-                        </tbody>
-                    </table>
-                </div>
-                <div id="threads" class="tab-pane">
-
-                    <table class="stacktraces table table-striped">
-                        #foreach($groupEntry in $page.threadStacks.entrySet())
-                        #set($group = $groupEntry.key)
-                        #set($list = $groupEntry.value)
-                        <tr>
-                            <td><a href="#$group.name">$group.name</a></td>
-                            <td>$list.size() threads</td>
-                        </tr>
-                        #end
-                    </table>
-
-                    <br/>
-                    <br/>
-                    #foreach($groupEntry in $page.threadStacks.entrySet())
-                    #set($group = $groupEntry.key)
-                    #set($list = $groupEntry.value)
-
-                    <table class="stacktraces">
-                        <thead>
-                            <tr>
-                                <th colspan="3"><a id="$group.name">Thread group: $group.name - $list.size() threads</a></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            #foreach($entry in $list)
-                            #if( $entry.requestData )
-                            <tr class="state-$entry.key.state">
-                                <td>
-                                    $entry.thread.name
-
-                                    <p>
-                                        <br/>
-                                        <b>Request Data</b>
-                                        <br/>
-                                        $entry.requestData.method
-                                        <br/>
-                                        <a href="$entry.requestData.url" parent="_blank">$entry.requestData.url</a>
-                                        <br/>
-                                        <acronym title="$entry.requestData.started">$entry.requestData.durationMillis ms</acronym>
-                                    </p>
-                                </td>
-                                <td>
-                                    $entry.thread.state
-                                    <br/>
-                                    $entry.threadCpuTimeSecs secs cpu
-                                </td>
-                                <td>
-                                    <div class="trace">
-                                        <ul>
-                                            #foreach($item in $entry.trace)
-                                            <li>$item.className :: $item.methodName ( $item.lineNumber )</li>
-                                            #end
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-                            #end
-                            #end
-
-                            #foreach($entry in $list)
-                            #if( !$entry.requestData )
-                            <tr class="state-$entry.key.state">
-                                <td>
-                                    $entry.thread.name
-
-                                </td>
-                                <td>
-                                    $entry.thread.state
-                                    <br/>
-                                    $entry.threadCpuTimeSecs secs cpu
-                                </td>
-                                <td>
-                                    <div class="trace">
-                                        <ul>
-                                            #foreach($item in $entry.trace)
-                                            <li>$item.className :: $item.methodName ( $item.lineNumber )</li>
-                                            #end
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-                            #end
-                            #end
-                        </tbody>
-                    </table>
-                    #end
-                </div>
+                </div>                                
             </div>
         </div>
 
