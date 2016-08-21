@@ -4,7 +4,7 @@
     <groupId>co.kademi</groupId>
     <artifactId>kademi-dev</artifactId>
     <packaging>war</packaging>
-    <version>8.2.4.3</version>
+    <version>8.2.4.4</version>
 
     <build>
         <plugins>
