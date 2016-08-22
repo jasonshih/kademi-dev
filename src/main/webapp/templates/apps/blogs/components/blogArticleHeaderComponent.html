@@ -1,15 +1,4 @@
 <style>
-    .horiz-image-container {
-        margin-left: auto;
-        margin-right: auto;
-        max-height: 200px;
-        overflow: hidden;
-        width: 80%;
-    }
-    .horiz-image {
-        margin-left: auto;
-        margin-right: auto;
-    }
     .blog-article-body {
         margin-top: 30px;
     }
@@ -30,18 +19,4 @@
         <span class="label label-success">Featured</span>
         #end
     </div>
-</div>
-
-<hr/>
-
-#set($horizImage = $page.horizontalImageHref)
-#if($horizImage)
-<div class="horiz-image-container">
-    <img src="$horizImage" class="img-responsive horiz-image" />
-</div>
-
-#end
-
-<div class="blog-article-body">
-    $page.body
 </div>

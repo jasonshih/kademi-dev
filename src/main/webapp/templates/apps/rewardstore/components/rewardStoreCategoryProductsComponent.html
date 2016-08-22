@@ -1,12 +1,3 @@
-<link rel="stylesheet" type="text/css" href="/theme/apps/rewardstore/reward-store.css" />
-<style>
-    #inifiniteLoader{
-        vertical-align: middle;
-        text-align: center;
-        padding: 15px;
-        display: none;
-    }
-</style>
 #set($fromRange = 0)
 #if($params.fromRange)
 #set($fromRange = $formatter.toInteger($params.fromRange))
@@ -18,7 +9,7 @@
 #end
 
 #set( $products = $page.searchProducts( $request.params.q, $fromRange, $toRange, 'title', null ) )
-<div id='products-list'>
+<div id='products-list' class="rewardStoreCategoryProductsComponent">
     #if( $products.hits.hits.size() == 0 )
     <b class=''>No products were found matching the critieria</b>
     #else
@@ -42,74 +33,17 @@
     </div>
     #end
 </div>
+#if ($page)
 <div id="inifiniteLoader">
     <span class="alert alert-success">
         <img src="/templates/ajax-loader.gif" />
     </span>
 </div>
-
-<script type="text/javascript">
-    var startFrom = 100;
-    $(function () {
-        initSearchProduct();
-        $(window).scroll(function () {
-            if ($(window).scrollTop() == $(document).height() - $(window).height()) {
-                doPaginate();
-            }
-        });
-    });
-
-    function initSearchProduct() {
-        $("#product-query").keyup(function () {
-            typewatch(function () {
-                flog("do search");
-                doProductSearch();
-            }, 500);
-        });
-    }
-
-    function doProductSearch() {
-        var query = $("#product-query").val();
-        flog("doSearch", query);
-        var newUrl = window.location.pathname + "?q=" + query;
-        window.history.replaceState("", "", newUrl);
-        $.ajax({
-            type: 'GET',
-            url: newUrl,
-            success: function (data) {
-                flog("success", data);
-                var fragment = $(data).find("#products-list");
-                $("#products-list").replaceWith(fragment);
-            },
-            error: function (resp) {
-                Msg.error("An error occured doing the product search. Please check your internet connection and try again");
-            }
-        });
-    }
-
-    function doPaginate() {
-        var query = $("#product-query").val();
-        flog("doSearch", query);
-        var newUrl = window.location.pathname + "?q=" + query + "&fromRange=" + startFrom;
-        $('#inifiniteLoader').show();
-        $.ajax({
-            type: 'GET',
-            url: newUrl,
-            success: function (data) {
-                flog("success", data);
-                var fragment = $(data).find("#products-list");
-                var products = fragment.find('.product-item');
-                $("#products-list .row").append(products);
-                startFrom = startFrom + 100;
-                $('#inifiniteLoader').hide();
-            },
-            error: function (resp) {
-                Msg.error("An error occured doing the product search. Please check your internet connection and try again");
-                $('#inifiniteLoader').hide();
-            }
-        });
-    }
+#else
+<div class="alert alert-warning">Products go here</div>
+<script>
+    var contentEditing = true;
 </script>
-
+#end
 
 
