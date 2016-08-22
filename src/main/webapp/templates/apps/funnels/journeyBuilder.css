@@ -85,15 +85,7 @@
     display: none;
 }
 
-#builder .right-panel .panel-setting.panel-edit-title .panel-edit-title {
-    display: block !important;
-}
-
-#builder .right-panel .panel-setting.panel-edit-details .panel-edit-details {
-    display: block !important;
-}
-
-#builder .right-panel .panel-setting.panel-decision .panel-decision {
+#builder .right-panel .panel-setting .active {
     display: block !important;
 }
 
@@ -103,7 +95,7 @@
     padding: 8px 0 4px;
 }
 
-#builder .right-panel li {
+#builder .right-panel li.list-group-item {
     cursor: move;
     border: 0 !important;
     padding: 5px 10px;

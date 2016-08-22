@@ -1,5 +1,5 @@
 JBNodes['emailAction'] = {
-    title: '<i class="fa fa-envelope" aria-hidden="true"></i> <span class="node-type">Send Email</span>',
+    title: '<i class="fa fa-envelope"></i> <span class="node-type">Send Email</span>',
     previewUrl: '/theme/apps/email/jb/sendEmailNode.png',
     ports: {
         nextNodeId: {
@@ -28,7 +28,7 @@ JBNodes['emailAction'] = {
         form.load(href + ' #frmDetails > *', function () {
             form.attr('action', href);
 
-            JBApp.showSettingPanel('edit-details');
+            JBApp.showSettingPanel(node);
         });
     }
 };

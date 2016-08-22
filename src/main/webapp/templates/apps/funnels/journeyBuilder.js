@@ -18,10 +18,22 @@ var JBApp = {
     getNodeDataById: function (id) {
         for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
             var node = JBApp.funnel.nodes[i];
-            var nodeData = JBApp.getNodeData(node)[1];
+            var nodeData = JBApp.getNodeData(node);
 
-            if (nodeData.nodeId === id) {
+            if (nodeData[1].nodeId === id) {
                 return nodeData;
+                break;
+            }
+        }
+    },
+
+    getNodeTypeById: function (id) {
+        for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
+            var node = JBApp.funnel.nodes[i];
+            var nodeData = JBApp.getNodeData(node);
+
+            if (nodeData[1].nodeId === id) {
+                return nodeData[0];
                 break;
             }
         }
@@ -102,57 +114,6 @@ var JBApp = {
         nodeHtml += '   <span class="nodeTitle btnNodeEdit">' + nodeName + ' <i class="fa fa-pencil"></i></span>' + nodePorts;
         nodeHtml += '</div>';
 
-        //if (type.indexOf('Goal') !== -1) {
-        //    var portsString = '';
-        //    var portsData = JBApp.PORTS[type];
-        //    for (var portName in portsData) {
-        //        var portData = portsData[portName];
-        //
-        //        if (portName === 'timeoutNode') {
-        //            portsString += '<span title="' + portData + '" class="ep ep-timeout" data-name="' + portName + '"></span>';
-        //        } else {
-        //            portsString += '<span title="' + portData + '" class="ep ep-basic" data-name="' + portName + '"></span>';
-        //        }
-        //    }
-        //
-        //    nodeHtml += '<div class="title">';
-        //    nodeHtml += '   <i class="fa fa-trophy" aria-hidden="true"></i>';
-        //    nodeHtml += '   <span class="node-type">' + JBApp.GOALS[type] + '</span>';
-        //    nodeHtml += '   <span class="node-buttons clearfix">';
-        //    nodeHtml += '       <span class="btnNodeDetails" title="Edit details"><i class="fa fa-fw fa-cog"></i></span>';
-        //    nodeHtml += '       <span class="btnNodeDelete" title="Delete this node"><i class="fa fa-fw fa-trash"></i></span>';
-        //    nodeHtml += '   </span>';
-        //    nodeHtml += '</div>';
-        //    nodeHtml += '<div class="inner">';
-        //    nodeHtml += '   <span class="nodeTitle btnNodeEdit">' + nodeName + ' <i class="fa fa-pencil"></i></span>' + portsString;
-        //    nodeHtml += '</div>';
-        //} else if (type === 'decision') {
-        //    nodeHtml += '<div class="title">';
-        //    nodeHtml += '   <i class="fa fa-question-circle" aria-hidden="true"></i>';
-        //    nodeHtml += '   <span class="node-type">Decision</span>';
-        //    nodeHtml += '   <span class="node-buttons clearfix">';
-        //    nodeHtml += '       <span class="btnNodeDetails" title="Edit details"><i class="fa fa-fw fa-cog"></i></span>';
-        //    nodeHtml += '       <span class="btnNodeDelete" title="Delete this node"><i class="fa fa-fw fa-trash"></i></span>';
-        //    nodeHtml += '   </span>';
-        //    nodeHtml += '</div>';
-        //    nodeHtml += '<div class="inner">';
-        //    nodeHtml += '   <span class="nodeTitle btnNodeEdit">' + nodeName + ' <i class="fa fa-pencil"></i></span>';
-        //    nodeHtml += '   <span title="Make new choice" class="ep ep-green"></span> ';
-        //    nodeHtml += '   <span title="Default next action" class="ep ep-red"></span>';
-        //    nodeHtml += '</div>'
-        //} else {
-        //    nodeHtml += '<div class="title">' + JBApp.ACTIONS[action];
-        //    nodeHtml += '   <span class="node-buttons clearfix">';
-        //    nodeHtml += '       <span class="btnNodeDetails" title="Edit details"><i class="fa fa-fw fa-cog"></i></span>';
-        //    nodeHtml += '       <span class="btnNodeDelete" title="Delete this node"><i class="fa fa-fw fa-trash"></i></span>';
-        //    nodeHtml += '   </span>';
-        //    nodeHtml += '</div>';
-        //    nodeHtml += '<div class="inner">';
-        //    nodeHtml += '   <span class="nodeTitle btnNodeEdit">' + nodeName + ' <i class="fa fa-pencil"></i></span>';
-        //    nodeHtml += '   <span title="When completed" class="ep ep-basic"></span>';
-        //    nodeHtml += '</div>';
-        //}
-
         d.innerHTML = nodeHtml;
         d.style.left = node.x + 'px';
         d.style.top = node.y + 'px';
@@ -201,8 +162,6 @@ var JBApp = {
         });
 
         for (var portName in JBNodes[type].ports) {
-            var portData = JBNodes[type].ports[portName];
-
             JBApp.jspInstance.makeSource(node, {
                 filter: '[data-name=' + portName + ']',
                 connectorStyle: JBApp.getConnectorStyle(portName),
@@ -228,17 +187,6 @@ var JBApp = {
         decisionChoices: [1, 0.775, 1, 0],
         decisionDefault: [1, 0.925, 1, 0],
         timeoutNode: [1, 0.925, 1, 0]
-    },
-
-    connectionNames: {
-        nextNodeId: 'Then',
-        timeoutNode: 'Timeout',
-        decisionDefault: 'Decision Default',
-        decisionChoices: 'Decision Choice',
-        nodeIdDelivered: 'Email Delivered',
-        nodeIdFailed: 'Email Failed',
-        nodeIdOpened: 'Email Opened',
-        nodeIdConverted: 'Email Converted'
     },
 
     initConnection: function (node, type) {
@@ -289,7 +237,7 @@ var JBApp = {
             type: 'PUT',
             data: JSON.stringify(JBApp.funnel),
             success: function () {
-                builderStatus.html(message || 'Funnel is saved!').delay(2000).fadeOut(2000);
+                builderStatus.html(message || 'Funnel is saved').delay(2000).fadeOut(2000);
                 
                 if (typeof callback === 'function') {
                     callback();
@@ -346,19 +294,39 @@ var JBApp = {
         flog('hideSettingPanel');
         
         var settingPanel = $('.panel-setting');
-        settingPanel.attr('class', 'panel panel-default panel-setting');
-        settingPanel.find('.panel-body .active').removeClass('active');
+        settingPanel.removeClass('showed');
+        settingPanel.find('.active').removeClass('active');
+        JBApp.currentSettingNode = null;
+        JBApp.currentSettingNodeId = null;
     },
     
     showSettingPanel: function (formName) {
         flog('showSettingPanel', formName);
+
+        var titleSelector = '';
+        var formSelector = '';
+        if (typeof formName !== 'string') {
+            var node = formName;
+            var nodeType = JBApp.getNodeTypeById(node.nodeId);
+            JBApp.currentSettingNode = node;
+            JBApp.currentSettingNodeId = node.nodeId;
+            formSelector = '.panel-edit-details.panel-setting-' + nodeType;
+            titleSelector = '.panel-edit-details';
+        } else {
+            formSelector = '.panel-' + formName;
+            titleSelector = '.panel-' + formName;
+        }
         
         var settingPanel = $('.panel-setting');
+        settingPanel.addClass('showed');
+        settingPanel.find('.active').removeClass('active');
+
         var settingPanelBody = settingPanel.find('.panel-body');
-        var formPanel = settingPanelBody.find('.panel-' + formName);
-        settingPanel.attr('class', 'panel panel-default panel-setting showed panel-' + formName);
-        settingPanelBody.find('.active').removeClass('active');
+        var formPanel = settingPanelBody.find(formSelector);
         formPanel.addClass('active');
+
+        var settingPanelHeading = settingPanel.find('.panel-heading');
+        settingPanelHeading.find(titleSelector).addClass('active');
 
         setTimeout(function () {
             formPanel.find('input:text').first().trigger('focus');
@@ -495,10 +463,9 @@ jsPlumb.ready(function () {
         var portData = JBNodes[nodeType].ports[portName];
         var label = portData.label;
         var maxConnections = portData.maxConnections;
-        var connectionName = JBApp.connectionNames[portName];
         var connection = info.connection;
 
-        flog('In connection, nodeType: ' + nodeType + ', portName: ' + portName + ', label: ' + label + ', connectionName: ' + connectionName + ', maxConnections: ' + maxConnections, info, connection);
+        flog('In connection, nodeType: ' + nodeType + ', portName: ' + portName + ', label: ' + label + ', maxConnections: ' + maxConnections, info, connection);
 
         // Check limitation of connections
         if (maxConnections !== -1) {
@@ -860,7 +827,7 @@ function initNodeActions() {
         var domElement = $(this).closest('.w');
         var id = domElement.attr('id');
         var type = domElement.attr('data-type');
-        var nodeData = JBApp.getNodeDataById(id);
+        var nodeData = JBApp.getNodeDataById(id)[1];
 
         if (typeof JBNodes[type].showSettingForm === 'function') {
             JBNodes[type].showSettingForm($('.panel-setting-' + type), nodeData);
