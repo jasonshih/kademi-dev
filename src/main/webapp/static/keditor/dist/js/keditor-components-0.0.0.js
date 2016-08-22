@@ -353,6 +353,7 @@
             });
         }
     }
+
 })(jQuery);
 /**
  * KEditor Google Map Component
