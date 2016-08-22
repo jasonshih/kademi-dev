@@ -1,0 +1,12 @@
+#if ($scope == "site")
+#set ($action = "/contentSearch")
+#end
+#if ($scope == "page")
+#set ($action = ".")
+#end
+<form action='$!action'>
+    <div class="input-group">
+        <input type="text" name="q" class="form-control" placeholder="Search" aria-describedby="searchBoxComponent">
+        <span class="input-group-addon" id="searchBoxComponent"><span class='glyphicon glyphicon-search'></span></span>
+    </div>
+</form>
