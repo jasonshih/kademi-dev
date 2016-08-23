@@ -272,6 +272,13 @@ function checkProcessStatus() {
                         if (typeof state.errorProfiles !== 'undefined') {
                             $('#myWizard').find('.errorProfiles').text(state.errorProfiles)
                         }
+                        flog("finished state", state, state.resultHash);
+                        if (typeof state.resultHash !== 'undefined' &&  state.resultHash != null ) {
+                            var href = "/_hashes/files/" + state.resultHash + ".csv";
+                            $('#myWizard').find('.errorRows').prop("href", href).closest("a").show();
+                        }else{
+                            $('#myWizard').find('.errorRows').closest("a").hide();
+                        }
 
                         $('#myWizard').wizard("next");
                         $('#table-users-body').reloadFragment({url: '/manageUsers/'});
@@ -288,9 +295,7 @@ function checkProcessStatus() {
                         if (isNaN(percentComplete)){
                             percentComplete = 0;
                         }
-                        if (percentComplete > 90){
-                            percentComplete = 90;
-                        }
+                        percentComplete = percentComplete * 0.9; // scale down to a max of 90% so the user doesnt think they're finished when they're not. 
                         $('#importProgressbar .progress-bar').attr('aria-valuenow', percentComplete).css('width',percentComplete+'%');
                         jobTitle.text("Process running...");
                     }
