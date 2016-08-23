@@ -272,6 +272,13 @@ function checkProcessStatus() {
                         if (typeof state.errorProfiles !== 'undefined') {
                             $('#myWizard').find('.errorProfiles').text(state.errorProfiles)
                         }
+                        flog("finished state", state, state.resultHash);
+                        if (typeof state.resultHash !== 'undefined' &&  state.resultHash != null ) {
+                            var href = "/_hashes/files/" + state.resultHash + ".csv";
+                            $('#myWizard').find('.errorRows').prop("href", href).closest("a").show();
+                        }else{
+                            $('#myWizard').find('.errorRows').closest("a").hide();
+                        }
 
                         $('#myWizard').wizard("next");
                         $('#table-users-body').reloadFragment({url: '/manageUsers/'});
