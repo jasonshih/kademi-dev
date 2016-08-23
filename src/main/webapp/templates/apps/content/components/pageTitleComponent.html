@@ -1,5 +1,8 @@
+#if (!$tag)
+#set ($tag = 'h1')
+#end
 #if ($page)
 <$tag>$page.title</$tag>
 #else
-<h1>Page Title</h1>
+<$tag class="alert alert-warning">Page Title</$tag>
 #end

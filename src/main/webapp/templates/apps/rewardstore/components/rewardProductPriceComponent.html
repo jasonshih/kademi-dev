@@ -1,3 +1,4 @@
+#if ($page)
 <div class="productPrice">
     <div id="addToCartSection">
         <span class="label label-success priceLabel">
@@ -9,3 +10,7 @@
         </span>
     </div>
 </div>
+
+#else
+<div class="alert alert-warning">Product price goes here</div>
+#end
