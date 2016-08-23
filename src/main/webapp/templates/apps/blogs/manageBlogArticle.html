@@ -3,7 +3,7 @@
         <title>Manage Blog Article</title>
         <script type="text/javascript" src="/static/typeahead/0.10.2/typeahead.bundle.js">//</script>
         <script type="text/javascript" src="/static/bootstrap-upcrop-image/1.0/bootstrap-upcrop-image.js">//</script>
-        <script type="text/javascript" src="manageBlogArticle.js">//</script>
+        <script type="text/javascript" bottom="true" src="manageBlogArticle.js">//</script>
         <script src="/static/d3/d3.v3.js" type="text/javascript">//</script>
         <link href="/static/nvd3/nv.d3.css" rel="stylesheet" type="text/css"/>
         <script src="/static/nvd3/nv.d3.js" type="text/javascript">//</script>
@@ -181,7 +181,7 @@
                             <label class="control-label col-md-3" for="articleDate">Article Date</label>
                             <div class="col-sm-5">
                                 <div class='input-group'>
-                                    <input type="text" id="articleDate" name="articleDateDate" placeholder="Start date" data-format="DD/MM/YYYY" value="$!page.articleDate" class="form-control date-picker" />
+                                    <input type="text" id="articleDate" name="articleDateDate" placeholder="Start date" value="$!page.articleDate" class="form-control datetimepicker" />
                                     <span class="input-group-addon">
                                         <a href="#articleDate" data-role="date-picker-trigger">
                                             <i class="fa fa-calendar"></i>
@@ -447,7 +447,7 @@
                         <label class="col-sm-3 control-label" for="newTagName">Embargo Date</label>
                         <div class="col-sm-8">
                             <div class="input-group">
-                                <input type="text" class="form-control date-picker" data-date-viewmode="years" data-date-format="dd/mm/yyyy" placeholder="Embargo date" value="" name="embargoDate"/>
+                                <input type="text" class="form-control datetimepicker" placeholder="Embargo date" value="" name="embargoDate"/>
                                 <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
                             </div>
                             <br/>

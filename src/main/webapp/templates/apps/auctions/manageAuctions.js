@@ -72,8 +72,7 @@ function initDateTimePicker() {
                 'left': left + 'px',
                 'z-index': 9999
             });
-        }
-        else if (datepicker.hasClass('top')) {
+        } else if (datepicker.hasClass('top')) {
             var top = $(this).offset().top - datepicker.outerHeight() - 40;
             var left = $(this).offset().left;
             datepicker.css({

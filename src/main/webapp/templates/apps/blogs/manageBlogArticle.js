@@ -2,8 +2,8 @@ var iframeUrl;
 var win = $(window);
 
 function initManageBlogArticle() {
+    $.timeago.settings.allowFuture = true;
     $('.timeago').timeago();
-
     if (isKEditor) {
         initEditorFrame();
         initPostMessage();
@@ -45,6 +45,38 @@ function initManageBlogArticle() {
     initManageArticleFiles();
     initGraphControls();
     loadGraphData();
+    initDateTimePicker();
+}
+
+function initDateTimePicker() {
+    $('body').css('position', 'relative');
+    var opts = {
+        widgetParent: 'body',
+        format: "DD/MM/YYYY"
+    };
+    $('.datetimepicker').datetimepicker(opts);
+    $('.datetimepicker').on('dp.show', function() {
+        var datepicker = $('body').find('.bootstrap-datetimepicker-widget:last');
+        if (datepicker.hasClass('bottom')) {
+            var top = $(this).offset().top - $(this).outerHeight();
+            var left = $(this).offset().left;
+            datepicker.css({
+                'top': top + 'px',
+                'bottom': 'auto',
+                'left': left + 'px',
+                'z-index': 9999
+            });
+        } else if (datepicker.hasClass('top')) {
+            var top = $(this).offset().top - datepicker.outerHeight() - 40;
+            var left = $(this).offset().left;
+            datepicker.css({
+                'top': top + 'px',
+                'bottom': 'auto',
+                'left': left + 'px',
+                'z-index': 9999
+            });
+        }
+    });
 }
 
 function onArticleSaved(resp) {
