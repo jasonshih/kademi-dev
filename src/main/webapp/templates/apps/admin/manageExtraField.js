@@ -79,7 +79,6 @@ function initCRUDExtraField() {
 function openExtraFieldModal(key, value) {
     flog("openExtraFieldModal");
     var modal = $('#modal-extra-field');
-
     if (key && value) {
         var txtName = $('#extra-field-name');
         var chkRequire = $('#extra-field-required');
@@ -198,6 +197,13 @@ function initExtraFieldModal() {
 
     form.forms({
         confirmMessage: null,
+        validate: function(form, config){
+            var builtinFields = ['firstname', 'surname', 'email', 'phone', 'nickname', 'birthdate'];
+            if (txtName.val() && builtinFields.indexOf(txtName.val().toLowerCase())!== -1){
+                return {error: 1, errorFields: ['addFieldName'], errorMessages: ['Field name must be different from built-in fields.']};
+            }
+            return true;
+        },
         onValid: function () {
             var valueString = '';
 
