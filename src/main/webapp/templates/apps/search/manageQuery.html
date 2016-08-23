@@ -52,7 +52,7 @@
                             <td>$hit.id</td>
                             <td>$hit.type</td>
                             #foreach( $field in $page.queryFieldNames)
-                            <th>$!hit.fields.get($field).value</th>
+                            <td>$!hit.fields.get($field).value</td>
                             #end
                         </tr>
                         #end
@@ -152,6 +152,6 @@
 
 
             });
-        </script>        
+        </script>
     </body>
 </html>
