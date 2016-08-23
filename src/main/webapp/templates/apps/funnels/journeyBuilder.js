@@ -5,7 +5,7 @@ var JBApp = {
 
     initialized: false,
 
-    getNodeData: function (node) {
+    getNodeInfo: function (node) {
         for (var key in node) {
             if (node.hasOwnProperty(key)) {
                 return [key, node[key]];
@@ -15,13 +15,13 @@ var JBApp = {
         return null;
     },
 
-    getNodeDataById: function (id) {
+    getNodeInfoById: function (id) {
         for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
             var node = JBApp.funnel.nodes[i];
-            var nodeData = JBApp.getNodeData(node);
+            var nodeInfo = JBApp.getNodeInfo(node);
 
-            if (nodeData[1].nodeId === id) {
-                return nodeData;
+            if (nodeInfo[1].nodeId === id) {
+                return nodeInfo;
                 break;
             }
         }
@@ -30,10 +30,10 @@ var JBApp = {
     getNodeTypeById: function (id) {
         for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
             var node = JBApp.funnel.nodes[i];
-            var nodeData = JBApp.getNodeData(node);
+            var nodeInfo = JBApp.getNodeInfo(node);
 
-            if (nodeData[1].nodeId === id) {
-                return nodeData[0];
+            if (nodeInfo[1].nodeId === id) {
+                return nodeInfo[0];
                 break;
             }
         }
@@ -87,7 +87,7 @@ var JBApp = {
                     portClass = 'ep-red';
                     break;
 
-                case 'decisionChoice':
+                case 'decisionChoices':
                     portClass = 'ep-green';
                     break;
 
@@ -193,20 +193,27 @@ var JBApp = {
         flog('initConnection', node, type);
 
         for (var portName in JBNodes[type].ports) {
+            var connectionType = portName;
+
             if (portName === 'decisionChoices') {
                 for (var key in node.choices) {
                     JBApp.jspInstance.connect({
                         source: node.nodeId,
                         target: key,
-                        type: portName
+                        type: connectionType
                     });
                 }
             } else {
+                if (portName === 'decisionDefault') {
+                    portName = 'nextNodeId';
+                    connectionType = 'decisionDefault';
+                }
+
                 if (node[portName]) {
                     JBApp.jspInstance.connect({
                         source: node.nodeId,
                         target: node[portName],
-                        type: portName
+                        type: connectionType
                     });
                 }
             }
@@ -251,41 +258,28 @@ var JBApp = {
     
     deleteConnection: function (connection) {
         flog('deleteConnection', connection);
-        
+
+        var portName = connection.endpoints[0].connectionType;
         for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
             var node = JBApp.funnel.nodes[i];
-            for (var key in node) {
-                if (node[key].nodeId === connection.sourceId) {
-                    if (key.indexOf('Goal') !== -1) {
-                        if (connection.hasType('timeoutNode')) {
-                            node[key].timeoutNode = '';
-                        } else {
-                            if (connection.hasType('nodeIdDelivered')) {
-                                node[key].nodeIdDelivered = '';
-                            }
-                            if (connection.hasType('nodeIdFailed')) {
-                                node[key].nodeIdFailed = '';
-                            }
-                            if (connection.hasType('nodeIdOpened')) {
-                                node[key].nodeIdOpened = '';
-                            }
-                            if (connection.hasType('nodeIdConverted')) {
-                                node[key].nodeIdConverted = '';
-                            }
+            var nodeInfo = JBApp.getNodeInfo(node);
+            var nodeData = nodeInfo[1];
+            var nodeType = nodeInfo[0];
+
+            if (nodeData.nodeId === connection.sourceId) {
+                if (nodeType === 'decision') {
+                    if (connection.hasType('decisionDefault')) {
+                        nodeData.nextNodeId = '';
+                    } else if (connection.hasType('decisionChoices')) {
+                        if (nodeData.choices.hasOwnProperty(connection.targetId)) {
+                            delete nodeData.choices[connection.targetId];
                         }
-                    } else if (key === 'decision') {
-                        if (connection.hasType('decisionDefault')) {
-                            node[key].nextNodeId = '';
-                        } else if (connection.hasType('decisionChoices')) {
-                            if (node[key].choices.hasOwnProperty(connection.targetId)) {
-                                delete node[key].choices[connection.targetId];
-                            }
-                        }
-                    } else {
-                        node[key].nextNodeId = '';
                     }
-                    break;
+                } else {
+                    nodeData[portName] = '';
                 }
+
+                break;
             }
         }
     },
@@ -519,16 +513,17 @@ jsPlumb.ready(function () {
             
             for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
                 var node = JBApp.funnel.nodes[i];
-                var nodeData = JBApp.getNodeData(node)[1];
+                var nodeData = JBApp.getNodeInfo(node)[1];
                 
                 if (nodeData.nodeId === connection.sourceId) {
                     if (nodeData.hasOwnProperty('choices')) {
                         flog('started from a decision node');
                         
                         if (connection.hasType('decisionDefault')) {
+                            flog(nodeData)
                             nodeData.nextNodeId = connection.targetId;
+                            flog(nodeData)
                         } else if (connection.hasType('decisionChoices')) {
-                            // decision choices
                             if (!nodeData.choices) {
                                 nodeData.choices = {};
                             }
@@ -556,14 +551,14 @@ jsPlumb.ready(function () {
 
                     for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
                         var node = JBApp.funnel.nodes[i];
-                        var nodeData = JBApp.getNodeData(node);
-                        JBApp.newNode(nodeData[1], nodeData[0]);
+                        var nodeInfo = JBApp.getNodeInfo(node);
+                        JBApp.newNode(nodeInfo[1], nodeInfo[0]);
                     }
 
                     for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
                         var node = JBApp.funnel.nodes[i];
-                        var nodeData = JBApp.getNodeData(node);
-                        JBApp.initConnection(nodeData[1], nodeData[0]);
+                        var nodeInfo = JBApp.getNodeInfo(node);
+                        JBApp.initConnection(nodeInfo[1], nodeInfo[0]);
                     }
 
                     JBApp.initialized = true;
@@ -606,12 +601,12 @@ function initSettingPanel() {
     });
 
     for (var nodeType in JBNodes) {
-        var nodeData = JBNodes[nodeType];
+        var nodeDef = JBNodes[nodeType];
 
-        if (typeof nodeData.initSettingForm === 'function') {
+        if (typeof nodeDef.initSettingForm === 'function') {
             var form = $('<form class="panel-setting-' + nodeType + ' panel-edit-details"></form>');
             panelSettingBody.append(form);
-            nodeData.initSettingForm(form);
+            nodeDef.initSettingForm(form);
         } else {
             $.error('"initSettingForm" method of ' + nodeType + ' does not exist!');
         }
@@ -687,10 +682,10 @@ function initSideBar() {
 
     var snippetsStr = '';
     for (var nodeType in JBNodes) {
-        var nodeData = JBNodes[nodeType];
+        var nodeDef = JBNodes[nodeType];
 
         snippetsStr += '<li data-type="' + nodeType + '" class="list-group-item">';
-        snippetsStr += '    <img src="' + nodeData.previewUrl + '" class="img-responsive" />';
+        snippetsStr += '    <img src="' + nodeDef.previewUrl + '" class="img-responsive" />';
         snippetsStr += '</li>';
     }
     rightPanel.find('.list-group').html(snippetsStr);
@@ -763,7 +758,7 @@ function doSaveChoice(form) {
 
     for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
         var node = JBApp.funnel.nodes[i];
-        var nodeData = JBApp.getNodeData(node)[1];
+        var nodeData = JBApp.getNodeInfo(node)[1];
         
         if (nodeData.nodeId === sourceId) {
             if (nodeData.hasOwnProperty('choices')) {
@@ -812,7 +807,7 @@ function initNodeActions() {
         var nodeId = $(this).closest('.w').attr('id');
         for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
             var node = JBApp.funnel.nodes[i];
-            var nodeData = JBApp.getNodeData(node)[1];
+            var nodeData = JBApp.getNodeInfo(node)[1];
             
             if (nodeData.nodeId === nodeId) {
                 showTitleForm(nodeData);
@@ -827,7 +822,7 @@ function initNodeActions() {
         var domElement = $(this).closest('.w');
         var id = domElement.attr('id');
         var type = domElement.attr('data-type');
-        var nodeData = JBApp.getNodeDataById(id)[1];
+        var nodeData = JBApp.getNodeInfoById(id)[1];
 
         if (typeof JBNodes[type].showSettingForm === 'function') {
             JBNodes[type].showSettingForm($('.panel-setting-' + type), nodeData);
