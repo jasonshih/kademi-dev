@@ -109,6 +109,58 @@ function initFormPointsSystem() {
     });
 }
 
+function setGroupRecipient(name, groupType, isRecip) {
+    flog("setGroupRecipient", name, groupType, isRecip);
+    try {
+        $.ajax({
+            type: 'POST',
+            url: window.location.pathname,
+            data: {
+                group: name,
+                isRecip: isRecip
+            },
+            dataType: "json",
+            success: function (data) {
+                if (data.status) {
+                    flog("saved ok", data);
+                    if (isRecip) {
+                        var groupClass = "";
+                        var groupIcon = "";
+                        if (groupType === "P" || groupType === "") {
+                            groupClass = "alert alert-success";
+                            groupIcon = "clip-users";
+                        } else if (groupType === "S") {
+                            groupClass = "alert alert-info";
+                            groupIcon = "fa fa-trophy";
+                        } else if (groupType === "M") {
+                            groupClass = "alert alert-info";
+                            groupIcon = "fa fa-envelope";
+                        }
+                        var newBtn = $('<span id="group_' + name + '" class="group-list ' + groupClass + '">'
+                            + '<i class="' + groupIcon + '"></i>'
+                            + '<span class="block-name" title="' + name + '"> ' + name + '</span>'
+                            + ' <a href="' + name + '" class="btn btn-xs btn-danger btn-remove-group" title="Delete access for group ' + name + '"><i class="fa fa-times"></i></a>'
+                            + '</span>');
+                        $(".GroupList").append(newBtn);
+                        flog("appended to", $(".GroupList"));
+                    } else {
+                        var toRemove = $("#group_" + name);
+                        toRemove.remove();
+                    }
+                } else {
+                    flog("error", data);
+                    Msg.error("Sorry, couldnt save " + data);
+                }
+            },
+            error: function (resp) {
+                flog("error", resp);
+                Msg.error("Sorry, couldnt save - " + resp);
+            }
+        });
+    } catch (e) {
+        flog("exception in createJob", e);
+    }
+}
 
 function initDebitsPjax() {
     $(document).pjax2('.debitsTableWrap', {

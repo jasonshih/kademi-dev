@@ -112,7 +112,7 @@
                                         <span class="chevron"></span>
                                     </li>
                                     <li data-step="3" data-name="import">
-                                        <span class="badge">3</span>Import
+                                        <span class="badge">3</span>Review
                                         <span class="chevron"></span>
                                     </li>
                                     <li data-step="4" data-name="processing">
@@ -177,7 +177,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <br>
+                                        <br/>
                                         <div class="text-right">
                                             <i>
                                                 Modes:
@@ -210,11 +210,39 @@
                                         <h4>Start importing</h4>
                                         <p>Press the button here to begin importing. This process imports at a rate of about 1000 rows per minute,
                                             so may take some time depending on the size of the file</p>
-                                        <div class="well" style="margin-bottom: 5px">
-                                            <p class="beforeImportInfo text-info"></p>
+
+                                        <button type="submit" class="btn btn-success btn-large">
+                                            <span class="fa fa-arrow-circle-right"></span>
+                                            Import now
+                                        </button>
+                                        
+                                        <hr/>
+
+                                        <table class="table">
+                                            <tr>
+                                                <th>New profiles to be inserted</th>
+                                                <td class="beforeImportNumNew"></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Existing profiles to be updated</th>
+                                                <td class="beforeImportNumExisting"></td>
+                                            </tr>                                                    
+                                            <tr>
+                                                <th>Invalid records</th>
+                                                <td class="beforeImportNumInvalid"></td>
+                                            </tr>
+                                        </table>
+
+                                        <i>Any invalid records are displayed below. If you proceed these will not be imported, but you can download a list at the end to correct and reupload</i>
+                                        <div class="table-responsive" style="max-height: 300px">
+                                            <table class="table table-bordered table-striped">
+                                                <tbody class="beforeImportInvalidRows">
+
+                                                </tbody>
+                                            </table>
                                         </div>
-                                        <button type="submit" class="btn btn-success">Import now</button>
                                     </div>
+
                                     <div class="step-pane sample-pane alert" data-step="4">
                                         <h4>Import running</h4>
                                         <div class="progress" id="importProgressbar">
