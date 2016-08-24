@@ -52,7 +52,7 @@ function initDateTimePicker() {
     $('body').css('position', 'relative');
     var opts = {
         widgetParent: 'body',
-        format: "DD/MM/YYYY"
+        format: "DD/MM/YYYY HH:mm"
     };
     $('.datetimepicker').datetimepicker(opts);
     $('.datetimepicker').on('dp.show', function() {
