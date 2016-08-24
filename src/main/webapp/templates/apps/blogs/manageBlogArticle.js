@@ -54,9 +54,7 @@ function initDateTimePicker() {
         widgetParent: 'body',
         format: "DD/MM/YYYY HH:mm"
     };
-    $('.datetimepicker[name=embargoDate]').datetimepicker(opts);
-    opts.format = 'DD/MM/YYYY';
-    $('.datetimepicker[name=articleDateDate]').datetimepicker(opts);
+    $('.datetimepicker').datetimepicker(opts);
     $('.datetimepicker').on('dp.show', function() {
         var datepicker = $('body').find('.bootstrap-datetimepicker-widget:last');
         if (datepicker.hasClass('bottom')) {
