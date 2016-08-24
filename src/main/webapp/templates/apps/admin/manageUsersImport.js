@@ -59,7 +59,25 @@ function initUploads() {
                 success: function (resp) {
                     if (resp.status && resp.data) {
                         form.find('[type=submit]').removeClass('hide');
-                        form.find(".beforeImportInfo").text('New profiles found: ' + resp.data.newProfilesCount + ', existing profiles found: ' + resp.data.existingProfilesCount);
+                        form.find(".beforeImportNumNew").text(resp.data.newProfilesCount);
+                        form.find(".beforeImportNumExisting").text(resp.data.existingProfilesCount);
+                        form.find(".beforeImportNumInvalid").text(resp.data.invalidRows.length);
+                        
+                        var invalidRowsBody = form.find(".beforeImportInvalidRows");                        
+                        invalidRowsBody.html("");
+                        if( resp.data.invalidRows ) {
+                            for( var i=0; i<resp.data.invalidRows.length; i++) {
+                                var row = resp.data.invalidRows[i];
+                                flog("row", row);
+                                var tr = $("<tr>");
+                                for( var col=0; col<row.length; col++) {
+                                    var colText = row[col];
+                                    tr.append("<td>" + colText + "</td>");
+                                }
+                                invalidRowsBody.append(tr);
+                            }
+                        }
+                        
                         userImportTotalCount = resp.data.newProfilesCount + resp.data.existingProfilesCount;
                     } else {
                         form.find(".beforeImportInfo").text('Cannot verify data to import');
