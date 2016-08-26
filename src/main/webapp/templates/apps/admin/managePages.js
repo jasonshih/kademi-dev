@@ -60,11 +60,29 @@ function initAddPageModal() {
         $('.param-wrapper').html('');
     });
 
-    form.on("input", ".pageTitle", function(e) {
+    var txtNewFileName = form.find(".newFileName[type=text]");
+    var txtNewFileNameHidden = form.find(".newFileName[type=hidden]");
+
+    form.find('.defaultFolderPageTrigger').on('click', function () {
+        flog('Default folder page is clicked!', txtNewFileName, txtNewFileNameHidden);
+
+        txtNewFileName.prop('disabled', true).removeClass('required');
+        txtNewFileNameHidden.attr('disabled', false);
+    });
+
+    form.find('.fileNameTrigger').on('click', function () {
+        flog('File name is clicked!', txtNewFileName, txtNewFileNameHidden);
+
+        txtNewFileName.prop('disabled', false).addClass('required');
+        txtNewFileNameHidden.attr('disabled', true);
+    });
+
+    form.on("input", ".pageTitle", function (e) {
         var inp = $(e.target);
         var val = inp.val();
         var pageName = form.find('[type=hidden][name=pageName]');
-        if (!pageName.val()){
+
+        if (!pageName.val() && txtNewFileName.is(':enabled')) {
             // new page
             var newVal = val.toLowerCase();
             newVal = newVal.replaceAll("[", "-");
@@ -75,7 +93,7 @@ function initAddPageModal() {
             newVal = newVal.replaceAll("(", "-");
             newVal = newVal.replaceAll(")", "-");
             flog("on change", val, newVal);
-            form.find(".newFileName").val(newVal);
+            txtNewFileName.val(newVal);
         }
     });
 
@@ -204,7 +222,13 @@ function showEditModal(name, pageArticle) {
             modal.find('input[name=itemType]').val(data.itemType);
             modal.find('input[name=category]').val(data.category);
             modal.find('input[name=tags]').val(data.tags);
-            modal.find('input[name=name]').val(name);
+
+            if (name === 'index.html') {
+                modal.find('.defaultFolderPageTrigger').trigger('click');
+            } else {
+                modal.find('.fileNameTrigger').trigger('click');
+                modal.find('.newFileName[type=text]').val(name);
+            }
 
             flog(data.metas, data.params);
 

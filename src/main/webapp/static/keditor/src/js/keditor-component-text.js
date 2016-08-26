@@ -10,6 +10,7 @@
     var flog = KEditor.log;
 
     CKEDITOR.disableAutoInline = true;
+    CKEDITOR.dtd.$removeEmpty['i'] = false;
 
     // Text component
     // ---------------------------------------------------------------------
