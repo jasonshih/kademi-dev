@@ -53,6 +53,8 @@
         }
     };
 
+    var defaultRegionCode = typeof window.defaultRegionCode !== 'undefined' ? window.defaultRegionCode : 'AU';
+
     // Version for jquery.forms
     $.fn.forms.version = '1.1.1';
 
