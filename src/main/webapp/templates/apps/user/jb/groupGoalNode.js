@@ -29,11 +29,46 @@ JBNodes['groupGoal'] = {
             '<div class="form-group">' +
             '    <div class="col-md-12">' +
             '        <label>Group name</label>' +
-            '        <input type="text" class="form-control groupName" value="" />' +
+            '        <select class="form-control groupName"></select>' +
+            '    </div>' +
+            '</div>' +
+            '<div class="form-group">' +
+            '    <div class="col-md-12">' +
+            '        <label>Timeout</label>' +
+            '        <div class="input-group">' +
+            '            <input type="number" class="form-control timeout-multiples numeric" />' +
+            '            <div class="input-group-btn">' +
+            '                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="timeout-units-preview"></span>' +
+            '                    <span class="caret"></span>' +
+            '                </button>' +
+            '                <input type="hidden" class="timeout-units" value="" />' +
+            '                <ul class="dropdown-menu dropdown-menu-right timeout-units-selector">' +
+            '                    <li><a href="#" data-value="y">Years</a></li>' +
+            '                    <li><a href="#" data-value="M">Months</a></li>' +
+            '                    <li><a href="#" data-value="w">Weeks</a></li>' +
+            '                    <li><a href="#" data-value="d">Days</a></li>' +
+            '                    <li><a href="#" data-value="h">Hours</a></li>' +
+            '                    <li><a href="#" data-value="m">Minutes</a></li>' +
+            '                </ul>' +
+            '            </div>' +
+            '        </div>' +
             '    </div>' +
             '</div>'
-
         );
+
+        $.ajax({
+            url: '/groups/_DAV/PROPFIND?fields=name',
+            type: 'get',
+            dataType: 'json',
+            success: function (resp) {
+                var optionsStr = '<option value="">[No group selected]</option>';
+                for (var i = 1; i < resp.length; i++) {
+                    optionsStr += '<option value="' + resp[i].name + '">' + resp[i].name + '</option>';
+                }
+
+                form.find('.groupName').html(optionsStr);
+            }
+        });
 
         form.find('.timeout-units-selector li').on('click', function (e) {
             e.preventDefault();
@@ -51,7 +86,9 @@ JBNodes['groupGoal'] = {
             onValid: function () {
                 var timeoutUnits = form.find('.timeout-units').val();
                 var timeoutMultiples = form.find('.timeout-multiples').val();
+                var groupName = form.find('.groupName').val();
 
+                JBApp.currentSettingNode.groupName = groupName || null;
                 JBApp.currentSettingNode.timeoutUnits = timeoutUnits || null;
                 JBApp.currentSettingNode.timeoutMultiples = timeoutMultiples || null;
                 JBApp.saveFunnel('Funnel is saved');
@@ -69,6 +106,7 @@ JBNodes['groupGoal'] = {
         }
 
         form.find('.timeout-multiples').val(node.timeoutMultiples !== null ? node.timeoutMultiples : '');
+        form.find('.groupName').val(node.groupName !== null ? node.groupName : '');
         JBApp.showSettingPanel(node);
     }
 };
