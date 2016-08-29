@@ -1,6 +1,6 @@
 JBNodes['groupGoal'] = {
     title: '<i class="fa fa-trophy"></i> <span class="node-type">Group goal</span>',
-    previewUrl: '/theme/apps/email/jb/groupGoalNode.png',
+    previewUrl: '/theme/apps/user/jb/groupGoalNode.png',
     ports: {
         nodeIdAccepted: {
             label: 'accepted',
