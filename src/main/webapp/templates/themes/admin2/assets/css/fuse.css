@@ -826,7 +826,7 @@ ul.main-navigation-menu {
     .main-navigation {
         top: 99px;
         bottom: auto;
-        max-height: calc(100% - 99px)!important;
+        max-height: calc(100% - 99px) !important;
         min-height: 0 !important;
     }
 
@@ -924,6 +924,22 @@ ul.main-navigation-menu li > ul.sub-menu > li {
 .fallback-dropzone {
     overflow: auto !important;
     padding: 10px !important;
+}
+
+/* ============================================================================
+   Bootstrap switch in input-group
+   ============================================================================ */
+.input-group-btn .bootstrap-switch {
+    margin-left: -1px;
+    border-radius: 0;
+}
+
+.input-group-btn .bootstrap-switch > div > span.bootstrap-switch-handle-on {
+    border-radius: 0;
+}
+
+.input-group-btn .bootstrap-switch > div > span.bootstrap-switch-handle-off {
+    border-radius: 0;
 }
 
 /* ============================================================================
@@ -1341,7 +1357,7 @@ body.ajax-loading .ajaxLoader {
 }
 
 .table-responsive {
-    min-height: 220px;    
+    min-height: 220px;
     /**
     BM: Removed because messing up resp table layouts, eg on manage search index. Not sure why i ever put this in
     overflow-x: visible;

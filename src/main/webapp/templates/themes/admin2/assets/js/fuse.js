@@ -289,7 +289,22 @@ function initTable() {
 function initSwitch() {
     flog("fuse.js: make switch");
     if ($(document).bootstrapSwitch) {
-        $(".make-switch input[type=checkbox], input.make-switch").bootstrapSwitch();
+
+        $(".make-switch input[type=checkbox], input.make-switch").each(function () {
+            var target = $(this);
+            var dataHolder = target.is('.make-switch') ? target : target.closest('.make-switch');
+
+            target.bootstrapSwitch({
+                onColor: dataHolder.attr('data-on-color') || 'primary',
+                offColor: dataHolder.attr('data-off-color') || 'default',
+                size: dataHolder.attr('data-size') || 'normal',
+                onText: dataHolder.attr('data-on-text') || 'ON',
+                offText: dataHolder.attr('data-off-text') || 'OFF',
+                labelText: dataHolder.attr('data-label-text') || '&nbsp;',
+                handleWidth: +dataHolder.attr('data-handle-width') || 'auto',
+                labelWidth: +dataHolder.attr('data-label-width') || 'auto'
+            });
+        });
     }
 }
 
