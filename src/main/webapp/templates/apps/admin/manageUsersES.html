@@ -31,6 +31,15 @@
                 overflow: hidden;
                 white-space: nowrap;
             }
+
+            .btn-group-user-states .btn-link {
+                text-decoration: none !important;
+                color: #aaa;
+            }
+
+            .btn-group-user-states .btn-link.active {
+                color: #000;
+            }
         </style>
     </head>
     <body class="manage-users">
@@ -41,13 +50,12 @@
                         <p class="input-group search-user input-group-sm">
                             <input type="text" id="user-query" class="form-control" placeholder="Search for user here" value="" />
                             <span class="input-group-btn">
-                                <input checked="checked" type="checkbox" name="enabled" value="true" class="make-switch btn-switch-enable" title="Showing enable users" data-on-color="success" data-off-color="danger" data-on-text="<i class='fa fa-check' title='Enable users'></i>" data-off-text="<i class='fa fa-times' title='Disabled users'></i>" data-handle-width="50" data-label-width="20" />
                                 <button class="btn btn-sm btn-default" type="button" data-type="clearer" data-target="#user-query">
                                     <i class="fa fa-times"></i>
                                 </button>
                             </span>
                         </p>
-                        <div class="btn-group btn-group-sm">
+                        <div class="btn-group btn-group-sm" style="margin-bottom: 5px;">
                             <a href="#" class="btn btn-success btn-add-user"><i class="fa fa-user-plus"></i> Add new user</a>
                             <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
                                 <i class="fa fa-list"></i>
@@ -62,6 +70,14 @@
                                 <li class="divider"></li>
                                 <li class="presentation" role="menuitem"><a role="button" href="unsubscribers.csv" download="unsubscribers.csv">Open Unsubscribers CSV</a></li>
                             </ul>
+                        </div>
+                        <div class="btn-group btn-group-sm btn-group-user-states" style="margin-bottom: 5px;" data-toggle="buttons">
+                            <label class="btn btn-link active">
+                                <input type="radio" name="enabled" value="true" class="btn-enable-user" autocomplete="off" checked="checked" /> <i class="fa fa-check"></i> Enabled Users
+                            </label>
+                            <label class="btn btn-link">
+                                <input type="radio" name="enabled" value="false" class="btn-disable-user" autocomplete="off" /> <i class="fa fa-times"></i> Disabled Users
+                            </label>
                         </div>
                     </div>
                     <div class="col-lg-7">

@@ -213,9 +213,7 @@ function initSearchUser() {
         doSearch();
     });
 
-    $('.btn-switch-enable').closest('.bootstrap-switch').attr('title', 'Showing enabled users');
-    $('.btn-switch-enable').on('switchChange.bootstrapSwitch', function(event, state) {
-        $(this).closest('.bootstrap-switch').attr('title', 'Showing ' + (state.value ? 'enabled' : 'disabled') + ' users');
+    $('.btn-group-user-states .btn-link input[type=radio]').on('change', function () {
         doSearch();
     });
 }
@@ -223,7 +221,7 @@ function initSearchUser() {
 function doSearch() {
     var query = $('#user-query').val();
     var groupName = $('#search-group').val();
-    var isEnabled = $('.btn-switch-enable').is(':checked');
+    var isEnabled = $('.btn-enable-user').is(':checked');
     flog('doSearch', query, groupName);
     var uri = URI(window.location);
     uri.setSearch('q', query);
