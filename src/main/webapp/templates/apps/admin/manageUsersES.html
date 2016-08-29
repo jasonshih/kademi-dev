@@ -71,12 +71,16 @@
                                 <li class="presentation" role="menuitem"><a role="button" href="unsubscribers.csv" download="unsubscribers.csv">Open Unsubscribers CSV</a></li>
                             </ul>
                         </div>
+                        #set ($showEnabledUsers = true)
+                        #if ($params.enabled)
+                            #set ($showEnabledUsers = $params.enabled)
+                        #end
                         <div class="btn-group btn-group-sm btn-group-user-states" style="margin-bottom: 5px;" data-toggle="buttons">
-                            <label class="btn btn-link active">
-                                <input type="radio" name="enabled" value="true" class="btn-enable-user" autocomplete="off" checked="checked" /> <i class="fa fa-check"></i> Enabled Users
+                            <label class="btn btn-link #if ($showEnabledUsers == true) active #end">
+                                <input type="radio" #if ($showEnabledUsers == true) checked="checked" #end name="enabled" value="true" class="btn-enable-user" autocomplete="off" /> <i class="fa fa-check"></i> Enabled Users
                             </label>
-                            <label class="btn btn-link">
-                                <input type="radio" name="enabled" value="false" class="btn-disable-user" autocomplete="off" /> <i class="fa fa-times"></i> Disabled Users
+                            <label class="btn btn-link #if ($showEnabledUsers == false) active #end">
+                                <input type="radio" #if ($showEnabledUsers == false) checked="checked" #end name="enabled" value="false" class="btn-disable-user" autocomplete="off" /> <i class="fa fa-times"></i> Disabled Users
                             </label>
                         </div>
                     </div>
