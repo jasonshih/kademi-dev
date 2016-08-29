@@ -1,3 +1,4 @@
+#if ($page)
 #if( $userResource )
 <h1>Sorry, you dont have permission to view this page</h1>
 <h4>You're currently logged in as <b>$userResource.title</b> with email <b>$userResource.email</b></h4>
@@ -51,3 +52,6 @@
         }); // setup login and logout
     });
 </script>
+#else
+<div class="alert alert-warning">Login form goes here</div>
+#end

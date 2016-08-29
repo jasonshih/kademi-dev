@@ -19,6 +19,7 @@
                         <thead>
                             <tr>
                                 <th>Title</th>
+                                <th>Num leads</th>
                                 <th class="action"></th>
                             </tr>
                         </thead>
@@ -26,10 +27,11 @@
                             #foreach($v in $page.children)
                             <tr>
                                 <td><a href="$v.name">$v.title</a></td>
+                                <td>$!v.numLeads</td>
 
                                 <td class="action">
                                     <div class="btn-group btn-group-sm">
-                                        <a href="$v.name" class="btn btn-sm btn-info"><i class="fa fa-cog"></i> Manage</a>
+                                        <a href="$v.name" class="btn btn-sm btn-info"><i class="fa fa-cog"></i> Edit</a>
                                         <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
                                             <span class="caret"></span>
                                             <span class="sr-only">Toggle Dropdown</span>

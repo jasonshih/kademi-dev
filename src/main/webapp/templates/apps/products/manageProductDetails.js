@@ -2,7 +2,7 @@ function initProductDetails() {
     jQuery("form.updateProduct").forms({
         callback: function () {
             $('#relatedAppWrap').reloadFragment({
-                whenComplete: function(dom){
+                whenComplete: function (dom) {
                 }
             });
             Msg.success("Successfully updated product!");
@@ -22,23 +22,25 @@ function initProductDetails() {
     });
     initProductImages();
     initProductVariants();
+    initProductVariantImgUpload();
 }
 
 function initProductVariants() {
     var modal = $("#modal-product-option");
     modal.find("form").forms({
-        callback: function(resp, form) {
+        callback: function (resp, form) {
             flog("done", resp, form);
-            if( resp.status ) {
+            if (resp.status) {
                 Msg.info("Saved");
                 modal.modal("hide");
-                $("#variantsList").reloadFragment();
+                reloadVariantList();
             } else {
                 Msg.error("An error occured saving the option");
             }
         }
     });
-    $("#variants").on("click", ".btn-add-variant", function(e) {
+
+    $("#variants").on("click", ".btn-add-variant", function (e) {
         e.preventDefault();
         var target = $(e.target);
         var ppId = target.closest(".product-parameter").data("product-parameter-id");
@@ -51,7 +53,8 @@ function initProductVariants() {
 
         modal.modal("show");
     });
-    $("#variants").on("click", ".btn-edit-variant", function(e) {
+
+    $("#variants").on("click", ".btn-edit-variant", function (e) {
         e.preventDefault();
         var target = $(e.target);
         var tr = target.closest("tr");
@@ -59,10 +62,78 @@ function initProductVariants() {
         modal.find("input[name=productParameterId]").val(ppId);
         var optId = target.closest("a").attr("href");
         modal.find("input[name=productOptionId]").val(optId);
-        modal.find("input[name=name]").val( tr.find(".variant-name").text() );
-        modal.find("input[name=title]").val( tr.find(".variant-title").text() );
-        modal.find("input[name=cost]").val( tr.find(".variant-cost").text() );
+        modal.find("input[name=name]").val(tr.find(".variant-name").text());
+        modal.find("input[name=title]").val(tr.find(".variant-title").text());
+        modal.find("input[name=cost]").val(tr.find(".variant-cost").text());
         modal.modal("show");
+    });
+
+    $('#variants').on('click', '.btn-option-img-del', function (e) {
+        e.preventDefault();
+
+        var btn = $(this);
+        var optid = btn.data('optid');
+
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                productOptionId: optid,
+                productOptionImgUrl: false
+            },
+            success: function () {
+                reloadVariantList();
+            }
+        });
+    });
+}
+
+function reloadVariantList() {
+    $('#variantsList').reloadFragment({
+        whenComplete: function () {
+            initProductVariantImgUpload();
+        }
+    });
+}
+
+function initProductVariantImgUpload() {
+    $('.btn-option-img-upload').each(function (i, item) {
+        var btn = $(item);
+        var optid = btn.data('optid');
+
+        btn.upcropImage({
+            buttonContinueText: 'Save',
+            url: window.location.pathname + '?productOptionId=' + optid,
+            fieldName: 'variantImg',
+            onCropComplete: function (resp) {
+                flog("onCropComplete:", resp, resp.nextHref);
+                reloadVariantList();
+            },
+            onContinue: function (resp) {
+                flog("onContinue:", resp, resp.result.nextHref);
+                $.ajax({
+                    url: window.location.pathname,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        uploadedHref: resp.result.nextHref,
+                        applyImage: true
+                    },
+                    success: function (resp) {
+                        flog("success");
+                        if (resp.status) {
+                            Msg.info("Done");
+                            reloadVariantList();
+                        } else {
+                            Msg.error("An error occured processing the variant image.");
+                        }
+                    },
+                    error: function () {
+                        alert('An error occured processing the variant image.');
+                    }
+                });
+            }
+        });
     });
 }
 
@@ -131,7 +202,7 @@ function doCreateProductParameter(newTitle) {
             flog("success");
             if (resp.status) {
                 Msg.info("Done");
-                $("#variants").reloadFragment();
+                reloadVariantList();
             } else {
                 Msg.error("An error occured creating the variant type");
             }

@@ -208,7 +208,12 @@ function initSearchUser() {
             doSearch();
         }, 500);
     });
+
     $('#search-group').change(function () {
+        doSearch();
+    });
+
+    $('.btn-group-user-states .btn-link input[type=radio]').on('change', function () {
         doSearch();
     });
 }
@@ -216,10 +221,12 @@ function initSearchUser() {
 function doSearch() {
     var query = $('#user-query').val();
     var groupName = $('#search-group').val();
+    var isEnabled = $('.btn-enable-user').is(':checked');
     flog('doSearch', query, groupName);
     var uri = URI(window.location);
     uri.setSearch('q', query);
     uri.setSearch('g', groupName);
+    uri.setSearch('enabled', isEnabled);
     flog('doSearch', uri.toString());
     var newHref = uri.toString();
     window.history.pushState('', newHref, newHref);
