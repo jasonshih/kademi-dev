@@ -1,6 +1,7 @@
+#if ($page)
 <div id="successfull-div" style="display:none;">
     <div class="well well-lg text-center">
-        <h2><i class="fa fa fa-check-circle"></i>Your order has been placed successful</h2>
+        <h2><i class="fa fa fa-check-circle"></i>Your order has been placed successfully</h2>
     </div>
 </div>
 
@@ -53,3 +54,6 @@
         initEcommerceCheckout();
     });
 </script>
+#else
+<div class="alert alert-warning">Ecommerce checkout info component goes here</div>
+#end
