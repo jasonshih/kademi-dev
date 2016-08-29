@@ -33,11 +33,7 @@ function initProductVariants() {
             if (resp.status) {
                 Msg.info("Saved");
                 modal.modal("hide");
-                $("#variantsList").reloadFragment({
-                    whenComplete: function () {
-                        initProductVariantImgUpload();
-                    }
-                });
+                reloadVariantList();
             } else {
                 Msg.error("An error occured saving the option");
             }
@@ -86,13 +82,17 @@ function initProductVariants() {
                 productOptionImgUrl: false
             },
             success: function () {
-                $('#variantsList').reloadFragment({
-                    whenComplete: function () {
-                        initProductVariantImgUpload();
-                    }
-                });
+                reloadVariantList();
             }
         });
+    });
+}
+
+function reloadVariantList() {
+    $('#variantsList').reloadFragment({
+        whenComplete: function () {
+            initProductVariantImgUpload();
+        }
     });
 }
 
@@ -107,11 +107,7 @@ function initProductVariantImgUpload() {
             fieldName: 'variantImg',
             onCropComplete: function (resp) {
                 flog("onCropComplete:", resp, resp.nextHref);
-                $('#variantsList').reloadFragment({
-                    whenComplete: function () {
-                        initProductVariantImgUpload();
-                    }
-                });
+                reloadVariantList();
             },
             onContinue: function (resp) {
                 flog("onContinue:", resp, resp.result.nextHref);
@@ -127,11 +123,7 @@ function initProductVariantImgUpload() {
                         flog("success");
                         if (resp.status) {
                             Msg.info("Done");
-                            $('#variantsList').reloadFragment({
-                                whenComplete: function () {
-                                    initProductVariantImgUpload();
-                                }
-                            });
+                            reloadVariantList();
                         } else {
                             Msg.error("An error occured processing the variant image.");
                         }
@@ -210,7 +202,7 @@ function doCreateProductParameter(newTitle) {
             flog("success");
             if (resp.status) {
                 Msg.info("Done");
-                $("#variants").reloadFragment();
+                reloadVariantList();
             } else {
                 Msg.error("An error occured creating the variant type");
             }
