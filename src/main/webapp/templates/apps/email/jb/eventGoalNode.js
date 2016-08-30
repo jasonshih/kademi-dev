@@ -14,6 +14,8 @@ JBNodes['eventGoal'] = {
         }
     },
 
+    settingEnabled: true,
+
     initSettingForm: function (form) {
         form.append(
             '<div class="form-group">' +

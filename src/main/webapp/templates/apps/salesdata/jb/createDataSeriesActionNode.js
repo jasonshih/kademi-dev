@@ -8,6 +8,8 @@ JBNodes['createDataSeriesAction'] = {
             maxConnections: 1
         }
     },
+
+    settingEnabled: true,
     
     initSettingForm: function (form) {
         form.append(

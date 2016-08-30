@@ -106,7 +106,9 @@ var JBApp = {
         var nodeHtml = '';
         nodeHtml += '<div class="title"> ' + JBNodes[type].title;
         nodeHtml += '   <span class="node-buttons clearfix">';
-        nodeHtml += '       <span class="btnNodeDetails" title="Edit details"><i class="fa fa-fw fa-cog"></i></span>';
+        if (JBNodes[type].settingEnabled) {
+            nodeHtml += '       <span class="btnNodeDetails" title="Edit details"><i class="fa fa-fw fa-cog"></i></span>';
+        }
         nodeHtml += '       <span class="btnNodeDelete" title="Delete this node"><i class="fa fa-fw fa-trash"></i></span>';
         nodeHtml += '   </span>';
         nodeHtml += '</div>';
@@ -520,9 +522,7 @@ jsPlumb.ready(function () {
                         flog('started from a decision node');
                         
                         if (connection.hasType('decisionDefault')) {
-                            flog(nodeData)
                             nodeData.nextNodeId = connection.targetId;
-                            flog(nodeData)
                         } else if (connection.hasType('decisionChoices')) {
                             if (!nodeData.choices) {
                                 nodeData.choices = {};
@@ -530,6 +530,7 @@ jsPlumb.ready(function () {
                             nodeData.choices[connection.targetId] = {constant: {}};
                         }
                     } else {
+                        flog(portName, '======================', connection.targetId);
                         nodeData[portName] = connection.targetId;
                     }
                     
@@ -603,12 +604,14 @@ function initSettingPanel() {
     for (var nodeType in JBNodes) {
         var nodeDef = JBNodes[nodeType];
 
-        if (typeof nodeDef.initSettingForm === 'function') {
-            var form = $('<form class="panel-setting-' + nodeType + ' panel-edit-details"></form>');
-            panelSettingBody.append(form);
-            nodeDef.initSettingForm(form);
-        } else {
-            $.error('"initSettingForm" method of ' + nodeType + ' does not exist!');
+        if (nodeDef.settingEnabled) {
+            if (typeof nodeDef.initSettingForm === 'function') {
+                var form = $('<form class="panel-setting-' + nodeType + ' panel-edit-details"></form>');
+                panelSettingBody.append(form);
+                nodeDef.initSettingForm(form);
+            } else {
+                $.error('"initSettingForm" method of ' + nodeType + ' does not exist!');
+            }
         }
     }
 

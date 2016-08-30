@@ -9,6 +9,8 @@ JBNodes['emailAction'] = {
         }
     },
 
+    settingEnabled: true,
+
     initSettingForm: function (form) {
         form.forms({
             onSuccess: function () {
