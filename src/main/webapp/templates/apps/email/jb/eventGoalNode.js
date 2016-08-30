@@ -74,6 +74,12 @@ JBNodes['eventGoal'] = {
             '</div>' +
             '<div class="form-group">' +
             '    <div class="col-md-12">' +
+            '        <label>Stage</label>' +
+            '        <select class="form-control stageName"></select>' +
+            '    </div>' +
+            '</div>' +
+            '<div class="form-group">' +
+            '    <div class="col-md-12">' +
             '        <label>Timeout</label>' +
             '        <div class="input-group">' +
             '            <input type="number" class="form-control timeout-multiples numeric" />' +
@@ -117,6 +123,7 @@ JBNodes['eventGoal'] = {
                 var condition2 = form.find('.condition2').val();
                 var condition3 = form.find('.condition3').val();
                 var condition4 = form.find('.condition4').val();
+                var stageName = form.find('.stageName').val();
 
                 JBApp.currentSettingNode.timeoutUnits = timeoutUnits || null;
                 JBApp.currentSettingNode.timeoutMultiples = timeoutMultiples || null;
@@ -125,6 +132,8 @@ JBNodes['eventGoal'] = {
                 JBApp.currentSettingNode.condition2 = condition2 || null;
                 JBApp.currentSettingNode.condition3 = condition3 || null;
                 JBApp.currentSettingNode.condition4 = condition4 || null;
+                JBApp.currentSettingNode.stageName = stageName || null;
+
                 JBApp.saveFunnel('Funnel is saved');
                 JBApp.hideSettingPanel();
             }
@@ -138,6 +147,14 @@ JBNodes['eventGoal'] = {
             form.find('.timeout-units').val('');
             form.find('.timeout-units-preview').html('');
         }
+
+        var stagesOptionStr = '<option value="">[No stage selected]</option>';
+        if (JBApp.funnel.stages && $.isArray(JBApp.funnel.stages)) {
+            for (var i = 0; i < JBApp.funnel.stages.length; i++) {
+                stagesOptionStr += '<option value="' + JBApp.funnel.stages[i].name + '">' + JBApp.funnel.stages[i].desc + '</option>';
+            }
+        }
+        form.find('.stageName').html(stagesOptionStr).val(node.timeoutMultiples !== null ? node.timeoutMultiples : '');
 
         form.find('.timeout-multiples').val(node.timeoutMultiples !== null ? node.timeoutMultiples : '');
         form.find('.triggerTypeId').val(node.triggerTypeId !== null ? node.triggerTypeId : '');
