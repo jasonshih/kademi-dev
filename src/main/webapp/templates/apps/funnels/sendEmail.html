@@ -6,10 +6,14 @@
         #set( $website = $page.website )
         #if( $params.mode == "settings" )
         <form method="POST" action="$page.path" class="" id="frmDetails" style="">
-            <a class="btn btn-info" href="$page.href">
-                <i class="fa fa-envelope"></i>
-                Manage
-            </a>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <a class="btn btn-info" href="$page.href">
+                        <i class="fa fa-envelope"></i>
+                        Manage
+                    </a>
+                </div>
+            </div>
 
             <div class="form-group">
                 <div class="col-sm-12">
@@ -24,12 +28,6 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-12">
-                    <label for="subject">Subject</label>
-                    <textarea style="height: 70px" id="subject" name="subject" value="" placeholder="Enter the email subject here" class="form-control required-if-shown">$formatter.htmlEncode( $page.node.subject )</textarea>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-12">
                     <label for="form">From</label>
                     <input type="text" id="form" name="from" value="$!formatter.htmlEncode( $page.from )" placeholder="admin@mybusinessname.com" class="form-control" />
                 </div>
@@ -38,12 +36,21 @@
                 <div class="col-sm-12">
                     <label for="replyTo">Reply to</label>
                     <input type="text" name="replyTo" id="replyTo" value="$!formatter.htmlEncode( $page.replyTo )" placeholder="admin@mybusinessname.com" class="form-control" />
+                    <small>Can use MVEL syntax</small>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-12">
                     <label for="to">To</label>
                     <input type="text" id="to" name="to" value="$!formatter.htmlEncode( $page.to )" placeholder="admin@mybusinessname.com" class="form-control" />
+                    <small>Can use MVEL syntax</small>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <label for="subject">Subject</label>
+                    <textarea style="height: 70px" id="subject" name="subject" placeholder="Enter the email subject here" class="form-control required-if-shown">$formatter.htmlEncode( $page.node.subject )</textarea>
+                    <small>Can use MVEL syntax</small>
                 </div>
             </div>
         </form>
