@@ -1,13 +1,13 @@
-(function($) {
+(function ($) {
     var methods = {
-        init: function(options) {
+        init: function (options) {
             var container = this;
             var config = $.extend({
                 url: "./",
                 useJsonPut: true,
                 useDropzone: false,
                 buttonText: "Add files",
-                oncomplete: function(data) {
+                oncomplete: function (data) {
                     flog("finished upload", data);
                 },
                 isInCkeditor: false,
@@ -62,7 +62,7 @@
 
                 var previewDiv = null;
 
-                $.getScriptOnce(('/static/dropzone/v3.10.2/dropzone.js'), function() {
+                $.getScriptOnce(('/static/dropzone/v3.10.2/dropzone.js'), function () {
                     flog("Loaded dropzone plugin, now init...");
                     Dropzone.autoDiscover = false;
                     var dzConfig = {
@@ -71,8 +71,8 @@
                         addRemoveLinks: true,
                         parallelUploads: 1,
                         uploadMultiple: false,
-                        init: function() {
-                            this.on("success", function(file, resp) {
+                        init: function () {
+                            this.on("success", function (file, resp) {
                                 flog("success1", resp);
                                 var result = null;
                                 if (typeof resp === "string") {
@@ -80,7 +80,7 @@
                                 } else {
                                     result = resp;
                                 }
-                                if( $.isArray(result)) {
+                                if ($.isArray(result)) {
                                     result = result[0]; // might be a propfind response
                                 }
                                 var data = {
@@ -90,23 +90,30 @@
                                 flog("success2", file, result);
                                 config.oncomplete(data, file.name, result.href);
                             });
-                            this.on("error", function(file, errorMessage) {
+
+                            this.on("error", function (file, errorMessage) {
                                 alert("An error occured uploading: " + file.name + " because: " + errorMessage);
                             });
-                            this.on("addedfile", function(file, errorMessage) {
+
+                            this.on("addedfile", function (file, errorMessage) {
                                 if (previewDiv !== null) {
                                     previewDiv.show();
                                 }
                             });
-                            this.on("complete", function(file, errorMessage) {
+
+                            this.on("complete", function (file, errorMessage) {
                                 if (previewDiv !== null) {
                                     previewDiv.hide();
                                 }
                             });
+
+                            this.on("processing", function (file) {
+                                this.options.url = form.attr('action');
+                            });
                         }
                     };
 
-                    if(config.acceptedFiles){
+                    if (config.acceptedFiles) {
                         dzConfig.acceptedFiles = config.acceptedFiles;
                     }
 
@@ -196,17 +203,17 @@
                 container.data('fileUpload', fileUpload);
             });
         },
-        setUrl: function(url) {
+        setUrl: function (url) {
             flog("setUrl", this, url);
             var newAction = url + "_DAV/PUT?overwrite=true";
             this.find("form").attr("action", newAction);
         }
     };
 
-    $.fn.mupload = function(method) {
+    $.fn.mupload = function (method) {
         flog("mupload", this);
         if (methods[method]) {
-            return methods[ method ].apply(this, Array.prototype.slice.call(arguments, 1));
+            return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
         } else if (typeof method === 'object' || !method) {
             return methods.init.apply(this, arguments);
         } else {
