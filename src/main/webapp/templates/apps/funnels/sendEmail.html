@@ -4,13 +4,13 @@
     </head>
     <body>
         #set( $website = $page.website )
-        #if( $params.mode == "settings" )        
+        #if( $params.mode == "settings" )
         <form method="POST" action="$page.path" class="" id="frmDetails" style="">
             <a class="btn btn-info" href="$page.href">
                 <i class="fa fa-envelope"></i>
                 Manage
             </a>
-            
+
             <div class="form-group">
                 <div class="col-sm-12">
                     <label for="website">Website</label>
@@ -40,15 +40,21 @@
                     <input type="text" name="replyTo" id="replyTo" value="$!formatter.htmlEncode( $page.replyTo )" placeholder="admin@mybusinessname.com" class="form-control" />
                 </div>
             </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <label for="to">To</label>
+                    <input type="text" id="to" name="to" value="$!formatter.htmlEncode( $page.to )" placeholder="admin@mybusinessname.com" class="form-control" />
+                </div>
+            </div>
         </form>
-        #else        
+        #else
         <form method="POST" action="$page.path" class="form-horizontal" id="frmDetails">
             <button class="btn btn-success" type="submit">Save</button>
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
                         <label class="control-label col-md-4" for="website">Website</label>
-                        <div class="col-md-8">                            
+                        <div class="col-md-8">
                             <select name="website" class="form-control required-if-shown">
                                 $formatter.option("", "[Please select]" )
                                 #foreach($website in $rootFolder.websites)
@@ -78,6 +84,13 @@
                             <small class="text-muted help-block">Eg <i>"Joe Bloggs" &lt;joe@bloggs.com&gt;</i>.</small>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-4" for="replyT">To address</label>
+                        <div class="col-sm-8">
+                            <input type="text" id="to" name="to" value="$!formatter.htmlEncode( $page.to )" placeholder="admin@mybusinessname.com" class="form-control" />
+                            <small class="text-muted help-block">Eg <i>"Joe Bloggs" &lt;joe@bloggs.com&gt;</i>.</small>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-md-6">
                     <div class="pull-right">
@@ -99,7 +112,7 @@
                     <div>
                     </div>
                 </div>
-            </div>   
+            </div>
         </form>
         <hr style="clear: both"/>
         <iframe id="rawBody" class="" style="width: 100%; height: 1200px; overflow-y: auto" src="edmeditor?fileName=${page.node.contentFileName}&useHash=true" >
@@ -145,18 +158,18 @@
             <div class="modal-body" id="send-test-body">
             </div>
         </div>
-        
+
         <script type="text/javascript" src="/theme/apps/email/manageEmail.js">//</script>
         <script type="text/javascript">
             $(function () {
                 initSendTest();
                 $("#frmDetails").forms({
-                    onSuccess : function() {
+                    onSuccess: function () {
                         Msg.info("Saved");
                     }
                 });
             });
-        </script>        
-        #end                
+        </script>
+        #end
     </body>
 </html>
