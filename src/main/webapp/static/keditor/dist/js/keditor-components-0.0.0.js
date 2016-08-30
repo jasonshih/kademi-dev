@@ -174,14 +174,10 @@
             flog('init "carousel" component', component);
             var componentContent = component.children('.keditor-component-content');
             var carousel = componentContent.find('.carousel');
-
-            if (!carousel.attr('id')) {
-                var id = keditor.generateId('component-carousel');
-                carousel.attr('id', id);
-                carousel.find('.carousel-indicators li').attr('data-target', id);
-                carousel.find('.carousel-control').attr('href', '#' + id);
-            }
-
+            var id = keditor.generateId('component-carousel');
+            carousel.attr('id', id);
+            carousel.find('.carousel-indicators li').attr('data-target', id);
+            carousel.find('.carousel-control').attr('href', '#' + id);
         },
         getContent: function (component, keditor) {
             var componentContent = component.children('.keditor-component-content');
