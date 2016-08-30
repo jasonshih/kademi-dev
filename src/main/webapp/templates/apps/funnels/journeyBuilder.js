@@ -515,11 +515,12 @@ jsPlumb.ready(function () {
             
             for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
                 var node = JBApp.funnel.nodes[i];
-                var nodeData = JBApp.getNodeInfo(node)[1];
-                
+                var nodeInfo = JBApp.getNodeInfo(node);
+                var nodeData = nodeInfo[1];
+
                 if (nodeData.nodeId === connection.sourceId) {
-                    if (nodeData.hasOwnProperty('choices')) {
-                        flog('started from a decision node');
+                    if (nodeInfo[0] === 'decision') {
+                        flog('Started from a decision node');
                         
                         if (connection.hasType('decisionDefault')) {
                             nodeData.nextNodeId = connection.targetId;
@@ -530,7 +531,6 @@ jsPlumb.ready(function () {
                             nodeData.choices[connection.targetId] = {constant: {}};
                         }
                     } else {
-                        flog(portName, '======================', connection.targetId);
                         nodeData[portName] = connection.targetId;
                     }
                     
