@@ -426,14 +426,18 @@
                                 <td>$!lead.trackingId</td>
                                 <td>
                                     #if( $lead.profile )
-                                    <a href="/manageUsers/$lead.profile.id">$lead.profile.email</a>                                    
+                                    <a href="/manageUsers/$lead.profile.id">$lead.profile.email</a>
                                     #end
                                 </td>
                                 <td>
-                                    $!page.nodeTitle($lead.lastAttainedGoal)                                    
+                                    #if( $lead.lastAttainedGoal)
+                                    <a href="$lead.lastAttainedGoal">$page.nodeTitle($lead.lastAttainedGoal)</a>
+                                    #end
                                 </td>
                                 <td>
-                                    $!page.nodeTitle($lead.currentGoal)                                    
+                                    #if( $lead.currentGoal )
+                                    <a href="$lead.currentGoal">$page.nodeTitle($lead.currentGoal)</a>
+                                    #end
                                 </td>
                                 <td><abbr class="timeago" title="$lead.createDate">$formatter.formatDate( $lead.createDate )</abbr></td>
                                 <td><abbr class="timeago" title="$lead.lastAttainedDate">$formatter.formatDate( $lead.lastAttainedDate )</abbr></td>
