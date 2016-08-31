@@ -58,6 +58,7 @@ function initAddPageModal() {
         clearForm(form);
         $('.meta-wrapper').html('');
         $('.param-wrapper').html('');
+        $('.fileNameTrigger').trigger('click');
     });
 
     var txtNewFileName = form.find(".newFileName[type=text]");

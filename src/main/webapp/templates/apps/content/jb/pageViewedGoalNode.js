@@ -14,6 +14,8 @@ JBNodes['pageViewedGoal'] = {
         }
     },
 
+    settingEnabled: true,
+
     initSettingForm: function (form) {
         form.append(
             '<div class="form-group">' +
@@ -26,6 +28,12 @@ JBNodes['pageViewedGoal'] = {
             '    <div class="col-md-12">' +
             '        <label>Path</label>' +
             '        <input type="text" class="form-control path" value="" />' +
+            '    </div>' +
+            '</div>' +
+            '<div class="form-group">' +
+            '    <div class="col-md-12">' +
+            '        <label>Stage</label>' +
+            '        <select class="form-control stageName"></select>' +
             '    </div>' +
             '</div>' +
             '<div class="form-group">' +
@@ -84,12 +92,14 @@ JBNodes['pageViewedGoal'] = {
                 var timeoutMultiples = form.find('.timeout-multiples').val();
                 var path = form.find('.path').val();
                 var websiteName = form.find('.websiteName').val();
+                var stageName = form.find('.stageName').val();
 
                 JBApp.currentSettingNode.timeoutUnits = timeoutUnits || null;
                 JBApp.currentSettingNode.timeoutMultiples = timeoutMultiples || null;
                 JBApp.currentSettingNode.path = path || null;
                 JBApp.currentSettingNode.websiteName = websiteName || null;
-                
+                JBApp.currentSettingNode.stageName = stageName || null;
+
                 JBApp.saveFunnel('Funnel is saved');
                 JBApp.hideSettingPanel();
             }
@@ -103,6 +113,14 @@ JBNodes['pageViewedGoal'] = {
             form.find('.timeout-units').val('');
             form.find('.timeout-units-preview').html('');
         }
+
+        var stagesOptionStr = '<option value="">[No stage selected]</option>';
+        if (JBApp.funnel.stages && $.isArray(JBApp.funnel.stages)) {
+            for (var i = 0; i < JBApp.funnel.stages.length; i++) {
+                stagesOptionStr += '<option value="' + JBApp.funnel.stages[i].name + '">' + JBApp.funnel.stages[i].desc + '</option>';
+            }
+        }
+        form.find('.stageName').html(stagesOptionStr).val(node.timeoutMultiples !== null ? node.timeoutMultiples : '');
 
         form.find('.timeout-multiples').val(node.timeoutMultiples !== null ? node.timeoutMultiples : '');
         form.find('.path').val(node.path || '');

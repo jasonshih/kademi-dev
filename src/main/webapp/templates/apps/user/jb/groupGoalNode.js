@@ -24,12 +24,20 @@ JBNodes['groupGoal'] = {
         }
     },
 
+    settingEnabled: true,
+
     initSettingForm: function (form) {
         form.append(
             '<div class="form-group">' +
             '    <div class="col-md-12">' +
             '        <label>Group name</label>' +
             '        <select class="form-control groupName"></select>' +
+            '    </div>' +
+            '</div>' +
+            '<div class="form-group">' +
+            '    <div class="col-md-12">' +
+            '        <label>Stage</label>' +
+            '        <select class="form-control stageName"></select>' +
             '    </div>' +
             '</div>' +
             '<div class="form-group">' +
@@ -87,10 +95,13 @@ JBNodes['groupGoal'] = {
                 var timeoutUnits = form.find('.timeout-units').val();
                 var timeoutMultiples = form.find('.timeout-multiples').val();
                 var groupName = form.find('.groupName').val();
+                var stageName = form.find('.stageName').val();
 
                 JBApp.currentSettingNode.groupName = groupName || null;
                 JBApp.currentSettingNode.timeoutUnits = timeoutUnits || null;
                 JBApp.currentSettingNode.timeoutMultiples = timeoutMultiples || null;
+                JBApp.currentSettingNode.stageName = stageName || null;
+
                 JBApp.saveFunnel('Funnel is saved');
                 JBApp.hideSettingPanel();
             }
@@ -104,6 +115,14 @@ JBNodes['groupGoal'] = {
             form.find('.timeout-units').val('');
             form.find('.timeout-units-preview').html('');
         }
+
+        var stagesOptionStr = '<option value="">[No stage selected]</option>';
+        if (JBApp.funnel.stages && $.isArray(JBApp.funnel.stages)) {
+            for (var i = 0; i < JBApp.funnel.stages.length; i++) {
+                stagesOptionStr += '<option value="' + JBApp.funnel.stages[i].name + '">' + JBApp.funnel.stages[i].desc + '</option>';
+            }
+        }
+        form.find('.stageName').html(stagesOptionStr).val(node.timeoutMultiples !== null ? node.timeoutMultiples : '');
 
         form.find('.timeout-multiples').val(node.timeoutMultiples !== null ? node.timeoutMultiples : '');
         form.find('.groupName').val(node.groupName !== null ? node.groupName : '');

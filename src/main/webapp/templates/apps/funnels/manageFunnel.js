@@ -131,8 +131,17 @@ function initPropertiesForm() {
             JBApp.funnel.customerActivities = customerActivities;
             JBApp.funnel.funnelTesters = funnelTesters;
 
-            saveFunnel('', function () {
+            JBApp.saveFunnel('', function () {
                 Msg.success('Properties are saved!');
+
+                var stagesOptionStr = '<option value="">[No stage selected]</option>';
+                if (JBApp.funnel.stages && $.isArray(JBApp.funnel.stages)) {
+                    for (var i = 0; i < JBApp.funnel.stages.length; i++) {
+                        stagesOptionStr += '<option value="' + JBApp.funnel.stages[i].name + '">' + JBApp.funnel.stages[i].desc + '</option>';
+                    }
+                }
+
+                $('#builder .panel-setting .stageName').html(stagesOptionStr);
             });
         }
     });

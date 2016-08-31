@@ -3,12 +3,7 @@
         <title>$view.title</title>
         <link rel="stylesheet" type="text/css" href="manageUser.css" />
         <script type="text/javascript" src="/static/uri/1.15.1/URI.js">//</script>
-        <!-- Import users wizard -->
-        <link href="//www.fuelcdn.com/fuelux/3.13.0/css/fuelux.min.css" rel="stylesheet"/>
-        <script src="//www.fuelcdn.com/fuelux/3.13.0/js/fuelux.min.js">//</script>
-        <script src="/theme/assets/plugins/jQuery-Smart-Wizard/js/jquery.smartWizard.js">//</script>
         <script type="text/javascript" src="manageUser.js">//</script>
-        <script type="text/javascript" src="manageUsersImport.js">//</script>
         <style>
             #table-users {
                 table-layout: fixed;
@@ -75,7 +70,7 @@
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu">
-                                <li class="presentation" role="menuitem"><a href="#importerWizard" data-toggle="collapse" class="btn-upload-users-csv">Import &amp; remove users</a></li>
+                                <li class="presentation" role="menuitem"><a href="upload" class="btn-upload-users-csv">Import &amp; remove users</a></li>
                                 <li class="presentation" role="menuitem"><a role="button" href="users.csv" download="users.csv">Export users</a></li>
                                 <li class="presentation" role="menuitem"><a href="#" class="btn-match-orgs">Match orgs</a></li>
                                 #portlets("manageUsersTools")
@@ -119,206 +114,6 @@
                     </div>
                 </div>
 
-                <div class="row collapse"  id="importerWizard" style="margin-bottom:30px">
-                    <div class="col-lg-12">
-                        <div class="wizard" id="myWizard">
-                            <div class="steps-container">
-                                <ul class="steps">
-                                    <li data-step="1" data-name="upload" class="active">
-                                        <span class="badge">1</span>Upload
-                                        <span class="chevron"></span>
-                                    </li>
-                                    <li data-step="2">
-                                        <span class="badge">2</span>Select columns
-                                        <span class="chevron"></span>
-                                    </li>
-                                    <li data-step="3" data-name="import">
-                                        <span class="badge">3</span>Review
-                                        <span class="chevron"></span>
-                                    </li>
-                                    <li data-step="4" data-name="processing">
-                                        <span class="badge">4</span>Processing
-                                        <span class="chevron"></span>
-                                    </li>
-                                    <li data-step="5" data-name="complete">
-                                        <span class="badge">5</span>Complete
-                                        <span class="chevron"></span>
-                                    </li>
-
-                                </ul>
-                            </div>
-                            <div class="actions">
-                                <button type="button" class="btn btn-default btn-prev">
-                                    <span class="glyphicon glyphicon-arrow-left"></span>Prev
-                                </button>
-                                <button type="button" class="btn btn-primary btn-next" data-last="Complete">Next
-                                    <span class="glyphicon glyphicon-arrow-right"></span>
-                                </button>
-                            </div>
-                            <form method="post" action="">
-                                <div class="step-content">
-                                    <div class="step-pane active sample-pane alert" data-step="1">
-                                        <h4>Upload Users Data</h4>
-                                        <div id='btn-upload' class="pull-left"></div>
-                                        <div class="clearfix"></div>
-                                    </div>
-                                    <div class="step-pane sample-pane alert" data-step="2">
-
-                                        <input type="hidden" name="fileHash" value=""/>
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <div class="form-inline text-right">
-                                                    <div class="form-group" style="margin-right: 20px">
-                                                        <label for="startRow" >Start row: </label>
-                                                        <input style="width: 100px" type="number" min="1" name="startRow" id="startRow" class="form-control" value="1"/>
-                                                    </div>
-                                                    <div class="form-group" style="margin-right: 20px">
-                                                        <label for="defaultGroup">Default group: </label>
-                                                        <select id="defaultGroup" name="defaultGroup" class="form-control">
-                                                            <option value="">[No default group]</option>
-                                                            #foreach($group in $rootFolder.groups)
-                                                            <option value="$group.name">
-                                                                #if( $group.title)
-                                                                $group.title
-                                                                #else
-                                                                $group.name
-                                                                #end
-                                                            </option>
-                                                            #end
-                                                        </select>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="removalMode">Mode: </label>
-                                                        <select id="removalMode" name="removalMode" class="form-control">
-                                                            <option value="">Auto</option>
-                                                            <option value="remove">Remove all uploaded</option>
-                                                            <option value="unsub">Un-subscribe all uploaded</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <br/>
-                                        <div class="text-right">
-                                            <i>
-                                                Modes:
-                                                Auto will only remove profiles if you select a removal column. If so it must have a value of unsub or remove, or be left blank to add or update normally.
-                                                <br/>The "remove all uploaded" mode will remove all profiles in the uploaded file without creating an unsubscribe record
-                                                <br/>"Un-subscribe all.." will remove all profiles and create unsubscribe records for them
-                                            </i>
-                                        </div>
-
-                                        <hr/>
-
-                                        <p class="lead">Please select which destination field each column should be imported into:</p>
-
-                                        <div class="table-responsive" style="max-height: 300px; overflow-y: auto">
-                                            <table class="table table-bordered table-striped" id="importerTable" >
-                                                <thead>
-                                                    <tr id="importerHead">
-                                                        <th>Please wait...</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="importerBody">
-                                                    <tr>
-                                                        <td>Loading...</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <div class="step-pane sample-pane alert" data-step="3">
-                                        <h4>Start importing</h4>
-                                        <p>Press the button here to begin importing. This process imports at a rate of about 1000 rows per minute,
-                                            so may take some time depending on the size of the file</p>
-
-                                        <button type="submit" class="btn btn-success btn-large">
-                                            <span class="fa fa-arrow-circle-right"></span>
-                                            Import now
-                                        </button>
-                                        
-                                        <hr/>
-
-                                        <table class="table">
-                                            <tr>
-                                                <th>New profiles to be inserted</th>
-                                                <td class="beforeImportNumNew"></td>
-                                            </tr>
-                                            <tr>
-                                                <th>Existing profiles to be updated</th>
-                                                <td class="beforeImportNumExisting"></td>
-                                            </tr>                                                    
-                                            <tr>
-                                                <th>Invalid records</th>
-                                                <td class="beforeImportNumInvalid"></td>
-                                            </tr>
-                                        </table>
-
-                                        <i>Any invalid records are displayed below. If you proceed these will not be imported, but you can download a list at the end to correct and reupload</i>
-                                        <div class="table-responsive" style="max-height: 300px">
-                                            <table class="table table-bordered table-striped">
-                                                <tbody class="beforeImportInvalidRows">
-
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-
-                                    <div class="step-pane sample-pane alert" data-step="4">
-                                        <h4>Import running</h4>
-                                        <div class="progress" id="importProgressbar">
-                                            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
-                                            </div>
-                                        </div>
-                                        <div class="process-results">
-                                            <p>
-                                                <strong>Process Status:</strong>
-                                                <strong id='job-status'></strong>
-                                            </p>
-
-                                            <button class="btn btn-danger" name="cancel" type="button" id="btn-cancel-import">Cancel Import</button>
-                                        </div>
-
-                                    </div>
-                                    <div class="step-pane sample-pane alert" data-step="5">
-                                        <table class="table table-bordered">
-                                            <tr>
-                                                <th>Number created</th>
-                                                <td class="createdProfiles"></td>
-                                            </tr>
-                                            <tr>
-                                                <th>Number updated:</th>
-                                                <td class="updatedProfiles"></td>
-                                            </tr>
-                                            <tr>
-                                                <th>Number removed</th>
-                                                <td class="removedProfiles"></td>
-                                            </tr>
-                                            <tr>
-                                                <th>Number un-subscribed</th>
-                                                <td class="unsubbedProfiles"></td>
-                                            </tr>
-                                            <tr>
-                                                <th>Number with errors</th>
-                                                <td class="errorProfiles"></td>
-                                            </tr>
-                                            <tr>
-                                                <th>Errors file</th>
-                                                <td class="">
-                                                    <a href="" class="errorRows btn btn-warning">
-                                                        <span class="fa fa-download"></span>
-                                                    </a>
-                                                </td>
-                                            </tr>
-
-                                        </table>
-                                    </div>
-
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="">
@@ -824,7 +619,6 @@
             var availableProfileFields = $formatter.toJson($page.availableFields);
             $(function () {
                 initManageUsers();
-                initManageUsersImport();
 
                 $('#aggregationsContainer').on('click', '.term-select', function (e) {
                     e.preventDefault();

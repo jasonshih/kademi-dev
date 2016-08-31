@@ -2,7 +2,7 @@
  * Created by Anh on 4/8/2016.
  */
 
-var usersImportUrl = '/manageUsers/userFile';
+var usersImportUrl = '/manageUsers/upload';
 var importWizardStarted = false;
 var userImportTotalCount = 0;
 function initManageUsersImport() {
@@ -62,8 +62,8 @@ function initUploads() {
                         form.find(".beforeImportNumNew").text(resp.data.newProfilesCount);
                         form.find(".beforeImportNumExisting").text(resp.data.existingProfilesCount);
                         form.find(".beforeImportNumInvalid").text(resp.data.invalidRows.length);
-                        
-                        var invalidRowsBody = form.find(".beforeImportInvalidRows");                        
+
+                        var invalidRowsBody = form.find(".beforeImportInvalidRows");
                         invalidRowsBody.html("");
                         if( resp.data.invalidRows ) {
                             for( var i=0; i<resp.data.invalidRows.length; i++) {
@@ -77,7 +77,7 @@ function initUploads() {
                                 invalidRowsBody.append(tr);
                             }
                         }
-                        
+
                         userImportTotalCount = resp.data.newProfilesCount + resp.data.existingProfilesCount;
                     } else {
                         form.find(".beforeImportInfo").text('Cannot verify data to import');
@@ -313,7 +313,7 @@ function checkProcessStatus() {
                         if (isNaN(percentComplete)){
                             percentComplete = 0;
                         }
-                        percentComplete = percentComplete * 0.9; // scale down to a max of 90% so the user doesnt think they're finished when they're not. 
+                        percentComplete = percentComplete * 0.9; // scale down to a max of 90% so the user doesnt think they're finished when they're not.
                         $('#importProgressbar .progress-bar').attr('aria-valuenow', percentComplete).css('width',percentComplete+'%');
                         jobTitle.text("Process running...");
                     }

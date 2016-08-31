@@ -14,6 +14,8 @@ JBNodes['contactFormGoal'] = {
         }
     },
 
+    settingEnabled: true,
+
     initSettingForm: function (form) {
         form.append(
             '<div class="form-group">' +
@@ -26,6 +28,12 @@ JBNodes['contactFormGoal'] = {
             '    <div class="col-md-12">' +
             '        <label>Contact form path</label>' +
             '        <input type="text" class="form-control contactFormPath" value="" />' +
+            '    </div>' +
+            '</div>' +
+            '<div class="form-group">' +
+            '    <div class="col-md-12">' +
+            '        <label>Stage</label>' +
+            '        <select class="form-control stageName"></select>' +
             '    </div>' +
             '</div>' +
             '<div class="form-group">' +
@@ -84,11 +92,13 @@ JBNodes['contactFormGoal'] = {
                 var timeoutMultiples = form.find('.timeout-multiples').val();
                 var contactFormPath = form.find('.contactFormPath').val();
                 var websiteName = form.find('.websiteName').val();
+                var stageName = form.find('.stageName').val();
 
                 JBApp.currentSettingNode.timeoutUnits = timeoutUnits || null;
                 JBApp.currentSettingNode.timeoutMultiples = timeoutMultiples || null;
                 JBApp.currentSettingNode.contactFormPath = contactFormPath || null;
                 JBApp.currentSettingNode.websiteName = websiteName || null;
+                JBApp.currentSettingNode.stageName = stageName || null;
 
                 JBApp.saveFunnel('Funnel is saved');
                 JBApp.hideSettingPanel();
@@ -103,6 +113,14 @@ JBNodes['contactFormGoal'] = {
             form.find('.timeout-units').val('');
             form.find('.timeout-units-preview').html('');
         }
+
+        var stagesOptionStr = '<option value="">[No stage selected]</option>';
+        if (JBApp.funnel.stages && $.isArray(JBApp.funnel.stages)) {
+            for (var i = 0; i < JBApp.funnel.stages.length; i++) {
+                stagesOptionStr += '<option value="' + JBApp.funnel.stages[i].name + '">' + JBApp.funnel.stages[i].desc + '</option>';
+            }
+        }
+        form.find('.stageName').html(stagesOptionStr).val(node.timeoutMultiples !== null ? node.timeoutMultiples : '');
 
         form.find('.timeout-multiples').val(node.timeoutMultiples !== null ? node.timeoutMultiples : '');
         form.find('.contactFormPath').val(node.contactFormPath || '');

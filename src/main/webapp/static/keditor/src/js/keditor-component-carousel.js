@@ -17,14 +17,10 @@
             flog('init "carousel" component', component);
             var componentContent = component.children('.keditor-component-content');
             var carousel = componentContent.find('.carousel');
-
-            if (!carousel.attr('id')) {
-                var id = keditor.generateId('component-carousel');
-                carousel.attr('id', id);
-                carousel.find('.carousel-indicators li').attr('data-target', id);
-                carousel.find('.carousel-control').attr('href', '#' + id);
-            }
-
+            var id = keditor.generateId('component-carousel');
+            carousel.attr('id', id);
+            carousel.find('.carousel-indicators li').attr('data-target', id);
+            carousel.find('.carousel-control').attr('href', '#' + id);
         },
         getContent: function (component, keditor) {
             var componentContent = component.children('.keditor-component-content');
@@ -101,11 +97,16 @@
                 }
             });
 
-            $(document.body).on('click', '.carouselImageItem a', function (e) {
+            $(document.body).on('click', '.carouselImageItem a.btn-remove-image', function (e) {
                 e.preventDefault();
-                var hash = $(this).siblings('[data-hash]').attr('data-hash');
-                self.refreshCarousel(keditor.getSettingComponent(), hash);
-                $(this).parent().remove();
+
+                if (confirm('Are you sure that you want to delete this image?')) {
+                    var btn = $(this);
+                    var hash = btn.closest('.btn-group').siblings('[data-hash]').attr('data-hash');
+
+                    self.refreshCarousel(keditor.getSettingComponent(), hash);
+                    btn.closest('.carouselImageItem').remove();
+                }
             });
 
             form.find('.carouselPause').on('change', function (e) {
@@ -168,7 +169,7 @@
                 '   <img class="img-responsive" src="' + src + '" data-hash="' + hash + '" />' +
                 '   <div class="btn-group btn-group-sm">' +
                 '       <a class="btn btn-info btn-sort-image" href="#"><i class="fa fa-sort"></i></a>' +
-                '       <a title="Delete this image" class="btn btn-danger" href="#"><i class="fa fa-trash"></i></a>' +
+                '       <a title="Delete this image" class="btn btn-danger btn-remove-image" href="#"><i class="fa fa-trash"></i></a>' +
                 '   </div>' +
                 '</div>'
             );

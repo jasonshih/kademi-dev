@@ -12,6 +12,7 @@
     // since there's jquery.milton-image-select is using the same shorthand $().mselect, just create alias for this
     $.fn.mselectAll = $.fn.mselect;
     flog('mselectAll loaded');
+
     $.fn.mselect.DEFAULT = {
         btnClass: 'btn btn-success',
         btnOkClass: 'btn btn-sm btn-primary',
@@ -28,7 +29,7 @@
         },
         onSelectFile: function (selectedUrl, selectedRelUrl) {
         },
-        onSelectFolder: function(selectedUrl, selectedRelUrl){
+        onSelectFolder: function (selectedUrl, selectedRelUrl) {
 
         },
         useModal: true
@@ -53,7 +54,7 @@
                             modal = getModal(config);
                         }
                         config.showModal(modal);
-                        if (config.zIndex){
+                        if (config.zIndex) {
                             modal.parent('.modal-scrollable').css('z-index', config.zIndex + 1).siblings('.modal-backdrop').css('z-index', config.zIndex);
                         }
                     });
@@ -68,14 +69,14 @@
             };
 
             var deps = ['/static/js/jquery.jstree.js', '/static/js/jquery.milton-tree.js', '/static/milton-upload/1.0.1/jquery.milton-upload.js'];
-            var i = setInterval(function(){
+            var i = setInterval(function () {
                 if ($.getScriptOnce.loaded[deps[0]]
                     && $.getScriptOnce.loaded[deps[1]]
                     && $.getScriptOnce.loaded[deps[2]]) {
                     clearInterval(i);
                     f();
                 }
-            },100);
+            }, 100);
             $.getScriptOnce(deps[0]);
             $.getScriptOnce(deps[1]);
             $.getScriptOnce(deps[2]);
@@ -143,12 +144,20 @@
             pagePath: config.pagePath,
             excludedEndPaths: config.excludedEndPaths,
             onselectFolder: function (n, selectedUrl, hash) {
-                flog('selected folder', selectedUrl, hash);
-                previewContainer.html('<p class="alert alert-warning">Unsupported preview folder</p>')
+                flog('Selected folder', n, selectedUrl, hash);
+
+                $('#milton-btn-upload-file').mupload('setUrl', config.basePath + selectedUrl);
+                //previewContainer.html('<p class="alert alert-warning">Unsupported preview folder</p>');
                 previewContainer.attr('data-url', selectedUrl);
                 previewContainer.attr('data-hash', hash);
             },
             onselectFile: function (n, selectedUrl, hash) {
+                flog('Selected file', n, selectedUrl, hash);
+
+                var newUrl = config.basePath + (selectedUrl.substr(0, selectedUrl.lastIndexOf('/')) + '/');
+                newUrl = newUrl.replace(/\/\//g, '/');
+                $('#milton-btn-upload-file').mupload('setUrl', newUrl);
+
                 if (isVideo(selectedUrl)) {
                     previewContainer.html('<div class="jp-video" data-hash="' + hash + '"></div>');
                     $.getScript('/static/jwplayer/6.10/jwplayer.js', function () {
@@ -161,8 +170,7 @@
                         jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
                         buildJWAudioPlayer(100, selectedUrl, false);
                     });
-                }
-                else if (isImage(selectedUrl)) {
+                } else if (isImage(selectedUrl)) {
                     previewContainer.html('<img class="img-responsive" src="' + selectedUrl + '" data-hash="' + hash + '" />');
                 } else {
                     previewContainer.html('<p class="alert alert-warning">Unsupported preview file</p>')
@@ -171,7 +179,7 @@
                 previewContainer.attr('data-url', selectedUrl);
             }
         };
-        if (!config.mselectAll){
+        if (!config.mselectAll) {
             mtreeOptions.includeContentTypes = config.contentTypes;
         }
         tree.mtree(mtreeOptions);
@@ -186,7 +194,7 @@
                 url = href;
             }
         };
-        if (!config.mselectAll){
+        if (!config.mselectAll) {
             muploadOptions.acceptedFiles = getAcceptedFiles(config.contentTypes);
         }
         $('#milton-btn-upload-file').mupload(muploadOptions);
@@ -211,7 +219,7 @@
                     config.onSelectFile.call(this, url, relUrl, fileType, hash);
                 }
 
-                if (typeof config.onSelectFolder === 'function'){
+                if (typeof config.onSelectFolder === 'function') {
                     var hash = previewContainer.attr('data-hash');
                     config.onSelectFolder.call(this, url, hash);
                 }
@@ -246,16 +254,16 @@
         }
 
         return (
-                '<div class="milton-file-select-container">' +
-                '    <div class="row">' +
-                '        <div class="col-xs-4"><div class="milton-tree-wrapper"></div></div>' +
-                '        <div class="col-xs-8">' +
-                '            <div id="milton-btn-upload-file"></div>' + extraElement +
-                '            <div class="milton-preview"></div>' +
-                '        </div>' +
-                '    </div>' +
-                '</div>'
-                );
+            '<div class="milton-file-select-container">' +
+            '    <div class="row">' +
+            '        <div class="col-xs-4"><div class="milton-tree-wrapper"></div></div>' +
+            '        <div class="col-xs-8">' +
+            '            <div id="milton-btn-upload-file"></div>' + extraElement +
+            '            <div class="milton-preview"></div>' +
+            '        </div>' +
+            '    </div>' +
+            '</div>'
+        );
     }
 
     function getModal(config) {
@@ -264,17 +272,17 @@
         var modal = $('#modal-milton-file-select');
         if (modal.length === 0) {
             $('body').append(
-                    '<div id="modal-milton-file-select" class="modal modal-md fade" aria-hidden="true" tabindex="-1">' +
-                    '   <div class="modal-header">' +
-                    '       <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>' +
-                    '       <h4 class="modal-title">' + config.modalTitle + '</h4>' +
-                    '   </div>' +
-                    '   <div class="modal-body">' + getSelectContainer(config) + '</div>' +
-                    '   <div class="modal-footer">' +
-                    '<button class="' + config.btnOkClass + ' btn-ok" type="button"> OK </button>' +
-                    '   </div>' +
-                    '</div>'
-                    );
+                '<div id="modal-milton-file-select" class="modal modal-md fade" aria-hidden="true" tabindex="-1">' +
+                '   <div class="modal-header">' +
+                '       <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>' +
+                '       <h4 class="modal-title">' + config.modalTitle + '</h4>' +
+                '   </div>' +
+                '   <div class="modal-body">' + getSelectContainer(config) + '</div>' +
+                '   <div class="modal-footer">' +
+                '<button class="' + config.btnOkClass + ' btn-ok" type="button"> OK </button>' +
+                '   </div>' +
+                '</div>'
+            );
             modal = $('#modal-milton-file-select');
 
             initSelectContainer(modal, config, function () {
@@ -291,21 +299,21 @@
         var modal = $('#modal-milton-file-select');
         if (modal.length === 0) {
             $('body').append(
-                    '<div id="modal-milton-file-select" class="modal modal-md fade" aria-hidden="true" tabindex="-1">' +
-                    '   <div class="modal-dialog">' +
-                    '       <div class="modal-content">' +
-                    '           <div class="modal-header">' +
-                    '               <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>' +
-                    '               <h4 class="modal-title">' + config.modalTitle + '</h4>' +
-                    '           </div>' +
-                    '           <div class="modal-body">' + getSelectContainer(config) + '</div>' +
-                    '           <div class="modal-footer">' +
-                    '               <button class="' + config.btnOkClass + ' btn-ok" type="button"> OK </button>' +
-                    '           </div>' +
-                    '       </div>' +
-                    '   </div>' +
-                    '</div>'
-                    );
+                '<div id="modal-milton-file-select" class="modal modal-md fade" aria-hidden="true" tabindex="-1">' +
+                '   <div class="modal-dialog">' +
+                '       <div class="modal-content">' +
+                '           <div class="modal-header">' +
+                '               <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>' +
+                '               <h4 class="modal-title">' + config.modalTitle + '</h4>' +
+                '           </div>' +
+                '           <div class="modal-body">' + getSelectContainer(config) + '</div>' +
+                '           <div class="modal-footer">' +
+                '               <button class="' + config.btnOkClass + ' btn-ok" type="button"> OK </button>' +
+                '           </div>' +
+                '       </div>' +
+                '   </div>' +
+                '</div>'
+            );
             modal = $('#modal-milton-file-select');
 
             initSelectContainer(modal, config, function () {
@@ -315,4 +323,5 @@
 
         return modal;
     }
+
 })(jQuery);
