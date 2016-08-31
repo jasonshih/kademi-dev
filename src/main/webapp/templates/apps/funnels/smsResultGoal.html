@@ -1,0 +1,13 @@
+<div class="form-group">
+    <label class="control-label col-md-2" for="deliveryAction">Delivery action</label>
+    <div class="col-md-4">
+        <select class="form-control" name="deliveryAction">
+            <option value="">[Select delivery action]</option>
+            $formatter.option("Delivered", "Delivered", $trigger.deliveryAction)
+            $formatter.option("Failed", "Failed", $trigger.deliveryAction)
+            $formatter.option("Opened", "Opened", $trigger.deliveryAction)
+            $formatter.option("Converted", "Converted", $trigger.deliveryAction)
+        </select>
+        <small class="text-muted help-block">If this goal identifies a source, such as search or social</small>
+    </div>
+</div>
