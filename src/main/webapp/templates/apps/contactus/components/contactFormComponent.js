@@ -96,6 +96,14 @@
                         component.attr('data-submit-class', this.value);
                         keditor.initDynamicContent(dynamicElement);
                     });
+
+                    form.find('#thankYou').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-thank-you', this.value);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
                 }
             });
         },
@@ -114,6 +122,7 @@
             form.find('#cbbSubmitSize').val(dataAttributes['data-submit-size']);
             form.find('#cbbSubmitColor').val(dataAttributes['data-submit-color']);
             form.find('#txtSubmitClass').val(dataAttributes['data-submit-class']);
+            form.find('#thankYou').val(dataAttributes['data-thank-you']);
         }
     };
 

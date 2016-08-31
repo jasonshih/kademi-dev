@@ -93,10 +93,12 @@
 <div class="thankyou">
     <div class="container">
         <div class="row">
-            <div class="col-sm-6">
-                #set($thankYou = "Thank you for your message, we will reply shortly.")
-                #set($thankYou = $content.getParam("thankyou"))
-                $thankYou
+            <div class="col-sm-12">
+                #set($thankYouMessage = $thankYou)
+                #if (!$thankYouMessage)
+                #set($thankYouMessage = "Thank you for your message, we will reply shortly.")
+                #end
+                <div class="alert alert-success">$thankYouMessage</div>
             </div>
         </div>
     </div>
