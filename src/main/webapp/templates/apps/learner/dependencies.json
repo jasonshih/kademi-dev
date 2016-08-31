@@ -8,7 +8,7 @@
         },
         {
             "css": {
-                "lessMedia": "print",
+                "cssMedia": "print",
                 "path": "/templates/apps/learner/modulePagePrint.css"
             }
         },
