@@ -2,6 +2,11 @@
     <head>
         <title>Manage Users Upload</title>
         <link href="//www.fuelcdn.com/fuelux/3.13.0/css/fuelux.min.css" rel="stylesheet"/>
+        <style>
+            select option[disabled]{
+                color: #eee;
+            }
+        </style>
     </head>
     <body>
         <div class="row fuelux"  id="importerWizard" style="margin-bottom:30px">
@@ -14,19 +19,23 @@
                                 <span class="chevron"></span>
                             </li>
                             <li data-step="2">
-                                <span class="badge">2</span>Select columns
+                                <span class="badge">2</span> Select mode and default group
                                 <span class="chevron"></span>
                             </li>
-                            <li data-step="3" data-name="import">
-                                <span class="badge">3</span>Review
+                            <li data-step="3">
+                                <span class="badge">3</span>Map columns
                                 <span class="chevron"></span>
                             </li>
-                            <li data-step="4" data-name="processing">
-                                <span class="badge">4</span>Processing
+                            <li data-step="4" data-name="import">
+                                <span class="badge">4</span>Review
                                 <span class="chevron"></span>
                             </li>
-                            <li data-step="5" data-name="complete">
-                                <span class="badge">5</span>Complete
+                            <li data-step="5" data-name="processing">
+                                <span class="badge">5</span>Processing
+                                <span class="chevron"></span>
+                            </li>
+                            <li data-step="6" data-name="complete">
+                                <span class="badge">6</span>Complete
                                 <span class="chevron"></span>
                             </li>
 
@@ -54,10 +63,14 @@
                                     <div class="col-sm-12">
                                         <div class="form-inline text-right">
                                             <div class="form-group" style="margin-right: 20px">
-                                                <label for="startRow" >Start row: </label>
-                                                <input style="width: 100px" type="number" min="1" name="startRow" id="startRow" class="form-control" value="1"/>
+                                                <label for="removalMode">Mode: </label>
+                                                <select id="removalMode" name="removalMode" class="form-control">
+                                                    <option value="">Auto</option>
+                                                    <option value="remove">Remove all uploaded</option>
+                                                    <option value="unsub">Un-subscribe all uploaded</option>
+                                                </select>
                                             </div>
-                                            <div class="form-group" style="margin-right: 20px">
+                                            <div class="form-group" >
                                                 <label for="defaultGroup">Default group: </label>
                                                 <select id="defaultGroup" name="defaultGroup" class="form-control">
                                                     <option value="">[No default group]</option>
@@ -72,14 +85,6 @@
                                                     #end
                                                 </select>
                                             </div>
-                                            <div class="form-group">
-                                                <label for="removalMode">Mode: </label>
-                                                <select id="removalMode" name="removalMode" class="form-control">
-                                                    <option value="">Auto</option>
-                                                    <option value="remove">Remove all uploaded</option>
-                                                    <option value="unsub">Un-subscribe all uploaded</option>
-                                                </select>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -92,27 +97,38 @@
                                         <br/>"Un-subscribe all.." will remove all profiles and create unsubscribe records for them
                                     </i>
                                 </div>
+                            </div>
+                            <div class="step-pane alert" data-step="3">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-inline text-right">
+                                            <div class="form-group" style="margin-right: 20px">
+                                                <label for="startRow" >Start row: </label>
+                                                <input style="width: 100px" type="number" min="1" name="startRow" id="startRow" class="form-control" value="1"/>
+                                            </div>
 
-                                <hr/>
-
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
                                 <p class="lead">Please select which destination field each column should be imported into:</p>
 
                                 <div class="table-responsive" style="max-height: 300px; overflow-y: auto">
                                     <table class="table table-bordered table-striped" id="importerTable" >
                                         <thead>
-                                            <tr id="importerHead">
-                                                <th>Please wait...</th>
-                                            </tr>
+                                        <tr id="importerHead">
+                                            <th>Please wait...</th>
+                                        </tr>
                                         </thead>
                                         <tbody id="importerBody">
-                                            <tr>
-                                                <td>Loading...</td>
-                                            </tr>
+                                        <tr>
+                                            <td>Loading...</td>
+                                        </tr>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
-                            <div class="step-pane sample-pane alert" data-step="3">
+                            <div class="step-pane sample-pane alert" data-step="4">
                                 <h4>Start importing</h4>
                                 <p>Press the button here to begin importing. This process imports at a rate of about 1000 rows per minute,
                                     so may take some time depending on the size of the file</p>
@@ -149,7 +165,7 @@
                                 </div>
                             </div>
 
-                            <div class="step-pane sample-pane alert" data-step="4">
+                            <div class="step-pane sample-pane alert" data-step="5">
                                 <h4>Import running</h4>
                                 <div class="progress" id="importProgressbar">
                                     <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
@@ -165,7 +181,7 @@
                                 </div>
 
                             </div>
-                            <div class="step-pane sample-pane alert" data-step="5">
+                            <div class="step-pane sample-pane alert" data-step="6">
                                 <table class="table table-bordered">
                                     <tr>
                                         <th>Number created</th>
@@ -206,7 +222,7 @@
         </div>
 
         <script type="text/javascript" src="//www.fuelcdn.com/fuelux/3.13.0/js/fuelux.min.js">//</script>
-        <script type="text/javascript" src="/theme/assets/plugins/jQuery-Smart-Wizard/js/jquery.smartWizard.js">//</script>
+        <!--<script type="text/javascript" src="/theme/assets/plugins/jQuery-Smart-Wizard/js/jquery.smartWizard.js">//</script>-->
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
         <script type="text/javascript" src="/theme/apps/admin/manageUsersImport.js">//</script>
         <script type="text/javascript">
