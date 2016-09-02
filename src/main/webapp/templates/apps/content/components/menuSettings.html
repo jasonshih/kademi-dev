@@ -1,1 +1,27 @@
-No settings
+<form class="form-horizontal">
+    <div class="form-group">
+        <label class="col-sm-12"><strong>Logo</strong></label>
+        <div class="col-sm-12">
+            <input type="text" name="logo" class="form-control" />
+        </div>
+    </div>
+</form>
+
+#set( $myMenu = $applicationManager.defaultMenuItem )
+#showMenu( $myMenu )
+
+#macro( showMenu $menuItem )
+<form class="form-horizontal">
+    <div class="form-group">
+        <label class="col-sm-12"><strong>$menuItem.id</strong></label>
+        <div class="col-sm-12">
+            <input type="text" name="logo" class="form-control" value="$item.text" />
+        </div>
+    </div>
+</form>
+
+#foreach($item in $menuItem.items)
+#showMenu( $item )
+#end
+
+#end
