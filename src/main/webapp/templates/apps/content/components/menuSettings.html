@@ -7,21 +7,17 @@
     </div>
 </form>
 
-#set( $myMenu = $applicationManager.defaultMenuItem )
+#set( $myMenu = $menuManager.rootMenuItem )
+
 #showMenu( $myMenu )
 
 #macro( showMenu $menuItem )
-<form class="form-horizontal">
-    <div class="form-group">
-        <label class="col-sm-12"><strong>$menuItem.id</strong></label>
-        <div class="col-sm-12">
-            <input type="text" name="logo" class="form-control" value="$item.text" />
-        </div>
-    </div>
-</form>
+<li>$!menuItem.text</li>
 
+<ul class="list">
 #foreach($item in $menuItem.items)
 #showMenu( $item )
 #end
+</ul>
 
 #end
