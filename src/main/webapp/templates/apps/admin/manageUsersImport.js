@@ -2,7 +2,7 @@
  * Created by Anh on 4/8/2016.
  */
 
-var usersImportUrl = '/manageUsers/userFile';
+var usersImportUrl = '/manageUsers/upload';
 var importWizardStarted = false;
 var userImportTotalCount = 0;
 function initManageUsersImport() {
@@ -41,7 +41,7 @@ function initUploads() {
             }
         }
 
-        if (data.step === 3) {
+        if (data.step === 4) {
             var fileHash = form.find('[name=fileHash]').val();
             var startRow = form.find('[name=startRow]').val();
             var formData = {beforeImport: 'beforeImport', fileHash: fileHash, startRow: startRow};
@@ -59,7 +59,25 @@ function initUploads() {
                 success: function (resp) {
                     if (resp.status && resp.data) {
                         form.find('[type=submit]').removeClass('hide');
-                        form.find(".beforeImportInfo").text('New profiles found: ' + resp.data.newProfilesCount + ', existing profiles found: ' + resp.data.existingProfilesCount);
+                        form.find(".beforeImportNumNew").text(resp.data.newProfilesCount);
+                        form.find(".beforeImportNumExisting").text(resp.data.existingProfilesCount);
+                        form.find(".beforeImportNumInvalid").text(resp.data.invalidRows.length);
+
+                        var invalidRowsBody = form.find(".beforeImportInvalidRows");
+                        invalidRowsBody.html("");
+                        if (resp.data.invalidRows) {
+                            for (var i = 0; i < resp.data.invalidRows.length; i++) {
+                                var row = resp.data.invalidRows[i];
+                                flog("row", row);
+                                var tr = $("<tr>");
+                                for (var col = 0; col < row.length; col++) {
+                                    var colText = row[col];
+                                    tr.append("<td>" + colText + "</td>");
+                                }
+                                invalidRowsBody.append(tr);
+                            }
+                        }
+
                         userImportTotalCount = resp.data.newProfilesCount + resp.data.existingProfilesCount;
                     } else {
                         form.find(".beforeImportInfo").text('Cannot verify data to import');
@@ -73,18 +91,25 @@ function initUploads() {
     });
 
     $('#myWizard').on('actionclicked.fu.wizard', function (evt, data) {
-        if (data.step === 1 && $('#importerWizard').attr('aria-expanded') == 'true') {
+        if (data.step === 1) {
             if (form.find("input[name=fileHash]").val() == "") {
                 if ($('#btn-upload').length) {
                     Msg.error("Please select a file to upload");
-                } else {
-                    Msg.error("Sale Group hasn't been set. Please contact administrator for assistant.");
                 }
                 evt.preventDefault();
             }
         }
 
         if (data.step === 2) {
+            var removalMode = $('#removalMode').val();
+            if (removalMode) {
+                $('#importerHead').find('select option[value=groupName]').attr('disabled', "disabled");
+            } else {
+                $('#importerHead').find('select option[value=groupName]').removeAttr('disabled');
+            }
+        }
+
+        if (data.step === 3) {
             var startRow = $('#startRow').val();
             if (!startRow) {
                 Msg.error('Please enter start row value');
@@ -114,13 +139,12 @@ function initUploads() {
                 return false;
             }
 
-            if (!defaultGroup && selectedCols.indexOf(requiredField) === -1) {
-                if (!removalMode) {
-                    Msg.error('Please select default group or indicate group field in data table');
-                    importerHead.find('select').first().trigger('focus');
-                    evt.preventDefault();
-                    return false;
-                }
+            if (!defaultGroup && !removalMode && selectedCols.indexOf(requiredField) === -1) {
+                // mode is auto and no default group selected and no group field selected
+                Msg.error('Please indicate group field in data table');
+                importerHead.find('select').first().trigger('focus');
+                evt.preventDefault();
+                return false;
             }
 
             var uniqueFields = ['email', 'userId', 'phone'];
@@ -141,7 +165,7 @@ function initUploads() {
             }
         }
 
-        if (data.step === 3) {
+        if (data.step === 4) {
             if (!importWizardStarted) {
                 Msg.error("Importing process hasn't been started yet");
                 evt.preventDefault();
@@ -272,6 +296,13 @@ function checkProcessStatus() {
                         if (typeof state.errorProfiles !== 'undefined') {
                             $('#myWizard').find('.errorProfiles').text(state.errorProfiles)
                         }
+                        flog("finished state", state, state.resultHash);
+                        if (typeof state.resultHash !== 'undefined' && state.resultHash != null) {
+                            var href = "/_hashes/files/" + state.resultHash + ".csv";
+                            $('#myWizard').find('.errorRows').prop("href", href).closest("a").show();
+                        } else {
+                            $('#myWizard').find('.errorRows').closest("a").hide();
+                        }
 
                         $('#myWizard').wizard("next");
                         $('#table-users-body').reloadFragment({url: '/manageUsers/'});
@@ -288,9 +319,7 @@ function checkProcessStatus() {
                         if (isNaN(percentComplete)) {
                             percentComplete = 0;
                         }
-                        if (percentComplete > 90) {
-                            percentComplete = 90;
-                        }
+                        percentComplete = percentComplete * 0.9; // scale down to a max of 90% so the user doesnt think they're finished when they're not.
                         $('#importProgressbar .progress-bar').attr('aria-valuenow', percentComplete).css('width', percentComplete + '%');
                         jobTitle.text("Process running...");
                     }
