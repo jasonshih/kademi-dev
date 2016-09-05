@@ -41,7 +41,7 @@ function initUploads() {
             }
         }
 
-        if (data.step === 3) {
+        if (data.step === 4) {
             var fileHash = form.find('[name=fileHash]').val();
             var startRow = form.find('[name=startRow]').val();
             var formData = {beforeImport: 'beforeImport', fileHash: fileHash, startRow: startRow};
@@ -91,18 +91,25 @@ function initUploads() {
     });
 
     $('#myWizard').on('actionclicked.fu.wizard', function (evt, data) {
-        if (data.step === 1 && $('#importerWizard').attr('aria-expanded') == 'true') {
+        if (data.step === 1) {
             if (form.find("input[name=fileHash]").val() == "") {
                 if ($('#btn-upload').length) {
                     Msg.error("Please select a file to upload");
-                } else {
-                    Msg.error("Sale Group hasn't been set. Please contact administrator for assistant.");
                 }
                 evt.preventDefault();
             }
         }
 
         if (data.step === 2) {
+            var removalMode = $('#removalMode').val();
+            if (removalMode){
+                $('#importerHead').find('select option[value=groupName]').attr('disabled', "disabled");
+            } else {
+                $('#importerHead').find('select option[value=groupName]').removeAttr('disabled');
+            }
+        }
+
+        if (data.step === 3) {
             var startRow = $('#startRow').val();
             if (!startRow) {
                 Msg.error('Please enter start row value');
@@ -132,13 +139,12 @@ function initUploads() {
                 return false;
             }
 
-            if (!defaultGroup && selectedCols.indexOf(requiredField) === -1) {
-                if (!removalMode){
-                    Msg.error('Please select default group or indicate group field in data table');
-                    importerHead.find('select').first().trigger('focus');
-                    evt.preventDefault();
-                    return false;
-                }
+            if (!defaultGroup && !removalMode && selectedCols.indexOf(requiredField) === -1) {
+                // mode is auto and no default group selected and no group field selected
+                Msg.error('Please indicate group field in data table');
+                importerHead.find('select').first().trigger('focus');
+                evt.preventDefault();
+                return false;
             }
 
             var uniqueFields = ['email', 'userId', 'phone'];
@@ -159,7 +165,7 @@ function initUploads() {
             }
         }
 
-        if (data.step === 3) {
+        if (data.step === 4) {
             if (!importWizardStarted) {
                 Msg.error("Importing process hasn't been started yet");
                 evt.preventDefault();
@@ -238,7 +244,10 @@ function initUploads() {
 
     $('#btn-cancel-import').on('click', function (e) {
         e.preventDefault();
-
+        var c = confirm('Are you sure you want to cancel this process?');
+        if (!c) {
+            return;
+        }
         $.ajax({
             type: 'post',
             url: usersImportUrl,
