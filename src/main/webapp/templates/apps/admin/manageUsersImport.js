@@ -244,7 +244,10 @@ function initUploads() {
 
     $('#btn-cancel-import').on('click', function (e) {
         e.preventDefault();
-
+        var c = confirm('Are you sure you want to cancel this process?');
+        if (!c) {
+            return;
+        }
         $.ajax({
             type: 'post',
             url: usersImportUrl,
