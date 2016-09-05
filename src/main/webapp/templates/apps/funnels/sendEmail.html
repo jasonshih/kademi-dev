@@ -1,6 +1,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>Send Email Funnel Action</title>
+        <style>
+            #chart_histogram svg, .myPie svg {
+                height: 220px;
+            }
+        </style>
     </head>
     <body>
         #set( $website = $page.website )
@@ -55,76 +60,121 @@
             </div>
         </form>
         #else
-        <form method="POST" action="$page.path" class="form-horizontal" id="frmDetails">
-            <button class="btn btn-success" type="submit">Save</button>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label class="control-label col-md-4" for="website">Website</label>
-                        <div class="col-md-8">
-                            <select name="website" class="form-control required-if-shown">
-                                $formatter.option("", "[Please select]" )
-                                #foreach($website in $rootFolder.websites)
-                                $formatter.option($website.id, $website.name, $website.id)
-                                #end
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-4" for="subject">Email subject</label>
-                        <div class="col-md-8">
+        <form name="frmDetails" action="." method="post" class="form-horizontal">
+            <div class="page-validation"></div>
 
-                            <textarea style="height: 70px" name="subject" id="subject" value="" placeholder="Enter the email subject here" class="form-control required-if-shown">$formatter.htmlEncode( $page.node.subject )</textarea>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-4" for="from">Email from address</label>
-                        <div class="col-md-8">
-                            <input type="text" name="from" id="from" value="$!formatter.htmlEncode( $page.from )" placeholder="admin@mybusinessname.com" class="form-control" />
-                            <small class="text-muted help-block">Eg <i>"Joe Bloggs" &lt;joe@bloggs.com&gt;</i>. You can leave this field blank but <b>Reply to address</b> will be required!</small>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-4" for="replyT">Reply to address</label>
-                        <div class="col-md-8">
-                            <input type="text" name="replyTo" id="replyTo" value="$!formatter.htmlEncode( $page.replyTo )" placeholder="admin@mybusinessname.com" class="form-control" />
-                            <small class="text-muted help-block">Eg <i>"Joe Bloggs" &lt;joe@bloggs.com&gt;</i>.</small>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-4" for="replyT">To address</label>
-                        <div class="col-sm-8">
-                            <input type="text" id="to" name="to" value="$!formatter.htmlEncode( $page.to )" placeholder="admin@mybusinessname.com" class="form-control" />
-                            <small class="text-muted help-block">Eg <i>"Joe Bloggs" &lt;joe@bloggs.com&gt;</i>.</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="pull-right">
-                        <div class="btn-group">
-                            <button class="btn btn-success btn-sent-test" type="button">
-                                <span class="glyphicon glyphicon-send"></span>
-                                Send test
-                            </button>
-                            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" type="button">
-                                <span class="caret"></span>
-                                <span class="sr-only">Toggle Dropdown</span>
-                            </button>
-                            <ul class="dropdown-menu pull-right" role="menu">
-                                <li><a href="#" class="btn-sent-test-choose">Enter recipient address</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div style="clear: both"></div>
-                    <div>
-                    </div>
+            <div class="btn-group pull-right page-action status-tools page-action" style="margin-left: 15px">
+                <button class="btn btn-sm btn-success Draft status-tool">
+                    <span class="glyphicon glyphicon-floppy-disk"></span>
+                    Save
+                </button>
+
+                <div class="btn-group">
+                    <button class="btn btn-sm btn-success btn-sent-test" type="button">
+                        <span class="glyphicon glyphicon-send"></span>
+                        Send test
+                    </button>
+                    <button type="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown" type="button">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu pull-right" role="menu">
+                        <li><a href="#" class="btn-sent-test-choose">Enter recipient address</a></li>
+                    </ul>
                 </div>
             </div>
-        </form>
-        <hr style="clear: both"/>
-        <iframe id="rawBody" class="" style="width: 100%; height: 1200px; overflow-y: auto" src="edmeditor?fileName=${page.node.contentFileName}&useHash=true" >
 
-        </iframe>
+            <div class="tabbable">
+                <ul class="nav nav-tabs tab-bricky">
+                    <li class=""><a data-toggle="tab" href="#summary">Summary</a></li>
+                    <li class=""><a data-toggle="tab" href="#sendInfo">Send information</a></li>
+                    <li class=""><a data-toggle="tab" href="#messages">Message</a></li>
+                </ul>
+
+                <div class="tab-content">
+                    <div id="summary" class="tab-pane">
+                        <div class="row">
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                                <div id="pieDevice" class="myPie">
+                                    <svg></svg>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                                <div id="pieClient" class="myPie">
+                                    <svg></svg>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                                <div id="pieDomain" class="myPie">
+                                    <svg></svg>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                <div id="chart_histogram">
+                                    <svg></svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="sendInfo" class="tab-pane">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label col-md-4" for="website">Website</label>
+                                    <div class="col-md-8">
+                                        <select name="website" class="form-control required-if-shown">
+                                            $formatter.option("", "[Please select]" )
+                                            #foreach($website in $rootFolder.websites)
+                                            $formatter.option($website.id, $website.name, $website.id)
+                                            #end
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-4" for="subject">Email subject</label>
+                                    <div class="col-md-8">
+
+                                        <textarea style="height: 70px" name="subject" id="subject" value="" placeholder="Enter the email subject here" class="form-control required-if-shown">$formatter.htmlEncode( $page.node.subject )</textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-4" for="from">Email from address</label>
+                                    <div class="col-md-8">
+                                        <input type="text" name="from" id="from" value="$!formatter.htmlEncode( $page.from )" placeholder="admin@mybusinessname.com" class="form-control" />
+                                        <small class="text-muted help-block">Eg <i>"Joe Bloggs" &lt;joe@bloggs.com&gt;</i>. You can leave this field blank but <b>Reply to address</b> will be required!</small>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-4" for="replyT">Reply to address</label>
+                                    <div class="col-md-8">
+                                        <input type="text" name="replyTo" id="replyTo" value="$!formatter.htmlEncode( $page.replyTo )" placeholder="admin@mybusinessname.com" class="form-control" />
+                                        <small class="text-muted help-block">Eg <i>"Joe Bloggs" &lt;joe@bloggs.com&gt;</i>.</small>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-4" for="replyT">To address</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="to" name="to" value="$!formatter.htmlEncode( $page.to )" placeholder="admin@mybusinessname.com" class="form-control" />
+                                        <small class="text-muted help-block">Eg <i>"Joe Bloggs" &lt;joe@bloggs.com&gt;</i>.</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="messages" class="tab-pane">
+                        <iframe id="rawBody" frameBorder="0" class="" style="width: 100%; height: 1200px; overflow-y: auto" src="edmeditor?fileName=${page.node.contentFileName}&useHash=true" >
+                        </iframe>
+                    </div>
+                </div>
+
+            </div>
+        </form>
 
         <div id="modal-send-test" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
             <div class="modal-header">
@@ -166,7 +216,11 @@
             </div>
         </div>
 
+        <script src="/static/d3/d3.v3.js" type="text/javascript">//</script>
+        <link href="/static/nvd3/nv.d3.css" rel="stylesheet" type="text/css"/>
+        <script src="/static/nvd3/nv.d3.js" type="text/javascript">//</script>
         <script type="text/javascript" src="/theme/apps/email/manageEmail.js">//</script>
+        <script type="text/javascript" src="/theme/apps/funnels/sendEmail.js">//</script>
         <script type="text/javascript">
             $(function () {
                 initSendTest();
