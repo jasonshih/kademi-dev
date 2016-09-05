@@ -154,3 +154,22 @@ body.opened-keditor-sidebar div.cke_float[id*=cke_keditor-component-content-] {
     bottom: 5px;
     right: 5px;
 }
+
+body.dragging, body.dragging * {
+  cursor: move !important;
+}
+
+.dragged {
+  position: absolute;
+  opacity: 0.5;
+  z-index: 2000;
+}
+
+ol.menuTree li.placeholder {
+  position: relative;
+  /** More li styles **/
+}
+ol.menuTree li.placeholder:before {
+  position: absolute;
+  /** Define arrowhead **/
+}
