@@ -77,6 +77,18 @@
 
 }(jQuery));
 
+(function ($) {
+    $.getStyleOnce = function (url) {
+        if (!$('link[href="' + url + '"]').length) {
+            flog('Load "' + url + '"');
+            $('<link href="' + url + '" rel="stylesheet" type="text/css" />').appendTo('head');
+        } else {
+            flog('"' + url + '" is already loaded');
+        }
+    };
+
+}(jQuery));
+
 function endsWith(str, suffix) {
     if (typeof str === 'string') {
         return str.indexOf(suffix, str.length - suffix.length) !== -1;

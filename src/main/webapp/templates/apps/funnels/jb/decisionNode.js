@@ -5,12 +5,14 @@ JBNodes['decision'] = {
         decisionDefault: {
             label: 'default',
             title: 'Default next action',
-            maxConnections: 1
+            maxConnections: 1,
+            position: [1, 0.925, 1, 0]
         },
         decisionChoices: {
             label: 'choice',
             title: 'Make new choice',
-            maxConnections: -1
+            maxConnections: -1,
+            position: [1, 0.775, 1, 0]
         }
     },
 

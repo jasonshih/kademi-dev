@@ -81,6 +81,18 @@
 
 }(jQuery));
 
+(function ($) {
+    $.getStyleOnce = function (url) {
+        if (!$('link[href="' + url + '"]').length) {
+            flog('Load "' + url + '"');
+            $('<link href="' + url + '" rel="stylesheet" type="text/css" />').appendTo('head');
+        } else {
+            flog('"' + url + '" is already loaded');
+        }
+    };
+
+}(jQuery));
+
 // Function check/uncheck for checkbox
 $.fn.check = function(is_check) {
     return $(this).attr('checked', is_check);

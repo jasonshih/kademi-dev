@@ -182,12 +182,6 @@ var JBApp = {
 
     connectionTypes: {
         nextNodeId: [1, 0.775, 1, 0],
-        nodeIdDelivered: [1, 0.775, 1, 0],
-        nodeIdFailed: [1, 0.63, 1, 0],
-        nodeIdOpened: [1, 0.475, 1, 0],
-        nodeIdConverted: [1, 0.325, 1, 0],
-        decisionChoices: [1, 0.775, 1, 0],
-        decisionDefault: [1, 0.925, 1, 0],
         timeoutNode: [1, 0.925, 1, 0]
     },
 
@@ -392,6 +386,18 @@ jsPlumb.ready(function () {
     });
     JBApp.jspInstance = instance;
 
+    // Load connection types position from JBNodes
+    for (var nodeName in JBNodes) {
+        for (var portName in JBNodes[nodeName].ports) {
+            var portData = JBNodes[nodeName].ports[portName];
+
+            if (portData.position) {
+                JBApp.connectionTypes[portName] = portData.position;
+            }
+        }
+    }
+
+    // Register connection types
     for (var typeName in JBApp.connectionTypes) {
         var outPortPosition = JBApp.connectionTypes[typeName];
 
