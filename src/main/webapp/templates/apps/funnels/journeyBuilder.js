@@ -391,8 +391,34 @@ jsPlumb.ready(function () {
         for (var portName in JBNodes[nodeName].ports) {
             var portData = JBNodes[nodeName].ports[portName];
 
-            if (portData.position) {
-                JBApp.connectionTypes[portName] = portData.position;
+            if (portData.position !== undefined) {
+                var positionValue;
+
+                switch (portData.position) {
+                    case 0:
+                        positionValue = [1, 0.925, 1, 0];
+                        break;
+
+                    case 1:
+                        positionValue = [1, 0.775, 1, 0];
+                        break;
+
+                    case 2:
+                        positionValue = [1, 0.63, 1, 0];
+                        break;
+
+                    case 3:
+                        positionValue = [1, 0.475, 1, 0];
+                        break;
+
+                    case 4:
+                        positionValue = [1, 0.325, 1, 0];
+                        break;
+                }
+
+                flog('================', portName, positionValue);
+
+                JBApp.connectionTypes[portName] = positionValue;
             }
         }
     }
