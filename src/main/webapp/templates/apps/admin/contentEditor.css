@@ -156,20 +156,26 @@ body.opened-keditor-sidebar div.cke_float[id*=cke_keditor-component-content-] {
 }
 
 body.dragging, body.dragging * {
-  cursor: move !important;
+    cursor: move !important;
 }
 
 .dragged {
-  position: absolute;
-  opacity: 0.5;
-  z-index: 2000;
+    position: absolute;
+    opacity: 0.5;
+    z-index: 2000;
 }
 
 ol.menuTree li.placeholder {
-  position: relative;
-  /** More li styles **/
+    position: relative;
+    /** More li styles **/
 }
 ol.menuTree li.placeholder:before {
-  position: absolute;
-  /** Define arrowhead **/
+    position: absolute;
+    /** Define arrowhead **/
+}
+.menuEditor ol {
+    padding-left: 15px;
+}
+.menuEditor li {
+    line-height: 30px;
 }
