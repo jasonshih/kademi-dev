@@ -5,20 +5,17 @@ JBNodes['groupGoal'] = {
         nodeIdAccepted: {
             label: 'accepted',
             title: 'When accepted',
-            maxConnections: 1,
-            position: 1
+            maxConnections: 1
         },
         nodeIdRejected: {
             label: 'rejected',
             title: 'When rejected',
-            maxConnections: 1,
-            position: 2
+            maxConnections: 1
         },
         nodeIdPending: {
             label: 'pending',
             title: 'When pending',
-            maxConnections: 1,
-            position: 3
+            maxConnections: 1
         },
         timeoutNode: {
             label: 'timeout',

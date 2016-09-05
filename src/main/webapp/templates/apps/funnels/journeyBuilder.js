@@ -388,13 +388,12 @@ jsPlumb.ready(function () {
 
     // Load connection types position from JBNodes
     for (var nodeName in JBNodes) {
-        for (var portName in JBNodes[nodeName].ports) {
-            var portData = JBNodes[nodeName].ports[portName];
-
-            if (portData.position !== undefined) {
+        var index = 0;
+        $.each(JBNodes[nodeName].ports, function (portName) {
+            if (portName !== 'timeoutNode' && portName !== 'nextNodeId') {
                 var positionValue;
 
-                switch (portData.position) {
+                switch (index) {
                     case 0:
                         positionValue = [1, 0.925, 1, 0];
                         break;
@@ -416,11 +415,11 @@ jsPlumb.ready(function () {
                         break;
                 }
 
-                flog('================', portName, positionValue);
-
                 JBApp.connectionTypes[portName] = positionValue;
             }
-        }
+
+            index++;
+        });
     }
 
     // Register connection types

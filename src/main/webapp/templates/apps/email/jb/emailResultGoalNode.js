@@ -5,26 +5,22 @@ JBNodes['emailResultGoal'] = {
         nodeIdDelivered: {
             label: 'delivered',
             title: 'When delivered',
-            maxConnections: 1,
-            position: 1
+            maxConnections: 1
         },
         nodeIdFailed: {
             label: 'failed',
             title: 'When failed',
-            maxConnections: 1,
-            position: 2
+            maxConnections: 1
         },
         nodeIdOpened: {
             label: 'opened',
             title: 'When opened',
-            maxConnections: 1,
-            position: 3
+            maxConnections: 1
         },
         nodeIdConverted: {
             label: 'converted',
             title: 'When converted',
-            maxConnections: 1,
-            position: 4
+            maxConnections: 1
         },
         timeoutNode: {
             label: 'timeout',
