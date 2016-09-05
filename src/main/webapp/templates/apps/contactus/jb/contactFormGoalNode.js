@@ -2,14 +2,14 @@ JBNodes['contactFormGoal'] = {
     title: '<i class="fa fa-trophy"></i> <span class="node-type">Contact Form Goal</span>',
     previewUrl: '/theme/apps/contactus/jb/contactFormGoalNode.png',
     ports: {
-        nextNodeId: {
-            label: 'then',
-            title: 'When completed',
-            maxConnections: 1
-        },
         timeoutNode: {
             label: 'timeout',
             title: 'When timeout',
+            maxConnections: 1
+        },
+        nextNodeId: {
+            label: 'then',
+            title: 'When completed',
             maxConnections: 1
         }
     },

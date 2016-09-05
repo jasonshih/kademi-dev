@@ -2,6 +2,11 @@ JBNodes['emailResultGoal'] = {
     title: '<i class="fa fa-trophy"></i> <span class="node-type">Email Result Goal</span>',
     previewUrl: '/theme/apps/email/jb/emailResultGoalNode.png',
     ports: {
+        timeoutNode: {
+            label: 'timeout',
+            title: 'When timeout',
+            maxConnections: 1
+        },
         nodeIdDelivered: {
             label: 'delivered',
             title: 'When delivered',
@@ -20,11 +25,6 @@ JBNodes['emailResultGoal'] = {
         nodeIdConverted: {
             label: 'converted',
             title: 'When converted',
-            maxConnections: 1
-        },
-        timeoutNode: {
-            label: 'timeout',
-            title: 'When timeout',
             maxConnections: 1
         }
     },
