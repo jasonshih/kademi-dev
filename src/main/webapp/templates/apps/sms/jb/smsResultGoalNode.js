@@ -2,6 +2,11 @@ JBNodes['smsResultGoal'] = {
     title: '<i class="fa fa-trophy"></i> <span class="node-type">Sms Result Goal</span>',
     previewUrl: '/theme/apps/sms/jb/smsResultGoalNode.png',
     ports: {
+        timeoutNode: {
+            label: 'timeout',
+            title: 'When timeout',
+            maxConnections: 1
+        },
         nodeIdDelivered: {
             label: 'delivered',
             title: 'When delivered',
@@ -15,11 +20,6 @@ JBNodes['smsResultGoal'] = {
         nodeIdSent: {
             label: 'sent',
             title: 'When sent',
-            maxConnections: 1
-        },
-        timeoutNode: {
-            label: 'timeout',
-            title: 'When timeout',
             maxConnections: 1
         }
     },

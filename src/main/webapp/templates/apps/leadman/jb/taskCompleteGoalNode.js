@@ -2,14 +2,14 @@ JBNodes['taskCompleteGoal'] = {
     title: '<i class="fa fa-trophy"></i> <span class="node-type">Task Complete Goal</span>',
     previewUrl: '/theme/apps/leadman/jb/taskCompleteGoalNode.png',
     ports: {
-        nextNodeId: {
-            label: 'then',
-            title: 'When completed',
-            maxConnections: 1
-        },
         timeoutNode: {
             label: 'timeout',
             title: 'When timeout',
+            maxConnections: 1
+        },
+        nextNodeId: {
+            label: 'then',
+            title: 'When completed',
             maxConnections: 1
         }
     },

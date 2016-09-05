@@ -2,6 +2,11 @@ JBNodes['groupGoal'] = {
     title: '<i class="fa fa-trophy"></i> <span class="node-type">Group goal</span>',
     previewUrl: '/theme/apps/user/jb/groupGoalNode.png',
     ports: {
+        timeoutNode: {
+            label: 'timeout',
+            title: 'When timeout',
+            maxConnections: 1
+        },
         nodeIdAccepted: {
             label: 'accepted',
             title: 'When accepted',
@@ -15,11 +20,6 @@ JBNodes['groupGoal'] = {
         nodeIdPending: {
             label: 'pending',
             title: 'When pending',
-            maxConnections: 1
-        },
-        timeoutNode: {
-            label: 'timeout',
-            title: 'When timeout',
             maxConnections: 1
         }
     },

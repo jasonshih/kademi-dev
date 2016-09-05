@@ -2,14 +2,14 @@ JBNodes['eventGoal'] = {
     title: '<i class="fa fa-trophy"></i> <span class="node-type">Event Goal</span>',
     previewUrl: '/theme/apps/email/jb/eventGoalNode.png',
     ports: {
-        nextNodeId: {
-            label: 'then',
-            title: 'When complete',
-            maxConnections: 1
-        },
         timeoutNode: {
             label: 'timeout',
             title: 'When timeout',
+            maxConnections: 1
+        },
+        nextNodeId: {
+            label: 'then',
+            title: 'When completed',
             maxConnections: 1
         }
     },
