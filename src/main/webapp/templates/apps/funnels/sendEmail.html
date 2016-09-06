@@ -242,17 +242,17 @@
         <script id="email-template" type="text/html">
             {{\#if .}}
             {{#each .}}
-            <tr href="/emails/{{id}}">
-                <td class="icon email-item clickable" title="{{status}}">
+            <tr href="/emails/{{_source.id}}">
+                <td class="icon email-item clickable" title="{{_source.sendStatusText}}">
                     {{genEmailStatus this}}
                 </td>
 
-                <td class="email-item clickable">{{subject}}</td>
-                <td class="email-item clickable">{{recipientAddress}}</td>
-                <td class="email-item clickable">{{recipient.firstName}}</td>
-                <td class="email-item clickable">{{recipient.surName}}</td>
+                <td class="email-item clickable">{{_source.subject}}</td>
+                <td class="email-item clickable">{{_source.recipientAddress}}</td>
+                <td class="email-item clickable">{{_source.recipient.firstName}}</td>
+                <td class="email-item clickable">{{_source.recipient.surName}}</td>
                 <td class="email-item clickable">
-                    <abbr class="pull-right timeago" title="$formatter.formatDateISO8601($item.sendStatusDate)">{{sendStatusDate}}</abbr>
+                    <abbr class="pull-right timeago" title="{{formatISODate _source.sendStatusDate}}">{{_source.sendStatusDate}}</abbr>
                 </td>
             </tr>
             {{/each}}
