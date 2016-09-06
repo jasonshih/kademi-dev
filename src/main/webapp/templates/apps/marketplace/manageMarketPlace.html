@@ -32,7 +32,13 @@
                                         </a>
                                         <div class="caption">
                                             <h4 class="title"><a href="$app.href">$app.title<span class="parag-end"></span></a></h4>
-                                            <p>$app.brief</p>
+                                            <p>
+                                                #if( $app.brief )
+                                                $app.brief
+                                                #else
+                                                No description.
+                                                #end
+                                            </p>
                                         </div>
                                         <div class="ratings">
                                             <p class="pull-right">
