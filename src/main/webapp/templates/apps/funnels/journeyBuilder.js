@@ -238,7 +238,7 @@ var JBApp = {
         $.ajax({
             url: 'funnel.json',
             type: 'PUT',
-            data: JSON.stringify(JBApp.funnel),
+            data: JSON.stringify(JBApp.funnel, null, 4),
             success: function () {
                 builderStatus.html(message || 'Funnel is saved').delay(2000).fadeOut(2000);
                 
