@@ -80,7 +80,7 @@
                 '           <label>Background Color</label>' +
                 '           <div class="input-group button-color-picker">' +
                 '               <span class="input-group-addon"><i></i></span>' +
-                '               <input type="text" value="" id="button-color" class="form-control" />' +
+                '               <input type="text" value="" name="button-color" class="form-control" />' +
                 '           </div>' +
                 '       </div>' +
                 '    </div>' +
@@ -109,8 +109,10 @@
 
                 if (color && color !== 'transparent') {
                     comp.find('.jumbotron').css('background-color', color);
+                    comp.attr('data-bgcolor', color);
                 } else {
                     comp.find('.jumbotron').css('background-color', '');
+
                     form.find('.button-color').val('');
                 }
             });
@@ -118,7 +120,7 @@
 
         showSettingForm: function (form, component, keditor) {
             flog('showSettingForm "jumbotron" component', component);
-
+            form.find('[name=button-color]').val(component.attr('data-bgcolor')).trigger('change');
             form.find('[name=showButton][value=false]').prop('checked', component.find('a').hasClass('hide'));
         },
 
