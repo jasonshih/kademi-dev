@@ -505,30 +505,68 @@ function initKEditor(body, fileName) {
             var paddingLeft = '';
             var paddingRight = '';
             var paddingBottom = '';
+
             for (var i = 0; i < styleRules.length; i++) {
                 var rule = styleRules[i];
-                rule = rule.split(':');
 
-                if (rule[0].trim() === 'padding-top') {
-                    paddingTop = rule[1] || '';
-                    paddingTop = paddingTop.replace('px', '').trim();
-                }
+                if (rule) {
+                    rule = rule.split(':');
 
-                if (rule[0].trim() === 'padding-left') {
-                    paddingLeft = rule[1] || '';
-                    paddingLeft = paddingLeft.replace('px', '').trim();
-                }
+                    var ruleName = rule[0].trim();
+                    var ruleValue = rule[1].trim();
 
-                if (rule[0].trim() === 'padding-right') {
-                    paddingRight = rule[1] || '';
-                    paddingRight = paddingRight.replace('px', '').trim();
-                }
+                    if (ruleName === 'padding-top') {
+                        paddingTop = ruleValue.replace('px', '').trim();
+                    }
 
-                if (rule[0].trim() === 'padding-bottom') {
-                    paddingBottom = rule[1] || '';
-                    paddingBottom = paddingBottom.replace('px', '').trim();
+                    if (ruleName === 'padding-left') {
+                        paddingLeft = ruleValue.replace('px', '').trim();
+                    }
+
+                    if (ruleName === 'padding-right') {
+                        paddingRight = ruleValue.replace('px', '').trim();
+                    }
+
+                    if (ruleName === 'padding-bottom') {
+                        paddingBottom = ruleValue.replace('px', '').trim();
+                    }
+
+                    if (ruleName === 'padding') {
+                        ruleValue = ruleValue.split(' ');
+
+                        switch (ruleValue.length) {
+                            case 1:
+                                paddingTop = ruleValue[0].replace('px', '').trim();
+                                paddingLeft = ruleValue[0].replace('px', '').trim();
+                                paddingRight = ruleValue[0].replace('px', '').trim();
+                                paddingBottom = ruleValue[0].replace('px', '').trim();
+                                break;
+
+                            case 2:
+                                paddingTop = ruleValue[0].replace('px', '').trim();
+                                paddingBottom = ruleValue[0].replace('px', '').trim();
+                                paddingRight = ruleValue[1].replace('px', '').trim();
+                                paddingLeft = ruleValue[1].replace('px', '').trim();
+                                break;
+
+                            case 3:
+                                paddingTop = ruleValue[0].replace('px', '').trim();
+                                paddingRight = ruleValue[1].replace('px', '').trim();
+                                paddingLeft = ruleValue[1].replace('px', '').trim();
+                                paddingBottom = ruleValue[2].replace('px', '').trim();
+                                break;
+
+                            case 4:
+                                paddingTop = ruleValue[0].replace('px', '').trim();
+                                paddingRight = ruleValue[1].replace('px', '').trim();
+                                paddingBottom = ruleValue[2].replace('px', '').trim();
+                                paddingLeft = ruleValue[3].replace('px', '').trim();
+                                break;
+                        }
+                    }
                 }
             }
+
             form.find('.txt-padding-top').val(paddingTop);
             form.find('.txt-padding-bottom').val(paddingBottom);
             form.find('.txt-padding-left').val(paddingLeft);
