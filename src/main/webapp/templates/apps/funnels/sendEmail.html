@@ -242,7 +242,7 @@
         <script id="email-template" type="text/html">
             {{\#if .}}
             {{#each .}}
-            <tr href="/emails/{{_id}}">
+            <tr href="/emails/{{_source.id}}">
                 <td class="icon email-item clickable" title="{{_source.sendStatusText}}">
                     {{genEmailStatus this}}
                 </td>

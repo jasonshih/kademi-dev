@@ -171,7 +171,7 @@
             var templ = '';
 
             templ += '<span class="fa-stack fa-lg">';
-            if (item._source.sendStatus == 'c') {
+            if (item._source.sendStatus === 'c') {
                 templ += '<i class="fa fa-check-circle fa-stack-1x text-success"></i>';
             } else {
                 templ += '<i class="fa fa-exclamation-circle fa-stack-1x text-muted"></i>';
@@ -183,7 +183,7 @@
 
             templ += '</span>';
 
-            templ += '<abbr title="EmailItemID: ' + item._id + '">';
+            templ += '<abbr title="EmailItemID: ' + item._source.id + '">';
             if (item._source.sendStatus === 'r') {
                 templ += '<small>( retry at ' + item._source.nextAttemptDate + ')</small>';
             } else if (item._source.sendStatus === 'p') {
