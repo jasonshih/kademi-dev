@@ -35,7 +35,62 @@
     function handleData(resp) {
         var aggr = (resp !== null ? resp.aggregations : null);
 
+        initHistogram(aggr);
         initPies(aggr);
+    }
+
+    function initHistogram(aggr) {
+        $('#chart_histogram svg').empty();
+        nv.addGraph(function () {
+            var chart = nv.models.multiBarChart()
+                    .options({
+                        showLegend: false,
+                        showControls: false,
+                        noData: "No Data available for histogram",
+                        margin: {
+                            left: 40,
+                            bottom: 60
+                        }
+                    });
+
+            chart.xAxis
+                    .axisLabel("Date")
+                    .rotateLabels(-45)
+                    .tickFormat(function (d) {
+                        return moment(d).format("DD MMM");
+                    });
+
+            chart.yAxis
+                    .axisLabel("Sent")
+                    .tickFormat(d3.format('d'));
+
+            var myData = [];
+            var createdDate = {
+                values: [],
+                key: "Created",
+                color: "#7777ff",
+                area: true
+            };
+
+            myData.push(createdDate);
+
+            var createdBuckets = (aggr !== null ? aggr.createdDate.buckets : []);
+
+            for (var i = 0; i < createdBuckets.length; i++) {
+                var bucket = createdBuckets[i];
+                createdDate.values.push(
+                        {x: bucket.key, y: bucket.doc_count});
+            }
+
+            d3.select('#chart_histogram svg')
+                    .datum(myData)
+                    .transition().duration(500)
+                    .call(chart);
+
+            nv.utils.windowResize(chart.update);
+
+            return chart;
+        });
     }
 
     function initPies(aggr) {
