@@ -9,6 +9,24 @@
             searchData.startDate = startDate;
             searchData.endDate = endDate;
             loadAnalytics();
+            loadHistory();
+        });
+    }
+
+    function loadHistory() {
+        flog('Loading email history...');
+        var href = "?history&" + $.param(searchData);
+        $.ajax({
+            type: "GET",
+            url: href,
+            dataType: 'html',
+            success: function (resp) {
+                var json = null;
+
+                if (resp !== null && resp.length > 0) {
+                    json = JSON.parse(resp);
+                }
+            }
         });
     }
 
@@ -129,6 +147,36 @@
     }
 
     $(function () {
+        Handlebars.registerHelper('genEmailStatus', function (item, options) {
+            var templ = '';
+
+            templ += '<span class="fa-stack fa-lg">';
+            if (item.sendStatus == 'c') {
+                templ += '<i class="fa fa-check-circle fa-stack-1x text-success"></i>';
+            } else {
+                templ += '<i class="fa fa-exclamation-circle fa-stack-1x text-muted"></i>';
+            }
+
+            if (item.ignored) {
+                templ += '<i class="fa fa-ban fa-stack-2x text-danger"></i>';
+            }
+
+            templ += '</span>';
+
+            templ += '<abbr title="EmailItemID: ' + item.id + '">';
+            if (item.sendStatus === 'r') {
+                templ += '<small>( retry at ' + item.nextAttemptDate + ')</small>';
+            } else if (item.sendStatus === 'p') {
+                if (item.numAttempts) {
+                    templ += '<small>( ' + item.numAttempts + ' attempts )</small>';
+                }
+            } else if (item.sendStatus === 'f') {
+                templ += '<small>( ' + item.numAttempts + ' attempts; last error ' + item.lastAttempt.status + ')</small>';
+            }
+            templ += '</abbr>';
+            return Handlebars.SafeString(templ);
+        });
+
         initReportDateRange();
     });
 })(jQuery);
