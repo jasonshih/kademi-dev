@@ -30,6 +30,7 @@
         <table class="table table-hover table-striped">
             <thead>
                 <tr>
+                    <th></th>
                     <th>First name</th>
                     <th>Surname</th>
                     <th>Email</th>
@@ -40,6 +41,13 @@
             <tbody>
                 #foreach($unsub in $page.children.ofType.unsub)
                 <tr>
+                    <td>
+                        #if( $unsub.profile )
+                        <a href="/manageUsers/$unsub.profile.id">
+                            <span class="fa fa-user"></span>
+                        </a>
+                        #end
+                    </td>
                     <td>$!unsub.profile.firstName</td>
                     <td>$!unsub.profile.surName</td>
                     <td>$!unsub.profile.email</td>
