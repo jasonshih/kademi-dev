@@ -1,10 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
-
-</body>
-</html>
+#if ($page)
+<ol class="breadcrumb" style="$!style">
+    #if( $page.parent.title )
+    <li>
+        <a href="$page.parent.href">
+            $page.parent.title
+        </a>
+    </li>
+    #end
+    <li class="active">
+        <a href="$page.href">$formatter.htmlEncode($page.title)</a>
+    </li>
+</ol>
+#else
+<ol class="breadcrumb" style="$!style">
+    <li><a href="#">Home</a></li>
+    <li class="active"><a href="#">Breadcrumb</a></li>
+</ol>
+#end
