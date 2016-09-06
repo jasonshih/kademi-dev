@@ -20,6 +20,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 #foreach($app in $page.children.ofType("app"))
+                                #if( $app.appProvider || $app.themeProvider )
                                 <div class="col-md-2">
                                     <div class="thumbnail app">
                                         <a href="$app.href">
@@ -31,7 +32,13 @@
                                         </a>
                                         <div class="caption">
                                             <h4 class="title"><a href="$app.href">$app.title<span class="parag-end"></span></a></h4>
-                                            <p>$app.brief</p>
+                                            <p>
+                                                #if( $app.brief )
+                                                $app.brief
+                                                #else
+                                                No description.
+                                                #end
+                                            </p>
                                         </div>
                                         <div class="ratings">
                                             <p class="pull-right">
@@ -45,6 +52,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                #end
                                 #end
                             </div>
                         </div>
