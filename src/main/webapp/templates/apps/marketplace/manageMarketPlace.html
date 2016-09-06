@@ -20,6 +20,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 #foreach($app in $page.children.ofType("app"))
+                                #if( $app.appProvider || $app.themeProvider )
                                 <div class="col-md-2">
                                     <div class="thumbnail app">
                                         <a href="$app.href">
@@ -45,6 +46,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                #end
                                 #end
                             </div>
                         </div>
