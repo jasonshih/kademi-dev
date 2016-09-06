@@ -38,7 +38,10 @@
                 flog('loadHistory', items);
 
                 var itemsHtml = template(items);
-                $('#history-table-body').html(itemsHtml);
+                $('#history-table-body').empty();
+                $('#history-table-body').append(itemsHtml);
+
+                $('#history-table-body .timeago').timeago();
             }
         });
     }
@@ -57,7 +60,6 @@
                     json = JSON.parse(resp);
                 }
 
-                flog('response', json);
                 handleData(json);
             }
         });
@@ -160,34 +162,40 @@
     }
 
     $(function () {
+        Handlebars.registerHelper('formatISODate', function (dateString, options) {
+            var d = new moment(dateString);
+            return new Handlebars.SafeString(d.toISOString());
+        });
+
         Handlebars.registerHelper('genEmailStatus', function (item, options) {
             var templ = '';
 
             templ += '<span class="fa-stack fa-lg">';
-            if (item.sendStatus == 'c') {
+            if (item._source.sendStatus == 'c') {
                 templ += '<i class="fa fa-check-circle fa-stack-1x text-success"></i>';
             } else {
                 templ += '<i class="fa fa-exclamation-circle fa-stack-1x text-muted"></i>';
             }
 
-            if (item.ignored) {
+            if (item._source.ignored) {
                 templ += '<i class="fa fa-ban fa-stack-2x text-danger"></i>';
             }
 
             templ += '</span>';
 
-            templ += '<abbr title="EmailItemID: ' + item.id + '">';
-            if (item.sendStatus === 'r') {
-                templ += '<small>( retry at ' + item.nextAttemptDate + ')</small>';
-            } else if (item.sendStatus === 'p') {
-                if (item.numAttempts) {
-                    templ += '<small>( ' + item.numAttempts + ' attempts )</small>';
+            templ += '<abbr title="EmailItemID: ' + item._id + '">';
+            if (item._source.sendStatus === 'r') {
+                templ += '<small>( retry at ' + item._source.nextAttemptDate + ')</small>';
+            } else if (item._source.sendStatus === 'p') {
+                if (item._source.numAttempts) {
+                    templ += '<small>( ' + item._source.numAttempts + ' attempts )</small>';
                 }
-            } else if (item.sendStatus === 'f') {
-                templ += '<small>( ' + item.numAttempts + ' attempts; last error ' + item.lastAttempt.status + ')</small>';
+            } else if (item._source.sendStatus === 'f') {
+                templ += '<small>( ' + item._source.numAttempts + ' attempts; last error ' + item._source.lastAttempt.status + ')</small>';
             }
             templ += '</abbr>';
-            return Handlebars.SafeString(templ);
+
+            return new Handlebars.SafeString(templ);
         });
 
         initReportDateRange();
