@@ -15,17 +15,30 @@
 
     function loadHistory() {
         flog('Loading email history...');
+
+        var source = $("#email-template").html();
+        var template = Handlebars.compile(source);
+
         var href = "?history&" + $.param(searchData);
         $.ajax({
             type: "GET",
             url: href,
             dataType: 'html',
             success: function (resp) {
+                var items = [];
                 var json = null;
 
                 if (resp !== null && resp.length > 0) {
                     json = JSON.parse(resp);
+                    if (json.hits !== null && typeof json.hits !== 'undefined') {
+                        items = json.hits.hits;
+                    }
                 }
+
+                flog('loadHistory', items);
+
+                var itemsHtml = template(items);
+                $('#history-table-body').html(itemsHtml);
             }
         });
     }
