@@ -9,7 +9,9 @@
         <hr/>
         <div class="menuTree">
             #set( $myMenu = $menuManager.rootMenuItem )
-            #showMenuList( $myMenu, true )
+            <ol>
+                #showMenu( $myMenu )
+            </ol>            
             <br class="clearfix"/>
             <button class="btn btn-success saveMenu">
                 <span class="fa fa-check"></span>
@@ -58,30 +60,34 @@
 
 
 #macro( showMenu $menuItem )
-<li>
-    <a href="$item.id" class="editMenu" data-href="$!menuItem.href" data-hidden="$menuItem.hidden">
-        <span class="fa fa-pencil"></span>
-        <span class="menuItemText">
-            $!menuItem.text
-        </span>
-    </a>        
-</li>
-#showMenuList($menuItem, false )
-
+    <li>
+        <button class="btn btn-success btn-sm btnAddMenuItem" style="position: absolute; right: 0">
+            <span class="fa fa-plus"></span>
+        </button>
+        
+        <a href="$menuItem.id" class="editMenu" data-href="$!menuItem.href" data-hidden="$menuItem.hidden">
+            <span class="fa fa-pencil"></span>
+            <span class="menuItemText">
+                #if( $menuItem.text )
+                $menuItem.text
+                #else
+                Root menu item
+                #end
+            </span>
+        </a>        
+        
+        #showMenuList($menuItem, true )
+    </li>    
 #end
 
-#macro( showMenuList $menuItem $allowAdd )
+
+#macro( showMenuList $menuItem )
 <div class="menuList">
     <ol class="list" data-id="$menuItem.id">
         #foreach($item in $menuItem.items)
         #showMenu( $item )
         #end
     </ol>
-    #if( $allowAdd )
-    <button class="btn btn-success btn-sm btnAddMenuItem">
-        <span class="fa fa-plus"></span>
-    </button>
-    #end
 </div>    
 #end
 

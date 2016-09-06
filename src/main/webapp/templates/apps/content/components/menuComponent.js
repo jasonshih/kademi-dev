@@ -27,8 +27,10 @@
 
                     form.on("click", ".btnAddMenuItem", function (e) {
                         e.preventDefault();
-                        var div = $(e.target).closest(".menuList");
+                        var div = $(e.target).closest("li").find("> .menuList");
+                        flog("menuList", div);
                         var ol = div.find("> ol");
+                        flog("ol", ol);
                         var newId = "menu-custom-" + Math.floor((Math.random() * 10000) ); 
                         var newLi = '<li class="ui-sortable-handle">' +
                                 '<a data-href="" class="editMenu" href="' + newId + '">' +
@@ -123,7 +125,7 @@
                     });
                     form.on("click", ".saveMenu", function (e) {
                         e.preventDefault();
-                        var topOl = $(".menuTree > .menuList > ol")
+                        var topOl = $(".menuTree > ol")
                         var list = new Array();
                         toMenuData(topOl, list);
                         flog("saving menu", list);
@@ -164,13 +166,14 @@
     function toMenuData(ol, list) {        
         var parentId = ol.data("id");        
         var lis = ol.find("> li");
-        flog("toMenuData", ol, list, lis);
+        flog("toMenuData", ol);
         $.each(lis, function (i, n) {
             var li = $(n);
+            flog("toMenuData - item", li);
             var link = li.find("a");
             var itemId = link.attr("href");
             var itemHref = link.data("href");
-            var itemText = li.find(".menuItemText").text().trim();
+            var itemText = li.find("> a .menuItemText").text().trim();
             var isCustom = itemId.startsWith("menu-custom-"); // different format to native menu items
             var isHidden = link.data("hidden");
             var menuConfigItem = {
@@ -183,6 +186,8 @@
                 hidden : isHidden
             };
             list.push(menuConfigItem);
+            var subOl = li.find("> .menuList > ol");
+            toMenuData(subOl, list);
         });
     }
 })(jQuery);
