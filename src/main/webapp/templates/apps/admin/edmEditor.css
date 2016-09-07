@@ -152,7 +152,7 @@ body.opened-keditor-sidebar div.cke_float[id*="cke_keditor-section-"] {
 }
 
 .keditor-container-content {
-    min-height: 50px;
+    height: 50px;
     vertical-align: top;
 }
 
