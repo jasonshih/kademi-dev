@@ -2,19 +2,27 @@
 
 var JBApp = {
     funnel: null,
-
     initialized: false,
-
     getNodeInfo: function (node) {
         for (var key in node) {
             if (node.hasOwnProperty(key)) {
                 return [key, node[key]];
             }
         }
-        
+
         return null;
     },
-
+    getNodeType: function (node, typeName) {        
+        var nodeType = JBNodes[typeName];
+        if( nodeType == null ) {
+            flog("getNodeType try", node.nodeType);
+            if( node.nodeType ) {
+                nodeType = JBNodes[node.nodeType];
+            }
+        }
+        flog("getNodeType", node, typeName, "nodeType=", nodeType);
+        return nodeType;
+    },
     getNodeInfoById: function (id) {
         for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
             var node = JBApp.funnel.nodes[i];
@@ -26,19 +34,22 @@ var JBApp = {
             }
         }
     },
-
     getNodeTypeById: function (id) {
+        flog("getNodeTypeById", JBApp.funnel.nodes);
         for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
             var node = JBApp.funnel.nodes[i];
             var nodeInfo = JBApp.getNodeInfo(node);
 
             if (nodeInfo[1].nodeId === id) {
+                flog("found node info", nodeInfo, "type=", nodeInfo[0]);
+                if( nodeInfo[1].nodeType ) {
+                    return nodeInfo[1].nodeType; // this is to allow customGoal etc to be used for many different node types
+                }
                 return nodeInfo[0];
                 break;
             }
         }
     },
-    
     reloadFunnelJson: function () {
         flog('reloadFunnelJson');
 
@@ -48,7 +59,6 @@ var JBApp = {
             }
         });
     },
-    
     parseFunnel: function () {
         flog('parseFunnel');
 
@@ -61,17 +71,14 @@ var JBApp = {
             };
         }
     },
-
     isActionNode: function (type) {
         return type.indexOf('Action') !== 1;
     },
-
     isGoalNode: function (type) {
         return type.indexOf('Goal') !== 1;
     },
-
     newNode: function (node, type) {
-        flog('newNode', node, type);
+        flog('newNode', type, node);
 
         var d = document.createElement('div');
         d.className = 'w ' + type;
@@ -79,8 +86,17 @@ var JBApp = {
         d.setAttribute('data-type', type);
 
         var nodePorts = '';
-        for (var portName in JBNodes[type].ports) {
-            var portData = JBNodes[type].ports[portName];
+        var nodeType = JBNodes[type];        
+        if( nodeType == null ) {
+            nodeType = JBNodes[node.nodeType];
+        }
+        if( nodeType == null ) {
+            flog("WARN: could not find node type=", type,"nodetype=",node.nodeType, "node=", node);
+            return null;
+        }
+        
+        for (var portName in nodeType.ports) {
+            var portData = nodeType.ports[portName];
             var portClass = '';
             switch (portName) {
                 case 'decisionDefault':
@@ -104,9 +120,9 @@ var JBApp = {
 
         var nodeName = node.title ? '<span class="node-title-inner">' + node.title + '</span>' : '<span class="node-title-inner text-muted">Enter title</span>';
         var nodeHtml = '';
-        nodeHtml += '<div class="title"> ' + JBNodes[type].title;
+        nodeHtml += '<div class="title"> ' + nodeType.title;
         nodeHtml += '   <span class="node-buttons clearfix">';
-        if (JBNodes[type].settingEnabled) {
+        if (nodeType.settingEnabled) {
             nodeHtml += '       <span class="btnNodeDetails" title="Edit details"><i class="fa fa-fw fa-cog"></i></span>';
         }
         nodeHtml += '       <span class="btnNodeDelete" title="Delete this node"><i class="fa fa-fw fa-trash"></i></span>';
@@ -121,11 +137,10 @@ var JBApp = {
         d.style.top = node.y + 'px';
 
         JBApp.jspInstance.getContainer().appendChild(d);
-        JBApp.initNode(d, type);
+        JBApp.initNode(d, type, node);
 
         return d;
     },
-
     getConnectorStyle: function (portName) {
         var color = '';
         switch (portName) {
@@ -152,19 +167,22 @@ var JBApp = {
             outlineWidth: 4
         }
     },
+    initNode: function (nodeDiv, type, node) {
+        flog('initNode', nodeDiv, type);
 
-    initNode: function (node, type) {
-        flog('initNode', node, type);
-
-        JBApp.jspInstance.draggable(node, {
+        JBApp.jspInstance.draggable(nodeDiv, {
             stop: function () {
                 JBApp.saveFunnel();
             },
             grid: [10, 10]
         });
-
-        for (var portName in JBNodes[type].ports) {
-            JBApp.jspInstance.makeSource(node, {
+        var nodeType = JBApp.getNodeType(node, type);
+        if( nodeType == null ) {
+            flog("WARN: Could not find node type for node=", node, "type=", type);
+            return;
+        }
+        for (var portName in nodeType.ports) {
+            JBApp.jspInstance.makeSource(nodeDiv, {
                 filter: '[data-name=' + portName + ']',
                 connectorStyle: JBApp.getConnectorStyle(portName),
                 connectionType: portName,
@@ -172,23 +190,26 @@ var JBApp = {
             });
         }
 
-        JBApp.jspInstance.makeTarget(node, {
+        JBApp.jspInstance.makeTarget(nodeDiv, {
             dropOptions: {
                 hoverClass: 'dragHover'
             },
             allowLoopback: false
         });
     },
-
     connectionTypes: {
         nextNodeId: [1, 0.775, 1, 0],
         timeoutNode: [1, 0.925, 1, 0]
     },
-
     initConnection: function (node, type) {
         flog('initConnection', node, type);
 
-        for (var portName in JBNodes[type].ports) {
+        var nodeType = JBApp.getNodeType(node, type);
+        if( nodeType == null ) {
+            return null;
+        }
+
+        for (var portName in nodeType.ports) {
             var connectionType = portName;
 
             if (portName === 'decisionChoices') {
@@ -215,33 +236,36 @@ var JBApp = {
             }
         }
     },
-    
     saveFunnel: function (message, callback) {
         flog('saveFunnel', message);
-        
+
         var builderStatus = $('#builder-status');
         builderStatus.stop().show().html('Saving...');
-        
+
         for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
             var node = JBApp.funnel.nodes[i];
             for (var key in node) {
                 if (node.hasOwnProperty(key)) {
                     var nodeId = node[key].nodeId;
                     var nodeEl = $('#' + nodeId);
-
-                    node[key].x = parseInt(nodeEl.css('left').replace('px', ''));
-                    node[key].y = parseInt(nodeEl.css('top').replace('px', ''));
+                    flog("nodeEl", nodeEl);
+                    if( nodeEl.length > 0 ) {
+                        node[key].x = parseInt(nodeEl.css('left').replace('px', ''));
+                        node[key].y = parseInt(nodeEl.css('top').replace('px', ''));
+                    } else {
+                        flog("WARN: could not find nodeid ", nodeId, "in node=", node[key]);
+                    }
                 }
             }
         }
-        
+
         $.ajax({
             url: 'funnel.json',
             type: 'PUT',
             data: JSON.stringify(JBApp.funnel, null, 4),
             success: function () {
                 builderStatus.html(message || 'Funnel is saved').delay(2000).fadeOut(2000);
-                
+
                 if (typeof callback === 'function') {
                     callback();
                 }
@@ -251,7 +275,6 @@ var JBApp = {
             }
         });
     },
-    
     deleteConnection: function (connection) {
         flog('deleteConnection', connection);
 
@@ -279,25 +302,24 @@ var JBApp = {
             }
         }
     },
-    
     hideSettingPanel: function () {
         flog('hideSettingPanel');
-        
+
         var settingPanel = $('.panel-setting');
         settingPanel.removeClass('showed');
         settingPanel.find('.active').removeClass('active');
         JBApp.currentSettingNode = null;
         JBApp.currentSettingNodeId = null;
     },
-    
     showSettingPanel: function (formName) {
-        flog('showSettingPanel', formName);
+        flog('showSettingPanel-', formName);
 
         var titleSelector = '';
         var formSelector = '';
         if (typeof formName !== 'string') {
             var node = formName;
             var nodeType = JBApp.getNodeTypeById(node.nodeId);
+            flog("nodeType=", nodeType, " for nodeId=", node.nodeId);
             JBApp.currentSettingNode = node;
             JBApp.currentSettingNodeId = node.nodeId;
             formSelector = '.panel-edit-details.panel-setting-' + nodeType;
@@ -306,13 +328,14 @@ var JBApp = {
             formSelector = '.panel-' + formName;
             titleSelector = '.panel-' + formName;
         }
-        
+
         var settingPanel = $('.panel-setting');
         settingPanel.addClass('showed');
         settingPanel.find('.active').removeClass('active');
 
         var settingPanelBody = settingPanel.find('.panel-body');
         var formPanel = settingPanelBody.find(formSelector);
+        flog("showSettingPanel. formSelector=", formSelector, "formPanel=", formPanel, "settingPanelBody=", settingPanelBody);
         formPanel.addClass('active');
 
         var settingPanelHeading = settingPanel.find('.panel-heading');
@@ -326,61 +349,61 @@ var JBApp = {
 
 jsPlumb.ready(function () {
     JBApp.parseFunnel();
-    
+
     // setup some defaults for jsPlumb.
     var instance = jsPlumb.getInstance({
         Endpoint: ['Dot', {
-            radius: 2
-        }],
+                radius: 2
+            }],
         Connector: ['Flowchart', {
-            cornerRadius: 5,
-            gap: 1,
-            stub: 15,
-            alwaysRespectStubs: true,
-            midpoint: 1
-        }],
+                cornerRadius: 5,
+                gap: 1,
+                stub: 15,
+                alwaysRespectStubs: true,
+                midpoint: 1
+            }],
         HoverPaintStyle: {
             strokeStyle: '#1e8151',
             lineWidth: 2
         },
         ConnectionOverlays: [
             ['Arrow', {
-                location: 1,
-                id: 'arrow',
-                length: 10,
-                width: 10,
-                foldback: 0.5
-            }],
+                    location: 1,
+                    id: 'arrow',
+                    length: 10,
+                    width: 10,
+                    foldback: 0.5
+                }],
             ['Label', {
-                label: '',
-                id: 'label',
-                cssClass: 'aLabel'
-            }],
+                    label: '',
+                    id: 'label',
+                    cssClass: 'aLabel'
+                }],
             ['Custom', {
-                create: function () {
-                    return $('<div><a href="#" title="Click to delete connection" class="buttonX"><i class="fa fa-times-circle"></i></a></div>');
-                },
-                events: {
-                    click: function (labelOverlay, e) {
-                        flog('Click on label overlay', labelOverlay, labelOverlay.component);
+                    create: function () {
+                        return $('<div><a href="#" title="Click to delete connection" class="buttonX"><i class="fa fa-times-circle"></i></a></div>');
+                    },
+                    events: {
+                        click: function (labelOverlay, e) {
+                            flog('Click on label overlay', labelOverlay, labelOverlay.component);
 
-                        e.preventDefault();
-                        e.stopPropagation();
-                        e.stopImmediatePropagation();
+                            e.preventDefault();
+                            e.stopPropagation();
+                            e.stopImmediatePropagation();
 
-                        labelOverlay.component.setParameter('clickedButtonX', true);
+                            labelOverlay.component.setParameter('clickedButtonX', true);
 
-                        if (confirm('Are you sure you want to delete this connection?')) {
-                            labelOverlay.component.setParameter('clickedButtonXCancelled', false);
-                        } else {
-                            labelOverlay.component.setParameter('clickedButtonXCancelled', true);
+                            if (confirm('Are you sure you want to delete this connection?')) {
+                                labelOverlay.component.setParameter('clickedButtonXCancelled', false);
+                            } else {
+                                labelOverlay.component.setParameter('clickedButtonXCancelled', true);
+                            }
                         }
-                    }
-                },
-                location: 0.7,
-                id: 'buttonX',
-                visible: false
-            }]
+                    },
+                    location: 0.7,
+                    id: 'buttonX',
+                    visible: false
+                }]
         ],
         Container: 'paper'
     });
@@ -471,13 +494,13 @@ jsPlumb.ready(function () {
             flog('clicked to non-connection ', connection);
         }
     });
-    
+
     instance.bind('mouseover', function (connection) {
         if (connection.getOverlay('buttonX')) {
             connection.getOverlay('buttonX').show();
         }
     });
-    
+
     instance.bind('mouseout', function (connection) {
         if (connection.getOverlay('buttonX')) {
             connection.getOverlay('buttonX').hide();
@@ -485,14 +508,20 @@ jsPlumb.ready(function () {
     });
 
     instance.bind('connection', function (info) {
-        var nodeType = info.source.getAttribute('data-type');
+        var type = info.source.getAttribute('data-type');
         var portName = info.sourceEndpoint.connectionType;
-        var portData = JBNodes[nodeType].ports[portName];
+        var div = $(info.source);
+        var nodeId = div.attr("id");
+        var node = JBApp.getNodeInfoById(nodeId)[1];
+        
+        var nodeType = JBApp.getNodeType(node, type);
+        flog("bind connection", nodeType);
+        var portData = nodeType.ports[portName];
         var label = portData.label;
         var maxConnections = portData.maxConnections;
         var connection = info.connection;
 
-        flog('In connection, nodeType: ' + nodeType + ', portName: ' + portName + ', label: ' + label + ', maxConnections: ' + maxConnections, info, connection);
+        flog('In connection, nodeType: ' + type + ', portName: ' + portName + ', label: ' + label + ', maxConnections: ' + maxConnections, info, connection);
 
         // Check limitation of connections
         if (maxConnections !== -1) {
@@ -540,10 +569,10 @@ jsPlumb.ready(function () {
         // Set label
         connection.getOverlay('label').setLabel(label);
         $(connection.getOverlay('label').canvas).addClass('showed');
-        
+
         if (JBApp.initialized) {
             flog('New connection was made', info.connection);
-            
+
             for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
                 var node = JBApp.funnel.nodes[i];
                 var nodeInfo = JBApp.getNodeInfo(node);
@@ -552,7 +581,7 @@ jsPlumb.ready(function () {
                 if (nodeData.nodeId === connection.sourceId) {
                     if (nodeInfo[0] === 'decision') {
                         flog('Started from a decision node');
-                        
+
                         if (connection.hasType('decisionDefault')) {
                             nodeData.nextNodeId = connection.targetId;
                         } else if (connection.hasType('decisionChoices')) {
@@ -564,7 +593,7 @@ jsPlumb.ready(function () {
                     } else {
                         nodeData[portName] = connection.targetId;
                     }
-                    
+
                     break;
                 }
             }
@@ -572,7 +601,7 @@ jsPlumb.ready(function () {
             JBApp.saveFunnel();
         }
     });
-    
+
     // suspend drawing and initialise.
     instance.batch(function () {
         if (JBApp.funnel && JBApp.funnel.nodes && JBApp.funnel.nodes.length > 0) {
@@ -718,6 +747,7 @@ function initSideBar() {
     for (var nodeType in JBNodes) {
         var nodeDef = JBNodes[nodeType];
 
+//        flog("initSideBar: add node type", nodeType, nodeDef);
         snippetsStr += '<li data-type="' + nodeType + '" class="list-group-item">';
         snippetsStr += '    <img src="' + nodeDef.previewUrl + '" class="img-responsive" />';
         snippetsStr += '</li>';
@@ -749,13 +779,20 @@ function initSideBar() {
             var type = ui.draggable.attr('data-type');
             var node = {
                 nodeId: type + '-' + uuid(),
+                nodeType : type,
                 x: ui.offset.left - paper.offset().left,
                 y: ui.offset.top - paper.offset().top
             };
             var objToPush = {};
-            objToPush[type] = node;
+            var nodeInfo = JBNodes[type];
+            var nodeType = type;
+            if (nodeInfo.nodeType) {
+                nodeType = nodeInfo.nodeType;
+            }
+            objToPush[nodeType] = node;
 
             JBApp.newNode(node, type);
+            flog("drop. add node: node=", node, "type=", type, "objToPush", objToPush);
             JBApp.funnel.nodes.push(objToPush);
             JBApp.saveFunnel('New node is added!');
         }
@@ -778,7 +815,7 @@ function initChoiceForm() {
     var form = $('form.panel-decision');
     form.on('submit', function (e) {
         e.preventDefault();
-        
+
         doSaveChoice(form);
     });
 }
@@ -793,7 +830,7 @@ function doSaveChoice(form) {
     for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
         var node = JBApp.funnel.nodes[i];
         var nodeData = JBApp.getNodeInfo(node)[1];
-        
+
         if (nodeData.nodeId === sourceId) {
             if (nodeData.hasOwnProperty('choices')) {
                 var choices = nodeData.choices;
@@ -803,9 +840,9 @@ function doSaveChoice(form) {
 
                 if (targetId in choices) {
                     var constant = choices[targetId].constant || {
-                            value: '',
-                            label: 'empty'
-                        };
+                        value: '',
+                        label: 'empty'
+                    };
                     constant.value = constValue;
 
                     choices[targetId].constant = constant;
@@ -842,7 +879,7 @@ function initNodeActions() {
         for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
             var node = JBApp.funnel.nodes[i];
             var nodeData = JBApp.getNodeInfo(node)[1];
-            
+
             if (nodeData.nodeId === nodeId) {
                 showTitleForm(nodeData);
                 break;
@@ -891,7 +928,7 @@ function deleteNode(nodeId) {
             }
         }
     }
-    
+
     if (index > -1) {
         JBApp.funnel.nodes.splice(index, 1);
     }
