@@ -797,7 +797,8 @@ function initSideBar() {
 
             JBApp.newNode(node, type);
             JBApp.funnel.nodes.push(objToPush);
-            JBApp.saveFunnel('New node is added: type=' + type + ' nodeData: \n' + JSON.stringify(objToPush, null, 4));
+            JBApp.saveFunnel('New node is added!');
+            flog('New node added: type=' + nodeType + ' nodeData: \n' + JSON.stringify(objToPush, null, 4));
         }
     });
 }
