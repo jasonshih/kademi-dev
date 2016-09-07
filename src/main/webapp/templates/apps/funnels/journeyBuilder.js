@@ -783,18 +783,18 @@ function initSideBar() {
                 x: ui.offset.left - paper.offset().left,
                 y: ui.offset.top - paper.offset().top
             };
-            var objToPush = {};
             var nodeInfo = JBNodes[type];
             var nodeType = type;
-            if (nodeInfo.nodeType) {
-                nodeType = nodeInfo.nodeType;
+            if (nodeInfo.nodeTypeClass) {
+                nodeType = nodeInfo.nodeTypeClass;
             }
+
+            var objToPush = {};
             objToPush[nodeType] = node;
 
             JBApp.newNode(node, type);
-            flog("drop. add node: node=", node, "type=", type, "objToPush", objToPush);
             JBApp.funnel.nodes.push(objToPush);
-            JBApp.saveFunnel('New node is added!');
+            JBApp.saveFunnel('New node is added: type=' + type + ' nodeData: \n' + JSON.stringify(objToPush, null, 4));
         }
     });
 }

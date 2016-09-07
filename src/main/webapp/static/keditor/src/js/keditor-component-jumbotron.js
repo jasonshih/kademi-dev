@@ -91,6 +91,59 @@
                 '           <div class="radio"><label><input type="radio" name="rounded" value="false"> No</label></div>' +
                 '       </div>' +
                 '    </div>' +
+                '   <div class="form-group">' +
+                '       <div class="col-md-12"><label>Inner Padding (in px)</label>' +
+                '           <div class="row row-sm text-center">' +
+                '               <div class="col-xs-4 col-xs-offset-4">' +
+                '                   <input type="number" value="" name="padding-top" class="paddingSettings form-control"/>' +
+                '                   <small>top</small>' +
+                '               </div>' +
+                '           </div>' +
+                '           <div class="row row-sm text-center">' +
+                '               <div class="col-xs-4">' +
+                '                   <input type="number" value="" name="padding-left" class="paddingSettings form-control"/> ' +
+                '                   <small>left</small>' +
+                '               </div>' +
+                '               <div class="col-xs-4 col-xs-offset-4">' +
+                '                   <input type="number" value="" name="padding-right" class="paddingSettings form-control"/>' +
+                '                   <small>right</small>' +
+                '               </div>' +
+                '           </div> '+
+                '           <div class="row row-sm text-center">' +
+                '               <div class="col-xs-4 col-xs-offset-4">' +
+                '                   <input type="number" value="" name="padding-bottom" class="paddingSettings form-control"/>' +
+                '                   <small>bottom</small>' +
+                '               </div>' +
+                '           </div>' +
+                '       </div>' +
+                '   </div>' +
+
+                '   <div class="form-group">' +
+                '       <div class="col-md-12"><label>Margins (in px)</label>' +
+                '           <div class="row row-sm text-center">' +
+                '               <div class="col-xs-4 col-xs-offset-4">' +
+                '                   <input type="number" value="" name="margin-top" class="marginSettings form-control"/>' +
+                '                   <small>top</small>' +
+                '               </div>' +
+                '           </div>' +
+                '           <div class="row row-sm text-center">' +
+                '               <div class="col-xs-4">' +
+                '                   <input type="number" value="" name="margin-left" class="marginSettings form-control"/> ' +
+                '                   <small>left</small>' +
+                '               </div>' +
+                '               <div class="col-xs-4 col-xs-offset-4">' +
+                '                   <input type="number" value="" name="margin-right" class="marginSettings form-control"/>' +
+                '                   <small>right</small>' +
+                '               </div>' +
+                '           </div> '+
+                '           <div class="row row-sm text-center">' +
+                '               <div class="col-xs-4 col-xs-offset-4">' +
+                '                   <input type="number" value="" name="margin-bottom" class="marginSettings form-control"/>' +
+                '                   <small>bottom</small>' +
+                '               </div>' +
+                '           </div>' +
+                '       </div>' +
+                '   </div>' +
                 '</form>'
             );
 
@@ -116,12 +169,51 @@
                     form.find('.button-color').val('');
                 }
             });
+
+            var paddingSettings = form.find('.paddingSettings');
+            paddingSettings.on('change', function () {
+                var paddingValue = this.value || '';
+                var component = keditor.getSettingComponent();
+                var paddingProp = $(this).attr('name');
+                if (paddingValue.trim() === '') {
+                    component.find('.jumbotron').css(paddingProp, '');
+                } else {
+                    if (isNaN(paddingValue)) {
+                        paddingValue = 0;
+                        this.value = paddingValue;
+                    }
+                    component.find('.jumbotron').css(paddingProp, paddingValue + 'px');
+                }
+            });
+
+            var marginSettings = form.find('.marginSettings');
+            marginSettings.on('change', function () {
+                var paddingValue = this.value || '';
+                var component = keditor.getSettingComponent();
+                var paddingProp = $(this).attr('name');
+                if (paddingValue.trim() === '') {
+                    component.find('.jumbotron').css(paddingProp, '');
+                } else {
+                    if (isNaN(paddingValue)) {
+                        paddingValue = 0;
+                        this.value = paddingValue;
+                    }
+                    component.find('.jumbotron').css(paddingProp, paddingValue + 'px');
+                }
+            });
         },
 
         showSettingForm: function (form, component, keditor) {
             flog('showSettingForm "jumbotron" component', component);
             form.find('[name=button-color]').val(component.attr('data-bgcolor')).trigger('change');
+            form.find('.paddingSettings').each(function(){
+                $(this).val(component.find('.jumbotron').css($(this).attr('name')).replace('px',''));
+            });
+            form.find('.marginSettings').each(function(){
+                $(this).val(component.find('.jumbotron').css($(this).attr('name')).replace('px',''));
+            });
             form.find('[name=showButton][value=false]').prop('checked', component.find('a').hasClass('hide'));
+            form.find('[name=rounded][value=false]').prop('checked', component.find('.jumbotron').css('border-radius').replace('px', '') === '0');
         },
 
         destroy: function (component, keditor) {

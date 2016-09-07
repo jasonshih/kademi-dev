@@ -5,7 +5,7 @@
         <link href="manageWebsite.css" rel="stylesheet" type="text/css" />
         <!-- <link rel="stylesheet" href="/theme/assets/plugins/bootstrap-switch/static/stylesheets/bootstrap-switch.css"/> -->
         <script type="text/javascript" src="manageWebsite.js">//</script>
-        <script type="text/javascript" src="manageMenu.js">//</script>
+        <!--<script type="text/javascript" src="manageMenu.js">//</script>-->
         <script type="text/javascript" src="manageApps.js">//</script>
         <script type="text/javascript" src="/static/js/managePublishing.js">//</script>
         <script type="text/javascript" src="/static/bootstrap-upcrop-image/1.0/bootstrap-upcrop-image.js">//</script>
@@ -263,12 +263,12 @@
                                 <input type="text" class="form-control toolbar-Logo" name="logo" id="logo" value="$formatter.htmlAttEncode($page.themeAttributes.logo)" />
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="menu" class="col-sm-3 control-label">Menu</label>
-                            <div class="col-sm-6">
-                                <textarea id="menu" name="menu" class="form-control limited" rows="5">$!page.themeAttributes.menu</textarea>
-                            </div>
-                        </div>
+                        <!--<div class="form-group">-->
+                            <!--<label for="menu" class="col-sm-3 control-label">Menu</label>-->
+                            <!--<div class="col-sm-6">-->
+                                <!--<textarea id="menu" name="menu" class="form-control limited" rows="5">$!page.themeAttributes.menu</textarea>-->
+                            <!--</div>-->
+                        <!--</div>-->
                         #foreach( $customField in $page.customFields )
                         <div class="form-group">
                             <label for="menu" class="col-sm-3 control-label">$customField.text</label>
