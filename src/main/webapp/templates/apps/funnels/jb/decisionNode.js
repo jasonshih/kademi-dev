@@ -14,7 +14,7 @@ JBNodes['decision'] = {
         }
     },
 
-    settingEnabled: true,
+    settingEnabled: false,
 
     initSettingForm: function (form) {
         form.forms({

@@ -809,7 +809,11 @@ function showChoiceForm(choice, sourceId, targetId) {
     var form = $('form.panel-decision');
     form.find('[name=sourceId]').val(sourceId);
     form.find('[name=targetId]').val(targetId);
-    form.find('[name=constValue]').val(choice.constant.value || '');
+    if (choice.query && choice.query.rules) {
+        $('#query-builder').queryBuilder('setRules', choice.query.rules);
+    } else {
+        $('#query-builder').queryBuilder('reset');
+    }
     JBApp.showSettingPanel('decision');
 }
 
@@ -817,19 +821,69 @@ function initChoiceForm() {
     flog('initChoiceForm');
 
     var form = $('form.panel-decision');
-    form.on('submit', function (e) {
-        e.preventDefault();
+    form.append(
+        '<div class="form-group">' +
+        '    <div class="col-md-12">' +
+        '        <button type="button" class="btn btn-primary btn-build-query btn-block">Decide your choice</button>' +
+        '    </div>' +
+        '</div>' +
+        '<input type="hidden" name="sourceId"/>' +
+        '<input type="hidden" name="targetId"/>'
+    );
 
-        doSaveChoice(form);
+    var modal = $(
+        '<div class="modal modal-lg fade in" id="modal-query-builder">' +
+        '   <div class="modal-header">' +
+        '       <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+        '       <h4 class="modal-title">Decide your choice</h4>' +
+        '   </div>' +
+        '   <div class="modal-body">' +
+        '       <div id="query-builder"></div>' +
+        '   </div>' +
+        '   <div class="modal-footer">' +
+        '       <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>' +
+        '       <button type="button" class="btn btn-primary btn-save-choice">Save your choice</button>' +
+        '   </div>' +
+        '</div>'
+    );
+    modal.appendTo(document.body);
+
+    $.getScriptOnce('/static/query-builder/2.3.3/js/query-builder.standalone.min.js', function () {
+        $.ajax({
+            url: window.location.pathname + '?fields',
+            type: 'get',
+            dataType: 'json',
+            success: function (resp) {
+                var builder = $('#query-builder');
+                builder.queryBuilder({
+                    filters: resp
+                });
+
+                form.find('.btn-build-query').on('click', function (e) {
+                    e.preventDefault();
+
+                    modal.modal('show');
+                });
+
+                modal.find('.btn-save-choice').on('click', function (e) {
+                    e.preventDefault();
+
+                    var choiceRules = builder.queryBuilder('getRules');
+                    if (!$.isEmptyObject(choiceRules)) {
+                        doSaveChoice(form, choiceRules);
+                    }
+                });
+            }
+        });
     });
+    $.getStyleOnce('/static/query-builder/2.3.3/css/query-builder.default.min.css');
 }
 
-function doSaveChoice(form) {
-    flog('doSaveChoice', form);
+function doSaveChoice(form, choiceRules) {
+    flog('doSaveChoice', choiceRules);
 
     var sourceId = form.find('[name=sourceId]').val();
     var targetId = form.find('[name=targetId]').val();
-    var constValue = form.find('[name=constValue]').val();
 
     for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
         var node = JBApp.funnel.nodes[i];
@@ -843,13 +897,12 @@ function doSaveChoice(form) {
                 }
 
                 if (targetId in choices) {
-                    var constant = choices[targetId].constant || {
-                            value: '',
-                            label: 'empty'
-                        };
-                    constant.value = constValue;
+                    choices[targetId].query = choices[targetId].query || {
+                            rules: {},
+                            label: ''
+                    };
 
-                    choices[targetId].constant = constant;
+                    choices[targetId].query.rules = choiceRules;
                 }
 
                 nodeData.choices = choices;
@@ -858,6 +911,7 @@ function doSaveChoice(form) {
         }
     }
 
+    $('#modal-query-builder').modal('hide');
     JBApp.saveFunnel('Decision choices updated', function () {
         JBApp.hideSettingPanel();
     });

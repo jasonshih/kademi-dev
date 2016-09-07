@@ -8,6 +8,9 @@
                 if (callback) {
                     callback.call(this, url, script, textStatus, jqXHR);
                 }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                flog('Error when loading script: ' + url, jqXHR, textStatus, errorThrown);
             }
         });
 
@@ -40,6 +43,9 @@
                         for (var i = 0; i < scriptMeta.callbacks.length; i++) {
                             scriptMeta.callbacks[i].call(this, url, script, textStatus, jqXHR);
                         }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        flog('Error when loading script: ' + url, jqXHR, textStatus, errorThrown);
                     }
                 });
             }
