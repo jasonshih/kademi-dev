@@ -12,15 +12,17 @@ var JBApp = {
 
         return null;
     },
-    getNodeType: function (node, typeName) {        
+    getNodeType: function (node, typeName) {
         var nodeType = JBNodes[typeName];
-        if( nodeType == null ) {
-            flog("getNodeType try", node.nodeType);
-            if( node.nodeType ) {
+        if (nodeType == null) {
+            flog('getNodeType by "nodeType" property', node.nodeType);
+            if (node.nodeType) {
                 nodeType = JBNodes[node.nodeType];
             }
         }
-        flog("getNodeType", node, typeName, "nodeType=", nodeType);
+
+        flog("getNodeType", node, typeName, "nodeType=" + nodeType);
+
         return nodeType;
     },
     getNodeInfoById: function (id) {
@@ -41,10 +43,12 @@ var JBApp = {
             var nodeInfo = JBApp.getNodeInfo(node);
 
             if (nodeInfo[1].nodeId === id) {
-                flog("found node info", nodeInfo, "type=", nodeInfo[0]);
-                if( nodeInfo[1].nodeType ) {
+                flog('Found node info', nodeInfo, 'type=' + nodeInfo[0]);
+
+                if (nodeInfo[1].nodeType) {
                     return nodeInfo[1].nodeType; // this is to allow customGoal etc to be used for many different node types
                 }
+
                 return nodeInfo[0];
                 break;
             }
@@ -71,32 +75,29 @@ var JBApp = {
             };
         }
     },
-    isActionNode: function (type) {
-        return type.indexOf('Action') !== 1;
-    },
-    isGoalNode: function (type) {
-        return type.indexOf('Goal') !== 1;
-    },
     newNode: function (node, type) {
-        flog('newNode', type, node);
-
-        var d = document.createElement('div');
-        d.className = 'w ' + type;
-        d.id = node.nodeId;
-        d.setAttribute('data-type', type);
+        flog('newNode', node, type);
 
         var nodePorts = '';
-        var nodeType = JBNodes[type];        
-        if( nodeType == null ) {
-            nodeType = JBNodes[node.nodeType];
+        var divTypeClass = type;
+        var nodeDef = JBNodes[type];
+        if (nodeDef == null) {
+            nodeDef = JBNodes[node.nodeType];
+            divTypeClass = node.nodeType;
         }
-        if( nodeType == null ) {
-            flog("WARN: could not find node type=", type,"nodetype=",node.nodeType, "node=", node);
+
+        if (nodeDef == null) {
+            flog('WARN: Could not find node type=' + type, ', nodeType=' + node.nodeType, 'node=', node);
             return null;
         }
+
+        var d = document.createElement('div');
+        d.className = 'w ' + divTypeClass;
+        d.id = node.nodeId;
+        d.setAttribute('data-type', divTypeClass);
         
-        for (var portName in nodeType.ports) {
-            var portData = nodeType.ports[portName];
+        for (var portName in nodeDef.ports) {
+            var portData = nodeDef.ports[portName];
             var portClass = '';
             switch (portName) {
                 case 'decisionDefault':
@@ -115,15 +116,15 @@ var JBApp = {
                     portClass = 'ep-basic';
             }
 
-            nodePorts += '   <span title="' + portData.title + '" class="ep ' + portClass + '" data-name="' + portName + '"></span>';
+            nodePorts += '<span title="' + portData.title + '" class="ep ' + portClass + '" data-name="' + portName + '"></span>';
         }
 
         var nodeName = node.title ? '<span class="node-title-inner">' + node.title + '</span>' : '<span class="node-title-inner text-muted">Enter title</span>';
         var nodeHtml = '';
-        nodeHtml += '<div class="title"> ' + nodeType.title;
+        nodeHtml += '<div class="title"> ' + nodeDef.title;
         nodeHtml += '   <span class="node-buttons clearfix">';
-        if (nodeType.settingEnabled) {
-            nodeHtml += '       <span class="btnNodeDetails" title="Edit details"><i class="fa fa-fw fa-cog"></i></span>';
+        if (nodeDef.settingEnabled) {
+            nodeHtml += '   <span class="btnNodeDetails" title="Edit details"><i class="fa fa-fw fa-cog"></i></span>';
         }
         nodeHtml += '       <span class="btnNodeDelete" title="Delete this node"><i class="fa fa-fw fa-trash"></i></span>';
         nodeHtml += '   </span>';
@@ -176,11 +177,13 @@ var JBApp = {
             },
             grid: [10, 10]
         });
+
         var nodeType = JBApp.getNodeType(node, type);
-        if( nodeType == null ) {
-            flog("WARN: Could not find node type for node=", node, "type=", type);
+        if (nodeType == null) {
+            flog('WARN: Could not find node type=' + type, 'node=', node);
             return;
         }
+
         for (var portName in nodeType.ports) {
             JBApp.jspInstance.makeSource(nodeDiv, {
                 filter: '[data-name=' + portName + ']',
@@ -205,7 +208,7 @@ var JBApp = {
         flog('initConnection', node, type);
 
         var nodeType = JBApp.getNodeType(node, type);
-        if( nodeType == null ) {
+        if (nodeType == null) {
             return null;
         }
 
@@ -249,7 +252,7 @@ var JBApp = {
                     var nodeId = node[key].nodeId;
                     var nodeEl = $('#' + nodeId);
                     flog("nodeEl", nodeEl);
-                    if( nodeEl.length > 0 ) {
+                    if (nodeEl.length > 0) {
                         node[key].x = parseInt(nodeEl.css('left').replace('px', ''));
                         node[key].y = parseInt(nodeEl.css('top').replace('px', ''));
                     } else {
@@ -353,57 +356,57 @@ jsPlumb.ready(function () {
     // setup some defaults for jsPlumb.
     var instance = jsPlumb.getInstance({
         Endpoint: ['Dot', {
-                radius: 2
-            }],
+            radius: 2
+        }],
         Connector: ['Flowchart', {
-                cornerRadius: 5,
-                gap: 1,
-                stub: 15,
-                alwaysRespectStubs: true,
-                midpoint: 1
-            }],
+            cornerRadius: 5,
+            gap: 1,
+            stub: 15,
+            alwaysRespectStubs: true,
+            midpoint: 1
+        }],
         HoverPaintStyle: {
             strokeStyle: '#1e8151',
             lineWidth: 2
         },
         ConnectionOverlays: [
             ['Arrow', {
-                    location: 1,
-                    id: 'arrow',
-                    length: 10,
-                    width: 10,
-                    foldback: 0.5
-                }],
+                location: 1,
+                id: 'arrow',
+                length: 10,
+                width: 10,
+                foldback: 0.5
+            }],
             ['Label', {
-                    label: '',
-                    id: 'label',
-                    cssClass: 'aLabel'
-                }],
+                label: '',
+                id: 'label',
+                cssClass: 'aLabel'
+            }],
             ['Custom', {
-                    create: function () {
-                        return $('<div><a href="#" title="Click to delete connection" class="buttonX"><i class="fa fa-times-circle"></i></a></div>');
-                    },
-                    events: {
-                        click: function (labelOverlay, e) {
-                            flog('Click on label overlay', labelOverlay, labelOverlay.component);
+                create: function () {
+                    return $('<div><a href="#" title="Click to delete connection" class="buttonX"><i class="fa fa-times-circle"></i></a></div>');
+                },
+                events: {
+                    click: function (labelOverlay, e) {
+                        flog('Click on label overlay', labelOverlay, labelOverlay.component);
 
-                            e.preventDefault();
-                            e.stopPropagation();
-                            e.stopImmediatePropagation();
+                        e.preventDefault();
+                        e.stopPropagation();
+                        e.stopImmediatePropagation();
 
-                            labelOverlay.component.setParameter('clickedButtonX', true);
+                        labelOverlay.component.setParameter('clickedButtonX', true);
 
-                            if (confirm('Are you sure you want to delete this connection?')) {
-                                labelOverlay.component.setParameter('clickedButtonXCancelled', false);
-                            } else {
-                                labelOverlay.component.setParameter('clickedButtonXCancelled', true);
-                            }
+                        if (confirm('Are you sure you want to delete this connection?')) {
+                            labelOverlay.component.setParameter('clickedButtonXCancelled', false);
+                        } else {
+                            labelOverlay.component.setParameter('clickedButtonXCancelled', true);
                         }
-                    },
-                    location: 0.7,
-                    id: 'buttonX',
-                    visible: false
-                }]
+                    }
+                },
+                location: 0.7,
+                id: 'buttonX',
+                visible: false
+            }]
         ],
         Container: 'paper'
     });
@@ -779,9 +782,9 @@ function initSideBar() {
             var type = ui.draggable.attr('data-type');
             var node = {
                 nodeId: type + '-' + uuid(),
-                nodeType : type,
-                x: ui.offset.left - paper.offset().left,
-                y: ui.offset.top - paper.offset().top
+                nodeType: type,
+                x: ui.offset.left - paper.offset().left + paper.scrollLeft(),
+                y: ui.offset.top - paper.offset().top + paper.scrollTop()
             };
             var nodeInfo = JBNodes[type];
             var nodeType = type;
@@ -840,9 +843,9 @@ function doSaveChoice(form) {
 
                 if (targetId in choices) {
                     var constant = choices[targetId].constant || {
-                        value: '',
-                        label: 'empty'
-                    };
+                            value: '',
+                            label: 'empty'
+                        };
                     constant.value = constValue;
 
                     choices[targetId].constant = constant;
