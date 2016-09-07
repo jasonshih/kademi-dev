@@ -2,7 +2,7 @@ function initManageWebsite() {
     flog("initManageWebsite");
     initGroupCheckbox();
     initApps();
-    initManageMenu();
+    //initManageMenu();
     initManageWebsiteImage();
     initSwitchPublic();
     initPublishingMenu("");

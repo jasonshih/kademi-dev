@@ -93,6 +93,24 @@
 
 }(jQuery));
 
+$.fn.fshow = function () {
+    return $(this).each(function () {
+        $(this).animate({
+            height: 'show',
+            opacity: 1
+        }, 200);
+    });
+};
+
+$.fn.fhide = function () {
+    return $(this).each(function () {
+        $(this).animate({
+            height: 'hide',
+            opacity: 0
+        }, 200);
+    });
+};
+
 // Function check/uncheck for checkbox
 $.fn.check = function(is_check) {
     return $(this).attr('checked', is_check);

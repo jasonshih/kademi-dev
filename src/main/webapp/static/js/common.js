@@ -89,6 +89,24 @@
 
 }(jQuery));
 
+$.fn.fshow = function () {
+    return $(this).each(function () {
+         $(this).animate({
+             height: 'show',
+             opacity: 1
+         }, 200);
+    });
+};
+
+$.fn.fhide = function () {
+    return $(this).each(function () {
+         $(this).animate({
+             height: 'hide',
+             opacity: 0
+         }, 200);
+    });
+};
+
 function endsWith(str, suffix) {
     if (typeof str === 'string') {
         return str.indexOf(suffix, str.length - suffix.length) !== -1;
