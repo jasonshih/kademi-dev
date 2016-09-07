@@ -11,15 +11,6 @@ function initProfile() {
         }
     });
 
-    $("#myUploaded").mupload({
-        url: "",
-        buttonText: "<i class=\"fa fa-folder-open-o\"></i> Select a new photo",
-        oncomplete: function (data, name, href) {
-            flog("set img", $(".profile-photo img"));
-            $(".profile-photo img").attr("src", "pic");
-        }
-    });
-
     flog("init delete membersip");
     $(".memberships-wrapper").on("click", "a.btn-delete-membership", function (e) {
         flog("click", this);

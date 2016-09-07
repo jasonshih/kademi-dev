@@ -52,17 +52,17 @@ function initAddPageModal() {
 
     var modal = $('#modal-save-page');
     var form = modal.find('form');
+    var txtNewFileName = form.find(".newFileName[type=text]");
+    var txtNewFileNameHidden = form.find(".newFileName[type=hidden]");
 
     $(document.body).on('hidden.bs.modal', '#modal-save-page', function () {
         modal.find('.btn-history-page').addClass('hidden');
         clearForm(form);
         $('.meta-wrapper').html('');
         $('.param-wrapper').html('');
-        $('.fileNameTrigger').trigger('click');
+        txtNewFileNameHidden.val('index');
+        form.find('.fileNameTrigger').trigger('click');
     });
-
-    var txtNewFileName = form.find(".newFileName[type=text]");
-    var txtNewFileNameHidden = form.find(".newFileName[type=hidden]");
 
     form.find('.defaultFolderPageTrigger').on('click', function () {
         flog('Default folder page is clicked!', txtNewFileName, txtNewFileNameHidden);
