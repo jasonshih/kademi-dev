@@ -187,23 +187,23 @@ function initKEditor(body, fileName) {
                 '      <div class="col-md-12">' +
                 '          <label>Padding (in px)</label>' +
                 '          <div class="row row-sm text-center">' +
-                '              <div class="col-xs-4 col-xs-offset-4">' +
+                '              <div class="col-xs-5 col-xs-offset-4">' +
                 '                  <input type="number" value="" class="txt-padding-top form-control" />' +
                 '                  <small>top</small>' +
                 '              </div>' +
                 '          </div>' +
                 '          <div class="row row-sm text-center">' +
-                '              <div class="col-xs-4">' +
+                '              <div class="col-xs-5">' +
                 '                  <input type="number" value="" class="txt-padding-left form-control" />' +
                 '                  <small>left</small>' +
                 '              </div>' +
-                '              <div class="col-xs-4 col-xs-offset-4">' +
+                '              <div class="col-xs-5 col-xs-offset-4">' +
                 '                  <input type="number" value="" class="txt-padding-right form-control" />' +
                 '                  <small>right</small>' +
                 '              </div>' +
                 '          </div>' +
                 '          <div class="row row-sm text-center">' +
-                '              <div class="col-xs-4 col-xs-offset-4">' +
+                '              <div class="col-xs-5 col-xs-offset-4">' +
                 '                  <input type="number" value="" class="txt-padding-bottom form-control" />' +
                 '                  <small>bottom</small>' +
                 '              </div>' +
