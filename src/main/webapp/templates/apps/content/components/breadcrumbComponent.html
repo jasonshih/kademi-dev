@@ -2,13 +2,13 @@
 <ol class="breadcrumb" style="$!style">
     #if( $page.parent.title )
     <li>
-        <a href="$page.parent.href">
+        <a class="text-muted" href="$page.parent.href">
             $page.parent.title
         </a>
     </li>
     #end
     <li class="active">
-        <a href="$page.href">$formatter.htmlEncode($page.title)</a>
+        <a class="text-primary" href="$page.href">$formatter.htmlEncode($page.title)</a>
     </li>
 </ol>
 #else
