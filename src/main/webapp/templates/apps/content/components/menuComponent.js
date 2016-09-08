@@ -76,7 +76,8 @@
                             '           </a>' +
                             '       </span>' +
                             '       <span class="menuItemText">Enter text</span>' +
-                            '   </a>' +
+                            '   </div>' +
+                            '   <ol class="menuList" data-id="' + newId + '"></ol>' +
                             '</li>'
                         );
 
