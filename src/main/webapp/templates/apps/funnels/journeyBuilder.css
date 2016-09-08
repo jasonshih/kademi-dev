@@ -279,3 +279,7 @@ path, .jsplumb-endpoint {
 .nodeTitle {
     cursor: pointer;
 }
+
+.choices-wrapper ul {
+    padding-left: 20px;
+}

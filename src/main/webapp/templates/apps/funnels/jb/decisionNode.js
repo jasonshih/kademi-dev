@@ -144,8 +144,8 @@ JBNodes['decision'] = {
             var choice = self.choices[targetId];
             var toText = '';
             var target = $('#' + targetId).clone();
-            target.find('.node-buttons').remove();
-            toText = target.find('.title').html().trim() + ': ';
+            target.find('.title span').remove();
+            toText = target.find('.title').html().trim() + ' ';
 
             var targetTitle = target.find('.node-title-inner').html().trim();
             if (targetTitle !== 'Enter title') {
