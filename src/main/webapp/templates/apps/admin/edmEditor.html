@@ -33,7 +33,7 @@
         <script type="text/javascript" src="/static/keditor/dist/js/keditor-0.0.0.js" >//</script>
         <script type="text/javascript" src="/static/keditor/dist/js/keditor-edm-components-0.0.0.js" >//</script>
         <script type="text/javascript" src="/static/bootstrap-select/1.10.0/dist/js/bootstrap-select.min.js"></script>
-        
+
         <script type="text/javascript" src="/static/js/keymap.js">//</script>
         <script type="text/javascript" src="/static/js/init-theme.js">//</script>
 
@@ -72,7 +72,7 @@
         #set($fname = $params.fileName)
         #set($file = $folder.child($fname))
         #set($useHash = $params.useHash)
-                
+
 
         <nav class="navbar navbar-default navbar-inverse navbar-fixed-top">
             <div class="container-fluid">
@@ -97,7 +97,7 @@
         </div>
 
         <script type="text/javascript" src="${page.parent.href}_components?handlers&amp;fileName=${params.fileName}">//</script>
-        
+
         <script type="text/javascript">
             var allGroups = {
                 #foreach ($group in $page.find("/").allGroups)
