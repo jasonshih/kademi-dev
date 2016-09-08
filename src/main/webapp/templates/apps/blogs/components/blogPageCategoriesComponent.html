@@ -1,3 +1,10 @@
+#if ($blog)
+#set ($categoryCounts = $rootFolder.find("/blogs").child($blog).$categoryCounts)
+#else
+#set ($categoryCounts = $page.$categoryCounts)
+#end
+
+
 #set ($currentCate = $!params.cat)
 #set ($currentTag = $!params.tag)
 <div class="panel panel-default">
@@ -5,7 +12,7 @@
         <div class="panel-title">Categories</div>
     </div>
     <div class="list-group list-unstyled">
-        #foreach($categoryCount in $page.categoryCounts)
+        #foreach($categoryCount in $categoryCounts)
         #set ($cls = "")
         #set ($href = "cat=" + $formatter.percentEncode( $categoryCount.item ) )
         #if($currentTag)

@@ -91,8 +91,12 @@ var JBApp = {
             return null;
         }
 
-        var d = document.createElement('div');
-        d.className = 'node-wrapper';
+        var nodeDiv = document.createElement('div');
+        nodeDiv.className = 'node ' + divTypeClass;
+        nodeDiv.id = node.nodeId;
+        nodeDiv.setAttribute('data-type', divTypeClass);
+        nodeDiv.style.left = node.x + 'px';
+        nodeDiv.style.top = node.y + 'px';
 
         for (var portName in nodeDef.ports) {
             var portData = nodeDef.ports[portName];
@@ -119,28 +123,30 @@ var JBApp = {
 
         var nodeName = node.title ? '<span class="node-title-inner">' + node.title + '</span>' : '<span class="node-title-inner text-muted">Enter title</span>';
         var nodeHtml = '';
-        nodeHtml += '<div class="node ' + divTypeClass + '" data-type="' + divTypeClass + '" id="' + node.nodeId + '">';
-        nodeHtml += '    <div class="title"> ' + nodeDef.title;
-        nodeHtml += '       <span class="node-buttons clearfix">';
+        nodeHtml += '<div class="title"> ' + nodeDef.title;
+        nodeHtml += '   <span class="node-buttons clearfix">';
         if (nodeDef.settingEnabled) {
-            nodeHtml += '       <span class="btnNodeDetails" title="Edit details"><i class="fa fa-fw fa-cog"></i></span>';
+            nodeHtml += '   <span class="btnNodeDetails" title="Edit details"><i class="fa fa-fw fa-cog"></i></span>';
         }
-        nodeHtml += '           <span class="btnNodeDelete" title="Delete this node"><i class="fa fa-fw fa-trash"></i></span>';
-        nodeHtml += '       </span>';
-        nodeHtml += '    </div>';
-        nodeHtml += '    <div class="inner">';
-        nodeHtml += '       <span class="nodeTitle btnNodeEdit">' + nodeName + ' <i class="fa fa-pencil"></i></span>' + nodePorts;
-        nodeHtml += '    </div>';
+        nodeHtml += '       <span class="btnNodeDelete" title="Delete this node"><i class="fa fa-fw fa-trash"></i></span>';
+        nodeHtml += '   </span>';
+        nodeHtml += '</div>';
+        nodeHtml += '<div class="inner">';
+        nodeHtml += '   <span class="nodeTitle btnNodeEdit">' + nodeName + ' <i class="fa fa-pencil"></i></span>' + nodePorts;
         nodeHtml += '</div>';
 
-        d.innerHTML = nodeHtml;
-        d.style.left = node.x + 'px';
-        d.style.top = node.y + 'px';
+        nodeDiv.innerHTML = nodeHtml;
+        JBApp.jspInstance.getContainer().appendChild(nodeDiv);
 
-        JBApp.jspInstance.getContainer().appendChild(d);
-        JBApp.initNode(d, type, node);
+        var nodeBackdrop = document.createElement('div');
+        nodeBackdrop.className = 'node-backdrop ' + divTypeClass;
+        nodeBackdrop.id = node.nodeId + '-backdrop';
+        nodeBackdrop.style.left = node.x + 'px';
+        nodeBackdrop.style.top = node.y + 'px';
+        JBApp.jspInstance.getContainer().appendChild(nodeBackdrop);
 
-        return d;
+        JBApp.initNode(nodeDiv, type, node);
+        return nodeDiv;
     },
     getConnectorStyle: function (portName) {
         var color = '';
@@ -168,14 +174,19 @@ var JBApp = {
             outlineWidth: 4
         }
     },
-    initNode: function (nodeWrapper, type, node) {
-        flog('initNode', nodeWrapper, type);
+    initNode: function (nodeDiv, type, node) {
+        flog('initNode', nodeDiv, type);
 
-        var nodeDiv = $(nodeWrapper).children('.node').get(0);
-
-        JBApp.jspInstance.draggable(nodeWrapper, {
+        var nodeBackdrop = $('#' + nodeDiv.id + '-backdrop');
+        JBApp.jspInstance.draggable(nodeDiv, {
             stop: function () {
                 JBApp.saveFunnel();
+            },
+            drag: function () {
+                nodeBackdrop.css({
+                    top: nodeDiv.style.top,
+                    left: nodeDiv.style.left
+                });
             },
             grid: [10, 10]
         });
@@ -252,11 +263,11 @@ var JBApp = {
             for (var key in node) {
                 if (node.hasOwnProperty(key)) {
                     var nodeId = node[key].nodeId;
-                    var nodeEl = $('#' + nodeId).parent();
+                    var nodeDiv = $('#' + nodeId);
 
-                    if (nodeEl.length > 0) {
-                        node[key].x = parseInt(nodeEl.css('left').replace('px', ''));
-                        node[key].y = parseInt(nodeEl.css('top').replace('px', ''));
+                    if (nodeDiv.length > 0) {
+                        node[key].x = parseInt(nodeDiv.css('left').replace('px', ''));
+                        node[key].y = parseInt(nodeDiv.css('top').replace('px', ''));
                     } else {
                         flog("WARN: could not find nodeid ", nodeId, "in node=", node[key]);
                     }
@@ -461,42 +472,15 @@ jsPlumb.ready(function () {
     }
 
     instance.bind('click', function (connection) {
-        if (connection) {
-            if (connection.getParameter('clickedButtonX') === true) {
-                var clickedButtonXCancelled = connection.getParameter('clickedButtonXCancelled');
-                if (clickedButtonXCancelled === false) {
-                    JBApp.deleteConnection(connection);
-                    instance.detach(connection);
-                    JBApp.saveFunnel('Connection is deleted!');
+        if (connection && connection.getParameter('clickedButtonX') === true) {
+            var clickedButtonXCancelled = connection.getParameter('clickedButtonXCancelled');
+            if (clickedButtonXCancelled === false) {
+                JBApp.deleteConnection(connection);
+                instance.detach(connection);
+                JBApp.saveFunnel('Connection is deleted!');
 
-                    return false;
-                }
+                return false;
             }
-        }
-
-        var sourceId = connection.sourceId;
-        var targetId = connection.targetId;
-
-        flog('Click on jsplump', connection, sourceId, targetId);
-
-        if (connection && sourceId && targetId) {
-            flog('Edit connection ', connection);
-            var nodes = JBApp.funnel.nodes;
-
-            var filteredDecision = nodes.filter(function (item) {
-                return item.hasOwnProperty('decision') && item['decision'].nodeId === sourceId;
-            });
-            flog('filteredDecision', filteredDecision);
-
-            if (filteredDecision.length > 0) {
-                var node = filteredDecision[0]['decision'];
-                var choice = node.choices[targetId];
-                if (choice) {
-                    showChoiceForm(choice, sourceId, targetId);
-                }
-            }
-        } else {
-            flog('clicked to non-connection ', connection);
         }
     });
 
@@ -572,8 +556,10 @@ jsPlumb.ready(function () {
         }
 
         // Set label
-        connection.getOverlay('label').setLabel(label);
-        $(connection.getOverlay('label').canvas).addClass('showed');
+        if (label) {
+            connection.getOverlay('label').setLabel(label);
+            $(connection.getOverlay('label').canvas).addClass('showed');
+        }
 
         if (JBApp.initialized) {
             flog('New connection was made', info.connection);
@@ -681,7 +667,6 @@ function initSettingPanel() {
     }
 
     initTitleForm();
-    initChoiceForm();
 }
 
 function initTitleForm() {
@@ -752,7 +737,6 @@ function initSideBar() {
     for (var nodeType in JBNodes) {
         var nodeDef = JBNodes[nodeType];
 
-//        flog("initSideBar: add node type", nodeType, nodeDef);
         snippetsStr += '<li data-type="' + nodeType + '" class="list-group-item">';
         snippetsStr += '    <img src="' + nodeDef.previewUrl + '" class="img-responsive" />';
         snippetsStr += '</li>';
@@ -805,120 +789,6 @@ function initSideBar() {
     });
 }
 
-function showChoiceForm(choice, sourceId, targetId) {
-    flog('showChoiceForm', choice, sourceId, targetId);
-
-    var form = $('form.panel-decision');
-    form.find('[name=sourceId]').val(sourceId);
-    form.find('[name=targetId]').val(targetId);
-    if (choice.query && choice.query.rules) {
-        $('#query-builder').queryBuilder('setRules', choice.query.rules);
-    } else {
-        $('#query-builder').queryBuilder('reset');
-    }
-    JBApp.showSettingPanel('decision');
-}
-
-function initChoiceForm() {
-    flog('initChoiceForm');
-
-    var form = $('form.panel-decision');
-    form.append(
-        '<div class="form-group">' +
-        '    <div class="col-md-12">' +
-        '        <button type="button" class="btn btn-primary btn-build-query btn-block">Decide your choice</button>' +
-        '    </div>' +
-        '</div>' +
-        '<input type="hidden" name="sourceId"/>' +
-        '<input type="hidden" name="targetId"/>'
-    );
-
-    var modal = $(
-        '<div class="modal modal-lg fade in" id="modal-query-builder">' +
-        '   <div class="modal-header">' +
-        '       <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
-        '       <h4 class="modal-title">Decide your choice</h4>' +
-        '   </div>' +
-        '   <div class="modal-body">' +
-        '       <div id="query-builder"></div>' +
-        '   </div>' +
-        '   <div class="modal-footer">' +
-        '       <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>' +
-        '       <button type="button" class="btn btn-primary btn-save-choice">Save your choice</button>' +
-        '   </div>' +
-        '</div>'
-    );
-    modal.appendTo(document.body);
-
-    $.getScriptOnce('/static/query-builder/2.3.3/js/query-builder.standalone.min.js', function () {
-        $.ajax({
-            url: window.location.pathname + '?fields',
-            type: 'get',
-            dataType: 'json',
-            success: function (resp) {
-                var builder = $('#query-builder');
-                builder.queryBuilder({
-                    filters: resp
-                });
-
-                form.find('.btn-build-query').on('click', function (e) {
-                    e.preventDefault();
-
-                    modal.modal('show');
-                });
-
-                modal.find('.btn-save-choice').on('click', function (e) {
-                    e.preventDefault();
-
-                    var choiceRules = builder.queryBuilder('getRules');
-                    if (!$.isEmptyObject(choiceRules)) {
-                        doSaveChoice(form, choiceRules);
-                    }
-                });
-            }
-        });
-    });
-    $.getStyleOnce('/static/query-builder/2.3.3/css/query-builder.default.min.css');
-}
-
-function doSaveChoice(form, choiceRules) {
-    flog('doSaveChoice', choiceRules);
-
-    var sourceId = form.find('[name=sourceId]').val();
-    var targetId = form.find('[name=targetId]').val();
-
-    for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
-        var node = JBApp.funnel.nodes[i];
-        var nodeData = JBApp.getNodeInfo(node)[1];
-
-        if (nodeData.nodeId === sourceId) {
-            if (nodeData.hasOwnProperty('choices')) {
-                var choices = nodeData.choices;
-                if (!choices) {
-                    choices = {};
-                }
-
-                if (targetId in choices) {
-                    choices[targetId].query = choices[targetId].query || {
-                            rules: {},
-                            label: ''
-                    };
-
-                    choices[targetId].query.rules = choiceRules;
-                }
-
-                nodeData.choices = choices;
-                break;
-            }
-        }
-    }
-
-    $('#modal-query-builder').modal('hide');
-    JBApp.saveFunnel('Decision choices updated', function () {
-        JBApp.hideSettingPanel();
-    });
-}
-
 function showTitleForm(node) {
     flog('showTitleForm', node);
 
@@ -965,13 +835,13 @@ function initNodeActions() {
     $(document.body).on('click', '.btnNodeDelete', function (e) {
         e.preventDefault();
 
-        var domElement = $(this).closest('.node');
-        var wrapper = domElement.parent();
+        var nodeDiv = $(this).closest('.node');
 
         if (confirm('Are you sure you want to delete this node?')) {
-            var id = domElement.attr('id');
+            var id = nodeDiv.attr('id');
             deleteNode(id);
-            JBApp.jspInstance.remove(wrapper.attr('id'));
+            JBApp.jspInstance.remove(id);
+            $('#' + id + '-backdrop').remove();
             JBApp.saveFunnel('Node is deleted!');
         }
     });
@@ -993,6 +863,22 @@ function deleteNode(nodeId) {
 
     if (index > -1) {
         JBApp.funnel.nodes.splice(index, 1);
+
+        // Remove connection which deleted node is source
+        JBApp.jspInstance.select({
+            source: nodeId
+        }).each(function (connection) {
+            JBApp.deleteConnection(connection);
+            JBApp.jspInstance.detach(connection);
+        });
+
+        // Remove connection which deleted node is target
+        JBApp.jspInstance.select({
+            target: nodeId
+        }).each(function (connection) {
+            JBApp.deleteConnection(connection);
+            JBApp.jspInstance.detach(connection);
+        });
     }
 }
 
