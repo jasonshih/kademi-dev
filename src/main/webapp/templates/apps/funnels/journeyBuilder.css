@@ -108,8 +108,6 @@
 
 .node-wrapper {
     position: absolute;
-    z-index: 4;
-    cursor: move;
     opacity: 0.8;
     padding: 0 100px 100px 0;
 }
@@ -125,6 +123,7 @@
     font-size: 14px;
     transition: background-color 0.25s ease-in;
     position: relative;
+    cursor: move;
 }
 
 .node-wrapper .inner {

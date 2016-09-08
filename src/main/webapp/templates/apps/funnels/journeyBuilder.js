@@ -461,42 +461,15 @@ jsPlumb.ready(function () {
     }
 
     instance.bind('click', function (connection) {
-        if (connection) {
-            if (connection.getParameter('clickedButtonX') === true) {
-                var clickedButtonXCancelled = connection.getParameter('clickedButtonXCancelled');
-                if (clickedButtonXCancelled === false) {
-                    JBApp.deleteConnection(connection);
-                    instance.detach(connection);
-                    JBApp.saveFunnel('Connection is deleted!');
+        if (connection && connection.getParameter('clickedButtonX') === true) {
+            var clickedButtonXCancelled = connection.getParameter('clickedButtonXCancelled');
+            if (clickedButtonXCancelled === false) {
+                JBApp.deleteConnection(connection);
+                instance.detach(connection);
+                JBApp.saveFunnel('Connection is deleted!');
 
-                    return false;
-                }
+                return false;
             }
-        }
-
-        var sourceId = connection.sourceId;
-        var targetId = connection.targetId;
-
-        flog('Click on jsplump', connection, sourceId, targetId);
-
-        if (connection && sourceId && targetId) {
-            flog('Edit connection ', connection);
-            var nodes = JBApp.funnel.nodes;
-
-            var filteredDecision = nodes.filter(function (item) {
-                return item.hasOwnProperty('decision') && item['decision'].nodeId === sourceId;
-            });
-            flog('filteredDecision', filteredDecision);
-
-            if (filteredDecision.length > 0) {
-                var node = filteredDecision[0]['decision'];
-                var choice = node.choices[targetId];
-                if (choice) {
-                    showChoiceForm(choice, sourceId, targetId);
-                }
-            }
-        } else {
-            flog('clicked to non-connection ', connection);
         }
     });
 
@@ -572,8 +545,10 @@ jsPlumb.ready(function () {
         }
 
         // Set label
-        connection.getOverlay('label').setLabel(label);
-        $(connection.getOverlay('label').canvas).addClass('showed');
+        if (label) {
+            connection.getOverlay('label').setLabel(label);
+            $(connection.getOverlay('label').canvas).addClass('showed');
+        }
 
         if (JBApp.initialized) {
             flog('New connection was made', info.connection);
@@ -681,7 +656,6 @@ function initSettingPanel() {
     }
 
     initTitleForm();
-    initChoiceForm();
 }
 
 function initTitleForm() {
@@ -802,120 +776,6 @@ function initSideBar() {
             JBApp.saveFunnel('New node is added!');
             flog('New node added: type=' + nodeType + ' nodeData: \n' + JSON.stringify(objToPush, null, 4));
         }
-    });
-}
-
-function showChoiceForm(choice, sourceId, targetId) {
-    flog('showChoiceForm', choice, sourceId, targetId);
-
-    var form = $('form.panel-decision');
-    form.find('[name=sourceId]').val(sourceId);
-    form.find('[name=targetId]').val(targetId);
-    if (choice.query && choice.query.rules) {
-        $('#query-builder').queryBuilder('setRules', choice.query.rules);
-    } else {
-        $('#query-builder').queryBuilder('reset');
-    }
-    JBApp.showSettingPanel('decision');
-}
-
-function initChoiceForm() {
-    flog('initChoiceForm');
-
-    var form = $('form.panel-decision');
-    form.append(
-        '<div class="form-group">' +
-        '    <div class="col-md-12">' +
-        '        <button type="button" class="btn btn-primary btn-build-query btn-block">Decide your choice</button>' +
-        '    </div>' +
-        '</div>' +
-        '<input type="hidden" name="sourceId"/>' +
-        '<input type="hidden" name="targetId"/>'
-    );
-
-    var modal = $(
-        '<div class="modal modal-lg fade in" id="modal-query-builder">' +
-        '   <div class="modal-header">' +
-        '       <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
-        '       <h4 class="modal-title">Decide your choice</h4>' +
-        '   </div>' +
-        '   <div class="modal-body">' +
-        '       <div id="query-builder"></div>' +
-        '   </div>' +
-        '   <div class="modal-footer">' +
-        '       <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>' +
-        '       <button type="button" class="btn btn-primary btn-save-choice">Save your choice</button>' +
-        '   </div>' +
-        '</div>'
-    );
-    modal.appendTo(document.body);
-
-    $.getScriptOnce('/static/query-builder/2.3.3/js/query-builder.standalone.min.js', function () {
-        $.ajax({
-            url: window.location.pathname + '?fields',
-            type: 'get',
-            dataType: 'json',
-            success: function (resp) {
-                var builder = $('#query-builder');
-                builder.queryBuilder({
-                    filters: resp
-                });
-
-                form.find('.btn-build-query').on('click', function (e) {
-                    e.preventDefault();
-
-                    modal.modal('show');
-                });
-
-                modal.find('.btn-save-choice').on('click', function (e) {
-                    e.preventDefault();
-
-                    var choiceRules = builder.queryBuilder('getRules');
-                    if (!$.isEmptyObject(choiceRules)) {
-                        doSaveChoice(form, choiceRules);
-                    }
-                });
-            }
-        });
-    });
-    $.getStyleOnce('/static/query-builder/2.3.3/css/query-builder.default.min.css');
-}
-
-function doSaveChoice(form, choiceRules) {
-    flog('doSaveChoice', choiceRules);
-
-    var sourceId = form.find('[name=sourceId]').val();
-    var targetId = form.find('[name=targetId]').val();
-
-    for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
-        var node = JBApp.funnel.nodes[i];
-        var nodeData = JBApp.getNodeInfo(node)[1];
-
-        if (nodeData.nodeId === sourceId) {
-            if (nodeData.hasOwnProperty('choices')) {
-                var choices = nodeData.choices;
-                if (!choices) {
-                    choices = {};
-                }
-
-                if (targetId in choices) {
-                    choices[targetId].query = choices[targetId].query || {
-                            rules: {},
-                            label: ''
-                    };
-
-                    choices[targetId].query.rules = choiceRules;
-                }
-
-                nodeData.choices = choices;
-                break;
-            }
-        }
-    }
-
-    $('#modal-query-builder').modal('hide');
-    JBApp.saveFunnel('Decision choices updated', function () {
-        JBApp.hideSettingPanel();
     });
 }
 
