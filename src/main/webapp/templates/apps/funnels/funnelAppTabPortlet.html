@@ -3,7 +3,7 @@
     #set( $funnel = $applications.funnels.funnel($lead) )
     <div class="panel-heading">
         #if( $funnel )
-        <a href="/funnels/$funnel.name">$funnel.title</a>
+        <a href="/funnels/$funnel.name">$funnel.title - $funnel.class</a>
         #else
         COULD NOT FIND FUNNEL -$lead.funnel
         #end

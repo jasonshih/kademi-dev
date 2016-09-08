@@ -22,11 +22,11 @@
 
             <div class="form-group">
                 <div class="col-sm-12">
-                    <label for="website">Website</label>
+                    <label for="website">Website - $website.id</label>
                     <select name="website" id="themeSiteId" class="form-control">
                         $formatter.option("", "[Website]")
-                        #foreach($website in $rootFolder.websites)
-                        $formatter.option($website.id, $website.name, $website.id)
+                        #foreach($w in $rootFolder.websites)
+                        $formatter.option($w.id, $w.name, $website.id)
                         #end
                     </select>
                 </div>

@@ -63,8 +63,8 @@
                             #foreach($w in $page.websites)
                             <tr>
                                 <td>
-                                    <a href="http://${page.websiteAddress($w)}${formatter.portString}/" target="_blank" class="btn btn-sm btn-info repo"><i class="fa fa-eye"></i> $w.name</a>
-                                    
+                                    <a href="http://${page.websiteAddress($w)}${formatter.portString}/" target="_blank" title="ID - $w.id" class="btn btn-sm btn-info repo"><i class="fa fa-eye"></i> $w.name</a>
+
                                 </td>
                                 <td>$!w.domainName</td>
                                 <td>$!w.redirectTo</td>
@@ -103,6 +103,6 @@
             $(function () {
                 initManageWebsites();
             });
-        </script> 
+        </script>
     </body>
 </html>
