@@ -726,7 +726,6 @@ function initSideBar() {
     for (var nodeType in JBNodes) {
         var nodeDef = JBNodes[nodeType];
 
-//        flog("initSideBar: add node type", nodeType, nodeDef);
         snippetsStr += '<li data-type="' + nodeType + '" class="list-group-item">';
         snippetsStr += '    <img src="' + nodeDef.previewUrl + '" class="img-responsive" />';
         snippetsStr += '</li>';
@@ -853,6 +852,22 @@ function deleteNode(nodeId) {
 
     if (index > -1) {
         JBApp.funnel.nodes.splice(index, 1);
+
+        // Remove connection which deleted node is source
+        JBApp.jspInstance.select({
+            source: nodeId
+        }).each(function (connection) {
+            JBApp.deleteConnection(connection);
+            JBApp.jspInstance.detach(connection);
+        });
+
+        // Remove connection which deleted node is target
+        JBApp.jspInstance.select({
+            target: nodeId
+        }).each(function (connection) {
+            JBApp.deleteConnection(connection);
+            JBApp.jspInstance.detach(connection);
+        });
     }
 }
 
