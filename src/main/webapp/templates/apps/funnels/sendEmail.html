@@ -22,13 +22,14 @@
 
             <div class="form-group">
                 <div class="col-sm-12">
-                    <label for="website">Website - $website.id</label>
+                    <label for="website">Website</label>
                     <select name="website" id="themeSiteId" class="form-control">
                         $formatter.option("", "[Website]")
                         #foreach($w in $rootFolder.websites)
                         $formatter.option($w.id, $w.name, $website.id)
                         #end
                     </select>
+                    <small>Will be used for domain and theming</small>
                 </div>
             </div>
             <div class="form-group">
@@ -48,7 +49,7 @@
                 <div class="col-sm-12">
                     <label for="to">To</label>
                     <input type="text" id="to" name="to" value="$!formatter.htmlEncode( $page.to )" placeholder="admin@mybusinessname.com" class="form-control" />
-                    <small>Can use MVEL syntax</small>
+                    <small>Can use MVEL syntax. Leave blank for the lead profile.</small>
                 </div>
             </div>
             <div class="form-group">
