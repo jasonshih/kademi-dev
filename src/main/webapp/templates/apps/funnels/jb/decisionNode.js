@@ -143,7 +143,13 @@ JBNodes['decision'] = {
         for (var targetId in self.choices) {
             var choice = self.choices[targetId];
             var toText = '';
-            var target = $('#' + targetId).clone();
+            var target = $('#' + targetId);
+
+            if (target.length === 0) {
+                break;
+            }
+
+            target = target.clone();
             target.find('.title span').remove();
             toText = target.find('.title').html().trim() + ' ';
 
