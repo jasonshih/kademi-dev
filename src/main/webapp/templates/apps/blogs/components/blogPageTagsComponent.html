@@ -1,9 +1,17 @@
+#if ($blog)
+#set ($tagCounts = $rootFolder.find("/blogs").child($blog).tagCounts)
+#else
+#set ($tagCounts = $page.tagCounts)
+#end
+
+#set ($currentCate = $!params.cat)
+#set ($currentTag = $!params.tag)
 <div class="panel panel-default">
     <div class="panel-heading">
         <div class="panel-title">Tags</div>
     </div>
     <div class="list-group">
-        #foreach($tagCount in $page.tagCounts)
+        #foreach($tagCount in $tagCounts)
         #set ($cls = "")
         #set ($href = "tag=" + $formatter.percentEncode( $tagCount.item ) )
         #if($currentCate)
