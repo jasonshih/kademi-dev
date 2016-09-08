@@ -3,11 +3,16 @@
     #set( $funnel = $applications.funnels.funnel($lead) )
     <div class="panel-heading">
         #if( $funnel )
-        <a href="/funnels/$funnel.name">$funnel.title - $funnel.class</a>
+        <a href="/funnels/$funnel.name">
+            #if( $funnel.title )
+            $funnel.title
+            #else
+            $funnel.name
+            #end
+        </a>
         #else
         COULD NOT FIND FUNNEL -$lead.funnel
         #end
-        $funnel - $funnel.name
     </div>
     <div class="panel-body">
         <table class="table table-striped">
@@ -34,14 +39,45 @@
             <tr>
                 <td>Current goal</td>
                 <td>
-                    $funnel.get($lead.currentGoal).title
-                    ( $lead.currentGoal )
+                    $!funnel.get($lead.currentGoal).title
+                    ( <a href="/funnels/$funnel.name/$lead.currentGoal">$lead.currentGoal</a> )
                 </td>
             </tr>
             <tr>
                 <td>Timer</td>
                 <td>$!lead.timerDate</td>
             </tr>
+        </table>
+        
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th colspan="2">Lead tasks</th>
+                    <th>Due date</th>
+                    <th>ID</th>
+                    <th>Assigned to Group</th>
+                    <th>Assigned to Org</th>
+                    <th>Assigned to Profile</th>
+                </tr>
+            </thead>
+            #set( $tasks = $lead.tasks() )
+            #if( $tasks.empty )
+            <tr>
+                <td>There are no tasks</td>
+            </tr>            
+            #else
+            #foreach( $task in $tasks )
+            <tr>
+                <td>$!task.title</td>
+                <td>$!task.taskDescription</td>                
+                <td>$!task.dueDate</td>
+                <td>$!task.taskName</td>
+                <td>$!task.assignedToGroup.name</td>
+                <td>$!task.assignedToOrg.orgId</td>
+                <td>$!task.assignedToProfile.name</td>                
+            </tr>
+            #end
+            #end
         </table>
 
         <h3>EDMs</h3>
