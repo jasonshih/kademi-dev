@@ -91,8 +91,12 @@ var JBApp = {
             return null;
         }
 
-        var d = document.createElement('div');
-        d.className = 'node-wrapper';
+        var nodeDiv = document.createElement('div');
+        nodeDiv.className = 'node ' + divTypeClass;
+        nodeDiv.id = node.nodeId;
+        nodeDiv.setAttribute('data-type', divTypeClass);
+        nodeDiv.style.left = node.x + 'px';
+        nodeDiv.style.top = node.y + 'px';
 
         for (var portName in nodeDef.ports) {
             var portData = nodeDef.ports[portName];
@@ -119,28 +123,30 @@ var JBApp = {
 
         var nodeName = node.title ? '<span class="node-title-inner">' + node.title + '</span>' : '<span class="node-title-inner text-muted">Enter title</span>';
         var nodeHtml = '';
-        nodeHtml += '<div class="node ' + divTypeClass + '" data-type="' + divTypeClass + '" id="' + node.nodeId + '">';
-        nodeHtml += '    <div class="title"> ' + nodeDef.title;
-        nodeHtml += '       <span class="node-buttons clearfix">';
+        nodeHtml += '<div class="title"> ' + nodeDef.title;
+        nodeHtml += '   <span class="node-buttons clearfix">';
         if (nodeDef.settingEnabled) {
-            nodeHtml += '       <span class="btnNodeDetails" title="Edit details"><i class="fa fa-fw fa-cog"></i></span>';
+            nodeHtml += '   <span class="btnNodeDetails" title="Edit details"><i class="fa fa-fw fa-cog"></i></span>';
         }
-        nodeHtml += '           <span class="btnNodeDelete" title="Delete this node"><i class="fa fa-fw fa-trash"></i></span>';
-        nodeHtml += '       </span>';
-        nodeHtml += '    </div>';
-        nodeHtml += '    <div class="inner">';
-        nodeHtml += '       <span class="nodeTitle btnNodeEdit">' + nodeName + ' <i class="fa fa-pencil"></i></span>' + nodePorts;
-        nodeHtml += '    </div>';
+        nodeHtml += '       <span class="btnNodeDelete" title="Delete this node"><i class="fa fa-fw fa-trash"></i></span>';
+        nodeHtml += '   </span>';
+        nodeHtml += '</div>';
+        nodeHtml += '<div class="inner">';
+        nodeHtml += '   <span class="nodeTitle btnNodeEdit">' + nodeName + ' <i class="fa fa-pencil"></i></span>' + nodePorts;
         nodeHtml += '</div>';
 
-        d.innerHTML = nodeHtml;
-        d.style.left = node.x + 'px';
-        d.style.top = node.y + 'px';
+        nodeDiv.innerHTML = nodeHtml;
+        JBApp.jspInstance.getContainer().appendChild(nodeDiv);
 
-        JBApp.jspInstance.getContainer().appendChild(d);
-        JBApp.initNode(d, type, node);
+        var nodeBackdrop = document.createElement('div');
+        nodeBackdrop.className = 'node-backdrop ' + divTypeClass;
+        nodeBackdrop.id = node.nodeId + '-backdrop';
+        nodeBackdrop.style.left = node.x + 'px';
+        nodeBackdrop.style.top = node.y + 'px';
+        JBApp.jspInstance.getContainer().appendChild(nodeBackdrop);
 
-        return d;
+        JBApp.initNode(nodeDiv, type, node);
+        return nodeDiv;
     },
     getConnectorStyle: function (portName) {
         var color = '';
@@ -168,14 +174,19 @@ var JBApp = {
             outlineWidth: 4
         }
     },
-    initNode: function (nodeWrapper, type, node) {
-        flog('initNode', nodeWrapper, type);
+    initNode: function (nodeDiv, type, node) {
+        flog('initNode', nodeDiv, type);
 
-        var nodeDiv = $(nodeWrapper).children('.node').get(0);
-
-        JBApp.jspInstance.draggable(nodeWrapper, {
+        var nodeBackdrop = $('#' + nodeDiv.id + '-backdrop');
+        JBApp.jspInstance.draggable(nodeDiv, {
             stop: function () {
                 JBApp.saveFunnel();
+            },
+            drag: function () {
+                nodeBackdrop.css({
+                    top: nodeDiv.style.top,
+                    left: nodeDiv.style.left
+                });
             },
             grid: [10, 10]
         });
@@ -252,11 +263,11 @@ var JBApp = {
             for (var key in node) {
                 if (node.hasOwnProperty(key)) {
                     var nodeId = node[key].nodeId;
-                    var nodeEl = $('#' + nodeId).parent();
+                    var nodeDiv = $('#' + nodeId);
 
-                    if (nodeEl.length > 0) {
-                        node[key].x = parseInt(nodeEl.css('left').replace('px', ''));
-                        node[key].y = parseInt(nodeEl.css('top').replace('px', ''));
+                    if (nodeDiv.length > 0) {
+                        node[key].x = parseInt(nodeDiv.css('left').replace('px', ''));
+                        node[key].y = parseInt(nodeDiv.css('top').replace('px', ''));
                     } else {
                         flog("WARN: could not find nodeid ", nodeId, "in node=", node[key]);
                     }
@@ -824,13 +835,13 @@ function initNodeActions() {
     $(document.body).on('click', '.btnNodeDelete', function (e) {
         e.preventDefault();
 
-        var domElement = $(this).closest('.node');
-        var wrapper = domElement.parent();
+        var nodeDiv = $(this).closest('.node');
 
         if (confirm('Are you sure you want to delete this node?')) {
-            var id = domElement.attr('id');
+            var id = nodeDiv.attr('id');
             deleteNode(id);
-            JBApp.jspInstance.remove(wrapper.attr('id'));
+            JBApp.jspInstance.remove(id);
+            $('#' + id + '-backdrop').remove();
             JBApp.saveFunnel('Node is deleted!');
         }
     });

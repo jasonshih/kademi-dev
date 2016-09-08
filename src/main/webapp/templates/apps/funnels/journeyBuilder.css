@@ -106,13 +106,17 @@
     padding: 0 !important;
 }
 
-.node-wrapper {
+.node-backdrop {
     position: absolute;
-    opacity: 0.8;
-    padding: 0 100px 100px 0;
+    width: 300px;
+    height: 220px;
+    z-index: 3;
 }
 
-.node-wrapper .node {
+.node {
+    position: absolute;
+    opacity: 0.8;
+    z-index: 4;
     width: 200px;
     height: 120px;
     text-align: center;
@@ -122,15 +126,14 @@
     background-color: white;
     font-size: 14px;
     transition: background-color 0.25s ease-in;
-    position: relative;
     cursor: move;
 }
 
-.node-wrapper .inner {
+.node .inner {
     margin-top: 9px;
 }
 
-.node-wrapper .title {
+.node .title {
     text-align: left;
     border-radius: 8px 8px 0 0;
     padding: 5px 45px 5px 5px;
@@ -138,19 +141,19 @@
     border-color: #ddd;
 }
 
-.node-wrapper.action .inner {
+.node.action .inner {
     text-align: center;
     padding: 0 20px;
 }
 
-.node-wrapper .title .node-buttons {
+.node .title .node-buttons {
     position: absolute;
     top: 5px;
     right: 5px;
     cursor: pointer;
 }
 
-.node-wrapper .title .node-buttons span {
+.node .title .node-buttons span {
     display: inline-block;
     width: 20px;
     height: 20px;
@@ -159,7 +162,7 @@
     float: left;
 }
 
-.node-wrapper .title .node-buttons span:hover {
+.node .title .node-buttons span:hover {
     background-color: #ddd;
 }
 
