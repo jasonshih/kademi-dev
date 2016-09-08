@@ -15,15 +15,22 @@ JBNodes['createTaskAction'] = {
         form.append(
             '<div class="form-group">' +
             '    <div class="col-md-12">' +
-            '        <label>Task name</label>' +
+            '        <label>Title</label>' +
+            '        <input type="text" class="form-control titleMvel" value="" />' +
+            '        <small class="text-muted help-block">Can use MVEL syntax</small>' +
+            '    </div>' +
+            '</div>' +                
+            '<div class="form-group">' +
+            '    <div class="col-md-12">' +
+            '        <label>Task ID</label>' +
             '        <input type="text" class="form-control taskName" value="" />' +
             '    </div>' +
             '</div>' +
             '<div class="form-group">' +
             '    <div class="col-md-12">' +
-            '        <label>Frequency</label>' +
+            '        <label>Task due</label>' +
             '        <div class="input-group">' +
-            '            <input type="number" class="form-control periodMultiples numeric" />' +
+            '            <input type="number" class="form-control periodMultiples numeric" placeholder="3" />' +
             '            <div class="input-group-btn">' +
             '                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="frequency-preview"></span>' +
             '                    <span class="caret"></span>' +
@@ -38,12 +45,13 @@ JBNodes['createTaskAction'] = {
             '                </ul>' +
             '            </div>' +
             '        </div>' +
+            '        <i>When the task is due, eg "3 days"</i>' +            
             '    </div>' +
             '</div>' +
             '<div class="form-group">' +
             '    <div class="col-md-12">' +
-            '        <label>Run at</label>' +
-            '        <input type="number" class="form-control runHour numeric" min="0" max="23" value="" />' +
+            '        <label>Run at hour</label>' +
+            '        <input type="number" class="form-control runHour numeric" min="0" max="23" value="" placeholder="9" />' +
             '        <small class="text-muted help-block">Format is 24 hours time</small>' +
             '    </div>' +
             '</div>' +
@@ -58,13 +66,6 @@ JBNodes['createTaskAction'] = {
             '    <div class="col-md-12">' +
             '        <label>Assign to group</label>' +
             '        <input type="text" class="form-control assignToGroupRule" value="" />' +
-            '        <small class="text-muted help-block">Can use MVEL syntax</small>' +
-            '    </div>' +
-            '</div>' +
-            '<div class="form-group">' +
-            '    <div class="col-md-12">' +
-            '        <label>Title</label>' +
-            '        <input type="text" class="form-control titleMvel" value="" />' +
             '        <small class="text-muted help-block">Can use MVEL syntax</small>' +
             '    </div>' +
             '</div>' +
