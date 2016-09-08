@@ -23,7 +23,7 @@ JBNodes['decision'] = {
             '<div class="form-group">' +
             '   <div class="col-md-12">' +
             '       <label for="expression">Expression</label>' +
-            '       <textarea name="expression" id="expression" class="form-control" rows="5"></textarea>' +
+            '       <textarea name="expression" class="form-control expression" rows="5"></textarea>' +
             '       <small class="text-muted help-block">Enter the expression using MVEL syntax</small>' +
             '   </div>' +
             '</div>' +
