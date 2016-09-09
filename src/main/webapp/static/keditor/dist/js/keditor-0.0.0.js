@@ -1201,7 +1201,7 @@
 
                 var container = self.getClickedElement(e, '.keditor-container');
                 if (container) {
-                    flog('Click on .keditor-container', container, container.hasClass('showed-keditor-toolbar'));
+                    flog('Click on .keditor-container', container);
 
                     if (!container.hasClass('showed-keditor-toolbar')) {
                         body.find('.keditor-container.showed-keditor-toolbar').removeClass('showed-keditor-toolbar');
