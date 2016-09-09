@@ -29,6 +29,7 @@ var pageArea;
             timeout = setTimeout(delayed, threshold || 100);
         };
     };
+
     // smartresize
     jQuery.fn[sr] = function (fn) {
         return fn ? this.bind('resize', debounce(fn)) : this.trigger(sr);
@@ -260,7 +261,8 @@ var Main = function () {
     var runNavigationMenu = function () {
         var mainMenu = $('#main-navigation-menu');
         var callback = null;
-        if (windowWidth >= 768) {
+
+        if (windowWidth >= 980) {
             initNiceScroll(mainMenu);
             callback = function () {
                 updateNiceScroll(mainMenu);
