@@ -3,6 +3,7 @@
     #parse("/theme/masterTemplate.html")
     <head>
         #@themeHeader( $page.title )
+        <link href="/static/dropzone/v3.10.2/css/dropzone.css" rel="stylesheet" type="text/css"/>
         #end
     </head>
     <body>
@@ -70,6 +71,15 @@
                                     <li><a href="#" data-name="sort" data-value="dueDate-desc" class="filter">Due Last</a></li>
                                 </ul>
                             </div>
+                            <div class="btn-group">
+                                <a id="tasksCsv" href="tasks.csv" class="btn btn-info">Export</a>
+                                <button class="btn btn-info dropdown-toggle" type="button" id="exportDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="exportDropdown">
+                                    <li><a href="#" data-toggle="modal" data-target="#modal-upload">Import from CSV</a></li>
+                                </ul>
+                            </div>
                             <a href="$page.href" title="Clear search" class="btn btn-primary pull-right"><i class="fa fa-refresh"></i></a>
                         </div>
                     </div>
@@ -125,9 +135,27 @@
                 </div>
             </div>
         </div>
+
+        <div id="modal-upload" class="modal fade" role="dialog" aria-labelledby="" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Import CSV</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form action="${page.href}tasks.csv" class="dropzone dropzone-fullwidth" id="uploadFileDropzone"></form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="/static/dropzone/v3.10.2/dropzone.min.js" type="text/javascript"></script>
         <script src="/static/uri/1.15.1/URI.js" type="text/javascript"></script>
         <script src="/theme/apps/leadman/leadTasks.js" type="text/javascript"></script>
         #end
-
     </body>
 </html>
