@@ -672,11 +672,25 @@
 
             var self = this;
             var options = keditor.options;
+            self.options.skin = editorSkin;
+            self.options.templates_files = [templatesPath];
 
             var componentContent = component.children('.keditor-component-content');
-            componentContent.prop('contenteditable', true);
+            var textWrapper = componentContent.find('.text-wrapper');
+            var textHtml = textWrapper.html();
+            var editorDiv = $('<div class="text-editor" contenteditable="true"></div>').attr('id', keditor.generateId('text-editor')).html(textHtml);
+            textWrapper.html(editorDiv);
 
-            componentContent.on('input', function (e) {
+            var editor = editorDiv.ckeditor(self.options).editor;
+            editor.on('instanceReady', function () {
+                flog('CKEditor is ready', component);
+
+                if (typeof options.onComponentReady === 'function') {
+                    options.onComponentReady.call(contentArea, component, editor);
+                }
+            });
+
+            editorDiv.on('input', function (e) {
                 if (typeof options.onComponentChanged === 'function') {
                     options.onComponentChanged.call(contentArea, e, component);
                 }
@@ -687,23 +701,6 @@
 
                 if (typeof options.onContentChanged === 'function') {
                     options.onContentChanged.call(contentArea, e);
-                }
-            });
-
-            self.options.skin = editorSkin;
-            self.options.templates_files = [templatesPath];
-
-            var textWrapper = componentContent.find('.text-wrapper');
-            var textHtml = textWrapper.html();
-            var editorDiv = $('<div class="text-editor"></div>').attr('id', keditor.generateId('text-editor')).html(textHtml);
-            textWrapper.html(editorDiv);
-
-            var editor = editorDiv.ckeditor(self.options).editor;
-            editor.on('instanceReady', function () {
-                flog('CKEditor is ready', component);
-
-                if (typeof options.onComponentReady === 'function') {
-                    options.onComponentReady.call(contentArea, component, editor);
                 }
             });
         },

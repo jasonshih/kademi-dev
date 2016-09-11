@@ -3,11 +3,16 @@
     #set( $funnel = $applications.funnels.funnel($lead) )
     <div class="panel-heading">
         #if( $funnel )
-        <a href="/funnels/$funnel.name">$funnel.title - $funnel.class</a>
+        <a href="/funnels/$funnel.name">
+            #if( $funnel.title )
+            $funnel.title
+            #else
+            $funnel.name
+            #end
+        </a>
         #else
         COULD NOT FIND FUNNEL -$lead.funnel
         #end
-        $funnel - $funnel.name
     </div>
     <div class="panel-body">
         <table class="table table-striped">
@@ -34,30 +39,101 @@
             <tr>
                 <td>Current goal</td>
                 <td>
-                    $funnel.get($lead.currentGoal).title
-                    ( $lead.currentGoal )
+                    #if( $lead.currentGoal )
+                    $!funnel.get($lead.currentGoal).title
+                    ( <a href="/funnels/$funnel.name/$lead.currentGoal">$lead.currentGoal</a> )
+                    #else
+                    <span class="label label-warning">No current goal. Not being processed.</span>
+                    #end
                 </td>
             </tr>
             <tr>
-                <td>Timer</td>
-                <td>$!lead.timerDate</td>
+                <td>Last attained goal</td>
+                <td>
+                    #if( $lead.lastAttainedGoal )
+                    $lead.lastAttainedGoal
+                    -
+                    $!lead.lastAttainedDate
+                    #else
+                    Unknown last goal attained. Transitioned at $!lead.lastAttainedDate
+                    #end
+                </td>
             </tr>
+
+            <tr>
+                <td>Timer</td>
+                <td>
+                    $!lead.timerDate
+
+                    (time now: $formatter.now)
+                </td>
+            </tr>
+
+            <tr>
+                <td>Timer processing</td>
+                <td>
+                    <table class="table">
+                        <tr>
+                            <th>Started</th>
+                            <th>Completed</th>
+                            <th>Attempts</th>
+                        </tr>
+                        <tr>
+                            <td>$!lead.processingStartedAt</td>
+                            <td>$!lead.completedProcessingAt</td>
+                            <td>$!lead.numAttempts</td>                        
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            
+        </table>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th colspan="2">Lead tasks</th>
+                    <th>Due date</th>
+                    <th>ID</th>
+                    <th>Assigned to Group</th>
+                    <th>Assigned to Org</th>
+                    <th>Assigned to Profile</th>
+                </tr>
+            </thead>
+            #set( $tasks = $lead.tasks() )
+            #if( $tasks.empty )
+            <tr>
+                <td>There are no tasks</td>
+            </tr>            
+            #else
+            #foreach( $task in $tasks )
+            <tr>
+                <td>$!task.title</td>
+                <td>$!task.taskDescription</td>                
+                <td>$!task.dueDate</td>
+                <td>$!task.taskName</td>
+                <td>$!task.assignedToGroup.name</td>
+                <td>$!task.assignedToOrg.orgId</td>
+                <td>$!task.assignedToProfile.name</td>                
+            </tr>
+            #end
+            #end
         </table>
 
         <h3>EDMs</h3>
         <table class="table">
-        #foreach($funnelEdm in $lead.funnelEdms)
-        <tr>
-            <td>
-                #if( $funnelEdm.emailItem )
+            #foreach($funnelEdm in $lead.funnelEdms)
+            <tr>
+                <td>
+                    #if( $funnelEdm.emailItem )
                     <a href="/emails/$funnelEdm.emailItem.id">$funnelEdm.emailItem.subject</a>
-                #else if( $funnelEdm.smsItem )
+                    #else if( $funnelEdm.smsItem )
                     SMS
-                #end
-            </td>
-            <td></td>
-        </tr>
-        #end
+                    #end
+                </td>
+                <td></td>
+            </tr>
+            #end
         </table>
     </div>
 </div>
