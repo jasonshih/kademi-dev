@@ -8,6 +8,8 @@
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "menu" component');
 
+            $.getScriptOnce('/theme/apps/content/toggleMenu.js');
+
             $.ajax({
                 url: '_components/toggleMenu?settings',
                 type: 'get',

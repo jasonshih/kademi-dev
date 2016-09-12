@@ -13,6 +13,12 @@
             }
         },
         {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/content/toggleMenu.js"
+            }
+        },
+        {
             "css": {
                 "cssMedia": "all",
                 "path": "/theme/apps/content/directoryIndex.css"

@@ -4,8 +4,8 @@
 #set( $menu = $menuManager.rootMenuItem )
 #end
 
-<div class="navbar-trigger-wrapper $triggerAlign">
-    <button class="btn navbar-trigger $triggerSize $triggerColor $!triggerClass" id="${menuId}-trigger" type="button">$!triggerText</button>
+<div class="toggle-menu-trigger-wrapper $triggerAlign">
+    <button class="btn toggle-menu-trigger $triggerSize $triggerColor $!triggerClass" data-menu="#${menuId}" type="button">$!triggerText</button>
 </div>
 <div class="navbar navbar-default navbar-fixed-top toggle-menu" id="${menuId}" style="display: none;">
     <div class="container">
@@ -78,31 +78,11 @@
                     </ul>
                 </li>
                 #end
-                <li class="navbar-closer-wrapper"><a href="#" class="navbar-closer" id="${menuId}-closer">&times;</a></li>
+                <li class="navbar-closer-wrapper"><a href="#" class="toggle-menu-closer" data-menu="#${menuId}">&times;</a></li>
             </ul>
         </div><!--/.nav-collapse -->
     </div>
 </div>
-
-<script type="text/javascript">
-    $(function () {
-        var menu = $('#${menuId}');
-
-        $('#${menuId}-trigger').on('click', function (e) {
-            e.preventDefault();
-
-            menu.show();
-            menu.trigger('showed.toggleMenu');
-        });
-
-        $('#${menuId}-closer').on('click', function (e) {
-            e.preventDefault();
-
-            menu.hide();
-            menu.trigger('hidden.toggleMenu');
-        });
-    });
-</script>
 
 #macro( showMenuItem $item )
     #if( $item.visible.isEmpty() )
