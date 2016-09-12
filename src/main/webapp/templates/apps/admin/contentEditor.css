@@ -2,6 +2,10 @@
     padding-top: 50px !important;
 }
 
+#content-area .navbar-fixed-top {
+    top: 50px;
+}
+
 .keditor-component .keditor-toolbar {
     text-align: left;
 }
@@ -61,7 +65,7 @@ body.opened-keditor-sidebar div.cke_float[id*=cke_keditor-component-content-] {
 }
 
 /* Navbar style */
-.content-editor-page .navbar-fixed-top {
+.content-editor-page > .navbar-fixed-top {
     background: #222 !important;
     margin: 0 !important;
     padding: 0 !important;
@@ -69,8 +73,8 @@ body.opened-keditor-sidebar div.cke_float[id*=cke_keditor-component-content-] {
     min-height: 0 !important;
 }
 
-.content-editor-page .navbar-fixed-top .navbar-header,
-.content-editor-page .navbar-fixed-top .navbar-brand {
+.content-editor-page > .navbar-fixed-top .navbar-header,
+.content-editor-page > .navbar-fixed-top .navbar-brand {
     height: 50px !important;
     line-height: 50px !important;
     padding: 0 !important;
@@ -78,7 +82,7 @@ body.opened-keditor-sidebar div.cke_float[id*=cke_keditor-component-content-] {
     margin: 0 !important;
 }
 
-.content-editor-page .navbar-fixed-top a {
+.content-editor-page > .navbar-fixed-top a {
     height: 50px !important;
     line-height: 50px !important;
     color: #999 !important;
@@ -88,25 +92,25 @@ body.opened-keditor-sidebar div.cke_float[id*=cke_keditor-component-content-] {
     border: 0 !important;
 }
 
-.content-editor-page .navbar-fixed-top .navbar-nav {
+.content-editor-page > .navbar-fixed-top .navbar-nav {
     margin: 0 !important;
     padding: 0 !important;
     border: 0 !important;
 }
 
-.content-editor-page .navbar-fixed-top .navbar-nav > li {
+.content-editor-page > .navbar-fixed-top .navbar-nav > li {
     margin: 0 !important;
     padding: 0 !important;
     border: 0 !important;
 }
 
-.content-editor-page .navbar-fixed-top .navbar-nav > li > a:hover {
+.content-editor-page > .navbar-fixed-top .navbar-nav > li > a:hover {
     color: #fff !important;
     background-color: #080808 !important;
     border: 0 !important;
 }
 
-.content-editor-page .navbar-fixed-top .fa {
+.content-editor-page > .navbar-fixed-top .fa {
     font-size: 20px !important;
     line-height: 50px !important;
 }

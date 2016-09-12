@@ -16,14 +16,20 @@ body {
    KEditor base
    ================================================================================== */
 #keditor-sidebar,
-.keditor-toolbar {
+.keditor-toolbar,
+#keditor-sidebar .form-control {
   font: 14px/1.42857143 "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 }
 #keditor-sidebar small,
 .keditor-toolbar small,
+#keditor-sidebar .form-control small,
 #keditor-sidebar .small,
-.keditor-toolbar .small {
+.keditor-toolbar .small,
+#keditor-sidebar .form-control .small {
   font-size: 88% !important;
+}
+#keditor-sidebar .form-control {
+  height: 34px;
 }
 /* ==================================================================================
    opened-keditor-sidebar

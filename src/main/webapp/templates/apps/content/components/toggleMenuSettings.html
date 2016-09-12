@@ -1,0 +1,146 @@
+<form class="form-horizontal">
+    <div class="menuEditor">
+        <div class="form-group">
+            <div class="col-sm-12">
+                <label>Logo</label>
+                <p><img src="/static/images/photo_holder.png" class="img-responsive img-thumbnail" id="logo-previewer" /></p>
+                <button type="button" class="btn btn-block btn-primary" id="logo-edit">Change Logo</button>
+                <button type="button" class="btn btn-block btn-xs btn-danger" id="logo-delete">Remove Logo</button>
+                <input type="hidden" name="logo" class="form-control" />
+            </div>
+        </div>
+        <hr />
+        <label>Menu Items</label>
+        <div class="menuTree clearfix">
+            #set( $myMenu = $menuManager.rootMenuItem )
+            <ol class="menuList rootMenuList">
+                #showMenu( $myMenu true )
+            </ol>
+
+            <button class="btn btn-primary saveMenu btn-block">
+                <span class="fa fa-check"></span>
+                Save menu
+            </button>
+        </div>
+        <hr />
+        <div class="form-group">
+            <label class="col-sm-12"><strong>Show button align</strong></label>
+            <div class="col-sm-12">
+                <select class="form-control" id="cbbTriggerAlign">
+                    <option value="text-left">Left</option>
+                    <option value="text-center">Center</option>
+                    <option value="text-right" selected="selected">Right</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-12"><strong>Show button text</strong></label>
+            <div class="col-sm-12">
+                <input type="text" class="form-control" id="txtTriggerText" value="Send message" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-12"><strong>Show button size</strong></label>
+            <div class="col-sm-12">
+                <select class="form-control" id="cbbTriggerSize">
+                    <option value="btn-xs">Extra Small</option>
+                    <option value="btn-sm">Small</option>
+                    <option value="btn-md" selected="selected">Medium</option>
+                    <option value="btn-lg">Large</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-12"><strong>Show button color</strong></label>
+            <div class="col-sm-12">
+                <select class="form-control" id="cbbTriggerColor">
+                    <option value="btn-default">Default</option>
+                    <option value="btn-primary" selected="selected">Primary</option>
+                    <option value="btn-info">Info</option>
+                    <option value="btn-success">Success</option>
+                    <option value="btn-warning">Warning</option>
+                    <option value="btn-danger">Danger</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-12"><strong>Show button extra class</strong></label>
+            <div class="col-sm-12">
+                <input type="text" class="form-control" id="txtTriggerClass" value="" />
+            </div>
+        </div>
+    </div>
+
+
+    <div class="editMenuItem" style="display: none">
+        <h4 style="margin-top: 0;">Edit menu item</h4>
+
+        <div class="form-group">
+            <label class="col-sm-12"><strong>Path</strong></label>
+
+            <div class="col-sm-12">
+                <input type="text" name="href" class="form-control input-sm" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-12"><strong>Text</strong></label>
+
+            <div class="col-sm-12">
+                <input type="text" name="text" class="form-control input-sm" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-12">
+                <button class="editMenuItemOk btn btn-sm btn-success">
+                    <span class="fa fa-check"></span>
+                </button>
+
+                <button class="editMenuItemHide btn btn-sm btn-info" title="Toggle visibility">
+                    <span class="fa fa-eye-slash"></span>
+                </button>
+                
+                <button class="editMenuItemDelete btn btn-sm btn-danger" title="Delete">
+                    <span class="fa fa-times"></span>
+                </button>
+
+                <button class="editMenuItemCancel btn btn-xs btn-default" title="Cancel">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+
+#macro( showMenu $menuItem $isRootMenuItem )
+    <li #if ($isRootMenuItem) class="rootMenuItem" #end>
+        <div data-id="$menuItem.id" data-href="$!menuItem.href" data-hidden="$menuItem.hidden" class="menuItem">
+            <span class="btn-group btn-group-xs small">
+                <a class="btn btn-success btnAddMenuItem" href="#">
+                    <span class="fa fa-plus small"></span>
+                </a>
+                #if (!$isRootMenuItem)
+                    <a class="btn btn-info btnSortMenuItem" href="#">
+                        <span class="fa fa-sort small"></span>
+                    </a>
+                #end
+                #if (!$isRootMenuItem)
+                <a class="btn btn-primary btnEditMenuItem" href="#">
+                    <span class="fa fa-pencil small"></span>
+                </a>
+                #end
+            </span>
+
+            <span class="menuItemText">#if ($menuItem.text) $!menuItem.text #else Root Menu Item #end </span>
+        </div>
+
+        #showMenuList($menuItem)
+    </li>
+#end
+
+#macro( showMenuList $menuItem )
+    <ol class="menuList" data-id="$menuItem.id">
+        #foreach($item in $menuItem.items)
+            #showMenu( $item false )
+        #end
+    </ol>
+#end
