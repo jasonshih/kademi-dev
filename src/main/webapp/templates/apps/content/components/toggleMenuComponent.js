@@ -48,14 +48,6 @@
                         form.find('#logo-previewer').attr('src', '/static/images/photo_holder.png');
                     });
     
-                    form.find('#txtTriggerText').on('change', function () {
-                        var component = keditor.getSettingComponent();
-                        var dynamicElement = component.find('[data-dynamic-href]');
-        
-                        component.attr('data-trigger-text', this.value || 'Send message');
-                        keditor.initDynamicContent(dynamicElement);
-                    });
-    
                     form.find('#cbbTriggerSize').on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
@@ -255,8 +247,7 @@
             var imageUrl = dataAttributes['data-logo'];
             form.find('#logo-previewer').attr('src', imageUrl ? imageUrl : '/static/images/photo_holder.png');
             form.find('[name=logo]').val(dataAttributes['data-logo']);
-    
-            form.find('#txtTriggerText').val(dataAttributes['data-trigger-text']);
+
             form.find('#cbbTriggerSize').val(dataAttributes['data-trigger-size']);
             form.find('#cbbTriggerColor').val(dataAttributes['data-trigger-color']);
             form.find('#txtTriggerClass').val(dataAttributes['data-trigger-class']);
