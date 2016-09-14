@@ -14,7 +14,7 @@
         },
         {
             "less": {
-                "cssMedia": "all",
+                "lessMedia": "all",
                 "path": "/theme/apps/learner/modulePage.less"
             }
         },
