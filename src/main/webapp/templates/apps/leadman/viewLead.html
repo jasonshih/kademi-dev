@@ -540,7 +540,7 @@
                         <div class="task-item-list">
                             <div id="tasksList" class="panel-group">
                                 #set ($taskCount = 0)
-                                #foreach($task in $page.children)
+                                #foreach($task in $page.children.ofType.task.sortByExpr("dueDate") )
                                 #if(${task.class.simpleName} == "LeadTaskPage")
                                 #set ($taskCount = $taskCount + 1)
                                 <div class="panel panel-default">
